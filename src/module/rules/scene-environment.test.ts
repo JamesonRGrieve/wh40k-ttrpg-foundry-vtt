@@ -13,6 +13,9 @@ import {
     environmentJumpDistance,
     environmentLiftingSum,
     environmentMovementRates,
+    environmentNpcMovementRates,
+    environmentPrintedMovementShift,
+    environmentThrowStrengthBonus,
     exposureForAtmosphere,
     isDefaultEnvironment,
     parseSceneEnvironment,
@@ -133,6 +136,63 @@ describe('gravity: carrying, jumping and movement rates (#604)', () => {
         for (const line of FFG_LINES) expect(environmentMovementRates(rates, env({ gravity: 'zero' }), line)).toEqual({ half: 2, full: 3, charge: 5, run: 9 });
         expect(environmentMovementRates(rates, env({ gravity: 'low' }), 'dh2')).toBe(rates);
         expect(environmentMovementRates(rates, env({ gravity: 'zero' }), 'im')).toBe(rates);
+    });
+});
+
+describe('gravity: throwing Strength Bonus (#604)', () => {
+    it('low gravity: +2 in every line', () => {
+        for (const line of FFG_LINES) expect(environmentThrowStrengthBonus(3, env({ gravity: 'low' }), line)).toBe(5);
+    });
+
+    it('high gravity: −2, to a minimum of 0, never raising a bonus already below it', () => {
+        for (const line of FFG_LINES) expect(environmentThrowStrengthBonus(4, env({ gravity: 'high' }), line)).toBe(2);
+        expect(environmentThrowStrengthBonus(1, env({ gravity: 'high' }), 'dh2')).toBe(0);
+        expect(environmentThrowStrengthBonus(-1, env({ gravity: 'high' }), 'dh2')).toBe(-1);
+    });
+
+    it('standard and zero gravity, and an unmodelled line, leave it alone', () => {
+        expect(environmentThrowStrengthBonus(3, env({ gravity: 'standard' }), 'dh2')).toBe(3);
+        expect(environmentThrowStrengthBonus(3, env({ gravity: 'zero' }), 'dh2')).toBe(3);
+        expect(environmentThrowStrengthBonus(3, env({ gravity: 'low' }), 'im')).toBe(3);
+    });
+});
+
+describe('gravity: a printed movement line takes the Agility Bonus shift (#604)', () => {
+    it('is the shift the rule makes to the creature’s own Agility Bonus', () => {
+        expect(environmentPrintedMovementShift(3, env({ gravity: 'low' }), 'dw')).toBe(2);
+        expect(environmentPrintedMovementShift(4, env({ gravity: 'high' }), 'dw')).toBe(-2);
+    });
+
+    it('honours the high-gravity floor of 1', () => {
+        expect(environmentPrintedMovementShift(2, env({ gravity: 'high' }), 'bc')).toBe(-1);
+        expect(environmentPrintedMovementShift(1, env({ gravity: 'high' }), 'bc')).toBe(0);
+    });
+
+    it('an NPC’s printed line takes the shift in low / high gravity, and is kept as printed in standard', () => {
+        // A printed 4/8/12/24 line on an AB 3 NPC (e.g. Unnatural Agility already folded in by the book).
+        const printed = { half: 4, full: 8, charge: 12, run: 24 };
+        const npc = { agilityBonus: 3, size: 4, printed };
+        expect(environmentNpcMovementRates(npc, env({}), 'dh2')).toEqual(printed);
+        expect(environmentNpcMovementRates(npc, env({ gravity: 'low' }), 'dh2')).toEqual({ half: 6, full: 12, charge: 18, run: 36 });
+        expect(environmentNpcMovementRates(npc, env({ gravity: 'high' }), 'rt')).toEqual({ half: 2, full: 4, charge: 6, run: 12 });
+        expect(environmentNpcMovementRates(npc, env({ gravity: 'low' }), 'im')).toEqual(printed);
+    });
+
+    it('zero gravity halves a printed line, rounding up', () => {
+        const npc = { agilityBonus: 3, size: 4, printed: { half: 3, full: 6, charge: 9, run: 18 } };
+        expect(environmentNpcMovementRates(npc, env({ gravity: 'zero' }), 'ow')).toEqual({ half: 2, full: 3, charge: 5, run: 9 });
+    });
+
+    it('with no printed line, the rates derive from the shifted Agility Bonus', () => {
+        const npc = { agilityBonus: 3, size: 4, printed: null };
+        expect(environmentNpcMovementRates(npc, env({}), 'dh2')).toEqual({ half: 3, full: 6, charge: 9, run: 18 });
+        expect(environmentNpcMovementRates(npc, env({ gravity: 'low' }), 'dh2')).toEqual({ half: 5, full: 10, charge: 15, run: 30 });
+    });
+
+    it('is zero in standard or zero gravity and in an unmodelled line', () => {
+        expect(environmentPrintedMovementShift(3, env({ gravity: 'zero' }), 'dh2')).toBe(0);
+        expect(environmentPrintedMovementShift(3, env({ gravity: 'standard' }), 'dh2')).toBe(0);
+        expect(environmentPrintedMovementShift(3, env({ gravity: 'low' }), 'im')).toBe(0);
     });
 });
 

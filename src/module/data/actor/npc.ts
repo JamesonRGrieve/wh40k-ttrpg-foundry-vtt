@@ -13,7 +13,7 @@ import {
     skillRankFrom,
     splitCharacteristic,
 } from '../../rules/npc-advancement.ts';
-import { actorEnvironmentContext, environmentAgilityBonus, environmentMovementRates } from '../../rules/scene-environment.ts';
+import { actorEnvironmentContext, environmentAgilityBonus, environmentNpcMovementRates } from '../../rules/scene-environment.ts';
 import { computeArmour } from '../../utils/armour-calculator.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
@@ -22,7 +22,6 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
-import { computeMovement } from '../shared/movement-math.ts';
 import { skillCharacteristicMap, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
@@ -1403,15 +1402,18 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * @protected
      */
     _prepareMovement(): void {
-        // Respect a printed statblock movement line; only auto-derive when the NPC
-        // has no authored movement (migrated from the legacy `move` string sets this).
-        // A printed line is the NPC's own stored value, so the scene's gravity is
-        // not folded into it (writing it here would persist on the next save).
-        if (this.movementManual) return;
         // The scene's gravity (#604): AB shift for movement, zero gravity halves.
         const { env, line } = actorEnvironmentContext(this.parent as Parameters<typeof actorEnvironmentContext>[0]);
-        const ab = environmentAgilityBonus(this.characteristics.agility.effectiveBonus, env, line, 'movement');
-        const { half, full, charge, run } = environmentMovementRates(computeMovement(ab, this.size, true), env, line);
+        // A printed statblock movement line (migrated from the legacy `move` string)
+        // is respected and takes the same gravity change as a derived one. Like an
+        // Active Effect's change, it lands on the prepared data only (every prepare
+        // starts from the stored source after a reset), so the printed line itself
+        // is never overwritten.
+        const { half, full, charge, run } = environmentNpcMovementRates(
+            { agilityBonus: this.characteristics.agility.effectiveBonus, size: this.size, printed: this.movementManual ? this.movement : null },
+            env,
+            line,
+        );
         this.movement.half = half;
         this.movement.full = full;
         this.movement.charge = charge;

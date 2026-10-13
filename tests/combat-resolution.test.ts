@@ -375,6 +375,38 @@ describe('actor.rollWeaponAttack dispatch', () => {
 });
 
 /* -------------------------------------------- */
+/*  Zero-gravity Charge from the attack dialog  */
+/* -------------------------------------------- */
+
+describe('a Charge declared in the attack dialog demands the zero-gravity Agility test (#604)', () => {
+    beforeEach(() => installGlobals());
+
+    /** Post an attack under `actionName` and report how often the actor's zero-g test was asked for. */
+    async function postAttack(actionName: string): Promise<number> {
+        const { ActionData, WeaponActionData } = await import('../src/module/rolls/action-data.ts');
+        const action = new WeaponActionData();
+        // The attack card itself is out of scope: stub the shared post path.
+        vi.spyOn(ActionData.prototype, 'performActionAndSendToChat').mockResolvedValue();
+        const zeroGravityTest = vi.fn();
+        // `Reflect.set`: the attacker is reduced to the one method the Charge path calls.
+        Reflect.set(action.rollData, 'sourceActor', { rollZeroGravityManoeuvreTest: zeroGravityTest });
+        Reflect.set(action.rollData, 'weapon', { system: {} });
+        action.rollData.action = actionName;
+        await action.performActionAndSendToChat();
+        return zeroGravityTest.mock.calls.length;
+    }
+
+    it('a Charge asks the attacker for the test (the actor decides whether the scene is in zero gravity)', async () => {
+        expect(await postAttack('Charge')).toBe(1);
+    });
+
+    it('any other attack action does not', async () => {
+        expect(await postAttack('Standard Attack')).toBe(0);
+        expect(await postAttack('All Out Attack')).toBe(0);
+    });
+});
+
+/* -------------------------------------------- */
 /*  Determinism note                            */
 /* -------------------------------------------- */
 

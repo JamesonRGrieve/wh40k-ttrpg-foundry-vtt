@@ -3,6 +3,8 @@ import { t } from '../i18n/t.ts';
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
 import { parsePsychicRange } from './psychic-range.ts';
+import { actorEnvironmentContext, environmentThrowStrengthBonus } from './scene-environment.ts';
+import { strengthBonusRangeFactor, thrownRangeMetres } from './thrown-range.ts';
 import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
 type RangeAnnotatedRollData = RollData & {
@@ -16,10 +18,24 @@ type WeaponRangeSystem = {
     attack?: {
         range?: {
             value?: string | number;
+            /** Printed non-numeric range — `SBx3` for a thrown weapon. */
+            special?: string;
         };
     };
     effectiveSpecial?: Set<string>;
 };
+
+/**
+ * The Strength Bonus the attacker throws with: the effective (modified) bonus,
+ * shifted by the scene's gravity in the attacker's own line (#604). Zero with no
+ * attacker or no Strength characteristic.
+ */
+function throwingStrengthBonus(rollData: WeaponRollData): number {
+    const strength = rollData.sourceActor?.getCharacteristicFuzzy('strength');
+    if (strength === undefined) return 0;
+    const { env, line } = actorEnvironmentContext(rollData.sourceActor);
+    return environmentThrowStrengthBonus(strength.effectiveBonus ?? strength.bonus, env, line);
+}
 
 type PsychicPowerRangeSystem = {
     range?: string | number;
@@ -45,8 +61,12 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
     let range = 0;
     const weaponSystem = weapon.system as WeaponRangeSystem;
     const weaponRange = weaponSystem.attack?.range?.value ?? weaponSystem.range;
+    // A muscle-powered weapon prints its range as a multiple of the thrower's SB.
+    const sbFactor = strengthBonusRangeFactor(weaponSystem.attack?.range?.special) ?? strengthBonusRangeFactor(weaponSystem.range);
 
-    if (Number.isInteger(weaponRange)) {
+    if (sbFactor !== null) {
+        range = thrownRangeMetres(sbFactor, throwingStrengthBonus(rollData));
+    } else if (Number.isInteger(weaponRange)) {
         range = Number(weaponRange);
     } else if (weaponRange === '' || weaponRange === 'N/A') {
         range = 0;

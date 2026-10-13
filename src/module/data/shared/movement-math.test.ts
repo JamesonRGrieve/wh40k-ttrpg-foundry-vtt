@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeMovement, sumMovementModifiers } from './movement-math.ts';
+import { computeMovement, shiftMovementRates, sumMovementModifiers } from './movement-math.ts';
 
 describe('computeMovement (#271)', () => {
     it('PC path (no floors): half/full/charge/run = baseMove × {1,2,3,6}', () => {
@@ -19,6 +19,31 @@ describe('computeMovement (#271)', () => {
     it('size shifts baseMove by (size - 4)', () => {
         // ab 3, size 6 → baseMove = 3 + 6 - 4 = 5
         expect(computeMovement(3, 6, false).half).toBe(5);
+    });
+});
+
+describe('shiftMovementRates — a printed line under a base-move change (#604)', () => {
+    const printed = { half: 3, full: 6, charge: 9, run: 18 };
+
+    it('a +2 shift moves each rate by 2 × its multiple', () => {
+        expect(shiftMovementRates(printed, 2, true)).toEqual({ half: 5, full: 10, charge: 15, run: 30 });
+    });
+
+    it('a −2 shift stops at the NPC 1/2/3/6 floor', () => {
+        expect(shiftMovementRates(printed, -2, true)).toEqual({ half: 1, full: 2, charge: 3, run: 6 });
+        expect(shiftMovementRates(printed, -1, true)).toEqual({ half: 2, full: 4, charge: 6, run: 12 });
+    });
+
+    it('never raises a printed rate already below its floor', () => {
+        expect(shiftMovementRates({ half: 0, full: 0, charge: 0, run: 0 }, -2, true)).toEqual({ half: 0, full: 0, charge: 0, run: 0 });
+    });
+
+    it('a zero shift leaves the line exactly as printed, floors or not', () => {
+        expect(shiftMovementRates({ half: 0, full: 1, charge: 2, run: 4 }, 0, true)).toEqual({ half: 0, full: 1, charge: 2, run: 4 });
+    });
+
+    it('matches deriving the line from the shifted Agility Bonus', () => {
+        expect(shiftMovementRates(computeMovement(5, 4, true), 2, true)).toEqual(computeMovement(7, 4, true));
     });
 });
 

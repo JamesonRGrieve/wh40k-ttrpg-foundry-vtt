@@ -244,7 +244,9 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
             threatLevel: system.threatLevel,
             characteristics: foundry.utils.deepClone(system.characteristics),
             wounds: foundry.utils.deepClone(system.wounds),
-            movement: foundry.utils.deepClone(system.movement),
+            // The stored line, not the prepared one: the prepared rates carry the
+            // scene's gravity (#604), which must not be written into another NPC.
+            movement: foundry.utils.deepClone((npc._source.system as { movement: typeof system.movement }).movement),
             size: system.size,
             initiative: foundry.utils.deepClone(system.initiative),
             trainedSkills: foundry.utils.deepClone(system.trainedSkills),

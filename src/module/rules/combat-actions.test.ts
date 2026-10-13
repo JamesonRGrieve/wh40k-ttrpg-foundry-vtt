@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput } from './combat-actions';
+import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput, isChargeAction } from './combat-actions';
 
 /** An owned talent as the stub actor carries it: document identifier + picked specialisation. */
 interface StubTalent {
@@ -242,5 +242,17 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(0);
         expect(rd.twoWeaponPlan).toBeNull();
+    });
+});
+
+describe('isChargeAction — the attack action the zero-gravity test gates (#604)', () => {
+    it('is the Charge action, which the action list offers exactly once', () => {
+        expect(isChargeAction('Charge')).toBe(true);
+        expect(allCombatActions().filter((action) => isChargeAction(action.name))).toHaveLength(1);
+    });
+
+    it('no other action is a Charge', () => {
+        expect(isChargeAction('Standard Attack')).toBe(false);
+        expect(isChargeAction('All Out Attack')).toBe(false);
     });
 });

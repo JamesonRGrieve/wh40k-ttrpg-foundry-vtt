@@ -18,8 +18,10 @@
  *   BC and OW word the carrying change as "Strength Bonus and Toughness Bonus
  *   increased by four points"; it is read as the SUM, as the other four lines
  *   print it, because the carrying table is indexed by that sum. The throwing
- *   change is shown to the table but not applied: no range calculation reads the
- *   thrower's Strength Bonus yet (a thrown weapon's `SBx3` range is unresolved).
+ *   change feeds the thrown-weapon range (`SBx3`), which `range.ts` resolves from
+ *   the thrower's Strength Bonus via {@link environmentThrowStrengthBonus}.
+ *   A printed (manual) NPC movement line takes the same Agility Bonus shift at
+ *   data prep via {@link environmentPrintedMovementShift}, never into its source.
  * - **Zero gravity** (same pages; DH1 Core p. 212, Table 7-30: Treacherous
  *   Environments). Difficult terrain for movement — movement halved — and a Charge
  *   or Run needs a Hard (−20) Agility test or the character falls Prone. DH2, RT,
@@ -44,6 +46,7 @@
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { computeMovement, type MovementRates, shiftMovementRates } from '../data/shared/movement-math.ts';
 import type { I18nKey } from '../types/i18n-keys';
 import { inferActiveGameLine } from '../utils/item-variant-utils.ts';
 import { nonNegInt } from './_num.ts';
@@ -347,6 +350,44 @@ export function environmentAgilityBonus(agilityBonus: number, env: SceneEnvironm
     if (rule === null) return agilityBonus;
     if (purpose === 'initiative' && environmentRulesFor(line)?.gravity.affectsInitiative !== true) return agilityBonus;
     return shiftWithFloor(agilityBonus, rule.agilityBonus, rule.agilityBonusFloor);
+}
+
+/**
+ * The Agility Bonus shift a printed movement line takes under the scene's
+ * gravity: the difference the low/high-gravity rule makes to the creature's own
+ * Agility Bonus for movement (so the high-gravity floor of 1 is honoured). Zero
+ * in standard or zero gravity, and in an unmodelled line.
+ */
+export function environmentPrintedMovementShift(agilityBonus: number, env: SceneEnvironment, line: GameSystemId): number {
+    return environmentAgilityBonus(agilityBonus, env, line, 'movement') - agilityBonus;
+}
+
+/**
+ * An NPC's movement rates under the scene's gravity. With no printed line they
+ * are derived from the gravity-shifted Agility Bonus; a printed statblock line is
+ * kept and takes the same shift (times each rate's multiple). Zero gravity then
+ * halves either. The NPC 1/2/3/6 floors apply throughout.
+ */
+export function environmentNpcMovementRates(
+    npc: { agilityBonus: number; size: number; printed: Readonly<MovementRates> | null },
+    env: SceneEnvironment,
+    line: GameSystemId,
+): MovementRates {
+    const base =
+        npc.printed === null
+            ? computeMovement(environmentAgilityBonus(npc.agilityBonus, env, line, 'movement'), npc.size, true)
+            : shiftMovementRates(npc.printed, environmentPrintedMovementShift(npc.agilityBonus, env, line), true);
+    return environmentMovementRates(base, env, line);
+}
+
+/**
+ * The Strength Bonus a character throws with under the scene's gravity: ±2 in
+ * low / high gravity (high: to a minimum of 0). Unchanged otherwise.
+ */
+export function environmentThrowStrengthBonus(strengthBonus: number, env: SceneEnvironment, line: GameSystemId): number {
+    const rule = gravityWorldRule(env, line);
+    if (rule === null) return strengthBonus;
+    return shiftWithFloor(strengthBonus, rule.throwStrengthBonus, rule.throwStrengthBonusFloor);
 }
 
 /** Strength Bonus + Toughness Bonus for carrying, lifting and pushing under the scene's gravity. */

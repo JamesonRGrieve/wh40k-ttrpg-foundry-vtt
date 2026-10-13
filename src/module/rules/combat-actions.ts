@@ -23,6 +23,19 @@ export type CombatActionModifierInput = Pick<
 /** The canonical action name whose penalties {@link resolveTwoWeaponPenalties} owns. */
 const TWO_WEAPON_ACTION = 'Two-Weapon Fighting';
 
+/** The Charge action's canonical name. */
+const CHARGE_ACTION = 'Charge';
+
+/**
+ * Whether an attack action is a Charge — the one attack action the zero-gravity
+ * rule names ("making a Charge or Run action requires a Hard (−20) Agility
+ * test"; Run is a movement action, not an attack). Whether the test is actually
+ * due is the scene environment's call (`rollZeroGravityManoeuvreTest`).
+ */
+export function isChargeAction(action: string): boolean {
+    return action === CHARGE_ACTION;
+}
+
 /**
  * The actor's owned talents as the talent-gated rules read them: each one's
  * document `system.identifier` and the `system.specialization` picked.
@@ -240,7 +253,7 @@ export function allCombatActions(): CombatAction[] {
             },
         },
         {
-            name: 'Charge',
+            name: CHARGE_ACTION,
             type: ['Full'],
             subtype: ['Attack', 'Melee', 'Movement'],
             description: 'Rush up to 3x AgB, the final 4m straight at the foe; +20 WS.',

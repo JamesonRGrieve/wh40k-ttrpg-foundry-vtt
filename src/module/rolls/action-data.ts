@@ -9,6 +9,7 @@ import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import type { AreaTargetResult, AreaTemplateSpec } from '../rules/area-template.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
+import { isChargeAction } from '../rules/combat-actions.ts';
 import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
 import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
@@ -1183,6 +1184,10 @@ export class WeaponActionData extends ActionData {
         // The burst's hit ceiling, with each part's rule, for the card (#607).
         this.rollData.hitCeiling = localizeHitCeiling(this.rollData);
         await super.performActionAndSendToChat();
+        // A Charge declared in the attack dialog is a Charge action: in zero gravity
+        // it demands the Hard (−20) Agility test, as a token's Charge move does (#604).
+        // The actor method is a no-op outside a zero-gravity scene.
+        if (isChargeAction(this.rollData.action)) this.rollData.sourceActor?.rollZeroGravityManoeuvreTest();
     }
 
     /**
