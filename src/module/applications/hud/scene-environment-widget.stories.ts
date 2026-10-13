@@ -16,7 +16,7 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/hud/scene-environment-widget.hbs?raw';
 import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, clickAction, renderSheet } from '../../../../stories/test-helpers';
 import type { GameSystemId } from '../../config/game-systems/types.ts';
 import { DEFAULT_SCENE_ENVIRONMENT, type SceneEnvironment } from '../../rules/scene-environment.ts';
 import { buildSceneEnvironmentView } from './scene-environment-view.ts';
@@ -70,6 +70,17 @@ export const ZeroGravityGm: Story = {
         // Zero gravity offers the Charge / Run test; the GM gets the editor button.
         await expect(canvasElement.querySelector('[data-action="rollZeroGravity"]')).not.toBeNull();
         await expect(canvasElement.querySelector('[data-action="editEnvironment"]')).not.toBeNull();
+    },
+};
+
+/** The GM's two buttons dispatch the actions the widget class answers: open the window, roll the test. */
+export const GmControlsDispatch: Story = {
+    args: { environment: { ...DEFAULT_SCENE_ENVIRONMENT, gravity: 'zero' }, isGM: true },
+    play: async ({ canvasElement }) => {
+        const clicks = captureActionClicks(canvasElement);
+        clickAction(canvasElement, 'rollZeroGravity');
+        clickAction(canvasElement, 'editEnvironment');
+        await expect(clicks.map((c) => c.action)).toEqual(['rollZeroGravity', 'editEnvironment']);
     },
 };
 

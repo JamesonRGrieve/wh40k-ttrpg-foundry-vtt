@@ -12,7 +12,7 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/scene-environment.hbs?raw';
 import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, clickAction, renderSheet } from '../../../../stories/test-helpers';
 import type { GameSystemId } from '../../config/game-systems/types.ts';
 import { DEFAULT_SCENE_ENVIRONMENT, type SceneEnvironment } from '../../rules/scene-environment.ts';
 import { buildSceneEnvironmentView } from '../hud/scene-environment-view.ts';
@@ -65,6 +65,31 @@ export const ZeroGravityVacuum: Story = {
         const harsh = canvasElement.querySelector<HTMLInputElement>('input[name="harshConditions"]');
         harsh?.click();
         await expect(harsh?.checked).toBe(true);
+    },
+};
+
+/**
+ * The GM edits the form: each field change bubbles to the form (the window's
+ * submit-on-change handler re-renders the preview from it), carrying the field
+ * name the handler reads; Save dispatches the action that writes the scene flag.
+ */
+export const EditAndSave: Story = {
+    play: async ({ canvasElement }) => {
+        const changed: string[] = [];
+        canvasElement.addEventListener('change', (event) => {
+            if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) changed.push(event.target.name);
+        });
+        const gravity = canvasElement.querySelector<HTMLSelectElement>('select[name="gravity"]');
+        if (gravity === null) throw new Error('no gravity select');
+        gravity.value = 'low';
+        gravity.dispatchEvent(new Event('change', { bubbles: true }));
+        canvasElement.querySelector<HTMLInputElement>('input[name="harshConditions"]')?.click();
+        await expect(changed).toEqual(['gravity', 'harshConditions']);
+        await expect(gravity.value).toBe('low');
+
+        const clicks = captureActionClicks(canvasElement);
+        clickAction(canvasElement, 'save');
+        await expect(clicks.map((c) => c.action)).toEqual(['save']);
     },
 };
 
