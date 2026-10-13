@@ -21,3 +21,17 @@
 export function isCharacterActorType(type: string): boolean {
     return type === 'character' || type.endsWith('-character');
 }
+
+/** The registered actor roles that are vehicles: ground/air/water craft, voidships and the legacy vehicle/starship types. */
+const VEHICLE_ACTOR_ROLES: ReadonlySet<string> = new Set(['vehicle', 'starship', 'terracraft', 'aircraft', 'watercraft', 'voidcraft']);
+
+/**
+ * True for vehicle actor types — any line's `<system>-<role>` or the generic
+ * bare `<role>`, for every vehicle role above — and false for characters,
+ * NPCs and loot. The game-line prefix is ignored: which rulebook a craft runs
+ * on is not what it is.
+ */
+export function isVehicleActorType(type: string): boolean {
+    const role = type.slice(type.lastIndexOf('-') + 1);
+    return VEHICLE_ACTOR_ROLES.has(role);
+}

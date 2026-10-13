@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     ACTOR_JOURNAL_LINK_FLAG,
     actorJournalLinkSource,
+    actorJournalRefKind,
     compendiumCollectionId,
     type DropData,
     applyPortraitJournalDrop,
@@ -25,7 +26,7 @@ import {
     resolveActorJournalLink,
     visibleActorJournalLink,
 } from './actor-journal-link.ts';
-import type { JournalRef } from './event-graph.ts';
+import type { JournalRef, VaultJournalIdentity } from './event-graph.ts';
 import { EventTracker } from './event-tracker.ts';
 
 const ENTRY = 'JournalEntry.aaaaaaaaaaaaaaaa';
@@ -34,9 +35,23 @@ const NAMED_ENTRY = 'JournalEntry.cccccccccccccccc';
 const PAGE = 'JournalEntry.aaaaaaaaaaaaaaaa.JournalEntryPage.pppppppppppppppp';
 const PACK_ENTRY = 'Compendium.wh40k-rpg.lore.JournalEntry.dddddddddddddddd';
 
-function actor(name: string, journalLink?: string): JournalLinkedActor {
-    return { name, flags: { 'wh40k-rpg': journalLink === undefined ? {} : { [ACTOR_JOURNAL_LINK_FLAG]: journalLink } } };
+function actor(name: string, journalLink?: string, type = 'dh2-npc'): JournalLinkedActor {
+    return { name, type, flags: { 'wh40k-rpg': journalLink === undefined ? {} : { [ACTOR_JOURNAL_LINK_FLAG]: journalLink } } };
 }
+
+describe('actorJournalRefKind', () => {
+    it.each(['dh2-vehicle', 'rt-starship', 'rt-voidcraft', 'dh2-terracraft', 'ow-aircraft', 'watercraft', 'vehicle'])('resolves %s as a vehicle', (type) => {
+        expect(actorJournalRefKind(type)).toBe('vehicle');
+    });
+
+    it('resolves a loot pile as an item', () => {
+        expect(actorJournalRefKind('loot')).toBe('item');
+    });
+
+    it.each(['dh2-character', 'character', 'rt-npc', 'npc', 'bc-character'])('resolves %s as a character', (type) => {
+        expect(actorJournalRefKind(type)).toBe('character');
+    });
+});
 
 describe('isJournalLinkUuid', () => {
     it.each([ENTRY, PAGE, PACK_ENTRY, `${PACK_ENTRY}.JournalEntryPage.pppppppppppppppp`])('accepts %s', (uuid) => {
@@ -59,26 +74,31 @@ describe('resolveActorJournalLink precedence', () => {
     });
 
     it('the explicit flag wins over the resolver, which is not consulted', () => {
-        expect(resolveActorJournalLink({ name: 'Garrick Varo', explicitLink: OTHER_ENTRY }, resolver)).toBe(OTHER_ENTRY);
+        expect(resolveActorJournalLink({ name: 'Garrick Varo', kind: 'character', explicitLink: OTHER_ENTRY }, resolver)).toBe(OTHER_ENTRY);
         expect(resolver).not.toHaveBeenCalled();
     });
 
     it('with no explicit flag, asks the resolver as a character reference', () => {
-        expect(resolveActorJournalLink({ name: 'Garrick Varo', explicitLink: undefined }, resolver)).toBe(NAMED_ENTRY);
+        expect(resolveActorJournalLink({ name: 'Garrick Varo', kind: 'character', explicitLink: undefined }, resolver)).toBe(NAMED_ENTRY);
         expect(resolver).toHaveBeenCalledWith({ kind: 'character', name: 'Garrick Varo' });
     });
 
+    it("asks the resolver with the source's kind (a vehicle as a vehicle)", () => {
+        resolveActorJournalLink({ name: 'The Errant Vector', kind: 'vehicle', explicitLink: undefined }, resolver);
+        expect(resolver).toHaveBeenCalledWith({ kind: 'vehicle', name: 'The Errant Vector' });
+    });
+
     it('an invalid explicit flag is ignored in favour of the resolver', () => {
-        expect(resolveActorJournalLink({ name: 'Garrick Varo', explicitLink: 'Actor.aaaaaaaaaaaaaaaa' }, resolver)).toBe(NAMED_ENTRY);
+        expect(resolveActorJournalLink({ name: 'Garrick Varo', kind: 'character', explicitLink: 'Actor.aaaaaaaaaaaaaaaa' }, resolver)).toBe(NAMED_ENTRY);
     });
 
     it('resolves to nothing when neither answers', () => {
-        expect(resolveActorJournalLink({ name: 'Nobody', explicitLink: undefined }, resolver)).toBeNull();
+        expect(resolveActorJournalLink({ name: 'Nobody', kind: 'character', explicitLink: undefined }, resolver)).toBeNull();
     });
 
     it('drops a link the viewer may not see', () => {
-        expect(visibleActorJournalLink({ name: 'x', explicitLink: ENTRY }, resolver, () => false)).toBeNull();
-        expect(visibleActorJournalLink({ name: 'x', explicitLink: ENTRY }, resolver, () => true)).toBe(ENTRY);
+        expect(visibleActorJournalLink({ name: 'x', kind: 'character', explicitLink: ENTRY }, resolver, () => false)).toBeNull();
+        expect(visibleActorJournalLink({ name: 'x', kind: 'character', explicitLink: ENTRY }, resolver, () => true)).toBe(ENTRY);
     });
 });
 
@@ -143,7 +163,12 @@ describe('portrait drop validation', () => {
 
 describe('actor flag reading', () => {
     it('reads the raw explicit flag and reports whether it is a valid link', () => {
-        expect(actorJournalLinkSource(actor('Vex', ENTRY))).toEqual({ name: 'Vex', explicitLink: ENTRY });
+        expect(actorJournalLinkSource(actor('Vex', ENTRY))).toEqual({ name: 'Vex', kind: 'character', explicitLink: ENTRY });
+        expect(actorJournalLinkSource(actor('Vigil Ledger', undefined, 'rt-voidcraft'))).toEqual({
+            name: 'Vigil Ledger',
+            kind: 'vehicle',
+            explicitLink: undefined,
+        });
         expect(hasExplicitJournalLink(actor('Vex', ENTRY))).toBe(true);
         expect(hasExplicitJournalLink(actor('Vex', 'nonsense'))).toBe(false);
         expect(hasExplicitJournalLink(actor('Vex'))).toBe(false);
@@ -154,7 +179,7 @@ interface WorldJournal {
     name: string;
     uuid: string;
     visible: boolean;
-    flags: Record<string, never>;
+    flags: { 'wh40k-rpg'?: { vault: VaultJournalIdentity } };
 }
 
 /** Stub the world: the journal collection, the current user, and a sync UUID lookup over the journals. */
@@ -183,6 +208,30 @@ describe('portraitJournalLink (runtime, over the Event Tracker resolver)', () =>
         EventTracker.registerJournalLinkResolver(null);
         expect(portraitJournalLink(actor('Garrick Varo'))).toBe(NAMED_ENTRY);
         expect(portraitJournalLink(actor('Unknown Hiver'))).toBeNull();
+    });
+
+    it("a vehicle actor opens the vault's vehicle journal, a same-named NPC its character journal", () => {
+        const identity = (entityType: VaultJournalIdentity['entityType']): VaultJournalIdentity => ({
+            path: `${entityType}/The Errant Vector.md`,
+            entityType,
+            name: 'The Errant Vector',
+        });
+        stubWorld(
+            [
+                { name: 'Errant Vector captain', uuid: OTHER_ENTRY, visible: true, flags: { 'wh40k-rpg': { vault: identity('character') } } },
+                { name: 'Errant Vector', uuid: NAMED_ENTRY, visible: true, flags: { 'wh40k-rpg': { vault: identity('vehicle') } } },
+            ],
+            false,
+        );
+        expect(portraitJournalLink(actor('The Errant Vector', undefined, 'dh2-vehicle'))).toBe(NAMED_ENTRY);
+        expect(portraitJournalLink(actor('The Errant Vector', undefined, 'rt-voidcraft'))).toBe(NAMED_ENTRY);
+        expect(portraitJournalLink(actor('The Errant Vector', undefined, 'dh2-npc'))).toBe(OTHER_ENTRY);
+    });
+
+    it('a vehicle actor falls back to its location journal when the vault wrote it as a location', () => {
+        const location: VaultJournalIdentity = { path: 'Locations/Vigil Ledger.md', entityType: 'location', name: 'Vigil Ledger' };
+        stubWorld([{ name: 'Vigil Ledger (wreck)', uuid: NAMED_ENTRY, visible: true, flags: { 'wh40k-rpg': { vault: location } } }], false);
+        expect(portraitJournalLink(actor('Vigil Ledger', undefined, 'rt-starship'))).toBe(NAMED_ENTRY);
     });
 
     it('hides a GM-only entry from a player but shows it to the GM', () => {

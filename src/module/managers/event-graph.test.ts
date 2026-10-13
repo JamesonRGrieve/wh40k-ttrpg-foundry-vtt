@@ -391,6 +391,20 @@ describe('vault-identity journal lookup', () => {
         expect(findJournalUuid(journals, { kind: 'quest', name: 'Day 4' })).toBe('JournalEntry.quest');
     });
 
+    it('a vehicle prefers its vehicle journal, then a location; a location prefers a location, then a vehicle', () => {
+        const journals: NamedJournal[] = [
+            { name: 'Errant Vector (place)', uuid: 'JournalEntry.location', vault: vault('location', 'The Errant Vector') },
+            { name: 'Errant Vector', uuid: 'JournalEntry.vehicle', vault: vault('vehicle', 'The Errant Vector') },
+            { name: 'Errant Vector crew', uuid: 'JournalEntry.character', vault: vault('character', 'The Errant Vector') },
+        ];
+        expect(findJournalUuid(journals, { kind: 'vehicle', name: 'The Errant Vector' })).toBe('JournalEntry.vehicle');
+        expect(findJournalUuid(journals, { kind: 'location', name: 'The Errant Vector' })).toBe('JournalEntry.location');
+        expect(findJournalUuid(journals, { kind: 'character', name: 'The Errant Vector' })).toBe('JournalEntry.character');
+        // Each falls back to the other place type before any unfitting one.
+        expect(findJournalUuid(journals.slice(0, 1), { kind: 'vehicle', name: 'The Errant Vector' })).toBe('JournalEntry.location');
+        expect(findJournalUuid(journals.slice(1), { kind: 'location', name: 'The Errant Vector' })).toBe('JournalEntry.vehicle');
+    });
+
     it('falls back to the exact journal name when no vault flag names the reference', () => {
         const journals: NamedJournal[] = [
             { name: 'The Sump', uuid: 'JournalEntry.sump' },
@@ -422,6 +436,17 @@ describe('vault-identity scene lookup', () => {
         expect(findSceneForLocation(scenes, 'The Sump')?.id).toBe('byName');
         expect(findSceneForLocation(scenes, 'Nowhere')).toBeUndefined();
         expect(findSceneForLocation(scenes, '')).toBeUndefined();
+    });
+
+    it("a vehicle's interior scene answers for the vessel as a location", () => {
+        const vector: VaultJournalIdentity = { path: 'Locations/The Errant Vector.md', entityType: 'vehicle', name: 'The Errant Vector' };
+        const scenes = [
+            { name: 'The Errant Vector', id: 'byName' },
+            { name: 'Errant Vector — deck 0', id: 'byFlag', vault: vector },
+        ];
+        expect(findSceneForLocation(scenes, 'The Errant Vector')?.id).toBe('byFlag');
+        expect(sceneLocationName({ name: 'Errant Vector — deck 0', vault: vector })).toBe('The Errant Vector');
+        expect(findLocationVaultIdentity([{ name: 'Errant Vector', uuid: 'JournalEntry.vector', vault: vector }], 'The Errant Vector')).toEqual(vector);
     });
 
     it('a flagged scene stands for its vault location', () => {

@@ -179,7 +179,7 @@ export interface ComputedCharacterState {
 }
 
 /** What a tracker name refers to, for resolving it to its Foundry journal. */
-export type JournalRefKind = 'character' | 'location' | 'event-source' | 'quest' | 'item';
+export type JournalRefKind = 'character' | 'vehicle' | 'location' | 'event-source' | 'quest' | 'item';
 
 /** A named reference the dashboard wants to link to its journal. */
 export interface JournalRef {
@@ -190,8 +190,12 @@ export interface JournalRef {
 /** Maps a reference to a JournalEntry / JournalEntryPage UUID, or null when it has none. */
 export type JournalLinkResolver = (ref: JournalRef) => string | null;
 
-/** The vault entity types a vault-written JournalEntry can carry (the vault's `entity_type`). */
-export type VaultEntityType = 'character' | 'location' | 'item' | 'quest' | 'journal' | 'note';
+/**
+ * The vault entity types a vault-written JournalEntry can carry (the vault's `entity_type`).
+ * A `vehicle` is dual-nature — a combat actor and a walkable-interior location
+ * authored in the vault's `Locations/` tree — so it answers for both kinds.
+ */
+export type VaultEntityType = 'character' | 'vehicle' | 'location' | 'item' | 'quest' | 'journal' | 'note';
 
 /**
  * The vault identity the vault→Foundry journal writer stamps on every
@@ -216,7 +220,8 @@ export interface NamedJournal {
 /** The vault entity types that fit each reference kind, most preferred first. */
 const VAULT_TYPES_FOR_KIND: Readonly<Record<JournalRefKind, readonly VaultEntityType[]>> = {
     'character': ['character'],
-    'location': ['location'],
+    'vehicle': ['vehicle', 'location'],
+    'location': ['location', 'vehicle'],
     'item': ['item'],
     'quest': ['quest'],
     'event-source': ['journal', 'quest'],
@@ -549,11 +554,16 @@ export function findJournalUuidByVaultIdentity(journals: Iterable<NamedJournal>,
     return best?.uuid ?? null;
 }
 
-/** The vault identity of the location journal named `location`, or null when no journal carries one. */
+/** True when a vault identity stands for a place: a location, or a vehicle (whose interior is one). */
+function isPlaceIdentity(vault: VaultJournalIdentity | undefined): vault is VaultJournalIdentity {
+    return vault !== undefined && VAULT_TYPES_FOR_KIND.location.includes(vault.entityType);
+}
+
+/** The vault identity of the location (or vehicle) journal named `location`, or null when no journal carries one. */
 export function findLocationVaultIdentity(journals: Iterable<NamedJournal>, location: string): VaultJournalIdentity | null {
     if (location === '') return null;
     for (const journal of journals) {
-        if (journal.vault?.entityType === 'location' && journal.vault.name === location) return journal.vault;
+        if (isPlaceIdentity(journal.vault) && journal.vault.name === location) return journal.vault;
     }
     return null;
 }
@@ -565,19 +575,20 @@ export interface LocatableScene {
     readonly vault?: VaultJournalIdentity | undefined;
 }
 
-/** The location a scene stands for: its vault location name when flagged, else its own name. */
+/** The location a scene stands for: its vault location (or vehicle interior) name when flagged, else its own name. */
 export function sceneLocationName(scene: LocatableScene): string {
-    return scene.vault?.entityType === 'location' ? scene.vault.name : scene.name;
+    return isPlaceIdentity(scene.vault) ? scene.vault.name : scene.name;
 }
 
 /**
  * The scene for a location: one whose vault identity flag names the location
- * (entity type `location`) wins, then one whose own name is the location.
+ * (entity type `location`, or `vehicle` for a vessel's interior) wins, then one
+ * whose own name is the location.
  */
 export function findSceneForLocation<T extends LocatableScene>(scenes: Iterable<T>, location: string): T | undefined {
     if (location === '') return undefined;
     const list = Array.from(scenes);
-    return list.find((scene) => scene.vault?.entityType === 'location' && scene.vault.name === location) ?? list.find((scene) => scene.name === location);
+    return list.find((scene) => isPlaceIdentity(scene.vault) && scene.vault.name === location) ?? list.find((scene) => scene.name === location);
 }
 
 /**

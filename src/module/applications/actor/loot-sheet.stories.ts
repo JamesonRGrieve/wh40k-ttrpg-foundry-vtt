@@ -20,7 +20,21 @@ interface LootStoryCtx {
     lootTotalWeight: number;
     lootSource: string;
     isEmpty: boolean;
+    portraitJournal?: { uuid: string; canClear: boolean } | null;
 }
+
+/** The fraction of `outer`'s area that `inner` covers. */
+function coveredFraction(inner: DOMRect, outer: DOMRect): number {
+    const width = Math.max(0, Math.min(inner.right, outer.right) - Math.max(inner.left, outer.left));
+    const height = Math.max(0, Math.min(inner.bottom, outer.bottom) - Math.max(inner.top, outer.top));
+    return (width * height) / (outer.width * outer.height);
+}
+
+/**
+ * The most of the 40px thumbnail the compact journal controls may cover. The
+ * corner-hung column covers ~19%; the old in-image row covered ~41% (#590 follow-up).
+ */
+const MAX_THUMBNAIL_COVERAGE = 0.25;
 
 function renderLootSheet(ctx: LootStoryCtx): HTMLElement {
     return renderSheet(lootSrc, ctx);
@@ -65,6 +79,27 @@ export const Populated: Story = {
         await expect((takeAll as HTMLButtonElement).disabled).toBe(false);
         await expect(canvasElement.querySelector('[data-action="itemDelete"][data-item-id="i2"]')).not.toBeNull();
         await expect(canvasElement.querySelector('[data-wh40k-hook="loot-list"]')).not.toBeNull();
+    },
+};
+
+export const LinkedJournal: Story = {
+    name: 'Linked journal (owner) — compact portrait controls',
+    args: { ...populatedCtx, portraitJournal: { uuid: 'JournalEntry.aaaaaaaaaaaaaaaa', canClear: true } },
+    render: (args) => renderLootSheet(args),
+    play: async ({ canvasElement }) => {
+        const portrait = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="actor-portrait"]');
+        const open = portrait?.querySelector<HTMLButtonElement>('[data-action="openPortraitJournal"]') ?? null;
+        const clear = portrait?.querySelector<HTMLButtonElement>('[data-action="clearPortraitJournal"]') ?? null;
+        await expect(open).not.toBeNull();
+        await expect(clear).not.toBeNull();
+        const image = portrait?.querySelector('img');
+        if (open === null || clear === null || image == null) return;
+        // The controls hang off the thumbnail's corner rather than covering it.
+        const imageRect = image.getBoundingClientRect();
+        // A real layout only: without one every rect is empty and there is nothing to measure.
+        if (imageRect.width === 0) return;
+        const covered = coveredFraction(open.getBoundingClientRect(), imageRect) + coveredFraction(clear.getBoundingClientRect(), imageRect);
+        await expect(covered).toBeLessThanOrEqual(MAX_THUMBNAIL_COVERAGE);
     },
 };
 

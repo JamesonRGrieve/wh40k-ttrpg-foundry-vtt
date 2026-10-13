@@ -8,9 +8,12 @@
  *   1. an explicit per-actor link — a JournalEntry / JournalEntryPage UUID in
  *      the actor flag `flags['wh40k-rpg'].journalLink`, set by dropping a
  *      journal onto the portrait; otherwise
- *   2. the Event Tracker's journal-link resolution for `{ kind: 'character',
- *      name: actor.name }` (registered resolver, then vault identity, then
- *      exact name) — the one resolver the tracker dashboard also uses.
+ *   2. the Event Tracker's journal-link resolution for `{ kind, name:
+ *      actor.name }` (registered resolver, then vault identity, then exact
+ *      name) — the one resolver the tracker dashboard also uses. The kind
+ *      follows the actor type: a vehicle resolves as `vehicle` (the vault's
+ *      dual-nature vessel, authored in `Locations/`), a loot pile as `item`,
+ *      every character and NPC as `character`.
  *
  * The icon shows only when the resolved entry is visible to the current user,
  * and opening re-checks that, so a player never reaches a GM-only entry.
@@ -20,8 +23,9 @@
  */
 
 import { SYSTEM_ID } from '../constants.ts';
+import { isVehicleActorType } from '../documents/actor-types.ts';
 import { t } from '../i18n/t.ts';
-import type { JournalLinkResolver } from './event-graph.ts';
+import type { JournalLinkResolver, JournalRefKind } from './event-graph.ts';
 import { EventTracker } from './event-tracker.ts';
 
 /** Actor flag key (under the system scope) holding the explicit journal link. */
@@ -76,17 +80,29 @@ export function planPortraitJournalDrop(data: DropData, isOwner: boolean): Portr
     return isOwner ? { kind: 'link', uuid } : { kind: 'denied' };
 }
 
+/** The loot-pile actor type: its journal is the vault's item (container) entry. */
+const LOOT_ACTOR_TYPE = 'loot';
+
+/** The journal reference kind an actor type resolves as: vehicle, item (loot) or character. */
+export function actorJournalRefKind(type: string): JournalRefKind {
+    if (isVehicleActorType(type)) return 'vehicle';
+    if (type === LOOT_ACTOR_TYPE) return 'item';
+    return 'character';
+}
+
 /** The actor fields the link resolution reads. */
 export interface ActorJournalLinkSource {
     readonly name: string;
+    /** The reference kind the actor's type resolves as (see {@link actorJournalRefKind}). */
+    readonly kind: JournalRefKind;
     /** The stored explicit-link flag (validated here, never trusted). */
     readonly explicitLink: string | undefined;
 }
 
-/** The explicit link when it is a valid journal UUID, else the resolver's answer for the actor's name. */
+/** The explicit link when it is a valid journal UUID, else the resolver's answer for the actor's name and kind. */
 export function resolveActorJournalLink(source: ActorJournalLinkSource, resolve: JournalLinkResolver): string | null {
     if (isJournalLinkUuid(source.explicitLink)) return source.explicitLink;
-    return resolve({ kind: 'character', name: source.name });
+    return resolve({ kind: source.kind, name: source.name });
 }
 
 /** The resolved link, kept only when the current user may view it. */
@@ -119,12 +135,13 @@ export function isLookedUpJournalVisible(found: object | null, packVisible: bool
 /** The minimal actor surface the runtime reads. */
 export interface JournalLinkedActor {
     readonly name: string;
+    readonly type: string;
     readonly flags: { readonly [SYSTEM_ID]?: { readonly [ACTOR_JOURNAL_LINK_FLAG]?: string } };
 }
 
-/** Read an actor's link source (name + stored explicit flag). */
+/** Read an actor's link source (name, reference kind from its type, stored explicit flag). */
 export function actorJournalLinkSource(actor: JournalLinkedActor): ActorJournalLinkSource {
-    return { name: actor.name, explicitLink: actor.flags[SYSTEM_ID]?.[ACTOR_JOURNAL_LINK_FLAG] };
+    return { name: actor.name, kind: actorJournalRefKind(actor.type), explicitLink: actor.flags[SYSTEM_ID]?.[ACTOR_JOURNAL_LINK_FLAG] };
 }
 
 /** True when the actor carries a valid explicit link (the one an owner can clear). */
