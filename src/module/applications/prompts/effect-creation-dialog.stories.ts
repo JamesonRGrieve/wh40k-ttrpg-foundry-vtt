@@ -1,18 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/effect-creation-dialog.hbs?raw';
-import { clickAction, renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, clickAction, renderSheet, submitForm } from '../../../../stories/test-helpers';
+
+/** One `{id, label}` option row, the shape `_prepareContext` hands the three pickers. */
+interface PickerOption {
+    id: string;
+    label: string;
+}
 
 interface Args {
     selectedCategory: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';
     /** Picker rows, shaped like `conditionPickerRows` (the condition documents). */
     conditions?: { id: string; name: string; img: string; nature: string }[];
-    characteristics?: { key: string; label: string; selected?: boolean }[];
-    skills?: { key: string; label: string; characteristic: string }[];
-    name?: string;
-    duration?: number;
+    characteristics?: PickerOption[];
+    skills?: PickerOption[];
+    combatTypes?: PickerOption[];
 }
 
+/**
+ * The context `EffectCreationDialog._prepareContext` builds: the selected
+ * category, the owner line's condition rows, and the characteristic / skill /
+ * combat pickers keyed by `id` (the value the form submits).
+ */
 const meta = {
     title: 'Dialogs/EffectCreationDialog',
     render: (args) => renderSheet(templateSrc, { ...args }),
@@ -24,25 +34,50 @@ const meta = {
             { id: 'stunned', name: 'Stunned', img: 'icons/svg/daze.svg', nature: 'harmful' },
         ],
         characteristics: [
-            { key: 'ws', label: 'Weapon Skill' },
-            { key: 'bs', label: 'Ballistic Skill' },
-            { key: 's', label: 'Strength' },
+            { id: 'weaponSkill', label: 'Weapon Skill' },
+            { id: 'ballisticSkill', label: 'Ballistic Skill' },
+            { id: 'strength', label: 'Strength' },
         ],
         skills: [
-            { key: 'awareness', label: 'Awareness', characteristic: 'Per' },
-            { key: 'dodge', label: 'Dodge', characteristic: 'Ag' },
+            { id: 'dodge', label: 'Dodge' },
+            { id: 'awareness', label: 'Awareness' },
         ],
-        name: '',
-        duration: 1,
+        combatTypes: [
+            { id: 'attack', label: 'Attack Rolls' },
+            { id: 'damage', label: 'Damage' },
+            { id: 'initiative', label: 'Initiative' },
+        ],
     },
 } satisfies Meta<Args>;
 export default meta;
 
 type Story = StoryObj<Args>;
 
+/** The option values a named `<select>` offers, the placeholder excluded. */
+function optionValues(canvasElement: HTMLElement, name: string): string[] {
+    const options = canvasElement.querySelectorAll<HTMLOptionElement>(`select[name="${name}"] option`);
+    return Array.from(options)
+        .map((o) => o.value)
+        .filter((v) => v !== '');
+}
+
+/** The form's submitted `effectType`, captured on submit. */
+function captureSubmittedType(canvasElement: HTMLElement): { effectType: string | null } {
+    const seen: { effectType: string | null } = { effectType: null };
+    canvasElement.querySelector('form')?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!(event.target instanceof HTMLFormElement)) return;
+        const value = new FormData(event.target).get('effectType');
+        seen.effectType = typeof value === 'string' ? value : null;
+    });
+    return seen;
+}
+
 /**
  * The condition picker renders one selectable row per catalog condition, with
- * the condition document's image (an image path, not an icon-font class).
+ * the condition document's image (an image path, not an icon-font class). A row
+ * click dispatches `selectCondition` with its id — the handler writes it into
+ * the hidden `conditionId` field and submits.
  */
 export const ConditionTab: Story = {
     play: async ({ canvasElement }) => {
@@ -53,25 +88,66 @@ export const ConditionTab: Story = {
             'icons/svg/net.svg',
             'icons/svg/daze.svg',
         ]);
+        await expect(canvasElement.querySelector('input[name="conditionId"]')).not.toBeNull();
+        const clicks = captureActionClicks(canvasElement);
+        (rows[1] as HTMLElement | undefined)?.click();
+        await expect(clicks).toEqual([{ action: 'selectCondition', dataset: { conditionId: 'pinned' } }]);
     },
 };
 
+/** Characteristic: the picker submits the characteristic id, a modifier in steps of 5 and a duration. */
 export const CharacteristicTab: Story = {
     args: { selectedCategory: 'characteristic' },
+    play: async ({ canvasElement }) => {
+        await expect(optionValues(canvasElement, 'characteristic')).toEqual(['weaponSkill', 'ballisticSkill', 'strength']);
+        await expect(canvasElement.querySelector('input[name="modifierValue"]')?.getAttribute('step')).toBe('5');
+        await expect(canvasElement.querySelector('[data-category="characteristic"]')?.getAttribute('data-active')).toBe('true');
+        const submitted = captureSubmittedType(canvasElement);
+        submitForm(canvasElement, { 'characteristic': 'strength', 'modifierValue': 10, 'duration.rounds': 3 });
+        await expect(submitted.effectType).toBe('characteristic');
+        await expect(canvasElement.querySelector<HTMLSelectElement>('select[name="characteristic"]')?.value).toBe('strength');
+    },
 };
 
+/** Skill: the common-skill picker submits the skill id. */
 export const SkillTab: Story = {
     args: { selectedCategory: 'skill' },
+    play: async ({ canvasElement }) => {
+        await expect(optionValues(canvasElement, 'skill')).toEqual(['dodge', 'awareness']);
+        const submitted = captureSubmittedType(canvasElement);
+        submitForm(canvasElement, { skill: 'dodge', modifierValue: -10 });
+        await expect(submitted.effectType).toBe('skill');
+    },
 };
 
+/** Combat: the combat-stat picker submits the stat id. */
+export const CombatTab: Story = {
+    args: { selectedCategory: 'combat' },
+    play: async ({ canvasElement }) => {
+        await expect(optionValues(canvasElement, 'combatType')).toEqual(['attack', 'damage', 'initiative']);
+        const submitted = captureSubmittedType(canvasElement);
+        submitForm(canvasElement, { combatType: 'initiative', modifierValue: 5 });
+        await expect(submitted.effectType).toBe('combat');
+    },
+};
+
+/** Custom: a required name and no picker. */
 export const CustomTab: Story = {
-    args: { selectedCategory: 'custom', name: 'Sanctified Aura', duration: 5 },
+    args: { selectedCategory: 'custom' },
+    play: async ({ canvasElement }) => {
+        const name = canvasElement.querySelector<HTMLInputElement>('input[name="customName"]');
+        await expect(name?.required).toBe(true);
+        await expect(canvasElement.querySelector('select')).toBeNull();
+        const submitted = captureSubmittedType(canvasElement);
+        submitForm(canvasElement, { customName: 'Sanctified Aura' });
+        await expect(submitted.effectType).toBe('custom');
+    },
 };
 
 /**
- * Asserts that the five category tabs render with `data-action="selectCategory"`
- * and the matching `data-category` attribute. The runtime sheet routes both
- * verbatim into Foundry's static-actions resolver.
+ * The five category tabs render with `data-action="selectCategory"` and the
+ * matching `data-category`; exactly one is active. The runtime sheet routes the
+ * click into Foundry's static-actions resolver.
  */
 export const CategoryTabsDispatch: Story = {
     play: async ({ canvasElement }) => {
@@ -79,6 +155,9 @@ export const CategoryTabsDispatch: Story = {
         await expect(tabs.length).toBe(5);
         const categories = Array.from(tabs).map((b) => b.getAttribute('data-category'));
         await expect(categories).toEqual(['condition', 'characteristic', 'skill', 'combat', 'custom']);
+        await expect(Array.from(tabs).filter((b) => b.getAttribute('data-active') === 'true').length).toBe(1);
+        const clicks = captureActionClicks(canvasElement);
         clickAction(canvasElement, 'selectCategory');
+        await expect(clicks[0]?.dataset['category']).toBe('condition');
     },
 };
