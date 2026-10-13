@@ -372,3 +372,36 @@ describe('schema initials defer to the canonical body', () => {
         expect(patches[0]).toMatchObject({ system: { armourPoints: { body: 4, head: 0 }, coverage: ['body'] } });
     });
 });
+
+/**
+ * #583 triage warned: treating "stored == default" as unset would refill an
+ * emptied magazine from the canonical full clip on every load. Instance state
+ * always wins, default or not.
+ */
+describe('instance state is never deferred to canonical', () => {
+    const defaults = {
+        class: 'melee',
+        clip: { max: 0, value: 0, magazine: [] },
+        jammed: false,
+        state: { equipped: false, identified: true },
+        uses: { value: null, max: null },
+        quantity: 1,
+    };
+
+    it('keeps an emptied magazine empty', () => {
+        const canonical = { class: 'pistol', clip: { max: 12, value: 12, magazine: [{ ammoUuid: '', count: 12 }] } };
+        const persisted = { class: 'melee', clip: { max: 0, value: 0, magazine: [] } };
+        expect(buildHydratedSystem(canonical, persisted, defaults)).toEqual({ class: 'pistol', clip: { max: 12, value: 0, magazine: [] } });
+    });
+
+    it('keeps runtime state at its default even where the canonical differs', () => {
+        const canonical = { jammed: true, state: { equipped: true, identified: false }, uses: { value: 3, max: 3 }, quantity: 5 };
+        const persisted = { jammed: false, state: { equipped: false, identified: true }, uses: { value: null, max: null }, quantity: 1 };
+        expect(buildHydratedSystem(canonical, persisted, defaults)).toEqual({
+            jammed: false,
+            state: { equipped: false, identified: true },
+            uses: { value: null, max: 3 },
+            quantity: 1,
+        });
+    });
+});

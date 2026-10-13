@@ -125,10 +125,45 @@ function deepMerge(base: Record<string, unknown>, overlay: Record<string, unknow
 }
 
 /**
+ * Per-instance runtime state: what the owning actor's play changes, not what
+ * the compendium authors. A stored value here ALWAYS wins, default or not — an
+ * emptied magazine (`clip.value: 0`) is the schema initial and a real state, and
+ * must not refill from the canonical full clip on every load. `state` is the
+ * documented home of runtime state (docs/pack-authoring.md "Stateful Fields Live
+ * Under system.state"); the rest are runtime fields still in the legacy layout,
+ * plus the per-actor fields a lean overlay carries.
+ */
+const INSTANCE_STATE_PATHS: readonly (readonly string[])[] = [
+    ['state'],
+    ['clip', 'value'],
+    ['clip', 'magazine'],
+    ['jammed'],
+    ['rechargeMark'],
+    ['uses', 'value'],
+    ['quantity'],
+    ['cost'],
+    ['specialization'],
+    ['level'],
+];
+
+/** The schema defaults with every instance-state path removed, so those never defer to canonical. */
+function withoutInstanceState(schemaDefaults: Record<string, unknown>): Record<string, unknown> {
+    const pruned = structuredClone(schemaDefaults);
+    for (const path of INSTANCE_STATE_PATHS) {
+        let parent: unknown = pruned;
+        for (const segment of path.slice(0, -1)) parent = isPlainObject(parent) ? parent[segment] : undefined;
+        const leaf = path.at(-1);
+        if (isPlainObject(parent) && leaf !== undefined) delete parent[leaf];
+    }
+    return pruned;
+}
+
+/**
  * Pure join: canonical source system as the base layer, the item's PERSISTED
  * system overlaid on top (per-actor specialization/level/state/variantOf win).
  * `schemaDefaults` is the item type's cleaned empty source; a persisted value
- * equal to its default is the schema filling a gap, so canonical keeps it.
+ * equal to its default is the schema filling a gap, so canonical keeps it —
+ * except on an instance-state path, where the stored value is always real.
  * No foundry-global dependency — unit-testable (cf. item-variant-utils' shim).
  */
 export function buildHydratedSystem(
@@ -136,7 +171,7 @@ export function buildHydratedSystem(
     persistedSystem: Record<string, unknown>,
     schemaDefaults: Record<string, unknown> = {},
 ): Record<string, unknown> {
-    return deepMerge(structuredClone(sourceSystem), persistedSystem, schemaDefaults);
+    return deepMerge(structuredClone(sourceSystem), persistedSystem, withoutInstanceState(schemaDefaults));
 }
 
 /** Per-type cache of each item system DataModel's cleaned empty source. */
