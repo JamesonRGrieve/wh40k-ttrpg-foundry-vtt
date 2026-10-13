@@ -10,8 +10,10 @@
  * - Auto Roll for digital rolling
  */
 
+import { SYSTEM_ID } from '../../constants.ts';
 import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
+import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import { type ModifierSourcesShape, type PassiveModifierRow, selectPassiveModifierRows } from '../../rolls/passive-modifiers.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
@@ -38,6 +40,15 @@ import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/hi
 import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
+import {
+    type CollectedSituationalModifier,
+    failureConsequenceFires,
+    isRowSpent,
+    readRoundUses,
+    SITUATIONAL_ROUND_USES_FLAG,
+    type SituationalFailureConsequence,
+    stampRoundUses,
+} from '../../rules/situational-limits.ts';
 import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
@@ -49,13 +60,13 @@ import {
 } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
-import { findWithoutTalent, resolvePushTheLimit, type PushTheLimitCriticalTable } from '../../rules/without-talents.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { hooksOn } from '../../utils/hooks-on.ts';
 import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
+import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -128,16 +139,6 @@ interface SelectableQualityOption {
     isSelected: boolean;
 }
 
-/** The tests Push the Limit's +20 applies to (Enemies Without p. 63): Operate, or Survival on a living steed. */
-const PUSH_THE_LIMIT_SKILLS: ReadonlySet<string> = new Set(['operate', 'survival']);
-/** The skill that marks the living-steed case (Impact Critical — Leg instead of Motive Systems). */
-const PUSH_THE_LIMIT_MOUNT_SKILL = 'survival';
-/** The printed critical tables Push the Limit routes a catastrophe to. */
-const PUSH_THE_LIMIT_TABLE_KEYS: Record<PushTheLimitCriticalTable, string> = {
-    'motive-systems': 'WH40K.WithoutTalents.PushTheLimit.MotiveSystemsTable',
-    'impact-leg': 'WH40K.WithoutTalents.PushTheLimit.ImpactLegTable',
-};
-
 interface SituationalModifierEntry {
     key: string;
     source: string;
@@ -148,6 +149,12 @@ interface SituationalModifierEntry {
     condition?: string;
     icon?: string;
     appliesToVariant?: string;
+    /** The row's printed once-per-round limit (#101). */
+    oncePerRound?: boolean;
+    /** What failing the boosted test badly costs (#101). */
+    failureConsequence?: SituationalFailureConsequence;
+    /** A once-per-round row already used this combat round: shown, but not selectable. */
+    spent?: boolean;
 }
 
 /**
@@ -781,7 +788,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
         const allSituationalModifiers = (this._cachedSituationalModifiers ?? []).map((m) => ({
             ...m,
-            active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
+            active: m.spent !== true && (this._situationalModifiers[`${m.key}_${m.source}`] ?? false),
             toggleKey: `${m.key}_${m.source}`,
             valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
         }));
@@ -1305,14 +1312,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         const type = rd.type === 'Skill' ? 'skills' : rd.type === 'Characteristic' ? 'characteristics' : 'combat';
         const key = (rd.rollKey as string | null) ?? null;
-        return (
-            actor as {
-                getSituationalModifiers: (
-                    type: string,
-                    key: string | null,
-                ) => Array<{ key: string; source: string; value: number; label: string; appliesToVariant?: string; itemId?: string }>;
-            }
-        ).getSituationalModifiers(type, key);
+        const rowSource = actor as {
+            getSituationalModifiers: (type: string, key: string | null) => CollectedSituationalModifier[];
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#getFlag returns the stored flag untyped; readRoundUses narrows it
+            getFlag?: (scope: string, key: string) => unknown;
+        };
+        // A once-per-round row already used this combat round stays visible but
+        // spent (#101), so the player sees why it cannot be picked again.
+        const uses = readRoundUses(rowSource.getFlag?.(SYSTEM_ID, SITUATIONAL_ROUND_USES_FLAG));
+        const now = currentCombatRound(game.combat);
+        return rowSource.getSituationalModifiers(type, key).map((row) => (isRowSpent(row, uses, now) ? { ...row, spent: true } : row));
     }
 
     /**
@@ -1393,7 +1402,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     async _resolveSimpleActionHooks(): Promise<void> {
         this.#applySenseChannelGate();
-        this.#applyPushTheLimit();
+        this.#applySituationalFailureConsequences();
         await this.actionData.checkForOpposed();
         await this.actionData.descriptionText();
     }
@@ -1404,45 +1413,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * deafened → Auditory), auto-fail the roll and surface why. The token↔channel
      * relationship is authored on the compendium variant (`blockedBy`), not here.
      */
-    /**
-     * Push the Limit (#101, DH2 Enemies Without p. 63): the talent's +20 is its
-     * own situational modifier on Operate (and Survival, for a living steed). When
-     * the player toggled it on and the test fails by 4+ degrees, the card names
-     * the critical table to roll — Motive Systems for a vehicle, Impact (Leg) for
-     * a mount. The talent is recognised by the toggled row's owning item
-     * identifier, never by name.
-     */
-    #applyPushTheLimit(): void {
-        if (this.rollType !== 'simple' || this.rollData.type !== 'Skill') return;
-        const skillKey = this.rollData.rollKey;
-        if (!PUSH_THE_LIMIT_SKILLS.has(skillKey)) return;
-        const source = this.rollData.sourceActor;
-        if (source === null) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
-        const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
-        const owners = active.flatMap((mod) => {
-            const item = mod.itemId === undefined ? undefined : source.items.get(mod.itemId);
-            return item === undefined ? [] : [{ type: item.type, system: item.system as { identifier?: string } }];
-        });
-        if (findWithoutTalent(owners, 'pushTheLimit') === undefined) return;
-        const rd = this.actionData.rollData;
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: false,
-            rawDegrees: rd.success ? rd.dos : rd.dof,
-            success: rd.success,
-            livingMount: skillKey === PUSH_THE_LIMIT_MOUNT_SKILL,
-        });
-        if (result.criticalTable === null) return;
-        this.actionData.addEffect(
-            game.i18n.localize('WH40K.WithoutTalents.PushTheLimit.ChatTitle'),
-            game.i18n.format('WH40K.WithoutTalents.PushTheLimit.CriticalEffect', {
-                degrees: String(rd.dof),
-                table: game.i18n.localize(PUSH_THE_LIMIT_TABLE_KEYS[result.criticalTable]),
-            }),
-        );
-    }
-
     #applySenseChannelGate(): void {
         if (this.rollType !== 'simple' || this.rollData.type !== 'Skill') return;
         const variantName = this._selectedSkillVariant;
@@ -1461,6 +1431,59 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         );
     }
 
+    /**
+     * A toggled situational row's failure consequence (#101): when the boosted
+     * test fails by the row's `minDof` or more, the card says which table to roll
+     * and with what dice. Push the Limit (DH2 Enemies Without p. 63) authors this
+     * on its Operate row (Motive Systems) and its Survival row (Impact – Leg). The
+     * threshold, table and dice are all row data; nothing here names a talent.
+     */
+    #applySituationalFailureConsequences(): void {
+        if (this.rollType !== 'simple') return;
+        const rd = this.actionData.rollData;
+        for (const row of this._activeSituationalRows()) {
+            const consequence = row.failureConsequence;
+            if (consequence === undefined || !failureConsequenceFires(consequence, { success: rd.success, dof: rd.dof })) continue;
+            const table = uuidNameCache.getName(consequence.tableUuid);
+            const effect =
+                consequence.formula === ''
+                    ? game.i18n.format('WH40K.Roll.SituationalFailure.EffectTable', { source: row.source, degrees: String(rd.dof), table })
+                    : game.i18n.format('WH40K.Roll.SituationalFailure.Effect', {
+                          source: row.source,
+                          degrees: String(rd.dof),
+                          formula: consequence.formula,
+                          table,
+                      });
+            this.actionData.addEffect(row.source, effect);
+        }
+    }
+
+    /**
+     * Stamp every toggled once-per-round row as used this combat round (#101), so
+     * the next roll this round shows it spent. Out of combat nothing is written.
+     */
+    async #stampRoundLimitedRows(): Promise<void> {
+        const actor = this.rollData.sourceActor;
+        if (actor === null) return;
+        const next = stampRoundUses(
+            readRoundUses(actor.getFlag(SYSTEM_ID, SITUATIONAL_ROUND_USES_FLAG)),
+            this._activeSituationalRows(),
+            currentCombatRound(game.combat),
+        );
+        if (next !== null) await actor.setFlag(SYSTEM_ID, SITUATIONAL_ROUND_USES_FLAG, next);
+    }
+
+    /**
+     * The situational rows that count toward this roll: toggled on, not spent
+     * this round, and gated by the selected test variant (#246). A variant-tagged
+     * row only counts when its variant is the one being rolled.
+     */
+    _activeSituationalRows(): SituationalModifierEntry[] {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
+        const active = (this._cachedSituationalModifiers ?? []).filter((mod) => mod.spent !== true && this._situationalModifiers[`${mod.key}_${mod.source}`]);
+        return filterModifiersByVariant(active, this._selectedSkillVariant);
+    }
+
     _calculateSituationalModifiers(): number {
         let total = 0;
         for (const mod of this._activeSituationalComponents()) {
@@ -1477,11 +1500,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * `SITUATIONAL +N` row. Their values sum to `_calculateSituationalModifiers()`.
      */
     _activeSituationalComponents(): RollModifierComponent[] {
-        // Active, then gated by the selected test variant (#246): a variant-tagged
-        // modifier only counts when its variant is the one being rolled.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _cachedSituationalModifiers is dialog state (null = not yet collected), not a DataModel field
-        const active = (this._cachedSituationalModifiers ?? []).filter((mod) => this._situationalModifiers[`${mod.key}_${mod.source}`]);
-        return filterModifiersByVariant(active, this._selectedSkillVariant).map((mod) => ({
+        return this._activeSituationalRows().map((mod) => ({
             key: `${mod.key}_${mod.source}`,
             // The owning item's name IS the provenance label (#480). This used to
             // read `mod.label`, a field `getSituationalModifiers` never returns, so
@@ -1685,6 +1704,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static async #onToggleSituational(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset['toggleKey'];
         if (key === undefined) return;
+        // A spent once-per-round row (#101) cannot be switched back on this round.
+        if (this._applicableModifiers.some((mod) => mod.spent === true && `${mod.key}_${mod.source}` === key)) return;
         this._situationalModifiers[key] = !this._situationalModifiers[key];
         await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
@@ -2501,6 +2522,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         } else {
             await this._submitSimpleRoll(manualTotal);
         }
+        // A target-only post is not a use of a once-per-round row (#101); a rolled test is.
+        if (manualTotal !== null) await this.#stampRoundLimitedRows();
 
         // #401: the attack resolved — drop the target reticle from the canvas.
         UnifiedRollDialog.#clearCanvasTargets();
@@ -2531,6 +2554,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             await this._resolveSimpleActionHooks();
             await sendActionDataToChat(this.actionData);
         }
+        await this.#stampRoundLimitedRows();
 
         // #401: the roll resolved — drop the target reticle from the canvas.
         UnifiedRollDialog.#clearCanvasTargets();

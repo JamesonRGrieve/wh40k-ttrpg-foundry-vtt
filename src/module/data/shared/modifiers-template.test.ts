@@ -165,9 +165,24 @@ describe('situationalEntrySchema (via ModifiersTemplate.defineSchema)', () => {
                 icon: { kind: 'StringField', options: { required: false, initial: 'fa-exclamation-triangle' } },
                 // #246/#440 test-variant scoping tag (blank = universal).
                 appliesToVariant: { kind: 'StringField', options: { required: false, blank: true, initial: '' } },
+                // #101 printed use limit and failure risk (Push the Limit).
+                oncePerRound: { kind: 'BooleanField', options: { required: false, initial: false } },
+                failureConsequence: {
+                    kind: 'SchemaField',
+                    fields: {
+                        minDof: { kind: 'NumberField', options: { required: true, initial: 0, min: 0, integer: true } },
+                        tableUuid: { kind: 'StringField', options: { required: true, blank: true, initial: '' } },
+                        formula: { kind: 'StringField', options: { required: true, blank: true, initial: '' } },
+                    },
+                },
             },
         },
     };
+
+    it('the failure consequence is optional and nullable, defaulting to none (#101)', () => {
+        const element = subField(situational, 'skills').arg(0) as RecordingField;
+        expect(subField(element, 'failureConsequence').arg(1)).toEqual({ required: false, nullable: true, initial: null });
+    });
 
     it('exposes exactly the three situational channels', () => {
         expect(Object.keys(situational.arg(0)).sort()).toEqual(['characteristics', 'combat', 'skills']);

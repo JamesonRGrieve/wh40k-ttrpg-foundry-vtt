@@ -8,7 +8,6 @@ import {
     medicaeAgainstCharacteristic,
     resolveFieldVivisection,
     resolveLeapingDodge,
-    resolvePushTheLimit,
     sprayAvoidanceTest,
     WITHOUT_TALENTS,
 } from './without-talents';
@@ -22,7 +21,8 @@ import {
 
 describe('WITHOUT_TALENTS — namespace re-export (#101)', () => {
     it('groups the novel-mechanic talents that carry resolvers', () => {
-        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(['fieldVivisection', 'leapingDodge', 'pushTheLimit'].sort());
+        // Push the Limit is data on its talent's situational rows, not a resolver (#101).
+        expect(Object.keys(WITHOUT_TALENTS).sort()).toEqual(['fieldVivisection', 'leapingDodge'].sort());
     });
 });
 
@@ -88,82 +88,6 @@ describe('Leaping Dodge — composes with #103 spray-avoidance (#101)', () => {
     });
 });
 
-describe('Push the Limit — +20 Operate / 4+ DoF crit (#101)', () => {
-    it('applies +20 when invoked and not yet used this round', () => {
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: false,
-            rawDegrees: 1,
-            success: true,
-            livingMount: false,
-        });
-        expect(result.invoked).toBe(true);
-        expect(result.modifier).toBe(20);
-        expect(result.triggersCritical).toBe(false);
-        expect(result.criticalTable).toBeNull();
-    });
-
-    it('does NOT re-apply the bonus when the once-per-round cap has been spent', () => {
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: true,
-            rawDegrees: 1,
-            success: true,
-            livingMount: false,
-        });
-        expect(result.invoked).toBe(false);
-        expect(result.modifier).toBe(0);
-    });
-
-    it('triggers a Motive Systems critical on 4+ DoF for vehicles', () => {
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: false,
-            rawDegrees: 4,
-            success: false,
-            livingMount: false,
-        });
-        expect(result.triggersCritical).toBe(true);
-        expect(result.criticalTable).toBe('motive-systems');
-    });
-
-    it('routes to the Impact Leg crit table for living mounts', () => {
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: false,
-            rawDegrees: 5,
-            success: false,
-            livingMount: true,
-        });
-        expect(result.triggersCritical).toBe(true);
-        expect(result.criticalTable).toBe('impact-leg');
-    });
-
-    it('does not trigger a crit when DoF is below the threshold', () => {
-        const result = resolvePushTheLimit({
-            invoke: true,
-            alreadyUsedThisRound: false,
-            rawDegrees: 3,
-            success: false,
-            livingMount: false,
-        });
-        expect(result.triggersCritical).toBe(false);
-        expect(result.criticalTable).toBeNull();
-    });
-
-    it('does not trigger a crit when the talent was not invoked', () => {
-        const result = resolvePushTheLimit({
-            invoke: false,
-            alreadyUsedThisRound: false,
-            rawDegrees: 6,
-            success: false,
-            livingMount: false,
-        });
-        expect(result.invoked).toBe(false);
-        expect(result.triggersCritical).toBe(false);
-    });
-});
-
 describe('talent lookups — matched by identifier, never by name (#101)', () => {
     const talent = (identifier: string, specialization = ''): { type: string; system: { identifier: string; specialization: string } } => ({
         type: 'talent',
@@ -173,7 +97,7 @@ describe('talent lookups — matched by identifier, never by name (#101)', () =>
     it('findWithoutTalent finds an owned talent by its compendium identifier', () => {
         const items = [talent('sprintMaster'), talent('leapingDodge')];
         expect(findWithoutTalent(items, 'leapingDodge')).toBe(items[1]);
-        expect(findWithoutTalent(items, 'pushTheLimit')).toBeUndefined();
+        expect(findWithoutTalent(items, 'fieldVivisection')).toBeUndefined();
     });
 
     it('ignores a non-talent item that happens to share the identifier', () => {

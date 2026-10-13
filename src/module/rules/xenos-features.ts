@@ -32,12 +32,6 @@ export const LEAPING_DODGE = {
     sprayAvoidanceSkill: 'dodge' as const,
 };
 
-/** Push the Limit — +20 Operate once/round; 4+ DoF triggers a motive-systems critical. */
-export const PUSH_THE_LIMIT = {
-    operateBonus: 20,
-    failureThresholdForCritical: 4, // DoF
-};
-
 /* -------------------------------------------- */
 /*  Without homeworld traits (#102)             */
 /* -------------------------------------------- */

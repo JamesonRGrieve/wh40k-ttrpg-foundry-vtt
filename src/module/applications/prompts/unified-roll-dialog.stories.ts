@@ -128,6 +128,49 @@ export const ManualSuccess: Story = {
     },
 };
 
+/**
+ * A once-per-round situational row already used this combat round (#101, Push
+ * the Limit): the chip stays visible so the player sees why, but it is disabled,
+ * struck through, and its tooltip says it is spent. Other rows stay selectable.
+ */
+export const OncePerRoundSpent: Story = {
+    args: baseContext({
+        rollName: 'Operate (Surface) Test',
+        hasSituationalModifiers: true,
+        situationalModifiers: [
+            {
+                active: false,
+                spent: true,
+                toggleKey: 'operate_Push the Limit',
+                condition: 'Pushing the limit (once/round; 4+ DoF risks a Motive System critical)',
+                icon: 'fa-solid fa-exclamation-triangle',
+                source: 'Push the Limit',
+                value: 20,
+                valueLabel: '+20',
+            },
+            {
+                active: true,
+                toggleKey: 'operate_Skilled Rider',
+                condition: 'Familiar mount',
+                icon: 'fas fa-horse',
+                source: 'Skilled Rider',
+                value: 10,
+                valueLabel: '+10',
+            },
+        ],
+    }),
+    play: async ({ canvasElement }) => {
+        const spent = canvasElement.querySelector<HTMLButtonElement>('[data-toggle-key="operate_Push the Limit"]');
+        await expect(spent?.disabled).toBe(true);
+        await expect(spent?.getAttribute('aria-disabled')).toBe('true');
+        await expect(spent?.dataset['situationalSpent']).toBe('true');
+        await expect(spent?.dataset['tooltip']).toBe('Already used this round');
+        const live = canvasElement.querySelector<HTMLButtonElement>('[data-toggle-key="operate_Skilled Rider"]');
+        await expect(live?.disabled).toBe(false);
+        await expect(live?.getAttribute('aria-pressed')).toBe('true');
+    },
+};
+
 /** Athletics roll with the self-contained climb-surface context sub-panel expanded. */
 export const AthleticsClimb: Story = {
     args: baseContext({

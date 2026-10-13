@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FIELD_VIVISECTION, LEAPING_DODGE, PUSH_THE_LIMIT, RIGHT_STUFF, SERENITY_OF_THE_GREEN, SURVIVORS_PARANOIA } from './xenos-features';
+import { FIELD_VIVISECTION, LEAPING_DODGE, RIGHT_STUFF, SERENITY_OF_THE_GREEN, SURVIVORS_PARANOIA } from './xenos-features';
 
 /**
  * Contract tests for the Enemies Without supplement constants
@@ -23,11 +23,6 @@ describe('Without novel-mechanic talents (#101)', () => {
 
     it('Leaping Dodge uses Dodge skill for Spray avoidance (composes with #103)', () => {
         expect(LEAPING_DODGE.sprayAvoidanceSkill).toBe('dodge');
-    });
-
-    it('Push the Limit grants +20 Operate; 4+ DoF triggers motive-systems critical', () => {
-        expect(PUSH_THE_LIMIT.operateBonus).toBe(20);
-        expect(PUSH_THE_LIMIT.failureThresholdForCritical).toBe(4);
     });
 });
 

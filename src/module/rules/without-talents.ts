@@ -16,24 +16,24 @@
  *                            against studied xenos.
  *   2. Leaping Dodge       — Dodge skill replaces Agility for Spray
  *                            avoidance (composes with #103).
- *   3. Push the Limit      — +20 Operate once/round; 4+ DoF triggers a
- *                            motive-systems critical hit.
  *
- * Hotshot Pilot and Hull Down have no resolver here: neither had a caller
- * in the roll flow, and their printed rules (a post-roll Fatigue trade on
- * degrees; a Size reduction lasting until the start of the next turn) live
- * on their compendium documents.
+ * Push the Limit has no resolver here: its +20, its once-per-round limit and
+ * its 4+ DoF critical-table risk are data on the talent's own situational rows
+ * (`oncePerRound`, `failureConsequence`), enforced by the roll dialog through
+ * `situational-limits.ts` (#101). Hotshot Pilot and Hull Down have no resolver
+ * either: neither had a caller in the roll flow, and their printed rules (a
+ * post-roll Fatigue trade on degrees; a Size reduction lasting until the start
+ * of the next turn) live on their compendium documents.
  */
 
 import { nonNegInt } from './_num.ts';
 import { resolveSprayAvoidance, type SprayAvoidanceResult } from './spray-avoidance.ts';
-import { FIELD_VIVISECTION, LEAPING_DODGE, PUSH_THE_LIMIT } from './xenos-features.ts';
+import { FIELD_VIVISECTION, LEAPING_DODGE } from './xenos-features.ts';
 
 /** Without-talent constants regrouped for namespace clarity. */
 export const WITHOUT_TALENTS = {
     fieldVivisection: FIELD_VIVISECTION,
     leapingDodge: LEAPING_DODGE,
-    pushTheLimit: PUSH_THE_LIMIT,
 } as const;
 
 /**
@@ -195,57 +195,4 @@ export function resolveLeapingDodge(input: LeapingDodgeInput): SprayAvoidanceRes
  */
 export function sprayAvoidanceTest(items: Iterable<WithoutTalentItemLike>, agilityTotal: number, dodgeTotal: number): SprayAvoidanceResult {
     return resolveLeapingDodge({ hasLeapingDodge: findWithoutTalent(items, 'leapingDodge') !== undefined, agilityTotal, dodgeTotal });
-}
-
-// ---------------------------------------------------------------------------
-// 3. Push the Limit — without.md p. 62 (#101)
-// ---------------------------------------------------------------------------
-
-export interface PushTheLimitInput {
-    /** True when the character has Push the Limit and elects to invoke it this round. */
-    invoke: boolean;
-    /** Has the once-per-round invocation already fired this round? */
-    alreadyUsedThisRound: boolean;
-    /** Raw Operate / Survival test margin: +DoS on success, +DoF on failure (always ≥0). */
-    rawDegrees: number;
-    /** Did the (pre-bonus) test succeed? Caller derives by recomputing with the bonus. */
-    success: boolean;
-    /** True when the mount is a living steed (routes to Leg crit instead of Motive Systems). */
-    livingMount: boolean;
-}
-
-/** Critical-hit table to roll on when Push the Limit triggers a crit. */
-export type PushTheLimitCriticalTable = 'motive-systems' | 'impact-leg';
-
-export interface PushTheLimitResult {
-    /** Flat modifier to apply to the Operate / Survival test (+20 when the talent fires). */
-    modifier: number;
-    /** True when the talent's once-per-round invocation actually applied. */
-    invoked: boolean;
-    /** True when the failure margin reached the catastrophic threshold (4+ DoF). */
-    triggersCritical: boolean;
-    /** Critical-hit table the caller rolls on when {@link triggersCritical} is true. */
-    criticalTable: PushTheLimitCriticalTable | null;
-}
-
-/**
- * Resolve the +20 Operate bonus / catastrophe trigger from Push the
- * Limit. The +20 only applies when the player invokes the talent and
- * the once-per-round cap has not yet been spent. On a failed test by
- * 4+ DoF the talent's downside fires: vehicles roll on the Motive
- * Systems critical table; living mounts roll on the Impact Critical
- * (Leg) table. Both tables are content owned by the compendium —
- * the resolver only reports which table the caller routes to.
- */
-export function resolvePushTheLimit(input: PushTheLimitInput): PushTheLimitResult {
-    const invoked = input.invoke && !input.alreadyUsedThisRound;
-    const modifier = invoked ? PUSH_THE_LIMIT.operateBonus : 0;
-    const dof = input.success ? 0 : nonNegInt(input.rawDegrees);
-    const triggersCritical = invoked && !input.success && dof >= PUSH_THE_LIMIT.failureThresholdForCritical;
-    return {
-        modifier,
-        invoked,
-        triggersCritical,
-        criticalTable: triggersCritical ? (input.livingMount ? 'impact-leg' : 'motive-systems') : null,
-    };
 }

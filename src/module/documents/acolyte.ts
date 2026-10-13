@@ -4,6 +4,7 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 // RollConfigurationDialog, so importing it drags the applications layer into
 // every document that just wants a roll class.
 import { SYSTEM_ID } from '../constants.ts';
+import type { SituationalModifierRow } from '../data/shared/modifiers-template.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
 import {
@@ -40,6 +41,7 @@ import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
+import { activeFailureConsequence, type CollectedSituationalModifier, failureConsequenceField } from '../rules/situational-limits.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
@@ -299,21 +301,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} [key] - Optional key to filter by (e.g., "weaponSkill", "dodge", "attack")
      * @returns {Array<{key: string, value: number, condition: string, icon: string, source: string, itemId: string}>}
      */
-    getSituationalModifiers(
-        type: 'characteristics' | 'skills' | 'combat',
-        key: string | null = null,
-    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; sourceType: string; itemId: string; appliesToVariant?: string }> {
-        type SituationalEntry = { key: string; value: number; condition: string; icon?: string; appliesToVariant?: string };
-        const modifiers: Array<{
-            key: string;
-            value: number;
-            condition: string;
-            icon: string;
-            source: string;
-            sourceType: string;
-            itemId: string;
-            appliesToVariant?: string;
-        }> = [];
+    getSituationalModifiers(type: 'characteristics' | 'skills' | 'combat', key: string | null = null): CollectedSituationalModifier[] {
+        type SituationalEntry = Pick<SituationalModifierRow, 'key' | 'value' | 'condition'> &
+            Partial<Pick<SituationalModifierRow, 'icon' | 'appliesToVariant' | 'oncePerRound' | 'failureConsequence'>>;
+        const modifiers: CollectedSituationalModifier[] = [];
 
         // Collect from all modifier-providing items
         const modifierItems = this.items.filter((item: WH40KItem) => {
@@ -359,6 +350,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     // Propagate the test-variant tag (#246/#440) so the dialog can gate
                     // a sense-scoped modifier (an auspex tagged "Visual") to its channel.
                     ...(mod.appliesToVariant !== undefined && mod.appliesToVariant !== '' ? { appliesToVariant: mod.appliesToVariant } : {}),
+                    // A printed use limit and failure risk ride on the row (#101),
+                    // so the dialog enforces them from data, never from the item name.
+                    ...(mod.oncePerRound === true ? { oncePerRound: true } : {}),
+                    ...failureConsequenceField(activeFailureConsequence(mod.failureConsequence)),
                 });
             }
         }

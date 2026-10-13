@@ -312,7 +312,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs',
             'systems/wh40k-rpg/templates/chat/crusader-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/without-homeworld-info-dialog.hbs',
-            'systems/wh40k-rpg/templates/chat/push-the-limit-chat.hbs',
             'systems/wh40k-rpg/templates/chat/weapon-quality-effect-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/right-stuff-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/right-stuff-chat.hbs',

@@ -749,6 +749,11 @@
             "RollMode": "Roll Mode",
             "SituationalModifiers": "Situational Bonuses",
             "SituationalTotal": "Situational Total",
+            "SituationalSpent": "Already used this round",
+            "SituationalFailure": {
+                "Effect": "Failed by {degrees} degrees with {source} active — immediately roll {formula} on {table} and apply the result.",
+                "EffectTable": "Failed by {degrees} degrees with {source} active — immediately roll on {table} and apply the result."
+            },
             "Success": "Success",
             "Failure": "Failure",
             "CriticalSuccess": "Critical Success!",
@@ -2973,20 +2978,6 @@
             "MechanicalHook": "Mechanical Hook"
         },
         "WithoutTalents": {
-            "PushTheLimit": {
-                "ChatTitle": "Push the Limit",
-                "InvokedTag": "Talent invoked (+20 Operate)",
-                "NotInvokedTag": "Talent not invoked",
-                "BonusLabel": "Operate bonus",
-                "DegreesLabel": "Degrees",
-                "OutcomeLabel": "Outcome",
-                "Success": "Success",
-                "Failure": "Failure",
-                "CriticalLabel": "Catastrophic failure — roll on:",
-                "MotiveSystemsTable": "Table 7-32: Motive Systems Critical Hit Effects (DH Core p. 257)",
-                "ImpactLegTable": "Table 7-18: Impact Critical Effects — Leg (DH Core p. 239)",
-                "CriticalEffect": "Failed by {degrees} degrees while pushing the limit — immediately roll 1d5 on {table} and apply the result."
-            },
             "FieldVivisection": {
                 "Base": "Medicae ({characteristic}) — Field Vivisection"
             }

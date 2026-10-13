@@ -1,4 +1,5 @@
 import { CRAFTSMANSHIP_TIERS, type Craftsmanship } from '../../rules/ow-craftsmanship.ts';
+import type { SituationalFailureConsequence } from '../../rules/situational-limits.ts';
 import { SENSE_KINDS, SENSE_RANGE_SOURCES, type SenseEntry } from '../../rules/token-senses.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
@@ -359,6 +360,17 @@ function dynamicModifiersSchema(): foundry.data.fields.DataField.Any {
     );
 }
 
+/** One authored situational-modifier row (the shape {@link situationalEntrySchema} stores). */
+export interface SituationalModifierRow {
+    key: string;
+    value: number;
+    condition: string;
+    icon: string;
+    appliesToVariant?: string;
+    oncePerRound?: boolean;
+    failureConsequence?: SituationalFailureConsequence | null;
+}
+
 /**
  * One situational-modifier channel: an `ArrayField` of conditional
  * `{ key, value, condition, icon }` entries. The `situational.characteristics`,
@@ -380,6 +392,21 @@ function situationalEntrySchema(): foundry.data.fields.DataField.Any {
             // sense channel is the one being rolled — an auspex bonus tagged Visual
             // augments sight, not hearing. Blank = universal (applies to every variant).
             appliesToVariant: new fields.StringField({ required: false, blank: true, initial: '' }),
+            // A row the printed rule limits to once per combat round (Push the
+            // Limit, #101): once used, it cannot be toggled again until the round
+            // advances. Out of combat the limit does not bind.
+            oncePerRound: new fields.BooleanField({ required: false, initial: false }),
+            // What failing the boosted test badly costs (#101): failing by
+            // `minDof`+ degrees means rolling `formula` on the RollTable at
+            // `tableUuid`. Null = the row carries no such risk.
+            failureConsequence: new fields.SchemaField(
+                {
+                    minDof: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    tableUuid: new fields.StringField({ required: true, blank: true, initial: '' }),
+                    formula: new fields.StringField({ required: true, blank: true, initial: '' }),
+                },
+                { required: false, nullable: true, initial: null },
+            ),
         }),
         { required: true, initial: [] },
     );
@@ -557,9 +584,9 @@ export default class ModifiersTemplate extends SystemDataModel {
         resources: { wounds: number; fate: number; insanity: number; corruption: number };
         other: Array<{ key: string; label: string; value: number; mode: string }>;
         situational: {
-            characteristics: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
-            skills: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
-            combat: Array<{ key: string; value: number; condition: string; icon: string; appliesToVariant?: string }>;
+            characteristics: SituationalModifierRow[];
+            skills: SituationalModifierRow[];
+            combat: SituationalModifierRow[];
         };
         /** Data-driven dynamic modifier hooks (Direction #7) — see {@link DynamicModifierEntry}. */
         dynamicModifiers: DynamicModifierEntry[];

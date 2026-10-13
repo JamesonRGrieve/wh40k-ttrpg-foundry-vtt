@@ -75,10 +75,12 @@
     {{#if hasSituationalModifiers}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mb-2.5">
         {{#each situationalModifiers}}
+        {{!-- A once-per-round row already used this round (#101) stays visible but disabled. --}}
         <button type="button"
-                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if active}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if spent}}tw-cursor-not-allowed tw-opacity-50 tw-line-through tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a]{{else if active}}tw-cursor-pointer tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-cursor-pointer tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
                 data-action="toggleSituational" data-toggle-key="{{toggleKey}}"
-                data-tooltip="{{condition}}">
+                aria-pressed="{{#if active}}true{{else}}false{{/if}}"
+                {{#if spent}}disabled aria-disabled="true" data-situational-spent="true" data-tooltip="{{localize "WH40K.Roll.SituationalSpent"}}"{{else}}data-tooltip="{{condition}}"{{/if}}>
             {{#if icon}}<i class="{{icon}}"></i>{{/if}}
             <span class="tw-font-medium tw-max-w-[120px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{source}}</span>
             <span class="tw-font-bold tw-text-sm {{#if (gt value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
@@ -101,10 +103,10 @@
         <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-mr-1">{{localize "WH40K.GearAssist.Label"}}</span>
         {{#each gearModifiers}}
         <button type="button"
-                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if active}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
+                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if spent}}tw-cursor-not-allowed tw-opacity-50 tw-line-through tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a]{{else if active}}tw-cursor-pointer tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-cursor-pointer tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
                 data-action="toggleSituational" data-toggle-key="{{toggleKey}}"
                 aria-pressed="{{#if active}}true{{else}}false{{/if}}"
-                data-tooltip="{{condition}}">
+                {{#if spent}}disabled aria-disabled="true" data-situational-spent="true" data-tooltip="{{localize "WH40K.Roll.SituationalSpent"}}"{{else}}data-tooltip="{{condition}}"{{/if}}>
             {{#if icon}}<i class="{{icon}}"></i>{{/if}}
             <span class="tw-font-medium tw-max-w-[120px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{source}}</span>
             <span class="tw-font-bold tw-text-sm {{#if (gt value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">{{valueLabel}}</span>

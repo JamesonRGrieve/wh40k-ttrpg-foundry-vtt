@@ -246,10 +246,22 @@ describe('Without talents reach the roll flow (#101)', () => {
         expect(manager).not.toContain('canvas.tokens?.controlled');
     });
 
-    it('Push the Limit is resolved on every simple skill roll path', () => {
+    it('a situational row failure consequence (Push the Limit) is resolved on every simple roll path, from row data', () => {
         const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
-        expect(dialog).toMatch(/_resolveSimpleActionHooks\(\): Promise<void> \{[^}]*this\.#applyPushTheLimit\(\);/);
-        expect(dialog).toContain('resolvePushTheLimit(');
+        expect(dialog).toMatch(/_resolveSimpleActionHooks\(\): Promise<void> \{[^}]*this\.#applySituationalFailureConsequences\(\);/);
+        expect(dialog).toContain('failureConsequenceFires(consequence');
+        // Direction #7: no talent identifier, skill set or table key is named in the dialog.
+        expect(dialog).not.toContain('pushTheLimit');
+        expect(dialog).not.toContain('PUSH_THE_LIMIT');
+        expect(dialog).not.toContain('MotiveSystemsTable');
+    });
+
+    it('once-per-round situational rows are marked spent, refused on toggle, and stamped after a rolled test', () => {
+        const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
+        expect(dialog).toContain('isRowSpent(row, uses, now)');
+        expect(dialog).toMatch(/#onToggleSituational[\s\S]{0,400}mod\.spent === true/);
+        expect(dialog).toMatch(/if \(manualTotal !== null\) await this\.#stampRoundLimitedRows\(\);/);
+        expect(dialog).toMatch(/sendActionDataToChat\(this\.actionData\);\s*\}\s*await this\.#stampRoundLimitedRows\(\);/);
     });
 
     it('the attack card prints the substituted base label', () => {
