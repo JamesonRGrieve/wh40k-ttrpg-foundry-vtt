@@ -12,10 +12,16 @@
  *
  * RNG-free except for the explicit `rollRandomIssueGear` helper, which
  * accepts an injected `() => number` so callers can seed deterministic
- * stories / tests. No I/O, no Foundry Document reads. Composes with
- * `./ow-logistics`'s `computeLogisticsTarget` — callers pass the base
- * target through `applyTable63Modifiers` to stack the +10 Ordinary bonus
- * and any Table 6-3 deltas before resolving the d100.
+ * stories / tests. No I/O, no Foundry Document reads.
+ *
+ * This is NOT the item-acquisition test of `./ow-logistics`
+ * (`computeLogisticsTarget`): OW core p. 165 — "Note that the Availability of
+ * any equipment included in the Mission Assignment Gear does not affect the
+ * difficulty of this Test." Table 6-2's availability and front-condition
+ * rows therefore do not apply. Callers pass the squad's Logistics Rating
+ * (with Munitorum Influence and the GM's situational modifier) as the base
+ * target, and `applyTable63Modifiers` stacks the +10 Ordinary bonus and the
+ * Table 6-3 deltas before the d100 is resolved.
  */
 
 /* -------------------------------------------------------------------- */
