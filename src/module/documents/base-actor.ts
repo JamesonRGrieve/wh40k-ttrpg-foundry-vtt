@@ -46,6 +46,7 @@ import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type Su
 import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
 import { isRecharging, type RechargeMark } from '../rules/weapon-recharge.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
+import { findCharacteristic } from '../utils/characteristic-lookup.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { materializeOwnedItemSources } from '../utils/item-variant-utils.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
@@ -1446,14 +1447,9 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
+    /** The characteristic named by key or short name (`intelligence`, `Int`), in any case. */
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {
-        // This tries to account for case sensitivity and abbreviations
-        for (const [name, characteristic] of Object.entries(this.characteristics)) {
-            if (char.toUpperCase() === name.toUpperCase() || char.toLocaleString() === characteristic.short.toUpperCase()) {
-                return characteristic;
-            }
-        }
-        return undefined;
+        return findCharacteristic(this.characteristics, char);
     }
 
     /**
