@@ -32,7 +32,7 @@ type RawValue = RawSource[string];
  *
  * Set values are always converted to arrays regardless of this option.
  */
-export type StringMode = 'none' | 'wrap' | 'split';
+type StringMode = 'none' | 'wrap' | 'split';
 
 interface NormalizeOptions {
     /** How to coerce a raw string value to an array. Defaults to `'none'`. */

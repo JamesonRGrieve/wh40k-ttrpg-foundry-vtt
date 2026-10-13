@@ -12,13 +12,13 @@ import ItemGrantData from './item-grant.ts';
 import ResourceGrantData from './resource-grant.ts';
 import SkillGrantData from './skill-grant.ts';
 
-export { BaseGrantData, ItemGrantData, SkillGrantData, CharacteristicGrantData, ResourceGrantData, ChoiceGrantData };
+export { BaseGrantData };
 
 /**
  * Registry of all grant types.
  * @type {Object<string, typeof BaseGrantData>}
  */
-export const GRANT_TYPES = {
+const GRANT_TYPES = {
     item: ItemGrantData,
     skill: SkillGrantData,
     characteristic: CharacteristicGrantData,
@@ -54,18 +54,4 @@ export function createGrant(config: GrantConfig): BaseGrantData | null {
         console.warn(`createGrant: Failed to create ${type} grant:`, message, config);
         return null;
     }
-}
-
-/**
- * Validate a grant configuration.
- * @param config - Grant configuration
- * @returns Array of validation errors
- */
-export function validateGrantConfig(config: GrantConfig): string[] {
-    const grant = createGrant(config);
-    if (!grant) {
-        const type = config.type;
-        return [`Invalid grant type: ${typeof type === 'string' ? type : '(none)'}`];
-    }
-    return grant.validateGrant();
 }

@@ -29,17 +29,6 @@
 const { NumberField, BooleanField } = foundry.data.fields;
 
 /**
- * Shape of the persisted Comrade-healing slot. Mirrors the schema
- * below exactly so the compiler narrows access without casts.
- */
-export interface OwComradeHealingData {
-    /** Days of recovery still owed before the Comrade is back to unharmed. */
-    comradeRecoveryDays: number;
-    /** Whether refit logistics currently allow a replacement Comrade. */
-    refitAvailable: boolean;
-}
-
-/**
  * Class-level `declare` shape contributed by this schema slot. The
  * orchestrator splices these declarations onto CharacterData so the
  * compiler narrows `actor.system.comradeRecoveryDays` etc. without

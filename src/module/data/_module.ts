@@ -5,9 +5,6 @@
  * Following the DnD5e pattern, we use DataModel composition with template mixins.
  */
 
-// Abstract base classes
-export * from './abstract/_module.ts';
-
 // Custom field types
 export * from './fields/_module.ts';
 

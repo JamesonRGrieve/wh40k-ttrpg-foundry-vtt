@@ -41,17 +41,6 @@
 const { NumberField, ArrayField, StringField } = foundry.data.fields;
 
 /**
- * Shape of the persisted Battlefield slot. Mirrors the schema below
- * exactly so the compiler narrows access without casts.
- */
-export interface OwBattlefieldData {
-    /** Turns remaining before the squad may request support again. */
-    supportCooldown: number;
-    /** Identifiers of Regimental Awards currently conferred on the actor. */
-    regimentalAwards: string[];
-}
-
-/**
  * Class-level `declare` shape contributed by this schema slot. The
  * orchestrator splices these declarations onto CharacterData so the
  * compiler narrows `actor.system.supportCooldown` and

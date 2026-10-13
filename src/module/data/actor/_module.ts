@@ -20,14 +20,12 @@
  *     │       └── RTVoidcraftData
  */
 
-// Kind base classes (the effective "PlayerMixin / NPCMixin")
-export { CharacterBaseData, NPCBaseData } from './bases/_module.ts';
-
-// Concrete per-(system, kind) data models
+// Concrete per-(system, kind) data models. The kind bases, the vehicle base
+// classes, the shared templates and the horde mixin are imported from their
+// own modules by the classes that extend them.
 export * from './concrete/_module.ts';
 
-// Vehicle hierarchy: abstract base + conventional-craft intermediate + concrete craft kinds
-export { default as VehicleData, ConventionalCraftData } from './vehicle.ts';
+// Concrete craft kinds
 export { default as TerracraftData } from './terracraft.ts';
 export { default as AircraftData } from './aircraft.ts';
 export { default as WatercraftData } from './watercraft.ts';
@@ -35,9 +33,3 @@ export { default as VoidcraftData } from './voidcraft.ts';
 
 // Content-agnostic loot pile (homologated across all seven lines)
 export { default as LootData } from './loot.ts';
-
-// Shared templates
-export { CommonTemplate, CreatureTemplate } from './templates/_module.ts';
-
-// Mixins
-export { HordeTemplate } from './mixins/_module.ts';

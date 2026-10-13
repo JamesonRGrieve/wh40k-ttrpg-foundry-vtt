@@ -53,11 +53,6 @@ export function owCraftsmanshipSchemaFields(): Record<string, never> {
     return {};
 }
 
-/**
- * Stub declarations type — no actor-level slots.
- */
-export type OwCraftsmanshipDeclarations = Record<string, never>;
-
 /* -------------------------------------------------------------------- */
 /*  Panel context shape                                                 */
 /* -------------------------------------------------------------------- */
@@ -67,7 +62,7 @@ export type OwCraftsmanshipDeclarations = Record<string, never>;
  * on `kind` so the template can switch between the ranged-reliability
  * and the melee WS / damage display.
  */
-export type OwCraftsmanshipWeaponEntry =
+type OwCraftsmanshipWeaponEntry =
     | {
           readonly kind: 'ranged';
           readonly itemId: string;
@@ -84,7 +79,7 @@ export type OwCraftsmanshipWeaponEntry =
       };
 
 /** A single equipped armour's craftsmanship readout entry. */
-export interface OwCraftsmanshipArmourEntry {
+interface OwCraftsmanshipArmourEntry {
     readonly itemId: string;
     readonly name: string;
     readonly tier: Craftsmanship;
