@@ -3,7 +3,7 @@
  * cues), so every message carries a `type` and each listener ignores the rest.
  */
 
-export const SYSTEM_SOCKET = 'system.wh40k-rpg';
+const SYSTEM_SOCKET = 'system.wh40k-rpg';
 
 /** Any message on the system socket. */
 export interface SystemSocketMessage {

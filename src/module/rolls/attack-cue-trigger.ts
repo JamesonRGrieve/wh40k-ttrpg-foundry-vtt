@@ -55,12 +55,12 @@ export const CUE_EFFECT = {
 const REACTION_KEYS: ReadonlySet<string> = new Set(['dodge', 'parry']);
 
 /** An actor whose token on the viewed scene the cue plays at. */
-export interface CueActorLike {
+interface CueActorLike {
     getActiveTokens: () => readonly { id: string }[];
 }
 
 /** The slice of a rolled weapon or power a cue reads. */
-export interface CueItemLike {
+interface CueItemLike {
     readonly isMelee: boolean;
     readonly system: object;
 }

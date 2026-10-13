@@ -175,12 +175,12 @@ export function defaultCuePreset(kind: CueAttackKind): CuePreset {
 }
 
 /** Is this one of the cue events? */
-export function isCueEvent(value: string): value is CueEvent {
+function isCueEvent(value: string): value is CueEvent {
     return (CUE_EVENTS as readonly string[]).includes(value);
 }
 
 /** Is this one of the procedural presets? */
-export function isCuePreset(value: string): value is CuePreset {
+function isCuePreset(value: string): value is CuePreset {
     return (CUE_PRESETS as readonly string[]).includes(value);
 }
 
