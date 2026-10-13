@@ -7,7 +7,6 @@ import {
     cueProfileOf,
     defaultCuePreset,
     missPoint,
-    pickCueAsset,
     planAttackCues,
     planHitCues,
     planReactionCues,
@@ -208,17 +207,6 @@ describe('profile → steps', () => {
         expect(fire).toMatchObject({ preset: 'plasma', tint: '#00ffaa', animation: 'plasma-bolt.webm', sound: 'plasma.ogg' });
         expect(hit).toMatchObject({ animation: '', sound: '' });
         expect(overheat).toMatchObject({ sound: 'vent.ogg' });
-    });
-
-    it('picks among several files for one event with the injected RNG', () => {
-        const sounds = [
-            { event: 'fire' as const, src: 'a.ogg' },
-            { event: 'hit' as const, src: 'x.ogg' },
-            { event: 'fire' as const, src: 'b.ogg' },
-        ];
-        expect(pickCueAsset(sounds, 'fire', () => 0)).toBe('a.ogg');
-        expect(pickCueAsset(sounds, 'fire', () => 0.99)).toBe('b.ogg');
-        expect(pickCueAsset(sounds, 'miss', () => 0)).toBe('');
     });
 });
 

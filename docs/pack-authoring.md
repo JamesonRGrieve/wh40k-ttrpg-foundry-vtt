@@ -1206,6 +1206,50 @@ AGPL-compatible art and audio may be referenced. Nothing from unlicensed packs (
 the removed GameDevMarket and GW assets). The system ships no cue art or audio of its
 own: every preset is drawn procedurally.
 
+### Status visuals (condition token effects)
+
+Conditions carry a `system.visual` block: how the condition shows on the token that
+bears it (#595). Like `cue`, it is line-agnostic content authored once at the
+`system` root. The condition catalog reads it from the pack index, so every line's
+condition reaches the token through the same registry; nothing in `src/` names a
+condition. A condition with no `visual` (or an empty one) shows nothing.
+
+```json
+"visual": {
+  "preset": "burning",
+  "tint": "",
+  "filter": "",
+  "overlay": "",
+  "intensity": { "perStack": 0.5, "max": 2 },
+  "sounds": [{ "event": "apply", "src": "modules/<pack>/ignite.ogg" }]
+}
+```
+
+- **`preset`** — the procedural look drawn on the token: `burning` (flicker and
+  embers), `bleeding` (drips), `stunned` (orbiting stars), `pinned` (chevrons pressing
+  down), `prone` (a ground shadow), `frightened` (trembling marks), `poisoned` (rising
+  bubbles), `warp` (a shimmering ring). `""` for none.
+- **`tint`** — `#rrggbb` colour for the preset, or `""` for its own colour.
+- **`filter`** — a still filter on the token's art: `desaturate`, `dim`, `blur`, or
+  `""`.
+- **`overlay`** — an optional looping image or video drawn over the token, or `""`.
+- **`intensity`** — `perStack` is added for each stack past the first (several
+  effects conferring the status, or a stackable condition item's `stacks`), up to
+  `max` (1–3). `perStack: 0` means stacking does not change the look.
+- **`sounds`** — optional one-shot sounds on `apply` / `remove`. **Empty by default.**
+
+Presets are assigned from what the condition's own rules text and structured fields
+say it is (a per-round fire tick → `burning`, `actionLimit: halfActionOnly` from
+suppression → `pinned` with `filter: dim`, Unconscious → `filter: desaturate`).
+Where a condition gives no clear picture (Fear, Corruption, Helpless, diseases,
+psychic afflictions) it is left without a visual until someone picks one.
+
+Each client renders from its own documents; reduced motion shows only the still
+parts (a ring in the preset's colour, the filter, a paused overlay). The GM's
+"Canvas animations and sounds" switch turns every visual off; each player has a
+"Show conditions on tokens" toggle and an intensity scale. Same licensing rules as
+attack cues.
+
 ---
 
 ## Adventures

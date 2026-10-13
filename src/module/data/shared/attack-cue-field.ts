@@ -20,11 +20,12 @@ export interface AttackCueData {
     sounds: { event: CueEvent; src: string }[];
 }
 
-function assetList(): foundry.data.fields.DataField.Any {
+/** A list of authored files, one per event of a cue vocabulary (attack cues, status visuals). */
+export function cueAssetListField(events: readonly string[]): foundry.data.fields.DataField.Any {
     const fields = foundry.data.fields;
     return new fields.ArrayField(
         new fields.SchemaField({
-            event: new fields.StringField({ required: true, blank: false, choices: [...CUE_EVENTS] }),
+            event: new fields.StringField({ required: true, blank: false, choices: [...events] }),
             src: new fields.StringField({ required: true, blank: false }),
         }),
         { required: false, initial: [] },
@@ -56,8 +57,8 @@ export function attackCueField(): foundry.data.fields.SchemaField.Any {
         {
             preset: new fields.StringField({ required: false, blank: true, initial: '', choices: ['', ...CUE_PRESETS] }),
             tint: new fields.StringField({ required: false, blank: true, initial: '' }),
-            animations: assetList(),
-            sounds: assetList(),
+            animations: cueAssetListField(CUE_EVENTS),
+            sounds: cueAssetListField(CUE_EVENTS),
         },
         { required: false },
     );

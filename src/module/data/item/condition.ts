@@ -6,10 +6,12 @@ import {
     type TargetedConditionEntry,
     TICK_INTERVALS,
 } from '../../rules/condition-mechanics.ts';
+import type { StatusVisual } from '../../rules/status-visual.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import { statusVisualField } from '../shared/status-visual-field.ts';
 
 /**
  * Data model for Condition items (status effects).
@@ -38,6 +40,8 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     declare autoFail: string[];
     /** Per-interval effect (read by `rules/condition-tick.ts`). */
     declare tick: ConditionTick;
+    /** How the condition shows on its bearer's token (read by `rules/status-visual.ts`). */
+    declare visual: StatusVisual;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -115,6 +119,9 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
                 ),
                 onFail: new fields.StringField({ required: true, blank: true, initial: '' }),
             }),
+
+            // Token visual (#595): line-agnostic content, authored once at the root.
+            visual: statusVisualField(),
         };
     }
 

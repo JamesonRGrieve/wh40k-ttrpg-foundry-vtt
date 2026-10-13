@@ -534,6 +534,24 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "scope": "client",
               "type": "Number",
             },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "true",
+              "key": "status-visuals",
+              "requiresReload": undefined,
+              "scope": "client",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "1",
+              "key": "status-visual-intensity",
+              "requiresReload": undefined,
+              "scope": "client",
+              "type": "Number",
+            },
           ]
         `);
     });

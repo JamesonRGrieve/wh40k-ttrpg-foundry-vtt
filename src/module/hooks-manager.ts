@@ -97,6 +97,7 @@ import { openWithinHomeworldInfoDialog } from './applications/prompts/within-hom
 import { openWithoutHomeworldInfoDialog } from './applications/prompts/without-homeworld-info-dialog.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
+import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
 import { onRefreshRoundedToken } from './canvas/token-rounded-ring.ts';
 import { hydrateActorInMemory } from './compendium-hydrate.ts';
@@ -285,6 +286,8 @@ export class HooksManager {
         // Stacked-token bust palette: pick a specific token out of an overlapping
         // stack instead of Foundry's invisible click-to-cycle (#569).
         registerStackedTokenPicker();
+        // Status-effect visuals on tokens (#595), rendered from document state on every client.
+        registerStatusVisuals();
         hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
         );
@@ -1367,6 +1370,9 @@ export class HooksManager {
     static async loadConditionStatusEffects(): Promise<void> {
         await loadConditionCatalog(game.packs);
         registerConditionStatusEffects(CONFIG.statusEffects, inferActiveGameLine());
+        // The canvas drew before the catalog loaded, so its tokens' status visuals
+        // (#595) could not resolve until now.
+        refreshAllStatusVisuals();
     }
 
     static async ready(): Promise<void> {

@@ -90,33 +90,61 @@ export class WH40KSettings {
         attackCueAnimations: 'attack-cue-animations',
         attackCueSounds: 'attack-cue-sounds',
         attackCueVolume: 'attack-cue-volume',
+        statusVisuals: 'status-visuals',
+        statusVisualIntensity: 'status-visual-intensity',
     };
 
     /** Default attack-cue volume (#594), 0–1. */
     static ATTACK_CUE_VOLUME_DEFAULT = 0.8;
 
+    /** Default status-visual intensity scale (#595), 0–1. */
+    static STATUS_VISUAL_INTENSITY_DEFAULT = 1;
+
+    /** A boolean cue setting; unregistered (tests, early boot) reads as on. */
+    private static cueFlag(key: string): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, key) !== false;
+        } catch {
+            return true;
+        }
+    }
+
+    /** A numeric cue setting; unregistered or not a number reads as `fallback`. */
+    private static cueNumber(key: string, fallback: number): number {
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+            const value: unknown = game.settings.get(SYSTEM_ID, key);
+            return typeof value === 'number' ? value : fallback;
+        } catch {
+            return fallback;
+        }
+    }
+
     /** The settings that decide how this client plays attack cues (#594). Safe before registration (all on, default volume). */
     static getAttackCueSettings(): { worldEnabled: boolean; animationsEnabled: boolean; soundsEnabled: boolean; volume: number } {
         const S = WH40KSettings.SETTINGS;
-        const flag = (key: string): boolean => {
-            try {
-                return game.settings.get(SYSTEM_ID, key) !== false;
-            } catch {
-                return true;
-            }
-        };
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let volume: unknown;
-        try {
-            volume = game.settings.get(SYSTEM_ID, S.attackCueVolume);
-        } catch {
-            volume = WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT;
-        }
         return {
-            worldEnabled: flag(S.attackCues),
-            animationsEnabled: flag(S.attackCueAnimations),
-            soundsEnabled: flag(S.attackCueSounds),
-            volume: typeof volume === 'number' ? volume : WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT,
+            worldEnabled: WH40KSettings.cueFlag(S.attackCues),
+            animationsEnabled: WH40KSettings.cueFlag(S.attackCueAnimations),
+            soundsEnabled: WH40KSettings.cueFlag(S.attackCueSounds),
+            volume: WH40KSettings.cueNumber(S.attackCueVolume, WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT),
+        };
+    }
+
+    /**
+     * The settings that decide how this client shows status-effect visuals (#595): the
+     * same GM switch, sounds and volume as attack cues, plus this user's own status
+     * toggle and intensity scale. Safe before registration (all on, full intensity).
+     */
+    static getStatusVisualSettings(): { worldEnabled: boolean; enabled: boolean; intensity: number; soundsEnabled: boolean; volume: number } {
+        const S = WH40KSettings.SETTINGS;
+        const cues = WH40KSettings.getAttackCueSettings();
+        return {
+            worldEnabled: cues.worldEnabled,
+            enabled: WH40KSettings.cueFlag(S.statusVisuals),
+            intensity: WH40KSettings.cueNumber(S.statusVisualIntensity, WH40KSettings.STATUS_VISUAL_INTENSITY_DEFAULT),
+            soundsEnabled: cues.soundsEnabled,
+            volume: cues.volume,
         };
     }
 
@@ -1162,6 +1190,26 @@ export class WH40KSettings {
                 scope: 'client',
                 config: true,
                 default: WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT,
+                type: Number,
+                range: { min: 0, max: 1, step: 0.05 },
+            },
+            {
+                // Status-effect visuals (#595): under the same GM switch as attack cues.
+                key: S.statusVisuals,
+                name: 'WH40K.SETTINGS.StatusVisuals.Name',
+                hint: 'WH40K.SETTINGS.StatusVisuals.Hint',
+                scope: 'client',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.statusVisualIntensity,
+                name: 'WH40K.SETTINGS.StatusVisualIntensity.Name',
+                hint: 'WH40K.SETTINGS.StatusVisualIntensity.Hint',
+                scope: 'client',
+                config: true,
+                default: WH40KSettings.STATUS_VISUAL_INTENSITY_DEFAULT,
                 type: Number,
                 range: { min: 0, max: 1, step: 0.05 },
             },

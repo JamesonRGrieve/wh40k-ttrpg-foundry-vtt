@@ -16,6 +16,8 @@
  * Everything in this module is pure; `canvas/attack-cue-canvas.ts` plays the steps.
  */
 
+import { type CueAssetOf, type CueAssetSource, cueAssetSources, pickCueAsset, readCueAssets, readHexTint } from './cue-common.ts';
+
 /** Every outcome a cue can be played for. One vocabulary for all six lines. */
 export const CUE_EVENTS = [
     'fire',
@@ -64,10 +66,7 @@ export type CuePreset = (typeof CUE_PRESETS)[number];
 export type CueAttackKind = 'ranged' | 'melee' | 'psychic';
 
 /** An authored animation or sound file for one cue event. */
-export interface CueAsset {
-    event: CueEvent;
-    src: string;
-}
+type CueAsset = CueAssetOf<CueEvent>;
 
 /** A weapon's or power's cue profile, as authored on its compendium document. */
 export interface CueProfile {
@@ -184,24 +183,12 @@ function isCuePreset(value: string): value is CuePreset {
     return (CUE_PRESETS as readonly string[]).includes(value);
 }
 
-const HEX_COLOUR = /^#[0-9a-f]{6}$/i;
-
 /** The authored-profile shape as the item's DataModel holds it (before narrowing). */
 export interface CueProfileSource {
     preset?: string | undefined;
     tint?: string | undefined;
-    animations?: readonly { event?: string | undefined; src?: string | undefined }[] | undefined;
-    sounds?: readonly { event?: string | undefined; src?: string | undefined }[] | undefined;
-}
-
-function cleanAssets(list: CueProfileSource['animations']): CueAsset[] {
-    const assets: CueAsset[] = [];
-    for (const entry of list ?? []) {
-        const event = entry.event ?? '';
-        const src = (entry.src ?? '').trim();
-        if (src !== '' && isCueEvent(event)) assets.push({ event, src });
-    }
-    return assets;
+    animations?: readonly CueAssetSource[] | undefined;
+    sounds?: readonly CueAssetSource[] | undefined;
 }
 
 /**
@@ -210,26 +197,12 @@ function cleanAssets(list: CueProfileSource['animations']): CueAsset[] {
  */
 export function readCueProfile(source: CueProfileSource | null | undefined): CueProfile {
     const preset = source?.preset ?? '';
-    const tint = source?.tint ?? '';
     return {
         preset: isCuePreset(preset) ? preset : '',
-        tint: HEX_COLOUR.test(tint) ? tint.toLowerCase() : '',
-        animations: cleanAssets(source?.animations),
-        sounds: cleanAssets(source?.sounds),
+        tint: readHexTint(source?.tint),
+        animations: readCueAssets(source?.animations, isCueEvent),
+        sounds: readCueAssets(source?.sounds, isCueEvent),
     };
-}
-
-/** One authored asset entry off an untyped payload. */
-function assetSource(entry: object): { event?: string; src?: string } {
-    return {
-        ...('event' in entry && typeof entry.event === 'string' ? { event: entry.event } : {}),
-        ...('src' in entry && typeof entry.src === 'string' ? { src: entry.src } : {}),
-    };
-}
-
-/** An authored asset list off an untyped payload; anything but a list of objects reads as empty. */
-function assetSources<T>(list: readonly T[]): { event?: string; src?: string }[] {
-    return list.filter((entry): entry is T & object => typeof entry === 'object' && entry !== null).map(assetSource);
 }
 
 /**
@@ -243,17 +216,9 @@ export function cueProfileOf(system: object | null | undefined): CueProfile {
     return readCueProfile({
         ...('preset' in raw && typeof raw.preset === 'string' ? { preset: raw.preset } : {}),
         ...('tint' in raw && typeof raw.tint === 'string' ? { tint: raw.tint } : {}),
-        animations: 'animations' in raw && Array.isArray(raw.animations) ? assetSources(raw.animations) : [],
-        sounds: 'sounds' in raw && Array.isArray(raw.sounds) ? assetSources(raw.sounds) : [],
+        animations: 'animations' in raw ? cueAssetSources(raw.animations) : [],
+        sounds: 'sounds' in raw ? cueAssetSources(raw.sounds) : [],
     });
-}
-
-/** One authored file for an event, picked at random when several are authored; '' when none. */
-export function pickCueAsset(assets: readonly CueAsset[], event: CueEvent, rng: () => number): string {
-    const matching = assets.filter((asset) => asset.event === event);
-    if (matching.length === 0) return '';
-    const index = Math.min(matching.length - 1, Math.max(0, Math.floor(rng() * matching.length)));
-    return matching[index]?.src ?? '';
 }
 
 /** Builds steps for one plan, filling the preset, tint and authored files from the profile. */

@@ -12,7 +12,9 @@
 
 import { type CueRenderer, cueSoundVolume, selectCueRenderer } from '../rules/attack-cue-playback.ts';
 import { type CueAnchor, type CueEvent, type CuePlan, type CuePoint, type CuePreset, type CueStep, missPoint } from '../rules/attack-cue.ts';
+import { tintColour } from '../rules/cue-common.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { playCueSound, prefersReducedMotion } from './cue-media.ts';
 
 /** How long a travelling visual (a shot, a swing, a cone) takes, in ms. Matches the mapping's travel time. */
 const TRAVEL_MS = 250;
@@ -274,7 +276,7 @@ const POINT_CUES: Readonly<Partial<Record<CueEvent, (at: CuePoint, colour: numbe
 /** Draw one step with the system's procedural effect. */
 function drawProcedural(step: CueStep): void {
     const style = PRESET_STYLE[step.preset];
-    const colour = step.tint === '' ? style.colour : Number.parseInt(step.tint.slice(1), 16);
+    const colour = tintColour(step.tint, style.colour);
     const from = resolveAnchor(step.from);
     if (from === null) return;
     if (step.event === 'spray' && step.to?.kind === 'template') {
@@ -314,11 +316,6 @@ function playSequencer(ctor: SequenceConstructor, step: CueStep): void {
     void sequence.play();
 }
 
-/** Would a reduced-motion preference suppress animations here? */
-function prefersReducedMotion(): boolean {
-    return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 /** Play one step's visual and sound on this client. */
 function playStep(
     step: CueStep,
@@ -329,8 +326,7 @@ function playStep(
     const chosen = renderer(step);
     if (chosen === 'sequencer' && sequencer !== null) playSequencer(sequencer, step);
     else if (chosen === 'canvas') drawProcedural(step);
-    const volume = volumeFor(step.sound);
-    if (volume !== null) void foundry.audio.AudioHelper.play({ src: step.sound, volume, loop: false }, false);
+    playCueSound(step.sound, volumeFor(step.sound));
 }
 
 /**

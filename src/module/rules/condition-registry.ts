@@ -6,7 +6,8 @@
  * bearer's active conditions ({@link activeConditionMechanics}). Direction #7:
  * no condition's name, artwork, modifier or behaviour is written here — they are
  * the documents' `name`, `img`, `system.modifiers` and the structured
- * `system.targeted` / `helplessTarget` / `actionLimit` / `autoFail` / `tick`.
+ * `system.targeted` / `helplessTarget` / `actionLimit` / `autoFail` / `tick`, and
+ * the token visual `system.visual` (#595, drawn by `canvas/status-visual-layer.ts`).
  *
  * **Loading.** Compendium documents load asynchronously, but the HUD reads
  * `CONFIG.statusEffects` synchronously. So at `ready` {@link loadConditionCatalog}
@@ -183,6 +184,7 @@ const CONDITION_INDEX_FIELDS: readonly string[] = [
     'system.tick',
     'system.removal',
     'system.source',
+    'system.visual',
 ];
 
 /** The game line a pack belongs to, from its `<line>-…` name prefix. */
