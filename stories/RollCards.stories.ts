@@ -85,6 +85,121 @@ export const SimpleParryCounterAttack: Story = {
     },
 };
 
+/** One provenance row on a Parry card, as `EvasionActionData` folds it into the test. */
+function parryRow(label: string, value: number, source: string): { label: string; value: number; source: string; tooltipData: string } {
+    return { label, value, source, tooltipData: JSON.stringify({ title: label, sources: [{ name: source, value }] }) };
+}
+
+/** The Parry card for a weapon of one quality, its onParry hook row beside the weapon row (#414). */
+function parryCardWith(quality: { label: string; value: number }, weapon: string): HTMLElement {
+    const rows = [parryRow(`${quality.label} (${weapon})`, quality.value, weapon), parryRow('Guarded Stance', 5, 'Guarded Stance')];
+    const total = rows.reduce((sum, row) => sum + row.value, 0);
+    return renderSheet(
+        simpleRollChatSrc,
+        mockRollData({
+            rollData: { name: 'Parry Test', type: 'Skill', baseTarget: 45, modifierSources: rows, modifiedTarget: 45 + total },
+            effectOutput: [{ name: 'Evasion', effect: 'Lucius Varn’s Parry evades the attack' }],
+        }),
+    );
+}
+
+/**
+ * The parrying weapon's quality is a sourced row on the Parry card (#414): Balanced
+ * +10, Defensive +15, Unbalanced −10 — and the evader's `onParry` hook is its own row
+ * beside it, each hoverable to its source.
+ */
+export const SimpleParryQualityRows: Story = {
+    name: 'Simple Roll / Parry with weapon-quality and onParry rows',
+    render: () => {
+        const column = document.createElement('div');
+        column.classList.add('tw-flex', 'tw-flex-col', 'tw-gap-3');
+        column.append(
+            parryCardWith({ label: 'Balanced', value: 10 }, 'Chainsword'),
+            parryCardWith({ label: 'Defensive', value: 15 }, 'Combat Shield'),
+            parryCardWith({ label: 'Unbalanced', value: -10 }, 'Great Weapon'),
+        );
+        return column;
+    },
+    play: async ({ canvasElement }) => {
+        const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]'));
+        const labels = rows.map((row) => row.textContent.replace(/\s+/g, ' ').trim());
+        await expect(labels).toEqual([
+            'Balanced (Chainsword) +10',
+            'Guarded Stance +5',
+            'Defensive (Combat Shield) +15',
+            'Guarded Stance +5',
+            'Unbalanced (Great Weapon) -10',
+            'Guarded Stance +5',
+        ]);
+        const unbalanced = JSON.parse(rows[4]?.dataset['wh40kTooltipData'] ?? '{}') as { sources?: Array<{ name: string; value: number }> };
+        await expect(unbalanced.sources).toEqual([{ name: 'Great Weapon', value: -10 }]);
+        await expect(canvasElement.textContent).toContain('60');
+    },
+};
+
+/**
+ * A second successful Parry in the same round by a character whose Counter Attack is
+ * once per round (DH2, #603): no control, and the card says why.
+ */
+export const SimpleParryCounterAttackSpent: Story = {
+    name: 'Simple Roll / Parry — Counter Attack already used this round',
+    render: () => {
+        const grid = document.createElement('div');
+        grid.classList.add('tw-grid', 'tw-gap-3');
+        // DH2 prints the round limit; the per-system wrappers check the note reads under every line's theme.
+        for (const gameSystem of ['dh2', 'dh1', 'rt'] as const) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('wh40k-rpg');
+            wrapper.dataset['wh40kSystem'] = gameSystem;
+            wrapper.appendChild(
+                renderSheet(
+                    simpleRollChatSrc,
+                    mockRollData({
+                        gameSystem,
+                        rollData: { name: 'Parry Test', type: 'Skill' },
+                        effectOutput: [{ name: 'Evasion', effect: 'Lucius Varn’s Parry evades the attack' }],
+                        counterAttackSpent: 'Counter Attack',
+                    }),
+                ),
+            );
+            grid.appendChild(wrapper);
+        }
+        return grid;
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.roll-control__counter-attack')).toBeNull();
+        const notes = canvasElement.querySelectorAll('[data-counter-attack-spent]');
+        await expect(notes.length).toBe(3);
+        await expect(canvasElement.querySelector('[data-counter-attack-spent]')?.textContent).toContain('Counter Attack already used this round');
+    },
+};
+
+/** An offered Counter Attack wins over a stale "spent" note: the control renders, the note does not. */
+export const SimpleParryCounterAttackOfferedNotSpent: Story = {
+    name: 'Simple Roll / Parry — an offer hides the spent note',
+    render: () =>
+        renderSheet(
+            simpleRollChatSrc,
+            mockRollData({
+                rollData: { name: 'Parry Test', type: 'Skill' },
+                counterAttack: {
+                    sourceName: 'Counter Attack',
+                    attackModifier: -20,
+                    limit: 'none',
+                    actorUuid: 'Actor.lucius',
+                    attackerUuid: 'Actor.heretic',
+                    attackerName: 'Heretic',
+                    weaponId: 'sword',
+                },
+                counterAttackSpent: 'Counter Attack',
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.roll-control__counter-attack')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-counter-attack-spent]')).toBeNull();
+    },
+};
+
 /** A Parry with no Counter Attack hook offers nothing. */
 export const SimpleParryWithoutCounterAttack: Story = {
     name: 'Simple Roll / Parry without Counter Attack',

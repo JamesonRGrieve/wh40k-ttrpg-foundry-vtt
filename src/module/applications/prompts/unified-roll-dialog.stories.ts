@@ -222,3 +222,96 @@ export const WeaponTargetDropdown: Story = {
         await expect(select?.value).toBe('c1');
     },
 };
+
+/** The passive block's rows: [label, value] per locked row. */
+function passiveRows(canvasElement: HTMLElement): string[][] {
+    return Array.from(canvasElement.querySelectorAll('.fa-lock'), (lock) => {
+        const row = lock.parentElement;
+        return Array.from(row?.querySelectorAll('span') ?? [], (span) => span.textContent.trim());
+    });
+}
+
+/**
+ * The always-on modifiers behind a skill's base target (#484): Superior Chirurgeon's
+ * +20 Medicae is a locked, read-only row — already in the base, never re-added.
+ */
+export const PassiveSkillModifiers: Story = {
+    args: baseContext({
+        rollName: 'Medicae Test',
+        baseTarget: 60,
+        finalTarget: 60,
+        situationalMod: 0,
+        hasPassiveModifiers: true,
+        passiveModifiers: [{ label: 'Superior Chirurgeon', value: 20, valueLabel: '–', type: 'talent' }],
+    }),
+    play: async ({ canvasElement }) => {
+        await expect(passiveRows(canvasElement)).toEqual([['Superior Chirurgeon', '–']]);
+        // Read-only: no control carries the row, so nothing can toggle it off or re-add it.
+        const lock = canvasElement.querySelector('.fa-lock');
+        await expect(lock?.closest('button, [data-action], input')).toBeNull();
+        await expect(canvasElement.textContent).toContain('Included in base skill.');
+    },
+};
+
+/**
+ * A weapon attack's passive block (#484): the attack rolls Weapon Skill, so the
+ * modifiers baked into WS — a talent and a condition here — are listed beside the
+ * attack's own toggleable pills, which stay separate and interactive.
+ */
+export const PassiveWeaponAttackModifiers: Story = {
+    args: baseContext({
+        rollName: 'Chainsword Attack',
+        rollSubtitle: 'Standard Attack',
+        baseTarget: 45,
+        finalTarget: 55,
+        hasPassiveModifiers: true,
+        passiveModifiers: [
+            { label: 'Duelling Drill', value: 10, valueLabel: '–', type: 'talent' },
+            { label: 'Fatigued', value: -10, valueLabel: '–', type: 'condition' },
+        ],
+        hasSituationalModifiers: true,
+        situationalModifiers: [
+            { active: true, toggleKey: 'attack_Aim', condition: 'Aim (Half Action)', icon: 'fas fa-crosshairs', source: 'Aim', value: 10, valueLabel: '+10' },
+        ],
+    }),
+    play: async ({ canvasElement }) => {
+        await expect(passiveRows(canvasElement)).toEqual([
+            ['Duelling Drill', '–'],
+            ['Fatigued', '–'],
+        ]);
+        const aim = canvasElement.querySelector<HTMLButtonElement>('[data-toggle-key="attack_Aim"]');
+        // The attack's own pill stays a live toggle beside the read-only rows.
+        await expect(aim?.dataset['action']).toBe('toggleSituational');
+        await expect(aim?.disabled).toBe(false);
+        await expect(aim?.getAttribute('aria-pressed')).toBe('true');
+    },
+};
+
+/**
+ * Push the Limit available (#101): its row is a live, toggleable pill carrying the
+ * once-per-round and critical-risk note as its tooltip, until it is used this round.
+ */
+export const OncePerRoundAvailable: Story = {
+    args: baseContext({
+        rollName: 'Operate (Surface) Test',
+        hasSituationalModifiers: true,
+        situationalModifiers: [
+            {
+                active: false,
+                toggleKey: 'operate_Push the Limit',
+                condition: 'Pushing the limit (once/round; 4+ DoF risks a Motive System critical)',
+                icon: 'fa-solid fa-exclamation-triangle',
+                source: 'Push the Limit',
+                value: 20,
+                valueLabel: '+20',
+            },
+        ],
+    }),
+    play: async ({ canvasElement }) => {
+        const push = canvasElement.querySelector<HTMLButtonElement>('[data-toggle-key="operate_Push the Limit"]');
+        await expect(push?.disabled).toBe(false);
+        await expect(push?.getAttribute('aria-pressed')).toBe('false');
+        await expect(push?.dataset['situationalSpent']).toBeUndefined();
+        await expect(push?.dataset['tooltip']).toContain('4+ DoF');
+    },
+};
