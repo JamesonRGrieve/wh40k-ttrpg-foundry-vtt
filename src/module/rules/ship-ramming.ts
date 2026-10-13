@@ -45,7 +45,7 @@ export const RAMMING_KEYS = {
 } as const;
 
 /** One row of the hull-size damage table authored on the Ramming Speed order. */
-export interface RamDamageRow {
+interface RamDamageRow {
     readonly hullType: string;
     readonly formula: string;
 }
@@ -80,13 +80,13 @@ export function composeRammingTest(input: RammingTestInput): ShipTestDerivation 
 }
 
 /** A rolled dice formula. */
-export interface RolledFormula {
+interface RolledFormula {
     readonly formula: string;
     readonly total: number;
 }
 
 /** A rolled GM-entered bonus (power ram, Good an' Ard, …). */
-export interface RolledBonus extends RolledFormula {
+interface RolledBonus extends RolledFormula {
     readonly label: string;
 }
 
@@ -103,7 +103,7 @@ export interface RammingDamageInput {
 }
 
 /** One ship's side of the collision: its damage terms and their total. */
-export interface RammingDamageSide {
+interface RammingDamageSide {
     readonly components: readonly ShipTestComponent[];
     readonly total: number;
 }

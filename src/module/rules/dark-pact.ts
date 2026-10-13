@@ -22,16 +22,6 @@ export interface PactDefinition {
     discoverySubtletyPenalty: number;
 }
 
-export interface PactRecord {
-    definition: PactDefinition;
-    /** Whether this pact is publicly known (i.e. discovered). */
-    discovered: boolean;
-    /** Current disposition value. */
-    disposition: PactDisposition;
-    /** Whether the most recent payment was made. */
-    paymentCurrent: boolean;
-}
-
 /** Adjust pact disposition by ±n, clamped at the ±3 range. */
 export function adjustPactDisposition(current: PactDisposition, delta: number): PactDisposition {
     const next = Math.max(-3, Math.min(3, current + Math.trunc(delta)));

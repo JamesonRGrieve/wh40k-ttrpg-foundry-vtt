@@ -54,10 +54,10 @@ export const BOARDING_LOCK_DIFFICULTY = -20;
 export const BOARDING_FAILED_BREAK_FREE_PENALTY = -20;
 
 /** Crew Population / Hull Integrity difference per bonus step. */
-export const BOARDING_DIFFERENCE_STEP = 10;
+const BOARDING_DIFFERENCE_STEP = 10;
 
 /** Command bonus per full difference step. */
-export const BOARDING_BONUS_PER_STEP = 10;
+const BOARDING_BONUS_PER_STEP = 10;
 
 /** Command bonus per point of the ship's Turret Rating (p.220). */
 export const BOARDING_TURRET_BONUS_PER_POINT = 10;

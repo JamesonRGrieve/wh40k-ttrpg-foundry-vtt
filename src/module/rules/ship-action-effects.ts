@@ -27,26 +27,25 @@ export const SHIP_EFFECT_KINDS = ['reducePriorTurnDamage', 'shipModifier'] as co
 export type ShipEffectKind = (typeof SHIP_EFFECT_KINDS)[number];
 
 /** The prior-turn damage pools a `reducePriorTurnDamage` effect can target (Hold Fast!, Triage). */
-export const SHIP_EFFECT_POOL_TARGETS = ['morale', 'crewPopulation'] as const satisfies readonly PriorTurnPool[];
+const SHIP_EFFECT_POOL_TARGETS = ['morale', 'crewPopulation'] as const satisfies readonly PriorTurnPool[];
 
 /** Ship stats a timed modifier changes directly (an ActiveEffect `ADD` change on `system.<stat>`). */
-export const SHIP_EFFECT_STAT_TARGETS = ['speed', 'manoeuvrability', 'detection'] as const;
-export type ShipEffectStatTarget = (typeof SHIP_EFFECT_STAT_TARGETS)[number];
+const SHIP_EFFECT_STAT_TARGETS = ['speed', 'manoeuvrability', 'detection'] as const;
+type ShipEffectStatTarget = (typeof SHIP_EFFECT_STAT_TARGETS)[number];
 
 /**
  * Ballistic Skill targets of a timed modifier: one chosen Weapon Component
  * (`weaponBallisticSkill`, Lock on Target) or every BS test to fire the ship's
  * weapons (`ballisticSkill`, Come to New Heading, Evasive Manoeuvres).
  */
-export const SHIP_EFFECT_BS_TARGETS = ['weaponBallisticSkill', 'ballisticSkill'] as const;
-export type ShipEffectBsTarget = (typeof SHIP_EFFECT_BS_TARGETS)[number];
+const SHIP_EFFECT_BS_TARGETS = ['weaponBallisticSkill', 'ballisticSkill'] as const;
+type ShipEffectBsTarget = (typeof SHIP_EFFECT_BS_TARGETS)[number];
 
 /** Every target a `shipModifier` effect can name. */
 export type ShipModifierTarget = ShipEffectStatTarget | ShipEffectBsTarget;
 
 /** Every target an order's `shipEffect.targets` may list. */
 export const SHIP_EFFECT_TARGETS = [...SHIP_EFFECT_POOL_TARGETS, ...SHIP_EFFECT_STAT_TARGETS, ...SHIP_EFFECT_BS_TARGETS] as const;
-export type ShipEffectTarget = (typeof SHIP_EFFECT_TARGETS)[number];
 
 /**
  * When a timed modifier lapses, as a V14 ActiveEffect expiry event: `turnEnd`
@@ -54,7 +53,7 @@ export type ShipEffectTarget = (typeof SHIP_EFFECT_TARGETS)[number];
  * beginning of its next Turn".
  */
 export const SHIP_EFFECT_EXPIRIES = ['turnEnd', 'turnStart'] as const;
-export type ShipEffectExpiry = (typeof SHIP_EFFECT_EXPIRIES)[number];
+type ShipEffectExpiry = (typeof SHIP_EFFECT_EXPIRIES)[number];
 
 /** The ship stat a Combined Skill Test adds to the character's skill (RT Core p.212). */
 export const SHIP_TEST_STATS = ['manoeuvrability', 'detection'] as const;
@@ -92,7 +91,7 @@ export function isModifierTarget(value: string): value is ShipModifierTarget {
     return isMember(SHIP_EFFECT_STAT_TARGETS, value) || isMember(SHIP_EFFECT_BS_TARGETS, value);
 }
 
-export function isStatTarget(value: string): value is ShipEffectStatTarget {
+function isStatTarget(value: string): value is ShipEffectStatTarget {
     return isMember(SHIP_EFFECT_STAT_TARGETS, value);
 }
 
@@ -124,8 +123,8 @@ export function extraDegreesOfSuccess(method: 'gen1' | 'gen2', roll: number, tar
 }
 
 /** Langpack keys naming the terms of an effect's magnitude. */
-export const MAGNITUDE_BASE_KEY = 'WH40K.Voidcraft.ShipAction.Magnitude.Base';
-export const MAGNITUDE_DEGREES_KEY = 'WH40K.Voidcraft.ShipAction.Magnitude.Degrees';
+const MAGNITUDE_BASE_KEY = 'WH40K.Voidcraft.ShipAction.Magnitude.Base';
+const MAGNITUDE_DEGREES_KEY = 'WH40K.Voidcraft.ShipAction.Magnitude.Degrees';
 
 /**
  * The terms of an effect's magnitude: the bare-success `base`, plus `step`
@@ -174,7 +173,7 @@ export interface ShipModifierInput extends ShipModifierFlag {
 }
 
 /** One `changes` entry of the effect. */
-export interface ShipModifierChange {
+interface ShipModifierChange {
     key: string;
     mode: number;
     value: string;
@@ -264,15 +263,15 @@ export function collectShipModifierComponents(effects: Iterable<ShipEffectView>,
 /* -------------------------------------------- */
 
 /** Langpack keys of the test's terms. */
-export const ACTION_SKILL_KEY = 'WH40K.Voidcraft.ShipAction.Component.Skill';
-export const ACTION_DIFFICULTY_KEY = 'WH40K.Voidcraft.ShipAction.Component.Difficulty';
-export const SHIP_STAT_KEYS: Readonly<Record<ShipTestStat, string>> = {
+const ACTION_SKILL_KEY = 'WH40K.Voidcraft.ShipAction.Component.Skill';
+const ACTION_DIFFICULTY_KEY = 'WH40K.Voidcraft.ShipAction.Component.Difficulty';
+const SHIP_STAT_KEYS: Readonly<Record<ShipTestStat, string>> = {
     manoeuvrability: 'WH40K.Voidcraft.ShipAction.Component.Manoeuvrability',
     detection: 'WH40K.Voidcraft.ShipAction.Component.Detection',
 };
 
 /** The ship stat a Combined Skill Test adds, with the live modifiers already inside it. */
-export interface ShipTestStatInput {
+interface ShipTestStatInput {
     stat: ShipTestStat;
     /** The ship's current value, ActiveEffect changes included. */
     value: number;

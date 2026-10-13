@@ -36,7 +36,7 @@ export type CraftsmanshipKey = (typeof CRAFTSMANSHIP_KEYS)[number];
  * number — `automatic` (the test is passed without a roll) or `discretion`
  * (the GM decides).
  */
-export type AvailabilityModifier = number | 'automatic' | 'discretion';
+type AvailabilityModifier = number | 'automatic' | 'discretion';
 
 /** A line's printed acquisition ladder. */
 export interface AcquisitionLadder {

@@ -91,7 +91,7 @@ export function resolveTest(roll: number, target: number): TestOutcome {
     };
 }
 
-export type MasteryWinner = 'summoner' | 'daemon' | 'stalemate';
+type MasteryWinner = 'summoner' | 'daemon' | 'stalemate';
 
 export interface MasteryContestInput {
     summonerRoll: number;

@@ -185,7 +185,7 @@ export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string
  * @param {WeaponRollData} rollData - The weapon roll data
  * @returns {Object} Object with modifier entries { qualityName: value }
  */
-export function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
+function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
     const modifiers: QualityModifierMap = {};
     // eslint-disable-next-line no-restricted-syntax -- boundary: WeaponRollData.weapon is the real WH40KItem document; QualityItem is a structural subset narrowing required for quality checks
     const weapon = rollData.weapon as unknown as QualityItem;
@@ -753,56 +753,3 @@ export function resolveIndirectPenalty(level: number): number {
     const n = nonNegInt(level);
     return n === 0 ? 0 : n * -10;
 }
-
-/* -------------------------------------------- */
-/*  Export for External Integration             */
-/* -------------------------------------------- */
-
-/**
- * Main integration point for weapon quality effects.
- * Provides all Phase 1-4 quality handlers in one object.
- */
-export const WeaponQualityEffects = {
-    // Quality checks
-    weaponHasQuality,
-    rollDataHasQuality,
-
-    // Attack modifiers
-    calculateQualityAttackModifiers,
-    applyQualityModifiersToRollData,
-
-    // Parry modifiers
-    getWeaponParryModifier,
-    canWeaponParry,
-    getAttackerWeaponParryPenalty,
-
-    // Penetration modifiers
-    calculateQualityPenetrationModifiers,
-
-    // Exotic quality handlers (Phase 4)
-    calculateExoticQualityDamageModifiers,
-    weaponIgnoresArmor,
-    getRighteousFuryThreshold,
-    checkRighteousFury,
-
-    // Phase 6 pure resolvers (#57 completion)
-    resolveScatterRangeBand,
-    resolveHitEffectSaveTarget,
-    resolveStunDuration,
-    resolveLanceBonus,
-    resolvePrimitiveDamageAdjust,
-    resolveProvenDamageAdjust,
-    resolveGravitonBonusDamage,
-    resolveHaywireRadius,
-    resolveTemplateRadius,
-    resolveMaximalEffect,
-    resolvePowerFieldParryDestroys,
-    resolveCripplingTickDamage,
-    resolveIndirectPenalty,
-
-    // Die operations (#303)
-    weaponQualityIdentifierFromName,
-    collectWeaponQualityDieOps,
-    applyKeepHighestToDie,
-    resolveDieOpDamageAdjust,
-};

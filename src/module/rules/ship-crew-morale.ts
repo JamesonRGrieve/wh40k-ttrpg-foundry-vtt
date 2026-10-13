@@ -131,8 +131,7 @@ export function applyHullDamageToCrew(
 }
 
 /** The damage pools Hold Fast! (Morale) and Triage (Crew Population) reduce. */
-export const PRIOR_TURN_POOLS = ['morale', 'crewPopulation'] as const;
-export type PriorTurnPool = (typeof PRIOR_TURN_POOLS)[number];
+export type PriorTurnPool = 'morale' | 'crewPopulation';
 
 /**
  * The losses recorded for the turn immediately before `currentTurn`, or null

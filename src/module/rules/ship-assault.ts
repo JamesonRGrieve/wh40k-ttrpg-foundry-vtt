@@ -21,7 +21,7 @@ import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
  * Hit and Run are Rogue Trader starship-combat rules; the other lines' void
  * craft have no such actions, so every entry point checks this explicitly.
  */
-export const SHIP_ASSAULT_GAME_SYSTEM = 'rt';
+const SHIP_ASSAULT_GAME_SYSTEM = 'rt';
 
 /** Whether a voidcraft of the given game system can take the assault actions. */
 export function supportsShipAssault(gameSystem: string): boolean {
@@ -29,7 +29,7 @@ export function supportsShipAssault(gameSystem: string): boolean {
 }
 
 /** Interpolation data a component's langpack key formats with. */
-export type ShipComponentData = Readonly<Record<string, string | number>>;
+type ShipComponentData = Readonly<Record<string, string | number>>;
 
 /**
  * One provenance-bearing term of a test target or a damage total. `labelKey`

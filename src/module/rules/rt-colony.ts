@@ -148,7 +148,7 @@ export function tierForSize(size: number): ColonyTierKey {
  * the consumer applies them to the Colony state (or surfaces them on
  * the chat card if the Colony state is read-only).
  */
-export type ColonyEffectKind =
+type ColonyEffectKind =
     // Characteristic > Size — positive cascade.
     | 'placated' // Complacency > Size → PF Value +1
     | 'orderly' // Order > Size → Productivity +2
@@ -167,7 +167,7 @@ export interface ColonyEffectDef {
     readonly trigger: { stat: Exclude<ColonyCharacteristicKey, 'size'>; mode: 'aboveSize' | 'atZero' };
 }
 
-export const COLONY_EFFECTS: ReadonlyArray<ColonyEffectDef> = Object.freeze([
+const COLONY_EFFECTS: ReadonlyArray<ColonyEffectDef> = Object.freeze([
     { id: 'placated', labelKey: 'WH40K.RT.Colony.Effect.Placated', trigger: { stat: 'complacency', mode: 'aboveSize' } },
     { id: 'orderly', labelKey: 'WH40K.RT.Colony.Effect.Orderly', trigger: { stat: 'order', mode: 'aboveSize' } },
     { id: 'productive', labelKey: 'WH40K.RT.Colony.Effect.Productive', trigger: { stat: 'productivity', mode: 'aboveSize' } },
@@ -280,7 +280,7 @@ export function applyPfValueAdjustment(base: number, adj: PfValueAdjustment): nu
  *   3–7 → no change
  *   ≥8  → Size +1 (Explorers may invest in Infrastructure Upgrades)
  */
-export type ColonyGrowthOutcome = 'decrease' | 'noChange' | 'increase';
+type ColonyGrowthOutcome = 'decrease' | 'noChange' | 'increase';
 
 export interface ColonyGrowthInput {
     readonly state: ColonyState;
@@ -471,17 +471,6 @@ export function resolveColonyGrowth(input: ColonyGrowthInput): ColonyGrowthResul
  * compendiums and feed `applyEndeavour({ theme, ap })`.
  */
 export type EndeavourTheme = 'exploration' | 'trade' | 'military' | 'criminal' | 'creed' | 'industry' | 'research' | 'agriculture';
-
-export const ENDEAVOUR_THEMES: ReadonlyArray<EndeavourTheme> = Object.freeze([
-    'exploration',
-    'trade',
-    'military',
-    'criminal',
-    'creed',
-    'industry',
-    'research',
-    'agriculture',
-]);
 
 /**
  * AP-to-Characteristic conversion divisor — 100 AP per +1 to the

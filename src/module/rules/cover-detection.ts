@@ -19,9 +19,9 @@
 export type DetectedCoverLevel = 'none' | 'half' | 'full';
 
 /** At/above this blocked fraction the target is in full cover. */
-export const FULL_COVER_THRESHOLD = 0.75;
+const FULL_COVER_THRESHOLD = 0.75;
 /** At/above this blocked fraction (but below full) the target is in half cover. */
-export const HALF_COVER_THRESHOLD = 0.25;
+const HALF_COVER_THRESHOLD = 0.25;
 
 /**
  * Classify cover from the fraction (0–1) of attacker→target sample rays blocked
@@ -88,7 +88,7 @@ export interface CoverEdge {
 }
 
 /** The least grade of marked cover that shields a target at all: half cover. */
-export const LEAST_COVER_GRADE = 0.5;
+const LEAST_COVER_GRADE = 0.5;
 
 /** Where segment `p→q` crosses segment `a→b`, or null where it does not (parallel, or apart). Pure. */
 export function segmentCrossing(p: CoverPoint, q: CoverPoint, a: CoverPoint, b: CoverPoint): CoverPoint | null {

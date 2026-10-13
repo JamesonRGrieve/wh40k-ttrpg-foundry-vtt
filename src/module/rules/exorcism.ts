@@ -51,7 +51,7 @@ export const EXORCISM_MODIFIER_ORDER: readonly ExorcismModifierId[] = [
 ];
 
 /** Bonus per degree of success on the preparatory Forbidden Lore (Daemonology) test. */
-export const EXORCISM_LORE_BONUS_PER_DOS = 5;
+const EXORCISM_LORE_BONUS_PER_DOS = 5;
 
 /** The +5 per DoS row from the preparatory Forbidden Lore test. */
 export function loreBonusFactor(loreDos: number): DaemonicMasteryFactor {
@@ -90,14 +90,14 @@ export function prepareExorcismAttempt(input: ExorcismAttemptInput): RitualTestC
 }
 
 /** One rolled attempt of the extended test. */
-export interface ExorcismAttempt extends TestOutcome {
+interface ExorcismAttempt extends TestOutcome {
     /** Hours this attempt took (1d5). */
     readonly hours: number;
     /** Fatigue suffered (= DoF on a failure). */
     readonly fatigue: number;
 }
 
-export type ExorcismStatus = 'in-progress' | 'banished' | 'collapsed';
+type ExorcismStatus = 'in-progress' | 'banished' | 'collapsed';
 
 export interface ExorcismState {
     /** DoS total that must be exceeded. */

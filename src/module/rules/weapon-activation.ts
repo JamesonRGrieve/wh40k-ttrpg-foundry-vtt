@@ -23,7 +23,7 @@
  */
 
 /** The profile applied to a weapon when it is in its deactivated state. */
-export interface DeactivationProfile {
+interface DeactivationProfile {
     /** Qualities the weapon GAINS while deactivated (e.g. 'primitive', 'unbalanced'). */
     addedQualities: Iterable<string>;
     /** Qualities the weapon LOSES while deactivated (e.g. 'tearing', 'balanced', 'powerField', 'shocking'). */

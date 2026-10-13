@@ -42,10 +42,11 @@ export interface MagazineSegment {
     damageType?: string;
     /**
      * Full damage-profile OVERRIDE (a warhead / sniper round that replaces the
-     * dice, not a delta). Used ONLY when `damageOverride.formula` is non-empty; a
-     * delta-mode round leaves `formula` '' and carries its numbers in `modifiers`.
+     * dice, not a delta). Used ONLY when `damageOverride.formula` is non-empty, or
+     * when `none` marks a payload round that deals no damage (#601); a delta-mode
+     * round leaves `formula` '' and carries its numbers in `modifiers`.
      */
-    damageOverride?: { formula: string; bonus: number; penetration: number };
+    damageOverride?: { formula: string; bonus: number; penetration: number; none?: boolean };
     /** Rate-of-fire override this ammo forces (e.g. Hot-shot → single shot), or null to keep the weapon's. */
     fireRateOverride?: number | null;
     /** Structured on-hit effect text this ammo triggers (e.g. Bleeder Rounds blood loss), or '' for none. */

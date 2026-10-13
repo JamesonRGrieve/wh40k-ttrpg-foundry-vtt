@@ -19,7 +19,7 @@ export type OrderActionType = (typeof ORDER_ACTION_TYPES)[number];
 export type ShipActionKind = 'extended' | 'manoeuvre';
 
 /** The `order` action type each tab lists. */
-export const SHIP_ACTION_ORDER_TYPE: Readonly<Record<ShipActionKind, OrderActionType>> = {
+const SHIP_ACTION_ORDER_TYPE: Readonly<Record<ShipActionKind, OrderActionType>> = {
     extended: 'extended-action',
     manoeuvre: 'maneuver-action',
 };

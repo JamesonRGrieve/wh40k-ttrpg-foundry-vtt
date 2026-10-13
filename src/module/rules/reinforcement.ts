@@ -26,7 +26,7 @@ export function maxWarbandContribution(finalCost: number): number {
 }
 
 /** One other Acolyte's contribution toward the cost. */
-export interface ReinforcementContribution {
+interface ReinforcementContribution {
     id: string;
     /** Their current Influence. */
     influence: number;
@@ -42,9 +42,9 @@ export interface ReinforcementCallInput {
 }
 
 /** Why a call can't go ahead. */
-export type ReinforcementCallProblem = 'belowMinimum' | 'contributionCap' | 'contributorShort' | 'callerShort';
+type ReinforcementCallProblem = 'belowMinimum' | 'contributionCap' | 'contributorShort' | 'callerShort';
 
-export interface ReinforcementCallPlan {
+interface ReinforcementCallPlan {
     finalCost: number;
     /** What the caller spends: the cost less the contributions. */
     callerPays: number;

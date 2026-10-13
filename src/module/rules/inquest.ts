@@ -17,22 +17,22 @@
 import { nonNegInt } from './_num.ts';
 
 export const INQUEST_SCOPES = ['minoris', 'majoris', 'extremis'] as const;
-export type InquestScope = (typeof INQUEST_SCOPES)[number];
+type InquestScope = (typeof INQUEST_SCOPES)[number];
 
 export const CLUE_SIGNIFICANCES = ['minor', 'major', 'vital'] as const;
 export type ClueSignificance = (typeof CLUE_SIGNIFICANCES)[number];
 
 /** Whether the warband pursues the Inquest openly or covertly (p. 64, "Approach"). */
 export const INQUEST_APPROACHES = ['covert', 'open'] as const;
-export type InquestApproach = (typeof INQUEST_APPROACHES)[number];
+type InquestApproach = (typeof INQUEST_APPROACHES)[number];
 
 /**
  * `active` while the warband is prosecuting it. On resolution it becomes
  * `goalsMet` or `goalsFailed`, because the reward depends on whether the
  * warband achieved its objective (p. 69).
  */
-export const INQUEST_STATUSES = ['active', 'goalsMet', 'goalsFailed'] as const;
-export type InquestStatus = (typeof INQUEST_STATUSES)[number];
+const INQUEST_STATUSES = ['active', 'goalsMet', 'goalsFailed'] as const;
+type InquestStatus = (typeof INQUEST_STATUSES)[number];
 
 /** A line's printed Inquest tables. */
 export interface InquestRules {

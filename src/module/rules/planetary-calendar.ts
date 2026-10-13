@@ -37,7 +37,7 @@ const SEASONS: SeasonInfo[] = [
 /** Rotation period of the Terran-standard fallback day, in hours. */
 export const TERRAN_ROTATION_HOURS = 24;
 
-export function localDaySeconds(body: CelestialBody): number {
+function localDaySeconds(body: CelestialBody): number {
     return body.rotationHours * HOUR_SECONDS;
 }
 
@@ -70,10 +70,6 @@ export function localSeason(elapsedTerranSeconds: number, body: CelestialBody): 
     if (fraction === null) return null;
     const index = Math.floor(fraction * SEASONS.length) % SEASONS.length;
     return SEASONS[index] ?? null;
-}
-
-export function terranDayNumber(elapsedTerranSeconds: number): number {
-    return Math.floor(elapsedTerranSeconds / (24 * HOUR_SECONDS));
 }
 
 /** The body's local hour of day as a fractional hour (`13:30` → 13.5). */

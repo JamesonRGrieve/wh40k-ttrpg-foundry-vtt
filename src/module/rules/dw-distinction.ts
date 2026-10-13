@@ -39,7 +39,7 @@ export function specialAbilityCategoryLabelKey(category: SpecialAbilityCategory)
  * `modifiers.characteristics` map so the central modifier path applies
  * them with provenance. Blank strings mean "none".
  */
-export interface SpecialAbilityGrant {
+interface SpecialAbilityGrant {
     /** Compendium UUID of a trait the bearer gains. */
     trait: string;
     /** Identifier of an Active Effect to attach to the bearer. */
@@ -69,7 +69,7 @@ export function isRenownCategory(category: SpecialAbilityCategory): boolean {
 }
 
 /** Reason a gain attempt was refused. */
-export type DistinctionGateFailure = 'rank-too-low';
+type DistinctionGateFailure = 'rank-too-low';
 
 /** Outcome of the Renown-rank gate. A refusal names the rank that was needed. */
 export type DistinctionGateResult = { allowed: true } | { allowed: false; reason: DistinctionGateFailure; requiredRank: RenownRank };

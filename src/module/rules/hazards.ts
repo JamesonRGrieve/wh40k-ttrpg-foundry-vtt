@@ -88,7 +88,7 @@ export const HAZARD_RULES: Readonly<Record<GameSystemId, HazardLineRules | null>
 };
 
 /** The hazard rules for a line, or null when the line is not modelled. */
-export function hazardRulesFor(line: GameSystemId): HazardLineRules | null {
+function hazardRulesFor(line: GameSystemId): HazardLineRules | null {
     return HAZARD_RULES[line];
 }
 
@@ -140,7 +140,7 @@ export const SUFFOCATION_ENDGAME_DAMAGE = '1d10';
 
 export type BreathUnit = 'minute' | 'round';
 
-export interface BreathAllotment {
+interface BreathAllotment {
     /** Minutes or rounds the character can hold his breath. */
     count: number;
     /** The interval of both the allotment and the Toughness test. */

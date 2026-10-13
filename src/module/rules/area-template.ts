@@ -31,10 +31,10 @@ const AREA_SHAPE_BY_AUTHORED: ReadonlyMap<string, AreaShape> = new Map<string, A
 ]);
 
 /** Where the template sits: on the firer (Spray) or on the point of impact (Blast). */
-export type AreaAnchor = 'firer' | 'impact';
+type AreaAnchor = 'firer' | 'impact';
 
 /** What the area does to each creature inside: they test to avoid a hit, or they are hit. */
-export type AreaResolution = 'avoid' | 'hit';
+type AreaResolution = 'avoid' | 'hit';
 
 /** The avoidance test a creature caught in an `avoid` area makes, as authored on the quality. */
 export interface AreaAvoidanceRule {
@@ -287,7 +287,7 @@ export const AVOIDANCE_TEST_LABEL_KEYS: Readonly<Record<AvoidanceSkill, I18nKey>
 };
 
 /** The test a creature rolled to avoid the area. */
-export interface AreaAvoidanceTest {
+interface AreaAvoidanceTest {
     /** Which test it rolled: its Agility, or Dodge with Leaping Dodge. */
     skill: AvoidanceSkill;
     /** The characteristic / skill total before modifiers. */

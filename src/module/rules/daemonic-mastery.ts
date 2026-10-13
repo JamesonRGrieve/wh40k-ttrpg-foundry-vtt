@@ -37,7 +37,7 @@ export const DAEMONIC_MASTERY_FACTORS = {
 } as const satisfies Record<string, DaemonicMasteryFactor>;
 
 /** One provenance-bearing component row of a composed ritual test. */
-export interface RitualTestComponent {
+interface RitualTestComponent {
     readonly id: string;
     readonly labelKey: string;
     readonly label?: string;

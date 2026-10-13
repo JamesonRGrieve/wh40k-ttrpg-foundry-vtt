@@ -53,7 +53,7 @@ export type GiftSubTable = (typeof GIFT_SUB_TABLES)[number];
 /** Whether a rolled characteristic change raises or lowers the characteristic. */
 export const GIFT_ROLL_DIRECTIONS = ['gain', 'loss'] as const;
 /** The direction of a rolled characteristic change. */
-export type GiftRollDirection = (typeof GIFT_ROLL_DIRECTIONS)[number];
+type GiftRollDirection = (typeof GIFT_ROLL_DIRECTIONS)[number];
 
 /* -------------------------------------------- */
 /*  Stored shape (MutationData `system.gift`)   */
