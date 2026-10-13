@@ -4,12 +4,15 @@
  */
 
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../types/global.d.ts';
+import { weaponHasQuality } from './weapon-quality-effects.ts';
 
 type WeaponTrainingTalent = WH40KItemDocument & { type: string; name: string };
 type WeaponTrainingWeapon = WH40KItemDocument & {
     system: WH40KItemDocument['system'] & {
         requiredTraining?: string;
-        special?: string;
+        /** The weapon's quality ids (WeaponData's SetField). */
+        special?: Set<string>;
+        effectiveSpecial?: Set<string>;
     };
 };
 
@@ -32,9 +35,10 @@ export function checkWeaponTraining(actor: WH40KBaseActorDocument, weapon: Weapo
         return { trained: true, talent: null };
     }
 
-    // Grenades don't require weapon training
-    const isGrenade = weapon.system.special?.includes('grenade') ?? false;
-    if (isGrenade) {
+    // Grenades don't require weapon training. `special` is a Set of quality ids: the old
+    // `special.includes(...)` threw for every weapon with a required training, which
+    // rejected the attack dialog's render, so such a weapon could not attack at all.
+    if (weaponHasQuality({ system: weapon.system }, 'grenade')) {
         return { trained: true, talent: null };
     }
 

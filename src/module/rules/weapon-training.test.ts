@@ -23,11 +23,12 @@ function actorWith(talents: string[]): ChkActor {
     return a as unknown as ChkActor;
 }
 
-function weaponNeeding(requiredTraining?: string, special?: string): ChkWeapon {
+/** A weapon as WeaponData shapes it: `special` is a Set of quality ids. */
+function weaponNeeding(requiredTraining?: string, special?: readonly string[]): ChkWeapon {
     const w = {
         system: {
             ...(requiredTraining === undefined ? {} : { requiredTraining }),
-            ...(special === undefined ? {} : { special }),
+            ...(special === undefined ? {} : { special: new Set(special) }),
         },
     };
     // eslint-disable-next-line no-restricted-syntax -- structural mock of the narrow weapon surface checkWeaponTraining reads (system.requiredTraining/special); full WH40KItemDocument carries Foundry-runtime deps unavailable under vitest.
@@ -42,9 +43,16 @@ describe('checkWeaponTraining', () => {
     });
 
     it('treats grenades as needing no training regardless of requiredTraining', () => {
-        const result = checkWeaponTraining(actorWith([]), weaponNeeding('Las', 'grenade, blast'));
+        const result = checkWeaponTraining(actorWith([]), weaponNeeding('Las', ['grenade', 'blast-3']));
         expect(result.trained).toBe(true);
         expect(result.talent).toBeNull();
+    });
+
+    // Tier B (#608): `special` is a Set, and `special.includes` threw for every weapon with a
+    // required training, rejecting the attack dialog (the DH1 Conversion Beamer never opened one).
+    it('reads the quality Set of a trained weapon that is not a grenade without throwing', () => {
+        expect(() => checkWeaponTraining(actorWith([]), weaponNeeding('Heavy (Las)', ['felling-1']))).not.toThrow();
+        expect(checkWeaponTraining(actorWith([]), weaponNeeding('Heavy (Las)', ['felling-1'])).trained).toBe(false);
     });
 
     it('matches a "Weapon Training (X)" talent against the required specialization', () => {
