@@ -47,6 +47,11 @@ const MANAGERS_EXTRA_FLOWS = [
     'event-tracker-compute-character-states',
     'event-tracker-build-content-html',
     'event-tracker-open-dialog',
+    'event-tracker-macro-and-scene-control',
+    'event-tracker-day-bar-and-resolve-toggle',
+    'event-tracker-pc-attitude-edit',
+    'event-tracker-journal-links',
+    'event-tracker-scene-buttons',
     'item-drop-non-droppable-returns-null',
     'item-drop-no-token-returns-null',
     'item-drop-creates-loot-pile',
@@ -119,8 +124,42 @@ interface EventTrackerLike {
         { dispositions: Record<string, { attitude?: string; trigger?: string }>; relationships: Array<{ currentState?: string; trigger?: string }> }
     >;
     open: () => void;
+    getCampaignDay: () => number;
+    setCampaignDay: (day: number) => Promise<void>;
+    getPcAttitudes: (npc: string) => Record<string, string>;
+    setPcAttitude: (npc: string, pc: string, attitude: string) => Promise<void>;
     _graph?: Record<string, object> | null;
     _characters?: Record<string, object> | null;
+}
+
+/** The tracker change context every tracker hook passes last. */
+interface TrackerChangeContext {
+    origin?: string;
+}
+
+/** Minimal JournalEntry shape the journal-link probe creates, opens and deletes. */
+interface XJournal {
+    id?: string;
+    uuid?: string;
+    sheet?: { rendered?: boolean; close?: () => Promise<void> } | null;
+    delete?: () => Promise<void>;
+}
+
+/** A scene-control tool as `getSceneControlButtons` registers it. */
+interface XSceneControlTool {
+    onChange?: (event?: Event, active?: boolean) => void;
+    visible?: boolean;
+}
+
+/** The scene-control groups, keyed by group name. */
+type XSceneControls = Record<string, { tools?: Record<string, XSceneControlTool> } | undefined>;
+
+/** A world scene as the scene-button probe reads it. */
+interface XScene {
+    id?: string;
+    name?: string;
+    flags?: { 'wh40k-rpg'?: { vault?: { entityType?: string; name?: string } } };
+    delete?: () => Promise<void>;
 }
 
 interface LootActor extends XActor {
@@ -163,14 +202,22 @@ interface ActorCtorX {
 interface XGlobal {
     Actor?: ActorCtorX;
     Scene?: SceneCtor;
+    JournalEntry?: { create?: (data: object) => Promise<XJournal | null> };
+    Hooks?: {
+        on: (hook: string, fn: (...args: Array<string | number | boolean | TrackerChangeContext>) => void) => number;
+        off: (hook: string, id: number) => void;
+        callAll: (hook: string, ...args: object[]) => boolean;
+    };
     game?: {
+        wh40k?: { EventTracker?: EventTrackerLike };
+        scenes?: { contents?: XScene[] };
         actors?: { get?: (id: string) => XActor | undefined };
         settings?: { get?: (namespace: string, key: string) => object | string | number | boolean | null | undefined };
         user?: { isGM?: boolean };
         /** Used to tell the Item Piles drop path from the loot-actor fallback (#385). */
         modules?: { get?: (id: string) => { active?: boolean } | undefined };
     };
-    ui?: { windows?: Record<string, XWindow> };
+    ui?: { windows?: Record<string, XWindow>; controls?: { controls?: XSceneControls } };
     canvas?: { ready?: boolean };
 }
 
@@ -197,6 +244,8 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             const SceneGbl = g.Scene;
             const gameGbl = g.game;
             const uiGbl = g.ui;
+            const JournalGbl = g.JournalEntry;
+            const HooksGbl = g.Hooks;
 
             const fired: Record<string, boolean> = {};
             const notes: Record<string, string> = {};
@@ -212,11 +261,13 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
             /** The Event Tracker dashboard's ApplicationV2 id (its window element's DOM id). */
             const EVENT_TRACKER_APP_ID = 'wh40k-event-tracker';
 
+            /** The open Event Tracker dashboard's window element, or null. */
+            const trackerRoot = (): HTMLElement | null => document.getElementById(EVENT_TRACKER_APP_ID);
+
             /** Close the Event Tracker dashboard (an ApplicationV2, so not in ui.windows) via its header close control. */
             async function closeEventTracker(): Promise<void> {
-                const app = (): HTMLElement | null => document.getElementById(EVENT_TRACKER_APP_ID);
-                app()?.querySelector<HTMLElement>('[data-action="close"]')?.click();
-                await pollUntil(() => app() == null);
+                trackerRoot()?.querySelector<HTMLElement>('[data-action="close"]')?.click();
+                await pollUntil(() => trackerRoot() == null);
             }
 
             /** Drain any dialog the previous probe left open. */
@@ -630,6 +681,440 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                     }
                 } catch (err) {
                     notes['event-tracker-open-dialog'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            /* ============================================================
+             * Shared plumbing for the dashboard-interaction flows (#589).
+             * ============================================================ */
+
+            /** The tracker module's class, or null when the module failed to load. */
+            async function importTracker(): Promise<EventTrackerLike | null> {
+                const mod = (await import(eventTrackerUrl)) as { EventTracker?: EventTrackerLike; default?: EventTrackerLike };
+                return mod.EventTracker ?? mod.default ?? null;
+            }
+
+            /** Put back the graph and characters a flow seeded over (synchronous, so no await can interleave). */
+            function restoreTracker(ET: EventTrackerLike, graph: EventTrackerLike['_graph'], characters: EventTrackerLike['_characters']): void {
+                ET._graph = graph;
+                ET._characters = characters;
+            }
+
+            /** Record every call of a hook until `off()`; each entry is the hook's argument list. */
+            function recordHook(hook: string): { calls: Array<Array<string | number | boolean | TrackerChangeContext>>; off: () => void } {
+                const calls: Array<Array<string | number | boolean | TrackerChangeContext>> = [];
+                const id = HooksGbl?.on(hook, (...args) => {
+                    calls.push(args);
+                });
+                return {
+                    calls,
+                    off: () => {
+                        if (id !== undefined) HooksGbl?.off(hook, id);
+                    },
+                };
+            }
+
+            /** True when a recorded hook call carries the `manual` origin context last (a dashboard edit). */
+            const isManualCall = (args: ReadonlyArray<string | number | boolean | TrackerChangeContext>): boolean => {
+                const context = args[args.length - 1];
+                return typeof context === 'object' && context.origin === 'manual';
+            };
+
+            /** Click a dashboard tab and wait for it to become the active one. */
+            async function selectTrackerTab(tab: string): Promise<boolean> {
+                trackerRoot()?.querySelector<HTMLElement>(`[data-action="selectTab"][data-tab="${tab}"]`)?.click();
+                return pollUntil(() => trackerRoot()?.querySelector(`[data-action="selectTab"][data-tab="${tab}"][aria-selected="true"]`) != null);
+            }
+
+            /** Create a world JournalEntry, queued for teardown. */
+            async function createProbeJournal(name: string, vault?: { path: string; entityType: string; name: string }): Promise<XJournal | null> {
+                const journal = JournalGbl?.create
+                    ? await withTimeout(
+                          JournalGbl.create({ name, ...(vault === undefined ? {} : { flags: { 'wh40k-rpg': { vault } } }) }),
+                          `JournalEntry.create ${name}`,
+                      )
+                    : null;
+                if (journal != null) {
+                    cleanups.push(async () => {
+                        try {
+                            await journal.sheet?.close?.();
+                            await journal.delete?.();
+                        } catch {
+                            /* ignore */
+                        }
+                    });
+                }
+                return journal;
+            }
+
+            /** Create a world player-character actor, queued for teardown. */
+            async function createProbePc(name: string): Promise<XActor | null> {
+                const actor = ActorGbl?.create
+                    ? await withTimeout(ActorGbl.create({ name, type: 'dh2-character', system: { gameSystem: 'dh2' } }), `Actor.create ${name}`)
+                    : null;
+                const actorId = actor?.id;
+                if (actorId != null) {
+                    cleanups.push(async () => {
+                        try {
+                            await gameGbl?.actors?.get?.(actorId)?.delete?.();
+                        } catch {
+                            /* ignore */
+                        }
+                    });
+                }
+                return actor;
+            }
+
+            /** The dashboard's journal content link carrying `uuid`, or null. */
+            const trackerJournalLink = (uuid: string | undefined): HTMLElement | null =>
+                uuid === undefined
+                    ? null
+                    : Array.from(trackerRoot()?.querySelectorAll<HTMLElement>('a.content-link[data-wh40k-hook="evt-journal-link"]') ?? []).find(
+                          (link) => link.dataset['uuid'] === uuid,
+                      ) ?? null;
+
+            /** Click a journal link on the dashboard and wait for its journal's sheet to render, then close it. */
+            async function clickOpensJournal(journal: XJournal | null): Promise<boolean> {
+                const link = trackerJournalLink(journal?.uuid);
+                if (journal == null || link === null) return false;
+                link.click();
+                const opened = await pollUntil(() => journal.sheet?.rendered === true);
+                await journal.sheet?.close?.();
+                return opened;
+            }
+
+            /* ============================================================
+             * Flow 7b: event-tracker-macro-and-scene-control
+             * The two documented entry points open the dashboard: the
+             * `game.wh40k.EventTracker.open()` macro surface (the same
+             * class the module exports) and the GM's WH40K scene-control
+             * tool. The tool is read from the rendered scene controls, or —
+             * when the controls have not rendered (no canvas) — from a
+             * fresh `getSceneControlButtons` pass.
+             * ============================================================ */
+            async function probeMacroAndSceneControl(): Promise<void> {
+                const flow = 'event-tracker-macro-and-scene-control';
+                try {
+                    const ET = await importTracker();
+                    if (ET === null) {
+                        notes[flow] = 'EventTracker unavailable';
+                        return;
+                    }
+                    if (gameGbl?.user?.isGM !== true) {
+                        notes[flow] = 'not joined as GM — the dashboard is GM-only';
+                        return;
+                    }
+                    const macroSurface = gameGbl.wh40k?.EventTracker;
+                    const sameClass = macroSurface === ET;
+                    const sceneTool = (): XSceneControlTool | undefined => {
+                        const rendered = uiGbl?.controls?.controls?.['wh40k']?.tools?.['eventTracker'];
+                        if (rendered !== undefined) return rendered;
+                        const controls: XSceneControls = {};
+                        HooksGbl?.callAll('getSceneControlButtons', controls);
+                        return controls['wh40k']?.tools?.['eventTracker'];
+                    };
+                    const prevGraph = ET._graph;
+                    const prevChars = ET._characters;
+                    ET._graph = { 'evt-macro-probe': { id: 'evt-macro-probe', name: 'Macro Probe Event', source_name: 'Probe Act' } };
+                    try {
+                        macroSurface?.open();
+                        const openedByMacro = await pollUntil(() => trackerRoot() != null);
+                        await closeEventTracker();
+                        const tool = sceneTool();
+                        tool?.onChange?.(new Event('click'), true);
+                        const openedByControl = await pollUntil(() => trackerRoot() != null);
+                        if (sameClass && openedByMacro && tool?.visible === true && openedByControl) {
+                            fired[flow] = true;
+                            notes[flow] = 'game.wh40k.EventTracker.open() and the GM scene-control tool both open the dashboard';
+                        } else {
+                            notes[flow] = `sameClass=${sameClass} openedByMacro=${openedByMacro} toolVisible=${String(
+                                tool?.visible,
+                            )} openedByControl=${openedByControl}`;
+                        }
+                    } finally {
+                        await closeEventTracker();
+                        restoreTracker(ET, prevGraph, prevChars);
+                    }
+                } catch (err) {
+                    notes[flow] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            /* ============================================================
+             * Flow 7c: event-tracker-day-bar-and-resolve-toggle
+             * The day bar's next / previous buttons step the persisted
+             * campaign day (and the label) and fire campaignDayChanged
+             * with the manual origin; ticking an event's checkbox
+             * resolves it and fires eventResolved. Restores the day and
+             * the resolved state after.
+             * ============================================================ */
+            async function probeDayBarAndResolveToggle(): Promise<void> {
+                const flow = 'event-tracker-day-bar-and-resolve-toggle';
+                try {
+                    const ET = await importTracker();
+                    if (ET === null) {
+                        notes[flow] = 'EventTracker unavailable';
+                        return;
+                    }
+                    if (gameGbl?.user?.isGM !== true) {
+                        notes[flow] = 'not joined as GM — the dashboard is GM-only';
+                        return;
+                    }
+                    const eventId = 'evt-day-probe';
+                    const startDay = ET.getCampaignDay();
+                    const prevGraph = ET._graph;
+                    const prevChars = ET._characters;
+                    ET._graph = { [eventId]: { id: eventId, name: 'Day Probe Event', source_name: 'Day Probe Source' } };
+                    const dayHook = recordHook('wh40k-rpg.campaignDayChanged');
+                    const resolvedHook = recordHook('wh40k-rpg.eventResolved');
+                    const dayLabel = (): string => trackerRoot()?.querySelector('[data-wh40k-hook="evt-day-label"]')?.textContent.trim() ?? '';
+                    const stepDay = (delta: number): void => {
+                        trackerRoot()?.querySelector<HTMLElement>(`[data-action="stepDay"][data-delta="${delta}"]`)?.click();
+                    };
+                    try {
+                        ET.open();
+                        await pollUntil(() => trackerRoot()?.querySelector(`[data-wh40k-hook="evt-row"][data-event-id="${eventId}"]`) != null);
+                        const labelBefore = dayLabel();
+                        stepDay(1);
+                        const steppedForward = await pollUntil(() => ET.getCampaignDay() === startDay + 1);
+                        const labelMoved = await pollUntil(() => dayLabel() !== '' && dayLabel() !== labelBefore);
+                        stepDay(-1);
+                        const steppedBack = await pollUntil(() => ET.getCampaignDay() === startDay);
+                        const dayHooked = dayHook.calls.some((args) => args[0] === startDay + 1 && isManualCall(args));
+
+                        trackerRoot()?.querySelector<HTMLInputElement>(`[data-action="toggleResolved"][data-event-id="${eventId}"]`)?.click();
+                        const resolved = await pollUntil(() => eventId in (ET.getResolved() ?? {}));
+                        const resolvedHooked = resolvedHook.calls.some((args) => args[0] === eventId && args[1] === true && isManualCall(args));
+                        if (steppedForward && labelMoved && steppedBack && dayHooked && resolved && resolvedHooked) {
+                            fired[flow] = true;
+                            notes[flow] = 'day bar stepped the persisted day both ways and the checkbox resolved the event, each firing its hook';
+                        } else {
+                            notes[
+                                flow
+                            ] = `forward=${steppedForward} label=${labelMoved} back=${steppedBack} dayHook=${dayHooked} resolved=${resolved} resolvedHook=${resolvedHooked}`;
+                        }
+                    } finally {
+                        dayHook.off();
+                        resolvedHook.off();
+                        restoreTracker(ET, prevGraph, prevChars);
+                        await closeEventTracker();
+                        try {
+                            await ET.setResolved(eventId, false);
+                            await ET.setCampaignDay(startDay);
+                        } catch {
+                            /* best-effort */
+                        }
+                    }
+                } catch (err) {
+                    notes[flow] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            /* ============================================================
+             * Flow 7d: event-tracker-pc-attitude-edit
+             * On the Relations tab, editing a PC's attitude toward an NPC
+             * persists it to the world setting and fires
+             * pcAttitudeChanged. The PC row comes from a real world
+             * player-character actor.
+             * ============================================================ */
+            async function probePcAttitudeEdit(): Promise<void> {
+                const flow = 'event-tracker-pc-attitude-edit';
+                try {
+                    const ET = await importTracker();
+                    if (ET === null) {
+                        notes[flow] = 'EventTracker unavailable';
+                        return;
+                    }
+                    if (gameGbl?.user?.isGM !== true) {
+                        notes[flow] = 'not joined as GM — the dashboard is GM-only';
+                        return;
+                    }
+                    const npc = 'Attitude Probe Magos';
+                    const pcName = 'managers-extra-attitude-pc';
+                    const pcActor = await createProbePc(pcName);
+                    if (pcActor == null) {
+                        notes[flow] = 'PC actor could not be created';
+                        return;
+                    }
+                    const prevGraph = ET._graph;
+                    const prevChars = ET._characters;
+                    ET._graph = { 'evt-attitude-probe': { id: 'evt-attitude-probe', name: 'Attitude Probe Event', source_name: 'Probe Act' } };
+                    ET._characters = { [npc]: { dispositions: [{ target: 'party', attitude: 'neutral', default: true }], relationships: [] } };
+                    const attitudeHook = recordHook('wh40k-rpg.pcAttitudeChanged');
+                    const attitudeInput = (): HTMLInputElement | null =>
+                        Array.from(trackerRoot()?.querySelectorAll<HTMLInputElement>('[data-wh40k-hook="evt-pc-attitude"]') ?? []).find(
+                            (input) => input.dataset['npc'] === npc && input.dataset['pc'] === pcName,
+                        ) ?? null;
+                    try {
+                        ET.open();
+                        await pollUntil(() => trackerRoot() != null);
+                        const onRelations = await selectTrackerTab('relations');
+                        await pollUntil(() => attitudeInput() != null);
+                        const input = attitudeInput();
+                        if (input !== null) {
+                            input.value = 'wary';
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                        const persisted = await pollUntil(() => ET.getPcAttitudes(npc)[pcName] === 'wary');
+                        const hooked = attitudeHook.calls.some((args) => args[0] === npc && args[1] === pcName && args[2] === 'wary' && isManualCall(args));
+                        if (onRelations && input !== null && persisted && hooked) {
+                            fired[flow] = true;
+                            notes[flow] = "editing a PC's attitude on the Relations tab persisted it and fired pcAttitudeChanged";
+                        } else {
+                            notes[flow] = `relations=${onRelations} input=${input !== null} persisted=${persisted} hooked=${hooked}`;
+                        }
+                    } finally {
+                        attitudeHook.off();
+                        restoreTracker(ET, prevGraph, prevChars);
+                        await closeEventTracker();
+                        try {
+                            await ET.setPcAttitude(npc, pcName, '');
+                        } catch {
+                            /* best-effort */
+                        }
+                    }
+                } catch (err) {
+                    notes[flow] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            /* ============================================================
+             * Flow 7e: event-tracker-journal-links
+             * Each tracker reference renders as a native content link to
+             * its world JournalEntry, and clicking it opens that journal:
+             * the event source (Timeline, by exact name), the location
+             * (Location tab, by its vault identity flag though the journal
+             * was renamed), the NPC and a PC (Relations tab, by name).
+             * ============================================================ */
+            async function probeJournalLinks(): Promise<void> {
+                const flow = 'event-tracker-journal-links';
+                try {
+                    const ET = await importTracker();
+                    if (ET === null) {
+                        notes[flow] = 'EventTracker unavailable';
+                        return;
+                    }
+                    if (gameGbl?.user?.isGM !== true) {
+                        notes[flow] = 'not joined as GM — the dashboard is GM-only';
+                        return;
+                    }
+                    const source = 'Journal Probe Day';
+                    const location = 'Journal Probe Spire';
+                    const npc = 'Journal Probe Holt';
+                    const pcName = 'managers-extra-journal-pc';
+                    const sourceJournal = await createProbeJournal(source);
+                    const locationJournal = await createProbeJournal('Journal Probe Spire (renamed by the GM)', {
+                        path: `Locations/${location}.md`,
+                        entityType: 'location',
+                        name: location,
+                    });
+                    const npcJournal = await createProbeJournal(npc);
+                    const pcJournal = await createProbeJournal(pcName);
+                    const pcActor = await createProbePc(pcName);
+                    if (sourceJournal == null || locationJournal == null || npcJournal == null || pcJournal == null || pcActor == null) {
+                        notes[flow] = 'probe journals / PC actor could not be created';
+                        return;
+                    }
+                    const prevGraph = ET._graph;
+                    const prevChars = ET._characters;
+                    ET._graph = { 'evt-journal-probe': { id: 'evt-journal-probe', name: 'Journal Probe Event', location, source_name: source } };
+                    ET._characters = { [npc]: { dispositions: [{ target: 'party', attitude: 'neutral', default: true }], relationships: [] } };
+                    try {
+                        ET.open();
+                        await pollUntil(() => trackerJournalLink(sourceJournal.uuid) != null);
+                        const sourceOpens = await clickOpensJournal(sourceJournal);
+                        await selectTrackerTab('location');
+                        await pollUntil(() => trackerJournalLink(locationJournal.uuid) != null);
+                        const locationOpens = await clickOpensJournal(locationJournal);
+                        await selectTrackerTab('relations');
+                        await pollUntil(() => trackerJournalLink(npcJournal.uuid) != null && trackerJournalLink(pcJournal.uuid) != null);
+                        const npcOpens = await clickOpensJournal(npcJournal);
+                        const pcOpens = await clickOpensJournal(pcJournal);
+                        if (sourceOpens && locationOpens && npcOpens && pcOpens) {
+                            fired[flow] = true;
+                            notes[flow] = 'event source, location (by vault flag), NPC and PC links each opened their journal entry';
+                        } else {
+                            notes[flow] = `source=${sourceOpens} location=${locationOpens} npc=${npcOpens} pc=${pcOpens}`;
+                        }
+                    } finally {
+                        await closeEventTracker();
+                        restoreTracker(ET, prevGraph, prevChars);
+                    }
+                } catch (err) {
+                    notes[flow] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
+                }
+            }
+
+            /* ============================================================
+             * Flow 7f: event-tracker-scene-buttons
+             * A location with no scene offers Spawn Scene; clicking it
+             * creates the scene, stamped with the location journal's vault
+             * identity, and the group then offers Go to Scene instead.
+             * (Go to Scene itself views the scene on the canvas, so it is
+             * not clicked here.)
+             * ============================================================ */
+            async function probeSceneButtons(): Promise<void> {
+                const flow = 'event-tracker-scene-buttons';
+                try {
+                    const ET = await importTracker();
+                    if (ET === null) {
+                        notes[flow] = 'EventTracker unavailable';
+                        return;
+                    }
+                    if (gameGbl?.user?.isGM !== true) {
+                        notes[flow] = 'not joined as GM — the dashboard is GM-only';
+                        return;
+                    }
+                    const location = 'Scene Probe Hab Block';
+                    const journal = await createProbeJournal('Scene Probe Hab Block (journal)', {
+                        path: `Locations/${location}.md`,
+                        entityType: 'location',
+                        name: location,
+                    });
+                    if (journal == null) {
+                        notes[flow] = 'location journal could not be created';
+                        return;
+                    }
+                    const spawnedScene = (): XScene | undefined => gameGbl.scenes?.contents?.find((scene) => scene.name === location);
+                    const sceneButton = (action: string): HTMLElement | null =>
+                        Array.from(trackerRoot()?.querySelectorAll<HTMLElement>(`[data-action="${action}"]`) ?? []).find(
+                            (button) => button.dataset['location'] === location,
+                        ) ?? null;
+                    const prevGraph = ET._graph;
+                    const prevChars = ET._characters;
+                    ET._graph = { 'evt-scene-probe': { id: 'evt-scene-probe', name: 'Scene Probe Event', location, source_name: 'Probe Act' } };
+                    try {
+                        ET.open();
+                        await pollUntil(() => trackerRoot() != null);
+                        await selectTrackerTab('location');
+                        const offeredSpawn = await pollUntil(() => sceneButton('spawnScene') != null);
+                        sceneButton('spawnScene')?.click();
+                        const created = await pollUntil(() => spawnedScene() !== undefined);
+                        const sceneId = spawnedScene()?.id;
+                        if (sceneId != null) {
+                            cleanups.push(async () => {
+                                try {
+                                    await gameGbl.scenes?.contents?.find((scene) => scene.id === sceneId)?.delete?.();
+                                } catch {
+                                    /* ignore */
+                                }
+                            });
+                        }
+                        const vault = spawnedScene()?.flags?.['wh40k-rpg']?.vault;
+                        const stamped = vault?.entityType === 'location' && vault.name === location;
+                        const offeredGo = await pollUntil(() => sceneButton('viewScene') != null && sceneButton('spawnScene') == null);
+                        if (offeredSpawn && created && stamped && offeredGo) {
+                            fired[flow] = true;
+                            notes[flow] = 'Spawn Scene created a vault-stamped scene and the group switched to Go to Scene';
+                        } else {
+                            notes[flow] = `spawnOffered=${offeredSpawn} created=${created} stamped=${stamped} goOffered=${offeredGo}`;
+                        }
+                    } finally {
+                        await closeEventTracker();
+                        restoreTracker(ET, prevGraph, prevChars);
+                    }
+                } catch (err) {
+                    notes[flow] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                 }
             }
 
@@ -1076,6 +1561,11 @@ async function probeManagersExtraFlows(page: Page): Promise<ProbeResult> {
                 await probeComputeStates();
                 await probeBuildContentHtml();
                 await probeOpenDialog();
+                await probeMacroAndSceneControl();
+                await probeDayBarAndResolveToggle();
+                await probePcAttitudeEdit();
+                await probeJournalLinks();
+                await probeSceneButtons();
                 await probeSharedActors();
                 await probeDropNonDroppable();
                 await probeDropNoToken();
