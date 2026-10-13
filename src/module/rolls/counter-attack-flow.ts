@@ -63,7 +63,7 @@ export function currentCombatTurn(combat: TurnSource | null): CombatTurnStamp | 
     return { combatId: combat.id, round: combat.round, turn: combat.turn ?? 0 };
 }
 
-/** A held item as {@link parryWeaponId} reads it. */
+/** A held item as {@link parryingWeapon} reads it. */
 export interface HeldWeapon {
     readonly id: string | null;
     readonly isMelee: boolean;
@@ -71,14 +71,15 @@ export interface HeldWeapon {
 }
 
 /**
- * The weapon a Parry was made with: the first equipped melee weapon that can
- * parry, or '' for bare hands.
- * @param {Iterable<HeldWeapon>} items  The actor's owned items.
+ * The weapon a Parry is made with: the first equipped melee weapon that can
+ * parry, or null for bare hands. The Counter Attack strikes with it (#603) and its
+ * qualities modify the Parry (#414).
+ * @param {Iterable<T>} items  The actor's owned items.
  */
-export function parryWeaponId(items: Iterable<HeldWeapon>): string {
+export function parryingWeapon<T extends HeldWeapon>(items: Iterable<T>): T | null {
     for (const item of items) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: an owned Foundry Item read through the duck-typed QualityItem canWeaponParry accepts
-        if (item.isMelee && item.equipped && canWeaponParry(item as Parameters<typeof canWeaponParry>[0])) return item.id ?? '';
+        if (item.isMelee && item.equipped && canWeaponParry(item as Parameters<typeof canWeaponParry>[0])) return item;
     }
-    return '';
+    return null;
 }

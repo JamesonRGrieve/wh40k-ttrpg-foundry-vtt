@@ -2151,6 +2151,7 @@ export type I18nKey =
     | 'WH40K.Evasion.Evaded'
     | 'WH40K.Evasion.FullyEvaded'
     | 'WH40K.Evasion.NotYours'
+    | 'WH40K.Evasion.ParryingWeaponQuality'
     | 'WH40K.Evasion.Part.Cap'
     | 'WH40K.Evasion.Part.Degrees'
     | 'WH40K.Evasion.Part.Hit'

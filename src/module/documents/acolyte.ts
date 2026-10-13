@@ -614,7 +614,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {EvasionSkill} skill  The evasion skill.
      */
     async rollEvasionTest(prompt: EvasionPromptContext, skill: EvasionSkill): Promise<void> {
-        return this.rollSkill(skill, undefined, { instance: new EvasionActionData(prompt, skill) });
+        return this.rollSkill(skill, undefined, { instance: EvasionActionData.forActor(this, prompt, skill) });
     }
 
     /**

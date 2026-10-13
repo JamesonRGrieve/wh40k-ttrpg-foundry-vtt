@@ -18,7 +18,7 @@ import { test } from './lib/test';
  *   - `weapon-jam.ts` (0% / 80%) — `getJamFloor` + `shouldJamRoll`.
  *   - `weapon-quality-effects.ts` (0% / 66.8%) — the quality lookup
  *     helpers (`weaponHasQuality`, `rollDataHasQuality`,
- *     `getWeaponParryModifier`).
+ *     `weaponParryModifiers`).
  *   - `critical-damage.ts` (0% / 33.9%) — `getFuzzy` (the table-key
  *     fuzzy matcher), `invalidateCriticalDamageCache`,
  *     `loadCriticalDamageTable`, `getCriticalDamage` (needs the table
@@ -42,7 +42,7 @@ const RULE_FLOWS = [
     'weapon-jam-shouldRoll',
     'quality-weaponHasQuality',
     'quality-rollDataHasQuality',
-    'quality-getWeaponParryModifier',
+    'quality-weaponParryModifiers',
     'critical-damage-getFuzzy',
     'critical-damage-loadTable',
     'critical-damage-invalidateCache',
@@ -86,7 +86,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         interface WeaponQualityModule extends ImportError {
             weaponHasQuality: (weapon: FakeWeapon | null, quality: string) => boolean;
             rollDataHasQuality: (rollData: { attackSpecials: { name: string }[] }, quality: string) => boolean;
-            getWeaponParryModifier: (weapon: FakeWeapon | null) => number;
+            weaponParryModifiers: (weapon: FakeWeapon | null) => { quality: string; value: number }[];
         }
         interface CriticalDamageModule extends ImportError {
             // getFuzzy / loadCriticalDamageTable are module-internal; getCriticalDamage
@@ -195,7 +195,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             // ---------- weapon-quality-effects ----------
             const wq = await loadModule<WeaponQualityModule>('weapon-quality-effects');
             if (wq.__importError != null) {
-                for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-getWeaponParryModifier'] as const)
+                for (const k of ['quality-weaponHasQuality', 'quality-rollDataHasQuality', 'quality-weaponParryModifiers'] as const)
                     record(k, false, wq.__importError);
             } else {
                 // weaponHasQuality reads `weapon.system.effectiveSpecial`
@@ -221,13 +221,13 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     record('quality-rollDataHasQuality', false, err instanceof Error ? err.message : String(err));
                 }
                 try {
-                    // getWeaponParryModifier walks the same effectiveSpecial Set;
-                    // 'balanced' yields a non-zero parry modifier, null yields 0.
-                    const parry = wq.getWeaponParryModifier({ system: { effectiveSpecial: new Set(['balanced']) } });
-                    const noParry = wq.getWeaponParryModifier(null);
-                    record('quality-getWeaponParryModifier', Number.isFinite(parry) && Number.isFinite(noParry), null);
+                    // weaponParryModifiers walks the same effectiveSpecial Set;
+                    // 'balanced' yields its authored parry row, null yields none.
+                    const parry = wq.weaponParryModifiers({ system: { effectiveSpecial: new Set(['balanced']) } });
+                    const noParry = wq.weaponParryModifiers(null);
+                    record('quality-weaponParryModifiers', Array.isArray(parry) && noParry.length === 0, null);
                 } catch (err) {
-                    record('quality-getWeaponParryModifier', false, err instanceof Error ? err.message : String(err));
+                    record('quality-weaponParryModifiers', false, err instanceof Error ? err.message : String(err));
                 }
             }
 

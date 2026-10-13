@@ -222,39 +222,35 @@ function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModif
 /*  Parry Modifiers (Category B)                */
 /* -------------------------------------------- */
 
+/** One quality's modifier on a Parry made with the weapon that carries it. */
+export interface ParryQualityModifier {
+    /** The quality id as the weapon carries it (`balanced`, `defensive`, …). */
+    readonly quality: string;
+    readonly value: number;
+}
+
 /**
- * Get parry modifier for a weapon.
- * Returns the total modifier to apply when parrying with this weapon.
- *
- * @param {Item} weapon - The weapon being used to parry
- * @returns {number} Total parry modifier (can be positive, negative, or 0)
+ * The modifiers a weapon's own qualities put on a Parry made with it (#414), one
+ * per quality so each is a sourced row on the test. Every line prints the same
+ * three: Balanced "+10 bonus to Weapon Skill tests made to Parry", Defensive "+15
+ * bonus to tests made when used to Parry", Unbalanced "–10 penalty when used to
+ * Parry". The values are the qualities' authored `parryBonus` / `parryPenalty`,
+ * resolved for the wielder's line — no quality is named here. (Unwieldy, which
+ * cannot parry at all, is {@link canWeaponParry}.)
+ * @param {QualityItem | null | undefined} weapon  The weapon the Parry is made with.
+ * @param {string} [systemId]  The wielder's game line.
+ * @returns {ParryQualityModifier[]}  The non-zero modifiers, in the weapon's quality order.
  */
-export function getWeaponParryModifier(weapon: QualityItem | null | undefined): number {
-    if (!weapon) return 0;
-
-    let totalModifier = 0;
-
-    // Unwieldy: Cannot parry (return special flag)
-    if (weaponHasQuality(weapon, 'unwieldy')) {
-        return -999; // Special flag indicating cannot parry
+export function weaponParryModifiers(weapon: QualityItem | null | undefined, systemId?: string): ParryQualityModifier[] {
+    const ids = weapon?.system?.effectiveSpecial ?? weapon?.system?.special;
+    if (ids === undefined) return [];
+    const modifiers: ParryQualityModifier[] = [];
+    for (const quality of ids) {
+        const mechanics = getWeaponQualityMechanicsForId(quality, systemId);
+        const value = (mechanics?.parryBonus ?? 0) + (mechanics?.parryPenalty ?? 0);
+        if (value !== 0) modifiers.push({ quality, value });
     }
-
-    // Defensive: +15 WS for parry
-    if (weaponHasQuality(weapon, 'defensive')) {
-        totalModifier += getWeaponQualityMechanics('defensive')?.parryBonus ?? 0;
-    }
-
-    // Balanced: +10 WS for parry
-    if (weaponHasQuality(weapon, 'balanced')) {
-        totalModifier += getWeaponQualityMechanics('balanced')?.parryBonus ?? 0;
-    }
-
-    // Unbalanced: -10 to parry attempts
-    if (weaponHasQuality(weapon, 'unbalanced')) {
-        totalModifier += getWeaponQualityMechanics('unbalanced')?.parryPenalty ?? 0;
-    }
-
-    return totalModifier;
+    return modifiers;
 }
 
 /**

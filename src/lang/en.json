@@ -825,6 +825,7 @@
             "FullyEvaded": "{defender} evaded every hit: there is no damage to roll.",
             "Evaded": "Evaded",
             "AttackerWeaponParryPenalty": "Parrying {weapon}",
+            "ParryingWeaponQuality": "{quality} ({weapon})",
             "CounterAttack": "Counter attack {attacker}",
             "CounterAttackTooltip": "{source}: attack back with the weapon that parried ({modifier} to the test)",
             "CounterAttackSpent": "Counter Attack has already been used this turn.",

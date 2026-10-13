@@ -955,7 +955,7 @@ const RULE_FLOWS = [
     'weapon-jam-shouldRoll',
     'quality-weaponHasQuality',
     'quality-rollDataHasQuality',
-    'quality-getWeaponParryModifier',
+    'quality-weaponParryModifiers',
     'critical-damage-getFuzzy',
     'critical-damage-loadTable',
     'critical-damage-invalidateCache',

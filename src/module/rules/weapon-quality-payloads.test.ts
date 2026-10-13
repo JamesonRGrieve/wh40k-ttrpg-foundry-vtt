@@ -100,6 +100,16 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('per-system weaponQuality index resolution
         });
     }
 
+    // #414 — every line prints Balanced +10, Defensive +15 and Unbalanced –10 to a
+    // Parry made with the weapon (DH1, DH2, RT, DW, BC, OW cores).
+    for (const { systemId } of PACKS) {
+        it(`${systemId}: resolves the Balanced / Defensive / Unbalanced parry modifiers through the ref`, () => {
+            expect(getWeaponQualityMechanics('balanced', systemId)?.parryBonus).toBe(10);
+            expect(getWeaponQualityMechanics('defensive', systemId)?.parryBonus).toBe(15);
+            expect(getWeaponQualityMechanics('unbalanced', systemId)?.parryPenalty).toBe(-10);
+        });
+    }
+
     it('defaults dieOps to an empty list for qualities that declare none', () => {
         expect(getWeaponQualityMechanics('accurate')?.dieOps).toEqual([]);
         expect(getWeaponQualityMechanics('scatter', 'dh2')?.dieOps).toEqual([]);

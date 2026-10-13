@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { currentCombatTurn, parryWeaponId, reactionHookSources } from './counter-attack-flow.ts';
+import { currentCombatTurn, parryingWeapon, reactionHookSources } from './counter-attack-flow.ts';
 
 describe('reactionHookSources (#603)', () => {
     it('collects the hooks each talent declares, and nothing from other items', () => {
@@ -21,12 +21,12 @@ describe('currentCombatTurn', () => {
     });
 });
 
-describe('parryWeaponId', () => {
+describe('parryingWeapon', () => {
     it('picks the first equipped melee weapon that can parry; bare hands otherwise', () => {
         const maul = { id: 'maul', isMelee: true, equipped: true, system: { special: new Set(['unwieldy']) } };
         const sword = { id: 'sword', isMelee: true, equipped: true, system: { special: new Set(['balanced']) } };
         const pistol = { id: 'pistol', isMelee: false, equipped: true, system: { special: new Set<string>() } };
-        expect(parryWeaponId([pistol, maul, sword])).toBe('sword');
-        expect(parryWeaponId([pistol, maul])).toBe('');
+        expect(parryingWeapon([pistol, maul, sword])).toBe(sword);
+        expect(parryingWeapon([pistol, maul])).toBeNull();
     });
 });

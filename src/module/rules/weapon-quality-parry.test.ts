@@ -13,6 +13,7 @@ import {
     getAttackerWeaponParryPenalty,
     warpWardingProperties,
     weaponIgnoresArmor,
+    weaponParryModifiers,
     type WornArmourCandidate,
 } from './weapon-quality-effects.ts';
 import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
@@ -42,6 +43,29 @@ describe('canWeaponParry / attackerWeaponPreventsParry', () => {
     it('a Flexible attacking weapon cannot be parried', () => {
         expect(attackerWeaponPreventsParry(weaponWith(['flexible']))).toBe(true);
         expect(attackerWeaponPreventsParry(weaponWith(['tearing']))).toBe(false);
+    });
+});
+
+describe('weaponParryModifiers — the parrying weapon’s own qualities (#414)', () => {
+    it('one row per quality carrying a parry modifier, read off its authored mechanics', () => {
+        setWeaponQualityPayloadsForTesting({ balanced: { parryBonus: 10 }, defensive: { parryBonus: 15 }, unbalanced: { parryPenalty: -10 }, tearing: {} });
+        expect(weaponParryModifiers(weaponWith(['balanced', 'tearing']), 'dh2')).toEqual([{ quality: 'balanced', value: 10 }]);
+        expect(weaponParryModifiers(weaponWith(['defensive', 'unbalanced']), 'bc')).toEqual([
+            { quality: 'defensive', value: 15 },
+            { quality: 'unbalanced', value: -10 },
+        ]);
+    });
+
+    it('prefers the effective qualities (craftsmanship-derived) over the base set', () => {
+        setWeaponQualityPayloadsForTesting({ balanced: { parryBonus: 10 } });
+        const weapon = { system: { special: new Set<string>(), effectiveSpecial: new Set(['balanced']) } } as QualityWeapon;
+        expect(weaponParryModifiers(weapon, 'rt')).toEqual([{ quality: 'balanced', value: 10 }]);
+    });
+
+    it('no weapon, or no parry qualities, puts nothing on the test', () => {
+        setWeaponQualityPayloadsForTesting({ tearing: {} });
+        expect(weaponParryModifiers(null, 'dh2')).toEqual([]);
+        expect(weaponParryModifiers(weaponWith(['tearing']), 'dh2')).toEqual([]);
     });
 });
 
