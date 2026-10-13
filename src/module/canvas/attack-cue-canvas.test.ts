@@ -11,8 +11,14 @@ import { playCuePlan } from './attack-cue-canvas.ts';
 /** A PIXI.Graphics stand-in that records the drawing calls it receives. */
 class FakeGraphics {
     static drawn = 0;
+    static made: FakeGraphics[] = [];
     destroyed = false;
+    constructor() {
+        FakeGraphics.made.push(this);
+    }
+    /** Like PIXI's: a destroyed graphic has no geometry left to clear. */
     clear(): this {
+        if (this.destroyed) throw new TypeError("Cannot read properties of null (reading 'clear')");
         return this;
     }
     lineStyle(): this {
@@ -160,6 +166,7 @@ beforeEach(() => {
     reducedMotion = false;
     sequencerCalls.length = 0;
     FakeGraphics.drawn = 0;
+    FakeGraphics.made = [];
     stubWorld();
 });
 
@@ -175,6 +182,25 @@ describe('playCuePlan — procedural canvas effects', () => {
         expect(addChild).toHaveBeenCalled();
         expect(FakeGraphics.drawn).toBeGreaterThan(0);
         expect(removeChild).toHaveBeenCalledTimes(addChild.mock.calls.length);
+    });
+
+    // Tier B (#599 area attack spec): deleting the scene mid-cue destroyed the interface
+    // layer's children, and every later frame threw drawing into the dead graphic.
+    it('stops a cue whose graphic the canvas destroyed mid-animation', () => {
+        const queuedFrames: Array<(now: number) => void> = [];
+        vi.stubGlobal('requestAnimationFrame', (tick: (now: number) => void): number => queuedFrames.push(tick));
+        playCuePlan({ sceneId: 'scene1', steps: [stepFor('fire')] });
+        const graphic = FakeGraphics.made.at(0);
+        expect(graphic).toBeDefined();
+        graphic?.destroy();
+        const pending = queuedFrames.splice(0);
+        expect(pending.length).toBeGreaterThan(0);
+        expect(() => {
+            for (const tick of pending) tick(performance.now() + 100);
+        }).not.toThrow();
+        // It neither asks for another frame nor removes what the canvas already tore down.
+        expect(queuedFrames).toEqual([]);
+        expect(removeChild).not.toHaveBeenCalled();
     });
 
     it('plays each step at its delay', () => {

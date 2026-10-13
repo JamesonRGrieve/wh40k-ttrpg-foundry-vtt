@@ -129,10 +129,14 @@ function resolveAnchor(anchor: CueAnchor): CuePoint | null {
 /*  Procedural drawing                          */
 /* -------------------------------------------- */
 
-/** Run `frame(progress)` each animation frame for `durationMs`, then `done()`. */
-function animate(durationMs: number, frame: (progress: number) => void, done: () => void): void {
+/**
+ * Run `frame(progress)` each animation frame for `durationMs`, then `done()`. Stops
+ * at once, without `done()`, as soon as `alive()` turns false.
+ */
+function animate(durationMs: number, frame: (progress: number) => void, done: () => void, alive: () => boolean): void {
     const start = performance.now();
     const tick = (now: number): void => {
+        if (!alive()) return;
         const progress = Math.min(1, (now - start) / durationMs);
         frame(progress);
         if (progress < 1) requestAnimationFrame(tick);
@@ -141,7 +145,12 @@ function animate(durationMs: number, frame: (progress: number) => void, done: ()
     requestAnimationFrame(tick);
 }
 
-/** Draw a short-lived graphic on the interface layer, redrawn each frame until it ends. */
+/**
+ * Draw a short-lived graphic on the interface layer, redrawn each frame until it ends.
+ * The canvas may be torn down mid-cue (the scene changes or is deleted), destroying the
+ * layer's children; the cue then simply stops instead of drawing into a destroyed
+ * graphic, which threw on every remaining frame.
+ */
 function drawTransient(durationMs: number, draw: (graphic: PIXI.Graphics, progress: number) => void): void {
     const layer = canvas.interface;
     if (layer === undefined) return;
@@ -157,6 +166,7 @@ function drawTransient(durationMs: number, draw: (graphic: PIXI.Graphics, progre
             layer.removeChild(graphic);
             graphic.destroy();
         },
+        () => !graphic.destroyed,
     );
 }
 
