@@ -79,6 +79,9 @@ function worldScenes(): WorldScene[] {
 interface EventTrackerContext extends Record<string, unknown>, EventTrackerView {}
 
 export default class EventTrackerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    /** Re-declared: HandlebarsApplicationMixin flattens the base type and drops the getter (mirrors WorldTimeWidget). */
+    declare rendered: boolean;
+
     static #instance: EventTrackerDialog | null = null;
 
     /** @override */
@@ -195,7 +198,7 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
     }
 
     #refresh(): void {
-        if (this.isRendered) void this.render();
+        if (this.rendered) void this.render();
     }
 
     /** Run a tracker write, surfacing a failure to the GM rather than as an unhandled rejection. */

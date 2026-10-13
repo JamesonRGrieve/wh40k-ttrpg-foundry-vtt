@@ -622,7 +622,6 @@ declare global {
                 controls: unknown[];
             };
             get element(): HTMLElement;
-            get isRendered(): boolean;
             get status(): number;
             render(options?: boolean | ApplicationV2Config.RenderOptions): Promise<unknown>;
             close(options?: Record<string, unknown>): Promise<unknown>;
