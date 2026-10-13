@@ -37,6 +37,7 @@ const { buildUuidIndex, resolveAdventure } = require("./scripts/resolve-adventur
 const { validateAdventurePacks } = require("./scripts/validate-adventure-events.cjs");
 const { iterPackJson } = require("./scripts/lib/iter-pack-json.cjs");
 const { packRecords } = require("./scripts/lib/pack-sublevels.cjs");
+const { withCompleteTokenFootprint } = require("./scripts/lib/pack-prototype-token.cjs");
 
 const util = require('util');
 if (!util.isDate) {
@@ -322,6 +323,8 @@ async function compilePacks() {
           // results) in its own sublevel record — inline embedded objects are
           // dropped on load (#560; scripts/lib/pack-sublevels.cjs).
           if (doc._id) {
+            // A partial prototypeToken makes the server's depth migration NaN (#602).
+            if (collectionType === 'actors') doc = withCompleteTokenFootprint(doc);
             const { records, skipped } = packRecords(collectionType, doc);
             for (const where of skipped) console.warn(`Skipped an embedded document with no _id (${where}) in ${filePath}`);
             for (const { key, value } of records) ops.push({ type: 'put', key, value });
