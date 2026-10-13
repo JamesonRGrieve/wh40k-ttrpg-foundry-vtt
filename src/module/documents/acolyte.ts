@@ -30,19 +30,17 @@ import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
-import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import {
     FitModificationActionData,
     type ModifiableWeapon,
     type ModificationParts,
     RemoveModificationActionData,
 } from '../rolls/weapon-modification-action-data.ts';
+import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
-import { isXenosEquipment, readXenosRepairInsight, XENOS_REPAIR_INSIGHT_FLAG, xenosRepairModifiers, type XenosRepairRules } from '../rules/xenos-equipment.ts';
-import type {
 import {
     MODIFICATION_BLOCKER_KEYS,
     type ModifiableWeaponSystem,
@@ -53,6 +51,8 @@ import {
     type ModificationSource,
     partsSourceUuid,
 } from '../rules/weapon-modification.ts';
+import { isXenosEquipment, readXenosRepairInsight, XENOS_REPAIR_INSIGHT_FLAG, xenosRepairModifiers, type XenosRepairRules } from '../rules/xenos-equipment.ts';
+import type {
     WH40KActorBio,
     WH40KActorSystemData,
     WH40KArmourLocation,
@@ -130,11 +130,11 @@ interface SkillEntry {
     trained?: boolean;
 }
 
-const SKILL_ALIASES: Record<string, string> = {
-    navigate: 'navigation',
 /** A weapon Item read through the personal-modification surface (#136): its fitted list, qualities, class / type and their labels. */
 type FittableWeapon = ModifiableWeapon & StatefulItem & { system: ModifiableWeaponSystem & { classLabel: string; typeLabel: string } };
 
+const SKILL_ALIASES: Record<string, string> = {
+    navigate: 'navigation',
 };
 
 /**

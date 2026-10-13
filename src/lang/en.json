@@ -7707,6 +7707,15 @@
             "EnterEditMode": "Enter Edit Mode",
             "ExitEditMode": "Exit Edit Mode"
         },
+        "Encumbrance": {
+            "Label": "Carrying",
+            "Title": "Encumbrance",
+            "TitleOverweight": "Encumbrance (overweight)",
+            "Current": "Current Enc.",
+            "Max": "Max Enc.",
+            "BackpackCurrent": "Backpack Current Enc.",
+            "BackpackMax": "Backpack Max Enc."
+        },
         "WeaponModification": {
             "EffectTitle": "Weapon Modification",
             "FitAction": "Fit a modification",
@@ -7723,15 +7732,6 @@
             "RemovedPartsKept": "{modification} comes off {weapon} with its parts intact.",
             "RemovedPartsLost": "{modification} comes off {weapon}, but its parts are lost.",
             "RemovedPartsMissing": "{modification} comes off {weapon}, but its parts' source document is gone, so they cannot be returned."
-        },
-        "Encumbrance": {
-            "Label": "Carrying",
-            "Title": "Encumbrance",
-            "TitleOverweight": "Encumbrance (overweight)",
-            "Current": "Current Enc.",
-            "Max": "Max Enc.",
-            "BackpackCurrent": "Backpack Current Enc.",
-            "BackpackMax": "Backpack Max Enc."
         },
         "WeaponSheet": {
             "EffectDamage": "Damage {value}",

@@ -44,10 +44,10 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /**
-     * RT core with the 1.4 errata (pp. 239/242): "The total number of hits scored
     /** RT core p. 133 Weapon Upgrades: a successful Trade (Armourer) test (#136). */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
+    /**
+     * RT core with the 1.4 errata (pp. 239/242): "The total number of hits scored
      * by a weapon cannot exceed the weapon's … Rate of Fire"; Suppressing Fire:
      * "The number of hits scored may not exceed …"; Storm: the errata FAQ answers
      * "Double the Rate of Fire" — #607.

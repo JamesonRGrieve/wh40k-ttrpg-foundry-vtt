@@ -49,11 +49,11 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
  * (Enemies Without p. 42) first needs a Hard (−20) Forbidden Lore test, then
  * repairs at −20 +5 per degree of success on it.
  */
+const DH2_XENOS_EQUIPMENT_RULES: XenosRepairRules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
+
 export const DH2_ITEM_REPAIR_RULES: ItemRepairRules = {
     craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
     destroyedAtDegreesOfFailure: 4,
-const DH2_XENOS_EQUIPMENT_RULES: XenosRepairRules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
-
     xenos: DH2_XENOS_EQUIPMENT_RULES,
 };
 
@@ -100,10 +100,10 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;
     readonly inquestRules: InquestRules = DH2_INQUEST_RULES;
     readonly itemRepair: ItemRepairRules = DH2_ITEM_REPAIR_RULES;
+    readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
     /**
      * DH2 core ch. VII: "The number of total hits scored in this manner cannot
      * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
-    readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
      * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
