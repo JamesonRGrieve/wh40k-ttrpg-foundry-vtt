@@ -25,7 +25,7 @@ import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
 /* -------------------------------------------- */
 
 /** API surface added by ApplicationV2Mixin */
-export interface ApplicationV2MixinAPI {
+interface ApplicationV2MixinAPI {
     /** Expanded states for collapsible sections persisted between renders. */
     readonly expandedSections: Map<string, boolean>;
     /** Localized window subtitle. */
@@ -88,7 +88,7 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
 /* -------------------------------------------- */
 
 /** API surface added by TooltipMixin */
-export interface TooltipMixinAPI {
+interface TooltipMixinAPI {
     prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
     prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
     prepareArmorTooltip: (location: string, armorData: WH40KArmourLocation, equipped?: ArmorTooltipEquippedPiece[]) => string;
@@ -155,7 +155,7 @@ export interface EnhancedAnimationsMixinAPI {
 /* -------------------------------------------- */
 
 /** API surface added by CollapsiblePanelMixin */
-export interface CollapsiblePanelMixinAPI {
+interface CollapsiblePanelMixinAPI {
     _loadPanelStates: () => void;
     _savePanelState: (panelId: string, isExpanded: boolean) => Promise<void>;
     _getPanelFlagKey: () => string;
@@ -173,7 +173,7 @@ export interface CollapsiblePanelMixinAPI {
 /* -------------------------------------------- */
 
 /** API surface added by ContextMenuMixin */
-export interface ContextMenuMixinAPI {
+interface ContextMenuMixinAPI {
     _createContextMenus: () => void;
     _createCustomContextMenus: () => void;
     _getCharacteristicContextOptions: (target: HTMLElement) => Record<string, unknown>[];
@@ -240,7 +240,7 @@ export interface EnhancedDragDropMixinAPI {
 /* -------------------------------------------- */
 
 /** API surface added by WhatIfMixin */
-export interface WhatIfMixinAPI {
+interface WhatIfMixinAPI {
     _whatIfActive: boolean;
     _whatIfChanges: Record<string, unknown>;
     _whatIfPreview: unknown;
@@ -268,21 +268,21 @@ export interface WhatIfMixinAPI {
 /* -------------------------------------------- */
 
 /** API surface added by StatBreakdownMixin */
-export interface StatBreakdownMixinAPI {
+interface StatBreakdownMixinAPI {
     close: (options?: Record<string, unknown>) => Promise<void>;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by ActiveModifiersMixin */
-export interface ActiveModifiersMixinAPI {
+interface ActiveModifiersMixinAPI {
     prepareActiveModifiers: () => unknown;
 }
 
 /* -------------------------------------------- */
 
 /** API surface added by ItemPreviewMixin — all methods are static action handlers or private (#) members; no public instance API beyond DEFAULT_OPTIONS actions */
-export type ItemPreviewMixinAPI = object;
+type ItemPreviewMixinAPI = object;
 
 /* -------------------------------------------- */
 

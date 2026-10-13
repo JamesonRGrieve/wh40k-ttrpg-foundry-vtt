@@ -1,4 +1,4 @@
-export type AnyApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+type AnyApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 
 // TypeScript's mixin support still requires an `any[]` constructor signature.
 // biome-ignore lint/suspicious/noExplicitAny: mixin constructor requires any[] per TS mixin rule (TS2545)

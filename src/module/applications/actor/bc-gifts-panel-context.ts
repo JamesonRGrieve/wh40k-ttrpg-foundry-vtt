@@ -35,7 +35,7 @@ interface PendingRollEntry {
 }
 
 /** One Gift row of the panel. */
-export interface GiftPanelEntry {
+interface GiftPanelEntry {
     id: string;
     name: string;
     img: string;

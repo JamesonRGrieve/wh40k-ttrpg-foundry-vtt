@@ -17,13 +17,13 @@ import type { ShipAssaultShip } from '../../rules/ship-assault.ts';
 import type { Localize } from './ship-assault-card.ts';
 
 /** Identifier of each assault flow; doubles as the sheet's `data-assault` value. */
-export type ShipAssaultFlowId = 'board' | 'boarding-round' | 'hit-and-run' | 'ram';
+type ShipAssaultFlowId = 'board' | 'boarding-round' | 'hit-and-run' | 'ram';
 
 /** Which voidcraft-sheet tab surfaces the action. */
 export type ShipAssaultTab = 'manoeuvre' | 'extended';
 
 /** One option of a select field. */
-export interface AssaultFieldOption {
+interface AssaultFieldOption {
     value: string;
     label: string;
 }
@@ -84,7 +84,7 @@ export interface AssaultFormValues {
 }
 
 /** A resolved step plus the dice it rolled (attached to the chat message). */
-export interface AssaultStep<R> {
+interface AssaultStep<R> {
     resolution: R;
     rolls: Roll[];
 }

@@ -32,7 +32,7 @@ interface ShipActionDialogOptions extends ApplicationV2Config.DefaultOptions {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export class ShipActionDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class ShipActionDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     readonly ship: WH40KVoidcraft;
     readonly order: ShipActionOrder;
     readonly requirements: string;

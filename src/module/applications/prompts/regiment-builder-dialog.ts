@@ -279,15 +279,3 @@ function readSelectionFromActor(actor: WH40KBaseActor | null): RegimentSelection
         },
     };
 }
-
-/** Convenience opener for sheets / chat-card buttons. */
-export function openRegimentBuilderDialog(
-    opts: {
-        actor?: WH40KBaseActor | null;
-        selection?: RegimentSelection;
-        catalog?: ReadonlyArray<RegimentOption>;
-    } = {},
-): void {
-    const dialog = new RegimentBuilderDialog(opts);
-    void dialog.render({ force: true });
-}

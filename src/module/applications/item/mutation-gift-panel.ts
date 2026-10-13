@@ -43,7 +43,7 @@ export interface CharacteristicConfig {
 }
 
 /** One characteristic input of a rider's delta grid. */
-export interface RiderCharacteristicInput {
+interface RiderCharacteristicInput {
     key: string;
     labelKey: string;
     abbreviation: string;
@@ -53,7 +53,7 @@ export interface RiderCharacteristicInput {
 }
 
 /** One rider of the panel. */
-export interface RiderView {
+interface RiderView {
     index: number;
     alignmentPath: string;
     alignmentLabelKey: string;
@@ -70,7 +70,7 @@ export interface RiderView {
 }
 
 /** One acquisition roll of the panel. */
-export interface CharacteristicRollView {
+interface CharacteristicRollView {
     index: number;
     characteristicPath: string;
     characteristicOptions: SelectOption[];

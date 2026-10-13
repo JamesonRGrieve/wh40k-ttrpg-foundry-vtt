@@ -52,7 +52,7 @@ export interface CategoryScalar {
 }
 
 /** A Mark of Distinction's grant editor. */
-export interface MarkGrantView {
+interface MarkGrantView {
     trait: ReferenceListContext;
     activeEffectPath: string;
     activeEffectOptions: LiteralOption[];

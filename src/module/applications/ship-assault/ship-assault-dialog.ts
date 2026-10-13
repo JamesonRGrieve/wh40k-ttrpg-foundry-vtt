@@ -76,7 +76,7 @@ interface ShipAssaultDialogOptions extends ApplicationV2Config.DefaultOptions {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
     readonly attacker: WH40KVoidcraft;
     readonly entry: ShipAssaultEntry;
     /** The ships this action can be aimed at; the first is the default target. */

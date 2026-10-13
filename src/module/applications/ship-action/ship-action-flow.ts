@@ -43,7 +43,7 @@ import { readSituational, situationalFields } from '../ship-assault/ship-assault
 import { rollFormula, rollTotal, ShipAssaultInputError, type AssaultFieldGroup, type AssaultFormValues } from '../ship-assault/ship-assault-flow.ts';
 
 /** The chat card a rolled ship action posts. */
-export const SHIP_ACTION_CARD_TEMPLATE = 'systems/wh40k-rpg/templates/chat/ship-action-roll-chat.hbs';
+const SHIP_ACTION_CARD_TEMPLATE = 'systems/wh40k-rpg/templates/chat/ship-action-roll-chat.hbs';
 
 /** Langpack key of the rule citation every row hovers to. */
 const CITATION_KEY = 'WH40K.Voidcraft.ShipAction.Citation';
@@ -81,7 +81,7 @@ export interface ShipActionContext {
 }
 
 /** An effect's magnitude as the card renders it: base ± each degree term = total. */
-export interface ShipActionMagnitudeView {
+interface ShipActionMagnitudeView {
     title: string;
     baseLabel: string;
     base: number;

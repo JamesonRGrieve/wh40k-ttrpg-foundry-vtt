@@ -212,7 +212,7 @@ export function isReferenceMode(value: string | undefined): value is ReferenceMo
 }
 
 /** One displayed reference: the stored UUID and its resolved display name. */
-export interface ReferenceEntry {
+interface ReferenceEntry {
     uuid: string;
     name: string;
     /** Position in a list reference; `-1` for a single reference. */

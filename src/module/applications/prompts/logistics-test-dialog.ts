@@ -334,22 +334,3 @@ function readLogisticsSlot(actor: WH40KBaseActor | null): LogisticsActorSlot | u
         situational: typeof sys.situational === 'number' ? sys.situational : 0,
     };
 }
-
-/** Convenience opener for sheets / chat-card buttons. */
-export function openLogisticsTestDialog(
-    opts: {
-        actor?: WH40KBaseActor | null;
-        baseRating?: number;
-        munitorum?: boolean;
-        situational?: number;
-        troopCount?: TroopCount;
-        timeInFront?: TimeInFront;
-        frontActive?: FrontActive;
-        warCondition?: WarCondition;
-        craftsmanship?: Craftsmanship;
-        standardKit?: boolean;
-    } = {},
-): void {
-    const dialog = new LogisticsTestDialog(opts);
-    void dialog.render({ force: true });
-}

@@ -281,17 +281,3 @@ function readColonyStateFromActor(actor: WH40KBaseActor | null): Partial<ColonyS
     if (colony === undefined) return undefined;
     return { ...colony.characteristics };
 }
-
-/** Convenience opener for sheets / chat-card buttons. */
-export function openColonyGrowthDialog(
-    opts: {
-        actor?: WH40KBaseActor | null;
-        colonyState?: Partial<ColonyState>;
-        growthModifier?: number;
-        agriculturalSoftener?: boolean;
-        ecclesiasticalOrderSwap?: boolean;
-    } = {},
-): void {
-    const dialog = new ColonyGrowthDialog(opts);
-    void dialog.render({ force: true });
-}

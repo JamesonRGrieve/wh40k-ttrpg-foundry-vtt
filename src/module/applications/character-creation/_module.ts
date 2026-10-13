@@ -1,24 +1,10 @@
 /**
  * Character Creation exports
  *
- * This module provides the full Origin Path character creation experience:
- * - OriginPathBuilder: Main builder UI for selecting 6 origin path steps
- * - OriginPathChoiceDialog: Modal dialog for making choices when an origin has options
- * - OriginRollDialog: Dialog for rolling starting stats (wounds, fate) interactively
+ * The Origin Path character creation entry point. OriginPathBuilder is the
+ * main builder UI for selecting the origin path steps; it opens
+ * OriginPathChoiceDialog and OriginRollDialog itself, so those are imported
+ * from their own modules rather than re-exported here.
  */
 
 export { default as OriginPathBuilder } from './origin-path-builder.ts';
-export { default as OriginPathChoiceDialog } from './origin-path-choice-dialog.ts';
-export { default as OriginRollDialog } from './origin-roll-dialog.ts';
-
-// Per-system builder variants — stamp the gameSystem id so callers can
-// dispatch to the right builder based on an actor's concrete type.
-export {
-    BCOriginPathBuilder,
-    DH1OriginPathBuilder,
-    DH2OriginPathBuilder,
-    DWOriginPathBuilder,
-    getBuilderForActorType,
-    OWOriginPathBuilder,
-    RTOriginPathBuilder,
-} from './system-origin-builders.ts';

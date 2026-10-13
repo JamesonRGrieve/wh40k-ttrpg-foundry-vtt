@@ -3,7 +3,6 @@
  */
 
 export { default as BaseItemSheet } from './base-item-sheet.ts';
-export { default as ContainerItemSheet } from './container-item-sheet.ts';
 
 // Specific item sheets
 export { default as AmmoSheet } from './ammo-sheet.ts';
@@ -15,7 +14,6 @@ export { default as CriticalInjurySheet } from './critical-injury-sheet.ts';
 export { default as CyberneticSheet } from './cybernetic-sheet.ts';
 export { default as EndeavourSheet } from './endeavour-sheet.ts';
 export { default as ForceFieldSheet } from './force-field-sheet.ts';
-export { default as FreeformGatedItemSheet } from './freeform-gated-item-sheet.ts';
 export { default as GearSheet } from './gear-sheet.ts';
 export { default as JournalEntryItemSheet } from './journal-entry-item-sheet.ts';
 export { default as LeadSheet } from './lead-sheet.ts';
