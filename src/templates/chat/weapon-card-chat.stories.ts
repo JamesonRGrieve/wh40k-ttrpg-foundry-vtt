@@ -44,7 +44,8 @@ interface WeaponCardItem {
         effectiveSpecial: Set<string>;
         qualitiesArray: QualityRow[];
         description: { value: string };
-        source: string;
+        /** The structured reference every DescriptionTemplate item carries. */
+        source: { book: string; page: string; url: string };
     };
 }
 
@@ -79,7 +80,7 @@ function weapon(name: string, damageLabel: string, qualities: QualityRow[], rang
             effectiveSpecial: new Set(qualities.map((q) => q.label.toLowerCase())),
             qualitiesArray: qualities,
             description: { value: '' },
-            source: 'Dark Heresy 2e Core',
+            source: { book: 'Dark Heresy 2e Core', page: '142', url: '' },
         },
     };
 }
@@ -112,6 +113,9 @@ export const Damaging: Story = {
         await expect(button(canvasElement, 'rollDamage')).not.toBeNull();
         await expect(button(canvasElement, 'reload')).not.toBeNull();
         await expect(canvasElement.textContent).toContain('1d10+4 E');
+        // The footer names the book, not the structured source object.
+        await expect(canvasElement.textContent).toContain('Dark Heresy 2e Core, p.142');
+        await expect(canvasElement.textContent).not.toContain('[object Object]');
     },
 };
 
