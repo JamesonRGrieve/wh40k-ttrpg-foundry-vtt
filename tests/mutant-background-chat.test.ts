@@ -21,6 +21,10 @@ describe('mutant-background-chat.hbs (#91)', () => {
         expect(card).not.toContain('ConvertMalignancy');
     });
 
+    it('gives the +N starting Corruption its own light text colour (it read dark on the dark card)', () => {
+        expect(card).toMatch(/<span class="[^"]*tw-text-\[#e8e4d9\][^"]*">\+\{\{startingCorruption\}\}<\/span>/);
+    });
+
     it('states the Twisted Flesh rule the flag grants', () => {
         expect(card).toContain('WH40K.Malignancy.TwistedFlesh.OutcomeHint');
     });
