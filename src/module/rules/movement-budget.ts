@@ -118,3 +118,26 @@ export function combatMovementView(input: {
     const remaining = allowance > 0 ? Math.max(0, allowance - Math.max(0, input.movedThisTurnMetres)) : 0;
     return { inCombat: input.inCombat, disabled, selectedMode: input.selectedMode, remaining };
 }
+
+/** The token flag (under the system scope) the in-combat move-mode toggle persists. */
+export const MOVE_MODE_FLAG = 'movementAction';
+
+/** The slice of a TokenDocument the turn-end move-mode reset touches. */
+export interface MoveModeToken {
+    getFlag: (scope: string, key: string) => string | undefined;
+    /** Resolves to the updated document (Foundry's `TokenDocument#unsetFlag`); the result is not read. */
+    unsetFlag: (scope: string, key: string) => Promise<object | undefined>;
+}
+
+/**
+ * Clear the selected move mode on a combatant's tokens when its turn ends (#610).
+ * The move action — Half, Full, Charge or Run — is chosen and spent on each turn
+ * (DH2 core Chapter VII, likewise every line), so a mode picked last turn must not
+ * carry into the next one. Only tokens that actually carry the flag are written.
+ * @returns How many tokens were cleared.
+ */
+export async function clearTurnMoveMode(tokens: Iterable<MoveModeToken | null | undefined>, scope: string): Promise<number> {
+    const stale = [...tokens].filter((token): token is MoveModeToken => token?.getFlag(scope, MOVE_MODE_FLAG) !== undefined);
+    await Promise.all(stale.map(async (token) => token.unsetFlag(scope, MOVE_MODE_FLAG)));
+    return stale.length;
+}

@@ -147,6 +147,7 @@ import { captureCoreDeadStatus, loadConditionCatalog, registerConditionStatusEff
 import { WH40K } from './rules/config.ts';
 import { convertDeadActorToPile } from './rules/death-loot.ts';
 import { registerGMProxy } from './rules/gm-proxy.ts';
+import { clearTurnMoveMode, type MoveModeToken } from './rules/movement-budget.ts';
 import { registerMovementEnforcement } from './rules/movement-enforcement.ts';
 import { localHourOfDay } from './rules/planetary-calendar.ts';
 import {
@@ -533,9 +534,15 @@ export class HooksManager {
         // must run once. Per-session uses reset manually via
         // `actor.resetRerollUses('per-session')` (no native session-end hook).
         // eslint-disable-next-line no-restricted-syntax -- boundary: deleteCombat hook payload is framework-typed; we read only combatants → actor
-        hooksOn('deleteCombat', (combat: { combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null }> } }) => {
+        hooksOn('deleteCombat', (combat: { combatants?: { contents?: Array<{ actor?: WH40KBaseActor | null; token?: MoveModeToken | null }> } }) => {
             const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
             if (game.user.id !== firstGM) return;
+            // No turn follows the encounter, so no move mode survives it (#610).
+            const encounterTokens = (combat.combatants?.contents ?? []).map((c) => c.token);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            clearTurnMoveMode(encounterTokens, SYSTEM_ID).catch((err: unknown) => {
+                console.error('move-mode: deleteCombat reset failed', err);
+            });
             const seen = new Set<string>();
             for (const combatant of combat.combatants?.contents ?? []) {
                 const actor = combatant.actor;
@@ -561,12 +568,21 @@ export class HooksManager {
         // eslint-disable-next-line no-restricted-syntax -- boundary: combatTurnChange hook payloads are framework-typed; we read only the prior combatant → actor
         hooksOn(
             'combatTurnChange',
-            (combat: { combatants?: { get?: (id: string) => { actor?: WH40KBaseActor | null } | undefined } }, prior: { combatantId?: string | null }) => {
+            (
+                combat: { combatants?: { get?: (id: string) => { actor?: WH40KBaseActor | null; token?: MoveModeToken | null } | undefined } },
+                prior: { combatantId?: string | null },
+            ) => {
                 const firstGM = game.users.contents.find((u) => u.active && u.isGM)?.id;
                 if (game.user.id !== firstGM) return;
                 const priorId = prior.combatantId;
                 if (priorId == null) return;
-                const actor = combat.combatants?.get?.(priorId)?.actor;
+                const combatant = combat.combatants?.get?.(priorId);
+                // The move action is chosen each turn: the mode picked this turn ends with it (#610).
+                // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+                clearTurnMoveMode([combatant?.token], SYSTEM_ID).catch((err: unknown) => {
+                    console.error('move-mode: combatTurnChange reset failed', err);
+                });
+                const actor = combatant?.actor;
                 if (actor == null) return;
                 // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
                 actor.endTurnForArmedTestHooks().catch((err: unknown) => {

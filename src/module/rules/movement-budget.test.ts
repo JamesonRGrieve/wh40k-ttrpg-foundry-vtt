@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { combatMovementView, evaluateCombatMovement, turnMovementAllowance } from './movement-budget.ts';
+import { clearTurnMoveMode, combatMovementView, evaluateCombatMovement, MOVE_MODE_FLAG, type MoveModeToken, turnMovementAllowance } from './movement-budget.ts';
 
 const base = { enforced: true, isActorsTurn: true, movedThisTurnMetres: 0, requestedMetres: 5, allowanceMetres: 10 };
 
@@ -101,5 +101,34 @@ describe('combatMovementView', () => {
     it('clamps remaining at 0 once the budget is spent', () => {
         const view = combatMovementView({ inCombat: true, isActorsTurn: true, isGM: false, selectedMode: 'full', rates, movedThisTurnMetres: 10 });
         expect(view.remaining).toBe(0); // 8 full − 10 moved → clamped
+    });
+});
+
+/** #610: the move mode is chosen each turn, so the turn end clears it. */
+describe('clearTurnMoveMode', () => {
+    const tokenWith = (mode: string | undefined): MoveModeToken & { cleared: string[] } => {
+        const cleared: string[] = [];
+        return {
+            cleared,
+            getFlag: (_scope, key) => (key === MOVE_MODE_FLAG ? mode : undefined),
+            unsetFlag: async (scope, key) => {
+                cleared.push(`${scope}.${key}`);
+                return Promise.resolve(undefined);
+            },
+        };
+    };
+
+    it('clears a token that ran last turn', async () => {
+        const runner = tokenWith('run');
+        await expect(clearTurnMoveMode([runner], 'wh40k-rpg')).resolves.toBe(1);
+        expect(runner.cleared).toEqual(['wh40k-rpg.movementAction']);
+    });
+
+    it('leaves a token with no move mode untouched and skips missing tokens', async () => {
+        const idle = tokenWith(undefined);
+        const charger = tokenWith('charge');
+        await expect(clearTurnMoveMode([idle, null, undefined, charger], 'wh40k-rpg')).resolves.toBe(1);
+        expect(idle.cleared).toEqual([]);
+        expect(charger.cleared).toEqual(['wh40k-rpg.movementAction']);
     });
 });
