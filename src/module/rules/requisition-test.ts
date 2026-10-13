@@ -11,7 +11,6 @@
  * test math. The math is identical in both modes.
  */
 
-import { nonNegInt } from './_num.ts';
 import { type AcquisitionLadder, type AvailabilityKey, availabilityTerm, type CraftsmanshipKey } from './acquisition-ladder.ts';
 
 export interface RequisitionTestInput {
@@ -71,14 +70,4 @@ export function getRequisitionTestTarget(input: RequisitionTestInput): Requisiti
     }
     const target = breakdown.reduce((sum, m) => sum + m.value, 0);
     return { kind: 'test', target: Math.max(0, target), breakdown };
-}
-
-/**
- * Influence drop on a big failure (core.md p. 142): on a failure of 3+
- * DoF, the warband's Influence drops by 1. Returns the next Influence
- * value (≥ 0) or the input if no drop.
- */
-export function applyInfluenceLossOnBigFailure(currentInfluence: number, dof: number): number {
-    if (dof >= 3) return Math.max(0, Math.trunc(currentInfluence) - 1);
-    return nonNegInt(currentInfluence);
 }

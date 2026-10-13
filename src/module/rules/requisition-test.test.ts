@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DH1eSystemConfig } from '../config/game-systems/dh1-config.ts';
 import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
 import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
-import { applyInfluenceLossOnBigFailure, getRequisitionTestTarget, type RequisitionTestInput } from './requisition-test';
+import { getRequisitionTestTarget, type RequisitionTestInput } from './requisition-test';
 
 /** The target of a test that resolves to a roll; fails loudly otherwise. */
 function testTarget(input: RequisitionTestInput): number {
@@ -60,19 +60,5 @@ describe('getRequisitionTestTarget — other lines read their own ladder (#192)'
                 { source: 'availability', value: 20, detail: 'common' },
             ],
         });
-    });
-});
-
-describe('applyInfluenceLossOnBigFailure', () => {
-    it('drops Influence by 1 when DoF >= 3', () => {
-        expect(applyInfluenceLossOnBigFailure(40, 3)).toBe(39);
-        expect(applyInfluenceLossOnBigFailure(40, 5)).toBe(39);
-    });
-    it('does not drop for DoF 0–2', () => {
-        expect(applyInfluenceLossOnBigFailure(40, 0)).toBe(40);
-        expect(applyInfluenceLossOnBigFailure(40, 2)).toBe(40);
-    });
-    it('clamps at 0', () => {
-        expect(applyInfluenceLossOnBigFailure(0, 5)).toBe(0);
     });
 });

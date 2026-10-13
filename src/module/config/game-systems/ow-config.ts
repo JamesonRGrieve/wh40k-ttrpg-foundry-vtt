@@ -35,6 +35,8 @@ export const OW_ACQUISITION_LADDER = {
         unique: 'discretion',
     },
     craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
+    // p. 162: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
+    failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
 /** One availability column of Table 6-2 (a printed cell per rating). */

@@ -24,9 +24,11 @@ import {
     FRONT_TIME_KEYS,
     type FrontActive,
     type LogisticsContext,
+    type LogisticsFront,
     type LogisticsTarget,
-    OW_DEFAULT_LOGISTICS_RATING,
+    logisticsStandingFrom,
     resolveLogisticsTest,
+    type StoredLogisticsStanding,
     type TimeInFront,
     TROOP_COUNT_KEYS,
     type TroopCount,
@@ -38,12 +40,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { type LogisticsRow, logisticsOptions, logisticsRows } from './logistics-test-rows.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
-
-interface LogisticsActorSlot {
-    readonly logisticsRating: number;
-    readonly munitorum: boolean;
-    readonly situational: number;
-}
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface LogisticsContextRow extends Record<string, unknown> {
@@ -69,6 +65,9 @@ export type LogisticsChatContext = {
 type Axis = 'availability' | 'troopCount' | 'timeInFront' | 'frontActive' | 'warCondition' | 'craftsmanship';
 
 const AXES: readonly Axis[] = ['availability', 'troopCount', 'timeInFront', 'frontActive', 'warCondition', 'craftsmanship'];
+
+/** The axes that are the squad's persisted battlefront rather than part of one request. */
+const FRONT_AXES = ['troopCount', 'timeInFront', 'frontActive', 'warCondition'] as const satisfies readonly (keyof LogisticsFront)[];
 
 function oneOf<T extends string>(values: readonly T[], value: string): value is T {
     return (values as readonly string[]).includes(value);
@@ -106,16 +105,17 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
     ) {
         super(options);
         this.actor = options.actor ?? null;
-        const seed = readLogisticsSlot(this.actor);
-        this.baseRating = options.baseRating ?? seed?.logisticsRating ?? OW_DEFAULT_LOGISTICS_RATING;
-        this.munitorum = options.munitorum ?? seed?.munitorum ?? false;
-        this.situational = Math.trunc(options.situational ?? seed?.situational ?? 0);
+        // The squad's standing — rating, Munitorum, situational and the persisted battlefront (#496).
+        const standing = logisticsStandingFrom(readStoredStanding(this.actor));
+        this.baseRating = options.baseRating ?? standing.rating;
+        this.munitorum = options.munitorum ?? standing.munitorum;
+        this.situational = Math.trunc(options.situational ?? standing.situational);
         this.availability = options.availability ?? 'common';
         this.craftsmanship = options.craftsmanship ?? 'common';
-        this.troopCount = options.troopCount ?? 'company';
-        this.timeInFront = options.timeInFront ?? 'months3to6';
-        this.frontActive = options.frontActive ?? 'months3to6';
-        this.warCondition = options.warCondition ?? 'violentImpasse';
+        this.troopCount = options.troopCount ?? standing.front.troopCount;
+        this.timeInFront = options.timeInFront ?? standing.front.timeInFront;
+        this.frontActive = options.frontActive ?? standing.front.frontActive;
+        this.warCondition = options.warCondition ?? standing.front.warCondition;
         this.standardKit = options.standardKit === true;
     }
 
@@ -203,6 +203,10 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         const value = target.dataset['value'];
         if (axis === undefined || value === undefined || !oneOf(AXES, axis)) return;
         this.#setAxis(axis, value);
+        // The front is the squad's standing state: save it so the armoury prices against the same front (#496).
+        if (this.actor !== null && oneOf(FRONT_AXES, axis)) {
+            await this.actor.update({ [`system.logisticsFront.${axis}`]: this[axis] });
+        }
         await this.render();
     }
 
@@ -270,17 +274,11 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
 }
 
 /**
- * Read the persisted Logistics scalars off an actor's system data.
- * Returns `undefined` when the actor is null (story / probe context).
+ * The persisted Logistics standing on an actor's system data; empty when the
+ * actor is null (story / probe context), which defaults every field.
  */
-function readLogisticsSlot(actor: WH40KBaseActor | null): LogisticsActorSlot | undefined {
-    if (actor === null) return undefined;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: OW Logistics scalars are per-system actor schema fields not exposed on the abstract WH40KBaseActor system surface
-    const sys = actor.system as { logisticsRating?: number; munitorum?: boolean; situational?: number };
-    if (typeof sys.logisticsRating !== 'number') return undefined;
-    return {
-        logisticsRating: sys.logisticsRating,
-        munitorum: sys.munitorum === true,
-        situational: typeof sys.situational === 'number' ? sys.situational : 0,
-    };
+function readStoredStanding(actor: WH40KBaseActor | null): StoredLogisticsStanding {
+    if (actor === null) return {};
+    // eslint-disable-next-line no-restricted-syntax -- boundary: OW Logistics standing is a per-system actor schema slice not exposed on the abstract WH40KBaseActor system surface
+    return actor.system as StoredLogisticsStanding;
 }

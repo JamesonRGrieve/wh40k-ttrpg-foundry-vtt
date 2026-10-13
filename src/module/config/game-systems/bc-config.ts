@@ -108,6 +108,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
+        // p. 306: "If he fails, he does not" obtain it — no Infamy is lost.
+        failureLoss: null,
     };
 
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.bc';

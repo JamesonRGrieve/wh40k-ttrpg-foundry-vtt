@@ -16,8 +16,16 @@
  */
 
 import type { I18nKey } from '../types/i18n-keys';
-import type { AcquisitionLadder, AvailabilityKey, CraftsmanshipKey } from './acquisition-ladder.ts';
-import { applyInfluenceLossOnBigFailure, getRequisitionTestTarget, type RequisitionModifier } from './requisition-test.ts';
+import { type AcquisitionFailureLoss, type AcquisitionLadder, type AvailabilityKey, type CraftsmanshipKey, ratingAfterFailure } from './acquisition-ladder.ts';
+import {
+    computeLogisticsTarget,
+    type LogisticsBreakdown,
+    type LogisticsContext,
+    type LogisticsStanding,
+    logisticsContextFor,
+    logisticsStandingFrom,
+} from './ow-logistics.ts';
+import { getRequisitionTestTarget, type RequisitionModifier } from './requisition-test.ts';
 
 /**
  * Why a requisition was refused, as a langpack key plus its format data. The
@@ -77,6 +85,14 @@ export interface RequesterState {
     pool?: number | undefined;
     /** DW Renown, which gates what Requisition may be spent on. */
     renown?: number | undefined;
+    /** Fellowship bonus, for DH2's "more degrees of failure than his Fellowship bonus" Influence loss. */
+    fellowshipBonus?: number | undefined;
+    /**
+     * OW: the squad's full Logistics standing (Munitorum, situational, the
+     * persisted battlefront), so the armoury prices exactly as the Logistics
+     * Test dialog does (#496). Absent → `rating` on the default front.
+     */
+    logistics?: LogisticsStanding | undefined;
 }
 
 /** What the armoury is being asked for. */
@@ -104,6 +120,10 @@ export interface RequisitionGate {
     automatic?: boolean | undefined;
     /** Modifier provenance, for the chat card (never a lumped total). */
     breakdown?: RequisitionModifier[] | undefined;
+    /** OW: the Logistics Test the target came from, so the card prints its Table 6-2 / 6-6 rows. */
+    logistics?: { context: LogisticsContext; breakdown: LogisticsBreakdown } | undefined;
+    /** What a failed test costs the rating, as the buyer's line prints it; `null` when it prints none. */
+    failureLoss?: AcquisitionFailureLoss | null | undefined;
     /** Points this costs, for a pool economy. */
     cost?: number | undefined;
 }
@@ -133,8 +153,11 @@ export function evaluateRequisition(
         return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.NoEconomy' } };
     }
 
+    if (economy === 'logistics') return evaluateLogistics(requester, item, ladder);
+
     if (isTestBasedEconomy(economy)) {
         if (ladder === null) return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.NoEconomy' } };
+        const failureLoss = ladder.failureLoss;
         const result = getRequisitionTestTarget({
             influence: requester.rating,
             ladder,
@@ -143,7 +166,7 @@ export function evaluateRequisition(
         });
         if (result.kind === 'automatic') return { economy, allowed: true, automatic: true };
         if (result.kind === 'discretion') return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Discretion' } };
-        return { economy, allowed: true, target: result.target, breakdown: result.breakdown };
+        return { economy, allowed: true, target: result.target, breakdown: result.breakdown, failureLoss };
     }
 
     // Pool economies: no roll, but the pool must cover it — and DW gates on Renown.
@@ -166,6 +189,32 @@ export function evaluateRequisition(
     return { economy, allowed: true, cost };
 }
 
+/**
+ * OW: the armoury request IS a Logistics Test (core p. 162), so it is priced by
+ * the same `computeLogisticsTarget` as the Logistics Test dialog — the item's
+ * Availability in the deployed troop column of Table 6-2, the squad's persisted
+ * front conditions, Munitorum Influence, the GM's situational modifier, and
+ * Table 6-6 craftsmanship (#496). The armoury cannot know whether the item is
+ * in another deployed regiment's standard kit, so that +20 is not applied here.
+ */
+function evaluateLogistics(requester: RequesterState, item: RequestedItem, ladder: AcquisitionLadder | null): RequisitionGate {
+    const economy: RequisitionEconomy = 'logistics';
+    if (ladder === null) return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.NoEconomy' } };
+    const standing = requester.logistics ?? logisticsStandingFrom({ logisticsRating: requester.rating });
+    const context = logisticsContextFor(standing, { availability: item.availability, craftsmanship: item.craftsmanship ?? 'common', standardKit: false });
+    const result = computeLogisticsTarget(context);
+    if (result.kind === 'automatic') return { economy, allowed: true, automatic: true };
+    if (result.kind === 'discretion') return { economy, allowed: false, reason: { key: 'WH40K.Requisition.Refusal.Discretion' } };
+    return {
+        economy,
+        allowed: true,
+        target: result.target,
+        breakdown: [{ source: 'rating', value: result.breakdown.rating }],
+        logistics: { context, breakdown: result.breakdown },
+        failureLoss: ladder.failureLoss,
+    };
+}
+
 /** What an attempt did to the requester's standing, and whether to transfer. */
 export interface RequisitionOutcome {
     /** True when the item should move into the requester's inventory. */
@@ -178,14 +227,15 @@ export interface RequisitionOutcome {
 /**
  * Resolve an attempt into a transfer decision and the cost to the requester.
  *
- * A test economy consumes nothing on success and drops Influence on a big
- * failure (`applyInfluenceLossOnBigFailure`, #68). A pool economy always
- * succeeds once the gate allowed it, and debits the pool.
+ * A test economy consumes nothing on success. On a failure it costs the rating
+ * only what the buyer's line prints (`gate.failureLoss`, #496): DH1 and DH2
+ * print a loss, OW and BC print none. A pool economy always succeeds once the
+ * gate allowed it, and debits the pool.
  * @param {RequisitionGate} gate  The gate's verdict.
  * @param {RequesterState} requester  Standing before the attempt.
  * @param {object} [roll]  Test result; required for a test economy.
  * @param {boolean} roll.success  Whether the test passed.
- * @param {number} roll.degreesOfFailure  DoF, for the big-failure Influence drop.
+ * @param {number} roll.degreesOfFailure  DoF counted `plusOne` (a bare fail is 1), for the line's failure loss.
  * @returns {RequisitionOutcome}  Transfer decision and post-attempt standing.
  */
 export function resolveRequisition(
@@ -204,7 +254,8 @@ export function resolveRequisition(
         // failing closed keeps an un-rolled request from handing over the item.
         if (roll === undefined) return { transfer: false, ratingAfter: requester.rating, poolAfter: requester.pool };
         if (roll.success) return { transfer: true, ratingAfter: requester.rating, poolAfter: requester.pool };
-        return { transfer: false, ratingAfter: applyInfluenceLossOnBigFailure(requester.rating, roll.degreesOfFailure), poolAfter: requester.pool };
+        const ratingAfter = ratingAfterFailure(gate.failureLoss ?? null, requester.rating, roll.degreesOfFailure, requester.fellowshipBonus ?? 0);
+        return { transfer: false, ratingAfter, poolAfter: requester.pool };
     }
 
     const cost = gate.cost ?? 0;

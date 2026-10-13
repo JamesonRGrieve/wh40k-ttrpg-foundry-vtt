@@ -68,8 +68,8 @@ describe('applyRequisition', () => {
         const result = applyRequisition(planRequisition(req), req, failedBadly);
         expect(result.transfer).toBe(false);
         expect(result.stockAfter).toBeUndefined();
-        // The big-failure Influence drop still lands (#68).
-        expect(result.ratingAfter).toBeLessThan(40);
+        // DH2's printed loss still lands: 4 DoF beyond a Fellowship bonus of 0 (core p. 269, #496).
+        expect(result.ratingAfter).toBe(36);
     });
 
     it('writes no stock change for infinite stock, even on success', () => {

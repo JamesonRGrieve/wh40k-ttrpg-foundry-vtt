@@ -99,7 +99,7 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['owComradeSchemaFields', owComradeSchemaFields, ['comrade']],
     ['owCraftsmanshipSchemaFields', owCraftsmanshipSchemaFields, []],
     ['owDrawbackSchemaFields', owDrawbackSchemaFields, ['regimentDrawbacks', 'multiComradeRoster']],
-    ['owLogisticsSchemaFields', owLogisticsSchemaFields, ['logisticsRating', 'munitorum', 'situational']],
+    ['owLogisticsSchemaFields', owLogisticsSchemaFields, ['logisticsRating', 'munitorum', 'situational', 'logisticsFront']],
     ['owMissionGearSchemaFields', owMissionGearSchemaFields, ['lastGearOutcome']],
     ['owMountSchemaFields', owMountSchemaFields, ['mountedOn']],
     ['owOrdersSchemaFields', owOrdersSchemaFields, ['activeOrders']],
@@ -115,6 +115,10 @@ describe('per-system mixin *SchemaFields()', () => {
     it('pins field TYPES for a representative template (dw-astartes implants → ArrayField)', () => {
         const schema = dwAstartesSchemaFields();
         expect(schema['implants']).toBeInstanceOf(fields.ArrayField);
+    });
+
+    it('pins the OW battlefront as a nested SchemaField (#496)', () => {
+        expect(owLogisticsSchemaFields()['logisticsFront']).toBeInstanceOf(fields.SchemaField);
     });
 
     it('pins a numeric field type (dw-renown renown → NumberField)', () => {

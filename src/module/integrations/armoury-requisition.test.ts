@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
+import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
 import {
     buildArmouryCardContext,
     gateArmouryTrade,
@@ -39,10 +40,30 @@ afterEach(() => {
 
 describe('readRequesterState', () => {
     it('reads each economy off its own schema field', () => {
-        const system = { influence: 45, infamy: 30, logisticsRating: 25, requisition: 12, renown: 22, rogueTrader: { profitFactor: { current: 40 } } };
-        expect(readRequesterState(system, 'influence')).toEqual({ rating: 45 });
+        const system = {
+            influence: 45,
+            infamy: 30,
+            logisticsRating: 25,
+            munitorum: true,
+            situational: 5,
+            logisticsFront: { troopCount: 'regiment', timeInFront: 'years1to5', frontActive: 'years5plus', warCondition: 'dominant' },
+            characteristics: { fellowship: { bonus: 4 } },
+            requisition: 12,
+            renown: 22,
+            rogueTrader: { profitFactor: { current: 40 } },
+        };
+        expect(readRequesterState(system, 'influence')).toEqual({ rating: 45, fellowshipBonus: 4 });
         expect(readRequesterState(system, 'infamy')).toEqual({ rating: 30 });
-        expect(readRequesterState(system, 'logistics')).toEqual({ rating: 25 });
+        // OW reads the squad's whole Logistics standing, including the persisted front (#496).
+        expect(readRequesterState(system, 'logistics')).toEqual({
+            rating: 25,
+            logistics: {
+                rating: 25,
+                munitorum: true,
+                situational: 5,
+                front: { troopCount: 'regiment', timeInFront: 'years1to5', frontActive: 'years5plus', warCondition: 'dominant' },
+            },
+        });
         expect(readRequesterState(system, 'requisition-points')).toEqual({ rating: 0, pool: 12, renown: 22 });
         expect(readRequesterState(system, 'profit-factor')).toEqual({ rating: 0, pool: 40 });
         expect(readRequesterState(system, 'none')).toEqual({ rating: 0 });
@@ -110,18 +131,50 @@ describe('resolveArmouryRequisition', () => {
         expect(rollD100).not.toHaveBeenCalled();
     });
 
-    it('denies a failed test and drops Influence on a 3+ DoF failure', () => {
+    it('DH2: denies a failed test and drops Influence by the DoF beyond Fellowship bonus (core p. 269)', () => {
         const outcome = resolveArmouryRequisition({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
-            requester: { rating: 40 },
+            requester: { rating: 40, fellowshipBonus: 3 },
             entries: [entry(item({ availability: 'rare' }))],
             infiniteStock: true,
             rollD100: () => 95,
         });
         expect(outcome.allowed).toBe(false);
-        expect(outcome.attempts[0]).toMatchObject({ outcome: 'denied', target: 20, roll: 95 });
-        expect(standingUpdate(outcome)).toEqual({ 'system.influence': 39 });
+        // 95 vs 20: 8 DoF, 5 beyond Fellowship bonus 3.
+        expect(outcome.attempts[0]).toMatchObject({ outcome: 'denied', target: 20, roll: 95, dof: 8 });
+        expect(standingUpdate(outcome)).toEqual({ 'system.influence': 35 });
+    });
+
+    it('OW: a failed Logistics request costs no Logistics Rating, however badly it fails (#496)', () => {
+        const outcome = resolveArmouryRequisition({
+            economy: 'logistics',
+            ladder: OW_ACQUISITION_LADDER,
+            requester: readRequesterState({ logisticsRating: 30 }, 'logistics'),
+            entries: [entry(item({ availability: 'rare' }))],
+            infiniteStock: true,
+            rollD100: () => 100,
+        });
+        expect(outcome.allowed).toBe(false);
+        expect(outcome.attempts[0]).toMatchObject({ outcome: 'denied', roll: 100 });
+        expect(standingUpdate(outcome)).toBeNull();
+    });
+
+    it('OW: prices the request on the squad’s persisted front, as the Logistics Test dialog does (#496)', () => {
+        const system = {
+            logisticsRating: 30,
+            logisticsFront: { troopCount: 'regiments', timeInFront: 'months6to12', frontActive: 'years1to5', warCondition: 'nearVictorious' },
+        };
+        const outcome = resolveArmouryRequisition({
+            economy: 'logistics',
+            ladder: OW_ACQUISITION_LADDER,
+            requester: readRequesterState(system, 'logistics'),
+            entries: [entry(item({ availability: 'rare' }))],
+            infiniteStock: true,
+            rollD100: () => 1,
+        });
+        // 30, Rare / Multiple Regiments −10, +10, +20, +10 = 60.
+        expect(outcome.attempts[0]).toMatchObject({ outcome: 'granted', target: 60 });
     });
 
     it('refuses a bound item without rolling', () => {
@@ -234,6 +287,24 @@ describe('buildArmouryCardContext — roll transparency', () => {
         expect(ctx.gameSystem).toBe('dh2');
     });
 
+    it('OW: prints the same Table 6-2 / 6-6 provenance rows as the Logistics Test card (#496)', () => {
+        stubI18n();
+        const outcome = resolveArmouryRequisition({
+            economy: 'logistics',
+            ladder: OW_ACQUISITION_LADDER,
+            requester: readRequesterState({ logisticsRating: 40, munitorum: true }, 'logistics'),
+            entries: [entry(item({ availability: 'rare', craftsmanship: 'good' }))],
+            infiniteStock: true,
+            rollD100: () => 1,
+        });
+        const attempt = buildArmouryCardContext(outcome, 'ow').attempts.at(0);
+        expect(attempt?.baseTarget).toBe(40);
+        // Default front: Munitorum +5, Rare / Company −30, +0, +0, Violent Impasse −10, Good −30.
+        expect(attempt?.modifierSources.map((r) => r.value)).toEqual([5, -30, 0, 0, -10, -30]);
+        expect(attempt?.modifierSources.map((r) => r.label)).toContain('WH40K.OW.Logistics.Modifier.WarCondition');
+        expect(attempt?.target).toBe(0);
+    });
+
     it('reports a refusal through the langpack, never hard-coded English', () => {
         stubI18n();
         const outcome = resolveArmouryRequisition({
@@ -273,12 +344,16 @@ describe('gateArmouryTrade — the Item Piles hook', () => {
 
     it('cancels the trade when the Influence test fails, and writes the Influence loss', async () => {
         const { create } = stubFoundry(99);
-        const buyer = { system: { gameSystem: 'dh2', influence: 40 }, update: vi.fn().mockResolvedValue({}) };
+        const buyer = {
+            system: { gameSystem: 'dh2', influence: 40, characteristics: { fellowship: { bonus: 4 } } },
+            update: vi.fn().mockResolvedValue({}),
+        };
         expect(gateArmouryTrade(ARMOURY, buyer, { buyerReceive: [entry(item())] }, 'u1', speaker)).toBe(false);
         await vi.waitFor(() => {
             expect(create).toHaveBeenCalledTimes(1);
         });
-        expect(buyer.update).toHaveBeenCalledWith({ 'system.influence': 39 });
+        // 99 vs 20 (Rare): 8 DoF, 4 beyond the buyer's Fellowship bonus.
+        expect(buyer.update).toHaveBeenCalledWith({ 'system.influence': 36 });
     });
 
     it('lets the trade through when the test passes', async () => {

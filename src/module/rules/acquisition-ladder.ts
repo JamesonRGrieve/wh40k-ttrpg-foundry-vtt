@@ -38,20 +38,60 @@ export type CraftsmanshipKey = (typeof CRAFTSMANSHIP_KEYS)[number];
  */
 type AvailabilityModifier = number | 'automatic' | 'discretion';
 
+/** One printed availability column: a cell per rating. */
+export type AvailabilityColumn = Readonly<Record<AvailabilityKey, AvailabilityModifier>>;
+
+/**
+ * What a failed acquisition test costs the requester's rating, as the line
+ * prints it (#496).
+ * - `flat`: lose `loss` when the test fails by `minDegrees` or more, with
+ *   degrees counted per `counting` — `fullTens` (one per full 10 points of
+ *   margin, the DH1 rule) or `plusOne` (a bare fail is 1, the DH2-era rule).
+ * - `beyondFellowshipBonus`: lose the degrees of failure in excess of the
+ *   requester's Fellowship bonus (degrees counted `plusOne`).
+ */
+export type AcquisitionFailureLoss = { kind: 'flat'; minDegrees: number; loss: number; counting: 'fullTens' | 'plusOne' } | { kind: 'beyondFellowshipBonus' };
+
 /** A line's printed acquisition ladder. */
 export interface AcquisitionLadder {
-    availability: Readonly<Record<AvailabilityKey, AvailabilityModifier>>;
+    availability: AvailabilityColumn;
     /** `null` when the line's test takes no craftsmanship modifier. */
     craftsmanship: Readonly<Record<CraftsmanshipKey, number>> | null;
+    /** What a failed test costs the rating; `null` when the line prints no loss. */
+    failureLoss: AcquisitionFailureLoss | null;
 }
 
 /** How one availability cell resolves for a test. */
 export type AvailabilityTerm = { kind: 'modifier'; value: number } | { kind: 'automatic' } | { kind: 'discretion' };
 
+/** Resolve an availability rating against one printed column. */
+export function availabilityCell(column: AvailabilityColumn, availability: AvailabilityKey): AvailabilityTerm {
+    const cell = column[availability];
+    return typeof cell === 'number' ? { kind: 'modifier', value: cell } : { kind: cell };
+}
+
 /** Resolve an availability rating against a ladder. */
 export function availabilityTerm(ladder: AcquisitionLadder, availability: AvailabilityKey): AvailabilityTerm {
-    const cell = ladder.availability[availability];
-    return typeof cell === 'number' ? { kind: 'modifier', value: cell } : { kind: cell };
+    return availabilityCell(ladder.availability, availability);
+}
+
+/**
+ * The rating left after a FAILED acquisition test, under the line's printed
+ * failure loss. `degreesOfFailure` is the `plusOne` count (a bare fail is 1),
+ * which is what the requisition rail rolls with; a `fullTens` rule converts.
+ * The rating never falls below 0.
+ */
+export function ratingAfterFailure(loss: AcquisitionFailureLoss | null, rating: number, degreesOfFailure: number, fellowshipBonus: number): number {
+    const current = Math.max(0, Math.trunc(rating));
+    if (loss === null || degreesOfFailure <= 0) return current;
+    let lost = 0;
+    if (loss.kind === 'flat') {
+        const degrees = loss.counting === 'fullTens' ? degreesOfFailure - 1 : degreesOfFailure;
+        lost = degrees >= loss.minDegrees ? loss.loss : 0;
+    } else {
+        lost = Math.max(0, degreesOfFailure - Math.max(0, Math.trunc(fellowshipBonus)));
+    }
+    return Math.max(0, current - lost);
 }
 
 function collapseKey(raw: string): string {

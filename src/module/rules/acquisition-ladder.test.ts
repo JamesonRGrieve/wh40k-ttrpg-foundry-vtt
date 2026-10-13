@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DH2_ACQUISITION_LADDER } from '../config/game-systems/dh2-config.ts';
 import { acquisitionLadderFor, SystemConfigRegistry } from '../config/game-systems/index.ts';
 import { OW_ACQUISITION_LADDER } from '../config/game-systems/ow-config.ts';
-import { type AcquisitionLadder, availabilityTerm, normaliseAvailability, normaliseCraftsmanship } from './acquisition-ladder.ts';
+import { type AcquisitionLadder, availabilityTerm, normaliseAvailability, normaliseCraftsmanship, ratingAfterFailure } from './acquisition-ladder.ts';
 
 /**
  * Each line's acquisition ladder, pinned cell-for-cell to its printed table
@@ -28,6 +28,8 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: null,
+        // Ascension p. 16: fails by four or more (full-ten) degrees → the group loses 1 Influence.
+        failureLoss: { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' },
     },
     // DH2 core Table 5-1 / Table 5-2 (p. 141).
     dh2: {
@@ -45,6 +47,8 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -60,
         },
         craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
+        // Core p. 269 "Excessive or Reckless Use": the DoF beyond Fellowship bonus.
+        failureLoss: { kind: 'beyondFellowshipBonus' },
     },
     // RT core Table 9-35 (p. 272).
     rt: {
@@ -62,6 +66,8 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -30 },
+        // p. 271: a failure only means waiting to try again.
+        failureLoss: null,
     },
     // BC core Table 9-11 (p. 306).
     bc: {
@@ -79,6 +85,8 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
+        // p. 306: "If he fails, he does not" — no Infamy loss.
+        failureLoss: null,
     },
     // OW core Table 6-2 "Company or Less" column (p. 163) and Table 6-6 (p. 167).
     ow: {
@@ -96,6 +104,8 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: 'discretion',
         },
         craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
+        // p. 162: failure only means the item could not be obtained.
+        failureLoss: null,
     },
     // DW spends Requisition points; IM has no availability-modified test.
     dw: null,
@@ -122,6 +132,35 @@ describe('availabilityTerm', () => {
         expect(availabilityTerm(DH2_ACQUISITION_LADDER, 'common')).toEqual({ kind: 'modifier', value: 10 });
         expect(availabilityTerm(DH2_ACQUISITION_LADDER, 'ubiquitous')).toEqual({ kind: 'automatic' });
         expect(availabilityTerm(OW_ACQUISITION_LADDER, 'unique')).toEqual({ kind: 'discretion' });
+    });
+});
+
+describe('ratingAfterFailure (#496)', () => {
+    it('loses nothing when the line prints no loss', () => {
+        expect(ratingAfterFailure(null, 40, 9, 0)).toBe(40);
+    });
+
+    it('DH1 flat loss counts a degree per full 10 points: 4+ such degrees cost 1', () => {
+        const dh1 = { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' } as const;
+        // plusOne DoF 4 is a 30–39 margin: three DH1 degrees.
+        expect(ratingAfterFailure(dh1, 40, 4, 0)).toBe(40);
+        // plusOne DoF 5 is a 40+ margin: four DH1 degrees.
+        expect(ratingAfterFailure(dh1, 40, 5, 0)).toBe(39);
+    });
+
+    it('a plusOne flat loss uses the DoF as given', () => {
+        expect(ratingAfterFailure({ kind: 'flat', minDegrees: 3, loss: 2, counting: 'plusOne' }, 40, 3, 0)).toBe(38);
+    });
+
+    it('DH2 loses the degrees beyond Fellowship bonus, and nothing within it', () => {
+        const dh2 = { kind: 'beyondFellowshipBonus' } as const;
+        expect(ratingAfterFailure(dh2, 40, 4, 4)).toBe(40);
+        expect(ratingAfterFailure(dh2, 40, 7, 4)).toBe(37);
+    });
+
+    it('never drives the rating below 0, and a pass (0 DoF) costs nothing', () => {
+        expect(ratingAfterFailure({ kind: 'beyondFellowshipBonus' }, 2, 9, 0)).toBe(0);
+        expect(ratingAfterFailure({ kind: 'beyondFellowshipBonus' }, 20, 0, 0)).toBe(20);
     });
 });
 

@@ -59,6 +59,9 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
             unique: -70,
         },
         craftsmanship: null,
+        // Ascension p. 16: "if the Test fails by four or more degrees, the group loses 1 Influence" —
+        // a DH1 degree is each full 10 points of margin (core: "for each full 10 points by which you fail").
+        failureLoss: { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' },
     };
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh1';
     readonly cssClass = 'dark-heresy-1e';

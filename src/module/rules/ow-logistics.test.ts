@@ -8,6 +8,10 @@ import {
     TROOP_COUNT_KEYS,
     WAR_CONDITION_KEYS,
     computeLogisticsTarget,
+    logisticsContextFor,
+    logisticsFrontFrom,
+    logisticsStandingFrom,
+    OW_DEFAULT_FRONT,
     resolveLogisticsTest,
     type LogisticsContext,
     type LogisticsTarget,
@@ -239,5 +243,37 @@ describe('resolveLogisticsTest', () => {
     it('carries the test breakdown through', () => {
         const test = test40();
         expect(resolveLogisticsTest(test, 1).breakdown).toBe(test.breakdown);
+    });
+});
+
+describe('the squad’s persisted standing (#496)', () => {
+    it('defaults the front to Company or Less, 3–6 Months twice, Violent Impasse', () => {
+        expect(OW_DEFAULT_FRONT).toEqual({ troopCount: 'company', timeInFront: 'months3to6', frontActive: 'months3to6', warCondition: 'violentImpasse' });
+        expect(logisticsFrontFrom(undefined)).toEqual(OW_DEFAULT_FRONT);
+    });
+
+    it('keeps every stored row it knows and defaults the unknown or missing ones', () => {
+        expect(logisticsFrontFrom({ troopCount: 'regiments', timeInFront: 'bogus', warCondition: 'dominant' })).toEqual({
+            troopCount: 'regiments',
+            timeInFront: 'months3to6',
+            frontActive: 'months3to6',
+            warCondition: 'dominant',
+        });
+    });
+
+    it('reads the rating, Munitorum and situational, defaulting a fresh squad', () => {
+        expect(logisticsStandingFrom({})).toEqual({ rating: 10, munitorum: false, situational: 0, front: OW_DEFAULT_FRONT });
+        expect(logisticsStandingFrom({ logisticsRating: 25, munitorum: true, situational: -5 })).toMatchObject({
+            rating: 25,
+            munitorum: true,
+            situational: -5,
+        });
+    });
+
+    it('builds the full test context from a standing plus a request', () => {
+        const standing = logisticsStandingFrom({ logisticsRating: 25, logisticsFront: { troopCount: 'regiment' } });
+        expect(logisticsContextFor(standing, { availability: 'rare', craftsmanship: 'good', standardKit: true })).toEqual(
+            baseline({ rating: 25, availability: 'rare', troopCount: 'regiment', craftsmanship: 'good', standardKit: true }),
+        );
     });
 });

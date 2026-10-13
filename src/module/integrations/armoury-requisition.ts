@@ -25,6 +25,7 @@
  * trade (a pile, a hand-built shop) keeps paying in coin, untouched.
  */
 
+import { logisticsRows } from '../applications/prompts/logistics-test-rows.ts';
 import { acquisitionLadderFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
@@ -38,7 +39,8 @@ import {
 } from '../rules/acquisition-ladder.ts';
 import { type FlaggedActorLike, findArmoury } from '../rules/armoury.ts';
 import { isRenownRank, RENOWN_THRESHOLDS } from '../rules/dw-renown.ts';
-import { isTestBasedEconomy, requisitionEconomyFor, type RequesterState, type RequestedItem, type RequisitionEconomy } from '../rules/requisition-rail.ts';
+import { type LogisticsBreakdown, type LogisticsContext, logisticsStandingFrom, type StoredLogisticsStanding } from '../rules/ow-logistics.ts';
+import { isTestBasedEconomy, type RequestedItem, type RequesterState, type RequisitionEconomy, requisitionEconomyFor } from '../rules/requisition-rail.ts';
 import type { RequisitionModifier } from '../rules/requisition-test.ts';
 import { applyRequisition, planRequisition, type RequisitionRequest } from '../rules/requisition-transfer.ts';
 import type { I18nKey } from '../types/i18n-keys';
@@ -72,11 +74,11 @@ export interface RequisitionableItem {
 }
 
 /** The requester-side fields each economy reads. Absent on lines that lack them. */
-export interface RequisitionerSystem {
+export interface RequisitionerSystem extends StoredLogisticsStanding {
     gameSystem?: string | undefined;
     influence?: number | undefined;
     infamy?: number | undefined;
-    logisticsRating?: number | undefined;
+    characteristics?: { fellowship?: { bonus?: number | undefined } | undefined } | undefined;
     requisition?: number | undefined;
     renown?: number | undefined;
     rogueTrader?: { profitFactor?: { current?: number | undefined } | undefined } | undefined;
@@ -99,15 +101,21 @@ function readRequisitionPool(system: RequisitionerSystem): RequesterState {
     return { rating: 0, pool: system.requisition ?? 0, renown: system.renown ?? 0 };
 }
 
+/** OW: the squad's whole Logistics standing, so the armoury prices exactly as the Logistics Test dialog (#496). */
+function readLogisticsStanding(system: RequisitionerSystem): RequesterState {
+    const logistics = logisticsStandingFrom(system);
+    return { rating: logistics.rating, logistics };
+}
+
 function readProfitFactorPool(system: RequisitionerSystem): RequesterState {
     return { rating: 0, pool: system.rogueTrader?.profitFactor?.current ?? 0 };
 }
 
 /** How each economy reads the requester's standing off the actor's system data. */
 const REQUESTER_READERS: Record<RequisitionEconomy, (system: RequisitionerSystem) => RequesterState> = {
-    'influence': (system) => ({ rating: system.influence ?? 0 }),
+    'influence': (system) => ({ rating: system.influence ?? 0, fellowshipBonus: system.characteristics?.fellowship?.bonus ?? 0 }),
     'infamy': (system) => ({ rating: system.infamy ?? 0 }),
-    'logistics': (system) => ({ rating: system.logisticsRating ?? 0 }),
+    'logistics': readLogisticsStanding,
     'requisition-points': readRequisitionPool,
     'profit-factor': readProfitFactorPool,
     'none': () => ({ rating: 0 }),
@@ -147,6 +155,8 @@ interface ArmouryAttempt {
     refusal?: { key: I18nKey; data?: Record<string, number | string> | undefined } | undefined;
     target?: number | undefined;
     breakdown?: RequisitionModifier[] | undefined;
+    /** OW: the Logistics Test the target came from (its Table 6-2 / 6-6 rows). */
+    logistics?: { context: LogisticsContext; breakdown: LogisticsBreakdown } | undefined;
     roll?: number | undefined;
     dos?: number | undefined;
     dof?: number | undefined;
@@ -221,6 +231,7 @@ export function resolveArmouryRequisition(input: {
             outcome: result.transfer ? 'granted' : 'denied',
             target: plan.gate.target,
             breakdown: plan.gate.breakdown,
+            logistics: plan.gate.logistics,
             roll: rolled?.total,
             dos: rolled?.dos,
             dof: rolled?.dof,
@@ -339,12 +350,16 @@ export function buildArmouryCardContext(outcome: ArmouryRequisitionOutcome, game
     const attempts = outcome.attempts.map((attempt): ArmouryCardAttempt => {
         const breakdown = attempt.breakdown ?? [];
         const base = breakdown.find((m) => m.source === 'rating');
-        const rows: ProvenanceRow[] = breakdown
-            .filter((m) => m.source !== 'rating')
-            .map((m) => {
-                const label = modifierLabel(m, translate);
-                return { label, value: m.value, tooltipData: JSON.stringify({ title: label, sources: [{ name: label, value: m.value }] }) };
-            });
+        const rows: ProvenanceRow[] =
+            attempt.logistics === undefined
+                ? breakdown
+                      .filter((m) => m.source !== 'rating')
+                      .map((m) => {
+                          const label = modifierLabel(m, translate);
+                          return { label, value: m.value, tooltipData: JSON.stringify({ title: label, sources: [{ name: label, value: m.value }] }) };
+                      })
+                : // OW: the same Table 6-2 / 6-6 provenance rows the Logistics Test card prints.
+                  logisticsRows(attempt.logistics.context, attempt.logistics.breakdown, translate).filter((row) => row.key !== 'rating');
         const refusal = attempt.refusal;
         return {
             name: attempt.name,

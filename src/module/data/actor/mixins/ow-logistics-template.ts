@@ -2,19 +2,21 @@
  * Only War Squad Logistics DataModel mixin (#154).
  *
  * Backs the OW Logistics engine in `src/module/rules/ow-logistics.ts`.
- * Persists the three actor-owned scalars feeding `computeLogisticsTarget()`:
+ * Persists the squad's standing state feeding `computeLogisticsTarget()`:
  *
  *   - `logisticsRating`    Base Squad Logistics Rating
  *                          (default {@link OW_DEFAULT_LOGISTICS_RATING}).
  *   - `munitorum`          Squad has the Munitorum Influence Talent.
  *   - `situational`        GM-set situational modifier (stable between rolls).
+ *   - `logisticsFront`     The battlefront the squad is "currently operating
+ *                          in" (p. 162): Table 6-2's troops deployed, time spent
+ *                          in front, front active and war conditions. Standing
+ *                          campaign state, so the test dialog and the armoury
+ *                          requisition price against the same front (#496).
  *
- * The per-axis selectors of Table 6-2 (troop count, time in front, front
- * activity, war condition, craftsmanship, standard kit) are NOT persisted
- * on the actor — they are per-test inputs collected by
- * `LogisticsTestDialog` at roll time and live only on the chat card.
- * Persisting them on the actor would conflate the squad's standing state
- * with the situational state of a single requisition.
+ * The per-request inputs — the item's availability and craftsmanship, and
+ * whether it is in a deployed regiment's standard kit — are NOT persisted:
+ * they belong to one requisition, not to the squad.
  *
  * Wiring is performed by the orchestrator (see
  * `.integration-staging/154.json`):
@@ -25,9 +27,20 @@
  * UI imports.
  */
 
-import { OW_DEFAULT_LOGISTICS_RATING } from '../../../rules/ow-logistics.ts';
+import {
+    FRONT_TIME_KEYS,
+    type LogisticsFront,
+    OW_DEFAULT_FRONT,
+    OW_DEFAULT_LOGISTICS_RATING,
+    TROOP_COUNT_KEYS,
+    WAR_CONDITION_KEYS,
+} from '../../../rules/ow-logistics.ts';
 
-const { NumberField, BooleanField } = foundry.data.fields;
+const { NumberField, BooleanField, SchemaField, StringField } = foundry.data.fields;
+
+function frontRow(keys: readonly string[], initial: string): foundry.data.fields.DataField.Any {
+    return new StringField({ required: true, nullable: false, blank: false, initial, choices: [...keys] });
+}
 
 /**
  * Schema fields produced by this mixin. Spread into `defineSchema()` on
@@ -62,6 +75,12 @@ export function owLogisticsSchemaFields(): Record<string, foundry.data.fields.Da
             integer: true,
             nullable: false,
         }),
+        logisticsFront: new SchemaField({
+            troopCount: frontRow(TROOP_COUNT_KEYS, OW_DEFAULT_FRONT.troopCount),
+            timeInFront: frontRow(FRONT_TIME_KEYS, OW_DEFAULT_FRONT.timeInFront),
+            frontActive: frontRow(FRONT_TIME_KEYS, OW_DEFAULT_FRONT.frontActive),
+            warCondition: frontRow(WAR_CONDITION_KEYS, OW_DEFAULT_FRONT.warCondition),
+        }),
     };
 }
 
@@ -83,4 +102,6 @@ export interface OwLogisticsDeclarations {
     munitorum: boolean;
     /** GM standing-state situational modifier in points (commonly ±5). */
     situational: number;
+    /** The squad's current battlefront (Table 6-2 front conditions). */
+    logisticsFront: LogisticsFront;
 }

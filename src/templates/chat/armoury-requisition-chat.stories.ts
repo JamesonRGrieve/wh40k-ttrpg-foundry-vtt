@@ -5,7 +5,8 @@
  * Contexts are built by the real pure resolver (`resolveArmouryRequisition`) and
  * card builder (`buildArmouryCardContext`), with the langpack resolved from
  * en.json, so a change to the live payload shape surfaces here first. Covers a
- * granted test, a denied test with the big-failure Influence loss, a refusal
+ * granted test, a denied DH2 test with its printed Influence loss, a denied OW
+ * Logistics Test (Table 6-2 rows, no rating loss), a refusal
  * before any test, a pool-economy (Deathwatch Requisition) spend, and the same
  * granted card framed under every game system.
  */
@@ -15,12 +16,15 @@ import type { SystemId } from '../../../stories/mocks/extended';
 import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../stories/test-helpers';
 import { DH2_ACQUISITION_LADDER } from '../../module/config/game-systems/dh2-config';
+import { OW_ACQUISITION_LADDER } from '../../module/config/game-systems/ow-config';
 import {
     buildArmouryCardContext,
     type ItemPilesTradeEntry,
     type RequisitionableItem,
+    readRequesterState,
     resolveArmouryRequisition,
 } from '../../module/integrations/armoury-requisition';
+import type { AcquisitionLadder } from '../../module/rules/acquisition-ladder';
 import type { RequisitionEconomy } from '../../module/rules/requisition-rail';
 import type { I18nKey } from '../../module/types/i18n-keys';
 import cardSrc from './armoury-requisition-chat.hbs?raw';
@@ -40,19 +44,30 @@ function line(name: string, system: Partial<RequisitionableItem['system']>, quan
     return { type: 'item', quantity, item: { name, system: { availability: 'common', craftsmanship: 'common', quantity: 1, ...system } } };
 }
 
+/** The ladder each story economy prices against: DH2 for Influence, OW for Logistics; the per-system story only reframes the card. */
+function storyLadder(economy: RequisitionEconomy): AcquisitionLadder | null {
+    if (economy === 'influence') return DH2_ACQUISITION_LADDER;
+    if (economy === 'logistics') return OW_ACQUISITION_LADDER;
+    return null;
+}
+
 function card(opts: {
     economy: RequisitionEconomy;
     rating?: number;
     pool?: number;
+    fellowshipBonus?: number;
     entries: ItemPilesTradeEntry[];
     roll: number;
     gameSystem: SystemId;
 }): HTMLElement {
+    const requester =
+        opts.economy === 'logistics'
+            ? readRequesterState({ logisticsRating: opts.rating ?? 0 }, 'logistics')
+            : { rating: opts.rating ?? 0, pool: opts.pool, renown: 30, fellowshipBonus: opts.fellowshipBonus };
     const outcome = resolveArmouryRequisition({
         economy: opts.economy,
-        // Influence stories price against DH2's ladder; the per-system story only reframes the card.
-        ladder: opts.economy === 'influence' ? DH2_ACQUISITION_LADDER : null,
-        requester: { rating: opts.rating ?? 0, pool: opts.pool, renown: 30 },
+        ladder: storyLadder(opts.economy),
+        requester,
         entries: opts.entries,
         infiniteStock: true,
         rollD100: () => opts.roll,
@@ -83,12 +98,27 @@ export const Granted: Story = {
 };
 
 export const DeniedWithInfluenceLoss: Story = {
-    name: 'Denied — 3+ DoF failure costs Influence',
-    render: () => card({ economy: 'influence', rating: 40, entries: [HELLGUN], roll: 96, gameSystem: 'dh2' }),
+    name: 'Denied — DH2 loses the DoF beyond Fellowship bonus',
+    // 96 vs 0: 10 DoF, 6 beyond a Fellowship bonus of 4 (core p. 269).
+    render: () => card({ economy: 'influence', rating: 40, fellowshipBonus: 4, entries: [HELLGUN], roll: 96, gameSystem: 'dh2' }),
     play: async ({ canvasElement }) => {
         const scope = within(canvasElement);
         await expect(scope.getByText('Requisition Denied')).toBeTruthy();
-        await expect(scope.getByText('Influence falls from 40 to 39.')).toBeTruthy();
+        await expect(scope.getByText('Influence falls from 40 to 34.')).toBeTruthy();
+    },
+};
+
+export const LogisticsDeniedNoLoss: Story = {
+    name: 'Denied — OW Logistics Test, Table 6-2 rows, no rating lost',
+    render: () => card({ economy: 'logistics', rating: 30, entries: [HELLGUN], roll: 100, gameSystem: 'ow' }),
+    play: async ({ canvasElement }) => {
+        const scope = within(canvasElement);
+        await expect(scope.getByText('Requisition Denied')).toBeTruthy();
+        // The same provenance rows as the Logistics Test card: availability, both time rows, war conditions, craftsmanship.
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBe(5);
+        await expect(scope.getByText('War Conditions')).toBeTruthy();
+        // OW prints no Logistics Rating loss on a failure.
+        await expect(scope.queryByText(/falls from/)).toBeNull();
     },
 };
 

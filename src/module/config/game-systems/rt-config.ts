@@ -35,6 +35,8 @@ export const RT_ACQUISITION_LADDER = {
         unique: -70,
     },
     craftsmanship: { poor: 10, common: 0, good: -10, best: -30 },
+    // p. 271: on a failure "the Explorer must wait until later to try again" — no Profit Factor is lost.
+    failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
 export class RTSystemConfig extends CareerBasedSystemConfig {

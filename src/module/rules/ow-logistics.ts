@@ -24,7 +24,7 @@
 
 import { OW_ACQUISITION_LADDER, OW_LOGISTICS_FRONT_CONDITIONS } from '../config/game-systems/ow-config.ts';
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
-import { type AvailabilityKey, availabilityTerm, type CraftsmanshipKey } from './acquisition-ladder.ts';
+import { type AvailabilityKey, availabilityCell, type CraftsmanshipKey } from './acquisition-ladder.ts';
 
 /* -------------------------------------------------------------------- */
 /*  Base rating + flat bonuses                                          */
@@ -70,6 +70,94 @@ export const WAR_CONDITION_KEYS = [
     'dominant',
 ] as const satisfies readonly WarCondition[];
 
+/**
+ * The battlefront the squad is "currently operating in" (p. 162): the four
+ * Table 6-2 conditions that are standing campaign state rather than
+ * per-request input. Persisted on the OW actor so every Logistics path — the
+ * test dialog and the armoury requisition — prices against the same front.
+ */
+export interface LogisticsFront {
+    readonly troopCount: TroopCount;
+    readonly timeInFront: TimeInFront;
+    readonly frontActive: FrontActive;
+    readonly warCondition: WarCondition;
+}
+
+/**
+ * The front a squad starts on before the GM sets one. The book prints no
+ * default: Company or Less is the smallest deployment (and the line ladder's
+ * own column); 3–6 Months is the time row printed Challenging (+0); War
+ * Conditions has no +0 row, so Violent Impasse — the contested front of the
+ * p. 163 worked example — is used (#496).
+ */
+export const OW_DEFAULT_FRONT: LogisticsFront = {
+    troopCount: 'company',
+    timeInFront: 'months3to6',
+    frontActive: 'months3to6',
+    warCondition: 'violentImpasse',
+};
+
+function pick<T extends string>(keys: readonly T[], raw: string | undefined, fallback: T): T {
+    return keys.find((key) => key === raw) ?? fallback;
+}
+
+/** A stored front as the actor schema holds it (plain strings, possibly absent on legacy data). */
+export type StoredLogisticsFront = Partial<Record<keyof LogisticsFront, string>>;
+
+/** Read a stored front, falling back to {@link OW_DEFAULT_FRONT} for any absent or unknown row. */
+export function logisticsFrontFrom(stored: StoredLogisticsFront | undefined): LogisticsFront {
+    return {
+        troopCount: pick(TROOP_COUNT_KEYS, stored?.troopCount, OW_DEFAULT_FRONT.troopCount),
+        timeInFront: pick(FRONT_TIME_KEYS, stored?.timeInFront, OW_DEFAULT_FRONT.timeInFront),
+        frontActive: pick(FRONT_TIME_KEYS, stored?.frontActive, OW_DEFAULT_FRONT.frontActive),
+        warCondition: pick(WAR_CONDITION_KEYS, stored?.warCondition, OW_DEFAULT_FRONT.warCondition),
+    };
+}
+
+/** The squad's persisted Logistics standing, as the OW actor schema stores it. */
+export interface StoredLogisticsStanding {
+    readonly logisticsRating?: number | undefined;
+    readonly munitorum?: boolean | undefined;
+    readonly situational?: number | undefined;
+    readonly logisticsFront?: StoredLogisticsFront | undefined;
+}
+
+/** The squad's standing state: everything in a Logistics Test that is not the request. */
+export interface LogisticsStanding {
+    readonly rating: number;
+    readonly munitorum: boolean;
+    readonly situational: number;
+    readonly front: LogisticsFront;
+}
+
+/** Read the squad's standing off the actor's system data, defaulting what is absent. */
+export function logisticsStandingFrom(stored: StoredLogisticsStanding): LogisticsStanding {
+    return {
+        rating: Math.trunc(stored.logisticsRating ?? OW_DEFAULT_LOGISTICS_RATING),
+        munitorum: stored.munitorum === true,
+        situational: Math.trunc(stored.situational ?? 0),
+        front: logisticsFrontFrom(stored.logisticsFront),
+    };
+}
+
+/** One Logistics request: the item and whether it is in a deployed regiment's standard kit. */
+export interface LogisticsRequest {
+    readonly availability: AvailabilityKey;
+    readonly craftsmanship: Craftsmanship;
+    readonly standardKit: boolean;
+}
+
+/** The full Logistics Test context for a request made from a standing. */
+export function logisticsContextFor(standing: LogisticsStanding, request: LogisticsRequest): LogisticsContext {
+    return {
+        rating: standing.rating,
+        munitorum: standing.munitorum,
+        situational: standing.situational,
+        ...standing.front,
+        ...request,
+    };
+}
+
 /* -------------------------------------------------------------------- */
 /*  Composition                                                         */
 /* -------------------------------------------------------------------- */
@@ -78,7 +166,7 @@ export const WAR_CONDITION_KEYS = [
  * Inputs to the Logistics Test difficulty. All fields are required — callers
  * default omitted axes (an unrated item to `common`, etc.) before invoking.
  */
-export interface LogisticsContext {
+export interface LogisticsContext extends LogisticsFront {
     /** Base Squad Logistics Rating (default 10 per `OW_DEFAULT_LOGISTICS_RATING`). */
     readonly rating: number;
     /** True if any squad member has Munitorum Influence (+5 to rating). */
@@ -87,10 +175,6 @@ export interface LogisticsContext {
     readonly situational: number;
     /** The requested item's Availability. */
     readonly availability: AvailabilityKey;
-    readonly troopCount: TroopCount;
-    readonly timeInFront: TimeInFront;
-    readonly frontActive: FrontActive;
-    readonly warCondition: WarCondition;
     /** True if the requested gear is in any deployed regiment's standard kit (+20). */
     readonly standardKit: boolean;
     readonly craftsmanship: Craftsmanship;
@@ -130,7 +214,7 @@ export type LogisticsTarget = LogisticsTestTarget | { readonly kind: 'automatic'
  */
 export function computeLogisticsTarget(ctx: LogisticsContext): LogisticsTarget {
     const fc = OW_LOGISTICS_FRONT_CONDITIONS;
-    const cell = availabilityTerm({ availability: fc.availabilityByTroops[ctx.troopCount], craftsmanship: null }, ctx.availability);
+    const cell = availabilityCell(fc.availabilityByTroops[ctx.troopCount], ctx.availability);
     if (cell.kind !== 'modifier') return { kind: cell.kind };
 
     const breakdown: LogisticsBreakdown = {

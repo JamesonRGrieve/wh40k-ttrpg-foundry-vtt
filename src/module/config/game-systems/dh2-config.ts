@@ -41,6 +41,9 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
         unique: -60,
     },
     craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
+    // p. 269, "Excessive or Reckless Use": "When an Acolyte fails an Influence test by more degrees of
+    // failure than his Fellowship bonus, his Influence decreases by the difference between the two."
+    failureLoss: { kind: 'beyondFellowshipBonus' },
 };
 
 /**
