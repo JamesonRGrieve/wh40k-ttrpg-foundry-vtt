@@ -828,7 +828,7 @@
             "ParryingWeaponQuality": "{quality} ({weapon})",
             "CounterAttack": "Counter attack {attacker}",
             "CounterAttackTooltip": "{source}: attack back with the weapon that parried ({modifier} to the test)",
-            "CounterAttackSpent": "Counter Attack has already been used this turn.",
+            "CounterAttackSpent": "Counter Attack has already been used this round.",
             "Summary": {
                 "Pending": "Awaiting {defender}'s evasion",
                 "Blocked": "{defender} cannot evade: {reason}",

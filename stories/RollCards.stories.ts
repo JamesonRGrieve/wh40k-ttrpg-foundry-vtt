@@ -67,7 +67,7 @@ export const SimpleParryCounterAttack: Story = {
                 counterAttack: {
                     sourceName: 'Counter Attack',
                     attackModifier: -20,
-                    limit: 'perTurn',
+                    limit: 'perRound',
                     actorUuid: 'Actor.lucius',
                     attackerUuid: 'Actor.heretic',
                     attackerName: 'Heretic',
@@ -81,7 +81,7 @@ export const SimpleParryCounterAttack: Story = {
         await expect(button?.textContent).toContain('Heretic');
         await expect(button?.dataset['weaponId']).toBe('sword');
         await expect(button?.dataset['modifier']).toBe('-20');
-        await expect(button?.dataset['limit']).toBe('perTurn');
+        await expect(button?.dataset['limit']).toBe('perRound');
     },
 };
 

@@ -15,12 +15,12 @@ import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { spendActionForActor } from '../rules/action-economy.ts';
-import { counterAttackOffer, readCombatTurnStamp } from '../rules/counter-attack.ts';
+import { counterAttackOffer, readCombatRoundStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionNegation } from '../rules/evasion.ts';
 import { weaponParryModifiers } from '../rules/weapon-quality-effects.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { SimpleSkillData } from './action-data.ts';
-import { COUNTER_ATTACK_FLAG, type CounterAttackCard, currentCombatTurn, parryingWeapon, reactionHookSources } from './counter-attack-flow.ts';
+import { COUNTER_ATTACK_FLAG, type CounterAttackCard, currentCombatRound, parryingWeapon, reactionHookSources } from './counter-attack-flow.ts';
 import { EVASION_OUTCOME_FLAG, type EvasionOutcome, type EvasionPromptContext, evasionOutcomeSummary } from './evasion-flow.ts';
 import type { RollModifierComponent } from './roll-data.ts';
 import { resolveDegreesMethod } from './roll-helpers.ts';
@@ -129,8 +129,8 @@ export class EvasionActionData extends SimpleSkillData {
             skill: this.skill,
             success: this.rollData.success,
             sources: reactionHookSources(defender.items),
-            lastUsed: readCombatTurnStamp(defender.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)),
-            now: currentCombatTurn(game.combat),
+            lastUsed: readCombatRoundStamp(defender.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)),
+            now: currentCombatRound(game.combat),
         });
         if (offer === null) return null;
         return {

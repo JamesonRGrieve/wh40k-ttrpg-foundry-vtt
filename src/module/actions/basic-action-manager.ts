@@ -10,7 +10,7 @@ import { t } from '../i18n/t.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
-import { COUNTER_ATTACK_FLAG, currentCombatTurn } from '../rolls/counter-attack-flow.ts';
+import { COUNTER_ATTACK_FLAG, currentCombatRound } from '../rolls/counter-attack-flow.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import {
     closeEvasionPrompt,
@@ -32,7 +32,7 @@ import { WeaponRollData } from '../rolls/roll-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
-import { isSameTurn, readCombatTurnStamp } from '../rules/counter-attack.ts';
+import { isSameRound, readCombatRoundStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rules/evasion.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import {
@@ -234,8 +234,8 @@ export class BasicActionManager {
     /**
      * Counter Attack (#603): the parrying character strikes back at the opponent with
      * the weapon that parried, the talent's modifier a sourced row on the attack. Only
-     * the character's owners and the GM may take it; a per-turn hook is stamped on the
-     * character so it is not offered again this turn.
+     * the character's owners and the GM may take it; a per-round hook is stamped on the
+     * character with the combat round so it is not offered again until the round advances.
      */
     async _counterAttack(event: Event): Promise<void> {
         event.preventDefault();
@@ -251,9 +251,9 @@ export class BasicActionManager {
             ui.notifications.warn(t('WH40K.Evasion.NotYours', { defender: actor.name }));
             return;
         }
-        const now = currentCombatTurn(game.combat);
-        if (limit === 'perTurn') {
-            if (isSameTurn(readCombatTurnStamp(actor.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)), now)) {
+        const now = currentCombatRound(game.combat);
+        if (limit === 'perRound') {
+            if (isSameRound(readCombatRoundStamp(actor.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)), now)) {
                 ui.notifications.warn(t('WH40K.Evasion.CounterAttackSpent'));
                 return;
             }

@@ -2,14 +2,14 @@
  * @file Counter Attack on the evasion card (#603): after a successful Parry, the
  * parrying character's reaction hooks (`rules/counter-attack.ts`) may offer an
  * attack back at the opponent, with the weapon that parried, at the hook's
- * modifier. A per-turn hook is stamped on the actor when used, so it is offered
- * again only on a later turn.
+ * modifier. A per-round hook is stamped on the actor with the combat round when
+ * used, so it is offered again only once the round advances.
  */
 
-import type { CombatTurnStamp, CounterAttackOffer, ReactionHook, ReactionHookSource } from '../rules/counter-attack.ts';
+import type { CombatRoundStamp, CounterAttackOffer, ReactionHook, ReactionHookSource } from '../rules/counter-attack.ts';
 import { canWeaponParry } from '../rules/weapon-quality-effects.ts';
 
-/** The actor flag a per-turn reaction hook's last use is stamped under. */
+/** The actor flag a per-round reaction hook's last use is stamped under. */
 export const COUNTER_ATTACK_FLAG = 'counterAttackUsed';
 
 /** The Counter Attack control the evasion card renders. */
@@ -46,21 +46,21 @@ export function reactionHookSources(items: Iterable<HookBearingItem>): ReactionH
     return sources;
 }
 
-/** The combat as the turn stamp reads it. */
-export interface TurnSource {
+/** The combat as the round stamp reads it. */
+export interface RoundSource {
     readonly id: string | null;
     readonly started: boolean;
     readonly round: number;
-    readonly turn: number | null;
 }
 
 /**
- * The current combat turn, or null out of combat.
- * @param {TurnSource | null} combat  The active combat.
+ * The current combat round, or null out of combat. A per-round reaction hook
+ * resets when this advances (#603: DH2's "once per turn" means once per round).
+ * @param {RoundSource | null} combat  The active combat.
  */
-export function currentCombatTurn(combat: TurnSource | null): CombatTurnStamp | null {
+export function currentCombatRound(combat: RoundSource | null): CombatRoundStamp | null {
     if (combat?.id == null || !combat.started) return null;
-    return { combatId: combat.id, round: combat.round, turn: combat.turn ?? 0 };
+    return { combatId: combat.id, round: combat.round };
 }
 
 /** A held item as {@link parryingWeapon} reads it. */

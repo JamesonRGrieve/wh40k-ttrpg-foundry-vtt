@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { currentCombatTurn, parryingWeapon, reactionHookSources } from './counter-attack-flow.ts';
+import { currentCombatRound, parryingWeapon, reactionHookSources } from './counter-attack-flow.ts';
 
 describe('reactionHookSources (#603)', () => {
     it('collects the hooks each talent declares, and nothing from other items', () => {
-        const hook = { trigger: 'parrySuccess', grants: 'attack', limit: 'perTurn', attackModifier: -20 } as const;
+        const hook = { trigger: 'parrySuccess', grants: 'attack', limit: 'perRound', attackModifier: -20 } as const;
         const items = [
             { type: 'talent', name: 'Counter Attack', system: { reactionHooks: [hook] } },
             { type: 'talent', name: 'Ambidextrous', system: { reactionHooks: [] } },
@@ -13,11 +13,11 @@ describe('reactionHookSources (#603)', () => {
     });
 });
 
-describe('currentCombatTurn', () => {
-    it('stamps a started combat’s round and turn; nothing out of combat', () => {
-        expect(currentCombatTurn({ id: 'c1', started: true, round: 2, turn: 1 })).toEqual({ combatId: 'c1', round: 2, turn: 1 });
-        expect(currentCombatTurn({ id: 'c1', started: false, round: 0, turn: null })).toBeNull();
-        expect(currentCombatTurn(null)).toBeNull();
+describe('currentCombatRound', () => {
+    it('stamps a started combat’s round (not the combatant turn); nothing out of combat', () => {
+        expect(currentCombatRound({ id: 'c1', started: true, round: 2 })).toEqual({ combatId: 'c1', round: 2 });
+        expect(currentCombatRound({ id: 'c1', started: false, round: 0 })).toBeNull();
+        expect(currentCombatRound(null)).toBeNull();
     });
 });
 
