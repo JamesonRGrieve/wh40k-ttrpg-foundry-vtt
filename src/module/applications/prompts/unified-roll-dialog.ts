@@ -49,6 +49,7 @@ import {
     type SituationalFailureConsequence,
     stampRoundUses,
 } from '../../rules/situational-limits.ts';
+import { isSkillUseItemSlotKey, type SkillUseItemSlotKey } from '../../rules/skill-uses.ts';
 import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
@@ -85,6 +86,46 @@ interface SkillUseHost {
     selectSkillUse: (useId: string) => void;
     /** Re-apply the current pick's label / difficulty / opposition to the roll data. */
     syncSkillUse: () => void;
+    /** The item pickers the current use needs (#535); empty when it acts on no item. */
+    readonly skillUseItemPickers: readonly SkillUseItemPickerView[];
+    selectSkillUseItem: (slot: SkillUseItemSlotKey, itemId: string) => void;
+    /** Runs before the dice: `blocked` keeps the dialog open, `redirected` closes it without rolling. */
+    prepareSkillUseRoll: () => Promise<'ready' | 'blocked' | 'redirected'>;
+}
+
+/** One item picker as the host exposes it (#535). */
+interface SkillUseItemPickerView {
+    readonly key: SkillUseItemSlotKey;
+    readonly labelKey: string;
+    readonly hintKey: string;
+    readonly emptyKey: string;
+    readonly options: ReadonlyArray<{ id: string; name: string }>;
+    readonly selectedId: string | null;
+}
+
+/** Form-field name prefix of the skill-use item pickers (#535). */
+const SKILL_USE_ITEM_FIELD = 'skillUseItem';
+
+/** The id of one item picker's `<select>`, unique to its dialog. */
+function skillUseItemInputId(dialogId: string, slot: SkillUseItemSlotKey): string {
+    return `${dialogId}-${SKILL_USE_ITEM_FIELD}-${slot}`;
+}
+
+/** One item picker as the skill-use panel renders it (#535). */
+export interface SkillUseItemPickerContext {
+    key: SkillUseItemSlotKey;
+    /** The `<select>` name: the form handler routes it to the host, never into the roll data. */
+    fieldName: string;
+    /** The `<select>` id its `<label for>` points at, unique per dialog. */
+    inputId: string;
+    /** The hint's id, referenced by the `<select>`'s `aria-describedby`. */
+    hintId: string;
+    label: string;
+    hint: string;
+    /** Shown in place of the `<select>` when nothing is eligible. */
+    emptyLabel: string;
+    isEmpty: boolean;
+    options: Array<{ id: string; name: string; isSelected: boolean }>;
 }
 
 type AttackOptionWeaponLike = WH40KItemDocument & {
@@ -257,6 +298,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _charOverride: string | null;
     /** Climbing-surface modifier for Athletics rolls (#146). Defaults to 'standard' (no modifier). */
     declare _climbSurface: ClimbingSurface;
+    /**
+     * The skill-use item picker to give keyboard focus after the next render (#535):
+     * a re-render replaces the `<select>` the player was on, and choosing an
+     * item-choice use moves them straight to its picker.
+     */
+    declare _itemPickerFocus: SkillUseItemSlotKey | null;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -295,6 +342,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._cachedSituationalModifiers = null;
         this._pickerOutsideHandler = null;
         this._targetHookId = null;
+        this._itemPickerFocus = null;
         this._psyMode = 'unfettered';
         this._pushLevel = 1;
         this._selectedAssistantIds = new Set<string>();
@@ -954,6 +1002,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 void this.render(false, { parts: ['contextPanel', 'targetDisplay', 'modifiers', 'diceInput'] });
             };
             this._targetHookId = hooksOn('targetToken', onTarget);
+        }
+
+        // Give keyboard focus back to the skill-use item picker a re-render replaced,
+        // or move it to the picker a newly chosen item-choice use opened (#535).
+        if (this._itemPickerFocus !== null) {
+            const pickerId = skillUseItemInputId(this.id, this._itemPickerFocus);
+            this._itemPickerFocus = null;
+            this._el.querySelector<HTMLSelectElement>(`#${CSS.escape(pickerId)}`)?.focus();
         }
 
         // Auto-select number inputs on focus
@@ -1655,6 +1711,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended.object is typed loosely by Foundry; cast is the documented pattern
         const formObject = (formData as unknown as { object: Record<string, unknown> }).object;
+        // The item pickers (#535) must be taken before the form merges into the roll data.
+        const changedItemSlot = this.#takeSkillUseItemPicks(formObject);
+        if (changedItemSlot !== null) this._itemPickerFocus = changedItemSlot;
         const data = foundry.utils.expandObject(formObject);
         // Sync the <select> dialog-state pickers. ApplicationV2 binds [data-action]
         // to click only, so the climbSurface / characteristicOverride selects'
@@ -1682,8 +1741,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Re-render dependent parts (e.g., Called Shot location dropdown, range info).
         // The skill path also needs `modifiers`: it hosts the use picker and the target
         // selector, and a target change can move a target-scaled RAW difficulty (#432).
+        // A new item pick also renames the roll in the header (#535).
         const parts = ['contextPanel', 'targetDisplay', 'diceInput'];
         if (this.#skillUseHost() !== null) parts.push('modifiers');
+        if (changedItemSlot !== null) parts.push('header');
         await this.render(false, { parts });
     }
 
@@ -2364,8 +2425,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     /**
      * The action data as a skill-use host, or null when this roll has no inline use
-     * picker (a weapon/psychic roll, or a skill whose uses need a pre-roll item
-     * choice). Structural rather than an `instanceof` so the dialog stays decoupled
+     * picker (a weapon/psychic roll, or a skill without Special Uses). Structural
+     * rather than an `instanceof` so the dialog stays decoupled
      * from the concrete `SkillUseActionData` in the rolls layer.
      */
     #skillUseHost(): SkillUseHost | null {
@@ -2373,6 +2434,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const candidate = this.actionData as unknown as Partial<SkillUseHost>;
         if (!Array.isArray(candidate.skillUseOptions)) return null;
         if (typeof candidate.selectSkillUse !== 'function' || typeof candidate.syncSkillUse !== 'function') return null;
+        if (typeof candidate.selectSkillUseItem !== 'function' || typeof candidate.prepareSkillUseRoll !== 'function') return null;
         // eslint-disable-next-line no-restricted-syntax -- boundary: verified above by the shape checks
         return candidate as SkillUseHost;
     }
@@ -2387,14 +2449,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         hasSkillUsePicker: boolean;
         skillUses: Array<{ id: string; label: string; isSelected: boolean; needsTarget: boolean; modifier: number; modifierLabel: string }>;
         skillUseNeedsTarget: boolean;
+        skillUseItemPickers: SkillUseItemPickerContext[];
     } {
         const host = this.#skillUseHost();
         // A lone "general test" is not a choice — no picker for it.
         if (host === null || host.skillUseOptions.length <= 1) {
-            return { hasSkillUsePicker: false, skillUses: [], skillUseNeedsTarget: false };
+            return { hasSkillUsePicker: false, skillUses: [], skillUseNeedsTarget: false, skillUseItemPickers: [] };
         }
         const selected = host.skillUseOptions.find((use) => use.id === host.selectedSkillUseId);
         return {
+            skillUseItemPickers: UnifiedRollDialog.buildSkillUseItemPickers(host.skillUseItemPickers, this.id),
             hasSkillUsePicker: true,
             skillUses: host.skillUseOptions.map((use) => ({
                 id: use.id,
@@ -2406,6 +2470,63 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             })),
             skillUseNeedsTarget: selected?.needsTarget ?? false,
         };
+    }
+
+    /**
+     * Shape the host's item pickers (#535) for the skill-use panel: the localized
+     * label and hint, an id per slot that is unique to this dialog so the `<label for>`
+     * and `aria-describedby` resolve, and the selected option.
+     */
+    static buildSkillUseItemPickers(pickers: readonly SkillUseItemPickerView[], dialogId: string): SkillUseItemPickerContext[] {
+        return pickers.map((picker) => {
+            const inputId = skillUseItemInputId(dialogId, picker.key);
+            return {
+                key: picker.key,
+                fieldName: `${SKILL_USE_ITEM_FIELD}.${picker.key}`,
+                inputId,
+                hintId: `${inputId}-hint`,
+                label: game.i18n.localize(picker.labelKey),
+                hint: game.i18n.localize(picker.hintKey),
+                emptyLabel: game.i18n.localize(picker.emptyKey),
+                isEmpty: picker.options.length === 0,
+                options: picker.options.map((option) => ({ id: option.id, name: option.name, isSelected: option.id === picker.selectedId })),
+            };
+        });
+    }
+
+    /**
+     * Hand the item pickers' values (#535) to the skill-use host and drop them from
+     * the submitted form, so they never merge into the roll data. Returns the slot
+     * whose pick changed, or null.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: this is Foundry's FormDataExtended.object, a loose field-name map; each pick is narrowed by isSkillUseItemSlotKey and typeof below
+    #takeSkillUseItemPicks(formObject: Record<string, unknown>): SkillUseItemSlotKey | null {
+        const host = this.#skillUseHost();
+        let changed: SkillUseItemSlotKey | null = null;
+        for (const [field, value] of Object.entries(formObject)) {
+            if (!field.startsWith(`${SKILL_USE_ITEM_FIELD}.`)) continue;
+            delete formObject[field];
+            const slot = field.slice(SKILL_USE_ITEM_FIELD.length + 1);
+            if (host === null || !isSkillUseItemSlotKey(slot) || typeof value !== 'string') continue;
+            const before = host.skillUseItemPickers.find((picker) => picker.key === slot)?.selectedId ?? null;
+            if (before === value) continue;
+            host.selectSkillUseItem(slot, value);
+            changed = slot;
+        }
+        return changed;
+    }
+
+    /**
+     * The pre-roll step of a skill-use roll (#535). True when the dice may be rolled.
+     * A missing item keeps the dialog open; a test launched in this one's place (the
+     * xenos Forbidden Lore step) closes it.
+     */
+    async #skillUseReadyToRoll(): Promise<boolean> {
+        const host = this.#skillUseHost();
+        if (host === null) return true;
+        const readiness = await host.prepareSkillUseRoll();
+        if (readiness === 'redirected') await this.close();
+        return readiness === 'ready';
     }
 
     /**
@@ -2491,8 +2612,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static async #onSelectSkillUse(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
         const useId = target.dataset['useId'];
         if (useId === undefined) return;
-        this.#skillUseHost()?.selectSkillUse(useId);
-        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+        const host = this.#skillUseHost();
+        host?.selectSkillUse(useId);
+        // An item-choice use (#535) takes the player straight to its first item picker.
+        this._itemPickerFocus = host?.skillUseItemPickers.at(0)?.key ?? null;
+        // The header names the use (and its item), so it re-renders with the pick.
+        await this.render(false, { parts: ['header', 'targetDisplay', 'modifiers', 'diceInput'] });
     }
 
     /* -------------------------------------------- */
@@ -2504,6 +2629,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     async _submitToChat(): Promise<void> {
         const rollType = this.rollType;
+        // A target-only post is not an attempt, so only an entered roll runs the pre-roll step.
+        if (this._manualRollTotal !== null && !(await this.#skillUseReadyToRoll())) return;
 
         // Apply modifiers to roll data
         this._applyModifiersToRollData();
@@ -2539,6 +2666,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * Use Foundry's digital roll.
      */
     async _systemRoll(): Promise<void> {
+        if (!(await this.#skillUseReadyToRoll())) return;
         this._applyModifiersToRollData();
 
         const rollType = this.rollType;

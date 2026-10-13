@@ -48,6 +48,10 @@ import {
     resolveInterrogation,
     resolveSocialInfluence,
     type SkillUseDef,
+    type SkillUseItemChoice,
+    type SkillUseItemSlot,
+    type SkillUseItemSlotKey,
+    skillUseItemSlots,
     type SkillUseKind,
     useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
@@ -2125,10 +2129,9 @@ function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | n
 
 /**
  * Shape a roll for a chosen skill use (#432) — its display label, its RAW difficulty
- * modifier, and its opposition. The SINGLE place that mapping lives, so the inline
- * dialog picker and the pre-roll picker (kept for the item-choice families) cannot
- * drift apart. Idempotent: re-running it for the same use is a no-op, and re-running
- * it for a different one replaces rather than accumulates.
+ * modifier, and its opposition. The SINGLE place that mapping lives. Idempotent:
+ * re-running it for the same use is a no-op, and re-running it for a different one
+ * replaces rather than accumulates.
  *
  * Opposition by CHARACTERISTIC is resolved by the shared `checkForOpposed`; opposition
  * by SKILL (Deceive vs Scrutiny, the Barter/Gamble contests) is resolved inside that
@@ -2147,16 +2150,54 @@ export function applySkillUseToRollData(rollData: RollData, use: SkillUseDef, sk
 }
 
 /**
- * The one roll-dialog-facing action for a skill whose uses are all resolvable
- * inline (`skillUsesAreInline`). It carries the skill's use list and the player's
- * current pick, and **defers constructing the concrete ActionData subclass until
- * the roll resolves** — at which point both the use AND the target are final.
+ * What a skill-use roll's item pickers draw on (#535). The rolling actor supplies
+ * it: the dialog never reads an inventory itself, and the rolls layer never
+ * imports the actor.
+ */
+export interface SkillUseItemSource {
+    /** The items eligible for one slot of the use, given the roll's current target. */
+    candidates: (use: SkillUseDef, slot: SkillUseItemSlotKey, target: WH40KBaseActorDocument | null) => readonly PickedItem[];
+    /** Named target modifiers the chosen items bring (the #444 craftsmanship row, the #136 xenos rows). */
+    modifiers: (use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActorDocument | null) => Record<string, number>;
+    /**
+     * Steps that must happen before the dice (the #136 xenos Forbidden Lore step).
+     * Resolves false when a different test was launched in this roll's place.
+     */
+    beforeRoll: (use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActorDocument | null) => Promise<boolean>;
+    /** Build the concrete action for the chosen items, through the use family's handler. */
+    build: (use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActorDocument | null) => SimpleSkillData | null;
+}
+
+/** An eligible item as a picker lists it. */
+export interface PickedItem {
+    readonly id: string;
+    readonly name: string;
+}
+
+/** One item picker the roll dialog renders: the slot, its eligible items, and the current pick. */
+export interface SkillUseItemPicker extends SkillUseItemSlot {
+    readonly options: readonly PickedItem[];
+    readonly selectedId: string | null;
+}
+
+/**
+ * Whether a skill-use roll may go ahead (#535): `ready` rolls; `blocked` keeps the
+ * dialog open because an item is still missing; `redirected` means a different
+ * test was opened in its place, so this dialog closes without rolling.
+ */
+export type SkillUseRollReadiness = 'ready' | 'blocked' | 'redirected';
+
+/**
+ * The one roll-dialog-facing action for a skill with Special Uses. It carries the
+ * skill's use list, the player's current pick and, for an item-choice use, the
+ * picked item(s), and **defers constructing the concrete ActionData subclass until
+ * the roll resolves** — at which point the use, the target AND the item are final.
  *
  * That deferral is the point: the use used to be chosen in a pre-dialog picker and
  * the subclass built immediately, which forced a second pop-up before the Roll Test
  * dialog and froze the target before the dialog could offer one. Here the dialog
- * mutates `selectedSkillUseId` / `rollData.targetActor` freely, and the subclass is
- * built from whatever they finally are.
+ * mutates `selectedSkillUseId` / `rollData.targetActor` / the item picks freely, and
+ * the subclass is built from whatever they finally are.
  *
  * The shell delegates the two resolution hooks that the use families specialise —
  * `checkForOpposed()` (Deceive/Barter oppose by SKILL, others by characteristic) and
@@ -2169,11 +2210,16 @@ export class SkillUseActionData extends SimpleSkillData {
     readonly skillLabel: string;
     private _selectedUseId: string;
     private _delegate: SimpleSkillData | null = null;
+    private readonly _itemSource: SkillUseItemSource | null;
+    private _itemChoice: SkillUseItemChoice = {};
+    /** The roll-modifier keys the current item picks wrote, so a new pick replaces them. */
+    private _itemModifierKeys: string[] = [];
 
-    constructor(skillKey: string, skillLabel: string, initialUseId?: string) {
+    constructor(skillKey: string, skillLabel: string, initialUseId?: string, itemSource: SkillUseItemSource | null = null) {
         super();
         this.skillKey = skillKey;
         this.skillLabel = skillLabel;
+        this._itemSource = itemSource;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json (flag on) types [0] as possibly-undefined and requires the fallback; the lint parser (flag off) does not
         this._selectedUseId = initialUseId ?? getSkillUses(skillKey)[0]?.id ?? 'general';
     }
@@ -2203,26 +2249,100 @@ export class SkillUseActionData extends SimpleSkillData {
         if (this.skillUseOptions.every((u) => u.id !== useId)) return;
         this._selectedUseId = useId;
         this._delegate = null;
+        // A different use draws on a different pool of items.
+        this._itemChoice = {};
+        this.syncSkillUse();
+    }
+
+    /**
+     * The item pickers the selected use needs (#535), each with the items eligible
+     * against the current target and the current pick. Empty for a use that acts on
+     * no item.
+     */
+    get skillUseItemPickers(): SkillUseItemPicker[] {
+        const use = this.selectedSkillUse;
+        const source = this._itemSource;
+        if (use === null || source === null) return [];
+        return skillUseItemSlots(use).map((slot) => ({
+            ...slot,
+            options: source.candidates(use, slot.key, this.rollData.targetActor),
+            selectedId: this._itemChoice[slot.key] ?? null,
+        }));
+    }
+
+    /** Pick the item for one slot from the dialog. An item the slot does not offer is ignored. */
+    selectSkillUseItem(slot: SkillUseItemSlotKey, itemId: string): void {
+        const picker = this.skillUseItemPickers.find((p) => p.key === slot);
+        if (picker === undefined || picker.options.every((option) => option.id !== itemId)) return;
+        this._itemChoice = { ...this._itemChoice, [slot]: itemId };
+        this._delegate = null;
         this.syncSkillUse();
     }
 
     /**
      * Re-apply the selected use's roll shaping onto `rollData`. Idempotent, and safe
      * to call on every dialog render: the RAW First-Aid difficulty scales with the
-     * patient's wounds, so it must be recomputed whenever the player retargets, not
-     * only when they change use.
+     * patient's wounds, and a retarget changes which items a steal or a defuse can
+     * pick, so both must be recomputed whenever the player retargets, not only when
+     * they change use.
      */
     syncSkillUse(): void {
         const use = this.selectedSkillUse;
         if (use === null) return;
         applySkillUseToRollData(this.rollData, use, this.skillLabel);
+        this.#syncItemChoice(use);
+    }
+
+    /**
+     * Keep each item pick valid against the current pool (the first eligible item is
+     * the default), write the modifiers the picked items bring, and name the item in
+     * the roll's label.
+     */
+    #syncItemChoice(use: SkillUseDef): void {
+        const pickers = this.skillUseItemPickers;
+        const choice: SkillUseItemChoice = {};
+        for (const picker of pickers) {
+            const kept = picker.options.find((option) => option.id === picker.selectedId) ?? picker.options.at(0);
+            if (kept !== undefined) choice[picker.key] = kept.id;
+        }
+        this._itemChoice = choice;
+
+        for (const key of this._itemModifierKeys) delete this.rollData.modifiers[key];
+        this._itemModifierKeys = [];
+        const source = this._itemSource;
+        if (source === null || !useNeedsItemChoice(use)) return;
+        for (const [key, value] of Object.entries(source.modifiers(use, choice, this.rollData.targetActor))) {
+            if (value === 0) continue;
+            this.rollData.modifiers[key] = value;
+            this._itemModifierKeys.push(key);
+        }
+        const itemName = pickers.find((p) => p.key === 'item')?.options.find((o) => o.id === choice.item)?.name;
+        if (itemName !== undefined) this.rollData.nameOverride = `${this.rollData.nameOverride} (${itemName})`;
+    }
+
+    /**
+     * Run before the dice (#535). An item-choice use with a slot still empty is
+     * blocked, and the player is told what is missing; otherwise the actor's
+     * pre-roll step decides whether this test goes ahead or another replaced it.
+     */
+    async prepareSkillUseRoll(): Promise<SkillUseRollReadiness> {
+        const use = this.selectedSkillUse;
+        if (use === null || !useNeedsItemChoice(use)) return 'ready';
+        const missing = skillUseItemSlots(use).find((slot) => this._itemChoice[slot.key] === undefined);
+        if (missing !== undefined || this._itemSource === null) {
+            ui.notifications.warn(game.i18n.localize(missing?.emptyKey ?? 'WH40K.SkillUse.ItemSlot.Missing'));
+            return 'blocked';
+        }
+        const proceed = await this._itemSource.beforeRoll(use, this._itemChoice, this.rollData.targetActor);
+        return proceed ? 'ready' : 'redirected';
     }
 
     /**
      * Build (once, lazily) the ActionData subclass that resolves the selected use.
-     * Returns null when the pick needs nothing applied (the plain test) or when a
-     * target-directed use reached resolution with no target chosen — the latter is
-     * reported to the player rather than silently resolving as a bare skill test.
+     * Returns null when the pick needs nothing applied (the plain test), or when a
+     * target-directed use reached resolution with no target chosen, or an item-choice
+     * use with no item. The last two are reported to the player rather than silently
+     * resolving as a bare skill test.
      */
     #resolveDelegate(): SimpleSkillData | null {
         if (this._delegate !== null) return this._delegate;
@@ -2230,17 +2350,31 @@ export class SkillUseActionData extends SimpleSkillData {
         if (use === null || use.kind === 'general') return null;
 
         if (use.needsTarget && this.rollData.targetActor === null) {
-            const message = game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) });
-            ui.notifications.warn(message);
-            this.addEffect(game.i18n.localize('WH40K.SkillUse.EffectLabel'), message);
+            this.#reportUnresolved(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
             return null;
         }
 
-        const delegate = buildSkillUseDelegate(use);
+        const delegate = useNeedsItemChoice(use) ? this.#buildItemDelegate(use) : buildSkillUseDelegate(use);
         if (delegate === null) return null;
         delegate.rollData = this.rollData;
         this._delegate = delegate;
         return delegate;
+    }
+
+    /** The item-choice family's action, built by the actor from the picked item(s) (#535). */
+    #buildItemDelegate(use: SkillUseDef): SimpleSkillData | null {
+        const delegate = this._itemSource?.build(use, this._itemChoice, this.rollData.targetActor) ?? null;
+        if (delegate === null) {
+            const missing = skillUseItemSlots(use).find((slot) => this._itemChoice[slot.key] === undefined);
+            this.#reportUnresolved(game.i18n.localize(missing?.emptyKey ?? 'WH40K.SkillUse.ItemSlot.Missing'));
+        }
+        return delegate;
+    }
+
+    /** Tell the player why the use did not apply: a notification and a chat-card row. */
+    #reportUnresolved(message: string): void {
+        ui.notifications.warn(message);
+        this.addEffect(game.i18n.localize('WH40K.SkillUse.EffectLabel'), message);
     }
 
     override async checkForOpposed(): Promise<void> {
@@ -2282,8 +2416,9 @@ const SKILL_USE_DELEGATE_FACTORIES: Partial<Record<SkillUseKind, (use: SkillUseD
  * Map an inline-resolvable use to the ActionData subclass that applies it (#432).
  * Deliberately keyed on the use's declared `kind` / `id` — never on a skill name —
  * so a new skill that reuses an existing use family needs no code change here.
- * Returns null for the plain test and for the item-choice families, which are built
- * by their own pre-roll flows (they need the chosen item as a constructor argument).
+ * Returns null for the plain test and for the item-choice families, which need the
+ * picked item as a constructor argument and are built through the roll's
+ * {@link SkillUseItemSource} instead (#535).
  */
 export function buildSkillUseDelegate(use: SkillUseDef): SimpleSkillData | null {
     if (useNeedsItemChoice(use)) return null;

@@ -12,7 +12,13 @@ import {
     resolveDosReadout,
     resolveInterrogation,
     resolveSocialInfluence,
-    skillUsesAreInline,
+    dispatchItemChoiceUse,
+    isSkillUseItemSlotKey,
+    itemChoiceFamily,
+    type ItemChoiceHandlers,
+    type SkillUseCandidate,
+    skillUseItemCandidates,
+    skillUseItemSlots,
     useNeedsItemChoice,
     type FirstAidTargetVitals,
     type SkillUseDef,
@@ -525,8 +531,8 @@ describe('opposed pilot/operate chases (#454)', () => {
     });
 });
 
-describe('inline vs pre-roll use resolution (#432)', () => {
-    it('classifies the item-choice families as needing a pre-roll pick', () => {
+describe('item-choice use classification (#432/#535)', () => {
+    it('classifies the item-choice families as needing an item pick', () => {
         expect(useNeedsItemChoice(getSkillUse('chemUse', 'applyChem') as SkillUseDef)).toBe(true);
         expect(useNeedsItemChoice(getSkillUse('chemUse', 'coatWeapon') as SkillUseDef)).toBe(true);
         expect(useNeedsItemChoice(getSkillUse('sleightOfHand', 'steal') as SkillUseDef)).toBe(true);
@@ -556,52 +562,183 @@ describe('inline vs pre-roll use resolution (#432)', () => {
         }
     });
 
-    it('routes the Medicae-family and social/detection skills through the INLINE dialog picker', () => {
-        for (const skill of [
-            'medicae',
-            'interrogation',
-            'charm',
-            'command',
-            'intimidate',
-            'deceive',
-            'blather',
-            'wrangling',
-            'performer',
-            'stealth',
-            'awareness',
-            'scrutiny',
-            'concealment',
-            'silentMove',
-            'shadowing',
-            'tracking',
-            'disguise',
-            'barter',
-            'commerce',
-            'gamble',
-            'pilot',
-            'operate',
-        ]) {
-            expect(skillUsesAreInline(skill)).toBe(true);
-        }
-    });
-
-    it('keeps the item-choice skills on their pre-roll picker path', () => {
-        for (const skill of ['chemUse', 'sleightOfHand', 'techUse', 'security', 'demolition', 'athletics']) {
-            expect(skillUsesAreInline(skill)).toBe(false);
-        }
-    });
-
-    it('treats a skill with no special uses as inline (it never shows a picker at all)', () => {
-        expect(skillUsesAreInline('carouse')).toBe(true);
-        expect(hasSkillUses('carouse')).toBe(false);
-    });
-
-    it('marks a skill inline ONLY when every one of its uses is — one item-choice use disqualifies it', () => {
-        // Sleight of Hand offers an inline-resolvable detection contest AND item-moving
-        // uses; the item-moving ones force the whole skill onto the pre-roll path.
+    it('lets one skill mix item-choice and plain uses (Sleight of Hand)', () => {
         const uses = getSkillUses('sleightOfHand');
         expect(uses.some((u) => !useNeedsItemChoice(u))).toBe(true);
         expect(uses.some((u) => useNeedsItemChoice(u))).toBe(true);
-        expect(skillUsesAreInline('sleightOfHand')).toBe(false);
+    });
+
+    it('maps each item-choice kind to the family whose handler builds it', () => {
+        expect(itemChoiceFamily(useDef('chemUse', 'applyChem'))).toBe('chem');
+        expect(itemChoiceFamily(useDef('chemUse', 'coatWeapon'))).toBe('chem');
+        expect(itemChoiceFamily(useDef('sleightOfHand', 'steal'))).toBe('palm');
+        expect(itemChoiceFamily(useDef('sleightOfHand', 'plant'))).toBe('palm');
+        expect(itemChoiceFamily(useDef('techUse', 'repair'))).toBe('objectState');
+        expect(itemChoiceFamily(useDef('security', 'bypassLock'))).toBe('objectState');
+        expect(itemChoiceFamily(useDef('athletics', 'breakObject'))).toBe('objectState');
+        expect(itemChoiceFamily(useDef('demolition', 'placeCharge'))).toBe('demolition');
+        expect(itemChoiceFamily(useDef('demolition', 'defuse'))).toBe('demolition');
+        expect(itemChoiceFamily(useDef('medicae', 'firstAid'))).toBeNull();
+    });
+});
+
+/** A registered use, asserted present. */
+function useDef(skill: string, id: string): SkillUseDef {
+    const def = getSkillUse(skill, id);
+    if (def === null) throw new Error(`no ${skill}/${id} use`);
+    return def;
+}
+
+/** A carried item as the candidate filters read it. */
+function candidate(id: string, opts: Partial<Omit<SkillUseCandidate, 'id'>> = {}): SkillUseCandidate {
+    return { id, name: id, type: 'gear', isWeapon: false, isArmour: false, isGear: true, system: {}, ...opts };
+}
+
+describe('item pickers per use (#535)', () => {
+    it('gives Coat Weapon a chem picker and a weapon picker, and every other item use one picker', () => {
+        expect(skillUseItemSlots(useDef('chemUse', 'coatWeapon')).map((s) => s.key)).toEqual(['item', 'weapon']);
+        for (const [skill, id] of [
+            ['chemUse', 'applyChem'],
+            ['sleightOfHand', 'steal'],
+            ['sleightOfHand', 'plant'],
+            ['techUse', 'repair'],
+            ['security', 'bypassLock'],
+            ['athletics', 'breakObject'],
+            ['demolition', 'placeCharge'],
+            ['demolition', 'defuse'],
+        ] as const) {
+            expect(skillUseItemSlots(useDef(skill, id)).map((s) => s.key)).toEqual(['item']);
+        }
+        expect(skillUseItemSlots(useDef('medicae', 'firstAid'))).toEqual([]);
+    });
+
+    it('labels each picker and names what is missing from the langpack', () => {
+        const [repair] = skillUseItemSlots(useDef('techUse', 'repair'));
+        expect(repair).toEqual({
+            key: 'item',
+            labelKey: 'WH40K.SkillUse.ItemSlot.Item',
+            hintKey: 'WH40K.SkillUse.Object.PickRepairHint',
+            emptyKey: 'WH40K.SkillUse.Object.NoBroken',
+        });
+        expect(skillUseItemSlots(useDef('chemUse', 'coatWeapon')).map((s) => s.emptyKey)).toEqual([
+            'WH40K.SkillUse.Chem.NoChem',
+            'WH40K.SkillUse.Chem.NoWeapon',
+        ]);
+    });
+
+    it('recognises only the declared slot keys', () => {
+        expect(isSkillUseItemSlotKey('item')).toBe(true);
+        expect(isSkillUseItemSlotKey('weapon')).toBe(true);
+        expect(isSkillUseItemSlotKey('target')).toBe(false);
+    });
+});
+
+describe('eligible items per use (#535)', () => {
+    const chem = candidate('stimm', { type: 'drug', isGear: false, system: { uses: { value: 2 }, grants: { activeEffects: [{}] } } });
+    const emptyChem = candidate('spent', { type: 'drug', isGear: false, system: { uses: { value: 0 }, grants: { activeEffects: [{}] } } });
+    const inertChem = candidate('inert', { type: 'consumable', isGear: false, system: { uses: { value: 1 }, grants: { activeEffects: [] } } });
+    const lasgun = candidate('lasgun', { type: 'weapon', isWeapon: true, isGear: false });
+    const brokenAuspex = candidate('auspex', { system: { state: { broken: true } } });
+    const jammedPistol = candidate('pistol', { type: 'weapon', isWeapon: true, isGear: false, system: { jammed: true } });
+    const destroyed = candidate('slag', { system: { state: { broken: true, destroyed: true } } });
+    const lockbox = candidate('lockbox', { system: { state: { locked: true } } });
+    const charge = candidate('krak', { system: { state: { armed: { active: false } } } });
+    const armed = candidate('armed', { system: { state: { armed: { active: true } } } });
+    const talent = candidate('talent', { type: 'talent', isGear: false });
+    const unsaved = { ...brokenAuspex, id: null };
+
+    const ids = (items: readonly SkillUseCandidate[]): Array<string | null> => items.map((i) => i.id);
+
+    it('Apply/Coat lists your chems with a dose left and an effect; Coat also lists your weapons', () => {
+        const own = [chem, emptyChem, inertChem, lasgun];
+        expect(ids(skillUseItemCandidates(useDef('chemUse', 'applyChem'), 'item', own, null))).toEqual(['stimm']);
+        expect(ids(skillUseItemCandidates(useDef('chemUse', 'coatWeapon'), 'weapon', own, null))).toEqual(['lasgun']);
+    });
+
+    it('Steal lists the target’s physical items; Plant lists yours', () => {
+        expect(ids(skillUseItemCandidates(useDef('sleightOfHand', 'steal'), 'item', [lasgun], [brokenAuspex, talent]))).toEqual(['auspex']);
+        expect(ids(skillUseItemCandidates(useDef('sleightOfHand', 'steal'), 'item', [lasgun], null))).toEqual([]);
+        expect(ids(skillUseItemCandidates(useDef('sleightOfHand', 'plant'), 'item', [lasgun, talent], [brokenAuspex]))).toEqual(['lasgun']);
+    });
+
+    it('Repair lists broken or jammed items, yours and the target’s, but never a destroyed one (#444)', () => {
+        expect(ids(skillUseItemCandidates(useDef('techUse', 'repair'), 'item', [brokenAuspex, destroyed, lockbox], [jammedPistol]))).toEqual([
+            'auspex',
+            'pistol',
+        ]);
+    });
+
+    it('Bypass Lock lists locked items; Break lists intact ones', () => {
+        expect(ids(skillUseItemCandidates(useDef('security', 'bypassLock'), 'item', [lockbox, brokenAuspex], null))).toEqual(['lockbox']);
+        expect(ids(skillUseItemCandidates(useDef('athletics', 'breakObject'), 'item', [lockbox, brokenAuspex, talent], null))).toEqual(['lockbox']);
+    });
+
+    it('Place lists your unarmed charges; Defuse lists armed ones on you or the target', () => {
+        expect(ids(skillUseItemCandidates(useDef('demolition', 'placeCharge'), 'item', [charge, armed], [candidate('theirs')]))).toEqual(['krak']);
+        expect(ids(skillUseItemCandidates(useDef('demolition', 'defuse'), 'item', [charge], [armed]))).toEqual(['armed']);
+    });
+
+    it('never offers an item without an id, nor anything for a use that needs no item', () => {
+        expect(skillUseItemCandidates(useDef('techUse', 'repair'), 'item', [unsaved], null)).toEqual([]);
+        expect(skillUseItemCandidates(useDef('medicae', 'firstAid'), 'item', [brokenAuspex], null)).toEqual([]);
+    });
+});
+
+describe('dispatching a picked item to its handler (#535)', () => {
+    type Call = [family: string, use: string, ...ids: Array<string | null>];
+    function spyHandlers(calls: Call[]): ItemChoiceHandlers<string> {
+        return {
+            chem: (u, chemId, weaponId) => {
+                calls.push(['chem', u.id, chemId, weaponId]);
+                return 'chem';
+            },
+            palm: (u, itemId) => {
+                calls.push(['palm', u.id, itemId]);
+                return 'palm';
+            },
+            objectState: (u, itemId) => {
+                calls.push(['objectState', u.id, itemId]);
+                return 'objectState';
+            },
+            demolition: (u, itemId) => {
+                calls.push(['demolition', u.id, itemId]);
+                return 'demolition';
+            },
+        };
+    }
+
+    it.each([
+        ['chemUse', 'applyChem', ['chem', 'applyChem', 'x', null]],
+        ['sleightOfHand', 'steal', ['palm', 'steal', 'x']],
+        ['sleightOfHand', 'plant', ['palm', 'plant', 'x']],
+        ['techUse', 'repair', ['objectState', 'repair', 'x']],
+        ['security', 'bypassLock', ['objectState', 'bypassLock', 'x']],
+        ['athletics', 'breakObject', ['objectState', 'breakObject', 'x']],
+        ['demolition', 'placeCharge', ['demolition', 'placeCharge', 'x']],
+        ['demolition', 'defuse', ['demolition', 'defuse', 'x']],
+    ] as const)('%s / %s calls its handler with the picked item', (skill, id, expected) => {
+        const calls: Call[] = [];
+        dispatchItemChoiceUse(useDef(skill, id), { item: 'x' }, spyHandlers(calls));
+        expect(calls).toEqual([expected]);
+    });
+
+    it('Coat Weapon passes both the chem and the weapon', () => {
+        const calls: Call[] = [];
+        dispatchItemChoiceUse(useDef('chemUse', 'coatWeapon'), { item: 'stimm', weapon: 'lasgun' }, spyHandlers(calls));
+        expect(calls).toEqual([['chem', 'coatWeapon', 'stimm', 'lasgun']]);
+    });
+
+    it('Apply Chem ignores a stray weapon pick', () => {
+        const calls: Call[] = [];
+        dispatchItemChoiceUse(useDef('chemUse', 'applyChem'), { item: 'stimm', weapon: 'lasgun' }, spyHandlers(calls));
+        expect(calls).toEqual([['chem', 'applyChem', 'stimm', null]]);
+    });
+
+    it('calls nothing while a needed slot is empty, or for a use that needs no item', () => {
+        const calls: Call[] = [];
+        expect(dispatchItemChoiceUse(useDef('techUse', 'repair'), {}, spyHandlers(calls))).toBeNull();
+        expect(dispatchItemChoiceUse(useDef('chemUse', 'coatWeapon'), { item: 'stimm' }, spyHandlers(calls))).toBeNull();
+        expect(dispatchItemChoiceUse(useDef('medicae', 'firstAid'), { item: 'x' }, spyHandlers(calls))).toBeNull();
+        expect(calls).toEqual([]);
     });
 });

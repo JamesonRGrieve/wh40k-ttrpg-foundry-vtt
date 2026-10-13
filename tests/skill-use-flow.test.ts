@@ -16,6 +16,7 @@
  */
 
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import type { SkillUseItemSource } from '../src/module/rolls/action-data.ts';
 import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 /* -------------------------------------------- */
@@ -127,15 +128,19 @@ stubs.game = {
 const {
     applySkillUseToRollData,
     buildSkillUseDelegate,
+    ChemUseActionData,
     ContestActionData,
+    DemolitionActionData,
     DetectionActionData,
     InterrogationActionData,
     MedicaeActionData,
+    ObjectStateActionData,
+    PalmActionData,
     SkillUseActionData,
     SocialBuffActionData,
     SocialInfluenceActionData,
 } = await import('../src/module/rolls/action-data.ts');
-const { getSkillUse, getSkillUses } = await import('../src/module/rules/skill-uses.ts');
+const { dispatchItemChoiceUse, getSkillUse, getSkillUses, skillUseItemCandidates } = await import('../src/module/rules/skill-uses.ts');
 const { DAY_SECONDS } = await import('../src/module/rules/world-time.ts');
 
 afterAll(() => {
@@ -665,5 +670,268 @@ describe('SkillUseActionData — inline use selection', () => {
         expect(action.rollData.isOpposed).toBe(true);
         expect(action.rollData.opposedChar).toBe('WP');
         expect(target.fatigueApplied).toEqual([1]);
+    });
+});
+
+/* -------------------------------------------- */
+/*  Item-choice uses in the dialog (#535)        */
+/* -------------------------------------------- */
+
+/** The system slots the item-choice actions and candidate filters read. */
+interface FakeItemSystem {
+    uses: { value: number; max: number };
+    grants: { activeEffects: Array<{ key: string; mode: number; value: number; durationRounds: number }> };
+    addictive: number;
+    state: { broken: boolean; locked: boolean; destroyed: boolean; armed: { active: boolean; setterDegrees: number } };
+    jammed: boolean;
+}
+
+/** A carried item: satisfies the candidate filters and every item-choice action's item shape. */
+interface FakeItem {
+    id: string;
+    name: string;
+    type: string;
+    isWeapon: boolean;
+    isArmour: boolean;
+    isGear: boolean;
+    system: FakeItemSystem;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item#update payloads are open-ended Records
+    updates: Array<Record<string, unknown>>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Item#update payloads are open-ended Records
+    update: (patch: Record<string, unknown>) => Promise<void>;
+}
+
+function fakeItem(
+    id: string,
+    opts: { type?: string; isWeapon?: boolean; isGear?: boolean; state?: Partial<FakeItemSystem['state']>; uses?: number; effects?: number } = {},
+): FakeItem {
+    const item: FakeItem = {
+        id,
+        name: `Item ${id}`,
+        type: opts.type ?? (opts.isWeapon === true ? 'weapon' : 'gear'),
+        isWeapon: opts.isWeapon ?? false,
+        isArmour: false,
+        isGear: opts.isGear ?? opts.isWeapon !== true,
+        system: {
+            uses: { value: opts.uses ?? 0, max: opts.uses ?? 0 },
+            grants: { activeEffects: Array.from({ length: opts.effects ?? 0 }, () => ({ key: 'system.x', mode: 2, value: 1, durationRounds: 1 })) },
+            addictive: 0,
+            state: { broken: false, locked: false, destroyed: false, armed: { active: false, setterDegrees: 0 }, ...opts.state },
+            jammed: false,
+        },
+        updates: [],
+        update: async (patch): Promise<void> => {
+            item.updates.push(patch);
+            return Promise.resolve();
+        },
+    };
+    return item;
+}
+
+/** What the roller carries, what each target carries, and what the fake source records. */
+interface ItemWorld {
+    own: FakeItem[];
+    carriedBy: Map<object, FakeItem[]>;
+    /** The craftsmanship row a repair pick brings. */
+    craftsmanship: number;
+    /** What the pre-roll step answers. */
+    proceed: boolean;
+    /** Every handler call, as [family, use id, ...picked ids]. */
+    calls: string[][];
+}
+
+function itemWorld(own: FakeItem[] = []): ItemWorld {
+    return { own, carriedBy: new Map(), craftsmanship: 0, proceed: true, calls: [] };
+}
+
+/**
+ * The item source an actor hands the shell, built on the REAL candidate filters and
+ * the REAL per-kind dispatch, with handlers that build the real actions. This is the
+ * acolyte's wiring minus the Foundry documents.
+ */
+function itemSource(world: ItemWorld): SkillUseItemSource {
+    const carried = (target: object | null): FakeItem[] | null => (target === null ? null : world.carriedBy.get(target) ?? []);
+    const findItem = (id: string, target: object | null): FakeItem | null =>
+        carried(target)?.find((i) => i.id === id) ?? world.own.find((i) => i.id === id) ?? null;
+    return {
+        candidates: (use, slot, target) => skillUseItemCandidates(use, slot, world.own, carried(target)).map((i) => ({ id: i.id, name: i.name })),
+        modifiers: (use, choice): Record<string, number> =>
+            use.kind === 'repair' && choice.item !== undefined ? { 'craftsmanship-repair': world.craftsmanship } : {},
+        beforeRoll: async (): Promise<boolean> => Promise.resolve(world.proceed),
+        build: (use, choice, target) =>
+            dispatchItemChoiceUse<ReturnType<SkillUseItemSource['build']>>(use, choice, {
+                chem: (u, chemId, weaponId) => {
+                    world.calls.push(['chem', u.id, chemId, weaponId ?? '']);
+                    const chem = findItem(chemId, null);
+                    if (chem === null) return null;
+                    return u.kind === 'coatWeapon'
+                        ? new ChemUseActionData('coatWeapon', chem, findItem(weaponId ?? '', null))
+                        : new ChemUseActionData('applyChem', chem);
+                },
+                palm: (u, itemId) => {
+                    world.calls.push(['palm', u.id, itemId]);
+                    return new PalmActionData(u.kind === 'steal' ? 'steal' : 'plant', itemId);
+                },
+                objectState: (u, itemId) => {
+                    world.calls.push(['objectState', u.id, itemId]);
+                    const item = findItem(itemId, target);
+                    const mode = u.kind === 'repair' ? 'repair' : u.kind === 'bypassLock' ? 'bypassLock' : 'breakObject';
+                    return item === null ? null : new ObjectStateActionData(mode, item);
+                },
+                demolition: (u, itemId) => {
+                    world.calls.push(['demolition', u.id, itemId]);
+                    const item = findItem(itemId, target);
+                    if (item === null) return null;
+                    return u.kind === 'placeCharge' ? new DemolitionActionData('placeCharge', item, 'on trigger') : new DemolitionActionData('defuse', item);
+                },
+            }),
+    };
+}
+
+describe('SkillUseActionData — item-choice uses resolve through their handler (#535)', () => {
+    it.each([
+        ['chemUse', 'applyChem', fakeItem('chem', { type: 'drug', isGear: false, uses: 2, effects: 1 }), ['chem', 'applyChem', 'chem', '']],
+        ['sleightOfHand', 'plant', fakeItem('knife', { isWeapon: true }), ['palm', 'plant', 'knife']],
+        ['techUse', 'repair', fakeItem('auspex', { state: { broken: true } }), ['objectState', 'repair', 'auspex']],
+        ['security', 'bypassLock', fakeItem('lockbox', { state: { locked: true } }), ['objectState', 'bypassLock', 'lockbox']],
+        ['athletics', 'breakObject', fakeItem('crate'), ['objectState', 'breakObject', 'crate']],
+        ['demolition', 'placeCharge', fakeItem('krak'), ['demolition', 'placeCharge', 'krak']],
+        ['demolition', 'defuse', fakeItem('armed', { state: { armed: { active: true, setterDegrees: 1 } } }), ['demolition', 'defuse', 'armed']],
+    ] as const)('%s / %s: picking an item calls the handler with that item', async (skill, useId, item, expected) => {
+        const world = itemWorld([item]);
+        const action = new SkillUseActionData(skill, skill, undefined, itemSource(world));
+        action.selectSkillUse(useId);
+        action.selectSkillUseItem('item', item.id);
+        // A target is bound for every kind: Apply and Plant need one, and it carries none of the items.
+        bind(action, makeTarget({ name: 'Mark' }), { success: false, dof: 1 });
+        // The mark's opposing roll is not under test here, only which handler builds the action.
+        action.rollData.isOpposed = false;
+
+        await expect(action.prepareSkillUseRoll()).resolves.toBe('ready');
+        await action.checkForOpposed();
+
+        expect(world.calls).toEqual([expected]);
+    });
+
+    it('Steal picks from the TARGET’s items and moves the picked one on a win', async () => {
+        const world = itemWorld();
+        const mark = makeTarget({ name: 'Mark' });
+        const purse = fakeItem('purse');
+        world.carriedBy.set(mark, [fakeItem('rosary'), purse]);
+        const moved: string[] = [];
+        Object.assign(mark, {
+            transferItemTo: async (id: string): Promise<string> => {
+                moved.push(id);
+                return Promise.resolve('Item purse');
+            },
+        });
+        const action = new SkillUseActionData('sleightOfHand', 'Sleight of Hand', undefined, itemSource(world));
+        action.selectSkillUse('steal');
+        bind(action, mark, { success: true, dos: 2 });
+        action.syncSkillUse();
+        expect(action.skillUseItemPickers[0]?.options.map((o) => o.id)).toEqual(['rosary', 'purse']);
+        action.selectSkillUseItem('item', 'purse');
+
+        await action.descriptionText();
+
+        expect(world.calls).toEqual([['palm', 'steal', 'purse']]);
+        expect(moved).toEqual(['purse']);
+    });
+
+    it('Repair clears the picked item’s broken state, shows its craftsmanship row before the roll, and names it', async () => {
+        const auspex = fakeItem('auspex', { state: { broken: true } });
+        const vox = fakeItem('vox', { state: { broken: true } });
+        const world = itemWorld([auspex, vox]);
+        world.craftsmanship = -10;
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(world));
+        action.selectSkillUse('repair');
+        action.selectSkillUseItem('item', 'vox');
+
+        expect(action.rollData.modifiers['craftsmanship-repair']).toBe(-10);
+        expect(action.rollData.nameOverride).toBe('Tech-Use: WH40K.SkillUse.Object.Repair (Item vox)');
+
+        bind(action, makeTarget(), { success: true, dos: 1 });
+        await action.descriptionText();
+
+        expect(vox.updates).toEqual([{ 'system.state.broken': false, 'system.jammed': false }]);
+        expect(auspex.updates).toEqual([]);
+        expect(cardText(action)).toContain('WH40K.SkillUse.Object.Repaired');
+    });
+
+    it('defaults to the first eligible item and replaces, never stacks, the item modifiers', () => {
+        const world = itemWorld([fakeItem('auspex', { state: { broken: true } }), fakeItem('vox', { state: { broken: true } })]);
+        world.craftsmanship = -10;
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(world));
+        action.selectSkillUse('repair');
+        expect(action.skillUseItemPickers[0]?.selectedId).toBe('auspex');
+
+        action.selectSkillUseItem('item', 'vox');
+        action.syncSkillUse();
+        expect(action.rollData.modifiers['craftsmanship-repair']).toBe(-10);
+
+        action.selectSkillUse('general');
+        expect(action.rollData.modifiers['craftsmanship-repair']).toBeUndefined();
+        expect(action.skillUseItemPickers).toEqual([]);
+    });
+
+    it('ignores a pick the slot does not offer', () => {
+        const world = itemWorld([fakeItem('auspex', { state: { broken: true } }), fakeItem('intact')]);
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(world));
+        action.selectSkillUse('repair');
+        action.selectSkillUseItem('item', 'intact');
+        expect(action.skillUseItemPickers[0]?.selectedId).toBe('auspex');
+    });
+
+    it('Coat Weapon needs both a chem and a weapon, and coats the picked weapon', async () => {
+        const blade = fakeItem('blade', { isWeapon: true });
+        const world = itemWorld([fakeItem('toxin', { type: 'drug', isGear: false, uses: 3, effects: 1 }), blade]);
+        const action = new SkillUseActionData('chemUse', 'Chem-Use', undefined, itemSource(world));
+        action.selectSkillUse('coatWeapon');
+        expect(action.skillUseItemPickers.map((p) => [p.key, p.selectedId])).toEqual([
+            ['item', 'toxin'],
+            ['weapon', 'blade'],
+        ]);
+        bind(action, makeTarget(), { success: true, dos: 1 });
+        await action.descriptionText();
+
+        expect(world.calls).toEqual([['chem', 'coatWeapon', 'toxin', 'blade']]);
+        expect(blade.updates).toEqual([{ 'system.state.coating': { name: 'Item toxin', charges: 3 } }]);
+    });
+
+    it('Place Charge arms the picked explosive', async () => {
+        const krak = fakeItem('krak');
+        const action = new SkillUseActionData('demolition', 'Demolition', undefined, itemSource(itemWorld([krak])));
+        action.selectSkillUse('placeCharge');
+        bind(action, makeTarget(), { success: true, dos: 2 });
+        await action.descriptionText();
+        expect(krak.updates).toEqual([{ 'system.state.armed': { active: true, trigger: 'on trigger', setterDegrees: 2 } }]);
+    });
+
+    it('blocks the roll and says what is missing when nothing is eligible', async () => {
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(itemWorld([fakeItem('intact')])));
+        action.selectSkillUse('repair');
+        await expect(action.prepareSkillUseRoll()).resolves.toBe('blocked');
+        expect(warnings).toEqual(['WH40K.SkillUse.Object.NoBroken']);
+    });
+
+    it('reports on the card instead of resolving a bare test when no item reached resolution', async () => {
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(itemWorld()));
+        action.selectSkillUse('repair');
+        bind(action, makeTarget(), { success: true, dos: 1 });
+        await action.descriptionText();
+        expect(cardText(action)).toContain('WH40K.SkillUse.Object.NoBroken');
+    });
+
+    it('is redirected when the pre-roll step launches another test (the xenos Forbidden Lore step)', async () => {
+        const world = itemWorld([fakeItem('xenos-blade', { isWeapon: true, state: { broken: true } })]);
+        world.proceed = false;
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(world));
+        action.selectSkillUse('repair');
+        await expect(action.prepareSkillUseRoll()).resolves.toBe('redirected');
+    });
+
+    it('lets a plain use roll with no pre-roll step', async () => {
+        const action = new SkillUseActionData('techUse', 'Tech-Use', undefined, itemSource(itemWorld()));
+        await expect(action.prepareSkillUseRoll()).resolves.toBe('ready');
     });
 });

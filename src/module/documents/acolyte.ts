@@ -9,8 +9,6 @@ import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
 import {
     type ActionData,
-    applySkillUseToRollData,
-    buildSkillUseDelegate,
     type ChemLike,
     ChemUseActionData,
     type CoatableWeapon,
@@ -21,8 +19,10 @@ import {
     type StatefulItem,
     DosReadoutActionData,
     MalignancyTestActionData,
+    type SimpleSkillData,
     type SkillRollOptions,
     SkillUseActionData,
+    type SkillUseItemSource,
     XenosLoreActionData,
 } from '../rolls/action-data.ts';
 import { EvasionActionData } from '../rolls/evasion-action-data.ts';
@@ -42,7 +42,15 @@ import type { EvasionSkill } from '../rules/evasion.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { activeFailureConsequence, type CollectedSituationalModifier, failureConsequenceField } from '../rules/situational-limits.ts';
-import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
+import {
+    dispatchItemChoiceUse,
+    getSkillReadout,
+    hasSkillUses,
+    type ItemChoiceHandlers,
+    type SkillUseDef,
+    type SkillUseItemChoice,
+    skillUseItemCandidates,
+} from '../rules/skill-uses.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
     type ModifiableWeaponSystem,
@@ -632,23 +640,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Dispatch a skill roll to the flow its chosen use needs (#432 and its consumers).
-     * Returns true when a use handled the roll, false when the choice falls through to
-     * the normal test below.
-     *
-     * Two paths, decided by whether the skill's uses can be chosen INSIDE the roll
-     * dialog:
-     * - **Inline** (the default, and every target-directed family): the Roll Test
-     *   dialog opens straight away with the use picker — and, for a target-directed
-     *   use, the target picker — rendered in it. No pre-dialog pop-up, and the
-     *   concrete action data is not built until the roll resolves.
-     * - **Pre-roll picker** (Chem-Use, Sleight of Hand, Tech-Use, Security,
-     *   Demolition, Athletics): these uses need a SECOND choice — which chem, which
-     *   item, which charge — before their action data can be constructed at all, so
-     *   they keep the pop-up that gathers it.
+     * Open the Roll Test dialog for a skill with Special Uses (#432). Returns true:
+     * the dialog owns the roll. Every choice the roll needs is made inside that one
+     * dialog: the use, the target for a target-directed use, and the item(s) for an
+     * item-choice use (#535). The concrete action is built when the roll resolves,
+     * from whatever the player finally picked.
      */
     _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): boolean {
-        const action = new SkillUseActionData(skillKey, skillLabel);
+        const action = new SkillUseActionData(skillKey, skillLabel, undefined, this._skillUseItemSource());
         this._buildSimpleSkillRoll({
             key: skillKey,
             type: 'skill',
@@ -665,238 +664,123 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Resolve a target-directed skill use on the PRE-ROLL picker path (#432/#434/#435).
-     * Only reachable for skills whose use list also contains an item-choice family
-     * (Sleight of Hand's Notice contest is the live case) — every other target-directed
-     * use is chosen inside the dialog now.
-     *
-     * The per-use wiring is NOT duplicated here: `buildSkillUseDelegate` picks the same
-     * action subclass the inline path builds, and `applySkillUseToRollData` applies the
-     * same label / RAW difficulty / opposition, so the two paths cannot drift.
-     *
-     * RAW per-target time gates (#458) are deliberately NOT checked here — they are
-     * enforced at roll RESOLUTION, against the final target.
+     * The inventory the roll dialog's item pickers draw on (#535): this actor's
+     * carried items and the target's. Confirming a pick dispatches to the use
+     * family's handler below, which builds the concrete action.
      */
-    _rollTargetedSkillUse(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): void {
-        const targetActor = firstTargetedActor();
-        if (targetActor === null) {
-            ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: game.i18n.localize(use.labelKey) }));
-            return;
-        }
-        const action = buildSkillUseDelegate(use);
-        if (action === null) return;
-        this._buildSimpleSkillRoll({
-            key: skillKey,
-            type: 'skill',
-            label: `${skillLabel}: ${game.i18n.localize(use.labelKey)}`,
-            target: targetValue,
-            situationalKey: skillKey,
-            instance: action,
-            ...(skillRank !== undefined ? { skillRank } : {}),
+    _skillUseItemSource(): SkillUseItemSource {
+        const handlersFor = (target: WH40KBaseActor | null): ItemChoiceHandlers<SimpleSkillData | null> => ({
+            chem: (use, chemId, weaponId) => this._chemUseAction(use, chemId, weaponId),
+            palm: (use, itemId) => this._palmAction(use, itemId),
+            objectState: (use, itemId) => this._objectStateAction(use, itemId, target),
+            demolition: (use, itemId) => this._demolitionAction(use, itemId, target),
         });
-        action.rollData.targetActor = targetActor;
-        applySkillUseToRollData(action.rollData, use, skillLabel);
-        openRollPrompt(action);
+        return {
+            candidates: (use, slot, target) =>
+                skillUseItemCandidates(use, slot, this.items.contents, target?.items.contents ?? null).flatMap((item) =>
+                    item.id === null ? [] : [{ id: item.id, name: item.name }],
+                ),
+            modifiers: (use, choice, target) => this._skillUseItemModifiers(use, choice, target),
+            beforeRoll: async (use, choice, target) => this._beforeItemUseRoll(use, choice, target),
+            build: (use, choice, target) => dispatchItemChoiceUse(use, choice, handlersFor(target)),
+        };
+    }
+
+    /** The picked item, from the target's inventory when it is there, else this actor's. */
+    _skillUseItem(itemId: string, target: WH40KBaseActor | null): WH40KItem | null {
+        return target?.items.get(itemId) ?? this.items.get(itemId) ?? null;
     }
 
     /**
-     * Chem-Use (#441): pick the chem to administer (and the weapon to coat), then
-     * route through ChemUseActionData, which applies the dose to the TARGET on
-     * success — or to the applicant on a botch (OW/BC RAW). Chems are the carried
-     * drug/consumable items that still have a dose left and declare an effect.
+     * Chem-Use (#441): ChemUseActionData applies a dose of the picked chem to the
+     * TARGET on success, or to the applicant on a botch (OW/BC RAW). Coating puts it
+     * on the picked weapon instead.
      */
-    async _rollChemUse(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
-        const useLabel = game.i18n.localize(use.labelKey);
-        const chems = this.items.filter((item: WH40KItem) => {
-            if (item.type !== 'drug' && item.type !== 'consumable' && item.type !== 'gear') return false;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the gear dose slots this reads
-            const sys = item.system as unknown as { uses?: { value?: number }; grants?: { activeEffects?: unknown[] } };
-            return (sys.uses?.value ?? 0) > 0 && (sys.grants?.activeEffects?.length ?? 0) > 0;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: the filtered items satisfy ChemLike structurally (dose payload + update)
-        }) as unknown as ChemLike[];
-        const chem = await promptItemChoice(
-            chems,
-            game.i18n.format('WH40K.SkillUse.Chem.PickTitle', { use: useLabel }),
-            game.i18n.localize('WH40K.SkillUse.Chem.PickHint'),
-        );
-        if (chem === null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.SkillUse.Chem.NoChem'));
-            return;
-        }
+    _chemUseAction(use: SkillUseDef, chemId: string, weaponId: string | null): ChemUseActionData | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; a carried chem Item satisfies ChemLike structurally (dose payload + update)
+        const chem = this.items.get(chemId) as unknown as ChemLike | undefined;
+        if (chem === undefined) return null;
+        if (use.kind !== 'coatWeapon') return new ChemUseActionData('applyChem', chem);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: a weapon Item satisfies CoatableWeapon structurally (id/name/update)
+        const weapon = weaponId === null ? undefined : (this.items.get(weaponId) as unknown as CoatableWeapon | undefined);
+        return weapon === undefined ? null : new ChemUseActionData('coatWeapon', chem, weapon);
+    }
 
-        let weapon: CoatableWeapon | null = null;
-        let targetActor: WH40KBaseActor | null = null;
-        if (use.kind === 'coatWeapon') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: filtered weapon Items satisfy CoatableWeapon structurally (id/name/update)
-            const weapons = this.items.filter((item: WH40KItem) => item.type === 'weapon') as unknown as CoatableWeapon[];
-            weapon = await promptItemChoice(
-                weapons,
-                game.i18n.localize('WH40K.SkillUse.Chem.PickWeaponTitle'),
-                game.i18n.localize('WH40K.SkillUse.Chem.PickWeaponHint'),
-            );
-            if (weapon === null) return;
-        } else {
-            targetActor = firstTargetedActor();
-            if (targetActor === null) {
-                ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: useLabel }));
-                return;
-            }
-        }
-
-        const chemAction = new ChemUseActionData(use.kind === 'coatWeapon' ? 'coatWeapon' : 'applyChem', chem, weapon);
-        this._buildSimpleSkillRoll({
-            key: skillKey,
-            type: 'skill',
-            label: `${skillLabel}: ${useLabel} (${chem.name})`,
-            target: targetValue,
-            situationalKey: skillKey,
-            instance: chemAction,
-            ...(skillRank !== undefined ? { skillRank } : {}),
-        });
-        chemAction.rollData.targetActor = targetActor;
-        openRollPrompt(chemAction);
+    /** Sleight of Hand (#442): PalmActionData moves the picked item on a winning opposed roll. */
+    _palmAction(use: SkillUseDef, itemId: string): PalmActionData {
+        return new PalmActionData(use.kind === 'steal' ? 'steal' : 'plant', itemId);
     }
 
     /**
-     * Sleight of Hand plant/steal (#442): pick the item to move — from the target's
-     * carried items when stealing, from the actor's own when planting — then route
-     * through PalmActionData, which transfers it on a winning opposed roll.
+     * Repair / Bypass Lock / Break (#443/#444/#448): ObjectStateActionData writes the
+     * picked item's state on success. A repair carries the line's printed repair rule
+     * (DH2 destroys the item on 4+ DoF) and spends a xenos lore insight (#136).
      */
-    async _rollPalm(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
-        const useLabel = game.i18n.localize(use.labelKey);
-        const targetActor = firstTargetedActor();
-        if (targetActor === null) {
-            ui.notifications.warn(game.i18n.format('WH40K.SkillUse.NoTarget', { use: useLabel }));
-            return;
-        }
-        // Steal from the target's inventory; plant from your own. Physical items only
-        // (something you can actually palm), so skip talents/skills/conditions/etc.
-        const source = use.kind === 'steal' ? targetActor : this;
-        const carried = source.items.filter(
-            (item: WH40KItem) =>
-                (item.isWeapon || item.isArmour || item.isGear || item.type === 'cybernetic' || item.type === 'ammunition') && item.id !== null,
-        );
-        const pickable = carried.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
-        const chosen = await promptItemChoice(
-            pickable,
-            game.i18n.format('WH40K.SkillUse.Palm.PickTitle', { use: useLabel }),
-            game.i18n.localize('WH40K.SkillUse.Palm.PickHint'),
-        );
-        if (chosen === null) {
-            ui.notifications.warn(game.i18n.localize('WH40K.SkillUse.Palm.NoItem'));
-            return;
-        }
-
-        const palm = new PalmActionData(use.kind === 'steal' ? 'steal' : 'plant', chosen.id);
-        this._buildSimpleSkillRoll({
-            key: skillKey,
-            type: 'skill',
-            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
-            target: targetValue,
-            situationalKey: skillKey,
-            instance: palm,
-            ...(skillRank !== undefined ? { skillRank } : {}),
-        });
-        palm.rollData.targetActor = targetActor;
-        palm.rollData.isOpposed = true;
-        palm.rollData.opposedChar = use.opposedChar ?? 'Per';
-        openRollPrompt(palm);
-    }
-
-    /**
-     * Object-interaction appliers (#443/#444/#448): pick the item to act on — a broken
-     * or jammed device to repair, a locked one to open, or an intact one to smash —
-     * from your own carried items or a targeted actor's, then route through
-     * ObjectStateActionData, which writes the state on success. Candidate items are
-     * gathered by the state the use targets.
-     */
-    async _rollObjectState(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
-        const useLabel = game.i18n.localize(use.labelKey);
+    _objectStateAction(use: SkillUseDef, itemId: string, target: WH40KBaseActor | null): ObjectStateActionData | null {
+        const item = this._skillUseItem(itemId, target);
+        if (item === null) return null;
         const mode = use.kind === 'repair' ? 'repair' : use.kind === 'bypassLock' ? 'bypassLock' : 'breakObject';
-        const target = firstTargetedActor();
-        const pools: WH40KItem[][] = [this.items.contents];
-        if (target !== null) pools.push(target.items.contents);
-        const candidates = pools.flat().filter((item: WH40KItem) => {
-            if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the runtime state slots this reads
-            const sys = item.system as unknown as { state?: { broken?: boolean; locked?: boolean; destroyed?: boolean }; jammed?: boolean };
-            const broken = (sys.state?.broken ?? false) || sys.jammed === true;
-            // A destroyed item can never be repaired (DH2 core p. 142, #444).
-            const repairable = broken && sys.state?.destroyed !== true;
-            // Repair → broken/jammed; bypass → locked; break → an intact item to smash.
-            const flagged = mode === 'repair' ? repairable : mode === 'bypassLock' ? sys.state?.locked ?? false : !broken;
-            return flagged && item.id !== null;
-        });
-        const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
-        const hintKey =
-            mode === 'repair'
-                ? 'WH40K.SkillUse.Object.PickRepairHint'
-                : mode === 'bypassLock'
-                ? 'WH40K.SkillUse.Object.PickLockHint'
-                : 'WH40K.SkillUse.Object.PickBreakHint';
-        const chosen = await promptItemChoice(pickable, game.i18n.format('WH40K.SkillUse.Object.PickTitle', { use: useLabel }), game.i18n.localize(hintKey));
-        if (chosen === null) {
-            const noneKey =
-                mode === 'repair'
-                    ? 'WH40K.SkillUse.Object.NoBroken'
-                    : mode === 'bypassLock'
-                    ? 'WH40K.SkillUse.Object.NoLocked'
-                    : 'WH40K.SkillUse.Object.NoBreakable';
-            ui.notifications.warn(game.i18n.localize(noneKey));
-            return;
-        }
-        const owner = target?.items.get(chosen.id) !== undefined ? target : this;
-        const chosenItem = owner.items.get(chosen.id);
-        if (chosenItem === undefined) return;
+        const rules = mode === 'repair' ? itemRepairRulesFor(this.system.gameSystem) : null;
+        const consumesXenosInsight = rules !== null && (this._xenosInsightModifiers(rules.xenos, item)?.consumesInsight ?? false);
         // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies StatefulItem structurally (id/name/update)
-        const statefulItem = chosenItem as unknown as StatefulItem;
-
-        // The line's printed repair rule (#444): DH2 applies the Table 5-2 craftsmanship
-        // modifier and destroys the item on 4+ DoF; other lines keep the plain test.
-        const repairRules = mode === 'repair' ? itemRepairRulesFor(this.system.gameSystem) : null;
-        let extraModifiers: Record<string, number> = {};
-        let consumesXenosInsight = false;
-        if (repairRules !== null) {
-            const xenos = await this._xenosAttemptModifiers(repairRules.xenos, chosenItem, statefulItem);
-            if (xenos === null) return;
-            extraModifiers = { 'craftsmanship-repair': craftsmanshipRepairModifier(repairRules, chosenItem.system.craftsmanship), ...xenos.modifiers };
-            consumesXenosInsight = xenos.consumesInsight;
-        }
-
-        const objectAction = new ObjectStateActionData(mode, statefulItem, { rules: repairRules, consumesXenosInsight });
-        this._buildSimpleSkillRoll({
-            key: skillKey,
-            type: 'skill',
-            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
-            target: targetValue,
-            situationalKey: skillKey,
-            instance: objectAction,
-            extraModifiers,
-            ...(skillRank !== undefined ? { skillRank } : {}),
-        });
-        openRollPrompt(objectAction);
+        return new ObjectStateActionData(mode, item as unknown as StatefulItem, { rules, consumesXenosInsight });
     }
 
     /**
-     * The xenos step before repairing or modifying an item (DH2 Enemies Without
-     * p. 42, #136). A non-xenos item, or a line without the rule, adds nothing.
-     * A xenos item needs the roller's Forbidden Lore insight first: without one
-     * this rolls that lore test instead and returns null. With one it returns the
-     * −20 alien-nature and +5-per-DoS rows, and the attempt spends the insight.
+     * The target modifiers the picked item brings (#535), shown in the dialog before
+     * the roll: a repair's Table 5-2 craftsmanship row (#444), and the xenos rows when
+     * the roller holds a Forbidden Lore insight on the item (#136).
+     */
+    _skillUseItemModifiers(use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActor | null): Record<string, number> {
+        if (use.kind !== 'repair' || choice.item === undefined) return {};
+        const rules = itemRepairRulesFor(this.system.gameSystem);
+        const item = this._skillUseItem(choice.item, target);
+        if (rules === null || item === null) return {};
+        const xenos = this._xenosInsightModifiers(rules.xenos, item);
+        return { 'craftsmanship-repair': craftsmanshipRepairModifier(rules, item.system.craftsmanship), ...(xenos?.modifiers ?? {}) };
+    }
+
+    /**
+     * Before a repair's dice (#136): a xenos item needs the roller's Forbidden Lore
+     * insight first. Without one this opens that lore test instead and resolves false,
+     * so the repair is not rolled.
+     */
+    async _beforeItemUseRoll(use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActor | null): Promise<boolean> {
+        if (use.kind !== 'repair' || choice.item === undefined) return true;
+        const rules = itemRepairRulesFor(this.system.gameSystem);
+        const item = this._skillUseItem(choice.item, target);
+        if (rules === null || item === null) return true;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies StatefulItem structurally (id/name/update)
+        return (await this._xenosAttemptModifiers(rules.xenos, item, item as unknown as StatefulItem)) !== null;
+    }
+
+    /**
+     * The xenos rows for repairing or modifying an item (DH2 Enemies Without p. 42,
+     * #136). A non-xenos item, or a line without the rule, adds nothing. A xenos item
+     * gets the −20 alien-nature and +5-per-DoS rows when the roller holds a Forbidden
+     * Lore insight on it, and the attempt spends it. Null when they hold none yet.
+     */
+    _xenosInsightModifiers(rules: XenosRepairRules | null, item: WH40KItem): { modifiers: Record<string, number>; consumesInsight: boolean } | null {
+        if (rules === null || !isXenosEquipment(item)) return { modifiers: {}, consumesInsight: false };
+        const insight = this.uuid === null ? null : readXenosRepairInsight(item.getFlag(SYSTEM_ID, XENOS_REPAIR_INSIGHT_FLAG), this.uuid);
+        if (insight === null) return null;
+        const xenos = xenosRepairModifiers(rules, insight.degrees);
+        return { modifiers: { 'xenos-repair': xenos.alienNature, 'xenos-lore-insight': xenos.loreInsight }, consumesInsight: true };
+    }
+
+    /**
+     * The xenos step before repairing or modifying an item (#136). Without the
+     * roller's Forbidden Lore insight on a xenos item, this rolls that lore test
+     * instead and returns null. Otherwise it returns the rows to apply.
      */
     async _xenosAttemptModifiers(
         rules: XenosRepairRules | null,
         item: WH40KItem,
         statefulItem: StatefulItem,
     ): Promise<{ modifiers: Record<string, number>; consumesInsight: boolean } | null> {
-        if (rules === null || !isXenosEquipment(item)) return { modifiers: {}, consumesInsight: false };
-        const insight = this.uuid === null ? null : readXenosRepairInsight(item.getFlag(SYSTEM_ID, XENOS_REPAIR_INSIGHT_FLAG), this.uuid);
-        if (insight === null) {
-            await this._rollXenosRepairLore(statefulItem, item.name, rules);
-            return null;
-        }
-        const xenos = xenosRepairModifiers(rules, insight.degrees);
-        return { modifiers: { 'xenos-repair': xenos.alienNature, 'xenos-lore-insight': xenos.loreInsight }, consumesInsight: true };
+        const xenos = this._xenosInsightModifiers(rules, item);
+        if (xenos === null && rules !== null) await this._rollXenosRepairLore(statefulItem, item.name, rules);
+        return xenos;
     }
 
     /**
@@ -1053,52 +937,20 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Demolition (#445): pick the explosive to place (an unarmed charge you carry) or
-     * defuse (an armed charge on you or a targeted actor), then route through
-     * DemolitionActionData, which arms it with the setter's degrees on a placement or
-     * resolves the opposed defuse against those recorded degrees.
+     * Demolition (#445): DemolitionActionData arms the picked charge with the setter's
+     * degrees on a placement, or resolves the opposed defuse against those recorded
+     * degrees. A charge is placed from your own items; an armed one may be defused on
+     * you or on the target.
      */
-    async _rollDemolition(use: SkillUseDef, skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): Promise<void> {
-        const useLabel = game.i18n.localize(use.labelKey);
+    _demolitionAction(use: SkillUseDef, itemId: string, target: WH40KBaseActor | null): DemolitionActionData | null {
         const isPlace = use.kind === 'placeCharge';
-        const target = firstTargetedActor();
-        // Place from your own carried charges; defuse an armed charge on you or the target.
-        const pools: WH40KItem[][] = isPlace ? [this.items.contents] : target !== null ? [this.items.contents, target.items.contents] : [this.items.contents];
-        const candidates = pools.flat().filter((item: WH40KItem) => {
-            if (!item.isWeapon && !item.isGear) return false;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; narrow to the armed state slot this reads
-            const armed = (item.system as unknown as { state?: { armed?: { active?: boolean } } }).state?.armed?.active ?? false;
-            return armed !== isPlace && item.id !== null;
-        });
-        const pickable = candidates.map((i: WH40KItem) => ({ id: i.id as string, name: i.name }));
-        const chosen = await promptItemChoice(
-            pickable,
-            game.i18n.format('WH40K.SkillUse.Demo.PickTitle', { use: useLabel }),
-            game.i18n.localize(isPlace ? 'WH40K.SkillUse.Demo.PickPlaceHint' : 'WH40K.SkillUse.Demo.PickDefuseHint'),
-        );
-        if (chosen === null) {
-            ui.notifications.warn(game.i18n.localize(isPlace ? 'WH40K.SkillUse.Demo.NoCharge' : 'WH40K.SkillUse.Demo.NoArmed'));
-            return;
-        }
-        const owner = !isPlace && target?.items.get(chosen.id) !== undefined ? target : this;
+        const item = isPlace ? this.items.get(itemId) ?? null : this._skillUseItem(itemId, target);
+        if (item === null) return null;
         // eslint-disable-next-line no-restricted-syntax -- boundary: the resolved Item satisfies ExplosiveItem structurally (id/name/update + armed state)
-        const explosive = owner.items.get(chosen.id) as unknown as ExplosiveItem;
-
-        const demo = new DemolitionActionData(
-            isPlace ? 'placeCharge' : 'defuse',
-            explosive,
-            isPlace ? game.i18n.localize('WH40K.SkillUse.Demo.DefaultTrigger') : '',
-        );
-        this._buildSimpleSkillRoll({
-            key: skillKey,
-            type: 'skill',
-            label: `${skillLabel}: ${useLabel} (${chosen.name})`,
-            target: targetValue,
-            situationalKey: skillKey,
-            instance: demo,
-            ...(skillRank !== undefined ? { skillRank } : {}),
-        });
-        openRollPrompt(demo);
+        const explosive = item as unknown as ExplosiveItem;
+        return isPlace
+            ? new DemolitionActionData('placeCharge', explosive, game.i18n.localize('WH40K.SkillUse.Demo.DefaultTrigger'))
+            : new DemolitionActionData('defuse', explosive);
     }
 
     /**

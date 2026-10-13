@@ -6,8 +6,11 @@
      rendered right below it, so picking a use and picking who it lands on happen in
      the one Roll Test dialog. Pre-targeting a token still works — it simply arrives
      as a pre-fill instead of a precondition.
-     Context: hasSkillUsePicker, skillUses[], skillUseNeedsTarget (+ the target-selector
-     partial's own hasTarget / hasCombat / combatants / targetName). --}}
+     A use that acts on an item (Repair, Bypass Lock, Break, Apply/Coat, Steal/Plant,
+     Place/Defuse — #535) renders one labelled <select> per item it needs, listing the
+     eligible items; the form's submitOnChange hands each pick to the action.
+     Context: hasSkillUsePicker, skillUses[], skillUseNeedsTarget, skillUseItemPickers[]
+     (+ the target-selector partial's own hasTarget / hasCombat / combatants / targetName). --}}
 {{#if hasSkillUsePicker}}
 <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-2.5">
     <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{localize "WH40K.SkillUse.UsePickerLabel"}}</span>
@@ -28,5 +31,22 @@
     {{#if skillUseNeedsTarget}}
     {{> "systems/wh40k-rpg/templates/prompt/unified/target-selector.hbs"}}
     {{/if}}
+    {{#each skillUseItemPickers}}
+    <div class="tw-flex tw-flex-col tw-gap-1" data-skill-use-item-slot="{{key}}">
+        {{#if isEmpty}}
+        <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{label}}</span>
+        <p class="tw-m-0 tw-text-[0.78rem] tw-text-[#f87171]" role="status">{{emptyLabel}}</p>
+        {{else}}
+        <label for="{{inputId}}" class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em] tw-font-medium">{{label}}</label>
+        <select id="{{inputId}}" name="{{fieldName}}" aria-describedby="{{hintId}}"
+                class="tw-w-full tw-py-1 tw-px-2 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded tw-text-[0.78rem] tw-text-[#e8e4d9] focus:tw-outline-none focus:tw-border-[rgba(201,162,39,0.6)] focus:tw-shadow-[0_0_0_2px_rgba(201,162,39,0.35)]">
+            {{#each options}}
+            <option value="{{id}}" {{#if isSelected}}selected{{/if}}>{{name}}</option>
+            {{/each}}
+        </select>
+        <span id="{{hintId}}" class="tw-text-[0.7rem] tw-text-[#9a9a8a]">{{hint}}</span>
+        {{/if}}
+    </div>
+    {{/each}}
 </div>
 {{/if}}

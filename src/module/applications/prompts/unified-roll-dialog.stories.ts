@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import contextSrc from '../../../../src/templates/prompt/unified/context-panel.hbs?raw';
 import diceSrc from '../../../../src/templates/prompt/unified/dice-input.hbs?raw';
 import footerSrc from '../../../../src/templates/prompt/unified/footer.hbs?raw';
@@ -220,6 +220,107 @@ export const WeaponTargetDropdown: Story = {
         const options = canvasElement.querySelectorAll('select[name="targetCombatantId"] option');
         await expect(options.length).toBe(4);
         await expect(select?.value).toBe('c1');
+    },
+};
+
+/** The skill-use chips for Tech-Use with Repair chosen (#432/#535). */
+const TECH_USE_USES = [
+    { id: 'general', label: 'General Test', isSelected: false, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+    { id: 'repair', label: 'Repair Item', isSelected: true, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+];
+
+/** One item picker as the dialog's `buildSkillUseItemPickers` shapes it. */
+function itemPicker(
+    key: 'item' | 'weapon',
+    label: string,
+    hint: string,
+    emptyLabel: string,
+    options: Array<{ id: string; name: string; isSelected: boolean }>,
+): Ctx {
+    const inputId = `story-dialog-skillUseItem-${key}`;
+    return { key, fieldName: `skillUseItem.${key}`, inputId, hintId: `${inputId}-hint`, label, hint, emptyLabel, isEmpty: options.length === 0, options };
+}
+
+/**
+ * Tech-Use Repair with the inline item picker (#535): the eligible broken items in a
+ * labelled `<select>`, the craftsmanship row already on the target, and the item
+ * named in the roll title. The picker is keyboard-reachable and described by its hint.
+ */
+export const SkillUseItemPicker: Story = {
+    args: baseContext({
+        rollName: 'Tech-Use: Repair Item (Auspex)',
+        finalTarget: 35,
+        baseTarget: 45,
+        hasSkillUsePicker: true,
+        skillUses: TECH_USE_USES,
+        skillUseNeedsTarget: false,
+        skillUseItemPickers: [
+            itemPicker('item', 'Item', 'Pick the broken or jammed item to repair.', 'You have no broken or jammed item to repair.', [
+                { id: 'auspex', name: 'Auspex', isSelected: true },
+                { id: 'laspistol', name: 'Laspistol (jammed)', isSelected: false },
+            ]),
+        ],
+    }),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        const select = view.getByLabelText<HTMLSelectElement>('Item');
+        await expect(select.name).toBe('skillUseItem.item');
+        await expect(select.value).toBe('auspex');
+        await expect(select.options.length).toBe(2);
+        const hint = canvasElement.querySelector(`#${select.getAttribute('aria-describedby') ?? ''}`);
+        await expect(hint?.textContent).toBe('Pick the broken or jammed item to repair.');
+        select.focus();
+        await expect(document.activeElement).toBe(select);
+        await userEvent.selectOptions(select, 'laspistol');
+        await expect(select.value).toBe('laspistol');
+        await expect(view.getByRole('button', { name: /Repair Item/ }).getAttribute('aria-pressed')).toBe('true');
+    },
+};
+
+/** Chem-Use Coat Weapon needs two picks: the chem and the weapon to coat (#535). */
+export const SkillUseCoatWeaponPickers: Story = {
+    args: baseContext({
+        rollName: 'Chem-Use: Coat Weapon (Bloodfire)',
+        hasSkillUsePicker: true,
+        skillUses: [
+            { id: 'general', label: 'General Test', isSelected: false, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+            { id: 'applyChem', label: 'Administer Chem', isSelected: false, needsTarget: true, modifier: 0, modifierLabel: '+0' },
+            { id: 'coatWeapon', label: 'Coat Weapon', isSelected: true, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+        ],
+        skillUseNeedsTarget: false,
+        skillUseItemPickers: [
+            itemPicker('item', 'Chem', 'Pick the substance to use.', 'You carry no chem with a dose left and a declared effect.', [
+                { id: 'bloodfire', name: 'Bloodfire', isSelected: true },
+            ]),
+            itemPicker('weapon', 'Weapon to coat', 'Pick the weapon to coat with the chem.', 'You carry no weapon to coat.', [
+                { id: 'knife', name: 'Mono-knife', isSelected: true },
+                { id: 'sword', name: 'Chainsword', isSelected: false },
+            ]),
+        ],
+    }),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByLabelText<HTMLSelectElement>('Chem').value).toBe('bloodfire');
+        await expect(view.getByLabelText<HTMLSelectElement>('Weapon to coat').options.length).toBe(2);
+    },
+};
+
+/** Nothing eligible: the picker is replaced by a status line saying what is missing (#535). */
+export const SkillUseNoEligibleItem: Story = {
+    args: baseContext({
+        rollName: 'Security: Bypass Lock',
+        hasSkillUsePicker: true,
+        skillUses: [
+            { id: 'general', label: 'General Test', isSelected: false, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+            { id: 'bypassLock', label: 'Bypass Lock', isSelected: true, needsTarget: false, modifier: 0, modifierLabel: '+0' },
+        ],
+        skillUseNeedsTarget: false,
+        skillUseItemPickers: [itemPicker('item', 'Item', 'Pick the locked item to open.', 'There is no locked item to open.', [])],
+    }),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByRole('status').textContent).toBe('There is no locked item to open.');
+        await expect(canvasElement.querySelector('select[name="skillUseItem.item"]')).toBeNull();
     },
 };
 

@@ -319,37 +319,206 @@ export function hasSkillUses(skillKey: string): boolean {
     return getSkillUses(skillKey).length > 1;
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Item-choice uses (#535)                                                    */
+/* -------------------------------------------------------------------------- */
+
 /**
- * Use kinds that cannot be resolved from the roll dialog alone because they need a
- * SECOND choice first — which chem, which item to palm, which device to repair,
- * which charge to place. Those families still open their own pre-roll picker.
+ * The action family an item-choice use resolves through. Each family has ONE
+ * handler on the actor that turns the chosen item(s) into the concrete action.
  */
-const ITEM_CHOICE_KINDS: ReadonlySet<SkillUseKind> = new Set<SkillUseKind>([
-    'applyChem',
-    'coatWeapon',
-    'steal',
-    'plant',
-    'repair',
-    'bypassLock',
-    'breakObject',
-    'placeCharge',
-    'defuse',
-]);
+export type ItemChoiceFamily = 'chem' | 'palm' | 'objectState' | 'demolition';
+
+/**
+ * Use kinds that need a SECOND choice before their action can be built — which
+ * chem, which item to palm, which device to repair, which charge to place. The
+ * roll dialog shows an inline item picker for them (#535).
+ */
+const ITEM_CHOICE_FAMILY: Partial<Record<SkillUseKind, ItemChoiceFamily>> = {
+    applyChem: 'chem',
+    coatWeapon: 'chem',
+    steal: 'palm',
+    plant: 'palm',
+    repair: 'objectState',
+    bypassLock: 'objectState',
+    breakObject: 'objectState',
+    placeCharge: 'demolition',
+    defuse: 'demolition',
+};
+
+/** The family an item-choice use resolves through, or null for every other use. */
+export function itemChoiceFamily(use: SkillUseDef): ItemChoiceFamily | null {
+    return ITEM_CHOICE_FAMILY[use.kind] ?? null;
+}
 
 /** Whether resolving this use requires picking an item before the roll can be built. */
 export function useNeedsItemChoice(use: SkillUseDef): boolean {
-    return ITEM_CHOICE_KINDS.has(use.kind);
+    return itemChoiceFamily(use) !== null;
+}
+
+/** One picker an item-choice use shows: `item` is the thing acted on, `weapon` the weapon a chem coats. */
+export type SkillUseItemSlotKey = 'item' | 'weapon';
+
+/** Whether a string (a form-field suffix) names an item slot. */
+export function isSkillUseItemSlotKey(value: string): value is SkillUseItemSlotKey {
+    return value === 'item' || value === 'weapon';
+}
+
+/** The player's picks, keyed by slot. A slot with no pick is absent. */
+export type SkillUseItemChoice = Partial<Record<SkillUseItemSlotKey, string>>;
+
+/** One item picker in the roll dialog: its label, its hint, and the text shown when nothing is eligible. */
+export interface SkillUseItemSlot {
+    readonly key: SkillUseItemSlotKey;
+    readonly labelKey: string;
+    readonly hintKey: string;
+    readonly emptyKey: string;
+}
+
+function itemSlot(labelLeaf: string, hintKey: string, emptyKey: string): SkillUseItemSlot {
+    return { key: 'item', labelKey: `WH40K.SkillUse.ItemSlot.${labelLeaf}`, hintKey, emptyKey };
+}
+
+const CHEM_SLOT = itemSlot('Chem', 'WH40K.SkillUse.Chem.PickHint', 'WH40K.SkillUse.Chem.NoChem');
+const COAT_WEAPON_SLOT: SkillUseItemSlot = {
+    key: 'weapon',
+    labelKey: 'WH40K.SkillUse.ItemSlot.Weapon',
+    hintKey: 'WH40K.SkillUse.Chem.PickWeaponHint',
+    emptyKey: 'WH40K.SkillUse.Chem.NoWeapon',
+};
+const PALM_SLOT = itemSlot('Item', 'WH40K.SkillUse.Palm.PickHint', 'WH40K.SkillUse.Palm.NoItem');
+
+const ITEM_SLOTS: Partial<Record<SkillUseKind, readonly SkillUseItemSlot[]>> = {
+    applyChem: [CHEM_SLOT],
+    coatWeapon: [CHEM_SLOT, COAT_WEAPON_SLOT],
+    steal: [PALM_SLOT],
+    plant: [PALM_SLOT],
+    repair: [itemSlot('Item', 'WH40K.SkillUse.Object.PickRepairHint', 'WH40K.SkillUse.Object.NoBroken')],
+    bypassLock: [itemSlot('Item', 'WH40K.SkillUse.Object.PickLockHint', 'WH40K.SkillUse.Object.NoLocked')],
+    breakObject: [itemSlot('Item', 'WH40K.SkillUse.Object.PickBreakHint', 'WH40K.SkillUse.Object.NoBreakable')],
+    placeCharge: [itemSlot('Explosive', 'WH40K.SkillUse.Demo.PickPlaceHint', 'WH40K.SkillUse.Demo.NoCharge')],
+    defuse: [itemSlot('Explosive', 'WH40K.SkillUse.Demo.PickDefuseHint', 'WH40K.SkillUse.Demo.NoArmed')],
+};
+
+/** The item pickers a use needs, in display order. Empty for a use that needs no item. */
+export function skillUseItemSlots(use: SkillUseDef): readonly SkillUseItemSlot[] {
+    return ITEM_SLOTS[use.kind] ?? [];
+}
+
+/** The runtime state slots the candidate filters read off an item's system data. */
+interface CandidateSystem {
+    readonly uses?: { readonly value?: number };
+    readonly grants?: { readonly activeEffects?: readonly object[] };
+    readonly state?: {
+        readonly broken?: boolean;
+        readonly locked?: boolean;
+        readonly destroyed?: boolean;
+        readonly armed?: { readonly active?: boolean };
+    };
+    readonly jammed?: boolean;
+}
+
+/** The item surface the candidate filters read. A carried Foundry Item satisfies it. */
+export interface SkillUseCandidate {
+    readonly id: string | null;
+    readonly name: string;
+    readonly type: string;
+    readonly isWeapon: boolean;
+    readonly isArmour: boolean;
+    readonly isGear: boolean;
+    readonly system: object;
+}
+
+function candidateSystem(item: SkillUseCandidate): CandidateSystem {
+    return item.system;
+}
+
+/** Carried chems with a dose left and a declared effect (#441). */
+function isChem(item: SkillUseCandidate): boolean {
+    if (item.type !== 'drug' && item.type !== 'consumable' && item.type !== 'gear') return false;
+    const sys = candidateSystem(item);
+    return (sys.uses?.value ?? 0) > 0 && (sys.grants?.activeEffects?.length ?? 0) > 0;
+}
+
+/** A physical item small enough to palm (#442): not a talent, skill or condition. */
+function isPalmable(item: SkillUseCandidate): boolean {
+    return item.isWeapon || item.isArmour || item.isGear || item.type === 'cybernetic' || item.type === 'ammunition';
+}
+
+/** The object-interaction filters (#443/#444/#448): the state each mode acts on. */
+function objectStateMatches(kind: SkillUseKind, item: SkillUseCandidate): boolean {
+    if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
+    const sys = candidateSystem(item);
+    const broken = (sys.state?.broken ?? false) || sys.jammed === true;
+    // A destroyed item can never be repaired (DH2 core p. 142, #444).
+    if (kind === 'repair') return broken && sys.state?.destroyed !== true;
+    if (kind === 'bypassLock') return sys.state?.locked ?? false;
+    return !broken;
+}
+
+/** Demolition (#445): an unarmed charge to place, or an armed one to defuse. */
+function explosiveMatches(kind: SkillUseKind, item: SkillUseCandidate): boolean {
+    if (!item.isWeapon && !item.isGear) return false;
+    const armed = candidateSystem(item).state?.armed?.active ?? false;
+    return armed !== (kind === 'placeCharge');
+}
+
+/** The saved items of `pool` that `keep` accepts. */
+function eligible<T extends SkillUseCandidate>(pool: readonly T[], keep: (item: T) => boolean): T[] {
+    return pool.filter((item) => item.id !== null && keep(item));
+}
+
+/** One family's candidate gathering, from the roller's items and the target's (null with no target). */
+type CandidatePool = <T extends SkillUseCandidate>(use: SkillUseDef, slot: SkillUseItemSlotKey, own: readonly T[], target: readonly T[] | null) => T[];
+
+const CANDIDATE_POOLS: Record<ItemChoiceFamily, CandidatePool> = {
+    chem: (_use, slot, own) => (slot === 'weapon' ? eligible(own, (item) => item.type === 'weapon') : eligible(own, isChem)),
+    palm: (use, _slot, own, target) => eligible(use.kind === 'steal' ? target ?? [] : own, isPalmable),
+    objectState: (use, _slot, own, target) => eligible([...own, ...(target ?? [])], (item) => objectStateMatches(use.kind, item)),
+    demolition: (use, _slot, own, target) =>
+        eligible(use.kind === 'placeCharge' ? own : [...own, ...(target ?? [])], (item) => explosiveMatches(use.kind, item)),
+};
+
+/**
+ * The items eligible for one slot of an item-choice use (#535). `own` is the
+ * roller's carried items; `target` is the targeted actor's, or null with no
+ * target. Stealing takes from the target; planting, coating and placing a charge
+ * use your own items; repair, bypass, break and defuse accept either.
+ */
+export function skillUseItemCandidates<T extends SkillUseCandidate>(
+    use: SkillUseDef,
+    slot: SkillUseItemSlotKey,
+    own: readonly T[],
+    target: readonly T[] | null,
+): T[] {
+    const family = itemChoiceFamily(use);
+    return family === null ? [] : CANDIDATE_POOLS[family](use, slot, own, target);
 }
 
 /**
- * Whether every use this skill offers can be chosen INSIDE the roll dialog (#432) —
- * i.e. none of them needs a secondary item pick. Such a skill opens the Roll Test
- * dialog directly, with its use picker (and, for target-directed uses, its target
- * picker) inline; a skill with any item-choice use keeps its pre-roll picker, since
- * the item must be known before the action data can be built.
+ * The handler each family dispatches to once the player has picked its item(s).
+ * The actor implements these; keeping the per-kind routing here means every
+ * family is covered by one switch the tests exercise.
  */
-export function skillUsesAreInline(skillKey: string): boolean {
-    return getSkillUses(skillKey).every((use) => !useNeedsItemChoice(use));
+export interface ItemChoiceHandlers<R> {
+    chem: (use: SkillUseDef, chemId: string, weaponId: string | null) => R;
+    palm: (use: SkillUseDef, itemId: string) => R;
+    objectState: (use: SkillUseDef, itemId: string) => R;
+    demolition: (use: SkillUseDef, itemId: string) => R;
+}
+
+/**
+ * Route a confirmed item-choice use to its family's handler with the chosen
+ * item(s). Returns null when the use needs no item, or when a required slot is
+ * still empty.
+ */
+export function dispatchItemChoiceUse<R>(use: SkillUseDef, choice: SkillUseItemChoice, handlers: ItemChoiceHandlers<R>): R | null {
+    const family = itemChoiceFamily(use);
+    const itemId = choice.item;
+    if (family === null || itemId === undefined) return null;
+    if (family !== 'chem') return handlers[family](use, itemId);
+    if (use.kind !== 'coatWeapon') return handlers.chem(use, itemId, null);
+    return choice.weapon === undefined ? null : handlers.chem(use, itemId, choice.weapon);
 }
 
 /** Look up a single use def by skill + id, or null when unknown. */
