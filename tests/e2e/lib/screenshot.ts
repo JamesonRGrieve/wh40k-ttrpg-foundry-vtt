@@ -126,6 +126,15 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
     return null;
 }
 
+/**
+ * Applied by Playwright for the duration of each capture only. The cheap clear
+ * removes the toasts on screen, but core queues notifications and shows the next
+ * one up to the moment of the screenshot (a banner covered the top of an Only War
+ * dialog capture), so the toast list and the collapsed sidebar's chat popouts are
+ * also hidden while the PNG is taken.
+ */
+const CAPTURE_STYLE = '#notifications, #chat-notifications .chat-message { visibility: hidden !important; }';
+
 /** What {@link clearOverlays} clears beyond the cheap pass. */
 interface OverlayClearOptions {
     /** Also close every floating application window (the expensive, state-changing part). */
@@ -263,13 +272,13 @@ export async function snap(
 
     try {
         if (opts.fullPage === true) {
-            await page.screenshot({ path, fullPage: true });
+            await page.screenshot({ path, fullPage: true, style: CAPTURE_STYLE });
             return path;
         }
 
         // Explicit viewport region (a canvas area such as a token pair or a template).
         if (opts.clip !== undefined) {
-            await page.screenshot({ path, clip: opts.clip });
+            await page.screenshot({ path, clip: opts.clip, style: CAPTURE_STYLE });
             return path;
         }
 
@@ -277,7 +286,7 @@ export async function snap(
         if (typeof opts.selector === 'string' && opts.selector !== '') {
             const loc = page.locator(opts.selector).first();
             if ((await loc.count()) > 0) {
-                await loc.screenshot({ path });
+                await loc.screenshot({ path, style: CAPTURE_STYLE });
                 return path;
             }
             // Selector requested but not found → fall through to default
@@ -288,13 +297,13 @@ export async function snap(
         // dialog element on-screen.
         const appLoc = await prepareApplicationForCapture(page);
         if (appLoc !== null) {
-            await appLoc.screenshot({ path });
+            await appLoc.screenshot({ path, style: CAPTURE_STYLE });
             return path;
         }
 
         // Last-resort fallback: full-page capture so the spec still has
         // a record of the runtime state for debugging.
-        await page.screenshot({ path, fullPage: true });
+        await page.screenshot({ path, fullPage: true, style: CAPTURE_STYLE });
         return path;
     } catch {
         return null;
