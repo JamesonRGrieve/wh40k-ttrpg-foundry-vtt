@@ -19,6 +19,7 @@
             {{#if reinforcementPanel.peer}}
                 <p class="tw-m-0 tw-text-[0.75rem] tw-italic">{{localize "WH40K.Reinforcement.PeerDiscount" peer=reinforcementPanel.peer amount=reinforcementPanel.peerAmount}}</p>
             {{/if}}
+            {{> systems/wh40k-rpg/templates/actor/panel/reinforcement-caller-terms.hbs requirement=reinforcementPanel.callerRequirement}}
         {{else}}
             <p data-wh40k-hook="rc-panel-no-terms" class="tw-m-0 tw-text-[0.75rem] tw-italic">{{localize "WH40K.Reinforcement.Problem.noTerms"}}</p>
         {{/if}}

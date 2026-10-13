@@ -1,0 +1,16 @@
+{{!--
+    A Reinforcement Character's terms for its caller (#77), shared by the RC
+    panel and the call dialog. The Thrice-Bound Daemonhost (Enemies Beyond p. 38)
+    needs a caller with Forbidden Lore (Daemonology) at Trained, who gains 1d5
+    Corruption. Renders nothing when `requirement` is null (the RC prints none).
+--}}
+{{#if requirement}}
+    <ul data-wh40k-hook="rc-caller-terms" class="tw-m-0 tw-pl-4 tw-text-[0.75rem] tw-italic">
+        {{#if requirement.skillLabel}}
+            <li data-wh40k-hook="rc-caller-skill">{{localize "WH40K.Reinforcement.CallerSkill" skill=requirement.skillLabel rank=(localize requirement.rankKey)}}</li>
+        {{/if}}
+        {{#if requirement.corruption}}
+            <li data-wh40k-hook="rc-caller-corruption">{{localize "WH40K.Reinforcement.CallerCorruption" formula=requirement.corruption}}</li>
+        {{/if}}
+    </ul>
+{{/if}}

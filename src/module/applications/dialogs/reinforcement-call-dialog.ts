@@ -9,6 +9,12 @@
  * adjustment. On confirm, everyone's Influence drops by what they paid, the
  * warband's Subtlety drops by the final cost, and a chat card records the call.
  *
+ * An RC may also print terms for its caller (the Thrice-Bound Daemonhost,
+ * Enemies Beyond p. 38): a required skill rank, which blocks a caller without
+ * it, and Corruption the caller gains, which is rolled on confirm and added to
+ * their Corruption. That update queues any Malignancy Test the gain crosses
+ * (`WH40KAcolyte._preUpdate`).
+ *
  * The RC's terms are compendium data on the NPC (`system.reinforcement`). All
  * the math is the pure `rules/reinforcement.ts` through
  * `buildReinforcementCallView`.
@@ -18,11 +24,16 @@ import type { GameSystemId } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { t } from '../../i18n/t.ts';
 import {
+    actorSkillRank,
     buildReinforcementCallView,
-    fixedPeerDiscount,
+    fixedAmount,
+    requiredCallerRank,
+    requiredSkillLabel,
     type ReinforcementCallView,
     type ReinforcementCandidate,
+    type ReinforcementCallerTerms,
     type ReinforcementTerms,
+    type SkillLabelSource,
 } from './reinforcement-call-view.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -33,12 +44,26 @@ const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/reinforcement-call-chat.
 interface ReinforcementActor {
     readonly uuid: string | null;
     readonly name: string;
-    readonly system: { readonly isReinforcement: boolean; readonly reinforcement: ReinforcementTerms };
+    readonly system: {
+        readonly isReinforcement: boolean;
+        readonly reinforcement: ReinforcementTerms;
+        readonly skills: SkillLabelSource;
+    };
 }
 
 /** A calling / contributing Acolyte: a DH2 character with an Influence score. */
 interface InfluenceActor extends ReinforcementCandidate {
     readonly actor: WH40KBaseActor;
+    /** Their Corruption points. */
+    readonly corruption: number;
+}
+
+/** The character surface the call reads: line, Influence, Corruption and skill ranks. */
+interface CallerSystem {
+    gameSystem?: string;
+    influence?: number;
+    corruption?: number;
+    skills?: Parameters<typeof actorSkillRank>[0];
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 context is a free-form template payload; Record<string, unknown> is the correct base shape
@@ -49,16 +74,29 @@ interface ReinforcementCallContext extends Record<string, unknown> {
     peerApplied: boolean;
 }
 
-/** The DH2 player characters who can call or contribute, with their Influence. */
-function warbandCandidates(): InfluenceActor[] {
+/**
+ * The DH2 player characters who can call or contribute, with their Influence,
+ * Corruption and rank in the skill the RC requires of its caller.
+ */
+function warbandCandidates(caller: ReinforcementCallerTerms): InfluenceActor[] {
     const out: InfluenceActor[] = [];
     for (const actor of game.actors.contents) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor#system is the per-type DataModel union; influence + gameSystem live on character.ts only
-        const sys = actor.system as unknown as { gameSystem?: string; influence?: number };
+        const sys = actor.system as unknown as CallerSystem;
         if (!actor.hasPlayerOwner || sys.gameSystem !== 'dh2' || typeof sys.influence !== 'number') continue;
-        out.push({ id: actor.id, name: actor.name, influence: sys.influence, actor });
+        const skillRank = caller.skill === '' || sys.skills === undefined ? 0 : actorSkillRank(sys.skills, caller.skill, caller.specialization);
+        out.push({ id: actor.id, name: actor.name, influence: sys.influence, skillRank, corruption: sys.corruption ?? 0, actor });
     }
     return out;
+}
+
+/** Roll (or read) a printed amount: a plain number, or a dice formula. Blank is 0. */
+async function resolveAmount(amount: string): Promise<number> {
+    const fixed = fixedAmount(amount);
+    if (fixed !== null) return fixed;
+    if (amount.trim() === '') return 0;
+    const roll = await new Roll(amount).evaluate();
+    return Math.max(0, Math.trunc(roll.total));
 }
 
 export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -100,7 +138,7 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
     };
 
     readonly #rc: ReinforcementActor;
-    readonly #candidates: InfluenceActor[] = warbandCandidates();
+    readonly #candidates: InfluenceActor[];
     #callerId: string;
     #contributions: Record<string, number> = {};
     #peerApplied = false;
@@ -110,8 +148,10 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
     constructor(rc: ReinforcementActor) {
         super();
         this.#rc = rc;
+        this.#candidates = warbandCandidates(rc.system.reinforcement.caller);
         const minimum = rc.system.reinforcement.influenceMinimum;
-        const eligible = minimum === null ? undefined : this.#candidates.find((c) => c.influence >= minimum);
+        const rank = requiredCallerRank(rc.system.reinforcement.caller) ?? 0;
+        const eligible = minimum === null ? undefined : this.#candidates.find((c) => c.influence >= minimum && c.skillRank >= rank);
         this.#callerId = (eligible ?? this.#candidates.at(0))?.id ?? '';
     }
 
@@ -133,12 +173,18 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
     }
 
     #view(): ReinforcementCallView {
-        return buildReinforcementCallView(this.#rc.system.reinforcement, this.#candidates, {
-            callerId: this.#callerId,
-            contributions: this.#contributions,
-            peerDiscount: this.#peerDiscount,
-            gmAdjustment: this.#gmAdjustment,
-        });
+        const terms = this.#rc.system.reinforcement;
+        return buildReinforcementCallView(
+            terms,
+            this.#candidates,
+            {
+                callerId: this.#callerId,
+                contributions: this.#contributions,
+                peerDiscount: this.#peerDiscount,
+                gmAdjustment: this.#gmAdjustment,
+            },
+            requiredSkillLabel(this.#rc.system.skills, terms.caller),
+        );
     }
 
     /** @override */
@@ -148,7 +194,7 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
             ...context,
             rcName: this.#rc.name,
             view: this.#view(),
-            peerFormula: fixedPeerDiscount(this.#rc.system.reinforcement.peerDiscount.amount) === null,
+            peerFormula: fixedAmount(this.#rc.system.reinforcement.peerDiscount.amount) === null,
             peerApplied: this.#peerApplied,
         };
     }
@@ -161,14 +207,7 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
             this.#peerDiscount = 0;
             return;
         }
-        const amount = this.#rc.system.reinforcement.peerDiscount.amount;
-        const fixed = fixedPeerDiscount(amount);
-        if (fixed !== null) {
-            this.#peerDiscount = fixed;
-            return;
-        }
-        const roll = await new Roll(amount).evaluate();
-        this.#peerDiscount = Math.max(0, Math.trunc(roll.total));
+        this.#peerDiscount = await resolveAmount(this.#rc.system.reinforcement.peerDiscount.amount);
     }
 
     static async #onFormChange(this: ReinforcementCallDialog, _event: Event, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
@@ -207,6 +246,12 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
         // Attribute the loss to the RC; an unsaved actor has no UUID, so it counts as a GM adjustment.
         await caller.actor.applySubtlety(-plan.subtletyLoss, this.#rc.uuid ?? 'manual');
 
+        // The caller's printed Corruption (Daemonhost: 1d5). Raising system.corruption
+        // queues any Malignancy Test the gain crosses, in the same write.
+        const corruptionFormula = this.#rc.system.reinforcement.caller.corruption.trim();
+        const corruptionGained = await resolveAmount(corruptionFormula);
+        if (corruptionGained > 0) await caller.actor.update({ 'system.corruption': caller.corruption + corruptionGained });
+
         const content = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, {
             gameSystem: 'dh2',
             rcName: this.#rc.name,
@@ -218,6 +263,8 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
             finalCost: plan.finalCost,
             payments: payments.map(({ candidate, amount }) => ({ name: candidate.name, amount })),
             subtletyLoss: plan.subtletyLoss,
+            corruptionGained,
+            corruptionFormula,
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create accepts a loose document-data shape
         await ChatMessage.create({ user: game.user.id, content, speaker: ChatMessage.getSpeaker({ actor: caller.actor }) });

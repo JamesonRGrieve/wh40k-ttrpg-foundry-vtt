@@ -1,15 +1,16 @@
 /**
- * Guard for the reference-stub OVERRIDE whitelist (`STUB_OVERRIDE_KEYS` in
- * `src/packs/validate-schema.cjs`). The pack build resolves a stub as
- * `{ ...resolvedTargetBody, ...stubKeysMinusReference }` (`resolvePackSourceDocument`,
- * gulpfile.js), so a stub may carry `name` / `_id` / `img` to ride a SHARED
- * canonical body under a local identity — a name-over-body reference (ratified
- * in #499, where rejecting the override form silently dropped 25 RT items). The
- * validator must accept exactly that set and still warn on any other extra key
- * or an empty override value.
+ * Guard for reference-stub overrides (`scripts/lib/pack-reference.cjs`, used by
+ * the gulp build and `src/packs/validate-schema.cjs`). A stub may carry `name` /
+ * `_id` / `img` to ride a SHARED canonical body under a local identity, a
+ * name-over-body reference (ratified in #499, where rejecting the override form
+ * silently dropped 25 RT items). It may also carry a `system` overlay that is
+ * deep-merged onto the body, so a Reinforcement Character stub adds its RC terms
+ * over the bestiary profile without copying it (#77). The validator must accept
+ * exactly that set and still warn on any other extra key or an empty override.
  */
 import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
+import { applyReferenceOverrides, deepMergeOverlay, isReferenceStub } from '../scripts/lib/pack-reference.cjs';
 
 interface Warning {
     rule: string;
@@ -22,7 +23,8 @@ interface StubUnderTest {
     name?: string;
     _id?: string;
     img?: string;
-    system?: Record<string, number>;
+    system?: Record<string, number | boolean | Record<string, number>> | number[];
+    flags?: Record<string, number>;
 }
 interface SchemaValidator {
     validateDocument: (doc: StubUnderTest, relFile: string, warnings: Warning[]) => void;
@@ -53,8 +55,18 @@ describe('reference-stub override whitelist', () => {
         expect(rulesFor({ reference: '../x/_source/y.json' })).toHaveLength(0);
     });
 
-    it('warns on a non-override extra key (system cannot be deep-patched by a shallow spread)', () => {
-        expect(rulesFor({ reference: '../x.json', system: { foo: 1 } })).toContain('stub-extra-keys');
+    it('accepts a system overlay (deep-merged onto the body, #77)', () => {
+        const rules = rulesFor({ reference: '../x.json', name: 'Ork Freeboota', system: { isReinforcement: true, fate: { value: 2, max: 2 } } });
+        expect(rules).toHaveLength(0);
+    });
+
+    it('warns on a non-override extra key', () => {
+        expect(rulesFor({ reference: '../x.json', flags: { foo: 1 } })).toContain('stub-extra-keys');
+    });
+
+    it('warns on an empty or non-object system overlay', () => {
+        expect(rulesFor({ reference: '../x.json', system: {} })).toContain('stub-override-system');
+        expect(rulesFor({ reference: '../x.json', system: [1] })).toContain('stub-override-system');
     });
 
     it('warns on an empty override value', () => {
@@ -65,5 +77,65 @@ describe('reference-stub override whitelist', () => {
 
     it('warns on a non-string reference', () => {
         expect(rulesFor({ reference: 123 })).toContain('stub-bad-reference');
+    });
+});
+
+describe('reference-stub resolution (#77)', () => {
+    // A bestiary profile, trimmed to what the overlay touches.
+    const freeboota = {
+        _id: '6yWxfSDIlZw3nklV',
+        name: 'Freeboota',
+        type: 'dh2-npc',
+        system: {
+            tier: 'elite',
+            characteristics: { ws: 40, bs: 35 },
+            isReinforcement: false,
+            fate: { value: 0, max: 0 },
+            reinforcement: { influenceMinimum: null, influenceCost: null, peerDiscount: { peer: '', amount: '' } },
+            tags: ['ork', 'xenos'],
+        },
+    };
+
+    it('recognises a stub by its string reference', () => {
+        expect(isReferenceStub({ reference: '../x.json', system: { fate: { value: 2 } } })).toBe(true);
+        expect(isReferenceStub({ reference: 3 })).toBe(false);
+        expect(isReferenceStub([])).toBe(false);
+    });
+
+    it('keeps the body and deep-merges only the RC terms (Enemies Without p. 41)', () => {
+        const stub = {
+            reference: '../../dh2-without-actors-bestiary/_source/freeboota_6yWxfSDIlZw3nklV.json',
+            name: 'Ork Freeboota',
+            system: {
+                isReinforcement: true,
+                fate: { value: 2, max: 2 },
+                reinforcement: { influenceMinimum: 45, influenceCost: 5, peerDiscount: { peer: 'Orks', amount: '2' } },
+            },
+        };
+        const out = applyReferenceOverrides(freeboota, stub);
+        expect(out['name']).toBe('Ork Freeboota');
+        expect(out['_id']).toBe('6yWxfSDIlZw3nklV');
+        expect(out['reference']).toBeUndefined();
+        expect(out['system']).toEqual({
+            tier: 'elite',
+            characteristics: { ws: 40, bs: 35 },
+            isReinforcement: true,
+            fate: { value: 2, max: 2 },
+            reinforcement: { influenceMinimum: 45, influenceCost: 5, peerDiscount: { peer: 'Orks', amount: '2' } },
+            tags: ['ork', 'xenos'],
+        });
+        // The canonical body is not mutated.
+        expect(freeboota.system.isReinforcement).toBe(false);
+    });
+
+    it('leaves the body system untouched for an identity-only stub', () => {
+        const out = applyReferenceOverrides(freeboota, { reference: '../x.json', img: 'a.webp' });
+        expect(out['system']).toBe(freeboota.system);
+        expect(out['img']).toBe('a.webp');
+    });
+
+    it('replaces arrays and scalars outright and merges nested objects', () => {
+        expect(deepMergeOverlay({ a: [1, 2], b: { c: 1, d: 2 } }, { a: [3], b: { d: 4 } })).toEqual({ a: [3], b: { c: 1, d: 4 } });
+        expect(deepMergeOverlay({ a: 1 }, { a: { b: 2 } })).toEqual({ a: { b: 2 } });
     });
 });

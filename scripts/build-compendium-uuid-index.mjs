@@ -24,6 +24,9 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { iterPackJson } = require('./lib/iter-pack-json.cjs');
+// The build's stub resolution (overrides + `system` overlay), so the index sees
+// the same compiled document the pack does.
+const { isReferenceStub, applyReferenceOverrides } = require('./lib/pack-reference.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,16 +74,6 @@ function detectCollectionType(folder) {
   return 'Item';
 }
 
-function isReferenceStub(doc) {
-  return (
-    doc &&
-    typeof doc === 'object' &&
-    !Array.isArray(doc) &&
-    typeof doc.reference === 'string' &&
-    Object.keys(doc).length === 1
-  );
-}
-
 function resolveReferencePath(reference, fromFile) {
   if (path.isAbsolute(reference)) return reference;
   if (reference.startsWith('src/')) return path.resolve(REPO_ROOT, reference);
@@ -102,7 +95,7 @@ function readResolvedDoc(filePath, seen = new Set()) {
   if (!fs.existsSync(targetPath)) {
     throw new Error(`Reference target not found: ${doc.reference} (from ${normalized})`);
   }
-  return readResolvedDoc(targetPath, seen);
+  return applyReferenceOverrides(readResolvedDoc(targetPath, seen), doc);
 }
 
 function normalizeName(name) {

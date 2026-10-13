@@ -301,6 +301,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         influenceMinimum: number | null;
         influenceCost: number | null;
         peerDiscount: { peer: string; amount: string };
+        caller: { skill: string; specialization: string; rank: number | null; corruption: string };
     };
 
     // From HordeTemplate mixin
@@ -591,6 +592,20 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                     peer: new StringField({ required: true, initial: '', blank: true }),
                     /** The discount: a number or a dice formula (the Arco-Flagellant's "1d5"). */
                     amount: new StringField({ required: true, initial: '', blank: true }),
+                }),
+                // Extra terms some RCs print for the Acolyte who calls them, e.g. the
+                // Thrice-Bound Daemonhost (Enemies Beyond p. 38): "must possess the
+                // Forbidden Lore (Daemonology) skill at the Trained level, and gains
+                // 1d5 Corruption points". Blank / null when the RC prints none.
+                caller: new SchemaField({
+                    /** The skill the caller must have: an actor skill key (e.g. "forbiddenLore"). */
+                    skill: new StringField({ required: true, initial: '', blank: true }),
+                    /** The specialisation of that skill, as the skill pack names it (e.g. "Daemonology"). */
+                    specialization: new StringField({ required: true, initial: '', blank: true }),
+                    /** The minimum rank (1 Known, 2 Trained, 3 Experienced, 4 Veteran). */
+                    rank: new NumberField({ required: true, nullable: true, initial: null, min: 1, max: 4, integer: true }),
+                    /** Corruption the caller gains: a number or a dice formula (e.g. "1d5"). */
+                    corruption: new StringField({ required: true, initial: '', blank: true }),
                 }),
             }),
         };

@@ -39,6 +39,9 @@ import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const { iterPackJson } = require('./lib/iter-pack-json.cjs');
+// Any stub (bare, identity override or `system` overlay) owns no references of its
+// own to migrate; its body does.
+const { isReferenceStub } = require('./lib/pack-reference.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -97,16 +100,6 @@ function loadIndex() {
     throw new Error(`Missing ${INDEX_FILE}. Run \`pnpm packs:audit\` first.`);
   }
   return JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
-}
-
-function isReferenceStub(doc) {
-  return (
-    doc &&
-    typeof doc === 'object' &&
-    !Array.isArray(doc) &&
-    typeof doc.reference === 'string' &&
-    Object.keys(doc).length === 1
-  );
 }
 
 class Resolver {

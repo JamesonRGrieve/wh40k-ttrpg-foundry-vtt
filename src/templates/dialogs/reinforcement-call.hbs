@@ -4,12 +4,13 @@
         <dt>{{localize "WH40K.Reinforcement.InfluenceMinimum"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{view.influenceMinimum}}</dd>
         <dt>{{localize "WH40K.Reinforcement.InfluenceCost"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{view.baseCost}}</dd>
     </dl>
+    {{> systems/wh40k-rpg/templates/actor/panel/reinforcement-caller-terms.hbs requirement=view.callerRequirement}}
 
     <label class="tw-flex tw-flex-col tw-gap-0.5 tw-text-[0.7rem] tw-uppercase tw-tracking-wider">
         {{localize "WH40K.Reinforcement.Caller"}}
         <select name="callerId">
             {{#each view.rows as |row|}}
-                <option value="{{row.id}}" {{#if row.isCaller}}selected{{/if}}>{{row.name}} ({{localize "WH40K.Reinforcement.InfluenceShort" value=row.influence}}){{#unless row.meetsMinimum}} — {{localize "WH40K.Reinforcement.BelowMinimum"}}{{/unless}}</option>
+                <option value="{{row.id}}" {{#if row.isCaller}}selected{{/if}}>{{row.name}} ({{localize "WH40K.Reinforcement.InfluenceShort" value=row.influence}}){{#unless row.meetsMinimum}} — {{localize "WH40K.Reinforcement.BelowMinimum"}}{{/unless}}{{#unless row.meetsSkill}} — {{localize "WH40K.Reinforcement.LacksSkill"}}{{/unless}}</option>
             {{/each}}
         </select>
     </label>

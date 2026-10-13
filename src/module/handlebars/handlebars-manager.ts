@@ -210,6 +210,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/dialogs/reinforcement-call.hbs',
             'systems/wh40k-rpg/templates/chat/reinforcement-call-chat.hbs',
             'systems/wh40k-rpg/templates/actor/panel/reinforcement-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/reinforcement-caller-terms.hbs',
             'systems/wh40k-rpg/templates/dialogs/inquest-tracker.hbs',
             'systems/wh40k-rpg/templates/chat/inquest-chat.hbs',
             'systems/wh40k-rpg/templates/dialogs/event-tracker/header.hbs',

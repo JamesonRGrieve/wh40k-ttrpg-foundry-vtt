@@ -27,16 +27,15 @@ const LINE_SET = new Set(LINES);
 const PROVENANCE = new Set(['raw', 'homebrew', 'derived']);
 
 /**
- * Identity/presentation keys a whole-file `reference` stub may carry alongside
- * `reference`. The build resolver (`resolvePackSourceDocument` in gulpfile.js)
- * merges these OVER the resolved canonical body as a shallow top-level spread,
- * so a pack can ride a SHARED body while carrying its own name, id, and art —
- * e.g. an Astartes-named weapon over a DH2 weapon body, or an RT item with
- * line-specific art. Anything outside this set (notably `system`) cannot be
- * deep-patched by a shallow spread and would silently replace the whole body,
- * so it stays a deviation.
+ * Keys a whole-file `reference` stub may carry alongside `reference`, from the
+ * shared stub definition the build resolver uses
+ * (scripts/lib/pack-reference.cjs). `name` / `_id` / `img` replace the resolved
+ * body's own (a shared body under a local identity or art). `system` is a
+ * partial overlay deep-merged onto the body's `system` (a Reinforcement
+ * Character stub carries only its RC terms over the bestiary profile, #77).
+ * Any other key is a deviation.
  */
-const STUB_OVERRIDE_KEYS = new Set(['name', '_id', 'img']);
+const STUB_OVERRIDE_KEYS = new Set(require('../../scripts/lib/pack-reference.cjs').STUB_OVERRIDE_KEYS);
 
 /**
  * Canonical native acquisition field per line, and whether the line
@@ -325,10 +324,9 @@ function nonEmptyString(value) {
 function validateDocument(doc, relFile, warnings) {
     const warn = (rule, detail) => warnings.push({ rule, file: relFile, detail: detail || '' });
 
-    // Reference stub: `reference` (required) plus an OPTIONAL identity/presentation
-    // override set (STUB_OVERRIDE_KEYS). The build resolves the stub as
-    // `{ ...resolvedTargetBody, ...stubKeysMinusReference }`, so overriding
-    // name/_id/img rides the shared body while carrying local identity + art.
+    // Reference stub: `reference` (required) plus an OPTIONAL override set
+    // (STUB_OVERRIDE_KEYS). The build applies name/_id/img over the resolved
+    // body and deep-merges a `system` overlay onto its `system`.
     if (isPlainObject(doc) && Object.prototype.hasOwnProperty.call(doc, 'reference')) {
         if (typeof doc.reference !== 'string') warn('stub-bad-reference', 'reference is not a string');
         const extra = Object.keys(doc).filter((k) => k !== 'reference' && !STUB_OVERRIDE_KEYS.has(k));
@@ -337,6 +335,9 @@ function validateDocument(doc, relFile, warnings) {
         if ('_id' in doc && !nonEmptyString(doc._id)) warn('stub-override-id', 'reference override _id is empty');
         if ('name' in doc && !nonEmptyString(doc.name)) warn('stub-override-name', 'reference override name is empty');
         if ('img' in doc && !nonEmptyString(doc.img)) warn('stub-override-img', 'reference override img is empty');
+        if ('system' in doc && (!isPlainObject(doc.system) || Object.keys(doc.system).length === 0)) {
+            warn('stub-override-system', 'reference override system is not a non-empty object overlay');
+        }
         return;
     }
 

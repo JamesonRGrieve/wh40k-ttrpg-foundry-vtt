@@ -24,6 +24,7 @@ export const CanonessWithContribution: Story = {
         const result = planReinforcementCall({
             callerInfluence: 55,
             influenceMinimum: 50,
+            callerSkill: { rank: 0, required: null },
             finalCost,
             contributions: [{ id: 'magnus', influence: 30, amount: 2 }],
         });
@@ -54,5 +55,34 @@ export const CanonessWithContribution: Story = {
         await expect(canvasElement.querySelector('[data-wh40k-hook="rc-chat-final-cost"]')?.textContent).toBe('4');
         const payments = Array.from(canvasElement.querySelectorAll('[data-wh40k-hook="rc-chat-payment"]'), (li) => li.textContent);
         await expect(payments).toEqual(['Ibnad spends 2 Influence', 'Magnus spends 2 Influence']);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-chat-corruption"]')).toBeNull();
+    },
+};
+
+/** Thrice-Bound Daemonhost (Enemies Beyond p. 38): the caller gains 1d5 Corruption. */
+export const DaemonhostCorruption: Story = {
+    render: () => {
+        const root = document.createElement('div');
+        root.className = 'wh40k-rpg';
+        root.append(
+            renderSheet(chatSrc, {
+                gameSystem: 'dh2',
+                rcName: 'Thrice-Bound Daemonhost',
+                callerName: 'A.Z.',
+                baseCost: 5,
+                peer: '',
+                peerDiscount: 0,
+                gmAdjustment: 0,
+                finalCost: 5,
+                payments: [{ name: 'A.Z.', amount: 5 }],
+                subtletyLoss: 5,
+                corruptionGained: 3,
+                corruptionFormula: '1d5',
+            }),
+        );
+        return root;
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-chat-corruption"]')?.textContent.trim()).toBe('A.Z. gains 3 Corruption (1d5)');
     },
 };

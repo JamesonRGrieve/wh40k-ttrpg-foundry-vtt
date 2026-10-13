@@ -147,8 +147,9 @@ for (const line of lines) {
         } catch {
             continue;
         }
-        // A whole-file reference stub resolves at build time and owns no data.
-        if (doc.reference !== undefined && Object.keys(doc).length === 1) continue;
+        // A whole-file reference stub resolves at build time; its skills live on the
+        // referenced body, and any `system` overlay carries only extra terms.
+        if (doc.reference !== undefined) continue;
         const system = doc.system;
         if (system === undefined || system === null) continue;
         scanned += 1;

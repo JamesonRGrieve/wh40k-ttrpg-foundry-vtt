@@ -592,14 +592,16 @@ Pack source files in `_source/` may be authored in one of two formats:
 Reference rules:
 
 - the file must contain the `reference` key and MAY additionally carry any of the
-  **override keys `name`, `_id`, `img`** — nothing else. The build merges the
-  overrides OVER the resolved body; the validator (`STUB_OVERRIDE_KEYS`) warns on
-  any other extra key.
-- the override merge is a **shallow top-level spread**, so `name`/`_id`/`img`
-  replace cleanly but **`system` cannot be deep-patched** — a `system` key on a
-  stub would replace the *entire* referenced body. To share stats but diverge a
-  single stat field, author a real document with a per-line variant container (or
-  `variantOf`), not a stub.
+  **override keys `name`, `_id`, `img`, `system`**, nothing else. The validator
+  (`STUB_OVERRIDE_KEYS`, from `scripts/lib/pack-reference.cjs`) warns on any other
+  extra key.
+- `name`/`_id`/`img` replace the resolved body's value. `system` is a partial
+  **overlay deep-merged** onto the body's `system`: nested objects merge key by
+  key, and arrays and scalars replace. Use it when the stub is the same thing as
+  its target plus some extra terms. Example: a DH2 Reinforcement Character that
+  "uses the rules from the NPC profile" in the bestiary carries only
+  `isReinforcement`, `reinforcement` and its `fate`. To diverge a line's stats,
+  author a per-line variant container (or `variantOf`) instead.
 - override `_id` when the stub is a **distinct item** riding a shared body (its own
   identity + UUID); omit `_id` to inherit the target's (a true byte-identical
   alias).
@@ -613,9 +615,9 @@ Reference rules:
 Build behavior:
 
 - `gulp packs` resolves the reference chain before writing the compendium document.
-- the resolved document is written as `{ ...resolvedTargetBody, ...overrideKeys }`
-  — the referenced JSON copied into place, then the stub's `name`/`_id`/`img`
-  applied on top.
+- the resolved document is the referenced JSON copied into place, then the stub's
+  `name`/`_id`/`img` applied on top and its `system` overlay deep-merged
+  (`applyReferenceOverrides`, `scripts/lib/pack-reference.cjs`).
 - this is a pack-authoring feature, not an alternate Foundry runtime shape — after
   compilation Foundry receives a normal expanded document object.
 
@@ -905,7 +907,7 @@ What it checks (each a separate warning rule):
 
 - **identity** — `name` non-empty, `_id` and `type` present.
 - **reference stubs** — a stub carries `reference` plus at most the override keys
-  `name` / `_id` / `img`.
+  `name` / `_id` / `img` / `system` (a non-empty object overlay).
 - **cost** — matches the asymmetric *Standard Cost Shape* (no `homebrew` on `dh1`;
   `homebrew.requisition` only on `dh2`; no legacy `value` / `currency`).
 - **state** — transient state lives under `system.state`, not flat on `system.*`.

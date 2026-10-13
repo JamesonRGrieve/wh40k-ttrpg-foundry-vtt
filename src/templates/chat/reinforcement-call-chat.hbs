@@ -1,7 +1,8 @@
 {{!--
     Reinforcement Character call card (DH2 core pp. 294–295, #77): who called
-    the RC, how the final Influence Cost was reached, who paid what, and the
-    warband's Subtlety loss. `gameSystem` is set on the root because chat cards
+    the RC, how the final Influence Cost was reached, who paid what, the
+    warband's Subtlety loss, and any Corruption the caller gained (the
+    Daemonhost's 1d5, Enemies Beyond p. 38). `gameSystem` is set on the root because chat cards
     render outside a sheet.
 --}}
 <div class="tw-p-3 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2:tw-border-bronze"
@@ -29,4 +30,11 @@
         <i class="fas fa-eye-slash" aria-hidden="true"></i>
         {{localize "WH40K.Reinforcement.SubtletyLoss"}}: −{{subtletyLoss}}
     </div>
+
+    {{#if corruptionGained}}
+        <div data-wh40k-hook="rc-chat-corruption" class="tw-mt-1 tw-text-[0.8rem] tw-text-[#c084fc] tw-text-center">
+            <i class="fas fa-skull" aria-hidden="true"></i>
+            {{localize "WH40K.Reinforcement.ChatCorruption" name=callerName amount=corruptionGained formula=corruptionFormula}}
+        </div>
+    {{/if}}
 </div>

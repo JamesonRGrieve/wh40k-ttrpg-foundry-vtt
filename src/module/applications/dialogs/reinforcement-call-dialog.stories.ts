@@ -20,16 +20,32 @@ const rng = seedRandom(0x77);
 const IBNAD = randomId('pc', rng);
 const MAGNUS = randomId('pc', rng);
 const GUS = randomId('pc', rng);
+// Magnus has Forbidden Lore (Daemonology) at Trained (rank 2); Ibnad only Known.
 const WARBAND = [
-    { id: IBNAD, name: 'Ibnad', influence: 55 },
-    { id: MAGNUS, name: 'Magnus', influence: 30 },
-    { id: GUS, name: 'Gus', influence: 20 },
+    { id: IBNAD, name: 'Ibnad', influence: 55, skillRank: 1 },
+    { id: MAGNUS, name: 'Magnus', influence: 52, skillRank: 2 },
+    { id: GUS, name: 'Gus', influence: 20, skillRank: 0 },
 ];
 
 // Sister of Battle Canoness (core p. 296).
-const CANONESS: ReinforcementTerms = { influenceMinimum: 50, influenceCost: 5, peerDiscount: { peer: 'Adepta Sororitas', amount: '2' } };
+const CANONESS: ReinforcementTerms = {
+    influenceMinimum: 50,
+    influenceCost: 5,
+    peerDiscount: { peer: 'Adepta Sororitas', amount: '2' },
+    caller: { skill: '', specialization: '', rank: null, corruption: '' },
+};
+
+// Thrice-Bound Daemonhost (Enemies Beyond p. 38).
+const DAEMONHOST: ReinforcementTerms = {
+    influenceMinimum: 50,
+    influenceCost: 5,
+    peerDiscount: { peer: '', amount: '' },
+    caller: { skill: 'forbiddenLore', specialization: 'Daemonology', rank: 2, corruption: '1d5' },
+};
 
 interface Args {
+    rcName: string;
+    terms: ReinforcementTerms;
     choices: ReinforcementCallChoices;
     peerApplied: boolean;
 }
@@ -40,8 +56,8 @@ function render(args: Args): HTMLElement {
     root.dataset['wh40kSystem'] = 'dh2';
     root.append(
         renderSheet(templateSrc, {
-            rcName: 'Sister of Battle Canoness',
-            view: buildReinforcementCallView(CANONESS, WARBAND, args.choices),
+            rcName: args.rcName,
+            view: buildReinforcementCallView(args.terms, WARBAND, args.choices, args.terms.caller.skill === '' ? '' : 'Forbidden Lore'),
             peerFormula: false,
             peerApplied: args.peerApplied,
         }),
@@ -53,6 +69,8 @@ const meta = {
     title: 'Dialogs/ReinforcementCallDialog',
     render,
     args: {
+        rcName: 'Sister of Battle Canoness',
+        terms: CANONESS,
         choices: { callerId: IBNAD, contributions: { [MAGNUS]: 1 }, peerDiscount: 2, gmAdjustment: 0 },
         peerApplied: true,
     },
@@ -86,5 +104,37 @@ export const CallerBelowMinimum: Story = {
     args: { choices: { callerId: GUS, contributions: {}, peerDiscount: 0, gmAdjustment: 0 }, peerApplied: false },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-wh40k-hook="rc-problem"]')?.textContent).toContain('below the Influence Minimum');
+    },
+};
+
+/** Ibnad has the Influence but only Known Forbidden Lore (Daemonology): the Daemonhost refuses him. */
+export const DaemonhostCallerLacksSkill: Story = {
+    args: {
+        rcName: 'Thrice-Bound Daemonhost',
+        terms: DAEMONHOST,
+        choices: { callerId: IBNAD, contributions: {}, peerDiscount: 0, gmAdjustment: 0 },
+        peerApplied: false,
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-caller-skill"]')?.textContent).toContain('Forbidden Lore (Daemonology) at Trained');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-caller-corruption"]')?.textContent).toContain('1d5 Corruption');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-problem"]')?.textContent).toContain('does not have the skill');
+        await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="callReinforcement"]')?.disabled).toBe(true);
+        // No Peer discount is printed, so no Peer checkbox.
+        await expect(canvasElement.querySelector('input[name="peerApplied"]')).toBeNull();
+    },
+};
+
+/** Magnus has Forbidden Lore (Daemonology) at Trained: the call can go ahead. */
+export const DaemonhostCallerTrained: Story = {
+    args: {
+        rcName: 'Thrice-Bound Daemonhost',
+        terms: DAEMONHOST,
+        choices: { callerId: MAGNUS, contributions: {}, peerDiscount: 0, gmAdjustment: 0 },
+        peerApplied: false,
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-problem"]')).toBeNull();
+        await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="callReinforcement"]')?.disabled).toBe(false);
     },
 };

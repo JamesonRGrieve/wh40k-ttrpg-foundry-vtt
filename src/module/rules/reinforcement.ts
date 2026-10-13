@@ -8,6 +8,11 @@
  * The GM may raise or lower the cost, and many RCs print a Peer-talent discount.
  * Calling an RC reduces the warband's Subtlety by the final cost.
  *
+ * Some RCs add terms for the caller. The Thrice-Bound Daemonhost (Enemies
+ * Beyond p. 38) needs a caller with Forbidden Lore (Daemonology) at Trained
+ * (rank 2), who gains 1d5 Corruption. The rank gate is here. The Corruption is
+ * rolled and applied by the call flow through the actor's Corruption update.
+ *
  * The per-RC values are compendium data on the NPC (`system.reinforcement`).
  * This module holds only the content-agnostic call math.
  */
@@ -34,15 +39,27 @@ interface ReinforcementContribution {
     amount: number;
 }
 
+/** The caller's rank in the skill the RC requires, and the rank required (null when it requires none). */
+interface CallerSkillCheck {
+    rank: number;
+    required: number | null;
+}
+
 export interface ReinforcementCallInput {
     callerInfluence: number;
     influenceMinimum: number;
+    callerSkill: CallerSkillCheck;
     finalCost: number;
     contributions: readonly ReinforcementContribution[];
 }
 
 /** Why a call can't go ahead. */
-type ReinforcementCallProblem = 'belowMinimum' | 'contributionCap' | 'contributorShort' | 'callerShort';
+type ReinforcementCallProblem = 'belowMinimum' | 'callerSkill' | 'contributionCap' | 'contributorShort' | 'callerShort';
+
+/** Whether the caller meets the RC's skill requirement (always true when it prints none). */
+export function meetsCallerSkill(check: CallerSkillCheck): boolean {
+    return check.required === null || nonNegInt(check.rank) >= check.required;
+}
 
 interface ReinforcementCallPlan {
     finalCost: number;
@@ -58,12 +75,14 @@ export type ReinforcementCallResult = { ok: true; plan: ReinforcementCallPlan } 
 
 /**
  * Check a proposed call and split its cost. A call fails when the caller is
- * below the RC's Influence Minimum, when contributions exceed half the cost,
- * or when anyone would spend more Influence than they have.
+ * below the RC's Influence Minimum or lacks its required skill rank, when
+ * contributions exceed half the cost, or when anyone would spend more
+ * Influence than they have.
  */
 export function planReinforcementCall(input: ReinforcementCallInput): ReinforcementCallResult {
     const callerInfluence = nonNegInt(input.callerInfluence);
     if (callerInfluence < nonNegInt(input.influenceMinimum)) return { ok: false, problem: 'belowMinimum' };
+    if (!meetsCallerSkill(input.callerSkill)) return { ok: false, problem: 'callerSkill' };
     const finalCost = nonNegInt(input.finalCost);
     const contributions = input.contributions
         .map((c) => ({ id: c.id, influence: nonNegInt(c.influence), amount: nonNegInt(c.amount) }))

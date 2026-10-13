@@ -15,6 +15,7 @@ import { tokenPresetFromActor } from '../../utils/token-footprint.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import ReinforcementCallDialog from '../dialogs/reinforcement-call-dialog.ts';
+import { callerRequirementView, requiredSkillLabel } from '../dialogs/reinforcement-call-view.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
@@ -409,6 +410,7 @@ export default class NPCSheet extends CharacterSheet {
                 influenceCost: terms.influenceCost,
                 peer: terms.peerDiscount.peer,
                 peerAmount: terms.peerDiscount.amount,
+                callerRequirement: callerRequirementView(terms.caller, requiredSkillLabel(npc.skills, terms.caller)),
             };
         }
 
