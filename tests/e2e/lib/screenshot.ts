@@ -126,19 +126,37 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
     return null;
 }
 
+/** What {@link clearOverlays} clears beyond the cheap pass. */
+interface OverlayClearOptions {
+    /** Also close every floating application window (the expensive, state-changing part). */
+    closeWindows: boolean;
+    /** With `closeWindows`, keep the windows whose id contains this fragment. */
+    keepIdFragment: string | null;
+}
+
 /**
- * Make the screen capture-clean: unpause, end any active tour, dismiss every
- * notification (the headless "no hardware acceleration" warning covered sheet
- * headers in most actor screenshots), and close every floating application window whose id
- * does not contain `keepIdFragment` (stray windows such as In-Universe Time
- * overlapped sheets; a sheet's app id embeds its document id). Best-effort.
+ * Make the screen capture-clean. The cheap pass, run by every {@link snap}: unpause,
+ * end any active tour and stop the welcome tour from starting later, and dismiss
+ * every notification (the headless "no hardware acceleration" warning covered sheet
+ * headers in most actor screenshots). With `closeWindows`, also close every floating
+ * application window whose id does not contain `keepIdFragment`. Best-effort.
+ *
+ * The welcome tour is started by core a couple of seconds AFTER `ready` (it pans
+ * to its default scene, waits, then calls `tour.start()` without re-checking its
+ * status), so exiting the active tour alone misses a tour that has not started yet
+ * and it then covers the next capture. Its `start` is replaced with a no-op for the
+ * rest of the page session so the pending call does nothing.
  */
-export async function clearScreenOverlays(page: Page, keepIdFragment?: string): Promise<void> {
+async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<void> {
     try {
-        await page.evaluate(async (keep: string | null) => {
+        await page.evaluate(async ({ closeWindows, keepIdFragment: keep }: OverlayClearOptions) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (`game`, `ui`, `foundry.applications.instances`) have no browser-side types
             const g = globalThis as unknown as {
-                game?: { paused?: boolean; togglePause?: (state: boolean) => void };
+                game?: {
+                    paused?: boolean;
+                    togglePause?: (state: boolean) => void;
+                    tours?: { get?: (id: string) => { start?: () => Promise<void> } | undefined };
+                };
                 ui?: { notifications?: { clear?: () => void } };
                 foundry?: {
                     applications?: { instances?: Map<string, { id?: string; close?: (o?: object) => Promise<void> }> };
@@ -147,12 +165,23 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
             };
             if (g.game?.paused === true) g.game.togglePause?.(false);
             // A fresh world auto-starts core's "Welcome to Foundry" tour, whose
-            // overlay sits over the middle of every capture.
+            // overlay sits over the middle of every capture: end it if it is up, and
+            // neuter its pending delayed start.
+            const welcome = g.game?.tours?.get?.('core.welcome');
+            if (welcome !== undefined)
+                welcome.start = async (): Promise<void> => {
+                    await Promise.resolve();
+                };
             g.foundry?.nue?.Tour?.activeTour?.exit?.();
-            g.ui?.notifications?.clear?.();
-            document.querySelectorAll('#notifications > *').forEach((n) => {
+            document.querySelectorAll('.tour-overlay, .tour-fadeout, .tour-center-step').forEach((n) => {
                 n.remove();
             });
+            g.ui?.notifications?.clear?.();
+            // Toasts, and the chat popouts shown over the canvas while the sidebar is collapsed.
+            document.querySelectorAll('#notifications > *, #chat-notifications .chat-message').forEach((n) => {
+                n.remove();
+            });
+            if (!closeWindows) return;
             const apps = Array.from(g.foundry?.applications?.instances?.values() ?? []);
             await Promise.all(
                 apps
@@ -170,10 +199,20 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
                         }
                     }),
             );
-        }, keepIdFragment ?? null);
+        }, options);
     } catch {
         /* ignore */
     }
+}
+
+/**
+ * The full clear: the cheap pass {@link snap} always runs, plus closing every
+ * floating application window whose id does not contain `keepIdFragment` (stray
+ * windows such as In-Universe Time overlapped sheets; a sheet's app id embeds its
+ * document id).
+ */
+export async function clearScreenOverlays(page: Page, keepIdFragment?: string): Promise<void> {
+    await clearOverlays(page, { closeWindows: true, keepIdFragment: keepIdFragment ?? null });
 }
 
 /**
@@ -186,11 +225,29 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
  *                  element (useful for panels embedded in a sheet).
  *                  Pass `{ fullPage: true }` to snapshot the entire
  *                  page bypassing the application detection (useful
- *                  for canvas / scene captures). Default: capture the
+ *                  for canvas / scene captures). Pass `{ clip }` (viewport
+ *                  pixels, see `canvasClip` in canvas-capture.ts) to capture
+ *                  one region of the canvas. Default: capture the
  *                  most recently rendered application root.
+ *
+ *                  Every capture first runs the cheap overlay clear (unpause,
+ *                  the welcome tour, notifications). Pass `{ closeWindows: true }`
+ *                  to also close the floating windows, keeping the ones whose id
+ *                  contains `keepWindow` (the subject's app id).
  */
-export async function snap(page: Page, label: string, opts: { fullPage?: boolean; selector?: string } = {}): Promise<string | null> {
+export async function snap(
+    page: Page,
+    label: string,
+    opts: {
+        fullPage?: boolean;
+        selector?: string;
+        clip?: { x: number; y: number; width: number; height: number };
+        closeWindows?: boolean;
+        keepWindow?: string;
+    } = {},
+): Promise<string | null> {
     ensureDir();
+    await clearOverlays(page, { closeWindows: opts.closeWindows === true, keepIdFragment: opts.keepWindow ?? null });
 
     // Best-effort: derive a spec name from the page's current URL or a
     // generic prefix if no test context is available.
@@ -204,6 +261,12 @@ export async function snap(page: Page, label: string, opts: { fullPage?: boolean
     try {
         if (opts.fullPage === true) {
             await page.screenshot({ path, fullPage: true });
+            return path;
+        }
+
+        // Explicit viewport region (a canvas area such as a token pair or a template).
+        if (opts.clip !== undefined) {
+            await page.screenshot({ path, clip: opts.clip });
             return path;
         }
 
