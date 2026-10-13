@@ -28,6 +28,7 @@ function echoI18n(): { localize: (key: string) => string; format: (key: string, 
 
 const PROMPT: EvasionPromptContext = {
     attackId: 'atk-1',
+    attackerUuid: 'Actor.atk',
     attackerName: 'Heretic',
     weaponName: 'Autogun',
     defenderUuid: 'Actor.def',

@@ -36,6 +36,8 @@ export const EVASION_DECLINED_TEMPLATE = 'systems/wh40k-rpg/templates/chat/evasi
 export interface EvasionPromptContext {
     /** The attack's ActionData id. */
     readonly attackId: string;
+    /** The attacker — the opponent a Counter Attack strikes back at (#603); '' when unknown. */
+    readonly attackerUuid: string;
     readonly attackerName: string;
     readonly weaponName: string;
     readonly defenderUuid: string;
@@ -107,6 +109,7 @@ export function readEvasionPrompt(flag: unknown): EvasionPromptContext | null {
     if (!isRecord(flag)) return null;
     const {
         attackId,
+        attackerUuid,
         attackerName,
         weaponName,
         defenderUuid,
@@ -122,6 +125,7 @@ export function readEvasionPrompt(flag: unknown): EvasionPromptContext | null {
     if (typeof attackId !== 'string' || typeof defenderUuid !== 'string' || typeof hitsLanded !== 'number' || typeof action !== 'string') return null;
     return {
         attackId,
+        attackerUuid: typeof attackerUuid === 'string' ? attackerUuid : '',
         attackerName: typeof attackerName === 'string' ? attackerName : '',
         weaponName: typeof weaponName === 'string' ? weaponName : '',
         defenderUuid,

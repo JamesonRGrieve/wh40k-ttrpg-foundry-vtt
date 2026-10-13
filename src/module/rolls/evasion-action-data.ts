@@ -11,10 +11,14 @@
  */
 
 import { evasionRulesFor } from '../config/game-systems/index.ts';
+import { SYSTEM_ID } from '../constants.ts';
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { spendActionForActor } from '../rules/action-economy.ts';
+import { counterAttackOffer, readCombatTurnStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionNegation } from '../rules/evasion.ts';
 import { SimpleSkillData } from './action-data.ts';
+import { COUNTER_ATTACK_FLAG, type CounterAttackCard, currentCombatTurn, parryWeaponId, reactionHookSources } from './counter-attack-flow.ts';
 import { EVASION_OUTCOME_FLAG, type EvasionOutcome, type EvasionPromptContext, evasionOutcomeSummary } from './evasion-flow.ts';
 import { resolveDegreesMethod } from './roll-helpers.ts';
 
@@ -26,6 +30,8 @@ export class EvasionActionData extends SimpleSkillData {
     readonly skill: EvasionSkill;
     /** The outcome, once the test has resolved. */
     outcome: EvasionOutcome | null = null;
+    /** The Counter Attack this evasion earned (#603) — rendered as the card's control; null for none. */
+    counterAttack: CounterAttackCard | null = null;
 
     constructor(prompt: EvasionPromptContext, skill: EvasionSkill) {
         super();
@@ -67,7 +73,30 @@ export class EvasionActionData extends SimpleSkillData {
         this.chatFlags = { [EVASION_OUTCOME_FLAG]: outcome };
         this.addEffect(t('WH40K.Evasion.EffectTitle'), evasionOutcomeSummary(outcome));
 
-        const defenderId = this.rollData.sourceActor?.id ?? null;
-        if (defenderId !== null) spendActionForActor(defenderId, 'reaction');
+        const defender = this.rollData.sourceActor;
+        if (defender === null) return;
+        if (defender.id !== null) spendActionForActor(defender.id, 'reaction');
+        this.counterAttack = this.#counterAttackFor(defender);
+    }
+
+    /** The Counter Attack a successful Parry earned this character (#603), or null. */
+    #counterAttackFor(defender: WH40KBaseActor): CounterAttackCard | null {
+        const actorUuid = defender.uuid;
+        if (this.prompt.attackerUuid === '' || actorUuid === null) return null;
+        const offer = counterAttackOffer({
+            skill: this.skill,
+            success: this.rollData.success,
+            sources: reactionHookSources(defender.items),
+            lastUsed: readCombatTurnStamp(defender.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)),
+            now: currentCombatTurn(game.combat),
+        });
+        if (offer === null) return null;
+        return {
+            ...offer,
+            actorUuid,
+            attackerUuid: this.prompt.attackerUuid,
+            attackerName: this.prompt.attackerName,
+            weaponId: parryWeaponId(defender.items),
+        };
     }
 }

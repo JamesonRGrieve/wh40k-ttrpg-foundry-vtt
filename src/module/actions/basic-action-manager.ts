@@ -10,6 +10,7 @@ import { t } from '../i18n/t.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
+import { COUNTER_ATTACK_FLAG, currentCombatTurn } from '../rolls/counter-attack-flow.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import {
     closeEvasionPrompt,
@@ -31,6 +32,7 @@ import { WeaponRollData } from '../rolls/roll-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
+import { isSameTurn, readCombatTurnStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rules/evasion.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import {
@@ -142,6 +144,11 @@ export class BasicActionManager {
                     void this._hordeBreakTest(ev);
                 });
             });
+            html.querySelectorAll<HTMLButtonElement>('.roll-control__counter-attack').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._counterAttack(ev);
+                });
+            });
             // Evasion prompt (#414): the defender's owners / the GM answer the attack.
             const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
             if (prompt !== null) this.#wireEvasionPrompt(html, prompt);
@@ -222,6 +229,45 @@ export class BasicActionManager {
             return;
         }
         await roller.rollEvasionTest(prompt, skill);
+    }
+
+    /**
+     * Counter Attack (#603): the parrying character strikes back at the opponent with
+     * the weapon that parried, the talent's modifier a sourced row on the attack. Only
+     * the character's owners and the GM may take it; a per-turn hook is stamped on the
+     * character so it is not offered again this turn.
+     */
+    async _counterAttack(event: Event): Promise<void> {
+        event.preventDefault();
+        const button = event.currentTarget as HTMLButtonElement;
+        const { actorUuid, attackerUuid, weaponId, modifier, source, limit } = button.dataset;
+        const actor = await this.#actorFromUuid(actorUuid ?? '');
+        const opponent = await this.#actorFromUuid(attackerUuid ?? '');
+        if (actor === null || opponent === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoActor'));
+            return;
+        }
+        if (!game.user.isGM && !actor.isOwner) {
+            ui.notifications.warn(t('WH40K.Evasion.NotYours', { defender: actor.name }));
+            return;
+        }
+        const now = currentCombatTurn(game.combat);
+        if (limit === 'perTurn') {
+            if (isSameTurn(readCombatTurnStamp(actor.getFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG)), now)) {
+                ui.notifications.warn(t('WH40K.Evasion.CounterAttackSpent'));
+                return;
+            }
+            if (now !== null) await actor.setFlag(SYSTEM_ID, COUNTER_ATTACK_FLAG, now);
+        }
+        button.disabled = true;
+        const weapon = weaponId === undefined || weaponId === '' ? null : actor.items.get(weaponId) ?? null;
+        const sourceName = source ?? '';
+        DHTargetedActionManager.performWeaponAttack(actor, opponent, weapon, {
+            key: 'counter-attack',
+            label: sourceName,
+            value: Number(modifier ?? 0),
+            source: sourceName,
+        });
     }
 
     /** The defender takes the hit (#414): no test, no Reaction spent, and the attack's damage proceeds. */

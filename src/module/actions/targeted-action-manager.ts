@@ -3,6 +3,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
+import type { RollModifierComponent } from '../rolls/roll-data.ts';
 import { findSpreadTargets } from '../rules/burst-spread-canvas.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
@@ -135,6 +136,7 @@ export class TargetedActionManager {
         source: WH40KBaseActor | CanvasToken | null = null,
         target: WH40KBaseActor | CanvasToken | null = null,
         weapon: WH40KItem | null = null,
+        sourcedModifier: RollModifierComponent | null = null,
     ): void {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
@@ -168,6 +170,12 @@ export class TargetedActionManager {
         // time — the allocator is pure and has no scene access. Empty for a lone
         // enemy, which leaves allocation in its existing single-target mode.
         weaponRollData.spreadTargets = findSpreadTargets(rollData.targetToken);
+        // A modifier the attack carries from what granted it (Counter Attack's −20,
+        // #603) — a named bucket the card expands into its sourced row.
+        if (sourcedModifier !== null) {
+            weaponRollData.modifiers[sourcedModifier.key] = sourcedModifier.value;
+            weaponRollData.expandedBuckets[sourcedModifier.key] = [sourcedModifier];
+        }
         prepareUnifiedRoll(weaponAttack);
     }
 

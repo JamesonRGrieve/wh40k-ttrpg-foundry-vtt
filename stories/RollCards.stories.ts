@@ -52,6 +52,48 @@ export const SimpleEvasionOutcome: Story = {
     },
 };
 
+/**
+ * A successful Parry by a character with Counter Attack (#603): the card offers the
+ * attack back at the opponent, carrying the parrying weapon and the talent's −20.
+ */
+export const SimpleParryCounterAttack: Story = {
+    name: 'Simple Roll / Parry offers Counter Attack',
+    render: () =>
+        renderSheet(
+            simpleRollChatSrc,
+            mockRollData({
+                rollData: { name: 'Parry Test', type: 'Skill' },
+                effectOutput: [{ name: 'Evasion', effect: 'Lucius Varn’s Parry evades the attack' }],
+                counterAttack: {
+                    sourceName: 'Counter Attack',
+                    attackModifier: -20,
+                    limit: 'perTurn',
+                    actorUuid: 'Actor.lucius',
+                    attackerUuid: 'Actor.heretic',
+                    attackerName: 'Heretic',
+                    weaponId: 'sword',
+                },
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        const button = canvasElement.querySelector<HTMLButtonElement>('.roll-control__counter-attack');
+        await expect(button).not.toBeNull();
+        await expect(button?.textContent).toContain('Heretic');
+        await expect(button?.dataset['weaponId']).toBe('sword');
+        await expect(button?.dataset['modifier']).toBe('-20');
+        await expect(button?.dataset['limit']).toBe('perTurn');
+    },
+};
+
+/** A Parry with no Counter Attack hook offers nothing. */
+export const SimpleParryWithoutCounterAttack: Story = {
+    name: 'Simple Roll / Parry without Counter Attack',
+    render: () => renderSheet(simpleRollChatSrc, mockRollData({ rollData: { name: 'Parry Test', type: 'Skill' } })),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.roll-control__counter-attack')).toBeNull();
+    },
+};
+
 export const SimpleSuccessWithFateControls: Story = {
     name: 'Simple Roll / Success + Fate (reroll & +DoS)',
     render: () => renderSheet(simpleRollChatSrc, mockRollData({ id: 'roll-fate-success', sourceFatePoints: 2, rerollOptions: [fateRerollOption] })),

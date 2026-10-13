@@ -1216,6 +1216,7 @@ export class WeaponActionData extends ActionData {
         const quality = weapon as Parameters<typeof attackerWeaponPreventsParry>[0];
         const prompt: EvasionPromptContext = {
             attackId: this.id,
+            attackerUuid: this.rollData.sourceActor?.uuid ?? '',
             attackerName: this.rollData.sourceActor?.name ?? '',
             weaponName: weapon.name,
             defenderUuid: defender.uuid,

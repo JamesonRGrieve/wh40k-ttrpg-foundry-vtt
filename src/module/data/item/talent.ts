@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { REACTION_HOOK_GRANTS, REACTION_HOOK_LIMITS, REACTION_HOOK_TRIGGERS, type ReactionHook } from '../../rules/counter-attack.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
@@ -52,6 +53,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         traits: Array<{ name: string; level: number; uuid: string }>;
         specialAbilities: Array<{ name: string; description: string }>;
     };
+    declare reactionHooks: ReactionHook[];
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -160,6 +162,19 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
                     { required: true, initial: [] },
                 ),
             }),
+
+            // Structured reaction hooks (#603): what a reaction outcome grants — e.g.
+            // Counter Attack's attack after a successful Parry. Authored per line on the
+            // compendium document; read by `rules/counter-attack.ts`, never by name.
+            reactionHooks: new fields.ArrayField(
+                new fields.SchemaField({
+                    trigger: new fields.StringField({ required: true, initial: 'parrySuccess', choices: [...REACTION_HOOK_TRIGGERS] }),
+                    grants: new fields.StringField({ required: true, initial: 'attack', choices: [...REACTION_HOOK_GRANTS] }),
+                    limit: new fields.StringField({ required: true, initial: 'none', choices: [...REACTION_HOOK_LIMITS] }),
+                    attackModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                }),
+                { required: false, initial: [] },
+            ),
         };
     }
 
