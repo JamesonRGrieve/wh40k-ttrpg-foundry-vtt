@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/hazard-dialog.hbs?raw';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, clickAction, renderSheet } from '../../../../stories/test-helpers';
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../../config/game-systems/types.ts';
 import {
     buildHazardSubjectView,
@@ -133,6 +133,40 @@ export const VacuumVenting: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector<HTMLSelectElement>('select[name="exposure"]')?.value).toBe('gradual');
         await expect(within(canvasElement).getByText('6 rounds safe, then 1d5')).toBeTruthy();
+    },
+};
+
+/**
+ * The GM's interactions: changing the hazard or the distance fires the change
+ * the dialog's submit-on-change handler folds into its state (the posted form
+ * carries the new `kind` / `metres`), and Resolve / Cancel dispatch their actions.
+ */
+export const Interactions: Story = {
+    args: { kind: 'falling', metres: 3, lines: ['dh2', 'rt'] },
+    play: async ({ canvasElement }) => {
+        const posted: Array<Record<string, string>> = [];
+        // The dialog's root is the form, so a change posts every named field in the canvas.
+        canvasElement.addEventListener('change', () => {
+            const fields = canvasElement.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[name]');
+            posted.push(Object.fromEntries(Array.from(fields).map((f) => [f.name, f.value])));
+        });
+        const metres = canvasElement.querySelector<HTMLInputElement>('input[name="metres"]');
+        if (metres === null) throw new Error('no metres input');
+        metres.value = '9';
+        metres.dispatchEvent(new Event('change', { bubbles: true }));
+        const kind = canvasElement.querySelector<HTMLSelectElement>('select[name="kind"]');
+        if (kind === null) throw new Error('no kind select');
+        kind.value = 'suffocation';
+        kind.dispatchEvent(new Event('change', { bubbles: true }));
+        await expect(posted.map((p) => [p['kind'], p['metres']])).toEqual([
+            ['falling', '9'],
+            ['suffocation', '9'],
+        ]);
+
+        const clicks = captureActionClicks(canvasElement);
+        clickAction(canvasElement, 'resolve');
+        clickAction(canvasElement, 'cancel');
+        await expect(clicks.map((c) => c.action)).toEqual(['resolve', 'cancel']);
     },
 };
 

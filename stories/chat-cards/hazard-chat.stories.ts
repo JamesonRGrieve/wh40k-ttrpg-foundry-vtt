@@ -118,10 +118,26 @@ export const FallingDH2: StoryObj<FallingArgs> = {
     },
 };
 
-/** The same card themed for Rogue Trader. */
+/**
+ * The same card themed for Rogue Trader. Clicking Apply Damage bubbles a click
+ * from the `.roll-control__apply-damage` button carrying the whole payload the
+ * chat-log handler (`_applyDamage`) reads: the actor, the total, the location and
+ * the ignore-armour flag.
+ */
 export const FallingRT: StoryObj<FallingArgs> = {
     args: { gameSystem: 'rt', metres: 12, die: 3, bonus: 12 },
     render: (args) => renderSheet(fallingSrc, fallingContext(args)),
+    play: async ({ canvasElement }) => {
+        await expect(within(canvasElement).getByText('15')).toBeTruthy();
+        const seen: Array<Record<string, string | undefined>> = [];
+        canvasElement.addEventListener('click', (event) => {
+            const button = event.target instanceof Element ? event.target.closest<HTMLElement>('.roll-control__apply-damage') : null;
+            if (button !== null) seen.push({ ...button.dataset });
+        });
+        canvasElement.querySelector<HTMLButtonElement>('button.roll-control__apply-damage')?.click();
+        await expect(seen).toHaveLength(1);
+        await expect(seen[0]).toMatchObject({ uuid: 'Actor.hazardStory', damage: '15', ignoreArmour: 'true' });
+    },
 };
 
 /** DH2 strenuous suffocation: 2 × TB rounds, dies after TB rounds, condition applied. */
