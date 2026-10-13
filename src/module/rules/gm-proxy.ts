@@ -7,7 +7,7 @@
  * every player on every NPC.
  */
 
-const SOCKET_NAME = 'system.wh40k-rpg';
+import { emitSystemSocket, onSystemSocket, type SystemSocketMessage } from '../utils/system-socket.ts';
 
 interface ProxyUpdatePayload {
     readonly type: 'updateActor';
@@ -25,9 +25,9 @@ interface ProxyCreateEffectsPayload {
 
 type ProxyPayload = ProxyUpdatePayload | ProxyCreateEffectsPayload;
 
-interface SocketLike {
-    on: (name: string, handler: (payload: ProxyPayload) => void) => void;
-    emit: (name: string, payload: ProxyPayload) => void;
+/** The system socket also carries other features' messages (attack cues); only these two are the proxy's. */
+function isProxyPayload(message: SystemSocketMessage): message is ProxyPayload {
+    return message.type === 'updateActor' || message.type === 'createActorEffects';
 }
 
 /** The slice of an actor a proxied effect creation needs. */
@@ -37,15 +37,10 @@ export interface EffectRecipientLike {
     createEmbeddedDocuments: (embeddedName: 'ActiveEffect', data: object[]) => Promise<readonly object[] | undefined>;
 }
 
-function getSocket(): SocketLike {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry game.socket is untyped
-    return (game as { socket: SocketLike }).socket;
-}
-
 export function registerGMProxy(): void {
-    getSocket().on(SOCKET_NAME, (payload: ProxyPayload) => {
-        if (!game.user.isGM) return;
-        void handleProxyRequest(payload);
+    onSystemSocket((message) => {
+        if (!game.user.isGM || !isProxyPayload(message)) return;
+        void handleProxyRequest(message);
     });
 }
 
@@ -79,7 +74,7 @@ export async function gmProxyActorUpdate(actorId: string, data: Record<string, u
     }
 
     const payload: ProxyUpdatePayload = { type: 'updateActor', actorId, data };
-    getSocket().emit(SOCKET_NAME, payload);
+    emitSystemSocket(payload);
 }
 
 /** Create ActiveEffects on an actor, directly when the user owns it, else through the GM. */
@@ -90,5 +85,5 @@ export async function gmProxyCreateActorEffects(actor: EffectRecipientLike, effe
         return;
     }
     const payload: ProxyCreateEffectsPayload = { type: 'createActorEffects', actorUuid: actor.uuid, effects };
-    getSocket().emit(SOCKET_NAME, payload);
+    emitSystemSocket(payload);
 }

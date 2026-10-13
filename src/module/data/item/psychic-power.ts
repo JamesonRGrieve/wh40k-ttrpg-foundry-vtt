@@ -2,6 +2,7 @@ import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
+import { type AttackCueData, attackCueField } from '../shared/attack-cue-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { normalisePsychicDiscipline, PSYCHIC_DISCIPLINE_CHOICES } from './psychic-discipline.ts';
@@ -29,6 +30,8 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare rangePerPR: number;
     declare notes: string;
     declare requires: string[];
+    /** Content-authored attack cue (#594). */
+    declare cue: AttackCueData;
 
     // Getters from ActivationTemplate
     declare activationLabel: string;
@@ -101,6 +104,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // be owned before this power can be purchased. Empty array means
             // no power-tree dependency (still gated on prCost vs PR).
             requires: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
+
+            // Attack cue (#594): how the power's manifestation looks and sounds on the
+            // canvas. Content, authored in the compendium `_source`.
+            cue: attackCueField(),
         };
     }
 

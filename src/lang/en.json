@@ -1736,6 +1736,22 @@
                 "Name": "Black Crusade apotheosis Infamy",
                 "Hint": "The Infamy a Black Crusade champion needs, when Corruption reaches 100, to become a Daemon Prince rather than a Chaos Spawn. The book suggests 75, 90 or 100; 100 is the default."
             },
+            "AttackCues": {
+                "Name": "Attack animations and sounds",
+                "Hint": "Play an animation and a sound on the canvas when an attack, a psychic power or a Dodge or Parry resolves: hits, misses, criticals, jams, overheats, bursts, blasts and Perils. Turn off to stop them for every player. Each player can also turn them off for themselves."
+            },
+            "AttackCueAnimations": {
+                "Name": "Show attack animations",
+                "Hint": "Draw attack animations on your canvas. They are never drawn while your system asks for reduced motion."
+            },
+            "AttackCueSounds": {
+                "Name": "Play attack sounds",
+                "Hint": "Play the sounds weapons and powers carry when they attack. Most carry none until they are given one."
+            },
+            "AttackCueVolume": {
+                "Name": "Attack sound volume",
+                "Hint": "Volume of attack sounds on your client, from 0 (silent) to 1."
+            },
             "AllowManualRoll": {
                 "Name": "Allow manual roll input",
                 "Hint": "Show the manual dice entry field in roll dialogs, for importing physical dice results. Hidden by default."

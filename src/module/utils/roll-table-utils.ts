@@ -172,9 +172,10 @@ export class RollTableUtils {
      * @param {WH40KBaseActor} actor - The actor rolling
      * @param {number} modifier - Modifier to the roll (e.g., from Psy Rating)
      * @param {number} ladderStep - Rows to escalate the drawn result by (0 = RAW)
+     * @param {() => void} [onPerils] - Called when the result escalates to Perils of the Warp, before that table is drawn
      * @returns {Promise<TableResult | null>}
      */
-    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0, ladderStep = 0): Promise<RollTableResult | null> {
+    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0, ladderStep = 0, onPerils?: () => void): Promise<RollTableResult | null> {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
@@ -186,6 +187,7 @@ export class RollTableUtils {
 
         // Check if result triggers Perils of the Warp (typically on 75+)
         if ((roll.total ?? 0) >= 75) {
+            onPerils?.();
             await this.rollPerilsOfTheWarp(actor);
         }
 

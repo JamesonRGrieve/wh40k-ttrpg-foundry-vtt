@@ -498,6 +498,42 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "scope": "world",
               "type": "Number",
             },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "true",
+              "key": "attack-cues",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "true",
+              "key": "attack-cue-animations",
+              "requiresReload": undefined,
+              "scope": "client",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "true",
+              "key": "attack-cue-sounds",
+              "requiresReload": undefined,
+              "scope": "client",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
+              "default": "0.8",
+              "key": "attack-cue-volume",
+              "requiresReload": undefined,
+              "scope": "client",
+              "type": "Number",
+            },
           ]
         `);
     });

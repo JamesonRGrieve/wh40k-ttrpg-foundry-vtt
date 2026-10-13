@@ -128,6 +128,7 @@ import { EventTracker } from './managers/event-tracker.ts';
 import { ItemDropManager } from './managers/item-drop-manager.ts';
 import { reconcileWorldOriginGrants } from './origin-grant-reconcile.ts';
 import type { ActionData } from './rolls/action-data.ts';
+import { registerAttackCueSocket } from './rolls/attack-cue-trigger.ts';
 import { registerKeepExtremeModifier } from './rolls/roll-keep.ts';
 import { registerRollPrompts } from './rolls/roll-prompt.ts';
 import { registerActionEconomy } from './rules/action-economy.ts';
@@ -1374,6 +1375,7 @@ export class HooksManager {
         // lands even if a later await throws on a minimal/seed world.
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
         registerGMProxy();
+        registerAttackCueSocket();
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();

@@ -1161,6 +1161,51 @@ graduates to strict; re-baseline upward with `pnpm images:ratchet:update`.
 - **Never merge distinct base-vs-variant statblocks** into one actor — they are
   separate documents (see *Cross-line same-name actors* and *Variants*).
 
+### Attack cues (animation & sound slots)
+
+Weapons and psychic powers carry a `system.cue` block: how their attacks look and
+sound on the canvas (#594). It is content and is line-agnostic — author it once at
+the `system` root, never inside a per-line variant container. The system maps the
+resolved roll outcome onto it; nothing in `src/` names a weapon.
+
+```json
+"cue": {
+  "preset": "plasma",
+  "tint": "#60c8ff",
+  "animations": [{ "event": "fire", "src": "modules/<pack>/plasma-bolt.webm" }],
+  "sounds": [
+    { "event": "fire", "src": "modules/<pack>/plasma-1.ogg" },
+    { "event": "fire", "src": "modules/<pack>/plasma-2.ogg" },
+    { "event": "overheat", "src": "modules/<pack>/vent.ogg" }
+  ]
+}
+```
+
+- **`preset`** — the procedural look the system draws itself (no art file needed):
+  `tracer`, `las`, `solid`, `bolt`, `plasma`, `melta`, `flame`, `launcher`, `arc`,
+  `blade`, `chain`, `power`, `blunt`, `warp`. Empty `""` takes the attack kind's
+  default (`tracer` for a ranged weapon, `blade` for melee, `warp` for a power).
+  Official weapons carry the preset of their weapon `type` (las → `las`,
+  solid-projectile → `solid`, bolt → `bolt`, power → `power`, …); `exotic`/`xenos`
+  weapons are left empty until someone picks a look for each.
+- **`tint`** — `#rrggbb` colour for the preset, or `""` for its own colour.
+- **`animations`** — optional animation files per cue event, played through the
+  Sequencer module when it is active. Without one (or without Sequencer) the preset
+  is drawn.
+- **`sounds`** — optional sound files per cue event. Several for one event are
+  picked from at random per shot. **Empty by default: an event with no sound plays
+  silently.**
+
+Cue events (one vocabulary for all six lines): `fire`, `hit`, `miss`, `critical`
+(the line's Righteous Fury), `jam`, `overheat`, `explode` (a weapon destroyed on an
+unmodified 00), `scatter`, `blast`, `spray` (area templates, #599), `melee-hit`,
+`melee-miss`, `parry`, `dodge`, `manifest`, `phenomena`, `perils`.
+
+**Licensing.** Only CC0, CC-BY (credited the way the inlined icons are) or
+AGPL-compatible art and audio may be referenced. Nothing from unlicensed packs (see
+the removed GameDevMarket and GW assets). The system ships no cue art or audio of its
+own: every preset is drawn procedurally.
+
 ---
 
 ## Adventures

@@ -29,6 +29,8 @@ interface SettingDescriptor {
     default: SettingDefault;
     type: NumberConstructor | BooleanConstructor | StringConstructor | ArrayConstructor;
     choices?: Record<string, string>;
+    /** Slider bounds for a Number setting. */
+    range?: { min: number; max: number; step: number };
     /** Foundry fires this on every client when the (world) value changes. Not
      *  part of the structural-shape snapshot — it is behaviour, not migration shape. */
     onChange?: (value: SettingDefault) => void;
@@ -84,7 +86,39 @@ export class WH40KSettings {
         tokenImageGenSize: 'token-image-gen-size',
         apotheosisInfamyThreshold: 'apotheosis-infamy-threshold',
         warbandInquests: 'warband-inquests',
+        attackCues: 'attack-cues',
+        attackCueAnimations: 'attack-cue-animations',
+        attackCueSounds: 'attack-cue-sounds',
+        attackCueVolume: 'attack-cue-volume',
     };
+
+    /** Default attack-cue volume (#594), 0–1. */
+    static ATTACK_CUE_VOLUME_DEFAULT = 0.8;
+
+    /** The settings that decide how this client plays attack cues (#594). Safe before registration (all on, default volume). */
+    static getAttackCueSettings(): { worldEnabled: boolean; animationsEnabled: boolean; soundsEnabled: boolean; volume: number } {
+        const S = WH40KSettings.SETTINGS;
+        const flag = (key: string): boolean => {
+            try {
+                return game.settings.get(SYSTEM_ID, key) !== false;
+            } catch {
+                return true;
+            }
+        };
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let volume: unknown;
+        try {
+            volume = game.settings.get(SYSTEM_ID, S.attackCueVolume);
+        } catch {
+            volume = WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT;
+        }
+        return {
+            worldEnabled: flag(S.attackCues),
+            animationsEnabled: flag(S.attackCueAnimations),
+            soundsEnabled: flag(S.attackCueSounds),
+            volume: typeof volume === 'number' ? volume : WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT,
+        };
+    }
 
     /**
      * Default Infamy a Black Crusade champion needs for apotheosis rather than
@@ -1092,6 +1126,45 @@ export class WH40KSettings {
                 default: WH40KSettings.APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT,
                 type: Number,
             },
+            {
+                // Attack cues (#594): the GM's switch for the whole table. Off, no
+                // client plays an attack animation or sound.
+                key: S.attackCues,
+                name: 'WH40K.SETTINGS.AttackCues.Name',
+                hint: 'WH40K.SETTINGS.AttackCues.Hint',
+                scope: 'world',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.attackCueAnimations,
+                name: 'WH40K.SETTINGS.AttackCueAnimations.Name',
+                hint: 'WH40K.SETTINGS.AttackCueAnimations.Hint',
+                scope: 'client',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.attackCueSounds,
+                name: 'WH40K.SETTINGS.AttackCueSounds.Name',
+                hint: 'WH40K.SETTINGS.AttackCueSounds.Hint',
+                scope: 'client',
+                config: true,
+                default: true,
+                type: Boolean,
+            },
+            {
+                key: S.attackCueVolume,
+                name: 'WH40K.SETTINGS.AttackCueVolume.Name',
+                hint: 'WH40K.SETTINGS.AttackCueVolume.Hint',
+                scope: 'client',
+                config: true,
+                default: WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT,
+                type: Number,
+                range: { min: 0, max: 1, step: 0.05 },
+            },
         ];
         for (const d of descriptors) {
             game.settings.register(SYSTEM_ID, d.key, {
@@ -1103,6 +1176,7 @@ export class WH40KSettings {
                 type: d.type,
                 ...(d.requiresReload !== undefined ? { requiresReload: d.requiresReload } : {}),
                 ...(d.choices !== undefined ? { choices: d.choices } : {}),
+                ...(d.range !== undefined ? { range: d.range } : {}),
                 ...(d.onChange !== undefined ? { onChange: d.onChange } : {}),
             });
         }

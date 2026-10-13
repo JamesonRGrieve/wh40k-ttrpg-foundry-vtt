@@ -54,4 +54,24 @@ describe('gm-proxy (#562)', () => {
         registerGMProxy();
         expect(mockOn).toHaveBeenCalledWith('system.wh40k-rpg', expect.any(Function));
     });
+
+    it('ignores the other messages the shared system socket carries (attack cues, #594)', () => {
+        let handler: ((payload: { type: string }) => void) | undefined;
+        const get = vi.fn();
+        Object.assign(globalThis, {
+            game: {
+                user: { isGM: true },
+                actors: { get },
+                socket: {
+                    on: (_name: string, fn: (payload: { type: string }) => void): void => {
+                        handler = fn;
+                    },
+                    emit: vi.fn(),
+                },
+            },
+        });
+        registerGMProxy();
+        handler?.({ type: 'attackCue' });
+        expect(get).not.toHaveBeenCalled();
+    });
 });

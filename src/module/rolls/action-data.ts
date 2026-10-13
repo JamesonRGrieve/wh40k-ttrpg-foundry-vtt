@@ -54,13 +54,13 @@ import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
 import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
-import { playWeaponAttackSoundsForRoll } from '../rules/weapon-sounds.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
 import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
+import { CUE_EFFECT, cueAttackResolved, cueHitsResolved } from './attack-cue-trigger.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { resolveGainedMalignancy } from './malignancy-outcome.ts';
@@ -236,6 +236,7 @@ export class ActionData {
         }
 
         this.addEffect(t(EFFECT_TITLE.psychicPhenomena), t('WH40K.ActionEffect.PsychicPhenomena'));
+        this.effects.push(CUE_EFFECT.phenomena);
 
         let autoRoll = true;
         try {
@@ -245,7 +246,9 @@ export class ActionData {
         }
         if (!autoRoll) return;
 
-        await RollTableUtils.rollPsychicPhenomena(sourceActor, outcome.modifier, outcome.ladderStep);
+        await RollTableUtils.rollPsychicPhenomena(sourceActor, outcome.modifier, outcome.ladderStep, () => {
+            this.effects.push(CUE_EFFECT.perils);
+        });
     }
 
     /** The rolled power's discipline choice (`malefic`, `sanctic`, …; normalised by the psychic-power DataModel), or '' with no power. */
@@ -681,12 +684,16 @@ export class ActionData {
     }
 
     async calculateHits(): Promise<void> {
-        const weaponRollData = this.rollData as WeaponRollData;
         const area = this.#areaTemplate();
-        if (area !== null) {
-            await this.#calculateAreaHits(area);
-            return;
-        }
+        if (area !== null) await this.#calculateAreaHits(area);
+        else await this.#calculateTargetHits();
+        // Criticals, and who an area attack hit, are known only now (#594).
+        cueHitsResolved(this);
+    }
+
+    /** The hits of an attack at its declared target, spread across nearby enemies where a burst allows. */
+    async #calculateTargetHits(): Promise<void> {
+        const weaponRollData = this.rollData as WeaponRollData;
         if ((this.rollData.success || weaponRollData.isThrown) && this.damageData !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
@@ -975,10 +982,11 @@ export class ActionData {
 
         await sendActionDataToChat(this);
 
-        // Play the weapon's authored attack sound(s): one per shot, so a burst
-        // plays several times and full-auto in rapid succession, broadcast to all
-        // clients. A non-weapon roll carries no `weapon`, so this is a no-op there.
-        playWeaponAttackSoundsForRoll(this.rollData);
+        // Play the attack's cue (#594) from the outcome the card shows: shots or
+        // swings per hit landed, a miss past the target, a jam, an area's cone or
+        // blast, Phenomena / Perils, or a successful Dodge / Parry. Every client
+        // plays it under its own settings.
+        cueAttackResolved(this);
 
         await this.maybeAutoRollDamage();
     }
