@@ -8,6 +8,8 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
+import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -25,6 +27,8 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /** DH1 core Weapon Upgrades: a successful Trade (Armourer) test (#136). */
+    readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     /**
      * DH1 core: "The number of extra hits you can score in this manner may not
      * exceed the … rate of fire" (both bursts); Suppressing Fire: "The number of

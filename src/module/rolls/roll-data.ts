@@ -108,6 +108,7 @@ const MODIFIER_KEY_META: Record<string, string> = {
     'xenos-lore': 'XenosLore',
     'xenos-repair': 'XenosRepair',
     'xenos-lore-insight': 'XenosLoreInsight',
+    'modification-availability': 'ModificationAvailability',
     [TARGET_CONDITION_BUCKET]: 'TargetConditions',
 };
 

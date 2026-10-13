@@ -143,6 +143,61 @@ export const RendersToggleBodyAction: Story = {
     },
 };
 
+// ── Personal modification (#136) ──────────────────────────────────────────────
+//
+// A character's own weapon on a line that prints the fitting test shows the
+// "Fit a modification" action; DH2 also prints the Tech-Use removal, so each
+// fitted modification gets a remove-and-keep-the-parts button. The sheet sets
+// `personalModification` to null on DW / BC / IM, unowned weapons and NPCs.
+
+const FITTED_MODIFICATIONS = [
+    {
+        index: 0,
+        uuid: 'Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip',
+        name: 'Custom Grip',
+        active: true,
+        category: 'stock',
+        categoryIcon: 'fa-wrench',
+        effects: ['+5 To Hit'],
+        hasEffects: true,
+    },
+];
+
+export const PersonalModificationDH2: Story = {
+    args: {
+        overrides: { modificationsData: FITTED_MODIFICATIONS, personalModification: { canRemove: true } },
+    },
+    play: async ({ canvasElement }) => {
+        const fit = canvasElement.querySelector<HTMLButtonElement>('[data-action="fitModification"]');
+        await expect(fit).toBeTruthy();
+        await expect(fit?.textContent).toContain('Fit a modification');
+        const remove = canvasElement.querySelector<HTMLButtonElement>('[data-action="unfitModification"]');
+        await expect(remove?.dataset['modUuid']).toBe('Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip');
+        await expect(remove?.getAttribute('aria-label')).toBeTruthy();
+    },
+};
+
+export const PersonalModificationFitOnly: Story = {
+    args: {
+        overrides: { modificationsData: FITTED_MODIFICATIONS, personalModification: { canRemove: false } },
+    },
+    play: async ({ canvasElement }) => {
+        // DH1 / RT / OW print the fitting test but no removal test.
+        await expect(canvasElement.querySelector('[data-action="fitModification"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-action="unfitModification"]')).toBeNull();
+    },
+};
+
+export const NoPersonalModification: Story = {
+    args: {
+        overrides: { modificationsData: FITTED_MODIFICATIONS, personalModification: null },
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-action="fitModification"]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-action="unfitModification"]')).toBeNull();
+    },
+};
+
 // ── Per-system homologation (dh2 / dh1 / rt / bc / ow / dw / im) ──────────────
 //
 // One story per game line — the weapon sheet is rendered under each system's

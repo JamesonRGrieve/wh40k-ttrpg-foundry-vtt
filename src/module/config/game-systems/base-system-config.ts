@@ -10,6 +10,7 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type {
     GameSystemId,
     SkillRankDef,
@@ -22,6 +23,21 @@ import type {
     SidebarHeaderField,
     SystemTheme,
 } from './types.ts';
+
+/**
+ * The fitting rule DH1, RT and OW print word for word: "A character with the
+ * Trade (Armourer) skill may upgrade weapons by making a successful test" (DH1
+ * core Weapon Upgrades; RT core p. 133; OW core Weapon Upgrades). No modifier,
+ * no failure consequence, no removal test (#136).
+ */
+export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
+    fitSkill: { skill: 'trade', specialisation: 'Armourer' },
+    availabilityModifier: false,
+    partsLostOnFailure: false,
+    damagesWeaponAtDegreesOfFailure: null,
+    removalSkill: null,
+    xenos: null,
+};
 
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
@@ -80,6 +96,15 @@ export abstract class BaseSystemConfig {
      * repair difficulty to the GM.
      */
     abstract readonly itemRepair: ItemRepairRules | null;
+
+    /**
+     * The line's printed rule for fitting a weapon modification personally
+     * (DH2 core p. 162 / Enemies Without p. 42; DH1 / RT / OW "a successful
+     * Trade (Armourer) test", #136), or `null` for a line that prints no
+     * fitting test (DW folds the labour into the Requisition cost; BC prints
+     * none).
+     */
+    abstract readonly weaponModification: WeaponModificationRules | null;
 
     /**
      * The line's printed burst ceiling (#607): whether a Semi-Auto / Full Auto

@@ -8,6 +8,7 @@ import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
 import { DH1eSystemConfig } from './dh1-config.ts';
@@ -92,6 +93,16 @@ export function inquestRulesFor(line: string | undefined): InquestRules | null {
 export function itemRepairRulesFor(line: string | undefined): ItemRepairRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.itemRepair ?? null;
+}
+
+/**
+ * A line's personal weapon-modification rule (#136), or `null` for an unknown
+ * line or one that prints no fitting test.
+ * @param line  `system.gameSystem` id.
+ */
+export function weaponModificationRulesFor(line: string | undefined): WeaponModificationRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.weaponModification ?? null;
 }
 
 /**

@@ -779,7 +779,8 @@
                 "CraftsmanshipRepair": "Craftsmanship (repair)",
                 "XenosLore": "Hard (−20): xenos device",
                 "XenosRepair": "Xenos device: alien nature",
-                "XenosLoreInsight": "Forbidden Lore insight (+5 per DoS)"
+                "XenosLoreInsight": "Forbidden Lore insight (+5 per DoS)",
+                "ModificationAvailability": "Modification Availability"
             },
             "ModifierCap": {
                 "Label": "Modifier cap (±60)",
@@ -1142,12 +1143,12 @@
                 "RepairDestroyed": "The repair fails so badly that {item} is destroyed. It can never be repaired.",
                 "XenosMakerTitle": "Xenos device",
                 "XenosMakerQuestion": "Does the warband know which alien race built {item}? (GM ruling)",
-                "XenosTooAlien": "Without knowing which race built {item}, it is too alien to repair.",
+                "XenosTooAlien": "Without knowing which race built {item}, it is too alien to repair or modify.",
                 "XenosLorePickTitle": "Forbidden Lore — the race that built it",
                 "XenosLorePickHint": "Pick the Forbidden Lore specialisation that covers the race that built this device.",
-                "XenosNoLore": "You need a Forbidden Lore specialisation covering this device's makers before you can repair it.",
-                "XenosLoreFailed": "The workings of {item} stay a mystery. It cannot be repaired on this attempt.",
-                "XenosLoreSucceeded": "You grasp how {item} works ({degrees} DoS). Your next Tech-Use repair of it takes −20, +5 per DoS."
+                "XenosNoLore": "You need a Forbidden Lore specialisation covering this device's makers before you can repair or modify it.",
+                "XenosLoreFailed": "The workings of {item} stay a mystery. It cannot be repaired or modified on this attempt.",
+                "XenosLoreSucceeded": "You grasp how {item} works ({degrees} DoS). Your next repair or modification of it takes −20, +5 per DoS."
             },
             "Palm": {
                 "Steal": "Steal / Pickpocket",
@@ -7705,6 +7706,23 @@
             "ViewDetails": "View Details",
             "EnterEditMode": "Enter Edit Mode",
             "ExitEditMode": "Exit Edit Mode"
+        },
+        "WeaponModification": {
+            "EffectTitle": "Weapon Modification",
+            "FitAction": "Fit a modification",
+            "RemoveAction": "Remove and keep the parts (test)",
+            "NoParts": "You carry no weapon modification parts to fit.",
+            "PickPartsTitle": "Fit a modification",
+            "PickPartsHint": "Pick the modification parts to fit to this weapon.",
+            "FitRollLabel": "{skill}: fit {modification} ({weapon})",
+            "RemoveRollLabel": "{skill}: remove {modification} ({weapon})",
+            "Fitted": "{modification} is fitted to {weapon}.",
+            "FitFailed": "{modification} is not fitted to {weapon}.",
+            "FitFailedPartsLost": "{modification} is not fitted to {weapon}, and its parts are lost.",
+            "WeaponDamaged": "The botched work damages {weapon}: it becomes Unreliable, or loses Reliable.",
+            "RemovedPartsKept": "{modification} comes off {weapon} with its parts intact.",
+            "RemovedPartsLost": "{modification} comes off {weapon}, but its parts are lost.",
+            "RemovedPartsMissing": "{modification} comes off {weapon}, but its parts' source document is gone, so they cannot be returned."
         },
         "Encumbrance": {
             "Label": "Carrying",

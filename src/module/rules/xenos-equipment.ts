@@ -11,9 +11,10 @@
  * for every degree of success on the Forbidden Lore test."
  *
  * The flow is two tests. The lore test's degrees of success are recorded on
- * the item as a "repair insight" for the Acolyte who rolled it. Their next
- * Tech-Use Repair on that item reads the insight and takes the −20 / +5-per-DoS
- * modifiers. Whether the maker race is known is a GM ruling made at repair
+ * the item as an insight for the Acolyte who rolled it. Their next attempt on
+ * that item, a Tech-Use Repair or a personal modification fitting or removal
+ * (`weapon-modification.ts`), reads the insight and takes the −20 /
+ * +5-per-DoS modifiers. Whether the maker race is known is a GM ruling made at repair
  * time, because items carry no maker field. The printed values live on the
  * line config (`ItemRepairRules.xenos`); this module holds only the math.
  */

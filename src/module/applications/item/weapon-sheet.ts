@@ -3,13 +3,16 @@
  */
 
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
+import { weaponModificationRulesFor } from '../../config/game-systems/index.ts';
 import type { AvailabilityConfig, LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
 import type { default as WeaponData } from '../../data/item/weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { t } from '../../i18n/t.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
+import { promptItemChoice } from '../../rolls/skill-use-picker.ts';
 import { DEFAULT_HIT_LOCATION } from '../../rules/hit-locations.ts';
 import { consumeRounds } from '../../rules/magazine.ts';
+import { MODIFICATION_BLOCKER_KEYS, modificationBlocker, modificationEntry, type ModificationSource } from '../../rules/weapon-modification.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -28,15 +31,15 @@ interface DragPreview {
     type: string;
 }
 
-/** Shape we read from a weaponModification item when wiring up drag-and-drop. */
-interface WeaponModificationItem {
-    uuid: string;
-    name: string;
-    system: {
-        category: string;
-        modifiers?: { damage?: number; penetration?: number; toHit?: number; range?: number; weight?: number };
-        restrictions?: { weaponClasses?: Set<string>; weaponTypes?: Set<string> };
-    };
+/** The actor surface the personal-modification actions call (#136); implemented by the character document. */
+interface ModificationFitter {
+    rollFitWeaponModification: (weaponId: string, partsId: string) => Promise<void>;
+    rollRemoveWeaponModification: (weaponId: string, modificationUuid: string) => Promise<void>;
+}
+
+/** Whether the owning actor can roll a personal fitting (characters can; NPCs and craft cannot). */
+function isModificationFitter(actor: object): actor is ModificationFitter {
+    return 'rollFitWeaponModification' in actor && 'rollRemoveWeaponModification' in actor;
 }
 
 /** Shape we read from an ammunition item; matches WeaponData.loadAmmo's parameter. */
@@ -115,6 +118,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             toggleActivation: WeaponSheet.#toggleActivation,
             viewModification: WeaponSheet.#viewModification,
             removeModification: WeaponSheet.#removeModification,
+            fitModification: WeaponSheet.#fitModification,
+            unfitModification: WeaponSheet.#unfitModification,
             loadAmmo: WeaponSheet.#loadAmmo,
             ejectAmmo: WeaponSheet.#ejectAmmo,
             clearJam: WeaponSheet.#clearJam,
@@ -254,6 +259,11 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Check if weapon has any modifications affecting stats
         context['hasModificationEffects'] = Object.values(system._modificationModifiers).some((v) => v !== 0);
+
+        // Personal fitting / removal (#136): offered on a character's own weapon when its line prints the test.
+        const owner = this.item.actor;
+        const fittingRules = owner !== null && this.isEditable && isModificationFitter(owner) ? weaponModificationRulesFor(owner.system.gameSystem) : null;
+        context['personalModification'] = fittingRules === null ? null : { canRemove: fittingRules.removalSkill !== null };
 
         // Loaded ammunition data
         context['hasLoadedAmmo'] = system.hasLoadedAmmo;
@@ -855,32 +865,10 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _onDropModification(modItem: WeaponModificationItem): Promise<boolean> {
-        // Validate
-        if (!this._canAddModification(modItem)) {
-            return false;
-        }
-
-        // Create modification entry
-        const mods = modItem.system.modifiers;
-        const modEntry = {
-            uuid: modItem.uuid,
-            name: modItem.name,
-            active: true,
-            category: modItem.system.category !== '' ? modItem.system.category : 'accessory',
-            cachedModifiers: {
-                damage: mods?.damage ?? 0,
-                penetration: mods?.penetration ?? 0,
-                toHit: mods?.toHit ?? 0,
-                range: mods?.range ?? 0,
-                weight: mods?.weight ?? 0,
-            },
-        };
-
-        // Add to array
-        const updated = [...this.item.system.modifications, modEntry];
+    async _onDropModification(modItem: ModificationSource): Promise<boolean> {
+        if (!this._canAddModification(modItem)) return false;
+        const updated = [...this.item.system.modifications, modificationEntry(modItem)];
         await this.item.update({ 'system.modifications': updated });
-
         ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.ModificationInstalled', { name: modItem.name }));
         return true;
     }
@@ -888,36 +876,54 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
     /* -------------------------------------------- */
 
     /**
-     * Check if a modification can be added to this weapon.
+     * Check if a modification can be added to this weapon: its class / type
+     * restrictions and no second copy (the same check the personal fitting runs).
      * @param {Item} modItem - The modification item
      * @returns {boolean}
      * @private
      */
-    _canAddModification(modItem: WeaponModificationItem): boolean {
+    _canAddModification(modItem: ModificationSource): boolean {
         const weapon = this.item.system;
-        const restrictions = modItem.system.restrictions;
+        const blocker = modificationBlocker(weapon, modItem);
+        if (blocker === null) return true;
+        ui.notifications.warn(
+            game.i18n.format(MODIFICATION_BLOCKER_KEYS[blocker], { name: modItem.name, classLabel: weapon.classLabel, typeLabel: weapon.typeLabel }),
+        );
+        return false;
+    }
 
-        // Check weapon class restriction
-        const classRestrictions = restrictions?.weaponClasses;
-        if (classRestrictions !== undefined && classRestrictions.size > 0 && !classRestrictions.has(weapon.class)) {
-            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.ModificationClassIncompatible', { name: modItem.name, classLabel: weapon.classLabel }));
-            return false;
+    /* -------------------------------------------- */
+
+    /**
+     * Fit a modification personally (#136): pick one of the owner's carried
+     * weapon modifications as the parts and roll the line's fitting test.
+     * @this {WeaponSheet}
+     */
+    static async #fitModification(this: WeaponSheet): Promise<void> {
+        const actor = this.item.actor;
+        const weaponId = this.item.id;
+        if (actor === null || weaponId === null || !isModificationFitter(actor)) return;
+        const parts = actor.items.filter((item) => item.type === 'weaponModification').map((item) => ({ id: item.id, name: item.name }));
+        if (parts.length === 0) {
+            ui.notifications.warn(t('WH40K.WeaponModification.NoParts'));
+            return;
         }
+        const chosen = await promptItemChoice(parts, t('WH40K.WeaponModification.PickPartsTitle'), t('WH40K.WeaponModification.PickPartsHint'));
+        if (chosen === null) return;
+        await actor.rollFitWeaponModification(weaponId, chosen.id);
+    }
 
-        // Check weapon type restriction
-        const typeRestrictions = restrictions?.weaponTypes;
-        if (typeRestrictions !== undefined && typeRestrictions.size > 0 && !typeRestrictions.has(weapon.type)) {
-            ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.ModificationTypeIncompatible', { name: modItem.name, typeLabel: weapon.typeLabel }));
-            return false;
-        }
-
-        // Check for duplicates
-        if (weapon.modifications.some((m) => m.uuid === modItem.uuid)) {
-            ui.notifications.info(game.i18n.format('WH40K.WeaponSheet.ModificationAlreadyInstalled', { name: modItem.name }));
-            return false;
-        }
-
-        return true;
+    /**
+     * Remove a fitted modification personally (#136): the line's removal test,
+     * which returns the parts on a success.
+     * @this {WeaponSheet}
+     */
+    static async #unfitModification(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const actor = this.item.actor;
+        const weaponId = this.item.id;
+        const uuid = target.dataset['modUuid'];
+        if (actor === null || weaponId === null || uuid === undefined || !isModificationFitter(actor)) return;
+        await actor.rollRemoveWeaponModification(weaponId, uuid);
     }
 
     /* -------------------------------------------- */
@@ -1135,8 +1141,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Handle weaponModification drops
         if ((droppedItem as { type?: string }).type === 'weaponModification') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns a broad Foundry document union; _onDropModification narrows via its WeaponModificationItem shape
-            return this._onDropModification(droppedItem as unknown as WeaponModificationItem);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns a broad Foundry document union; _onDropModification narrows via its ModificationSource shape
+            return this._onDropModification(droppedItem as unknown as ModificationSource);
         }
 
         // Handle ammunition drops

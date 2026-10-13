@@ -18,6 +18,8 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /** DW core p. 156: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
+    readonly weaponModification = null;
     /**
      * DW core: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … Rate of Fire" (both bursts); Suppressing Fire: "The number of

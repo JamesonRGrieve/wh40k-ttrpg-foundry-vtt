@@ -1,4 +1,4 @@
-import { itemRepairRulesFor, SystemConfigRegistry } from '../config/game-systems/index.ts';
+import { acquisitionLadderFor, itemRepairRulesFor, SystemConfigRegistry, weaponModificationRulesFor } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 // Direct, not via dice/_module.ts: that barrel also re-exports
 // RollConfigurationDialog, so importing it drags the applications layer into
@@ -31,12 +31,28 @@ import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
 import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
+import {
+    FitModificationActionData,
+    type ModifiableWeapon,
+    type ModificationParts,
+    RemoveModificationActionData,
+} from '../rolls/weapon-modification-action-data.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { getSkillReadout, hasSkillUses, type SkillUseDef } from '../rules/skill-uses.ts';
 import { isXenosEquipment, readXenosRepairInsight, XENOS_REPAIR_INSIGHT_FLAG, xenosRepairModifiers, type XenosRepairRules } from '../rules/xenos-equipment.ts';
 import type {
+import {
+    MODIFICATION_BLOCKER_KEYS,
+    type ModifiableWeaponSystem,
+    modificationAvailabilityModifier,
+    modificationBlocker,
+    modificationEntry,
+    type ModificationSkill,
+    type ModificationSource,
+    partsSourceUuid,
+} from '../rules/weapon-modification.ts';
     WH40KActorBio,
     WH40KActorSystemData,
     WH40KArmourLocation,
@@ -116,6 +132,9 @@ interface SkillEntry {
 
 const SKILL_ALIASES: Record<string, string> = {
     navigate: 'navigation',
+/** A weapon Item read through the personal-modification surface (#136): its fitted list, qualities, class / type and their labels. */
+type FittableWeapon = ModifiableWeapon & StatefulItem & { system: ModifiableWeaponSystem & { classLabel: string; typeLabel: string } };
+
 };
 
 /**
@@ -840,24 +859,13 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // The line's printed repair rule (#444): DH2 applies the Table 5-2 craftsmanship
         // modifier and destroys the item on 4+ DoF; other lines keep the plain test.
         const repairRules = mode === 'repair' ? itemRepairRulesFor(this.system.gameSystem) : null;
-        const extraModifiers: Record<string, number> = {};
+        let extraModifiers: Record<string, number> = {};
         let consumesXenosInsight = false;
         if (repairRules !== null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; craftsmanship is on the physical-item template, `type` on weapon/armour
-            const itemSystem = chosenItem.system as unknown as { craftsmanship?: string; type?: string };
-            extraModifiers['craftsmanship-repair'] = craftsmanshipRepairModifier(repairRules, itemSystem.craftsmanship);
-            if (repairRules.xenos !== null && isXenosEquipment({ type: chosenItem.type, system: itemSystem })) {
-                const insight = this.uuid === null ? null : readXenosRepairInsight(chosenItem.getFlag(SYSTEM_ID, XENOS_REPAIR_INSIGHT_FLAG), this.uuid);
-                if (insight === null) {
-                    // First the Hard (−20) Forbidden Lore test (Enemies Without p. 42, #136).
-                    await this._rollXenosRepairLore(statefulItem, chosen.name, repairRules.xenos);
-                    return;
-                }
-                const xenos = xenosRepairModifiers(repairRules.xenos, insight.degrees);
-                extraModifiers['xenos-repair'] = xenos.alienNature;
-                extraModifiers['xenos-lore-insight'] = xenos.loreInsight;
-                consumesXenosInsight = true;
-            }
+            const xenos = await this._xenosAttemptModifiers(repairRules.xenos, chosenItem, statefulItem);
+            if (xenos === null) return;
+            extraModifiers = { 'craftsmanship-repair': craftsmanshipRepairModifier(repairRules, chosenItem.system.craftsmanship), ...xenos.modifiers };
+            consumesXenosInsight = xenos.consumesInsight;
         }
 
         const objectAction = new ObjectStateActionData(mode, statefulItem, { rules: repairRules, consumesXenosInsight });
@@ -875,11 +883,144 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * The Forbidden Lore step before repairing a xenos item (DH2 Enemies Without
-     * p. 42, #136). If the race that built the item is unknown it cannot be
-     * repaired at all, which is a GM ruling made here. Otherwise the Acolyte picks
-     * the Forbidden Lore specialisation that covers that race and rolls it at Hard
-     * (−20); success records the insight their next repair attempt reads.
+     * The xenos step before repairing or modifying an item (DH2 Enemies Without
+     * p. 42, #136). A non-xenos item, or a line without the rule, adds nothing.
+     * A xenos item needs the roller's Forbidden Lore insight first: without one
+     * this rolls that lore test instead and returns null. With one it returns the
+     * −20 alien-nature and +5-per-DoS rows, and the attempt spends the insight.
+     */
+    async _xenosAttemptModifiers(
+        rules: XenosRepairRules | null,
+        item: WH40KItem,
+        statefulItem: StatefulItem,
+    ): Promise<{ modifiers: Record<string, number>; consumesInsight: boolean } | null> {
+        if (rules === null || !isXenosEquipment(item)) return { modifiers: {}, consumesInsight: false };
+        const insight = this.uuid === null ? null : readXenosRepairInsight(item.getFlag(SYSTEM_ID, XENOS_REPAIR_INSIGHT_FLAG), this.uuid);
+        if (insight === null) {
+            await this._rollXenosRepairLore(statefulItem, item.name, rules);
+            return null;
+        }
+        const xenos = xenosRepairModifiers(rules, insight.degrees);
+        return { modifiers: { 'xenos-repair': xenos.alienNature, 'xenos-lore-insight': xenos.loreInsight }, consumesInsight: true };
+    }
+
+    /**
+     * The test target for a skill a line's modification rule names, narrowed to
+     * the named specialisation when the actor has it. Without the specialisation
+     * the parent skill is rolled untrained, as `rollSkill` does.
+     */
+    _modificationSkillTest(ref: ModificationSkill): { key: string; label: string; target: number; skillRank?: number } | null {
+        const key = this._resolveSkillName(ref.skill);
+        const skill = this.skills[key] as WH40KSkill | undefined;
+        if (skill === undefined) return null;
+        const skillLabel = skill.label ?? key;
+        if (ref.specialisation === null) return { key, label: skillLabel, target: skill.current };
+        const entry = this._findSpecialistSkill(skill, ref.specialisation);
+        if (entry === undefined) return { key, label: `${skillLabel}: ${ref.specialisation}`, target: skill.current, skillRank: 0 };
+        return {
+            key,
+            label: `${skillLabel}: ${entry.name ?? entry.label ?? ref.specialisation}`,
+            target: entry.current ?? skill.current,
+            skillRank: entry.rank ?? (entry.trained === true ? 1 : 0),
+        };
+    }
+
+    /**
+     * Fit a weapon modification personally (#136): DH2 core p. 162's Trade
+     * (Armourer) test, or the plain test DH1 / RT / OW print. The parts are a
+     * weapon modification the Acolyte carries. On DH2 the test takes the
+     * modification's Availability, and a xenos weapon first needs the Forbidden
+     * Lore step (Enemies Without p. 42).
+     */
+    async rollFitWeaponModification(weaponId: string, partsId: string): Promise<void> {
+        const rules = weaponModificationRulesFor(this.system.gameSystem);
+        const weaponItem = this.items.get(weaponId);
+        const partsItem = this.items.get(partsId);
+        if (rules === null || weaponItem?.type !== 'weapon' || partsItem?.type !== 'weaponModification') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; a `weapon` Item's system is WeaponData, read through the fitting surface
+        const weapon = weaponItem as unknown as FittableWeapon;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; a `weaponModification` Item's system is WeaponModificationData, read through the parts surface
+        const parts = partsItem as unknown as ModificationParts & ModificationSource;
+        const sourceUuid = partsSourceUuid(partsItem);
+        const blocker = modificationBlocker(weapon.system, parts, sourceUuid);
+        if (blocker !== null) {
+            ui.notifications.warn(
+                game.i18n.format(MODIFICATION_BLOCKER_KEYS[blocker], {
+                    name: parts.name,
+                    classLabel: weapon.system.classLabel,
+                    typeLabel: weapon.system.typeLabel,
+                }),
+            );
+            return;
+        }
+        const test = this._modificationSkillTest(rules.fitSkill);
+        if (test === null) return;
+        const xenos = await this._xenosAttemptModifiers(rules.xenos, weaponItem, weapon);
+        if (xenos === null) return;
+        const availability = modificationAvailabilityModifier(rules, acquisitionLadderFor(this.system.gameSystem), partsItem.system.availability);
+        const action = new FitModificationActionData(weapon, parts, modificationEntry(parts, sourceUuid), rules, xenos.consumesInsight);
+        this._buildSimpleSkillRoll({
+            key: test.key,
+            type: 'skill',
+            label: game.i18n.format('WH40K.WeaponModification.FitRollLabel', { skill: test.label, modification: parts.name, weapon: weapon.name }),
+            target: test.target,
+            situationalKey: test.key,
+            instance: action,
+            extraModifiers: { ...(availability !== null ? { 'modification-availability': availability } : {}), ...xenos.modifiers },
+            ...(test.skillRank !== undefined ? { skillRank: test.skillRank } : {}),
+        });
+        openRollPrompt(action);
+    }
+
+    /**
+     * Remove a fitted weapon modification and try to keep its parts (#136, DH2
+     * core p. 162 "Removing and Re-using Modifications"): Tech-Use at the
+     * modification's Availability. Only a line that prints the removal test
+     * offers it; elsewhere the GM detaches modifications freely.
+     */
+    async rollRemoveWeaponModification(weaponId: string, modificationUuid: string): Promise<void> {
+        const rules = weaponModificationRulesFor(this.system.gameSystem);
+        const weaponItem = this.items.get(weaponId);
+        if (rules?.removalSkill == null || weaponItem?.type !== 'weapon') return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Item#system is the per-type DataModel union; a `weapon` Item's system is WeaponData, read through the fitting surface
+        const weapon = weaponItem as unknown as ModifiableWeapon & StatefulItem;
+        const entry = weapon.system.modifications.find((mod) => mod.uuid === modificationUuid);
+        if (entry === undefined) return;
+        const test = this._modificationSkillTest(rules.removalSkill);
+        if (test === null) return;
+        const xenos = await this._xenosAttemptModifiers(rules.xenos, weaponItem, weapon);
+        if (xenos === null) return;
+        // The parts come back from the document the fitted entry points at.
+        const source = await fromUuid(entry.uuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid (Foundry) returns the broad document union; the fitted entry's source is a weaponModification Item
+        const sourceItem = source instanceof Item ? (source as unknown as WH40KItem) : null;
+        const availability = modificationAvailabilityModifier(rules, acquisitionLadderFor(this.system.gameSystem), sourceItem?.system.availability);
+        const recoverParts = async (): Promise<boolean> => {
+            if (sourceItem === null) return false;
+            await this.createEmbeddedDocuments('Item', [sourceItem.toObject()]);
+            return true;
+        };
+        const action = new RemoveModificationActionData(weapon, entry, recoverParts, xenos.consumesInsight);
+        this._buildSimpleSkillRoll({
+            key: test.key,
+            type: 'skill',
+            label: game.i18n.format('WH40K.WeaponModification.RemoveRollLabel', { skill: test.label, modification: entry.name, weapon: weapon.name }),
+            target: test.target,
+            situationalKey: test.key,
+            instance: action,
+            extraModifiers: { ...(availability !== null ? { 'modification-availability': availability } : {}), ...xenos.modifiers },
+            ...(test.skillRank !== undefined ? { skillRank: test.skillRank } : {}),
+        });
+        openRollPrompt(action);
+    }
+
+    /**
+     * The Forbidden Lore step before repairing or modifying a xenos item (DH2
+     * Enemies Without p. 42, #136). If the race that built the item is unknown it
+     * cannot be repaired or modified at all, which is a GM ruling made here.
+     * Otherwise the Acolyte picks the Forbidden Lore specialisation that covers
+     * that race and rolls it at Hard (−20); success records the insight their
+     * next repair or modification attempt reads.
      */
     async _rollXenosRepairLore(item: StatefulItem, itemName: string, rules: XenosRepairRules): Promise<void> {
         const makerKnown = await foundry.applications.api.DialogV2.confirm({

@@ -9,8 +9,10 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
+import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -44,6 +46,8 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly itemRepair = null;
     /**
      * RT core with the 1.4 errata (pp. 239/242): "The total number of hits scored
+    /** RT core p. 133 Weapon Upgrades: a successful Trade (Armourer) test (#136). */
+    readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
      * by a weapon cannot exceed the weapon's … Rate of Fire"; Suppressing Fire:
      * "The number of hits scored may not exceed …"; Storm: the errata FAQ answers
      * "Double the Rate of Fire" — #607.

@@ -325,8 +325,28 @@
                   title="{{#if mod.active}}{{localize 'WH40K.ActiveModifiersPanel.Deactivate'}}{{else}}{{localize 'WH40K.ActiveModifiersPanel.Activate'}}{{/if}}">
             <i class="fa-solid {{#if mod.active}}fa-toggle-on{{else}}fa-toggle-off{{/if}}"></i>
           </button>
+          {{#if @root.personalModification.canRemove}}
+          <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-5 tw-h-5 tw-bg-transparent tw-border-none tw-text-[color:var(--wh40k-text-muted)] tw-cursor-pointer tw-p-0 hover:tw-text-gold"
+                  data-action="unfitModification"
+                  data-mod-uuid="{{mod.uuid}}"
+                  title="{{localize 'WH40K.WeaponModification.RemoveAction'}}"
+                  aria-label="{{localize 'WH40K.WeaponModification.RemoveAction'}}">
+            <i class="fa-solid fa-screwdriver" aria-hidden="true"></i>
+          </button>
+          {{/if}}
         </div>
         {{/each}}
+      </div>
+      {{/if}}
+
+      {{!-- PERSONAL FITTING (#136): roll the line's test to fit carried parts --}}
+      {{#if personalModification}}
+      <div class="tw-flex tw-justify-end tw-mb-[10px]">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-[6px] tw-py-1 tw-px-[10px] tw-bg-transparent tw-border tw-border-[rgba(212,140,80,0.35)] tw-rounded-[16px] tw-text-[0.75rem] tw-font-medium tw-text-[rgba(246,208,163,0.95)] tw-cursor-pointer hover:tw-border-[var(--wh40k-gold)] hover:tw-text-gold"
+                data-action="fitModification">
+          <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+          <span>{{localize "WH40K.WeaponModification.FitAction"}}</span>
+        </button>
       </div>
       {{/if}}
 

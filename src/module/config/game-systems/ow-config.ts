@@ -8,7 +8,9 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
+import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 /**
@@ -108,6 +110,12 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly itemRepair = null;
     /**
      * OW core: "The number of extra hits scored in this manner cannot exceed the
+    /**
+     * OW core Weapon Upgrades: an acquired upgrade is integrated by a successful
+     * Trade (Armourer) test (#136). The separate Weapon Customisations (p. 190,
+     * Routine (+20)) have no pack items yet, so they are not distinguished here.
+     */
+    readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
      * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
      * hits scored may not exceed …"; Storm: "up to the weapon's firing rate, as
      * normal" — #607.

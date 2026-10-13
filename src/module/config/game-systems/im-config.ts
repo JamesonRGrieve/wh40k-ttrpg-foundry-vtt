@@ -16,6 +16,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /** IM's attachment rule (an hour and a Tech (Engineering) test) is not modelled (#136). */
+    readonly weaponModification = null;
     /** IM prints no rate-of-fire bursts. */
     readonly burstRules = null;
     /** IM's evasion is not modelled beyond the single negated hit. */

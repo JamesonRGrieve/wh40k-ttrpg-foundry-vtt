@@ -10,6 +10,8 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
+import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
 
@@ -50,7 +52,25 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
 export const DH2_ITEM_REPAIR_RULES: ItemRepairRules = {
     craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
     destroyedAtDegreesOfFailure: 4,
-    xenos: { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 },
+const DH2_XENOS_EQUIPMENT_RULES: XenosRepairRules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
+
+    xenos: DH2_XENOS_EQUIPMENT_RULES,
+};
+
+/**
+ * Personal weapon modification — core p. 162 "Applying Personal
+ * Modifications": Trade (Armourer) at the modification's Availability (Table
+ * 5-1); a failure loses the parts and 2+ degrees of failure damage the weapon.
+ * "Removing and Re-using Modifications": Tech-Use at the same modifier.
+ * Xenos weapons (Enemies Without p. 42) take the same lore step as repair.
+ */
+export const DH2_WEAPON_MODIFICATION_RULES: WeaponModificationRules = {
+    fitSkill: { skill: 'trade', specialisation: 'Armourer' },
+    availabilityModifier: true,
+    partsLostOnFailure: true,
+    damagesWeaponAtDegreesOfFailure: 2,
+    removalSkill: { skill: 'techUse', specialisation: null },
+    xenos: DH2_XENOS_EQUIPMENT_RULES,
 };
 
 /**
@@ -83,6 +103,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     /**
      * DH2 core ch. VII: "The number of total hits scored in this manner cannot
      * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
+    readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
      * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };

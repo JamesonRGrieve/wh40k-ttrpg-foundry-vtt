@@ -72,6 +72,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
+    /** BC core p. 169: upgrades are "applied by characters with the Tech Skill", with no test printed (#136). */
+    readonly weaponModification = null;
     /**
      * BC core: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
