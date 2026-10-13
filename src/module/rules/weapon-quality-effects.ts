@@ -21,9 +21,11 @@
  * - Coordinates with range system for Melta
  */
 
+// The weapon, actor and roll-data shapes below are the structural surface these
+// resolvers read, declared here rather than imported from `rolls/roll-data.ts` /
+// `types/global.d.ts`: those type edges tied this leaf rules module into the
+// roll ↔ action-manager import cycle that everything consuming it then joined.
 import type { WeaponQualityDieOpKind, WeaponQualityDieOpPhase } from '../data/item/weapon-quality-mechanics.ts';
-import type { WeaponRollData } from '../rolls/roll-data.ts';
-import type { WH40KBaseActorDocument, WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
 import type { I18nKey } from '../types/i18n-keys';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 import { nonNegInt } from './_num.ts';
@@ -33,15 +35,30 @@ type AttackSpecialLike = {
     name?: string;
 };
 
+/** An embedded item as {@link weaponHasQuality} reads it: an attack special, matched by name. */
+type QualityEmbeddedItem = {
+    name: string;
+    isAttackSpecial: boolean;
+};
+
 type QualityItem = {
     name?: string;
-    items?: Iterable<WH40KItemDocument>;
+    items?: Iterable<QualityEmbeddedItem>;
     isAttackSpecial?: boolean;
-    system?: WH40KItemSystemData & {
+    system?: {
         enabled?: boolean;
         special?: Set<string>;
         effectiveSpecial?: Set<string>;
+        isMeleeWeapon?: boolean;
     };
+};
+
+/** A weapon roll as the attack-modifier resolvers read it (`rolls/roll-data.ts` WeaponRollData). */
+type QualityRollData = {
+    weapon: QualityItem;
+    attackSpecials: AttackSpecialLike[];
+    modifiers: Record<string, number>;
+    specialModifiers: Record<string, number>;
 };
 
 /** Righteous Fury triggers on a natural 10 unless a quality widens it. */
@@ -50,14 +67,14 @@ const STANDARD_RF_THRESHOLD = 10;
 /** Qualities whose payload (or rating) lowers the Righteous Fury threshold. */
 const RF_THRESHOLD_QUALITIES = ['gauss', 'vengeful'] as const;
 
-type QualityActor = WH40KBaseActorDocument & {
-    system: WH40KBaseActorDocument['system'] & {
+type QualityActor = {
+    system: {
         species?: string;
         traits?: Array<{ name?: string }>;
         psyker?: {
             psyRating?: number;
         };
-        characteristics?: {
+        characteristics: {
             strength?: {
                 bonus: number;
             };
@@ -170,7 +187,7 @@ function weaponQualityLevel(weapon: QualityItem, qualityName: string): number | 
  * @param {string} qualityName - Quality name to check
  * @returns {boolean} True if the quality is present in attackSpecials
  */
-export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string): boolean {
+export function rollDataHasQuality(rollData: Pick<QualityRollData, 'attackSpecials'>, qualityName: string): boolean {
     return rollData.attackSpecials.some((s: AttackSpecialLike) => s.name?.toLowerCase() === qualityName.toLowerCase());
 }
 
@@ -185,10 +202,9 @@ export function rollDataHasQuality(rollData: WeaponRollData, qualityName: string
  * @param {WeaponRollData} rollData - The weapon roll data
  * @returns {Object} Object with modifier entries { qualityName: value }
  */
-function calculateQualityAttackModifiers(rollData: WeaponRollData): QualityModifierMap {
+function calculateQualityAttackModifiers(rollData: QualityRollData): QualityModifierMap {
     const modifiers: QualityModifierMap = {};
-    // eslint-disable-next-line no-restricted-syntax -- boundary: WeaponRollData.weapon is the real WH40KItem document; QualityItem is a structural subset narrowing required for quality checks
-    const weapon = rollData.weapon as unknown as QualityItem;
+    const weapon = rollData.weapon;
 
     // Accurate: +10 BS when using Aim action
     if (weaponHasQuality(weapon, 'accurate')) {
@@ -516,7 +532,7 @@ export function checkRighteousFury(weapon: QualityItem | null | undefined, dieRe
  *
  * @param {WeaponRollData} rollData - The weapon roll data
  */
-export function applyQualityModifiersToRollData(rollData: WeaponRollData): void {
+export function applyQualityModifiersToRollData(rollData: QualityRollData): void {
     // Get quality modifiers
     const qualityModifiers = calculateQualityAttackModifiers(rollData);
 
