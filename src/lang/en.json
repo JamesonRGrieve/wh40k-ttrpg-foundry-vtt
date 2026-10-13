@@ -5704,7 +5704,19 @@
                 "Absorbed": "Absorbed (1)",
                 "AbsorbedTooltip": "Defences fully absorbed the hit; RAW applies 1 point of damage.",
                 "DamageDieTooltip": "DH2 core: replace one damage die with DoS ({dos}).",
-                "AppliedAutomatically": "Damage applied automatically"
+                "AppliedAutomatically": "Damage applied automatically",
+                "Profile": "Damage profile",
+                "ProfileBandUpTo": "Range band {index} of {count}: up to {max} m (target at {distance} m)",
+                "ProfileBandBeyond": "Range band {index} of {count}: beyond {min} m (target at {distance} m)",
+                "ProfileBandAny": "Range band {index} of {count} (target at {distance} m)",
+                "ProfileOutOfBand": "No range band reaches {distance} m: no damage",
+                "ProfileTable": "{table}: rolled {total}",
+                "ProfileTableMissing": "Damage table not found: no damage",
+                "ProfileMount": "Mounted weapon: {weapon}",
+                "ProfileWielderMelee": "Wielder's melee weapon: {weapon}",
+                "ProfileNoMount": "No weapon is mounted: no damage",
+                "ProfileNoWielderMelee": "No melee weapon to borrow: no damage",
+                "ProfilePenetration": "Penetration"
             },
             "AssignDamage": {
                 "Hit": "{location} Hit",
@@ -6935,6 +6947,12 @@
             "NoDamage": "No Damage",
             "NoDamageHint": "This weapon deals no damage; only its qualities apply.",
             "NoDamageNotice": "{name} deals no damage; only its qualities apply.",
+            "ContextualDamageNotice": "{name}'s damage depends on the attack (its range band, a table roll or the weapon it borrows from). Roll it from an attack.",
+            "DamageProfile": {
+                "Table": "Table",
+                "Mount": "As mounted weapon",
+                "WielderMelee": "As wielder's melee weapon"
+            },
             "ShowDetails": "Show Details",
             "HideDetails": "Hide Details",
             "FiringMode": "Firing Mode",

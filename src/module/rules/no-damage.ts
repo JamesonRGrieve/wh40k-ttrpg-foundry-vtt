@@ -5,9 +5,10 @@
  * structured `damage.none: true` flag on the `DamageTemplate` profile (with an
  * empty `formula`), which every line's per-line variant branch can carry.
  *
- * An empty `formula` WITHOUT `none` still means "no damage authored" and keeps the
- * weapon's legacy default dice, so `none` is the only thing that switches the damage
- * roll off. Such a weapon still resolves its attack and applies its qualities
+ * An empty `formula` WITHOUT `none` (and without a #608 contextual profile) still
+ * means "no damage authored" and keeps the weapon's legacy default dice, so `none`
+ * is the only thing that switches the damage roll off. Such a weapon still resolves
+ * its attack and applies its qualities
  * (Concussive, Snare, Smoke, Blind, Haywire, …); it only skips the damage roll.
  *
  * Content-agnostic: no weapon is named here. The flag lives in the compendium data.
@@ -45,6 +46,44 @@ function normalizeDamageValue(damage: unknown): void {
     if ('formula' in damage && typeof damage.formula === 'string' && isNoDamageNotation(damage.formula)) {
         Object.assign(damage, { formula: '', none: true });
     }
+}
+
+/**
+ * What a weapon's own damage profile is made of: dice, `none`, range bands, a table
+ * or a borrowed source (#601, #608).
+ *
+ * - `formula`: the authored dice.
+ * - `none`: the book's dash; no damage roll.
+ * - `bands` / `table` / `mount` / `wielder-melee`: resolved at attack time.
+ * - `legacy-default`: no profile authored; the weapon rolls the old default dice.
+ */
+export type DamageProfileKind = 'formula' | 'none' | 'bands' | 'table' | 'mount' | 'wielder-melee' | 'legacy-default';
+
+/** The profile fields that decide its {@link DamageProfileKind}. */
+interface DamageProfileShape {
+    formula: string;
+    none: boolean;
+    bands: readonly object[];
+    table: string;
+    from: '' | 'mount' | 'wielder-melee';
+}
+
+/** The dice an unauthored profile rolls. */
+export const LEGACY_DEFAULT_DAMAGE_FORMULA = '1d10';
+
+/** Classify a weapon's own damage profile. */
+export function classifyDamageProfile(damage: DamageProfileShape): DamageProfileKind {
+    if (damage.formula !== '') return 'formula';
+    if (damage.none) return 'none';
+    if (damage.bands.length > 0) return 'bands';
+    if (damage.table !== '') return 'table';
+    if (damage.from !== '') return damage.from;
+    return 'legacy-default';
+}
+
+/** Is this profile resolved at attack time (bands, table, borrowed)? */
+export function isContextualDamage(kind: DamageProfileKind): boolean {
+    return kind === 'bands' || kind === 'table' || kind === 'mount' || kind === 'wielder-melee';
 }
 
 /** The inputs that decide whether a weapon's attack rolls damage. */

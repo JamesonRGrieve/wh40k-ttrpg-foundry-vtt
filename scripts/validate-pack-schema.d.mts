@@ -9,10 +9,16 @@ export declare const WEAPON_CLASS: readonly string[];
 export declare const WEAPON_TYPE: readonly string[];
 export declare const ATTACK_KIND: readonly string[];
 export declare const CREW_EXPOSURE: readonly string[];
+export declare const DAMAGE_TYPE: readonly string[];
+export declare const DAMAGE_SOURCE: readonly string[];
+export declare const ROLL_TABLE_UUID: RegExp;
 
 /** A schema accepting a scalar OR a per-line / per-book variant container of it. */
 export declare function variant(inner: ZodTypeAny): ZodTypeAny;
 
+export declare const damageBandShape: ZodTypeAny;
+export declare const damageProfileShape: ZodTypeAny;
+export declare const tableResultDamageShape: ZodTypeAny;
 export declare const weaponSystemSchema: ZodTypeAny;
 export declare const vehicleTraitSystemSchema: ZodTypeAny;
 export declare const SYSTEM_SCHEMAS: Record<string, ZodTypeAny>;

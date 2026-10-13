@@ -46,6 +46,7 @@
  */
 
 import type { GameSystemId } from '../config/game-systems/types.ts';
+import { stripHtmlTags } from '../utils/format.ts';
 import { degreesOfFailure as computeDegreesOfFailure, degreesOfSuccess as computeDegreesOfSuccess, isD100Success } from './_dice.ts';
 
 // ---------------------------------------------------------------------------
@@ -372,11 +373,6 @@ export interface PerilResult {
     readonly effect: string;
 }
 
-/** Strip every HTML tag from a fragment, leaving its text content. */
-function stripTags(html: string): string {
-    return html.replace(/<[^>]*>/g, '');
-}
-
 /** Matches the first bold run — the authored form leads with `<b>`/`<strong>`. */
 const PERIL_NAME_RE = /<(?:strong|b)>([\s\S]*?)<\/(?:strong|b)>/i;
 
@@ -392,11 +388,11 @@ export function parsePerilText(html: string): PerilResult {
     const match = PERIL_NAME_RE.exec(html);
     const captured = match?.[1];
     if (match === null || captured === undefined) {
-        return { name: stripTags(html).trim(), effect: '' };
+        return { name: stripHtmlTags(html).trim(), effect: '' };
     }
-    const name = stripTags(captured).trim();
+    const name = stripHtmlTags(captured).trim();
     const remainder = html.slice(match.index + match[0].length);
-    const effect = stripTags(remainder)
+    const effect = stripHtmlTags(remainder)
         .replace(/^[\s:—–-]+/, '')
         .trim();
     return { name, effect };

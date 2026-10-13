@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { applyChosenQualityEffects, bridgeWeaponQualities, selectableQualityIds, toggleQualityChoice, updateAttackSpecials } from '../rules/attack-specials.ts';
+import type { DamageProfileContext, DamageProfileProvenance, ResolvedDamageProfile } from '../rules/damage-profile.ts';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
 import { applyModeQualities, type WeaponFiringMode } from '../rules/weapon-modes.ts';
 import { collectWeaponQualityDieOps } from '../rules/weapon-quality-effects.ts';
@@ -304,7 +305,7 @@ function rollSpecials(weaponItem: HitWeapon, embedded: readonly string[] = [], c
 function attack(
     sourceActor: HitActor,
     weaponItem: HitWeapon,
-    opts: { dos?: number; specials?: string[]; chosen?: string[]; action?: string } = {},
+    opts: { dos?: number; specials?: string[]; chosen?: string[]; action?: string; distance?: number } = {},
 ): AttackDataLike {
     const specials = rollSpecials(weaponItem, opts.specials, opts.chosen);
     return {
@@ -317,6 +318,7 @@ function attack(
             calledShotLocation: 'Body',
             action: opts.action ?? 'Standard Attack',
             rangeName: '',
+            distance: opts.distance,
             rangeBracket: '',
             modifiers: {},
             attackSpecials: specials,
@@ -324,6 +326,9 @@ function attack(
             eyeOfVengeance: false,
             hasAttackSpecial: (name: string) => specials.some((s) => s.name === name),
             getAttackSpecial: (name: string) => ({ level: specials.find((s) => s.name === name)?.level ?? 0 }),
+            addAttackQualities: (qualityIds: readonly string[]) => {
+                bridgeWeaponQualities(specials, qualityIds, new Set());
+            },
         },
     };
 }
@@ -433,6 +438,185 @@ describe.each(SYSTEMS)('damage / penetration propagation onto a hit (%s)', (game
         };
         const hit = await Hit.createHit(attack(actor(gameSystem, {}, [melta]), weapon({ penetration: 6 })), 1);
         expect(hit.totalPenetration).toBe(12);
+    });
+});
+
+/* -------------------------------------------------------------------------- */
+/*  Damage resolved at attack time (#608)                                      */
+/* -------------------------------------------------------------------------- */
+
+/** A resolved profile with neutral defaults. */
+function resolvedProfile(provenance: DamageProfileProvenance, overrides: Partial<Omit<ResolvedDamageProfile, 'provenance'>> = {}): ResolvedDamageProfile {
+    return { formula: '1d10', type: 'energy', penetration: 0, qualities: [], addsStrengthBonus: false, provenance, ...overrides };
+}
+
+/** A weapon whose damage the attack resolves (#608), the way `WeaponData.resolveContextualDamage` answers. */
+function contextualWeapon(resolve: (context: DamageProfileContext) => ResolvedDamageProfile | null, opts: { tableUuid?: string } = {}): HitWeapon {
+    const base = weapon({ damage: '' });
+    return {
+        ...base,
+        system: {
+            ...base.system,
+            effectiveDamageFormula: '',
+            damage: { type: 'impact' },
+            resolveContextualDamage: resolve,
+            damageTableUuid: opts.tableUuid ?? '',
+        },
+    };
+}
+
+const BAND_TWO = { kind: 'band', index: 2, count: 3, minRange: 15, maxRange: 50, distance: 30 } as const;
+
+describe.each(SYSTEMS)('a contextual damage profile on the hit (%s)', (gameSystem) => {
+    beforeEach(() => {
+        vi.stubGlobal('game', {
+            i18n: { localize: (key: string) => key, format: (key: string, data: Record<string, string>) => `${key} ${JSON.stringify(data)}` },
+            wh40k: { log: () => undefined },
+        });
+    });
+
+    it('rolls the band the measured distance picked, with its penetration, type, qualities and provenance', async () => {
+        const seen: number[] = [];
+        const beamer = contextualWeapon((context) => {
+            seen.push(context.distance);
+            return resolvedProfile(BAND_TWO, { formula: '3d10+9', penetration: 8, qualities: ['felling-1'] });
+        });
+        dieQueue.push(2, 3, 4);
+        const hit = await Hit.createHit(attack(actor(gameSystem), beamer, { distance: 30 }), 1);
+
+        expect(seen).toEqual([30]);
+        expect(hit.damage).toBe(18);
+        expect(hit.totalDamage).toBe(18);
+        expect(hit.totalPenetration).toBe(8);
+        expect(hit.damageType).toBe('energy');
+        expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileBandUpTo');
+        expect(JSON.parse(hit.profileTooltip)).toEqual({ title: hit.profileLabel, sources: [{ name: 'WH40K.Chat.Damage.ProfilePenetration', value: 8 }] });
+        expect(hit.effects.map((e) => e.name)).toContain('Felling');
+    });
+
+    it('a weapon with its own fixed profile records no provenance', async () => {
+        dieQueue.push(6);
+        const hit = await Hit.createHit(attack(actor(gameSystem), weapon({ damage: '1d10' })), 1);
+        expect(hit.profile).toBeNull();
+        expect(hit.profileLabel).toBe('');
+        expect(hit.totalDamage).toBe(6);
+    });
+
+    it('a profile with no dice deals nothing: no roll, no talent bonus, no penetration', async () => {
+        const sources: ModifierSourcesShape = { combat: { damage: [passive('Mighty Grip', 2)], penetration: [passive('Armour-Piercing Drill', 1)] } };
+        const beamer = contextualWeapon(() => resolvedProfile({ kind: 'out-of-band', distance: 500 }, { formula: '' }));
+        const hit = await Hit.createHit(attack(actor(gameSystem, sources), beamer, { distance: 500 }), 1);
+
+        expect(hit.damageRoll).toBeUndefined();
+        expect(hit.totalDamage).toBe(0);
+        expect(hit.modifiers).toEqual({});
+        expect(hit.totalPenetration).toBe(0);
+        expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileOutOfBand');
+    });
+
+    it('a borrowed melee profile adds the wielder’s Strength Bonus to a ranged attack', async () => {
+        const grapple = contextualWeapon(() =>
+            resolvedProfile({ kind: 'wielder-melee', weaponName: 'Bloodfist' }, { formula: '2d10', type: 'impact', penetration: 6, addsStrengthBonus: true }),
+        );
+        dieQueue.push(3, 4);
+        const hit = await Hit.createHit(attack(actor(gameSystem), grapple), 1);
+
+        expect(hit.damage).toBe(7);
+        expect(hit.modifiers['strength bonus']).toBe(4);
+        expect(hit.totalDamage).toBe(11);
+        expect(hit.totalPenetration).toBe(6);
+        expect(hit.profileLabel).toContain('Bloodfist');
+    });
+
+    it('a missing mount deals nothing and says so', async () => {
+        const sentry = contextualWeapon(() => resolvedProfile({ kind: 'no-borrowed', from: 'mount' }, { formula: '' }));
+        const hit = await Hit.createHit(attack(actor(gameSystem), sentry), 1);
+        expect(hit.totalDamage).toBe(0);
+        expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileNoMount');
+    });
+
+    describe('table damage', () => {
+        const TABLE_UUID = 'Compendium.wh40k-rpg.dh1-radical-rolltables.RollTable.15df0cf72c366222';
+        const discharge = {
+            name: 'Discharge',
+            formula: '1d100',
+            results: [
+                { range: [1, 20], text: '<p>The engine fails to operate.</p>' },
+                { range: [21, 100], text: '<p>Warp-lightning.</p>', flags: { 'wh40k-rpg': { damageProfile: { formula: '3d10', bonus: 10, type: 'energy' } } } },
+            ],
+        };
+
+        /** The weapon answers the draw the way `WeaponData` does: the row's profile, or no dice. */
+        const psyEngine = contextualWeapon(
+            (context) => {
+                const draw = context.tableDraw;
+                if (draw === null) return null;
+                const provenance = { kind: 'table', tableName: draw.tableName, total: draw.total, text: draw.row.text } as const;
+                return resolvedProfile(provenance, { formula: draw.row.profile === null ? '' : `${draw.row.profile.formula}+${draw.row.profile.bonus}` });
+            },
+            { tableUuid: TABLE_UUID },
+        );
+
+        it('draws the table, rolls the result’s damage and shows its text as an effect', async () => {
+            const loaded: string[] = [];
+            vi.stubGlobal('fromUuid', async (uuid: string) => {
+                loaded.push(uuid);
+                return Promise.resolve(discharge);
+            });
+            dieQueue.push(55, 1, 2, 3);
+            const hit = await Hit.createHit(attack(actor(gameSystem), psyEngine), 1);
+
+            expect(loaded).toEqual([TABLE_UUID]);
+            expect(hit.totalDamage).toBe(16);
+            expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileTable');
+            expect(hit.effects).toContainEqual({ name: 'Discharge', effect: 'Warp-lightning.' });
+        });
+
+        it('a result with no damage profile deals nothing but still shows its effect', async () => {
+            vi.stubGlobal('fromUuid', async () => Promise.resolve(discharge));
+            dieQueue.push(12);
+            const hit = await Hit.createHit(attack(actor(gameSystem), psyEngine), 1);
+            expect(hit.totalDamage).toBe(0);
+            expect(hit.effects).toContainEqual({ name: 'Discharge', effect: 'The engine fails to operate.' });
+        });
+
+        it('a table that cannot be loaded deals nothing and says so', async () => {
+            vi.stubGlobal('fromUuid', async () => Promise.resolve(null));
+            const hit = await Hit.createHit(attack(actor(gameSystem), psyEngine), 1);
+            expect(hit.totalDamage).toBe(0);
+            expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileTableMissing');
+        });
+    });
+});
+
+describe('WeaponRollData.bridgeContextualDamageQualities (#608)', () => {
+    it('adds the resolved band’s qualities to the attack so its area template sees them', () => {
+        const contexts: DamageProfileContext[] = [];
+        const beamer = contextualWeapon((context) => {
+            contexts.push(context);
+            return resolvedProfile(BAND_TWO, { qualities: ['felling-2', 'blast-2'] });
+        });
+        const rd = weaponRoll(actor('dh1'), beamer);
+        rd.distance = 60;
+        rd.bridgeContextualDamageQualities();
+
+        expect(contexts).toEqual([{ distance: 60, tableDraw: null }]);
+        expect(rd.attackSpecials).toEqual(
+            expect.arrayContaining([expect.objectContaining({ name: 'Blast', level: 2 }), expect.objectContaining({ name: 'Felling', level: 2 })]),
+        );
+    });
+
+    it('adds nothing for a fixed-profile weapon or a table weapon before its draw', () => {
+        const fixed = weaponRoll(actor('dh1'), weapon());
+        fixed.bridgeContextualDamageQualities();
+        expect(fixed.attackSpecials).toEqual([]);
+
+        const table = weaponRoll(
+            actor('dh1'),
+            contextualWeapon(() => null, { tableUuid: 'x' }),
+        );
+        table.bridgeContextualDamageQualities();
+        expect(table.attackSpecials).toEqual([]);
     });
 });
 

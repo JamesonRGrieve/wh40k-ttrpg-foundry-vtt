@@ -1,6 +1,7 @@
 import { t } from '../i18n/t.ts';
 import { calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
+import { type DamageProfileContext, describeDamageProvenance, drawDamageTable, type ResolvedDamageProfile } from '../rules/damage-profile.ts';
 import {
     buildCharBonus,
     collectDynamicComponents,
@@ -29,6 +30,7 @@ import {
     resolveDieOpDamageAdjust,
     resolveMaximalEffect,
 } from '../rules/weapon-quality-effects.ts';
+import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
 import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
 
 /**
@@ -47,6 +49,10 @@ interface ActionItemSystem {
     penetration?: unknown;
     /** The weapon's quality identifiers (`tearing`, `proven-3`, …) — base + craftsmanship + ammo + mode. Absent on powers. */
     effectiveSpecial?: Iterable<string>;
+    /** Damage resolved at attack time — a range band, a table draw, a borrowed weapon (#608). Absent on powers. */
+    resolveContextualDamage?: (context: DamageProfileContext) => ResolvedDamageProfile | null;
+    /** The RollTable a table-damage weapon draws from, '' otherwise (#608). */
+    damageTableUuid?: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: catch-all for other system fields accessed via string keys at framework boundaries
     [key: string]: unknown;
 }
@@ -92,6 +98,8 @@ export interface AttackDataLike {
         coverAP?: number;
         action: string;
         rangeName: string;
+        /** Measured distance to the target in metres; picks a range-band weapon's band (#608). */
+        distance?: number | undefined;
         /**
          * The computed range bracket (`pointBlank` / `short` / … / `melee`), set by
          * `rules/range.ts`. Slugged into the situation's `rangeBand` so `rangeBand` /
@@ -107,6 +115,8 @@ export interface AttackDataLike {
         eyeOfVengeance: boolean;
         hasAttackSpecial: (name: string) => boolean;
         getAttackSpecial: (name: string) => { level: number };
+        /** Bridge quality ids onto {@link attackSpecials} (a resolved damage profile's, #608). */
+        addAttackQualities?: (qualityIds: readonly string[]) => void;
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; kept unknown to avoid circular imports
     damageData?: { targetActor?: unknown };
@@ -310,6 +320,16 @@ export class Hit {
     modifiers: Record<string, number> = {};
     totalDamage = 0;
 
+    /**
+     * The damage profile this hit resolved at attack time (#608): the range band,
+     * the table result or the borrowed weapon. Null for a weapon's own fixed profile.
+     */
+    profile: ResolvedDamageProfile | null = null;
+    /** The card's statement of which band / table result / borrowed weapon applied; '' for a fixed profile. */
+    profileLabel = '';
+    /** Rich-tooltip data for the card's profile row. */
+    profileTooltip = '';
+
     dos = 0;
 
     penetration = 0;
@@ -367,17 +387,23 @@ export class Hit {
      */
     static async createHit(attackData: AttackDataLike, hitNumber: number, forcedLocation: string | null = null): Promise<Hit> {
         const hit = new Hit();
-        await hit._calculateDamage(attackData);
-        // Penetration is resolved BEFORE the modifier passes: a penetration hook
-        // that scales off the weapon's penetration (scale source `penetration`) or
-        // multiplies it (`mode: multiply`) reads `this.penetration`, which was
-        // still 0 when the dynamic pass ran ahead of `_calculatePenetration`.
-        await hit._calculatePenetration(attackData);
-        await hit.applyDynamicModifiers(attackData);
-        hit.applyPassiveCombatModifiers(attackData);
-        hit._totalDamage();
-        hit._totalPenetration();
-        hit._calculateSpecials(attackData);
+        await hit.resolveProfile(attackData);
+        // A resolved profile with no dice (beyond every band, a table result that only
+        // does something else, nothing to borrow from) deals nothing at all: no roll,
+        // and no bonus from the attacker's talents or the weapon's qualities (#608).
+        if (hit.profile?.formula !== '') {
+            await hit._calculateDamage(attackData);
+            // Penetration is resolved BEFORE the modifier passes: a penetration hook
+            // that scales off the weapon's penetration (scale source `penetration`) or
+            // multiplies it (`mode: multiply`) reads `this.penetration`, which was
+            // still 0 when the dynamic pass ran ahead of `_calculatePenetration`.
+            await hit._calculatePenetration(attackData);
+            await hit.applyDynamicModifiers(attackData);
+            hit.applyPassiveCombatModifiers(attackData);
+            hit._totalDamage();
+            hit._totalPenetration();
+            hit._calculateSpecials(attackData);
+        }
 
         hit.coverAP = attackData.rollData.coverAP ?? 0;
 
@@ -408,6 +434,47 @@ export class Hit {
 
     _totalDamage(): void {
         this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
+    }
+
+    /**
+     * Resolve damage that depends on the attack (#608) — the range band the measured
+     * distance falls in, a fresh draw on the weapon's damage table, or the profile of
+     * the weapon it borrows from — and record its provenance for the card. The
+     * profile's qualities join the attack's (idempotently: the attack stage already
+     * bridged a band's or a mount's), and a table result's text becomes an effect.
+     * A no-op for a weapon whose damage is its own fixed profile.
+     */
+    async resolveProfile(attackData: AttackDataLike): Promise<void> {
+        const rollData = attackData.rollData;
+        const system = rollData.weapon?.system;
+        if (system?.resolveContextualDamage === undefined) return;
+        const tableUuid = system.damageTableUuid ?? '';
+        const context: DamageProfileContext = { distance: rollData.distance ?? 0, tableDraw: null };
+        let profile: ResolvedDamageProfile | null;
+        if (tableUuid === '') {
+            profile = system.resolveContextualDamage(context);
+        } else {
+            const tableDraw = await drawDamageTable(tableUuid);
+            profile =
+                tableDraw === null
+                    ? {
+                          formula: '',
+                          type: system.damage?.type ?? 'impact',
+                          penetration: 0,
+                          qualities: [],
+                          addsStrengthBonus: false,
+                          provenance: { kind: 'table-missing' },
+                      }
+                    : system.resolveContextualDamage({ ...context, tableDraw });
+        }
+        if (profile === null) return;
+
+        this.profile = profile;
+        this.damageType = profile.type;
+        this.profileLabel = describeDamageProvenance(profile.provenance);
+        this.profileTooltip = prepareModifierTooltipData(this.profileLabel, [{ name: t('WH40K.Chat.Damage.ProfilePenetration'), value: profile.penetration }]);
+        rollData.addAttackQualities?.(profile.qualities);
+        if (profile.provenance.kind === 'table' && profile.provenance.text !== '') this.addEffect(profile.provenance.tableName, profile.provenance.text);
     }
 
     /**
@@ -521,8 +588,9 @@ export class Hit {
             game.wh40k.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
+        // A profile resolved at attack time (#608) replaces the weapon's own.
         // eslint-disable-next-line no-restricted-syntax -- boundary: system.damage may be a string formula in legacy data (pre-schema migration)
-        let rollFormula = actionItem.system.effectiveDamageFormula ?? actionItem.system.damage?.formula ?? actionItem.system.damage;
+        let rollFormula = this.profile?.formula ?? actionItem.system.effectiveDamageFormula ?? actionItem.system.damage?.formula ?? actionItem.system.damage;
         if (rollFormula === undefined || typeof rollFormula !== 'string' || rollFormula === '') {
             rollFormula = '0';
         }
@@ -606,7 +674,9 @@ export class Hit {
             }
         }
 
-        if (actionItem.isMelee) {
+        // Melee damage adds the wielder's Strength Bonus, and so does a melee weapon's
+        // damage borrowed by a ranged one (#608: a Magna-Grapple hits as the fist does).
+        if (actionItem.isMelee || this.profile?.addsStrengthBonus === true) {
             // Effective Strength Bonus so a fatigued / buffed character's melee damage
             // reflects it — the canonical #415 case. For an unmodified character
             // effectiveBonus == bonus, so the common case is unchanged.
@@ -618,7 +688,8 @@ export class Hit {
 
             // Deathdealer: the always-on +ceil(PerB/2) here was NOT RAW (the talent grants
             // +full Perception Bonus only on a Critical, handled by the onCrit hook). Removed.
-        } else if (actionItem.isRanged) {
+        }
+        if (!actionItem.isMelee && actionItem.isRanged) {
             // Scatter
             if (attackData.rollData.hasAttackSpecial('Scatter')) {
                 if (attackData.rollData.rangeName === 'Point Blank') {
@@ -709,10 +780,12 @@ export class Hit {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
 
-        // A penetration printed as a value of the user ("PR") is authored as a formula and wins.
-        const authoredFormula = actionItem.system.damage?.penetrationFormula;
+        // A penetration printed as a value of the user ("PR") is authored as a formula and wins,
+        // unless a profile resolved at attack time (#608) replaced the weapon's own.
+        const authoredFormula = this.profile === null ? actionItem.system.damage?.penetrationFormula : '';
         // eslint-disable-next-line no-restricted-syntax -- boundary: penetration may be a number or Roll formula string from legacy data; union cannot be expressed in the minimal interface
-        const declaredPenetration = actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
+        const declaredPenetration =
+            this.profile?.penetration ?? actionItem.system.effectivePenetration ?? actionItem.system.damage?.penetration ?? actionItem.system.penetration;
         const rollFormula = typeof authoredFormula === 'string' && authoredFormula !== '' ? authoredFormula : declaredPenetration;
         if (typeof rollFormula === 'number' && Number.isInteger(rollFormula)) {
             this.penetration = rollFormula;
@@ -796,8 +869,9 @@ export class Hit {
 
         // Prefer the weapon's mode-aware damage type (#430) — a beam-vs-blade weapon
         // deals a different type per firing mode; falls back to the base damage type.
+        // A profile resolved at attack time (#608) carries its own type.
         const effectiveType = (actionItem.system as { effectiveDamageType?: string }).effectiveDamageType;
-        this.damageType = effectiveType ?? actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
+        this.damageType = this.profile?.type ?? effectiveType ?? actionItem.system.damage?.type ?? actionItem.system.damageType ?? 'Impact';
 
         // Conditional weapon-quality grants (Direction #7, §D8) — e.g. Hammer Blow
         // adding Concussive (2) [DH2/OW/BC] or Shocking [DW/DH1] on an All-Out

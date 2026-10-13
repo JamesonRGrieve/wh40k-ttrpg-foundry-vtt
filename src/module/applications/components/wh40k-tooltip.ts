@@ -966,23 +966,9 @@ export function prepareWeaponTooltipData(weapon: WH40KItem): string {
     return JSON.stringify(data);
 }
 
-export interface ModifierTooltipSource {
-    name?: string;
-    source?: string;
-    value?: number;
-    modifier?: number;
-}
-
-export function prepareModifierTooltipData(title: string, sources: ModifierTooltipSource[]): string {
-    const data = {
-        title,
-        sources: sources.map((s) => ({
-            name: s.name ?? s.source ?? 'Unknown',
-            value: s.value ?? s.modifier ?? 0,
-        })),
-    };
-    return JSON.stringify(data);
-}
+// The modifier tooltip's serialiser lives with the pure utilities so the roll layer can
+// use it without importing this application; re-exported for the tooltip's callers.
+export { type ModifierTooltipSource, prepareModifierTooltipData } from '../../utils/modifier-tooltip.ts';
 
 export function prepareQualityTooltipData(identifier: string, level: number | null = null): string {
     const config = getQualityConfig();

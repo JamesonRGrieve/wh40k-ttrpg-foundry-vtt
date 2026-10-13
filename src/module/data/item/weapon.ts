@@ -3,8 +3,19 @@ import { SYSTEM_ID } from '../../constants.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { t } from '../../i18n/t.ts';
+import {
+    type BorrowCandidate,
+    type BorrowedDamageSource,
+    bandProvenance,
+    type DamageProfileContext,
+    type DamageTableDraw,
+    damageTypeAbbreviation,
+    pickBorrowedWeapon,
+    type ResolvedDamageProfile,
+    selectDamageBand,
+} from '../../rules/damage-profile.ts';
 import { consumeRounds, frontSegment, type MagazineSegment, magazineFromLegacy, magazineTotal } from '../../rules/magazine.ts';
-import { profileDealsDamage } from '../../rules/no-damage.ts';
+import { classifyDamageProfile, type DamageProfileKind, isContextualDamage, LEGACY_DEFAULT_DAMAGE_FORMULA, profileDealsDamage } from '../../rules/no-damage.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import {
     activeFiringMode,
@@ -36,7 +47,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import { type AttackCueData, attackCueField, migrateLegacyAttackSounds } from '../shared/attack-cue-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
-import DamageTemplate from '../shared/damage-template.ts';
+import DamageTemplate, { type DamageProfileData } from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
 import { renameKeys } from '../shared/migrate-rename.ts';
@@ -307,7 +318,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare state: EquippableState;
 
     // Properties from DamageTemplate
-    declare damage: { formula: string; type: string; bonus: number; penetration: number; none: boolean };
+    declare damage: DamageProfileData;
     declare special: Set<string>;
     declare modes: WeaponFiringMode[];
     declare activeMode: number;
@@ -1107,24 +1118,54 @@ export default class WeaponData extends ItemDataModel.mixin(
         });
     }
 
+    /** What the weapon's own damage profile is made of (#601, #608). */
+    get damageProfileKind(): DamageProfileKind {
+        return classifyDamageProfile(this.damage);
+    }
+
+    /**
+     * The damage of this attack depends on the attack itself — its range band, a
+     * table draw or a borrowed weapon (#608) — and is resolved by
+     * {@link resolveContextualDamage} at attack time. A chambered full-profile round
+     * or a firing mode with its own dice replaces it, like any profile.
+     * @type {boolean}
+     */
+    get hasContextualDamage(): boolean {
+        if (!isContextualDamage(this.damageProfileKind)) return false;
+        return this.loadedAmmo?.damageOverride == null && (this.activeFiringModeProfile?.damage ?? '') === '';
+    }
+
+    /** UUID of the RollTable this weapon draws its damage from, or '' (#608). */
+    get damageTableUuid(): string {
+        return this.hasContextualDamage ? this.damage.table : '';
+    }
+
     /**
      * Get effective damage formula (base + modifications).
      * NOTE: This does NOT include Strength Bonus, which is added dynamically at roll time.
      * Strength Bonus is applied in the actor's rollWeaponDamage() method.
+     * Empty for a no-damage profile and for damage resolved at attack time (#608).
      * @type {string}
      */
     get effectiveDamageFormula(): string {
         // A loaded warhead / sniper round OVERRIDES the dice + bonus outright
         // (#ammo-system); otherwise the weapon's own profile is the base and the
         // ammo's delta is folded via `_modificationModifiers`.
-        if (!this.dealsDamage) return '';
+        if (!this.dealsDamage || this.hasContextualDamage) return '';
         const override = this.loadedAmmo?.damageOverride ?? null;
-        // An empty formula with no `damage.none` means no dice were authored; it keeps
-        // the legacy default. A "no damage" profile returned '' above (#601).
-        const baseFormulaRaw = override !== null ? override.formula : this.damage.formula || '1d10';
-        const baseBonusRaw = override !== null ? override.bonus : this.damage.bonus || 0;
-        const baseDamage = modeDamageFormula(this.activeFiringModeProfile, baseFormulaRaw);
-        const baseBonus = modeDamageBonus(this.activeFiringModeProfile, baseBonusRaw);
+        if (override !== null) return this.#composeDamageFormula(override.formula, override.bonus);
+        const ownFormula = this.damageProfileKind === 'formula' ? this.damage.formula : LEGACY_DEFAULT_DAMAGE_FORMULA;
+        return this.#composeDamageFormula(ownFormula, this.damage.bonus || 0);
+    }
+
+    /**
+     * Fold the active firing mode, craftsmanship, modifications and the activation
+     * toggle into a base profile's dice and flat bonus — for the weapon's own profile
+     * and for a range band alike (#608).
+     */
+    #composeDamageFormula(formula: string, bonus: number): string {
+        const baseDamage = modeDamageFormula(this.activeFiringModeProfile, formula);
+        const baseBonus = modeDamageBonus(this.activeFiringModeProfile, bonus);
         const craftBonus = this.craftsmanshipModifiers.damage;
         const modBonus = this._modificationModifiers.damage;
         const deactBonus = deactivationStatDeltas(this.activation, this.state.activated).damage;
@@ -1133,6 +1174,122 @@ export default class WeaponData extends ItemDataModel.mixin(
 
         if (totalBonus === 0) return baseDamage;
         return `${baseDamage}${totalBonus > 0 ? '+' : ''}${totalBonus}`;
+    }
+
+    /** Fold the active firing mode, modifications and the activation toggle into a base penetration. */
+    #composePenetration(penetration: number): number {
+        const basePen = modePenetration(this.activeFiringModeProfile, penetration);
+        const modPen = this._modificationModifiers.penetration;
+        return basePen + modPen + deactivationStatDeltas(this.activation, this.state.activated).penetration;
+    }
+
+    /**
+     * Resolve damage that depends on the attack (#608): the range band the measured
+     * distance falls in, the drawn table result, or the profile of the weapon this
+     * one borrows from. Null when the weapon's damage is its own fixed profile (the
+     * `effective*` getters apply), and for a table weapon before its draw.
+     *
+     * An empty `formula` on the result means the hit deals no damage: beyond every
+     * band, a table result that only does something else, no weapon to borrow from.
+     */
+    resolveContextualDamage(context: DamageProfileContext): ResolvedDamageProfile | null {
+        if (!this.hasContextualDamage) return null;
+        const kind = this.damageProfileKind;
+        if (kind === 'bands') return this.#bandDamage(context.distance);
+        if (kind === 'table') return context.tableDraw === null ? null : this.#tableDamage(context.tableDraw);
+        if (kind === 'mount' || kind === 'wielder-melee') return this.#borrowedDamage(kind);
+        return null;
+    }
+
+    #bandDamage(distance: number): ResolvedDamageProfile {
+        const bands = this.damage.bands;
+        const selected = selectDamageBand(bands, distance);
+        if (selected === null) {
+            return {
+                formula: '',
+                type: this.damage.type,
+                penetration: 0,
+                qualities: [],
+                addsStrengthBonus: false,
+                provenance: { kind: 'out-of-band', distance },
+            };
+        }
+        const { band, index } = selected;
+        return {
+            formula: this.#composeDamageFormula(band.formula, band.bonus),
+            type: band.type,
+            penetration: this.#composePenetration(band.penetration),
+            qualities: band.qualities,
+            addsStrengthBonus: false,
+            provenance: bandProvenance(bands, index, distance),
+        };
+    }
+
+    #tableDamage(draw: DamageTableDraw): ResolvedDamageProfile {
+        const profile = draw.row.profile;
+        const provenance = { kind: 'table' as const, tableName: draw.tableName, total: draw.total, text: draw.row.text };
+        if (profile === null) {
+            return { formula: '', type: this.damage.type, penetration: 0, qualities: [], addsStrengthBonus: false, provenance };
+        }
+        return {
+            formula: this.#composeDamageFormula(profile.formula, profile.bonus),
+            type: profile.type,
+            penetration: this.#composePenetration(profile.penetration),
+            qualities: profile.qualities,
+            addsStrengthBonus: false,
+            provenance,
+        };
+    }
+
+    /**
+     * The profile of the weapon this one borrows from. A mount lends its whole firing
+     * profile, qualities included (a Tarantula fires the pair installed on it); the
+     * wielder's melee weapon lends its damage — dice, type, penetration and, as in
+     * hand, the wielder's Strength Bonus — but not its qualities.
+     */
+    #borrowedDamage(source: BorrowedDamageSource): ResolvedDamageProfile {
+        const lender = this.#borrowedWeapon(source);
+        if (lender === null) {
+            return {
+                formula: '',
+                type: this.damage.type,
+                penetration: 0,
+                qualities: [],
+                addsStrengthBonus: false,
+                provenance: { kind: 'no-borrowed', from: source },
+            };
+        }
+        const system = lender.weapon;
+        return {
+            formula: system.effectiveDamageFormula,
+            type: system.effectiveDamageType,
+            penetration: system.effectivePenetration,
+            qualities: source === 'mount' ? [...system.effectiveSpecial] : [],
+            addsStrengthBonus: source === 'wielder-melee' && system.isMeleeWeapon,
+            provenance: { kind: source, weaponName: lender.name },
+        };
+    }
+
+    /** The owning actor's weapon this one borrows from, chosen by {@link pickBorrowedWeapon}. */
+    #borrowedWeapon(source: BorrowedDamageSource): (BorrowCandidate & { name: string; weapon: WeaponData }) | null {
+        const actor = this.parent.actor;
+        if (actor === null) return null;
+        const candidates: Array<BorrowCandidate & { name: string; weapon: WeaponData }> = [];
+        for (const item of actor.items) {
+            const weapon = item.system;
+            if (!(weapon instanceof WeaponData)) continue;
+            candidates.push({
+                id: item.id,
+                name: item.name,
+                weapon,
+                hardpoint: weapon.hardpoint,
+                innate: weapon.innate,
+                isMelee: weapon.isMeleeWeapon,
+                inUse: weapon.state.equipped || weapon.hardpoint !== '',
+                borrowsDamage: weapon.damage.from !== '',
+            });
+        }
+        return pickBorrowedWeapon(source, { id: this.parent.id ?? '', identifier: this.identifier }, candidates);
     }
 
     /**
@@ -1151,18 +1308,7 @@ export default class WeaponData extends ItemDataModel.mixin(
 
     /** Damage-type abbreviation for the active mode (shadows the DamageTemplate getter). */
     get damageTypeAbbr(): string {
-        const abbrs: Record<string, string | undefined> = {
-            impact: 'I',
-            rending: 'R',
-            explosive: 'X',
-            energy: 'E',
-            fire: 'F',
-            shock: 'S',
-            cold: 'C',
-            toxic: 'T',
-        };
-        const type = this.effectiveDamageType;
-        return abbrs[type] ?? type.charAt(0).toUpperCase();
+        return damageTypeAbbreviation(this.effectiveDamageType);
     }
 
     /** Localized damage-type label for the active mode (shadows the DamageTemplate getter). */
@@ -1177,6 +1323,8 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     get fullDamageFormula(): string {
         if (!this.dealsDamage) return '';
+        // Resolved at attack time (#608): show what it depends on.
+        if (this.hasContextualDamage) return this.damageLabel;
         const baseFormula = this.effectiveDamageFormula;
 
         // Melee weapons add Strength Bonus to damage
@@ -1195,10 +1343,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         // An OVERRIDE round replaces base penetration; a delta round's Pen delta is
         // folded via `_modificationModifiers` (#ammo-system).
         const override = this.loadedAmmo?.damageOverride ?? null;
-        const basePenRaw = override !== null ? override.penetration : this.damage.penetration || 0;
-        const basePen = modePenetration(this.activeFiringModeProfile, basePenRaw);
-        const modPen = this._modificationModifiers.penetration;
-        return basePen + modPen + deactivationStatDeltas(this.activation, this.state.activated).penetration;
+        return this.#composePenetration(override !== null ? override.penetration : this.damage.penetration || 0);
     }
 
     /**

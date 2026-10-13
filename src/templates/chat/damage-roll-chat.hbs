@@ -22,6 +22,14 @@
                         {{/if}}
                     </div>
 
+                    {{!-- Damage resolved at attack time (#608): which range band, table
+                          result or borrowed weapon this hit's profile came from. --}}
+                    {{#if hit.profileLabel}}
+                    <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-py-1 tw-text-[0.9rem] tw-cursor-help" data-damage-profile="{{hit.profile.provenance.kind}}" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{hit.profileTooltip}}">
+                        <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium tw-shrink-0">{{localize "WH40K.Chat.Damage.Profile"}}</span>
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-text-right">{{hit.profileLabel}}</span>
+                    </div>
+                    {{/if}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
                         <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Chat.Damage.Formula"}}</span>
                         <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{hit.damageRoll.formula}}</span>

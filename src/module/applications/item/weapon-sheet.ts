@@ -513,6 +513,11 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             ui.notifications.info(t('WH40K.Weapon.NoDamageNotice', { name: weapon.name }));
             return;
         }
+        // A range band, table draw or borrowed weapon needs the attack to resolve it (#608).
+        if (weaponSystem.hasContextualDamage) {
+            ui.notifications.info(t('WH40K.Weapon.ContextualDamageNotice', { name: weapon.name }));
+            return;
+        }
         const formula = weaponSystem.effectiveDamageFormula;
         const damageRoll = await new Roll(formula).evaluate();
 

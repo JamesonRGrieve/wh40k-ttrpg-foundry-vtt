@@ -4,11 +4,12 @@ import type { WH40KItem } from '../documents/item.ts';
 import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
 import { type AreaTargetResult, type AreaTemplateSpec, type AvoidanceWielder, attackHasNoAttackRoll, resolveAreaTemplate } from '../rules/area-template.ts';
-import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
+import { bridgeWeaponQualities, calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import type { BurstCapComponent } from '../rules/auto-fire.ts';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
 import { WH40K } from '../rules/config.ts';
+import type { DamageProfileContext, ResolvedDamageProfile } from '../rules/damage-profile.ts';
 import { rollDifficulties } from '../rules/difficulties.ts';
 import {
     buildCharBonus,
@@ -398,6 +399,15 @@ export class RollData {
     }
 
     /**
+     * Bridge quality ids onto the attack's specials for this roll's game line — a
+     * resolved damage profile's qualities (a range band's Felling and Blast, a mounted
+     * weapon's Tearing, #608). A quality already present is not added twice.
+     */
+    addAttackQualities(qualityIds: readonly string[]): void {
+        bridgeWeaponQualities(this.attackSpecials, qualityIds, new Set(), this.gameSystemId);
+    }
+
+    /**
      * Commit the modifier total: the ±60-capped sum of every committed modifier
      * (`modifierTotal`), the un-capped sum (`rawModifierTotal`), whether the cap
      * fired, and the per-component provenance list.
@@ -741,6 +751,18 @@ export class WeaponRollData extends RollData {
         return { trained, heavyUnbraced: isHeavy && !collectActorStates(actor).includes(BRACED_STATE) };
     }
 
+    /**
+     * A range band's or a mounted weapon's qualities belong to the attack (#608): a
+     * Conversion Beamer fired beyond Short Range is a Blast (2) weapon, so its area
+     * template must see Blast before the attack resolves. A table weapon's result is
+     * not known until its damage is drawn, so it adds nothing here.
+     */
+    bridgeContextualDamageQualities(): void {
+        const system = this.weapon.system as { resolveContextualDamage?: (context: DamageProfileContext) => ResolvedDamageProfile | null };
+        const profile = system.resolveContextualDamage?.({ distance: this.distance, tableDraw: null }) ?? null;
+        if (profile !== null) this.addAttackQualities(profile.qualities);
+    }
+
     hasWeaponModification(special: string): boolean {
         return !!this.weaponModifications.find((s) => s.name === special);
     }
@@ -793,6 +815,7 @@ export class WeaponRollData extends RollData {
 
         updateWeaponModifiers(this);
         updateAttackSpecials(this);
+        this.bridgeContextualDamageQualities();
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
         this.usesAmmo = weaponSystem.usesAmmo === true;

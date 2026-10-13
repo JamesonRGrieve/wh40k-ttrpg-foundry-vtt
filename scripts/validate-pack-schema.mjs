@@ -64,11 +64,53 @@ export const WEAPON_TYPE = [
 ];
 export const ATTACK_KIND = ['ranged', 'melee', 'thrown'];
 export const CREW_EXPOSURE = ['', 'open', 'enclosed'];
+// Mirrors `DAMAGE_TYPE_CHOICES` / `DAMAGE_SOURCE_CHOICES` (src/module/rules/damage-profile.ts);
+// tests/validate-pack-schema.test.ts pins the match.
+export const DAMAGE_TYPE = ['impact', 'rending', 'explosive', 'energy', 'fire', 'shock', 'cold', 'toxic'];
+export const DAMAGE_SOURCE = ['', 'mount', 'wielder-melee'];
+/** A compendium RollTable UUID, the only document a `damage.table` may name. */
+export const ROLL_TABLE_UUID = /^Compendium\.[\w-]+\.[\w-]+\.RollTable\.[A-Za-z0-9]{16}$/;
 
 const attackShape = z
     .object({
         type: z.enum(ATTACK_KIND).optional(),
         characteristic: z.string().optional(),
+    })
+    .loose();
+
+/** One range band of a band-profile weapon (#608). */
+export const damageBandShape = z
+    .object({
+        maxRange: z.number().nonnegative().nullable(),
+        formula: z.string().min(1),
+        type: z.enum(DAMAGE_TYPE),
+        penetration: z.number().int().nonnegative(),
+        bonus: z.number().int(),
+        qualities: z.array(z.string().min(1)),
+    })
+    .strict();
+
+/**
+ * Bands are picked in authored order, so their bounds must rise and only the last
+ * may be unbounded — a later band behind an unbounded or wider one is unreachable.
+ */
+function bandsAscending(bands) {
+    return bands.every((band, i) => {
+        if (i === 0) return true;
+        const previous = bands[i - 1].maxRange;
+        return previous !== null && (band.maxRange === null || band.maxRange > previous);
+    });
+}
+
+/**
+ * A damage profile: the #608 shapes (bands / table / borrowed) are validated; the
+ * long-established fields pass as authored (the IM line stores damage as a string).
+ */
+export const damageProfileShape = z
+    .object({
+        bands: z.array(damageBandShape).refine(bandsAscending, { message: 'bands must rise in maxRange, with only the last unbounded' }).optional(),
+        table: z.union([z.literal(''), z.string().regex(ROLL_TABLE_UUID)]).optional(),
+        from: z.enum(DAMAGE_SOURCE).optional(),
     })
     .loose();
 
@@ -79,8 +121,33 @@ export const weaponSystemSchema = z
         type: variant(z.enum(WEAPON_TYPE)).nullable().optional(),
         melee: variant(z.boolean()).nullable().optional(),
         attack: variant(attackShape).nullable().optional(),
+        damage: variant(z.union([z.string(), damageProfileShape])).optional(),
     })
     .loose();
+
+/** The damage a RollTable result carries for a table-damage weapon (#608). */
+export const tableResultDamageShape = z
+    .object({
+        formula: z.string().min(1),
+        bonus: z.number().int().optional(),
+        type: z.enum(DAMAGE_TYPE).optional(),
+        penetration: z.number().int().nonnegative().optional(),
+        qualities: z.array(z.string().min(1)).optional(),
+    })
+    .strict();
+
+/** Errors in a RollTable's result damage profiles (`flags['wh40k-rpg'].damageProfile`). */
+function tableResultIssues(results) {
+    const errors = [];
+    results.forEach((result, i) => {
+        const profile = result?.flags?.['wh40k-rpg']?.damageProfile;
+        if (profile === undefined) return;
+        const res = tableResultDamageShape.safeParse(profile);
+        if (res.success) return;
+        for (const issue of res.error.issues) errors.push(`results.${i}.flags.wh40k-rpg.damageProfile.${issue.path.join('.')}: ${issue.message}`);
+    });
+    return errors;
+}
 
 /** Vehicle-trait `system` — the `crewExposure` enum whose blank default crashed hydration. */
 export const vehicleTraitSystemSchema = z
@@ -140,6 +207,7 @@ export function validateDoc(doc) {
         return errors;
     }
     const { type, system } = env.data;
+    if (Array.isArray(doc.results)) errors.push(...tableResultIssues(doc.results));
     const schema = SYSTEM_SCHEMAS[type];
     if (schema !== undefined && system !== undefined) {
         const res = schema.safeParse(system);

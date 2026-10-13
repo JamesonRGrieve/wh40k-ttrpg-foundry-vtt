@@ -1,7 +1,33 @@
+import { t } from '../../i18n/t.ts';
+import { DAMAGE_SOURCE_CHOICES, DAMAGE_TYPE_CHOICES, type DamageBand, type DamageSourceKind, damageTypeAbbreviation } from '../../rules/damage-profile.ts';
 import { normalizeNoDamageNotation } from '../../rules/no-damage.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 import FormulaField from '../fields/formula-field.ts';
+
+/** A damage profile as `DamageTemplate` declares it (#601 `none`, #608 bands / table / borrowed). */
+export interface DamageProfileData {
+    formula: string;
+    type: string;
+    bonus: number;
+    penetration: number;
+    none: boolean;
+    /** Ordered range bands; the attack distance picks one (#608). */
+    bands: DamageBand[];
+    /** UUID of a RollTable whose results carry the damage (#608); '' = none. */
+    table: string;
+    /** Borrow the damage of the mounted weapon or the wielder's melee weapon (#608). */
+    from: DamageSourceKind;
+}
+
+/** The FormulaField constructor options (the shipped field types reject the StringField options bag). */
+type FormulaFieldOptions = ConstructorParameters<typeof FormulaField>[0];
+
+/** A dice-formula field. */
+function formulaField(options: { required: boolean; blank: boolean; initial: string }): FormulaField {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
+    return new FormulaField(options as unknown as FormulaFieldOptions);
+}
 
 /**
  * Template for items that deal damage.
@@ -9,31 +35,45 @@ import FormulaField from '../fields/formula-field.ts';
  */
 export default class DamageTemplate extends SystemDataModel {
     // Typed property declarations matching defineSchema()
-    declare damage: { formula: string; type: string; bonus: number; penetration: number; none: boolean };
+    declare damage: DamageProfileData;
     declare special: Set<string>;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
+        const damageType = (): foundry.data.fields.DataField.Any =>
+            new fields.StringField({ required: true, initial: 'impact', choices: [...DAMAGE_TYPE_CHOICES] });
         return {
             damage: new fields.SchemaField({
-                // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
-                formula: new FormulaField({ required: true, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
-                type: new fields.StringField({
-                    required: true,
-                    initial: 'impact',
-                    choices: ['impact', 'rending', 'explosive', 'energy', 'fire', 'shock', 'cold', 'toxic'],
-                }),
+                formula: formulaField({ required: true, blank: true, initial: '' }),
+                type: damageType(),
                 bonus: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 penetration: new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 }),
                 // A penetration the book prints as a value of the user ("equal to the
                 // psyker's Psy Rating" → "PR"). When set it is rolled instead of `penetration`.
-                // eslint-disable-next-line no-restricted-syntax -- boundary: FormulaField extends StringField, ctor param shape mismatch
-                penetrationFormula: new FormulaField({ required: false, blank: true, initial: '' } as unknown as ConstructorParameters<typeof FormulaField>[0]),
+                penetrationFormula: formulaField({ required: false, blank: true, initial: '' }),
                 // The book prints a dash: this profile deals no damage, so no damage
                 // roll is made and only the qualities apply (#601). Distinct from an
                 // empty `formula`, which means no dice were authored.
                 none: new fields.BooleanField({ required: false, initial: false }),
+                // Damage that depends on the attack (#608). Each is an alternative to
+                // `formula`, resolved at attack time by `rules/damage-profile.ts`:
+                // range bands picked by the measured distance (in authored order, the
+                // last may be unbounded), a RollTable whose results carry the damage,
+                // or the profile of the mounted weapon / the wielder's melee weapon.
+                bands: new fields.ArrayField(
+                    new fields.SchemaField({
+                        maxRange: new fields.NumberField({ required: true, nullable: true, initial: null, min: 0 }),
+                        formula: formulaField({ required: true, blank: false, initial: '1d10' }),
+                        type: damageType(),
+                        penetration: new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                        bonus: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        qualities: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
+                    }),
+                    { required: false, initial: [] },
+                ),
+                table: new fields.DocumentUUIDField({ required: false, nullable: false, blank: true, initial: '', type: 'RollTable' }),
+                from: new fields.StringField({ required: false, blank: true, initial: '', choices: [...DAMAGE_SOURCE_CHOICES] }),
             }),
             special: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
         };
@@ -66,14 +106,16 @@ export default class DamageTemplate extends SystemDataModel {
         }
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: damage merge target
-    static #emptyDamage(): Record<string, unknown> {
+    static #emptyDamage(): DamageProfileData {
         return {
             formula: '',
             type: 'impact',
             bonus: 0,
             penetration: 0,
             none: false,
+            bands: [],
+            table: '',
+            from: '',
         };
     }
 
@@ -99,11 +141,11 @@ export default class DamageTemplate extends SystemDataModel {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry parent _source data
         const parent = this.parent as { _source?: { system?: Record<string, unknown> }; actor?: unknown } | undefined;
         const lineKey = inferActiveGameLine(parent ?? null);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-line variant resolved at runtime
-        const resolvedDamage = resolveLineVariant(this.damage, lineKey) as Record<string, unknown>;
         const resolvedSpecial = resolveLineVariant(this.special, lineKey) as string[] | Set<string> | null;
 
-        this.damage = foundry.utils.mergeObject(DamageTemplate.#emptyDamage(), resolvedDamage, { inplace: false }) as typeof this.damage;
+        // The resolved branch may be partial (an older per-line branch without the
+        // #601 / #608 keys); the empty profile fills what it leaves out.
+        this.damage = { ...DamageTemplate.#emptyDamage(), ...resolveLineVariant(this.damage, lineKey) };
 
         if (resolvedSpecial instanceof Set) {
             this.special = resolvedSpecial;
@@ -122,13 +164,21 @@ export default class DamageTemplate extends SystemDataModel {
      */
     get damageLabel(): string {
         const dmg = this.damage;
+        // Damage resolved at attack time (#608) labels what it depends on.
+        if (dmg.bands.length > 0)
+            return dmg.bands.map((band) => `${DamageTemplate.#diceLabel(band.formula, band.bonus)} ${damageTypeAbbreviation(band.type)}`).join(' / ');
+        if (dmg.table !== '') return t('WH40K.Weapon.DamageProfile.Table');
+        if (dmg.from === 'mount') return t('WH40K.Weapon.DamageProfile.Mount');
+        if (dmg.from === 'wielder-melee') return t('WH40K.Weapon.DamageProfile.WielderMelee');
         if (dmg.formula === '') return '-';
+        return `${DamageTemplate.#diceLabel(dmg.formula, dmg.bonus)} ${this.damageTypeAbbr}`;
+    }
 
-        let label = dmg.formula;
-        if (dmg.bonus > 0) label += `+${dmg.bonus}`;
-        else if (dmg.bonus < 0) label += dmg.bonus.toString();
-
-        return `${label} ${this.damageTypeAbbr}`;
+    /** Dice plus a signed flat bonus, as the books print them (`3d10+9`). */
+    static #diceLabel(formula: string, bonus: number): string {
+        if (bonus > 0) return `${formula}+${bonus}`;
+        if (bonus < 0) return `${formula}${bonus}`;
+        return formula;
     }
 
     /* -------------------------------------------- */
@@ -138,17 +188,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @type {string}
      */
     get damageTypeAbbr(): string {
-        const abbrs: Record<string, string | undefined> = {
-            impact: 'I',
-            rending: 'R',
-            explosive: 'X',
-            energy: 'E',
-            fire: 'F',
-            shock: 'S',
-            cold: 'C',
-            toxic: 'T',
-        };
-        return abbrs[this.damage.type] ?? this.damage.type.charAt(0).toUpperCase();
+        return damageTypeAbbreviation(this.damage.type);
     }
 
     /* -------------------------------------------- */

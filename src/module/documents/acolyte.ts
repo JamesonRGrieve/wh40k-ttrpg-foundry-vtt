@@ -979,6 +979,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ui.notifications.info(t('WH40K.Weapon.NoDamageNotice', { name: weapon.name }));
             return;
         }
+        // A range band, table draw or borrowed weapon needs the attack to resolve it (#608).
+        if (weapon.system['hasContextualDamage'] === true) {
+            ui.notifications.info(t('WH40K.Weapon.ContextualDamageNotice', { name: weapon.name }));
+            return;
+        }
 
         // Calculate damage with Strength Bonus for melee/thrown weapons
         const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;

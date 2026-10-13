@@ -126,7 +126,8 @@ describe('the psychic power schema the content session authors against', () => {
         ['range: new fields.StringField', power],
         ['skill: new fields.StringField', power],
         ['narrativeEffect: new fields.BooleanField', power],
-        ['penetrationFormula: new FormulaField', damage],
+        // `formulaField()` is damage-template.ts's FormulaField constructor wrapper.
+        ['penetrationFormula: formulaField(', damage],
     ])('declares %s', (field, source) => {
         expect(source).toContain(field);
     });

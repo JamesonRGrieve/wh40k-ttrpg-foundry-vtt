@@ -32,3 +32,11 @@ export function capitalize(text: string | null | undefined): string {
     if (text == null || text === '') return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+/**
+ * Strip every HTML tag from a fragment, leaving its text content — for showing a
+ * compendium result's authored HTML (a RollTable result) as plain card text.
+ */
+export function stripHtmlTags(html: string): string {
+    return html.replace(/<[^>]*>/g, '');
+}
