@@ -103,8 +103,9 @@
                         {{/if}}
                     {{/if}}
 
-                    {{! Assign Damage — auto-applied (#248) hides the manual button }}
-                    {{#if @root.targetActor}}
+                    {{! Assign Damage — auto-applied (#248) hides the manual button. An area hit
+                        (#599) carries its own creature; every other hit goes to the card's target. }}
+                    {{#if (or hit.targetUuid @root.targetActor)}}
                         {{#if @root.autoApplied}}
                         <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-muted)]">
                             <span class="material-icons tw-text-[var(--wh40k-card-gold)]">check_circle</span>
@@ -118,7 +119,7 @@
                                 data-total-damage="{{hit.totalDamage}}"
                                 data-total-penetration="{{hit.totalPenetration}}"
                                 data-total-fatigue="{{hit.totalFatigue}}"
-                                data-target-uuid="{{@root.targetActor.uuid}}"
+                                data-target-uuid="{{#if hit.targetUuid}}{{hit.targetUuid}}{{else}}{{@root.targetActor.uuid}}{{/if}}"
                                 data-damage-type="{{hit.damageType}}"
                                 data-is-explosive="{{hit.isExplosive}}"
                             >

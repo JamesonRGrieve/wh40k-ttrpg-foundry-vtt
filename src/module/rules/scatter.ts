@@ -24,6 +24,9 @@ export interface ScatterVector {
     metres: number;
 }
 
+/** Dice for how far a scattered shot travels (DH2 p.230: 1d5 metres; Blast uses the same roll). */
+export const SCATTER_DISTANCE_FORMULA = '1d5';
+
 /**
  * Build a ScatterVector from caller-rolled inputs. Direction is clamped
  * into 1..10; metres is clamped into 1..5. Non-finite values default

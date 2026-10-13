@@ -236,11 +236,14 @@ describe('Field Vivisection swaps a Called Shot onto Medicae (#101, Enemies With
 });
 
 describe('Without talents reach the roll flow (#101)', () => {
-    it('Spray attack cards offer the avoidance test, routed through the Leaping Dodge resolver', () => {
-        expect(readRepoFile('src/templates/chat/action-roll-chat.hbs')).toContain('roll-control__avoid-spray');
+    it('area attack cards resolve the template, each avoidance routed through the Leaping Dodge resolver (#599)', () => {
+        expect(readRepoFile('src/templates/chat/action-roll-chat.hbs')).toContain('roll-control__resolve-area');
         const manager = readRepoFile('src/module/actions/basic-action-manager.ts');
-        expect(manager).toContain("querySelectorAll('.roll-control__avoid-spray')");
+        expect(manager).toContain("querySelectorAll('.roll-control__resolve-area')");
         expect(manager).toContain('sprayAvoidanceTest(');
+        // The defenders are the tokens inside the template, not whatever the clicker controls.
+        expect(manager).toContain('tokensInAreaTemplate(');
+        expect(manager).not.toContain('canvas.tokens?.controlled');
     });
 
     it('Push the Limit is resolved on every simple skill roll path', () => {
@@ -269,5 +272,24 @@ describe('opposed psychic resolution wired to the #449 engine (#451)', () => {
         expect(actionData).toContain('this.rollData.isOpposed');
         expect(actionData).toContain('WH40K.Psychic.OpposedResisted');
         expect(actionData).toContain('this.rollData.opposedMargin');
+    });
+});
+
+describe('area and no-roll flags resolve after the attack specials (#600)', () => {
+    // The flags used to be read before `updateAttackSpecials` filled the list, so the
+    // first update saw no Spray and the card printed a roll, a target and degrees.
+    const source = readRepoFile('src/module/rolls/roll-data.ts');
+    const update = source.slice(source.indexOf('    update(): void {', source.indexOf('class WeaponRollData')));
+
+    it('reads the attack specials and the range before resolving the area', () => {
+        const resolved = update.indexOf('resolveAreaTemplate(');
+        expect(resolved).toBeGreaterThan(update.indexOf('updateAttackSpecials(this)'));
+        expect(resolved).toBeGreaterThan(update.indexOf('calculateWeaponRange(this)'));
+        expect(update.indexOf('this.ignoreDegrees = this.noAttackRoll')).toBeGreaterThan(update.indexOf('attackHasNoAttackRoll('));
+    });
+
+    it('never name-matches a quality for the area or the roll', () => {
+        expect(source).not.toContain("hasAttackSpecial('Spray')");
+        expect(readRepoFile('src/module/rolls/action-data.ts')).not.toContain("hasAttackSpecial('Spray')");
     });
 });

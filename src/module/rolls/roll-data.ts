@@ -1,7 +1,9 @@
+import type { AreaTemplateRef } from '../canvas/area-template-canvas.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
+import { type AreaTargetResult, type AreaTemplateSpec, type AvoidanceWielder, attackHasNoAttackRoll, resolveAreaTemplate } from '../rules/area-template.ts';
 import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
@@ -28,7 +30,7 @@ import {
     type TargetedConditionComponent,
 } from '../rules/targeted-conditions.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
-import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
+import { checkWeaponTraining, getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import {
     FIELD_VIVISECTION_TARGET_TAG,
     fieldVivisectionMode,
@@ -598,6 +600,11 @@ interface FieldVivisectionAttacker {
     getCharacteristicFuzzy: (key: string) => { readonly total: number } | undefined;
 }
 
+/** The weapon class whose unbraced fire grants an area's unbraced-Heavy avoidance bonus. */
+const HEAVY_WEAPON_CLASS = 'heavy';
+/** The actor state tag (a "Braced" status or effect) that marks a braced wielder. */
+const BRACED_STATE = 'braced';
+
 export class WeaponRollData extends RollData {
     weapons: WH40KItem[] = [];
     declare weapon: WH40KItem;
@@ -665,7 +672,20 @@ export class WeaponRollData extends RollData {
     isManoeuvre: boolean = false;
     isDisarm: boolean = false;
     override isThrown: boolean = false;
-    isSpray: boolean = false;
+    /**
+     * The area template one of the attack's qualities declares (Spray's cone, Blast's
+     * circle), resolved from the quality data on every `update()` (#599). Null for an
+     * ordinary single-target attack.
+     */
+    areaTemplate: AreaTemplateSpec | null = null;
+    /** A quality removes the attack roll (Spray: no BS test, #600). */
+    noAttackRoll: boolean = false;
+    /** The placed template for this attack, set when the attack resolves. */
+    areaTemplateRef: AreaTemplateRef | null = null;
+    /** The card's plain statement of the area's mechanic, in place of a roll readout. */
+    areaStatement: string = '';
+    /** The creatures caught in the template once it is resolved. */
+    areaResults: AreaTargetResult[] = [];
     isLasWeapon: boolean = false;
     lasMode: string = 'Standard';
     /**
@@ -686,6 +706,18 @@ export class WeaponRollData extends RollData {
     constructor() {
         super();
         this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
+    }
+
+    /**
+     * The wielder's state an area's avoidance bonuses read (#599): whether they have
+     * the weapon's training, and whether the weapon is Heavy and fired without the
+     * wielder being braced.
+     */
+    areaAvoidanceWielder(): AvoidanceWielder {
+        const actor = this.sourceActor;
+        const trained = actor === null ? true : checkWeaponTraining(actor, this.weapon).trained;
+        const isHeavy = (this.weapon.system as { class?: string }).class === HEAVY_WEAPON_CLASS;
+        return { trained, heavyUnbraced: isHeavy && !collectActorStates(actor).includes(BRACED_STATE) };
     }
 
     hasWeaponModification(special: string): boolean {
@@ -712,16 +744,12 @@ export class WeaponRollData extends RollData {
 
         this.canAim = this.action !== 'All Out Attack';
         this.isLasWeapon = weaponSystem.type === 'Las';
-        this.isSpray = this.hasAttackSpecial('Spray');
         this.isStun = this.action === 'Stun';
         this.isFeint = this.action === 'Feint';
         this.isKnockDown = this.action === 'Knock Down';
         this.isManoeuvre = this.action === 'Manoeuvre';
         this.isDisarm = this.action === 'Disarm';
 
-        this.ignoreModifiers = this.isSpray || this.isStun;
-        this.ignoreDegrees = this.isSpray || this.isStun;
-        this.ignoreSuccess = this.isSpray;
         this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown || this.isManoeuvre || this.isDisarm;
         this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm;
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
@@ -753,6 +781,17 @@ export class WeaponRollData extends RollData {
             this.usesAmmo = false;
         }
         calculateWeaponRange(this);
+
+        // The area and no-roll flags read the attack specials and the range, so they
+        // resolve only after both are current (#600: reading them earlier saw the
+        // previous update's — or on the first update, an empty — special list, so a
+        // Spray card printed a roll, a target and degrees).
+        this.areaTemplate = resolveAreaTemplate(this.attackSpecials, this.maxRange, this.gameSystemId);
+        this.noAttackRoll = attackHasNoAttackRoll(this.attackSpecials, this.gameSystemId);
+        this.ignoreModifiers = this.noAttackRoll || this.isStun;
+        this.ignoreDegrees = this.noAttackRoll || this.isStun;
+        this.ignoreSuccess = this.noAttackRoll;
+
         this.applyTargetConditionModifiers();
         this.updateBaseTarget();
 

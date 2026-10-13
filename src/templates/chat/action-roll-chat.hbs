@@ -45,6 +45,12 @@
 
                 {{> systems/wh40k-rpg/templates/chat/partial/card-target-row.hbs target=targetActor}}
 
+                {{!-- Area attack (#599 / #600): state the area's mechanic instead of a
+                      roll/target/DoS readout when the quality removes the attack roll. --}}
+                {{#if areaStatement}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/area-attack-summary.hbs summary=areaStatement}}
+                {{/if}}
+
                 {{#unless ignoreModifiers}}
                     {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs baseTarget=baseTarget baseLabel=baseLabel activeModifiers=activeModifiers modifierSources=modifierSources modifiedTarget=modifiedTarget modifierCapFired=modifierCapFired rawModifierTotal=rawModifierTotal modifierTotal=modifierTotal}}
 
@@ -140,7 +146,18 @@
                 {{!-- Action Controls --}}
                 {{#unless ignoreControls}}
                     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
-                        {{#if showDamage}}
+                        {{!-- An area attack (#599) resolves the tokens inside its template first;
+                              that card carries the Roll Damage for whoever it hits. --}}
+                        {{#if areaTemplate}}
+                            <button
+                                class="roll-control__resolve-area tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                                data-roll-id="{{@root.id}}"
+                                title="{{localize 'WH40K.AreaAttack.ResolveTooltip'}}"
+                            >
+                                <i class="fas fa-bullseye tw-text-[0.8rem]" aria-hidden="true"></i>
+                                <span>{{localize "WH40K.AreaAttack.ResolveButton"}}</span>
+                            </button>
+                        {{else if showDamage}}
                             <button class="roll-control__roll-damage tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
@@ -156,30 +173,19 @@
                                 <span class="material-icons tw-text-[14px]">deblur</span>
                                 <span>{{localize "WH40K.FateRefund"}}</span>
                             </button>
-                            {{#if success}}
+                            {{#if success}}{{#unless noAttackRoll}}
                                 <button class="roll-control__fate-add-dos tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                     <span class="material-icons tw-text-[14px]">add_circle</span>
                                     <span>{{localize "WH40K.FateAddDoS"}}</span>
                                 </button>
-                            {{/if}}
+                            {{/unless}}{{/if}}
                             {{> systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs rerollOptions=@root.rerollOptions rollId=@root.id}}
                         </div>
                         {{!-- Defender reactions (#414): on a hit against a target, let the
                               defender Attempt Dodge (any attack) or Parry (melee), rolling
                               their own reaction test and spending their Reaction for the round. --}}
-                        {{!-- Spray avoidance (#103 / #101): everyone in the cone tests to avoid
-                              the hit — Agility, or Dodge with Leaping Dodge. Not a Reaction. --}}
-                        {{#if isSpray}}
-                            <button
-                                class="roll-control__avoid-spray tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0"
-                                data-roll-id="{{@root.id}}"
-                                title="{{localize 'WH40K.WithoutTalents.LeapingDodge.AvoidSprayTooltip'}}"
-                            >
-                                <i class="fas fa-person-running tw-text-[0.75rem]" aria-hidden="true"></i>
-                                <span>{{localize "WH40K.WithoutTalents.LeapingDodge.AvoidSpray"}}</span>
-                            </button>
-                        {{/if}}
-                        {{#if success}}
+                        {{!-- No attack roll (Spray) means no hit to dodge: the template's avoidance test replaces it. --}}
+                        {{#if success}}{{#unless noAttackRoll}}
                             {{#if targetActor}}
                                 <div class="tw-flex tw-gap-1.5">
                                     <button
@@ -204,7 +210,7 @@
                                     {{/if}}
                                 </div>
                             {{/if}}
-                        {{/if}}
+                        {{/unless}}{{/if}}
                         {{!-- Assassin's Strike post-attack Acrobatics + Half Move (#149 — DH2 errata L75) --}}
                         {{#if @root.hasAssassinsStrike}}
                             {{#if success}}

@@ -292,6 +292,8 @@ export class Hit {
      * attack. Empty when the attack had no declared target.
      */
     targetName = '';
+    /** The actor this hit lands on when it differs from the card's target (an area hit, #599); '' otherwise. */
+    targetUuid = '';
 
     /**
      * Cover armour bonus the target benefits from at this hit location.
@@ -355,7 +357,7 @@ export class Hit {
      * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData: AttackDataLike, hitNumber: number): Promise<Hit> {
+    static async createHit(attackData: AttackDataLike, hitNumber: number, forcedLocation: string | null = null): Promise<Hit> {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
         // Penetration is resolved BEFORE the modifier passes: a penetration hook
@@ -371,7 +373,10 @@ export class Hit {
 
         hit.coverAP = attackData.rollData.coverAP ?? 0;
 
-        if (attackData.rollData.isCalledShot === true) {
+        if (forcedLocation !== null) {
+            // An area quality that fixes where its hits land (Spray: the Body, #599).
+            hit.location = resolveHitLocationId(forcedLocation) ?? DEFAULT_HIT_LOCATION;
+        } else if (attackData.rollData.isCalledShot === true) {
             hit.location = resolveHitLocationId(attackData.rollData.calledShotLocation) ?? DEFAULT_HIT_LOCATION;
         } else {
             const roll = attackData.rollData.roll;

@@ -20,10 +20,43 @@ interface WeaponQualityHitEffect {
     saveTargetPenaltyPerLevel: number | null;
 }
 
-/** Template payload (Blast / Smoke / Spray). */
-interface WeaponQualityTemplate {
+/**
+ * Where an area template's size comes from: the weapon's range (Spray's cone runs out
+ * to the weapon's range) or the quality's `(X)` level (Blast (X) is X metres).
+ */
+export const WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES = ['', 'range', 'level'] as const;
+
+/** Where an area template sits: on the firer (Spray's cone) or the point of impact (Blast). */
+export const WEAPON_QUALITY_TEMPLATE_ANCHORS = ['', 'firer', 'impact'] as const;
+
+/**
+ * What an area does to each creature inside it: they test to avoid one hit (`avoid`,
+ * Spray), or they are hit (`hit`, Blast). Blank for a template that only marks ground
+ * (Smoke).
+ */
+export const WEAPON_QUALITY_TEMPLATE_RESOLUTIONS = ['', 'avoid', 'hit'] as const;
+
+/**
+ * Area-template payload (Blast / Smoke / Spray, #599). Everything the attack flow needs
+ * to place the template and resolve the creatures inside it is content data here, so
+ * the engine never name-matches a quality (Direction #7).
+ */
+export interface WeaponQualityTemplate {
+    /** `cone`, `sphere` (drawn as a circle), or a non-targeting shape such as `concealment-cloud`. */
     shape: string;
-    radiusVariable: boolean;
+    /** Cone opening in degrees (30 for Spray). */
+    angle: number | null;
+    distanceSource: (typeof WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES)[number];
+    anchor: (typeof WEAPON_QUALITY_TEMPLATE_ANCHORS)[number];
+    resolution: (typeof WEAPON_QUALITY_TEMPLATE_RESOLUTIONS)[number];
+    /** Difficulty modifier of the avoidance test (Challenging = 0). */
+    avoidModifier: number | null;
+    /** Bonus to the avoidance test when the wielder lacks the weapon's training. */
+    avoidUntrainedBonus: number | null;
+    /** Bonus to the avoidance test when the weapon is Heavy and fired unbraced. */
+    avoidUnbracedHeavyBonus: number | null;
+    /** Hit location every hit from the area strikes (`body` for Spray), or blank to roll it. */
+    hitLocation: string;
 }
 
 /**
@@ -98,6 +131,11 @@ export interface WeaponQualityMechanics {
      * are optional (Direction #7).
      */
     selectable: boolean;
+    /**
+     * The attack makes no attack roll (Spray: no Ballistic Skill test). The card then
+     * states the area's mechanic instead of a roll, target and degrees (#600).
+     */
+    noAttackRoll: boolean;
     /**
      * Effects a {@link selectable} quality applies while the attacker has chosen it
      * for the attack — Maximal: +10 m range, 3 rounds per shot, +2 to Blast, and in

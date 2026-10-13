@@ -59,6 +59,13 @@ for (const [systemId, dir] of Object.entries(TARGET_SYSTEMS)) {
         if (typeof identifier !== 'string' || identifier === '') continue;
 
         const stubId = stableId(`${systemId}:${identifier}`);
+        const outFile = join(outDir, `${identifier}_${stubId}.json`);
+        // A line whose RAW diverges from the shared payload (DH2 Spray's untrained /
+        // unbraced-Heavy avoidance bonuses) carries its own mechanics; never overwrite it.
+        if (existsSync(outFile)) {
+            const existing = JSON.parse(readFileSync(outFile, 'utf8'));
+            if (existing?.system?.mechanics !== undefined && !existing.system.mechanicsRef) continue;
+        }
         const stub = {
             name: rt.name,
             type: 'weaponQuality',
@@ -78,7 +85,7 @@ for (const [systemId, dir] of Object.entries(TARGET_SYSTEMS)) {
             flags: {},
             _id: stubId,
         };
-        writeFileSync(join(outDir, `${identifier}_${stubId}.json`), `${JSON.stringify(stub, null, 4)}\n`);
+        writeFileSync(outFile, `${JSON.stringify(stub, null, 4)}\n`);
         written += 1;
     }
 }

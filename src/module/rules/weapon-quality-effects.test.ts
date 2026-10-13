@@ -33,7 +33,7 @@ import {
     resolveTemplateRadius,
     weaponQualityIdentifierFromName,
 } from './weapon-quality-effects.ts';
-import { setWeaponQualityPayloadsForTesting, weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
+import { setWeaponQualityPayloadsForTesting, type WeaponQualityMechanicsInput, weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
 type QualityWeapon = Parameters<typeof resolvePowerFieldParryDestroys>[0];
 
@@ -103,10 +103,13 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Scavenged — destroyOnCriticalFail', () 
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Blast (X) — template payload', () => {
-    it('exposes a sphere template with variable radius', () => {
+    it('exposes a circle at the impact point, X metres, that hits everyone inside', () => {
         const tpl = mech('blast').template;
         expect(tpl.shape).toBe('sphere');
-        expect(tpl.radiusVariable).toBe(true);
+        expect(tpl.distanceSource).toBe('level');
+        expect(tpl.anchor).toBe('impact');
+        expect(tpl.resolution).toBe('hit');
+        expect(mech('blast').noAttackRoll).toBe(false);
     });
 
     it('resolveTemplateRadius returns the X value, clamped at 0', () => {
@@ -379,10 +382,11 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Shocking — Toughness or 1 round stun, h
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Smoke (X) — concealment cloud', () => {
-    it('exposes a concealment-cloud template with variable radius', () => {
+    it('exposes a concealment-cloud template sized by X that targets nobody', () => {
         const tpl = mech('smoke').template;
         expect(tpl.shape).toBe('concealment-cloud');
-        expect(tpl.radiusVariable).toBe(true);
+        expect(tpl.distanceSource).toBe('level');
+        expect(tpl.resolution).toBe('');
     });
 });
 
@@ -396,11 +400,30 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Snare (X) — Agility penalty', () => {
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Spray — cone template, Agility avoidance', () => {
-    it('exposes a cone template with non-variable shape', () => {
+    it('exposes a 30° cone from the firer out to the weapon range, avoided at +0, Body hits, no attack roll', () => {
         const entry = mech('spray');
-        expect(entry.template.shape).toBe('cone');
-        expect(entry.template.radiusVariable).toBe(false);
+        expect(entry.template).toMatchObject({
+            shape: 'cone',
+            angle: 30,
+            distanceSource: 'range',
+            anchor: 'firer',
+            resolution: 'avoid',
+            avoidModifier: 0,
+            hitLocation: 'body',
+        });
+        expect(entry.noAttackRoll).toBe(true);
         expect(entry.sprayAvoidanceCharacteristic).toBe('agility');
+    });
+
+    it('the shared FFG payload carries no wielder bonuses; DH2 adds +20 untrained and +30 unbraced Heavy', () => {
+        expect(mech('spray').template.avoidUntrainedBonus).toBeNull();
+        const dh2Path = resolve(__dirname, '../../packs-private/dark-heresy-2/dh2-core-items-weapon-qualities/_source/spray_oc7tLjpRxKGMQyqk.json');
+        const dh2 = JSON.parse(readFileSync(dh2Path, 'utf8')) as { system: { mechanics?: WeaponQualityMechanicsInput; mechanicsRef?: string } };
+        const dh2Mechanics = weaponQualityMechanicsFromRaw(dh2.system.mechanics);
+        expect(dh2.system.mechanicsRef).toBeUndefined();
+        expect(dh2Mechanics.template.avoidUntrainedBonus).toBe(20);
+        expect(dh2Mechanics.template.avoidUnbracedHeavyBonus).toBe(30);
+        expect(dh2Mechanics.template.angle).toBe(30);
     });
 });
 

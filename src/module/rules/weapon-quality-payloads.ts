@@ -11,7 +11,7 @@
  * each over the all-absent default so consumers always get a fully-shaped payload.
  */
 
-import type { WeaponQualityDieOp, WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
+import type { WeaponQualityDieOp, WeaponQualityMechanics, WeaponQualityTemplate } from '../data/item/weapon-quality-mechanics.ts';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 
 /** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
@@ -22,6 +22,7 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
     return {
         type: '',
         selectable: false,
+        noAttackRoll: false,
         chosenRangeBonus: null,
         chosenAmmoMultiplier: null,
         chosenBlastBonus: null,
@@ -63,7 +64,17 @@ function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
         toxicAdditionalDamageDice: '',
         sprayAvoidanceCharacteristic: '',
         hitEffect: { requiresSave: '', failEffect: '', stunRoundsVariable: false, stunRounds: null, saveTargetPenaltyPerLevel: null },
-        template: { shape: '', radiusVariable: false },
+        template: {
+            shape: '',
+            angle: null,
+            distanceSource: '',
+            anchor: '',
+            resolution: '',
+            avoidModifier: null,
+            avoidUntrainedBonus: null,
+            avoidUnbracedHeavyBonus: null,
+            hitLocation: '',
+        },
         rangeBands: { pointBlank: null, shortRange: null, standardRange: null, longRange: null, extremeRange: null },
         dieOps: [],
     };
@@ -287,8 +298,10 @@ export function chosenQualityEffects(chosenQualityIds: Iterable<string>, systemI
  * top-level keys optional but still demands COMPLETE `WeaponQualityDieOp` entries,
  * which is stricter than what the merge actually accepts.
  */
-export type WeaponQualityMechanicsInput = Partial<Omit<WeaponQualityMechanics, 'dieOps'>> & {
+export type WeaponQualityMechanicsInput = Partial<Omit<WeaponQualityMechanics, 'dieOps' | 'template'>> & {
     dieOps?: Array<Partial<WeaponQualityDieOp>>;
+    /** Authored with only the keys a quality sets; merged over the all-absent template. */
+    template?: Partial<WeaponQualityTemplate>;
 };
 
 /** Seed the index directly (unit tests / stories — no Foundry pack available there). Populates the flat fallback. */

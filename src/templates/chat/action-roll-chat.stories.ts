@@ -12,6 +12,9 @@
  *   4. TargetOnly     — target posted, no dice entered (breakdown only).
  *   5. PerSystem      — the Success card framed under each of the 7 systems,
  *                       the IM frame routed through `withSystem(..., 'im')`.
+ *   6. SprayNoAttackRoll — no roll/target/DoS rows; the area statement and the
+ *                       template resolve control instead (#599 / #600).
+ *   7. BlastWithAttackRoll — the roll readout stays; resolve replaces Roll Damage.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -58,8 +61,12 @@ interface ActionRollData {
     isOpposed?: boolean;
     ignoreDegrees?: boolean;
     ignoreSuccess?: boolean;
-    /** Spray-quality attack — shows the avoidance control (#101 / #103). */
-    isSpray?: boolean;
+    /** A quality removes the attack roll (Spray, #600). */
+    noAttackRoll?: boolean;
+    /** The area the attack's quality declares (#599); its presence offers the Resolve control. */
+    areaTemplate?: { shape: 'cone' | 'circle'; distance: number };
+    /** The card's plain statement of the area's mechanic. */
+    areaStatement?: string;
     /** Provenance label for a substituted base (Field Vivisection, #101). */
     baseLabel?: string;
 }
@@ -346,22 +353,81 @@ export const SystemFrameIM: Story = {
     },
 };
 
-// ── Without talents (#101) ────────────────────────────────────────────────────
+// ── Area attacks (#599 / #600) ────────────────────────────────────────────────
 
-/** A Spray attack is a forced hit; the card offers everyone in the cone the avoidance test (Agility, or Dodge with Leaping Dodge). */
-export const SprayAvoidance: Story = {
-    name: 'Spray — Avoid Spray control (Leaping Dodge)',
+const SPRAY_STATEMENT = 'Spray: no attack roll. Targets in the cone test Agility (+0).';
+
+/**
+ * A Spray attack makes no attack roll: the card states the mechanic instead of a roll,
+ * a target and degrees, and offers to resolve the tokens in the placed cone. Nothing
+ * that presumes a BS test (Fate +DoS, Dodge / Parry, Roll Damage) is offered.
+ */
+export const SprayNoAttackRoll: Story = {
+    name: 'Spray — no attack roll, cone resolve control',
     args: {
         id: 'roll-spray',
         label: 'Flamer',
-        rollData: successRollData({ name: 'Flamer', ignoreControls: false, isSpray: true, ignoreDegrees: true, ignoreModifiers: true }),
+        // No `roll`, `resultFormula` or `hitLocation`: a no-attack-roll attack has none.
+        rollData: {
+            name: 'Flamer',
+            action: 'Standard Attack',
+            effectString: '1d10+4 E; Pen 2',
+            isManualRoll: false,
+            ignoreModifiers: true,
+            ignoreDegrees: true,
+            ignoreSuccess: true,
+            ignoreControls: false,
+            noAttackRoll: true,
+            baseTarget: BASE_TARGET,
+            modifiedTarget: BASE_TARGET,
+            activeModifiers: {},
+            modifierSources: [],
+            success: true,
+            dos: 1,
+            areaTemplate: { shape: 'cone', distance: 20 },
+            areaStatement: SPRAY_STATEMENT,
+        },
         effectOutput: [],
     },
     render: (args) => renderCard(args),
     play: async ({ canvasElement }) => {
-        const avoid = canvasElement.querySelector<HTMLButtonElement>('.roll-control__avoid-spray');
-        await expect(avoid).not.toBeNull();
-        await expect(avoid?.dataset['rollId']).toBe('roll-spray');
+        const statement = canvasElement.querySelector('[data-area-statement]');
+        await expect(statement?.textContent.trim()).toBe(SPRAY_STATEMENT);
+        // No BS test happened, so nothing reads as one.
+        await expect(canvasElement.textContent).not.toContain('Roll vs Target');
+        await expect(canvasElement.textContent).not.toContain('Degrees of Success');
+        await expect(canvasElement.textContent).not.toContain('DoS');
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBe(0);
+        const resolve = canvasElement.querySelector<HTMLButtonElement>('.roll-control__resolve-area');
+        await expect(resolve).not.toBeNull();
+        await expect(resolve?.dataset['rollId']).toBe('roll-spray');
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+        await expect(canvasElement.querySelector('.roll-control__fate-add-dos')).toBeNull();
+        await expect(canvasElement.querySelector('.roll-control__attempt-dodge')).toBeNull();
+    },
+};
+
+/** Blast keeps its BS test and its roll readout; the template control replaces Roll Damage. */
+export const BlastWithAttackRoll: Story = {
+    name: 'Blast (3) — attack roll kept, blast resolve control',
+    args: {
+        id: 'roll-blast',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({
+            name: 'Frag Grenade',
+            ignoreControls: false,
+            areaTemplate: { shape: 'circle', distance: 3 },
+            areaStatement: 'Blast (3): Everyone in the blast (3 m) takes a hit.',
+        }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.textContent).toContain('Roll vs Target');
+        await expect(canvasElement.textContent).toContain('Degrees of Success');
+        await expect(canvasElement.querySelector('[data-area-statement]')?.textContent).toContain('Blast (3)');
+        await expect(canvasElement.querySelector('.roll-control__resolve-area')).not.toBeNull();
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
     },
 };
 
@@ -377,6 +443,7 @@ export const FieldVivisectionBase: Story = {
     render: (args) => renderCard(args),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.textContent).toContain('Medicae (BS) — Field Vivisection');
-        await expect(canvasElement.querySelector('.roll-control__avoid-spray')).toBeNull();
+        await expect(canvasElement.querySelector('.roll-control__resolve-area')).toBeNull();
+        await expect(canvasElement.querySelector('[data-area-statement]')).toBeNull();
     },
 };

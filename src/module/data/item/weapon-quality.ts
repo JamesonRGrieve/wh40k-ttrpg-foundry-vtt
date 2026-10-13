@@ -1,7 +1,14 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import { WEAPON_QUALITY_DIE_OP_KINDS, WEAPON_QUALITY_DIE_OP_PHASES, type WeaponQualityMechanics } from './weapon-quality-mechanics.ts';
+import {
+    WEAPON_QUALITY_DIE_OP_KINDS,
+    WEAPON_QUALITY_DIE_OP_PHASES,
+    WEAPON_QUALITY_TEMPLATE_ANCHORS,
+    WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES,
+    WEAPON_QUALITY_TEMPLATE_RESOLUTIONS,
+    type WeaponQualityMechanics,
+} from './weapon-quality-mechanics.ts';
 
 /**
  * Data model for Weapon Quality items (reference items for weapon qualities).
@@ -50,6 +57,8 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                 type: new fields.StringField({ required: false, blank: true, initial: '' }),
                 // Attacker opts into this quality per attack (see WeaponQualityMechanics.selectable).
                 selectable: new fields.BooleanField({ required: false, initial: false }),
+                // No attack roll (see WeaponQualityMechanics.noAttackRoll).
+                noAttackRoll: new fields.BooleanField({ required: false, initial: false }),
                 // Effects while a selectable quality is chosen (see WeaponQualityMechanics.chosen*).
                 chosenRangeBonus: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 chosenAmmoMultiplier: new fields.NumberField({ required: false, nullable: true, initial: null, min: 1 }),
@@ -98,9 +107,18 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                     stunRounds: new fields.NumberField({ required: false, nullable: true, initial: null }),
                     saveTargetPenaltyPerLevel: new fields.NumberField({ required: false, nullable: true, initial: null }),
                 }),
+                // Area template (#599): shape, size source, anchor and what happens to
+                // the creatures inside — read by `rules/area-template.ts`.
                 template: new fields.SchemaField({
                     shape: new fields.StringField({ required: false, blank: true, initial: '' }),
-                    radiusVariable: new fields.BooleanField({ required: false, initial: false }),
+                    angle: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, max: 360 }),
+                    distanceSource: new fields.StringField({ required: false, blank: true, initial: '', choices: WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES }),
+                    anchor: new fields.StringField({ required: false, blank: true, initial: '', choices: WEAPON_QUALITY_TEMPLATE_ANCHORS }),
+                    resolution: new fields.StringField({ required: false, blank: true, initial: '', choices: WEAPON_QUALITY_TEMPLATE_RESOLUTIONS }),
+                    avoidModifier: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    avoidUntrainedBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    avoidUnbracedHeavyBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
+                    hitLocation: new fields.StringField({ required: false, blank: true, initial: '' }),
                 }),
                 rangeBands: new fields.SchemaField({
                     pointBlank: new fields.NumberField({ required: false, nullable: true, initial: null }),

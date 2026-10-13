@@ -3,12 +3,16 @@
 // module's graph and formed 72 of the repo's import cycles for one symbol.
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
-import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { tokensInAreaTemplate } from '../canvas/area-template-canvas.ts';
+import { t } from '../i18n/t.ts';
 import type { ActionData } from '../rolls/action-data.ts';
+import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
-import { uuid, postChatCard, emitChatFromTemplate } from '../rolls/roll-helpers.ts';
+import { WeaponRollData } from '../rolls/roll-data.ts';
+import { uuid, postChatCard, emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
 import { actionBudgetForActor, spendActionForActor } from '../rules/action-economy.ts';
+import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { weaponHasQuality } from '../rules/weapon-quality-effects.ts';
@@ -20,6 +24,9 @@ import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
 
+/** The card listing who an area attack caught (#599). */
+const AREA_RESOLUTION_TEMPLATE = 'systems/wh40k-rpg/templates/chat/area-resolution-chat.hbs';
+
 /**
  * Structural narrowing of WH40KBaseActor with the `rollSkill` method that
  * system-specific subclasses (Acolyte, Npc) define but the base type does
@@ -30,9 +37,6 @@ type WithRollSkill = WH40KBaseActorDocument & {
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollSkill options object is forwarded to Foundry's roll dispatcher
     rollSkill?: (skill: string, spec?: string, opts?: Record<string, unknown>) => Promise<void>;
 };
-
-/** A defender rolling to avoid a Spray attack. */
-type SprayDefender = WH40KBaseActor;
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -112,9 +116,9 @@ export class BasicActionManager {
                     void this._attemptReaction(ev, 'parry');
                 });
             });
-            html.querySelectorAll('.roll-control__avoid-spray').forEach((el) => {
+            html.querySelectorAll('.roll-control__resolve-area').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
-                    void this._avoidSpray(ev);
+                    void this._resolveArea(ev);
                 });
             });
         });
@@ -189,41 +193,42 @@ export class BasicActionManager {
         // resolved against a target, surface the post-armour/TB damage on the card up
         // front. The manual "Assign Damage" button below still performs the application.
         const damageTarget = actionData.rollData.targetActor;
-        let targetName: string | null = null;
+        const hits = actionData.damageData?.hits ?? [];
+        // Area hits each name their own creature; "effective vs <target>" would name the wrong one.
+        const targetName: string | null = hits.some((hit) => hit.targetUuid !== '') ? null : damageTarget?.name ?? null;
         let autoApplied = false;
-        if (damageTarget != null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape and .name is the document name
-            const targetLike = damageTarget as unknown as ActorLike & { name?: string };
-            targetName = targetLike.name ?? null;
-            // Auto-apply (#248) runs only on a GM client: applying damage updates the
-            // target actor, so it must happen once on a client with permission. The card
-            // HTML is generated here, so a GM-rolled attack bakes in autoApplied=true (and
-            // hides the manual button) for everyone; player-rolled attacks fall back to the
-            // manual "Assign Damage" button.
-            const autoApply = WH40KSettings.isAutoApplyDamageEnabled() && game.user.isGM;
-            // Process hits as a sequential promise chain (not a for-await loop): each
-            // auto-apply writes the target's wounds, so they must run one at a time to
-            // avoid racing actor.update.
-            await (actionData.damageData?.hits ?? []).reduce<Promise<void>>(async (previous, hit) => {
-                await previous;
-                const assign = new AssignDamageData(targetLike, hit);
-                assign.update();
-                const preview = assign.previewReducedDamage();
-                hit.hasEffective = true;
-                hit.effectiveDamage = preview.effective;
-                hit.effectiveArmour = preview.armour;
-                hit.effectiveTb = preview.toughnessBonus;
-                hit.effectiveAbsorbed = preview.absorbed;
-                if (autoApply) {
-                    // finalize() applies wounds + rolls critical damage; performAction…()
-                    // writes the wound/critical update and posts the assign-damage card
-                    // (incl. the critical-injury status item).
-                    await assign.finalize();
-                    await assign.performActionAndSendToChat();
-                    autoApplied = true;
-                }
-            }, Promise.resolve());
-        }
+        // Auto-apply (#248) runs only on a GM client: applying damage updates the
+        // target actor, so it must happen once on a client with permission. The card
+        // HTML is generated here, so a GM-rolled attack bakes in autoApplied=true (and
+        // hides the manual button) for everyone; player-rolled attacks fall back to the
+        // manual "Assign Damage" button.
+        const autoApply = WH40KSettings.isAutoApplyDamageEnabled() && game.user.isGM;
+        // Process hits as a sequential promise chain (not a for-await loop): each
+        // auto-apply writes the target's wounds, so they must run one at a time to
+        // avoid racing actor.update. An area hit (#599) lands on its own creature;
+        // every other hit lands on the card's target.
+        await hits.reduce<Promise<void>>(async (previous, hit) => {
+            await previous;
+            const hitTarget = hit.targetUuid === '' ? damageTarget : await this.#actorFromUuid(hit.targetUuid);
+            if (hitTarget == null) return;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the target is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape
+            const assign = new AssignDamageData(hitTarget as unknown as ActorLike, hit);
+            assign.update();
+            const preview = assign.previewReducedDamage();
+            hit.hasEffective = true;
+            hit.effectiveDamage = preview.effective;
+            hit.effectiveArmour = preview.armour;
+            hit.effectiveTb = preview.toughnessBonus;
+            hit.effectiveAbsorbed = preview.absorbed;
+            if (autoApply) {
+                // finalize() applies wounds + rolls critical damage; performAction…()
+                // writes the wound/critical update and posts the assign-damage card
+                // (incl. the critical-injury status item).
+                await assign.finalize();
+                await assign.performActionAndSendToChat();
+                autoApplied = true;
+            }
+        }, Promise.resolve());
 
         const templateData = {
             weaponName: actionData.rollData.name,
@@ -439,38 +444,82 @@ export class BasicActionManager {
     }
 
     /**
-     * Spray avoidance (#103, DH2 Enemies Without p. 63): everyone caught in a
-     * Spray weapon's cone tests to avoid the hit. The defenders are the tokens
-     * the clicking user controls (several may be in the cone), falling back to
-     * the card's target. Each rolls Agility — or Dodge when it owns Leaping
-     * Dodge — through its own roll pipeline. Not a Reaction, so nothing is spent.
+     * Resolve an area attack against the tokens inside its template (#599). The template
+     * is read as it stands now, so the user may have moved or rotated it after the
+     * attack placed it. The firer is never caught. An `avoid` area (Spray) has each
+     * creature roll its avoidance test — Agility, or Dodge with Leaping Dodge (#101,
+     * #103) — with the quality's difficulty and the wielder's untrained / unbraced-Heavy
+     * bonuses as provenance rows; a failure is a hit. A `hit` area (Blast) hits everyone
+     * inside. The results post as a card whose Roll Damage rolls one hit per creature hit.
      */
-    async _avoidSpray(event: Event): Promise<void> {
+    async _resolveArea(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
         const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
-        const controlled = (canvas.tokens?.controlled ?? []).map((token) => token.actor).filter((actor): actor is NonNullable<typeof actor> => actor != null);
-        const fallback = actionData?.rollData.targetActor ?? null;
-        const defenders: SprayDefender[] = controlled.length > 0 ? controlled : fallback === null ? [] : [fallback];
-        if (defenders.length === 0) {
-            ui.notifications.warn(game.i18n.localize('WH40K.WithoutTalents.LeapingDodge.NoDefender'));
+        const rollData = actionData?.rollData;
+        if (actionData == null || !(rollData instanceof WeaponRollData) || rollData.areaTemplate === null) return;
+        const spec = rollData.areaTemplate;
+        const firerTokenIds = new Set((rollData.sourceActor?.getActiveTokens() ?? []).map((token) => token.id));
+        const caught = rollData.areaTemplateRef === null ? null : tokensInAreaTemplate(rollData.areaTemplateRef, firerTokenIds);
+        if (caught === null) {
+            ui.notifications.warn(t('WH40K.AreaAttack.NoTemplate'));
             return;
         }
-        for (const defender of defenders) {
+        if (caught.length === 0) {
+            ui.notifications.info(t('WH40K.AreaAttack.NoTargets'));
+            return;
+        }
+
+        btn.disabled = true;
+        const wielder = rollData.areaAvoidanceWielder();
+        const rolls: Roll[] = [];
+        const results: AreaTargetResult[] = [];
+        for (const token of caught) {
+            const defender = token.actor;
+            // An actor's UUID is null only before it is persisted; such a token cannot take a hit.
+            const actorUuid = defender?.uuid ?? null;
+            if (defender === null || actorUuid === null) continue;
+            const name = token.name;
+            if (spec.avoid === null) {
+                results.push(areaHitResult(token.id, actorUuid, name));
+                continue;
+            }
             const items = Array.from(defender.items, (item) => ({ type: item.type, system: item.system as { identifier?: string } }));
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
             const agility = defender.characteristics['agility']?.total ?? 0;
             const dodge = (defender.system as { skills?: Partial<Record<string, { current: number }>> }).skills?.['dodge']?.current ?? 0;
             const test = sprayAvoidanceTest(items, agility, dodge);
-            if (test.skill === 'dodge') {
-                ui.notifications.info(game.i18n.format('WH40K.WithoutTalents.LeapingDodge.UsingDodge', { name: defender.name }));
-                // `rollSkill` lives on the character / NPC subclasses, not the base actor (same reach as `_attemptReaction`).
-                // eslint-disable-next-line no-await-in-loop -- sequential by design: each defender's test opens its own roll dialog
-                await (defender as SprayDefender & { rollSkill?: (skill: string) => Promise<void> }).rollSkill?.('dodge');
-            } else {
-                defender.rollCharacteristic('agility', game.i18n.localize('WH40K.WithoutTalents.LeapingDodge.AgilityFlavor'));
-            }
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: each creature's d100 is its own roll on the card
+            const roll = await roll1d100();
+            rolls.push(roll);
+            results.push(
+                avoidanceResult({
+                    tokenId: token.id,
+                    actorUuid,
+                    name,
+                    skill: test.skill,
+                    base: test.target,
+                    components: areaAvoidanceComponents(spec.avoid, wielder),
+                    roll: roll.total ?? 0,
+                }),
+            );
         }
+
+        rollData.areaResults = results;
+        // A fresh resolution replaces any hits rolled from an earlier one.
+        if (actionData.damageData !== undefined) actionData.damageData.hits = [];
+        await emitChatFromTemplate(
+            AREA_RESOLUTION_TEMPLATE,
+            {
+                rollId: actionData.id,
+                weaponName: rollData.name,
+                summary: rollData.areaStatement,
+                results: areaResultRows(results),
+                anyHit: results.some((result) => result.hit),
+                _gameSystemId: firstSystemId(rollData.sourceActor),
+            },
+            { rolls },
+        );
     }
 
     async _refundResources(event: Event): Promise<void> {
@@ -679,11 +728,7 @@ export class BasicActionManager {
 
         let targetActor: WH40KBaseActorDocument | undefined;
         if (targetUuid != null && targetUuid !== '') {
-            const doc = await fromUuid(targetUuid);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; no typed accessor in fvtt-types
-            const actor = doc instanceof Actor ? doc : (doc as unknown as { actor?: unknown } | null)?.actor;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: actor is instanceof-narrowed from unknown; cast through unknown is necessary
-            targetActor = actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : undefined;
+            targetActor = (await this.#actorFromUuid(targetUuid)) ?? undefined;
         } else {
             const targetedObjects = game.user.targets;
             if (targetedObjects.size > 0) {
@@ -718,13 +763,7 @@ export class BasicActionManager {
             return;
         }
 
-        const actor = await fromUuid(targetUuid);
-        /* eslint-disable no-restricted-syntax -- boundary: fromUuid result may be a TokenDocument with .actor; cast through unknown is necessary */
-        const targetActor =
-            actor instanceof Actor
-                ? (actor as unknown as WH40KBaseActorDocument)
-                : ((actor as unknown as { actor?: unknown } | null)?.actor as WH40KBaseActorDocument | undefined);
-        /* eslint-enable no-restricted-syntax */
+        const targetActor = await this.#actorFromUuid(targetUuid);
 
         if (targetActor == null) {
             ui.notifications.warn(game.i18n.localize('WH40K.Notify.Action.NoActor'));
@@ -767,6 +806,15 @@ export class BasicActionManager {
         const assignData = new AssignDamageData(sourceActor as unknown as ActorLike, hitData);
         prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
         /* eslint-enable no-restricted-syntax */
+    }
+
+    /** The actor a UUID names: an Actor, or the actor of a token document. Null when it resolves to neither. */
+    async #actorFromUuid(documentUuid: string): Promise<WH40KBaseActorDocument | null> {
+        const doc = await fromUuid(documentUuid);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns an untyped document that may be a TokenDocument carrying .actor
+        const actor = doc instanceof Actor ? doc : (doc as unknown as { actor?: unknown } | null)?.actor;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid's Actor is narrowed by instanceof; the system's document type is not surfaced on it
+        return actor instanceof Actor ? (actor as unknown as WH40KBaseActorDocument) : null;
     }
 
     getActionData(id: string | undefined): ActionData | null {

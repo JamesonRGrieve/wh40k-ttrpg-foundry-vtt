@@ -1,11 +1,13 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
+import { activeTokenOf, placeAreaTemplate } from '../canvas/area-template-canvas.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
+import type { AreaTargetResult, AreaTemplateSpec } from '../rules/area-template.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
@@ -23,7 +25,14 @@ import { type CastRecipient, castEffectsFor, type PowerEffectSource } from '../r
 import type { RerollOption } from '../rules/reroll.ts';
 import { isSancticDiscipline } from '../rules/sanctic-daemonology.ts';
 import { hasSancticPurity, SANCTIC_PURITY_FATE_COST } from '../rules/sanctic-purity.ts';
-import { scatterDirection } from '../rules/scatter.ts';
+import {
+    buildScatterVector,
+    labelForDirection,
+    rollScatterDirection,
+    SCATTER_DISTANCE_FORMULA,
+    type ScatterVector,
+    scatterDirection,
+} from '../rules/scatter.ts';
 import {
     applyFirstAidOutcome,
     blatherRounds,
@@ -51,6 +60,7 @@ import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xen
 import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { resolveGainedMalignancy } from './malignancy-outcome.ts';
@@ -71,7 +81,6 @@ const EFFECT_TITLE = {
     disarm: 'WH40K.ActionEffect.Title.Disarm',
     allOutAttack: 'WH40K.ActionEffect.Title.AllOutAttack',
     stunAttack: 'WH40K.ActionEffect.Title.StunAttack',
-    spray: 'WH40K.ActionEffect.Title.Spray',
     suppressing: 'WH40K.ActionEffect.Title.Suppressing',
     nearOverheat: 'WH40K.ActionEffect.Title.NearOverheat',
     catastrophicJam: 'WH40K.ActionEffect.Title.CatastrophicJam',
@@ -380,6 +389,15 @@ export class ActionData {
 
     async _calculateHit(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
+        // A quality that removes the attack roll (Spray) rolls no d100: the attack
+        // lands and the area decides who is hit (#600). Conditions that make the
+        // attacker fail a test still apply.
+        if (this.#noAttackRoll()) {
+            this.rollData.roll = null;
+            this.rollData.success = true;
+            this.applyConditionOutcomeRules();
+            return;
+        }
         if ((weaponRollData as { isManualRoll?: boolean }).isManualRoll !== true) {
             // Advantage / Disadvantage / Emphasis roll the d100 twice and keep one —
             // only while the homebrew setting is on (RAW: one d100).
@@ -478,13 +496,6 @@ export class ActionData {
                 return;
             }
 
-            if (this.rollData.hasAttackSpecial('Spray')) {
-                this.rollData.success = true;
-                this.rollData.dos = 1;
-                this.rollData.dof = 0;
-                this.addEffect(t(EFFECT_TITLE.spray), t('WH40K.ActionEffect.Spray'));
-            }
-
             const itemSystem = actionItem.system as {
                 isMelee?: boolean;
                 isRanged?: boolean;
@@ -498,7 +509,8 @@ export class ActionData {
             // frequency 'per-round', combatMode 'melee'), surfaced on the roll card
             // via getRerollOptions — no longer an automatic re-roll here (Direction #7
             // + RAW: the talent says the character *may* re-roll).
-            if (itemSystem.isRanged === true) {
+            // Jams and overheats read the d100, so an attack that rolls none skips them.
+            if (itemSystem.isRanged === true && !this.#noAttackRoll()) {
                 if (this.rollData.action === 'Suppressing Fire - Semi') {
                     this.addEffect(t(EFFECT_TITLE.suppressing), t('WH40K.ActionEffect.Suppressing.Semi'));
                 } else if (this.rollData.action === 'Suppressing Fire - Full') {
@@ -577,9 +589,12 @@ export class ActionData {
 
         if (this.rollData.success) {
             this.rollData.dof = 0;
-            // Floored at 1: a FORCED success (a helpless target, Spray) can have a
-            // roll above the target, whose negative margin is not a degree count.
-            this.rollData.dos = Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0));
+            // Floored at 1: a FORCED success (a helpless target) can have a roll
+            // above the target, whose negative margin is not a degree count. With no
+            // attack roll at all there are no degrees to count: one.
+            this.rollData.dos = this.#noAttackRoll()
+                ? 1
+                : Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0));
 
             const damageData = this.damageData;
             if (actionItem !== undefined && damageData !== undefined) {
@@ -631,7 +646,9 @@ export class ActionData {
             // auto-fail, a jam) can have a roll at or under the target.
             this.rollData.dof = Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget));
 
-            if (weaponRollData.isThrown) {
+            // An area weapon's miss scatters its template instead (prepareAreaAttack),
+            // which reports the direction and distance it actually rolled.
+            if (weaponRollData.isThrown && this.#areaTemplate() === null) {
                 this.addEffect(t(EFFECT_TITLE.deviation), t('WH40K.ActionEffect.Deviation', { direction: scatterDirection() }));
             }
 
@@ -665,6 +682,11 @@ export class ActionData {
 
     async calculateHits(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
+        const area = this.#areaTemplate();
+        if (area !== null) {
+            await this.#calculateAreaHits(area);
+            return;
+        }
         if ((this.rollData.success || weaponRollData.isThrown) && this.damageData !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
             const attackData = this as unknown as AttackDataLike;
@@ -686,6 +708,75 @@ export class ActionData {
                 this.damageData.hits.push(hit);
             }
         }
+    }
+
+    /**
+     * One hit per creature the resolved template hits (#599): each failed Spray
+     * avoidance test, everyone under a Blast. A quality that fixes the hit location
+     * (Spray: the Body) sets it on every hit.
+     */
+    async #calculateAreaHits(area: AreaTemplateSpec): Promise<void> {
+        const damageData = this.damageData;
+        if (damageData === undefined) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: ActionData↔AttackDataLike are duck-typed siblings
+        const attackData = this as unknown as AttackDataLike;
+        const location = area.hitLocation === '' ? null : area.hitLocation;
+        for (const caught of this.#areaResults()) {
+            if (!caught.hit) continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
+            const hit = await Hit.createHit(attackData, 0, location);
+            hit.targetName = caught.name;
+            hit.targetUuid = caught.actorUuid;
+            damageData.hits.push(hit);
+        }
+    }
+
+    /** The area template the attack's qualities declare, or null (always null off a weapon attack). */
+    #areaTemplate(): AreaTemplateSpec | null {
+        return this.rollData instanceof WeaponRollData ? this.rollData.areaTemplate : null;
+    }
+
+    /** Whether the attack makes no attack roll (always false off a weapon attack). */
+    #noAttackRoll(): boolean {
+        return this.rollData instanceof WeaponRollData && this.rollData.noAttackRoll;
+    }
+
+    /** The creatures the resolved template caught; empty until it is resolved. */
+    #areaResults(): readonly AreaTargetResult[] {
+        return this.rollData instanceof WeaponRollData ? this.rollData.areaResults : [];
+    }
+
+    /**
+     * Place the area attack's template and state its mechanic on the card (#599, #600).
+     * A firer-anchored cone sits on the attacker pointing at the target; an impact
+     * template sits on the target, and on a miss it scatters (1d10 direction on the
+     * scatter diagram, 1d5 metres) and is centred where the shot lands. The creatures
+     * inside are resolved later from the card, after the user has adjusted it.
+     */
+    async prepareAreaAttack(): Promise<void> {
+        const rollData = this.rollData;
+        if (!(rollData instanceof WeaponRollData) || rollData.areaTemplate === null) return;
+        const spec = rollData.areaTemplate;
+        rollData.areaResults = [];
+        rollData.areaStatement = localizeAreaStatement(spec, rollData.noAttackRoll);
+
+        let scatter: ScatterVector | null = null;
+        if (spec.anchor === 'impact' && !rollData.success) {
+            const metres = await new Roll(SCATTER_DISTANCE_FORMULA).evaluate();
+            scatter = buildScatterVector(rollScatterDirection(), metres.total);
+            this.addEffect(
+                t(EFFECT_TITLE.deviation),
+                t('WH40K.AreaAttack.Scatter', { metres: scatter.metres, direction: labelForDirection(scatter.direction) }),
+            );
+        }
+
+        const firer = activeTokenOf(rollData.sourceActor);
+        if (firer === null) {
+            ui.notifications.warn(t('WH40K.AreaAttack.NoCanvas'));
+            return;
+        }
+        rollData.areaTemplateRef = await placeAreaTemplate(spec, firer, activeTokenOf(rollData.targetActor), scatter);
+        if (rollData.areaTemplateRef !== null) ui.notifications.info(t('WH40K.AreaAttack.Placed', { quality: areaQualityLabel(spec) }));
     }
 
     /** The declared target, as an allocation entry. Falls back to an unnamed placeholder. */
@@ -862,7 +953,7 @@ export class ActionData {
             await this.checkForOpposed();
             await this.checkForPerils();
 
-            if (this.rollData.success) {
+            if (this.rollData.success && !this.#noAttackRoll()) {
                 (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0) ?? '';
             }
 
@@ -873,6 +964,8 @@ export class ActionData {
             await this.descriptionText();
 
             await this.useResources();
+
+            await this.prepareAreaAttack();
         }
 
         this.rollData.render = (await this.rollData.roll?.render()) ?? null;
@@ -960,6 +1053,9 @@ export class ActionData {
         // counts as a "hit" for auto-damage purposes.
         if (!(this.rollData.success || this.rollData.isThrown === true)) return 'attack missed';
         if (!WH40KSettings.isAutoRollDamageEnabled()) return 'auto-roll-damage setting is off';
+        // An area attack's hits come from the creatures in its template, which the
+        // card resolves once the user has placed it (#599).
+        if (this.#areaTemplate() !== null) return 'area attack awaits its template resolution';
         return null;
     }
 

@@ -1,0 +1,45 @@
+{{!--
+    Area attack summary (#599 / #600) — the mechanic an area quality applies, stated
+    plainly in place of a roll/target/DoS readout, plus the per-target results once the
+    template is resolved.
+
+    Hash params:
+        summary  — required, the localized statement ("Spray: no attack roll. …")
+        results  — optional, [{name, hit, outcomeLabel, test: {label, base, roll, target, components:[{label, value, tooltipData}]}}]
+                   each test prints base ± every provenance row = target, hoverable via the
+                   shared wh40k-tooltip "modifier" type, then the d100 against that target.
+--}}
+<div class="tw-mb-2 tw-p-3 tw-border-l-[3px] tw-border-l-gold tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md" data-area-summary>
+    <div class="tw-flex tw-items-start tw-gap-1.5 tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)]">
+        <i class="fas fa-bullseye tw-text-gold tw-text-[0.8rem] tw-mt-0.5" aria-hidden="true"></i>
+        <span data-area-statement>{{summary}}</span>
+    </div>
+    {{#if results.length}}
+        <ul class="tw-mt-2 tw-flex tw-flex-col tw-gap-1 tw-list-none tw-p-0 tw-m-0" aria-label="{{localize "WH40K.AreaAttack.ResultsTitle"}}">
+            {{#each results as |result|}}
+                <li class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1 tw-border-t tw-border-[var(--wh40k-border-color)]" data-area-target data-area-hit="{{result.hit}}">
+                    <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.85rem]">
+                        <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-truncate">{{result.name}}</span>
+                        <span class="tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[0.75rem] {{#if result.hit}}tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-success-secondary)]{{/if}}" data-area-outcome>{{result.outcomeLabel}}</span>
+                    </div>
+                    {{#if result.test}}
+                        <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]">
+                            <span>{{result.test.label}}</span>
+                            <span data-area-base>{{result.test.base}}</span>
+                        </div>
+                        {{#each result.test.components as |component|}}
+                            <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.75rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}">
+                                <span class="tw-text-[var(--wh40k-card-muted)]">{{component.label}}</span>
+                                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{#if (gt component.value 0)}}+{{/if}}{{component.value}}</span>
+                            </div>
+                        {{/each}}
+                        <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]">
+                            <span>{{localize "WH40K.Roll.Audit.RollVsTarget"}}</span>
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]" data-area-roll>{{result.test.roll}} {{localize "WH40K.Roll.Audit.AgainstTarget" target=result.test.target}}</span>
+                        </div>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+    {{/if}}
+</div>

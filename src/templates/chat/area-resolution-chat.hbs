@@ -1,0 +1,16 @@
+{{!-- Area attack resolution (#599): who the template caught, each creature's
+      avoidance test (base ± provenance = target, roll) or plain hit, and the Roll
+      Damage that rolls one hit per creature hit. --}}
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline=(localize "WH40K.AreaAttack.ResultsTitle")
+    title=weaponName}}
+    {{> systems/wh40k-rpg/templates/chat/partial/area-attack-summary.hbs summary=summary results=results}}
+    {{#if anyHit}}
+        <div class="tw-flex tw-flex-col tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+            <button class="roll-control__roll-damage tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{rollId}}">
+                <span class="material-icons tw-text-[16px]" aria-hidden="true">bolt</span>
+                <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
+            </button>
+        </div>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}
