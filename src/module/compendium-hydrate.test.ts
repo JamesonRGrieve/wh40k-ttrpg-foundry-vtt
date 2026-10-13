@@ -304,6 +304,54 @@ describe('hydrateActorInMemory — commits onto a sealed source', () => {
         await expect(hydrateActorInMemory(actor)).resolves.toBe(0);
         expect(doc._source.system).toEqual({ variantOf: 'Compendium.x.Actor.base', specialization: 'Las', armour: 25 });
     });
+
+    /**
+     * 6499b134f: a canonical body that fails validation (live: a weapon whose
+     * compendium damage formula is "-") threw out of `updateSource`, and the boot
+     * join awaits every actor, so one bad item stopped the system's `ready`. Each
+     * item's commit is now isolated: the bad one is logged and skipped, the rest join.
+     */
+    it('one item whose canonical body fails validation is skipped; the others still join', async () => {
+        const errors = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { damage: '1d10' } }));
+        const bad = {
+            id: 'bad',
+            name: 'Broken Stub',
+            img: null,
+            type: 'weapon',
+            _stats: { compendiumSource: 'Compendium.x.Item.bad' },
+            ...sealedDoc({ cost: 1 }),
+            updateSource: (): void => {
+                throw new Error('validation failed: damage "-" is not a formula');
+            },
+        };
+        const goodDoc = sealedDoc({ cost: 2 });
+        const good = { id: 'good', name: 'Good Stub', img: null, type: 'weapon', _stats: { compendiumSource: 'Compendium.x.Item.good' }, ...goodDoc };
+        const actor = { items: { contents: [bad, good] }, name: 'Mixed Arsenal', reset: vi.fn() };
+        await expect(hydrateActorInMemory(actor)).resolves.toBe(1);
+        expect(goodDoc._source.system).toEqual({ damage: '1d10', cost: 2 });
+        expect(actor.reset).toHaveBeenCalledOnce();
+        expect(errors).toHaveBeenCalledWith(expect.stringContaining('skipped item bad on Mixed Arsenal'), expect.any(Error));
+    });
+
+    it('an actor whose only joinable item fails is left unreset, and the join still resolves', async () => {
+        vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, system: { damage: '1d10' } }));
+        const bad = {
+            id: 'bad',
+            name: 'Broken Stub',
+            img: null,
+            type: 'weapon',
+            _stats: { compendiumSource: 'Compendium.x.Item.bad' },
+            ...sealedDoc({ cost: 1 }),
+            updateSource: (): void => {
+                throw new Error('validation failed');
+            },
+        };
+        const actor = { items: { contents: [bad] }, name: 'Lone Stub', reset: vi.fn() };
+        await expect(hydrateActorInMemory(actor)).resolves.toBe(0);
+        expect(actor.reset).not.toHaveBeenCalled();
+    });
 });
 
 /**
