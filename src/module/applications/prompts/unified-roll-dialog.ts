@@ -1396,8 +1396,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * ran previously: the homebrew sense-channel gate (#440), the opposed contest
      * (`checkForOpposed` — Interrogation/Detection/Social, #435/#434/#433), and the
      * `descriptionText` auto-resolve (First Aid heal, DoS readout, disposition
-     * shift — #432/#437/#438/#436). Base `ActionData` no-ops both hooks, so a plain
-     * characteristic/skill roll is unaffected. Order matters: the sense-gate may
+     * shift — #432/#437/#438/#436), then `useResources` (a Malignancy Test spends its
+     * owed test, #67). Base `ActionData` no-ops all three for a non-weapon roll, so a
+     * plain characteristic/skill roll is unaffected. Order matters: the sense-gate may
      * force a failure that `descriptionText` must then read.
      */
     async _resolveSimpleActionHooks(): Promise<void> {
@@ -1405,6 +1406,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this.#applySituationalFailureConsequences();
         await this.actionData.checkForOpposed();
         await this.actionData.descriptionText();
+        // Spend what the resolved test costs, as `performActionAndSendToChat` does for
+        // weapons and powers. Without it a Malignancy Test never left the owed queue,
+        // and a Fate re-roll (refund → re-run) added one back.
+        await this.actionData.useResources();
     }
 
     /**
