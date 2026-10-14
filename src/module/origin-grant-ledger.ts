@@ -73,8 +73,14 @@ export function readOriginDelta(flags: unknown, key: string): OriginAppliedDelta
     const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.[SYSTEM_ID]?.[ORIGIN_GRANT_DELTAS_FLAG];
     if (bag === undefined || bag === null || typeof bag !== 'object') return {};
     // eslint-disable-next-line no-restricted-syntax -- boundary: per-origin delta entries are user-data-derived; narrowed to the numeric fields we read
-    const entry = (bag as Record<string, OriginAppliedDelta | undefined>)[key];
-    return entry ?? {};
+    const flat = (bag as Record<string, OriginAppliedDelta | undefined>)[key];
+    if (flat !== undefined) return flat;
+    // The delta is written through the update path `originDeltaFlagPath(key)`, and a
+    // compendium-UUID key is dotted (`Compendium.wh40k-rpg.<pack>.Item.<id>`), so
+    // Foundry's update stores it nested one level per segment. Read it back the
+    // same way; a flat lookup missed it, and every boot re-applied the origin.
+    const nested = valueAtPath(bag, key);
+    return nested !== null && typeof nested === 'object' ? nested : {};
 }
 
 /** The non-characteristic resources an origin's `modifiers.resources` block grants. */

@@ -4,6 +4,7 @@ import {
     BUILDER_ORIGIN_RESOURCE_PATHS,
     ORIGIN_GRANT_DELTAS_FLAG,
     ORIGIN_RESOURCE_PATHS,
+    ORIGIN_RESOURCES,
     type OriginAppliedDelta,
     deltaFromModifiers,
     type OriginIdentityItemLike,
@@ -117,6 +118,75 @@ describe('origin-grant-ledger: originIdentityKey', () => {
     it('is stable across re-derivation from the same item (key never drifts)', () => {
         const item = base({ _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-origins.Item.abc123' } });
         expect(originIdentityKey(item)).toBe(originIdentityKey(item));
+    });
+});
+
+/**
+ * Apply an `actor.update()` bag the way Foundry stores it: every dotted key
+ * is expanded one level per segment (`foundry.utils.expandObject`), so a
+ * dotted ledger key such as a compendium UUID ends up nested.
+ */
+function applyUpdate(target: Stored, updates: Stored): void {
+    for (const [path, value] of Object.entries(updates)) {
+        const parts = path.split('.');
+        const last = parts.pop() ?? '';
+        let node = target;
+        for (const part of parts) {
+            const next = node[part];
+            if (typeof next === 'object') {
+                node = next;
+            } else {
+                const created: Stored = {};
+                node[part] = created;
+                node = created;
+            }
+        }
+        node[last] = value;
+    }
+}
+
+/** A document's stored data: nested objects of numbers. */
+interface Stored {
+    [key: string]: Stored | number;
+}
+
+/** A recorded delta as stored data. */
+function toStored(delta: OriginAppliedDelta): Stored {
+    const out: Stored = { characteristics: { ...delta.characteristics } };
+    for (const resource of ORIGIN_RESOURCES) {
+        const value = delta[resource];
+        if (value !== undefined) out[resource] = value;
+    }
+    return out;
+}
+
+describe('origin-grant-ledger: the world-ready reconcile is idempotent through Foundry storage (#42)', () => {
+    // A compendium-UUID identity key: the dots make Foundry nest the ledger entry.
+    const KEY = 'Compendium.wh40k-rpg.ow-hammer-origins-homeworlds.Item.3422efadd4703be1';
+    const AGRI_WORLD: OriginModifierBag = { resources: { wounds: 2 } };
+
+    /** One boot's reconcile of the origin: read the ledger, reconcile, store the update as Foundry would. */
+    function boot(actor: { system: Stored; flags: Stored }): void {
+        const prior = readOriginDelta(actor.flags, KEY);
+        const { updates, newDelta } = reconcileResourceDeltas(actor.system, originContribution(deltaFromModifiers(AGRI_WORLD)), prior, ORIGIN_RESOURCE_PATHS);
+        const bag: Stored = { [originDeltaFlagPath(KEY)]: toStored(newDelta) };
+        for (const [path, value] of Object.entries(updates)) if (typeof value === 'number') bag[path] = value;
+        applyUpdate({ system: actor.system, flags: actor.flags }, bag);
+    }
+
+    it('reads back a delta Foundry stored nested under its dotted key', () => {
+        const flags: Stored = {};
+        applyUpdate({ flags }, { [originDeltaFlagPath(KEY)]: { wounds: 2 } });
+        expect(readOriginDelta(flags, KEY)).toEqual({ wounds: 2 });
+    });
+
+    it('applies Agri-World’s +2 Wounds once however many times the world readies', () => {
+        const actor: { system: Stored; flags: Stored } = { system: { wounds: { max: 10 } }, flags: {} };
+        boot(actor);
+        expect(actor.system['wounds']).toEqual({ max: 12 });
+        boot(actor);
+        boot(actor);
+        expect(actor.system['wounds']).toEqual({ max: 12 });
     });
 });
 
