@@ -38,6 +38,12 @@ describe('Roll Test dialog target breakdown (#489)', () => {
         for (const key of ["'fatigue'", "'try-again'", "'climb-surface'", "modifiers['gang-up']"]) expect(dialog).toContain(key);
     });
 
+    it('picking an attack mode re-renders the header, whose subtitle names the action (#607)', () => {
+        const handler = dialog.slice(dialog.indexOf('static async #onSelectAttackMode'));
+        const render = handler.slice(0, handler.indexOf('static async #onSelectAimMode'));
+        expect(render).toContain("parts: ['header', 'contextPanel', 'targetDisplay', 'diceInput']");
+    });
+
     it('renders one hoverable modifier row per component, not hand-picked buckets', () => {
         expect(targetDisplay).toContain('{{#each targetComponents as |component|}}');
         expect(targetDisplay).toContain('data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}"');

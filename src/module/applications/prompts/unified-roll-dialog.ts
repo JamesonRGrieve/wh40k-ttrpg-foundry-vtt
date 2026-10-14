@@ -2093,7 +2093,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             rd.modifiers['aim'] = 0;
         }
 
-        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        // The header's subtitle names the action, so it re-renders with the pick.
+        await this.render(false, { parts: ['header', 'contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     static async #onSelectAimMode(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
