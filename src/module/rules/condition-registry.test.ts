@@ -227,6 +227,54 @@ describe('the effect-creation picker is scoped to the bearer’s line (#516)', (
     });
 });
 
+describe('a line without its own copy resolves to the shared DH2 condition (#595, #516)', () => {
+    const BLINDFOLD = 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/delapouite/blindfold.svg';
+
+    beforeEach(() => {
+        // IM's pack is listed FIRST and prints its own Blinded; DH2's is the shared copy.
+        setConditionCatalog(
+            buildConditionCatalog([
+                {
+                    packName: 'im-core-items-conditions',
+                    rows: [
+                        {
+                            _id: 'imb',
+                            uuid: 'Compendium.wh40k-rpg.im-core-items-conditions.Item.imb',
+                            name: 'Blinded',
+                            img: 'icons/svg/mystery-man.svg',
+                            type: 'condition',
+                            system: { identifier: 'blinded' },
+                        },
+                    ],
+                },
+                {
+                    packName: 'dh2-core-items-conditions',
+                    rows: [
+                        {
+                            _id: 'dhb',
+                            uuid: 'Compendium.wh40k-rpg.dh2-core-items-conditions.Item.dhb',
+                            name: 'Blinded',
+                            img: BLINDFOLD,
+                            type: 'condition',
+                            system: { identifier: 'blinded' },
+                        },
+                    ],
+                },
+            ]),
+        );
+    });
+
+    it('BC and RT, which print no Blinded document of their own, take the DH2 copy, not IM’s', () => {
+        expect(resolveCondition('blinded', 'bc')?.img).toBe(BLINDFOLD);
+        expect(resolveCondition('blinded', 'rt')?.img).toBe(BLINDFOLD);
+        expect(conditionStatusEffects('bc').find((r) => r.id === 'blinded')?.img).toBe(BLINDFOLD);
+    });
+
+    it('IM keeps its own copy', () => {
+        expect(resolveCondition('blinded', 'im')?.img).toBe('icons/svg/mystery-man.svg');
+    });
+});
+
 describe('activeConditionMechanics', () => {
     it("reads the bearer's status ids against the catalog, resolved for its line", () => {
         const mechanics = activeConditionMechanics({ system: { gameSystem: 'rt' }, statuses: new Set(['grappled', 'not-a-condition']), items: [] });

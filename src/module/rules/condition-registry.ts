@@ -232,9 +232,27 @@ export function setConditionCatalog(next: ReadonlyMap<string, ConditionCatalogEn
     catalog = next;
 }
 
-/** The copy of a condition to use for a bearer of `line`: own line, then line-agnostic, then first. */
+/**
+ * The line whose condition documents are the shared copies (#595): another line's
+ * pack carries a reference stub to the DH2 document, or nothing at all, for a
+ * condition it prints the same way.
+ */
+const SHARED_CONDITION_LINE: SupportedLineKey = 'dh2';
+
+/**
+ * The copy of a condition to use for a bearer of `line`: its own line's, then a
+ * line-agnostic one, then the shared DH2 copy, then whichever exists. The shared
+ * copy comes before another line's own copy, so a line without a document resolves
+ * to the book text every line shares, not to some other line's variant (IM prints
+ * its own Blinded).
+ */
 function pickSource(entry: ConditionCatalogEntry, line: SupportedLineKey): ConditionSource | undefined {
-    return entry.sources.find((s) => s.line === line) ?? entry.sources.find((s) => s.line === null) ?? entry.sources[0];
+    return (
+        entry.sources.find((s) => s.line === line) ??
+        entry.sources.find((s) => s.line === null) ??
+        entry.sources.find((s) => s.line === SHARED_CONDITION_LINE) ??
+        entry.sources[0]
+    );
 }
 
 /** A condition resolved for one game line. */
