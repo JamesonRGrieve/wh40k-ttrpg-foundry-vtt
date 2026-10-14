@@ -10,7 +10,9 @@
  *      target component as a hoverable provenance row.
  *   2. Round won — opposed Command Tests with Crew / Hull / Turret bonuses,
  *      the winner's per-degree damage and the loser's Morale check.
- *   3. Defender wins — a tie resolves for the boarded ship by 0 degrees.
+ *   3. RT degrees — each full 10 of margin, no base degree, with the degrees
+ *      formula under each test; a bare pass (0 degrees) still beats a failure.
+ *   4. Defender wins — a tie resolves for the boarded ship by 0 degrees.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -45,14 +47,22 @@ function lockContext(roll: number): CardContext {
         difficultyKey: BOARDING_KEYS.lockDifficulty,
         situational: { value: 20, label: 'Trakta Field' },
     });
-    const test = resolveShipTest(derivation, roll);
+    const test = resolveShipTest(derivation, roll, 'gen1');
     return { ...BASE, lock: { test: buildTestView(storyLocalize('WH40K.Voidcraft.Boarding.LockTestTitle'), test, SOURCE, storyLocalize) } };
 }
 
 function roundContext(attackerRoll: number, defenderRoll: number, hullDegrees: number): CardContext {
-    const attacker = resolveShipTest(composeBoardingCommand({ ship: ATTACKER_SHIP, commandSkill: 50, failedBreakFree: false }, DEFENDER_SHIP), attackerRoll);
-    const defender = resolveShipTest(composeBoardingCommand({ ship: DEFENDER_SHIP, commandSkill: 45, failedBreakFree: true }, ATTACKER_SHIP), defenderRoll);
-    const round = resolveBoardingRound({ attackerRoll, attackerTarget: attacker.target, defenderRoll, defenderTarget: defender.target });
+    const attacker = resolveShipTest(
+        composeBoardingCommand({ ship: ATTACKER_SHIP, commandSkill: 50, failedBreakFree: false }, DEFENDER_SHIP),
+        attackerRoll,
+        'gen1',
+    );
+    const defender = resolveShipTest(
+        composeBoardingCommand({ ship: DEFENDER_SHIP, commandSkill: 45, failedBreakFree: true }, ATTACKER_SHIP),
+        defenderRoll,
+        'gen1',
+    );
+    const round = resolveBoardingRound(attacker, defender);
     const winner = round.winner === 'attacker' ? ATTACKER_SHIP : DEFENDER_SHIP;
     const loser = round.winner === 'attacker' ? DEFENDER_SHIP : ATTACKER_SHIP;
     const allocation = allocateBoardingDegrees(round.degrees, hullDegrees);
@@ -142,6 +152,35 @@ export const RoundWon: Story = {
         await expect(view.getByText(/wins the Command Test by/)).toBeTruthy();
         await expect(canvasElement.querySelectorAll('[data-wh40k-hook="ship-assault-damage"]').length).toBe(3);
         await expect(view.getByText(/tests Morale/)).toBeTruthy();
+    },
+};
+
+/** The attacker's Command target in {@link roundContext}, so a story can roll exactly on it. */
+const ATTACKER_COMMAND_TARGET = composeBoardingCommand({ ship: ATTACKER_SHIP, commandSkill: 50, failedBreakFree: false }, DEFENDER_SHIP).target;
+
+export const RoundDegreesCountedTheRtWay: Story = {
+    name: 'Boarding round — RT degrees: each full 10 of margin, no base degree (#188)',
+    args: roundContext(ATTACKER_COMMAND_TARGET - 25, 99, 0),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        // A 25-point margin is two RT degrees (the +1 count would say three), and the
+        // failed defender scores none, so the attacker wins by exactly two.
+        await expect(view.getByText(new RegExp(`${ATTACKER_SHIP.name} wins the Command Test by 2 degree`))).toBeTruthy();
+        await expect(view.getByText('Success — 2 DoS')).toBeTruthy();
+        const formulas = Array.from(canvasElement.querySelectorAll('[data-wh40k-hook="result-formula"]'), (el) => el.textContent.trim());
+        await expect(formulas[0]).toBe(`2 DoS = ⌊25 ÷ 10⌋ (roll ${ATTACKER_COMMAND_TARGET - 25} vs target ${ATTACKER_COMMAND_TARGET})`);
+        await expect(formulas).toHaveLength(2);
+    },
+};
+
+export const BarePassBeatsAFailure: Story = {
+    name: 'Boarding round — a bare pass (0 RT degrees) still beats a failure (#188)',
+    args: roundContext(ATTACKER_COMMAND_TARGET, 99, 0),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText(new RegExp(`${ATTACKER_SHIP.name} wins the Command Test by 0 degree`))).toBeTruthy();
+        await expect(view.getByText('Success — 0 DoS')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-assault-damage"]')).toBeNull();
     },
 };
 

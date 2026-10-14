@@ -75,8 +75,9 @@ test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', 
         const corsair = await createShip(page, CORSAIR);
         const before = await chatMessageIds(page);
         try {
-            // Boarder: Command 50 + 20 (Crew 80 vs 55) + 10 (Turrets) = 80, rolls 50 → 4 degrees over the Corsair,
-            // whose Command 45 + 10 = 55 fails on 60. One degree goes on Hull, three on 3d5 Crew + 3d5 Morale;
+            // Boarder: Command 50 + 20 (Crew 80 vs 55) + 10 (Turrets) = 80, rolls 50. RT counts each full 10
+            // of margin (RT Core p.232), so that is 3 degrees — the +1 count said 4. The Corsair's Command
+            // 45 + 10 = 55 fails on 60 and scores none. One degree goes on Hull, two on 2d5 Crew + 2d5 Morale;
             // the Corsair then tests its reduced Morale on a 40.
             const ran = await runAssaultFromSheet(page, boarder.id, {
                 tab: 'manoeuvreActions',
@@ -85,28 +86,31 @@ test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', 
                 defender: CORSAIR.name,
                 inputs: { attackerCommand: 50, defenderCommand: 45 },
                 choices: { hullDegrees: 1 },
-                faces: [50, 60, 2, 3, 4, 1, 2, 3, 40],
+                faces: [50, 60, 2, 3, 1, 2, 40],
             });
             expect(ran.inputNames).toEqual(
                 expect.arrayContaining(['attackerCommand', 'attackerFailedBreakFree', 'defenderCommand', 'defenderFailedBreakFree']),
             );
-            expect(ran.preview, 'the resolved dialog previews both Command Tests').toContain('Errant Vector (Boarding) wins the Command Test by 4 degree(s).');
+            expect(ran.preview, 'the resolved dialog previews both Command Tests').toContain('Errant Vector (Boarding) wins the Command Test by 3 degree(s).');
             expect(ran.unusedDice).toBe(0);
 
             expect(ran.card.html).toContain('data-wh40k-system="rt"');
             expect(ran.card.text).toContain('Larger Crew Population (80 vs 55)');
             expect(ran.card.text).toContain('Turret Rating 1');
+            expect(ran.card.text).toContain('Success — 3 DoS');
+            expect(ran.card.text).toContain('3 DoS = ⌊30 ÷ 10⌋ (roll 50 vs target 80)');
+            expect(ran.card.text).toContain('Failure — 0 DoF');
             expect(ran.card.text).toContain('Hull Integrity damage (1 per degree)');
             expect(ran.card.text).toContain('Crew Population damage (1d5 per degree)');
             expect(ran.card.text).toContain('Morale damage (1d5 per degree)');
-            expect(ran.card.text).toContain('Eldar Corsair tests Morale: rolled 40 against 53.');
+            expect(ran.card.text).toContain('Eldar Corsair tests Morale: rolled 40 against 56.');
             expect(ran.card.text).toContain('The crew fights on.');
             expect(ran.card.html.split('data-wh40k-hook="ship-assault-damage"').length - 1, 'Hull, Crew and Morale sections').toBe(3);
 
-            // Hull 28 − 1 (which also costs 1 Crew and 1 Morale), then 2+3+4 = 9 Crew and 1+2+3 = 6 Morale.
-            expect(await readShip(page, corsair.id)).toMatchObject({ hull: 27, population: 45, morale: 53 });
+            // Hull 28 − 1 (which also costs 1 Crew and 1 Morale), then 2+3 = 5 Crew and 1+2 = 3 Morale.
+            expect(await readShip(page, corsair.id)).toMatchObject({ hull: 27, population: 49, morale: 56 });
             expect(await readShip(page, boarder.id)).toMatchObject({ hull: 35, population: 80, morale: 75 });
-            expect(await snapShipVitals(page, corsair.id, 'ship-boarding-round-loser-after')).toEqual({ hull: '27', morale: '53', population: '45' });
+            expect(await snapShipVitals(page, corsair.id, 'ship-boarding-round-loser-after')).toEqual({ hull: '27', morale: '56', population: '49' });
         } finally {
             await deleteMessages(page, await messagesSince(page, before));
             await deleteActors(page, [boarder.id, corsair.id]);

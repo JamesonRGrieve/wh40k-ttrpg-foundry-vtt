@@ -107,6 +107,7 @@ export function createRammingFlow(loadProfile: RammingProfileLoader): ShipAssaul
                     situational: readSituational(form, 'situational'),
                 }),
                 rollTotal(testRoll),
+                ctx.degreesMethod,
             );
             if (!test.success) return { resolution: { test, damage: null }, rolls: [testRoll] };
 

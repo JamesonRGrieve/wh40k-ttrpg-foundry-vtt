@@ -33,14 +33,15 @@
  * Pure module: no RNG, no Foundry. The caller rolls the d100s and the d5s.
  */
 
-import { resolveOpposedByDoS } from './_dice.ts';
 import {
     deriveTarget,
     HARD_DIFFICULTY_KEY,
+    resolveOpposedShipTests,
     situationalComponents,
     type ShipAssaultShip,
     type ShipTestComponent,
     type ShipTestDerivation,
+    type ShipTestResult,
     type SituationalModifier,
 } from './ship-assault.ts';
 
@@ -117,14 +118,6 @@ export function composeBoardingCommand(side: BoardingSideInput, opponent: ShipAs
     return deriveTarget({ labelKey: BOARDING_KEYS.commandSkill, value: side.commandSkill }, modifiers);
 }
 
-/** Rolled opposed Command Test. */
-export interface BoardingRoundInput {
-    readonly attackerRoll: number;
-    readonly attackerTarget: number;
-    readonly defenderRoll: number;
-    readonly defenderTarget: number;
-}
-
 /** Outcome of a boarding round's opposed Command Test. */
 export interface BoardingRoundResolution {
     /** Which ship won the round. Ties go to the defender. */
@@ -135,14 +128,14 @@ export interface BoardingRoundResolution {
     readonly degrees: number;
 }
 
-/** Resolve the opposed Command Test of one boarding round. */
-export function resolveBoardingRound(input: BoardingRoundInput): BoardingRoundResolution {
-    const { success, aDoS, bDoS, netDoS } = resolveOpposedByDoS(
-        { roll: input.attackerRoll, target: input.attackerTarget },
-        { roll: input.defenderRoll, target: input.defenderTarget },
-        { tie: 'b' },
-    );
-    return { winner: success ? 'attacker' : 'defender', attackerDoS: aDoS, defenderDoS: bDoS, degrees: Math.abs(netDoS) };
+/**
+ * Resolve the opposed Command Test of one boarding round from both rolled
+ * tests. A success beats a failure, then the most degrees win, counted the
+ * line's way (RT: each full 10 of margin, no base degree).
+ */
+export function resolveBoardingRound(attacker: ShipTestResult, defender: ShipTestResult): BoardingRoundResolution {
+    const { winner, degrees } = resolveOpposedShipTests(attacker, defender);
+    return { winner, attackerDoS: attacker.dos, defenderDoS: defender.dos, degrees };
 }
 
 /** How the winner spends its degrees. */

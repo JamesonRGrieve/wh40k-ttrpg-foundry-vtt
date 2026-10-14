@@ -28,6 +28,7 @@ async function card(rolls: number[]): Promise<HTMLElement> {
         attacker: storyShipActor(ATTACKER_SHIP, 50),
         defender: storyShipActor({ ...DEFENDER_SHIP, turretRating: 2 }, 40),
         localize: storyLocalize,
+        degreesMethod: 'gen1',
     });
     queueStoryRolls(...rolls);
     const empty = readAssaultForm(document.createElement('form'));
@@ -51,6 +52,21 @@ export const ShotDown: Story = {
         await expect(view.getByText(/Turret Rating 2/)).toBeTruthy();
         await expect(view.getByText(/shot down/)).toBeTruthy();
         await expect(canvasElement.querySelectorAll('[data-wh40k-hook="ship-assault-test"]').length).toBe(1);
+    },
+};
+
+export const TurnedBackByThreeDegrees: Story = {
+    name: 'Approach fails by three RT degrees — the craft turns back, not shot down (#188)',
+    // Approach target 30, roll 65: a 35-point margin is three RT degrees of failure.
+    // The +1 count called it four and shot the craft down.
+    loaders: [async () => ({ el: await card([65]) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('Failure — 3 DoF')).toBeTruthy();
+        await expect(view.getByText('3 DoF = ⌊35 ÷ 10⌋ (roll 65 vs target 30)')).toBeTruthy();
+        await expect(view.getByText(/forced to return to its ship/)).toBeTruthy();
+        await expect(view.queryByText(/shot down/)).toBeNull();
     },
 };
 

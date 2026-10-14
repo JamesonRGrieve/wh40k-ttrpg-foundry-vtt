@@ -46,6 +46,17 @@ describe('hit-and-run flow', () => {
         expect(session.choiceGroups()).toEqual([]);
     });
 
+    it('turns a craft that fails by three RT degrees back instead of shooting it down', async () => {
+        const { session } = start();
+        // Target 30, roll 65: a 35-point margin is three RT degrees; the +1 count said four.
+        queueRolls(65);
+        await session.roll(formValues({ pilotSkill: 50 }));
+        const approach = session.previewCard()?.data['approach'] as { test: { dof: number; degreesFormula: string }; shotDown: boolean };
+        expect(approach.test.dof).toBe(3);
+        expect(approach.test.degreesFormula).toContain('FailureGen1');
+        expect(approach.shotDown).toBe(false);
+    });
+
     it('lets the raider choose a Critical Hit and lands it with the Hull damage', async () => {
         const { session, target } = start();
         queueRolls(10, 15, 45, 2, 5);

@@ -9,6 +9,7 @@
  * an injected {@link Localize} so the builders stay unit-testable.
  */
 
+import { degreesResultFormula } from '../../rolls/roll-helpers.ts';
 import type { ShipTestComponent, ShipTestResult } from '../../rules/ship-assault.ts';
 
 /** Localize a langpack key, formatting it with `data` when given. */
@@ -34,6 +35,8 @@ export interface AssaultTestView {
     success: boolean;
     dos: number;
     dof: number;
+    /** The degrees derivation (`2 DoS = ⌊24 ÷ 10⌋ (roll 29 vs target 53)`). */
+    degreesFormula: string;
 }
 
 /** A damage total as the `ship-assault-damage.hbs` partial renders it. */
@@ -66,7 +69,19 @@ export function buildTestView(title: string, result: ShipTestResult, source: str
         success: result.success,
         dos: result.dos,
         dof: result.dof,
+        degreesFormula: shipDegreesFormula(result, localize),
     };
+}
+
+/**
+ * The result side of a ship test's derivation, under the line's degrees
+ * method: RT `2 DoS = ⌊24 ÷ 10⌋ (roll 29 vs target 53)`, Gen 2
+ * `3 DoS = 1 + 2 (…)`. Shares the roll card's readout and langpack keys.
+ */
+export function shipDegreesFormula(result: ShipTestResult, localize: Localize): string {
+    const printed = result.success ? result.dos : result.dof;
+    const count = result.method === 'gen1' ? printed + 1 : printed;
+    return degreesResultFormula({ method: result.method, success: result.success, count, roll: result.roll, target: result.target }, localize);
 }
 
 /** Build the view of a damage total from its components. */

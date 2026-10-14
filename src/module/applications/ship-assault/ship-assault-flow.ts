@@ -13,6 +13,7 @@
  */
 
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import type { DegreesMethod } from '../../rolls/roll-helpers.ts';
 import type { ShipAssaultShip } from '../../rules/ship-assault.ts';
 import type { Localize } from './ship-assault-card.ts';
 
@@ -78,6 +79,8 @@ export interface ShipAssaultContext {
     attacker: AssaultShipActor;
     defender: AssaultShipActor;
     localize: Localize;
+    /** How the action's tests count degrees: the attacker's line, or the `degreesMode` world override. */
+    degreesMethod: DegreesMethod;
 }
 
 /** Typed read access to the dialog's form values. */

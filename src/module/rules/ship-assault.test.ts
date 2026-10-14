@@ -4,6 +4,7 @@ import {
     deriveTarget,
     MANOEUVRABILITY_KEY,
     PILOT_SKILL_KEY,
+    resolveOpposedShipTests,
     resolveShipTest,
     SITUATIONAL_MODIFIER_KEY,
     situationalComponents,
@@ -57,22 +58,64 @@ describe('ship-assault — derivation', () => {
     });
 });
 
-describe('ship-assault — test resolution', () => {
+describe('ship-assault — test resolution, Rogue Trader degrees (gen1)', () => {
     const derivation = deriveTarget({ labelKey: 'base', value: 45 }, []);
 
-    it('scores degrees of success on a pass', () => {
-        expect(resolveShipTest(derivation, 23)).toMatchObject({ success: true, dos: 3, dof: 0 });
+    it('counts each full 10 of margin as a degree of success, with no base degree', () => {
+        // RT Core p.232: Fellowship 42, roll 18 → two degrees.
+        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: 42 }, []), 18, 'gen1')).toMatchObject({ success: true, dos: 2, dof: 0, method: 'gen1' });
+        expect(resolveShipTest(derivation, 23, 'gen1')).toMatchObject({ success: true, dos: 2, dof: 0 });
     });
 
-    it('scores degrees of failure on a miss', () => {
-        expect(resolveShipTest(derivation, 86)).toMatchObject({ success: false, dos: 0, dof: 5 });
+    it('scores a bare pass as a success with 0 degrees', () => {
+        expect(resolveShipTest(derivation, 45, 'gen1')).toMatchObject({ success: true, dos: 0, dof: 0 });
+        expect(resolveShipTest(derivation, 37, 'gen1')).toMatchObject({ success: true, dos: 0 });
     });
 
-    it('auto-passes a natural 01 with at least one degree, even below 1', () => {
-        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: -5 }, []), 1)).toMatchObject({ success: true, dos: 1 });
+    it('counts each full 10 of failure margin as a degree of failure', () => {
+        expect(resolveShipTest(derivation, 86, 'gen1')).toMatchObject({ success: false, dos: 0, dof: 4 });
+        expect(resolveShipTest(derivation, 46, 'gen1')).toMatchObject({ success: false, dof: 0 });
     });
 
-    it('auto-fails a natural 100', () => {
-        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: 120 }, []), 100)).toMatchObject({ success: false, dof: 1 });
+    it('auto-passes a natural 01 and auto-fails a natural 100', () => {
+        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: -5 }, []), 1, 'gen1')).toMatchObject({ success: true, dos: 0 });
+        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: 120 }, []), 100, 'gen1')).toMatchObject({ success: false, dof: 2 });
+    });
+});
+
+describe('ship-assault — test resolution, the Gen 2 world override', () => {
+    const derivation = deriveTarget({ labelKey: 'base', value: 45 }, []);
+
+    it('counts the base degree plus the tens-digit difference, as the roll engine does', () => {
+        expect(resolveShipTest(derivation, 23, 'gen2')).toMatchObject({ success: true, dos: 3, method: 'gen2' });
+        expect(resolveShipTest(derivation, 86, 'gen2')).toMatchObject({ success: false, dof: 5 });
+    });
+
+    it('never scores a result below one degree', () => {
+        expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: -15 }, []), 1, 'gen2')).toMatchObject({ success: true, dos: 1 });
+    });
+});
+
+describe('ship-assault — opposed tests (RT Core p.233 "Opposed Tests")', () => {
+    const at = (target: number, roll: number): ReturnType<typeof resolveShipTest> =>
+        resolveShipTest(deriveTarget({ labelKey: 'base', value: target }, []), roll, 'gen1');
+
+    it('a success beats a failure even with 0 RT degrees', () => {
+        expect(resolveOpposedShipTests(at(50, 50), at(40, 90))).toEqual({ winner: 'attacker', degrees: 0 });
+        expect(resolveOpposedShipTests(at(40, 90), at(50, 48))).toEqual({ winner: 'defender', degrees: 0 });
+    });
+
+    it('between two successes the most degrees win, by the difference', () => {
+        expect(resolveOpposedShipTests(at(80, 30), at(50, 35))).toEqual({ winner: 'attacker', degrees: 4 });
+        expect(resolveOpposedShipTests(at(50, 35), at(80, 30))).toEqual({ winner: 'defender', degrees: 4 });
+    });
+
+    it('a failed side scores no degrees against a winner', () => {
+        expect(resolveOpposedShipTests(at(80, 50), at(55, 60))).toEqual({ winner: 'attacker', degrees: 3 });
+    });
+
+    it('equal results and a double failure go to the defender by 0', () => {
+        expect(resolveOpposedShipTests(at(50, 30), at(60, 40))).toEqual({ winner: 'defender', degrees: 0 });
+        expect(resolveOpposedShipTests(at(30, 90), at(30, 80))).toEqual({ winner: 'defender', degrees: 0 });
     });
 });

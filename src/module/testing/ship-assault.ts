@@ -4,6 +4,7 @@
  */
 import { vi } from 'vitest';
 import type { AssaultFormValues, AssaultShipActor, ShipAssaultContext } from '../applications/ship-assault/ship-assault-flow.ts';
+import type { DegreesMethod } from '../rolls/roll-helpers.ts';
 import type { ShipAssaultShip } from '../rules/ship-assault.ts';
 
 /** One queued roll outcome: its total and (for pools) its individual dice. */
@@ -88,8 +89,9 @@ export function echoLocalize(key: string, data?: Readonly<Record<string, string 
     return data === undefined ? key : `${key}${JSON.stringify(data)}`;
 }
 
-export function assaultContext(attacker: RecordingShip, defender: RecordingShip): ShipAssaultContext {
-    return { attacker, defender, localize: echoLocalize };
+/** A flow context between two recording ships. Degrees count the Rogue Trader way unless `degreesMethod` overrides it. */
+export function assaultContext(attacker: RecordingShip, defender: RecordingShip, degreesMethod: DegreesMethod = 'gen1'): ShipAssaultContext {
+    return { attacker, defender, localize: echoLocalize, degreesMethod };
 }
 
 /** Form values backed by a plain record. */

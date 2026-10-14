@@ -567,7 +567,7 @@ const SHIP_ACTION_FLOWS = [
 ];
 recordDimension('ship-action.flow', covered['ship-action.flow'], SHIP_ACTION_FLOWS);
 // tests/e2e/ship-ramming.spec.ts, ship-boarding.spec.ts, ship-hit-and-run.spec.ts — the Ship Assault panel.
-const SHIP_ASSAULT_FLOWS = ['ram', 'ram-miss', 'board', 'boarding-round', 'hit-and-run', 'hit-and-run-shot-down'];
+const SHIP_ASSAULT_FLOWS = ['ram', 'ram-miss', 'board', 'boarding-round', 'hit-and-run', 'hit-and-run-shot-down', 'hit-and-run-turned-back'];
 recordDimension('ship-assault.flow', covered['ship-assault.flow'], SHIP_ASSAULT_FLOWS);
 // tests/e2e/ship-weapon-fire.spec.ts — the Weapons tab's Fire dialog and the Weapon Component sheet.
 const SHIP_WEAPON_FLOWS = ['macrobattery', 'lance-critical', 'miss', 'other-line-gated', 'item-sheet-labels'];

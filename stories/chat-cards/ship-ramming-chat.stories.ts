@@ -25,7 +25,12 @@ const FLOW = createRammingFlow(async () => Promise.resolve({ damage: [{ hullType
 
 /** Run the flow on the given dice (and optional bonus die) and render its final card. */
 async function card(rolls: number[], bonus: boolean): Promise<HTMLElement> {
-    const session = FLOW.start({ attacker: storyShipActor(ATTACKER_SHIP), defender: storyShipActor(DEFENDER_SHIP), localize: storyLocalize });
+    const session = FLOW.start({
+        attacker: storyShipActor(ATTACKER_SHIP),
+        defender: storyShipActor(DEFENDER_SHIP),
+        localize: storyLocalize,
+        degreesMethod: 'gen1',
+    });
     queueStoryRolls(...rolls);
     const form = document.createElement('form');
     if (bonus) form.innerHTML = '<input name="bonusFormula" value="1d10" /><input name="bonusLabel" value="Power Ram" />';

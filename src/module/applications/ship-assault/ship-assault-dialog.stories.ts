@@ -27,7 +27,12 @@ interface DialogArgs {
 }
 
 function startSession(): ShipAssaultSession {
-    return BOARDING_ROUND_FLOW.start({ attacker: storyShipActor(ATTACKER_SHIP), defender: storyShipActor(DEFENDER_SHIP), localize: storyLocalize });
+    return BOARDING_ROUND_FLOW.start({
+        attacker: storyShipActor(ATTACKER_SHIP),
+        defender: storyShipActor(DEFENDER_SHIP),
+        localize: storyLocalize,
+        degreesMethod: 'gen1',
+    });
 }
 
 async function renderDialog(args: DialogArgs): Promise<HTMLElement> {

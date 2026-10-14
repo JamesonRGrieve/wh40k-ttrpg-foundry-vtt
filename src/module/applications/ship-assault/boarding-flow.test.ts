@@ -64,22 +64,31 @@ describe('boarding-round flow', () => {
         const round = session.previewCard()?.data['round'] as { attackerTest: { target: number }; defenderTest: { target: number }; degrees: number };
         expect(round.attackerTest.target).toBe(80);
         expect(round.defenderTest.target).toBe(35);
-        expect(round.degrees).toBe(8);
+        // Roll 8 against 80: a 72-point margin is 7 RT degrees (the +1 count said 8); the defender failed.
+        expect(round.degrees).toBe(7);
     });
 
     it('asks the winner how to spend its degrees, capped at the margin', async () => {
         const { session } = await rolledRound();
         const field = session.choiceGroups()[0]?.fields[0];
-        expect(field).toMatchObject({ name: 'hullDegrees', min: 0, max: 8 });
+        expect(field).toMatchObject({ name: 'hullDegrees', min: 0, max: 7 });
+    });
+
+    it('counts the Gen 2 way only under that world override', async () => {
+        const session = BOARDING_ROUND_FLOW.start(assaultContext(recordingShip(ATTACKER), recordingShip(DEFENDER), 'gen2'));
+        queueRolls(8, 60);
+        await session.roll(formValues({ attackerCommand: 50, defenderCommand: 45, defenderFailedBreakFree: true }));
+        // Gen 2: 1 + (tens 8 − tens 0) = 9 against a failed defender.
+        expect((session.previewCard()?.data['round'] as { degrees: number }).degrees).toBe(9);
     });
 
     it('applies hull and crew damage to the loser, then tests its Morale', async () => {
         const { session, attacker, defender } = await rolledRound();
-        queueRolls({ total: 15, dice: [3, 3, 3, 3, 3] }, { total: 15, dice: [1, 2, 3, 4, 5] }, 70);
+        queueRolls({ total: 12, dice: [3, 3, 3, 3] }, { total: 10, dice: [1, 2, 3, 4] }, 70);
         const applied = await session.apply(formValues({ hullDegrees: 3 }));
-        expect(QueuedRollStub.formulas).toEqual(['5d5', '5d5', '1d100']);
+        expect(QueuedRollStub.formulas).toEqual(['4d5', '4d5', '1d100']);
         expect(defender.hullHits).toEqual([3]);
-        expect(defender.crewHits).toEqual([[15, 15]]);
+        expect(defender.crewHits).toEqual([[12, 10]]);
         expect(attacker.hullHits).toEqual([]);
         const morale = applied?.card.data['morale'] as { fightsOn: boolean; value: number; roll: number };
         expect(morale).toMatchObject({ roll: 70, value: 60, fightsOn: false });

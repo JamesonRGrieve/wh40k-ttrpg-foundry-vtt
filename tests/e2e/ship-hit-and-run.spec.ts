@@ -48,7 +48,8 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
         const before = await chatMessageIds(page);
         try {
             // Approach: Pilot 50 − 20 (Turret Rating 2) = 30, rolls 10.
-            // Command: raider 50 + 10 = 60 rolls 15; defender 40 + 10 = 50 rolls 45. The raid wins by 4;
+            // Command: raider 50 + 10 = 60 rolls 15 (4 RT degrees); defender 40 + 10 = 50 rolls 45 (a bare pass,
+            // 0 RT degrees). The raid wins by 4;
             // the Critical Hit rolls are 2 and 5 and the raider picks the 5.
             const ran = await runAssaultFromSheet(page, raider.id, {
                 tab: 'extendedActions',
@@ -66,6 +67,8 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(ran.card.html).toContain('data-wh40k-system="rt"');
             expect(ran.card.text).toContain('Turret Rating 2 (Chaos Raider Bone Tithe)');
             expect(ran.card.text).toContain('Ordinary (+10)');
+            expect(ran.card.text).toContain('4 DoS = ⌊45 ÷ 10⌋ (roll 15 vs target 60)');
+            expect(ran.card.text).toContain('0 DoS = ⌊5 ÷ 10⌋ (roll 45 vs target 50)');
             expect(ran.card.text).toContain('Critical Hit rolls: 2 and 5.');
             expect(ran.card.text).toContain('Inflicted: Critical Hit roll 5.');
             expect(ran.card.text).toContain('Hull Integrity damage (1 per degree won by)');
@@ -114,5 +117,35 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             await deleteActors(page, [raider.id, target.id]);
         }
         recordCoverage('ship-assault.flow', 'hit-and-run-shot-down');
+    });
+
+    test('a craft that fails its approach by three RT degrees turns back instead of being shot down', async ({ page }) => {
+        await joinShipWorld(page);
+        const raider = await createShip(page, RAIDER);
+        const target = await createShip(page, BONE_TITHE);
+        const before = await chatMessageIds(page);
+        try {
+            // Approach target 30, rolls 65: a 35-point margin is three degrees of failure under RT's count
+            // (RT Core p.232). The +1 count called it four and shot the craft down (p.219: "four or more").
+            const ran = await runAssaultFromSheet(page, raider.id, {
+                tab: 'extendedActions',
+                assault: 'hit-and-run',
+                label: 'ship-hit-and-run-turned-back',
+                defender: BONE_TITHE.name,
+                inputs: { pilotSkill: 50 },
+                choices: {},
+                faces: [65],
+            });
+            expect(ran.unusedDice).toBe(0);
+            expect(ran.card.text).toContain('Failure — 3 DoF');
+            expect(ran.card.text).toContain('3 DoF = ⌊35 ÷ 10⌋ (roll 65 vs target 30)');
+            expect(ran.card.text).toContain('The boarding craft is forced to return to its ship.');
+            expect(ran.card.text).not.toContain('shot down');
+            expect(await readShip(page, target.id)).toMatchObject({ hull: 28, statuses: 0 });
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [raider.id, target.id]);
+        }
+        recordCoverage('ship-assault.flow', 'hit-and-run-turned-back');
     });
 });

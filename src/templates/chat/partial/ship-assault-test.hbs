@@ -3,11 +3,11 @@
 
     Renders the full target derivation through `modifier-breakdown.hbs` — base
     (source) ± every hoverable modifier (source) = target — then the roll and
-    its degrees of success / failure.
+    its degrees of success / failure with the line's degrees formula.
 
     Hash params:
         test — AssaultTestView {title, baseLabel, baseTarget, modifierSources,
-               target, roll, success, dos, dof}
+               target, roll, success, dos, dof, degreesFormula}
 --}}
 <section data-wh40k-hook="ship-assault-test" class="tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.18)]">
     <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-[var(--wh40k-card-muted)] tw-mb-1">{{test.title}}</div>
@@ -24,4 +24,5 @@
             <span class="tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{localize "WH40K.Voidcraft.Assault.Failure" dof=test.dof}}</span>
         {{/if}}
     </div>
+    {{> systems/wh40k-rpg/templates/chat/partial/result-formula.hbs resultFormula=test.degreesFormula}}
 </section>

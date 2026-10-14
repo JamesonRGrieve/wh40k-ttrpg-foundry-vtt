@@ -71,7 +71,7 @@ export const BOARD_FLOW = defineShipAssault<ShipTestResult>({
             situational: readSituational(form, 'situational'),
         });
         const roll = await rollFormula('1d100');
-        return { resolution: resolveShipTest(derivation, rollTotal(roll)), rolls: [roll] };
+        return { resolution: resolveShipTest(derivation, rollTotal(roll), ctx.degreesMethod), rolls: [roll] };
     },
     previewCard: lockCard,
     choiceGroups: () => [],
@@ -222,14 +222,9 @@ export const BOARDING_ROUND_FLOW = defineShipAssault<BoardingRound>({
         );
         const attackerRoll = await rollFormula('1d100');
         const defenderRoll = await rollFormula('1d100');
-        const attacker = resolveShipTest(attackerDerivation, rollTotal(attackerRoll));
-        const defender = resolveShipTest(defenderDerivation, rollTotal(defenderRoll));
-        const round = resolveBoardingRound({
-            attackerRoll: attacker.roll,
-            attackerTarget: attacker.target,
-            defenderRoll: defender.roll,
-            defenderTarget: defender.target,
-        });
+        const attacker = resolveShipTest(attackerDerivation, rollTotal(attackerRoll), ctx.degreesMethod);
+        const defender = resolveShipTest(defenderDerivation, rollTotal(defenderRoll), ctx.degreesMethod);
+        const round = resolveBoardingRound(attacker, defender);
         return { resolution: { attacker, defender, round }, rolls: [attackerRoll, defenderRoll] };
     },
     previewCard: (ctx, rolled) => ({ template: TEMPLATE, data: roundCardData(ctx, rolled) }),

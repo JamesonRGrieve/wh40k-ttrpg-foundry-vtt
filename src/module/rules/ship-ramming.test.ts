@@ -43,8 +43,8 @@ describe('ship-ramming — test', () => {
             [HARD_DIFFICULTY_KEY, -20],
         ]);
         expect(derivation.target).toBe(35);
-        expect(resolveShipTest(derivation, 35).success).toBe(true);
-        expect(resolveShipTest(derivation, 36).success).toBe(false);
+        expect(resolveShipTest(derivation, 35, 'gen1').success).toBe(true);
+        expect(resolveShipTest(derivation, 36, 'gen1').success).toBe(false);
     });
 
     it('stacks a situational bonus such as a Ram Ship', () => {

@@ -127,6 +127,7 @@ export const HIT_AND_RUN_FLOW = defineShipAssault<HitAndRunRolled>({
                 situational: readSituational(form, 'situational'),
             }),
             rollTotal(approachRoll),
+            ctx.degreesMethod,
         );
         if (!approach.success) return { resolution: { approach, command: null }, rolls: [approachRoll] };
 
@@ -135,10 +136,12 @@ export const HIT_AND_RUN_FLOW = defineShipAssault<HitAndRunRolled>({
         const attacker = resolveShipTest(
             composeRaidCommand(form.number('attackerCommand', ctx.attacker.system.crew.crewRating), readSituational(form, 'attackerSituational')),
             rollTotal(attackerRoll),
+            ctx.degreesMethod,
         );
         const defender = resolveShipTest(
             composeRaidCommand(form.number('defenderCommand', ctx.defender.system.crew.crewRating), readSituational(form, 'defenderSituational')),
             rollTotal(defenderRoll),
+            ctx.degreesMethod,
         );
         const outcome = resolveHitAndRunCommand(attacker, defender);
         const rolls = [approachRoll, attackerRoll, defenderRoll];

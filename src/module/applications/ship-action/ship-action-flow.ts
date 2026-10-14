@@ -261,7 +261,7 @@ export async function rollShipAction(
     });
 
     const roll = await rollFormula('1d100');
-    const result = resolveShipTest(derivation, rollTotal(roll));
+    const result = resolveShipTest(derivation, rollTotal(roll), ctx.degreesMethod);
     const citation = localize(CITATION_KEY);
     let magnitude: ShipActionMagnitudeView | null = null;
     let outcome = localize('WH40K.Voidcraft.ShipAction.Outcome.Failed');

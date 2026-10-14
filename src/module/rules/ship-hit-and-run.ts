@@ -21,10 +21,10 @@
  * Pure module: no RNG, no Foundry. The caller rolls the dice.
  */
 
-import { resolveOpposedByDoS } from './_dice.ts';
 import {
     deriveTarget,
     PILOT_SKILL_KEY,
+    resolveOpposedShipTests,
     situationalComponents,
     type ShipAssaultShip,
     type ShipTestDerivation,
@@ -99,14 +99,13 @@ export interface HitAndRunCommandResolution {
     readonly netDoS: number;
 }
 
-/** Resolve the opposed raid Command test from both rolled tests. */
+/**
+ * Resolve the opposed raid Command test from both rolled tests: a success
+ * beats a failure, then the most degrees win, counted the line's way.
+ */
 export function resolveHitAndRunCommand(attacker: ShipTestResult, defender: ShipTestResult): HitAndRunCommandResolution {
-    const { success, aDoS, bDoS, netDoS } = resolveOpposedByDoS(
-        { roll: attacker.roll, target: attacker.target },
-        { roll: defender.roll, target: defender.target },
-        { tie: 'b' },
-    );
-    return { success, attackerDoS: aDoS, defenderDoS: bDoS, netDoS };
+    const { winner } = resolveOpposedShipTests(attacker, defender);
+    return { success: winner === 'attacker', attackerDoS: attacker.dos, defenderDoS: defender.dos, netDoS: attacker.dos - defender.dos };
 }
 
 /**

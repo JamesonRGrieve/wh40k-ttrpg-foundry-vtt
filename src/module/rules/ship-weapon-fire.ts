@@ -27,9 +27,9 @@
  * callers roll the dice and pass the totals in.
  */
 
-import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
 import {
     deriveTarget,
+    resolveShipTest,
     situationalComponents,
     sumComponents,
     type ShipTestComponent,
@@ -104,13 +104,13 @@ export function composeGunneryTest(input: GunneryTestInput): ShipTestDerivation 
 
 /**
  * Resolve the rolled test with RT's degrees: one per full 10 of margin, so a
- * bare success or failure is 0 degrees. Natural 01 passes and 100 fails.
+ * bare success or failure is 0 degrees. Natural 01 passes and 100 fails. The
+ * hit counts ("one hit, plus an additional hit for each degree of success")
+ * are written against that count, so it is pinned rather than following the
+ * `degreesMode` override.
  */
 export function resolveGunneryTest(derivation: ShipTestDerivation, roll: number): ShipTestResult {
-    const success = isD100Success(roll, derivation.target);
-    const dos = success ? degreesOfSuccess(roll, derivation.target, { extra: true }) : 0;
-    const dof = success ? 0 : degreesOfFailure(roll, derivation.target, { extra: true });
-    return { ...derivation, roll, success, dos, dof };
+    return resolveShipTest(derivation, roll, 'gen1');
 }
 
 /** Hits scored by a shot, with the terms that produced them. */

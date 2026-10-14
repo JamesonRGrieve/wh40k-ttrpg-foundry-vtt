@@ -14,7 +14,8 @@
  * no Foundry. Callers roll the dice and feed the totals in.
  */
 
-import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
+import { printedDegrees, type DegreesMethod } from '../rolls/roll-helpers.ts';
+import { isD100Success } from './_dice.ts';
 
 /**
  * Game-system id the ship assault actions are gated on. Ramming, boarding and
@@ -53,10 +54,12 @@ export interface ShipTestDerivation {
 export interface ShipTestResult extends ShipTestDerivation {
     readonly roll: number;
     readonly success: boolean;
-    /** Degrees of Success (0 on a failure). */
+    /** Degrees of Success as the line prints them (0 on a failure). */
     readonly dos: number;
-    /** Degrees of Failure (0 on a success). */
+    /** Degrees of Failure as the line prints them (0 on a success). */
     readonly dof: number;
+    /** How the degrees were counted: the line's method, or the `degreesMode` world override. */
+    readonly method: DegreesMethod;
 }
 
 /** The stats of one ship an assault action reads. */
@@ -107,15 +110,38 @@ export function deriveTarget(base: ShipTestComponent, modifiers: readonly ShipTe
 
 /**
  * Resolve a rolled d100 against a derivation. Success follows the shared d100
- * rule (natural 01 passes, natural 100 fails); a passing roll always scores at
- * least one degree, so an auto-pass on 01 against a target below 1 is still 1
- * DoS. Degrees of Failure count from the target itself.
+ * rule (natural 01 passes, natural 100 fails). Degrees are counted the way the
+ * roll engine counts them for the line (`printedDegrees`): Rogue Trader counts
+ * each full 10 points of margin with no base degree, so a bare pass or a bare
+ * failure is 0 degrees (RT Core "Degrees of Success and Failure"); the Gen 2
+ * method counts the first degree, so a result there is never below 1.
  */
-export function resolveShipTest(derivation: ShipTestDerivation, roll: number): ShipTestResult {
+export function resolveShipTest(derivation: ShipTestDerivation, roll: number, method: DegreesMethod): ShipTestResult {
     const success = isD100Success(roll, derivation.target);
-    const dos = success ? Math.max(1, degreesOfSuccess(roll, derivation.target)) : 0;
-    const dof = success ? 0 : Math.max(1, degreesOfFailure(roll, derivation.target));
-    return { ...derivation, roll, success, dos, dof };
+    const least = method === 'gen2' ? 1 : 0;
+    const degrees = Math.max(least, printedDegrees(method, success, derivation.target, roll));
+    return { ...derivation, roll, success, method, dos: success ? degrees : 0, dof: success ? 0 : degrees };
+}
+
+/** Which side of an opposed ship test won, and by how many degrees. */
+export interface OpposedShipOutcome {
+    /** Ties, and a contest both sides fail, go to the defender. */
+    readonly winner: 'attacker' | 'defender';
+    /** The winner's Degrees of Success less the loser's (a failed side scores 0). */
+    readonly degrees: number;
+}
+
+/**
+ * Resolve an opposed pair of rolled ship tests (RT Core "Opposed Tests"):
+ * "Whoever succeeds at his test wins. If both participants succeed, the one
+ * with the most degrees of success wins." Success is checked first because
+ * under the RT count a bare pass scores 0 degrees, the same as a failure.
+ * Equal results go to the defender (the boarded / raided ship).
+ */
+export function resolveOpposedShipTests(attacker: ShipTestResult, defender: ShipTestResult): OpposedShipOutcome {
+    const attackerWins = attacker.success !== defender.success ? attacker.success : attacker.dos > defender.dos;
+    const degrees = attackerWins ? attacker.dos - defender.dos : defender.dos - attacker.dos;
+    return { winner: attackerWins ? 'attacker' : 'defender', degrees: Math.max(0, degrees) };
 }
 
 /** Inputs for a Pilot (Space Craft) + Manoeuvrability test. */

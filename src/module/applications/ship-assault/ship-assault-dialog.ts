@@ -10,6 +10,7 @@
  */
 
 import { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { resolveDegreesMethod } from '../../rolls/roll-helpers.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { readAssaultForm } from './ship-assault-fields.ts';
@@ -118,7 +119,12 @@ class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as A
     };
 
     #startSession(defender: WH40KVoidcraft): ShipAssaultSession {
-        return this.entry.start({ attacker: this.attacker, defender, localize: foundryLocalize });
+        return this.entry.start({
+            attacker: this.attacker,
+            defender,
+            localize: foundryLocalize,
+            degreesMethod: resolveDegreesMethod(this.attacker.system.gameSystem),
+        });
     }
 
     /** @inheritDoc */

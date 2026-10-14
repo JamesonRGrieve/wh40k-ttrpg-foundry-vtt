@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ShipAssaultShip } from './ship-assault';
+import { deriveTarget, resolveShipTest, type ShipAssaultShip, type ShipTestResult } from './ship-assault';
 import {
     allocateBoardingDegrees,
     BOARDING_FAILED_BREAK_FREE_PENALTY,
@@ -91,21 +91,32 @@ describe('ship-boarding — Command composition', () => {
     });
 });
 
-describe('ship-boarding — opposed round', () => {
-    it('awards the attacker the margin in degrees', () => {
-        const round = resolveBoardingRound({ attackerRoll: 10, attackerTarget: 60, defenderRoll: 45, defenderTarget: 50 });
-        expect(round).toEqual({ winner: 'attacker', attackerDoS: 6, defenderDoS: 1, degrees: 5 });
+describe('ship-boarding — opposed round, RT degrees (each full 10 of margin, p.232)', () => {
+    const command = (target: number, roll: number): ShipTestResult => resolveShipTest(deriveTarget({ labelKey: 'command', value: target }, []), roll, 'gen1');
+
+    it('awards the attacker the difference in degrees', () => {
+        const round = resolveBoardingRound(command(60, 10), command(50, 45));
+        expect(round).toEqual({ winner: 'attacker', attackerDoS: 5, defenderDoS: 0, degrees: 5 });
+    });
+
+    it('counts a 30-point win over a failed defender as 3 degrees, not the +1 count’s 4', () => {
+        // The Tier B boarding round: Command 80 rolls 50 against a defender who fails.
+        expect(resolveBoardingRound(command(80, 50), command(55, 60))).toMatchObject({ winner: 'attacker', degrees: 3 });
+    });
+
+    it('lets a bare pass (0 degrees) beat a failure, by 0 degrees', () => {
+        expect(resolveBoardingRound(command(50, 50), command(55, 90))).toEqual({ winner: 'attacker', attackerDoS: 0, defenderDoS: 0, degrees: 0 });
     });
 
     it('lets the defender win and inflict damage too', () => {
-        const round = resolveBoardingRound({ attackerRoll: 90, attackerTarget: 40, defenderRoll: 10, defenderTarget: 50 });
+        const round = resolveBoardingRound(command(40, 90), command(50, 10));
         expect(round.winner).toBe('defender');
-        expect(round.degrees).toBe(5);
+        expect(round.degrees).toBe(4);
     });
 
     it('resolves a tie for the defender by 0 degrees', () => {
-        const round = resolveBoardingRound({ attackerRoll: 40, attackerTarget: 40, defenderRoll: 50, defenderTarget: 50 });
-        expect(round).toEqual({ winner: 'defender', attackerDoS: 1, defenderDoS: 1, degrees: 0 });
+        const round = resolveBoardingRound(command(40, 40), command(50, 50));
+        expect(round).toEqual({ winner: 'defender', attackerDoS: 0, defenderDoS: 0, degrees: 0 });
     });
 });
 

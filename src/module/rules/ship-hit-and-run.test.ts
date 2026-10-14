@@ -65,12 +65,20 @@ describe('ship-hit-and-run — approach', () => {
         expect(derivation.target).toBe(20);
     });
 
-    it('downs the craft at four degrees of failure, counted like every other test', () => {
+    it('downs the craft at four RT degrees of failure: a margin of 40 or more (p.219)', () => {
         const derivation = composeApproachTest({ pilotSkill: 40, target: target(0) });
-        // margin 30 → 4 DoF under the system's degree count; the old resolver said 3.
-        expect(isShotDown(resolveShipTest(derivation, 70))).toBe(true);
-        expect(isShotDown(resolveShipTest(derivation, 69))).toBe(false);
-        expect(isShotDown(resolveShipTest(derivation, 40))).toBe(false);
+        expect(isShotDown(resolveShipTest(derivation, 80, 'gen1'))).toBe(true);
+        // Margin 39 is three RT degrees; the +1 count called it four and shot the craft down.
+        expect(isShotDown(resolveShipTest(derivation, 79, 'gen1'))).toBe(false);
+        expect(isShotDown(resolveShipTest(derivation, 70, 'gen1'))).toBe(false);
+        expect(isShotDown(resolveShipTest(derivation, 40, 'gen1'))).toBe(false);
+    });
+
+    it('follows the roll engine under the Gen 2 world override', () => {
+        const derivation = composeApproachTest({ pilotSkill: 40, target: target(0) });
+        // 1 + (tens 7 − tens 4) = 4 DoF.
+        expect(isShotDown(resolveShipTest(derivation, 70, 'gen2'))).toBe(true);
+        expect(isShotDown(resolveShipTest(derivation, 69, 'gen2'))).toBe(false);
     });
 });
 
@@ -81,17 +89,25 @@ describe('ship-hit-and-run — raid Command', () => {
         expect(derivation.target).toBe(70);
     });
 
-    it('awards the raider the net degrees as Hull damage', () => {
-        const attacker = resolveShipTest(composeRaidCommand(50), 15);
-        const defender = resolveShipTest(composeRaidCommand(40), 45);
+    it('awards the raider the net RT degrees as Hull damage', () => {
+        const attacker = resolveShipTest(composeRaidCommand(50), 15, 'gen1');
+        const defender = resolveShipTest(composeRaidCommand(40), 45, 'gen1');
         const command = resolveHitAndRunCommand(attacker, defender);
-        expect(command).toEqual({ success: true, attackerDoS: 5, defenderDoS: 1, netDoS: 4 });
+        expect(command).toEqual({ success: true, attackerDoS: 4, defenderDoS: 0, netDoS: 4 });
         expect(hitAndRunHullDamage(command)).toBe(4);
     });
 
+    it('lets a bare-pass raider beat a failed defender, for 0 Hull', () => {
+        const attacker = resolveShipTest(composeRaidCommand(40), 50, 'gen1');
+        const defender = resolveShipTest(composeRaidCommand(40), 95, 'gen1');
+        const command = resolveHitAndRunCommand(attacker, defender);
+        expect(command).toEqual({ success: true, attackerDoS: 0, defenderDoS: 0, netDoS: 0 });
+        expect(hitAndRunHullDamage(command)).toBe(0);
+    });
+
     it('resolves a tie for the defender with no damage', () => {
-        const attacker = resolveShipTest(composeRaidCommand(40), 50);
-        const defender = resolveShipTest(composeRaidCommand(40), 50);
+        const attacker = resolveShipTest(composeRaidCommand(40), 50, 'gen1');
+        const defender = resolveShipTest(composeRaidCommand(40), 50, 'gen1');
         const command = resolveHitAndRunCommand(attacker, defender);
         expect(command.success).toBe(false);
         expect(hitAndRunHullDamage(command)).toBe(0);
