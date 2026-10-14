@@ -1,5 +1,7 @@
+import { npcActorTypeFor } from '../../documents/actor-types.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
@@ -30,6 +32,7 @@ interface TemplateRow {
     name: string | null;
     img: string;
     category: string;
+    categoryLabel: string;
     faction: string;
     baseThreat: number;
     type: string;
@@ -156,6 +159,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
                     name: t.name,
                     img: t.img ?? '',
                     category: (t.system as unknown as NpcTemplateSys).category,
+                    categoryLabel: String((t.system as unknown as NpcTemplateSys).category).titleCase(),
                     faction: (t.system as unknown as NpcTemplateSys).faction,
                     baseThreat: (t.system as unknown as NpcTemplateSys).baseThreatLevel,
                     type: (t.system as unknown as NpcTemplateSys).type,
@@ -227,12 +231,25 @@ export default class TemplateSelector extends makeNpcFormDialog({
 
         // Threat level slider
         const threatSlider = this.element.querySelector<HTMLInputElement>('[name="threatLevel"]');
-        const threatValue = this.element.querySelector('.threat-value');
+        const threatValue = this.element.querySelector('[data-tsel="threat-value"]');
         if (threatSlider) {
+            // Dragging only updates the readout; re-rendering mid-drag would replace the slider under the pointer.
             threatSlider.addEventListener('input', () => {
                 this.#threatLevel = parseInt(threatSlider.value, 10);
                 if (threatValue) threatValue.textContent = String(this.#threatLevel);
-                this._debounceRender();
+            });
+            threatSlider.addEventListener('change', () => {
+                this.#threatLevel = parseInt(threatSlider.value, 10);
+                void this.render({ parts: ['content'] });
+            });
+        }
+
+        // Template rows are listbox options: Enter / Space select them like a click.
+        for (const row of this.element.querySelectorAll<HTMLElement>('[data-action="selectTemplate"]')) {
+            row.addEventListener('keydown', (event) => {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+                row.click();
             });
         }
 
@@ -382,7 +399,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
 
             const actorData = {
                 name: template.name,
-                type: 'npcV2',
+                type: npcActorTypeFor(WH40KSettings.getPrimaryGameSystem()),
                 img: template.img ?? 'icons/svg/mystery-man.svg',
                 system: systemData,
             };

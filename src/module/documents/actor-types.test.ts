@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isCharacterActorType, isNpcActorType, isVehicleActorType } from './actor-types.ts';
+import systemManifest from '../../system.json';
+import { isCharacterActorType, isNpcActorType, isVehicleActorType, npcActorTypeFor } from './actor-types.ts';
 
 describe('isNpcActorType', () => {
     it('accepts every per-line NPC type and the generic fallback', () => {
@@ -48,6 +49,17 @@ describe('isCharacterActorType', () => {
     it('rejects NPCs, vehicles, starships and look-alikes', () => {
         for (const type of ['dh2-npc', 'rt-starship', 'dh2-terracraft', 'loot', 'acolyte', 'character-sheet']) {
             expect(isCharacterActorType(type)).toBe(false);
+        }
+    });
+});
+
+describe('npcActorTypeFor', () => {
+    it('names a registered NPC type for every line', () => {
+        const registered = Object.keys(systemManifest.documentTypes.Actor);
+        for (const line of ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw']) {
+            const type = npcActorTypeFor(line);
+            expect(isNpcActorType(type)).toBe(true);
+            expect(registered).toContain(type);
         }
     });
 });

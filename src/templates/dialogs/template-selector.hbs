@@ -1,114 +1,112 @@
-{{!-- NPC Template Selector Dialog --}}
-<form class="tw-flex tw-flex-col" autocomplete="off">
-    {{!-- Filters Section --}}
-    <div class="tw-p-4 tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
-        <div class="tw-flex tw-flex-wrap tw-gap-4">
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>select]:tw-p-2 [&>select]:tw-border [&>select]:tw-border-solid [&>select]:tw-border-[var(--wh40k-border-color,#444)] [&>select]:tw-rounded-sm">
-                <label for="category-filter">{{localize "WH40K.NPC.Category"}}</label>
-                <select id="category-filter" name="category" data-action="filterTemplates">
-                    <option value="">{{localize "WH40K.All"}}</option>
-                    {{#each categories as |cat|}}
-                    <option value="{{cat.value}}" {{#eq cat.value selectedCategory}}selected{{/eq}}>{{cat.label}}</option>
-                    {{/each}}
-                </select>
-            </div>
+{{!-- NPC Template Selector Dialog. Context: TemplateSelector._prepareContext. --}}
+<div data-tsel="root" class="tw-flex tw-flex-col tw-h-full tw-min-h-0">
+    {{!-- Filters --}}
+    <div data-tsel="filters" class="tw-flex tw-flex-wrap tw-items-end tw-gap-4 tw-p-4 tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase">
+            {{localize "WH40K.NPC.Category"}}
+            <select name="filterCategory" class="tw-p-2 tw-normal-case tw-font-normal">
+                <option value="">{{localize "WH40K.All"}}</option>
+                {{#each categories as |cat|}}
+                <option value="{{cat.key}}" {{#if cat.selected}}selected{{/if}}>{{cat.label}}</option>
+                {{/each}}
+            </select>
+        </label>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>select]:tw-p-2 [&>select]:tw-border [&>select]:tw-border-solid [&>select]:tw-border-[var(--wh40k-border-color,#444)] [&>select]:tw-rounded-sm">
-                <label for="faction-filter">{{localize "WH40K.NPC.Faction"}}</label>
-                <select id="faction-filter" name="faction" data-action="filterTemplates">
-                    <option value="">{{localize "WH40K.All"}}</option>
-                    {{#each factions as |faction|}}
-                    <option value="{{faction}}" {{#eq faction selectedFaction}}selected{{/eq}}>{{faction}}</option>
-                    {{/each}}
-                </select>
-            </div>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase">
+            {{localize "WH40K.NPC.Faction"}}
+            <select name="filterFaction" class="tw-p-2 tw-normal-case tw-font-normal">
+                <option value="">{{localize "WH40K.All"}}</option>
+                {{#each factions as |faction|}}
+                <option value="{{faction.key}}" {{#if faction.selected}}selected{{/if}}>{{faction.label}}</option>
+                {{/each}}
+            </select>
+        </label>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[200px] [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>input]:tw-p-2 [&>input]:tw-border [&>input]:tw-border-solid [&>input]:tw-border-[var(--wh40k-border-color,#444)] [&>input]:tw-rounded-sm">
-                <label for="search-filter">{{localize "WH40K.Common.Search"}}</label>
-                <input type="text" id="search-filter" name="search"
-                       value="{{searchQuery}}" placeholder="{{localize 'WH40K.NPC.Template.SearchPlaceholder'}}"
-                       data-action="filterTemplates" />
-            </div>
-        </div>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-[200px] tw-text-xs tw-font-semibold tw-uppercase">
+            {{localize "WH40K.Common.Search"}}
+            <input type="text" name="filterSearch" class="tw-p-2 tw-normal-case tw-font-normal" value="{{filters.search}}"
+                   placeholder="{{localize 'WH40K.NPC.Template.SearchPlaceholder'}}" />
+        </label>
+
+        <button type="button" class="tw-w-auto tw-px-3 tw-py-2" data-action="clearFilter">
+            <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i>
+            {{localize "WH40K.CompendiumBrowser.ClearFilters"}}
+        </button>
     </div>
 
-    {{!-- Templates List --}}
-    <div class="tw-p-4 tw-max-h-[400px] tw-overflow-y-auto">
-        {{#if (gt filteredTemplates.length 0)}}
+    {{!-- Template list --}}
+    <div data-tsel="list" class="tw-flex-1 tw-min-h-0 tw-p-4 tw-overflow-y-auto" role="listbox" aria-label="{{localize 'WH40K.NPC.Template.SelectTemplate'}}">
+        {{#if hasTemplates}}
         <div class="tw-flex tw-flex-col tw-gap-2">
-            {{#each filteredTemplates as |template|}}
-            <div class="tw-flex tw-items-center tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-primary,#0d0d12)] tw-border-2 tw-border-solid tw-border-transparent tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] {{#eq template.uuid ../selectedTemplate}}!tw-border-[var(--wh40k-accent-color,var(--wh40k-color-gold))] tw-bg-[var(--wh40k-accent-color-light,rgba(212,175,55,0.1))]{{/eq}}"
+            {{#each templates as |template|}}
+            <div data-tsel="row" class="tw-flex tw-items-center tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-bg-primary,#0d0d12)] tw-border-2 tw-border-solid tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] {{#if template.selected}}tw-border-gold tw-bg-[rgba(212,175,55,0.1)]{{else}}tw-border-transparent{{/if}}"
+                 role="option" tabindex="0" aria-selected="{{#if template.selected}}true{{else}}false{{/if}}"
                  data-uuid="{{template.uuid}}" data-action="selectTemplate">
-                <img src="{{template.img}}" alt="{{template.name}}" class="tw-w-12 tw-h-12 tw-object-cover tw-rounded-md" />
-                <div class="tw-flex-1">
-                    <h4 class="tw-m-0 tw-mb-1 tw-text-base">{{template.name}}</h4>
-                    <div class="tw-flex tw-gap-2 tw-text-xs [&>span]:tw-px-1.5 [&>span]:tw-py-0.5 [&>span]:tw-bg-[var(--wh40k-bg-tertiary,#252525)] [&>span]:tw-rounded-sm">
-                        <span>{{localize template.categoryLabel}}</span>
+                <img src="{{template.img}}" alt="" class="tw-w-12 tw-h-12 tw-object-cover tw-rounded-md tw-border-none" />
+                <div class="tw-flex-1 tw-min-w-0">
+                    <h4 data-tsel="name" class="tw-m-0 tw-mb-1 tw-text-base tw-border-none">{{template.name}}</h4>
+                    <div class="tw-flex tw-flex-wrap tw-gap-2 tw-text-xs">
+                        <span class="tw-px-1.5 tw-py-0.5 tw-bg-[var(--wh40k-bg-tertiary,#252525)] tw-rounded-sm">{{template.categoryLabel}}</span>
                         {{#if template.faction}}
-                        <span>{{template.faction}}</span>
+                        <span class="tw-px-1.5 tw-py-0.5 tw-bg-[var(--wh40k-bg-tertiary,#252525)] tw-rounded-sm">{{template.faction}}</span>
                         {{/if}}
-                        <span class="!tw-bg-[var(--wh40k-warning-light,rgba(139,105,20,0.4))]">{{localize "WH40K.NPC.ThreatLevel"}} {{template.threatLevel}}</span>
+                        <span data-tsel="threat" class="tw-px-1.5 tw-py-0.5 tw-bg-[rgba(139,105,20,0.4)] tw-rounded-sm">{{localize "WH40K.NPC.ThreatLevel"}} {{template.baseThreat}}</span>
                     </div>
-                    {{#if template.description}}
-                    <p class="tw-mt-1 tw-mb-0 tw-text-sm tw-text-[var(--wh40k-text-muted,#888)]">{{truncate template.description 80}}</p>
+                    {{#if template.summary}}
+                    <p class="tw-mt-1 tw-mb-0 tw-text-sm tw-text-[var(--wh40k-text-muted,#888)]">{{truncate template.summary 80}}</p>
                     {{/if}}
-                </div>
-                <div class="tw-flex tw-gap-1">
-                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-bg-transparent tw-border-none tw-text-[var(--color-text-secondary,#888)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary,#333)] hover:tw-text-[var(--color-text-primary,#eee)] [&>i]:tw-text-[0.75rem]" data-action="viewTemplate"
-                            data-uuid="{{template.uuid}}" data-tooltip="{{localize 'WH40K.View'}}">
-                        <i class="fas fa-eye"></i>
-                    </button>
                 </div>
             </div>
             {{/each}}
         </div>
         {{else}}
-        <div class="tw-text-center tw-p-12 tw-text-[var(--wh40k-text-muted,#888)] [&>i]:tw-text-5xl [&>i]:tw-mb-4 [&>i]:tw-opacity-50">
-            <i class="fas fa-search"></i>
+        <div data-tsel="empty" class="tw-text-center tw-p-12 tw-text-[var(--wh40k-text-muted,#888)]">
+            <i class="fa-solid fa-magnifying-glass tw-text-5xl tw-mb-4 tw-opacity-50" aria-hidden="true"></i>
             <p>{{localize "WH40K.NPC.Template.NoTemplatesFound"}}</p>
         </div>
         {{/if}}
     </div>
 
-    {{!-- Selected Template Preview --}}
-    {{#if selectedTemplateData}}
-    <div class="tw-p-4 tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color,#444)] [&>h3]:tw-m-0 [&>h3]:tw-mb-4 [&>h3]:tw-text-base">
-        <h3>{{localize "WH40K.NPC.Template.SelectedTemplate"}}: {{selectedTemplateData.name}}</h3>
-
-        <div class="tw-flex tw-flex-wrap tw-gap-4">
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-sm [&>label]:tw-font-medium [&>input]:tw-p-2 [&>input]:tw-border [&>input]:tw-border-solid [&>input]:tw-border-[var(--wh40k-border-color,#444)] [&>input]:tw-rounded-sm [&>input]:tw-min-w-[200px]">
-                <label for="npc-name">{{localize "WH40K.Name"}}</label>
-                <input type="text" id="npc-name" name="npcName"
-                       value="{{npcName}}" placeholder="{{selectedTemplateData.name}}" />
-            </div>
-
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-sm [&>label]:tw-font-medium">
-                <label for="target-threat">{{localize "WH40K.NPC.ThreatLevel"}}</label>
-                <div class="tw-flex tw-items-center tw-gap-2">
-                    <input type="range" id="target-threat" name="targetThreat" class="tw-w-[150px]"
-                           min="1" max="30" value="{{targetThreat}}" data-action="updateThreatPreview" />
-                    <span class="tw-font-bold tw-min-w-[30px] tw-text-center">{{targetThreat}}</span>
-                </div>
-            </div>
-
-            <div class="tw-flex tw-flex-row tw-items-center tw-gap-1 [&>label]:tw-flex [&>label]:tw-items-center [&>label]:tw-gap-2 [&>label]:tw-cursor-pointer">
-                <label>
-                    <input type="checkbox" name="openSheet" {{#if openSheet}}checked{{/if}} />
-                    {{localize "WH40K.NPC.Template.OpenSheetAfterCreate"}}
-                </label>
-            </div>
+    {{!-- Selected template: threat, horde and a preview at that threat --}}
+    {{#if hasSelection}}
+    <div data-tsel="selection" class="tw-p-4 tw-bg-[var(--wh40k-bg-secondary,#1a1a1a)] tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
+        <h3 class="tw-m-0 tw-mb-3 tw-text-base tw-border-none">{{localize "WH40K.NPC.Template.SelectedTemplate"}}: {{selectedTemplate.name}}</h3>
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-6">
+            <label class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-medium">
+                {{localize "WH40K.NPC.Template.PreviewAtThreat"}}
+                <input type="range" name="threatLevel" class="tw-w-[150px]" min="1" max="30" value="{{threatLevel}}" />
+                <span data-tsel="threat-value" class="tw-font-bold tw-min-w-[30px] tw-text-center">{{threatLevel}}</span>
+            </label>
+            <label class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-cursor-pointer">
+                <input type="checkbox" name="isHorde" {{#if isHorde}}checked{{/if}} />
+                {{localize "WH40K.NPC.EnableHordeMode"}}
+            </label>
         </div>
+        {{#if preview}}
+        <div data-tsel="preview" class="tw-mt-3 tw-flex tw-flex-wrap tw-gap-2 tw-text-sm">
+            {{#each preview.characteristics as |char|}}
+            <span class="tw-flex tw-flex-col tw-items-center tw-min-w-[2.75rem] tw-px-1.5 tw-py-1 tw-bg-[var(--wh40k-bg-tertiary,#252525)] tw-rounded-sm" data-characteristic="{{char.key}}">
+                <span class="tw-text-[0.65rem] tw-uppercase tw-opacity-80">{{char.label}}</span>
+                <span class="tw-font-bold">{{char.value}}</span>
+            </span>
+            {{/each}}
+        </div>
+        <div data-tsel="vitals" class="tw-mt-2 tw-flex tw-flex-wrap tw-gap-4 tw-text-sm">
+            <span>{{localize "WH40K.Wounds"}}: <strong data-preview="wounds">{{preview.wounds}}</strong></span>
+            <span>{{localize "WH40K.NPC.Armour"}}: <strong data-preview="armour">{{preview.armour}}</strong></span>
+            <span>{{localize "WH40K.NPC.Template.Weapons"}}: <strong data-preview="weapons">{{preview.weaponCount}}</strong></span>
+            <span>{{localize "WH40K.NPC.Template.TrainedSkills"}}: <strong data-preview="skills">{{preview.skillCount}}</strong></span>
+        </div>
+        {{/if}}
     </div>
     {{/if}}
 
-    {{!-- Dialog Footer --}}
-    <footer class="tw-flex tw-justify-end tw-gap-2 tw-p-4 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
-        <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-medium tw-rounded-md tw-border tw-border-solid tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-text-[var(--color-text-primary,#eee)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(100,100,120,0.5)] hover:tw--translate-y-px disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" data-action="cancel">
-            {{localize "WH40K.Cancel"}}
+    <footer data-tsel="footer" class="tw-flex tw-justify-end tw-gap-2 tw-p-4 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color,#444)]">
+        {{#each buttons as |button|}}
+        <button type="button" class="tw-w-auto tw-px-3 tw-py-1.5" data-action="{{button.action}}" {{#if button.disabled}}disabled{{/if}}>
+            <i class="{{button.icon}}" aria-hidden="true"></i>
+            {{localize button.label}}
         </button>
-        <button type="submit" class="tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-px-3 tw-py-1.5 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-rounded-md tw-border tw-border-solid {{themeClassFor 'border'}} tw-bg-gradient-to-br tw-from-gold tw-to-gold-dark tw-text-white tw-cursor-pointer tw-transition-all tw-shadow-sm hover:tw--translate-y-px hover:tw-shadow-md disabled:tw-opacity-50 disabled:tw-cursor-not-allowed" {{#unless selectedTemplate}}disabled{{/unless}}>
-            <i class="fas fa-user-plus"></i>
-            {{localize "WH40K.NPC.Template.CreateNPC"}}
-        </button>
+        {{/each}}
     </footer>
-</form>
+</div>

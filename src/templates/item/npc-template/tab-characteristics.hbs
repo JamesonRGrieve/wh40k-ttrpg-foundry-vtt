@@ -79,9 +79,9 @@
                     <span class="tw-w-10 tw-text-center tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{skill.characteristic}}</span>
                     <div>
                         <select class="tw-p-1" name="system.trainedSkills.{{idx}}.level">
-                            <option value="trained" {{#eq skill.level "trained"}}selected{{/eq}}>{{localize "WH40K.Skills.Trained"}}</option>
-                            <option value="plus10" {{#eq skill.level "plus10"}}selected{{/eq}}>+10</option>
-                            <option value="plus20" {{#eq skill.level "plus20"}}selected{{/eq}}>+20</option>
+                            <option value="trained" {{#if (eq skill.level "trained")}}selected{{/if}}>{{localize "WH40K.Skills.Trained"}}</option>
+                            <option value="plus10" {{#if (eq skill.level "plus10")}}selected{{/if}}>+10</option>
+                            <option value="plus20" {{#if (eq skill.level "plus20")}}selected{{/if}}>+20</option>
                         </select>
                     </div>
                     <input class="tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"

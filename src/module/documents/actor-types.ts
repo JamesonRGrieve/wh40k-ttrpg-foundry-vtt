@@ -30,6 +30,15 @@ export function isNpcActorType(type: string): boolean {
     return type === 'npc' || type.endsWith('-npc');
 }
 
+/**
+ * The registered NPC actor type for a game line (`dh2` → `dh2-npc`). NPC
+ * generators (templates, quick-create) must create a registered type; the
+ * retired `npcV2` type is not one, so Foundry rejected those actors.
+ */
+export function npcActorTypeFor(line: string): string {
+    return `${line}-npc`;
+}
+
 /** The registered actor roles that are vehicles: ground/air/water craft, voidships and the legacy vehicle/starship types. */
 const VEHICLE_ACTOR_ROLES: ReadonlySet<string> = new Set(['vehicle', 'starship', 'terracraft', 'aircraft', 'watercraft', 'voidcraft']);
 

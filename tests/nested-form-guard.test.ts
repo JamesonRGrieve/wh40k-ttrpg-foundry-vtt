@@ -28,7 +28,6 @@ const FORM_TAG = /<form[\s>]/;
 
 /** Templates that legitimately open a form, mapped to the application source whose root is not a form. */
 const OWN_FORM_TEMPLATES: Readonly<Record<string, string>> = {
-    'dialogs/template-selector.hbs': 'src/module/applications/npc/template-selector.ts',
     'dialogs/difficulty-calculator.hbs': 'src/module/applications/npc/difficulty-calculator-dialog.ts',
     'dialogs/combat-preset.hbs': 'src/module/applications/npc/combat-preset-dialog.ts',
     'dialogs/characteristic-setup.hbs': 'src/module/applications/dialogs/characteristic-setup-dialog.ts',
