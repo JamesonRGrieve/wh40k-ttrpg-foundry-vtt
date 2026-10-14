@@ -68,6 +68,65 @@ export function readGrappleOpponentUuid(flags: object | undefined, scope: string
     return typeof uuid === 'string' && uuid !== '' ? uuid : null;
 }
 
+/**
+ * The attack action that tries to start a grapple. RAW in every line (DH2 core
+ * p. 228 "Grappling", RT p. 246, DH1 p. 197): instead of dealing unarmed damage,
+ * the attacker makes a Weapon Skill attack; the target may use a Reaction to
+ * avoid it; if the attack succeeds the two are grappling, the attacker in control.
+ * The lines differ only in that Reaction (DH1: an Agility Test; the others: Dodge
+ * or Parry), which the shared evasion window already makes per line.
+ *
+ * It is the combat-action table's own Grapple attack action, so the attack
+ * dialog keeps it (an action the table lacks resets to Standard Attack) and
+ * choosing Grapple from the action list starts a grapple too.
+ */
+export const GRAPPLE_ATTEMPT_ACTION = 'Grapple';
+
+/** The chat-message flag carrying grapple flag writes for the active GM to apply. */
+export const GRAPPLE_UPDATE_FLAG = 'grappleUpdate';
+
+/** One combatant's grapple flag, as the active GM writes it. */
+export interface GrappleFlagWrite {
+    /** The combatant's actor UUID. */
+    uuid: string;
+    state: GrappleState;
+    /** The other participant's actor UUID; null when the grapple is over. */
+    opponentUuid: string | null;
+}
+
+/** A successful grapple attempt: the attacker controls the grapple, the target is held. Each records the other. */
+export function grappleStartWrites(controllerUuid: string, targetUuid: string): GrappleFlagWrite[] {
+    return [
+        { uuid: controllerUuid, state: 'grappling', opponentUuid: targetUuid },
+        { uuid: targetUuid, state: 'controlled', opponentUuid: controllerUuid },
+    ];
+}
+
+/** The grapple is over for both participants (a successful Break Free). */
+export function grappleEndWrites(oneUuid: string, otherUuid: string): GrappleFlagWrite[] {
+    return [
+        { uuid: oneUuid, state: 'none', opponentUuid: null },
+        { uuid: otherUuid, state: 'none', opponentUuid: null },
+    ];
+}
+
+/** The flag value a write stores at `flags[SYSTEM_ID][GRAPPLE_FLAG]`. */
+export function grappleFlagValue(write: GrappleFlagWrite): { state: GrappleState; opponentUuid: string | null } {
+    return { state: write.state, opponentUuid: write.opponentUuid };
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: a chat-message flag is an untyped JSON bag; validated entry by entry below
+export function readGrappleWrites(value: unknown): GrappleFlagWrite[] {
+    if (!Array.isArray(value)) return [];
+    return value.flatMap((entry): GrappleFlagWrite[] => {
+        if (!isRecord(entry)) return [];
+        const { uuid, state, opponentUuid } = entry;
+        if (typeof uuid !== 'string' || uuid === '' || typeof state !== 'string' || !GRAPPLE_STATES.has(state)) return [];
+        if (opponentUuid !== null && typeof opponentUuid !== 'string') return [];
+        return [{ uuid, state: state as GrappleState, opponentUuid }];
+    });
+}
+
 /** Enumerated controller / controlled actions, all opposed-Strength resolved. */
 export type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
 
@@ -213,6 +272,8 @@ export function resolveMoveWhileGrappling(input: OpposedStrengthInput): GrappleR
 /** What a grapple test reads off a participant actor. */
 export interface GrappleParticipant {
     name: string;
+    /** The actor's UUID — what the other participant's grapple flag records. */
+    uuid: string;
     system: { characteristics?: { strength?: { total?: number } }; size?: number };
 }
 
@@ -221,8 +282,9 @@ export interface GrappleParticipant {
  * actor type; the grapple reads only the optional Strength total and Size, which
  * an actor type without them (a vehicle) leaves undefined.
  */
-export function asGrappleParticipant(actor: { name: string; system: object }): GrappleParticipant {
-    return { name: actor.name, system: actor.system };
+export function asGrappleParticipant(actor: { name: string; uuid: string | null; system: object }): GrappleParticipant {
+    // An unsaved actor has no UUID; it cannot be recorded as anyone's opponent.
+    return { name: actor.name, uuid: actor.uuid ?? '', system: actor.system };
 }
 
 /** A participant's Strength total — the target of its side of every grapple test. */

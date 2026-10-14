@@ -2811,6 +2811,17 @@
             "StandUp": "Stand Up",
             "Move": "Move While Grappling",
             "NoOpponent": "Target the combatant in the grapple with you: every grapple action is an Opposed Strength test against them.",
+            "Start": {
+                "Button": "Begin Grapple",
+                "Title": "Grapple",
+                "Body": "{controller} has {target} in a grapple, and controls it.",
+                "NoReactions": "Neither participant can use Reactions.",
+                "OnlyGrapple": "Both may take only the Grapple action.",
+                "ControllerEnds": "{controller} may end the grapple as a Free Action.",
+                "Evaded": "{target} avoided the grapple.",
+                "NoTarget": "Target the combatant to grapple before attacking."
+            },
+            "Ended": "The grapple is over.",
             "Chat": {
                 "Opposed": "Opposed Strength test: {actor} against {opponent}",
                 "RollAgainst": "Rolled {roll} against Strength {strength}",

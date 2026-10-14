@@ -49,6 +49,7 @@ import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { applyGrappleWritesFromMessage, postGrappleStart } from './grapple-relay.ts';
 import { type RiderSource, type RiderToken, resolveRiderAgainst, riderSourceOf } from './grenade-rider-actions.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
@@ -131,6 +132,11 @@ export class BasicActionManager {
                     void this._rollDamage(ev);
                 });
             });
+            html.querySelectorAll('.roll-control__begin-grapple').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._beginGrapple(ev);
+                });
+            });
             html.querySelectorAll('.roll-control__apply-damage').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._applyDamage(ev);
@@ -200,6 +206,8 @@ export class BasicActionManager {
      * prompt's recipients, and apply an outcome to the attack this client holds.
      */
     #onCreateChatMessage(message: ChatMessage): void {
+        // A grapple started or ended (#450): the active GM writes both participants' flags.
+        applyGrappleWritesFromMessage(message);
         const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
         if (prompt !== null && !message.isAuthor && message.whisper.includes(game.user.id)) {
             ui.notifications.info(t('WH40K.Evasion.PromptNotice', { defender: prompt.defenderName, attacker: prompt.attackerName }));
@@ -394,6 +402,44 @@ export class BasicActionManager {
         }
 
         await this._postDamageCard(actionData);
+    }
+
+    /**
+     * Begin Grapple (#450): a grapple attempt that hit and was not evaded starts a
+     * grapple the attacker controls (DH2 p. 228). Like Roll Damage, it waits for the
+     * defender's evasion answer; only the GM may proceed over an open window. The
+     * start card carries both participants' flag writes for the active GM.
+     */
+    async _beginGrapple(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.Notify.Action.RollDataUnavailable'));
+        if (actionData?.rollData.success !== true) return;
+        const attacker = actionData.rollData.sourceActor;
+        const target = actionData.rollData.targetActor;
+        if (attacker?.uuid == null || target?.uuid == null) {
+            ui.notifications.warn(t('WH40K.Grapple.Start.NoTarget'));
+            return;
+        }
+        if (actionData.evasion?.outcome?.remaining === 0) {
+            ui.notifications.info(t('WH40K.Grapple.Start.Evaded', { target: target.name }));
+            return;
+        }
+        if (actionData.evasion?.status === 'pending') {
+            if (!game.user.isGM) {
+                ui.notifications.warn(t('WH40K.Evasion.AwaitingDefender', { defender: actionData.evasion.defenderName }));
+                return;
+            }
+            actionData.evasion = forcedAttackEvasion(actionData.evasion);
+            await rerenderActionDataInChat(actionData);
+        }
+        btn.disabled = true;
+        await postGrappleStart(
+            { name: attacker.name, uuid: attacker.uuid },
+            { name: target.name, uuid: target.uuid },
+            firstSystemId(attacker) ?? '',
+            ChatMessage.getSpeaker({ actor: attacker }),
+        );
     }
 
     /**

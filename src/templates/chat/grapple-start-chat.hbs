@@ -1,0 +1,23 @@
+{{!--
+    Grapple begun (#450; DH2 core p. 228 "Grappling", RT p. 246, DH1 p. 197):
+    a grapple attempt landed and was not evaded, so the attacker controls a
+    grapple on the target. The card carries both participants' flag writes
+    (actions/grapple-relay.ts); the active GM applies them when it is posted.
+
+    Context: gameSystem, controllerName, targetName.
+--}}
+<div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-slate-500 tw-bg-[rgba(22,24,30,0.92)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-wh40k-surface="dark"
+     data-wh40k-hook="grapple-start-card">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-hands-bound tw-text-[1.1rem] tw-text-slate-300" aria-hidden="true"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">{{localize "WH40K.Grapple.Start.Title"}}</div>
+    </div>
+    <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-bold">{{localize "WH40K.Grapple.Start.Body" controller=controllerName target=targetName}}</p>
+    <ul class="tw-m-0 tw-pl-4 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">
+        <li>{{localize "WH40K.Grapple.Start.NoReactions"}}</li>
+        <li>{{localize "WH40K.Grapple.Start.OnlyGrapple"}}</li>
+        <li>{{localize "WH40K.Grapple.Start.ControllerEnds" controller=controllerName}}</li>
+    </ul>
+</div>

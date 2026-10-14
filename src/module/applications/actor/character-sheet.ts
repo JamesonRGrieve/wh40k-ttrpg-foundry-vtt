@@ -88,7 +88,8 @@ import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstF
 import {
     asGrappleParticipant,
     buildGrappleCard,
-    GRAPPLE_FLAG,
+    GRAPPLE_UPDATE_FLAG,
+    grappleEndWrites,
     type GrappleParticipant,
     grappleSize,
     grappleStrength,
@@ -5191,7 +5192,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * full tests and the verdict. Returns the resolution so the caller can apply
      * follow-up (state flag flip); null when there is no opponent to test against.
      */
-    private async _rollGrappleOpposed(resolver: (input: OpposedStrengthInput) => GrappleResolution): Promise<GrappleResolution | null> {
+    private async _rollGrappleOpposed(resolver: (input: OpposedStrengthInput) => GrappleResolution, endsOnWin = false): Promise<GrappleResolution | null> {
         try {
             const opponent = await this.#grappleOpponent();
             if (opponent === null) {
@@ -5213,17 +5214,24 @@ export default class CharacterSheet extends BaseActorSheet {
                 actorSize: grappleSize(grappler),
                 opponentSize: grappleSize(opponent),
             });
+            // Breaking free ends the grapple for both: the card carries both flag writes for the active GM.
+            const ended = endsOnWin && resolution.success;
             await emitChatFromTemplate(
                 'systems/wh40k-rpg/templates/chat/grapple-opposed-chat.hbs',
                 {
                     gameSystem: this._resolveGameSystemId() ?? '',
+                    ended,
                     ...buildGrappleCard(
                         resolution,
                         { name: this.actor.name, strength: actorStrength, roll: actorRoll },
                         { name: opponent.name, strength: opponentStrength, roll: opponentRoll },
                     ),
                 },
-                { speaker: ChatMessage.getSpeaker({ actor: this.actor }), rolls: [actorRollObj, opponentRollObj] },
+                {
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    rolls: [actorRollObj, opponentRollObj],
+                    ...(ended ? { flags: { [GRAPPLE_UPDATE_FLAG]: grappleEndWrites(grappler.uuid, opponent.uuid) } } : {}),
+                },
             );
             return resolution;
         } catch (error) {
@@ -5245,13 +5253,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** Grapple controlled — Break Free (#120, opposed Strength). */
     static async #grappleBreakFree(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const result = await this._rollGrappleOpposed(resolveBreakGrapple);
-        if (result?.success === true) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag bag is keyed by namespace at runtime
-            await (this.actor as unknown as { setFlag: (scope: string, key: string, value: unknown) => Promise<unknown> }).setFlag(SYSTEM_ID, GRAPPLE_FLAG, {
-                state: 'none',
-            });
-        }
+        // A win ends the grapple for BOTH participants; the result card carries the writes (grapple-relay.ts).
+        await this._rollGrappleOpposed(resolveBreakGrapple, true);
     }
 
     /** Grapple controlled — Stand Up while gripped (#120, opposed Strength). */

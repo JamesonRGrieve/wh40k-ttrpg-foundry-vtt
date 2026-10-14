@@ -20,13 +20,15 @@ initializeStoryHandlebars();
 interface Args {
     card: GrappleCardContext;
     gameSystem: SystemId;
+    /** A won Break Free: the card notes the grapple is over. */
+    ended?: boolean;
 }
 
 function renderCard(args: Args): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.style.maxWidth = '300px';
-    wrapper.appendChild(renderSheet(cardSrc, { gameSystem: args.gameSystem, ...args.card }));
+    wrapper.appendChild(renderSheet(cardSrc, { gameSystem: args.gameSystem, ended: args.ended === true, ...args.card }));
     return wrapper;
 }
 
@@ -65,6 +67,23 @@ export const LargerControllerHolds: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-grapple-side="opponent"] [data-grapple-size-edge]')?.textContent).toContain('+1 DoS for Size');
         await expect(canvasElement.querySelector('[data-wh40k-hook="grapple-verdict"]')?.textContent).toContain('Ogryn wins the test');
+    },
+};
+
+/** The held side wins Break Free: the grapple is over for both. */
+export const BreakFreeEnds: Story = {
+    args: {
+        card: buildGrappleCard(
+            resolveBreakGrapple({ actorRoll: 8, actorStrength: 50, opponentRoll: 44, opponentStrength: 30 }),
+            { name: 'Acolyte Vex', strength: 50, roll: 8 },
+            { name: 'Cultist', strength: 30, roll: 44 },
+        ),
+        gameSystem: 'dh2',
+        ended: true,
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="grapple-verdict"]')?.textContent).toContain('Acolyte Vex wins the test');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="grapple-ended"]')?.textContent).toContain('The grapple is over.');
     },
 };
 

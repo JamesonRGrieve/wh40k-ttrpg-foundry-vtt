@@ -19,6 +19,7 @@ import {
     type DynamicModifierSituation,
     ownsActivatableHook,
 } from '../rules/dynamic-modifiers.ts';
+import { GRAPPLE_ATTEMPT_ACTION } from '../rules/grapple.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { actorEnvironmentContext, collectEnvironmentAttackModifiers, ENVIRONMENT_BUCKET, sumEnvironmentComponents } from '../rules/scene-environment.ts';
@@ -746,6 +747,8 @@ export class WeaponRollData extends RollData {
     /** Opposed melee manoeuvres routed through the #449 engine (#450). */
     isManoeuvre: boolean = false;
     isDisarm: boolean = false;
+    /** The attack is a grapple attempt (#450): no damage; a hit not evaded starts a grapple. */
+    isGrappleAttempt: boolean = false;
     override isThrown: boolean = false;
     /**
      * The area template one of the attack's qualities declares (Spray's cone, Blast's
@@ -849,9 +852,12 @@ export class WeaponRollData extends RollData {
         this.isKnockDown = this.action === 'Knock Down';
         this.isManoeuvre = this.action === 'Manoeuvre';
         this.isDisarm = this.action === 'Disarm';
+        // A grapple attempt deals no damage: its hit starts a grapple (DH2 p. 228). It keeps its
+        // controls — the card's Begin Grapple — and its evasion window.
+        this.isGrappleAttempt = this.action === GRAPPLE_ATTEMPT_ACTION;
 
         this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown || this.isManoeuvre || this.isDisarm;
-        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm;
+        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm || this.isGrappleAttempt;
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
         // #450: Manoeuvre and Disarm are opposed vs the target's Weapon Skill, like

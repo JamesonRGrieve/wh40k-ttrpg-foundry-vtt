@@ -2,12 +2,20 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from '../constants.ts';
+import { MELEE_SPECIAL_OPTIONS } from './attack-options';
+import { allCombatActions } from './combat-actions.ts';
 import {
+    asGrappleParticipant,
     degreesOfSuccess,
     GRAPPLE_ACTION_LABEL_KEYS,
+    GRAPPLE_ATTEMPT_ACTION,
     GRAPPLE_FLAG,
+    grappleEndWrites,
+    grappleFlagValue,
+    grappleStartWrites,
     readGrappleOpponentUuid,
     readGrappleState,
+    readGrappleWrites,
     resolveBreakGrapple,
     resolveDamageOpponent,
     resolveMoveWhileGrappling,
@@ -187,5 +195,64 @@ describe('character sheet reads the grapple state through readGrappleState (#120
     it('uses the shared reader and the system scope', () => {
         expect(source).toContain('readGrappleState(this.actor.flags, SYSTEM_ID)');
         expect(source).not.toMatch(/flags[^;\n]*\bwh40k\?\.grapple/);
+    });
+
+    it('a won Break Free ends the grapple for both participants through the relay', () => {
+        expect(source).toContain('this._rollGrappleOpposed(resolveBreakGrapple, true)');
+        expect(source).toContain('grappleEndWrites(grappler.uuid, opponent.uuid)');
+    });
+});
+
+describe('starting a grapple (#450; DH2 p. 228, RT p. 246, DH1 p. 197)', () => {
+    it('a successful attempt makes the attacker the controller and the target held, each naming the other', () => {
+        expect(grappleStartWrites('Actor.a', 'Actor.b')).toEqual([
+            { uuid: 'Actor.a', state: 'grappling', opponentUuid: 'Actor.b' },
+            { uuid: 'Actor.b', state: 'controlled', opponentUuid: 'Actor.a' },
+        ]);
+    });
+
+    it('the writes are what the readers then find', () => {
+        const flags = grappleStartWrites('Actor.a', 'Actor.b').map((write) => ({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: grappleFlagValue(write) } }));
+        expect(flags.map((f) => readGrappleState(f, SYSTEM_ID))).toEqual(['grappling', 'controlled']);
+        expect(flags.map((f) => readGrappleOpponentUuid(f, SYSTEM_ID))).toEqual(['Actor.b', 'Actor.a']);
+    });
+
+    it('ending clears both sides', () => {
+        for (const write of grappleEndWrites('Actor.a', 'Actor.b')) {
+            expect(write.state).toBe('none');
+            expect(write.opponentUuid).toBeNull();
+        }
+    });
+
+    it('reads only well-formed writes off a chat-message flag', () => {
+        const good = grappleStartWrites('Actor.a', 'Actor.b');
+        expect(readGrappleWrites(good)).toEqual(good);
+        expect(readGrappleWrites(undefined)).toEqual([]);
+        expect(readGrappleWrites([{ uuid: '', state: 'grappling', opponentUuid: null }, { uuid: 'Actor.c', state: 'hugging', opponentUuid: null }, 7])).toEqual(
+            [],
+        );
+    });
+
+    it('is offered as a melee special option of the attack, naming the attempt action', () => {
+        expect(MELEE_SPECIAL_OPTIONS.find((option) => option.key === 'grapple')?.actionName).toBe(GRAPPLE_ATTEMPT_ACTION);
+    });
+
+    it.each(['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'])('the attempt is a melee attack action of the %s table, so the dialog keeps it', (line) => {
+        const action = allCombatActions(line).find((entry) => entry.name === GRAPPLE_ATTEMPT_ACTION);
+        expect(action?.subtype).toEqual(expect.arrayContaining(['Attack', 'Melee']));
+    });
+
+    it('an attempt deals no damage, keeps its controls and opens an evasion window for its one hit', () => {
+        const rollData = readFileSync(resolve(__dirname, '../rolls/roll-data.ts'), 'utf8');
+        const actionData = readFileSync(resolve(__dirname, '../rolls/action-data.ts'), 'utf8');
+        expect(rollData).toContain('this.isGrappleAttempt = this.action === GRAPPLE_ATTEMPT_ACTION');
+        expect(rollData).toMatch(/this\.ignoreDamage = [^;]*this\.isGrappleAttempt/);
+        expect(rollData).not.toMatch(/this\.ignoreControls = [^;]*isGrappleAttempt/);
+        expect(actionData).toContain('rollData.isGrappleAttempt ? 1 : this.hitsOnDeclaredTarget()');
+    });
+
+    it('participants carry their UUID (empty for an unsaved actor)', () => {
+        expect(asGrappleParticipant({ name: 'A', uuid: 'Actor.a', system: {} }).uuid).toBe('Actor.a');
+        expect(asGrappleParticipant({ name: 'A', uuid: null, system: {} }).uuid).toBe('');
     });
 });

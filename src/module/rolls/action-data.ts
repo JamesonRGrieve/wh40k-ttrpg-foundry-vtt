@@ -1204,7 +1204,8 @@ export class WeaponActionData extends ActionData {
             this.evasion = null;
             return;
         }
-        const hitsLanded = this.hitsOnDeclaredTarget();
+        // A grapple attempt deals no damage, so it has no damage hits; its one hit is the grapple the target may evade.
+        const hitsLanded = rollData.isGrappleAttempt ? 1 : this.hitsOnDeclaredTarget();
         if (hitsLanded === 0) {
             this.evasion = null;
             return;

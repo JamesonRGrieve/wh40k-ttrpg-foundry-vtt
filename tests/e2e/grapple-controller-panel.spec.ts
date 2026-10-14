@@ -62,15 +62,16 @@ test.describe.serial('Grapple controller panel (Tier B, #120)', () => {
     test('both sides show the panel; Break Free ends the grapple and the panel leaves', async ({ page }) => {
         await joinOrSkip(page);
         await prepareStage(page);
-        const character = (name: string, state: string): object => ({
+        const character = (name: string, state: string, opponentUuid: string | null): object => ({
             name,
             type: 'dh2-character',
             img: 'icons/svg/mystery-man.svg',
             system: { gameSystem: 'dh2', characteristics: { strength: { base: 40, advance: 0, modifier: 0 } } },
-            flags: { 'wh40k-rpg': { grapple: { state } } },
+            flags: { 'wh40k-rpg': { grapple: { state, opponentUuid } } },
         });
-        const controller = await createActor(page, { data: character('Grappling Enforcer', 'grappling') });
-        const held = await createActor(page, { data: character('Held Heretic', 'controlled') });
+        // The held side records its controller, as a started grapple does (grapple-start.spec.ts).
+        const controller = await createActor(page, { data: character('Grappling Enforcer', 'grappling', null) });
+        const held = await createActor(page, { data: character('Held Heretic', 'controlled', `Actor.${controller.id}`) });
         try {
             // The controller's side.
             const controllerSheet = await openActorSheet(page, controller.id, 'overview');
@@ -93,7 +94,12 @@ test.describe.serial('Grapple controller panel (Tier B, #120)', () => {
             // Break Free: 05 against the opponent's 99 wins the opposed Strength test.
             await fixD100(page, [5, 99]);
             await page.locator(`#${heldSheet} [data-wh40k-hook="grapple-break-btn"]`).click();
-            await expect.poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'Break Free ends the grapple' }).toEqual({ state: 'none' });
+            await expect
+                .poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'Break Free ends the grapple' })
+                .toEqual({ state: 'none', opponentUuid: null });
+            await expect
+                .poll(async () => actorFlag(page, controller.id, 'grapple'), { message: 'it ends for the controller too' })
+                .toEqual({ state: 'none', opponentUuid: null });
             await expect(page.locator(`#${heldSheet} ${PANEL}`)).toHaveCount(0);
             expect(await snapWindow(page, 'grapple-broken-free-sheet', heldSheet)).not.toBeNull();
             recordCoverage('grapple.flow', 'break-free');

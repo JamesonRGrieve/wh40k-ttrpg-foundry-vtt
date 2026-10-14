@@ -5,7 +5,8 @@
     Size edge a larger combatant scores) — then the RAW Opposed-test verdict
     (DH2 p. 24): the winner, or a stalemate when both fail.
 
-    Context: buildGrappleCard (rules/grapple.ts) + gameSystem.
+    Context: buildGrappleCard (rules/grapple.ts) + gameSystem + ended (a won
+    Break Free: the grapple is over for both).
 --}}
 <div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-slate-500 tw-bg-[rgba(22,24,30,0.92)]"
      data-wh40k-system="{{gameSystem}}"
@@ -35,5 +36,6 @@
 
     <div class="tw-mt-2 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-text-[0.85rem] tw-font-bold {{#if (eq outcome 'stalemate')}}tw-border-amber-600/60 tw-bg-amber-950/40{{else}}tw-border-slate-400/60 tw-bg-slate-800/40{{/if}}" data-wh40k-hook="grapple-verdict">
         {{#if (eq outcome 'stalemate')}}{{localize "WH40K.Grapple.Chat.Stalemate"}}{{else}}{{localize "WH40K.Grapple.Chat.Wins" name=winnerName}}{{/if}}
+        {{#if ended}}<div class="tw-mt-1 tw-font-normal" data-wh40k-hook="grapple-ended">{{localize "WH40K.Grapple.Ended"}}</div>{{/if}}
     </div>
 </div>

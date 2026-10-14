@@ -5,6 +5,7 @@
  */
 
 import { combatActionAttackModifier, combatActionCostLabel } from './combat-actions.ts';
+import { GRAPPLE_ATTEMPT_ACTION } from './grapple.ts';
 
 /** The weapon surface the attack-mode availability reads: its class and rate of fire. */
 export interface AttackOptionWeapon {
@@ -216,6 +217,15 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         actionCost: 'Half',
         icon: 'fas fa-arrows-up-down-left-right',
         tooltip: 'Opposed WS test. Move opponent up to 1m in chosen direction. Cannot push into obstacles.',
+    },
+    {
+        // RAW (DH2 p. 228, RT p. 246, DH1 p. 197): instead of unarmed damage, a WS attack the target may react to; a hit starts a grapple the attacker controls.
+        key: 'grapple',
+        label: 'Grapple',
+        actionName: GRAPPLE_ATTEMPT_ACTION,
+        actionCost: 'Half',
+        icon: 'fas fa-hands-bound',
+        tooltip: 'WS attack instead of damage; the target may Dodge or Parry. A hit starts a Grapple you control.',
     },
     {
         key: 'disarm',
