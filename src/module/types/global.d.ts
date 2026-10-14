@@ -359,9 +359,19 @@ interface TooltipsWH40K {
 }
 
 /**
+ * An owned item as `openMutantBackgroundDialog` reads it. Its `system` is
+ * narrowed by `rules/chaos-backgrounds.ts` to the origin path whose
+ * `grants.startingMutationFormula` and `modifiers.resources.corruption` carry
+ * the Mutant background's content (Within p. 32).
+ */
+export interface WH40KMutantBackgroundOrigin {
+    type: string;
+    system: object;
+}
+
+/**
  * The actor surface `openMutantBackgroundDialog` touches: narrow enough to avoid
- * Document coupling, and tolerant of both `corruption` schema shapes (a bare
- * number on some lines, `{ value }` on others). Lives here so the dialog and the
+ * Document coupling. Lives here so the dialog and the
  * {@link WH40KPromptLaunchers} signature share one definition without the
  * launcher interface having to import the dialog module.
  */
@@ -369,12 +379,12 @@ export interface WH40KMutantBackgroundTarget {
     /** `null` on an unsaved Document, per Foundry's `Document#id`. */
     id?: string | null | undefined;
     name?: string | undefined;
-    /** Character Corruption Points: a plain `NumberField` at `system.corruption`. */
-    system?: { corruption?: number };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts a path-keyed payload and resolves to the updated Document (framework signature)
-    update?: (data: Record<string, unknown>) => Promise<unknown>;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.setFlag stores arbitrary serializable values keyed by scope/key (framework signature)
-    setFlag?: (scope: string, key: string, value: unknown) => Promise<unknown>;
+    /** Owned items, searched for the Mutant origin. */
+    items?: Iterable<WH40KMutantBackgroundOrigin> | undefined;
+    /** Foundry `Actor#createEmbeddedDocuments`: adds the rolled mutation. */
+    createEmbeddedDocuments?: Actor.Implementation['createEmbeddedDocuments'];
+    /** Foundry `Actor#setFlag`: records Twisted Flesh. */
+    setFlag?: Actor.Implementation['setFlag'];
 }
 
 /**

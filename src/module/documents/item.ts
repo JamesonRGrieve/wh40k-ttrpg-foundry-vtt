@@ -2,6 +2,7 @@ import { identifierFromNameIfBlank } from '../data/fields/identifier-utils.ts';
 import {
     deltaFromModifiers,
     ORIGIN_RESOURCE_PATHS,
+    originContribution,
     originDeltaFlagPath,
     originIdentityKey,
     readOriginDelta,
@@ -9,6 +10,7 @@ import {
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
 import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { startingCorruptionHoldsMalignancy } from '../rules/chaos-backgrounds.ts';
 import {
     NAVIGATOR_LEVEL_LABEL_KEY,
     type NavigatorPowerLevel,
@@ -47,9 +49,9 @@ type AttackSpecialIndexEntry = {
 
 type OriginActorLike = WH40KBaseActor & {
     system: WH40KBaseActor['system'] & {
-        characteristics?: Record<string, { advance?: number }>;
+        characteristics?: Record<string, { base?: number }>;
         wounds?: { max?: number };
-        fate?: { total?: number };
+        fate?: { max?: number; value?: number };
     };
 };
 
@@ -1048,13 +1050,10 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Reverse-then-add reconcile via the shared origin-grant-ledger helper, onto
         // this applier's own resource→path map (Fate onto `fate.max` + `fate.value`).
-        const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(
-            actor.system,
-            { characteristics: md.characteristics, resources: { wounds: md.wounds, fate: md.fate } },
-            priorDelta,
-            ORIGIN_RESOURCE_PATHS,
-        );
+        const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(actor.system, originContribution(md), priorDelta, ORIGIN_RESOURCE_PATHS);
         Object.assign(updates, resourceUpdates);
+        // A starting-mutation origin's Corruption queues no Malignancy Test (Within p. 32).
+        Object.assign(updates, startingCorruptionHoldsMalignancy(this.system, resourceUpdates, actor.system));
 
         // Record the delta this apply commits, so the next apply can reverse it.
         updates[originDeltaFlagPath(identityKey)] = newDelta;

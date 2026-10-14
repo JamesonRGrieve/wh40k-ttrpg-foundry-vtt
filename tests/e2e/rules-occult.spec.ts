@@ -324,7 +324,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (chaosBg.__importError != null) {
             fail(['chaos-backgrounds-predicates'], chaosBg.__importError);
         } else {
-            guarded('chaos-backgrounds-predicates', () => val<number>(chaosBg, 'MUTANT_STARTING_CORRUPTION') === 10);
+            guarded('chaos-backgrounds-predicates', () => {
+                const formula = val<(system: object) => string | null>(chaosBg, 'startingMutationFormula');
+                return formula({ grants: { startingMutationFormula: '5d10' } }) === '5d10' && formula({ grants: [] }) === null;
+            });
         }
 
         return out;

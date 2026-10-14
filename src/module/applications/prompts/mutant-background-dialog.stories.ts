@@ -2,56 +2,65 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/mutant-background-dialog.hbs?raw';
 import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
-import { MUTANT_STARTING_CORRUPTION } from '../../rules/chaos-backgrounds.ts';
 
 interface Args {
     canApply: boolean;
     actorName: string | null;
 }
 
+/** The Mutant origin's content (Within p. 32), as the dialog reads it off the character's origin. */
+const MUTANT_ORIGIN = { startingCorruption: 10, mutationFormula: '5d10' };
+
 const meta = {
     title: 'Dialogs/MutantBackgroundDialog',
     render: (args) =>
         renderSheet(templateSrc, {
-            startingCorruption: MUTANT_STARTING_CORRUPTION,
+            startingCorruption: args.canApply ? MUTANT_ORIGIN.startingCorruption : 0,
+            mutationFormula: args.canApply ? MUTANT_ORIGIN.mutationFormula : null,
             actorName: args.actorName,
             canApply: args.canApply,
         }),
     args: {
         canApply: true,
-        actorName: null,
+        actorName: 'Aurelia Vex',
     },
 } satisfies Meta<Args>;
 export default meta;
 
 type Story = StoryObj<Args>;
 
-/** No actor selected: the +10 callout from the rule constant, no "Applying to" line. */
+/**
+ * A Mutant character: the origin's starting Corruption, the statement that it
+ * owes no Malignancy Test, and the starting-mutation roll that replaces it.
+ */
 export const Default: Story = {
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.textContent).toContain(`+${MUTANT_STARTING_CORRUPTION}`);
-        await expect(within(canvasElement).queryByText(/Applying to:/)).toBeNull();
+        const corruption = canvasElement.querySelector<HTMLElement>('[data-mutant-row="corruption"]');
+        await expect(corruption?.textContent).toContain('+10');
+        await expect(canvasElement.querySelector('[data-mutant-row="no-malignancy"]')?.textContent).toMatch(/no Malignancy Test/i);
+        await expect(canvasElement.querySelector('[data-mutant-row="mutation"]')?.textContent).toContain('5d10');
+        await expect(within(canvasElement).getByText('Aurelia Vex')).toBeTruthy();
     },
 };
 
-/** An actor was passed: the dialog names who the background lands on, and Apply / Cancel dispatch their actions. */
-export const WithTargetActor: Story = {
-    args: {
-        actorName: 'Aurelia Vex',
-    },
+/** Roll Starting Mutation and Cancel dispatch their actions. */
+export const RollAndCancel: Story = {
     play: async ({ canvasElement }) => {
-        await expect(within(canvasElement).getByText('Aurelia Vex')).toBeTruthy();
         const seen = captureActionClicks(canvasElement);
-        canvasElement.querySelector<HTMLButtonElement>('[data-action="apply"]')?.click();
+        const apply = canvasElement.querySelector<HTMLButtonElement>('[data-action="apply"]');
+        await expect(apply?.textContent).toMatch(/Roll Starting Mutation/i);
+        apply?.click();
         canvasElement.querySelector<HTMLButtonElement>('[data-action="cancel"]')?.click();
         await expect(seen.map((click) => click.action)).toEqual(['apply', 'cancel']);
     },
 };
 
-/** canApply false: Apply is disabled (Cancel stays usable). */
-export const DisabledApply: Story = {
-    args: { canApply: false },
+/** No Mutant origin on the character: no roll to make, so Apply is disabled and the dialog says why. */
+export const WithoutMutantOrigin: Story = {
+    args: { canApply: false, actorName: null },
     play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-mutant-row="no-origin"]')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-mutant-row="corruption"]')).toBeNull();
         await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="apply"]')?.disabled).toBe(true);
         await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="cancel"]')?.disabled).toBe(false);
     },
@@ -65,6 +74,5 @@ export const TwistedFleshGrantPresent: Story = {
         await expect(grant).toBeTruthy();
         if (grant === null) return;
         await expect(within(grant).getAllByText(/Twisted Flesh/i).length).toBeGreaterThan(0);
-        await expect(canvasElement.querySelector('[data-action="apply"]')?.textContent).toMatch(/Apply/i);
     },
 };

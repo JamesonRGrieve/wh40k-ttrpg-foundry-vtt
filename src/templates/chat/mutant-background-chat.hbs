@@ -19,10 +19,15 @@
             {{localize "WH40K.MutantBackground.AppliedMessage"}}
         </div>
     {{/if}}
+    <p class="tw-text-[0.8rem] tw-mt-0 tw-mb-2 tw-text-[#c8c4b9]" data-mutant-row="no-malignancy">{{localize "WH40K.MutantBackground.NoMalignancyTest"}}</p>
     <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
-        <li class="tw-flex tw-justify-between tw-gap-3">
+        <li class="tw-flex tw-justify-between tw-gap-3" data-mutant-row="corruption">
             <span class="tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.StartingCorruption"}}</span>
             <span class="tw-font-bold tw-tabular-nums tw-text-[#e8e4d9]">+{{startingCorruption}}</span>
+        </li>
+        <li class="tw-flex tw-justify-between tw-gap-3" data-mutant-row="mutation">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.StartingMutation"}} ({{mutationFormula}} = {{mutationTotal}})</span>
+            <span class="tw-font-bold dh2:tw-text-green-400 tw-text-[#a8e0a8]">{{#if mutationName}}{{mutationName}}{{else}}{{localize "WH40K.MutationRoll.NoMutation"}}{{/if}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
             <span class="tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.TwistedFleshLabel"}}</span>

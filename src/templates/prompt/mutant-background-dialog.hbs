@@ -1,27 +1,49 @@
-{{!-- Mutant Background Dialog (GitHub #91) --}}
-{{!-- GM confirms the Within Mutant background; +10 starting Corruption + Twisted Flesh grant. --}}
+{{!-- Mutant Background Dialog (GitHub #91, Enemies Within p. 32) --}}
+{{!-- Starting Corruption (applied by the origin, no Malignancy Test) + the starting-mutation roll + Twisted Flesh. --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2">
 
     <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
         {{localize "WH40K.MutantBackground.Description"}}
     </div>
 
-    {{!-- Starting corruption callout --}}
-    <div class="tw-mb-3 tw-p-3 tw-rounded-md tw-border-2 dh2:tw-border-green-700 dh2:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]">
-        <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2:tw-text-green-400 tw-text-[#a8e0a8] tw-mb-1">
-            {{localize "WH40K.MutantBackground.StartingCorruption"}}
-        </div>
-        <div class="tw-flex tw-items-baseline tw-gap-2">
-            <span class="tw-font-bold tw-tabular-nums tw-text-[1.6rem] dh2:tw-text-green-400 tw-text-[#a8e0a8]">+{{startingCorruption}}</span>
-            <span class="tw-text-[0.8rem] tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.CorruptionUnit"}}</span>
-        </div>
-        {{#if actorName}}
-            <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#9a9a8a]">
-                {{localize "WH40K.MutantBackground.AppliedTo"}}
-                <strong class="tw-text-[#e8e4d9]">{{actorName}}</strong>
+    {{#if canApply}}
+        {{!-- Starting corruption callout --}}
+        <div class="tw-mb-3 tw-p-3 tw-rounded-md tw-border-2 dh2:tw-border-green-700 dh2:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]"
+             data-mutant-row="corruption">
+            <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2:tw-text-green-400 tw-text-[#a8e0a8] tw-mb-1">
+                {{localize "WH40K.MutantBackground.StartingCorruption"}}
             </div>
-        {{/if}}
-    </div>
+            <div class="tw-flex tw-items-baseline tw-gap-2">
+                <span class="tw-font-bold tw-tabular-nums tw-text-[1.6rem] dh2:tw-text-green-400 tw-text-[#a8e0a8]">+{{startingCorruption}}</span>
+                <span class="tw-text-[0.8rem] tw-text-[#9a9a8a]">{{localize "WH40K.MutantBackground.CorruptionUnit"}}</span>
+            </div>
+            <div class="tw-mt-1 tw-text-[0.8rem] tw-text-[#c8c4b9]" data-mutant-row="no-malignancy">
+                {{localize "WH40K.MutantBackground.NoMalignancyTest"}}
+            </div>
+            {{#if actorName}}
+                <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#9a9a8a]">
+                    {{localize "WH40K.MutantBackground.AppliedTo"}}
+                    <strong class="tw-text-[#e8e4d9]">{{actorName}}</strong>
+                </div>
+            {{/if}}
+        </div>
+
+        {{!-- Starting mutation callout --}}
+        <div class="tw-mb-3 tw-p-3 tw-rounded-md tw-border-2 dh2:tw-border-green-700 dh2:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]"
+             data-mutant-row="mutation">
+            <div class="tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] dh2:tw-text-green-400 tw-text-[#a8e0a8] tw-mb-1">
+                {{localize "WH40K.MutantBackground.StartingMutation"}}
+            </div>
+            <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">
+                {{localize "WH40K.MutantBackground.StartingMutationNote" formula=mutationFormula}}
+            </div>
+        </div>
+    {{else}}
+        <div class="tw-mb-3 tw-p-3 tw-rounded-md tw-border-2 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[0.85rem] tw-text-[#e8e4d9]"
+             data-mutant-row="no-origin">
+            {{localize "WH40K.MutantBackground.NoOrigin"}}
+        </div>
+    {{/if}}
 
     {{!-- Twisted Flesh grant callout --}}
     <div class="tw-mb-5 tw-p-3 tw-rounded-md tw-border-2 dh2:tw-border-green-700 dh2:tw-bg-green-900/30 tw-border-[rgba(80,140,80,0.35)] tw-bg-[rgba(0,0,0,0.35)]"

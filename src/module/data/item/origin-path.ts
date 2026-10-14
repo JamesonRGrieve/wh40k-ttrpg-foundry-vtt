@@ -81,6 +81,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         fateThreshold: number;
         blessedByEmperor: boolean;
         psyRating: number;
+        startingMutationFormula: string;
         skills: Array<{ name: string; specialization: string; level: string }>;
         talents: Array<{ name: string; specialization: string; uuid: string }>;
         traits: Array<{ name: string; level: number; uuid: string }>;
@@ -240,6 +241,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 // sanctions a psyker at PR 1). XP-spend computation subtracts the cost of
                 // this granted rating so the free starting rating isn't counted as bought.
                 psyRating: new fields.NumberField({ required: false, initial: 0, min: 0, integer: true }),
+
+                // Starting-mutation roll on the line's Mutations table, made at creation in
+                // place of the Malignancy Test this origin's starting Corruption would owe
+                // (DH2 Within p. 32, Mutant: "5d10"). See `rules/chaos-backgrounds.ts`.
+                startingMutationFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
 
                 // Skills granted (with training level)
                 skills: new fields.ArrayField(

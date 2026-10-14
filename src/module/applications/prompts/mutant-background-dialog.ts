@@ -1,21 +1,23 @@
 /**
- * @file MutantBackgroundDialog — GM dialog confirming the Mutant
- * origin path background for a fresh dh2 character. Surfaces the
- * +10 starting Corruption and the Twisted Flesh talent grant, and
- * (when an actor is provided) applies both on confirm. Also emits
- * a chat card announcing the application.
+ * @file MutantBackgroundDialog — GM dialog finishing the Mutant origin path
+ * background for a dh2 character (Enemies Within p. 32).
  *
- * The starting Corruption comes from `MUTANT_STARTING_CORRUPTION` in
- * `src/module/rules/chaos-backgrounds.ts`; the Twisted Flesh flag
- * marks the background's malignancy-to-mutation option for the GM.
+ * The Mutant's 10 starting Corruption is an origin resource: the origin-grant
+ * ledger applies it from the Mutant origin's `modifiers.resources.corruption`
+ * when the origin is committed, and queues no Malignancy Test for it. In place
+ * of that test the book has the character "roll 5d10 on Table 8-16: Mutations
+ * ... to determine a starting mutation". This dialog makes that roll (the
+ * formula is the origin's `grants.startingMutationFormula`), adds the rolled
+ * mutation to the character, sets the Twisted Flesh flag, and posts a chat card.
  *
- * See GitHub issue #91.
+ * The rule lives in `src/module/rules/chaos-backgrounds.ts`. See GitHub #91.
  */
 
 import { SYSTEM_ID } from '../../constants.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { MUTANT_STARTING_CORRUPTION, mutantCorruptionUpdate, TWISTED_FLESH_FLAG } from '../../rules/chaos-backgrounds.ts';
-import type { WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
+import { originStartingCorruption, startingMutationFormula, startingMutationRow, TWISTED_FLESH_FLAG } from '../../rules/chaos-backgrounds.ts';
+import { loadMutationEntries } from '../../rules/mutation-roll.ts';
+import type { WH40KMutantBackgroundOrigin, WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -23,28 +25,36 @@ const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Minimal actor surface the dialog touches — kept narrow to avoid Document
- * coupling. Corruption is the character's plain number at `system.corruption`.
- *
- * Declared in `types/global.d.ts` rather than here because the launcher
- * signature on `game.wh40k.prompts` needs the same shape, and that interface
- * cannot import this module (see the note on `WH40KPromptLaunchers` — a `typeof`
- * import there closes a `no-circular` cycle per launcher).
+ * coupling. Declared in `types/global.d.ts` rather than here because the
+ * launcher signature on `game.wh40k.prompts` needs the same shape, and that
+ * interface cannot import this module (see the note on `WH40KPromptLaunchers`
+ * — a `typeof` import there closes a `no-circular` cycle per launcher).
  */
 type MutantTargetActor = WH40KMutantBackgroundTarget;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface MutantBackgroundContext extends Record<string, unknown> {
     startingCorruption: number;
+    mutationFormula: string | null;
     actorName: string | null;
     canApply: boolean;
 }
 
+/** The actor's origin carrying a starting-mutation roll (the Mutant background), if any. */
+function mutantOrigin(actor: MutantTargetActor | null): WH40KMutantBackgroundOrigin | null {
+    if (actor?.items === undefined) return null;
+    for (const item of actor.items) {
+        if (item.type === 'originPath' && startingMutationFormula(item.system) !== null) return item;
+    }
+    return null;
+}
+
 /**
- * GM-only dialog: confirm the Mutant background, click Apply, post
- * a chat card. When an actor was passed at construction time, the
- * dialog mutates `system.corruption` and sets a system flag marking
- * the Twisted Flesh talent grant so the Malignancy pipeline can
- * surface the conversion option.
+ * GM-only dialog: roll the Mutant's starting mutation, add it to the
+ * character, set the Twisted Flesh flag the Malignancy pipeline reads, and post
+ * a chat card. Apply is only offered for a character that carries the Mutant
+ * origin, since the roll's formula and the starting Corruption are that
+ * origin's content.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
@@ -95,11 +105,13 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
     /** @inheritDoc */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<MutantBackgroundContext> {
         const context = (await super._prepareContext(options)) as MutantBackgroundContext;
+        const origin = mutantOrigin(this.actor);
         return {
             ...context,
-            startingCorruption: MUTANT_STARTING_CORRUPTION,
+            startingCorruption: origin === null ? 0 : originStartingCorruption(origin.system),
+            mutationFormula: origin === null ? null : startingMutationFormula(origin.system),
             actorName: this.actor?.name ?? null,
-            canApply: true,
+            canApply: origin !== null,
         };
     }
 
@@ -109,31 +121,32 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
 
     static async #onApply(this: MutantBackgroundDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-
-        // Apply mechanical effects when an actor was supplied.
         const actor = this.actor;
-        if (actor !== null && typeof actor.update === 'function') {
-            try {
-                await actor.update(mutantCorruptionUpdate(actor.system?.corruption ?? 0));
-            } catch {
-                /* swallow — chat card still posts so the GM has a record */
-            }
-            if (typeof actor.setFlag === 'function') {
-                try {
-                    await actor.setFlag(SYSTEM_ID, TWISTED_FLESH_FLAG, true);
-                } catch {
-                    /* swallow */
-                }
-            }
+        const origin = mutantOrigin(actor);
+        const formula = origin === null ? null : startingMutationFormula(origin.system);
+        if (actor === null || origin === null || formula === null) return;
+
+        // Within p. 32: roll the formula on Table 8-16 for the starting mutation.
+        const roll = await new Roll(formula).evaluate();
+        const total = roll.total;
+        const entries = (await loadMutationEntries()) ?? [];
+        const mutation = startingMutationRow(entries, total);
+        if (mutation === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.MutationRoll.TableMissing'));
+        } else if (actor.createEmbeddedDocuments !== undefined) {
+            const item = await fromUuid(mutation.uuid);
+            if (item instanceof Item) await actor.createEmbeddedDocuments('Item', [item.toObject()]);
         }
+        if (actor.setFlag !== undefined) await actor.setFlag(SYSTEM_ID, TWISTED_FLESH_FLAG, true);
 
-        const templateData = {
-            startingCorruption: MUTANT_STARTING_CORRUPTION,
-            actorName: actor?.name ?? null,
+        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', {
+            startingCorruption: originStartingCorruption(origin.system),
+            mutationFormula: formula,
+            mutationTotal: total,
+            mutationName: mutation?.name ?? null,
+            actorName: actor.name ?? null,
             gameSystem: 'dh2',
-        };
-
-        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/mutant-background-chat.hbs', templateData);
+        });
         await this.close();
     }
 

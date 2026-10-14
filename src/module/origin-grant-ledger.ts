@@ -77,35 +77,70 @@ export function readOriginDelta(flags: unknown, key: string): OriginAppliedDelta
     return entry ?? {};
 }
 
+/** The non-characteristic resources an origin's `modifiers.resources` block grants. */
+export const ORIGIN_RESOURCES = ['wounds', 'fate', 'corruption', 'insanity'] as const;
+
+/** One of {@link ORIGIN_RESOURCES}. */
+export type OriginResource = (typeof ORIGIN_RESOURCES)[number];
+
 /**
- * Opaque bag of origin modifiers as stored on the shared item schema. Values
- * are typed `| undefined` because legacy / partially-authored origin documents
- * can carry sparse entries; {@link deltaFromModifiers} coerces them to the
- * canonical numeric delta both grant mechanisms compare against.
+ * Opaque bag of origin modifiers as stored on the shared item schema
+ * (`ModifiersTemplate`): characteristic changes under `characteristics`, and
+ * Wounds / Fate / Corruption / Insanity under `resources`. Values are typed
+ * `| undefined` because legacy / partially-authored origin documents can carry
+ * sparse entries; {@link deltaFromModifiers} coerces them to the canonical
+ * numeric delta both grant mechanisms compare against.
  */
 export interface OriginModifierBag {
     characteristics?: Record<string, number | undefined>;
-    wounds?: number | undefined;
-    fate?: number | undefined;
+    resources?: Partial<Record<OriginResource, number | undefined>> | undefined;
 }
+
+/** What one origin contributes: non-zero characteristic changes plus every resource (0 when absent). */
+export type OriginModifierDelta = { characteristics: Record<string, number> } & Record<OriginResource, number>;
 
 /**
  * Reduce an origin's modifier bag to the canonical {@link OriginAppliedDelta}
  * the ledger records — only non-zero characteristic entries are kept, matching
  * what `applyOriginToActor` writes back. This is the single definition of "what
  * resources an origin contributes", consumed by both the reconcile applier and
- * the builder when it stamps the ledger after its absolute writes.
+ * the builder when it reconciles the ledger after its absolute writes.
  */
-export function deltaFromModifiers(modifiers: OriginModifierBag | undefined): { characteristics: Record<string, number>; wounds: number; fate: number } {
-    const delta: { characteristics: Record<string, number>; wounds: number; fate: number } = { characteristics: {}, wounds: 0, fate: 0 };
+export function deltaFromModifiers(modifiers: OriginModifierBag | undefined): OriginModifierDelta {
+    const delta: OriginModifierDelta = { characteristics: {}, wounds: 0, fate: 0, corruption: 0, insanity: 0 };
     const chars = modifiers?.characteristics ?? {};
     for (const [key, raw] of Object.entries(chars)) {
         const value = Number(raw ?? 0);
         if (value !== 0) delta.characteristics[key] = value;
     }
-    delta.wounds = Number(modifiers?.wounds ?? 0);
-    delta.fate = Number(modifiers?.fate ?? 0);
+    for (const resource of ORIGIN_RESOURCES) delta[resource] = Number(modifiers?.resources?.[resource] ?? 0);
     return delta;
+}
+
+/** The {@link reconcileResourceDeltas} contribution an origin's {@link OriginModifierDelta} represents. */
+export function originContribution(delta: OriginModifierDelta): ResourceContribution {
+    const resources: Partial<Record<OriginResource, number>> = {};
+    for (const resource of ORIGIN_RESOURCES) resources[resource] = delta[resource];
+    return { characteristics: delta.characteristics, resources };
+}
+
+/**
+ * The prior delta the origin-path builder reconciles against after its own
+ * absolute writes. The builder bakes every origin's characteristic changes
+ * into `characteristics.*.base`, so those count as already applied. A resource
+ * it rewrote absolutely this commit (Wounds from the rolled total, Fate from
+ * the rolled / threshold total) no longer carries any earlier origin
+ * contribution, so its prior is 0 and the origin's modifier is added on top.
+ * Every other resource (Corruption, Insanity, an unrolled Wounds / Fate) keeps
+ * the prior the ledger recorded, so a re-commit never stacks it.
+ * @param recorded  The delta the ledger holds for this origin.
+ * @param delta  The origin's current contribution.
+ * @param rewritten  The resources the builder wrote absolutely this commit.
+ */
+export function priorAfterBuilderWrites(recorded: OriginAppliedDelta, delta: OriginModifierDelta, rewritten: ReadonlySet<OriginResource>): OriginAppliedDelta {
+    const prior: OriginAppliedDelta = { ...recorded, characteristics: { ...delta.characteristics } };
+    for (const resource of rewritten) prior[resource] = 0;
+    return prior;
 }
 
 /**
@@ -119,32 +154,45 @@ export function originDeltaFlagPath(identityKey: string): string {
 }
 
 /**
- * Non-characteristic resources the reverse-then-add reconcile loop can write.
- * Each maps to one prior-delta scalar but may fan out to several `system.*`
+ * Per-resource `system.*` sub-paths the reverse-then-add writes for one applier.
+ * Each resource maps to one prior-delta scalar but may fan out to several
  * sub-paths (e.g. wounds → `value` + `max`), all sharing that single prior.
  */
-type ReconcilableResource = 'wounds' | 'fate' | 'corruption' | 'insanity';
-
-/** Per-resource `system.*` sub-paths the reverse-then-add writes for one applier. */
-export type ResourcePathMap = Partial<Record<ReconcilableResource, readonly string[]>>;
+export type ResourcePathMap = Partial<Record<OriginResource, readonly string[]>>;
 
 /**
- * Where `WH40KItem.applyOriginToActor` puts an origin's Wounds and Fate.
- * Wounds raise the maximum. Fate raises the Fate total — `fate.max`, DH2's Fate
- * threshold — and the current points with it, since a character starts with his
- * full Fate. (The schema has no separate total field: #42.)
+ * Where `WH40KItem.applyOriginToActor` puts an origin's resources.
+ * Wounds raise the maximum (a boot reconcile must not heal an injured
+ * character). Fate raises the Fate total — `fate.max`, DH2's Fate threshold —
+ * and the current points with it, since a character starts with his full Fate.
+ * (The schema has no separate total field: #42.) Corruption and Insanity are
+ * plain numbers on the character schema; an actor without them (an NPC) is
+ * skipped by {@link reconcileResourceDeltas}.
  */
 export const ORIGIN_RESOURCE_PATHS = {
     wounds: ['wounds.max'],
     fate: ['fate.max', 'fate.value'],
+    corruption: ['corruption'],
+    insanity: ['insanity'],
+} as const satisfies ResourcePathMap;
+
+/**
+ * Where the origin-path builder puts an origin's resources at character
+ * creation: as {@link ORIGIN_RESOURCE_PATHS}, but a new character starts at
+ * full Wounds, so the current Wounds move with the maximum, as the builder's
+ * own rolled-Wounds write does.
+ */
+export const BUILDER_ORIGIN_RESOURCE_PATHS = {
+    ...ORIGIN_RESOURCE_PATHS,
+    wounds: ['wounds.max', 'wounds.value'],
 } as const satisfies ResourcePathMap;
 
 /** A single origin/grant's resource contribution, normalized for {@link reconcileResourceDeltas}. */
 export interface ResourceContribution {
-    /** Characteristic advances keyed by characteristic id (e.g. `weaponSkill`). */
+    /** Characteristic changes keyed by characteristic id (e.g. `weaponSkill`). */
     characteristics: Record<string, number>;
     /** Non-characteristic resource bonuses; absent entries contribute nothing. */
-    resources: Partial<Record<ReconcilableResource, number>>;
+    resources: Partial<Record<OriginResource, number>>;
 }
 
 /** Result of one reconcile: the `actor.update()` system-path bag plus the delta to record. */
@@ -178,9 +226,12 @@ function valueAtPath(system: object, path: string): unknown {
  * {@link ORIGIN_RESOURCE_PATHS}, while a resource-grant applier might write
  * `wounds.value`+`.max` / `fate.value`+`.max` plus corruption /
  * insanity — each passes its own {@link ResourcePathMap}. A resource's single
- * prior reverses across all of its configured sub-paths. Characteristics the
- * actor does not carry are skipped (no advance slot to write) but still recorded
- * in the returned delta, matching {@link deltaFromModifiers}.
+ * prior reverses across all of its configured sub-paths. A characteristic
+ * change lands on `characteristics.*.base`, where the builder bakes origin
+ * bonuses: `advance` counts +5 steps, so a +5 origin there would be +25.
+ * Characteristics and resource paths the actor does not carry (an NPC has no
+ * Corruption) are skipped, but still recorded in the returned delta, matching
+ * {@link deltaFromModifiers}.
  *
  * Pure (no Foundry globals): reads the passed `system` snapshot and returns the
  * update bag for the caller to commit, plus the delta to stamp under
@@ -196,9 +247,9 @@ export function reconcileResourceDeltas(
     const updates: Record<string, unknown> = {};
     const newChars: Record<string, number> = {};
 
-    // Characteristic advances (reverse prior, add current). Skip characteristics
-    // the actor does not have — there is no advance slot to write — but still
-    // record every non-zero contribution in the delta.
+    // Characteristic changes (reverse prior, add current) on the base value.
+    // Skip characteristics the actor does not have, but still record every
+    // non-zero contribution in the delta.
     const priorChars = priorDelta.characteristics ?? {};
     const charKeys = new Set<string>([...Object.keys(contribution.characteristics), ...Object.keys(priorChars)]);
     for (const key of charKeys) {
@@ -207,23 +258,24 @@ export function reconcileResourceDeltas(
         const prior = Number(priorChars[key] ?? 0);
         if (value === prior) continue;
         if (valueAtPath(system, `characteristics.${key}`) === undefined) continue;
-        const current = Number(valueAtPath(system, `characteristics.${key}.advance`) ?? 0);
-        updates[`system.characteristics.${key}.advance`] = current - prior + value;
+        const current = Number(valueAtPath(system, `characteristics.${key}.base`) ?? 0);
+        updates[`system.characteristics.${key}.base`] = current - prior + value;
     }
 
     const newDelta: OriginAppliedDelta = { characteristics: newChars };
 
     // Non-characteristic resources (reverse prior, add current) — each resource's
-    // single prior reverses across every configured sub-path.
-    for (const [resource, paths] of Object.entries(resourcePaths) as Array<[ReconcilableResource, readonly string[] | undefined]>) {
+    // single prior reverses across every configured sub-path the actor carries.
+    for (const [resource, paths] of Object.entries(resourcePaths) as Array<[OriginResource, readonly string[] | undefined]>) {
         if (paths === undefined) continue;
         const value = Number(contribution.resources[resource] ?? 0);
         newDelta[resource] = value;
         const prior = Number(priorDelta[resource] ?? 0);
         if (value === prior) continue;
         for (const path of paths) {
-            const current = Number(valueAtPath(system, path) ?? 0);
-            updates[`system.${path}`] = current - prior + value;
+            const raw = valueAtPath(system, path);
+            if (raw === undefined) continue;
+            updates[`system.${path}`] = Number(raw ?? 0) - prior + value;
         }
     }
 

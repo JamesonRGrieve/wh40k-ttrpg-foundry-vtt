@@ -16,8 +16,20 @@ import type { AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
-import { deltaFromModifiers, originDeltaFlagPath, originIdentityKey, type OriginModifierBag } from '../../origin-grant-ledger.ts';
+import {
+    BUILDER_ORIGIN_RESOURCE_PATHS,
+    deltaFromModifiers,
+    originContribution,
+    originDeltaFlagPath,
+    originIdentityKey,
+    priorAfterBuilderWrites,
+    readOriginDelta,
+    reconcileResourceDeltas,
+    type OriginModifierBag,
+    type OriginResource,
+} from '../../origin-grant-ledger.ts';
 import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
+import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../../rules/chaos-backgrounds.ts';
 import { originFateContribution } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
@@ -29,6 +41,7 @@ import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import { openMutantBackgroundDialog } from '../prompts/mutant-background-dialog.ts';
 import { cloneGrantedItemData } from './grant-materialize.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
@@ -4937,14 +4950,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 await this.actor.update(resourceUpdate);
             }
 
-            // Record the resource deltas these origins represent in the shared
-            // ledger, so the boot-time reconcile pass treats them as already
-            // applied and does not additively double-count wounds/fate/chars on
-            // top of the absolute writes above. Must run AFTER the embedded
-            // origin items are created (it reads them back) and after the
-            // resource writes (so the recorded deltas reflect the committed
-            // selections).
-            await this._stampOriginGrantLedger();
+            // Apply each origin's `modifiers.resources` on top of the absolute
+            // writes above and record every origin's delta in the shared ledger,
+            // so the boot-time reconcile pass treats them as already applied.
+            // Must run AFTER the embedded origin items are created (it reads them
+            // back) and after the resource writes (which it builds on).
+            const rewritten = new Set<OriginResource>();
+            if (woundsRolled > 0) rewritten.add('wounds');
+            if (fateRolled > 0) rewritten.add('fate');
+            await this._reconcileOriginGrantLedger(rewritten);
+
+            // A starting-mutation origin (DH2 Mutant, Within p. 32) rolls its
+            // starting mutation now, in place of a Malignancy Test.
+            if (this.actor.items.some((i) => i.type === 'originPath' && startingMutationFormula(i.system) !== null)) {
+                openMutantBackgroundDialog(this.actor);
+            }
 
             // Equip Acolyte: create the selected Armoury items on the actor (plus 2 clips for weapons)
             if (this.systemConfig.equipmentStep && this.equipmentSelections.size > 0) {
@@ -5107,36 +5127,45 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Stamp the shared origin-grant resource ledger so the boot-time reconcile
-     * pass ({@link WH40KItem.applyOriginToActor}) becomes a no-op for the
-     * characteristics / wounds / fate this commit already baked in via its
-     * absolute writes.
+     * Apply every embedded origin's `modifiers.resources` and record its delta
+     * in the shared origin-grant ledger, so the boot-time reconcile pass
+     * ({@link WH40KItem.applyOriginToActor}) becomes a no-op afterwards.
      *
-     * The builder writes resources absolutely (`system.wounds.max = rolled`,
-     * `system.characteristics.*.base = baseline + roll + originBonus`). The
-     * reconcile applier instead adds an origin's `system.modifiers` deltas on
-     * top of whatever it finds, reversing a recorded prior delta first. Without
-     * a recorded delta, the next world `ready` sees `prior = {}` and re-adds the
-     * origin's modifiers — double-applying. By recording each embedded origin's
-     * `deltaFromModifiers(...)` (the exact value the reconcile applier computes
-     * as `newDelta`), we guarantee `prior === newDelta` on the next reconcile,
-     * so every resource branch there is skipped. The ledger key is derived with
-     * the same {@link originIdentityKey} the applier uses, so they always agree.
+     * The builder writes characteristics and rolled Wounds / Fate absolutely
+     * (`system.characteristics.*.base = baseline + roll + originBonus`,
+     * `system.wounds.max = rolled`). The reconcile applier instead adds an
+     * origin's modifier deltas on top of whatever it finds, reversing a recorded
+     * prior delta first. Each origin is reconciled here through the same
+     * {@link reconcileResourceDeltas}, against {@link priorAfterBuilderWrites}:
+     * the baked-in characteristics count as applied, a resource this commit
+     * rewrote absolutely starts from 0, and every other resource (Corruption,
+     * Insanity) re-bases off its recorded prior so a re-commit never stacks it.
+     * The recorded delta is then exactly what the next reconcile derives, so
+     * `prior === newDelta` there. Origins are written one at a time because
+     * each builds on the actor values the previous one left.
+     * @param rewritten  The resources this commit wrote absolutely.
      * @private
      */
-    async _stampOriginGrantLedger(): Promise<void> {
+    async _reconcileOriginGrantLedger(rewritten: ReadonlySet<OriginResource>): Promise<void> {
         const embeddedOrigins = this.actor.items.filter((i) => i.type === 'originPath');
-        if (embeddedOrigins.length === 0) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
-        const ledgerUpdate: Record<string, unknown> = {};
         for (const origin of embeddedOrigins) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: embedded item system bag is the open-ended shared item schema; we read only the modifier fields
             const modifiers = (origin.system as { modifiers?: OriginModifierBag } | undefined)?.modifiers;
             // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem's fvtt-typed _stats/flags shapes are looser than OriginIdentityItemLike; the same coercion is used in WH40KItem.#originIdentityKey
             const identityKey = originIdentityKey(origin as unknown as Parameters<typeof originIdentityKey>[0]);
-            ledgerUpdate[originDeltaFlagPath(identityKey)] = deltaFromModifiers(modifiers);
+            const delta = deltaFromModifiers(modifiers);
+            const prior = priorAfterBuilderWrites(readOriginDelta(this.actor.flags, identityKey), delta, rewritten);
+            const { updates, newDelta } = reconcileResourceDeltas(this.actor.system, originContribution(delta), prior, BUILDER_ORIGIN_RESOURCE_PATHS);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
+            const ledgerUpdate: Record<string, unknown> = {
+                ...updates,
+                // A starting-mutation origin's Corruption queues no Malignancy Test (Within p. 32).
+                ...startingCorruptionHoldsMalignancy(origin.system, updates, this.actor.system),
+                [originDeltaFlagPath(identityKey)]: newDelta,
+            };
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: each origin builds on the values the previous one wrote
+            await this.actor.update(ledgerUpdate);
         }
-        await this.actor.update(ledgerUpdate);
     }
 
     /** Item types considered "inventory" — wiped on a Reset Inventory commit. */
