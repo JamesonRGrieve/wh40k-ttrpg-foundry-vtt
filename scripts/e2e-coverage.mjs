@@ -557,6 +557,7 @@ recordDimension('passive-modifiers.flow', covered['passive-modifiers.flow'], PAS
 // tests/e2e/ship-actions.spec.ts + starship-crew-morale.spec.ts — the Extended / Manoeuvre tab actions.
 const SHIP_ACTION_FLOWS = [
     'action-lists',
+    'row-icons',
     'aid-the-machine-spirit',
     'lock-on-target',
     'flank-speed',

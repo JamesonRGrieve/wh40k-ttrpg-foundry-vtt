@@ -76,7 +76,62 @@ async function snapActionTab(page: Page, actorId: string, tab: ShipActionTab, la
     return { html, text };
 }
 
+/** One action row's icon as the browser loaded it. */
+interface RowIcon {
+    name: string;
+    src: string;
+    loaded: boolean;
+}
+
+/** Every action row of a tab and its icon, once the browser has settled every image. */
+async function rowIcons(page: Page, section: string): Promise<RowIcon[]> {
+    const rows = page.locator(`${section} li[data-action-uuid]`);
+    await page.waitForFunction(
+        (selector: string) => [...document.querySelectorAll<HTMLImageElement>(`${selector} li[data-action-uuid] img`)].every((img) => img.complete),
+        section,
+    );
+    return rows.evaluateAll((items) =>
+        items.map((item) => {
+            const img = item.querySelector('img');
+            return {
+                name: item.querySelector('span')?.textContent.trim() ?? '',
+                src: img?.getAttribute('src') ?? '',
+                loaded: img !== null && img.complete && img.naturalWidth > 0,
+            };
+        }),
+    );
+}
+
+/** The game-icons CDN the pack art is hotlinked from (`scripts/pack-icon-map.json` `cdn`). */
+const GAME_ICONS_CDN = 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/';
+
 test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, #189)', () => {
+    test('every Extended and Manoeuvre action row shows a loaded game-icons image, not a broken one (#186)', async ({ page }) => {
+        await joinShipWorld(page);
+        const ship = await createShip(page, SHIP);
+        try {
+            const sheetId = await openSheet(page, ship.id);
+            for (const [tab, label] of [
+                ['extendedActions', 'ship-actions-extended-icons'],
+                ['manoeuvreActions', 'ship-actions-manoeuvre-icons'],
+            ] as const) {
+                const section = await showTab(page, sheetId, tab);
+                const icons = await rowIcons(page, section);
+                expect(icons.length, `${tab} lists actions`).toBeGreaterThan(0);
+                // The removed _vendored-ui art rendered every row as a broken image (#625 repointed the packs).
+                expect(
+                    icons.filter((icon) => !icon.loaded).map((icon) => `${icon.name} → ${icon.src}`),
+                    `${tab}: broken icons`,
+                ).toEqual([]);
+                expect(icons.filter((icon) => !icon.src.startsWith(GAME_ICONS_CDN)).map((icon) => `${icon.name} → ${icon.src}`)).toEqual([]);
+                expect(await snapWindow(page, label, sheetId, `${section} .wh40k-panel:has(li[data-action-uuid])`)).not.toBeNull();
+            }
+        } finally {
+            await deleteActors(page, [ship.id]);
+        }
+        recordCoverage('ship-action.flow', 'row-icons');
+    });
+
     test('both action tabs list the line orders, with Roll on each automated one; another line gets none', async ({ page }) => {
         await joinShipWorld(page);
         const ship = await createShip(page, SHIP);
