@@ -182,4 +182,49 @@ test.describe.serial('Effect creation dialog (Tier B, #516)', () => {
             }, item.id);
         }
     });
+
+    /**
+     * The condition picker offers only the owner's line's conditions (#516): a DH2
+     * character is not offered BC Decay's Festering Shroud or Nurgle's Breath, and a
+     * BC character is.
+     */
+    for (const lineCase of [
+        { line: 'dh2', decay: false },
+        { line: 'bc', decay: true },
+    ] as const) {
+        test(`${lineCase.line.toUpperCase()}: the condition picker lists only its own line's conditions`, async ({ page }) => {
+            await joinOrSkip(page);
+            const actorId = await page.evaluate(async (line: string) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Actor` global is injected by the licensed app; no shipped types
+                const g = globalThis as unknown as { Actor: { create: (d: object) => Promise<{ id: string } | null> } };
+                const actor = await g.Actor.create({ name: `Picker Probe (${line})`, type: `${line}-character`, system: { gameSystem: line } });
+                return actor?.id ?? '';
+            }, lineCase.line);
+            expect(actorId).not.toBe('');
+            try {
+                const sheetId = await renderSheet(page, 'actors', actorId);
+                await clearScreenOverlays(page, sheetId);
+                await page.locator(`#${sheetId} [data-action="tab"][data-tab="combat"]`).first().click();
+                await page.locator(`#${sheetId} [data-action="createEffect"]:visible`).first().click();
+                const dialog = await effectDialog(page);
+                await dialog.locator('[data-action="selectCategory"][data-category="condition"]').click();
+                const conditions = dialog.locator('[data-action="selectCondition"]');
+                await expect(conditions.first()).toBeVisible();
+                const names = (await conditions.allInnerTexts()).map((n) => n.trim());
+                expect(names, 'the core conditions are offered').toContain('Prone');
+                for (const decay of ['Festering Shroud', "Nurgle's Breath"]) {
+                    if (lineCase.decay) expect(names, `${lineCase.line} is offered its supplement's ${decay}`).toContain(decay);
+                    else expect(names, `${lineCase.line} is not offered BC Decay's ${decay}`).not.toContain(decay);
+                }
+                expect(await snap(page, `effect-creation-condition-picker-${lineCase.line}`, { selector: `#${await dialogId(dialog)}` })).not.toBeNull();
+                recordCoverage('effect-creation.flow', `condition-picker-${lineCase.line}`);
+            } finally {
+                await page.evaluate(async (id: string) => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global is injected by the licensed app; no shipped types
+                    const g = globalThis as unknown as { game: { actors: { get: (i: string) => { delete: () => Promise<object> } | undefined } } };
+                    await g.game.actors.get(id)?.delete();
+                }, actorId);
+            }
+        });
+    }
 });

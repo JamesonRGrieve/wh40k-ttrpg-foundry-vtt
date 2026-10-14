@@ -32,6 +32,7 @@
 
 import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
+import { isLineOrHomebrewPack } from '../utils/compendium-query.ts';
 import { inferActiveGameLine, materializeItemVariants, normalizeGameLineKey, type SupportedLineKey } from '../utils/item-variant-utils.ts';
 import {
     type ConditionMechanics,
@@ -148,6 +149,8 @@ export function modifiersToEffectChanges(modifiers: RawValue): EffectChange[] {
 /** One pack's copy of a condition, as read from the pack index. */
 type ConditionSource = {
     uuid: string;
+    /** The pack's short name (`dh2-core-items-conditions`, `hb-dh2-items-conditions`). */
+    packName: string;
     /** The pack's game line (from its `<line>-…` name), or null for a line-agnostic pack. */
     line: SupportedLineKey | null;
     name: string;
@@ -208,6 +211,7 @@ export function buildConditionCatalog(packs: Iterable<{ packName: string; rows: 
             const id = identifier.trim();
             const source: ConditionSource = {
                 uuid: row.uuid ?? '',
+                packName,
                 line,
                 name: row.name ?? id,
                 img: row.img ?? '',
@@ -350,10 +354,32 @@ export function conditionEffectData(condition: string, line: SupportedLineKey, o
     };
 }
 
-/** Picker rows (the effect-creation dialog) — one per catalog condition, resolved for `line`. */
-export function conditionPickerRows(line: SupportedLineKey): Array<{ id: string; name: string; img: string; nature: string }> {
-    const rows: Array<{ id: string; name: string; img: string; nature: string }> = [];
-    for (const id of catalog.keys()) {
+/**
+ * Whether a condition has a copy in `line`'s own packs — its core and supplement
+ * packs (`<line>-…`) or its homebrew packs (`hb-<line>-…`) — the same per-line
+ * scoping the other compendium lookups use (`isLineOrHomebrewPack`).
+ */
+function printedForLine(entry: ConditionCatalogEntry, line: SupportedLineKey): boolean {
+    return entry.sources.some((source) => isLineOrHomebrewPack(`${SYSTEM_ID}.${source.packName}`, line));
+}
+
+/**
+ * Picker rows (the effect-creation dialog) — one per condition the bearer's line
+ * prints, resolved for `line`. Another line's or another line's supplement's
+ * condition (BC Decay's Festering Shroud for a DH2 bearer) is not offered.
+ */
+export function conditionPickerRows(line: SupportedLineKey): ConditionRow[] {
+    return conditionRows(line, (entry) => printedForLine(entry, line));
+}
+
+/** One condition, resolved for a line, as a picker or status row shows it. */
+type ConditionRow = { id: string; name: string; img: string; nature: string };
+
+/** Every catalog condition `keep` accepts, resolved for `line`. */
+function conditionRows(line: SupportedLineKey, keep: (entry: ConditionCatalogEntry) => boolean): ConditionRow[] {
+    const rows: ConditionRow[] = [];
+    for (const [id, entry] of catalog) {
+        if (!keep(entry)) continue;
         const resolved = resolveCondition(id, line);
         if (resolved !== null) rows.push({ id, name: resolved.name, img: resolved.img, nature: resolved.nature });
     }
@@ -368,7 +394,10 @@ export function conditionPickerRows(line: SupportedLineKey): Array<{ id: string;
  */
 export function conditionStatusEffects(line: SupportedLineKey): StatusEffectEntry[] {
     const rows: StatusEffectEntry[] = coreDeadStatus === null ? [] : [coreDeadStatus];
-    for (const row of conditionPickerRows(line)) rows.push({ id: row.id, name: row.name, img: row.img });
+    // Every catalog condition, not just the world line's: `CONFIG.statusEffects` is
+    // also the id lookup `toggleStatusEffect` resolves a status through, and an
+    // actor of another line must still be able to take its own conditions.
+    for (const row of conditionRows(line, () => true)) rows.push({ id: row.id, name: row.name, img: row.img });
     return rows;
 }
 

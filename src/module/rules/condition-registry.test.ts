@@ -6,6 +6,7 @@ import {
     captureCoreDeadStatus,
     conditionEffectData,
     conditionPickerRows,
+    type ConditionIndexRow,
     conditionStatusEffects,
     MODE_ADD,
     modifiersToEffectChanges,
@@ -177,6 +178,52 @@ describe('status-effect rows', () => {
             img: 'icons/svg/mystery-man.svg',
             nature: 'harmful',
         });
+    });
+});
+
+describe('the effect-creation picker is scoped to the bearer’s line (#516)', () => {
+    /** A line pack with one condition document. */
+    function pack(packName: string, id: string, name: string): { packName: string; rows: ConditionIndexRow[] } {
+        return {
+            packName,
+            rows: [{ _id: id, uuid: `Compendium.wh40k-rpg.${packName}.Item.${id}`, name, img: '', type: 'condition', system: { identifier: id } }],
+        };
+    }
+
+    beforeEach(() => {
+        setConditionCatalog(
+            buildConditionCatalog([
+                ...conditionPackFixture(),
+                pack('bc-core-items-conditions', 'prone', 'Prone'),
+                pack('bc-decay-items-conditions', 'festering-shroud', 'Festering Shroud'),
+                pack('bc-decay-items-conditions', 'nurgles-breath', "Nurgle's Breath"),
+                pack('hb-dh2-items-conditions', 'shell-shocked', 'Shell-Shocked'),
+            ]),
+        );
+    });
+
+    it('a DH2 bearer is not offered another line’s or its supplement’s conditions', () => {
+        const ids = conditionPickerRows('dh2').map((r) => r.id);
+        expect(ids).toContain('prone');
+        expect(ids).not.toContain('festering-shroud');
+        expect(ids).not.toContain('nurgles-breath');
+        // RT-only conditions in the fixture stay out too.
+        expect(ids).not.toContain('concealed');
+    });
+
+    it('a DH2 bearer is offered its own homebrew conditions', () => {
+        expect(conditionPickerRows('dh2').map((r) => r.id)).toContain('shell-shocked');
+    });
+
+    it('a BC bearer is offered its supplements’ conditions, and not DH2 homebrew', () => {
+        const ids = conditionPickerRows('bc').map((r) => r.id);
+        expect(ids).toEqual(expect.arrayContaining(['prone', 'festering-shroud', 'nurgles-breath']));
+        expect(ids).not.toContain('shell-shocked');
+    });
+
+    it('the status-effect registry still lists every line’s conditions, so any bearer can take its own', () => {
+        const ids = conditionStatusEffects('dh2').map((r) => r.id);
+        expect(ids).toEqual(expect.arrayContaining(['festering-shroud', 'shell-shocked', 'concealed']));
     });
 });
 
