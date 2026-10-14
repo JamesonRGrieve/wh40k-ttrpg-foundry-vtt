@@ -118,15 +118,19 @@ export async function snapCard(page: Page, label: string, id: string): Promise<s
     return snap(page, label, { selector: await popOutChatMessage(page, id) });
 }
 
-/** A control inside a chat card in the sidebar chat log (not the transient copy over the canvas). */
+/**
+ * A control inside a chat card in the sidebar chat log: the message element itself
+ * (a bare `[data-message-id]` also matches the card's Delete control, and the
+ * transient copy over the canvas is outside `#sidebar`).
+ */
 export function cardControl(id: string, control: string): string {
-    return `#sidebar .chat-log [data-message-id="${id}"] ${control}`;
+    return `#sidebar .chat-log .message[data-message-id="${id}"] ${control}`;
 }
 
 /** Click a control inside a chat card, with the chat log in view. */
 export async function clickInCard(page: Page, id: string, control: string): Promise<void> {
     await showChatMessage(page, id);
-    await page.locator(cardControl(id, control)).first().click();
+    await page.locator(cardControl(id, control)).click();
 }
 
 /**

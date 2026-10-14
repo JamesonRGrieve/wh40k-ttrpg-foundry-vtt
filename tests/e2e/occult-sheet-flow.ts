@@ -208,9 +208,9 @@ export async function waitForMessage(page: Page, before: readonly string[], mark
  */
 export async function snapMessage(page: Page, label: string, messageId: string): Promise<void> {
     await clearScreenOverlays(page);
+    // `#sidebar .chat-log .message[data-message-id=…]`: exactly the one message in the sidebar log.
     const logSelector = await showChatMessage(page, messageId);
-    // The log can hold the card twice (the live log and its scrollback copy).
-    await expect(page.locator(logSelector).first()).toBeVisible();
+    await expect(page.locator(logSelector)).toBeVisible();
     const popoutId = await page.evaluate(async (id) => {
         interface PopoutGlobals {
             CONFIG: { ChatMessage: { popoutClass: new (options: { message: object }) => { id: string; render: (o: { force: boolean }) => Promise<object> } } };

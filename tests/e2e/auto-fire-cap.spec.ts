@@ -17,8 +17,10 @@ import {
     snapWindow,
     submitRoll,
 } from './combat-resolution-flow';
+import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -71,6 +73,34 @@ async function hitsScored(page: Page, attack: ChatCard): Promise<number> {
     }, rollId);
 }
 
+/**
+ * Capture a chat card taller than the viewport whole: pop it out, grow the viewport
+ * until the popout fits its content, snap it, then restore the viewport. A capped
+ * burst's damage card lists every hit and runs past 900px, so even the popout cut
+ * its lower hits off.
+ */
+async function snapTallCard(page: Page, label: string, id: string): Promise<string | null> {
+    const viewport = page.viewportSize();
+    const popout = await popOutChatMessage(page, id);
+    // The tallest scroll extent inside the popout (whichever element scrolls), plus its header.
+    const needed = await page.evaluate((sel) => {
+        const frame = document.querySelector<HTMLElement>(sel);
+        const header = frame?.querySelector<HTMLElement>('.window-header')?.offsetHeight ?? 0;
+        const tallest = Math.max(0, ...[...(frame?.querySelectorAll<HTMLElement>('*') ?? [])].map((el) => el.scrollHeight));
+        return tallest + header + 60;
+    }, popout);
+    if (viewport !== null && needed > viewport.height) await page.setViewportSize({ width: viewport.width, height: needed });
+    await page.evaluate((sel) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { setPosition: (p: object) => void }> } } }).foundry
+            .applications.instances;
+        apps.get(sel.slice(1))?.setPosition({ height: 'auto' });
+    }, popout);
+    const shot = await snap(page, label, { selector: popout });
+    if (viewport !== null) await page.setViewportSize(viewport);
+    return shot;
+}
+
 /** Fire a Semi-Auto Burst with a fixed d100, roll its damage, and capture both cards. */
 async function semiAutoBurst(
     page: Page,
@@ -92,7 +122,7 @@ async function semiAutoBurst(
     await clickInCard(page, attack.id, '.roll-control__roll-damage');
     const damage = await awaitCard(page, beforeDamage, 'Damage Roll');
     expect(await snapCard(page, `${label}-attack-card`, attack.id)).not.toBeNull();
-    expect(await snapCard(page, `${label}-damage-card`, damage.id)).not.toBeNull();
+    expect(await snapTallCard(page, `${label}-damage-card`, damage.id)).not.toBeNull();
     return { attack, damage };
 }
 
