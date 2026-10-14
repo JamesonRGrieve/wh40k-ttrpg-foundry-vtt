@@ -80,6 +80,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 planReinforcementCall: (input: {
                     callerInfluence: number;
                     influenceMinimum: number;
+                    callerSkill: { rank: number; required: number | null };
                     finalCost: number;
                     contributions: Array<{ id: string; influence: number; amount: number }>;
                 }) => { ok: true; plan: { finalCost: number; callerPays: number; subtletyLoss: number } } | { ok: false; problem: string };
@@ -91,7 +92,14 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     availability: string;
                     craftsmanship: string;
                 }) => { kind: string; target?: number };
-                applyInfluenceLossOnBigFailure: (influence: number, degrees: number) => number;
+            };
+            'acquisition-ladder': {
+                ratingAfterFailure: (
+                    loss: { kind: 'flat'; minDegrees: number; loss: number; counting: 'fullTens' | 'plusOne' } | { kind: 'beyondFellowshipBonus' } | null,
+                    rating: number,
+                    degreesOfFailure: number,
+                    fellowshipBonus: number,
+                ) => number;
             };
             'spray-avoidance': {
                 resolveSprayAvoidance: (input: { hasLeapingDodge: boolean; agilityTotal: number; dodgeTotal: number }) => {
@@ -213,16 +221,25 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             // cost (rounded up), and the warband's Subtlety drops by the final cost.
             guarded('reinforcement-callPlan', () => {
                 const finalCost = reinforcement.reinforcementFinalCost(20, 5, 0);
-                const call = (callerInfluence: number, amount: number): ReturnType<typeof reinforcement.planReinforcementCall> =>
+                // An RC with no caller-skill term (`required: null`) unless a call passes one (#77).
+                const call = (
+                    callerInfluence: number,
+                    amount: number,
+                    callerSkill: { rank: number; required: number | null } = { rank: 0, required: null },
+                ): ReturnType<typeof reinforcement.planReinforcementCall> =>
                     reinforcement.planReinforcementCall({
                         callerInfluence,
                         influenceMinimum: 30,
+                        callerSkill,
                         finalCost,
                         contributions: [{ id: 'ally', influence: 10, amount }],
                     });
                 const ok = call(40, 8);
                 const overCap = call(40, 9);
                 const belowMinimum = call(20, 0);
+                // Enemies Beyond p. 38: the Thrice-Bound Daemonhost needs its caller Trained (rank 2).
+                const untrained = call(40, 8, { rank: 1, required: 2 });
+                const trained = call(40, 8, { rank: 2, required: 2 });
                 return (
                     finalCost === 15 &&
                     reinforcement.maxWarbandContribution(finalCost) === 8 &&
@@ -232,7 +249,10 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     !overCap.ok &&
                     overCap.problem === 'contributionCap' &&
                     !belowMinimum.ok &&
-                    belowMinimum.problem === 'belowMinimum'
+                    belowMinimum.problem === 'belowMinimum' &&
+                    !untrained.ok &&
+                    untrained.problem === 'callerSkill' &&
+                    trained.ok
                 );
             });
         }
@@ -240,7 +260,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- requisition-test ----------
         const requisition = await loadModule('requisition-test');
         if (isImportError(requisition)) {
-            fail(['requisition-test-target', 'requisition-test-influenceLoss'], requisition.__importError);
+            fail(['requisition-test-target'], requisition.__importError);
         } else {
             guarded('requisition-test-target', () => {
                 // DH2 core Tables 5-1 / 5-2 (the ladder lives on the line config, #192).
@@ -254,7 +274,25 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 const automatic = requisition.getRequisitionTestTarget({ influence: 5, ladder, availability: 'ubiquitous', craftsmanship: 'common' });
                 return common.target === 50 && clamped.target === 0 && residual.target === 30 && automatic.kind === 'automatic';
             });
-            guarded('requisition-test-influenceLoss', () => requisition.applyInfluenceLossOnBigFailure(40, 3) === 39);
+        }
+
+        // ---------- acquisition-ladder (the per-line Influence loss on a failed requisition, #496) ----------
+        const acquisition = await loadModule('acquisition-ladder');
+        if (isImportError(acquisition)) {
+            fail(['requisition-test-influenceLoss'], acquisition.__importError);
+        } else {
+            guarded('requisition-test-influenceLoss', () => {
+                // The losses as dh2-config / dh1-config declare them; a line that prints none loses nothing.
+                const dh2 = { kind: 'beyondFellowshipBonus' } as const;
+                const dh1 = { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' } as const;
+                return (
+                    acquisition.ratingAfterFailure(dh2, 40, 6, 4) === 38 &&
+                    acquisition.ratingAfterFailure(dh2, 40, 3, 4) === 40 &&
+                    acquisition.ratingAfterFailure(dh1, 40, 5, 0) === 39 &&
+                    acquisition.ratingAfterFailure(dh1, 40, 4, 0) === 40 &&
+                    acquisition.ratingAfterFailure(null, 40, 9, 0) === 40
+                );
+            });
         }
 
         // ---------- spray-avoidance ----------
