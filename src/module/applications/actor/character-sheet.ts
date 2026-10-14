@@ -44,6 +44,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
@@ -85,7 +86,13 @@ import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
 import {
+    asGrappleParticipant,
+    buildGrappleCard,
     GRAPPLE_FLAG,
+    type GrappleParticipant,
+    grappleSize,
+    grappleStrength,
+    readGrappleOpponentUuid,
     readGrappleState,
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -5165,33 +5172,64 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Shared roller for the five grapple actions (#120 — core.md L10155-10180).
+     * The other participant of this actor's grapple: the one recorded on its
+     * grapple flag, else the user's single targeted token's actor. Null when
+     * neither names someone other than this actor.
+     */
+    async #grappleOpponent(): Promise<GrappleParticipant | null> {
+        const recorded = readGrappleOpponentUuid(this.actor.flags, SYSTEM_ID);
+        const fromFlag = recorded === null ? null : await fromUuid(recorded);
+        if (fromFlag instanceof Actor && fromFlag.id !== this.actor.id) return asGrappleParticipant(fromFlag);
+        const targeted = Array.from(game.user.targets).flatMap((token) => (token.actor !== null && token.actor.id !== this.actor.id ? [token.actor] : []));
+        const only = targeted.length === 1 ? targeted.at(0) : undefined;
+        return only === undefined ? null : asGrappleParticipant(only);
+    }
+
+    /**
+     * Shared roller for the five grapple actions (#120, #450; DH2 core p. 221–222).
      *
-     * Rolls 1d100 for the actor against their Strength total, rolls 1d100
-     * against a placeholder opponent Strength (the opponent is supplied
-     * through targeting in the live combat flow; for now the controller
-     * actions roll an unopposed test echoed through the resolver so the
-     * DoS math stays canonical), and dispatches the result through the
-     * requested resolver. Returns the resolution so the caller can decide
-     * follow-up (chat card, state flag flip).
+     * Every grapple action is an Opposed Strength test against the other
+     * participant: this actor and that opponent each roll 1d100 against their
+     * own Strength total (with the grapple's Size edge), the requested resolver
+     * decides it by the RAW Opposed-test ladder, and the result card posts both
+     * full tests and the verdict. Returns the resolution so the caller can apply
+     * follow-up (state flag flip); null when there is no opponent to test against.
      */
     private async _rollGrappleOpposed(resolver: (input: OpposedStrengthInput) => GrappleResolution): Promise<GrappleResolution | null> {
         try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
-            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
-            const strengthTotal = characteristics?.['strength']?.total ?? 30;
+            const opponent = await this.#grappleOpponent();
+            if (opponent === null) {
+                this._notify('warning', game.i18n.localize('WH40K.Grapple.NoOpponent'), { duration: 4000 });
+                return null;
+            }
+            const grappler = asGrappleParticipant(this.actor);
+            const actorStrength = grappleStrength(grappler);
+            const opponentStrength = grappleStrength(opponent);
             const actorRollObj = await new Roll('1d100').evaluate();
             const opponentRollObj = await new Roll('1d100').evaluate();
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
-            const actorRoll = Math.trunc(Number((actorRollObj as unknown as { total?: number }).total ?? 0));
-            // eslint-disable-next-line no-restricted-syntax -- boundary: same as above
-            const opponentRoll = Math.trunc(Number((opponentRollObj as unknown as { total?: number }).total ?? 0));
-            return resolver({
+            const actorRoll = Math.trunc(actorRollObj.total);
+            const opponentRoll = Math.trunc(opponentRollObj.total);
+            const resolution = resolver({
                 actorRoll,
-                actorStrength: strengthTotal,
+                actorStrength,
                 opponentRoll,
-                opponentStrength: strengthTotal,
+                opponentStrength,
+                actorSize: grappleSize(grappler),
+                opponentSize: grappleSize(opponent),
             });
+            await emitChatFromTemplate(
+                'systems/wh40k-rpg/templates/chat/grapple-opposed-chat.hbs',
+                {
+                    gameSystem: this._resolveGameSystemId() ?? '',
+                    ...buildGrappleCard(
+                        resolution,
+                        { name: this.actor.name, strength: actorStrength, roll: actorRoll },
+                        { name: opponent.name, strength: opponentStrength, roll: opponentRoll },
+                    ),
+                },
+                { speaker: ChatMessage.getSpeaker({ actor: this.actor }), rolls: [actorRollObj, opponentRollObj] },
+            );
+            return resolution;
         } catch (error) {
             this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.GrappleFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Grapple action error:', error);

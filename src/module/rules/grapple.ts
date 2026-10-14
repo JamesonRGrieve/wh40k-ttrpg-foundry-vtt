@@ -9,11 +9,10 @@
  * spend their round on a Damage / Throw Down / etc. action; the controlled
  * side may attempt a Break Free / Stand Up / Move.
  *
- * Every action below resolves through an opposed Strength test: the actor
- * rolls 1d100 against `actorStrength` and the opponent rolls 1d100 against
- * `opponentStrength`. The acting side wins the contest by either landing a
- * pass when the opponent fails OR by accumulating more degrees of success
- * than the opponent when both pass. Ties go to the controller per RAW.
+ * Every action below resolves through an opposed Strength test against the
+ * other participant (DH2 core p. 221–222): the actor rolls 1d100 against
+ * `actorStrength` and the opponent rolls 1d100 against `opponentStrength`,
+ * decided by the RAW Opposed-test ladder (p. 24) with the grapple's Size edge.
  *
  * The helpers here are pure: they take pre-rolled `1d100` values + the
  * relevant Strength totals and return a `GrappleResolution` describing the
@@ -21,7 +20,8 @@
  * responsible for prompting the rolls and emitting chat cards.
  */
 
-import { degreesOfSuccess, resolveOpposedByDoS } from './_dice.ts';
+import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
+import { type OpposedSide, resolveOpposed } from './opposed.ts';
 
 /** Re-exported from the shared dice primitives for callers/tests importing it from this module. */
 export { degreesOfSuccess };
@@ -54,8 +54,31 @@ export function readGrappleState(flags: object | undefined, scope: string): Grap
     return typeof state === 'string' && GRAPPLE_STATES.has(state) ? (state as GrappleState) : 'none';
 }
 
+/**
+ * The other participant of a grapple, as recorded on a combatant's grapple flag
+ * (`flags[SYSTEM_ID][GRAPPLE_FLAG].opponentUuid`), or null when none is recorded.
+ * Every grapple action is an Opposed Strength test against that participant
+ * (DH2 core p. 221–222: "an Opposed Strength test with the Grappled opponent",
+ * "against the controller of the Grapple").
+ */
+export function readGrappleOpponentUuid(flags: object | undefined, scope: string): string | null {
+    const scoped = isRecord(flags) ? flags[scope] : undefined;
+    const grapple = isRecord(scoped) ? scoped[GRAPPLE_FLAG] : undefined;
+    const uuid = isRecord(grapple) ? grapple['opponentUuid'] : undefined;
+    return typeof uuid === 'string' && uuid !== '' ? uuid : null;
+}
+
 /** Enumerated controller / controlled actions, all opposed-Strength resolved. */
-type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
+export type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
+
+/** The langpack label of each grapple action (the panel buttons and the result card share them). */
+export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleAction, string>> = {
+    'damage-opponent': 'WH40K.Grapple.DamageOpponent',
+    'throw-down-opponent': 'WH40K.Grapple.ThrowDownOpponent',
+    'break-free': 'WH40K.Grapple.BreakFree',
+    'stand-up': 'WH40K.Grapple.StandUp',
+    'move-while-grappling': 'WH40K.Grapple.Move',
+};
 
 /** Input shape for every opposed-Strength resolver below. */
 export interface OpposedStrengthInput {
@@ -67,16 +90,31 @@ export interface OpposedStrengthInput {
     opponentRoll: number;
     /** Opponent's Strength characteristic total. */
     opponentStrength: number;
+    /** Acting combatant's Size (the Size trait value, 4 = Average). Optional: equal sizes add nothing. */
+    actorSize?: number;
+    /** Opponent's Size. */
+    opponentSize?: number;
 }
+
+/** How the opposed test came out for the acting combatant. */
+export type GrappleOutcome = 'won' | 'lost' | 'stalemate';
 
 /** Resolution payload returned by every grapple action helper. */
 export interface GrappleResolution {
     /** True when the acting combatant wins the opposed test. */
     success: boolean;
-    /** Degrees of success for the actor (0 when actor failed their roll). */
+    /** Won, lost, or a stalemate (both failed, or a dead heat): nothing happens. */
+    outcome: GrappleOutcome;
+    /** Degrees of success for the actor (0 when actor failed their roll), Size edge included. */
     actorDoS: number;
-    /** Degrees of success for the opponent (0 when opponent failed their roll). */
+    /** Degrees of failure for the actor (0 when the actor passed). */
+    actorDoF: number;
+    /** Degrees of success for the opponent (0 when opponent failed their roll), Size edge included. */
     opponentDoS: number;
+    /** Degrees of failure for the opponent (0 when the opponent passed). */
+    opponentDoF: number;
+    /** Extra degrees of success the larger combatant scored for its Size (signed: + actor, − opponent). */
+    sizeEdge: number;
     /** Net DoS (actorDoS − opponentDoS) for downstream effects like damage scaling. */
     netDoS: number;
     /** The action that was resolved (echoed for chat-card / log convenience). */
@@ -84,21 +122,43 @@ export interface GrappleResolution {
 }
 
 /**
- * Generic opposed Strength resolver. The acting side wins when it scores at
- * least as many degrees of success as the opponent — `tie: 'a'` routes the
- * equal-DoS contest (and the both-fail 0–0 contest) to the actor, modelling
- * the controller-favoring tie at every call site (the resolver always returns
- * `success` for the side passed in as `actor`). See {@link resolveOpposedByDoS} for
- * the shared core; the grapple-specific net-DoS scaling is read off the result.
+ * Generic opposed Strength resolver, by the RAW Opposed-test ladder (DH2 core
+ * p. 24, `rules/opposed.ts`): a success beats a failure; both succeeding, more
+ * degrees of success wins; then the higher Strength bonus; then the lower roll.
+ * Both failing is a stalemate — "nothing happens" — so the acting side does
+ * not get its way (the GM may call for a re-roll instead).
+ *
+ * Grappling size differences (DH2 core p. 222): the larger combatant scores one
+ * extra degree of success on a successful test for each point its Size exceeds
+ * the other's.
  */
 function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleAction): GrappleResolution {
-    const {
-        success,
-        aDoS: actorDoS,
-        bDoS: opponentDoS,
-        netDoS,
-    } = resolveOpposedByDoS({ roll: input.actorRoll, target: input.actorStrength }, { roll: input.opponentRoll, target: input.opponentStrength }, { tie: 'a' });
-    return { success, actorDoS, opponentDoS, netDoS, action };
+    const sizeEdge = (input.actorSize ?? 0) - (input.opponentSize ?? 0);
+    const side = (roll: number, strength: number, edge: number): OpposedSide & { dos: number; dof: number } => {
+        const success = isD100Success(roll, strength);
+        return {
+            success,
+            dos: success ? Math.max(1, degreesOfSuccess(roll, strength)) + Math.max(0, edge) : 0,
+            dof: success ? 0 : Math.max(1, degreesOfFailure(roll, strength)),
+            charBonus: Math.floor(strength / 10),
+            roll,
+        };
+    };
+    const actor = side(input.actorRoll, input.actorStrength, sizeEdge);
+    const opponent = side(input.opponentRoll, input.opponentStrength, -sizeEdge);
+    const { winner } = resolveOpposed(actor, opponent);
+    const outcome: GrappleOutcome = winner === 'initiator' ? 'won' : winner === 'target' ? 'lost' : 'stalemate';
+    return {
+        success: outcome === 'won',
+        outcome,
+        actorDoS: actor.dos,
+        actorDoF: actor.dof,
+        opponentDoS: opponent.dos,
+        opponentDoF: opponent.dof,
+        sizeEdge,
+        netDoS: actor.dos - opponent.dos,
+        action,
+    };
 }
 
 /**
@@ -148,4 +208,80 @@ export function resolveStandUpInGrapple(input: OpposedStrengthInput): GrappleRes
  */
 export function resolveMoveWhileGrappling(input: OpposedStrengthInput): GrappleResolution {
     return resolveOpposedStrength(input, 'move-while-grappling');
+}
+
+/** What a grapple test reads off a participant actor. */
+export interface GrappleParticipant {
+    name: string;
+    system: { characteristics?: { strength?: { total?: number } }; size?: number };
+}
+
+/**
+ * View an actor as a grapple participant. Actor system data is a union over every
+ * actor type; the grapple reads only the optional Strength total and Size, which
+ * an actor type without them (a vehicle) leaves undefined.
+ */
+export function asGrappleParticipant(actor: { name: string; system: object }): GrappleParticipant {
+    return { name: actor.name, system: actor.system };
+}
+
+/** A participant's Strength total — the target of its side of every grapple test. */
+export function grappleStrength(participant: GrappleParticipant): number {
+    return participant.system.characteristics?.strength?.total ?? 0;
+}
+
+/** A participant's Size (the Size-trait scale); 0 when the actor type has none, so it adds no edge. */
+export function grappleSize(participant: GrappleParticipant): number {
+    const { size } = participant.system;
+    return size ?? 0;
+}
+
+/** One combatant's half of the grapple result card. */
+export interface GrappleCardSide {
+    name: string;
+    /** The Strength total the test was rolled against. */
+    strength: number;
+    roll: number;
+    success: boolean;
+    dos: number;
+    dof: number;
+    /** Extra DoS this side scored for being larger (0 when none). */
+    sizeEdge: number;
+}
+
+/** Context of `chat/grapple-opposed-chat.hbs`. */
+export interface GrappleCardContext {
+    actionLabelKey: string;
+    outcome: GrappleOutcome;
+    actor: GrappleCardSide;
+    opponent: GrappleCardSide;
+    /** The winner's name; empty on a stalemate. */
+    winnerName: string;
+}
+
+/** Shape the result card from a resolved grapple action: both sides' full test, and who won. */
+export function buildGrappleCard(
+    resolution: GrappleResolution,
+    actor: { name: string; strength: number; roll: number },
+    opponent: { name: string; strength: number; roll: number },
+): GrappleCardContext {
+    return {
+        actionLabelKey: GRAPPLE_ACTION_LABEL_KEYS[resolution.action],
+        outcome: resolution.outcome,
+        actor: {
+            ...actor,
+            success: resolution.actorDoS > 0,
+            dos: resolution.actorDoS,
+            dof: resolution.actorDoF,
+            sizeEdge: resolution.actorDoS > 0 ? Math.max(0, resolution.sizeEdge) : 0,
+        },
+        opponent: {
+            ...opponent,
+            success: resolution.opponentDoS > 0,
+            dos: resolution.opponentDoS,
+            dof: resolution.opponentDoF,
+            sizeEdge: resolution.opponentDoS > 0 ? Math.max(0, -resolution.sizeEdge) : 0,
+        },
+        winnerName: resolution.outcome === 'won' ? actor.name : resolution.outcome === 'lost' ? opponent.name : '',
+    };
 }

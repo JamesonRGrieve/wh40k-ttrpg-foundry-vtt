@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from '../constants.ts';
 import {
     degreesOfSuccess,
+    GRAPPLE_ACTION_LABEL_KEYS,
     GRAPPLE_FLAG,
+    readGrappleOpponentUuid,
     readGrappleState,
     resolveBreakGrapple,
     resolveDamageOpponent,
@@ -82,13 +84,21 @@ describe('grapple — resolveBreakGrapple', () => {
 });
 
 describe('grapple — resolveStandUpInGrapple', () => {
-    it('ties resolve in favor of the actor (DoS equal, both pass)', () => {
+    it('a dead heat (same DoS, Strength bonus and roll) is a stalemate: the actor does not stand (DH2 p. 24)', () => {
         const r = resolveStandUpInGrapple({ actorRoll: 40, actorStrength: 40, opponentRoll: 40, opponentStrength: 40 });
         expect(r.actorDoS).toBe(1);
         expect(r.opponentDoS).toBe(1);
         expect(r.netDoS).toBe(0);
-        expect(r.success).toBe(true);
+        expect(r.outcome).toBe('stalemate');
+        expect(r.success).toBe(false);
         expect(r.action).toBe('stand-up');
+    });
+
+    it('a degree tie goes to the higher Strength bonus, then the lower roll (DH2 p. 24)', () => {
+        // Both 1 DoS; the actor's SB 5 beats the opponent's SB 4.
+        expect(resolveStandUpInGrapple({ actorRoll: 50, actorStrength: 50, opponentRoll: 45, opponentStrength: 45 }).outcome).toBe('won');
+        // Both 1 DoS and SB 4; the opponent's lower roll wins.
+        expect(resolveStandUpInGrapple({ actorRoll: 44, actorStrength: 45, opponentRoll: 41, opponentStrength: 45 }).outcome).toBe('lost');
     });
 
     it('returns failure when actor fails and opponent passes', () => {
@@ -100,12 +110,53 @@ describe('grapple — resolveStandUpInGrapple', () => {
 });
 
 describe('grapple — resolveMoveWhileGrappling', () => {
-    it('both fail → actor still wins (tie at 0 DoS, actor-favoring tie)', () => {
+    it('both fail → stalemate, nothing happens (DH2 p. 24)', () => {
         const r = resolveMoveWhileGrappling({ actorRoll: 95, actorStrength: 35, opponentRoll: 88, opponentStrength: 35 });
         expect(r.actorDoS).toBe(0);
         expect(r.opponentDoS).toBe(0);
-        expect(r.success).toBe(true);
+        expect(r.actorDoF).toBe(7);
+        expect(r.opponentDoF).toBe(6);
+        expect(r.outcome).toBe('stalemate');
+        expect(r.success).toBe(false);
         expect(r.action).toBe('move-while-grappling');
+    });
+});
+
+describe('grapple — size differences (DH2 p. 222)', () => {
+    it('the larger combatant scores an extra DoS per Size point on a success', () => {
+        // Both pass with 2 DoS; the actor is one Size larger, so it wins 3–2.
+        const r = resolveDamageOpponent({ actorRoll: 30, actorStrength: 40, opponentRoll: 30, opponentStrength: 40, actorSize: 5, opponentSize: 4 });
+        expect(r.sizeEdge).toBe(1);
+        expect(r.actorDoS).toBe(3);
+        expect(r.opponentDoS).toBe(2);
+        expect(r.outcome).toBe('won');
+    });
+
+    it('a larger opponent gains the edge instead, and a failed test gains nothing', () => {
+        const r = resolveBreakGrapple({ actorRoll: 30, actorStrength: 40, opponentRoll: 30, opponentStrength: 40, actorSize: 4, opponentSize: 6 });
+        expect(r.opponentDoS).toBe(4);
+        expect(r.outcome).toBe('lost');
+        const failed = resolveBreakGrapple({ actorRoll: 90, actorStrength: 40, opponentRoll: 95, opponentStrength: 40, actorSize: 8, opponentSize: 4 });
+        expect(failed.actorDoS).toBe(0);
+        expect(failed.outcome).toBe('stalemate');
+    });
+});
+
+describe('readGrappleOpponentUuid', () => {
+    it('reads the other participant recorded on the grapple flag', () => {
+        expect(readGrappleOpponentUuid({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'grappling', opponentUuid: 'Actor.abc' } } }, SYSTEM_ID)).toBe('Actor.abc');
+    });
+
+    it('is null when none is recorded', () => {
+        expect(readGrappleOpponentUuid({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'grappling' } } }, SYSTEM_ID)).toBeNull();
+        expect(readGrappleOpponentUuid(undefined, SYSTEM_ID)).toBeNull();
+    });
+});
+
+describe('GRAPPLE_ACTION_LABEL_KEYS', () => {
+    it('labels every action with a langpack key the panel buttons use', () => {
+        const panel = readFileSync(resolve(__dirname, '../../templates/actor/panel/grapple-controller-panel.hbs'), 'utf8');
+        for (const key of Object.values(GRAPPLE_ACTION_LABEL_KEYS)) expect(panel).toContain(`"${key}"`);
     });
 });
 

@@ -2809,7 +2809,17 @@
             "ThrowDownOpponent": "Throw Down Opponent",
             "BreakFree": "Break Free",
             "StandUp": "Stand Up",
-            "Move": "Move While Grappling"
+            "Move": "Move While Grappling",
+            "NoOpponent": "Target the combatant in the grapple with you: every grapple action is an Opposed Strength test against them.",
+            "Chat": {
+                "Opposed": "Opposed Strength test: {actor} against {opponent}",
+                "RollAgainst": "Rolled {roll} against Strength {strength}",
+                "DoS": "{value} DoS",
+                "DoF": "{value} DoF",
+                "SizeEdge": "+{value} DoS for Size",
+                "Wins": "{name} wins the test",
+                "Stalemate": "Stalemate: both failed, and nothing happens"
+            }
         },
         "CriticalDamage": {
             "ChatTitle": "Critical Damage",

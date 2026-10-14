@@ -1,0 +1,39 @@
+{{!--
+    Grapple action result card (#450 / DH2 core p. 221–222): the Opposed
+    Strength test between the acting combatant and the other participant.
+    Each side prints its whole test — Strength target, roll, degrees (and the
+    Size edge a larger combatant scores) — then the RAW Opposed-test verdict
+    (DH2 p. 24): the winner, or a stalemate when both fail.
+
+    Context: buildGrappleCard (rules/grapple.ts) + gameSystem.
+--}}
+<div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-slate-500 tw-bg-[rgba(22,24,30,0.92)]"
+     data-wh40k-system="{{gameSystem}}"
+     data-wh40k-surface="dark"
+     data-wh40k-hook="grapple-card"
+     data-grapple-outcome="{{outcome}}">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-hands-bound tw-text-[1.1rem] tw-text-slate-300" aria-hidden="true"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">{{localize actionLabelKey}}</div>
+    </div>
+    <p class="tw-m-0 tw-mb-2 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Chat.Opposed" actor=actor.name opponent=opponent.name}}</p>
+
+    {{#each (array actor opponent) as |side|}}
+    <div class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1.5 tw-border-t tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-text-[0.85rem]" data-grapple-side="{{#if @first}}actor{{else}}opponent{{/if}}">
+        <div class="tw-flex tw-justify-between tw-gap-2">
+            <span class="tw-font-bold">{{side.name}}</span>
+            <span class="tw-font-bold tw-tabular-nums {{#if side.success}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-danger-secondary)]{{/if}}">
+                {{#if side.success}}{{localize "WH40K.Grapple.Chat.DoS" value=side.dos}}{{else}}{{localize "WH40K.Grapple.Chat.DoF" value=side.dof}}{{/if}}
+            </span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]">
+            <span>{{localize "WH40K.Grapple.Chat.RollAgainst" roll=side.roll strength=side.strength}}</span>
+            {{#if side.sizeEdge}}<span data-grapple-size-edge>{{localize "WH40K.Grapple.Chat.SizeEdge" value=side.sizeEdge}}</span>{{/if}}
+        </div>
+    </div>
+    {{/each}}
+
+    <div class="tw-mt-2 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-text-[0.85rem] tw-font-bold {{#if (eq outcome 'stalemate')}}tw-border-amber-600/60 tw-bg-amber-950/40{{else}}tw-border-slate-400/60 tw-bg-slate-800/40{{/if}}" data-wh40k-hook="grapple-verdict">
+        {{#if (eq outcome 'stalemate')}}{{localize "WH40K.Grapple.Chat.Stalemate"}}{{else}}{{localize "WH40K.Grapple.Chat.Wins" name=winnerName}}{{/if}}
+    </div>
+</div>
