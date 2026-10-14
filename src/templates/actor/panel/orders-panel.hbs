@@ -23,14 +23,14 @@
             dragType="order"
             extraAttrs=(concat 'data-category="' order.system.category '"')
             editTitleKey="WH40K.Orders.EditOrder"
-            pills=(array order.system.pill (hash bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=order.system.actionTypeLabel))
+            pills=(array order.system.pill (object bgClass="tw-bg-[rgba(0,0,0,0.1)]" textClass="tw-text-[color:var(--wh40k-text-muted)]" label=order.system.actionTypeLabel))
             stats=(array
-                (hash labelKey="WH40K.NavigatorPowers.Test" value=order.system.testLabel)
-                (hash labelKey="WH40K.Orders.Action" value=order.system.actionTypeLabel))
+                (object labelKey="WH40K.NavigatorPowers.Test" value=order.system.testLabel)
+                (object labelKey="WH40K.Orders.Action" value=order.system.actionTypeLabel))
             actions=(array
-                (hash action="rollOrder" icon="fa-dice-d20" titleKey="WH40K.Orders.ExecuteOrder" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                (hash action="vocalizeOrder" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
-                (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                (object action="rollOrder" icon="fa-dice-d20" titleKey="WH40K.Orders.ExecuteOrder" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                (object action="vocalizeOrder" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                (object action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Requirements") icon="fa-list-check" content=order.system.requirements}}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Effect") icon="fa-check-circle" labelClass="tw-text-[#22c55e]" content=order.system.effect}}

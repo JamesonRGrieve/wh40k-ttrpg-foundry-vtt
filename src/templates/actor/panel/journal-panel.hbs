@@ -23,9 +23,9 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    {{#if entry.system.description}}
+                    {{#if entry.system.description.value}}
                         <div class="tw-mt-[var(--wh40k-space-xs)] tw-pt-[var(--wh40k-space-xs)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-secondary)] tw-italic tw-leading-[1.4]">
-                            {{truncate entry.system.description 150}}
+                            {{truncate entry.system.description.value 150}}
                         </div>
                     {{/if}}
                 </div>

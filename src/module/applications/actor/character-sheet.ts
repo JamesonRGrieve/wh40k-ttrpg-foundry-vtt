@@ -252,6 +252,8 @@ type CharacterSheetContextDeclaredFields = {
     skillsFilter?: unknown;
     skillLists?: unknown;
     biography?: unknown;
+    /** The owned journal-entry items the Biography tab's journal panel lists (#613). */
+    journalEntries?: WH40KItem[];
     aptitudePills?: unknown;
     aptitudes?: unknown;
     favoriteSkills?: unknown;
@@ -1438,6 +1440,8 @@ export default class CharacterSheet extends BaseActorSheet {
                 notes: enrichedNotes,
             },
         };
+        // The journal panel under the notes lists these; nothing supplied them, so it always showed "no entries" (#613).
+        ctx.journalEntries = this.actor.items.filter((item) => (item.type as string) === 'journalEntry');
 
         return ctx;
     }

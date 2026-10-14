@@ -7,9 +7,9 @@
     title=(iff specialUse (concat skill.name ' — ' specialUse.name) skill.name)
     gameSystem=gameSystem
     badges=(array
-        (hash label=skill.system.skillTypeLabel)
-        (hash label=(concat skill.system.characteristicLabel ' (' skill.system.characteristicAbbr ')'))
-        (hash icon="fa-check-circle" label=(iff skill.system.isBasic 'Can Use Untrained' '')))
+        (object label=skill.system.skillTypeLabel)
+        (object label=(concat skill.system.characteristicLabel ' (' skill.system.characteristicAbbr ')'))
+        (object icon="fa-check-circle" label=(iff skill.system.isBasic 'Can Use Untrained' '')))
 }}
     {{#if specialUse}}
     <div class="tw-mb-2 tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-xs">

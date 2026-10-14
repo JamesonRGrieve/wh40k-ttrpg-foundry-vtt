@@ -2,6 +2,7 @@ import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
 import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
+import { truncate } from '../src/module/handlebars/handlebars-helpers.ts';
 import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
@@ -205,12 +206,10 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         if (num === 0) return '0';
         return String(num);
     });
-    HandlebarsLib.registerHelper('truncate', (value: HbsValue, length: HbsValue) => {
-        const text = unknownToStr(value ?? '');
-        const limit = Number(length ?? 0);
-        if (!Number.isFinite(limit) || limit <= 0 || text.length <= limit) return text;
-        return `${text.slice(0, limit).trimEnd()}...`;
-    });
+    // The production helper's function, so a story renders what Foundry renders (#613).
+    HandlebarsLib.registerHelper('truncate', (value: HbsValue, length: HbsValue) =>
+        truncate(typeof value === 'string' ? value : '', typeof length === 'number' ? length : undefined),
+    );
     HandlebarsLib.registerHelper('setToArray', (value: HbsValue) => asArray(value));
     HandlebarsLib.registerHelper('specialQualities', (value: HbsValue) => asArray(value));
     HandlebarsLib.registerHelper('arrayToObject', (array: HbsValue): Record<string, string> => {
@@ -315,9 +314,6 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
     HandlebarsLib.registerHelper('countType', (list: HbsValue, prop: HbsValue) => {
         if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return 0;
         return list.filter((item: HbsValue) => Boolean(getProp(item, prop))).length;
-    });
-    HandlebarsLib.registerHelper('hash', function hashHelper(this: HbsValue, options?: { hash?: HbsRecord }) {
-        return options?.hash ?? {};
     });
     HandlebarsLib.registerHelper('specialDisplay', (special: HbsValue): string => {
         if (special === null || special === undefined || special === '') return '';

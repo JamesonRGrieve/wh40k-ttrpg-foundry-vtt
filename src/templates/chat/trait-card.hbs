@@ -6,9 +6,9 @@
     iconClass=(traitIcon category)
     gameSystem=gameSystem
     badges=(array
-        (hash class=(concat 'wh40k-badge--category ' (traitCategoryColor category)) icon=(traitIcon category) label=categoryLabel)
-        (hash class="wh40k-badge--level" label=(iff hasLevel (concat 'Level ' level) ''))
-        (hash class="wh40k-badge--variable" icon="fa-adjust" label=(iff isVariable 'Variable' '')))
+        (object class=(concat 'wh40k-badge--category ' (traitCategoryColor category)) icon=(traitIcon category) label=categoryLabel)
+        (object class="wh40k-badge--level" label=(iff hasLevel (concat 'Level ' level) ''))
+        (object class="wh40k-badge--variable" icon="fa-adjust" label=(iff isVariable 'Variable' '')))
     footerLabel=timestamp
     footerIcon="fa-clock"
 }}

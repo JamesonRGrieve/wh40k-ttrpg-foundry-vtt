@@ -458,6 +458,15 @@ export function registerHandlebarsHelpers(): void {
     });
 
     /**
+     * Plain-text preview of (possibly HTML) text, cut at a length (#613).
+     * Usage: {{truncate entry.system.description 150}}. Without a length the
+     * last argument is Handlebars' options object, so the default applies.
+     */
+    Handlebars.registerHelper('truncate', (text: TplValue, maxLength: TplValue): string =>
+        truncate(typeof text === 'string' ? text : '', typeof maxLength === 'number' ? maxLength : undefined),
+    );
+
+    /**
      * Extract a slice of an array
      * Usage: {{#each (slice array 0 3)}}
      */
@@ -1061,15 +1070,15 @@ export function displayCrit(crit: number): string {
 }
 
 /**
- * Truncate a string to a maximum length, adding ellipsis if truncated
+ * Plain-text preview of a (possibly HTML) string, cut at a maximum length with
+ * an ellipsis. The tags are always stripped: the helper's output is escaped, so
+ * returning the HTML of a short string would print its tags.
  * @param {string} str - String to truncate
  * @param {number} maxLength - Maximum length before truncation
- * @returns {string} Truncated string
+ * @returns {string} Truncated plain text
  */
 export function truncate(str: string, maxLength = 100): string {
-    if (!str || typeof str !== 'string') return '';
-    // Strip HTML tags for text length calculation
     const plainText = str.replace(/<[^>]*>/g, '');
-    if (plainText.length <= maxLength) return str;
+    if (plainText.length <= maxLength) return plainText;
     return `${plainText.substring(0, maxLength).trim()}…`;
 }

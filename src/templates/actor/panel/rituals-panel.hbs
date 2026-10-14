@@ -12,16 +12,16 @@
             pills=(array ritual.system.pill)
             stats=(iff ritual.system.test.threshold
                 (array
-                    (hash labelKey="WH40K.Rituals.Test" value=ritual.system.testLabel)
-                    (hash labelKey="WH40K.Orders.Action" value=ritual.system.activationLabel)
-                    (hash labelKey="WH40K.ExtendedTest.ThresholdLabel" value=(localize "WH40K.Rituals.ThresholdValue" value=ritual.system.test.threshold)))
+                    (object labelKey="WH40K.Rituals.Test" value=ritual.system.testLabel)
+                    (object labelKey="WH40K.Orders.Action" value=ritual.system.activationLabel)
+                    (object labelKey="WH40K.ExtendedTest.ThresholdLabel" value=(localize "WH40K.Rituals.ThresholdValue" value=ritual.system.test.threshold)))
                 (array
-                    (hash labelKey="WH40K.Rituals.Test" value=ritual.system.testLabel)
-                    (hash labelKey="WH40K.Orders.Action" value=ritual.system.activationLabel)))
+                    (object labelKey="WH40K.Rituals.Test" value=ritual.system.testLabel)
+                    (object labelKey="WH40K.Orders.Action" value=ritual.system.activationLabel)))
             actions=(array
-                (hash action="rollRitual" icon="fa-dice-d20" titleKey="WH40K.BC.Ritual.PerformButton" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                (hash action="vocalizeRitual" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
-                (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                (object action="rollRitual" icon="fa-dice-d20" titleKey="WH40K.BC.Ritual.PerformButton" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                (object action="vocalizeRitual" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                (object action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Tabs.Requirements") icon="fa-list-check" content=ritual.system.requirements}}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Rituals.Costs") icon="fa-coins" content=ritual.system.costs}}

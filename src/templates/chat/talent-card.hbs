@@ -7,9 +7,9 @@
     title=talent.name
     gameSystem=gameSystem
     badges=(array
-        (hash icon="fa-layer-group" label=talent.tierLabel)
-        (hash icon=(talentIcon talent.category) label=talent.category)
-        (hash icon=(iff talent.isPassive "fa-circle" "fa-bolt") label=(iff talent.isPassive "Passive" "Active"))
+        (object icon="fa-layer-group" label=talent.tierLabel)
+        (object icon=(talentIcon talent.category) label=talent.category)
+        (object icon=(iff talent.isPassive "fa-circle" "fa-bolt") label=(iff talent.isPassive "Passive" "Active"))
     )
     footerLabel=timestamp
     footerIcon="fa-clock"

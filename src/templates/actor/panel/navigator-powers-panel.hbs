@@ -10,12 +10,12 @@
             editTitleKey="WH40K.NavigatorPowers.EditPower"
             pills=power.system.pills
             stats=(array
-                (hash labelKey="WH40K.NavigatorPowers.Test" value=power.system.testLabel)
-                (hash labelKey="WH40K.Orders.Action" value=power.system.activationLabel))
+                (object labelKey="WH40K.NavigatorPowers.Test" value=power.system.testLabel)
+                (object labelKey="WH40K.Orders.Action" value=power.system.activationLabel))
             actions=(array
-                (hash action="rollPower" icon="fa-dice-d20" titleKey="WH40K.NavigatorPowers.UsePower" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
-                (hash action="vocalizePower" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
-                (hash action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
+                (object action="rollPower" icon="fa-dice-d20" titleKey="WH40K.NavigatorPowers.UsePower" hoverClass="hover:tw-text-[color:var(--wh40k-accent-powers)]")
+                (object action="vocalizePower" icon="fa-comment" titleKey="WH40K.Action.PostToChat" hoverClass="hover:tw-bg-[rgba(59,130,246,0.15)] hover:tw-border-[rgba(59,130,246,0.3)] hover:tw-text-[#3b82f6]")
+                (object action="togglePowerDetails" icon="fa-chevron-down" titleKey="WH40K.Common.ToggleDetails" hoverClass="hover:tw-text-[color:var(--wh40k-text-dark)]"))
         }}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Chat.Item.Novice") icon="fa-seedling" labelClass="tw-text-[#22c55e]" content=power.system.levels.novice.effect}}
             {{> systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs label=(localize "WH40K.Chat.Item.Adept") icon="fa-star-half-alt" labelClass="tw-text-[#3b82f6]" content=power.system.levels.adept.effect}}
