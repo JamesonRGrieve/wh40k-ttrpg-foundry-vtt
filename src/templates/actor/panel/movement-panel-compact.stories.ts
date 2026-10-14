@@ -12,7 +12,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './movement-panel-compact.hbs?raw';
 
 initializeStoryHandlebars();
@@ -54,6 +54,12 @@ export const OutOfCombat: Story = {
     name: 'Out of combat — all modes selectable, no turn budget',
     args: { system: { movement: RATES, lifting: LIFTING } },
     render: (args) => renderPanel(args),
+    // Picking a mode sends setMovementMode with that mode; the sheet writes it and redraws this cluster (#235).
+    play: async ({ canvasElement }) => {
+        const clicks = captureActionClicks(canvasElement);
+        canvasElement.querySelector<HTMLElement>('[data-movement-type="run"]')?.click();
+        await expect(clicks.map((c) => [c.action, c.dataset['movementType']])).toEqual([['setMovementMode', 'run']]);
+    },
 };
 
 /** The move-mode toggles shown as selected (`aria-pressed`). */

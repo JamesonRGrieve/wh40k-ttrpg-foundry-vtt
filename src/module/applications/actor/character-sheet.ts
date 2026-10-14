@@ -4084,6 +4084,9 @@ export default class CharacterSheet extends BaseActorSheet {
         // Store movement action on token flags
         // eslint-disable-next-line no-restricted-syntax -- boundary: token.update() accepts untyped data; cast needed to satisfy the overload
         await token.update({ [`flags.${SYSTEM_ID}.${MOVE_MODE_FLAG}`]: movementType } as Record<string, unknown>);
+        // The flag lives on the TOKEN, whose update does not re-render the actor's sheet: redraw the
+        // Combat tab so the move-mode cluster shows the pick (#235).
+        await this.render({ parts: ['combat'] });
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; double-cast to access wh40k.movementTypes config
         const config = ((CONFIG as unknown as Record<string, unknown>)['wh40k'] as Record<string, unknown> | undefined)?.['movementTypes'] as

@@ -152,6 +152,15 @@ test.describe.serial('move mode cleared at turn end (Tier B, #610)', () => {
             if (panel === null) throw new Error('the PC sheet did not open');
             await page.locator(`${panel} [data-movement-type="run"]`).click();
             await expect.poll(async () => modeOf(page, scene.sceneId, pcToken), { timeout: scaledMs(10_000) }).toBe('run');
+            // The pick redraws the cluster by itself (#235): no re-open, Run shows pressed at once.
+            const sheetSelector = panel.split(' ')[0] ?? '';
+            await expect(page.locator(`${sheetSelector} [data-movement-type="run"][aria-pressed="true"]`)).toBeVisible();
+            await page.mouse.move(1, 1);
+            await snap(page, 'move-mode-pick-redraws-cluster', {
+                selector: `${sheetSelector} .wh40k-panel:has([data-movement-type="run"])`,
+                closeWindows: true,
+                keepWindow: sheetSelector.slice(1),
+            });
             await showMovementPanel(page, pcActor);
             const before = await pressedModes(page, panel);
             pass('toggle-sets-mode', before.length === 1 && before[0] === 'run', `after the click the panel shows ${JSON.stringify(before)} pressed`);
