@@ -21,13 +21,14 @@
             <div class="tw-flex tw-flex-col tw-gap-0.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Availability.Label"}}</label>
                 <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.availability">
-                    {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
+                    {{!-- Keyed by the schema's choice keys (#612: label values failed validation, so no edit on this sheet saved). --}}
+                    {{selectOptions dh.availabilities selected=item.system.availability labelAttr="label" localize=true}}
                 </select>
             </div>
             <div class="tw-flex tw-flex-col tw-gap-0.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Craftsmanship.Label"}}</label>
                 <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.craftsmanship">
-                    {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
+                    {{selectOptions dh.craftsmanships selected=item.system.craftsmanship labelAttr="label" localize=true}}
                 </select>
             </div>
         </div>

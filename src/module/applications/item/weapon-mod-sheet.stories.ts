@@ -27,7 +27,8 @@ interface WeaponModCtx {
     item: ReturnType<typeof mockItem>;
     system: ReturnType<typeof mockItem>['system'];
     source: ReturnType<typeof mockItem>['system'];
-    dh: { items: { availability: Record<string, { label: string }> } };
+    /** The `CONFIG.wh40k` slices the selects read: keyed by the schema's choice keys. */
+    dh: { availabilities: Record<string, { label: string }>; craftsmanships: Record<string, { label: string }> };
     canEdit: boolean;
     inEditMode: boolean;
     editable: boolean;
@@ -54,12 +55,15 @@ function makeCtx(overrides: Partial<WeaponModCtx> = {}): WeaponModCtx {
         system: item.system,
         source: item.system,
         dh: {
-            items: {
-                availability: {
-                    common: { label: 'Common' },
-                    scarce: { label: 'Scarce' },
-                    rare: { label: 'Rare' },
-                },
+            availabilities: {
+                common: { label: 'WH40K.Availability.Common' },
+                scarce: { label: 'WH40K.Availability.Scarce' },
+                rare: { label: 'WH40K.Availability.Rare' },
+            },
+            craftsmanships: {
+                poor: { label: 'WH40K.Craftsmanship.Poor' },
+                common: { label: 'WH40K.Craftsmanship.Common' },
+                good: { label: 'WH40K.Craftsmanship.Good' },
             },
         },
         canEdit: true,
@@ -92,6 +96,18 @@ export const RendersWeightField: Story = {
         const field = canvasElement.querySelector<HTMLInputElement>('[name="system.weight"]');
         await expect(field).toBeTruthy();
         await expect(field?.value).toBe('0.5');
+    },
+};
+
+/** The selects submit the schema's choice keys, never their labels (#612: a label value failed validation and blocked every edit). */
+export const SelectsSubmitChoiceKeys: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    play: async ({ canvasElement }) => {
+        const values = (name: string): string[] =>
+            Array.from(canvasElement.querySelectorAll<HTMLOptionElement>(`select[name="${name}"] option`)).map((option) => option.value);
+        await expect(values('system.availability')).toEqual(['common', 'scarce', 'rare']);
+        await expect(values('system.craftsmanship')).toEqual(['poor', 'common', 'good']);
+        await expect(canvasElement.querySelector<HTMLSelectElement>('select[name="system.availability"]')?.value).toBe('scarce');
     },
 };
 
