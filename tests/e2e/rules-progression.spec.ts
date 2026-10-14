@@ -77,8 +77,17 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         }
         interface XenosFeaturesModule extends ImportError {
             RIGHT_STUFF?: { applicableSkills?: readonly string[] };
-            PUSH_THE_LIMIT?: { operateBonus?: number; failureThresholdForCritical?: number };
             SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
+        }
+        /** A situational skill row on a compendium talent (#101 moved Push the Limit's terms here). */
+        interface SituationalSkillRow {
+            key?: string;
+            value?: number;
+            oncePerRound?: boolean;
+            failureConsequence?: { minDof?: number; tableUuid?: string };
+        }
+        interface TalentDoc {
+            system?: { modifiers?: { situational?: { skills?: SituationalSkillRow[] } } };
         }
         type ProfaneObjectsModule = ImportError;
         interface TrainingCheckResult {
@@ -172,16 +181,24 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             } else {
                 try {
                     const rightStuff = xenos.RIGHT_STUFF ?? {};
-                    const pushLimit = xenos.PUSH_THE_LIMIT ?? {};
                     const survivors = xenos.SURVIVORS_PARANOIA ?? {};
+                    // Push the Limit's +20 Operate, once-per-round limit and 4+ DoF critical are
+                    // row data on the compendium talent now (#101), not constants in this module.
+                    const pushUuid = 'Compendium.wh40k-rpg.dh2-without-items-talents.Item.nmjVhqTarVFg891j';
+                    const pushTalent = (await fromUuid(pushUuid)) as TalentDoc | null;
+                    const operate = pushTalent?.system?.modifiers?.situational?.skills?.find((row) => row.key === 'operate');
+                    const pushRowsOk =
+                        operate?.value === 20 &&
+                        operate.oncePerRound === true &&
+                        operate.failureConsequence?.minDof === 4 &&
+                        typeof operate.failureConsequence.tableUuid === 'string';
                     record(
                         'xenos-features-constants',
                         Array.isArray(rightStuff.applicableSkills) &&
                             rightStuff.applicableSkills.length > 0 &&
-                            typeof pushLimit.operateBonus === 'number' &&
-                            typeof pushLimit.failureThresholdForCritical === 'number' &&
-                            typeof survivors.negatedSurpriseBonus === 'number',
-                        null,
+                            typeof survivors.negatedSurpriseBonus === 'number' &&
+                            pushRowsOk,
+                        `pushTheLimitOperate=${JSON.stringify(operate ?? null)}`,
                     );
                 } catch (err) {
                     record('xenos-features-constants', false, String((err as Error).message));
