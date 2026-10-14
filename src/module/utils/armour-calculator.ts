@@ -122,6 +122,25 @@ function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string
     return 0;
 }
 
+/** Is this owned item equipped (`state.equipped`, the EquippableTemplate runtime flag)? */
+function isEquipped(item: WH40KItem): boolean {
+    return (item.system as { state?: { equipped?: boolean } }).state?.equipped === true;
+}
+
+/** Does this item carry armour points: an armour item, or a cybernetic with `hasArmourPoints`? */
+function bearsArmourPoints(item: WH40KItem): boolean {
+    return item.type === 'armour' || (item.type === 'cybernetic' && (item.system as { hasArmourPoints?: boolean }).hasArmourPoints === true);
+}
+
+/**
+ * Is the actor wearing any armour — an equipped armour item, or an equipped
+ * cybernetic that carries armour points? This is the set {@link computeArmour}
+ * reads under its default (PC) `equippedOnly` rule.
+ */
+export function hasWornArmour(actor: WH40KBaseActor): boolean {
+    return actor.items.filter((item: WH40KItem) => bearsArmourPoints(item) && isEquipped(item)).length > 0;
+}
+
 /**
  * Computes the total armour for each body location on an actor.
  * Combines toughness bonus, trait bonuses (Machine, Natural Armor),
@@ -132,7 +151,7 @@ function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string
  */
 export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptions = {}): Record<string, ArmourLocationData> {
     const equippedOnly = options.equippedOnly !== false;
-    const isWorn = (item: WH40KItem): boolean => !equippedOnly || (item.system as { state?: { equipped?: boolean } }).state?.equipped === true;
+    const isWorn = (item: WH40KItem): boolean => !equippedOnly || isEquipped(item);
 
     const toughness = actor.characteristics['toughness'] as (typeof actor.characteristics)[string] | undefined;
     const toughnessBonus = toughness?.bonus ?? 0;

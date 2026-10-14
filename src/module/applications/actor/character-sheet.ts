@@ -2936,6 +2936,23 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
+    /**
+     * The armour at one hit location, as the silhouette shows it (`total`
+     * includes TB). A PC's creature model prepares one entry per location;
+     * actor types whose armour has another shape override this (#611).
+     * @protected
+     */
+    _armourAtLocation(system: WH40KActorSystemData, locationKey: string): WH40KArmourLocation {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed loosely on WH40KActorSystemData; narrow per location key
+        const rawArmour = system.armour?.[locationKey];
+        return {
+            value: rawArmour?.value ?? 0,
+            total: rawArmour?.total ?? 0,
+            toughnessBonus: rawArmour?.toughnessBonus ?? 0,
+            traitBonus: rawArmour?.traitBonus ?? 0,
+        };
+    }
+
     // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display objects passed to Handlebars; no concrete type possible
     #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
         // `equipped` is runtime state under `system.state` (EquippableTemplate), not
@@ -2947,14 +2964,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         return HIT_LOCATION_IDS.map((locationKey) => {
             const locationLabel = hitLocationLabel(locationKey);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: system.armour is typed loosely on WH40KActorSystemData; narrow per location key
-            const rawArmour = system.armour?.[locationKey];
-            const armourData: WH40KArmourLocation = {
-                value: rawArmour?.value ?? 0,
-                total: rawArmour?.total ?? 0,
-                toughnessBonus: rawArmour?.toughnessBonus ?? 0,
-                traitBonus: rawArmour?.traitBonus ?? 0,
-            };
+            const armourData = this._armourAtLocation(system, locationKey);
             const coveringItems = equippedArmour
                 .map((item) => {
                     // Resolve AP through the shared helper so the effective-AP → AP →

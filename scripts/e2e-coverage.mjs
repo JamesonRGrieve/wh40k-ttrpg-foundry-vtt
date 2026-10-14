@@ -620,6 +620,17 @@ recordDimension('lean-weapon-hydrate.flow', covered['lean-weapon-hydrate.flow'],
 const NPC_MAGAZINE_FLOWS = ['compendium-npc-arrives-loaded', 'added-weapon-arrives-loaded'];
 recordDimension('npc-magazine.flow', covered['npc-magazine.flow'], NPC_MAGAZINE_FLOWS);
 
+// Worn armour sets an NPC's AP (#611), tests/e2e/npc-worn-armour.spec.ts.
+// Keep in sync with NPC_ARMOUR_FLOWS there.
+const NPC_ARMOUR_FLOWS = [
+    'breacher-stat-block-shows',
+    'arbitrator-before-equipping',
+    'arbitrator-carapace-equipped',
+    'listed-armour-without-stat-block',
+    'all-lines-worn-armour',
+];
+recordDimension('npc-armour.flow', covered['npc-armour.flow'], NPC_ARMOUR_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

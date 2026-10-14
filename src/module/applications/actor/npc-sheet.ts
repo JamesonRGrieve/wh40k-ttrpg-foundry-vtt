@@ -11,6 +11,7 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../../rules/token-senses.ts';
+import type { WH40KActorSystemData, WH40KArmourLocation } from '../../types/global.d.ts';
 import { tokenPresetFromActor } from '../../utils/token-footprint.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
@@ -22,6 +23,7 @@ import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import type { SkillLike } from './base-actor-sheet.ts';
 import CharacterSheet from './character-sheet.ts';
+import { npcArmourAtLocation } from './npc-armour-display.ts';
 
 /** Local trained-skill shape used by skill mutation handlers (loose superset of the schema). */
 interface NPCV2TrainedSkillData {
@@ -219,6 +221,16 @@ export default class NPCSheet extends CharacterSheet {
     /** NPCs hold talents without an XP economy: a dropped talent lands directly. */
     protected override _buysTalentsWithXp(): boolean {
         return false;
+    }
+
+    /**
+     * An NPC's armour block is `{mode, total, locations}` (AP only), not the PC
+     * per-location entries the silhouette reads (#611).
+     * @override
+     */
+    override _armourAtLocation(_system: WH40KActorSystemData, locationKey: string): WH40KArmourLocation {
+        const sys = this.npcActor.system;
+        return npcArmourAtLocation(sys.armour, locationKey, sys.characteristics.toughness.bonus);
     }
 
     /** Sheet display mode constants (PLAY=1, EDIT=2). */

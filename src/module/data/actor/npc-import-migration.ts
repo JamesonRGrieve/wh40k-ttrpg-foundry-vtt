@@ -389,8 +389,8 @@ export function migrateArmourPoints(source: JsonObject): void {
     // derives armour from Toughness + worn items at prepare time.
     if (typeof raw !== 'string' || raw.trim() === '') return;
     delete source['armourPoints'];
-    const m = /H\s*(\d+)\s+AR\s*(\d+)\s+AL\s*(\d+)\s+B\s*(\d+)\s+LR\s*(\d+)\s+LL\s*(\d+)/i.exec(raw);
-    if (m === null) {
+    const locations = parseArmourPointsLine(raw);
+    if (locations === null) {
         // Present but unparseable: still a raw/source-material intent. Mark it
         // authored so the runtime keeps the (possibly zero) authored value rather
         // than silently deriving over what a book printed.
@@ -398,19 +398,35 @@ export function migrateArmourPoints(source: JsonObject): void {
         source['armour'] = { ...existing, authored: true };
         return;
     }
-    source['armour'] = {
-        mode: 'locations',
-        total: toInt(m[4]),
-        authored: true,
-        locations: {
-            head: toInt(m[1]),
-            body: toInt(m[4]),
-            leftArm: toInt(m[3]),
-            rightArm: toInt(m[2]),
-            leftLeg: toInt(m[6]),
-            rightLeg: toInt(m[5]),
-        },
-    };
+    source['armour'] = { mode: 'locations', total: locations.body, authored: true, locations };
+}
+
+/** The location each stat-block AP token names (`H5`, `AR5`, …). */
+const ARMOUR_POINT_TOKENS: ReadonlyMap<string, 'head' | 'body' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg'> = new Map([
+    ['h', 'head'],
+    ['b', 'body'],
+    ['al', 'leftArm'],
+    ['ar', 'rightArm'],
+    ['ll', 'leftLeg'],
+    ['lr', 'rightLeg'],
+]);
+
+/**
+ * Parse a stat-block AP line (`H9 AR9 AL9 B9 LR9 LL9`) in ANY token order (#611):
+ * the authored line `H5 B5 AR5 AL5 LR5 LL5` failed a fixed-order match, fell to
+ * the "unparseable" branch, and stored AP 0 everywhere. A location the line does
+ * not name is 0. Null when the line names no location at all.
+ */
+function parseArmourPointsLine(raw: string): { head: number; body: number; leftArm: number; rightArm: number; leftLeg: number; rightLeg: number } | null {
+    const locations = { head: 0, body: 0, leftArm: 0, rightArm: 0, leftLeg: 0, rightLeg: 0 };
+    let found = false;
+    for (const [, token = '', digits = '0'] of raw.matchAll(/\b(AR|AL|LR|LL|H|B)\s*(\d+)/gi)) {
+        const location = ARMOUR_POINT_TOKENS.get(token.toLowerCase());
+        if (location === undefined) continue;
+        locations[location] = toInt(digits);
+        found = true;
+    }
+    return found ? locations : null;
 }
 
 /**

@@ -435,6 +435,27 @@ describe('migrateArmourPoints', () => {
         expect(loc).toEqual({ head: 1, rightArm: 2, leftArm: 3, body: 4, rightLeg: 5, leftLeg: 6 });
     });
 
+    it('parses the tokens in any order (#611: "H5 B5 AR5 AL5 LR5 LL5" used to store AP 0)', () => {
+        const source: JsonObject = { armourPoints: 'H5 B6 AR7 AL8 LR9 LL10' };
+        migrateArmourPoints(source);
+        const armour = asObject(source['armour'], 'armour');
+        expect(armour['total']).toBe(6);
+        expect(asObject(armour['locations'], 'locations')).toEqual({ head: 5, body: 6, rightArm: 7, leftArm: 8, rightLeg: 9, leftLeg: 10 });
+    });
+
+    it('reads a location the line omits as 0', () => {
+        const source: JsonObject = { armourPoints: 'B4' };
+        migrateArmourPoints(source);
+        expect(asObject(asObject(source['armour'], 'armour')['locations'], 'locations')).toEqual({
+            head: 0,
+            body: 4,
+            leftArm: 0,
+            rightArm: 0,
+            leftLeg: 0,
+            rightLeg: 0,
+        });
+    });
+
     it('is idempotent and leaves authored armour objects untouched', () => {
         const already: JsonObject = {
             armour: { mode: 'locations', total: 4, locations: { head: 4, body: 4, leftArm: 4, rightArm: 4, leftLeg: 4, rightLeg: 4 } },
