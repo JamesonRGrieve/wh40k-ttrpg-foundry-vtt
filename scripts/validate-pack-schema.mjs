@@ -328,12 +328,51 @@ export function extensionlessImagePaths(node, at = '', parentKey = '') {
 }
 
 /**
+ * The document classes whose `type` must be a sub-type the system registers in
+ * `system.json` `documentTypes`, mapped to the class their embedded `items[]`
+ * belong to (an Actor embeds Items).
+ */
+const TYPED_CLASSES = { Item: null, Actor: 'Item' };
+
+/**
+ * Errors for a `type` the system does not register (#136). Foundry silently
+ * drops a document of an unregistered sub-type: compendium weapon mods typed
+ * `weapon.modification` (the Item type is `weaponModification`) never reached
+ * an actor, and nothing failed. Checks the document's own `type` against its
+ * pack's class, and an Actor's embedded `items[].type` against the Item types.
+ * @param {unknown} doc  Parsed `_source/*.json`.
+ * @param {string | undefined} documentClass  The class its pack declares (`Item`, `Actor`, …).
+ * @param {Record<string, Record<string, unknown>>} documentTypes  `system.json` `documentTypes`.
+ * @returns {string[]}
+ */
+export function unregisteredTypeIssues(doc, documentClass, documentTypes) {
+    if (doc === null || typeof doc !== 'object' || documentClass === undefined || !(documentClass in TYPED_CLASSES)) return [];
+    const errors = [];
+    const registered = (cls, type) => Object.hasOwn(documentTypes[cls] ?? {}, type);
+    if (typeof doc.type === 'string' && !registered(documentClass, doc.type)) {
+        errors.push(`type: "${doc.type}" is not a registered ${documentClass} type (system.json documentTypes) — Foundry drops the document`);
+    }
+    const embeddedClass = TYPED_CLASSES[documentClass];
+    if (embeddedClass !== null && Array.isArray(doc.items)) {
+        doc.items.forEach((item, i) => {
+            if (item !== null && typeof item === 'object' && typeof item.type === 'string' && !registered(embeddedClass, item.type)) {
+                errors.push(`items.${i}.type: "${item.type}" is not a registered ${embeddedClass} type (system.json documentTypes) — Foundry drops the item`);
+            }
+        });
+    }
+    return errors;
+}
+
+/**
  * Validate one `_source` document. Returns an array of human-readable error
  * strings (empty when the document is well-formed).
  * @param {unknown} doc  Parsed `_source/*.json`.
+ * @param {{ documentClass?: string, documentTypes?: Record<string, Record<string, unknown>> }} [context]
+ *   The class the document's pack declares and the system's registered sub-types;
+ *   when given, an unregistered `type` is an error.
  * @returns {string[]}
  */
-export function validateDoc(doc) {
+export function validateDoc(doc, context = {}) {
     const errors = unlicensedArtPaths(doc).map(
         (at) => `${at}: references unlicensed art (_vendored-ui) — use the game-icons.net icon scripts/pack-icon-map.mjs picks for the document`,
     );
@@ -345,6 +384,7 @@ export function validateDoc(doc) {
     // Whole-file `reference` stubs are pointers to another pack's canonical document
     // (resolved at build time); they carry no name/type/system, so skip them.
     if (doc !== null && typeof doc === 'object' && typeof doc.reference === 'string' && doc.type === undefined) return errors;
+    if (context.documentTypes !== undefined) errors.push(...unregisteredTypeIssues(doc, context.documentClass, context.documentTypes));
     const env = documentEnvelope.safeParse(doc);
     if (!env.success) {
         for (const issue of env.error.issues) errors.push(`${issue.path.join('.') || '<root>'}: ${issue.message}`);
@@ -389,9 +429,31 @@ function findSourceFiles(root) {
     return out;
 }
 
+/** `system.json` `documentTypes`: the sub-types the system registers per document class. */
+function systemDocumentTypes() {
+    return JSON.parse(fs.readFileSync('src/system.json', 'utf8')).documentTypes ?? {};
+}
+
+/**
+ * Pack name → document class, from the system manifest's `packs` and each pack
+ * root's `system.packs.json` (the private declarations merged at build).
+ * @param {string[]} roots
+ * @returns {Map<string, string>}
+ */
+function packClasses(roots) {
+    const declared = [...(JSON.parse(fs.readFileSync('src/system.json', 'utf8')).packs ?? [])];
+    for (const root of roots) {
+        const manifest = path.join(root, 'system.packs.json');
+        if (fs.existsSync(manifest)) declared.push(...(JSON.parse(fs.readFileSync(manifest, 'utf8')).packs ?? []));
+    }
+    return new Map(declared.map((pack) => [pack.name, pack.type]));
+}
+
 function main() {
     const report = process.argv.includes('--report');
     const roots = packRoots();
+    const documentTypes = systemDocumentTypes();
+    const classes = packClasses(roots);
     let scanned = 0;
     let failed = 0;
     const failures = [];
@@ -406,7 +468,9 @@ function main() {
                 failures.push(`${file}: invalid JSON — ${e instanceof Error ? e.message : String(e)}`);
                 continue;
             }
-            const errs = validateDoc(doc);
+            // `<pack>/_source/<doc>.json`: the pack is the folder holding `_source`.
+            const documentClass = classes.get(path.basename(path.dirname(path.dirname(file))));
+            const errs = validateDoc(doc, { documentClass, documentTypes });
             if (errs.length > 0) {
                 failed++;
                 failures.push(`${file}:\n  - ${errs.join('\n  - ')}`);

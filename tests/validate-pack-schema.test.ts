@@ -1,8 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import {
     DAMAGE_SOURCE,
     DAMAGE_TYPE,
+    type DocumentTypes,
     extensionlessImagePaths,
     IMAGE_FILE_EXTENSIONS,
     RIDER_AFFECTS as GATE_RIDER_AFFECTS,
@@ -10,6 +13,7 @@ import {
     RIDER_DURATION_KIND,
     RIDER_TEST_CHARACTERISTIC,
     unlicensedArtPaths,
+    unregisteredTypeIssues,
     validateDoc,
     variant,
     WEAPON_CLASS,
@@ -277,5 +281,49 @@ describe('image extension gate (#626)', () => {
 
     it('ignores non-image keys that happen to hold a path-like string', () => {
         expect(extensionlessImagePaths({ system: { icon: 'fa-cube', source: { url: 'https://example.test/page' } } })).toEqual([]);
+    });
+});
+
+describe('registered document type gate (#136)', () => {
+    /** The real `system.json` `documentTypes`, so the gate is tested against what Foundry registers. */
+    const documentTypes = (JSON.parse(readFileSync(resolve(__dirname, '../src/system.json'), 'utf8')) as { documentTypes: DocumentTypes }).documentTypes;
+
+    it('rejects the dotted weapon.modification type that Foundry dropped on embedding', () => {
+        const errs = unregisteredTypeIssues({ name: 'Red-Dot Laser Sight', type: 'weapon.modification' }, 'Item', documentTypes);
+        expect(errs).toHaveLength(1);
+        expect(errs[0]).toMatch(/^type: "weapon\.modification" is not a registered Item type/);
+    });
+
+    it('accepts the registered weaponModification and armourModification types', () => {
+        expect(unregisteredTypeIssues({ name: 'Red-Dot Laser Sight', type: 'weaponModification' }, 'Item', documentTypes)).toEqual([]);
+        expect(unregisteredTypeIssues({ name: 'Armour Plating', type: 'armourModification' }, 'Item', documentTypes)).toEqual([]);
+    });
+
+    it("checks an Actor's own type against the Actor types and its embedded items against the Item types", () => {
+        const actor = {
+            name: 'Ganger',
+            type: 'dh2-npc',
+            items: [
+                { name: 'Stub', type: 'weapon' },
+                { name: 'Sight', type: 'weapon.modification' },
+            ],
+        };
+        expect(unregisteredTypeIssues(actor, 'Actor', documentTypes)).toEqual([
+            'items.1.type: "weapon.modification" is not a registered Item type (system.json documentTypes) — Foundry drops the item',
+        ]);
+        expect(unregisteredTypeIssues({ ...actor, type: 'weapon' }, 'Actor', documentTypes)[0]).toMatch(/is not a registered Actor type/);
+    });
+
+    it('leaves classes without registered sub-types (journals, tables) and unknown packs alone', () => {
+        expect(unregisteredTypeIssues({ name: 'Lore', type: 'base' }, 'JournalEntry', documentTypes)).toEqual([]);
+        expect(unregisteredTypeIssues({ name: 'Mutations', type: 'RollTable' }, 'RollTable', documentTypes)).toEqual([]);
+        expect(unregisteredTypeIssues({ name: 'Loose', type: 'weapon.modification' }, undefined, documentTypes)).toEqual([]);
+    });
+
+    it('runs inside validateDoc when the pack class is known', () => {
+        expect(validateDoc({ name: 'Sight', type: 'weapon.modification' }, { documentClass: 'Item', documentTypes }).join(' ')).toMatch(
+            /not a registered Item type/,
+        );
+        expect(validateDoc({ name: 'Sight', type: 'weapon.modification' })).toEqual([]);
     });
 });

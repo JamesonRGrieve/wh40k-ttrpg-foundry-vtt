@@ -161,7 +161,7 @@
             "psychicPower": "psychic.default",
             "trait": "trait.default",
             "weaponQuality": "weaponQuality.default",
-            "weapon.modification": "weaponModification.default",
+            "weaponModification": "weaponModification.default",
             "armourModification": "armourModification.default",
             "ammunition": "ammunition.default",
             "originPath": "originPath.default",

@@ -87,7 +87,7 @@ each underlying segment is already its own Foundry type (`shipWeapon`,
 `vehicleUpgrade`, …). The axis is applied **symmetrically and uniformly across
 lines**: a line with vehicle payloads uses `items-vehicle-*`, a line with ship
 payloads uses `items-ship-*`, and neither folds its payloads back into flat
-`items-*`. Personal-scale modifications (`weapon.modification`,
+`items-*`. Personal-scale modifications (`weaponModification`,
 `armourModification`) stay in personal `items-*` (`items-weapon-mods`,
 `items-armor-mods`); vehicle/ship upgrades use their scale prefix.
 
@@ -104,7 +104,7 @@ Rules:
   `items-ship-*`); bare `ship-weapons` / `ship-roles` and flat `vehicle-*` are
   non-conforming. A ship or vehicle that is an **Actor** is `actors-ships` /
   `actors-vehicles`, not an `items-*` payload.
-- **Modifications stay at personal scale.** `weapon.modification` →
+- **Modifications stay at personal scale.** `weaponModification` →
   `items-weapon-mods`; `armourModification` → `items-armor-mods`. Vehicle and ship
   upgrades are scale payloads (`items-vehicle-upgrades`, `items-ship-upgrades`).
 - The content segment after the group prefix is the content type and, where it

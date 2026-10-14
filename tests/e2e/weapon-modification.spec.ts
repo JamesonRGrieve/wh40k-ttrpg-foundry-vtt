@@ -24,14 +24,13 @@ import { expect, test } from './lib/test';
  */
 
 /**
- * The parts, as DH2 core p. 164 prints them (Scarce). They are made as a world
- * item rather than taken from the dh2-core-items-weapon-mods compendium: every
- * weapon modification in the compendiums is typed `weapon.modification`, not
- * `weaponModification`, so an actor drops them on embedding (reported to the
- * content owner).
+ * The parts, taken from the dh2-core-items-weapon-mods compendium as DH2 core
+ * p. 164 prints them (Scarce). The compendium mods were once typed
+ * `weapon.modification`, which no Item type registers, so an actor dropped them
+ * on embedding (#136); the spec now uses the compendium document itself.
  */
 const MOD_NAME = 'Red-Dot Laser Sight';
-const MOD_AVAILABILITY = 'scarce';
+const MOD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.9dd13b0f5d3d2b15';
 /** Uniform that rolls a d100 of 05: a success on any target above 5. */
 const SUCCESS_UNIFORM = 0.955;
 const ROLL_DIALOG = '.unified-roll-dialog';
@@ -39,8 +38,6 @@ const ROLL_DIALOG = '.unified-roll-dialog';
 /** What the spec stashes on the page between evaluates: its actors, and Foundry's own die generator while it is pinned. */
 interface ProbeStash {
     actorIds: string[];
-    /** World items (the parts' source documents). */
-    itemIds: string[];
     savedUniform: (() => number) | null;
     /** Notification texts, recorded once the dice are pinned. */
     notices?: string[];
@@ -55,11 +52,11 @@ interface Setup {
 
 /**
  * A character of `line` carrying one weapon (typed `xenos` when asked) and the
- * Red-Dot Laser Sight parts (a copy of a world source item); opens the weapon's sheet.
+ * Red-Dot Laser Sight parts, dropped from the compendium; opens the weapon's sheet.
  */
 async function setup(page: Page, line: 'dh2' | 'dw', xenos: boolean): Promise<Setup> {
     return page.evaluate(
-        async ({ gameSystem, xenosWeapon, modName, availability }): Promise<Setup> => {
+        async ({ gameSystem, xenosWeapon, modUuid }): Promise<Setup> => {
             interface ItemDoc {
                 id: string;
                 type: string;
@@ -70,24 +67,25 @@ async function setup(page: Page, line: 'dh2' | 'dw', xenos: boolean): Promise<Se
                 createEmbeddedDocuments: (type: string, data: object[]) => Promise<ItemDoc[]>;
                 items: { get: (id: string) => ItemDoc | undefined };
             }
-            interface WorldItem {
-                id: string;
-                uuid: string;
-                toObject: () => object;
+            interface CompendiumItem {
+                type: string;
             }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, Item) have no browser-side types
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (Actor, fromUuid, game) have no browser-side types
             const g = globalThis as unknown as {
                 Actor: { create: (data: object) => Promise<ActorDoc | null> };
-                Item: { create: (data: object) => Promise<WorldItem | null> };
+                fromUuid: (uuid: string) => Promise<CompendiumItem | null>;
+                game: { items: { fromCompendium: (doc: object) => object } };
                 __weaponModProbe?: ProbeStash;
             };
             try {
-                const stash: ProbeStash = g.__weaponModProbe ?? { actorIds: [], itemIds: [], savedUniform: null };
+                const stash: ProbeStash = g.__weaponModProbe ?? { actorIds: [], savedUniform: null };
                 g.__weaponModProbe = stash;
-                // The parts' source document: a fitted entry points back at it, and a removal returns a copy of it.
-                const source = await g.Item.create({ name: modName, type: 'weaponModification', system: { availability } });
-                if (source === null) return { error: 'Item.create returned null for the parts source', actorId: '', weaponId: '', sheetId: '' };
-                stash.itemIds.push(source.id);
+                // The parts' compendium document: a fitted entry points back at it, and a removal returns a copy of it.
+                const source = await g.fromUuid(modUuid);
+                if (source === null) return { error: `compendium parts ${modUuid} not found`, actorId: '', weaponId: '', sheetId: '' };
+                if (source.type !== 'weaponModification') {
+                    return { error: `compendium parts are typed "${source.type}", not weaponModification`, actorId: '', weaponId: '', sheetId: '' };
+                }
                 const actor = await g.Actor.create({
                     name: `Modification Probe (${gameSystem}${xenosWeapon ? ', xenos' : ''})`,
                     type: `${gameSystem}-character`,
@@ -109,7 +107,7 @@ async function setup(page: Page, line: 'dh2' | 'dw', xenos: boolean): Promise<Se
                         type: 'weapon',
                         system: { class: 'basic', type: xenosWeapon ? 'xenos' : 'solid-projectile', equipped: true },
                     },
-                    { ...source.toObject(), _stats: { compendiumSource: source.uuid } },
+                    g.game.items.fromCompendium(source),
                 ]);
                 if (!embedded.some((item) => item.type === 'weaponModification')) {
                     return {
@@ -128,7 +126,7 @@ async function setup(page: Page, line: 'dh2' | 'dw', xenos: boolean): Promise<Se
                 return { error: err instanceof Error ? err.message : String(err), actorId: '', weaponId: '', sheetId: '' };
             }
         },
-        { gameSystem: line, xenosWeapon: xenos, modName: MOD_NAME, availability: MOD_AVAILABILITY },
+        { gameSystem: line, xenosWeapon: xenos, modUuid: MOD_UUID },
     );
 }
 
@@ -138,7 +136,6 @@ async function teardown(page: Page): Promise<void> {
         const g = globalThis as unknown as {
             game: {
                 actors: { get: (id: string) => { delete: () => Promise<object> } | undefined };
-                items: { get: (id: string) => { delete: () => Promise<object> } | undefined };
             };
             __weaponModProbe?: ProbeStash;
             CONFIG: { Dice: { randomUniform: () => number } };
@@ -148,10 +145,6 @@ async function teardown(page: Page): Promise<void> {
         for (const id of stash?.actorIds ?? []) {
             // eslint-disable-next-line no-await-in-loop -- sequential teardown of the probe's own actors (their sheets close with them)
             await g.game.actors.get(id)?.delete();
-        }
-        for (const id of stash?.itemIds ?? []) {
-            // eslint-disable-next-line no-await-in-loop -- sequential teardown of the probe's own world items
-            await g.game.items.get(id)?.delete();
         }
         g.__weaponModProbe = undefined;
     });
@@ -178,7 +171,6 @@ async function pinDice(page: Page, uniform: number): Promise<void> {
         }
         g.__weaponModProbe = {
             actorIds: prior?.actorIds ?? [],
-            itemIds: prior?.itemIds ?? [],
             savedUniform: prior?.savedUniform ?? g.CONFIG.Dice.randomUniform,
             notices,
         };

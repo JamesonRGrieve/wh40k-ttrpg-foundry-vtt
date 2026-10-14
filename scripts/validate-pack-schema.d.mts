@@ -42,5 +42,11 @@ export declare const IMAGE_FILE_EXTENSIONS: readonly string[];
 /** Pointer paths of every image field whose path lacks an allowed image extension (#626). */
 export declare function extensionlessImagePaths(node: unknown, at?: string, parentKey?: string): string[];
 
+/** `system.json` `documentTypes`: the sub-types registered per document class. */
+export type DocumentTypes = Record<string, Record<string, unknown>>;
+
+/** Errors for a `type` (or an Actor's embedded `items[].type`) the system does not register (#136). */
+export declare function unregisteredTypeIssues(doc: unknown, documentClass: string | undefined, documentTypes: DocumentTypes): string[];
+
 /** Validate one `_source` document; returns human-readable error strings ([] when clean). */
-export declare function validateDoc(doc: unknown): string[];
+export declare function validateDoc(doc: unknown, context?: { documentClass?: string | undefined; documentTypes?: DocumentTypes }): string[];
