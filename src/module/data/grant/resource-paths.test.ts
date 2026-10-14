@@ -89,9 +89,13 @@ describe('RESOURCE_PATHS match the actor schemas', () => {
         expect(RESOURCE_PATHS.wounds).toMatchObject({ valuePath: 'system.wounds.value', maxPath: 'system.wounds.max' });
     });
 
-    it('NPCs carry no corruption or insanity field', () => {
-        expect(NPC_SCHEMA).not.toMatch(/\bcorruption: new/u);
-        expect(NPC_SCHEMA).not.toMatch(/\binsanity: new/u);
+    it('NPCs carry no corruption or insanity resource field', () => {
+        // A numeric pool is what a resource grant would write. The NPC schema does
+        // name `corruption` once: `reinforcement.caller.corruption`, the dice
+        // formula a Reinforcement Character's caller gains (#77). That is a
+        // StringField, not a resource, so only a numeric field is forbidden here.
+        expect(NPC_SCHEMA).not.toMatch(/\bcorruption: new (?:fields\.)?NumberField\(/u);
+        expect(NPC_SCHEMA).not.toMatch(/\binsanity: new (?:fields\.)?NumberField\(/u);
     });
 
     it('every resource path resolves on a schema-shaped character', () => {

@@ -34,8 +34,6 @@ const OWN_FORM_TEMPLATES: Readonly<Record<string, string>> = {
     'dialogs/characteristic-setup.hbs': 'src/module/applications/dialogs/characteristic-setup-dialog.ts',
     'prompt/daemon-weapon-attribute-dialog.hbs': 'src/module/applications/prompts/daemon-weapon-attribute-dialog.ts',
     'applications/compendium-browser.hbs': 'src/module/applications/compendium-browser.ts',
-    // A DialogV2 (root tag `dialog`); owned by the effect-creation work.
-    'dialogs/effect-creation-dialog.hbs': 'src/module/applications/prompts/effect-creation-dialog.ts',
 };
 
 /** A root declared as a div, or a DialogV2 (whose root is a `dialog`). */
