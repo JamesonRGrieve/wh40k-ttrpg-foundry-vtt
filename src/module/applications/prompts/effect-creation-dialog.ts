@@ -9,7 +9,10 @@ import type { SupportedLineKey } from '../../utils/item-variant-utils.ts';
 import type { ActiveEffectLike, EffectsOwner } from '../api/effect-actions.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 
-const { DialogV2 } = foundry.applications.api;
+// A Handlebars ApplicationV2 form, not a DialogV2: DialogV2 renders only its
+// `content` string and buttons and ignores PARTS / `_prepareContext`, so as a
+// DialogV2 the category tabs and pickers never rendered (#516).
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * Fields laid under every payload the dialog builds. An item sheet passes the
@@ -71,18 +74,18 @@ interface CustomEffectPayload {
     disabled: boolean;
 }
 
-export default class EffectCreationDialog extends DialogV2 {
+export default class EffectCreationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     declare owner: EffectsOwner;
     declare defaults: EffectCreationDefaults;
     declare selectedCategory: string;
-    declare element: HTMLElement;
     declare submit: () => Promise<void>;
 
     /** Promise-resolution plumbing (#287); dismissal without a submit resolves null. */
     readonly #resolution = new DialogResolution<ActiveEffectLike | null>(null);
 
     /** @override */
-    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+    static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+        tag: 'form',
         classes: ['wh40k-rpg', 'wh40k-effect-creation-dialog'],
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
@@ -106,24 +109,6 @@ export default class EffectCreationDialog extends DialogV2 {
             selectCategory: EffectCreationDialog._onSelectCategory,
             /* eslint-enable @typescript-eslint/unbound-method */
         },
-        // DialogV2-specific buttons config (not in the shared DefaultOptions type)
-        ...({
-            buttons: [
-                {
-                    action: 'create',
-                    label: 'WH40K.Effects.Create',
-                    icon: 'fas fa-check',
-                    default: true,
-                    type: 'submit',
-                },
-                {
-                    action: 'cancel',
-                    label: 'WH40K.Cancel',
-                    icon: 'fas fa-times',
-                    type: 'button',
-                },
-            ],
-        } as Partial<ApplicationV2Config.DefaultOptions>),
     };
 
     /* -------------------------------------------- */
@@ -151,7 +136,7 @@ export default class EffectCreationDialog extends DialogV2 {
     }
 
     constructor(options: EffectCreationDialogOptions) {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 constructor accepts Record<string,unknown>; EffectCreationDialogOptions is structurally compatible
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the ApplicationV2 constructor accepts Record<string,unknown>; EffectCreationDialogOptions is structurally compatible
         super(options as unknown as Record<string, unknown>);
         this.owner = options.owner;
         this.defaults = options.defaults;
@@ -163,7 +148,7 @@ export default class EffectCreationDialog extends DialogV2 {
     /** @override */
     /* eslint-disable no-restricted-syntax -- boundary: _prepareContext signature uses Record<string,unknown> as the ApplicationV2 override shape */
     // eslint-disable-next-line @typescript-eslint/require-await -- _prepareContext must be async per ApplicationV2 contract even when no internal awaits are needed
-    async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: Record<string, unknown> = {};
         /* eslint-enable no-restricted-syntax */
 
@@ -229,8 +214,9 @@ export default class EffectCreationDialog extends DialogV2 {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions -- conditionId is string|undefined from dataset; falsy check covers both undefined and ''
         if (!conditionId) return;
 
-        const form = this.element.querySelector('form');
-        if (form) {
+        // The window's root element is the form (`tag: 'form'`).
+        const form = this.element;
+        if (form instanceof HTMLFormElement) {
             (form.elements.namedItem('effectType') as HTMLInputElement).value = 'condition';
             (form.elements.namedItem('conditionId') as HTMLInputElement).value = conditionId;
             void this.submit();

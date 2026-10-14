@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { buildConditionCatalog, type EffectDataInput, setConditionCatalog } from '../../rules/condition-registry.ts';
 import { conditionPackFixture } from '../../testing/condition-catalog.ts';
@@ -12,7 +14,7 @@ type EffectData = EffectCreationData;
 /**
  * Tests for EffectCreationDialog's payload builders (#341).
  *
- * The dialog `extends DialogV2`, which is evaluated at module-load, so the
+ * The dialog `extends ApplicationV2`, which is evaluated at module-load, so the
  * Foundry globals it references must be installed before the dynamic import.
  * The builders are static and pure (given the stubbed globals), so we exercise
  * them directly without instantiating the dialog or booting ApplicationV2.
@@ -49,7 +51,7 @@ function installGlobals(combat: { round: number; turn: number } | null): void {
         CONFIG: { WH40K: { characteristics: { weaponSkill: { label: 'Weapon Skill' } } } },
         game: { combat },
         foundry: {
-            applications: { api: { DialogV2: class {} } },
+            applications: { api: { ApplicationV2: class {}, HandlebarsApplicationMixin: <T>(base: T): T => base } },
             utils: { deepClone: <T>(o: T): T => structuredClone(o) },
         },
     });
@@ -72,7 +74,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_buildEffectData assembles the single-change payload with nature + sign', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = Builders._buildEffectData({
@@ -92,7 +94,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_buildEffectData marks negative values harmful and omits the + sign', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = Builders._buildEffectData({
@@ -109,7 +111,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_applyDuration adds a combat-anchored duration block when rounds > 0', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = Builders._applyDuration(emptyPayload(), { effectType: 'custom', duration: { rounds: '5' } });
@@ -119,7 +121,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
     it('_applyDuration defaults startRound/startTurn to 0 with no active combat', async () => {
         installGlobals(null);
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = Builders._applyDuration(emptyPayload(), { effectType: 'custom', duration: { rounds: '2' } });
@@ -128,7 +130,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_applyDuration leaves the payload untouched when rounds is 0 or absent', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         expect(Builders._applyDuration(emptyPayload(), { effectType: 'custom' }).duration).toBeUndefined();
@@ -137,7 +139,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_createCharacteristicData resolves the CONFIG label and routes through _buildEffectData', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = assertPayload(
@@ -151,7 +153,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_createCharacteristicData falls back to a capitalised label when CONFIG lacks one', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = assertPayload(Builders._createCharacteristicData({ effectType: 'characteristic', characteristic: 'strength', modifierValue: '5' }));
@@ -160,7 +162,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_createSkillData builds a skill-bonus change', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = assertPayload(Builders._createSkillData({ effectType: 'skill', skill: 'dodge', modifierValue: '10' }));
@@ -170,7 +172,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('_createCombatData builds a combat change with the combat icon', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         const effect = assertPayload(Builders._createCombatData({ effectType: 'combat', combatType: 'attack', modifierValue: '-10' }));
@@ -182,7 +184,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it('the modifier builders return null when value is 0 or the target is missing', async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
 
         expect(Builders._createCharacteristicData({ effectType: 'characteristic', characteristic: 'strength', modifierValue: '0' })).toBeNull();
@@ -192,7 +194,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
 
     it("_createConditionData builds the condition document's payload for the actor's line, with the shared duration block", async () => {
         const Builders = await loadBuilders();
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when DialogV2 runtime is unavailable, not an assertion branch
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when ApplicationV2 runtime is unavailable, not an assertion branch
         if (Builders === undefined) return;
         setConditionCatalog(buildConditionCatalog(conditionPackFixture()));
 
@@ -220,7 +222,7 @@ describe('EffectCreationDialog payload builders (#341)', () => {
  * resolves it with the created effect, and the `close()` override resolves the
  * default (null) on dismissal — with the helper guarding against a double-resolve.
  *
- * The dialog `extends DialogV2` (evaluated at module load), so DialogV2 is stubbed
+ * The dialog `extends ApplicationV2` (evaluated at module load), so ApplicationV2 is stubbed
  * with a no-op that records the constructed instance via `render()` — letting us
  * drive the resolution paths without booting ApplicationV2.
  */
@@ -239,15 +241,15 @@ const createdEffect: ActiveEffectLike = { name: 'ae-created', disabled: false, u
 function installResolutionGlobals(): void {
     capturedDialog = undefined;
 
-    class DialogV2Stub {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry DialogV2's untyped options bag
+    class ApplicationV2Stub {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry ApplicationV2's untyped options bag
         constructor(_options?: Record<string, unknown>) {}
         // `this` is the EffectCreationDialog subclass instance at call time (this.render()).
         render(this: EffectCreationDialog, _force?: boolean): void {
             // eslint-disable-next-line @typescript-eslint/no-this-alias -- intentional: capture the rendered dialog instance so the test can drive its form handler
             capturedDialog = this;
         }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry DialogV2.close()'s untyped options bag
+        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry ApplicationV2.close()'s untyped options bag
         async close(_options?: Record<string, unknown>): Promise<this> {
             await Promise.resolve();
             return this;
@@ -260,7 +262,7 @@ function installResolutionGlobals(): void {
         CONST: { ACTIVE_EFFECT_MODES: { ADD: 2 } },
         CONFIG: { WH40K: { characteristics: {} } },
         foundry: {
-            applications: { api: { DialogV2: DialogV2Stub } },
+            applications: { api: { ApplicationV2: ApplicationV2Stub, HandlebarsApplicationMixin: <T>(base: T): T => base } },
             utils: { deepClone: <T>(o: T): T => structuredClone(o) },
         },
     });
@@ -309,7 +311,7 @@ describe('EffectCreationDialog resolution wiring (#287)', () => {
     it('show() resolves the created effect on a successful submit', async () => {
         const Mod = await loadDialog();
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
-        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
 
         const create = createSpy([createdEffect]);
         const result = Mod.default.show(mockOwner(create));
@@ -325,7 +327,7 @@ describe('EffectCreationDialog resolution wiring (#287)', () => {
     it('show() resolves null when the dialog is dismissed via close()', async () => {
         const Mod = await loadDialog();
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
-        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
 
         const result = Mod.default.show(mockOwner(createSpy()));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
@@ -339,7 +341,7 @@ describe('EffectCreationDialog resolution wiring (#287)', () => {
     it('never double-resolves: a close() after a submit does not overwrite the effect with null', async () => {
         const Mod = await loadDialog();
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
-        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
 
         const result = Mod.default.show(mockOwner(createSpy([createdEffect])));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
@@ -355,7 +357,7 @@ describe('EffectCreationDialog resolution wiring (#287)', () => {
     it("creates on an item owner with the item's origin laid under the built effect (#516)", async () => {
         const Mod = await loadDialog();
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
-        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the DialogV2 stub');
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
 
         const create = createSpy([createdEffect]);
         const item = mockOwner(create, 'Item.xyz');
@@ -367,5 +369,43 @@ describe('EffectCreationDialog resolution wiring (#287)', () => {
 
         await expect(result).resolves.toBe(createdEffect);
         expect(create).toHaveBeenCalledWith('ActiveEffect', [expect.objectContaining({ origin: 'Item.xyz', name: 'Blessed Edge' })]);
+    });
+});
+
+/**
+ * Regression (#516, found by the Tier B spec): as a DialogV2 the window rendered
+ * only DialogV2's `content` string and its Create / Cancel buttons — DialogV2
+ * ignores PARTS and `_prepareContext` — so the category tabs and pickers never
+ * appeared and Create submitted an empty form. It is now a Handlebars
+ * ApplicationV2 whose root is the form and whose template is that form's content.
+ */
+describe('EffectCreationDialog renders its template (#516)', () => {
+    const source = readFileSync(resolve(__dirname, 'effect-creation-dialog.ts'), 'utf8');
+    const template = readFileSync(resolve(__dirname, '../../../templates/dialogs/effect-creation-dialog.hbs'), 'utf8');
+
+    beforeEach(() => {
+        vi.resetModules();
+        installResolutionGlobals();
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        vi.resetModules();
+    });
+
+    it('is a Handlebars ApplicationV2, never a DialogV2', () => {
+        expect(source).toMatch(/extends HandlebarsApplicationMixin\(ApplicationV2\)/);
+        expect(source).not.toMatch(/extends DialogV2|\{ DialogV2 \}/);
+    });
+
+    it('renders its template as the content of its own form root', async () => {
+        const Mod = await loadDialog();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
+        expect(Mod.default.DEFAULT_OPTIONS.tag).toBe('form');
+        expect(Mod.default.DEFAULT_OPTIONS).not.toHaveProperty('buttons');
+        expect(Mod.default.PARTS).toMatchObject({ form: { template: 'systems/wh40k-rpg/templates/dialogs/effect-creation-dialog.hbs' } });
+        // A nested <form> inside the form root would never submit through the window's handler.
+        expect(template).not.toMatch(/<form\b/);
     });
 });

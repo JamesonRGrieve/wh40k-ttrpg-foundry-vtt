@@ -1,5 +1,6 @@
 {{!-- Effect Creation Dialog Template --}}
-<form class="tw-flex tw-flex-col tw-gap-4 tw-p-3">
+{{!-- The window root is the form (EffectCreationDialog `tag: 'form'`), so this is its content, not a nested form. --}}
+<div class="tw-flex tw-flex-col tw-gap-4 tw-p-3">
 
     {{!-- Category Selection Tabs --}}
     <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-black/30 tw-rounded-lg tw-border tw-border-solid {{themeClassFor 'border'}}">
@@ -260,4 +261,4 @@
         </button>
     </footer>
 
-</form>
+</div>

@@ -25,7 +25,13 @@ interface Args {
  */
 const meta = {
     title: 'Dialogs/EffectCreationDialog',
-    render: (args) => renderSheet(templateSrc, { ...args }),
+    // The live window's root is the form (`tag: 'form'`); the template is its content.
+    render: (args) => {
+        const form = document.createElement('form');
+        form.className = 'wh40k-rpg wh40k-effect-creation-dialog';
+        form.append(renderSheet(templateSrc, { ...args }));
+        return form;
+    },
     args: {
         selectedCategory: 'condition',
         conditions: [
@@ -151,6 +157,8 @@ export const CustomTab: Story = {
  */
 export const CategoryTabsDispatch: Story = {
     play: async ({ canvasElement }) => {
+        // The template is the content of the window's own form: no nested form.
+        await expect(canvasElement.querySelectorAll('form').length).toBe(1);
         const tabs = canvasElement.querySelectorAll('[data-action="selectCategory"]');
         await expect(tabs.length).toBe(5);
         const categories = Array.from(tabs).map((b) => b.getAttribute('data-category'));
