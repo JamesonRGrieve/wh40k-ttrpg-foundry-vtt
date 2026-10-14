@@ -257,7 +257,6 @@ type CharacterSheetContextDeclaredFields = {
     talentsCount?: number;
     traitsCount?: number;
     dynastyData?: Record<string, unknown>;
-    activeModifiers?: unknown;
     tab?: { id: string; group: string; cssClass: string; label: string; active: boolean };
     tabs?: unknown;
     skillsFilter?: unknown;
@@ -1314,9 +1313,6 @@ export default class CharacterSheet extends BaseActorSheet {
         // Dynasty is currently pursuing. The panel partial reads this hash.
         // eslint-disable-next-line no-restricted-syntax -- boundary: context is the Foundry render payload, a free-form record under fvtt-types
         (context as Record<string, unknown>)['endeavours'] = this.actor.items.filter((item) => (item.type as string) === 'endeavour');
-
-        // Prepare active modifiers panel (Phase 5 Integration)
-        context.activeModifiers = this.prepareActiveModifiers();
 
         // Fanatic role detection (#93 — DH2 Enemies Within p.34): the actor
         // owns the role whose `system.identifier` is `fanatic`.

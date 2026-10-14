@@ -269,18 +269,6 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
 
 // ── Shared template data ─────────────────────────────────────────────────────
 
-interface MockModifierGroupEntry {
-    id: string;
-    name: string;
-    img: string;
-    description: string;
-    duration: string;
-    active?: boolean;
-    canToggle?: boolean;
-    stacks?: number;
-    nature?: 'positive' | 'negative' | 'neutral';
-}
-
 /** The `EffectView` shape (helpers/effects.ts buildEffectView) the effect templates render. */
 export interface MockActiveEffect {
     id: string;
@@ -297,22 +285,6 @@ interface MockWeaponQuality {
     label: string;
     level?: number;
     description: string;
-}
-
-function mockModifierEntry(overrides?: DeepPartial<MockModifierGroupEntry>): MockModifierGroupEntry {
-    const id = `modifier-${Math.random().toString(36).slice(2, 8)}`;
-    const base: MockModifierGroupEntry = {
-        id,
-        name: 'Targeting Auspex',
-        img: 'icons/svg/aura.svg',
-        description: '+10 against concealed targets.',
-        duration: 'Sustained',
-        active: true,
-        canToggle: true,
-        stacks: 1,
-        nature: 'positive',
-    };
-    return deepMerge(base, overrides);
 }
 
 export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): MockActiveEffect {
@@ -338,93 +310,6 @@ function mockWeaponQuality(overrides?: DeepPartial<MockWeaponQuality>): MockWeap
             identifier: 'accurate',
             label: 'Accurate',
             description: 'Deals extra damage on precise shots.',
-        },
-        overrides,
-    );
-}
-
-export function mockModifiersPanel(overrides?: DeepPartial<MockObjectMap>): MockObjectMap {
-    return deepMerge(
-        {
-            modifiers: {
-                collapsed: false,
-                conditions: [
-                    mockModifierEntry({
-                        name: 'On Fire',
-                        img: 'icons/magic/fire/flame-burning-skull.webp',
-                        description: 'Take damage each round until extinguished.',
-                        duration: 'Ends after extinguish action',
-                        stacks: 2,
-                        nature: 'negative',
-                        canToggle: false,
-                    }),
-                ],
-                talents: [
-                    mockModifierEntry({
-                        name: 'Mighty Shot',
-                        img: 'icons/skills/ranged/target-bullseye-arrow-glowing.webp',
-                        description: '+2 damage with ranged attacks.',
-                    }),
-                ],
-                traits: [
-                    mockModifierEntry({
-                        name: 'Unnatural Perception',
-                        img: 'icons/creatures/eyes/humanoid-single-red-brown.webp',
-                        description: 'Heightened senses from augmetics.',
-                        canToggle: false,
-                    }),
-                ],
-                equipment: [
-                    mockModifierEntry({
-                        name: 'Red-Dot Sight',
-                        img: 'icons/weapons/guns/gun-pistol-flintlock-metal.webp',
-                        description: '+10 bonus at short range.',
-                        canToggle: false,
-                    }),
-                    // Craftsmanship-gated bonus (#432): applies only when the
-                    // equipped item meets the craftsmanship tier.
-                    mockModifierEntry({
-                        name: 'Power Sword',
-                        img: 'icons/weapons/swords/sword-guard-purple.webp',
-                        description: 'weaponSkill +10 (best+ craftsmanship)',
-                        duration: 'While Equipped',
-                        canToggle: false,
-                    }),
-                ],
-                // Origin-path bonuses (#432): flat skills apply at runtime,
-                // scoped ones surface as roll toggles with their condition.
-                origins: [
-                    mockModifierEntry({
-                        name: 'Hive World',
-                        img: 'icons/environment/settlement/city-industrial.webp',
-                        description: 'navigate +20 (In an enclosed space (Navigate Surface))',
-                        duration: 'Origin',
-                        canToggle: false,
-                    }),
-                    mockModifierEntry({
-                        name: 'Frontier World',
-                        img: 'icons/environment/wilderness/tent-camp.webp',
-                        description: 'techUse +20 (When applying personal weapon modifications)',
-                        duration: 'Origin',
-                        canToggle: false,
-                    }),
-                    mockModifierEntry({
-                        name: 'The Lathe Worlds',
-                        img: 'icons/environment/settlement/watchtower-cliff.webp',
-                        description: 'techUse +10',
-                        duration: 'Origin',
-                        canToggle: false,
-                    }),
-                ],
-                effects: [
-                    mockModifierEntry({
-                        name: 'Litany of Accuracy',
-                        img: 'icons/svg/book.svg',
-                        description: 'Reroll one missed shot this turn.',
-                        active: false,
-                    }),
-                ],
-            },
         },
         overrides,
     );

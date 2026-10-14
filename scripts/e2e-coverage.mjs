@@ -1498,7 +1498,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'appv2-mixin-number-autoselect',
     'effect-actions-crud',
     'item-target-resolve',
-    'active-modifiers-panel-prepare',
     'item-preview-card-toggle',
     'talent-editor-dialog-render',
 ];

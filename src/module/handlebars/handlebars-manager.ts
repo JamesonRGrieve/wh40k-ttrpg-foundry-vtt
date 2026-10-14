@@ -417,9 +417,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/vehicle-crew-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-special-rules-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-weapons-panel.hbs',
-
-            // Component templates
-            'systems/wh40k-rpg/templates/components/active-modifiers-panel.hbs',
         ];
 
         // Foundry V13's loadTemplates registers partials under the exact key

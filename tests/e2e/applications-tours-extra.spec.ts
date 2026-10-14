@@ -36,8 +36,6 @@ import { scaledMs } from './lib/timing';
  *     resolveEffect, effectToggle, effectDelete).
  *   - src/module/applications/api/item-target.ts (itemIdFromTarget closest
  *     + dataset fallback + empty-id rejection).
- *   - src/module/applications/components/active-modifiers-panel.ts
- *     (ActiveModifiersMixin.prepareActiveModifiers per-category roll-up).
  *   - src/module/applications/components/item-preview-card.ts
  *     (ItemPreviewMixin.toggleItemPreview inline preview inject/remove).
  *   - src/module/applications/item/talent-editor-dialog.ts
@@ -70,7 +68,6 @@ const APP_TOURS_EXTRA_FLOWS = [
     'appv2-mixin-number-autoselect',
     'effect-actions-crud',
     'item-target-resolve',
-    'active-modifiers-panel-prepare',
     'item-preview-card-toggle',
     'talent-editor-dialog-render',
 ] as const;
@@ -850,86 +847,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         }
 
         /* ============================================================
-         * Flow 16: active-modifiers-panel-prepare
-         * Embed a condition + a modifier-bearing talent on the PC,
-         * mix ActiveModifiersMixin onto a base whose `actor` is the
-         * live PC, and assert prepareActiveModifiers buckets the
-         * items into the conditions/talents/effects category lists.
-         * ============================================================ */
-        async function probeActiveModifiers(): Promise<void> {
-            interface ActiveModifiersInstance {
-                prepareActiveModifiers: () => {
-                    conditions: object[];
-                    talents: object[];
-                    traits: object[];
-                    equipment: object[];
-                    effects: object[];
-                };
-            }
-            interface ActiveModifiersModule {
-                ActiveModifiersMixin?: MixinFactory<ActiveModifiersInstance>;
-                default?: MixinFactory<ActiveModifiersInstance>;
-            }
-            try {
-                const live = getPc();
-                if (live == null) {
-                    notes['active-modifiers-panel-prepare'] = 'no PC actor';
-                } else {
-                    const embeds = await withTimeout(
-                        live.createEmbeddedDocuments('Item', [
-                            { name: 'probe-condition', type: 'condition', system: { gameSystem: 'dh2', description: 'probe', duration: 'Permanent' } },
-                            {
-                                name: 'probe-mod-talent',
-                                type: 'talent',
-                                system: { gameSystem: 'dh2', active: true, isPassive: false, modifiers: { characteristics: { weaponSkill: 5 } } },
-                            },
-                        ]),
-                        'embed condition+talent',
-                    );
-                    for (const e of embeds) {
-                        const created = live.items?.get?.(e.id);
-                        if (created != null) {
-                            cleanups.push(async () => {
-                                try {
-                                    await created.delete?.();
-                                } catch {
-                                    /* ignore */
-                                }
-                            });
-                        }
-                    }
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
-                    const mod = (await import(`${base}/applications/components/active-modifiers-panel.js`)) as unknown as ActiveModifiersModule;
-                    const ActiveModifiersMixin = mod.ActiveModifiersMixin ?? mod.default;
-                    if (typeof ActiveModifiersMixin !== 'function') {
-                        notes['active-modifiers-panel-prepare'] = 'ActiveModifiersMixin export missing';
-                    } else {
-                        class StubBase {
-                            actor = live;
-                        }
-                        const Mixed = ActiveModifiersMixin(StubBase);
-                        const inst = new Mixed();
-                        const data = inst.prepareActiveModifiers();
-                        const conditionBucketed = data.conditions.length >= 1;
-                        const talentBucketed = data.talents.length >= 1;
-                        const hasAllCategories = Array.isArray(data.traits) && Array.isArray(data.equipment) && Array.isArray(data.effects);
-                        if (conditionBucketed && talentBucketed && hasAllCategories) {
-                            fired['active-modifiers-panel-prepare'] = true;
-                            notes['active-modifiers-panel-prepare'] = `roll-up: conditions=${data.conditions.length} talents=${data.talents.length}`;
-                        } else {
-                            notes['active-modifiers-panel-prepare'] = `conditionBucketed=${String(conditionBucketed)} talentBucketed=${String(
-                                talentBucketed,
-                            )} hasAllCategories=${String(hasAllCategories)}`;
-                        }
-                    }
-                }
-            } catch (err) {
-                notes['active-modifiers-panel-prepare'] = `flow threw: ${String((err as Error).message)}`;
-            }
-        }
-
-        /* ============================================================
-         * Flow 17: item-preview-card-toggle
+         * Flow 16: item-preview-card-toggle
          * Mix ItemPreviewMixin onto a base whose `actor` is the live
          * PC and whose `element` holds an item row. Dispatch the
          * registered `toggleItemPreview` action twice: first inserts
@@ -1005,7 +923,7 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
         }
 
         /* ============================================================
-         * Flow 18: talent-editor-dialog-render
+         * Flow 17: talent-editor-dialog-render
          * Embed a talent item, construct TalentEditorDialog({ item }),
          * render it, and assert _prepareContext returns the editor
          * sections + the title getter reflects the item name. Close
@@ -1098,7 +1016,6 @@ async function probeAppToursExtraFlows(page: Page): Promise<ProbeResult> {
             await probeNumberAutoselect();
             await probeEffectActions();
             await probeItemTargetResolve();
-            await probeActiveModifiers();
             await probeItemPreviewToggle();
             await probeTalentEditorRender();
         } finally {

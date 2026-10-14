@@ -79,12 +79,6 @@ test.describe('Storybook integration', () => {
         await expect(page.locator('body')).not.toBeEmpty();
     });
 
-    test('renders the active modifiers shared panel', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-shared-components--active-modifiers-panel');
-
-        await expect(page.locator('.wh40k-rpg, [class*="modifier"]').first()).toBeAttached();
-    });
-
     test('renders the weapon quick-actions shared component', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-shared-components--weapon-quick-actions');
 

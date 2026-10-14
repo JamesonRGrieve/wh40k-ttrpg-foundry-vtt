@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect } from 'storybook/test';
-import activeModifiersPanelSrc from '../src/templates/components/active-modifiers-panel.hbs?raw';
 import quickActionsBarSrc from '../src/templates/components/quick-actions-bar.hbs?raw';
 import activeEffectsPanelSrc from '../src/templates/item/panel/active-effects-panel.hbs?raw';
-import { mockActiveEffectsContext, mockModifiersPanel, mockQuickActionItem, type MockItem } from './mocks';
+import { mockActiveEffectsContext, mockQuickActionItem, type MockItem } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 import { renderSheet } from './test-helpers';
 
@@ -38,39 +36,6 @@ export const ActiveEffectsEmptyEmbedded: Story = {
                     isEmbedded: true,
                 },
                 effects: [],
-            }),
-        ),
-};
-
-export const ActiveModifiersPanel: Story = {
-    render: () => renderSheet(activeModifiersPanelSrc, mockModifiersPanel()),
-    play: async ({ canvasElement }) => {
-        const text = canvasElement.textContent;
-        // All six roll-up sections render, including the #432 Origins section.
-        await expect(text).toContain('Conditions');
-        await expect(text).toContain('Talents');
-        await expect(text).toContain('Traits');
-        await expect(text).toContain('Equipment');
-        await expect(text).toContain('Origins');
-        await expect(text).toContain('Effects');
-        // #432: origin-path bonuses surface flat, situational (with condition),
-        // and equipment craftsmanship-gated (with tier) descriptions.
-        await expect(text).toContain('Hive World');
-        await expect(text).toContain('In an enclosed space'); // scoped/situational
-        await expect(text).toContain('best+ craftsmanship'); // craftsmanship gate
-        await expect(text).toContain('techUse +10'); // flat origin skill
-    },
-};
-
-export const ActiveModifiersCollapsed: Story = {
-    name: 'Active Modifiers Panel / Collapsed',
-    render: () =>
-        renderSheet(
-            activeModifiersPanelSrc,
-            mockModifiersPanel({
-                modifiers: {
-                    collapsed: true,
-                },
             }),
         ),
 };

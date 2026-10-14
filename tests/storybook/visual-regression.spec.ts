@@ -122,7 +122,6 @@ const STORY_IDS: readonly string[] = [
 
     // ── Shared components ────────────────────────────────────────────────────
     'dev-shared-components--active-effects-panel',
-    'dev-shared-components--active-modifiers-panel',
     'dev-shared-components--weapon-quick-actions',
     'dev-shared-fieldrow--number-dispatch',
 

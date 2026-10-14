@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
 import simpleRollChatSrc from '../src/templates/chat/simple-roll-chat.hbs?raw';
-import activeModifiersPanelSrc from '../src/templates/components/active-modifiers-panel.hbs?raw';
 import quickActionsBarSrc from '../src/templates/components/quick-actions-bar.hbs?raw';
 import armourSheetSrc from '../src/templates/item/item-armour-sheet.hbs?raw';
 import gearSheetSrc from '../src/templates/item/item-gear-sheet.hbs?raw';
@@ -14,7 +13,6 @@ import {
     mockArmourSheetContext,
     mockDamageRollData,
     mockGearSheetContext,
-    mockModifiersPanel,
     mockQuickActionItem,
     mockRollData,
     mockWeaponSheetContext,
@@ -48,27 +46,6 @@ describe('storybook shared component templates', () => {
 
         expect(element.querySelector('[data-action="createEffect"]')).toBeNull();
         expect(element.querySelector('[data-action="effectEdit"]')).toBeNull();
-    });
-
-    it('renders expanded modifier groups and counts', () => {
-        const element = compileToElement(activeModifiersPanelSrc, mockModifiersPanel());
-
-        // conditions(1) + talents(1) + traits(1) + equipment(2) + origins(3) + effects(1)
-        expect((element.querySelector('.wh40k-modifier-count')?.textContent ?? '').trim()).toBe('9');
-        // Only talents and effects sections expose a toggle (the mock's talent + effect).
-        expect(element.querySelectorAll('[data-action="toggleModifier"]')).toHaveLength(2);
-        expect(element.textContent).toContain('On Fire');
-    });
-
-    it('renders the #432 Origins section with flat, situational, and craftsmanship axes', () => {
-        const element = compileToElement(activeModifiersPanelSrc, mockModifiersPanel());
-        const text = element.textContent;
-
-        expect(text).toContain('Origins');
-        expect(text).toContain('Hive World');
-        expect(text).toContain('In an enclosed space'); // situational condition surfaced
-        expect(text).toContain('best+ craftsmanship'); // craftsmanship gate surfaced
-        expect(text).toContain('techUse +10'); // flat origin skill
     });
 
     it('renders compact condition quick actions with stack and remove controls', () => {

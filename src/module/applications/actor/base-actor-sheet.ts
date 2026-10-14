@@ -51,7 +51,6 @@ import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
 import WhatIfMixin from '../api/what-if-mixin.ts';
 // Direct imports rather than the components barrel, which re-exports every
 // component and widens this sheet's graph far beyond the two mixins it uses.
-import { ActiveModifiersMixin } from '../components/active-modifiers-panel.ts';
 import { ItemPreviewMixin } from '../components/item-preview-card.ts';
 import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
@@ -175,11 +174,8 @@ const ContextMenuBase = ContextMenuMixin(CollapsibleBase);
 const DragDropBase = EnhancedDragDropMixin(ContextMenuBase);
 const WhatIfBase = WhatIfMixin(DragDropBase) as unknown as AnyApplicationV2Ctor;
 const StatBreakdownBase = StatBreakdownMixin(WhatIfBase);
-const ItemPreviewBase = ItemPreviewMixin(
+const BaseActorSheetBase = ItemPreviewMixin(
     StatBreakdownBase as unknown as new (...args: unknown[]) => foundry.appv1.sheets.ActorSheet,
-) as unknown as AnyApplicationV2Ctor;
-const BaseActorSheetBase = ActiveModifiersMixin(
-    ItemPreviewBase as unknown as new (...args: unknown[]) => foundry.appv1.sheets.ActorSheet,
 ) as unknown as AnyApplicationV2Ctor;
 /* eslint-enable no-restricted-syntax */
 
@@ -261,9 +257,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     declare removeFromFavorites: (itemId: string) => Promise<void>;
     declare clearFavorites: () => Promise<void>;
     declare getFavoriteItems: () => unknown[];
-
-    // ActiveModifiersMixin
-    declare prepareActiveModifiers: () => unknown;
 
     // Instance properties used by BaseActorSheet itself
     declare _updateListener:

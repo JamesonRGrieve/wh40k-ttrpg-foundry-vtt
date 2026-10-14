@@ -398,11 +398,6 @@ test.describe('Storybook extra story render', () => {
     });
 
     // ── Shared — Components ──────────────────────────────────────────────────
-    test('shared components active modifiers panel renders', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-shared-components--active-modifiers-panel');
-        await expect(page.locator('.wh40k-rpg').first()).toBeAttached();
-    });
-
     test('shared components weapon quick actions renders', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-shared-components--weapon-quick-actions');
         await expect(page.locator('.wh40k-rpg').first()).toBeAttached();

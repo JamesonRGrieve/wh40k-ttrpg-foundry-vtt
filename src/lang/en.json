@@ -5338,7 +5338,7 @@
             "TagPlaceholder": "e.g., Boss, Minion, Ranged",
             "NoThreatChange": "No threat level change specified",
             "ScaleFailed": "Failed to scale NPC",
-            "ScaleOnlyV2": "Can only scale npcV2 type actors",
+            "ScaleOnlyV2": "Only NPCs can be threat-scaled",
             "PresetApplied": "Applied preset \"{preset}\" to {npc}",
             "PresetDeleteTitle": "Delete Preset",
             "PresetDeleteContent": "<p>Delete preset <strong>{name}</strong>?</p>",
@@ -6588,9 +6588,6 @@
         },
         "ActiveModifiersPanel": {
             "Title": "Active Modifiers",
-            "Conditions": "Conditions",
-            "Equipment": "Equipment",
-            "Origins": "Origins",
             "None": "No active modifiers",
             "Deactivate": "Deactivate",
             "Activate": "Activate"

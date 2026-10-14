@@ -274,13 +274,6 @@ interface StatBreakdownMixinAPI {
 
 /* -------------------------------------------- */
 
-/** API surface added by ActiveModifiersMixin */
-interface ActiveModifiersMixinAPI {
-    prepareActiveModifiers: () => unknown;
-}
-
-/* -------------------------------------------- */
-
 /** API surface added by ItemPreviewMixin — all methods are static action handlers or private (#) members; no public instance API beyond DEFAULT_OPTIONS actions */
 type ItemPreviewMixinAPI = object;
 
@@ -321,7 +314,7 @@ export interface SetFieldActionsMixinAPI {
  *   ApplicationV2Mixin, PrimarySheetMixin (incl. DragDropMixin), TooltipMixin,
  *   EnhancedAnimationsMixin (which absorbed VisualFeedbackMixin — #276),
  *   CollapsiblePanelMixin, ContextMenuMixin, EnhancedDragDropMixin, WhatIfMixin,
- *   StatBreakdownMixin, ActiveModifiersMixin, ItemPreviewMixin
+ *   StatBreakdownMixin, ItemPreviewMixin
  *
  * Plus Foundry base ApplicationV2 / ActorSheetV2 properties.
  */
@@ -335,7 +328,6 @@ export interface BaseActorSheetMixins
         EnhancedDragDropMixinAPI,
         WhatIfMixinAPI,
         Omit<StatBreakdownMixinAPI, 'close'>,
-        ActiveModifiersMixinAPI,
         ItemPreviewMixinAPI {
     /* -------------------------------------------- */
     /*  Foundry Base Properties (ActorSheetV2)      */
