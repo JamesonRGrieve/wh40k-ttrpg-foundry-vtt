@@ -278,6 +278,56 @@ export function unlicensedArtPaths(node, at = '') {
 }
 
 /**
+ * The file extensions Foundry accepts on an image field — a mirror of core's
+ * `CONST.IMAGE_FILE_EXTENSIONS` (common/constants.mjs), which this Node gate
+ * cannot import because the licensed Foundry install is optional here.
+ */
+export const IMAGE_FILE_EXTENSIONS = ['apng', 'avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'tiff', 'webp'];
+
+/**
+ * Foundry's own `hasFileExtension` test (common/data/validators.mjs): the
+ * extension may be followed by a query string, nothing else.
+ */
+const IMAGE_EXTENSION = new RegExp(`\\.(?:${IMAGE_FILE_EXTENSIONS.join('|')})(?:\\?.*)?$`, 'i');
+
+/**
+ * True when `key` (on `node`, whose own key is `parentKey`) is a Foundry image
+ * FilePathField: a document or embedded document's `img`, an active effect's
+ * legacy `icon`, a token or tile `texture.src`, a scene `background.src`, or an
+ * image journal page's `src`.
+ * @param {string} key
+ * @param {Record<string, unknown>} node
+ * @param {string} parentKey  The key holding `node` (for an array element, the array's key).
+ */
+function isImageField(key, node, parentKey) {
+    if (key === 'img') return true;
+    if (key === 'icon') return parentKey === 'effects';
+    if (key !== 'src') return false;
+    return parentKey === 'texture' || parentKey === 'background' || node['type'] === 'image';
+}
+
+/**
+ * Pointer paths of every image field in `node` whose path Foundry's image
+ * validation rejects: it has no allowed image extension (#626 — the Fandom
+ * `…/revision/latest?cb=…` form, which logged ~1,744 load warnings and dropped
+ * the art). Blank paths and inline `data:image/…` blobs are valid and skipped.
+ * @param {unknown} node
+ * @param {string} [at]
+ * @param {string} [parentKey]
+ * @returns {string[]}
+ */
+export function extensionlessImagePaths(node, at = '', parentKey = '') {
+    if (Array.isArray(node)) return node.flatMap((v, i) => extensionlessImagePaths(v, `${at}/${i}`, parentKey));
+    if (node === null || typeof node !== 'object') return [];
+    return Object.entries(node).flatMap(([key, value]) => {
+        const here = `${at}/${key}`;
+        const bad =
+            typeof value === 'string' && value !== '' && !value.startsWith('data:image/') && isImageField(key, node, parentKey) && !IMAGE_EXTENSION.test(value);
+        return [...(bad ? [here] : []), ...extensionlessImagePaths(value, here, key)];
+    });
+}
+
+/**
  * Validate one `_source` document. Returns an array of human-readable error
  * strings (empty when the document is well-formed).
  * @param {unknown} doc  Parsed `_source/*.json`.
@@ -286,6 +336,11 @@ export function unlicensedArtPaths(node, at = '') {
 export function validateDoc(doc) {
     const errors = unlicensedArtPaths(doc).map(
         (at) => `${at}: references unlicensed art (_vendored-ui) — use the game-icons.net icon scripts/pack-icon-map.mjs picks for the document`,
+    );
+    errors.push(
+        ...extensionlessImagePaths(doc).map(
+            (at) => `${at}: image path has no allowed image extension (${IMAGE_FILE_EXTENSIONS.join(', ')}) — Foundry rejects it at load`,
+        ),
     );
     // Whole-file `reference` stubs are pointers to another pack's canonical document
     // (resolved at build time); they carry no name/type/system, so skip them.
@@ -358,9 +413,10 @@ function main() {
             }
         }
     }
-    for (const f of failures.slice(0, 100)) console.log(f);
-    if (failures.length > 100) console.log(`… and ${failures.length - 100} more`);
-    console.log(`\n[validate-pack-schema] scanned ${scanned} document(s) in [${roots.join(', ') || 'no pack roots'}] — ${failed} failed.`);
+    const out = (line) => process.stdout.write(`${line}\n`);
+    for (const f of failures.slice(0, 100)) out(f);
+    if (failures.length > 100) out(`… and ${failures.length - 100} more`);
+    out(`\n[validate-pack-schema] scanned ${scanned} document(s) in [${roots.join(', ') || 'no pack roots'}] — ${failed} failed.`);
     if (failed > 0 && !report) process.exit(1);
 }
 

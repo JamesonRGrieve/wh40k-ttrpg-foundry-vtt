@@ -36,5 +36,11 @@ export declare const UNLICENSED_ART: RegExp;
 /** Pointer paths of every string in `node` that references {@link UNLICENSED_ART}. */
 export declare function unlicensedArtPaths(node: unknown, at?: string): string[];
 
+/** Foundry's `CONST.IMAGE_FILE_EXTENSIONS`, mirrored (#626). */
+export declare const IMAGE_FILE_EXTENSIONS: readonly string[];
+
+/** Pointer paths of every image field whose path lacks an allowed image extension (#626). */
+export declare function extensionlessImagePaths(node: unknown, at?: string, parentKey?: string): string[];
+
 /** Validate one `_source` document; returns human-readable error strings ([] when clean). */
 export declare function validateDoc(doc: unknown): string[];

@@ -3,6 +3,8 @@ import { z } from 'zod';
 import {
     DAMAGE_SOURCE,
     DAMAGE_TYPE,
+    extensionlessImagePaths,
+    IMAGE_FILE_EXTENSIONS,
     RIDER_AFFECTS as GATE_RIDER_AFFECTS,
     RIDER_AREA_MEASURE,
     RIDER_DURATION_KIND,
@@ -229,5 +231,51 @@ describe('unlicensed art gate (#625)', () => {
         expect(validateDoc({ name: 'Prone', type: 'condition', img: 'icons/svg/falling.svg', system: {} })).toEqual([]);
         expect(validateDoc({ name: 'Webber', type: 'weapon', img: 'systems/wh40k-rpg/packs/images/items/dh2/webber.webp', system: {} })).toEqual([]);
         expect(unlicensedArtPaths('systems/wh40k-rpg/icons/whatever.svg')).toEqual([]);
+    });
+});
+
+/**
+ * The image-extension gate (#626): Foundry's image FilePathFields reject a path
+ * without an IMAGE_FILE_EXTENSIONS extension, so the Fandom
+ * `…/revision/latest?cb=…` form loaded as a validation warning and no art.
+ */
+describe('image extension gate (#626)', () => {
+    const FANDOM_REVISION = 'https://static.wikia.nocookie.net/warhammer40k/images/1/1f/Kroot2.jpg/revision/latest?cb=20100706070107';
+    const FANDOM_FILE = 'https://static.wikia.nocookie.net/warhammer40k/images/1/1f/Kroot2.jpg';
+
+    it('mirrors Foundry core IMAGE_FILE_EXTENSIONS', () => {
+        expect([...IMAGE_FILE_EXTENSIONS].sort()).toEqual(['apng', 'avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'tiff', 'webp']);
+    });
+
+    it('flags an extensionless Fandom revision URL on img and the token texture', () => {
+        const actor = { name: 'Kroot', type: 'dh2-npc', img: FANDOM_REVISION, prototypeToken: { texture: { src: FANDOM_REVISION } }, system: {} };
+        expect(extensionlessImagePaths(actor)).toEqual(['/img', '/prototypeToken/texture/src']);
+        const errs = validateDoc(actor);
+        expect(errs).toHaveLength(2);
+        expect(errs[0]).toMatch(/^\/img: image path has no allowed image extension/);
+    });
+
+    it('flags embedded items, effect icons, scene backgrounds and image journal pages', () => {
+        const doc = {
+            items: [{ name: 'Knife', type: 'weapon', img: 'https://example.test/knife' }],
+            effects: [{ name: 'Stunned', icon: 'icons/svg/stunned' }],
+            background: { src: 'maps/hive' },
+            pages: [
+                { name: 'Handout', type: 'image', src: 'handouts/letter' },
+                { name: 'Text', type: 'text', src: 'not-an-image-field' },
+            ],
+        };
+        expect(extensionlessImagePaths(doc)).toEqual(['/items/0/img', '/effects/0/icon', '/background/src', '/pages/0/src']);
+    });
+
+    it('passes the extension-bearing Fandom file URL, a query string after the extension, data URIs and blanks', () => {
+        expect(extensionlessImagePaths({ img: FANDOM_FILE, prototypeToken: { texture: { src: FANDOM_FILE } } })).toEqual([]);
+        expect(extensionlessImagePaths({ img: 'https://cdn.example.test/a.PNG?v=2' })).toEqual([]);
+        expect(extensionlessImagePaths({ img: 'data:image/png;base64,AAAA' })).toEqual([]);
+        expect(extensionlessImagePaths({ img: '', texture: { src: '' } })).toEqual([]);
+    });
+
+    it('ignores non-image keys that happen to hold a path-like string', () => {
+        expect(extensionlessImagePaths({ system: { icon: 'fa-cube', source: { url: 'https://example.test/page' } } })).toEqual([]);
     });
 });
