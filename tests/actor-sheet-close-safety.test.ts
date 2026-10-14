@@ -71,6 +71,17 @@ describe('actor sheet close-path null safety', () => {
         expect(afterGuard).toMatch(/root\.querySelectorAll/);
     });
 
+    it('_saveSheetState persists nothing from a read-only sheet', () => {
+        // Closing a locked compendium actor's sheet wrote the `sheetState` flag
+        // anyway and Foundry refused it ("You may not update documents in the
+        // locked compendium"), an uncaught error on every compendium browse
+        // (found by the #626 Tier B spec). The guard must precede the write.
+        const saveBody = extractMethodBody(baseSrc, '_saveSheetState');
+        const guard = /if\s*\(\s*!this\.isEditable\s*\)\s*return;/.exec(saveBody);
+        expect(guard).not.toBeNull();
+        expect(saveBody.indexOf('setFlag')).toBeGreaterThan(guard?.index ?? Infinity);
+    });
+
     it('_applyScrollPositions does not read this.element after the guard (uses local `root` instead)', () => {
         const afterGuard = applyBody.split(/if\s*\(\s*root\s*===\s*null\s*\)\s*return;?/)[1] ?? '';
         expect(afterGuard).not.toMatch(/this\.element\./);

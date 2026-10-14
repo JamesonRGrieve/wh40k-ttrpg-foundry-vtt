@@ -614,6 +614,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _saveSheetState(): void {
+        // A read-only sheet (a locked compendium actor, or one the user cannot
+        // edit) has nowhere to persist to: the flag write is refused and throws
+        // "You may not update documents in the locked compendium" on every close.
+        if (!this.isEditable) return;
+
         // Capture scroll positions before saving
         this._captureScrollPositions();
 
