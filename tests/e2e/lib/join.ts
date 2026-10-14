@@ -45,6 +45,9 @@ const GM_USER_NAME = 'Gamemaster';
 /** Per-attempt wait for the join page to know the GM user. */
 const JOIN_ATTEMPT_TIMEOUT_MS = scaledMs(20_000);
 
+/** Wait for the system's async ready handler to finish after `game.ready` (see joinAsGM). */
+const SYSTEM_READY_TIMEOUT_MS = scaledMs(60_000);
+
 /** Wait for the post-join navigation into /game. */
 const GAME_NAVIGATION_TIMEOUT_MS = scaledMs(30_000);
 
@@ -143,6 +146,22 @@ export async function joinAsGM(page: Page): Promise<boolean> {
         }
     }
     if (!ready) return false;
+    // `game.ready` flips when core's ready hook fires, but the system's own ready
+    // handler is async and keeps going (world migration, hydration, indexes) before it
+    // registers its later hooks — the Event Tracker's completion triggers among them.
+    // A spec that acted straight away ran before those hooks existed (its first item
+    // acquisition resolved nothing; the second, 20 s later, did). The handler sets
+    // `game.wh40k.tooltips` right after those registrations, so wait for it.
+    try {
+        await page.waitForFunction(
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global `game` is injected by the licensed app; no shipped types
+            () => (globalThis as unknown as { game?: { wh40k?: { tooltips?: object } } }).game?.wh40k?.tooltips !== undefined,
+            undefined,
+            { timeout: SYSTEM_READY_TIMEOUT_MS },
+        );
+    } catch {
+        /* an older build without the marker: carry on as before */
+    }
     // Disable the "build your unfinished character" sheet-open prompt so its
     // modal dialog never overlays sheets that other specs render/screenshot.
     // (Specs that exercise the prompt itself re-enable it explicitly.)
