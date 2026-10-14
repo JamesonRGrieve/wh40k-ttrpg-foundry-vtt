@@ -19,7 +19,7 @@ import {
     type DynamicModifierSituation,
     ownsActivatableHook,
 } from '../rules/dynamic-modifiers.ts';
-import { GRAPPLE_ATTEMPT_ACTION } from '../rules/grapple.ts';
+import { canAttemptGrapple } from '../rules/grapple.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { actorEnvironmentContext, collectEnvironmentAttackModifiers, ENVIRONMENT_BUCKET, sumEnvironmentComponents } from '../rules/scene-environment.ts';
@@ -747,7 +747,9 @@ export class WeaponRollData extends RollData {
     /** Opposed melee manoeuvres routed through the #449 engine (#450). */
     isManoeuvre: boolean = false;
     isDisarm: boolean = false;
-    /** The attack is a grapple attempt (#450): no damage; a hit not evaded starts a grapple. */
+    /** The attacker asked to grapple instead of dealing damage (the attack dialog's Grapple toggle, #450). */
+    grappleAttempt: boolean = false;
+    /** The attack is a grapple attempt (#450): asked for, and allowed (`canAttemptGrapple`). No damage; a hit not evaded starts a grapple. */
     isGrappleAttempt: boolean = false;
     override isThrown: boolean = false;
     /**
@@ -823,6 +825,35 @@ export class WeaponRollData extends RollData {
         if (profile !== null) this.addAttackQualities(profile.qualities);
     }
 
+    /** Which special melee manoeuvre the attack is, and what that suppresses on the card. */
+    private resolveManoeuvreFlags(): void {
+        this.isStun = this.action === 'Stun';
+        this.isFeint = this.action === 'Feint';
+        this.isKnockDown = this.action === 'Knock Down';
+        this.isManoeuvre = this.action === 'Manoeuvre';
+        this.isDisarm = this.action === 'Disarm';
+        // A grapple attempt deals no damage: its hit starts a grapple (DH2 p. 228). It is an unarmed
+        // Standard Attack or Charge, so a Charge keeps its bonus; it keeps its controls — the
+        // card's Begin Grapple — and its evasion window.
+        this.isGrappleAttempt = this.grappleAttempt && this.canGrapple;
+
+        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown || this.isManoeuvre || this.isDisarm;
+        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm || this.isGrappleAttempt;
+        // #450: Manoeuvre and Disarm are opposed vs the target's Weapon Skill, like
+        // Feint; Knock-Down opposes Strength. All resolve through the #449 engine.
+        this.isOpposed = this.isKnockDown || this.isFeint || this.isManoeuvre || this.isDisarm;
+    }
+
+    /** The weapon is the bearer's bare hands (its content-declared `unarmed` flag), so this is an unarmed attack. */
+    get isUnarmedAttack(): boolean {
+        return (this.weapon.system as { unarmed?: boolean }).unarmed === true;
+    }
+
+    /** This attack may be made as a grapple attempt (#450): an unarmed Standard Attack or Charge. */
+    get canGrapple(): boolean {
+        return canAttemptGrapple(this.action, this.isUnarmedAttack);
+    }
+
     hasWeaponModification(special: string): boolean {
         return !!this.weaponModifications.find((s) => s.name === special);
     }
@@ -847,22 +878,9 @@ export class WeaponRollData extends RollData {
 
         this.canAim = this.action !== 'All Out Attack';
         this.isLasWeapon = weaponSystem.type === 'Las';
-        this.isStun = this.action === 'Stun';
-        this.isFeint = this.action === 'Feint';
-        this.isKnockDown = this.action === 'Knock Down';
-        this.isManoeuvre = this.action === 'Manoeuvre';
-        this.isDisarm = this.action === 'Disarm';
-        // A grapple attempt deals no damage: its hit starts a grapple (DH2 p. 228). It keeps its
-        // controls — the card's Begin Grapple — and its evasion window.
-        this.isGrappleAttempt = this.action === GRAPPLE_ATTEMPT_ACTION;
-
-        this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown || this.isManoeuvre || this.isDisarm;
-        this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown || this.isManoeuvre || this.isDisarm || this.isGrappleAttempt;
+        this.resolveManoeuvreFlags();
         this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
-        // #450: Manoeuvre and Disarm are opposed vs the target's Weapon Skill, like
-        // Feint; Knock-Down opposes Strength. All resolve through the #449 engine.
-        this.isOpposed = this.isKnockDown || this.isFeint || this.isManoeuvre || this.isDisarm;
         if (this.isOpposed && this.targetActor) {
             const targetActor = this.targetActor;
             if (this.isKnockDown) {

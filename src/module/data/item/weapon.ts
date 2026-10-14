@@ -315,6 +315,8 @@ export default class WeaponData extends ItemDataModel.mixin(
      * system code never name-matches the item (Direction #7).
      */
     declare grantedByDefault: boolean;
+    /** The bearer's bare hands: attacks with it are unarmed attacks (content-declared). */
+    declare unarmed: boolean;
     declare clip: { max: number; value: number; type: string; magazine: MagazineSegment[] };
     // Per-weapon jam state (#411). May be undefined at runtime when the schema
     // fails to initialise (mirrors loadedAmmo), so consumers guard via isJammed.
@@ -418,6 +420,11 @@ export default class WeaponData extends ItemDataModel.mixin(
             // grant decision is line-agnostic; per-line stats still resolve from
             // the variant containers when owned.
             grantedByDefault: new fields.BooleanField({ required: false, initial: false }),
+
+            // Content-declared: this "weapon" is the bearer's bare hands, so an attack
+            // with it is an unarmed attack (the only attack a grapple may start from,
+            // rules/grapple.ts). Shared, like grantedByDefault.
+            unarmed: new fields.BooleanField({ required: false, initial: false }),
 
             // Ammunition. `magazine` is the ordered clip loadout (#ammo-system): a
             // list of round-segments fired front-first, each a run of one ammo type

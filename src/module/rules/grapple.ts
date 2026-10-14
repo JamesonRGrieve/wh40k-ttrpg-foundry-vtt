@@ -69,18 +69,27 @@ export function readGrappleOpponentUuid(flags: object | undefined, scope: string
 }
 
 /**
- * The attack action that tries to start a grapple. RAW in every line (DH2 core
- * p. 228 "Grappling", RT p. 246, DH1 p. 197): instead of dealing unarmed damage,
- * the attacker makes a Weapon Skill attack; the target may use a Reaction to
- * avoid it; if the attack succeeds the two are grappling, the attacker in control.
- * The lines differ only in that Reaction (DH1: an Agility Test; the others: Dodge
- * or Parry), which the shared evasion window already makes per line.
+ * The attack actions a grapple attempt is made with. RAW, worded alike in every
+ * line ("Grappling": DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243, DW p. 246, OW
+ * p. 251): "Instead of inflicting Damage with an unarmed attack, a character can
+ * attempt to Grapple his opponent … a melee attack that uses either a Charge
+ * Action or a Standard Attack Action." The target may use a Reaction to avoid it
+ * (DH1: an Agility Test; the others: Dodge or Parry — the shared evasion window
+ * makes that per line); a hit starts a grapple the attacker controls.
  *
- * It is the combat-action table's own Grapple attack action, so the attack
- * dialog keeps it (an action the table lacks resets to Standard Attack) and
- * choosing Grapple from the action list starts a grapple too.
+ * The table's own Grapple action is not one of them: every line prints that it
+ * "is only used when a character is already engaged in a Grapple".
  */
-export const GRAPPLE_ATTEMPT_ACTION = 'Grapple';
+export const GRAPPLE_START_ACTIONS: readonly string[] = ['Standard Attack', 'Charge'];
+
+/**
+ * Whether an attack may be a grapple attempt: an unarmed attack (the weapon's
+ * content-declared `unarmed` flag) made with a Standard Attack or a Charge. No
+ * line prints a weapon that may grapple, so an armed attack never can.
+ */
+export function canAttemptGrapple(action: string, weaponIsUnarmed: boolean): boolean {
+    return weaponIsUnarmed && GRAPPLE_START_ACTIONS.includes(action);
+}
 
 /** The chat-message flag carrying grapple flag writes for the active GM to apply. */
 export const GRAPPLE_UPDATE_FLAG = 'grappleUpdate';

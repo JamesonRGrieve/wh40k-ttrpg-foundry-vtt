@@ -8,6 +8,7 @@ import modifiersSrc from '../../../../src/templates/prompt/unified/modifiers.hbs
 import targetSrc from '../../../../src/templates/prompt/unified/target-display.hbs?raw';
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import { type AttackOptionWeapon, getAvailableAttackModes } from '../../rules/attack-options.ts';
+import { canAttemptGrapple } from '../../rules/grapple.ts';
 
 /**
  * UnifiedRollDialog is the single dialog for every roll type (skill, weapon,
@@ -517,7 +518,7 @@ export const CappedBreakdown: Story = {
         targetComponents: [
             component('aim', 'Aim', 20, 'Aim'),
             component('range', 'Range', 30, 'Point Blank'),
-            component('combat-action', 'Combat Action', 30, 'All Out Attack'),
+            component('combat-action', 'All Out Attack', 30, 'All Out Attack'),
         ],
         targetCapFired: true,
         targetRawModifierTotal: 80,
@@ -592,6 +593,93 @@ export const Dh2BurstModes: Story = {
         await expect(modeLabel(canvasElement, 'fullAuto')).toBe('-10');
         await expect(modeCost(canvasElement, 'semiAuto')).toBe('Half');
         await expect(modeCost(canvasElement, 'fullAuto')).toBe('Half');
+    },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Grapple instead of damage (#450)                                   */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The weapon panel for a melee attack with the given mode selected. The Grapple toggle is built
+ * the way the dialog builds it: shown for an unarmed attack, live only where `canAttemptGrapple`
+ * allows (a Standard Attack or a Charge).
+ */
+function meleePanel(line: string, modeKey: string, unarmed: boolean, grappleAttempt: boolean): Ctx {
+    const weapon: AttackOptionWeapon = { isRanged: false, system: { attack: { rateOfFire: { semi: 0, full: 0 } } } };
+    const modes = getAvailableAttackModes(weapon, line);
+    const action = modes.find((mode) => mode.key === modeKey)?.actionName ?? '';
+    return baseContext({
+        rollName: 'Weapon Skill Test',
+        rollSubtitle: unarmed ? 'Unarmed' : 'Chainsword',
+        hasContextPanel: true,
+        isWeapon: true,
+        isRanged: false,
+        isMelee: true,
+        contextExpanded: true,
+        weapon: { name: unarmed ? 'Unarmed' : 'Chainsword', img: 'icons/svg/item-bag.svg', isRanged: false },
+        attackModes: modes.map((mode) => ({
+            ...mode,
+            isSelected: mode.key === modeKey,
+            modifierLabel: mode.modifier >= 0 ? `+${mode.modifier}` : `${mode.modifier}`,
+        })),
+        meleeSpecialOptions: [],
+        grappleOption: unarmed ? { available: canAttemptGrapple(action, true), active: grappleAttempt && canAttemptGrapple(action, true) } : null,
+        aimOptions: [],
+        rangeBrackets: [],
+        sizeOptions: [],
+        combatSituationals: [],
+    });
+}
+
+function grappleToggle(root: HTMLElement): HTMLButtonElement | null {
+    return root.querySelector<HTMLButtonElement>('[data-wh40k-hook="grapple-attempt-toggle"]');
+}
+
+/** RAW in every line: a grapple may be attempted with a Charge, which keeps its +20 — both show at once. */
+export const ChargeIntoGrapple: Story = {
+    args: meleePanel('dh2', 'charge', true, true),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh2' }),
+    play: async ({ canvasElement }) => {
+        const toggle = grappleToggle(canvasElement);
+        await expect(toggle).not.toBeNull();
+        await expect(toggle?.getAttribute('aria-pressed')).toBe('true');
+        await expect(toggle?.disabled).toBe(false);
+        await expect(toggle?.dataset['action']).toBe('toggleGrappleAttempt');
+        await expect(modeLabel(canvasElement, 'charge')).toBe('+20');
+        await expect(canvasElement.querySelector('[data-action="selectAttackMode"][data-mode-key="charge"]')?.className).toContain('tw-border-gold-raw');
+    },
+};
+
+/** The same in DH1, whose target answers with an Agility Test instead of a Dodge or Parry. */
+export const Dh1StandardAttackGrapple: Story = {
+    args: meleePanel('dh1', 'standard', true, false),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),
+    play: async ({ canvasElement }) => {
+        const toggle = grappleToggle(canvasElement);
+        await expect(toggle?.disabled).toBe(false);
+        await expect(toggle?.getAttribute('aria-pressed')).toBe('false');
+    },
+};
+
+/** Any other attack (here an All Out Attack) cannot be a grapple attempt: the toggle stays, disabled. */
+export const GrappleNeedsStandardOrCharge: Story = {
+    args: meleePanel('dh2', 'allOutAttack', true, true),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh2' }),
+    play: async ({ canvasElement }) => {
+        const toggle = grappleToggle(canvasElement);
+        await expect(toggle?.disabled).toBe(true);
+        await expect(toggle?.getAttribute('aria-pressed')).toBe('false');
+    },
+};
+
+/** "Instead of inflicting Damage with an unarmed attack": an armed attack is never offered the grapple. */
+export const ArmedAttackCannotGrapple: Story = {
+    args: meleePanel('dh2', 'standard', false, false),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh2' }),
+    play: async ({ canvasElement }) => {
+        await expect(grappleToggle(canvasElement)).toBeNull();
+        await expect(canvasElement.querySelector('[data-action="selectAttackMode"][data-mode-key="charge"]')).not.toBeNull();
     },
 };
 

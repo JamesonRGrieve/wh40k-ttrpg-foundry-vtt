@@ -2821,6 +2821,13 @@
                 "Evaded": "{target} avoided the grapple.",
                 "NoTarget": "Target the combatant to grapple before attacking."
             },
+            "Attempt": {
+                "Label": "Grapple",
+                "Hint": "Instead of dealing damage, try to grapple the target. An unarmed Standard Attack or Charge; the target may use a Reaction to avoid it, and a hit starts a grapple you control.",
+                "NoDamage": "No damage; a hit starts a grapple",
+                "NeedsAction": "Only with a Standard Attack or Charge",
+                "CardNote": "Grapple attempt: no damage, a hit starts a grapple"
+            },
             "Ended": "The grapple is over.",
             "Chat": {
                 "Opposed": "Opposed Strength test: {actor} against {opponent}",

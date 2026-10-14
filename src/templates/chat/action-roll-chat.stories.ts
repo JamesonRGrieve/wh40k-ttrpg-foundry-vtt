@@ -80,6 +80,8 @@ interface ActionRollData {
     showDamage?: boolean;
     /** The weapon deals no damage (#601): its qualities apply, nothing is rolled. */
     noDamage?: boolean;
+    /** The attack is a grapple attempt (#450): no damage; a hit offers Begin Grapple. */
+    isGrappleAttempt?: boolean;
     /** A burst's hit ceiling with each part's line rule (#607). */
     hitCeiling?: {
         base: { label: string; value: number; tooltipData: string };
@@ -493,6 +495,58 @@ export const NoDamageHit: Story = {
         // The rest of the attack still resolves: the roll readout and Fate refund stay.
         await expect(canvasElement.textContent).toContain('Roll vs Target');
         await expect(canvasElement.querySelector('.roll-control__refund')).not.toBeNull();
+    },
+};
+
+/**
+ * #450: a grapple attempt made with a Charge (RAW in every line). The Charge's +20 stays a
+ * sourced row of the target, and the card offers Begin Grapple, not Roll Damage.
+ */
+export const ChargeGrappleAttempt: Story = {
+    name: 'Charge grapple attempt — Charge bonus row and Begin Grapple',
+    args: {
+        id: 'roll-charge-grapple',
+        label: 'Weapon Skill Test',
+        rollData: successRollData({
+            name: 'Unarmed',
+            action: 'Charge',
+            effectString: '',
+            modifierSources: [sourced('Charge', 20, 'action', { action: 'Charge' })],
+            modifiedTarget: BASE_TARGET + 20,
+            dos: 4,
+            resultFormula: `Target ${BASE_TARGET + 20} − Roll 31 = 31 → 1 + 3 (tens) = 4 DoS`,
+            ignoreControls: false,
+            showDamage: false,
+            isGrappleAttempt: true,
+        }),
+        effectOutput: [],
+        evasion: { status: 'pending', summary: 'Awaiting Lucius Varn’s evasion', rows: [], fullyEvaded: false },
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const rows = canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]');
+        await expect(rows.length).toBe(1);
+        await expect(JSON.parse(rows.item(0).getAttribute('data-wh40k-tooltip-data') ?? '{}')).toMatchObject({ label: 'Charge', value: 20 });
+        await expect(canvasElement.textContent).toContain('Charge');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="grapple-attempt-note"]')?.textContent).toContain('Grapple attempt');
+        await expect(canvasElement.querySelector<HTMLButtonElement>('[data-wh40k-hook="begin-grapple-btn"]')?.dataset['rollId']).toBe('roll-charge-grapple');
+        await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+    },
+};
+
+/** A grapple attempt that missed: the card still says what it was, and offers nothing to begin. */
+export const GrappleAttemptMissed: Story = {
+    name: 'Grapple attempt — missed',
+    args: {
+        id: 'roll-grapple-miss',
+        label: 'Weapon Skill Test',
+        rollData: successRollData({ name: 'Unarmed', effectString: '', success: false, dos: 0, dof: 2, ignoreControls: false, isGrappleAttempt: true }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="grapple-attempt-note"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="begin-grapple-btn"]')).toBeNull();
     },
 };
 

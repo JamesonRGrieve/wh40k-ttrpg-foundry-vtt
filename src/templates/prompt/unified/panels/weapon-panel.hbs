@@ -57,6 +57,20 @@
             {{/each}}
         </div>
 
+        {{!-- Grapple instead of damage (#450): an unarmed Standard Attack or Charge --}}
+        {{#if grappleOption}}
+            <button type="button"
+                    class="tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-font-ui tw-text-2xs tw-text-left tw-transition-all {{#if grappleOption.active}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] [&>i]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)] tw-text-[#9a9a8a]{{/if}} {{#if grappleOption.available}}tw-cursor-pointer hover:tw-border-[rgba(255,255,255,0.15)]{{else}}tw-opacity-35 tw-cursor-not-allowed{{/if}}"
+                    data-action="toggleGrappleAttempt" data-wh40k-hook="grapple-attempt-toggle"
+                    aria-pressed="{{#if grappleOption.active}}true{{else}}false{{/if}}"
+                    data-tooltip="{{localize "WH40K.Grapple.Attempt.Hint"}}"
+                    {{#unless grappleOption.available}}disabled{{/unless}}>
+                <i class="fas fa-hands-bound tw-text-xs tw-text-[#7a7a6a]"></i>
+                <span class="tw-font-semibold">{{localize "WH40K.Grapple.Attempt.Label"}}</span>
+                <span class="tw-ml-auto tw-text-[#7a7a6a]">{{#if grappleOption.available}}{{localize "WH40K.Grapple.Attempt.NoDamage"}}{{else}}{{localize "WH40K.Grapple.Attempt.NeedsAction"}}{{/if}}</span>
+            </button>
+        {{/if}}
+
         {{!-- Melee Special Options (collapsible) --}}
         {{#if isMelee}}
             <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#7a7a6a] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-transition-colors hover:tw-text-[#9a9a8a] [&>i]:tw-text-[0.55rem]" data-action="toggleSpecialOptions">

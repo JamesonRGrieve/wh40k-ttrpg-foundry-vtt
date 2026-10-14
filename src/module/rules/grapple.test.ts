@@ -1,14 +1,15 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from '../constants.ts';
 import { MELEE_SPECIAL_OPTIONS } from './attack-options';
-import { allCombatActions } from './combat-actions.ts';
+import { allCombatActions, combatActionAttackModifier } from './combat-actions.ts';
 import {
     asGrappleParticipant,
     degreesOfSuccess,
     GRAPPLE_ACTION_LABEL_KEYS,
-    GRAPPLE_ATTEMPT_ACTION,
+    canAttemptGrapple,
+    GRAPPLE_START_ACTIONS,
     GRAPPLE_FLAG,
     grappleEndWrites,
     grappleFlagValue,
@@ -203,7 +204,7 @@ describe('character sheet reads the grapple state through readGrappleState (#120
     });
 });
 
-describe('starting a grapple (#450; DH2 p. 228, RT p. 246, DH1 p. 197)', () => {
+describe('starting a grapple (#450; DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243, DW p. 246, OW p. 251)', () => {
     it('a successful attempt makes the attacker the controller and the target held, each naming the other', () => {
         expect(grappleStartWrites('Actor.a', 'Actor.b')).toEqual([
             { uuid: 'Actor.a', state: 'grappling', opponentUuid: 'Actor.b' },
@@ -233,19 +234,53 @@ describe('starting a grapple (#450; DH2 p. 228, RT p. 246, DH1 p. 197)', () => {
         );
     });
 
-    it('is offered as a melee special option of the attack, naming the attempt action', () => {
-        expect(MELEE_SPECIAL_OPTIONS.find((option) => option.key === 'grapple')?.actionName).toBe(GRAPPLE_ATTEMPT_ACTION);
+    it('is made with a Standard Attack or a Charge, and only unarmed (every line: "Instead of inflicting Damage with an unarmed attack")', () => {
+        expect(GRAPPLE_START_ACTIONS).toEqual(['Standard Attack', 'Charge']);
+        expect(canAttemptGrapple('Standard Attack', true)).toBe(true);
+        expect(canAttemptGrapple('Charge', true)).toBe(true);
+        expect(canAttemptGrapple('Standard Attack', false)).toBe(false);
+        expect(canAttemptGrapple('Charge', false)).toBe(false);
+        for (const other of ['All Out Attack', 'Guarded Action', 'Lightning Attack', 'Stun', 'Grapple']) expect(canAttemptGrapple(other, true)).toBe(false);
     });
 
-    it.each(['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'])('the attempt is a melee attack action of the %s table, so the dialog keeps it', (line) => {
-        const action = allCombatActions(line).find((entry) => entry.name === GRAPPLE_ATTEMPT_ACTION);
-        expect(action?.subtype).toEqual(expect.arrayContaining(['Attack', 'Melee']));
+    it('is a toggle on the attack, not an attack mode of its own', () => {
+        expect(MELEE_SPECIAL_OPTIONS.some((option) => option.key === 'grapple')).toBe(false);
+    });
+
+    it.each(['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'])(
+        "in %s both start actions are melee attacks of the line's table, so the dialog keeps them and a Charge keeps its bonus",
+        (line) => {
+            for (const name of GRAPPLE_START_ACTIONS) {
+                expect(allCombatActions(line).find((entry) => entry.name === name)?.subtype).toEqual(expect.arrayContaining(['Attack', 'Melee']));
+            }
+            expect(combatActionAttackModifier('Charge', line)).toBeGreaterThan(0);
+        },
+    );
+
+    it('a weapon is unarmed only by its content-declared flag, which defaults off', () => {
+        const weapon = readFileSync(resolve(__dirname, '../data/item/weapon.ts'), 'utf8');
+        expect(weapon).toContain('unarmed: new fields.BooleanField({ required: false, initial: false })');
+    });
+
+    const unarmedSource = resolve(__dirname, '../../packs-private/imperium-maledictum/im-core-items-weapons/_source/unarmed.json');
+    it.skipIf(!existsSync(unarmedSource))('the Unarmed strike every creature is granted declares itself unarmed', () => {
+        expect(JSON.parse(readFileSync(unarmedSource, 'utf8'))).toMatchObject({
+            name: 'Unarmed',
+            type: 'weapon',
+            system: { grantedByDefault: true, unarmed: true },
+        });
+    });
+
+    it("the table's own Grapple action, used only inside a grapple, never starts one", () => {
+        expect(GRAPPLE_START_ACTIONS).not.toContain('Grapple');
     });
 
     it('an attempt deals no damage, keeps its controls and opens an evasion window for its one hit', () => {
         const rollData = readFileSync(resolve(__dirname, '../rolls/roll-data.ts'), 'utf8');
         const actionData = readFileSync(resolve(__dirname, '../rolls/action-data.ts'), 'utf8');
-        expect(rollData).toContain('this.isGrappleAttempt = this.action === GRAPPLE_ATTEMPT_ACTION');
+        expect(rollData).toContain('this.isGrappleAttempt = this.grappleAttempt && this.canGrapple');
+        expect(rollData).toContain('return canAttemptGrapple(this.action, this.isUnarmedAttack)');
+        expect(rollData).toContain('return (this.weapon.system as { unarmed?: boolean }).unarmed === true');
         expect(rollData).toMatch(/this\.ignoreDamage = [^;]*this\.isGrappleAttempt/);
         expect(rollData).not.toMatch(/this\.ignoreControls = [^;]*isGrappleAttempt/);
         expect(actionData).toContain('rollData.isGrappleAttempt ? 1 : this.hitsOnDeclaredTarget()');

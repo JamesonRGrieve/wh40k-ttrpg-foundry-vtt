@@ -21,7 +21,7 @@ type CombatAction = {
  *  without fabricating a whole WeaponRollData. */
 export type CombatActionModifierInput = Pick<
     WeaponRollData,
-    'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers' | 'sourceActor' | 'weapon' | 'twoWeaponPlan' | 'gameSystemId'
+    'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers' | 'expandedBuckets' | 'sourceActor' | 'weapon' | 'twoWeaponPlan' | 'gameSystemId'
 >;
 
 /**
@@ -97,7 +97,7 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
     // which also writes modifiers['attack'] in RollData.update(). Previously
     // whichever ran last won, silently dropping the Called Shot −20 (#408).
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) types actions[rollData.action] as always present; tsconfig.json (flag on) types it `| undefined` and requires this guard
-    rollData.modifiers['combat-action'] = currentAction === undefined ? 0 : combatActionAttackModifier(currentAction, rollData.gameSystemId);
+    let modifier = currentAction === undefined ? 0 : combatActionAttackModifier(currentAction, rollData.gameSystemId);
 
     // Two-Weapon Fighting's penalties are talent-dependent, so they cannot be a
     // fixed `attack.modifier` on the action entry like Called Shot's −20 (#517).
@@ -109,11 +109,18 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-unnecessary-boolean-literal-compare -- defensive: `weapon` is declared optional but the non-strict config widens it to always-present, so the compiler reports this guard as redundant; a two-weapon action can still be selected before a weapon is chosen
         const isMelee = rollData.weapon?.isMelee === true;
         const penalties = resolveTwoWeaponPenalties({ isMelee, talents: ownedTalents(rollData.sourceActor) });
-        rollData.modifiers['combat-action'] = penalties.mainPenalty;
+        modifier = penalties.mainPenalty;
         // The off-hand figure is carried rather than applied: it belongs to the
         // Free-Action follow-up, which is a second attack the player declares.
         rollData.twoWeaponPlan = { isMelee, mainPenalty: penalties.mainPenalty, offPenalty: penalties.offPenalty };
     }
+
+    rollData.modifiers['combat-action'] = modifier;
+    // The card names the action the modifier comes from ("Charge +20"), not a generic
+    // "Combat Action" bucket (roll transparency; #450's Charge into a grapple).
+    rollData.expandedBuckets['combat-action'] =
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: as above, tsconfig.json types currentAction `| undefined`
+        modifier === 0 || currentAction === undefined ? [] : [{ key: 'combat-action', label: currentAction, value: modifier, source: currentAction }];
 }
 
 /**

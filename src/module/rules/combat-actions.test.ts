@@ -29,6 +29,7 @@ function mockRollData(action: string, weaponAttackBonus: number, talents: StubTa
         calledShotLocation: '',
         // The weapon's own attackBonus lives on modifiers['attack'] (set by RollData.update()).
         modifiers: { attack: weaponAttackBonus },
+        expandedBuckets: {},
         // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the talent-owning actor (#517)
         sourceActor: { items } as unknown as CombatActionModifierInput['sourceActor'],
         // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the weapon's melee/ranged flavour
@@ -201,6 +202,25 @@ describe('calculateCombatActionModifier — combat-action modifier keying (#408)
         const allOut = mockRollData('All Out Attack', 0);
         calculateCombatActionModifier(allOut);
         expect(allOut.modifiers['combat-action']).toBe(30);
+    });
+
+    it('the card row names the action the modifier comes from (#450: "Charge +20", not "Combat Action")', () => {
+        stubGame();
+        const charge = mockRollData('Charge', 0);
+        calculateCombatActionModifier(charge);
+        expect(charge.expandedBuckets['combat-action']).toEqual([{ key: 'combat-action', label: 'Charge', value: 20, source: 'Charge' }]);
+
+        const twoWeapon = mockRollData('Two-Weapon Fighting', 0);
+        calculateCombatActionModifier(twoWeapon);
+        expect(twoWeapon.expandedBuckets['combat-action']).toEqual([
+            { key: 'combat-action', label: 'Two-Weapon Fighting', value: -20, source: 'Two-Weapon Fighting' },
+        ]);
+
+        // A zero modifier leaves no row, and a switch back to Standard Attack drops the Charge's.
+        charge.action = 'Standard Attack';
+        charge.actions = { 'Standard Attack': 'Standard Attack' };
+        calculateCombatActionModifier(charge);
+        expect(charge.expandedBuckets['combat-action']).toEqual([]);
     });
 });
 

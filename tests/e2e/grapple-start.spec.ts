@@ -28,12 +28,14 @@ import { forceDice, LOWEST_FACE, restoreDice } from './occult-sheet-flow';
 /**
  * Tier B: a grapple starts from the attack and ends on a Break Free (#450).
  *
- * RAW (DH2 core p. 228 "Grappling"): instead of dealing damage, the attacker makes
- * a Weapon Skill attack; the target may use a Reaction to avoid it; if it succeeds
- * the two are grappling with the attacker in control. Nothing used to start one:
- * no flow wrote the grapple flags, so the grapple actions had no opponent.
+ * RAW, worded alike in every line (DH2 core p. 228 "Grappling"): instead of
+ * inflicting damage with an unarmed attack, the attacker makes a Weapon Skill attack
+ * with a Charge or a Standard Attack; the target may use a Reaction to avoid it; if
+ * it succeeds the two are grappling with the attacker in control.
  *
- * The GM targets the defender, attacks with the Grapple special option, the
+ * The GM targets the defender. Armed (a chainsword) the attack dialog offers no
+ * grapple. Unarmed, an All Out Attack cannot grapple, and a Charge can: the GM
+ * toggles Grapple on the Charge, the card keeps the Charge's +20 row, the
  * defender takes the hit, and Begin Grapple on the attack card posts the start
  * card; both actors then carry the flag, each naming the other. The held
  * defender's Break Free (an Opposed Strength test against the controller found
@@ -42,6 +44,9 @@ import { forceDice, LOWEST_FACE, restoreDice } from './occult-sheet-flow';
  */
 
 const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
+/** The Unarmed strike every creature is granted; its content declares it unarmed. */
+const UNARMED_UUID = 'Compendium.wh40k-rpg.im-core-items-weapons.Item.jfGqgHO39b7wpwoK';
+const GRAPPLE_TOGGLE = '[data-wh40k-hook="grapple-attempt-toggle"]';
 
 function dh2Character(name: string, weaponSkill: number, strength: number): object {
     return {
@@ -66,7 +71,10 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
         const settings = await setWorldSettings(page, { 'allow-manual-roll': true, 'auto-roll-damage': false });
         const attacker = await createActor(page, {
             data: dh2Character('Grappling Heretic', 55, 30),
-            compendiumItems: [{ uuid: CHAINSWORD_UUID, equip: true }],
+            compendiumItems: [
+                { uuid: CHAINSWORD_UUID, equip: true },
+                { uuid: UNARMED_UUID, equip: true },
+            ],
         });
         const defender = await createActor(page, { data: dh2Character('Held Acolyte', 35, 50) });
         const stage = await stageScene(page, 'Grapple ring', [
@@ -78,21 +86,39 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
             { actorId: defender.id, initiative: 10 },
         ]);
         try {
-            const weaponId = attacker.items['Chainsword'] ?? '';
-            expect(weaponId, 'the attacker holds a melee weapon').not.toBe('');
-
-            // The Grapple special option on the attack.
+            const chainswordId = attacker.items['Chainsword'] ?? '';
+            const unarmedId = attacker.items['Unarmed'] ?? '';
+            expect(chainswordId, 'the attacker holds a melee weapon').not.toBe('');
+            expect(unarmedId, 'the attacker has the Unarmed strike').not.toBe('');
             await targetActor(page, defender.id);
+
+            // Armed, there is no grapple: every line grapples "instead of inflicting Damage with an unarmed attack".
+            const armedDialog = await attackWith(page, attacker.id, chainswordId);
+            await expect(page.locator(`#${armedDialog} [data-action="selectAttackMode"][data-mode-key="charge"]`)).toBeVisible();
+            await expect(page.locator(`#${armedDialog} ${GRAPPLE_TOGGLE}`)).toHaveCount(0);
+            expect(await snapWindow(page, 'grapple-armed-no-toggle', armedDialog)).not.toBeNull();
+            await page.locator(`#${armedDialog} [data-action="cancel"]`).click();
+            await expect(page.locator(`#${armedDialog}`)).toHaveCount(0);
+
+            // Unarmed: a Charge into a grapple — the toggle rides on the Charge, which keeps its bonus.
             const before = await messageIds(page);
-            const dialogId = await attackWith(page, attacker.id, weaponId);
-            await page.locator(`#${dialogId} [data-action="toggleSpecialOptions"]`).click();
-            await selectAttackMode(page, dialogId, 'grapple');
+            const dialogId = await attackWith(page, attacker.id, unarmedId);
+            const toggle = page.locator(`#${dialogId} ${GRAPPLE_TOGGLE}`);
+            await selectAttackMode(page, dialogId, 'allOutAttack');
+            await expect(toggle, 'an All Out Attack cannot grapple').toBeDisabled();
+            await selectAttackMode(page, dialogId, 'charge');
+            await expect(toggle).toBeEnabled();
+            await toggle.click();
+            await expect(page.locator(`#${dialogId} ${GRAPPLE_TOGGLE}`)).toHaveAttribute('aria-pressed', 'true');
             await enterRoll(page, dialogId, 12);
-            expect(await snapWindow(page, 'grapple-attempt-dialog', dialogId)).not.toBeNull();
+            expect(await snapWindow(page, 'grapple-charge-dialog', dialogId)).not.toBeNull();
             await submitRoll(page, dialogId);
             const attack = await awaitCard(page, before, 'data-evasion-status="');
             expect(attack.html, 'the attempt offers Begin Grapple, not damage').toContain('roll-control__begin-grapple');
             expect(attack.html).not.toContain('roll-control__roll-damage');
+            expect(attack.html).toContain('data-wh40k-hook="grapple-attempt-note"');
+            expect(attack.html, 'the Charge bonus is a sourced row of the target').toMatch(/data-wh40k-tooltip-data="[^"]*Charge[^"]*20/);
+            expect(await snapCard(page, 'grapple-charge-card', attack.id)).not.toBeNull();
 
             // The defender takes the hit, then the grapple begins.
             const prompt = await awaitCard(page, before, 'data-evasion-prompt');

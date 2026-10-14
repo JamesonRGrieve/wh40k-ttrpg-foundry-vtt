@@ -192,6 +192,10 @@
                         {{else if isGrappleAttempt}}
                             {{!-- A grapple attempt (#450) deals no damage: once the target has answered (or the GM
                                   closes its window), Begin Grapple starts the grapple the attacker controls. --}}
+                            <p class="tw-m-0 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-text-[0.75rem] tw-text-slate-300" data-wh40k-hook="grapple-attempt-note">
+                                <i class="fas fa-hands-bound" aria-hidden="true"></i>
+                                <span>{{localize "WH40K.Grapple.Attempt.CardNote"}}</span>
+                            </p>
                             {{#if success}}
                                 <button class="roll-control__begin-grapple tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-slate-700/40 tw-border tw-border-slate-500 tw-rounded-md tw-text-slate-100 tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-slate-600/60 hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed" data-roll-id="{{@root.id}}" data-wh40k-hook="begin-grapple-btn">
                                     <i class="fas fa-hands-bound tw-text-[0.8rem]" aria-hidden="true"></i>

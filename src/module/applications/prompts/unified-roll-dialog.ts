@@ -23,7 +23,7 @@ import {
     passiveModifierNoteKey,
     selectPassiveModifierRows,
 } from '../../rolls/passive-modifiers.ts';
-import { buildModifierComponents, type RollData, type RollModifierComponent } from '../../rolls/roll-data.ts';
+import { buildModifierComponents, type RollData, type RollModifierComponent, WeaponRollData } from '../../rolls/roll-data.ts';
 import { degreesResultFormula, getDegreeForMode, isD100Success, printedDegrees, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { isRollKeepMode, keepModeOptions, type RollKeepMode } from '../../rolls/roll-keep.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
@@ -117,6 +117,16 @@ const SKILL_USE_ITEM_FIELD = 'skillUseItem';
 /** The id of one item picker's `<select>`, unique to its dialog. */
 function skillUseItemInputId(dialogId: string, slot: SkillUseItemSlotKey): string {
     return `${dialogId}-${SKILL_USE_ITEM_FIELD}-${slot}`;
+}
+
+/**
+ * The attack panel's Grapple toggle (#450): grapple instead of dealing damage. Shown
+ * for an unarmed melee attack; live only on a Standard Attack or a Charge, so a
+ * Charge's bonus stays on the attempt.
+ */
+function grappleOptionFor(rd: RollData): { available: boolean; active: boolean } | null {
+    if (!(rd instanceof WeaponRollData) || rd.weapon.isRanged || !rd.isUnarmedAttack) return null;
+    return { available: rd.canGrapple, active: rd.grappleAttempt && rd.canGrapple };
 }
 
 /** One item picker as the skill-use panel renders it (#535). */
@@ -381,6 +391,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             toggleCombatSituational: UnifiedRollDialog.#onToggleCombatSituational,
             selectSizeModifier: UnifiedRollDialog.#onSelectSizeModifier,
             toggleSpecialOptions: UnifiedRollDialog.#onToggleSpecialOptions,
+            toggleGrappleAttempt: UnifiedRollDialog.#onToggleGrappleAttempt,
             toggleSizeSection: UnifiedRollDialog.#onToggleSizeSection,
             toggleRangeSection: UnifiedRollDialog.#onToggleRangeSection,
             toggleSituationalSection: UnifiedRollDialog.#onToggleSituationalSection,
@@ -1183,6 +1194,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             attackModes,
             meleeSpecialOptions,
             specialOptionsExpanded: this._specialOptionsExpanded,
+            grappleOption: grappleOptionFor(rd),
             aimOptions,
             combatSituationals,
             hasCombatSituationals: combatSituationals.length > 0,
@@ -2126,6 +2138,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (key === undefined) return;
         this._sizeModifierKey = key;
         this.rollData.modifiers['target-size'] = (parseInt(key, 10) - 4) * 10;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+    }
+
+    /** Grapple instead of dealing damage (#450); `WeaponRollData.update` keeps it only where it may apply. */
+    static async #onToggleGrappleAttempt(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
+        const rd = this.rollData;
+        if (!(rd instanceof WeaponRollData)) return;
+        rd.grappleAttempt = !rd.grappleAttempt;
+        rd.update();
         await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
