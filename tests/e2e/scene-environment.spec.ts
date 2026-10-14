@@ -276,7 +276,16 @@ test.describe.serial('Scene environment (Tier B, #604)', () => {
             await page.waitForTimeout(scaledMs(600));
             expect(await snap(page, 'scene-env-zero-g-run-same-turn-no-test', { selector: `#${sheetAgain}` })).not.toBeNull();
 
-            // The widget's explicit button always rolls, for the controlled token.
+            // The widget's explicit button always rolls, for the controlled token. The
+            // GM closes the character sheet first: it opens over the widget and would
+            // take the click.
+            await page.evaluate(async (id: string) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+                const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
+                    .applications.instances;
+                await apps.get(id)?.close();
+            }, sheetAgain);
+            await expect(page.locator(`#${sheetAgain}`)).toHaveCount(0);
             await controlTokens(page, probe.tokenIds);
             await openWidgetFromSceneControls(page);
             const widgetButton = page.locator(`${WIDGET} [data-action="rollZeroGravity"]`);
@@ -284,6 +293,7 @@ test.describe.serial('Scene environment (Tier B, #604)', () => {
             await widgetButton.click();
             await expect(page.locator(ROLL_DIALOG).first()).toBeVisible();
             await expect(page.locator(ROLL_DIALOG).first()).toContainText('Zero Gravity: Charge or Run (Agility)');
+            expect(await snapWindow(page, 'scene-env-zero-g-widget-roll-dialog', page.locator(ROLL_DIALOG).first())).not.toBeNull();
             recordCoverage('scene-environment.flow', 'zero-g-charge-once-per-turn');
         } finally {
             await deleteProbeScene(page, probe);
