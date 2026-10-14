@@ -155,8 +155,10 @@ export const PerLineThemeDH2AndRT: Story = {
         const dh2Colours = dh2 === null ? [] : themedColours(dh2);
         const rtColours = rt === null ? [] : themedColours(rt);
         await expect(dh2Colours.length).toBeGreaterThan(0);
-        await expect(dh2Colours.length).toBe(rtColours.length);
-        // The same elements take a different colour on each line.
-        await expect(dh2Colours.some((colour, index) => colour !== rtColours[index])).toBe(true);
+        await expect(rtColours.length).toBeGreaterThan(0);
+        // The two lines' headers differ in what they render, so the palettes are compared
+        // as sets: DH2 uses colours RT does not.
+        const rtSet = new Set(rtColours);
+        await expect(dh2Colours.some((colour) => !rtSet.has(colour))).toBe(true);
     },
 };
