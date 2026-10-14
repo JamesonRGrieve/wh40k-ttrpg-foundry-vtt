@@ -27,7 +27,7 @@
             </div>
             <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[rgba(202,210,222,0.7)]">{{localize "WH40K.Common.Source"}}</label>
-                <input name="system.source" type="text" value="{{item.system.source}}" />
+                {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
             </div>
         </div>
     </div>

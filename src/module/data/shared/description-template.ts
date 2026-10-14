@@ -1,3 +1,4 @@
+import { formatSourceLabel } from '../../handlebars/source-label.ts';
 import { resolveLineVariant, inferActiveGameLine, isLineVariantContainer } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
 
@@ -211,11 +212,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @type {string}
      */
     get sourceReference(): string {
-        const { book, page, url } = this.source;
-        if (book && page) return `${book}, p.${page}`;
-        if (book) return book;
-        if (url) return url;
-        return '';
+        return formatSourceLabel(this.source);
     }
 
     /* -------------------------------------------- */

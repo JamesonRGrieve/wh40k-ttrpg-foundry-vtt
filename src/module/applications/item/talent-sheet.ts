@@ -12,6 +12,7 @@
 import type TalentData from '../../data/item/talent.ts';
 import type DescriptionTemplate from '../../data/shared/description-template.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
+import { formatSourceLabel } from '../../handlebars/source-label.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
@@ -308,7 +309,7 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
             specialization: system.specialization,
             notes: system.notes,
             // Source fields
-            source: sourceBook !== '' ? `${sourceBook} p.${sourcePage}` : '',
+            source: formatSourceLabel(system.source),
             sourceBook: sourceBook,
             sourcePage: sourcePage,
             // Benefit field

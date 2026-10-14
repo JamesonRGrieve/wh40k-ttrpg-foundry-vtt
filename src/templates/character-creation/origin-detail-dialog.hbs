@@ -28,8 +28,7 @@
             {{#if hasSource}}
                 <div class="tw-mt-[var(--wh40k-space-xs)] tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-italic">
                     <i class="fa-solid fa-book tw-mr-[var(--wh40k-space-xs)]"></i>
-                    {{#if source.book}}{{source.book}}{{/if}}
-                    {{#if source.page}}, p.{{source.page}}{{/if}}
+                    {{sourceLabel source}}
                 </div>
             {{/if}}
         </div>

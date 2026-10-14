@@ -296,8 +296,7 @@
                     <i class="fas fa-book-open"></i>
                     {{localize "WH40K.Ammunition.Source"}}
                 </h3>
-                <input type="text" name="system.source" value="{{item.system.source}}" placeholder="{{localize "WH40K.Ammunition.SourcePlaceholder"}}"
-                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}readonly{{/unless}} />
+                {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=inEditMode}}
             </div>
 
         </div>

@@ -44,7 +44,7 @@
         </div>
         <div class="tw-flex tw-flex-col tw-gap-0.5">
             <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Common.Source"}}</label>
-            <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.source" type="text" value="{{item.system.source}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponMod.SourcePlaceholder'}}" />
+            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
         </div>
     </section>
 

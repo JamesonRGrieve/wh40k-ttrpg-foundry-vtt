@@ -21,6 +21,8 @@ interface SourceObject {
     book?: string;
     page?: string | number;
     url?: string;
+    /** Legacy `{book, page, custom}` free-text reference, pre-provenance schema. */
+    custom?: string;
 }
 
 /** Either `source` shape a template may hand this helper. */
@@ -35,8 +37,11 @@ function pageString(page: string | number | undefined): string {
 
 /**
  * Format a `source` value into a display label.
- * @returns The formatted reference (`"Book, p.12"` / `"Book"` / a URL / a raw
- *   string), or `''` when there is nothing to show.
+ * This is the single formatter for a source reference: the Handlebars helper,
+ * both `sourceReference` getters and every sheet context that pre-formats a
+ * reference call it, so the format cannot drift between surfaces.
+ * @returns The formatted reference (`"Book, p.12"` / `"Book"` / a legacy custom
+ *   reference / a URL / a raw string), or `''` when there is nothing to show.
  */
 export function formatSourceLabel(source: SourceInput): string {
     if (typeof source === 'string') return source.trim();
@@ -45,9 +50,11 @@ export function formatSourceLabel(source: SourceInput): string {
     const book = typeof source.book === 'string' ? source.book.trim() : '';
     const page = pageString(source.page).trim();
     const url = typeof source.url === 'string' ? source.url.trim() : '';
+    const custom = typeof source.custom === 'string' ? source.custom.trim() : '';
 
     if (book && page) return `${book}, p.${page}`;
     if (book) return book;
+    if (custom) return custom;
     if (url) return url;
     return '';
 }

@@ -74,6 +74,27 @@ export function mockSkill(overrides?: DeepPartial<MockSkill>): MockSkill {
     return deepMerge(base, overrides);
 }
 
+// ── Source reference ─────────────────────────────────────────────────────────
+
+/** The structured `system.source` every `DescriptionTemplate` item carries (#229). */
+export interface MockSourceReference {
+    provenance: string;
+    book: string;
+    page: string;
+    url: string;
+    derivedFrom: string;
+    errata: boolean;
+}
+
+/**
+ * A structured provenance reference in the shape `provenanceField()` stores.
+ * Stories must use this, not a bare string, so a template that interpolates the
+ * object raw renders `[object Object]` in the story the way it does in Foundry.
+ */
+export function mockSourceReference(overrides?: Partial<MockSourceReference>): MockSourceReference {
+    return { provenance: 'raw', book: 'Dark Heresy 2e Core', page: '198', url: '', derivedFrom: '', errata: false, ...overrides };
+}
+
 // ── Item ─────────────────────────────────────────────────────────────────────
 
 export interface MockItem {
@@ -655,6 +676,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 reload: 'full',
                 availability: 'rare',
                 craftsmanship: 'good',
+                source: mockSourceReference({ page: '144' }),
             },
             damageTypes: {
                 explosive: { label: 'Explosive' },
@@ -712,7 +734,8 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                     categoryIcon: 'fa-crosshairs',
                     active: true,
                     hasEffects: true,
-                    effects: [{ label: '+10 when aiming' }],
+                    // WeaponSheet#_getModificationEffects yields pre-formatted strings.
+                    effects: ['+10 when aiming'],
                 },
             ],
             effects: [mockActiveEffect(), mockActiveEffect({ label: 'Machine Spirit Agitation', disabled: true })],
@@ -746,6 +769,7 @@ export function mockArmourSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 rightLeg: 5,
             },
             craftsmanshipLabel: 'Good Craftsmanship',
+            source: mockSourceReference({ page: '166' }),
             description: { value: '<p>Rigid plates for elite troops.</p>' },
             effect: '<p>Bulky but dependable.</p>',
         },
@@ -795,6 +819,7 @@ export function mockGearSheetContext(overrides?: DeepPartial<MockObjectMap>): Mo
             maxUses: 6,
             uses: 4,
             effect: '<p>Provides a bonus to Medicae tests.</p>',
+            source: mockSourceReference({ page: '178' }),
             description: { value: '<p>Contains blessed scalpels, synthskin, and chems.</p>' },
         },
     });

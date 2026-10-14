@@ -10,6 +10,7 @@
 /* eslint-disable no-restricted-syntax -- migration / cleaning operate on raw Foundry V14 source payloads (true framework boundary) */
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { formatSourceLabel } from '../../handlebars/source-label.ts';
 import { inferActiveGameLine, materializeItemVariants } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
 
@@ -288,12 +289,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get sourceReference(): string {
-        if (typeof this.source === 'string') return this.source;
-        const { book, page, custom } = this.source;
-        if (custom) return custom;
-        if (book && page) return `${book}, p.${page}`;
-        if (book) return book;
-        return '';
+        return formatSourceLabel(this.source);
     }
 
     /**

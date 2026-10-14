@@ -340,11 +340,7 @@
             {{!-- Footer: Source --}}
             <div class="tw-pt-4 tw-border-t tw-border-white/10">
                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-mb-1 tw-block">{{localize "WH40K.Common.Source"}}</label>
-                <input type="text"
-                       class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
-                       name="system.source"
-                       value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}"
-                       placeholder="{{localize 'WH40K.ItemSheet.Skill.SourcePlaceholder'}}" />
+                {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
             </div>
         </div>
     </div>

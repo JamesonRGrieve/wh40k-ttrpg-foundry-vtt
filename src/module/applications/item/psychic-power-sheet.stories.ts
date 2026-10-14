@@ -3,7 +3,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { mockItem } from '../../../../stories/mocks';
+import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
@@ -39,7 +39,7 @@ function makeCtx(overrides: Partial<PsychicPowerCtx> = {}): PsychicPowerCtx {
             damageFormula: '1d10+PR',
             damageType: 'Energy',
             overbleed: false,
-            source: 'Dark Heresy 2e Core',
+            source: mockSourceReference(),
             description: { value: '<p>Blast foes with pure psychic force.</p>' },
         },
     });
@@ -81,6 +81,49 @@ export const RendersDisciplineBadge: Story = {
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
         void expect(storyCanvas.getByText('Biomancy Power')).toBeTruthy();
+    },
+};
+
+// ── Source reference (#229) ─────────────────────────────────────────────────
+//
+// `system.source` is the structured provenance object. The Power Details grid
+// used to bind an input straight to it and showed "[object Object]"; it now
+// edits Book + Page and the header badge formats through `sourceLabel`.
+
+export const SourceReferenceEditable: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getByText('Dark Heresy 2e Core, p.198')).toBeTruthy();
+        const book = canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]');
+        const page = canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]');
+        void expect(book?.value).toBe('Dark Heresy 2e Core');
+        void expect(page?.value).toBe('198');
+        void expect(canvasElement.querySelector('input[name="system.source"]')).toBeNull();
+        void expect(canvasElement.innerHTML).not.toContain('[object Object]');
+    },
+};
+
+export const SourceReferenceReadOnly: Story = {
+    render: () => renderSheet(templateSrc, makeCtx({ editable: false })),
+    play: ({ canvasElement }) => {
+        const storyCanvas = within(canvasElement);
+        void expect(storyCanvas.getAllByText('Dark Heresy 2e Core, p.198')).toHaveLength(2);
+        void expect(canvasElement.querySelector('input[name="system.source.book"]')).toBeNull();
+        void expect(canvasElement.innerHTML).not.toContain('[object Object]');
+    },
+};
+
+export const SourceReferenceEmpty: Story = {
+    render: () => {
+        const ctx = makeCtx();
+        ctx.item.system['source'] = mockSourceReference({ book: '', page: '' });
+        return renderSheet(templateSrc, ctx);
+    },
+    play: ({ canvasElement }) => {
+        // An empty reference hides the header badge instead of rendering a blank chip.
+        void expect(canvasElement.querySelector('.fa-book')).toBeNull();
+        void expect(canvasElement.innerHTML).not.toContain('[object Object]');
     },
 };
 

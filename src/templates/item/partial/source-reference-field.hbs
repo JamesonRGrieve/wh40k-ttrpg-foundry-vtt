@@ -1,0 +1,28 @@
+{{!--
+    Source reference control (#229) — the one place an item sheet shows or edits
+    its structured `system.source` provenance ({ provenance, book, page, url, … }).
+
+    Hashes:
+      source   — the structured source object (`item.system.source` / `source.source`).
+      editable — true renders Book + Page inputs bound to `system.source.book` /
+                 `system.source.page`; false renders the formatted reference.
+
+    Never bind an input to `system.source` itself: the field is a SchemaField, so
+    its value stringifies to "[object Object]" and a submit would write that
+    string back over the whole reference. Display goes through `sourceLabel`, the
+    same helper the chat cards and the psychic-power header badge use.
+--}}
+{{#if editable}}
+<div class="tw-flex tw-gap-1 tw-min-w-0 tw-w-full">
+    <input type="text" name="system.source.book" value="{{source.book}}"
+           aria-label="{{localize 'WH40K.Source.Book'}}" title="{{localize 'WH40K.Source.Book'}}"
+           placeholder="{{localize 'WH40K.Source.Book'}}"
+           class="tw-flex-1 tw-min-w-0 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+    <input type="text" name="system.source.page" value="{{source.page}}"
+           aria-label="{{localize 'WH40K.Source.Page'}}" title="{{localize 'WH40K.Source.Page'}}"
+           placeholder="{{localize 'WH40K.Source.Page'}}"
+           class="tw-w-14 tw-shrink-0 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+</div>
+{{else}}
+<span class="tw-block tw-px-2 tw-py-1 tw-text-sm tw-truncate" title="{{sourceLabel source}}">{{sourceLabel source}}</span>
+{{/if}}

@@ -515,7 +515,7 @@
           </h3>
 
           <div class="tw-flex tw-flex-col tw-gap-1.5">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" placeholder="{{localize 'WH40K.ItemSheet.OriginPath.SourcePlaceholder'}}" />
+            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
           </div>
         </div>
       </div>

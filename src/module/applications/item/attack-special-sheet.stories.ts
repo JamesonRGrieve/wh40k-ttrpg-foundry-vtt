@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-attack-special-sheet.hbs?raw';
+import { type MockSourceReference, mockSourceReference } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet } from '../../../../stories/test-helpers';
 
@@ -11,13 +12,13 @@ interface ItemContext {
         hasLevel: boolean;
         enabled: boolean;
         level: number;
-        source: string;
+        source: MockSourceReference;
         description: { value: string };
     };
 }
 interface Args {
     item: ItemContext;
-    [key: string]: ItemContext;
+    editable?: boolean;
 }
 
 const baseItem = (): Args['item'] => ({
@@ -27,7 +28,7 @@ const baseItem = (): Args['item'] => ({
         hasLevel: true,
         enabled: true,
         level: 2,
-        source: 'Power Weapon',
+        source: mockSourceReference({ book: 'Rogue Trader Core', page: '139' }),
         description: { value: 'Releases a coruscating arc of lightning on a successful hit.' },
     },
 });
@@ -58,6 +59,25 @@ export const RendersAndAcceptsName: Story = {
         const nameInput = cv.getByDisplayValue('Lightning Arc');
         void expect(nameInput).toBeTruthy();
         void expect(nameInput.getAttribute('name')).toBe('name');
+    },
+};
+
+/** Read-only: the structured source shows as one formatted reference (#229). */
+export const SourceReferenceLabel: Story = {
+    play: ({ canvasElement }) => {
+        const cv = within(canvasElement);
+        void expect(cv.getByText('Rogue Trader Core, p.139')).toBeTruthy();
+        void expect(canvasElement.innerHTML).not.toContain('[object Object]');
+    },
+};
+
+/** Editable: the structured source edits as Book + Page inputs, never as `system.source` (#229). */
+export const SourceReferenceInputs: Story = {
+    args: { item: baseItem(), editable: true },
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe('Rogue Trader Core');
+        void expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]')?.value).toBe('139');
+        void expect(canvasElement.querySelector('input[name="system.source"]')).toBeNull();
     },
 };
 

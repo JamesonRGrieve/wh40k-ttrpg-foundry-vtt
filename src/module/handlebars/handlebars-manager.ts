@@ -225,6 +225,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-name-input.hbs',
+            // Structured `system.source` show/edit control, shared by every item sheet (#229)
+            'systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs',
 
             // Content-block item sheet partials (mutation Gift / special-ability Distinction panels, #597)
             'systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs',

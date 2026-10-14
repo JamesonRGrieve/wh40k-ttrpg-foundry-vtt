@@ -280,8 +280,7 @@
           <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
         </div>
         <div class="tw-p-3">
-          <input type="text" name="system.source" value="{{source.source}}"
-                 placeholder="{{localize 'WH40K.Ammunition.SourcePlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+          {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
         </div>
       </div>
 

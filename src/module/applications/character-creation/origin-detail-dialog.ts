@@ -6,6 +6,7 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import { formatSourceLabel, type SourceInput } from '../../handlebars/source-label.ts';
 import { capitalize } from '../../utils/format.ts';
 import { getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
@@ -130,8 +131,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
         // Source info
         context['source'] = system['source'] ?? {};
-        const source = context['source'] as Record<string, unknown>;
-        context['hasSource'] = source['book'] !== undefined || source['page'] !== undefined;
+        context['hasSource'] = formatSourceLabel(context['source'] as SourceInput) !== '';
 
         // Characteristic modifiers
         const contextData = context as Record<string, unknown> & {

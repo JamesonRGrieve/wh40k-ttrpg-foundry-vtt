@@ -13,7 +13,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { mockItem } from '../../../../stories/mocks';
+import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
@@ -65,7 +65,7 @@ function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
             },
             modifiers: { characteristics: { agility: 5 } },
             requirements: { text: '', previousSteps: [], excludedSteps: [] },
-            source: { book: 'Dark Heresy 2e Core', page: '15' },
+            source: mockSourceReference({ book: 'Dark Heresy 2e Core', page: '15' }),
         },
     });
     return {
@@ -131,8 +131,8 @@ interface SystemOriginFixture {
     step: string;
     /** Localized step label rendered in the header badge. */
     stepLabel: string;
-    /** Source book + page, rendered on the description tab and used as `system.source`. */
-    source: string;
+    /** Source book + page, stored as the structured `system.source` reference (#229). */
+    source: { book: string; page: string };
     /** Skills this step grants, shown on the grants tab. */
     skillGrants: Array<{ name: string; specialization: string; level: string }>;
     /** Characteristic modifier this step applies (single entry keeps the fixture compact). */
@@ -149,7 +149,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Hive World',
         step: 'homeWorld',
         stepLabel: 'Home World',
-        source: 'Dark Heresy 2e Core, pg. 15',
+        source: { book: 'Dark Heresy 2e Core', page: '15' },
         skillGrants: [{ name: 'Dodge', specialization: '', level: 'trained' }],
         charModifier: { key: 'agility', label: 'Agility', short: 'Ag', value: 5 },
     },
@@ -157,7 +157,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Imperial World',
         step: 'homeWorld',
         stepLabel: 'Home World',
-        source: 'Dark Heresy Core, pg. 18',
+        source: { book: 'Dark Heresy Core', page: '18' },
         skillGrants: [{ name: 'Common Lore', specialization: 'Imperium', level: 'trained' }],
         charModifier: { key: 'willpower', label: 'Willpower', short: 'WP', value: 3 },
     },
@@ -165,7 +165,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Void Born',
         step: 'homeWorld',
         stepLabel: 'Home World',
-        source: 'Rogue Trader Core, pg. 22',
+        source: { book: 'Rogue Trader Core', page: '22' },
         skillGrants: [{ name: 'Navigation', specialization: 'Stellar', level: 'known' }],
         charModifier: { key: 'willpower', label: 'Willpower', short: 'WP', value: 5 },
     },
@@ -173,7 +173,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Renegade',
         step: 'homeWorld',
         stepLabel: 'Pride',
-        source: 'Black Crusade Core, pg. 30',
+        source: { book: 'Black Crusade Core', page: '30' },
         skillGrants: [{ name: 'Deceive', specialization: '', level: 'trained' }],
         charModifier: { key: 'fellowship', label: 'Fellowship', short: 'Fel', value: 5 },
     },
@@ -181,7 +181,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Death World',
         step: 'homeWorld',
         stepLabel: 'Home World',
-        source: 'Only War Core, pg. 28',
+        source: { book: 'Only War Core', page: '28' },
         skillGrants: [{ name: 'Survival', specialization: '', level: 'trained' }],
         charModifier: { key: 'toughness', label: 'Toughness', short: 'T', value: 5 },
     },
@@ -189,7 +189,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Chapter — Ultramarines',
         step: 'career',
         stepLabel: 'Chapter',
-        source: 'Deathwatch Core, pg. 24',
+        source: { book: 'Deathwatch Core', page: '24' },
         skillGrants: [{ name: 'Common Lore', specialization: 'War', level: 'trained' }],
         charModifier: { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS', value: 5 },
     },
@@ -197,7 +197,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Hive World Origin',
         step: 'homeWorld',
         stepLabel: 'Origin',
-        source: 'Imperium Maledictum Core, pg. 26',
+        source: { book: 'Imperium Maledictum Core', page: '26' },
         skillGrants: [{ name: 'Awareness', specialization: '', level: 'trained' }],
         charModifier: { key: 'perception', label: 'Perception', short: 'Per', value: 5 },
     },
@@ -233,7 +233,7 @@ function renderPerSystem(systemId: SystemId): HTMLElement {
             },
             modifiers: { characteristics: { [fixture.charModifier.key]: fixture.charModifier.value } },
             requirements: { text: '', previousSteps: [], excludedSteps: [] },
-            source: fixture.source,
+            source: mockSourceReference(fixture.source),
         },
     });
     const ctx = makeCtx({
@@ -260,6 +260,10 @@ function makePerSystemPlay(systemId: SystemId) {
         await expect(view.getByDisplayValue(fixture.name)).toBeTruthy();
         await expect(view.getAllByText(fixture.stepLabel).length).toBeGreaterThanOrEqual(1);
         await expect(canvasElement.querySelector('[data-wh40k-system]')?.getAttribute('data-wh40k-system')).toBe(systemId);
+        // The structured source edits as Book + Page, never as a raw object (#229).
+        await expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe(fixture.source.book);
+        await expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]')?.value).toBe(fixture.source.page);
+        await expect(canvasElement.innerHTML).not.toContain('[object Object]');
     };
 }
 
