@@ -329,7 +329,7 @@ test.describe('Storybook extra story render', () => {
 
     test('ship weapons panel DH2e renders fire/delete actions', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-inventory-item-table--ship-weapons-panel-dh-2');
-        await expect(page.locator('[data-action="itemFire"]').first()).toBeAttached();
+        await expect(page.locator('[data-action="fireShipWeapon"]').first()).toBeAttached();
         await expect(page.locator('[data-action="itemDelete"]').first()).toBeAttached();
     });
 

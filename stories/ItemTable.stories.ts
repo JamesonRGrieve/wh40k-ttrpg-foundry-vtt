@@ -361,7 +361,7 @@ export const ShipWeaponsPanelDH2: Story = {
         // Material Icons must NOT survive the migration.
         await expect(canvasElement.querySelector('.material-icons')).toBeNull();
         // Each ship-weapon row carries the fire + delete actions.
-        await expect(canvasElement.querySelectorAll('[data-action="itemFire"]').length).toBe(2);
+        await expect(canvasElement.querySelectorAll('[data-action="fireShipWeapon"]').length).toBe(2);
         await expect(canvasElement.querySelectorAll('[data-action="itemDelete"]').length).toBe(2);
     },
 };

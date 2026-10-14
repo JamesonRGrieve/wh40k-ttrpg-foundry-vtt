@@ -313,6 +313,10 @@ export function registerHandlebarsHelpers(): void {
         return capitalize(text);
     });
 
+    // The voidcraft Weapons tab's Strength / Crit columns (ship-weapons-panel.hbs).
+    Handlebars.registerHelper('displayStrength', (strength: number) => displayStrength(strength));
+    Handlebars.registerHelper('displayCrit', (crit: number) => displayCrit(crit));
+
     Handlebars.registerHelper('getBioOptions', (field: string): TplValue => {
         const bioConfig = CONFIG.wh40k as { bio?: Record<string, TplValue> };
         return bioConfig.bio?.[field];
