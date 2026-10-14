@@ -55,29 +55,46 @@ interface IconLoad {
  * Wait for every game-icons `<img>` under `selector` to settle, then report how
  * many loaded and which did not.
  */
+/**
+ * Extra load attempts for an icon whose first request failed. The icons are
+ * hotlinked from the game-icons CDN, and the headless browser occasionally drops
+ * a request that succeeds on the next try (a different image each run, while the
+ * same URL answers 200 from curl). A URL that is genuinely broken fails every
+ * attempt, so the assertion still proves each one resolves.
+ */
+const CDN_LOAD_RETRIES = 3;
+
 async function gameIconLoads(page: Page, selector: string): Promise<IconLoad> {
     return page.evaluate(
-        async ({ sel, fragment, settleMs }): Promise<IconLoad> => {
+        async ({ sel, fragment, settleMs, retries }): Promise<IconLoad> => {
             const root = document.querySelector(sel);
             if (root === null) return { loaded: 0, broken: [`${sel} not in the DOM`] };
             const imgs = Array.from(root.querySelectorAll('img')).filter((img) => img.src.includes(fragment));
-            await Promise.all(
-                imgs.map(
-                    async (img) =>
-                        new Promise<void>((done) => {
-                            if (img.complete) {
-                                done();
-                                return;
-                            }
-                            img.addEventListener('load', () => done(), { once: true });
-                            img.addEventListener('error', () => done(), { once: true });
-                            setTimeout(done, settleMs);
-                        }),
-                ),
-            );
+            const settle = async (img: HTMLImageElement): Promise<void> =>
+                new Promise<void>((done) => {
+                    if (img.complete) {
+                        done();
+                        return;
+                    }
+                    img.addEventListener('load', () => done(), { once: true });
+                    img.addEventListener('error', () => done(), { once: true });
+                    setTimeout(done, settleMs);
+                });
+            await Promise.all(imgs.map(settle));
+            for (let attempt = 0; attempt < retries; attempt += 1) {
+                const failed = imgs.filter((img) => img.naturalWidth === 0);
+                if (failed.length === 0) break;
+                for (const img of failed) {
+                    const src = img.src;
+                    img.removeAttribute('src');
+                    img.src = src;
+                }
+                // eslint-disable-next-line no-await-in-loop -- each retry round waits for the previous round's re-requests to settle
+                await Promise.all(failed.map(settle));
+            }
             return { loaded: imgs.filter((img) => img.naturalWidth > 0).length, broken: imgs.filter((img) => img.naturalWidth === 0).map((img) => img.src) };
         },
-        { sel: selector, fragment: GAME_ICONS, settleMs: scaledMs(15_000) },
+        { sel: selector, fragment: GAME_ICONS, settleMs: scaledMs(15_000), retries: CDN_LOAD_RETRIES },
     );
 }
 
@@ -304,12 +321,17 @@ test.describe.serial('game-icons pack icons (#625, Tier B)', () => {
 
     test('repointed condition, talent, psychic power and weapon icons load and render', async ({ page }) => {
         await joinOrSkip(page);
-        const failedCdn: string[] = [];
+        // A CDN URL fails the test only if it never loads: a request the headless
+        // browser drops and a later retry serves is network noise, not a bad icon.
+        const failedCdn = new Map<string, string>();
+        const loadedCdn = new Set<string>();
         page.on('requestfailed', (req) => {
-            if (req.url().includes(GAME_ICONS)) failedCdn.push(`${req.url()} (${req.failure()?.errorText ?? 'failed'})`);
+            if (req.url().includes(GAME_ICONS)) failedCdn.set(req.url(), req.failure()?.errorText ?? 'failed');
         });
         page.on('response', (res) => {
-            if (res.url().includes(GAME_ICONS) && res.status() >= 400) failedCdn.push(`${res.url()} (HTTP ${res.status()})`);
+            if (!res.url().includes(GAME_ICONS)) return;
+            if (res.status() >= 400) failedCdn.set(res.url(), `HTTP ${res.status()}`);
+            else loadedCdn.add(res.url());
         });
 
         let ids: ProbeIds = { sceneId: null, actorId: null, tokenId: null };
@@ -365,7 +387,8 @@ test.describe.serial('game-icons pack icons (#625, Tier B)', () => {
             });
             if (browserId !== null) await closeApp(page, browserId);
 
-            expect(failedCdn, 'game-icons CDN requests that failed').toEqual([]);
+            const neverLoaded = [...failedCdn].filter(([url]) => !loadedCdn.has(url)).map(([url, why]) => `${url} (${why})`);
+            expect(neverLoaded, 'game-icons CDN URLs that never loaded').toEqual([]);
         } finally {
             await cleanup(page, ids);
         }
