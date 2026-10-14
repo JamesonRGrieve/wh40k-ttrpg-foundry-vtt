@@ -22,7 +22,7 @@
  * than a compendium — the same rationale as `xp-costs.ts`.
  */
 
-import { psyRatingTotalCost, psychicPowerCost } from './xp-costs.ts';
+import { psychicPowerCharge, psyRatingTotalCost } from './xp-costs.ts';
 
 /** DH2 characteristic advances move in fixed +5 steps. */
 export const CHARACTERISTIC_STEP = 5;
@@ -166,8 +166,14 @@ export interface NpcCharacteristicAdvance extends PricedAdvance {
 export interface NpcPsychicAdvance {
     /** Printed psy rating (0 for a non-psyker). */
     psyRating: number;
-    /** Each known power's PR cost, used by `psychicPowerCost`. */
-    powerPrCosts: readonly number[];
+    /** Each known power, priced by `psychicPowerCharge` exactly as a PC's would be (#642). */
+    powers: readonly NpcPsychicPower[];
+}
+
+/** A known psychic power: its printed XP cost (null when not authored) and its PR requirement. */
+export interface NpcPsychicPower {
+    cost: number | null;
+    prCost: number;
 }
 
 /** Per-class XP breakdown plus the total. */
@@ -204,7 +210,7 @@ export function talentAdvanceCost(tables: AdvancementCostTables, held: readonly 
 /** Price the psychic side: psy rating ladder plus every known power. */
 export function psychicAdvanceCost(psychic: NpcPsychicAdvance): number {
     const rating = Math.max(0, Math.floor(psychic.psyRating));
-    const powers = psychic.powerPrCosts.reduce((sum, pr) => sum + psychicPowerCost(pr), 0);
+    const powers = psychic.powers.reduce((sum, power) => sum + psychicPowerCharge(power.cost, power.prCost), 0);
     return psyRatingTotalCost(rating) + powers;
 }
 

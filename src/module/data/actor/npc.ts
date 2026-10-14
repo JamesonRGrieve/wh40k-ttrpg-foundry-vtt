@@ -5,6 +5,7 @@ import {
     type NpcBuild,
     type NpcCharacteristicAdvance,
     type NpcSkillAdvance,
+    type NpcPsychicPower,
     type NpcTalentAdvance,
     type SkillRankSource,
     deriveAptitudes,
@@ -153,7 +154,7 @@ function isAptitudeCostSource(config: SystemConfigLike): config is SystemConfigL
 /** The owned-item surface {@link NPCData._buildAdvancementLedger} reads when pricing a build. */
 interface AdvancementItemLike {
     type: string;
-    system?: { tier?: number; aptitudes?: string[]; prCost?: number };
+    system?: { tier?: number; aptitudes?: string[]; prCost?: number; cost?: number | null };
 }
 
 /** One specialization row on a specialist skill — mirrors the PC `SkillField` entry shape. */
@@ -1367,7 +1368,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
 
         const talents: NpcTalentAdvance[] = [];
-        const powerPrCosts: number[] = [];
+        const powers: NpcPsychicPower[] = [];
         // Same narrow-collection idiom as the origin-path read above: Foundry types the
         // owned-item collection loosely, so name the surface this ledger actually reads
         // once rather than casting `.system` per branch.
@@ -1376,11 +1377,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             if (item.type === 'talent') {
                 talents.push({ aptitudes: item.system?.aptitudes ?? [], tier: item.system?.tier ?? 1 });
             } else if (item.type === 'psychicPower') {
-                powerPrCosts.push(item.system?.prCost ?? 1);
+                powers.push({ cost: item.system?.cost ?? null, prCost: item.system?.prCost ?? 1 });
             }
         }
 
-        return { skills, talents, characteristics, psychic: { psyRating: this.psy.rating, powerPrCosts } };
+        return { skills, talents, characteristics, psychic: { psyRating: this.psy.rating, powers } };
     }
 
     /**

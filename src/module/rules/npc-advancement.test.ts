@@ -28,6 +28,7 @@ import {
     splitCharacteristic,
     talentAdvanceCost,
 } from './npc-advancement.ts';
+import { psychicPowerCharge } from './xp-costs.ts';
 
 /** DH2e Core tables 2-2 / 2-4 / 2-6, the defaults `AptitudeBasedSystemConfig` supplies. */
 const TABLES: AdvancementCostTables = {
@@ -36,7 +37,7 @@ const TABLES: AdvancementCostTables = {
     talent: { 1: { 2: 200, 1: 300, 0: 600 }, 2: { 2: 300, 1: 450, 0: 900 }, 3: { 2: 400, 1: 600, 0: 1200 } },
 };
 
-const emptyBuild = (): NpcBuild => ({ skills: [], talents: [], characteristics: [], psychic: { psyRating: 0, powerPrCosts: [] } });
+const emptyBuild = (): NpcBuild => ({ skills: [], talents: [], characteristics: [], psychic: { psyRating: 0, powers: [] } });
 
 describe('skillRankFrom', () => {
     it('prefers the authored advance over the flags', () => {
@@ -153,9 +154,20 @@ describe('advance pricing', () => {
     });
 
     it('prices psy rating cumulatively plus each known power', () => {
-        // rating 3 → 200 + 400 + 600 = 1200; two PR-1 powers → 200 each
-        expect(psychicAdvanceCost({ psyRating: 3, powerPrCosts: [1, 1] })).toBe(1600);
-        expect(psychicAdvanceCost({ psyRating: 0, powerPrCosts: [] })).toBe(0);
+        // rating 3 → 200 + 400 + 600 = 1200; two PR-1 powers with no printed cost → 200 each
+        const unpriced = { cost: null, prCost: 1 };
+        expect(psychicAdvanceCost({ psyRating: 3, powers: [unpriced, unpriced] })).toBe(1600);
+        expect(psychicAdvanceCost({ psyRating: 0, powers: [] })).toBe(0);
+    });
+
+    it('charges a power its printed XP cost, as a PC pays it (#642)', () => {
+        // Cauterise prints "Value: 300 xp" (DH2 core p. 206); the PR heuristic would charge 200.
+        const powers = [
+            { cost: 300, prCost: 1 },
+            { cost: null, prCost: 2 },
+        ];
+        expect(psychicAdvanceCost({ psyRating: 0, powers })).toBe(300 + psychicPowerCharge(null, 2));
+        expect(psychicAdvanceCost({ psyRating: 0, powers })).toBe(psychicPowerCharge(300, 1) + psychicPowerCharge(null, 2));
     });
 });
 
@@ -165,7 +177,7 @@ describe('deriveNpcXp', () => {
             skills: [{ key: 'command', aptitudes: ['Fellowship', 'Leadership'], steps: 3 }],
             talents: [{ aptitudes: ['Fellowship', 'Leadership'], tier: 1 }],
             characteristics: [{ key: 'fellowship', aptitudes: ['Fellowship', 'Social'], steps: 2 }],
-            psychic: { psyRating: 0, powerPrCosts: [] },
+            psychic: { psyRating: 0, powers: [] },
         };
         const held = ['Fellowship', 'Leadership', 'Social'];
         const xp = deriveNpcXp(TABLES, held, build);
@@ -190,7 +202,7 @@ describe('deriveAptitudes', () => {
         ],
         talents: [{ aptitudes: ['Fellowship', 'Leadership'], tier: 2 }],
         characteristics: [{ key: 'fellowship', aptitudes: ['Fellowship', 'Social'], steps: 2 }],
-        psychic: { psyRating: 0, powerPrCosts: [] },
+        psychic: { psyRating: 0, powers: [] },
     };
 
     it('ranks the aptitudes the stat block actually leans on', () => {
