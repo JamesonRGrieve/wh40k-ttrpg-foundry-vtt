@@ -102,6 +102,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /**
+ * A message's `wh40k-rpg` flag under `key`, read straight off its `flags` bag.
+ * Unlike `getFlag`, it needs no ChatMessage method: a render hook can hand over a
+ * message-like object (a module's or a test's) that carries flags but is not a
+ * document, and the card must still render.
+ * @param message  The rendered message.
+ * @param key      The flag key under the system scope.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage flags are an untyped JSON bag, narrowed by the readers below
+export function messageSystemFlag(message: object, key: string): unknown {
+    const flags = 'flags' in message ? message.flags : undefined;
+    const scope = isRecord(flags) ? flags[SYSTEM_ID] : undefined;
+    return isRecord(scope) ? scope[key] : undefined;
+}
+
+/**
  * The evasion prompt a message carries, or null.
  * @param {unknown} flag  `message.flags['wh40k-rpg'].evasionPrompt`.
  */

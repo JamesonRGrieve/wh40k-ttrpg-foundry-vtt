@@ -26,6 +26,7 @@ import {
     evasionOutcomeSummary,
     findEvasionOutcome,
     forcedAttackEvasion,
+    messageSystemFlag,
     readEvasionOutcome,
     readEvasionPrompt,
     resolvedAttackEvasion,
@@ -163,7 +164,7 @@ export class BasicActionManager {
                 });
             });
             // Evasion prompt (#414): the defender's owners / the GM answer the attack.
-            const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
+            const prompt = readEvasionPrompt(messageSystemFlag(message, EVASION_PROMPT_FLAG));
             if (prompt !== null) this.#wireEvasionPrompt(html, prompt);
             html.querySelectorAll('.roll-control__resolve-area').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {

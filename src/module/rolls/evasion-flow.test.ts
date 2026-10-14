@@ -9,6 +9,7 @@ import {
     evasionRecipients,
     findEvasionOutcome,
     forcedAttackEvasion,
+    messageSystemFlag,
     openAttackEvasion,
     readEvasionOutcome,
     readEvasionPrompt,
@@ -171,5 +172,20 @@ describe('answered prompts', () => {
         expect(buttons.item(0).disabled).toBe(true);
         expect(buttons.item(1).disabled).toBe(false);
         expect(root.querySelector<HTMLElement>('[data-evasion-status]')?.hidden).toBe(false);
+    });
+});
+
+describe('messageSystemFlag', () => {
+    it('reads a system flag off the flags bag, with no getFlag method needed', () => {
+        const prompt = { attackId: 'a1' };
+        expect(messageSystemFlag({ flags: { 'wh40k-rpg': { evasionPrompt: prompt } } }, 'evasionPrompt')).toBe(prompt);
+    });
+
+    it('is undefined for a message with no flags, no system scope or no such key', () => {
+        expect(messageSystemFlag({}, 'evasionPrompt')).toBeUndefined();
+        expect(messageSystemFlag({ flags: null }, 'evasionPrompt')).toBeUndefined();
+        expect(messageSystemFlag({ flags: { core: { evasionPrompt: {} } } }, 'evasionPrompt')).toBeUndefined();
+        expect(messageSystemFlag({ flags: { 'wh40k-rpg': {} } }, 'evasionPrompt')).toBeUndefined();
+        expect(readEvasionPrompt(messageSystemFlag({}, 'evasionPrompt'))).toBeNull();
     });
 });
