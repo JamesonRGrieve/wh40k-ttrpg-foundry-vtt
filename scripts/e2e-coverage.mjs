@@ -540,6 +540,9 @@ recordDimension('evasion.flow', covered['evasion.flow'], EVASION_FLOWS);
 // tests/e2e/auto-fire-cap.spec.ts — AUTO_FIRE_FLOWS.
 const AUTO_FIRE_FLOWS = ['dh2-capped', 'dh2-under-cap', 'dh1-capped', 'dh1-under-cap'];
 recordDimension('auto-fire.flow', covered['auto-fire.flow'], AUTO_FIRE_FLOWS);
+// tests/e2e/roll-dialog-breakdown.spec.ts — ROLL_DIALOG_FLOWS.
+const ROLL_DIALOG_FLOWS = ['parry-rows', 'environment-rows', 'passive-note', 'dh1-burst-and-degrees', 'dh2-full-auto', 'fit-availability'];
+recordDimension('roll-dialog.flow', covered['roll-dialog.flow'], ROLL_DIALOG_FLOWS);
 // tests/e2e/without-talents.spec.ts — WITHOUT_TALENT_FLOWS.
 const WITHOUT_TALENT_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
 recordDimension('without-talents.flow', covered['without-talents.flow'], WITHOUT_TALENT_FLOWS);
