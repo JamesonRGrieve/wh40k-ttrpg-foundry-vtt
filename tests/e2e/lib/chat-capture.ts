@@ -11,7 +11,9 @@ import { clearScreenOverlays } from './screenshot';
  * bottom of the log runs under the chat input and past the log's scroll box.
  */
 export async function showChatMessage(page: Page, messageId: string): Promise<string> {
-    const selector = `#sidebar .chat-log [data-message-id="${messageId}"]`;
+    // The message element itself: a bare `[data-message-id]` also matched the card's
+    // Delete control, which carries the same attribute, so a strict locator failed.
+    const selector = `#sidebar .chat-log .message[data-message-id="${messageId}"]`;
     await page.evaluate(async (sel: string) => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `ui` global is injected by the licensed app; no shipped types
         const g = globalThis as unknown as { ui?: { sidebar?: { expanded?: boolean; expand?: () => void; changeTab?: (tab: string, group: string) => void } } };
@@ -58,7 +60,9 @@ export async function popOutChatMessage(page: Page, messageId: string): Promise<
         await settle(400);
         return popout.id;
     }, messageId);
-    if (appId === null) return showChatMessage(page, messageId);
+    if (appId === null) {
+        return showChatMessage(page, messageId);
+    }
     await clearScreenOverlays(page, appId);
     return `#${appId}`;
 }

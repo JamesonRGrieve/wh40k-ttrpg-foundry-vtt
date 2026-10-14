@@ -132,7 +132,7 @@ async function clearTemplates(page: Page, sceneId: string): Promise<void> {
 /** Read a posted card from the rendered chat log. */
 async function readCard(page: Page, messageId: string): Promise<CardView> {
     return page.evaluate(async (id: string): Promise<CardView> => {
-        const sel = `#sidebar .chat-log [data-message-id="${id}"]`;
+        const sel = `#sidebar .chat-log .message[data-message-id="${id}"]`;
         await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
         const card = document.querySelector(sel);
         return {

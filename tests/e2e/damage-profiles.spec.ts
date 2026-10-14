@@ -66,7 +66,7 @@ async function readMessages(page: Page, ids: readonly string[]): Promise<Message
         const g = globalThis as unknown as { game: { messages: { get: (i: string) => { rolls: Array<{ formula: string }> } | undefined } } };
         const views: MessageView[] = [];
         for (const id of messageIds) {
-            const sel = `#sidebar .chat-log [data-message-id="${id}"]`;
+            const sel = `#sidebar .chat-log .message[data-message-id="${id}"]`;
             // eslint-disable-next-line no-await-in-loop -- sequential by design: each card is read once it renders
             await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
             const card = document.querySelector(sel);

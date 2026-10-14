@@ -250,7 +250,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
             },
 
             clickInMessage: async ({ messageId, buttonSelector, faces, expectMessages }) => {
-                const selector = `#sidebar .chat-log [data-message-id="${messageId}"] ${buttonSelector}`;
+                const selector = `#sidebar .chat-log .message[data-message-id="${messageId}"] ${buttonSelector}`;
                 await helpers.waitFor(
                     () => document.querySelector(selector) !== null,
                     `button ${buttonSelector} on message ${messageId}`,
