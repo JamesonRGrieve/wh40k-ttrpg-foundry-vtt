@@ -89,7 +89,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             items: Array<{ type: string; name: string }>;
         }
         interface SyntheticWeapon {
-            system: { requiredTraining: string; special: string };
+            system: { requiredTraining: string; special: Set<string> };
         }
         interface WeaponTrainingModule extends ImportError {
             checkWeaponTraining?: (actor: SyntheticActor, weapon: SyntheticWeapon) => TrainingCheckResult;
@@ -221,8 +221,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 // branch fires; a weapon with no requiredTraining hits
                 // the early "trained: true" branch.
                 const actor: SyntheticActor = { items: [{ type: 'talent', name: 'Quick Draw' }] };
-                const untrainedWeapon: SyntheticWeapon = { system: { requiredTraining: 'Las', special: '' } };
-                const freeWeapon: SyntheticWeapon = { system: { requiredTraining: '-', special: '' } };
+                const untrainedWeapon: SyntheticWeapon = { system: { requiredTraining: 'Las', special: new Set<string>() } };
+                const freeWeapon: SyntheticWeapon = { system: { requiredTraining: '-', special: new Set<string>() } };
                 const checkWeaponTraining = wt.checkWeaponTraining;
                 const getWeaponTrainingModifier = wt.getWeaponTrainingModifier;
                 const getWeaponTrainingDescription = wt.getWeaponTrainingDescription;
