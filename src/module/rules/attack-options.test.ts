@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
 import {
     aggregateSituationalDamageEffects,
+    type AttackOptionWeapon,
+    getAvailableAttackModes,
+    getMeleeSpecialOptions,
     getSituationalModifiers,
     MELEE_ATTACK_MODES,
     MELEE_SITUATIONAL_MODIFIERS,
@@ -9,7 +12,7 @@ import {
     RANGED_ATTACK_MODES,
     RANGED_SITUATIONAL_MODIFIERS,
 } from './attack-options';
-import { allCombatActions } from './combat-actions';
+import { allCombatActions, combatActionAttackModifier } from './combat-actions';
 
 describe('attack-options situational modifiers', () => {
     describe('ranged set', () => {
@@ -90,44 +93,62 @@ describe('attack-options situational modifiers', () => {
     });
 });
 
-describe('ranged Rate-of-Fire to-hit modifiers (#231)', () => {
-    const findRanged = (key: string): (typeof RANGED_ATTACK_MODES)[number] | undefined => RANGED_ATTACK_MODES.find((m) => m.key === key);
+/** An autogun-like weapon: RoF S/3/10, so every ranged mode is available. */
+const AUTO_WEAPON: AttackOptionWeapon = { isRanged: true, system: { attack: { rateOfFire: { semi: 3, full: 10 } } } };
 
-    it('uses RAW values: single shot +0, semi-auto +0, full-auto -10', () => {
-        // Standard Attack has no inherent to-hit bonus in DH2e RAW (#383 — the
-        // #231 +10 single-shot bonus was incorrect); semi +0, full -10 stand.
-        expect(findRanged('standard')?.modifier).toBe(0);
-        expect(findRanged('semiAuto')?.modifier).toBe(0);
-        expect(findRanged('fullAuto')?.modifier).toBe(-10);
+/** The dialog's ranged mode `key` as shown to an actor of `line`. */
+function shownRanged(key: string, line: string | undefined): { modifier: number; tooltip: string } | undefined {
+    return getAvailableAttackModes(AUTO_WEAPON, line).find((m) => m.key === key);
+}
+
+describe('ranged Rate-of-Fire to-hit modifiers (#231, #607)', () => {
+    // Standard Attack has no inherent to-hit bonus (#383). DH2 core "a Challenging
+    // (+0) Ballistic Skill test" / "with a −10 penalty"; DH1 core p. 191 / p. 190
+    // "+10" / "+20", and DW and RT print the same.
+    it.each([
+        ['dh2', 0, -10],
+        ['bc', 0, -10],
+        ['ow', 0, -10],
+        ['dh1', 10, 20],
+        ['dw', 10, 20],
+        ['rt', 10, 20],
+    ] as const)('%s: single shot +0, semi-auto %i, full-auto %i', (line, semi, full) => {
+        expect(shownRanged('standard', line)?.modifier).toBe(0);
+        expect(shownRanged('semiAuto', line)?.modifier).toBe(semi);
+        expect(shownRanged('fullAuto', line)?.modifier).toBe(full);
     });
 
-    it('does not regress to the reported +10 semi / +20 full bonuses', () => {
-        expect(findRanged('semiAuto')?.modifier).not.toBe(10);
-        expect(findRanged('fullAuto')?.modifier).not.toBe(20);
+    it('an unresolved line shows DH2, the family default', () => {
+        expect(shownRanged('semiAuto', undefined)?.modifier).toBe(0);
+        expect(shownRanged('fullAuto', undefined)?.modifier).toBe(-10);
     });
 
-    it('tooltips agree with the numeric modifier (no stale +10/+20 text)', () => {
-        expect(findRanged('standard')?.tooltip).toContain('+0 to BS');
-        expect(findRanged('semiAuto')?.tooltip).toContain('+0 BS');
-        expect(findRanged('fullAuto')?.tooltip).toContain('-10 BS');
+    it('burst tooltips print no fixed bonus, which differs per line', () => {
+        expect(shownRanged('standard', 'dh2')?.tooltip).toContain('+0 to BS');
+        expect(shownRanged('semiAuto', 'dh1')?.tooltip).not.toMatch(/[+-]\d+ BS/);
+        expect(shownRanged('fullAuto', 'dh1')?.tooltip).not.toMatch(/[+-]\d+ BS/);
     });
 });
 
-describe('attack-mode ↔ combat-action modifier consistency (single source, #231)', () => {
+describe('attack-mode ↔ combat-action modifier consistency (single source, #231, #607)', () => {
     // The dialog DISPLAYS the attack-mode modifier; the roll APPLIES the linked
-    // combat action's modifier (calculateCombatActionModifier reads
-    // allCombatActions()[].attack.modifier by action name). If they drift the UI
-    // shows one number while the roll uses another — exactly how Full-Auto came
-    // to read +20 while applying 0. This locks them together.
-    const actionModifier = (name: string): number => {
-        const action = allCombatActions().find((a) => a.name === name);
-        return action?.attack?.modifier ?? 0;
-    };
+    // combat action's modifier. Both read `combatActionAttackModifier`, so the card
+    // cannot show one number while the roll uses another — exactly how Full-Auto
+    // once read +20 while applying 0. Locked per line.
+    const lines = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt'];
+    const melee: AttackOptionWeapon = { isRanged: false, system: {} };
 
-    const allModes = [...RANGED_ATTACK_MODES, ...MELEE_ATTACK_MODES, ...MELEE_SPECIAL_OPTIONS];
+    it.each(lines)('every mode shows the modifier its action applies (%s)', (line) => {
+        const shown = [...getAvailableAttackModes(AUTO_WEAPON, line), ...getAvailableAttackModes(melee, line), ...getMeleeSpecialOptions(line)];
+        expect(shown).toHaveLength(RANGED_ATTACK_MODES.length + MELEE_ATTACK_MODES.length + MELEE_SPECIAL_OPTIONS.length);
+        for (const mode of shown) {
+            expect(mode.modifier, `${line}: ${mode.key} → ${mode.actionName}`).toBe(combatActionAttackModifier(mode.actionName, line));
+        }
+    });
 
-    it.each(allModes)('mode "$key" displays the same modifier its action ($actionName) applies', (mode) => {
-        expect(mode.modifier, `${mode.key} → ${mode.actionName}`).toBe(actionModifier(mode.actionName));
+    it('non-burst modes keep the registry value in every line', () => {
+        const calledShot = allCombatActions().find((a) => a.name === 'Called Shot')?.attack?.modifier;
+        for (const line of lines) expect(shownRanged('calledShot', line)?.modifier).toBe(calledShot);
     });
 });
 

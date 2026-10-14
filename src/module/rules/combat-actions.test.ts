@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { allCombatActions, calculateCombatActionModifier, type CombatActionModifierInput, isChargeAction } from './combat-actions';
+import { allCombatActions, calculateCombatActionModifier, combatActionAttackModifier, type CombatActionModifierInput, isChargeAction } from './combat-actions';
 
 /** An owned talent as the stub actor carries it: document identifier + picked specialisation. */
 interface StubTalent {
@@ -7,7 +7,7 @@ interface StubTalent {
     specialization?: string;
 }
 
-function mockRollData(action: string, weaponAttackBonus: number, talents: StubTalent[] = [], isMelee = true): CombatActionModifierInput {
+function mockRollData(action: string, weaponAttackBonus: number, talents: StubTalent[] = [], isMelee = true, gameSystemId = 'dh2'): CombatActionModifierInput {
     const items = talents.map((t) => ({
         type: 'talent',
         name: 'Any Display Name',
@@ -25,6 +25,7 @@ function mockRollData(action: string, weaponAttackBonus: number, talents: StubTa
         // eslint-disable-next-line no-restricted-syntax -- test: minimal structural stand-in for the weapon's melee/ranged flavour
         weapon: { isMelee, isRanged: !isMelee } as unknown as CombatActionModifierInput['weapon'],
         twoWeaponPlan: null,
+        gameSystemId,
     };
 }
 
@@ -87,12 +88,24 @@ const EXPECTED_ATTACK_MODIFIERS: Readonly<Record<string, number>> = {
     'All Out Attack': 30,
     'Called Shot': -20,
     'Charge': 20,
-    'Full Auto Burst': -10,
     'Guarded Action': -10,
     'Lightning Attack': -10,
-    'Semi-Auto Burst': 0,
     'Swift Attack': 0,
 };
+
+/**
+ * The burst bonus each line prints (#607). DH1 core p. 191 / p. 190, DW core
+ * p. 242 / p. 239, RT core: Semi-Auto +10, Full Auto +20. DH2, BC and OW cores:
+ * Semi-Auto +0, Full Auto −10.
+ */
+const BURST_MODIFIERS_BY_LINE: ReadonlyArray<readonly [string, number, number]> = [
+    ['dh1', 10, 20],
+    ['dw', 10, 20],
+    ['rt', 10, 20],
+    ['dh2', 0, -10],
+    ['bc', 0, -10],
+    ['ow', 0, -10],
+];
 
 describe('combat-actions registry (#119)', () => {
     const actions = allCombatActions();
@@ -242,6 +255,40 @@ describe('Two-Weapon Fighting penalties (#517)', () => {
         calculateCombatActionModifier(rd);
         expect(rd.modifiers['combat-action']).toBe(0);
         expect(rd.twoWeaponPlan).toBeNull();
+    });
+});
+
+describe('burst to-hit modifier per line (#607)', () => {
+    afterEach(() => vi.unstubAllGlobals());
+
+    it.each(BURST_MODIFIERS_BY_LINE)('%s: Semi-Auto %i, Full Auto %i', (line, semi, full) => {
+        expect(combatActionAttackModifier('Semi-Auto Burst', line)).toBe(semi);
+        expect(combatActionAttackModifier('Full Auto Burst', line)).toBe(full);
+    });
+
+    it.each(BURST_MODIFIERS_BY_LINE)('%s: the roll keys the line value on combat-action', (line, semi, full) => {
+        stubGame();
+        const semiRoll = mockRollData('Semi-Auto Burst', 5, [], false, line);
+        calculateCombatActionModifier(semiRoll);
+        expect(semiRoll.modifiers['combat-action']).toBe(semi);
+        expect(semiRoll.modifiers['attack']).toBe(5);
+        const fullRoll = mockRollData('Full Auto Burst', 0, [], false, line);
+        calculateCombatActionModifier(fullRoll);
+        expect(fullRoll.modifiers['combat-action']).toBe(full);
+    });
+
+    it('a line that prints no bursts (IM) adds nothing; an unknown line reads DH2', () => {
+        expect(combatActionAttackModifier('Full Auto Burst', 'im')).toBe(0);
+        expect(combatActionAttackModifier('Full Auto Burst', undefined)).toBe(-10);
+        expect(combatActionAttackModifier('Full Auto Burst', 'nope')).toBe(-10);
+    });
+
+    it('Suppressing Fire keeps its own −20 rather than a burst bonus', () => {
+        for (const [line] of BURST_MODIFIERS_BY_LINE) {
+            expect(combatActionAttackModifier('Suppressing Fire - Full', line)).toBe(
+                allCombatActions().find((a) => a.name === 'Suppressing Fire - Full')?.attack?.modifier ?? 0,
+            );
+        }
     });
 });
 

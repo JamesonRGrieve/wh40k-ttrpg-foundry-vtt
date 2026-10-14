@@ -5,7 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
-import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
@@ -112,6 +112,11 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
+    /**
+     * DH2 core ch. VII: Semi-Auto Burst is "a Challenging (+0) Ballistic Skill
+     * test"; Full Auto Burst is made "with a −10 penalty" — #607.
+     */
+    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 0, full: -10 };
     /**
      * DH2 core ch. VII, Evasion: "When Evading Swift Attacks, Lightning Attacks,
      * Full Auto Bursts, Semi-Auto Bursts, attacks from weapons with the Twin-Linked

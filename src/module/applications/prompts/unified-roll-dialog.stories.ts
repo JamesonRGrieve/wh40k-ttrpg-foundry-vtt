@@ -7,6 +7,7 @@ import headerSrc from '../../../../src/templates/prompt/unified/header.hbs?raw';
 import modifiersSrc from '../../../../src/templates/prompt/unified/modifiers.hbs?raw';
 import targetSrc from '../../../../src/templates/prompt/unified/target-display.hbs?raw';
 import { renderSheetParts } from '../../../../stories/test-helpers';
+import { type AttackOptionWeapon, getAvailableAttackModes } from '../../rules/attack-options.ts';
 
 /**
  * UnifiedRollDialog is the single dialog for every roll type (skill, weapon,
@@ -414,5 +415,59 @@ export const OncePerRoundAvailable: Story = {
         await expect(push?.getAttribute('aria-pressed')).toBe('false');
         await expect(push?.dataset['situationalSpent']).toBeUndefined();
         await expect(push?.dataset['tooltip']).toContain('4+ DoF');
+    },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Burst to-hit bonus per line (#607)                                 */
+/* ------------------------------------------------------------------ */
+
+/** The weapon panel for an autogun (RoF S/3/10), its mode cards built by the real per-line resolver. */
+function burstPanel(line: string): Ctx {
+    const weapon: AttackOptionWeapon = { isRanged: true, system: { attack: { rateOfFire: { semi: 3, full: 10 } } } };
+    return baseContext({
+        rollName: 'Ballistic Skill Test',
+        rollSubtitle: 'Autogun',
+        hasContextPanel: true,
+        isWeapon: true,
+        isRanged: true,
+        contextExpanded: true,
+        weapon: { name: 'Autogun', img: 'icons/svg/item-bag.svg', isRanged: true },
+        attackModes: getAvailableAttackModes(weapon, line).map((mode) => ({
+            ...mode,
+            isSelected: mode.key === 'semiAuto',
+            modifierLabel: mode.modifier >= 0 ? `+${mode.modifier}` : `${mode.modifier}`,
+        })),
+        aimOptions: [],
+        rangeBrackets: [],
+        sizeOptions: [],
+        combatSituationals: [],
+    });
+}
+
+/** The modifier label on a mode card. */
+function modeLabel(root: HTMLElement, key: string): string {
+    const card = root.querySelector<HTMLElement>(`[data-action="selectAttackMode"][data-mode-key="${key}"]`);
+    return card?.lastElementChild?.textContent.trim() ?? '';
+}
+
+/** DH1 core p. 191 / p. 190: Semi-Auto Burst +10, Full Auto Burst +20 (DW and RT print the same). */
+export const Dh1BurstModes: Story = {
+    args: burstPanel('dh1'),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),
+    play: async ({ canvasElement }) => {
+        await expect(modeLabel(canvasElement, 'semiAuto')).toBe('+10');
+        await expect(modeLabel(canvasElement, 'fullAuto')).toBe('+20');
+        await expect(modeLabel(canvasElement, 'standard')).toBe('+0');
+    },
+};
+
+/** DH2 (BC and OW print the same): Semi-Auto Burst +0, Full Auto Burst −10. */
+export const Dh2BurstModes: Story = {
+    args: burstPanel('dh2'),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh2' }),
+    play: async ({ canvasElement }) => {
+        await expect(modeLabel(canvasElement, 'semiAuto')).toBe('+0');
+        await expect(modeLabel(canvasElement, 'fullAuto')).toBe('-10');
     },
 };

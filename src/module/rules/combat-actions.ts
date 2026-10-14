@@ -1,4 +1,6 @@
+import { burstAttackModifierFor } from '../config/game-systems/index.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
+import { burstAttackModeForAction } from './auto-fire.ts';
 import { hasGrenadeRider, type RiderWeaponSystem, riderTakesWeaponRoll } from './grenade-rider.ts';
 import { type GrenadeWeaponSystem, isGrenadeWeapon } from './grenade-weapon.ts';
 import { hitLocationNames } from './hit-locations.ts';
@@ -19,8 +21,23 @@ type CombatAction = {
  *  without fabricating a whole WeaponRollData. */
 export type CombatActionModifierInput = Pick<
     WeaponRollData,
-    'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers' | 'sourceActor' | 'weapon' | 'twoWeaponPlan'
+    'actions' | 'action' | 'isCalledShot' | 'calledShotLocation' | 'modifiers' | 'sourceActor' | 'weapon' | 'twoWeaponPlan' | 'gameSystemId'
 >;
+
+/**
+ * The to-hit modifier a combat action applies in a line — the one source both the
+ * roll and the attack-mode cards read (#231, #607). A burst prints its modifier
+ * per line (DH1 / DW / RT Semi-Auto +10, Full Auto +20; DH2 / BC / OW +0 and −10),
+ * carried on the game-system config; every other action's is the same in every
+ * line and lives on its registry entry.
+ * @param actionName  The combat action's canonical name.
+ * @param line        The rolling actor's game line.
+ */
+export function combatActionAttackModifier(actionName: string, line: string | undefined): number {
+    const burst = burstAttackModeForAction(actionName);
+    if (burst !== null) return burstAttackModifierFor(line, burst);
+    return allCombatActions().find((action) => action.name === actionName)?.attack?.modifier ?? 0;
+}
 
 /** The canonical action name whose penalties {@link resolveTwoWeaponPenalties} owns. */
 const TWO_WEAPON_ACTION = 'Two-Weapon Fighting';
@@ -79,8 +96,8 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
     // +30, …) gets its OWN key so it does not clobber the weapon's attackBonus,
     // which also writes modifiers['attack'] in RollData.update(). Previously
     // whichever ran last won, silently dropping the Called Shot −20 (#408).
-    const actionInfo = allCombatActions().find((action: CombatAction) => action.name === currentAction);
-    rollData.modifiers['combat-action'] = actionInfo?.attack?.modifier ?? 0;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) types actions[rollData.action] as always present; tsconfig.json (flag on) types it `| undefined` and requires this guard
+    rollData.modifiers['combat-action'] = currentAction === undefined ? 0 : combatActionAttackModifier(currentAction, rollData.gameSystemId);
 
     // Two-Weapon Fighting's penalties are talent-dependent, so they cannot be a
     // fixed `attack.modifier` on the action entry like Called Shot's −20 (#517).
@@ -291,10 +308,8 @@ export function allCombatActions(): CombatAction[] {
             name: 'Full Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: '-10 BS; each DoS adds a hit; 94+ jams; hits spread 2m.',
-            attack: {
-                modifier: -10,
-            },
+            // The to-hit modifier is per line (combatActionAttackModifier, #607).
+            description: 'Each DoS adds a hit; 94+ jams; hits spread 2m.',
         },
         {
             name: 'Grapple',
@@ -367,10 +382,8 @@ export function allCombatActions(): CombatAction[] {
             name: 'Semi-Auto Burst',
             type: ['Half'],
             subtype: ['Attack', 'Ranged'],
-            description: '+0 BS; every 2 DoS beyond the first adds a hit; 94+ jams; hits spread 2m.',
-            attack: {
-                modifier: 0,
-            },
+            // The to-hit modifier is per line (combatActionAttackModifier, #607).
+            description: 'Every 2 DoS beyond the first adds a hit; 94+ jams; hits spread 2m.',
         },
         {
             name: 'Stun',

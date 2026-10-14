@@ -20,6 +20,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification = null;
     /** IM prints no rate-of-fire bursts. */
     readonly burstRules = null;
+    /** IM prints no rate-of-fire bursts, so no burst to-hit modifier. */
+    readonly burstAttackModifiers = null;
     /** IM's evasion is not modelled beyond the single negated hit. */
     readonly evasionRules = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';

@@ -17,7 +17,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
 import {
     type ChaosAdvanceEntry,
     deriveAlignmentFromTally,
@@ -81,6 +81,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Full Automatic rate of fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
+    /**
+     * BC core, Combat Actions: Semi-Auto Burst "with a +0 bonus"; Full Auto Burst "with a
+     * −10 bonus to his attack" — #607.
+     */
+    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 0, full: -10 };
     /**
      * BC core: "When Evading Full Auto or Semi-Auto Bursts, each Degree of Success
      * on the Dodge Test negates one additional hit. When Evading Swift or Lightning

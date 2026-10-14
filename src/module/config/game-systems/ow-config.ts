@@ -6,7 +6,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
@@ -123,6 +123,11 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * normal" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
+    /**
+     * OW core p. 247: Semi-Auto Burst is "a Challenging (+0) Ballistic Skill Test";
+     * p. 245: Full Auto Burst is made "with a −10 penalty" — #607.
+     */
+    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 0, full: -10 };
     /**
      * OW core: "When Evading Swift Attacks, Lightning Attacks, Full Auto Bursts,
      * Semi-Auto Bursts, or any weapon with the Twin-Linked Quality, each Degree of

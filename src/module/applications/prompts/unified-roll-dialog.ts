@@ -23,6 +23,7 @@ import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from
 import {
     AIM_OPTIONS,
     aggregateSituationalDamageEffects,
+    type AttackOptionWeapon,
     getActionNameForMode,
     getAimKeyForModifier,
     getAimModifier,
@@ -61,7 +62,6 @@ import {
 } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
-import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
@@ -127,18 +127,6 @@ export interface SkillUseItemPickerContext {
     isEmpty: boolean;
     options: Array<{ id: string; name: string; isSelected: boolean }>;
 }
-
-type AttackOptionWeaponLike = WH40KItemDocument & {
-    isRanged: boolean;
-    system: WH40KItemDocument['system'] & {
-        attack?: {
-            rateOfFire?: {
-                semi?: number;
-                full?: number;
-            };
-        };
-    };
-};
 
 /**
  * The slice of a target actor read when auto-selecting situational modifiers
@@ -1165,20 +1153,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         // Card-based attack modes
         const isRanged = rd.weapon?.isRanged === true;
-        /* eslint-disable no-restricted-syntax -- boundary: rd.weapon cast is boundary; weapon roll data typing does not match AttackOptionWeaponLike exactly */
         const attackModes = rd.weapon
-            ? getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeaponLike).map((m) => ({
+            ? // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KItem#system is the per-type DataModel union (only `weapon` carries attack.rateOfFire); read through the attack-mode surface
+              getAvailableAttackModes(rd.weapon as unknown as AttackOptionWeapon, rd.gameSystemId).map((m) => ({
                   ...m,
                   isSelected: this._attackModeKey === m.key,
                   modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,
               }))
             : [];
-        /* eslint-enable no-restricted-syntax */
 
         // Melee special options
         const meleeSpecialOptions =
             !isRanged && rd.weapon
-                ? getMeleeSpecialOptions().map((m) => ({
+                ? getMeleeSpecialOptions(rd.gameSystemId).map((m) => ({
                       ...m,
                       isSelected: this._attackModeKey === m.key,
                       modifierLabel: m.modifier >= 0 ? `+${m.modifier}` : `${m.modifier}`,

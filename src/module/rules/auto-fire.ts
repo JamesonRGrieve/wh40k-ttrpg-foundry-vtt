@@ -70,6 +70,27 @@ export interface BurstCapComponent {
 /** Which rate-of-fire entry a burst action draws its ceiling and ammunition from. */
 export type BurstMode = 'semi' | 'full';
 
+/**
+ * A line's printed to-hit modifier for each burst action (#607): DH2 / BC / OW
+ * Semi-Auto +0 and Full Auto −10; DH1 / DW / RT Semi-Auto +10 and Full Auto +20.
+ */
+export type BurstAttackModifiers = Readonly<Record<BurstMode, number>>;
+
+/** The burst actions whose to-hit modifier is the line's {@link BurstAttackModifiers} entry. */
+const BURST_ATTACK_ACTIONS: Readonly<Record<string, BurstMode>> = {
+    'Semi-Auto Burst': 'semi',
+    'Full Auto Burst': 'full',
+};
+
+/**
+ * The burst mode whose printed to-hit modifier an action takes, or null. Only the
+ * two burst ATTACK actions: Suppressing Fire draws on a burst's ammunition but
+ * prints its own −20.
+ */
+export function burstAttackModeForAction(action: string): BurstMode | null {
+    return BURST_ATTACK_ACTIONS[action] ?? null;
+}
+
 /** A weapon's three rate-of-fire entries (`S/2/4` → single, semi 2, full 4). */
 interface RateOfFire {
     readonly semi: number;

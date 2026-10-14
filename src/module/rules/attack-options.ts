@@ -4,34 +4,41 @@
  * Used by the unified roll dialog weapon panel to render selectable cards.
  */
 
-import type { WH40KItemDocument } from '../types/global.d.ts';
+import { combatActionAttackModifier } from './combat-actions.ts';
 
-type AttackOptionWeapon = WH40KItemDocument & {
-    isRanged: boolean;
-    system: WH40KItemDocument['system'] & {
-        attack?: {
-            rateOfFire?: {
-                semi?: number;
-                full?: number;
+/** The weapon surface the attack-mode availability reads: its class and rate of fire. */
+export interface AttackOptionWeapon {
+    readonly isRanged: boolean;
+    readonly system: {
+        readonly attack?: {
+            readonly rateOfFire?: {
+                readonly semi?: number;
+                readonly full?: number;
             };
         };
     };
-};
+}
 
 type AttackModeOption = {
     key: string;
     label: string;
     actionName: string;
     actionCost: string | null;
-    modifier: number;
     icon: string;
     tooltip: string;
     default?: boolean;
     requires?: (weapon: AttackOptionWeapon) => boolean;
 };
 
+/**
+ * A mode as the dialog shows it: whether the weapon can take it, and the to-hit
+ * modifier its combat action applies in the rolling actor's line — read from the
+ * same source the roll uses ({@link combatActionAttackModifier}), so the card and
+ * the roll cannot disagree (#231, #607).
+ */
 type AttackModeAvailability = AttackModeOption & {
     available: boolean;
+    modifier: number;
 };
 
 /**
@@ -74,7 +81,6 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Standard Attack',
         actionName: 'Standard Attack',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-crosshairs',
         tooltip: 'Single shot. +0 to BS. Jam on 96+.',
         default: true,
@@ -84,9 +90,8 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Semi-Auto',
         actionName: 'Semi-Auto Burst',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-burst',
-        tooltip: 'Fire a burst. +0 BS. Additional hit per 2 DoS. Jam on 94+.',
+        tooltip: 'Fire a burst. Additional hit per 2 DoS. Jam on 94+.',
         requires: (weapon) => (weapon.system.attack?.rateOfFire?.semi ?? 0) > 0,
     },
     {
@@ -94,9 +99,8 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Full-Auto',
         actionName: 'Full Auto Burst',
         actionCost: 'Half',
-        modifier: -10,
         icon: 'fas fa-arrows-split-up-and-left',
-        tooltip: 'Spray fire. -10 BS. Additional hit per DoS. Jam on 94+.',
+        tooltip: 'Spray fire. Additional hit per DoS. Jam on 94+.',
         requires: (weapon) => (weapon.system.attack?.rateOfFire?.full ?? 0) > 0,
     },
     {
@@ -104,7 +108,6 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Suppressing Fire',
         actionName: 'Suppressing Fire - Full',
         actionCost: 'Full',
-        modifier: -20,
         icon: 'fas fa-shield-virus',
         tooltip: 'Full-auto in 45° arc at -20 BS. Enemies must pass -20 Pinning test.',
         requires: (weapon) => (weapon.system.attack?.rateOfFire?.full ?? 0) > 0,
@@ -114,7 +117,6 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Overwatch',
         actionName: 'Overwatch',
         actionCost: 'Full',
-        modifier: 0,
         icon: 'fas fa-eye',
         tooltip: 'Set a 45° kill zone. React to targets entering with chosen attack. Targets must test Pinning.',
     },
@@ -123,7 +125,6 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         label: 'Called Shot',
         actionName: 'Called Shot',
         actionCost: 'Full',
-        modifier: -20,
         icon: 'fas fa-bullseye',
         tooltip: 'Target a specific location. -20 BS.',
     },
@@ -138,7 +139,6 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'Standard Attack',
         actionName: 'Standard Attack',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-sword',
         tooltip: 'Basic melee strike. +0 to WS.',
         default: true,
@@ -148,7 +148,6 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'Charge',
         actionName: 'Charge',
         actionCost: 'Full',
-        modifier: 20,
         icon: 'fas fa-person-running',
         tooltip: 'Move up to 3× AgB (last 4m straight), +20 WS.',
     },
@@ -157,7 +156,6 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'All-Out Attack',
         actionName: 'All Out Attack',
         actionCost: 'Full',
-        modifier: 30,
         icon: 'fas fa-hand-fist',
         tooltip: 'Sacrifice Evasion reaction for +30 WS.',
     },
@@ -166,7 +164,6 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'Guarded Attack',
         actionName: 'Guarded Action',
         actionCost: 'Half',
-        modifier: -10,
         icon: 'fas fa-shield',
         tooltip: '-10 WS, but +10 to all Evasion tests until next turn.',
     },
@@ -175,7 +172,6 @@ export const MELEE_ATTACK_MODES: AttackModeOption[] = [
         label: 'Called Shot',
         actionName: 'Called Shot',
         actionCost: 'Full',
-        modifier: -20,
         icon: 'fas fa-bullseye',
         tooltip: 'Target a specific location. -20 WS.',
     },
@@ -190,7 +186,6 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         label: 'Feint',
         actionName: 'Feint',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-face-meh-blank',
         tooltip: 'Opposed WS test. If you win, next melee attack cannot be Evaded.',
     },
@@ -199,7 +194,6 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         label: 'Knockdown',
         actionName: 'Knock Down',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-person-falling',
         tooltip: 'On hit, opposed Strength test (+10 if Charging). 2+ DoS deals (1d5−3)+SB Impact and 1 Fatigue.',
     },
@@ -208,7 +202,6 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         label: 'Stun',
         actionName: 'Stun',
         actionCost: 'Half',
-        modifier: -20,
         icon: 'fas fa-stars',
         tooltip: 'Melee attack at -20 WS. On hit, 1d10+SB vs TB+(head AP). Stun for rounds equal to difference.',
     },
@@ -217,7 +210,6 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         label: 'Manoeuvre',
         actionName: 'Manoeuvre',
         actionCost: 'Half',
-        modifier: 0,
         icon: 'fas fa-arrows-up-down-left-right',
         tooltip: 'Opposed WS test. Move opponent up to 1m in chosen direction. Cannot push into obstacles.',
     },
@@ -226,7 +218,6 @@ export const MELEE_SPECIAL_OPTIONS: AttackModeOption[] = [
         label: 'Disarm',
         actionName: 'Disarm',
         actionCost: 'Full',
-        modifier: 0,
         icon: 'fas fa-hand-fist',
         tooltip: 'Opposed WS test. If you win, the target drops its weapon; win by 3+ degrees to take it.',
     },
@@ -445,26 +436,31 @@ export const MELEE_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
 // ──────────────────────────────────────────────
 
 /**
- * Get attack modes filtered by weapon capabilities.
- * @param {Item} weapon - The weapon item
- * @returns {Array} Attack modes with `available` flag set
+ * Get attack modes filtered by weapon capabilities, each carrying the to-hit
+ * modifier its action applies in `line`.
+ * @param weapon  The weapon item.
+ * @param line    The rolling actor's game line (`dh1`, `dh2`, …).
+ * @returns Attack modes with `available` and `modifier` set.
  */
-export function getAvailableAttackModes(weapon: AttackOptionWeapon): AttackModeAvailability[] {
+export function getAvailableAttackModes(weapon: AttackOptionWeapon, line: string | undefined): AttackModeAvailability[] {
     const modes = weapon.isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES;
     return modes.map((mode) => ({
         ...mode,
         available: mode.requires ? mode.requires(weapon) : true,
+        modifier: combatActionAttackModifier(mode.actionName, line),
     }));
 }
 
 /**
- * Get melee special options with availability.
- * @returns {Array} Special options (always available for melee weapons)
+ * Get melee special options with availability and their line's modifier.
+ * @param line  The rolling actor's game line.
+ * @returns Special options (always available for melee weapons).
  */
-export function getMeleeSpecialOptions(): AttackModeAvailability[] {
+export function getMeleeSpecialOptions(line: string | undefined): AttackModeAvailability[] {
     return MELEE_SPECIAL_OPTIONS.map((opt) => ({
         ...opt,
         available: true,
+        modifier: combatActionAttackModifier(opt.actionName, line),
     }));
 }
 

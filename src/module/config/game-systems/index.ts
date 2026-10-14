@@ -4,7 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -113,6 +113,21 @@ export function weaponModificationRulesFor(line: string | undefined): WeaponModi
 export function burstRulesFor(line: string | undefined): BurstCapRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.burstRules ?? null;
+}
+
+/** The line whose burst modifiers an unresolved line reads — DH2, the family's canonical default. */
+const DEFAULT_BURST_LINE = 'dh2';
+
+/**
+ * A burst action's printed to-hit modifier in a line (#607). An unresolved line
+ * (no rolling actor, or an id no config registers) reads DH2's; a line that
+ * prints no bursts (IM) contributes 0.
+ * @param line  `system.gameSystem` id.
+ * @param mode  The burst whose modifier is wanted.
+ */
+export function burstAttackModifierFor(line: string | undefined, mode: BurstMode): number {
+    const config = SystemConfigRegistry.getOrNull(line ?? DEFAULT_BURST_LINE) ?? SystemConfigRegistry.getOrNull(DEFAULT_BURST_LINE);
+    return config?.burstAttackModifiers?.[mode] ?? 0;
 }
 
 /**
