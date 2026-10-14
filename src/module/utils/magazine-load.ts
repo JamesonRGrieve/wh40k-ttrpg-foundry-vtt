@@ -27,13 +27,20 @@ export interface LoadableWeapon {
     /** Segments of special/mixed ammo; a loaded magazine already defines the round count. */
     magazineSegments: number;
     compendiumSource: string | null;
+    /**
+     * The payload states its own round count and is not a compendium copy: an
+     * authored weapon's explicit `clip.value` (an empty one included) is kept.
+     * A compendium copy's count is the canonical item's, not a choice, so it
+     * never counts as authored.
+     */
+    clipValueAuthored: boolean;
 }
 
 /**
  * The round count to store, or null when the weapon needs no loading: it is not
  * a weapon, already holds rounds or a magazine, or has no positive clip size.
  */
-export function magazineToLoad(weapon: Omit<LoadableWeapon, 'compendiumSource'>, resolvedMax: number | null): number | null {
+export function magazineToLoad(weapon: Omit<LoadableWeapon, 'compendiumSource' | 'clipValueAuthored'>, resolvedMax: number | null): number | null {
     if (weapon.type !== 'weapon') return null;
     if (weapon.clipValue > 0 || weapon.magazineSegments > 0) return null;
     if (resolvedMax === null || resolvedMax <= 0) return null;
@@ -42,7 +49,7 @@ export function magazineToLoad(weapon: Omit<LoadableWeapon, 'compendiumSource'>,
 
 /** Does this weapon need its clip size looked up before it can be judged? */
 function needsLoading(weapon: LoadableWeapon): boolean {
-    return weapon.type === 'weapon' && weapon.clipValue <= 0 && weapon.magazineSegments === 0;
+    return weapon.type === 'weapon' && !weapon.clipValueAuthored && weapon.clipValue <= 0 && weapon.magazineSegments === 0;
 }
 
 /**
@@ -92,12 +99,14 @@ export function loadableFromSource(source: object): LoadableWeapon {
     const magazine = clip?.['magazine'];
     const stats = isPlainObject(raw['_stats']) ? raw['_stats'] : null;
     const linkedSource = stats?.['compendiumSource'];
+    const compendiumSource = typeof linkedSource === 'string' && linkedSource !== '' ? linkedSource : null;
     return {
         type: typeof raw['type'] === 'string' ? raw['type'] : '',
         clipValue: numberAt(clip, 'value'),
         clipMax: numberAt(clip, 'max'),
         magazineSegments: Array.isArray(magazine) ? magazine.length : 0,
-        compendiumSource: typeof linkedSource === 'string' && linkedSource !== '' ? linkedSource : null,
+        compendiumSource,
+        clipValueAuthored: compendiumSource === null && typeof clip?.['value'] === 'number',
     };
 }
 

@@ -10,7 +10,7 @@ import { canonicalClipMax, fullMagazineFor, type LoadableWeapon, loadableFromSou
 const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
 
 function weapon(overrides: Partial<LoadableWeapon> = {}): LoadableWeapon {
-    return { type: 'weapon', clipValue: 0, clipMax: 0, magazineSegments: 0, compendiumSource: HAND_FLAMER, ...overrides };
+    return { type: 'weapon', clipValue: 0, clipMax: 0, magazineSegments: 0, compendiumSource: HAND_FLAMER, clipValueAuthored: false, ...overrides };
 }
 
 describe('magazineToLoad', () => {
@@ -73,16 +73,34 @@ describe('loadableFromSource', () => {
 
     it('reads the stored clip and magazine', () => {
         const raw = { type: 'weapon', system: { clip: { value: 4, max: 10, magazine: [{ count: 4 }] } }, _stats: { compendiumSource: null } };
-        expect(loadableFromSource(raw)).toEqual({ type: 'weapon', clipValue: 4, clipMax: 10, magazineSegments: 1, compendiumSource: null });
+        expect(loadableFromSource(raw)).toEqual({
+            type: 'weapon',
+            clipValue: 4,
+            clipMax: 10,
+            magazineSegments: 1,
+            compendiumSource: null,
+            clipValueAuthored: true,
+        });
+    });
+
+    it('treats a compendium copy`s round count as not authored', () => {
+        const raw = { type: 'weapon', system: { clip: { value: 0, max: 12 } }, _stats: { compendiumSource: HAND_FLAMER } };
+        expect(loadableFromSource(raw).clipValueAuthored).toBe(false);
     });
 });
 
 describe('withFullMagazine', () => {
-    it('writes a full magazine into a copy, keeping every other field', async () => {
-        const raw = { name: 'Autogun', type: 'weapon', system: { clip: { max: 30, value: 0, type: 'autogun' }, class: 'basic' } };
+    it('writes a full magazine into a copy of a compendium weapon, keeping every other field', async () => {
+        const stats = { compendiumSource: HAND_FLAMER };
+        const raw = { name: 'Autogun', type: 'weapon', system: { clip: { max: 30, value: 0, type: 'autogun' }, class: 'basic' }, _stats: stats };
         const loaded = await withFullMagazine(raw, vi.fn());
-        expect(loaded).toEqual({ name: 'Autogun', type: 'weapon', system: { clip: { max: 30, value: 30, type: 'autogun' }, class: 'basic' } });
+        expect(loaded).toEqual({ name: 'Autogun', type: 'weapon', system: { clip: { max: 30, value: 30, type: 'autogun' }, class: 'basic' }, _stats: stats });
         expect(raw.system.clip.value).toBe(0);
+    });
+
+    it('keeps an authored weapon`s explicit empty magazine (freeze Tier B, weapon-attack out-of-ammo)', async () => {
+        const raw = { name: 'probe-empty-weapon', type: 'weapon', system: { clip: { max: 30, value: 0 } } };
+        await expect(withFullMagazine(raw, vi.fn().mockResolvedValue(30))).resolves.toBe(raw);
     });
 
     it('loads a lean stub that carries no system at all', async () => {
