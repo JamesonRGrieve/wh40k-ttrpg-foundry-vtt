@@ -61,6 +61,32 @@ export async function placeAreaTemplate(
     target: CanvasToken | null,
     scatter: ScatterVector | null,
 ): Promise<AreaTemplateRef | null> {
+    return createTemplate({ shape: spec.shape, anchor: spec.anchor, distance: spec.distance, angle: spec.angle }, firer, target, scatter);
+}
+
+/**
+ * Create a grenade rider's circle of `radius` metres on the active scene (#623), on the
+ * target's token (or on the thrower's, to drag into place), and select it so the user
+ * can adjust it before resolving. Null (after a warning) when there is no scene.
+ */
+export async function placeRiderTemplate(radius: number, thrower: CanvasToken, target: CanvasToken | null): Promise<AreaTemplateRef | null> {
+    return createTemplate({ shape: 'circle', anchor: 'impact', distance: radius, angle: 0 }, thrower, target, null);
+}
+
+/** The template a placement creates: its shape, what it is anchored on, its size and (for a cone) its opening. */
+interface TemplatePlacement {
+    shape: AreaTemplateSpec['shape'];
+    anchor: AreaTemplateSpec['anchor'];
+    distance: number;
+    angle: number;
+}
+
+async function createTemplate(
+    placement: TemplatePlacement,
+    firer: CanvasToken,
+    target: CanvasToken | null,
+    scatter: ScatterVector | null,
+): Promise<AreaTemplateRef | null> {
     const scene = canvas.scene;
     const ppu = pixelsPerUnit();
     if (scene === null || ppu === null) {
@@ -68,7 +94,7 @@ export async function placeAreaTemplate(
         return null;
     }
     const { origin, direction } = areaPlacement({
-        anchor: spec.anchor,
+        anchor: placement.anchor,
         firer: toUnits(firer.center, ppu),
         firerRotation: firer.document.rotation,
         target: target === null ? null : toUnits(target.center, ppu),
@@ -76,12 +102,12 @@ export async function placeAreaTemplate(
     });
     const createdDocs = await scene.createEmbeddedDocuments('MeasuredTemplate', [
         {
-            t: spec.shape,
+            t: placement.shape,
             x: origin.x * ppu,
             y: origin.y * ppu,
-            distance: spec.distance,
+            distance: placement.distance,
             direction,
-            angle: spec.angle,
+            angle: placement.angle,
         },
     ]);
     const created = createdDocs.at(0);

@@ -8,8 +8,12 @@
  * model is `grenade-throw-view.ts`.
  */
 
+import { activeTokenOf, placeRiderTemplate } from '../../canvas/area-template-canvas.ts';
+import { t } from '../../i18n/t.ts';
+import { type RiderThrowFlag, riderThrowFlags } from '../../rolls/grenade-rider-flag.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { resolveThrow } from '../../rules/combat-actions.ts';
+import { riderArea, riderRadiusMetres } from '../../rules/grenade-rider.ts';
 import { ownerGameLine } from '../../utils/item-variant-utils.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
@@ -18,11 +22,14 @@ import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeThrowViewCo
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** The thrower the dialog reads its grenades from. */
+/** The thrower the dialog reads its grenades from, and places a rider's area from (#623). */
 export interface GrenadeThrower {
     name: string;
     type: string;
+    /** Null only before the actor is persisted; such a thrower places no rider area. */
+    uuid: string | null;
     items: Iterable<{ id: string | null; name: string; isThrown: boolean; system: GrenadeItemView['system'] }>;
+    getActiveTokens: () => foundry.canvas.placeables.Token[];
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
@@ -101,15 +108,40 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         await this.render();
     }
 
+    /**
+     * Place the thrown grenade's rider area (#623) on the user's target, or on the thrower
+     * to drag into place, and return the flag its card carries so Resolve Rider finds it.
+     * Null when the grenade prints no area or there is no canvas to place it on.
+     */
+    async #placeRiderArea(grenade: GrenadeItemView): Promise<RiderThrowFlag | null> {
+        const { rider, effectiveSpecial = new Set<string>() } = grenade.system;
+        const area = rider == null ? null : riderArea(rider, effectiveSpecial);
+        const thrower = activeTokenOf(this.#actor);
+        const actorUuid = this.#actor.uuid;
+        if (area === null || thrower === null || actorUuid === null) return null;
+        const printed = Number(area.size);
+        // A dice-sized area (a 3d10 m smokescreen) is rolled where it lands.
+        const size = Number.isFinite(printed) ? printed : (await new Roll(area.size).evaluate()).total;
+        const ref = await placeRiderTemplate(riderRadiusMetres(size, area.measure), thrower, game.user.targets.first() ?? null);
+        if (ref === null) return null;
+        ui.notifications.info(t('WH40K.GrenadeRider.Placed', { grenade: grenade.name }));
+        return { ...ref, actorUuid, itemId: grenade.id };
+    }
+
     static async #onThrow(this: GrenadeThrowDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { selectedGrenade } = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, GRENADE_LABELS);
-        if (selectedGrenade === null) return;
+        const grenades = riderGrenades(this.#actor);
+        const { selectedGrenade } = buildGrenadeThrowContext(grenades, this.#selectedId, GRENADE_LABELS);
+        const thrown = grenades.find((item) => item.id === selectedGrenade?.id);
+        if (selectedGrenade === null || thrown === undefined) return;
         const gameSystem = this.#gameSystem;
+        // A rider with a test or a condition resolves against the creatures in its area,
+        // from this card (a grenade that deals no damage, #622): place that area now.
+        const flag = selectedGrenade.resolvable ? await this.#placeRiderArea(thrown) : null;
         await emitChatFromTemplate(
             'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
-            { rider: selectedGrenade, gameSystem, _gameSystemId: gameSystem },
-            { speaker: { alias: this.#actor.name } },
+            { rider: selectedGrenade, canResolve: flag !== null, gameSystem, _gameSystemId: gameSystem },
+            { speaker: { alias: this.#actor.name }, ...(flag === null ? {} : { flags: riderThrowFlags(flag) }) },
         );
         await this.close();
     }

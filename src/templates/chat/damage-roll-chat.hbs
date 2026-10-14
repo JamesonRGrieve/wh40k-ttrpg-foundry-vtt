@@ -160,7 +160,7 @@
                             {{localize "WH40K.GrenadeRider.Struck"}}: <span class="tw-text-[#e8e4d9]">{{join damageRider.struck ", "}}</span>
                         </div>
                     {{/if}}
-                    {{> systems/wh40k-rpg/templates/chat/partial/grenade-rider-summary.hbs rider=damageRider.rider}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/grenade-rider-summary.hbs rider=damageRider.rider canResolve=damageRider.canResolve rollId=rollId}}
                 </div>
             {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

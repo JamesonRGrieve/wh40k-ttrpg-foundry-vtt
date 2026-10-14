@@ -1,17 +1,16 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
+import { riderFixture } from '../testing/grenade-rider-fixture.ts';
 import { allCombatActions, resolveThrow, updateAvailableCombatActions } from './combat-actions.ts';
-import type { GrenadeRiderData } from './grenade-rider.ts';
 
 /** A rider as a grenade's compendium document authors it (#135). */
-const RIDER: GrenadeRiderData = {
+const RIDER = riderFixture({
     test: { characteristic: 'agility', modifier: 10 },
-    area: { size: '', measure: 'radius' },
+    condition: 'blinded',
     duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-    effectRollShift: { perDegree: 0, max: 0 },
     effect: 'Blinded for a number of rounds equal to his degrees of failure.',
-};
+});
 
 /**
  * "Throw" half-action coverage (DH2 Core "Throw"): hurl a grenade or

@@ -2668,7 +2668,31 @@
             "Cancel": "Cancel",
             "ChatTitle": "Grenade Thrown",
             "FollowsDamage": "Rider — after the damage",
-            "Struck": "Struck"
+            "Struck": "Struck",
+            "Affects": "Affects",
+            "AffectsPsykers": "Psykers only",
+            "ResolveButton": "Resolve Rider",
+            "ResultsTitle": "Grenade Rider",
+            "TestLabel": "{characteristic} test",
+            "DegreesOfFailure": "{degrees} DoF",
+            "Outcome": {
+                "Unaffected": "Unaffected",
+                "Resisted": "Resisted",
+                "Suffers": "Suffers"
+            },
+            "Component": {
+                "Grenade": "{name}",
+                "Psyker": "Psyker"
+            },
+            "ConditionRounds": "{condition} for {rounds} round(s)",
+            "ConditionEncounter": "{condition} until the end of the encounter",
+            "EffectShift": "{step} to the effect roll",
+            "SuffersEffect": "Suffers the effect",
+            "Applied": "Applied",
+            "NotApplied": "The GM applies it",
+            "NoTargets": "No creature is in the grenade's area.",
+            "NoArea": "The grenade's area is gone; throw it again to resolve its rider.",
+            "Placed": "{grenade}: drag its area into place, then Resolve Rider."
         },
         "Daemonhost": {
             "DialogTitle": "Bind Daemonhost",

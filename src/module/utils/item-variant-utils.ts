@@ -31,6 +31,15 @@ const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
 const LINE_KEYS = new Set<SupportedLineKey>(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
 const SHARED_LINE_OBJECT_KEYS = new Set(['cost']);
 
+/**
+ * Fields whose explicit `null` branch means "this line prints none" (#622). Elsewhere a
+ * null branch falls back to another line's value like a missing one; a grenade's rider
+ * cannot, because a line that prints no rider for a shared grenade document (Black
+ * Crusade's Rad Grenade, whose radiation is its Irradiated quality) must not inherit
+ * another line's.
+ */
+const LINE_NULL_MEANS_NONE_KEYS = new Set(['rider']);
+
 // eslint-disable-next-line @typescript-eslint/no-shadow -- intentional local shim for Foundry's deepClone; safe in this module
 function deepClone<T>(value: T): T {
     if (typeof foundry !== 'undefined' && typeof foundry.utils.deepClone === 'function') {
@@ -236,6 +245,11 @@ export function materializeItemVariants(
         const nextPath = [...path, key];
         if (SHARED_LINE_OBJECT_KEYS.has(key)) {
             if (isPlainObject(rawValue)) materializeItemVariants(rawValue, lineKey, nextPath, fallbackLines);
+            continue;
+        }
+
+        if (LINE_NULL_MEANS_NONE_KEYS.has(key) && isLineVariantContainer(rawValue) && rawValue[lineKey] === null) {
+            source[key] = null;
             continue;
         }
 

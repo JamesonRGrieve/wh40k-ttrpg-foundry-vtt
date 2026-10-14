@@ -681,6 +681,11 @@ const GRENADE_THROW_FLOWS = [
     'damage-grenade-throws-with-blast',
     'damaging-rider-grenade-takes-weapon-roll',
     'damaging-rider-follows-damage',
+    'rider-area-placed-on-throw',
+    'rider-resolve-rolls-each-caught',
+    'rider-condition-applied-to-token',
+    'damaging-rider-resolves-after-damage',
+    'rider-psyker-only-condition-with-visual',
 ];
 recordDimension('grenade-throw.flow', covered['grenade-throw.flow'], GRENADE_THROW_FLOWS);
 

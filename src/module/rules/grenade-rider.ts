@@ -30,10 +30,30 @@ export type RiderDurationKind = (typeof RIDER_DURATION_KINDS)[number];
 export const RIDER_AREA_MEASURES = ['radius', 'diameter'] as const;
 export type RiderAreaMeasure = (typeof RIDER_AREA_MEASURES)[number];
 
+/**
+ * Who among the creatures caught the rider touches (#623).
+ *
+ * - `''`     — every creature caught.
+ * - `psyker` — only a creature with a psy rating (a Psyk-out grenade's cloud).
+ */
+export const RIDER_AFFECTS = ['', 'psyker'] as const;
+export type RiderAffects = (typeof RIDER_AFFECTS)[number];
+
 /** A grenade's rider, as the weapon's `system.rider` stores it. */
 export interface GrenadeRiderData {
-    /** The test each character in the area makes; `characteristic` '' when the rider has no test. */
-    test: { characteristic: string; modifier: number };
+    /**
+     * The test each character in the area makes; `characteristic` '' when the rider has
+     * no test. `psykerModifier` is a further modifier a psyker takes (a Spore Bomb's −20).
+     */
+    test: { characteristic: string; modifier: number; psykerModifier: number };
+    /** Who among the creatures caught the rider touches. */
+    affects: RiderAffects;
+    /**
+     * The condition registry id (`blinded`, `stunned`, …) a failed test applies for the
+     * rider's duration; '' when the effect is no registry condition (a table roll, a
+     * characteristic loss) and the effect prose is what the GM applies.
+     */
+    condition: string;
     /**
      * The area the rider covers, in metres. `size` '' takes the radius from the weapon's
      * Blast quality; otherwise a number or a dice formula the book prints.
@@ -67,6 +87,20 @@ export function hasGrenadeRider<T extends RiderWeaponSystem>(system: T): system 
 /** Whether the rider has its targets test (a Smoke grenade's screen, Tears of the Emperor's strike, have none). */
 export function riderHasTest(rider: GrenadeRiderData): boolean {
     return rider.test.characteristic !== '';
+}
+
+/**
+ * Whether the rider has anything to resolve against the creatures caught (#623): a test
+ * to roll, or a registry condition to apply. A rider that is only prose (a smokescreen,
+ * Tears of the Emperor's strike) is stated on the card and adjudicated by the GM.
+ */
+export function riderIsResolvable(rider: GrenadeRiderData): boolean {
+    return riderHasTest(rider) || rider.condition !== '';
+}
+
+/** The radius in metres of an area `size` metres across as `measure` (a smokescreen's diameter halves). */
+export function riderRadiusMetres(size: number, measure: RiderAreaMeasure): number {
+    return measure === 'diameter' ? size / 2 : size;
 }
 
 /**

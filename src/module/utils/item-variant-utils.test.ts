@@ -101,6 +101,25 @@ describe('materializeItemVariants', () => {
         expect(source.pen).toBe(2);
         expect(source.name).toBe('Lasgun');
     });
+
+    it("reads a rider's explicit null branch as 'this line prints none', not a fallback (#622)", () => {
+        // The shared Rad Grenade: DH2 and RT print a Toughness rider, Black Crusade none (its Irradiated quality).
+        const make = (): {
+            source: Record<string, { provenance: string }>;
+            rider: Record<string, { effect: string } | null>;
+            damage: Record<string, string | null>;
+        } => ({
+            source: { dh2: { provenance: 'raw' }, bc: { provenance: 'raw' }, rt: { provenance: 'raw' } },
+            rider: { dh2: { effect: 'DH2 rider' }, rt: { effect: 'RT rider' }, bc: null },
+            damage: { dh2: '1d10', bc: null },
+        });
+        expect(materializeItemVariants(make(), 'bc')['rider']).toBeNull();
+        expect(materializeItemVariants(make(), 'rt')['rider']).toEqual({ effect: 'RT rider' });
+        // A line with no branch at all still inherits the RAW printing.
+        expect(materializeItemVariants(make(), 'dh1')['rider']).toEqual({ effect: 'DH2 rider' });
+        // Any other field keeps falling back past an explicit null.
+        expect(materializeItemVariants(make(), 'bc')['damage']).toBe('1d10');
+    });
 });
 
 describe('inferActiveGameLine', () => {

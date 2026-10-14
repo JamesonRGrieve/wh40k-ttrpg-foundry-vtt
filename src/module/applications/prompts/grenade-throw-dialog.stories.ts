@@ -6,6 +6,7 @@ import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize'
 import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import { resolveThrow } from '../../rules/combat-actions.ts';
 import type { GrenadeRiderData } from '../../rules/grenade-rider.ts';
+import { riderFixture } from '../../testing/grenade-rider-fixture.ts';
 import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } from './grenade-throw-view.ts';
 
 /**
@@ -23,16 +24,7 @@ const LABELS: GrenadeLabels = {
     characteristic: (key) => CHARACTERISTIC_NAMES[key] ?? key,
 };
 
-function rider(overrides: Partial<GrenadeRiderData>): GrenadeRiderData {
-    return {
-        test: { characteristic: '', modifier: 0 },
-        area: { size: '', measure: 'radius' },
-        duration: { kind: '', base: 0, formula: '' },
-        effectRollShift: { perDegree: 0, max: 0 },
-        effect: '',
-        ...overrides,
-    };
-}
+const rider = riderFixture;
 
 function grenade(id: string, name: string, special: string[], riderData: GrenadeRiderData | null, damage = ''): GrenadeItemView {
     return {
@@ -60,6 +52,7 @@ const ITEMS: GrenadeItemView[] = [
         ['blast-6'],
         rider({
             test: { characteristic: 'agility', modifier: 10 },
+            condition: 'blinded',
             duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
             effect: 'Any character within the blast radius when it detonates must succeed on an Ordinary (+10) Agility test or be blinded for a number of rounds equal to his degrees of failure.',
         }),
@@ -223,7 +216,7 @@ export const ThrownPhotonFlashOpensOnIt: Story = {
 export const ThrownCard: Story = {
     render: () => {
         const { selectedGrenade } = buildGrenadeThrowContext(DIALOG_ITEMS, 'photon', LABELS);
-        return renderSheet(chatTemplateSrc, { rider: selectedGrenade, gameSystem: 'dh2' });
+        return renderSheet(chatTemplateSrc, { rider: selectedGrenade, canResolve: selectedGrenade?.resolvable === true, gameSystem: 'dh2' });
     },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-grenade-card]')?.getAttribute('data-wh40k-system')).toBe('dh2');
@@ -232,5 +225,22 @@ export const ThrownCard: Story = {
         await expect(view.getByText('Photon Flash Grenade')).toBeTruthy();
         await expect(view.getByText('Agility +10')).toBeTruthy();
         await expect(view.getByText('6 m radius')).toBeTruthy();
+        // A rider with a test resolves from this card (#623): the button carries no roll id,
+        // the card's flags carry the area it resolves against.
+        const resolve = view.getByRole('button', { name: /Resolve Rider/i });
+        await expect(resolve.classList.contains('roll-control__resolve-rider')).toBe(true);
+        await expect(resolve.hasAttribute('data-roll-id')).toBe(false);
+    },
+};
+
+/** A Smoke grenade's screen has no test and no condition: its card states it and offers nothing to resolve. */
+export const SmokeCardHasNothingToResolve: Story = {
+    render: () => {
+        const { selectedGrenade } = buildGrenadeThrowContext(DIALOG_ITEMS, 'smoke', LABELS);
+        return renderSheet(chatTemplateSrc, { rider: selectedGrenade, canResolve: selectedGrenade?.resolvable === true, gameSystem: 'dh2' });
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-grenade-effect]')?.textContent).toContain('smokescreen');
+        await expect(canvasElement.querySelector('.roll-control__resolve-rider')).toBeNull();
     },
 };

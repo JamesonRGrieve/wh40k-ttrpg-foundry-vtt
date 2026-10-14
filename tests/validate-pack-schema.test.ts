@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
     DAMAGE_SOURCE,
     DAMAGE_TYPE,
+    RIDER_AFFECTS as GATE_RIDER_AFFECTS,
     RIDER_AREA_MEASURE,
     RIDER_DURATION_KIND,
     RIDER_TEST_CHARACTERISTIC,
@@ -12,7 +13,7 @@ import {
 } from '../scripts/validate-pack-schema.mjs';
 import { WEAPON_CLASS_CHOICES } from '../src/module/data/shared/weapon-class.ts';
 import { DAMAGE_SOURCE_CHOICES, DAMAGE_TYPE_CHOICES } from '../src/module/rules/damage-profile.ts';
-import { RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../src/module/rules/grenade-rider.ts';
+import { RIDER_AFFECTS, RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../src/module/rules/grenade-rider.ts';
 
 /**
  * Unit coverage for the Zod v4 compendium content-schema gate
@@ -129,7 +130,9 @@ describe('contextual damage profiles (#608)', () => {
 
 describe('grenade riders (#135)', () => {
     const rider = (overrides: object = {}): object => ({
-        test: { characteristic: 'agility', modifier: 10 },
+        test: { characteristic: 'agility', modifier: 10, psykerModifier: 0 },
+        affects: '',
+        condition: 'blinded',
         area: { size: '', measure: 'radius' },
         duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
         effectRollShift: { perDegree: 0, max: 0 },
@@ -142,17 +145,31 @@ describe('grenade riders (#135)', () => {
         expect(RIDER_TEST_CHARACTERISTIC).toEqual(['', ...RIDER_TEST_CHARACTERISTICS]);
         expect(RIDER_DURATION_KIND).toEqual([...RIDER_DURATION_KINDS]);
         expect(RIDER_AREA_MEASURE).toEqual([...RIDER_AREA_MEASURES]);
+        expect(GATE_RIDER_AFFECTS).toEqual([...RIDER_AFFECTS]);
     });
 
-    it('accepts a whole rider, a per-line container of riders, and no rider', () => {
+    it('accepts a whole rider, a per-line container of riders, a line that prints none, and no rider', () => {
         expect(validateDoc(grenade(rider()))).toEqual([]);
         expect(validateDoc(grenade({ dh2: rider(), rt: rider({ duration: { kind: 'roll', base: 0, formula: '1d5' } }) }))).toEqual([]);
+        // Black Crusade prints no rider for the shared Rad Grenade (#622).
+        expect(validateDoc(grenade({ dh2: rider(), bc: null }))).toEqual([]);
         expect(validateDoc(grenade(null))).toEqual([]);
         expect(validateDoc({ name: 'Frag Grenade', type: 'weapon', system: {} })).toEqual([]);
     });
 
+    it('requires who the rider touches, a psyker modifier and a condition id (#623)', () => {
+        expect(
+            validateDoc(grenade(rider({ affects: 'psyker', condition: '', test: { characteristic: 'willpower', modifier: -30, psykerModifier: 0 } }))),
+        ).toEqual([]);
+        expect(validateDoc(grenade(rider({ affects: 'daemon' }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ condition: 'Blinded' }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ test: { characteristic: 'agility', modifier: 10 } }))).length).toBeGreaterThan(0);
+        const noCondition = Object.fromEntries(Object.entries(rider()).filter(([key]) => key !== 'condition'));
+        expect(validateDoc(grenade(noCondition)).length).toBeGreaterThan(0);
+    });
+
     it('rejects an unknown characteristic, duration kind or measure, a blank effect and a stray key', () => {
-        expect(validateDoc(grenade(rider({ test: { characteristic: 'influence', modifier: 0 } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ test: { characteristic: 'influence', modifier: 0, psykerModifier: 0 } }))).length).toBeGreaterThan(0);
         expect(validateDoc(grenade(rider({ duration: { kind: 'scene', base: 0, formula: '' } }))).length).toBeGreaterThan(0);
         expect(validateDoc(grenade(rider({ area: { size: '6', measure: 'cone' } }))).length).toBeGreaterThan(0);
         expect(validateDoc(grenade(rider({ effect: '' }))).length).toBeGreaterThan(0);

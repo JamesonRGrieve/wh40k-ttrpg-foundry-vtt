@@ -7,7 +7,7 @@
  * come through {@link GrenadeLabels} — so the dialog, its story and its tests share it.
  */
 
-import { type GrenadeRiderData, hasGrenadeRider, type RiderDurationKind, riderArea, riderHasTest } from '../../rules/grenade-rider.ts';
+import { type GrenadeRiderData, hasGrenadeRider, type RiderDurationKind, riderArea, riderHasTest, riderIsResolvable } from '../../rules/grenade-rider.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 
 /** One weapon quality as WeaponData's `qualitiesArray` lists it. */
@@ -60,6 +60,10 @@ export interface GrenadeChoice {
     /** The heading over the effect: "On a failed test" when there is a test, "Effect" when there is none. */
     effectLabel: string;
     effect: string;
+    /** "Psykers only" for a rider that touches psykers alone, or '' for one that touches everyone caught. */
+    affectsLabel: string;
+    /** Whether the rider has a test to roll or a condition to apply against the creatures caught (#623). */
+    resolvable: boolean;
     isSelected: boolean;
 }
 
@@ -124,6 +128,8 @@ export function buildGrenadeChoice(item: GrenadeItemView, selectedId: string, la
         shiftLabel: shiftLabel(rider, labels),
         effectLabel: labels.localize(hasTest ? 'WH40K.GrenadeRider.OnFailedTest' : 'WH40K.GrenadeRider.Effect'),
         effect: rider.effect,
+        affectsLabel: rider.affects === 'psyker' ? labels.localize('WH40K.GrenadeRider.AffectsPsykers') : '',
+        resolvable: riderIsResolvable(rider),
         isSelected: item.id === selectedId,
     };
 }
@@ -133,6 +139,8 @@ export interface DamageCardRider {
     rider: GrenadeChoice;
     /** The names of the creatures the attack struck, once each, in the order struck. */
     struck: string[];
+    /** Whether the card offers Resolve Rider (#623): a rider with a test or a condition, and someone struck. */
+    canResolve: boolean;
 }
 
 /**
@@ -142,7 +150,9 @@ export interface DamageCardRider {
 export function buildDamageCardRider(item: GrenadeItemView | null, struck: readonly string[], labels: GrenadeLabels): DamageCardRider | null {
     if (item === null) return null;
     const rider = buildGrenadeChoice(item, item.id, labels);
-    return rider === null ? null : { rider, struck: [...new Set(struck.filter((name) => name !== ''))] };
+    if (rider === null) return null;
+    const names = [...new Set(struck.filter((name) => name !== ''))];
+    return { rider, struck: names, canResolve: rider.resolvable && names.length > 0 };
 }
 
 /** The dialog context: every rider grenade the thrower carries, with `selectedId` (or the first) selected. */

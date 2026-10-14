@@ -286,6 +286,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/fear-test-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/grenade-throw-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/grenade-rider-results-chat.hbs',
             'systems/wh40k-rpg/templates/prompt/radical-services-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/radical-services-chat.hbs',
             'systems/wh40k-rpg/templates/chat/armoury-requisition-chat.hbs',

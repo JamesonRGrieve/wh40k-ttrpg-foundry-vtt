@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { type RiderOverrides, riderFixture } from '../testing/grenade-rider-fixture.ts';
 import {
     blastRating,
     type GrenadeRiderData,
@@ -6,6 +7,8 @@ import {
     RIDER_TEST_CHARACTERISTICS,
     riderArea,
     riderHasTest,
+    riderIsResolvable,
+    riderRadiusMetres,
     riderTakesWeaponRoll,
 } from './grenade-rider.ts';
 
@@ -15,16 +18,30 @@ import {
  * covers (printed, or the weapon's own Blast rating).
  */
 
-function rider(overrides: Partial<GrenadeRiderData> = {}): GrenadeRiderData {
-    return {
+function rider(overrides: RiderOverrides = {}): GrenadeRiderData {
+    return riderFixture({
         test: { characteristic: 'agility', modifier: 10 },
-        area: { size: '', measure: 'radius' },
         duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-        effectRollShift: { perDegree: 0, max: 0 },
         effect: 'Blinded for a number of rounds equal to the degrees of failure.',
         ...overrides,
-    };
+    });
 }
+
+describe('riderIsResolvable', () => {
+    it('resolves a rider with a test or a condition, and leaves a prose-only rider to the GM (#623)', () => {
+        expect(riderIsResolvable(rider())).toBe(true);
+        expect(riderIsResolvable(rider({ test: { characteristic: '' }, condition: 'stunned' }))).toBe(true);
+        // A smokescreen, Tears of the Emperor's strike: nothing to roll or apply.
+        expect(riderIsResolvable(rider({ test: { characteristic: '' } }))).toBe(false);
+    });
+});
+
+describe('riderRadiusMetres', () => {
+    it('reads a radius as printed and halves a diameter', () => {
+        expect(riderRadiusMetres(6, 'radius')).toBe(6);
+        expect(riderRadiusMetres(6, 'diameter')).toBe(3);
+    });
+});
 
 describe('hasGrenadeRider', () => {
     it('is true for an authored rider, false for null or an absent field', () => {

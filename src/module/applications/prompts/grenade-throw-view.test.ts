@@ -1,7 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { GrenadeRiderData } from '../../rules/grenade-rider.ts';
+import { type RiderOverrides, riderFixture } from '../../testing/grenade-rider-fixture.ts';
 import { buildLangStub } from '../../testing/lang-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { buildDamageCardRider, buildGrenadeChoice, buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } from './grenade-throw-view.ts';
@@ -20,15 +21,14 @@ const LABELS: GrenadeLabels = {
     characteristic: (key) => CHARACTERISTIC_NAMES[key] ?? key,
 };
 
-function rider(overrides: Partial<GrenadeRiderData> = {}): GrenadeRiderData {
-    return {
+/** A Photon Flash-like rider under `overrides`. */
+function rider(overrides: RiderOverrides = {}): GrenadeRiderData {
+    return riderFixture({
         test: { characteristic: 'agility', modifier: 10 },
-        area: { size: '', measure: 'radius' },
         duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-        effectRollShift: { perDegree: 0, max: 0 },
         effect: 'Blinded for a number of rounds equal to his degrees of failure.',
         ...overrides,
-    };
+    });
 }
 
 function grenade(id: string, name: string, riderData: GrenadeRiderData | null, extra: Partial<GrenadeItemView['system']> = {}): GrenadeItemView {
@@ -109,6 +109,13 @@ describe('buildGrenadeChoice', () => {
         expect(buildGrenadeChoice(grenade('b', 'Bare', bare, { effectiveSpecial: new Set() }), '', LABELS)).toMatchObject({ areaLabel: '', durationLabel: '' });
     });
 
+    it('labels a psyker-only rider and says whether there is anything to resolve (#623)', () => {
+        const psykOut = rider({ test: { characteristic: 'willpower', modifier: -30 }, affects: 'psyker' });
+        expect(buildGrenadeChoice(grenade('p', 'Psyk-Out Grenade', psykOut), '', LABELS)).toMatchObject({ affectsLabel: 'Psykers only', resolvable: true });
+        const smoke = rider({ test: { characteristic: '', modifier: 0 } });
+        expect(buildGrenadeChoice(grenade('s', 'Smoke Grenade', smoke), '', LABELS)).toMatchObject({ affectsLabel: '', resolvable: false });
+    });
+
     it('is null for a weapon without a rider', () => {
         expect(buildGrenadeChoice(grenade('f', 'Frag Grenade', null), 'f', LABELS)).toBeNull();
     });
@@ -152,12 +159,12 @@ describe('buildGrenadeThrowContext', () => {
 
 /** The pack documents and the line each is read for (the rider is per-line where the lines differ). */
 const PACKS = resolve(__dirname, '../../../packs-private');
-const PACK_RIDERS: Array<{ file: string; line: string; expected: Partial<Record<keyof GrenadeRiderData, object>> }> = [
+const PACK_RIDERS: Array<{ file: string; line: string; expected: RiderOverrides }> = [
     {
         // DH2 Core p.158: Ordinary (+10) Agility test, blinded for rounds equal to degrees of failure.
         file: 'dark-heresy-2/dh2-core-items-weapons/_source/photon-flash-grenade_rpn0j61j1euqi000.json',
         line: 'dh2',
-        expected: { test: { characteristic: 'agility', modifier: 10 }, duration: { kind: 'degreesOfFailure', base: 0, formula: '' } },
+        expected: { test: { characteristic: 'agility', modifier: 10 }, condition: 'blinded', duration: { kind: 'degreesOfFailure', base: 0, formula: '' } },
     },
     {
         // DH1 Core p.137: anyone within 15 metres, Toughness test or blinded 1d5 rounds.
@@ -195,9 +202,83 @@ const PACK_RIDERS: Array<{ file: string; line: string; expected: Partial<Record<
         // OW Core p.183 (as errata'd): Ordinary (+10) Agility test, rounds equal to degrees of failure.
         file: 'only-war/ow-core-items-weapons/_source/photon-flash-grenade-guard_uUNzo4fKh1SilVVD.json',
         line: 'ow',
-        expected: { test: { characteristic: 'agility', modifier: 10 }, duration: { kind: 'degreesOfFailure', base: 0, formula: '' } },
+        expected: { test: { characteristic: 'agility', modifier: 10 }, condition: 'blinded', duration: { kind: 'degreesOfFailure', base: 0, formula: '' } },
+    },
+    {
+        // Enemies Beyond p.41 (and Within p.44): a psyker hit tests Very Hard (–30) Willpower or loses psy rating per degree.
+        file: 'dark-heresy-2/dh2-beyond-items-weapons/_source/psyk-out-grenade_lScsj4tB78fJdtkt.json',
+        line: 'dh2',
+        expected: { test: { characteristic: 'willpower', modifier: -30, psykerModifier: 0 }, affects: 'psyker', condition: '' },
+    },
+    {
+        // RT Faith and Coin p.85: a psyker in the blast tests Difficult (–10) Willpower or is Stunned for 1d5+3 rounds.
+        file: 'dark-heresy-2/dh2-beyond-items-weapons/_source/psyk-out-grenade_lScsj4tB78fJdtkt.json',
+        line: 'rt',
+        expected: {
+            test: { characteristic: 'willpower', modifier: -10 },
+            affects: 'psyker',
+            condition: 'stunned',
+            duration: { kind: 'roll', base: 0, formula: '1d5+3' },
+        },
+    },
+    {
+        // DH1 Daemon Hunter p.68: Very Hard (–30) Willpower, psy rating lost per degree of failure.
+        file: 'dark-heresy-1/dh1-daemonhunter-items-weapons/_source/psyk-out-grenade_581f419cbb89f4eb.json',
+        line: 'dh1',
+        expected: { test: { characteristic: 'willpower', modifier: -30 }, affects: 'psyker', condition: '' },
+    },
+    {
+        // Enemies Within p.44: everyone struck tests Hard (–20) Toughness or suffers 2d10 Toughness damage.
+        file: 'dark-heresy-2/dh2-within-items-weapons/_source/rad-grenade_Pr6BN0flDXSlUxnc.json',
+        line: 'dh2',
+        expected: { test: { characteristic: 'toughness', modifier: -20 }, affects: '', condition: '' },
+    },
+    {
+        // RT Hostile Acquisitions p.51–52: Hard (–20) Toughness or 2d10 Toughness damage.
+        file: 'dark-heresy-2/dh2-within-items-weapons/_source/rad-grenade_Pr6BN0flDXSlUxnc.json',
+        line: 'rt',
+        expected: { test: { characteristic: 'toughness', modifier: -20 }, condition: '' },
+    },
+    {
+        // RT Faith and Coin p.85: Challenging (+0) Toughness (−5 per point of damage, stated in the effect).
+        file: 'rogue-trader/rt-faith-items-weapons/_source/rad-grenade_JG4AY6KIs4F5bBDq.json',
+        line: 'rt',
+        expected: { test: { characteristic: 'toughness', modifier: 0 }, condition: '' },
+    },
+    {
+        // DH1 Daemon Hunter p.68: Hard (–20) Toughness or 2d10 Toughness damage.
+        file: 'dark-heresy-1/dh1-daemonhunter-items-weapons/_source/rad-grenades_ad4ff72a1c734343.json',
+        line: 'dh1',
+        expected: { test: { characteristic: 'toughness', modifier: -20 }, condition: '' },
+    },
+    {
+        // Enemies Within p.45 + Core p.403 (mind-mould): Ordinary (+10) Toughness, psykers −20.
+        file: 'dark-heresy-2/dh2-within-items-weapons/_source/spore-bomb_sLizyfBckVTXxp6g.json',
+        line: 'dh2',
+        expected: { test: { characteristic: 'toughness', modifier: 10, psykerModifier: -20 }, affects: '', condition: '' },
+    },
+    {
+        // Enemies Within p.45 + Core p.149 Smoke (5): no test; the 5 m cloud, lasting 1d10+10 rounds, burns whoever starts a turn in it.
+        file: 'dark-heresy-2/dh2-within-items-weapons/_source/whitefire-grenade_Vmqd3y5vL4mnavCq.json',
+        line: 'dh2',
+        expected: { test: { characteristic: '' }, area: { size: '5', measure: 'radius' }, duration: { kind: 'roll', base: 0, formula: '1d10+10' } },
     },
 ];
+
+/** Shared grenade documents whose line prints no rider (an explicit null branch, #622). */
+const PACK_NO_RIDER: Array<{ file: string; line: string }> = [
+    // BC Tome of Decay p.44: the Rad Grenade's radiation is its Irradiated (2) quality, no rider.
+    { file: 'dark-heresy-2/dh2-within-items-weapons/_source/rad-grenade_Pr6BN0flDXSlUxnc.json', line: 'bc' },
+];
+
+/** The condition registry ids the condition packs author (`system.identifier`). */
+function conditionIds(): Set<string> {
+    const dir = resolve(PACKS, 'dark-heresy-2/dh2-core-items-conditions/_source');
+    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); narrowed to the condition identifier shape read here
+    return new Set(
+        readdirSync(dir).map((file) => (JSON.parse(readFileSync(resolve(dir, file), 'utf8')) as { system: { identifier: string } }).system.identifier),
+    );
+}
 
 /** A rider as a pack authors it: whole, or one per line. */
 type AuthoredRider = GrenadeRiderData | Partial<Record<string, GrenadeRiderData>>;
@@ -224,5 +305,16 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('pack grenade riders (#135)', () => {
         expect(authored).not.toBeNull();
         expect(authored).toMatchObject(expected);
         expect(authored?.effect.length).toBeGreaterThan(0);
+    });
+
+    it.each(PACK_NO_RIDER)('$file prints no rider for $line', ({ file, line }) => {
+        expect(packRider(file, line)).toBeNull();
+    });
+
+    it('names only conditions the condition packs author (#623)', () => {
+        const ids = conditionIds();
+        const named = PACK_RIDERS.map(({ file, line }) => packRider(file, line)?.condition ?? '').filter((id) => id !== '');
+        expect(named.length).toBeGreaterThan(0);
+        expect(named.filter((id) => !ids.has(id))).toEqual([]);
     });
 });

@@ -5,7 +5,7 @@ import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
 import { GRENADE_LABELS } from '../applications/prompts/grenade-labels.ts';
 import { buildDamageCardRider, type DamageCardRider } from '../applications/prompts/grenade-throw-view.ts';
-import { tokensInAreaTemplate } from '../canvas/area-template-canvas.ts';
+import { activeTokenOf, tokensInAreaTemplate } from '../canvas/area-template-canvas.ts';
 import { WH40K } from '../config.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
@@ -30,6 +30,7 @@ import {
     readEvasionPrompt,
     resolvedAttackEvasion,
 } from '../rolls/evasion-flow.ts';
+import { GRENADE_RIDER_FLAG, readRiderThrowFlag } from '../rolls/grenade-rider-flag.ts';
 import { WeaponRollData } from '../rolls/roll-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
@@ -48,12 +49,16 @@ import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { type RiderSource, type RiderToken, resolveRiderAgainst, riderSourceOf } from './grenade-rider-actions.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
 
 /** The armour property ids a Warp Weapon cannot pass through (#414). */
 const WARP_WARDING_PROPERTIES = warpWardingProperties(WH40K.armourProperties);
+
+/** The card listing what a grenade's rider did to each creature caught (#623). */
+const RIDER_RESULTS_TEMPLATE = 'systems/wh40k-rpg/templates/chat/grenade-rider-results-chat.hbs';
 
 /** The card listing who an area attack caught (#599). */
 const AREA_RESOLUTION_TEMPLATE = 'systems/wh40k-rpg/templates/chat/area-resolution-chat.hbs';
@@ -157,6 +162,11 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__resolve-area').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._resolveArea(ev);
+                });
+            });
+            html.querySelectorAll('.roll-control__resolve-rider').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    void this._resolveRider(ev);
                 });
             });
         });
@@ -717,6 +727,63 @@ export class BasicActionManager {
             },
             { rolls },
         );
+    }
+
+    /**
+     * Resolve a grenade's rider (#623) from the card that offers it. A damage card (a
+     * grenade that deals damage, #622) carries its roll id: the rider resolves against the
+     * creatures the attack struck — each area hit's creature, else the card's target. A
+     * throw card (a grenade that deals none) carries the rider's placed area in its flags:
+     * the rider resolves against the tokens inside it now, the thrower excepted.
+     */
+    async _resolveRider(event: Event): Promise<void> {
+        event.preventDefault();
+        const btn = event.currentTarget as HTMLButtonElement;
+        const rollId = btn.dataset['rollId'] ?? '';
+        const target = rollId === '' ? await this.#throwCardRiderTarget(btn) : this.#damageCardRiderTarget(btn);
+        if (target === null) return;
+        btn.disabled = true;
+        await resolveRiderAgainst(target.source, target.tokens, {
+            rollD100: async () => roll1d100(),
+            post: async (card, rolls) => emitChatFromTemplate(RIDER_RESULTS_TEMPLATE, { ...card }, { rolls }),
+        });
+    }
+
+    /** The grenade and the creatures struck, for a damage card's Resolve Rider. */
+    #damageCardRiderTarget(btn: HTMLElement): { source: RiderSource; tokens: RiderToken[] } | null {
+        const actionData = this.#resolveStoredAction(btn, game.i18n.localize('WH40K.FateActionExpired'));
+        const rollData = actionData?.rollData;
+        const weapon = rollData?.weapon;
+        if (rollData == null || weapon?.id == null) return null;
+        const struck =
+            rollData instanceof WeaponRollData && rollData.areaResults.length > 0
+                ? rollData.areaResults.filter((result) => result.hit).map((result) => canvas.tokens?.get(result.tokenId) ?? null)
+                : [activeTokenOf(rollData.targetActor)];
+        const tokens = struck.flatMap((token) => (token === null ? [] : [{ id: token.id, name: token.name, actor: token.actor }]));
+        return {
+            source: { item: { id: weapon.id, name: weapon.name, uuid: weapon.uuid, system: weapon.system }, thrower: rollData.sourceActor ?? null },
+            tokens,
+        };
+    }
+
+    /** The grenade and the tokens inside its placed area, for a throw card's Resolve Rider. */
+    async #throwCardRiderTarget(btn: HTMLElement): Promise<{ source: RiderSource; tokens: RiderToken[] } | null> {
+        const messageId = btn.closest<HTMLElement>('[data-message-id]')?.dataset['messageId'];
+        const message = messageId === undefined ? undefined : game.messages.get(messageId);
+        const flag = message === undefined ? null : readRiderThrowFlag(message.getFlag(SYSTEM_ID, GRENADE_RIDER_FLAG));
+        const thrower = flag === null ? null : await this.#actorFromUuid(flag.actorUuid);
+        const source = flag === null || thrower === null ? null : riderSourceOf(thrower, flag.itemId);
+        if (flag === null || source === null) {
+            ui.notifications.warn(t('WH40K.GrenadeRider.NoArea'));
+            return null;
+        }
+        const throwerTokenIds = new Set((source.thrower?.getActiveTokens() ?? []).map((token) => token.id));
+        const caught = tokensInAreaTemplate(flag, throwerTokenIds);
+        if (caught === null) {
+            ui.notifications.warn(t('WH40K.GrenadeRider.NoArea'));
+            return null;
+        }
+        return { source, tokens: caught.map((token) => ({ id: token.id, name: token.name, actor: token.actor })) };
     }
 
     async _refundResources(event: Event): Promise<void> {

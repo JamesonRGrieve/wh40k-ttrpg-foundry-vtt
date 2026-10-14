@@ -1,4 +1,4 @@
-import { RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../../rules/grenade-rider.ts';
+import { RIDER_AFFECTS, RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../../rules/grenade-rider.ts';
 
 /**
  * The `rider` schema field (#135): a grenade's save-or-suffer payload, authored on its
@@ -7,6 +7,10 @@ import { RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS }
  * Nullable with a null default, so every weapon that carries no rider — almost all of
  * them — persists `rider: null`, and a rider is either authored whole or absent. The
  * effect is required and non-blank: a rider with nothing to say is not a rider.
+ *
+ * `affects`, `test.psykerModifier` and `condition` (#623) are what resolving the rider
+ * against the creatures caught reads: who it touches, a psyker's extra modifier, and the
+ * condition registry id a failed test applies ('' for none).
  */
 export function grenadeRiderField(): foundry.data.fields.SchemaField.Any {
     const fields = foundry.data.fields;
@@ -15,7 +19,10 @@ export function grenadeRiderField(): foundry.data.fields.SchemaField.Any {
             test: new fields.SchemaField({
                 characteristic: new fields.StringField({ required: true, blank: true, initial: '', choices: ['', ...RIDER_TEST_CHARACTERISTICS] }),
                 modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                psykerModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
             }),
+            affects: new fields.StringField({ required: true, blank: true, initial: '', choices: [...RIDER_AFFECTS] }),
+            condition: new fields.StringField({ required: true, blank: true, initial: '' }),
             area: new fields.SchemaField({
                 size: new fields.StringField({ required: true, blank: true, initial: '' }),
                 measure: new fields.StringField({ required: true, blank: false, initial: 'radius', choices: [...RIDER_AREA_MEASURES] }),

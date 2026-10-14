@@ -1,0 +1,56 @@
+{{!-- A grenade rider's results (#623): each creature caught, its test printed as
+      base ± every provenance row = target against the d100 (rows hoverable through the
+      shared wh40k-tooltip "modifier" type), and what the rider did to it — the condition
+      applied for its duration (or left for the GM), the effect-roll step, or nothing. --}}
+{{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
+    overline=(localize "WH40K.GrenadeRider.ResultsTitle")
+    title=grenade}}
+    <div class="tw-mb-2 tw-p-3 tw-border-l-[3px] tw-border-l-gold tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md" data-rider-results>
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)]">
+            <span class="tw-flex tw-items-center tw-gap-1.5">
+                <i class="fas fa-bomb tw-text-gold tw-text-[0.8rem]" aria-hidden="true"></i>
+                <span>{{localize "WH40K.GrenadeRider.Test"}}: <strong class="tw-text-gold" data-rider-test>{{testLabel}}</strong></span>
+            </span>
+            {{#if affectsLabel}}
+                <span class="tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)]">{{affectsLabel}}</span>
+            {{/if}}
+        </div>
+        <ul class="tw-mt-2 tw-flex tw-flex-col tw-gap-1 tw-list-none tw-p-0 tw-m-0" aria-label="{{localize "WH40K.GrenadeRider.ResultsTitle"}}">
+            {{#each rows as |row|}}
+                <li class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1 tw-border-t tw-border-[var(--wh40k-border-color)]" data-rider-target data-rider-outcome="{{row.outcome}}">
+                    <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-text-[0.85rem]">
+                        <span class="tw-min-w-0 tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-truncate">{{row.name}}</span>
+                        <span class="tw-shrink-0 tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[0.75rem] {{#if (eq row.outcome "suffers")}}tw-text-[var(--wh40k-danger-secondary)]{{else if (eq row.outcome "resisted")}}tw-text-[var(--wh40k-success-secondary)]{{else}}tw-text-[var(--wh40k-card-muted)]{{/if}}" data-rider-outcome-label>{{row.outcomeLabel}}</span>
+                    </div>
+                    {{#if row.test}}
+                        <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]">
+                            <span>{{row.test.label}}</span>
+                            <span data-rider-base>{{row.test.base}}</span>
+                        </div>
+                        {{#each row.test.components as |component|}}
+                            <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.75rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-rider-component data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}">
+                                <span class="tw-text-[var(--wh40k-card-muted)]">{{component.label}}</span>
+                                <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{#if (gt component.value 0)}}+{{/if}}{{component.value}}</span>
+                            </div>
+                        {{/each}}
+                        <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]">
+                            <span>{{localize "WH40K.Roll.Audit.RollVsTarget"}}</span>
+                            <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-text-right" data-rider-roll>{{row.test.roll}} {{localize "WH40K.Roll.Audit.AgainstTarget" target=row.test.target}}{{#if row.test.degreesLabel}} · {{row.test.degreesLabel}}{{/if}}</span>
+                        </div>
+                    {{/if}}
+                    {{#if row.effectLabel}}
+                        <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-text-[0.8rem]" data-rider-effect>
+                            <span class="tw-text-[var(--wh40k-card-text)]">{{row.effectLabel}}</span>
+                            {{#if (eq row.applied true)}}
+                                <span class="tw-shrink-0 tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-success-secondary)]" data-rider-applied>{{localize "WH40K.GrenadeRider.Applied"}}</span>
+                            {{else if (eq row.applied false)}}
+                                <span class="tw-shrink-0 tw-text-[0.7rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-muted)]" data-rider-not-applied>{{localize "WH40K.GrenadeRider.NotApplied"}}</span>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+        <div class="tw-mt-2 tw-pt-2 tw-border-t tw-border-[var(--wh40k-border-color)] tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)]" data-rider-effect-text>{{effect}}</div>
+    </div>
+{{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

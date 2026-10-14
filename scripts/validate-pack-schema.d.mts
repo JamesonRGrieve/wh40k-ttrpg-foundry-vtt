@@ -15,6 +15,8 @@ export declare const ROLL_TABLE_UUID: RegExp;
 export declare const RIDER_TEST_CHARACTERISTIC: readonly string[];
 export declare const RIDER_DURATION_KIND: readonly string[];
 export declare const RIDER_AREA_MEASURE: readonly string[];
+export declare const RIDER_AFFECTS: readonly string[];
+export declare const RIDER_CONDITION_ID: RegExp;
 
 /** A schema accepting a scalar OR a per-line / per-book variant container of it. */
 export declare function variant(inner: ZodTypeAny): ZodTypeAny;
