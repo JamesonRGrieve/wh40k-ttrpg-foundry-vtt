@@ -7,10 +7,12 @@ import {
     deleteActors,
     deleteMessages,
     messagesSince,
+    readCard,
     readShip,
     RT_FRIGATE,
     runAssaultFromSheet,
     snapChatCard,
+    snapDamageControl,
     snapShipVitals,
     type ShipFixture,
 } from './ship-sheet-driver';
@@ -72,8 +74,15 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(await readShip(page, target.id)).toMatchObject({ hull: 24, population: 51, morale: 56, statuses: 1 });
             const critIds = (await messagesSince(page, before)).filter((id) => id !== ran.card.id);
             expect(critIds, 'the Critical Hit posts its own card').toHaveLength(1);
+            // #187: the roll of 5 draws Table 8-12's "Fire!" from the RT core roll tables — not the
+            // "roll table unavailable" fallback the old pack/name lookup always hit.
+            const crit = await readCard(page, critIds[0] ?? '');
+            expect(crit.text).toContain('Fire!');
+            expect(crit.text).not.toContain('unavailable');
             expect(await snapChatCard(page, 'ship-hit-and-run-critical-card', critIds[0] ?? '')).not.toBeNull();
             expect(await snapShipVitals(page, target.id, 'ship-hit-and-run-target-after')).toEqual({ hull: '24', morale: '56', population: '51' });
+            // #187: the target's Stats tab lists the Critical Hit it now carries.
+            expect((await snapDamageControl(page, target.id, 'ship-hit-and-run-target-damage-control')).criticals).toEqual(['Fire!']);
         } finally {
             await deleteMessages(page, await messagesSince(page, before));
             await deleteActors(page, [raider.id, target.id]);

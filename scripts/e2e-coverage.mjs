@@ -550,6 +550,26 @@ recordDimension('grapple.flow', covered['grapple.flow'], GRAPPLE_FLOWS);
 const PASSIVE_MODIFIER_FLOWS = ['skill-test', 'weapon-attack'];
 recordDimension('passive-modifiers.flow', covered['passive-modifiers.flow'], PASSIVE_MODIFIER_FLOWS);
 
+// Rogue Trader starship play, all driven from the voidcraft sheet (#184, #186, #187, #188, #189).
+// tests/e2e/ship-actions.spec.ts + starship-crew-morale.spec.ts — the Extended / Manoeuvre tab actions.
+const SHIP_ACTION_FLOWS = [
+    'action-lists',
+    'aid-the-machine-spirit',
+    'lock-on-target',
+    'flank-speed',
+    'come-to-new-heading',
+    'evasive-manoeuvres',
+    'hold-fast',
+    'triage',
+];
+recordDimension('ship-action.flow', covered['ship-action.flow'], SHIP_ACTION_FLOWS);
+// tests/e2e/ship-ramming.spec.ts, ship-boarding.spec.ts, ship-hit-and-run.spec.ts — the Ship Assault panel.
+const SHIP_ASSAULT_FLOWS = ['ram', 'ram-miss', 'board', 'boarding-round', 'hit-and-run', 'hit-and-run-shot-down'];
+recordDimension('ship-assault.flow', covered['ship-assault.flow'], SHIP_ASSAULT_FLOWS);
+// tests/e2e/ship-weapon-fire.spec.ts — the Weapons tab's Fire dialog and the Weapon Component sheet.
+const SHIP_WEAPON_FLOWS = ['macrobattery', 'lance-critical', 'miss', 'other-line-gated', 'item-sheet-labels'];
+recordDimension('ship-weapon.flow', covered['ship-weapon.flow'], SHIP_WEAPON_FLOWS);
+
 // Character-generation modes (point-buy + roll) exercised by
 // tests/e2e/char-gen-modes.spec.ts. Keep in sync with CHAR_GEN_MODES there.
 const CHAR_GEN_MODES = ['mode-tabs-present', 'point-buy-mode-renders', 'roll-mode-renders'];

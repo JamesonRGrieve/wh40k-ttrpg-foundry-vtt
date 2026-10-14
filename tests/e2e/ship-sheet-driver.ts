@@ -334,8 +334,7 @@ export async function snapChatCard(page: Page, label: string, messageId: string)
     await page.setViewportSize({ width: viewport?.width ?? TALL_VIEWPORT.width, height: TALL_VIEWPORT.height });
     try {
         const selector = await showChatMessage(page, messageId);
-        // The selector also matches the card's Delete link; the card itself comes first.
-        await page.locator(selector).first().waitFor({ state: 'visible' });
+        await page.locator(selector).waitFor({ state: 'visible' });
         return await snap(page, label, { selector });
     } finally {
         if (viewport !== null) await page.setViewportSize(viewport);
@@ -464,20 +463,140 @@ export async function rollShipActionFromSheet(page: Page, actorId: string, roll:
     return { card, dialogTitle, dialogOptions, unusedDice };
 }
 
-/** Fire one of the ship's Weapon Components from the Weapons tab and return its card. */
-export async function fireWeaponFromSheet(
-    page: Page,
-    actorId: string,
-    weaponId: string,
-    faces: readonly number[],
-): Promise<{ card: PostedCard; unusedDice: number }> {
+/** Choose the target ship in an open ship dialog by name, unless it is already the selected one. */
+async function pickDefender(page: Page, root: string, defender: string): Promise<string[]> {
+    const options = page.locator(`${root} select[name="defender"] option`);
+    const targets = (await options.allTextContents()).map((text) => text.trim());
+    const select = page.locator(`${root} select[name="defender"]`);
+    if (((await select.locator('option:checked').textContent()) ?? '').trim() !== defender) {
+        await select.selectOption({ label: defender });
+        await page.locator(`${root} select[name="defender"] option:checked`, { hasText: defender }).waitFor({ state: 'attached' });
+    }
+    return targets;
+}
+
+/** One shot of a Weapon Component at a target ship. */
+export interface ShipWeaponShot {
+    weaponId: string;
+    /** The target ship, picked by name in the Fire dialog. */
+    defender: string;
+    /** The gunner's Ballistic Skill typed into the dialog; the ship's own when omitted. */
+    gunnerSkill?: number;
+    rangeBand?: 'close' | 'standard' | 'long';
+    /** Die faces queued for the shot: the d100, each hit's damage, the 1d5 critical. */
+    faces: readonly number[];
+    /** Screenshot label prefix: `<label>-weapons-tab`, `-dialog`, `-dialog-resolved`, `-card`. None when omitted. */
+    label?: string;
+}
+
+/** What firing a Weapon Component produced. */
+export interface FiredWeapon {
+    card: PostedCard;
+    /** The dialog window's title. */
+    dialogTitle: string;
+    /** Target-select options the dialog offered. */
+    targets: string[];
+    /** Text of the dialog's preview card after Roll. */
+    preview: string;
+    unusedDice: number;
+}
+
+/**
+ * Fire one of the ship's Weapon Components as the GM does (#184): open the
+ * sheet on the Weapons tab, click the weapon's Fire control, pick the target
+ * ship and fill the gunnery inputs in the dialog, Roll, review the preview, and
+ * Apply — snapping each state and the posted card when `label` is given.
+ */
+export async function fireWeaponFromSheet(page: Page, actorId: string, shot: ShipWeaponShot): Promise<FiredWeapon> {
+    const snapAs = async (suffix: string, appId: string, selector?: string): Promise<void> => {
+        if (shot.label !== undefined) await snapWindow(page, `${shot.label}-${suffix}`, appId, selector);
+    };
     const sheetId = await openSheet(page, actorId);
     const section = await showTab(page, sheetId, 'weapons');
+    await snapAs('weapons-tab', sheetId);
+    await page.locator(`${section} [data-action="fireShipWeapon"][data-item-id="${shot.weaponId}"]`).click();
+    const dialog = await dialogId(page, 'ship-assault-dialog');
+    const root = `#${dialog} [data-wh40k-hook="ship-assault-dialog"]`;
+    const dialogTitle = ((await page.locator(`#${dialog} .window-title`).textContent()) ?? '').trim();
+    const targets = await pickDefender(page, root, shot.defender);
+    if (shot.gunnerSkill !== undefined) await fillField(page, dialog, 'gunnerSkill', shot.gunnerSkill);
+    if (shot.rangeBand !== undefined) await page.locator(`${root} select[name="rangeBand"]`).selectOption(shot.rangeBand);
+    await snapAs('dialog', dialog);
+
     const before = await chatMessageIds(page);
-    await rigDice(page, faces);
-    await page.locator(`${section} [data-action="fireShipWeapon"][data-item-id="${weaponId}"]`).click();
-    const card = await waitForCard(page, before, 'wh40k-ship-weapon-card');
-    return { card, unusedDice: await releaseDice(page) };
+    await rigDice(page, shot.faces);
+    await page.locator(`${root} [data-action="rollAssault"]`).click();
+    await page.locator(`${root} [data-action="applyAssault"]`).waitFor({ state: 'visible' });
+    const preview = ((await page.locator(root).textContent()) ?? '').replace(/\s+/gu, ' ').trim();
+    await snapAs('dialog-resolved', dialog);
+
+    await page.locator(`${root} [data-action="applyAssault"]`).click();
+    const card = await waitForCard(page, before, hookMarker('ship-weapon-card'));
+    const unusedDice = await releaseDice(page);
+    if (shot.label !== undefined) await snapChatCard(page, `${shot.label}-card`, card.id);
+    return { card, dialogTitle, targets, preview, unusedDice };
+}
+
+/** A posted chat message's card, read by id. */
+export async function readCard(page: Page, messageId: string): Promise<PostedCard> {
+    return page.evaluate((id: string): PostedCard => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { messages: { get: (i: string) => { id: string; content: string } | undefined } } };
+        const message = g.game.messages.get(id);
+        if (message === undefined) throw new Error(`no chat message ${id}`);
+        const parsed = document.createElement('div');
+        parsed.innerHTML = message.content;
+        return { id: message.id, html: message.content, text: parsed.textContent.replace(/\s+/gu, ' ').trim() };
+    }, messageId);
+}
+
+/** The Stats tab's Damage Control panel (#184, #187): raised void shields and the recorded Critical Hits. */
+export interface ShownDamageControl {
+    /** The "up / max" shields text. */
+    shields: string;
+    /** Each Critical Hit's name, in order. */
+    criticals: string[];
+}
+
+/** Open a ship's sheet on the Stats tab, snap its Damage Control panel, and return what it shows. */
+export async function snapDamageControl(page: Page, actorId: string, label: string): Promise<ShownDamageControl> {
+    const sheetId = await openSheet(page, actorId);
+    const section = await showTab(page, sheetId, 'stats');
+    const panel = `${section} .wh40k-ship-damage-control`;
+    await page.locator(panel).scrollIntoViewIfNeeded();
+    await snapWindow(page, label, sheetId, panel);
+    const shields = ((await page.locator(`${panel} [data-shields-up]`).textContent()) ?? '').replace(/\s+/gu, ' ').trim();
+    const criticals = await page
+        .locator(`${panel} [data-wh40k-hook="ship-criticals"] li`)
+        .evaluateAll((rows) => rows.map((row) => row.querySelector('span')?.firstChild?.textContent?.trim() ?? ''));
+    return { shields, criticals };
+}
+
+/** Set a ship's void shields (the stat and the raised count), as fixture setup. */
+export async function setVoidShields(page: Page, actorId: string, shields: number): Promise<void> {
+    await page.evaluate(
+        async ({ id, value }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+            const g = globalThis as unknown as { game: { actors: { get: (i: string) => { update: (d: object) => Promise<object> } | undefined } } };
+            await g.game.actors.get(id)?.update({
+                'system.voidShields': value,
+                'system.voidShieldsStatus.active': value,
+                'system.voidShieldsStatus.exhausted': 0,
+            });
+        },
+        { id: actorId, value: shields },
+    );
+}
+
+/** The raised void shields of one ship. */
+export async function readShieldsUp(page: Page, actorId: string): Promise<number> {
+    return page.evaluate((id: string): number => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { actors: { get: (i: string) => { system: { voidShieldsStatus: { active: number } } } | undefined } } };
+        const actor = g.game.actors.get(id);
+        if (actor === undefined) throw new Error(`no actor ${id}`);
+        return actor.system.voidShieldsStatus.active;
+    }, actorId);
 }
 
 /** The card root hook each assault action posts, by its `data-assault`. */
@@ -532,12 +651,7 @@ export async function runAssaultFromSheet(page: Page, attackerId: string, run: S
     const dialog = await dialogId(page, 'ship-assault-dialog');
     const root = `#${dialog} [data-wh40k-hook="ship-assault-dialog"]`;
 
-    const targets = (await page.locator(`${root} select[name="defender"] option`).allTextContents()).map((text) => text.trim());
-    const select = page.locator(`${root} select[name="defender"]`);
-    if (((await select.locator('option:checked').textContent()) ?? '').trim() !== run.defender) {
-        await select.selectOption({ label: run.defender });
-        await page.locator(`${root} select[name="defender"] option:checked`, { hasText: run.defender }).waitFor({ state: 'attached' });
-    }
+    const targets = await pickDefender(page, root, run.defender);
     const inputNames = await page.locator(`${root} [name]`).evaluateAll((fields) => fields.map((field) => field.getAttribute('name') ?? ''));
     for (const [name, value] of Object.entries(run.inputs)) {
         const field = page.locator(`${root} [name="${name}"]`);

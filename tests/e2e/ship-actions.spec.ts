@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { expect, test } from './lib/test';
 import {
@@ -40,6 +41,19 @@ const MACROBATTERY = { name: 'Sunsear Laser Battery', weaponType: 'macrobattery'
 
 const SHIP: ShipFixture = { ...RT_FRIGATE, name: 'Ship Actions Frigate', crewRating: 40, weapons: [LANCE, MACROBATTERY] };
 
+/** The ship the Weapons tab fires at (#184): no void shields, Armour 18. */
+const TARGET: ShipFixture = { ...RT_FRIGATE, name: 'Ship Actions Target' };
+
+/** Text of the hoverable modifier rows in a weapon card's Ballistic Skill Test section. */
+async function gunneryRows(page: Page, html: string): Promise<string[]> {
+    return page.evaluate((content: string) => {
+        const parsed = document.createElement('div');
+        parsed.innerHTML = content;
+        const section = parsed.querySelector('[data-wh40k-hook="ship-assault-test"]');
+        return [...(section?.querySelectorAll('[data-wh40k-tooltip="modifier"]') ?? [])].map((row) => row.textContent.replace(/\s+/gu, ' ').trim());
+    }, html);
+}
+
 /** Roll-button and assault-button labels of one action tab. */
 async function tabButtons(page: Page, section: string): Promise<{ rollable: string[]; dispatch: number; assaults: string[] }> {
     const rollable = await page
@@ -76,6 +90,17 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(extendedButtons.dispatch, 'every RAW Extended Action keeps its rules card').toBe(14);
             expect(extendedButtons.assaults).toEqual(['hit-and-run']);
             expect(await snapWindow(page, 'ship-actions-extended-tab', sheetId)).not.toBeNull();
+            // #186: the tab's intro paragraph meets WCAG AA on the dark sheet body (it was dim brown at 80%).
+            const extendedIntro = `${extended} [data-wh40k-hook="ship-action-tab-description"]`;
+            expect(await scanContrast(page, extendedIntro)).toEqual([]);
+            expect(
+                await snapWindow(
+                    page,
+                    'ship-actions-extended-tab-description',
+                    sheetId,
+                    `${extended} .wh40k-panel:has([data-wh40k-hook="ship-action-tab-description"])`,
+                ),
+            ).not.toBeNull();
 
             const manoeuvre = await showTab(page, sheetId, 'manoeuvreActions');
             const manoeuvreButtons = await tabButtons(page, manoeuvre);
@@ -84,6 +109,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(manoeuvreButtons.dispatch).toBe(12);
             expect(manoeuvreButtons.assaults).toEqual(['ram', 'board', 'boarding-round']);
             expect(await snapWindow(page, 'ship-actions-manoeuvre-tab', sheetId)).not.toBeNull();
+            expect(await scanContrast(page, `${manoeuvre} [data-wh40k-hook="ship-action-tab-description"]`)).toEqual([]);
 
             // The actions and assaults are Rogue Trader rules: a DH2 hull's tabs offer neither.
             const dh2Tab = await snapActionTab(page, dh2.id, 'extendedActions', 'ship-actions-extended-tab-dh2');
@@ -98,6 +124,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
     test('Aid the Machine Spirit raises Detection, which Lock on Target counts; Lock on Target reaches only its weapon', async ({ page }) => {
         await joinShipWorld(page);
         const ship = await createShip(page, SHIP);
+        const target = await createShip(page, TARGET);
         const before = await chatMessageIds(page);
         try {
             // Tech-Use 50, roll 30: a success by 2 extra degrees, +5 per 2 → +10 Detection.
@@ -134,16 +161,16 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(provenanceRows(lock.card.html), 'Detection, Aid and the magnitude degree rows').toBeGreaterThanOrEqual(3);
             expect(lock.card.text).toContain(`+15 to Ballistic Skill Tests to fire ${MACROBATTERY.name}, this turn.`);
 
-            // Fire the locked battery: BS 40 + Lock on Target 15 = 55, roll 20 hits; 2d6 of 1s score no hits.
-            const locked = await fireWeaponFromSheet(page, ship.id, ship.weaponIds[1] ?? '', [20, 1, 1]);
+            // Fire the locked battery at the target: BS 40 + Lock on Target 15 = 55, roll 20 → 3 degrees,
+            // capped at Strength 2; the two 1s (2 damage) do not pass Armour 18.
+            const locked = await fireWeaponFromSheet(page, ship.id, { weaponId: ship.weaponIds[1] ?? '', defender: TARGET.name, faces: [20, 1, 1] });
             expect(locked.unusedDice, locked.card.text).toBe(0);
-            expect(locked.card.text).toContain('Lock on Target');
-            expect(provenanceRows(locked.card.html)).toBe(1);
+            expect(await gunneryRows(page, locked.card.html)).toEqual(['Lock on Target +15']);
             expect(await snapChatCard(page, 'ship-action-lock-on-target-weapon-fire-card', locked.card.id)).not.toBeNull();
 
             // The lance was not the locked weapon: its BS test carries no Lock on Target row.
-            const other = await fireWeaponFromSheet(page, ship.id, ship.weaponIds[0] ?? '', [99]);
-            expect(other.card.text).not.toContain('Lock on Target');
+            const other = await fireWeaponFromSheet(page, ship.id, { weaponId: ship.weaponIds[0] ?? '', defender: TARGET.name, faces: [99] });
+            expect(await gunneryRows(page, other.card.html)).toEqual([]);
             expect(await snapChatCard(page, 'ship-action-unlocked-weapon-fire-card', other.card.id)).not.toBeNull();
 
             // The sheet lists both live effects on the action tabs.
@@ -153,7 +180,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(after.text).toContain('Aid the Machine Spirit Detection +10');
         } finally {
             await deleteMessages(page, await messagesSince(page, before));
-            await deleteActors(page, [ship.id]);
+            await deleteActors(page, [ship.id, target.id]);
         }
         recordCoverage('ship-action.flow', 'aid-the-machine-spirit');
         recordCoverage('ship-action.flow', 'lock-on-target');
@@ -195,6 +222,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
     test('Come to New Heading and Evasive Manoeuvres put their penalties on every weapon', async ({ page }) => {
         await joinShipWorld(page);
         const ship = await createShip(page, { ...SHIP, crewRating: 60 });
+        const target = await createShip(page, TARGET);
         const before = await chatMessageIds(page);
         try {
             // Pilot 40 + Manoeuvrability 15 − 10 = 45, roll 30: Come to New Heading's flat −20.
@@ -218,11 +246,10 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             });
             expect(evasive.card.text).toContain("-20 to every Ballistic Skill Test to fire the ship's weapons, until the start of the ship's next turn.");
 
-            // BS 60 − 20 − 20 = 20, roll 5 hits; 2d6 of 1s score no hits. Both penalties are named rows.
-            const fired = await fireWeaponFromSheet(page, ship.id, ship.weaponIds[1] ?? '', [5, 1, 1]);
-            expect(fired.card.text).toContain('Come to New Heading');
-            expect(fired.card.text).toContain('Evasive Manoeuvres');
-            expect(provenanceRows(fired.card.html)).toBe(2);
+            // BS 60 − 20 − 20 = 20, roll 5 → 1 degree, 2 hits; the two 1s do not pass Armour. Both penalties are named rows.
+            const fired = await fireWeaponFromSheet(page, ship.id, { weaponId: ship.weaponIds[1] ?? '', defender: TARGET.name, faces: [5, 1, 1] });
+            expect(fired.unusedDice, fired.card.text).toBe(0);
+            expect(await gunneryRows(page, fired.card.html)).toEqual(['Come to New Heading -20', 'Evasive Manoeuvres -20']);
             expect(await snapChatCard(page, 'ship-action-manoeuvre-penalties-weapon-fire-card', fired.card.id)).not.toBeNull();
 
             const after = await snapActionTab(page, ship.id, 'manoeuvreActions', 'ship-actions-in-effect-manoeuvre-tab');
@@ -230,7 +257,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(after.text).toContain("Evasive Manoeuvres every Ballistic Skill Test to fire the ship's weapons -20");
         } finally {
             await deleteMessages(page, await messagesSince(page, before));
-            await deleteActors(page, [ship.id]);
+            await deleteActors(page, [ship.id, target.id]);
         }
         recordCoverage('ship-action.flow', 'come-to-new-heading');
         recordCoverage('ship-action.flow', 'evasive-manoeuvres');
