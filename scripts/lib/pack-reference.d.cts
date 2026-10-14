@@ -23,3 +23,17 @@ export declare function isReferenceStub(doc: unknown): doc is PackDocument & { r
 export declare function deepMergeOverlay(base: PackJson | undefined, overlay: PackJson): PackJson;
 
 export declare function applyReferenceOverrides(resolved: PackDocument, stub: PackDocument & { reference: string }): PackDocument;
+
+/** Absolute roots a stub's `reference` resolves against. */
+export interface PackRoots {
+    /** The active pack root (src/packs or src/packs-private). */
+    packRoot: string;
+    /** The repository root, for other `src/…` references. */
+    repoRoot: string;
+}
+
+/** The file a stub's `reference` names. */
+export declare function resolveReferencePath(reference: string, fromFile: string, roots: PackRoots): string;
+
+/** A `_source` document as it compiles: a stub resolved to its target with its overrides applied. */
+export declare function resolvePackSourceDocument(filePath: string, roots: PackRoots): PackDocument;

@@ -9,6 +9,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { resolvePackSourceDocument } from '../scripts/lib/pack-reference.cjs';
 import {
     ORIGIN_RESOURCE_PATHS,
     ORIGIN_RESOURCES,
@@ -19,7 +20,8 @@ import {
 } from '../src/module/origin-grant-ledger.ts';
 import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../src/module/rules/chaos-backgrounds.ts';
 
-const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
+const REPO_ROOT = resolve(__dirname, '..');
+const PACKS_ROOT = resolve(REPO_ROOT, 'src/packs-private');
 
 interface OriginDoc {
     name: string;
@@ -27,7 +29,17 @@ interface OriginDoc {
     system: { modifiers: OriginModifierBag; grants?: { woundsFormula?: string; startingMutationFormula?: string } };
 }
 
-/** Every originPath `_source` document under an `*-origins-*` pack. */
+/** An origin as authored: `modifiers` may be absent, and then loads as the schema's empty bag. */
+interface AuthoredOriginDoc extends Omit<OriginDoc, 'system'> {
+    system: Omit<OriginDoc['system'], 'modifiers'> & { modifiers?: OriginModifierBag };
+}
+
+/** Whether a compiled pack document is an origin with a `system` block. */
+function isAuthoredOrigin(doc: object): doc is AuthoredOriginDoc {
+    return 'type' in doc && doc.type === 'originPath' && 'system' in doc && typeof doc.system === 'object' && doc.system !== null;
+}
+
+/** Every originPath `_source` document under an `*-origins-*` pack, stubs resolved as the build compiles them. */
 function originDocs(): Array<{ file: string; doc: OriginDoc }> {
     if (!existsSync(PACKS_ROOT)) return [];
     const out: Array<{ file: string; doc: OriginDoc }> = [];
@@ -40,8 +52,13 @@ function originDocs(): Array<{ file: string; doc: OriginDoc }> {
             for (const name of readdirSync(dir)) {
                 if (!name.endsWith('.json')) continue;
                 const file = join(dir, name);
-                const doc = JSON.parse(readFileSync(file, 'utf8')) as OriginDoc;
-                if (doc.type === 'originPath') out.push({ file, doc });
+                // A reference stub carries no `type` or `system` of its own: read it as the
+                // build compiles it, its target with its overrides applied.
+                const raw: object = resolvePackSourceDocument(file, { packRoot: PACKS_ROOT, repoRoot: REPO_ROOT });
+                if (!isAuthoredOrigin(raw)) continue;
+                // An origin with no modifiers loads the schema's empty bag (the IM origins author none).
+                const { modifiers = {}, ...system } = raw.system;
+                out.push({ file, doc: { ...raw, system: { ...system, modifiers } } });
             }
         }
     }

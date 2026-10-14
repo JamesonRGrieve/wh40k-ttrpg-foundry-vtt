@@ -81,10 +81,6 @@ const PACK_BUILD_DIR = process.env.WH40K_PACKS_BUILD_DIR || path.join(BUILD_DIR,
 // LevelDB dir, so concurrent compiles never contend on a lock.
 const PACK_COMPILE_CONCURRENCY = os.availableParallelism();
 
-function readJsonFile(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
 // A reference stub is `{ reference: "<path>" }` plus OPTIONAL overrides applied
 // over the resolved canonical document: `name` / `_id` / `img` replace the
 // body's own (a shared body under a divergent local identity), and a `system`
@@ -97,43 +93,12 @@ function readJsonFile(filePath) {
 // document: it fell through to the compile step, which skips anything without
 // an `_id`, so 25 RT items were silently absent from their compiled packs and
 // every actor referencing them carried a lean husk (#499).
-const { isReferenceStub, applyReferenceOverrides } = require("./scripts/lib/pack-reference.cjs");
+const packReference = require("./scripts/lib/pack-reference.cjs");
 
-function resolveReferencePath(reference, fromFile) {
-  if (path.isAbsolute(reference)) return reference;
-  // "packs/<group>/…" and "src/packs/<group>/…" name a sibling pack within the
-  // ACTIVE pack root (PACK_SRC — src/packs for the public generics, or
-  // src/packs-private for the copyrighted content), so anchor them at
-  // PACK_SRC_ABS rather than a hardcoded src/packs. For the public build both
-  // forms still resolve under src/packs exactly as before; for the private build
-  // they correctly resolve the cross-pack stubs that live in src/packs-private.
-  if (reference.startsWith('packs/')) {
-    return path.resolve(PACK_SRC_ABS, reference.slice('packs/'.length));
-  }
-  if (reference.startsWith('src/packs/')) {
-    return path.resolve(PACK_SRC_ABS, reference.slice('src/packs/'.length));
-  }
-  if (reference.startsWith('src/')) return path.resolve(__dirname, reference);
-  return path.resolve(path.dirname(fromFile), reference);
-}
-
-function resolvePackSourceDocument(filePath, seen = new Set()) {
-  const normalizedPath = path.resolve(filePath);
-  if (seen.has(normalizedPath)) {
-    throw new Error(`Circular pack reference detected: ${[...seen, normalizedPath].join(' -> ')}`);
-  }
-
-  const doc = readJsonFile(normalizedPath);
-  if (!isReferenceStub(doc)) return doc;
-
-  seen.add(normalizedPath);
-  const targetPath = resolveReferencePath(doc.reference, normalizedPath);
-  if (!fs.existsSync(targetPath)) {
-    throw new Error(`Pack reference target not found: ${doc.reference} (from ${normalizedPath})`);
-  }
-  const resolved = resolvePackSourceDocument(targetPath, seen);
-  // Per-line overrides win over the canonical body (e.g. an RT-specific `img`).
-  return applyReferenceOverrides(resolved, doc);
+// Stubs resolve against the ACTIVE pack root (PACK_SRC), so the private build
+// resolves the cross-pack stubs that live in src/packs-private.
+function resolvePackSourceDocument(filePath) {
+  return packReference.resolvePackSourceDocument(filePath, { packRoot: PACK_SRC_ABS, repoRoot: __dirname });
 }
 
 function detectCollectionType(folder) {

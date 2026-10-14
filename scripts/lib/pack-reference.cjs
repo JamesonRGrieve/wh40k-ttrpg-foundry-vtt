@@ -24,6 +24,9 @@
  *   weapons", Enemies Without p. 41).
  */
 
+const fs = require('node:fs');
+const path = require('node:path');
+
 /** Top-level keys that replace the resolved body's value outright. */
 const STUB_IDENTITY_KEYS = Object.freeze(['name', '_id', 'img']);
 
@@ -61,4 +64,54 @@ function applyReferenceOverrides(resolved, stub) {
     return out;
 }
 
-module.exports = { STUB_IDENTITY_KEYS, STUB_OVERRIDE_KEYS, isReferenceStub, deepMergeOverlay, applyReferenceOverrides };
+/**
+ * The file a stub's `reference` names. "packs/<group>/…" and "src/packs/<group>/…"
+ * name a sibling pack within the ACTIVE pack root (src/packs for the public
+ * generics, src/packs-private for the copyrighted content), so they anchor at
+ * `packRoot` rather than a hardcoded src/packs. Any other "src/…" path anchors at
+ * `repoRoot`; a bare path is relative to the stub's own file.
+ * @param {string} reference  The stub's `reference`.
+ * @param {string} fromFile   Absolute path of the stub.
+ * @param {{ packRoot: string, repoRoot: string }} roots  Absolute pack root and repo root.
+ */
+function resolveReferencePath(reference, fromFile, roots) {
+    if (path.isAbsolute(reference)) return reference;
+    if (reference.startsWith('packs/')) return path.resolve(roots.packRoot, reference.slice('packs/'.length));
+    if (reference.startsWith('src/packs/')) return path.resolve(roots.packRoot, reference.slice('src/packs/'.length));
+    if (reference.startsWith('src/')) return path.resolve(roots.repoRoot, reference);
+    return path.resolve(path.dirname(fromFile), reference);
+}
+
+/**
+ * A `_source` document as it compiles: a stub resolved (recursively) to its
+ * target with the stub's overrides applied, any other document as written.
+ * Throws on a reference cycle or a missing target.
+ * @param {string} filePath  The `_source` JSON file.
+ * @param {{ packRoot: string, repoRoot: string }} roots  Absolute pack root and repo root.
+ */
+function resolvePackSourceDocument(filePath, roots, seen = new Set()) {
+    const normalizedPath = path.resolve(filePath);
+    if (seen.has(normalizedPath)) {
+        throw new Error(`Circular pack reference detected: ${[...seen, normalizedPath].join(' -> ')}`);
+    }
+    const doc = JSON.parse(fs.readFileSync(normalizedPath, 'utf8'));
+    if (!isReferenceStub(doc)) return doc;
+
+    seen.add(normalizedPath);
+    const targetPath = resolveReferencePath(doc.reference, normalizedPath, roots);
+    if (!fs.existsSync(targetPath)) {
+        throw new Error(`Pack reference target not found: ${doc.reference} (from ${normalizedPath})`);
+    }
+    // Per-line overrides win over the canonical body (e.g. an RT-specific `img`).
+    return applyReferenceOverrides(resolvePackSourceDocument(targetPath, roots, seen), doc);
+}
+
+module.exports = {
+    STUB_IDENTITY_KEYS,
+    STUB_OVERRIDE_KEYS,
+    isReferenceStub,
+    deepMergeOverlay,
+    applyReferenceOverrides,
+    resolveReferencePath,
+    resolvePackSourceDocument,
+};
