@@ -46,18 +46,27 @@ export interface RecordingShip extends AssaultShipActor {
     hullHits: number[];
     crewHits: [number, number][];
     criticalHits: (number | undefined)[];
+    /** Each `overloadVoidShields` call's count. */
+    shieldOverloads: number[];
 }
 
-export function recordingShip(profile: ShipAssaultShip, options: { crewRating?: number; isOwner?: boolean } = {}): RecordingShip {
+export function recordingShip(profile: ShipAssaultShip, options: { crewRating?: number; isOwner?: boolean; voidShields?: number } = {}): RecordingShip {
     const ship: RecordingShip = {
         name: profile.name,
         isOwner: options.isOwner ?? true,
         assaultProfile: profile,
         system: { gameSystem: 'rt', crew: { crewRating: options.crewRating ?? 40 } },
         crew: { morale: { value: profile.morale } },
+        hullIntegrity: { value: profile.hullIntegrity, max: profile.hullIntegrity },
+        activeVoidShields: options.voidShields ?? 0,
         hullHits: [],
         crewHits: [],
         criticalHits: [],
+        shieldOverloads: [],
+        overloadVoidShields: async (count: number) => {
+            ship.shieldOverloads.push(count);
+            return Promise.resolve(count);
+        },
         rollShipCriticalHit: async (rolled?: number) => {
             ship.criticalHits.push(rolled);
             return Promise.resolve();

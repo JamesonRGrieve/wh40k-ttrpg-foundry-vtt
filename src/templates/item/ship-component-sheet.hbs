@@ -21,14 +21,14 @@
                     </div>
                     <div class="tw-p-[var(--wh40k-space-md)]">
                         <div class="form-group">
-                            <label>{{localize "WH40K.ShipComponent.Type"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.ComponentType"}}</label>
                             <select name="system.componentType">
                                 {{selectOptions componentTypes selected=source.componentType}}
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>{{localize "WH40K.HullType"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.HullTypes"}}</label>
                             <select name="system.hullType" multiple>
                                 {{selectOptions hullTypes selected=source.hullType}}
                             </select>
@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>{{localize "WH40K.ShipComponent.Condition"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.Condition"}}</label>
                             <select name="system.condition">
                                 {{selectOptions conditions selected=source.condition}}
                             </select>

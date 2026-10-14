@@ -126,7 +126,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/VoidcraftActorSheet',
-        exports: ['Default', 'EditMode', 'RollInitiative', 'BlackCruisadeVariant', 'MacrobatteryFiring', 'LanceFiring', 'MacrobatteryMiss', 'ExtendedActions'],
+        exports: ['Default', 'EditMode', 'RollInitiative', 'BlackCruisadeVariant', 'DamageControlCriticals', 'DamageControlSound', 'ExtendedActions'],
     },
     {
         title: 'Actor/VehicleSheet',
@@ -516,7 +516,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Chat/Ship Critical Hit',
-        exports: ['Vacuum', 'Fire', 'Bridge', 'Drive', 'CrewCasualties', 'TableUnavailableFallback'],
+        exports: ['Holed', 'InternalDamage', 'SensorsDamaged', 'ThrustersDamaged', 'Fire', 'TableUnavailableFallback'],
     },
     {
         title: 'Chat/Skill Card',

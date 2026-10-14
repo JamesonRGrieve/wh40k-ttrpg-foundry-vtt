@@ -2,9 +2,9 @@
  * Regression spec for issue #184 — Rogue Trader Battlefleet Koronus ship-weapon
  * firing resolution.
  *
- * Renders the `MacrobatteryFiring` Storybook story for the StarshipSheet (which
- * mounts the `ship-weapon-chat.hbs` template against a deterministic firing-
- * resolution payload), screenshots it for visual review, and asserts the body
+ * Renders the `MacrobatteryBookExample` ship weapon fire story (which drives
+ * the real fire flow with queued dice and mounts `ship-weapon-chat.hbs` on the
+ * card it produces), screenshots it for visual review, and asserts the body
  * is attached. Selectors stay deliberately loose because the chat-card markup
  * is still under Tailwind migration — the spec exists to catch hard regressions
  * (template throws, story id rename) rather than lock down DOM shape.
@@ -20,7 +20,7 @@ test.describe('Issue #184 — RT macrobattery firing flow', () => {
             if (msg.type() === 'error') consoleErrors.push(msg.text());
         });
 
-        await page.goto('/iframe.html?id=dev-actor-voidcraftactorsheet--macrobattery-firing');
+        await page.goto('/iframe.html?id=dev-chat-ship-weapon-fire-184--macrobattery-book-example');
         await page.waitForLoadState('networkidle');
 
         // Snapshot first so visual review always has the artefact.

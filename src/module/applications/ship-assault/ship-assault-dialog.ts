@@ -87,7 +87,7 @@ class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as A
     defenderIndex: number;
 
     constructor(options: ShipAssaultDialogOptions) {
-        super(options);
+        super({ ...options, window: { ...options.window, title: options.entry.windowTitleKey } });
         this.attacker = options.attacker;
         this.entry = options.entry;
         this.targets = listTargetShips(options.attacker);

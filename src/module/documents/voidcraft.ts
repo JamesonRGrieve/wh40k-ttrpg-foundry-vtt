@@ -1,3 +1,4 @@
+import type ShipWeaponData from '../data/item/ship-weapon.ts';
 import { t } from '../i18n/t.ts';
 import {
     readShipModifierFlag,
@@ -52,30 +53,39 @@ type VoidcraftSystemData = WH40KBaseActor['system'] & {
     };
     priorTurnDamage: PriorTurnDamageSnapshot;
     shipStatuses: ShipStatus[];
+    /** Derived ship Ballistic Skill (crew rating plus role bonuses, #196). */
+    ballisticSkill: number;
+    voidShieldsStatus: { active: number; exhausted: number };
 };
 
 /** One persistent Critical Hit status recorded on a ship. */
 interface ShipStatus {
+    /** The drawn table result's id; `critical-<roll>` when the table was unavailable. */
     id: string;
+    /** The result's name as the table prints it ("Holed", "Fire!"). */
+    name: string;
     rolled: number;
     text: string;
     appliedAt: number;
 }
 
-/** Stable status id per 1d5 Critical Hit result (1–5). */
-const CRITICAL_STATUS_IDS = ['vacuum', 'fire', 'bridge', 'drive', 'crew'] as const;
+/**
+ * The RT Critical Hits chart (RT Core Table 8-12) and the compendium it ships
+ * in. Scoping the lookup to the pack keeps another line's same-named table out.
+ */
+const CRITICAL_HIT_TABLE_NAME = 'Ship Critical Hits';
+const CRITICAL_HIT_TABLE_PACK = 'wh40k-rpg.rt-core-rolltables';
 
-/** Langpack label per 1d5 Critical Hit result (1–5). */
-const CRITICAL_STATUS_LABEL_KEYS = [
-    'WH40K.Voidcraft.Critical.Effect.Vacuum',
-    'WH40K.Voidcraft.Critical.Effect.Fire',
-    'WH40K.Voidcraft.Critical.Effect.Bridge',
-    'WH40K.Voidcraft.Critical.Effect.Drive',
-    'WH40K.Voidcraft.Critical.Effect.Crew',
-] as const;
+/** A weapon's Critical Hit rolls 1d5 on the chart (RT Core, "Starship Weapons"). */
+const WEAPON_CRITICAL_DIE = '1d5';
 
-/** Compendium pack the RT ship Critical Hit table is scoped to. */
-const CRITICAL_HIT_TABLE_PACK = 'wh40k-rpg.rt-core-rolltables-ship-combat';
+/** The drawn result's fields the status reads. `description` is V13+; `text` the legacy field. */
+interface DrawnCriticalResult {
+    id?: string | null;
+    name?: string | null;
+    description?: string | null;
+    text?: string | null;
+}
 
 /**
  * Game-system id the RT Crew Population & Morale combat economy is
@@ -230,12 +240,11 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             return;
         }
 
-        // Create a chat message with the weapon details
+        // Post the weapon's firing profile; resolving a shot against a target is
+        // the voidcraft sheet's Fire dialog (#184).
         const cardData = {
-            actor: this,
-            weapon: weapon,
-            crewRating: this.system.crew.crewRating,
-            detectionBonus: this.detectionBonus,
+            attackerName: this.name,
+            weapon: { name: weapon.name, img: weapon.img ?? '', ...(weapon as WH40KItem & { system: ShipWeaponData }).system.cardProfile },
             gameSystem: this.system.gameSystem,
             _gameSystemId: firstSystemId(this),
         };
@@ -381,6 +390,38 @@ export class WH40KVoidcraft extends WH40KBaseActor {
         return delta;
     }
 
+    /** Void shields currently raised: neither overloaded by incoming hits nor lowered (#184). */
+    get activeVoidShields(): number {
+        return this.system.voidShieldsStatus.active;
+    }
+
+    /**
+     * Overload up to `count` raised void shields (#184 — RT Core, "Damage and
+     * Defences"): each cancelled one incoming hit and is down until restored.
+     * Returns the number of shields that went down.
+     */
+    async overloadVoidShields(count: number): Promise<number> {
+        const { active, exhausted } = this.system.voidShieldsStatus;
+        const down = Math.max(0, Math.min(Math.trunc(count), active));
+        if (down === 0) return 0;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.voidShieldsStatus.active': active - down,
+            'system.voidShieldsStatus.exhausted': exhausted + down,
+        });
+        return down;
+    }
+
+    /** Clear one recorded Critical Hit status once it has been repaired (#187). */
+    async removeShipStatus(index: number): Promise<void> {
+        const statuses = this.system.shipStatuses;
+        if (index < 0 || index >= statuses.length) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
+        await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
+            'system.shipStatuses': statuses.filter((_status, position) => position !== index),
+        });
+    }
+
     /**
      * Roll on the Rogue Trader Critical Hit chart (issue #187) and record the
      * result as a persistent ship status, posting the critical-hit chat card.
@@ -392,27 +433,22 @@ export class WH40KVoidcraft extends WH40KBaseActor {
      * table-unavailable message so the GM applies the effect by hand.
      */
     async rollShipCriticalHit(rolled?: number): Promise<void> {
-        const preRoll = rolled === undefined ? null : await new Roll(String(rolled)).evaluate();
-        let result = 0;
-        let resultText = '';
-        const draw = await RollTableUtils.rollTable('Critical Hit', { displayChat: false, pack: CRITICAL_HIT_TABLE_PACK, roll: preRoll });
-        if (draw !== null) {
-            result = draw.roll.total ?? 0;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable result Collection is untyped; reading the drawn result's display text
-            const first = (draw.results as unknown as Array<{ text?: string }>).at(0);
-            resultText = first?.text ?? '';
-        }
-        if (resultText === '') {
-            result = rolled ?? Number((await new Roll('1d5').evaluate()).total);
-            resultText = t('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: result });
-        }
-
-        const index = Math.min(Math.max(result, 1), CRITICAL_STATUS_IDS.length) - 1;
-        const statusId = CRITICAL_STATUS_IDS.at(index) ?? CRITICAL_STATUS_IDS[0];
-        const statusLabel = t(CRITICAL_STATUS_LABEL_KEYS.at(index) ?? CRITICAL_STATUS_LABEL_KEYS[0]);
+        // The weapon chart is 1d5, but the table's own formula spans the whole
+        // chart (1d11) — so the die is always rolled here, never by the table.
+        const preRoll = await new Roll(rolled === undefined ? WEAPON_CRITICAL_DIE : String(rolled)).evaluate();
+        const result = Math.trunc(preRoll.total);
+        const draw = await RollTableUtils.rollTable(CRITICAL_HIT_TABLE_NAME, { displayChat: false, pack: CRITICAL_HIT_TABLE_PACK, roll: preRoll });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable#roll returns an untyped TableResult array; reading the drawn result's id, name and text
+        const drawn = draw === null ? undefined : (draw.results as unknown as DrawnCriticalResult[]).at(0);
+        const resultText = drawn?.description ?? drawn?.text ?? '';
+        const found = drawn !== undefined && resultText !== '';
+        const drawnName = drawn?.name ?? '';
+        const statusLabel = found && drawnName !== '' ? drawnName : t('WH40K.Voidcraft.Critical.ResultLabel', { rolled: result });
+        const statusText = found ? resultText : t('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: result });
+        const statusId = found ? drawn.id ?? `critical-${result}` : `critical-${result}`;
 
         // Persistent until cleared by an Emergency Repair or Quick Repair action.
-        const next: ShipStatus[] = [...this.system.shipStatuses, { id: statusId, rolled: result, text: resultText, appliedAt: Date.now() }];
+        const next: ShipStatus[] = [...this.system.shipStatuses, { id: statusId, name: statusLabel, rolled: result, text: statusText, appliedAt: Date.now() }];
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
         await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.shipStatuses': next });
 
@@ -420,7 +456,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             _gameSystemId: firstSystemId(this),
             actorName: this.name,
             resultName: statusLabel,
-            resultText,
+            resultText: statusText,
             statusLabel,
             rolled: result,
             rollLabel: t('WH40K.Voidcraft.Critical.RollLabel', { rolled: result }),

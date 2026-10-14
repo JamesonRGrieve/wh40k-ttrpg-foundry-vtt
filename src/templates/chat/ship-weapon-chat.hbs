@@ -1,151 +1,104 @@
 {{!--
-    Rogue Trader Ship Weapon Fire Card (issue #184).
+    Rogue Trader ship weapon card (#184 — RT Core 1.4 errata, Chapter VIII).
 
-    Renders the resolution of a BFK-style ship-weapon firing pass:
-      • Macrobattery: BS test → N d6 hits-pool (each ≥6 = 1 hit) → damage per hit.
-      • Lance: BS test → automatic hit → damage, ignoring void shields.
-    Falls back to a stat-block view when no `resolution` block is supplied (e.g.
-    when the card is built by legacy callers that have not yet been ported).
+    Always shows the Weapon Component's firing profile. When a shot was fired
+    at a target ship (the voidcraft sheet's Fire dialog), it also prints the
+    full derivation, each term hoverable to its rule:
+      • the gunner's Ballistic Skill Test — base ± ship actions ± range ± GM = target, the roll and its degrees;
+      • the hits — 1 + degrees (lance: per 3), capped at Strength, minus the target's void shields;
+      • the Hull Integrity damage — each hit's roll, minus Armour (a lance ignores it), plus a critical's automatic point;
+      • any Critical Hit roll, and the target's vitals before and after.
 
-    Required hash params:
-      weapon       — the WH40KItem (shipWeapon) being fired
-      crewRating   — BS target value (system.crew.crewRating)
-
-    Optional hash params:
-      resolution   — see StarshipSheet.#fireShipWeapon for the structured shape
-      gameSystem   — active game-system id, so per-system tw-* variants fire
-                     against the rendered chat card.
+    Context:
+      weapon        — {name, img, typeLabel, locationLabel, strength, damage, crit, range}
+      gameSystem    — the firing ship's line, for per-system variants
+      attackerName / defenderName
+      test          — AssaultTestView (absent on a profile-only card)
+      hits, damage  — AssaultDamageView | null
+      missed, allShielded, critical, vitalsTitle, vitals [{label, before, after}], applied, unapplied
 --}}
-{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
-    cardClass=""
-    outerExtraClass="wh40k-ship-weapon-card tw-overflow-hidden tw-rounded-md tw-font-ui"
-    image=weapon.img
-    imageAlt=weapon.name
-    title=weapon.name
-    subtitle=(concat (or resolution.weaponTypeLabel weapon.system.weaponType) " • " (or resolution.location weapon.system.location))
-    gameSystem=gameSystem
-}}
-    {{!-- Static stats panel (always rendered) --}}
-    <div class="tw-grid tw-grid-cols-2 tw-gap-1 tw-p-[10px] tw-mb-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold {{themeClassFor 'accent'}}">{{localize "WH40K.Voidcraft.Combat.Strength"}}:</span>
-            <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.strength}}</span>
+<div data-wh40k-hook="ship-weapon-card" class="wh40k-rpg wh40k-ship-weapon-card tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.92)] tw-text-[#ece8de] tw-font-ui"
+     data-wh40k-system="{{gameSystem}}">
+    <header class="tw-flex tw-items-center tw-gap-3 tw-mb-2">
+        {{#if weapon.img}}<img class="tw-w-10 tw-h-10 tw-flex-none tw-rounded-sm tw-border-0" src="{{weapon.img}}" alt="{{weapon.name}}" />{{/if}}
+        <div class="tw-flex tw-flex-col tw-min-w-0">
+            <span class="tw-font-display tw-uppercase tw-tracking-[0.1em] tw-text-[1rem] tw-text-amber-200">{{weapon.name}}</span>
+            <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-wide tw-text-amber-100">{{weapon.typeLabel}} &bull; {{weapon.locationLabel}}</span>
         </div>
-        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.DamageLabel"}}:</span>
-            <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.damage}}</span>
-        </div>
-        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.CritLabel"}}:</span>
-            <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.crit}}</span>
-        </div>
-        <div class="tw-flex tw-items-baseline tw-gap-[6px] tw-text-[0.85rem]">
-            <span class="tw-font-semibold tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.RangeLabel"}}:</span>
-            <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.range}}</span>
-        </div>
-    </div>
+    </header>
 
-    {{#if resolution}}
-        {{!-- Resolved firing pass (issue #184) ----------------------------------- --}}
-        <div class="tw-flex tw-flex-col tw-gap-2">
-            {{!-- BS test row --}}
-            <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                <div class="tw-flex tw-items-baseline tw-gap-2">
-                    <i class="fas fa-crosshairs tw-text-bronze"></i>
-                    <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">{{localize "WH40K.Voidcraft.Combat.BSTest"}}</span>
-                </div>
-                <div class="tw-flex tw-items-baseline tw-gap-2 tw-text-[0.9rem]">
-                    <span class="tw-text-[var(--wh40k-text-dark)]">{{resolution.bs.total}} / {{resolution.bs.target}}</span>
-                    {{#if resolution.bs.succeeded}}
-                        <span class="tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(75,192,115,0.18)] tw-text-[#4bc073] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Voidcraft.Combat.Success"}}{{#if resolution.bs.dos}} +{{resolution.bs.dos}}{{/if}}</span>
-                    {{else}}
-                        <span class="tw-px-2 tw-py-0.5 tw-rounded tw-bg-[rgba(220,38,38,0.18)] tw-text-[#fca5a5] tw-text-[0.7rem] tw-font-bold tw-uppercase">{{localize "WH40K.Voidcraft.Combat.Miss"}}</span>
-                    {{/if}}
-                </div>
-            </div>
-            {{#if resolution.bs.baseLabel}}
-                {{!-- BS target derivation: crew rating ± each live ship-action modifier (#186), hoverable to its source. --}}
-                <div class="tw-px-3">
-                    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
-                        baseTarget=resolution.bs.base
-                        baseLabel=resolution.bs.baseLabel
-                        modifierSources=resolution.bs.modifierSources
-                        modifiedTarget=resolution.bs.target}}
-                </div>
-            {{/if}}
-
-            {{#if resolution.bs.succeeded}}
-                {{!-- Hits panel (macrobattery N dice; lance auto-1) --}}
-                <div class="tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-mb-1">
-                        <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">
-                            <i class="fas fa-dice-d6"></i>
-                            {{localize "WH40K.Voidcraft.Combat.Hits"}}
-                        </span>
-                        <span class="tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{resolution.hits}}</span>
-                    </div>
-                    {{#if resolution.hitsFormula}}
-                        <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.Combat.Pool"}}: {{resolution.hitsFormula}}</div>
-                    {{/if}}
-                </div>
-
-                {{!-- Damage panel --}}
-                {{#if resolution.hits}}
-                    <div class="tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                        <div class="tw-flex tw-items-center tw-justify-between tw-mb-1">
-                            <span class="tw-font-semibold tw-uppercase tw-tracking-wide tw-text-[0.75rem] tw-text-bronze">
-                                <i class="fas fa-fire"></i>
-                                {{localize "WH40K.Voidcraft.Combat.Damage"}}
-                            </span>
-                            <span class="tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{resolution.totalDamage}}</span>
-                        </div>
-                        <div class="tw-flex tw-flex-wrap tw-gap-1 tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">
-                            {{#each resolution.damageRolls as |dmg idx|}}
-                                <span class="tw-px-1.5 tw-py-0.5 tw-bg-[rgba(0,0,0,0.06)] tw-rounded">{{dmg.formula}} = {{dmg.total}}</span>
-                            {{/each}}
-                        </div>
-                    </div>
-
-                    {{!-- Aftermath: shields + hull --}}
-                    <div class="tw-grid tw-grid-cols-2 tw-gap-2">
-                        <div class="tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                            <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-bronze tw-mb-1">
-                                <i class="fas fa-shield-alt"></i>
-                                {{localize "WH40K.Voidcraft.Combat.VoidShields"}}
-                            </div>
-                            {{#if resolution.ignoresShields}}
-                                <div class="tw-text-[0.8rem] tw-text-[var(--wh40k-text-muted)] tw-italic">{{localize "WH40K.Voidcraft.Combat.LanceBypass"}}</div>
-                            {{else if resolution.shieldedDamage}}
-                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">
-                                    {{localize "WH40K.Voidcraft.Combat.ShieldAbsorbed"}}: {{resolution.shieldedDamage}}
-                                </div>
-                                <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.shieldsBefore}} → {{resolution.shieldsAfter}}</div>
-                            {{else}}
-                                <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">{{localize "WH40K.Voidcraft.Combat.NoShields"}}</div>
-                                <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.shieldsBefore}} → {{resolution.shieldsAfter}}</div>
-                            {{/if}}
-                        </div>
-                        <div class="tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)]">
-                            <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-bronze tw-mb-1">
-                                <i class="fas fa-heart"></i>
-                                {{localize "WH40K.Voidcraft.Combat.Hull"}}
-                            </div>
-                            <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-text-dark)]">
-                                {{localize "WH40K.Voidcraft.Combat.HullApplied"}}: {{resolution.appliedDamage}}
-                            </div>
-                            <div class="tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)]">{{resolution.hullBefore}} → {{resolution.hullAfter}} / {{resolution.hullMax}}</div>
-                        </div>
-                    </div>
-                {{/if}}
-            {{/if}}
+    {{#if defenderName}}
+        <div class="tw-text-[0.95rem] tw-mb-2">
+            <strong class="tw-text-amber-200">{{attackerName}}</strong>
+            <span class="tw-mx-1 tw-text-amber-400" aria-hidden="true">→</span>
+            <strong class="tw-text-amber-200" data-wh40k-hook="ship-weapon-target">{{defenderName}}</strong>
         </div>
-    {{else}}
-        {{!-- Legacy fallback: stat-block only. --------------------------------- --}}
-        {{#if weapon.system.special}}
-            <div class="tw-flex tw-items-baseline tw-gap-1 tw-py-1 tw-mb-2 tw-text-[0.9rem]">
-                <span class="tw-font-semibold tw-text-bronze tw-flex-shrink-0">{{localize "WH40K.Voidcraft.Combat.Special"}}:</span>
-                <span class="tw-text-[var(--wh40k-text-dark)]">{{weapon.system.special}}</span>
-            </div>
+    {{/if}}
+
+    {{!-- 2 × 2 so the labels never break mid-word in the narrow chat sidebar. Each value sets its own
+         colour: the chat log's message styles would otherwise darken an inherited one. --}}
+    <dl class="tw-grid tw-grid-cols-2 tw-gap-x-3 tw-gap-y-1 tw-m-0 tw-mb-2 tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(251,191,36,0.3)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[0.85rem]">
+        <div class="tw-flex tw-justify-between tw-gap-2">
+            <dt class="tw-m-0 tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-amber-200">{{localize "WH40K.Voidcraft.Combat.Strength"}}</dt>
+            <dd class="tw-m-0 tw-font-semibold tw-tabular-nums tw-text-[#ece8de]">{{weapon.strength}}</dd>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-2">
+            <dt class="tw-m-0 tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-amber-200">{{localize "WH40K.Voidcraft.Combat.DamageLabel"}}</dt>
+            <dd class="tw-m-0 tw-font-semibold tw-tabular-nums tw-text-[#ece8de]">{{weapon.damage}}</dd>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-2">
+            <dt class="tw-m-0 tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-amber-200">{{localize "WH40K.Voidcraft.Combat.CritLabel"}}</dt>
+            <dd class="tw-m-0 tw-font-semibold tw-tabular-nums tw-text-[#ece8de]">{{weapon.crit}}</dd>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-2">
+            <dt class="tw-m-0 tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-amber-200">{{localize "WH40K.Voidcraft.Combat.RangeLabel"}}</dt>
+            <dd class="tw-m-0 tw-font-semibold tw-tabular-nums tw-text-[#ece8de]">{{weapon.range}}</dd>
+        </div>
+    </dl>
+
+    {{#if test}}
+        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
+
+        {{#if missed}}
+            <p class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-amber-100">{{localize "WH40K.Voidcraft.Fire.Missed" ship=defenderName}}</p>
+        {{/if}}
+        {{#if hits}}
+            {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=hits}}
+        {{/if}}
+        {{#if allShielded}}
+            <p class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-amber-100">{{localize "WH40K.Voidcraft.Fire.AllShielded" ship=defenderName}}</p>
+        {{/if}}
+        {{#if damage}}
+            {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=damage}}
+        {{/if}}
+        {{#if critical}}
+            <p data-wh40k-hook="ship-weapon-critical" class="tw-m-0 tw-mb-2 tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(248,113,113,0.6)] tw-bg-[rgba(127,29,29,0.35)] tw-text-[0.9rem] tw-font-semibold tw-text-red-100">
+                <i class="fas fa-burst" aria-hidden="true"></i> {{critical}}
+            </p>
+        {{/if}}
+
+        <table data-wh40k-hook="ship-weapon-vitals" class="tw-w-full tw-m-0 tw-border-collapse tw-text-[0.85rem]">
+            <caption class="tw-text-left tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-amber-200 tw-pb-1">{{vitalsTitle}}</caption>
+            <thead>
+                <tr class="tw-text-[0.7rem] tw-uppercase tw-tracking-wide tw-text-amber-100">
+                    <th scope="col" class="tw-text-left tw-font-semibold tw-py-0.5"></th>
+                    <th scope="col" class="tw-text-right tw-font-semibold tw-py-0.5 tw-whitespace-nowrap">{{localize "WH40K.Voidcraft.Fire.Vitals.Before"}}</th>
+                    {{#if applied}}<th scope="col" class="tw-text-right tw-font-semibold tw-py-0.5 tw-pl-2 tw-whitespace-nowrap">{{localize "WH40K.Voidcraft.Fire.Vitals.After"}}</th>{{/if}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each vitals as |row|}}
+                    <tr class="tw-border-0 tw-border-t tw-border-solid tw-border-[rgba(251,191,36,0.2)]">
+                        <th scope="row" class="tw-text-left tw-font-medium tw-py-0.5 tw-break-normal tw-text-[#ece8de]">{{row.label}}</th>
+                        <td class="tw-text-right tw-tabular-nums tw-py-0.5 tw-whitespace-nowrap tw-text-[#ece8de]">{{row.before}}</td>
+                        {{#if ../applied}}<td class="tw-text-right tw-tabular-nums tw-py-0.5 tw-pl-2 tw-whitespace-nowrap tw-font-semibold tw-text-amber-200">{{row.after}}</td>{{/if}}
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        {{#if unapplied}}
+            <p class="tw-m-0 tw-mt-2 tw-text-[0.8rem] tw-italic tw-text-amber-200">{{localize "WH40K.Voidcraft.Fire.NotApplied"}}</p>
         {{/if}}
     {{/if}}
-{{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}
+</div>

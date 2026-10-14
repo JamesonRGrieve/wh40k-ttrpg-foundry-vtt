@@ -2,23 +2,23 @@
  * Storybook story for the Rogue Trader Ship Critical Hit chat card
  * (issue #187).
  *
- * The runtime path lives in `starship-sheet.ts::#rollShipCriticalHit`:
- * it consults the world `RollTable.getName("Critical Hit")`, then the
- * `rt-core-rolltables-ship-combat` compendium pack, and finally falls
- * back to a bare 1d5 with the `WH40K.Starship.Critical.TableUnavailable`
- * message. The chat card itself is `ship-critical-hit-chat.hbs`,
- * a thin shell over `partial/chat-card-shell.hbs` that surfaces the
- * rolled effect text, the persistent status label, and the source roll.
+ * The runtime path is `WH40KVoidcraft.rollShipCriticalHit`: it rolls the
+ * weapon's 1d5 and draws that result from the world `RollTable` "Ship
+ * Critical Hits", else the `wh40k-rpg.rt-core-rolltables` compendium (RT Core
+ * Table 8-12), and only when neither exists posts the
+ * `WH40K.Voidcraft.Critical.TableUnavailable` message. The card is
+ * `ship-critical-hit-chat.hbs`, a thin shell over `partial/chat-card-shell.hbs`
+ * that shows the drawn result's name, its rules text (the table's HTML) and
+ * the source roll.
  *
- * The story renders the card directly with realistic context values for
- * each of the 5 Battlefleet Koronus chart entries (Vacuum, Fire, Bridge,
- * Drive, Crew) plus a Table-Unavailable fallback story, so the
- * Playwright spec at
- * `tests/storybook/issue-187-critical-hit-chart.spec.ts` can dump a
- * screenshot and assert the rendered body is attached.
+ * One story per 1d5 result of Table 8-12 (Holed, Internal Damage, Sensors
+ * Damaged, Thrusters Damaged, Fire!) plus the table-unavailable fallback, so
+ * `tests/storybook/issue-187-critical-hit-chart.spec.ts` can dump a screenshot.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect, within } from 'storybook/test';
 import shipCriticalHitChatSrc from '../src/templates/chat/ship-critical-hit-chat.hbs?raw';
+import { storyLocalize } from './mocks/ship-assault';
 import { renderSheet } from './test-helpers';
 
 interface CardArgs {
@@ -32,15 +32,15 @@ interface CardArgs {
     gameSystem: string;
 }
 
-function baseArgs(): CardArgs {
+/** One Table 8-12 result as the compendium table draws it: its name and its HTML text. */
+function result(rolled: number, name: string, text: string): CardArgs {
     return {
-        actorName: 'The Errant Vector',
-        resultName: 'Vacuum / Hull Breach',
-        resultText:
-            'Vacuum / Hull Breach — The hull is breached. Depressurisation begins in the affected compartment. Crew exposed to the void take damage each round until the breach is sealed.',
-        statusLabel: 'Vacuum / Hull Breach',
-        rolled: 1,
-        rollLabel: 'Rolled 1 on 1d5',
+        actorName: 'Whispering Star',
+        resultName: name,
+        resultText: `<p><b>${name}</b>: ${text}</p>`,
+        statusLabel: name,
+        rolled,
+        rollLabel: storyLocalize('WH40K.Voidcraft.Critical.RollLabel', { rolled }),
         image: 'icons/svg/explosion.svg',
         gameSystem: 'rt',
     };
@@ -49,81 +49,51 @@ function baseArgs(): CardArgs {
 const meta: Meta<CardArgs> = {
     title: 'Chat/Ship Critical Hit',
     render: (args) => renderSheet(shipCriticalHitChatSrc, args),
-    args: baseArgs(),
+    play: async ({ canvasElement, args }) => {
+        const view = within(canvasElement);
+        await expect(view.getAllByText(args.statusLabel).length).toBeGreaterThanOrEqual(1);
+        await expect(view.getByText(args.rollLabel)).toBeTruthy();
+        // The table's HTML renders as markup, not as escaped tags.
+        await expect(canvasElement.textContent).not.toContain('<p>');
+    },
 };
 
 export default meta;
 
 type Story = StoryObj<CardArgs>;
 
-/** Rolled a 1 — vacuum / hull breach. */
-export const Vacuum: Story = {
-    args: baseArgs(),
+/** Rolled a 1. */
+export const Holed: Story = {
+    args: result(1, 'Holed', "A lucky hit has wrenched open the ship's hull, exposing it to space."),
 };
 
-/** Rolled a 2 — fire breaks out aboard the ship. */
+/** Rolled a 2. */
+export const InternalDamage: Story = {
+    args: result(2, 'Internal Damage', 'The force of the hit ruptures bulkheads and smashes machinery.'),
+};
+
+/** Rolled a 3. */
+export const SensorsDamaged: Story = {
+    args: result(3, 'Sensors Damaged', "The ship's auspex arrays have been knocked out, leaving the vessel blind."),
+};
+
+/** Rolled a 4. */
+export const ThrustersDamaged: Story = {
+    args: result(4, 'Thrusters Damaged', "The ship's manoeuvring thrusters are smashed, venting randomly and leaking fuel."),
+};
+
+/** Rolled a 5. */
 export const Fire: Story = {
-    args: {
-        ...baseArgs(),
-        resultName: 'Fire',
-        statusLabel: 'Fire',
-        rolled: 2,
-        rollLabel: 'Rolled 2 on 1d5',
-        resultText:
-            'Fire — A fire breaks out aboard the vessel. The blaze burns crew each round until extinguished by an Emergency Repair or damage-control action.',
-        image: 'icons/svg/fire.svg',
-    },
-};
-
-/** Rolled a 3 — bridge damage; pilot/command tests suffer a penalty. */
-export const Bridge: Story = {
-    args: {
-        ...baseArgs(),
-        resultName: 'Bridge Damage',
-        statusLabel: 'Bridge Damage',
-        rolled: 3,
-        rollLabel: 'Rolled 3 on 1d5',
-        resultText: 'Bridge Damage — The bridge is struck. All pilot and command tests suffer a penalty until the damage is repaired.',
-        image: 'icons/svg/tower.svg',
-    },
-};
-
-/** Rolled a 4 — plasma drive damaged; speed reduced. */
-export const Drive: Story = {
-    args: {
-        ...baseArgs(),
-        resultName: 'Drive Damage',
-        statusLabel: 'Drive Damage',
-        rolled: 4,
-        rollLabel: 'Rolled 4 on 1d5',
-        resultText: "Drive Damage — The plasma drive is damaged. The ship's Speed is reduced until the drive is repaired.",
-        image: 'icons/svg/lightning.svg',
-    },
-};
-
-/** Rolled a 5 — crew casualties; population & morale drop. */
-export const CrewCasualties: Story = {
-    args: {
-        ...baseArgs(),
-        resultName: 'Crew Casualties',
-        statusLabel: 'Crew Casualties',
-        rolled: 5,
-        rollLabel: 'Rolled 5 on 1d5',
-        resultText: 'Crew Casualties — Shrapnel and decompression cut through the crew. Crew Population is reduced and Morale suffers from the loss.',
-        image: 'icons/svg/blood.svg',
-    },
+    args: { ...result(5, 'Fire!', 'Alarms scream through the hull as hungry flames roar through passageways and compartments.'), image: 'icons/svg/fire.svg' },
 };
 
 /**
- * Compendium roll-table was not found at runtime: the action handler
- * fell back to a bare 1d5 and posted the table-unavailable string.
+ * Neither the world nor the compendium holds the table: the roll is posted
+ * with the table-unavailable message, labelled by its number.
  */
 export const TableUnavailableFallback: Story = {
     args: {
-        ...baseArgs(),
-        resultName: 'Vacuum / Hull Breach',
-        rolled: 1,
-        rollLabel: 'Rolled 1 on 1d5',
-        resultText: 'The Critical Hit roll table is unavailable — rolled 1 on 1d5. Apply the corresponding effect from Battlefleet Koronus by hand.',
+        ...result(1, storyLocalize('WH40K.Voidcraft.Critical.ResultLabel', { rolled: 1 }), ''),
+        resultText: storyLocalize('WH40K.Voidcraft.Critical.TableUnavailable', { rolled: 1 }),
     },
 };

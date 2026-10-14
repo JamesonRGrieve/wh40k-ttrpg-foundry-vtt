@@ -17,10 +17,10 @@ import type { ShipAssaultShip } from '../../rules/ship-assault.ts';
 import type { Localize } from './ship-assault-card.ts';
 
 /** Identifier of each assault flow; doubles as the sheet's `data-assault` value. */
-type ShipAssaultFlowId = 'board' | 'boarding-round' | 'hit-and-run' | 'ram';
+type ShipAssaultFlowId = 'board' | 'boarding-round' | 'hit-and-run' | 'ram' | 'fire';
 
-/** Which voidcraft-sheet tab surfaces the action. */
-export type ShipAssaultTab = 'manoeuvre' | 'extended';
+/** Which voidcraft-sheet tab surfaces the action (the Weapons tab fires each weapon from its row). */
+export type ShipAssaultTab = 'manoeuvre' | 'extended' | 'weapons';
 
 /** One option of a select field. */
 interface AssaultFieldOption {
@@ -67,6 +67,10 @@ export interface AssaultShipActor {
     applyHullDamage: WH40KVoidcraft['applyHullDamage'];
     applyCrewMoraleDamage: WH40KVoidcraft['applyCrewMoraleDamage'];
     rollShipCriticalHit: WH40KVoidcraft['rollShipCriticalHit'];
+    readonly hullIntegrity: { readonly value: number; readonly max: number };
+    /** Void shields currently raised (not overloaded). */
+    readonly activeVoidShields: number;
+    overloadVoidShields: WH40KVoidcraft['overloadVoidShields'];
 }
 
 /** The two ships an action is between. The attacker is the sheet's ship. */
@@ -95,6 +99,8 @@ export interface ShipAssaultFlow<R> {
     readonly tab: ShipAssaultTab;
     readonly labelKey: string;
     readonly hintKey: string;
+    /** The dialog's window title; the assault dialog's own title when omitted. */
+    readonly windowTitleKey?: string;
     readonly icon: string;
     /** Input fields shown before rolling. */
     inputGroups: (ctx: ShipAssaultContext) => AssaultFieldGroup[];
@@ -129,9 +135,13 @@ export interface ShipAssaultEntry {
     readonly tab: ShipAssaultTab;
     readonly labelKey: string;
     readonly hintKey: string;
+    readonly windowTitleKey: string;
     readonly icon: string;
     start: (ctx: ShipAssaultContext) => ShipAssaultSession;
 }
+
+/** The dialog window title of an assault action that names none of its own. */
+const DEFAULT_WINDOW_TITLE_KEY = 'WH40K.Voidcraft.Assault.DialogTitle';
 
 /** Wrap a flow into a registry entry whose sessions keep their resolution typed. */
 export function defineShipAssault<R>(flow: ShipAssaultFlow<R>): ShipAssaultEntry {
@@ -140,6 +150,7 @@ export function defineShipAssault<R>(flow: ShipAssaultFlow<R>): ShipAssaultEntry
         tab: flow.tab,
         labelKey: flow.labelKey,
         hintKey: flow.hintKey,
+        windowTitleKey: flow.windowTitleKey ?? DEFAULT_WINDOW_TITLE_KEY,
         icon: flow.icon,
         start: (ctx) => {
             let step: AssaultStep<R> | null = null;

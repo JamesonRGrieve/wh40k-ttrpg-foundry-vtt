@@ -2,24 +2,20 @@
  * Storybook regression coverage for issue #187 — Rogue Trader Critical
  * Hit chart on ship hull damage.
  *
- * Background: per RAW (Battlefleet Koronus), when a ship's hull
- * integrity damage triggers a critical hit, the player rolls 1d5 on
- * the Critical Hit chart. The five entries (Vacuum / Fire / Bridge /
- * Drive / Crew) each apply a persistent status to the ship until it is
- * cleared by an Emergency Repair or Quick Repair Extended Action.
+ * Background: per RAW (RT Core, "Starship Weapons"), a weapon's Critical
+ * Hit rolls 1d5 on the Critical Hit chart (Table 8-12): Holed, Internal
+ * Damage, Sensors Damaged, Thrusters Damaged, Fire!. Each applies a
+ * persistent status to the ship until it is repaired.
  *
- * The runtime fix in `starship-sheet.ts::#rollShipCriticalHit` consults
- * the world `RollTable.getName("Critical Hit")`, then the
- * `rt-core-rolltables-ship-combat` compendium pack, then falls back to
- * a bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
- * message — so the player never sees Foundry's "no available results"
- * notification even when the compendium pack is absent. The Critical
- * Hit RollTable JSON itself ships in the `src/packs` submodule at
- * `rogue-trader/rt-core-rolltables-ship-combat/_source/critical-hit_*.json`
- * with 5 weighted result rows covering 1–5.
+ * `WH40KVoidcraft.rollShipCriticalHit` draws the 1d5 result from the world
+ * `RollTable` "Ship Critical Hits", then the `rt-core-rolltables`
+ * compendium pack (in the `src/packs-private` submodule at
+ * `rogue-trader/rt-core-rolltables/_source/ship-critical-hits_RTshipCrit221.json`),
+ * and only when neither exists posts the
+ * `WH40K.Voidcraft.Critical.TableUnavailable` message.
  *
  * This spec renders the post-roll chat card in Storybook for the
- * Vacuum entry (story id `dev-chat-ship-critical-hit--vacuum`), dumps a
+ * Holed entry (story id `dev-chat-ship-critical-hit--holed`), dumps a
  * full-page PNG to `.e2e-screenshots/issue-187-critical-hit.png` for
  * visual inspection, and asserts the rendered body is attached. The
  * assertion is lenient on structured selectors — the goal is a
@@ -39,10 +35,10 @@ test.beforeAll(() => {
     mkdirSync(resolve(__dirname, '..', '..', '.e2e-screenshots'), { recursive: true });
 });
 
-test('issue #187: ship critical hit chat card renders the vacuum result', async ({ page }) => {
+test('issue #187: ship critical hit chat card renders the Holed result', async ({ page }) => {
     // Story id derives from `title: 'Chat/Ship Critical Hit'` plus the
-    // `Vacuum` named export, kebab-cased by Storybook.
-    await page.goto('/iframe.html?id=dev-chat-ship-critical-hit--vacuum');
+    // `Holed` named export, kebab-cased by Storybook.
+    await page.goto('/iframe.html?id=dev-chat-ship-critical-hit--holed');
     await page.waitForLoadState('networkidle');
 
     // Lenient selector: the body element should be attached and contain
@@ -56,7 +52,7 @@ test('issue #187: ship critical hit chat card renders the vacuum result', async 
     // rather than a one-shot textContent() read, which races the mount
     // under heavy parallel load. We don't require an exact match because
     // the partial wraps content in nested elements with extra whitespace.
-    await expect(body).toContainText(/Vacuum|Hull Breach/i);
+    await expect(body).toContainText(/Holed/);
 
     await page.screenshot({ path: SCREENSHOT_PATH, fullPage: true });
 });

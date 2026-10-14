@@ -4949,18 +4949,69 @@
             "Critical": {
                 "Header": "Critical Hit",
                 "Roll": "Roll Critical Hit",
-                "RollTooltip": "Roll 1d5 on the Critical Hit chart (Battlefleet Koronus)",
+                "RollTooltip": "Roll 1d5 on the Critical Hit chart (RT Core Table 8-12)",
                 "ChatSubtitle": "Ship Critical Hit",
                 "RollLabel": "Rolled {rolled} on 1d5",
+                "ResultLabel": "Critical Hit {rolled}",
                 "StatusApplied": "Status Applied",
                 "PersistsUntilRepaired": "Persists until cleared by Emergency Repair or Quick Repair.",
-                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from Battlefleet Koronus by hand.",
-                "Effect": {
-                    "Vacuum": "Vacuum / Hull Breach",
-                    "Fire": "Fire",
-                    "Bridge": "Bridge Damage",
-                    "Drive": "Drive Damage",
-                    "Crew": "Crew Casualties"
+                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from RT Core Table 8-12 by hand."
+            },
+            "DamageControl": {
+                "Header": "Damage Control",
+                "ShieldsUp": "Void shields up",
+                "Criticals": "Critical Hits",
+                "NoCriticals": "No Critical Hits. The hull is sound.",
+                "Clear": "Clear",
+                "ClearTitle": "Clear this Critical Hit once it is repaired"
+            },
+            "Fire": {
+                "Action": "Fire Weapon Component",
+                "ActionHint": "The gunner's Ballistic Skill Test against the target ship. Hits meet its void shields, then its Armour, then its Hull Integrity.",
+                "DialogTitle": "Fire Ship Weapon",
+                "GunneryLegend": "Gunnery: {weapon} ({type})",
+                "Citation": "RT Core, Chapter VIII: Starship Weapons",
+                "DefencesCitation": "RT Core, Chapter VIII: Damage and Defences",
+                "Unsupported": "Ship weapon fire follows the Rogue Trader starship rules; this ship's game system has none.",
+                "NoRules": "The core rules give no firing rules for {type}. Resolve this weapon by hand.",
+                "TestTitle": "Gunner's Ballistic Skill Test",
+                "HitsTitle": "Hits on {ship}",
+                "DamageTitle": "Hull Integrity damage to {ship}",
+                "Missed": "The shot misses. No hits reach {ship}.",
+                "AllShielded": "{ship}'s void shields cancel every hit.",
+                "Critical": "Critical Hit! Rolled {rolled} on 1d5 against {ship}.",
+                "VitalsTitle": "{ship}",
+                "NotApplied": "You do not own the target ship, so the damage was not applied. The GM applies it by hand.",
+                "Field": {
+                    "GunnerSkill": "Gunner's Ballistic Skill",
+                    "RangeBand": "Range to target"
+                },
+                "Range": {
+                    "Close": "Close: up to {reach} VU (+10)",
+                    "Standard": "Within range: up to {reach} VU",
+                    "Long": "Long: up to {reach} VU (−10)"
+                },
+                "Component": {
+                    "GunnerSkill": "Gunner's Ballistic Skill",
+                    "RangeClose": "Within half range ({range} VU weapon)",
+                    "RangeLong": "Beyond range ({range} VU weapon)",
+                    "BaseHit": "Successful hit",
+                    "DegreeHits": "{dos} DoS: +1 hit each",
+                    "LanceDegreeHits": "{dos} DoS: +1 hit per 3",
+                    "StrengthCap": "Capped at Strength {strength}",
+                    "VoidShields": "Void shields ({ship}, {shields} up)",
+                    "HitDamage": "Hit {hit} ({formula})",
+                    "Armour": "Armour ({ship}, {armour})",
+                    "ArmourIgnored": "Lance ignores Armour ({ship}, {armour})",
+                    "CriticalPoint": "Critical Hit: 1 automatic point"
+                },
+                "Vitals": {
+                    "Before": "Before",
+                    "After": "After",
+                    "Hull": "Hull Integrity",
+                    "Shields": "Void shields up",
+                    "Population": "Crew Population",
+                    "Morale": "Morale"
                 }
             }
         },
@@ -5120,6 +5171,18 @@
                 "BombardmentCannon": "Bombardment Cannon",
                 "LandingBay": "Landing Bay",
                 "AttackCraft": "Attack Craft"
+            },
+            "DamageWithCrit": "{damage} (Crit {crit}+)",
+            "RangeVU": "{range} VU",
+            "Property": {
+                "Location": "Location: {value}",
+                "Strength": "Strength: {value}",
+                "Damage": "Damage: {value}",
+                "Range": "Range: {value}",
+                "Power": "Power: {value}",
+                "Space": "Space: {value}",
+                "ShipPoints": "SP: {value}",
+                "Special": "Special: {value}"
             }
         },
         "ShipLocation": {
@@ -6101,6 +6164,11 @@
                 "ComponentProperties": "Component Properties",
                 "UpgradeProperties": "Upgrade Properties",
                 "WeaponProperties": "Weapon Properties",
+                "WeaponType": "Weapon Type",
+                "ComponentType": "Component Type",
+                "Condition": "Condition",
+                "Location": "Location",
+                "HullTypes": "Hull Types",
                 "HullTypeHint": "Hold Ctrl/Cmd to select multiple hull types",
                 "ResourceRequirements": "Resource Requirements",
                 "Used": "(Used)",

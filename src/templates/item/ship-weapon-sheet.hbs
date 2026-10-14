@@ -22,21 +22,21 @@
                     </div>
                     <div class="tw-p-3">
                         <div class="form-group">
-                            <label>{{localize "WH40K.ShipWeapon.Type"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.WeaponType"}}</label>
                             <select name="system.weaponType">
                                 {{selectOptions weaponTypes selected=source.weaponType}}
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>{{localize "WH40K.ShipLocation"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.Location"}}</label>
                             <select name="system.location">
                                 {{selectOptions locations selected=source.location}}
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>{{localize "WH40K.HullType"}}</label>
+                            <label>{{localize "WH40K.ItemSheet.Ship.HullTypes"}}</label>
                             <select name="system.hullType" multiple>
                                 {{selectOptions hullTypes selected=source.hullType}}
                             </select>

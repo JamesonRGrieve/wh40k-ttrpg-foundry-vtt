@@ -470,3 +470,177 @@ describe('WH40KVoidcraft · ship-action modifiers (issue #186)', () => {
         expect(dh2.fake.created).toEqual([]);
     });
 });
+
+/**
+ * Issue #187 — the Critical Hit chart is RT Core Table 8-12, shipped as "Ship
+ * Critical Hits" in `rt-core-rolltables`. The lookup named a table ("Critical
+ * Hit") in a pack (`rt-core-rolltables-ship-combat`) that never existed, so
+ * every critical fell back to "roll table unavailable"; and a status was
+ * labelled from a hard-coded five-entry list that did not match the chart.
+ *
+ * Issue #184 — a hit's cancelled void shields overload on the TARGET.
+ */
+describe('WH40KVoidcraft · Critical Hits and void shields (issues #184, #187)', () => {
+    type Update = Record<string, number | object[]>;
+    interface Status {
+        id: string;
+        name: string;
+        rolled: number;
+        text: string;
+        appliedAt: number;
+    }
+    interface FakeShip {
+        name: string;
+        system: { gameSystem: string; shipStatuses: Status[]; voidShieldsStatus: { active: number; exhausted: number } };
+        updates: Update[];
+        update: (data: Update) => Promise<void>;
+    }
+    interface DamageMethods {
+        rollShipCriticalHit: (this: FakeShip, rolled?: number) => Promise<void>;
+        overloadVoidShields: (this: FakeShip, count: number) => Promise<number>;
+        removeShipStatus: (this: FakeShip, index: number) => Promise<void>;
+    }
+    /** The table lookup the document makes, as `RollTableUtils.rollTable` sees it. */
+    interface TableCall {
+        name: string;
+        pack: string | undefined;
+        roll: number | undefined;
+    }
+    interface DrawnResult {
+        id: string;
+        name: string;
+        description: string;
+    }
+
+    class RollStub {
+        total = 0;
+        readonly formula: string;
+        static formulas: string[] = [];
+        static next = 0;
+        constructor(formula: string) {
+            this.formula = formula;
+        }
+        async evaluate(): Promise<this> {
+            RollStub.formulas.push(this.formula);
+            this.total = /^\d+$/u.test(this.formula) ? Number(this.formula) : RollStub.next;
+            return Promise.resolve(this);
+        }
+    }
+
+    function fakeShip(shields = { active: 2, exhausted: 0 }, statuses: Status[] = []): FakeShip {
+        return {
+            name: 'Raider',
+            system: { gameSystem: 'rt', shipStatuses: statuses, voidShieldsStatus: shields },
+            updates: [],
+            async update(data) {
+                this.updates.push(data);
+                await Promise.resolve();
+            },
+        };
+    }
+
+    async function setup(
+        drawn: DrawnResult | null,
+    ): Promise<{ methods: DamageMethods; calls: TableCall[]; rendered: Record<string, string | number>[] } | undefined> {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        const tables = await importModelOrSkip(import('../utils/roll-table-utils.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined || tables === undefined) return undefined;
+        RollStub.formulas = [];
+        RollStub.next = 4;
+        const calls: TableCall[] = [];
+        const rendered: Record<string, string | number>[] = [];
+        vi.stubGlobal('Roll', RollStub);
+        vi.stubGlobal('game', {
+            i18n: { localize: (key: string) => key, format: (key: string, data: Record<string, string>) => `${key}:${JSON.stringify(data)}` },
+        });
+        vi.stubGlobal('foundry', {
+            applications: {
+                handlebars: {
+                    renderTemplate: async (_path: string, data: Record<string, string | number>) => {
+                        rendered.push(data);
+                        return Promise.resolve('<div></div>');
+                    },
+                },
+            },
+        });
+        vi.stubGlobal('ChatMessage', { getSpeaker: () => ({}), create: async () => Promise.resolve({}) });
+        vi.spyOn(tables.RollTableUtils, 'rollTable').mockImplementation(async (name, options) => {
+            const roll = options?.roll ?? null;
+            calls.push({ name, pack: options?.pack, roll: roll === null ? undefined : Number(roll.total) });
+            if (drawn === null) return Promise.resolve(null);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable#roll's result is Foundry's untyped draw; the document reads only `roll` and `results`
+            const draw = { roll, results: [drawn] } as unknown as Awaited<ReturnType<typeof tables.RollTableUtils.rollTable>>;
+            return Promise.resolve(draw);
+        });
+        // eslint-disable-next-line no-restricted-syntax -- boundary: reading the document's prototype methods through a structural test interface (the class type and DamageMethods do not overlap)
+        return { methods: mod.WH40KVoidcraft.prototype as unknown as DamageMethods, calls, rendered };
+    }
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
+    });
+
+    const FIRE: DrawnResult = { id: 'RTsc05ShipCrit05ee', name: 'Fire!', description: '<p><b>Fire!</b>: Alarms scream through the hull…</p>' };
+
+    it('draws "Ship Critical Hits" from rt-core-rolltables on the given 1d5 result', async () => {
+        const ctx = await setup(FIRE);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+        const ship = fakeShip();
+        await ctx.methods.rollShipCriticalHit.call(ship, 5);
+        expect(ctx.calls).toEqual([{ name: 'Ship Critical Hits', pack: 'wh40k-rpg.rt-core-rolltables', roll: 5 }]);
+        expect(ship.updates).toEqual([{ 'system.shipStatuses': [expect.objectContaining({ id: FIRE.id, name: 'Fire!', rolled: 5, text: FIRE.description })] }]);
+        expect(ctx.rendered[0]).toMatchObject({ resultName: 'Fire!', statusLabel: 'Fire!', resultText: FIRE.description });
+    });
+
+    it("rolls the weapon's 1d5 itself, never the table's 1d11", async () => {
+        const ctx = await setup(FIRE);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+        await ctx.methods.rollShipCriticalHit.call(fakeShip());
+        expect(RollStub.formulas).toEqual(['1d5']);
+        expect(ctx.calls[0]?.roll).toBe(4);
+    });
+
+    it('falls back to the roll, labelled by its number, only when the table is missing', async () => {
+        const ctx = await setup(null);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+        const ship = fakeShip();
+        await ctx.methods.rollShipCriticalHit.call(ship, 2);
+        expect(ship.updates[0]?.['system.shipStatuses']).toEqual([
+            expect.objectContaining({
+                id: 'critical-2',
+                name: 'WH40K.Voidcraft.Critical.ResultLabel:{"rolled":"2"}',
+                text: 'WH40K.Voidcraft.Critical.TableUnavailable:{"rolled":"2"}',
+            }),
+        ]);
+    });
+
+    it('overloads only the shields that are up, moving them to the exhausted pool', async () => {
+        const ctx = await setup(null);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+        const ship = fakeShip({ active: 1, exhausted: 1 });
+        expect(await ctx.methods.overloadVoidShields.call(ship, 3)).toBe(1);
+        expect(ship.updates).toEqual([{ 'system.voidShieldsStatus.active': 0, 'system.voidShieldsStatus.exhausted': 2 }]);
+        const down = fakeShip({ active: 0, exhausted: 2 });
+        expect(await ctx.methods.overloadVoidShields.call(down, 1)).toBe(0);
+        expect(down.updates).toEqual([]);
+    });
+
+    it('clears one repaired Critical Hit by its position', async () => {
+        const ctx = await setup(null);
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (ctx === undefined) return;
+        const holed: Status = { id: 'a', name: 'Holed', rolled: 1, text: '', appliedAt: 1 };
+        const fire: Status = { id: 'b', name: 'Fire!', rolled: 5, text: '', appliedAt: 2 };
+        const ship = fakeShip(undefined, [holed, fire]);
+        await ctx.methods.removeShipStatus.call(ship, 0);
+        expect(ship.updates).toEqual([{ 'system.shipStatuses': [fire] }]);
+        await ctx.methods.removeShipStatus.call(ship, 7);
+        expect(ship.updates).toHaveLength(1);
+    });
+});

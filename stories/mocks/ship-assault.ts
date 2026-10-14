@@ -41,13 +41,16 @@ export const DEFENDER_SHIP: ShipAssaultShip = {
 };
 
 /** A story ship actor: the assault flows read only this surface. */
-export function storyShipActor(profile: ShipAssaultShip, crewRating = 45): AssaultShipActor {
+export function storyShipActor(profile: ShipAssaultShip, crewRating = 45, voidShields = 1): AssaultShipActor {
     return {
         name: profile.name,
         isOwner: true,
         assaultProfile: profile,
         system: { gameSystem: 'rt', crew: { crewRating } },
         crew: { morale: { value: profile.morale } },
+        hullIntegrity: { value: profile.hullIntegrity, max: profile.hullIntegrity },
+        activeVoidShields: voidShields,
+        overloadVoidShields: async (count: number) => Promise.resolve(count),
         applyHullDamage: async (amount: number) => Promise.resolve({ hullLoss: amount, crewLoss: amount, moraleLoss: amount }),
         applyCrewMoraleDamage: async (crew: number, morale: number) => Promise.resolve({ crewLoss: crew, moraleLoss: morale }),
         rollShipCriticalHit: async () => Promise.resolve(),

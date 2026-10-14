@@ -94,6 +94,16 @@ export const RendersWeaponName: Story = {
     },
 };
 
+/** #184: every field label is localized — none shows a raw `WH40K.*` key. */
+export const FieldLabelsLocalized: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    play: async ({ canvasElement }) => {
+        const labels = [...canvasElement.querySelectorAll('label, h3')].map((label) => label.textContent.trim());
+        await expect(labels.filter((label) => label.startsWith('WH40K.'))).toEqual([]);
+        await expect(labels).toEqual(expect.arrayContaining(['Weapon Type', 'Location', 'Hull Types', 'Crit Rating', 'Range (VU)']));
+    },
+};
+
 export const RendersDetailsTabActive: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {

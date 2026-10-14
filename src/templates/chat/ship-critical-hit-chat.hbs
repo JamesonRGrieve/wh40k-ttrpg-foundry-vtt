@@ -13,8 +13,9 @@
     footerIcon="fa-rocket"
     gameSystem=gameSystem
 }}
-    <div class="tw-px-2 tw-py-2 tw-mb-2 tw-bg-[rgba(254,245,231,0.5)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)] tw-rounded-md tw-leading-relaxed">
-        {{resultText}}
+    {{!-- The drawn Table 8-12 result's rules text, as the compendium table authors it (HTML). --}}
+    <div class="tw-px-2 tw-py-2 tw-mb-2 tw-bg-[rgba(254,245,231,0.5)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)] tw-rounded-md tw-leading-relaxed [&_p]:tw-m-0">
+        {{{resultText}}}
     </div>
 
     <div class="tw-flex tw-flex-col tw-gap-1 tw-p-1.5 tw-bg-black/[0.03] tw-rounded-md tw-text-[13px]">

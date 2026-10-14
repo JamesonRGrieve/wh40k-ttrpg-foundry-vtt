@@ -4,6 +4,16 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import { renameKeys } from '../shared/migrate-rename.ts';
 import { normalizeToArray } from '../shared/normalize-to-array.ts';
 
+/** A Weapon Component's firing profile as the ship-weapon chat card shows it. */
+export interface ShipWeaponCardProfile {
+    typeLabel: string;
+    locationLabel: string;
+    strength: number;
+    damage: string;
+    crit: number;
+    range: number;
+}
+
 /**
  * Data model for Ship Weapon items.
  * @extends ItemDataModel
@@ -182,7 +192,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      */
     get weaponTypeLabel(): string {
         return game.i18n.localize(
-            `WH40K.ShipWeapon.${this.weaponType
+            `WH40K.ShipWeapon.Type.${this.weaponType
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,
@@ -202,7 +212,27 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get damageLabel(): string {
-        return `${this.damage}${this.crit > 0 ? ` (Crit ${this.crit}+)` : ''}`;
+        return this.crit > 0 ? game.i18n.format('WH40K.ShipWeapon.DamageWithCrit', { damage: this.damage, crit: String(this.crit) }) : this.damage;
+    }
+
+    /** The range in VUs, labelled. */
+    get rangeLabel(): string {
+        return game.i18n.format('WH40K.ShipWeapon.RangeVU', { range: String(this.range) });
+    }
+
+    /**
+     * The weapon's firing profile as the ship-weapon chat card shows it: its
+     * localized type and mounting plus the four stats the fire rules read.
+     */
+    get cardProfile(): ShipWeaponCardProfile {
+        return {
+            typeLabel: this.weaponTypeLabel,
+            locationLabel: this.locationLabel,
+            strength: this.strength,
+            damage: this.damage,
+            crit: this.crit,
+            range: this.range,
+        };
     }
 
     /* -------------------------------------------- */
@@ -211,19 +241,20 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
+        const prop = (key: string, value: string | number): string => game.i18n.format(key, { value: String(value) });
         const props = [
             this.weaponTypeLabel,
-            `Location: ${this.locationLabel}`,
-            `Str: ${this.strength}`,
-            `Damage: ${this.damageLabel}`,
-            `Range: ${this.range} VU`,
-            `Power: ${this.power}`,
-            `Space: ${this.space}`,
-            `SP: ${this.shipPoints}`,
+            prop('WH40K.ShipWeapon.Property.Location', this.locationLabel),
+            prop('WH40K.ShipWeapon.Property.Strength', this.strength),
+            prop('WH40K.ShipWeapon.Property.Damage', this.damageLabel),
+            prop('WH40K.ShipWeapon.Property.Range', this.rangeLabel),
+            prop('WH40K.ShipWeapon.Property.Power', this.power),
+            prop('WH40K.ShipWeapon.Property.Space', this.space),
+            prop('WH40K.ShipWeapon.Property.ShipPoints', this.shipPoints),
         ];
 
         if (this.special.size) {
-            props.push(`Special: ${Array.from(this.special).join(', ')}`);
+            props.push(prop('WH40K.ShipWeapon.Property.Special', Array.from(this.special).join(', ')));
         }
 
         return props;
@@ -241,7 +272,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             location: this.locationLabel,
             strength: this.strength,
             damage: this.damageLabel,
-            range: `${this.range} VU`,
+            range: this.rangeLabel,
         };
     }
 }

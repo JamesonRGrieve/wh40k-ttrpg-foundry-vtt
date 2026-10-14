@@ -14,20 +14,20 @@ import VoidcraftData, {
     type VoidcraftBuildValidation,
 } from '../../data/actor/voidcraft.ts';
 import type OrderData from '../../data/item/order.ts';
+import type ShipWeaponData from '../../data/item/ship-weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
-import { deriveTarget } from '../../rules/ship-assault.ts';
+import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
-import { capitalize } from '../../utils/format.ts';
 import { openShipActionDialog } from '../ship-action/ship-action-dialog.ts';
 import { shipActionModifierRows, type ShipActionModifierRow } from '../ship-action/ship-action-flow.ts';
-import { componentRow } from '../ship-assault/ship-assault-card.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
 import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
+import { createShipWeaponFireFlow } from '../ship-assault/ship-weapon-fire-flow.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
@@ -45,6 +45,9 @@ type ActionCardData = {
 
 /** An `order` item, its system typed to the OrderData DataModel. */
 type OrderItem = WH40KItem & { system: OrderData };
+
+/** A `shipWeapon` item, its system typed to the ShipWeaponData DataModel. */
+type ShipWeaponItem = WH40KItem & { system: ShipWeaponData };
 
 /** An `order` item viewed through the fields a ship-action row reads. */
 function shipActionOrderView(item: WH40KItem): ShipActionOrderView {
@@ -75,8 +78,26 @@ async function loadLineOrders(line: string): Promise<ShipActionOrderView[]> {
     }
 }
 
-/** Langpack key of the ship BS test's base row (the crew rating, RT Core p.218). */
-const BS_BASE_KEY = 'WH40K.Voidcraft.ShipAction.BsBase';
+/** One Critical Hit the Stats tab lists: its table name, the roll and the rules text. */
+interface ShipCriticalRow {
+    index: number;
+    label: string;
+    rolled: number;
+    text: string;
+}
+
+/**
+ * The ship's recorded Critical Hits (#187) as Stats-tab rows. A status saved
+ * before statuses carried the drawn result's name is labelled by its roll.
+ */
+function shipCriticalRows(statuses: readonly { name: string; rolled: number; text: string }[]): ShipCriticalRow[] {
+    return statuses.map((status, index) => ({
+        index,
+        label: status.name !== '' ? status.name : game.i18n.format('WH40K.Voidcraft.Critical.ResultLabel', { rolled: String(status.rolled) }),
+        rolled: status.rolled,
+        text: status.text,
+    }));
+}
 
 /** Localization key per essential slot for the build panel. */
 const ESSENTIAL_SLOT_LABEL_KEY: Record<string, string> = {
@@ -130,6 +151,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             lowerVoidShield: VoidcraftActorSheet.#lowerVoidShield,
             restoreVoidShields: VoidcraftActorSheet.#restoreVoidShields,
             rollShipCriticalHit: VoidcraftActorSheet.#rollShipCriticalHit,
+            removeShipStatus: VoidcraftActorSheet.#removeShipStatus,
             openShipAssault: VoidcraftActorSheet.#openShipAssault,
             rollShipAction: VoidcraftActorSheet.#rollShipAction,
         },
@@ -291,6 +313,12 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         // rollup from prepareEmbeddedData; falls back to a freshly-computed
         // rollup when the actor predates the schema extension.
         this._prepareBuildSummary(context, actor);
+
+        // Damage Control panel (Stats tab): raised void shields (#184) and the
+        // Critical Hits the hull carries (#187).
+        context['voidShieldsUp'] = actor.activeVoidShields;
+        context['voidShieldsMax'] = actor.voidShields;
+        context['shipCriticals'] = shipCriticalRows(actor.system.shipStatuses);
     }
 
     /**
@@ -503,186 +531,50 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle firing a ship weapon (issue #184).
+     * Fire a Weapon Component at another ship (#184 — RT Core, Chapter VIII).
      *
-     * Implements the RAW Rogue Trader Battlefleet Koronus resolution:
-     *   1. Roll a d100 BS test against the firing officer's BS (crewRating).
-     *   2. On success, by weapon class:
-     *      • Macrobattery — roll `strength` d6, every die ≥ 6 is one hit; the
-     *        weapon's base damage is dealt per hit.
-     *      • Lance — automatic single hit; void shields are ignored.
-     *      • Other (torpedo, nova-cannon, bombardment, etc.) — fall back to a
-     *        single hit pending dedicated resolution (out of scope for #184).
-     *   3. For each hit, void shields absorb damage when raised (one shield is
-     *      exhausted per macrobattery volley regardless of die count; lances
-     *      bypass shields entirely per BFK).
-     *   4. Damage that gets through reduces `hullIntegrity.value`.
-     *   5. Post a structured chat card with the full breakdown.
+     * Opens the shared ship dialog on the fire flow: the target ship comes
+     * from the GM's targeted tokens, then the scene, then the world. The
+     * gunner's Ballistic Skill Test carries this weapon's live ship-action
+     * modifiers (Lock on Target, Come to New Heading, Evasive Manoeuvres, #186)
+     * from the central collector; the hits, void shields, Armour, Hull Integrity
+     * damage and any Critical Hit land on the **target**. Rogue Trader only, and
+     * only for the weapon classes the core rules give firing rules for.
      */
-    static async #fireShipWeapon(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+    static #fireShipWeapon(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
         const itemId = target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         const weapon = actor.items.get(itemId ?? '');
-        if (!weapon) {
+        if (weapon?.type !== 'shipWeapon') {
             ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.Combat.NoWeapon'));
             return;
         }
-
-        const sys = weapon.system as {
-            weaponType?: string;
-            strength?: number;
-            damage?: string;
-            crit?: number;
-            range?: number;
-            location?: string;
-            special?: Set<string> | string[];
-        };
-
-        const crewRating = (actor.system as { crew?: { crewRating?: number } }).crew?.crewRating ?? 30;
-        const weaponType = sys.weaponType ?? 'macrobattery';
-        const strength = sys.strength ?? 1;
-        const damageFormula = sys.damage ?? '1d10';
-
-        // ── BS Test (1d100 vs crewRating ± live ship-action modifiers) ─────
-        // Lock on Target, Come to New Heading and Evasive Manoeuvres (#186)
-        // reach the test through the central collector, one named row each.
-        const bsDerivation = deriveTarget(
-            { labelKey: BS_BASE_KEY, value: crewRating },
-            collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: weapon.id }),
-        );
-        const bsTarget = bsDerivation.target;
-        const bsCitation = game.i18n.localize('WH40K.Voidcraft.ShipAction.Citation');
-        const bsRoll = await new Roll('1d100').evaluate();
-        const bsTotal = bsRoll.total;
-        const bsSucceeded = bsTotal <= bsTarget;
-        const dos = bsSucceeded ? Math.max(0, Math.floor((bsTarget - bsTotal) / 10)) : 0;
-
-        // ── Hit resolution ──────────────────────────────────────────────────
-        let hits = 0;
-        let hitsRoll: Roll | undefined;
-        let damagePerHit = 0;
-        const ignoresShields = weaponType === 'lance';
-
-        if (bsSucceeded) {
-            if (weaponType === 'macrobattery') {
-                // Roll `strength` d6, count each ≥ 6 as a hit.
-                hitsRoll = await new Roll(`${strength}d6cs>=6`).evaluate();
-                hits = Number(hitsRoll.total ?? 0);
-            } else {
-                // Lance / fallback: single hit.
-                hits = 1;
-            }
+        if (!actor.supportsShipAssault) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Voidcraft.Fire.Unsupported'));
+            return;
         }
-
-        // ── Damage roll (per hit) ───────────────────────────────────────────
-        const dmgRolled = await Promise.all(Array.from({ length: hits }, async () => new Roll(damageFormula).evaluate()));
-        const damageRolls: { total: number; formula: string }[] = dmgRolled.map((r) => ({
-            total: Number(r.total),
-            formula: damageFormula,
-        }));
-        let totalDamage = 0;
-        for (const dr of damageRolls) {
-            damagePerHit = dr.total;
-            totalDamage += dr.total;
+        const system = (weapon as ShipWeaponItem).system;
+        const weaponClass = shipWeaponClass(system.weaponType);
+        if (weaponClass === null) {
+            ui.notifications.warn(game.i18n.format('WH40K.Voidcraft.Fire.NoRules', { type: system.weaponTypeLabel }));
+            return;
         }
-
-        // ── Apply void shields (issue #184 RAW: shields absorb hits) ────────
-        // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraftSystemData carries voidShieldsStatus on the concrete subclass not the shared ActorDataModel union; narrow via unknown
-        const shieldStatusBefore = (actor.system as unknown as { voidShieldsStatus: { active: number; exhausted: number } }).voidShieldsStatus;
-        let shieldsActive = shieldStatusBefore.active;
-        let shieldsExhausted = shieldStatusBefore.exhausted;
-        let shieldedDamage = 0;
-        let appliedDamage = totalDamage;
-
-        if (!ignoresShields && hits > 0 && shieldsActive > 0) {
-            // One macrobattery volley exhausts at most one shield (regardless of
-            // how many dice came up ≥6); damage that pass through is the rest.
-            shieldedDamage = totalDamage; // entire volley absorbed by one shield
-            appliedDamage = 0;
-            shieldsActive -= 1;
-            shieldsExhausted += 1;
-        }
-
-        // ── Apply hull damage ───────────────────────────────────────────────
-        const hullBefore = (actor.system as { hullIntegrity: { value: number; max: number } }).hullIntegrity;
-        const hullCurrentBefore = hullBefore.value;
-        const hullCurrentAfter = Math.max(0, hullCurrentBefore - appliedDamage);
-
-        // ── Persist actor state (hull + shield exhaustion) ──────────────────
-        // Issue #189 — route hull damage through `applyHullDamage` so the
-        // RT Crew Population / Morale economy decrements (and the
-        // Hold Fast! / Triage prior-turn snapshot records) automatically.
-        // Non-RT hulls still take hull damage but skip the crew/morale tick.
-        if (appliedDamage > 0) {
-            await actor.applyHullDamage(appliedDamage);
-        }
-        if (!ignoresShields && hits > 0 && shieldStatusBefore.active !== shieldsActive) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
-            await (actor as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({
-                'system.voidShieldsStatus.active': shieldsActive,
-                'system.voidShieldsStatus.exhausted': shieldsExhausted,
-            });
-        }
-
-        // ── Build chat card ─────────────────────────────────────────────────
-        const cardData = {
-            _gameSystemId: firstSystemId(actor),
-            actor,
-            weapon,
-            crewRating,
-            gameSystem: (actor.system as { gameSystem: string }).gameSystem,
-            resolution: {
-                weaponType,
-                weaponTypeLabel: game.i18n.localize(
-                    `WH40K.ShipWeapon.Type.${weaponType
-                        .split('-')
-                        .map((s) => capitalize(s))
-                        .join('')}`,
-                ),
-                location: sys.location ?? 'dorsal',
-                strength,
-                damageFormula,
-                bs: {
-                    target: bsTarget,
-                    baseLabel: foundryLocalize(BS_BASE_KEY),
-                    base: crewRating,
-                    modifierSources: bsDerivation.modifiers.map((component) => componentRow(component, bsCitation, foundryLocalize)),
-                    total: bsTotal,
-                    succeeded: bsSucceeded,
-                    dos,
-                },
-                hits,
-                hitsFormula: hitsRoll?.formula ?? '',
-                damageRolls,
-                totalDamage,
-                ignoresShields,
-                shieldedDamage,
-                appliedDamage,
-                shieldsBefore: shieldStatusBefore.active,
-                shieldsAfter: ignoresShields ? shieldStatusBefore.active : shieldsActive,
-                hullBefore: hullCurrentBefore,
-                hullAfter: hullCurrentAfter,
-                hullMax: hullBefore.max,
-            },
-        };
-        // Silence "unused-binding" lints; damagePerHit is computed for callers/tests.
-        void damagePerHit;
-
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
-
-        const speaker = ChatMessage.getSpeaker({
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KVoidcraft satisfies Actor.Implementation but typings widen
-            actor: actor as unknown as Actor.Implementation,
+        const entry = createShipWeaponFireFlow({
+            weapon: { name: weapon.name, img: weapon.img ?? '', weaponClass, ...system.cardProfile },
+            ballisticSkill: actor.system.ballisticSkill,
+            shipModifiers: collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: weapon.id }),
         });
-        const payload = {
-            user: game.user.id,
-            speaker,
-            content: html,
-            rolls: [bsRoll, ...(hitsRoll ? [hitsRoll] : [])],
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ChatMessage.create payload not in shipped types for our card shape
-        } as unknown as Parameters<typeof ChatMessage.create>[0];
-        void ChatMessage.create(payload);
+        openShipAssaultDialog(actor, entry);
+    }
+
+    /* -------------------------------------------- */
+
+    /** Clear one Critical Hit status from the Stats tab once it is repaired (#187). */
+    static async #removeShipStatus(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const index = Number(target.dataset['statusIndex'] ?? '-1');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        await (this.actor as unknown as WH40KVoidcraft).removeShipStatus(index);
     }
 
     /* -------------------------------------------- */
@@ -948,20 +840,20 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /**
      * Roll on the Rogue Trader Critical Hit chart (issue #187).
      *
-     * Per RAW (Battlefleet Koronus), when hull integrity damage triggers a
-     * critical hit the ship rolls 1d5 on the Critical Hit chart. Each result
-     * (1–5) applies a persistent status that lasts until cleared by an
-     * Emergency Repair or Quick Repair extended action.
+     * Per RAW (RT Core, "Starship Weapons"), a weapon's Critical Hit rolls 1d5
+     * on the Critical Hit chart (Table 8-12). Each result applies a persistent
+     * status that lasts until cleared by an Emergency Repair or Quick Repair
+     * extended action (or the Stats tab's clear control).
      *
      * Resolution order, mirroring the divination roll in issue #199:
-     *   1. world `RollTable.getName("Critical Hit")` — GM-imported copy;
-     *   2. `wh40k-rpg.rt-core-rolltables-ship-combat` compendium pack;
-     *   3. fallback to a bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
+     *   1. world `RollTable.getName("Ship Critical Hits")` — GM-imported copy;
+     *   2. the `wh40k-rpg.rt-core-rolltables` compendium pack;
+     *   3. the bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
      *      message — the player still gets a result and the GM is told to
      *      apply the corresponding effect by hand.
      *
      * The drawn result is appended to `system.shipStatuses` (a typed array
-     * on `VoidcraftData`) AND posted to chat via the
+     * on `VoidcraftData`, listed on the Stats tab) AND posted to chat via the
      * `ship-critical-hit-chat.hbs` template. The resolution lives on the
      * document (`WH40KVoidcraft.rollShipCriticalHit`) so Hit and Run can
      * inflict a chosen result through the same path.

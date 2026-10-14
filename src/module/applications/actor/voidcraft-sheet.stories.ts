@@ -7,50 +7,31 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { storyLocalize } from '../../../../stories/mocks/ship-assault';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
+import { captureActionClicks, clickAction, assertField, renderSheetParts } from '../../../../stories/test-helpers';
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 import headerSrc from '../../../templates/actor/voidcraft/header.hbs?raw';
 import crewTabSrc from '../../../templates/actor/voidcraft/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extended-actions.hbs?raw';
 import manoeuvreActionsTabSrc from '../../../templates/actor/voidcraft/tab-manoeuvre-actions.hbs?raw';
 import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
-import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
 import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { shipActionModifierRows } from '../ship-action/ship-action-flow.ts';
-import { componentRow, type AssaultComponentRow } from '../ship-assault/ship-assault-card.ts';
 
 initializeStoryHandlebars();
 
 const rng = seedRandom(0xca5cade5);
 
-const shipWeaponChatTpl = Hbs.compile(shipWeaponChatSrc);
-
 /** Actor types are `<systemId>-<role>`; the prefix is the active game-system id. */
 function systemIdOf(ctx: SheetContextLike): string {
     const [systemId = 'rt'] = ctx.actor.type.split('-');
     return systemId;
-}
-
-/**
- * Render the resolved ship-weapon-firing chat card under a `.wh40k-rpg` +
- * `data-wh40k-system` ancestor so Tailwind utilities (scoped by
- * `important: '.wh40k-rpg'`) and per-system variants both cascade — chat cards
- * render outside any sheet root at runtime (CLAUDE.md "Adaptation procedure 3a").
- */
-function renderShipWeaponChatCard(args: ShipWeaponChatCtx): HTMLElement {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'wh40k-rpg tw-p-4';
-    wrapper.setAttribute('data-wh40k-system', args.gameSystem);
-    wrapper.innerHTML = shipWeaponChatTpl(args);
-    return wrapper;
 }
 
 function renderVoidcraftSheet(ctx: SheetContextLike): HTMLElement {
@@ -275,237 +256,60 @@ function renderActionsPanel(tabSrc: string, ctx: SheetContextLike): HTMLElement 
     return panel;
 }
 
-// ── Issue #184 — Macrobattery Firing chat card ──────────────────────────────
+// ── Issues #184 / #187 — Damage Control panel on the Stats tab ──────────────
 //
-// Renders the resolved BFK macrobattery firing pass to chat: BS test passed,
-// 4 hits from a strength-6 pool, base damage applied to hull after one void
-// shield absorbed the volley. The story is data-driven so the visual snapshot
-// is deterministic across runs.
+// The raised void shields (with their raise / lower / restore controls) and the
+// Critical Hits the hull carries, each with its Table 8-12 name, roll and text
+// and a Clear control. One story per state: criticals recorded, and a sound hull.
 
-interface ShipWeaponChatCtx {
-    actor: { name: string };
-    weapon: {
-        _id: string;
-        name: string;
-        img: string;
-        system: {
-            weaponType: string;
-            location: string;
-            strength: number;
-            damage: string;
-            crit: number;
-            range: number;
-            special: string;
-        };
-    };
-    crewRating: number;
-    gameSystem: string;
-    resolution: {
-        weaponType: string;
-        weaponTypeLabel: string;
-        location: string;
-        strength: number;
-        damageFormula: string;
-        bs: {
-            target: number;
-            total: number;
-            succeeded: boolean;
-            dos: number;
-            /** The target's derivation (#186): crew rating ± each live ship-action modifier. */
-            baseLabel?: string;
-            base?: number;
-            modifierSources?: AssaultComponentRow[];
-        };
-        hits: number;
-        hitsFormula: string;
-        damageRolls: Array<{ total: number; formula: string }>;
-        totalDamage: number;
-        ignoresShields: boolean;
-        shieldedDamage: number;
-        appliedDamage: number;
-        shieldsBefore: number;
-        shieldsAfter: number;
-        hullBefore: number;
-        hullAfter: number;
-        hullMax: number;
-    };
-}
+const RECORDED_CRITICALS = [
+    {
+        index: 0,
+        label: 'Fire!',
+        rolled: 5,
+        text: '<p><b>Fire!</b>: Alarms scream through the hull as hungry flames roar through passageways and compartments.</p>',
+    },
+    {
+        index: 1,
+        label: 'Sensors Damaged',
+        rolled: 3,
+        text: "<p><b>Sensors Damaged</b>: The ship's auspex arrays have been knocked out, leaving the vessel blind.</p>",
+    },
+];
 
-function mockShipWeaponChatCtx(overrides?: Partial<ShipWeaponChatCtx>): ShipWeaponChatCtx {
-    return {
-        actor: { name: 'Sword of Terra' },
-        weapon: {
-            _id: 'macrobattery-1',
-            name: 'Sunsear Laser Battery',
-            img: 'icons/weapons/artillery/cannon-engraved-bronze.webp',
-            system: {
-                weaponType: 'macrobattery',
-                location: 'prow',
-                strength: 6,
-                damage: '1d10+2',
-                crit: 5,
-                range: 9,
-                special: '',
-            },
-        },
-        crewRating: 45,
-        gameSystem: 'rt',
-        resolution: {
-            weaponType: 'macrobattery',
-            weaponTypeLabel: 'Macrobattery',
-            location: 'prow',
-            strength: 6,
-            damageFormula: '1d10+2',
-            bs: { target: 45, total: 28, succeeded: true, dos: 1 },
-            hits: 4,
-            hitsFormula: '6d6cs>=6',
-            damageRolls: [
-                { total: 8, formula: '1d10+2' },
-                { total: 11, formula: '1d10+2' },
-                { total: 6, formula: '1d10+2' },
-                { total: 9, formula: '1d10+2' },
-            ],
-            totalDamage: 34,
-            ignoresShields: false,
-            shieldedDamage: 34,
-            appliedDamage: 0,
-            shieldsBefore: 2,
-            shieldsAfter: 1,
-            hullBefore: 35,
-            hullAfter: 35,
-            hullMax: 35,
-        },
-        ...overrides,
-    };
-}
-
-export const MacrobatteryFiring: StoryObj<ShipWeaponChatCtx> = {
-    name: 'Issue #184 — Macrobattery Firing chat card',
-    args: mockShipWeaponChatCtx(),
-    render: (args) => renderShipWeaponChatCard(args),
+export const DamageControlCriticals: Story = {
+    name: 'Issues #184 / #187 — Damage Control with Critical Hits',
+    args: { ...defaultCtxWithSource, voidShieldsUp: 0, voidShieldsMax: 1, shipCriticals: RECORDED_CRITICALS },
+    render: (args) => renderVoidcraftSheet(args),
     play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        // Weapon name and per-class label both render.
-        await expect(storyCanvas.getByText('Sunsear Laser Battery')).toBeVisible();
-        await expect(storyCanvas.getAllByText(/Macrobattery/).length).toBeGreaterThanOrEqual(1);
-        // BS Test row renders with the success badge.
-        await expect(storyCanvas.getByText(/BS Test/i)).toBeVisible();
-        // Hits pool with total = 4.
-        await expect(storyCanvas.getByText(/Hits/i)).toBeVisible();
-        // Aftermath panels.
-        await expect(storyCanvas.getByText(/Shield absorbed/i)).toBeVisible();
-        await expect(storyCanvas.getByText(/Hull/i)).toBeVisible();
+        const view = within(canvasElement);
+        await expect(view.getByText('Damage Control')).toBeVisible();
+        const shields = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-void-shields"] [data-shields-up]');
+        await expect(shields?.textContent.trim()).toBe('0 / 1');
+        const criticals = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="ship-criticals"] li')];
+        await expect(criticals.map((row) => row.querySelector('span')?.firstChild?.textContent?.trim())).toEqual(['Fire!', 'Sensors Damaged']);
+        await expect(view.getByText(/Rolled 5 on 1d5/)).toBeVisible();
+        // The table's HTML renders as text, not escaped markup.
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-criticals"] b')?.textContent).toBe('Fire!');
+        const clicks = captureActionClicks(canvasElement);
+        const clear = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="removeShipStatus"]')].at(1);
+        clear?.click();
+        clickAction(canvasElement, 'restoreVoidShields');
+        await expect(clicks.map((click) => [click.action, click.dataset['statusIndex'] ?? ''])).toEqual([
+            ['removeShipStatus', '1'],
+            ['restoreVoidShields', ''],
+        ]);
     },
 };
 
-/** A BS row as the sheet builds it from the ship-action collector (#186). */
-function bsRow(name: string, value: number): AssaultComponentRow {
-    return componentRow(
-        { labelKey: 'WH40K.Voidcraft.ShipAction.Component.Effect', value, data: { name } },
-        storyLocalize('WH40K.Voidcraft.ShipAction.Citation'),
-        storyLocalize,
-    );
-}
-
-export const LockedOnFiring: StoryObj<ShipWeaponChatCtx> = {
-    name: 'Issue #186 — Firing with Lock on Target and Evasive Manoeuvres',
-    args: mockShipWeaponChatCtx({
-        resolution: {
-            ...mockShipWeaponChatCtx().resolution,
-            bs: {
-                target: 45,
-                total: 28,
-                succeeded: true,
-                dos: 1,
-                baseLabel: storyLocalize('WH40K.Voidcraft.ShipAction.BsBase'),
-                base: 45,
-                modifierSources: [bsRow('Lock on Target', 10), bsRow('Evasive Manoeuvres', -10)],
-            },
-        },
-    }),
-    render: (args) => renderShipWeaponChatCard(args),
+export const DamageControlSound: Story = {
+    name: 'Issues #184 / #187 — Damage Control, hull sound',
+    args: { ...defaultCtxWithSource, voidShieldsUp: 1, voidShieldsMax: 1, shipCriticals: [] },
+    render: (args) => renderVoidcraftSheet(args),
     play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText('Crew Rating (Ballistic Skill)')).toBeVisible();
-        const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]')];
-        await expect(rows.map((row) => row.textContent.replace(/\s+/g, ' ').trim())).toEqual(['Lock on Target +10', 'Evasive Manoeuvres -10']);
-    },
-};
-
-export const LanceFiring: StoryObj<ShipWeaponChatCtx> = {
-    name: 'Issue #184 — Lance Firing (bypasses shields)',
-    args: mockShipWeaponChatCtx({
-        weapon: {
-            _id: 'lance-1',
-            name: 'Titanforge Lance',
-            img: 'icons/weapons/artillery/cannon-engraved-bronze.webp',
-            system: {
-                weaponType: 'lance',
-                location: 'dorsal',
-                strength: 1,
-                damage: '1d10+4',
-                crit: 3,
-                range: 6,
-                special: '',
-            },
-        },
-        resolution: {
-            weaponType: 'lance',
-            weaponTypeLabel: 'Lance Weapon',
-            location: 'dorsal',
-            strength: 1,
-            damageFormula: '1d10+4',
-            bs: { target: 45, total: 31, succeeded: true, dos: 1 },
-            hits: 1,
-            hitsFormula: '',
-            damageRolls: [{ total: 13, formula: '1d10+4' }],
-            totalDamage: 13,
-            ignoresShields: true,
-            shieldedDamage: 0,
-            appliedDamage: 13,
-            shieldsBefore: 2,
-            shieldsAfter: 2,
-            hullBefore: 35,
-            hullAfter: 22,
-            hullMax: 35,
-        },
-    }),
-    render: (args) => renderShipWeaponChatCard(args),
-    play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText('Titanforge Lance')).toBeVisible();
-        await expect(storyCanvas.getByText(/Lance bypasses shields/i)).toBeVisible();
-    },
-};
-
-export const MacrobatteryMiss: StoryObj<ShipWeaponChatCtx> = {
-    name: 'Issue #184 — Macrobattery Miss',
-    args: mockShipWeaponChatCtx({
-        resolution: {
-            weaponType: 'macrobattery',
-            weaponTypeLabel: 'Macrobattery',
-            location: 'prow',
-            strength: 6,
-            damageFormula: '1d10+2',
-            bs: { target: 45, total: 87, succeeded: false, dos: 0 },
-            hits: 0,
-            hitsFormula: '',
-            damageRolls: [],
-            totalDamage: 0,
-            ignoresShields: false,
-            shieldedDamage: 0,
-            appliedDamage: 0,
-            shieldsBefore: 2,
-            shieldsAfter: 2,
-            hullBefore: 35,
-            hullAfter: 35,
-            hullMax: 35,
-        },
-    }),
-    render: (args) => renderShipWeaponChatCard(args),
-    play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/Miss/i)).toBeVisible();
+        await expect(within(canvasElement).getByText(/The hull is sound/)).toBeVisible();
+        await expect(canvasElement.querySelectorAll('[data-action="removeShipStatus"]').length).toBe(0);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-void-shields"] [data-shields-up]')?.textContent.trim()).toBe('1 / 1');
     },
 };
 
@@ -584,6 +388,10 @@ export const ExtendedActions: Story = {
         const storyCanvas = within(canvasElement);
         // List heading must localize-render
         await expect(storyCanvas.getByText(/Extended Actions/i)).toBeVisible();
+        // #186: the intro paragraph reads in the sheet's primary text colour, not dim brown on the dark body.
+        const intro = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-action-tab-description"]');
+        await expect(intro?.className).toContain('tw-text-[color:var(--color-text-primary)]');
+        await expect(intro?.className).not.toContain('tw-opacity-80');
         // Every one of the 14 RAW extended actions appears, and no manoeuvre leaks in
         await expect(storyCanvas.getByText('Active Augury')).toBeVisible();
         await expect(storyCanvas.getByText('Lock on Target')).toBeVisible();
@@ -619,6 +427,8 @@ export const ManoeuvreActions: Story = {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByText('Standard Move')).toBeVisible();
         await expect(storyCanvas.getByText('Disengage')).toBeVisible();
+        const intro = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-action-tab-description"]');
+        await expect(intro?.className).toContain('tw-text-[color:var(--color-text-primary)]');
         await expect(storyCanvas.queryByText('Triage')).toBeNull();
         const dispatchButtons = canvasElement.querySelectorAll('[data-action="dispatchManoeuvreAction"]');
         await expect(dispatchButtons.length).toBe(8);
