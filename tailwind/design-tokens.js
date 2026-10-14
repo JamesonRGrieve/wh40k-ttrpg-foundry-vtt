@@ -176,15 +176,48 @@ const semantic = {
     '--wh40k-danger-bg': 'rgba(220, 38, 38, 0.1)',
 };
 
+// The chat message surface. Foundry paints every `.chat-message` as light
+// parchment with dark text whatever the sheet theme, so the chat cards' tokens
+// follow the message, not the body: on a dark-theme world the body's dark panel
+// washes landed on parchment as a mid grey that no text colour could read on
+// (the damage card's red label and Assign Damage button were ~1.3:1). The light
+// theme's panel washes plus dark text tokens; every text value is ≥ 4.5:1 on
+// parchment, whisper, emote and blind messages under each card wash.
+const chatSurface = {
+    ...lightTheme,
+    '--wh40k-card-text': '#2a1a0a',
+    '--wh40k-card-muted': '#5a4630',
+    '--wh40k-text-bright': '#1a1008',
+    '--wh40k-text-dark': '#2a1a0a',
+    '--wh40k-text-medium': '#3a2820',
+    '--wh40k-text-muted': '#5a4630',
+    '--wh40k-text-secondary': '#5a4630',
+    '--wh40k-card-gold': '#6e500c',
+    '--wh40k-accent-gold': '#6e500c',
+    '--wh40k-gold-bright': '#6e500c',
+    '--wh40k-talents-primary': '#6e500c',
+    '--wh40k-bronze': '#74431a',
+    '--wh40k-wounds-secondary': '#8e1c12',
+    '--wh40k-danger-secondary': '#9e1c1c',
+    '--wh40k-accent-red': '#9e1c1c',
+    '--wh40k-success-secondary': '#1d6430',
+    '--wh40k-accent-green': '#1d6430',
+    '--wh40k-warning-secondary': '#7e4400',
+    '--wh40k-powers-secondary': '#64288a',
+    '--wh40k-accent-psychic': '#64288a',
+    '--wh40k-accent-info': '#1c5a88',
+};
+
 // A dark card surface (chat cards drawn on a near-black panel). The element that
 // paints the dark background declares `data-wh40k-surface="dark"`, and these
-// tokens re-point the text tokens its children read — the shared
-// modifier-breakdown partial (`--wh40k-card-text` / `--wh40k-card-muted`), the
-// theme text tokens (which follow the BODY theme, so a light-theme world would
-// otherwise put dark-brown text on the black card) and the card's own text
-// colour (Foundry's chat message colour is dark). Every value is ≥ 7:1 on
-// rgba(16, 8, 12, 0.9) over either chat background.
+// tokens re-point what its children read back from the light chat surface: the
+// dark theme's panel washes, the text tokens (the shared modifier-breakdown
+// partial's `--wh40k-card-text` / `--wh40k-card-muted`, the theme text tokens)
+// and the accent colours, plus the card's own text colour (Foundry's chat
+// message colour is dark). Every text value is ≥ 4.5:1 on each dark card panel
+// over either chat background.
 const darkSurface = {
+    ...darkTheme,
     'color': '#e8e4d9',
     '--wh40k-card-text': '#e8e4d9',
     '--wh40k-card-muted': '#b8ae9c',
@@ -192,6 +225,21 @@ const darkSurface = {
     '--wh40k-text-dark': '#e8dcc8',
     '--wh40k-text-medium': '#d4c8b4',
     '--wh40k-text-muted': '#b8ae9c',
+    '--wh40k-text-secondary': '#c8b8a0',
+    '--wh40k-card-gold': '#e0b84a',
+    '--wh40k-accent-gold': '#e0b84a',
+    '--wh40k-gold-bright': '#ffd700',
+    '--wh40k-talents-primary': '#e0b84a',
+    '--wh40k-bronze': '#e0a060',
+    '--wh40k-wounds-secondary': '#f07a6c',
+    '--wh40k-danger-secondary': '#f87171',
+    '--wh40k-accent-red': '#f87171',
+    '--wh40k-success-secondary': '#4ade80',
+    '--wh40k-accent-green': '#4ade80',
+    '--wh40k-warning-secondary': '#fbbf24',
+    '--wh40k-powers-secondary': '#c99be6',
+    '--wh40k-accent-psychic': '#c99be6',
+    '--wh40k-accent-info': '#7cc0f0',
     '--wh40k-border-color': 'rgba(180, 140, 100, 0.4)',
     '--wh40k-border-color-light': 'rgba(180, 140, 100, 0.25)',
 };
@@ -216,6 +264,7 @@ module.exports = {
         ':root, body.theme-light': lightTheme,
         'body.theme-dark': darkTheme,
         ':root, body.theme-light, body.theme-dark': semantic,
+        '.chat-message': chatSurface,
         '[data-wh40k-surface="dark"]': darkSurface,
     },
 };

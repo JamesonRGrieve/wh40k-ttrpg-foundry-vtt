@@ -117,3 +117,45 @@ describe('dark surface tokens (design-tokens.js)', () => {
         expect(contrast(hexRgb(l40), over({ r: 20, g: 8, b: 8 }, 0.88, PARCHMENT))).toBeGreaterThanOrEqual(4.5);
     });
 });
+
+describe('chat message surface tokens (design-tokens.js)', () => {
+    const tokensSource = read('tailwind/design-tokens.js');
+    const surface = objectLiteral(tokensSource, 'chatSurface');
+    const dark = objectLiteral(tokensSource, 'darkSurface');
+
+    /** Foundry's chat message backgrounds: the parchment message and the whisper / emote / blind tints. */
+    const MESSAGES: Rgb[] = [PARCHMENT, hexRgb('#e8e8ef'), hexRgb('#f3edde'), hexRgb('#f5eaf5')];
+    /** The translucent washes chat cards lay over the message (the light panel, then each semantic callout). */
+    const WASHES: Array<{ rgb: Rgb; alpha: number }> = [
+        { rgb: { r: 255, g: 255, b: 255 }, alpha: 0.35 }, // --wh40k-panel-bg-translucent (light)
+        { rgb: { r: 139, g: 0, b: 0 }, alpha: 0.08 }, // --wh40k-wounds-bg
+        { rgb: { r: 217, g: 119, b: 6 }, alpha: 0.1 }, // --wh40k-warning-bg
+        { rgb: { r: 220, g: 38, b: 38 }, alpha: 0.1 }, // --wh40k-danger-bg
+        { rgb: { r: 45, g: 90, b: 45 }, alpha: 0.1 }, // --wh40k-success-bg
+        { rgb: { r: 106, g: 32, b: 144 }, alpha: 0.08 }, // --wh40k-powers-bg
+        { rgb: { r: 37, g: 99, b: 235 }, alpha: 0.08 }, // --wh40k-fate-bg
+    ];
+
+    it('is applied to every chat message and spreads the light theme (no dark panel wash on parchment)', () => {
+        expect(tokensSource).toContain(`'.chat-message': chatSurface`);
+        expect(tokensSource).toMatch(/const chatSurface = \{\s*\.\.\.lightTheme,/);
+    });
+
+    it('the dark surface is declared after the chat surface, so a dark card inside a message keeps its own tokens', () => {
+        expect(tokensSource.indexOf(`'[data-wh40k-surface="dark"]': darkSurface`)).toBeGreaterThan(tokensSource.indexOf(`'.chat-message': chatSurface`));
+    });
+
+    it('every text token clears WCAG AA (4.5:1) on each chat message under each card wash', () => {
+        const backgrounds = MESSAGES.flatMap((message) => [message, ...WASHES.map(({ rgb, alpha }) => over(rgb, alpha, message))]);
+        const failing = [...surface.entries()]
+            .filter(([, value]) => value.startsWith('#'))
+            .filter(([, value]) => backgrounds.some((bg) => contrast(hexRgb(value), bg) < 4.5))
+            .map(([key]) => key);
+        expect(failing).toEqual([]);
+    });
+
+    it('a dark card re-points every colour the chat surface sets, so none leaks dark-on-dark', () => {
+        const missing = [...surface.keys()].filter((key) => surface.get(key)?.startsWith('#') === true && !dark.has(key));
+        expect(missing).toEqual([]);
+    });
+});
