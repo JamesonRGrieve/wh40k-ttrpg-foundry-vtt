@@ -1,0 +1,447 @@
+{
+    "$comment": "Function-chosen game-icons.net art for pack documents that used the removed _vendored-ui icons (#625). `icons` maps a role to a game-icons path (<author-dir>/<name>, no extension); the hotlink is `${cdn}/${path}.svg`. `rules` maps structured document data to a role; a document matches the FIRST applicable rule group for its type (see `order`), else its type default. Every author is credited in src/icons/ATTRIBUTION.md.",
+    "cdn": "https://cdn.jsdelivr.net/gh/game-icons/icons@master",
+    "licence": "CC BY 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "authors": {
+        "delapouite": {
+            "name": "Delapouite",
+            "url": "https://delapouite.com/"
+        },
+        "lorc": {
+            "name": "Lorc",
+            "url": "https://lorcblog.blogspot.com/"
+        },
+        "skoll": {
+            "name": "Skoll",
+            "url": "https://game-icons.net/"
+        },
+        "john-colburn": {
+            "name": "John Colburn",
+            "url": "http://ninmunanmu.com/"
+        },
+        "carl-olsen": {
+            "name": "Carl Olsen",
+            "url": "https://twitter.com/unstoppableCarl"
+        }
+    },
+    "icons": {
+        "condition.blinded": "delapouite/blindfold",
+        "condition.blood-loss": "lorc/bleeding-wound",
+        "condition.concealed": "lorc/hidden",
+        "condition.deafened": "skoll/hearing-disabled",
+        "condition.fire": "lorc/fire-silhouette",
+        "condition.grappled": "lorc/grab",
+        "condition.insanity": "delapouite/brain-tentacle",
+        "condition.pinned": "delapouite/bullet-impacts",
+        "condition.stunned": "delapouite/knocked-out-stars",
+        "condition.surprised": "lorc/surprised",
+
+        "weapon.default": "lorc/crossed-swords",
+        "weapon.las": "lorc/ray-gun",
+        "weapon.bolt": "lorc/bolter-gun",
+        "weapon.plasma": "lorc/plasma-bolt",
+        "weapon.melta": "lorc/laserburn",
+        "weapon.flame": "delapouite/flamethrower",
+        "weapon.launcher": "delapouite/missile-launcher",
+        "weapon.grenade": "lorc/grenade",
+        "weapon.explosive": "lorc/fire-bomb",
+        "weapon.chain": "delapouite/chainsaw",
+        "weapon.power": "lorc/lightning-saber",
+        "weapon.shock": "lorc/electric-whip",
+        "weapon.force": "lorc/rune-sword",
+        "weapon.shield": "lorc/checked-shield",
+        "weapon.pistol": "john-colburn/pistol-gun",
+        "weapon.basic": "skoll/winchester-rifle",
+        "weapon.heavy": "skoll/machine-gun",
+        "weapon.mounted": "lorc/sentry-gun",
+        "weapon.thrown": "lorc/thrown-daggers",
+        "weapon.melee": "lorc/broadsword",
+        "weapon.shotgun": "delapouite/sawed-off-shotgun",
+        "weapon.bow": "delapouite/bow-arrow",
+        "weapon.crossbow": "carl-olsen/crossbow",
+        "weapon.axe": "lorc/battle-axe",
+        "weapon.knife": "lorc/broad-dagger",
+        "weapon.spear": "lorc/barbed-spear",
+        "weapon.hammer": "delapouite/warhammer",
+        "weapon.mace": "lorc/spiked-mace",
+        "weapon.club": "delapouite/wood-club",
+        "weapon.staff": "lorc/wizard-staff",
+        "weapon.whip": "lorc/whip",
+        "weapon.flail": "delapouite/flail",
+        "weapon.claw": "lorc/claw-slashes",
+        "weapon.bite": "lorc/bestial-fangs",
+        "weapon.unarmed": "lorc/fist",
+
+        "armour.default": "delapouite/chest-armor",
+        "armour.flak": "lorc/armor-vest",
+        "armour.mesh": "lorc/layered-armor",
+        "armour.carapace": "delapouite/chest-armor",
+        "armour.power": "delapouite/overlord-helm",
+        "armour.void": "lorc/space-suit",
+        "armour.primitive": "delapouite/leather-armor",
+        "armour.xenos": "lorc/armoured-shell",
+        "armour.force-field": "lorc/energy-shield",
+
+        "talent.default": "delapouite/star-medal",
+        "talent.weapon-skill": "lorc/sword-clash",
+        "talent.ballistic-skill": "delapouite/crosshair",
+        "talent.strength": "delapouite/biceps",
+        "talent.toughness": "lorc/turtle-shell",
+        "talent.agility": "lorc/sprint",
+        "talent.intelligence": "lorc/brain",
+        "talent.perception": "delapouite/eye-target",
+        "talent.willpower": "lorc/aura",
+        "talent.fellowship": "delapouite/shaking-hands",
+        "talent.offence": "lorc/bloody-sword",
+        "talent.defence": "lorc/bordered-shield",
+        "talent.finesse": "lorc/laser-precision",
+        "talent.leadership": "lorc/laurel-crown",
+        "talent.knowledge": "lorc/open-book",
+        "talent.psyker": "lorc/psychic-waves",
+        "talent.fieldcraft": "lorc/compass",
+        "talent.tech": "lorc/gears",
+        "talent.social": "lorc/conversation",
+        "talent.chaos": "lorc/daemon-skull",
+        "talent.faith": "lorc/prayer",
+
+        "psychic.default": "lorc/psychic-waves",
+        "psychic.telepathy": "lorc/telepathy",
+        "psychic.pyromancy": "lorc/fireball",
+        "psychic.biomancy": "lorc/anatomy",
+        "psychic.divination": "delapouite/all-seeing-eye",
+        "psychic.telekinesis": "lorc/glowing-hands",
+        "psychic.cryokinesis": "lorc/frozen-orb",
+        "psychic.chaos": "lorc/gooey-daemon",
+        "psychic.daemonology": "lorc/pentagram-rose",
+        "psychic.sorcery": "lorc/book-aura",
+        "psychic.divine": "lorc/prayer",
+        "psychic.waaagh": "lorc/mailed-fist",
+        "psychic.storm": "lorc/lightning-storm",
+
+        "trait.default": "lorc/dna1",
+        "weaponQuality.default": "delapouite/swords-power",
+        "weaponModification.default": "delapouite/reload-gun-barrel",
+        "armourModification.default": "delapouite/armor-upgrade",
+        "ammunition.default": "lorc/bullets",
+        "originPath.default": "lorc/interstellar-path",
+        "order.default": "delapouite/megaphone",
+        "navigatorPower.default": "lorc/third-eye",
+        "ritual.default": "lorc/pentagram-rose",
+        "criticalInjury.default": "lorc/broken-bone",
+        "forceField.default": "lorc/energy-shield",
+        "shipComponent.default": "delapouite/spaceship",
+        "shipComponent.drive": "delapouite/rocket-thruster",
+        "shipComponent.shields": "lorc/bolt-shield",
+        "shipWeapon.default": "delapouite/laser-turret",
+        "shipRole.default": "delapouite/captain-hat-profile",
+        "shipUpgrade.default": "lorc/mighty-spanner",
+        "vehicleTrait.default": "skoll/tank-tread",
+        "vehicleUpgrade.default": "lorc/spanner",
+        "vehicle.default": "lorc/tank",
+        "journal.default": "lorc/scroll-unfurled"
+    },
+    "rules": {
+        "conditionName": {
+            "Blinded": "condition.blinded",
+            "Blood Loss": "condition.blood-loss",
+            "Concealed": "condition.concealed",
+            "Deafened": "condition.deafened",
+            "Fire": "condition.fire",
+            "Grappled": "condition.grappled",
+            "Insanity": "condition.insanity",
+            "Pinned": "condition.pinned",
+            "Stunned": "condition.stunned",
+            "Surprised / Unaware": "condition.surprised"
+        },
+        "itemTypeDefault": {
+            "weapon": "weapon.default",
+            "armour": "armour.default",
+            "talent": "talent.default",
+            "psychicPower": "psychic.default",
+            "trait": "trait.default",
+            "weaponQuality": "weaponQuality.default",
+            "weapon.modification": "weaponModification.default",
+            "armourModification": "armourModification.default",
+            "ammunition": "ammunition.default",
+            "originPath": "originPath.default",
+            "order": "order.default",
+            "navigatorPower": "navigatorPower.default",
+            "ritual": "ritual.default",
+            "criticalInjury": "criticalInjury.default",
+            "forceField": "forceField.default",
+            "shipComponent": "shipComponent.default",
+            "shipWeapon": "shipWeapon.default",
+            "shipRole": "shipRole.default",
+            "shipUpgrade": "shipUpgrade.default",
+            "vehicleTrait": "vehicleTrait.default",
+            "vehicleUpgrade": "vehicleUpgrade.default"
+        },
+        "actorTypeSuffixDefault": {
+            "terracraft": "vehicle.default",
+            "aircraft": "vehicle.default"
+        },
+        "untypedDefault": "journal.default",
+        "weaponNaturalName": [
+            {
+                "pattern": "\\b(claws?|talons?|scything)\\b",
+                "role": "weapon.claw"
+            },
+            {
+                "pattern": "\\b(bite|teeth|fangs?|jaws?|mandibles?|maw)\\b",
+                "role": "weapon.bite"
+            },
+            {
+                "pattern": "\\b(unarmed|fists?|punch)\\b",
+                "role": "weapon.unarmed"
+            }
+        ],
+        "weaponType": {
+            "las": "weapon.las",
+            "bolt": "weapon.bolt",
+            "plasma": "weapon.plasma",
+            "melta": "weapon.melta",
+            "flame": "weapon.flame",
+            "launcher": "weapon.launcher",
+            "grenade": "weapon.grenade",
+            "chain": "weapon.chain",
+            "power": "weapon.power",
+            "shock": "weapon.shock",
+            "force": "weapon.force",
+            "shield": "weapon.shield"
+        },
+        "weaponExplosive": {
+            "thrown": "weapon.grenade",
+            "otherwise": "weapon.explosive"
+        },
+        "weaponName": [
+            {
+                "pattern": "launcher",
+                "role": "weapon.launcher"
+            },
+            {
+                "pattern": "grenades?\\b",
+                "role": "weapon.grenade"
+            },
+            {
+                "pattern": "crossbows?\\b",
+                "role": "weapon.crossbow"
+            },
+            {
+                "pattern": "\\b(bows?|longbows?|shortbows?)\\b",
+                "role": "weapon.bow"
+            },
+            {
+                "pattern": "shotguns?\\b",
+                "role": "weapon.shotgun"
+            },
+            {
+                "pattern": "shields?\\b",
+                "role": "weapon.shield"
+            },
+            {
+                "pattern": "(axes?|hatchet|cleaver)\\b",
+                "role": "weapon.axe"
+            },
+            {
+                "pattern": "(knife|knives|daggers?|stiletto|dirk|shiv)\\b",
+                "role": "weapon.knife"
+            },
+            {
+                "pattern": "\\b(spears?|lance|pike|halberd|glaive|trident|polearm|javelin)\\b",
+                "role": "weapon.spear"
+            },
+            {
+                "pattern": "(hammers?|maul)\\b",
+                "role": "weapon.hammer"
+            },
+            {
+                "pattern": "maces?\\b",
+                "role": "weapon.mace"
+            },
+            {
+                "pattern": "\\b(club|cudgel|bludgeon|baton|truncheon)\\b",
+                "role": "weapon.club"
+            },
+            {
+                "pattern": "\\b(staff|stave)\\b",
+                "role": "weapon.staff"
+            },
+            {
+                "pattern": "(whips?|lash)\\b",
+                "role": "weapon.whip"
+            },
+            {
+                "pattern": "flails?\\b",
+                "role": "weapon.flail"
+            },
+            {
+                "pattern": "(swords?|blades?|sabre|saber|falchion|scimitar|katana|rapier|cutlass)\\b",
+                "role": "weapon.melee"
+            }
+        ],
+        "weaponClass": {
+            "pistol": "weapon.pistol",
+            "basic": "weapon.basic",
+            "heavy": "weapon.heavy",
+            "vehicle": "weapon.mounted",
+            "mounted": "weapon.mounted",
+            "thrown": "weapon.thrown",
+            "melee": "weapon.melee"
+        },
+        "armourType": {
+            "flak": "armour.flak",
+            "mesh": "armour.mesh",
+            "carapace": "armour.carapace",
+            "power": "armour.power",
+            "void": "armour.void",
+            "primitive": "armour.primitive",
+            "xenos": "armour.xenos",
+            "force-field": "armour.force-field"
+        },
+        "talentAptitude": [
+            {
+                "pattern": "^(weapon skill|ws)\\b",
+                "role": "talent.weapon-skill"
+            },
+            {
+                "pattern": "^(ballistic skill|bs)\\b",
+                "role": "talent.ballistic-skill"
+            },
+            {
+                "pattern": "^strength",
+                "role": "talent.strength"
+            },
+            {
+                "pattern": "^toughness",
+                "role": "talent.toughness"
+            },
+            {
+                "pattern": "^agility",
+                "role": "talent.agility"
+            },
+            {
+                "pattern": "^intelligence",
+                "role": "talent.intelligence"
+            },
+            {
+                "pattern": "^perception",
+                "role": "talent.perception"
+            },
+            {
+                "pattern": "^willpower",
+                "role": "talent.willpower"
+            },
+            {
+                "pattern": "^fellowship",
+                "role": "talent.fellowship"
+            },
+            {
+                "pattern": "^offen[cs]e",
+                "role": "talent.offence"
+            },
+            {
+                "pattern": "^defen[cs]e",
+                "role": "talent.defence"
+            },
+            {
+                "pattern": "^finesse",
+                "role": "talent.finesse"
+            },
+            {
+                "pattern": "^leadership",
+                "role": "talent.leadership"
+            },
+            {
+                "pattern": "^knowledge",
+                "role": "talent.knowledge"
+            },
+            {
+                "pattern": "^psyker",
+                "role": "talent.psyker"
+            },
+            {
+                "pattern": "^fieldcraft",
+                "role": "talent.fieldcraft"
+            },
+            {
+                "pattern": "^tech",
+                "role": "talent.tech"
+            },
+            {
+                "pattern": "^social",
+                "role": "talent.social"
+            },
+            {
+                "pattern": "^(khorne|nurgle|slaanesh|tzeentch)",
+                "role": "talent.chaos"
+            }
+        ],
+        "talentCategory": {
+            "combat": "talent.offence",
+            "offence": "talent.offence",
+            "psychic": "talent.psyker",
+            "social": "talent.social",
+            "knowledge": "talent.knowledge",
+            "leadership": "talent.leadership",
+            "tech": "talent.tech",
+            "mechanicus": "talent.tech",
+            "perception": "talent.perception",
+            "faith": "talent.faith"
+        },
+        "psychicDiscipline": [
+            {
+                "pattern": "soul ward|divine|sanctic",
+                "role": "psychic.divine"
+            },
+            {
+                "pattern": "daemonology|malefic",
+                "role": "psychic.daemonology"
+            },
+            {
+                "pattern": "chaos|nurgle|tzeentch|slaanesh|khorne|daemon",
+                "role": "psychic.chaos"
+            },
+            {
+                "pattern": "telepath",
+                "role": "psychic.telepathy"
+            },
+            {
+                "pattern": "pyromanc",
+                "role": "psychic.pyromancy"
+            },
+            {
+                "pattern": "biomanc",
+                "role": "psychic.biomancy"
+            },
+            {
+                "pattern": "divination|tarot",
+                "role": "psychic.divination"
+            },
+            {
+                "pattern": "telekine|psychokine",
+                "role": "psychic.telekinesis"
+            },
+            {
+                "pattern": "cryokine|voidfrost",
+                "role": "psychic.cryokinesis"
+            },
+            {
+                "pattern": "sorcery",
+                "role": "psychic.sorcery"
+            },
+            {
+                "pattern": "waaagh",
+                "role": "psychic.waaagh"
+            },
+            {
+                "pattern": "stormwroth|maelstrom",
+                "role": "psychic.storm"
+            }
+        ],
+        "shipComponentType": {
+            "plasmaDrive": "shipComponent.drive",
+            "voidShields": "shipComponent.shields"
+        }
+    }
+}

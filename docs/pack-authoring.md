@@ -1117,7 +1117,22 @@ looks wrong, fix the stat block, never hand-patch the derived output.
 Actors carry TWO art references at different aspect ratios; items carry one.
 Curated art (`systems/wh40k-rpg/images/**` or an `https://` hotlink) is **never
 overwritten** by any tool; only defaults (`icons/**`,
-`systems/wh40k-rpg/icons/**`, generic placeholder icons) are replaceable.
+`systems/wh40k-rpg/icons/**`, the game-icons.net function icons, generic
+placeholder icons) are replaceable.
+
+**Default icons are game-icons.net (CC BY 3.0), chosen by function.** A document
+without curated art takes the icon `scripts/pack-icon-map.mjs` picks for it from
+the reviewed table `scripts/pack-icon-map.json`: a weapon by its type (las, bolt,
+plasma, chain, power…) then a name keyword or its class, armour by its type, a
+talent by its first aptitude or else its category, a psychic power by its
+discipline, a condition by name, and any other type a neutral per-type icon.
+The icon is hotlinked as
+`https://cdn.jsdelivr.net/gh/game-icons/icons@master/<author>/<name>.svg`, every
+author is credited in `src/icons/ATTRIBUTION.md`, and it counts as a default, not
+real art. Add a new icon to the table (and its credit) rather than hand-picking
+one per document. The parked `_vendored-ui/` GameDevMarket icons are not licensed
+for this system: `scripts/validate-pack-schema.mjs` fails on any reference to
+them, or to their old `systems/wh40k-rpg/icons/{talents,psykana,items}` paths.
 
 **Image coverage is a one-way ratchet across all entity types.**
 `validate-images.cjs` grades every pack document's `img` as real art (a
