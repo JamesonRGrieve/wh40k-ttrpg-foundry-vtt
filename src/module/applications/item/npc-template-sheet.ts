@@ -6,6 +6,7 @@
 import type NPCTemplateData from '../../data/item/npc-template.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { newNpcActorType } from '../npc/npc-actor-type.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /** NPCTemplate items expose NPCTemplateData on `system`. */
@@ -485,7 +486,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
 
         const actorData = {
             name: this.item.name,
-            type: 'npcV2',
+            type: newNpcActorType(),
             img: this.item.img ?? 'icons/svg/mystery-man.svg',
             system: systemData,
         };

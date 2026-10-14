@@ -8,6 +8,8 @@
  * - Detailed validation messages
  */
 
+import { isNpcActorType } from '../documents/actor-types.ts';
+
 export interface StatBlockData {
     name?: string;
     type?: string;
@@ -135,9 +137,9 @@ export default class StatBlockValidator {
         }
 
         if (data.type === undefined || data.type === '') {
-            result.errors.push("Missing actor type. Expected 'npcV2'.");
-        } else if (data.type !== 'npcV2') {
-            result.warnings.push(`Actor type is '${data.type}', expected 'npcV2'.`);
+            result.errors.push("Missing actor type. Expected an NPC type such as 'dh2-npc'.");
+        } else if (!isNpcActorType(data.type)) {
+            result.warnings.push(`Actor type is '${data.type}', expected an NPC type such as 'dh2-npc'.`);
         }
 
         if (!data.system) {

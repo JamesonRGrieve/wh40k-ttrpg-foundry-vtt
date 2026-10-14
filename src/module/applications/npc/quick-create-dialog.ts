@@ -2,6 +2,7 @@ import type { WH40KNPC } from '../../documents/npc.ts';
 import { capitalize } from '../../utils/format.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { newNpcActorType } from './npc-actor-type.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
@@ -315,7 +316,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
         // Create the actor
         const actorData = {
             name: this.#state.name,
-            type: 'npcV2',
+            type: newNpcActorType(),
             img: 'icons/svg/mystery-man.svg',
             system: npcSystemData,
         };
@@ -435,7 +436,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
 
             return {
                 name,
-                type: 'npcV2',
+                type: newNpcActorType(),
                 img: 'icons/svg/mystery-man.svg',
                 system: systemData,
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create expects a complex Foundry type; the actorData object satisfies the required shape at runtime

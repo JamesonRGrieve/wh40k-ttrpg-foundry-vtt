@@ -21,7 +21,7 @@ function characteristics(weaponSkillBase = 40): NonNullable<NonNullable<StatBloc
 }
 
 function validBlock(): StatBlockData {
-    return { name: 'Ork Boy', type: 'npcV2', system: { characteristics: characteristics(), wounds: { max: 20 } } };
+    return { name: 'Ork Boy', type: 'dh2-npc', system: { characteristics: characteristics(), wounds: { max: 20 } } };
 }
 
 describe('StatBlockValidator.validate', () => {
@@ -31,10 +31,17 @@ describe('StatBlockValidator.validate', () => {
         expect(result.errors.join(' ')).toMatch(/no data/i);
     });
 
-    it('accepts a complete npcV2 block with in-range characteristics', () => {
+    it('accepts a complete NPC block with in-range characteristics', () => {
         const result = StatBlockValidator.validate(validBlock());
         expect(result.valid).toBe(true);
         expect(result.errors).toEqual([]);
+        expect(result.warnings.join(' ')).not.toMatch(/actor type/i);
+    });
+
+    it('warns on a type that is not a registered NPC type (the retired npcV2 included)', () => {
+        const result = StatBlockValidator.validate({ ...validBlock(), type: 'npcV2' });
+        expect(result.valid).toBe(true);
+        expect(result.warnings.join(' ')).toMatch(/expected an NPC type/i);
     });
 
     it('errors when the actor type is missing', () => {
@@ -44,7 +51,7 @@ describe('StatBlockValidator.validate', () => {
     });
 
     it('warns (but stays valid) on an out-of-range characteristic', () => {
-        const result = StatBlockValidator.validate({ name: 'X', type: 'npcV2', system: { characteristics: characteristics(250), wounds: { max: 20 } } });
+        const result = StatBlockValidator.validate({ name: 'X', type: 'dh2-npc', system: { characteristics: characteristics(250), wounds: { max: 20 } } });
         expect(result.valid).toBe(true);
         expect(result.warnings.join(' ')).toMatch(/outside normal range/i);
     });

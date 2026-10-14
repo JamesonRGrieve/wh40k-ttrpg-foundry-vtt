@@ -1,3 +1,4 @@
+import { isNpcActorType } from '../../documents/actor-types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
@@ -460,7 +461,7 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
     static async scale(actor: WH40KBaseActor): Promise<boolean> {
-        if ((actor.type as string) !== 'npcV2') {
+        if (!isNpcActorType(actor.type)) {
             ui.notifications.warn(game.i18n.localize('WH40K.NPC.ScaleOnlyV2'));
             return false;
         }

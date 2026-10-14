@@ -15,6 +15,7 @@ import { errorMessage } from '../../utils/error-message.ts';
 import StatBlockValidator, { type StatBlockData } from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { newNpcActorType } from './npc-actor-type.ts';
 import ThreatCalculator, {
     type NPCArmourData,
     type NPCArmourLocations,
@@ -412,6 +413,20 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - JSON string.
      * @returns {Object} Parsed data with validation.
      */
+    /**
+     * A pasted system, completed with the generator's defaults for whatever it
+     * omits — what the validator's "default values will be used" promises. A
+     * partial paste (no weapons, no wounds) otherwise reached the preview and the
+     * new actor half-formed, and the preview threw on the missing weapons.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: user-pasted JSON system data, untyped until merged over the generator's typed defaults
+    static #withDefaults(system: Record<string, unknown>): NPCSystemData {
+        const threatLevel = typeof system['threatLevel'] === 'number' ? system['threatLevel'] : 5;
+        const completed = ThreatCalculator.generateNPCData({ threatLevel });
+        foundry.utils.mergeObject(completed, system);
+        return completed;
+    }
+
     static parseJSON(input: string): ParseResult {
         const result: ParseResult = {
             data: null,
@@ -429,8 +444,9 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 result.data = {
                     name: (parsed['name'] as string) || 'Imported NPC',
                     img: (parsed['img'] as string) || 'icons/svg/mystery-man.svg',
-                    type: 'npcV2',
-                    system: parsed['system'] as NPCSystemData,
+                    // An export from a line keeps its line; anything else is the world's primary line's NPC.
+                    type: newNpcActorType(typeof parsed['type'] === 'string' ? parsed['type'] : undefined),
+                    system: StatBlockParser.#withDefaults(parsed['system'] as Record<string, unknown>),
                     items: (parsed['items'] as Array<{ name: string; type: string; system: Record<string, unknown> }>) || [],
                 };
             }
@@ -439,8 +455,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 result.data = {
                     name: (parsed['name'] as string) || 'Imported NPC',
                     img: 'icons/svg/mystery-man.svg',
-                    type: 'npcV2',
-                    system: parsed as unknown as NPCSystemData,
+                    type: newNpcActorType(),
+                    system: StatBlockParser.#withDefaults(parsed),
                     items: [],
                 };
             } else {
@@ -572,7 +588,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         result.data = {
             name,
             img: 'icons/svg/mystery-man.svg',
-            type: 'npcV2',
+            type: newNpcActorType(),
             system: systemData,
             items: [...talentItems, ...traitItems],
         };

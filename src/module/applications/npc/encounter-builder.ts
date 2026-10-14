@@ -10,6 +10,7 @@
  * - Deploy NPCs to combat tracker
  */
 
+import { isNpcActorType } from '../../documents/actor-types.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import { calculatePartyThreat, difficultyForRatio } from './threat-utils.ts';
 
@@ -284,7 +285,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
         }
 
         // Only allow NPC types
-        if (actor.type !== 'npc' && actor.type !== 'npcV2') {
+        if (!isNpcActorType(actor.type)) {
             ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.OnlyNpcs'));
             return;
         }
@@ -350,7 +351,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
      */
     static async #addNPC(this: EncounterBuilder, _event: Event, _target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = game.actors.filter((a) => (a as { type: string }).type === 'npc' || (a as { type: string }).type === 'npcV2');
+        const actors = game.actors.filter((a) => isNpcActorType(a.type));
 
         if (actors.length === 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Notify.Encounter.NoWorldNpcs'));

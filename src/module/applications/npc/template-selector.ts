@@ -1,8 +1,7 @@
-import { npcActorTypeFor } from '../../documents/actor-types.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
-import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { newNpcActorType } from './npc-actor-type.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
 interface FilterState {
@@ -399,7 +398,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
 
             const actorData = {
                 name: template.name,
-                type: npcActorTypeFor(WH40KSettings.getPrimaryGameSystem()),
+                type: newNpcActorType(),
                 img: template.img ?? 'icons/svg/mystery-man.svg',
                 system: systemData,
             };

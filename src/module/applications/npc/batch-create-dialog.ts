@@ -1,5 +1,6 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
+import { newNpcActorType } from './npc-actor-type.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
@@ -328,7 +329,7 @@ export default class BatchCreateDialog extends makeNpcFormDialog({
 
             const actorData: NPCActorData = {
                 name,
-                type: 'npcV2',
+                type: newNpcActorType(),
                 img: 'icons/svg/mystery-man.svg',
                 system: systemData,
             };
@@ -455,7 +456,7 @@ export default class BatchCreateDialog extends makeNpcFormDialog({
 
             const actorData: NPCActorData = {
                 name,
-                type: 'npcV2',
+                type: newNpcActorType(),
                 img: 'icons/svg/mystery-man.svg',
                 system: systemData,
                 folder: typeof folder === 'string' && folder !== '' ? folder : undefined,
