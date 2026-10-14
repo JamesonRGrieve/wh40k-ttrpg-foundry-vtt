@@ -123,13 +123,15 @@ test.describe.serial('Mutant background (Tier B)', () => {
         // Every die on its lowest face: 5d10 = 5, the Mutations table's first band (1–6).
         await forceDice(page, LOWEST_FACE);
         await dialog.locator('[data-action="apply"]').click();
+        // The card is the dialog's last step, posted after the mutation and the Twisted Flesh
+        // flag are both written (two separate updates): read the actor's state once it is in.
+        const card = await waitForMessage(page, before, 'mutant-twisted-flesh-rule');
         await expect.poll(async () => itemNames(page, actorId, 'mutation')).toEqual(['Bestial Hide']);
-        expect(await readActorFlag(page, actorId, 'twistedFlesh')).toBe(true);
+        await expect.poll(async () => readActorFlag(page, actorId, 'twistedFlesh')).toBe(true);
         expect(await readActorSystem(page, actorId, 'corruption')).toBe(10);
         expect(await readActorSystem(page, actorId, 'malignancyTestsPending')).toBe(0);
         await expect(page.locator(`#${dialogId}`)).toHaveCount(0);
 
-        const card = await waitForMessage(page, before, 'mutant-twisted-flesh-rule');
         expect(card.content).toContain('Mutant Applicant');
         expect(card.content).toContain('5d10 = 5');
         expect(card.content).toContain('Bestial Hide');
