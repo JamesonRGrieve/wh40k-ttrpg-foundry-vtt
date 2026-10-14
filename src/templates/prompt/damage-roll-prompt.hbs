@@ -1,5 +1,5 @@
 {{! Damage Roll Prompt }}
-<form class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
+<div class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
     {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title=(concat name " Damage")}}
         {{#if psychicPower}}
             {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Psychic Rating"}}
@@ -18,4 +18,4 @@
             <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px]" type="text" id="penetration" name="penetration" value="{{penetration}}" />
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
     {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
-</form>
+</div>

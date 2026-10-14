@@ -1,5 +1,5 @@
 <div class="wh40k-item-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
-    <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+    <div autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
         <!-- Item Header -->
         {{#> systems/wh40k-rpg/templates/item/panel/item-header.hbs namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.PsychicPower" hideTypeBadge=true }}
             <div class="tw-flex tw-flex-col tw-gap-2">
@@ -276,5 +276,5 @@
                 {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
             </div>
         </section>
-    </form>
+    </div>
 </div>

@@ -4,8 +4,11 @@
   CharacteristicCheck, etc.) typically override PARTS with their own
   template, but the base needs something renderable so an unspecialised
   instantiation (e.g. integration test) does not throw.
+
+  A div, not a form: the dialog root is already the form element, so the
+  submit button below submits it (#612).
 --}}
-<form class="standard-form framed" autocomplete="off">
+<div class="standard-form framed" autocomplete="off">
     {{#if rollData}}
         {{#with rollData}}
             <h3 class="divider">{{name}}</h3>
@@ -17,4 +20,4 @@
     <footer class="form-footer">
         <button type="submit" class="bright"><i class="fa-solid fa-dice"></i> {{localize "WH40K.Common.Roll"}}</button>
     </footer>
-</form>
+</div>

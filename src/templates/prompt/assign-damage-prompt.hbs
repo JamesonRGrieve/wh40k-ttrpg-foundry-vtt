@@ -1,7 +1,8 @@
 {{! Assign Damage Prompt }}
-<form class="standard-form framed">
+{{! Divs, not forms: the dialog root is already the form element (#612). }}
+<div class="standard-form framed">
 <div class="dialog-content">
-    <form autocomplete="off">
+    <div autocomplete="off">
         {{! Character Info }}
         <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-solid tw-border-gold/30 tw-rounded-md tw-bg-gradient-to-br tw-from-black/20 tw-to-black/10 tw-shadow-md">
             <div class="tw-flex tw-items-center tw-gap-3 tw-mb-4 tw-pb-3 tw-border-b tw-border-solid tw-border-white/10">
@@ -62,7 +63,7 @@
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
-    </form>
+    </div>
 </div>
 
 {{! Dialog Buttons }}
@@ -76,4 +77,4 @@
         {{localize "WH40K.Cancel"}}
     </button>
 </div>
-</form>
+</div>

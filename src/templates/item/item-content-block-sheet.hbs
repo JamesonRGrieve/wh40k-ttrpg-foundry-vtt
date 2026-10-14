@@ -16,7 +16,10 @@
   ProseMirror editors only surface when that setting is on.
 --}}
 <div class="tw-flex tw-flex-col tw-h-full">
-  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+  {{!-- A div, not a form: the sheet root is already the form element (tag: 'form').
+       A nested form becomes its controls' form owner, so the root form's
+       submit-on-change never sees them and no edit is saved (#597). --}}
+  <div class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: portrait + name + edit-mode toggle
@@ -144,5 +147,5 @@
       <span>{{localize "WH40K.Item.PersistenceFootnote"}}</span>
     </footer>
     {{/if}}
-  </form>
+  </div>
 </div>
