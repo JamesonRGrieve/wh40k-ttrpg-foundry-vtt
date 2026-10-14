@@ -2272,9 +2272,7 @@ const UTILS_VALIDATORS_FLOWS = [
 recordDimension('utils-validators.flow', covered['utils-validators.flow'], UTILS_VALIDATORS_FLOWS);
 
 // Data-layer flows exercised by tests/e2e/data-layer.spec.ts. Drives
-// source-code coverage on three uncovered data modules:
-//   - data/fields/mapping-field.ts (was 0% / 38.8%) — construct,
-//     getInitialValue, _cleanType.
+// source-code coverage on uncovered data modules:
 //   - config/advancements/index.ts (was 0% / 60.8%) — all 7 pure
 //     career-registry getters.
 //   - data/grant/choice-grant.ts (was 11.1% / 32.6%) and
@@ -2283,9 +2281,6 @@ recordDimension('utils-validators.flow', covered['utils-validators.flow'], UTILS
 // Keys MUST match the recordCoverage('data-layer.flow', ...) calls
 // in the spec.
 const DATA_LAYER_FLOWS = [
-    'mapping-field-construct',
-    'mapping-field-getInitialValue',
-    'mapping-field-cleanType',
     'advancements-getAvailableCareers',
     'advancements-getCareerKeyFromName',
     'advancements-hasCareer',

@@ -5,8 +5,7 @@ import { test } from './lib/test';
 
 /**
  * Tier B coverage of `src/module/data/abstract/*` and the custom
- * `src/module/data/fields/*` field types that `data-layer.spec.ts` does
- * NOT touch (it owns MappingField; everything else here is in scope).
+ * `src/module/data/fields/*` field types.
  * These modules sit at the very bottom of the DataModel stack — every
  * concrete actor / item DataModel extends `SystemDataModel`, every Item
  * subclass extends `ItemDataModel`, every Actor subclass extends

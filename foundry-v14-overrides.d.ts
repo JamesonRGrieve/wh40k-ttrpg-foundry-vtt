@@ -535,8 +535,7 @@ declare global {
      * instance methods that the system overrides.
      * @source foundry.mjs:9606, 10035, 10415, 10586, 10898, 11473, 11847, 12217, 12761, 12963
      *
-     * The 19 system `_cleanData` overrides and the custom `MappingField._cleanType`
-     * in `src/module/data/fields/mapping-field.ts` must adopt the 3-arg form to
+     * The system's `_cleanData` overrides must adopt the 3-arg form to
      * participate correctly in partial updates. Use these types when annotating
      * those overrides.
      */

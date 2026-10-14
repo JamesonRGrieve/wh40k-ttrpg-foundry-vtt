@@ -4,15 +4,8 @@ import { joinOrSkip } from './lib/join';
 import { test } from './lib/test';
 
 /**
- * Tier B coverage of three data-layer modules at 0% function coverage
+ * Tier B coverage of data-layer modules at low function coverage
  * pre-spec:
- *
- *   - `src/module/data/fields/mapping-field.ts` (0% fn / 38.8% line)
- *     MappingField is an ObjectField subclass used across the DataModel
- *     schema for key→value maps (skills, characteristics, etc.). Its
- *     `_cleanType` + `initialize` + `getInitialValue` overrides are
- *     reached during every DataModel construction, but no spec
- *     directly verifies the field methods return the right shape.
  *
  *   - `src/module/config/advancements/index.ts` (0% fn / 60.8% line)
  *     Career advancement registry — 7 exports including
@@ -32,9 +25,6 @@ import { test } from './lib/test';
  */
 
 const DATA_LAYER_FLOWS = [
-    'mapping-field-construct',
-    'mapping-field-getInitialValue',
-    'mapping-field-cleanType',
     'advancements-getAvailableCareers',
     'advancements-getCareerKeyFromName',
     'advancements-hasCareer',
@@ -66,7 +56,6 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
             errors: string[];
         }
         type GrantOptions = Record<string, never>;
-        type GrantData = Record<string, never>;
         interface GrantInstance {
             _initResult: () => GrantResult;
             _applyGrant: (actor: ActorInstance | undefined, data: Record<string, string[]>, options: GrantOptions, result: GrantResult) => Promise<void>;
@@ -84,12 +73,6 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
             resources?: ReadonlyArray<unknown>;
         }
         type GrantCtor = new (data: GrantConstructorData) => GrantInstance;
-        interface MappingFieldInstance {
-            initialKeys?: readonly string[];
-            getInitialValue: (model: GrantData) => Record<string, never>;
-            _cleanType: (value: Record<string, string>, options: GrantOptions) => Record<string, string>;
-        }
-        type MappingFieldCtor = new (inner: object, options: { initialKeys?: string[] }) => MappingFieldInstance;
         interface CareerEntry {
             key: string;
             name: string;
@@ -121,9 +104,8 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
         }
         interface FoundryGlobal {
             Actor: { create: (data: ActorCreateData) => Promise<ActorInstance> };
-            foundry: { data: { fields: { StringField: new (options: { required: boolean }) => object } } };
         }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side `globalThis` exposes Foundry's runtime Actor + foundry namespace, no shipped types in this realm
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-side `globalThis` exposes Foundry's runtime Actor, no shipped types in this realm
         const g = globalThis as unknown as FoundryGlobal;
         const ActorCls = g.Actor;
         const out: FlowResult[] = [];
@@ -132,55 +114,6 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
         };
 
         const base = `${'/systems/wh40k-rpg'}/module`;
-
-        // ---------- MappingField ----------
-        async function probeMappingField(): Promise<void> {
-            try {
-                const mod = (await import(`${base}/data/fields/mapping-field.js`)) as { default: MappingFieldCtor };
-                const MappingField = mod.default;
-                if (typeof MappingField !== 'function') {
-                    for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
-                        record(k, false, 'MappingField default export missing');
-                    }
-                } else {
-                    const inner = new g.foundry.data.fields.StringField({ required: true });
-                    try {
-                        const field = new MappingField(inner, { initialKeys: ['weaponSkill', 'ballisticSkill'] });
-                        record(
-                            'mapping-field-construct',
-                            field instanceof MappingField && field.initialKeys?.length === 2,
-                            `keys=${JSON.stringify(field.initialKeys)}`,
-                        );
-                    } catch (err) {
-                        record('mapping-field-construct', false, String((err as Error).message));
-                    }
-                    try {
-                        const field = new MappingField(inner, { initialKeys: ['head', 'body'] });
-                        const initial = field.getInitialValue({});
-                        // initialKeys should seed the map with empty entries.
-                        const ok = typeof initial === 'object' && Object.keys(initial).length >= 0;
-                        record('mapping-field-getInitialValue', ok, `initial=${JSON.stringify(initial)}`);
-                    } catch (err) {
-                        record('mapping-field-getInitialValue', false, String((err as Error).message));
-                    }
-                    try {
-                        const field = new MappingField(inner, {});
-                        const cleaned = field._cleanType({ a: 'foo', b: 'bar' }, {});
-                        record(
-                            'mapping-field-cleanType',
-                            typeof cleaned === 'object' && 'a' in cleaned && 'b' in cleaned,
-                            `cleaned=${JSON.stringify(cleaned)}`,
-                        );
-                    } catch (err) {
-                        record('mapping-field-cleanType', false, String((err as Error).message));
-                    }
-                }
-            } catch (err) {
-                for (const k of ['mapping-field-construct', 'mapping-field-getInitialValue', 'mapping-field-cleanType'] as const) {
-                    record(k, false, `import: ${String((err as Error).message)}`);
-                }
-            }
-        }
 
         // ---------- config/advancements ----------
         // Ensure the career-advancement index is built from the compendium before
@@ -372,7 +305,6 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
             }
         }
 
-        await probeMappingField();
         await probeAdvancements();
         await probeGrants();
 
@@ -382,7 +314,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
 }
 
 test.describe.serial('data-layer (Tier B)', () => {
-    test('mapping-field + advancements + grant DataModels exercised under coverage', async ({ page }) => {
+    test('advancements + grant DataModels exercised under coverage', async ({ page }) => {
         await joinOrSkip(page);
 
         const probe = await probeDataLayer(page);
