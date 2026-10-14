@@ -42,6 +42,7 @@ import { DAY_PHASE_LABEL_KEYS, dayPhase, sceneBodyKey, type WeatherKind, weather
 import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
+import { pinToHudLayer } from './hud-layer.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -153,6 +154,17 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
      *  flattens the base type and drops it; re-declare it so subclass access is
      *  typed (mirrors EncounterBuilder). */
     declare rendered: boolean;
+
+    /**
+     * The widget is a table-wide readout, not a window: it stays on the UI layer
+     * below every sheet and dialog even when rendered or clicked, so it never
+     * covers a window or catches its clicks (#639). Foundry calls this on every
+     * forced render and on every pointerdown in the frame. (Not in the shipped
+     * ApplicationV2 typings, hence no `override` keyword.)
+     */
+    bringToFront(): void {
+        pinToHudLayer(this.element);
+    }
 
     /* -------------------------------------------- */
     /*  Singleton lifecycle                         */

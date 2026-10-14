@@ -17,6 +17,7 @@ import { t } from '../../i18n/t.ts';
 import { readSceneEnvironment } from '../../rules/scene-environment.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SceneEnvironmentDialog from '../dialogs/scene-environment-dialog.ts';
+import { pinToHudLayer } from './hud-layer.ts';
 import { formatEnvironmentKey, primaryLineLabel } from './scene-environment-format.ts';
 import { buildSceneEnvironmentView } from './scene-environment-view.ts';
 
@@ -62,6 +63,15 @@ export default class SceneEnvironmentWidget extends HandlebarsApplicationMixin(A
 
     /** Re-declared: HandlebarsApplicationMixin flattens the base type and drops the getter (mirrors WorldTimeWidget). */
     declare rendered: boolean;
+
+    /**
+     * A table-wide readout beside the world-time widget: it stays on the UI layer
+     * below every sheet and dialog, so it never covers a window (#639). Overrides
+     * ApplicationV2#bringToFront, which the shipped typings omit.
+     */
+    bringToFront(): void {
+        pinToHudLayer(this.element);
+    }
 
     static #instance: SceneEnvironmentWidget | null = null;
 
