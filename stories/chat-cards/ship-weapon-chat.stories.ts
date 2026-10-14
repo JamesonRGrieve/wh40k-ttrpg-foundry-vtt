@@ -14,9 +14,14 @@
  *   4. A miss.
  *   5. The profile card (no shot), as `WH40KVoidcraft.fireWeapon` posts it, on
  *      another line to show the card has no RT-only assumption in its shell.
+ *   6. A Crippled firing ship — Strength halved.
+ *   7. A combined macrobattery salvo (p.221) — each battery's own test, the
+ *      pooled hits with the shields' discard by battery, Armour once, and at
+ *      most one Critical Hit.
  *
  * The dialog stories render `ship-assault-dialog.hbs` on the fire flow: the
- * gunnery inputs, and the resolved preview with the target's before vitals.
+ * gunnery inputs, the salvo inputs, and the resolved preview with the
+ * target's before vitals.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, within } from 'storybook/test';
@@ -55,10 +60,31 @@ const LANCE: ShipWeaponFireInput['weapon'] = {
 /** The book's raider: Armour 15. */
 const RAIDER = { ...DEFENDER_SHIP, armour: 15 };
 
-/** Fire from the players' frigate; `attackerHull` 0 fires it Crippled. */
-function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, attackerHull = ATTACKER_SHIP.hullIntegrity): ShipAssaultSession {
+/** A second macrobattery the clicked one can combine with into a salvo (p.221). */
+const BROADSIDE: ShipWeaponFireInput['weapon'] = {
+    ...MACROBATTERY,
+    name: 'Mars Broadside',
+    locationLabel: storyLocalize('WH40K.ShipLocation.Starboard'),
+    strength: 4,
+    damage: '2d10',
+};
+
+/** How a story fires: the firing ship's Hull (0 fires it Crippled), and the macrobatteries it may combine. */
+interface FireSetup {
+    attackerHull?: number;
+    companions?: ShipWeaponFireInput['companions'];
+}
+
+/** Fire from the players' frigate. */
+function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, setup: FireSetup = {}): ShipAssaultSession {
     const lock = { labelKey: 'WH40K.Voidcraft.ShipAction.Component.Effect', value: 10, data: { name: 'Lock on Target' } };
-    return createShipWeaponFireFlow({ weapon, ballisticSkill: 48, shipModifiers: weapon.weaponClass === 'macrobattery' ? [lock] : [] }).start({
+    const attackerHull = setup.attackerHull ?? ATTACKER_SHIP.hullIntegrity;
+    return createShipWeaponFireFlow({
+        weapon,
+        ballisticSkill: 48,
+        shipModifiers: weapon.weaponClass === 'macrobattery' ? [lock] : [],
+        companions: setup.companions ?? [],
+    }).start({
         attacker: { ...storyShipActor(ATTACKER_SHIP, 48), hullIntegrity: { value: attackerHull, max: ATTACKER_SHIP.hullIntegrity } },
         defender: storyShipActor(RAIDER, 40, shields),
         localize: storyLocalize,
@@ -66,18 +92,19 @@ function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, attac
     });
 }
 
-/** A form holding the gunnery inputs: close range, the gunner's BS. */
-function gunneryForm(gunnerSkill: number): HTMLFormElement {
+/** A form holding the gunnery inputs: close range, the gunner's BS, and the broadside ticked into a salvo when asked. */
+function gunneryForm(gunnerSkill: number, withBroadside = false): HTMLFormElement {
     const form = document.createElement('form');
     form.innerHTML = `<input name="gunnerSkill" value="${gunnerSkill}"><select name="rangeBand"><option value="close" selected>close</option></select>`;
+    if (withBroadside) form.insertAdjacentHTML('beforeend', '<input type="checkbox" name="salvo-broadside" checked>');
     return form;
 }
 
 /** Fire, apply, and render the posted card. */
-async function card(weapon: ShipWeaponFireInput['weapon'], shields: number, rolls: number[], gunnerSkill = 38, attackerHull?: number): Promise<HTMLElement> {
-    const session = startFire(weapon, shields, attackerHull);
+async function card(weapon: ShipWeaponFireInput['weapon'], shields: number, rolls: number[], gunnerSkill = 38, setup: FireSetup = {}): Promise<HTMLElement> {
+    const session = startFire(weapon, shields, setup);
     queueStoryRolls(...rolls);
-    await session.roll(readAssaultForm(gunneryForm(gunnerSkill)));
+    await session.roll(readAssaultForm(gunneryForm(gunnerSkill, setup.companions !== undefined)));
     const applied = await session.apply(readAssaultForm(document.createElement('form')));
     return renderSheet(shipWeaponChatSrc, applied?.card.data ?? {});
 }
@@ -125,7 +152,7 @@ export const CrippledFiringShip: Story = {
     name: 'Crippled firing ship — Strength halved, round up (#187)',
     // The book's macrobattery shot from a ship at 0 Hull Integrity: 3 hits, but a
     // Crippled Strength 3 battery lands only 2; the shield takes one; 9 vs Armour 15.
-    loaders: [async () => ({ el: await card(MACROBATTERY, 1, [29, 9], 38, 0) })],
+    loaders: [async () => ({ el: await card(MACROBATTERY, 1, [29, 9], 38, { attackerHull: 0 }) })],
     render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
     play: async ({ canvasElement }) => {
         const rows = provenance(canvasElement);
@@ -180,9 +207,45 @@ export const ProfileOnly: Story = {
     },
 };
 
+const SALVO: FireSetup = { companions: [{ id: 'broadside', weapon: BROADSIDE, shipModifiers: [] }] };
+
+export const SalvoCombined: Story = {
+    name: 'Macrobattery salvo — each battery tests, hits pooled, Armour once (#184)',
+    // Port battery: 38 + Lock on Target 10 + close 10 = 58, roll 29 → 3 hits. Broadside: 38 at standard
+    // range, roll 20 → 2 hits. The shield takes one of the (cheaper) port hits; 9 + 7 + 12 + 10 = 38 − Armour 15 once = 23.
+    loaders: [async () => ({ el: await card(MACROBATTERY, 1, [29, 20, 9, 7, 12, 10], 38, SALVO) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-weapon-salvo"]')?.textContent).toContain('2 macrobatteries');
+        await expect(canvasElement.querySelectorAll('[data-wh40k-hook="ship-assault-test"]').length).toBe(2);
+        await expect(view.getByText('Sunsear Laser Battery: Ballistic Skill Test')).toBeTruthy();
+        await expect(view.getByText('Mars Broadside: Ballistic Skill Test')).toBeTruthy();
+        const rows = provenance(canvasElement);
+        await expect(rows).toContain(`Void shields (${DEFENDER_SHIP.name}) take Sunsear Laser Battery's hits -1`);
+        await expect(rows).toContain('Hit 3: Mars Broadside (2d10) 12');
+        await expect(rows.filter((row) => row.startsWith('Armour ('))).toEqual([`Armour (${DEFENDER_SHIP.name}, 15) -15`]);
+        const totals = [...canvasElement.querySelectorAll('[data-wh40k-hook="ship-assault-damage"]')].map((el) => el.textContent.replace(/\s+/gu, ' '));
+        await expect(totals.at(-1)).toMatch(/Total 23\b/u);
+    },
+};
+
+export const SalvoOneCritical: Story = {
+    name: 'Macrobattery salvo — at most one Critical Hit (#184)',
+    // Both batteries roll 01 and meet Crit Rating 4; the salvo still rolls one 1d5.
+    loaders: [async () => ({ el: await card(MACROBATTERY, 0, [1, 1, 1, 1, 1, 1, 1, 1, 1, 4], 38, SALVO) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-wh40k-hook="ship-weapon-critical"]').length).toBe(1);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-weapon-critical"]')?.textContent).toContain(
+            'A combined salvo inflicts at most one Critical Hit.',
+        );
+    },
+};
+
 /** The Fire dialog on the fire flow: inputs, or the resolved preview. */
-async function dialog(resolve: boolean): Promise<HTMLElement> {
-    const session = startFire(MACROBATTERY, 1);
+async function dialog(resolve: boolean, setup: FireSetup = {}): Promise<HTMLElement> {
+    const session = startFire(MACROBATTERY, 1, setup);
     if (resolve) {
         queueStoryRolls(29, 9, 7);
         await session.roll(readAssaultForm(gunneryForm(38)));
@@ -226,5 +289,30 @@ export const FireDialogResolved: Story = {
         await expect(within(canvasElement).queryByText('After')).toBeNull();
         await expect(canvasElement.querySelector('[data-action="applyAssault"]')).toBeTruthy();
         await expect(canvasElement.querySelector('select[name="defender"]')).toBeNull();
+    },
+};
+
+export const FireDialogSalvoInputs: Story = {
+    name: 'Fire dialog — combine another macrobattery into a salvo (#184)',
+    loaders: [async () => ({ el: await dialog(false, SALVO) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('Combine macrobatteries into one salvo')).toBeTruthy();
+        const include = canvasElement.querySelector<HTMLInputElement>('input[name="salvo-broadside"]');
+        await expect(include?.checked).toBe(false);
+        if (include !== null) await userEvent.click(include);
+        await expect(include?.checked).toBe(true);
+        const band = canvasElement.querySelector<HTMLSelectElement>('select[name="salvoRange-broadside"]');
+        if (band !== null) await userEvent.selectOptions(band, 'close');
+        await expect(band?.value).toBe('close');
+        const shields = canvasElement.querySelector<HTMLSelectElement>('select[name="shieldsFirst"]');
+        // The 1d10 battery's hits are worth less than the 2d10 broadside's, so the shields take them by default.
+        await expect(shields?.value).toBe('primary');
+        await expect([...(shields?.options ?? [])].map((option) => option.textContent.trim())).toEqual(['Sunsear Laser Battery', 'Mars Broadside']);
+        // The form the dialog reads now names the broadside in the salvo.
+        const form = readAssaultForm(canvasElement);
+        await expect(form.checked('salvo-broadside')).toBe(true);
+        await expect(form.text('salvoRange-broadside', 'standard')).toBe('close');
     },
 };

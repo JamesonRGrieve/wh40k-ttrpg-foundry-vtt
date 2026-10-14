@@ -4996,6 +4996,17 @@
                 "Critical": "Critical Hit! Rolled {rolled} on 1d5 against {ship}.",
                 "VitalsTitle": "{ship}",
                 "NotApplied": "You do not own the target ship, so the damage was not applied. The GM applies it by hand.",
+                "SalvoCriticalLimit": "A combined salvo inflicts at most one Critical Hit.",
+                "Salvo": {
+                    "Legend": "Combine macrobatteries into one salvo",
+                    "Include": "Fire {weapon} in the salvo",
+                    "Range": "{weapon}: range to target",
+                    "ShieldsFirst": "Void shields take hits first from",
+                    "Title": "Combined salvo of {count} macrobatteries: one damage total, Armour once",
+                    "BatteryTestTitle": "{weapon}: Ballistic Skill Test",
+                    "BatteryHitsTitle": "{weapon}: hits",
+                    "PooledTitle": "Salvo hits on {ship}"
+                },
                 "Field": {
                     "GunnerSkill": "Gunner's Ballistic Skill",
                     "RangeBand": "Range to target"
@@ -5016,6 +5027,9 @@
                     "CrippledStrength": "Crippled: Strength halved ({strength} → {halved})",
                     "VoidShields": "Void shields ({ship}, {shields} up)",
                     "HitDamage": "Hit {hit} ({formula})",
+                    "SalvoBatteryHits": "{weapon}",
+                    "SalvoShields": "Void shields ({ship}) take {weapon}'s hits",
+                    "SalvoHitDamage": "Hit {hit}: {weapon} ({formula})",
                     "Armour": "Armour ({ship}, {armour})",
                     "ArmourIgnored": "Lance ignores Armour ({ship}, {armour})",
                     "CriticalPoint": "Critical Hit: 1 automatic point"

@@ -19,6 +19,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
+import type { ShipTestComponent } from '../../rules/ship-assault.ts';
 import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
@@ -27,7 +28,7 @@ import { shipActionModifierRows, type ShipActionModifierRow } from '../ship-acti
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
 import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
-import { createShipWeaponFireFlow } from '../ship-assault/ship-weapon-fire-flow.ts';
+import { createShipWeaponFireFlow, type ShipWeaponFireCompanion } from '../ship-assault/ship-weapon-fire-flow.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
@@ -539,7 +540,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * modifiers (Lock on Target, Come to New Heading, Evasive Manoeuvres, #186)
      * from the central collector; the hits, void shields, Armour, Hull Integrity
      * damage and any Critical Hit land on the **target**. Rogue Trader only, and
-     * only for the weapon classes the core rules give firing rules for.
+     * only for the weapon classes the core rules give firing rules for. A
+     * macrobattery's dialog offers the ship's other macrobatteries for a salvo.
      */
     static #fireShipWeapon(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
@@ -560,10 +562,26 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             ui.notifications.warn(game.i18n.format('WH40K.Voidcraft.Fire.NoRules', { type: system.weaponTypeLabel }));
             return;
         }
+        const bsModifiers = (id: string): ShipTestComponent[] =>
+            collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: id });
+        // The ship's other macrobatteries may join this one in a salvo (RT Core p.221).
+        const companions: ShipWeaponFireCompanion[] = [];
+        for (const other of actor.shipWeapons) {
+            const otherSystem = (other as ShipWeaponItem).system;
+            const otherClass = shipWeaponClass(otherSystem.weaponType);
+            const otherId = other.id;
+            if (otherId === null || otherId === weapon.id || otherClass !== 'macrobattery') continue;
+            companions.push({
+                id: otherId,
+                weapon: { name: other.name, img: other.img ?? '', weaponClass: otherClass, ...otherSystem.cardProfile },
+                shipModifiers: bsModifiers(otherId),
+            });
+        }
         const entry = createShipWeaponFireFlow({
             weapon: { name: weapon.name, img: weapon.img ?? '', weaponClass, ...system.cardProfile },
             ballisticSkill: actor.system.ballisticSkill,
-            shipModifiers: collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: weapon.id }),
+            shipModifiers: bsModifiers(weapon.id),
+            companions,
         });
         openShipAssaultDialog(actor, entry);
     }

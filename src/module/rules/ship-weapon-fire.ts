@@ -183,6 +183,8 @@ export function isShipCriticalHit(shot: ShipTestResult, critRating: number): boo
 export interface HitDamageRoll {
     readonly total: number;
     readonly formula: string;
+    /** The macrobattery that scored the hit, named on the row when hits from several are combined in a salvo. */
+    readonly weapon?: string;
 }
 
 /** The target's defences a shot's damage meets. */
@@ -204,11 +206,16 @@ export interface ShipHullDamage {
  * that dealt no hull damage adds 1 automatic point.
  */
 export function resolveHullDamage(weaponClass: ShipWeaponClass, damage: readonly HitDamageRoll[], target: ShipDamageTarget, critical: boolean): ShipHullDamage {
-    const components: ShipTestComponent[] = damage.map((roll, index) => ({
-        labelKey: 'WH40K.Voidcraft.Fire.Component.HitDamage',
-        value: roll.total,
-        data: { hit: index + 1, formula: roll.formula },
-    }));
+    const components: ShipTestComponent[] = damage.map(
+        (roll, index): ShipTestComponent =>
+            roll.weapon === undefined
+                ? { labelKey: 'WH40K.Voidcraft.Fire.Component.HitDamage', value: roll.total, data: { hit: index + 1, formula: roll.formula } }
+                : {
+                      labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoHitDamage',
+                      value: roll.total,
+                      data: { hit: index + 1, formula: roll.formula, weapon: roll.weapon },
+                  },
+    );
     const rolled = sumComponents(components);
     if (damage.length > 0) {
         if (weaponClass === 'lance') {
@@ -225,4 +232,118 @@ export function resolveHullDamage(weaponClass: ShipWeaponClass, damage: readonly
         components.push({ labelKey: 'WH40K.Voidcraft.Fire.Component.CriticalPoint', value: 1 });
     }
     return { components, hullLoss: Math.max(0, sumComponents(components)) };
+}
+
+/* -------------------------------------------- */
+/*  Macrobattery salvos                         */
+/* -------------------------------------------- */
+
+/*
+ * RT Core 1.4 errata, "Starship Weapons" (p.221): "If a ship fires multiple
+ * macrobatteries at a single target, before rolling to hit … the character
+ * directing the firing has the option of adding the totals together and
+ * applying the new, larger total to the target ship once … he can only
+ * inflict a maximum of one Critical Hit." Each battery still makes its own
+ * Ballistic Skill Test ("Even if all of the macrobatteries cause Critical Hits
+ * on their Ballistic Skill Tests, only one Critical Hit is applied"), and
+ * "Damage and Defences" (p.222): "the attacker chooses which hits are
+ * discarded by the void shields." Lances are never combined.
+ */
+
+/** One macrobattery's part in a salvo: its own test and the hits it scored. */
+export interface SalvoBatteryShot {
+    readonly name: string;
+    readonly damage: string;
+    readonly crit: number;
+    readonly test: ShipTestResult;
+    readonly scored: ScoredHits;
+}
+
+/** A salvo battery with the hits the void shields discarded from it. */
+export type ShieldedSalvoBattery = SalvoBatteryShot & { readonly cancelled: number };
+
+/** A whole damage formula: signed `NdM` and flat terms, nothing else. */
+const DAMAGE_FORMULA = /^[+-]?(?:\d*d\d+|\d+)(?:[+-](?:\d*d\d+|\d+))*$/u;
+
+/** One signed term of a damage formula. */
+const DAMAGE_TERM = /[+-]?[^+-]+/gu;
+
+/**
+ * The average of a ship weapon's Damage formula (`1d10+2`, `2d10`), used only
+ * to order which battery the void shields take hits from by default. A formula
+ * this cannot read averages Infinity, so it is never the default to discard.
+ */
+export function averageDamage(formula: string): number {
+    const compact = formula.replace(/\s+/gu, '').toLowerCase();
+    if (DAMAGE_FORMULA.exec(compact) === null) return Number.POSITIVE_INFINITY;
+    let total = 0;
+    for (const signed of compact.match(DAMAGE_TERM) ?? []) {
+        const sign = signed.startsWith('-') ? -1 : 1;
+        const term = signed.replace(/^[+-]/u, '');
+        const d = term.indexOf('d');
+        if (d < 0) {
+            total += sign * Number(term);
+        } else {
+            const count = term.slice(0, d);
+            total += sign * Number(count === '' ? '1' : count) * ((Number(term.slice(d + 1)) + 1) / 2);
+        }
+    }
+    return total;
+}
+
+/**
+ * The battery the attacker's void-shield choice should default to: the one
+ * whose hits are worth least (lowest average Damage), first listed on a tie.
+ */
+export function defaultShieldedBattery(batteries: readonly { readonly damage: string }[]): number {
+    const averages = batteries.map((battery) => averageDamage(battery.damage));
+    return Math.max(0, averages.indexOf(Math.min(...averages)));
+}
+
+/**
+ * Spend the target's raised void shields on the salvo's pooled hits: the
+ * attacker's chosen battery first, then the rest by lowest average Damage.
+ * Returns each battery, in battery order, with the hits it lost to the shields.
+ */
+export function allocateSalvoShields<T extends { readonly damage: string; readonly hits: number }>(
+    batteries: readonly T[],
+    shieldsUp: number,
+    first: number,
+): Array<T & { readonly cancelled: number }> {
+    const order = batteries
+        .map((battery, index) => ({ battery, index, average: averageDamage(battery.damage) }))
+        .sort((a, b) => (a.index === first ? -1 : b.index === first ? 1 : a.average - b.average || a.index - b.index));
+    const taken = new Map<number, number>();
+    let shields = Math.max(0, shieldsUp);
+    for (const { battery, index } of order) {
+        const lost = Math.min(battery.hits, shields);
+        taken.set(index, lost);
+        shields -= lost;
+    }
+    return batteries.map((battery, index) => ({ ...battery, cancelled: taken.get(index) ?? 0 }));
+}
+
+/**
+ * The pooled hits derivation of a salvo: each battery's hits, then each
+ * battery's hits the shields discarded, totalling the hits that land.
+ */
+export function salvoHitComponents(batteries: readonly ShieldedSalvoBattery[], target: { readonly name: string }): ShipTestComponent[] {
+    const scored = batteries.map((battery) => ({
+        labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoBatteryHits',
+        value: battery.scored.hits,
+        data: { weapon: battery.name },
+    }));
+    const shielded = batteries
+        .filter((battery) => battery.cancelled > 0)
+        .map((battery) => ({
+            labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoShields',
+            value: -battery.cancelled,
+            data: { ship: target.name, weapon: battery.name },
+        }));
+    return [...scored, ...shielded];
+}
+
+/** A salvo causes one Critical Hit at most, when any battery's test met its Crit Rating. */
+export function isSalvoCriticalHit(batteries: readonly SalvoBatteryShot[]): boolean {
+    return batteries.some((battery) => isShipCriticalHit(battery.test, battery.crit));
 }

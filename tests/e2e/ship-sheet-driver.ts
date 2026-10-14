@@ -95,7 +95,7 @@ export async function createShip(page: Page, fixture: ShipFixture): Promise<Crea
         interface ActorDoc {
             id: string;
             update: (data: object) => Promise<object>;
-            createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+            createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string; name: string }>>;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Actor` global has no browser-side types
         const g = globalThis as unknown as { Actor: { create: (data: object) => Promise<ActorDoc | null> } };
@@ -127,7 +127,8 @@ export async function createShip(page: Page, fixture: ShipFixture): Promise<Crea
                           system: { weaponType: w.weaponType, location: w.location, strength: w.strength, damage: w.damage, crit: w.crit, range: w.range },
                       })),
                   );
-        return { id: actor.id, weaponIds: weapons.map((w) => w.id) };
+        // createEmbeddedDocuments does not promise its input order once there are several items; match by name.
+        return { id: actor.id, weaponIds: fx.weapons.map((w) => weapons.find((created) => created.name === w.name)?.id ?? '') };
     }, fixture);
 }
 
@@ -483,7 +484,11 @@ export interface ShipWeaponShot {
     /** The gunner's Ballistic Skill typed into the dialog; the ship's own when omitted. */
     gunnerSkill?: number;
     rangeBand?: 'close' | 'standard' | 'long';
-    /** Die faces queued for the shot: the d100, each hit's damage, the 1d5 critical. */
+    /** Other macrobatteries ticked into a salvo (RT Core p.221), each with its own range band. */
+    salvo?: readonly { weaponId: string; rangeBand: 'close' | 'standard' | 'long' }[];
+    /** The battery the void shields take hits from first: `primary` or a salvo weapon's id. The dialog's default when omitted. */
+    shieldsFirst?: string;
+    /** Die faces queued for the shot: each d100, each hit's damage, the 1d5 critical. */
     faces: readonly number[];
     /** Screenshot label prefix: `<label>-weapons-tab`, `-dialog`, `-dialog-resolved`, `-card`. None when omitted. */
     label?: string;
@@ -496,6 +501,8 @@ export interface FiredWeapon {
     dialogTitle: string;
     /** Target-select options the dialog offered. */
     targets: string[];
+    /** Names of the dialog's input fields before Roll. */
+    inputNames: string[];
     /** Text of the dialog's preview card after Roll. */
     preview: string;
     unusedDice: number;
@@ -519,8 +526,14 @@ export async function fireWeaponFromSheet(page: Page, actorId: string, shot: Shi
     const root = `#${dialog} [data-wh40k-hook="ship-assault-dialog"]`;
     const dialogTitle = ((await page.locator(`#${dialog} .window-title`).textContent()) ?? '').trim();
     const targets = await pickDefender(page, root, shot.defender);
+    const inputNames = await page.locator(`${root} [name]`).evaluateAll((fields) => fields.map((field) => field.getAttribute('name') ?? ''));
     if (shot.gunnerSkill !== undefined) await fillField(page, dialog, 'gunnerSkill', shot.gunnerSkill);
     if (shot.rangeBand !== undefined) await page.locator(`${root} select[name="rangeBand"]`).selectOption(shot.rangeBand);
+    for (const battery of shot.salvo ?? []) {
+        await page.locator(`${root} input[type="checkbox"][name="salvo-${battery.weaponId}"]`).check();
+        await page.locator(`${root} select[name="salvoRange-${battery.weaponId}"]`).selectOption(battery.rangeBand);
+    }
+    if (shot.shieldsFirst !== undefined) await page.locator(`${root} select[name="shieldsFirst"]`).selectOption(shot.shieldsFirst);
     await snapAs('dialog', dialog);
 
     const before = await chatMessageIds(page);
@@ -534,7 +547,7 @@ export async function fireWeaponFromSheet(page: Page, actorId: string, shot: Shi
     const card = await waitForCard(page, before, hookMarker('ship-weapon-card'));
     const unusedDice = await releaseDice(page);
     if (shot.label !== undefined) await snapChatCard(page, `${shot.label}-card`, card.id);
-    return { card, dialogTitle, targets, preview, unusedDice };
+    return { card, dialogTitle, targets, inputNames, preview, unusedDice };
 }
 
 /** A posted chat message's card, read by id. */

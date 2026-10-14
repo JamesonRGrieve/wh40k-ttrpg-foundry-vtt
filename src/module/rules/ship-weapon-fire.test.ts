@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+    allocateSalvoShields,
     applyVoidShields,
+    averageDamage,
     composeGunneryTest,
     crippledStrength,
+    defaultShieldedBattery,
+    isSalvoCriticalHit,
     isShipCriticalHit,
+    salvoHitComponents,
+    type SalvoBatteryShot,
     rangeBandReach,
     resolveGunneryTest,
     resolveHullDamage,
@@ -170,5 +176,83 @@ describe('ship weapon fire (#184)', () => {
         const through = resolveHullDamage('macrobattery', [{ total: 18, formula: '1d10' }], raider, true);
         expect(through.hullLoss).toBe(3);
         expect(through.components.map((row) => row.labelKey)).not.toContain('WH40K.Voidcraft.Fire.Component.CriticalPoint');
+    });
+});
+
+describe('ship-weapon-fire — macrobattery salvos (RT Core p.221–222)', () => {
+    const raider = { name: 'Raider', armour: 15 };
+    const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
+    const battery = (name: string, damage: string, strength: number, roll: number, crit = 4): SalvoBatteryShot => {
+        const test = resolveGunneryTest(target, roll);
+        return { name, damage, crit, test, scored: scoreHits('macrobattery', strength, test, false) };
+    };
+
+    it('averages a ship weapon Damage formula, and never defaults to discarding an unreadable one', () => {
+        expect(averageDamage('1d10')).toBe(5.5);
+        expect(averageDamage('2d10')).toBe(11);
+        expect(averageDamage('1d10+2')).toBe(7.5);
+        expect(averageDamage('d5 - 1')).toBe(2);
+        expect(averageDamage('3')).toBe(3);
+        expect(averageDamage('1d10x')).toBe(Number.POSITIVE_INFINITY);
+        expect(averageDamage('')).toBe(Number.POSITIVE_INFINITY);
+    });
+
+    it('defaults the shields to the battery whose hits are worth least, first listed on a tie', () => {
+        expect(defaultShieldedBattery([{ damage: '2d10' }, { damage: '1d10+2' }, { damage: '1d10' }])).toBe(2);
+        expect(defaultShieldedBattery([{ damage: '1d10' }, { damage: '1d10' }])).toBe(0);
+    });
+
+    it('spends the shields on the attacker’s chosen battery first, then the cheapest', () => {
+        const pool = [
+            { damage: '2d10', hits: 2 },
+            { damage: '1d10', hits: 1 },
+            { damage: '1d10+2', hits: 3 },
+        ];
+        // "the attacker chooses which hits are discarded by the void shields" (p.222).
+        const lost = (shields: number, first: number): number[] => allocateSalvoShields(pool, shields, first).map((entry) => entry.cancelled);
+        expect(lost(2, 1)).toEqual([0, 1, 1]);
+        expect(lost(2, 0)).toEqual([2, 0, 0]);
+        expect(lost(9, 0)).toEqual([2, 1, 3]);
+        expect(lost(0, 0)).toEqual([0, 0, 0]);
+        // The batteries come back in their own order, carrying their fields.
+        expect(allocateSalvoShields(pool, 2, 1)[2]).toEqual({ damage: '1d10+2', hits: 3, cancelled: 1 });
+    });
+
+    it('derives the pooled hits by battery, then the shields by battery', () => {
+        const batteries = [
+            { ...battery('Port Battery', '1d10', 3, 29), cancelled: 1 },
+            { ...battery('Broadside', '2d10', 4, 40), cancelled: 0 },
+        ];
+        expect(salvoHitComponents(batteries, raider)).toEqual([
+            { labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoBatteryHits', value: 3, data: { weapon: 'Port Battery' } },
+            { labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoBatteryHits', value: 2, data: { weapon: 'Broadside' } },
+            { labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoShields', value: -1, data: { ship: 'Raider', weapon: 'Port Battery' } },
+        ]);
+    });
+
+    it('adds every battery’s hits into one total and subtracts Armour once', () => {
+        const damage = resolveHullDamage(
+            'macrobattery',
+            [
+                { total: 6, formula: '1d10', weapon: 'Port Battery' },
+                { total: 12, formula: '2d10', weapon: 'Broadside' },
+            ],
+            raider,
+            false,
+        );
+        // Separately, 6 and 12 each fail to pass Armour 15; combined, 18 − 15 = 3.
+        expect(damage.hullLoss).toBe(3);
+        expect(damage.components.filter((row) => row.labelKey === 'WH40K.Voidcraft.Fire.Component.Armour')).toHaveLength(1);
+        expect(damage.components[0]).toEqual({
+            labelKey: 'WH40K.Voidcraft.Fire.Component.SalvoHitDamage',
+            value: 6,
+            data: { hit: 1, formula: '1d10', weapon: 'Port Battery' },
+        });
+    });
+
+    it('causes at most one Critical Hit, when any battery met its Crit Rating', () => {
+        expect(isSalvoCriticalHit([battery('A', '1d10', 3, 1), battery('B', '1d10', 3, 1)])).toBe(true);
+        expect(isSalvoCriticalHit([battery('A', '1d10', 3, 29), battery('B', '1d10', 3, 1)])).toBe(true);
+        expect(isSalvoCriticalHit([battery('A', '1d10', 3, 29), battery('B', '1d10', 3, 40)])).toBe(false);
     });
 });

@@ -8,14 +8,19 @@
       • the hits — 1 + degrees (lance: per 3), capped at Strength, minus the target's void shields;
       • the Hull Integrity damage — each hit's roll, minus Armour (a lance ignores it), plus a critical's automatic point;
       • any Critical Hit roll, and the target's vitals before and after.
+    A combined macrobattery salvo (RT Core p.221) prints each battery's own test
+    and hits, then the pooled hits with the shields' discards by battery, one
+    damage total against Armour, and at most one Critical Hit.
 
     Context:
       weapon        — {name, img, typeLabel, locationLabel, strength, damage, crit, range}
       gameSystem    — the firing ship's line, for per-system variants
       attackerName / defenderName
-      test          — AssaultTestView (absent on a profile-only card)
-      hits, damage  — AssaultDamageView | null
-      missed, allShielded, critical, vitalsTitle, vitals [{label, before, after}], applied, unapplied
+      fired         — a shot was resolved (false/absent on a profile-only card)
+      test          — AssaultTestView of the clicked weapon
+      salvo         — {title, batteries [{test, hits}]} | null
+      hits, damage  — AssaultDamageView | null (a salvo's hits are the pooled ones)
+      missed, allShielded, critical, salvoCriticalLimit, vitalsTitle, vitals [{label, before, after}], applied, unapplied
 --}}
 <div data-wh40k-hook="ship-weapon-card" class="wh40k-rpg wh40k-ship-weapon-card tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.92)] tw-text-[#ece8de] tw-font-ui"
      data-wh40k-system="{{gameSystem}}">
@@ -56,8 +61,18 @@
         </div>
     </dl>
 
-    {{#if test}}
-        {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
+    {{#if fired}}
+        {{#if salvo}}
+            <p data-wh40k-hook="ship-weapon-salvo" class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-font-semibold tw-text-amber-200">{{salvo.title}}</p>
+            {{#each salvo.batteries as |battery|}}
+                {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=battery.test}}
+                {{#if battery.hits}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs damage=battery.hits}}
+                {{/if}}
+            {{/each}}
+        {{else}}
+            {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
+        {{/if}}
 
         {{#if missed}}
             <p class="tw-m-0 tw-mb-2 tw-text-[0.85rem] tw-text-amber-100">{{localize "WH40K.Voidcraft.Fire.Missed" ship=defenderName}}</p>
@@ -74,6 +89,7 @@
         {{#if critical}}
             <p data-wh40k-hook="ship-weapon-critical" class="tw-m-0 tw-mb-2 tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(248,113,113,0.6)] tw-bg-[rgba(127,29,29,0.35)] tw-text-[0.9rem] tw-font-semibold tw-text-red-100">
                 <i class="fas fa-burst" aria-hidden="true"></i> {{critical}}
+                {{#if salvoCriticalLimit}}<span class="tw-block tw-text-[0.8rem] tw-font-normal">{{localize "WH40K.Voidcraft.Fire.SalvoCriticalLimit"}}</span>{{/if}}
             </p>
         {{/if}}
 

@@ -45,6 +45,7 @@ import {
 
 const MACROBATTERY = { name: 'Sabre Macrobattery', weaponType: 'macrobattery', location: 'port', strength: 3, damage: '1d10', crit: 4, range: 6 } as const;
 const LANCE = { name: 'Sabre Lance', weaponType: 'lance', location: 'dorsal', strength: 1, damage: '1d10+4', crit: 4, range: 6 } as const;
+const BROADSIDE = { name: 'Sabre Broadside', weaponType: 'macrobattery', location: 'starboard', strength: 4, damage: '2d10', crit: 4, range: 6 } as const;
 
 const SABRE: ShipFixture = { ...RT_FRIGATE, name: 'Sabre', crewRating: 48, weapons: [MACROBATTERY, LANCE] };
 const RAIDER: ShipFixture = { ...RT_FRIGATE, name: 'Fire Target Raider', hullType: 'raider', armour: 15, hullIntegrity: 30, population: 60, morale: 50 };
@@ -185,6 +186,50 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
             await deleteActors(page, [sabre.id, raider.id]);
         }
         recordCoverage('ship-weapon.flow', 'crippled-half-strength');
+    });
+
+    test('two macrobatteries combined into one salvo: own tests, pooled hits, one Armour subtraction (#184)', async ({ page }) => {
+        await joinShipWorld(page);
+        const sabre = await createShip(page, { ...SABRE, weapons: [MACROBATTERY, LANCE, BROADSIDE] });
+        const raider = await createShip(page, RAIDER);
+        await setVoidShields(page, raider.id, 1);
+        const before = await chatMessageIds(page);
+        const [macroId = '', lanceId = '', broadsideId = ''] = sabre.weaponIds;
+        try {
+            // RT Core p.221: each battery tests on its own. The port battery: 48 + 10 (close) = 58, roll 29 → 3 hits.
+            // The broadside: 48 at standard range, roll 30 → 1 degree, 2 hits. The raider's shield discards one of
+            // the cheaper port hits (p.222, the attacker's choice). 9 + 7 + (6+6) + (5+5) = 38, less Armour 15 ONCE = 23.
+            // Fired one at a time, 16 and 22 would each lose 15 to Armour: 1 + 7 = 8.
+            const fired = await fireWeaponFromSheet(page, sabre.id, {
+                weaponId: macroId,
+                defender: RAIDER.name,
+                gunnerSkill: 48,
+                rangeBand: 'close',
+                salvo: [{ weaponId: broadsideId, rangeBand: 'standard' }],
+                faces: [29, 30, 9, 7, 6, 6, 5, 5],
+                label: 'ship-weapon-fire-salvo',
+            });
+            expect(fired.inputNames).toEqual(expect.arrayContaining([`salvo-${broadsideId}`, `salvoRange-${broadsideId}`, 'shieldsFirst']));
+            expect(fired.inputNames, 'a lance is never combined').not.toContain(`salvo-${lanceId}`);
+            expect(fired.unusedDice).toBe(0);
+
+            const { text, html } = fired.card;
+            expect(text).toContain('Combined salvo of 2 macrobatteries');
+            expect(text).toContain('Sabre Macrobattery: Ballistic Skill Test');
+            expect(text).toContain('Sabre Broadside: Ballistic Skill Test');
+            expect(text).toContain("Void shields (Fire Target Raider) take Sabre Macrobattery's hits -1");
+            expect(text).toContain('Hit 3: Sabre Broadside (2d10) 12');
+            expect(text.split('Armour (Fire Target Raider, 15) -15').length - 1, 'Armour is subtracted once').toBe(1);
+            expect(html.split('data-wh40k-hook="ship-assault-test"').length - 1, 'one test per battery').toBe(2);
+
+            expect(await readShip(page, raider.id)).toMatchObject({ hull: 7, population: 37, morale: 27 });
+            expect(await readShieldsUp(page, raider.id)).toBe(0);
+            expect(await snapShipVitals(page, raider.id, 'ship-weapon-fire-salvo-target-after')).toEqual({ hull: '7', morale: '27', population: '37' });
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [sabre.id, raider.id]);
+        }
+        recordCoverage('ship-weapon.flow', 'macrobattery-salvo');
     });
 
     test("the book's lance shot ignores Armour and its Critical Hit draws Table 8-12", async ({ page }) => {
