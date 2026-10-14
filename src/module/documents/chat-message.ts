@@ -1,4 +1,5 @@
 import { actorGameSystemId, isD100Success, printedDegrees, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { documentActions } from './document-actions.ts';
 
 /**
  * Minimal shape of a per-system item document as probed by chat-card actions.
@@ -253,9 +254,7 @@ export class ChatMessageWH40K extends ChatMessage {
                 const item = (await fromUuid(itemUuid)) as RollableItem | null;
                 const actor = item?.actor;
                 if (item !== null && actor !== null) {
-                    // Import and use targeted action manager
-                    const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
-                    DHTargetedActionManager.performWeaponAttack(actor as never, null, item as never);
+                    documentActions().performWeaponAttack(actor ?? null, item);
                 }
             }
             return;

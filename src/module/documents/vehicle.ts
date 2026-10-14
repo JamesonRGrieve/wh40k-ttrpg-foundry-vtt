@@ -1,8 +1,8 @@
-import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { occupantCandidateActors } from '../rules/vehicle-embark.ts';
 import { occupantsOf } from '../rules/vehicle-occupancy.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
+import { documentActions } from './document-actions.ts';
 
 type VehicleSystemData = WH40KBaseActor['system'] & {
     faction: string;
@@ -139,7 +139,7 @@ export class WH40KVehicle extends WH40KBaseActor {
         }
 
         game.wh40k.log(`Vehicle ${this.name} weapon ${item.name} fired by operator ${operator.name}`);
-        DHTargetedActionManager.performWeaponAttack(operator, null, item);
+        documentActions().performWeaponAttack(operator, item);
     }
 
     /**

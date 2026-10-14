@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../testing/model-import.ts';
+import { registerDocumentActionHandlers } from './document-actions.ts';
 
 describe('WH40KVehicle', () => {
     it('exports WH40KVehicle class', async () => {
@@ -67,8 +68,6 @@ describe('WH40KVehicle.rollItem — fires with the OPERATOR characteristics (RAW
     ): Promise<{ vehicle: { rollItem: (id: string) => Promise<void> }; spy: ReturnType<typeof vi.fn> } | undefined> {
         const mod = await importModelOrSkip(import('./vehicle.ts'));
         if (mod === undefined) return undefined;
-        const actions = await importModelOrSkip(import('../actions/targeted-action-manager.ts'));
-        if (actions === undefined) return undefined;
 
         const vehicle = Object.create(mod.WH40KVehicle.prototype) as { rollItem: (id: string) => Promise<void> };
         Object.defineProperty(vehicle, 'uuid', { value: VEH_UUID, writable: true });
@@ -78,7 +77,9 @@ describe('WH40KVehicle.rollItem — fires with the OPERATOR characteristics (RAW
         vi.stubGlobal('game', { actors: worldActors, user: { character }, wh40k: { log: (): void => undefined }, i18n: { format: (k: string): string => k } });
         vi.stubGlobal('canvas', { tokens: { placeables: [] } });
         vi.stubGlobal('ui', { notifications: { warn: (): void => undefined } });
-        const spy = vi.spyOn(actions.DHTargetedActionManager, 'performWeaponAttack').mockImplementation(() => undefined);
+        // The vehicle starts the attack through the document-action slot (hooks-manager fills it at init).
+        const spy = vi.fn();
+        registerDocumentActionHandlers({ performWeaponAttack: spy, performPsychicCast: vi.fn(), sendItemVocalizeChat: vi.fn() });
         return { vehicle, spy };
     }
 
@@ -95,7 +96,7 @@ describe('WH40KVehicle.rollItem — fires with the OPERATOR characteristics (RAW
         await ctx.vehicle.rollItem('w1');
         expect(ctx.spy).toHaveBeenCalledTimes(1);
         expect(ctx.spy.mock.calls[0]?.[0]).toBe(gunner); // operator's skill, not the vehicle's
-        expect(ctx.spy.mock.calls[0]?.[2]).toBe(weapon);
+        expect(ctx.spy.mock.calls[0]?.[1]).toBe(weapon);
     });
 
     it('falls back to the controlling character when nobody is crewing it', async () => {

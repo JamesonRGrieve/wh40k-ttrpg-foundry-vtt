@@ -55,6 +55,7 @@ import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { isActorWritable } from './actor-liveness.ts';
 import { isCharacterActorType } from './actor-types.ts';
+import { documentActions } from './document-actions.ts';
 import type { WH40KItem } from './item.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
@@ -1396,8 +1397,7 @@ export class WH40KBaseActor extends Actor {
             if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
                 this.rollCharacteristic(item.isRanged ? 'ballisticSkill' : 'weaponSkill', item.name);
             } else {
-                const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
-                DHTargetedActionManager.performWeaponAttack(this, null, item);
+                documentActions().performWeaponAttack(this, item);
             }
             return;
         }
@@ -1405,8 +1405,7 @@ export class WH40KBaseActor extends Actor {
             if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
                 this.rollCharacteristic('willpower', item.name);
             } else {
-                const { DHTargetedActionManager } = await import('../actions/targeted-action-manager.ts');
-                DHTargetedActionManager.performPsychicCast(this, null, item);
+                documentActions().performPsychicCast(this, item);
             }
             return;
         }
@@ -1425,7 +1424,6 @@ export class WH40KBaseActor extends Actor {
      * for non-weapon/non-psychic items). Shared by PC and NPC.
      */
     protected async _vocalizeItem(item: WH40KItem): Promise<void> {
-        const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
         // eslint-disable-next-line no-restricted-syntax -- boundary: benefit/description are per-item-type fields not on the shared system union; narrowed inline before string-vs-object dispatch
         const system = item.system as { benefit?: unknown; description?: unknown };
         const benefit = system.benefit;
@@ -1439,7 +1437,7 @@ export class WH40KBaseActor extends Actor {
                   (description as { value?: string }).value ?? ''
                 : '');
         const psyRating = this._rollPsyRating();
-        await DHBasicActionManager.sendItemVocalizeChat({
+        await documentActions().sendItemVocalizeChat({
             _gameSystemId: firstSystemId(this),
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- this.name is a Foundry document property that may be null; boundary: ?? is necessary here, not a DataModel schema gap
             actor: this.name ?? '',

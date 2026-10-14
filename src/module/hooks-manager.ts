@@ -8,6 +8,7 @@
 
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
+import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import {
     // Player sheets (default for {system}-character)
     DarkHeresy1PlayerSheet,
@@ -111,7 +112,8 @@ import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
 import { noteActorDeleting } from './documents/actor-liveness.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
-import { isCharacterActorType, type WH40KBaseActor } from './documents/base-actor.ts';
+import { isCharacterActorType, WH40KBaseActor } from './documents/base-actor.ts';
+import { registerDocumentActionHandlers } from './documents/document-actions.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
 import { registerArmouryRequisitionGate } from './integrations/armoury-requisition.ts';
@@ -296,6 +298,19 @@ export class HooksManager {
 
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
+        // Documents start rolls through this slot instead of importing the managers,
+        // which import the documents back (see documents/document-actions.ts).
+        registerDocumentActionHandlers({
+            performWeaponAttack: (attacker, weapon) => {
+                if (weapon instanceof WH40KItem && (attacker === null || attacker instanceof WH40KBaseActor)) {
+                    DHTargetedActionManager.performWeaponAttack(attacker, null, weapon);
+                }
+            },
+            performPsychicCast: (caster, power) => {
+                if (power instanceof WH40KItem && caster instanceof WH40KBaseActor) DHTargetedActionManager.performPsychicCast(caster, null, power);
+            },
+            sendItemVocalizeChat: async (data) => DHBasicActionManager.sendItemVocalizeChat(data),
+        });
 
         // #521: top-level WH40K scene control group with all system tools
         hooksOn('getSceneControlButtons', (controls: Record<string, foundry.applications.ui.SceneControls.Control>) => {

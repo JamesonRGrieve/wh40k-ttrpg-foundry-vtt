@@ -27,6 +27,18 @@ describe('import-cycle guards', () => {
         expect(importsOf(read('rolls/roll-helpers.ts'))).not.toContain('./action-data.ts');
     });
 
+    it('no document imports from actions/, statically or with import()', () => {
+        const dir = join(MODULE_ROOT, 'documents');
+        const offenders = readdirSync(dir, { recursive: true, encoding: 'utf8' })
+            .filter((file) => file.endsWith('.ts') && !file.endsWith('.test.ts'))
+            .filter((file) => {
+                const source = read(`documents/${file}`);
+                const dynamic = Array.from(source.matchAll(/import\(\s*'([^']+)'\s*\)/g), (m) => m[1]);
+                return [...importsOf(source), ...dynamic].some((spec) => spec.includes('actions/'));
+            });
+        expect(offenders).toEqual([]);
+    });
+
     it('global.d.ts does not import the character-creation or NPC application barrels', () => {
         const specs = importsOf(read('types/global.d.ts'));
         expect(specs).not.toContain('../applications/character-creation/_module.ts');
