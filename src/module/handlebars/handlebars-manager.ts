@@ -118,7 +118,6 @@ export class HandlebarManager {
             // Actor panels
             'systems/wh40k-rpg/templates/actor/panel/wounds-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fatigue-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/fate-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/inquest-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/corruption-panel.hbs',
