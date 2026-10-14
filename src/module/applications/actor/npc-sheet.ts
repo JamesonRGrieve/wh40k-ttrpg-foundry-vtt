@@ -22,7 +22,7 @@ import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import type { SkillLike } from './base-actor-sheet.ts';
-import CharacterSheet from './character-sheet.ts';
+import CharacterSheet, { DW_VEHICLE_PANEL, type SystemPanels } from './character-sheet.ts';
 import { npcArmourAtLocation } from './npc-armour-display.ts';
 
 /** Local trained-skill shape used by skill mutation handlers (loose superset of the schema). */
@@ -313,6 +313,17 @@ export default class NPCSheet extends CharacterSheet {
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
+
+    /* -------------------------------------------- */
+
+    /**
+     * The NPC tab renders one per-system panel: the DW vehicle panel. The
+     * character's other system panels belong to the Overview tab NPCs drop, and
+     * read ledgers the NPC DataModel does not have — a BC NPC has no
+     * `chaosAdvancements`, so building its Alignment panel threw "advances is not
+     * iterable" and no BC NPC sheet opened (#628).
+     */
+    static override SYSTEM_PANELS: SystemPanels = { dw: [DW_VEHICLE_PANEL] };
 
     /* -------------------------------------------- */
 

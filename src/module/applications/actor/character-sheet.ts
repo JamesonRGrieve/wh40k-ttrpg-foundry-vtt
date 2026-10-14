@@ -623,17 +623,23 @@ type UtilityMenuOption = {
  * under its `key`. Adding a system's panel is now a one-row edit. The exact
  * context-key names the `.hbs` partials read are preserved verbatim.
  */
-interface PanelBuilder {
+export interface PanelBuilder {
     key: string;
     build: (sheet: CharacterSheet) => object;
 }
+
+/** The per-system panels a sheet class builds into its render context. */
+export type SystemPanels = Partial<Record<GameSystemId, readonly PanelBuilder[]>>;
+
+/** DW vehicle Integrity panel — built for characters and, on their NPC tab, for DW NPCs. */
+export const DW_VEHICLE_PANEL: PanelBuilder = { key: 'vehiclePanel', build: (s) => s._prepareDwVehiclePanel() };
 
 /** OW pass-through panels read `system.*` by string key (no dedicated _prepare method yet). */
 function owSystemRecord(sheet: CharacterSheet): Record<string, unknown> {
     return sheet.actor.system;
 }
 
-const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
+const PANEL_BUILDERS: SystemPanels = {
     bc: [
         { key: 'alignmentPanel', build: (s) => s._prepareBcAlignmentPanel() },
         { key: 'psychicPanel', build: (s) => s._prepareBcPsychicPanel() },
@@ -650,7 +656,7 @@ const PANEL_BUILDERS: Partial<Record<GameSystemId, readonly PanelBuilder[]>> = {
         { key: 'astartesPanel', build: (s) => s._prepareDwAstartesPanel() },
         { key: 'oathPanel', build: (s) => s._prepareDwOathPanel() },
         { key: 'missionPanel', build: (s) => s._prepareDwMissionPanel() },
-        { key: 'vehiclePanel', build: (s) => s._prepareDwVehiclePanel() },
+        DW_VEHICLE_PANEL,
         { key: 'distinctionPanel', build: (s) => s._prepareDwDistinctionPanel() },
         { key: 'ammoPanel', build: (s) => s._prepareDwAmmoPanel() },
     ],
@@ -1025,6 +1031,16 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
+     * The per-system panels this sheet builds, keyed by game system. The
+     * character's are the Overview tab's panels, which read the character
+     * DataModel's advancement ledgers; a subclass whose actor type lacks those
+     * fields declares its own set.
+     */
+    static SYSTEM_PANELS: SystemPanels = PANEL_BUILDERS;
+
+    /* -------------------------------------------- */
+
+    /**
      * Template parts for the Acolyte sheet.
      * Each tab part shares the same container so they stack in one place.
      * Foundry V13 ApplicationV2 handles tab visibility automatically.
@@ -1197,12 +1213,12 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isIM = isIM;
         context.malignancyTestsDue = this.actor.usesMalignancyTest ? this.actor.system.malignancyTestsPending : 0;
 
-        // Per-system overview panels — table-driven (#282). Each system's entries
-        // (see PANEL_BUILDERS above) are written into the context under their exact
-        // partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no panels,
-        // and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
+        // Per-system panels — table-driven (#282). The sheet class's SYSTEM_PANELS
+        // entries for the active system are written into the context under their
+        // exact partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no
+        // panels, and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
         if (activeGameSystem !== null) {
-            for (const { key, build } of PANEL_BUILDERS[activeGameSystem] ?? []) {
+            for (const { key, build } of (this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem] ?? []) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic panel-context key written into the free-form CharacterSheetContext
                 (context as Record<string, unknown>)[key] = build(this);
             }
