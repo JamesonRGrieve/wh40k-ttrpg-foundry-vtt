@@ -1303,6 +1303,26 @@ const MANAGERS_EXTRA_FLOWS = [
 ];
 recordDimension('managers-extra.flow', covered['managers-extra.flow'], MANAGERS_EXTRA_FLOWS);
 
+// tests/e2e/event-tracker.spec.ts — the GM's Event Tracker dashboard and the
+// portrait journal link, clicked through with screenshots (#589, #590).
+const EVENT_TRACKER_FLOWS = ['timeline-day-resolve', 'pc-attitude-edit', 'journal-links-spawn-scene', 'vehicle-portrait-journal'];
+recordDimension('event-tracker.flow', covered['event-tracker.flow'], EVENT_TRACKER_FLOWS);
+
+// tests/e2e/inquest-tracker.spec.ts — the DH2 Party Overview Inquest panel and
+// the GM tracker's Revelation / Influence cards (#90).
+const INQUEST_FLOWS = ['panel-tracker-revelation-resolution', 'absent-on-dh1'];
+recordDimension('inquest.flow', covered['inquest.flow'], INQUEST_FLOWS);
+
+// tests/e2e/reinforcement-call.spec.ts — calling a Reinforcement Character from
+// its NPC sheet (#77).
+const REINFORCEMENT_FLOWS = ['daemonhost-caller-terms', 'enemies-without-peer-contribution'];
+recordDimension('reinforcement.flow', covered['reinforcement.flow'], REINFORCEMENT_FLOWS);
+
+// tests/e2e/weapon-modification.spec.ts — fitting and removing a weapon
+// modification personally from the weapon sheet (#136).
+const WEAPON_MODIFICATION_FLOWS = ['dh2-fit-and-remove', 'dh2-xenos-lore-then-fit', 'absent-on-dw'];
+recordDimension('weapon-modification.flow', covered['weapon-modification.flow'], WEAPON_MODIFICATION_FLOWS);
+
 // tests/e2e/handlebars-helpers-extra.spec.ts — src/module/handlebars/* +
 // src/module/helpers/* not driven by helpers.spec.ts.
 const HANDLEBARS_EXTRA_FLOWS = [
