@@ -39,6 +39,9 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
          */
         readonly #openPanels: Set<string> = new Set();
 
+        /** Expanding a tooltip panel stays usable on a locked sheet (#629). */
+        static VIEW_ONLY_ACTIONS: readonly string[] = ['toggleExpandable'];
+
         /**
          * Add expandable tooltip action handlers
          * @override

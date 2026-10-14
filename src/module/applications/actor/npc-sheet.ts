@@ -246,6 +246,9 @@ export default class NPCSheet extends CharacterSheet {
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
+    /** Expanding an ability's description stays usable on a locked NPC (#629). */
+    static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleAbilityDesc'];
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...CharacterSheet.DEFAULT_OPTIONS,

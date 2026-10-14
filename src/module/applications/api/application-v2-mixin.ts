@@ -6,6 +6,7 @@
 import { type AppSystemHandles, resolveAppSystemId } from './app-system-id.ts';
 import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
 import { applySystemDataset } from './apply-system-dataset.ts';
+import { collectViewOnlyActions, enableViewOnlyControls } from './view-only-actions.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
@@ -49,6 +50,15 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
          * @type {Record<string, ApplicationV2Config.PartConfiguration>}
          */
         static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {};
+
+        /* -------------------------------------------- */
+
+        /**
+         * Actions that only change what the viewer sees, never the document, so
+         * they stay usable on a locked sheet (#629). Subclasses list their own;
+         * the lists are unioned along the class chain.
+         */
+        static VIEW_ONLY_ACTIONS: readonly string[] = ['toggleCollapsed'];
 
         /* -------------------------------------------- */
         /*  Properties                                  */
@@ -254,6 +264,26 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
                     tag.querySelector(':scope > span')?.classList.add('remove');
                 }
             }
+        }
+
+        /* -------------------------------------------- */
+
+        /**
+         * Lock or unlock the sheet's form controls (Foundry calls this with `true`
+         * on every render of a sheet the user cannot edit). After Foundry disables
+         * them all, the controls bound to a view-only action are re-enabled, so a
+         * locked sheet can still expand details, switch tabs and open linked
+         * documents (#629). Declare such actions in `VIEW_ONLY_ACTIONS`.
+         */
+        _toggleDisabled(disabled: boolean): void {
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _toggleDisabled?: (this: BaseApplicationWH40K, disabled: boolean) => void;
+            };
+            prototype._toggleDisabled?.call(this, disabled);
+            if (!disabled) return;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: this.element is a Foundry runtime property not in ApplicationV2Ctor types
+            const element = (this as unknown as { element: HTMLElement }).element;
+            enableViewOnlyControls(element, collectViewOnlyActions(this.constructor as typeof BaseApplicationWH40K));
         }
 
         /* -------------------------------------------- */

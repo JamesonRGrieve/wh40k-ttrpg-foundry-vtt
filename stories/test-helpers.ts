@@ -147,6 +147,20 @@ export function captureActionClicks(container: HTMLElement): CapturedActionClick
 }
 
 /**
+ * Lock a rendered sheet the way Foundry's `DocumentSheetV2._toggleDisabled(true)`
+ * does for a document the user cannot edit (a compendium entry): every form
+ * control is disabled. Pair with `enableViewOnlyControls` to reproduce what the
+ * system's `_toggleDisabled` override shows a viewer (#629).
+ */
+export function lockSheetControls(container: ParentNode | HTMLElement): void {
+    for (const control of asParent(container).querySelectorAll<HTMLButtonElement | HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        'button, input, select, textarea',
+    )) {
+        control.disabled = true;
+    }
+}
+
+/**
  * Fill form fields and dispatch a submit on the enclosing form. Field names
  * map to `name="..."` attributes (e.g. `system.wounds.value`). Throws if a
  * named field is not present in the canvas.

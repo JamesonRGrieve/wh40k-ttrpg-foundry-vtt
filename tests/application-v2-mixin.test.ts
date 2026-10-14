@@ -102,4 +102,40 @@ describe('ApplicationV2Mixin', () => {
         expect(sidebar?.querySelector('[data-application-part="header"]')).not.toBeNull();
         expect(sidebar?.querySelector('[data-application-part="tabs"]')).not.toBeNull();
     });
+
+    it('keeps view-only actions usable when a locked sheet disables its controls (#629)', async () => {
+        installFoundryStubs();
+        vi.resetModules();
+
+        const { default: ApplicationV2Mixin } = await import('../src/module/applications/api/application-v2-mixin.ts');
+
+        /** Stands in for DocumentSheetV2, whose `_toggleDisabled` disables every form control. */
+        class LockingDocumentSheet extends BaseTestApplication {
+            _toggleDisabled(disabled: boolean): void {
+                for (const control of this.element.querySelectorAll('button')) control.disabled = disabled;
+            }
+        }
+
+        // eslint-disable-next-line no-restricted-syntax -- boundary: bridging the structural LockingDocumentSheet into Foundry's ApplicationV2Ctor shape for the mixin.
+        class LockedWeaponSheet extends ApplicationV2Mixin(LockingDocumentSheet as unknown as ApplicationV2Ctor) {
+            static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleBody'];
+        }
+
+        const root = document.createElement('div');
+        root.innerHTML = `
+            <button type="button" data-action="toggleBody">Show Details</button>
+            <button type="button" data-action="toggleCollapsed">Collapse</button>
+            <button type="button" data-action="rollDamage">Roll</button>
+        `;
+        const app = new LockedWeaponSheet(root);
+        const button = (action: string): HTMLButtonElement | null => root.querySelector<HTMLButtonElement>(`[data-action="${action}"]`);
+
+        app._toggleDisabled(true);
+        expect(button('toggleBody')?.disabled).toBe(false);
+        expect(button('toggleCollapsed')?.disabled).toBe(false);
+        expect(button('rollDamage')?.disabled).toBe(true);
+
+        app._toggleDisabled(false);
+        expect(button('rollDamage')?.disabled).toBe(false);
+    });
 });

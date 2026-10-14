@@ -99,6 +99,9 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         return super.inEditMode && WH40KSettings.freeformOwnedGate(this.isOwnedByActor);
     }
 
+    /** Show Details, section collapse and opening a quality or modification stay usable on a locked weapon (#629). */
+    static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleBody', 'toggleSection', 'openQuality', 'viewModification'];
+
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

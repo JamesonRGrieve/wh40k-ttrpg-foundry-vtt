@@ -70,6 +70,9 @@ export function embeddedEffectChoices(sheet: BaseItemSheet): EffectChoice[] {
 }
 
 export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH40KItemDocument> extends FreeformGatedItemSheet<TItem> {
+    /** Opening a referenced document stays usable on a locked sheet (#629). */
+    static override VIEW_ONLY_ACTIONS: readonly string[] = ['viewReference'];
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...FreeformGatedItemSheet.DEFAULT_OPTIONS,

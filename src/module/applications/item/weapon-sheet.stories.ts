@@ -6,8 +6,9 @@ import { expect, within } from 'storybook/test';
 import { mockWeaponSheetContext } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, lockSheetControls, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-weapon-sheet.hbs?raw';
+import { collectViewOnlyActions, enableViewOnlyControls } from '../api/view-only-actions.ts';
 
 initializeStoryHandlebars();
 
@@ -187,6 +188,49 @@ export const RendersToggleBodyAction: Story = {
         await expect(btn).toBeTruthy();
         // Dispatch click — verifies event wires without Foundry runtime
         btn?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    },
+};
+
+// ── Locked compendium weapon (#629) ───────────────────────────────────────────
+//
+// A compendium weapon is locked: Foundry disables every control of its sheet.
+// The system re-enables the controls whose action is view-only — the weapon
+// sheet declares toggleBody, toggleSection, openQuality and viewModification in
+// WeaponSheet.VIEW_ONLY_ACTIONS (the sheet class needs Foundry to load, so the
+// story names the same list) — so a viewer can still open "Show Details".
+
+const WEAPON_VIEW_ONLY_ACTIONS: ReadonlySet<string> = collectViewOnlyActions(
+    class {
+        static VIEW_ONLY_ACTIONS: readonly string[] = ['toggleBody', 'toggleSection', 'openQuality', 'viewModification', 'toggleCollapsed'];
+    },
+);
+
+export const LockedCompendiumShowDetails: Story = {
+    name: 'Locked compendium — Show Details stays usable',
+    args: { overrides: { editable: false, inEditMode: false, bodyCollapsed: true } },
+    render: (args: Args) => {
+        const el = renderSheet(templateSrc, mockWeaponSheetContext(args.overrides));
+        lockSheetControls(el);
+        enableViewOnlyControls(el, WEAPON_VIEW_ONLY_ACTIONS);
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const clicks = captureActionClicks(canvasElement);
+        const showDetails = canvasElement.querySelector<HTMLButtonElement>('button[data-action="toggleBody"]');
+        await expect(showDetails).not.toBeNull();
+        await expect(showDetails?.disabled).toBe(false);
+        await expect(within(canvasElement).getByText('Show Details')).toBeVisible();
+
+        // Every control bound to an editing action stays locked.
+        const locked = [...canvasElement.querySelectorAll<HTMLButtonElement>('button[data-action]')].filter(
+            (button) => !WEAPON_VIEW_ONLY_ACTIONS.has(button.dataset['action'] ?? ''),
+        );
+        await expect(locked.length).toBeGreaterThan(0);
+        await expect(locked.filter((button) => !button.disabled).map((button) => button.dataset['action'])).toEqual([]);
+
+        // A real click reaches the action dispatcher; a disabled control's would not.
+        showDetails?.click();
+        await expect(clicks.map((c) => c.action)).toEqual(['toggleBody']);
     },
 };
 

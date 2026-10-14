@@ -66,6 +66,9 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
 
     /* -------------------------------------------- */
 
+    /** Section collapse stays usable on a locked item sheet (#629). */
+    static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleSection'];
+
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

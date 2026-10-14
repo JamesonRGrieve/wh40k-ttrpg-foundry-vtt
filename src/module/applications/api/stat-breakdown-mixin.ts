@@ -54,6 +54,9 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
 
         declare document: WH40KBaseActorDocument | WH40KItemDocument;
 
+        /** Showing a stat's breakdown and opening its sources stay usable on a locked sheet (#629). */
+        static VIEW_ONLY_ACTIONS: readonly string[] = ['showStatBreakdown', 'viewBreakdownSource'];
+
         /**
          * Add stat breakdown action handlers
          * @override

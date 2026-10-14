@@ -194,6 +194,9 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
     /*  Static Configuration                        */
     /* -------------------------------------------- */
 
+    /** Tab switching and opening a granted item stay usable on a locked talent (#629). */
+    static override VIEW_ONLY_ACTIONS: readonly string[] = ['switchTab', 'viewGrantedItem'];
+
     /** @override */
     /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {

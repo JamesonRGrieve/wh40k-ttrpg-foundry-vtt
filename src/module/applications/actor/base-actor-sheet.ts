@@ -327,6 +327,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
     /* -------------------------------------------- */
 
+    /**
+     * Section dropdowns, skill info and opening an owned item's (equally locked)
+     * sheet stay usable on a locked actor sheet (#629).
+     */
+    static VIEW_ONLY_ACTIONS: readonly string[] = ['toggleSection', 'viewSkillInfo', 'itemEdit'];
+
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         /* eslint-disable @typescript-eslint/unbound-method -- Foundry's action dispatcher binds `this` to the sheet instance at invocation time. */
