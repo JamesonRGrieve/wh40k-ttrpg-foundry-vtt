@@ -22,7 +22,8 @@ import { scaledMs } from './lib/timing';
  * Photon Flash, Smoke, Psychotroke and Tears of the Emperor.
  *
  * - the Frag Grenade reads as a grenade, needs no Weapon Training, and its damage
- *   adds no Strength Bonus;
+ *   adds no Strength Bonus; its damage prompt shows the whole "Explosive" damage type
+ *   inside the select (#624);
  * - throwing the Photon Flash Grenade from the sheet opens the grenade dialog on
  *   that grenade, listing the four rider grenades and not the Frag Grenade;
  * - picking another grenade in the dialog shows its rider (Psychotroke's step-up);
@@ -39,6 +40,7 @@ const GRENADE_THROW_FLOWS = [
     'frag-reads-as-grenade',
     'grenade-needs-no-training',
     'grenade-damage-adds-no-strength-bonus',
+    'damage-prompt-type-unclipped',
     'save-grenade-opens-dialog-on-it',
     'dialog-lists-only-rider-grenades',
     'dialog-selection-shows-its-rider',
@@ -85,7 +87,16 @@ const TOKENS = [
     { key: 'near', name: 'Accomplice', type: 'dh2-npc', x: 800, y: 500, system: { characteristics: { agility: { base: 30 } } } },
 ];
 
+/** The damage prompt's damage-type select (#624): its chosen option, its content height and the option's line height. */
+interface TypeSelectRead {
+    text: string;
+    contentHeight: number;
+    lineHeight: number;
+}
+
 interface ProbeRead {
+    /** The damage prompt's damage-type select, or null when the prompt did not open. */
+    typeSelect: TypeSelectRead | null;
     fragClass: string;
     fragType: string;
     fragIsGrenade: boolean;
@@ -131,7 +142,21 @@ async function probeFrag(page: Page, actorId: string): Promise<ProbeRead> {
         const actor = g.game.actors.get(id);
         const frag = actor?.items.contents.find((item) => item.name === 'Frag Grenade');
         if (actor === undefined || frag === undefined)
-            return { fragClass: '', fragType: '', fragIsGrenade: false, trained: false, damageFormula: null, damageAppId: null };
+            return { fragClass: '', fragType: '', fragIsGrenade: false, trained: false, damageFormula: null, damageAppId: null, typeSelect: null };
+        /** The damage-type select's chosen option and the box it must fit in (#624). */
+        const readTypeSelect = (appId: string | null): TypeSelectRead | null => {
+            const select = appId === null ? null : document.querySelector<HTMLSelectElement>(`#${appId} [data-damage-type-select]`);
+            if (select === null) return null;
+            const style = getComputedStyle(select);
+            const fontSize = parseFloat(style.fontSize);
+            const parsedLine = parseFloat(style.lineHeight);
+            return {
+                text: Array.from(select.selectedOptions, (option) => option.textContent.trim()).join(''),
+                contentHeight: select.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom),
+                // `line-height: normal` reports no pixel value; it is ~1.2× the font size.
+                lineHeight: Number.isNaN(parsedLine) ? fontSize * 1.2 : parsedLine,
+            };
+        };
         const rulesRoot = '/systems/wh40k-rpg/module/rules';
         const grenadeModule = (await import(/* @vite-ignore */ `${rulesRoot}/grenade-weapon.js`)) as {
             isGrenadeWeapon: (s: object) => boolean;
@@ -155,6 +180,7 @@ async function probeFrag(page: Page, actorId: string): Promise<ProbeRead> {
             trained: trainingModule.checkWeaponTraining(actor, frag).trained,
             damageFormula: typeof prompt?.rollData?.damage === 'string' ? prompt.rollData.damage : null,
             damageAppId: prompt?.id ?? null,
+            typeSelect: readTypeSelect(prompt?.id ?? null),
         };
     }, actorId);
 }
@@ -233,6 +259,12 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
                 'grenade-damage-adds-no-strength-bonus',
                 frag.damageFormula === FRAG_DAMAGE,
                 `damage prompt formula ${String(frag.damageFormula)}, expected ${FRAG_DAMAGE} (Strength Bonus ${STRENGTH_BONUS} must not be added)`,
+            );
+            const select = frag.typeSelect;
+            record(
+                'damage-prompt-type-unclipped',
+                select !== null && select.text === 'Explosive' && select.lineHeight <= select.contentHeight,
+                `damage-type select ${JSON.stringify(select)}: "Explosive" must fit the select's content box`,
             );
             if (frag.damageAppId !== null) {
                 await clearScreenOverlays(page, frag.damageAppId);

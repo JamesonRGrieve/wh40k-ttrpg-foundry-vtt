@@ -2446,6 +2446,13 @@
             },
             "BarterTitle": "Barter",
             "DamageRollTitle": "Damage Roll",
+            "DamagePrompt": {
+                "Title": "{name} Damage",
+                "PsychicRating": "Psychic Rating",
+                "Formula": "Damage Formula",
+                "Type": "Damage Type",
+                "Penetration": "Penetration"
+            },
             "RollModifierTitle": "Roll Modifier",
             "AssignDamageTitle": "Assign Damage",
             "AmmoPicker": {

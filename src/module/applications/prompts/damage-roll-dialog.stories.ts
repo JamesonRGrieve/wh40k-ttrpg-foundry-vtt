@@ -50,11 +50,36 @@ export const PsychicPower: Story = {
     },
 };
 
-/** Confirms the damage formula field reflects the configured value. */
+/** Confirms the damage formula field reflects the configured value, and every label comes from the langpack. */
 export const FormulaField: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText(/Bolter Damage/)).toBeTruthy();
+        await expect(['Damage Formula', 'Damage Type', 'Penetration'].map((label) => view.queryByText(label) !== null)).toEqual([true, true, true]);
         assertField(canvasElement, 'damage', '1d10+5');
+    },
+};
+
+/**
+ * A grenade's Explosive damage type (#624): the select's chosen option sits inside its box.
+ * Foundry gives a select a fixed height and a matching line height, so the select clears
+ * its vertical padding and sets its own height and line height; the option's line then
+ * fits the box's content height instead of being pushed below it.
+ */
+export const ExplosiveTypeUnclipped: Story = {
+    args: { name: 'Frag Grenade', damage: '2d10', penetration: '0', damageType: 'explosive' },
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('[data-damage-type-select]');
+        if (select === null) throw new Error('no damage-type select');
+        await expect(select.value).toBe('explosive');
+        await expect(select.className).toContain('tw-py-0');
+        await expect(select.className).toContain('tw-h-10');
+        await expect(select.className).toContain('tw-leading-normal');
+        const style = getComputedStyle(select);
+        const contentHeight = select.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+        const fontSize = parseFloat(style.fontSize);
+        // `line-height: normal` reports no pixel value; it is ~1.2× the font size.
+        const lineHeight = Number.isNaN(parseFloat(style.lineHeight)) ? fontSize * 1.2 : parseFloat(style.lineHeight);
+        await expect(lineHeight).toBeLessThanOrEqual(contentHeight);
     },
 };

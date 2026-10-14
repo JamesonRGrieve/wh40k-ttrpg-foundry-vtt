@@ -1,20 +1,23 @@
 {{! Damage Roll Prompt }}
+{{!-- The damage-type select sets its own height, line height and padding (#624): Foundry's
+      chrome gives a select a fixed height and a line height to match, so the old vertical
+      padding pushed the chosen option ("Explosive") below the box and clipped it. --}}
 <div class="tw-relative tw-font-ui tw-text-[#e8e4d9] tw-p-5" autocomplete="off">
-    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title=(concat name " Damage")}}
+    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs title=(localize "WH40K.Dialog.DamagePrompt.Title" name=name)}}
         {{#if psychicPower}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Psychic Rating"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Dialog.DamagePrompt.PsychicRating"}}
                 <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[80px] tw-text-center tw-w-20" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
         {{/if}}
-        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Formula"}}
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Dialog.DamagePrompt.Formula"}}
             <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px]" type="text" id="damage" name="damage" value="{{damage}}" />
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Type"}}
-            <select class="tw-w-full tw-min-h-[40px] tw-px-3 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" id="damageType" name="damageType">
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Dialog.DamagePrompt.Type"}}
+            <select class="tw-w-full tw-h-10 tw-py-0 tw-px-3 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-cursor-pointer tw-appearance-none tw-min-w-[140px]" id="damageType" name="damageType" data-damage-type-select>
                 {{selectOptions (arrayToObject dh.combat.damage_types) selected=damageType}}
             </select>
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Penetration" last=true}}
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Dialog.DamagePrompt.Penetration" last=true}}
             <input class="tw-px-3.5 tw-py-2.5 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.08)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] tw-font-medium tw-min-w-[120px]" type="text" id="penetration" name="penetration" value="{{penetration}}" />
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
     {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}

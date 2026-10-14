@@ -672,6 +672,7 @@ const GRENADE_THROW_FLOWS = [
     'frag-reads-as-grenade',
     'grenade-needs-no-training',
     'grenade-damage-adds-no-strength-bonus',
+    'damage-prompt-type-unclipped',
     'save-grenade-opens-dialog-on-it',
     'dialog-lists-only-rider-grenades',
     'dialog-selection-shows-its-rider',
