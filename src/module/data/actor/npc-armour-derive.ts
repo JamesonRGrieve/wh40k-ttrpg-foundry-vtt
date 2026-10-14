@@ -33,7 +33,7 @@ export function npcArmourSource(wearsArmour: boolean, authored: boolean): NpcArm
 }
 
 /** The derived AP an NPC's armour block takes, or null when its stat block stands. */
-export type DerivedNpcArmour = Pick<NpcArmour, 'mode' | 'total'> & { locations: Record<string, number> };
+export type DerivedNpcArmour = Pick<NpcArmour, 'mode' | 'total' | 'locations'>;
 
 /**
  * Derive an NPC's armour from its items, or return null when its authored stat
@@ -43,12 +43,22 @@ export function deriveNpcArmour(actor: WH40KBaseActor, authored: boolean): Deriv
     const source = npcArmourSource(hasWornArmour(actor), authored);
     if (source === 'statBlock') return null;
     const derived = computeArmour(actor, { equippedOnly: source === 'worn' });
-    const locations: Record<string, number> = {};
-    let total = 0;
-    for (const [location, loc] of Object.entries(derived)) {
-        const ap = Math.max(0, loc.total - loc.toughnessBonus);
-        locations[location] = ap;
-        total = Math.max(total, ap);
-    }
+    // computeArmour seeds every body location, so the six the stat block names
+    // are always present; any further location it reports is carried as well.
+    const apAt = (location: string): number => {
+        const loc = derived[location];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types this index as possibly undefined, tsconfig.test.json (ESLint's project) does not
+        return loc === undefined ? 0 : Math.max(0, loc.total - loc.toughnessBonus);
+    };
+    const locations: NpcArmour['locations'] = {
+        head: apAt('head'),
+        body: apAt('body'),
+        leftArm: apAt('leftArm'),
+        rightArm: apAt('rightArm'),
+        leftLeg: apAt('leftLeg'),
+        rightLeg: apAt('rightLeg'),
+    };
+    for (const location of Object.keys(derived)) locations[location] = apAt(location);
+    const total = Math.max(0, ...Object.values(locations));
     return { mode: 'locations', total, locations };
 }
