@@ -1,4 +1,4 @@
-import { getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { actorGameSystemId, isD100Success, printedDegrees, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 
 /**
  * Minimal shape of a per-system item document as probed by chat-card actions.
@@ -94,8 +94,9 @@ export class ChatMessageWH40K extends ChatMessage {
         if (total === undefined) return null;
         const targetNum = Number(target);
         const success = isD100Success(total, targetNum);
-        const method = resolveDegreesMethod((this.speakerActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-        const degrees = 1 + (success ? getDegreeForMode(method, targetNum, total) : getDegreeForMode(method, total, targetNum));
+        // The badge prints the line's own count (#335): Gen 1 has no base degree.
+        const method = resolveDegreesMethod(actorGameSystemId(this.speakerActor));
+        const degrees = printedDegrees(method, success, targetNum, total);
 
         return { success, degrees };
     }

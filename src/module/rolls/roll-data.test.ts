@@ -177,10 +177,48 @@ describe('WeaponRollData target-condition modifiers (Path B)', () => {
 describe('result formula transparency (#… — central derivation in ActionData)', () => {
     const actionData = readRepoFile('src/module/rolls/action-data.ts');
 
-    it('ActionData builds a localized result formula from the final degrees and roll vs target', () => {
-        expect(actionData).toContain('this.rollData.resultFormula');
-        expect(actionData).toContain('WH40K.Roll.ResultFormula.Success');
-        expect(actionData).toContain('WH40K.Roll.ResultFormula.Failure');
+    it('ActionData builds the result formula through the shared per-method readout (#335)', () => {
+        expect(actionData).toContain('this.rollData.resultFormula = degreesResultFormula(');
+        // The method is stamped where the degrees are counted, so the card prints the line's own count.
+        expect(actionData).toContain('this.rollData.degreesMethod = degreesMethod;');
+    });
+});
+
+describe('RollData.printedDegrees — the count the card shows (#335)', () => {
+    function resolved(method: 'gen1' | 'gen2', success: boolean, count: number): RollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one getter
+        const rd = Object.create(RollData.prototype) as RollData;
+        rd.degreesMethod = method;
+        rd.success = success;
+        rd.dos = success ? count : 0;
+        rd.dof = success ? 0 : count;
+        return rd;
+    }
+
+    it('a DH1 (Gen 1) 01 vs 75 prints 7 DoS from the engine count of 8', () => {
+        expect(resolved('gen1', true, 8).printedDegrees).toEqual({ dos: 7, dof: 0 });
+    });
+
+    it('Gen 2 prints the engine count unchanged', () => {
+        expect(resolved('gen2', true, 8).printedDegrees).toEqual({ dos: 8, dof: 0 });
+        expect(resolved('gen2', false, 3).printedDegrees).toEqual({ dos: 0, dof: 3 });
+    });
+
+    it('a Gen 1 narrow failure prints 0 DoF', () => {
+        expect(resolved('gen1', false, 1).printedDegrees).toEqual({ dos: 0, dof: 0 });
+    });
+});
+
+describe('RollData.gameSystemId reads an NPC DataModel static (#335, #607)', () => {
+    it("resolves an NPC's line from its DataModel class, so its rolls use that line's rules", () => {
+        class Dh1NpcModel {
+            static gameSystem = 'dh1';
+        }
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one getter
+        const rd = Object.create(RollData.prototype) as RollData;
+        // eslint-disable-next-line no-restricted-syntax -- test: an NPC actor reduced to the DataModel surface the getter reads
+        rd.sourceActor = { system: new Dh1NpcModel() } as unknown as RollData['sourceActor'];
+        expect(rd.gameSystemId).toBe('dh1');
     });
 });
 

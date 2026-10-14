@@ -810,7 +810,9 @@
             "ResultFormula": {
                 "Success": "{dos} DoS = 1 + {degree} (roll {roll} vs target {target})",
                 "Failure": "{dof} DoF = 1 + {degree} (roll {roll} vs target {target})",
-                "Tooltip": "Degrees = 1 + the difference between the roll and the target, by tens under the active degrees mode (DH2 Gen 2 = tens digit; Gen 1 = margin ÷ 10)."
+                "SuccessGen1": "{dos} DoS = ⌊{margin} ÷ 10⌋ (roll {roll} vs target {target})",
+                "FailureGen1": "{dof} DoF = ⌊{margin} ÷ 10⌋ (roll {roll} vs target {target})",
+                "Tooltip": "Gen 2 (DH2, BC, OW): 1 + the difference between the tens digits of the roll and the target. Gen 1 (DH1, DW, RT): one degree for each full 10 points of margin, with no base degree."
             },
             "HitCeiling": {
                 "Label": "Max hits",

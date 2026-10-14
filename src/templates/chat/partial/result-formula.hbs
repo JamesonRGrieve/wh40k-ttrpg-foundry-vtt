@@ -1,0 +1,6 @@
+{{!-- The degrees readout under a roll card's DoS / DoF count (#335, #489): how the
+      line counted the degrees from the roll and the target. Reads `resultFormula`
+      from the roll context; renders nothing when the roll has none. --}}
+{{#if resultFormula}}
+    <div class="tw-text-center tw-py-1 tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)] tw-cursor-help" data-wh40k-hook="result-formula" data-tooltip="{{localize "WH40K.Roll.ResultFormula.Tooltip"}}">{{resultFormula}}</div>
+{{/if}}

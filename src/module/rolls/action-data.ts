@@ -85,6 +85,7 @@ import { resolveGainedMalignancy } from './malignancy-outcome.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import {
     type ChatCardFlags,
+    degreesResultFormula,
     emitChatFromTemplate,
     getDegreeForMode,
     isD100Success,
@@ -697,26 +698,21 @@ export class ActionData {
             }
         }
 
-        // Transparency readout: derive the result formula from the final degrees
-        // and the roll vs target, for the chat card (#…). Method-agnostic phrasing
-        // (`1 + degree`) — the exact degrees method is explained in the card's
-        // hover. Skipped for automatic / degree-less resolutions.
+        // Transparency readout: the degrees the line PRINTS and how they were
+        // counted under its method (#335) — Gen 1 has no base degree. Skipped for
+        // automatic / degree-less resolutions.
+        this.rollData.degreesMethod = degreesMethod;
         if (!this.rollData.ignoreDegrees) {
-            const rollTotalForFormula = this.rollData.roll?.total ?? 0;
-            const target = this.rollData.modifiedTarget;
-            this.rollData.resultFormula = this.rollData.success
-                ? game.i18n.format('WH40K.Roll.ResultFormula.Success', {
-                      dos: String(this.rollData.dos),
-                      degree: String(this.rollData.dos - 1),
-                      roll: String(rollTotalForFormula),
-                      target: String(target),
-                  })
-                : game.i18n.format('WH40K.Roll.ResultFormula.Failure', {
-                      dof: String(this.rollData.dof),
-                      degree: String(this.rollData.dof - 1),
-                      roll: String(rollTotalForFormula),
-                      target: String(target),
-                  });
+            this.rollData.resultFormula = degreesResultFormula(
+                {
+                    method: degreesMethod,
+                    success: this.rollData.success,
+                    count: this.rollData.success ? this.rollData.dos : this.rollData.dof,
+                    roll: this.rollData.roll?.total ?? 0,
+                    target: this.rollData.modifiedTarget,
+                },
+                (key, data) => game.i18n.format(key, data),
+            );
         }
     }
 

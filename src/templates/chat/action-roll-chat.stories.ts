@@ -58,6 +58,8 @@ interface ActionRollData {
     success?: boolean;
     dos?: number;
     dof?: number;
+    /** The degrees the line prints (#335): Gen 1 drops the engine's base degree. */
+    printedDegrees?: { dos: number; dof: number };
     resultFormula?: string;
     hitLocation?: string;
     // Keep the focus on transparency: suppress the action-control button row.
@@ -654,5 +656,57 @@ export const NoHitCeilingOnSingleShot: Story = {
     render: (args) => renderCard(args),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-hit-ceiling]')).toBeNull();
+    },
+};
+
+// ── Printed degrees per method (#335) ────────────────────────────────────────
+
+/** A 01 against 75: the engine counts 8 in both methods; the card prints the line's own count. */
+function naturalOneVs75(gameSystem: SystemId, printed: number, resultFormula: string): ActionRollChatCtx {
+    return {
+        id: `roll-degrees-${gameSystem}`,
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({
+            gameSystem,
+            baseTarget: 75,
+            modifiedTarget: 75,
+            modifierSources: [],
+            roll: { total: 1 },
+            dos: 8,
+            printedDegrees: { dos: printed, dof: 0 },
+            resultFormula,
+        }),
+        effectOutput: [],
+    };
+}
+
+/** DH1 core p. 184: one degree per full 10 points of margin, no base degree — 74 → 7. */
+export const Dh1PrintedDegrees: Story = {
+    name: 'DH1 (Gen 1) — 01 vs 75 prints 7 DoS',
+    args: naturalOneVs75('dh1', 7, '7 DoS = ⌊74 ÷ 10⌋ (roll 1 vs target 75)'),
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="degrees-count"]')?.textContent).toBe('7');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="result-formula"]')?.textContent).toBe('7 DoS = ⌊74 ÷ 10⌋ (roll 1 vs target 75)');
+    },
+};
+
+/** DH2 (Gen 2) counts the initial degree: 1 + 7 = 8. */
+export const Dh2PrintedDegrees: Story = {
+    name: 'DH2 (Gen 2) — 01 vs 75 prints 8 DoS',
+    args: naturalOneVs75('dh2', 8, '8 DoS = 1 + 7 (roll 1 vs target 75)'),
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="degrees-count"]')?.textContent).toBe('8');
+    },
+};
+
+/** A context without the printed count (an older caller) still shows the engine's `dos`. */
+export const DegreesWithoutPrintedCount: Story = {
+    name: 'No printed count — falls back to dos',
+    args: { id: 'roll-legacy-degrees', label: 'Ballistic Skill Test', rollData: successRollData(), effectOutput: [] },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="degrees-count"]')?.textContent).toBe('3');
     },
 };

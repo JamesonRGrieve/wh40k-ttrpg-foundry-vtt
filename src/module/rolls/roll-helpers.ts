@@ -38,10 +38,43 @@ export function getDegree(a: number, b: number): number {
  * the Gen-2 method (closest to its Success-Level rule). */
 const GEN1_DEGREE_SYSTEMS: ReadonlySet<string> = new Set(['dh1', 'dw', 'rt']);
 
+/** How a line counts degrees: Gen 1 by full tens of margin, Gen 2 by tens digits. */
+export type DegreesMethod = 'gen1' | 'gen2';
+
+/** The actor surface {@link actorGameSystemId} reads. */
+export interface GameSystemBearer {
+    /** The actor's DataModel — a per-type union, so only its object-ness is assumed. */
+    readonly system?: object | null;
+}
+
+/** The two places a DataModel may carry its line: the schema field, or a static on its class. */
+interface GameSystemSlots {
+    readonly gameSystem?: string;
+    readonly constructor?: { readonly gameSystem?: string };
+}
+
+/** A non-empty line id, or undefined. */
+function lineId(value: string | undefined): string | undefined {
+    return typeof value === 'string' && value !== '' ? value : undefined;
+}
+
+/**
+ * An actor's game line. A character carries it as the `system.gameSystem` schema
+ * field; an NPC DataModel has no such field and carries the line only as a static
+ * on its class (`DH1NPCData.gameSystem = 'dh1'`), so the class is read when the
+ * field is absent. Undefined for no actor or a line-less DataModel.
+ */
+export function actorGameSystemId(actor: GameSystemBearer | null | undefined): string | undefined {
+    const system = actor?.system;
+    if (system === undefined || system === null) return undefined;
+    const slots = system as GameSystemSlots;
+    return lineId(slots.gameSystem) ?? lineId(slots.constructor?.gameSystem);
+}
+
 /** Resolve the effective degrees method for an actor's game system, honouring
  * the `degreesMode` world setting. `raw` (default) → per-system; `gen1`/`gen2`
  * force one method across every system. */
-export function resolveDegreesMethod(systemId: string | undefined): 'gen1' | 'gen2' {
+export function resolveDegreesMethod(systemId: string | undefined): DegreesMethod {
     const mode = WH40KSettings.getDegreesMode();
     if (mode === 'gen1' || mode === 'gen2') return mode;
     return systemId !== undefined && GEN1_DEGREE_SYSTEMS.has(systemId) ? 'gen1' : 'gen2';
@@ -50,9 +83,78 @@ export function resolveDegreesMethod(systemId: string | undefined): 'gen1' | 'ge
 /** Additional degrees between `a` and `b` for the given method, NOT counting
  * the base success/failure (the caller adds the leading 1). Gen 1: full 10s of
  * the absolute margin. Gen 2: difference of the tens digits (== {@link getDegree}). */
-export function getDegreeForMode(method: 'gen1' | 'gen2', a: number, b: number): number {
+export function getDegreeForMode(method: DegreesMethod, a: number, b: number): number {
     if (method === 'gen1') return Math.floor(Math.abs(a - b) / 10);
     return Math.floor(a / 10) - Math.floor(b / 10);
+}
+
+/**
+ * The degrees count a line PRINTS for a resolved test (#335) — what a card shows.
+ *
+ * Gen 2 (DH2 / BC / OW) counts the initial degree: `1 + tens difference`. Gen 1
+ * (DH1 / DW / RT) has no base degree — DH1 core p. 184: "For each full 10 points
+ * by which you exceed your Characteristic, you achieve one degree of success"
+ * (Fellowship 44, roll 12 → 3 degrees) — so it is `⌊margin / 10⌋`, and a narrow
+ * pass is a success with 0 degrees.
+ *
+ * The roll engine's own count (`1 + getDegreeForMode`) stays normalised to "the
+ * base result plus further degrees" in BOTH methods, because the Gen 1 rules that
+ * scale on degrees are phrased "a hit as normal, plus one per degree" — the same
+ * arithmetic as Gen 2's "one per degree including the first". Only the printed
+ * number differs; {@link printedDegreesFromCount} converts a normalised count.
+ */
+export function printedDegrees(method: DegreesMethod, success: boolean, target: number, roll: number): number {
+    const further = success ? getDegreeForMode(method, target, roll) : getDegreeForMode(method, roll, target);
+    return printedDegreesFromCount(method, 1 + further);
+}
+
+/**
+ * Convert the engine's normalised degree count (base result + further degrees,
+ * never below 1) to the count the line prints. Gen 1 drops the base degree.
+ */
+export function printedDegreesFromCount(method: DegreesMethod, count: number): number {
+    return method === 'gen1' ? Math.max(0, count - 1) : count;
+}
+
+/** The localiser {@link degreesResultFormula} phrases the readout with. */
+type DegreesFormatter = (
+    key:
+        | 'WH40K.Roll.ResultFormula.Success'
+        | 'WH40K.Roll.ResultFormula.Failure'
+        | 'WH40K.Roll.ResultFormula.SuccessGen1'
+        | 'WH40K.Roll.ResultFormula.FailureGen1',
+    data: Record<string, string>,
+) => string;
+
+/** A resolved test as {@link degreesResultFormula} reads it. */
+export interface ResolvedDegrees {
+    readonly method: DegreesMethod;
+    readonly success: boolean;
+    /** The engine's normalised count (base result plus further degrees). */
+    readonly count: number;
+    readonly roll: number;
+    readonly target: number;
+}
+
+/**
+ * The card's degrees readout (#335, #489) under the line's method: Gen 2
+ * `8 DoS = 1 + 7 (roll 1 vs target 75)`; Gen 1 `7 DoS = ⌊74 ÷ 10⌋ (roll 1 vs
+ * target 75)`, the margin being the distance between roll and target.
+ */
+export function degreesResultFormula(resolved: ResolvedDegrees, format: DegreesFormatter): string {
+    const { method, success, count, roll, target } = resolved;
+    const shown = String(printedDegreesFromCount(method, count));
+    const common = { roll: String(roll), target: String(target) };
+    if (method === 'gen1') {
+        const margin = String(Math.abs(target - roll));
+        return success
+            ? format('WH40K.Roll.ResultFormula.SuccessGen1', { ...common, dos: shown, margin })
+            : format('WH40K.Roll.ResultFormula.FailureGen1', { ...common, dof: shown, margin });
+    }
+    const degree = String(count - 1);
+    return success
+        ? format('WH40K.Roll.ResultFormula.Success', { ...common, dos: shown, degree })
+        : format('WH40K.Roll.ResultFormula.Failure', { ...common, dof: shown, degree });
 }
 
 // The d100 success rule lives in the pure dice layer so the Foundry-free rules/

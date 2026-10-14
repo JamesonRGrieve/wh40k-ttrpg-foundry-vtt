@@ -17,7 +17,7 @@ import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import { type ModifierSourcesShape, type PassiveModifierRow, selectPassiveModifierRows } from '../../rolls/passive-modifiers.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
-import { getDegreeForMode, isD100Success, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import { degreesResultFormula, getDegreeForMode, isD100Success, printedDegrees, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { isRollKeepMode, keepModeOptions, type RollKeepMode } from '../../rolls/roll-keep.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
 import {
@@ -796,15 +796,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         let rollResult = null;
         const manualTotal = this._manualRollTotal;
         if (manualTotal !== null) {
-            const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+            // The count the line prints (#335): Gen 1 has no base degree.
+            const method = resolveDegreesMethod(this.rollData.gameSystemId);
             const success = isD100Success(manualTotal, finalTarget);
-            if (success) {
-                const dos = 1 + getDegreeForMode(method, finalTarget, manualTotal);
-                rollResult = { success: true, dos, dof: 0, total: manualTotal };
-            } else {
-                const dof = 1 + getDegreeForMode(method, manualTotal, finalTarget);
-                rollResult = { success: false, dos: 0, dof, total: manualTotal };
-            }
+            const degrees = printedDegrees(method, success, finalTarget, manualTotal);
+            rollResult = success ? { success: true, dos: degrees, dof: 0, total: manualTotal } : { success: false, dos: 0, dof: degrees, total: manualTotal };
         }
         this._rollResult = rollResult;
 
@@ -1608,7 +1604,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (attacker === null || target === null) return 0;
         const gridSize = canvas.grid?.size ?? 0;
         if (gridSize <= 0) return 0;
-        const config = gangUpConfigFor((rd.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+        const config = gangUpConfigFor(rd.gameSystemId);
         const tokens: GangUpTokenLike[] = [];
         for (const placeable of canvas.tokens?.placeables ?? []) {
             const like = UnifiedRollDialog.#tokenLikeFromPlaceable(placeable);
@@ -2772,7 +2768,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (manualTotal !== null) {
             // Manual roll - skip _calculateHit, compute success ourselves
             const target = this.rollData.modifiedTarget;
-            const method = resolveDegreesMethod((this.rollData.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem);
+            const method = resolveDegreesMethod(this.rollData.gameSystemId);
             this.rollData.success = isD100Success(manualTotal, target);
             if (this.rollData.success) {
                 this.rollData.dof = 0;
@@ -2781,6 +2777,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 this.rollData.dos = 0;
                 this.rollData.dof = 1 + getDegreeForMode(method, manualTotal, target);
             }
+            // The card prints the line's own count and how it was reached (#335).
+            this.rollData.degreesMethod = method;
+            this.rollData.resultFormula = degreesResultFormula(
+                {
+                    method,
+                    success: this.rollData.success,
+                    count: this.rollData.success ? this.rollData.dos : this.rollData.dof,
+                    roll: manualTotal,
+                    target,
+                },
+                (key, data) => game.i18n.format(key, data),
+            );
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.render() is not typed in the system typings; cast is required
             this.rollData.render = await (this.rollData.roll as unknown as { render: () => Promise<string> }).render();
             // A real (manual) roll resolved — run the skill-use resolution hooks so

@@ -1,6 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type ChatRuntimeHandle, stubChatRuntime } from '../testing/chat-runtime.ts';
-import { emitChatFromTemplate, getDegreeForMode, isD100Success, resolveDegreesMethod } from './roll-helpers.ts';
+import {
+    actorGameSystemId,
+    degreesResultFormula,
+    emitChatFromTemplate,
+    getDegreeForMode,
+    isD100Success,
+    printedDegrees,
+    printedDegreesFromCount,
+    resolveDegreesMethod,
+} from './roll-helpers.ts';
 
 /**
  * Degrees-of-success method selection (#DoS-mode setting).
@@ -215,5 +224,84 @@ describe('resolveDegreesMethod — RAW resolves per system', () => {
         stubMode('gen2');
         expect(resolveDegreesMethod('dh1')).toBe('gen2');
         expect(resolveDegreesMethod('rt')).toBe('gen2');
+    });
+});
+
+/**
+ * The count a line PRINTS (#335). DH1 core p. 184: "For each full 10 points by
+ * which you exceed your Characteristic, you achieve one degree of success" —
+ * Fellowship 44, roll 12 is 3 degrees, not 4. Gen 2 counts the initial degree.
+ */
+describe('printedDegrees — the count the card shows (#335)', () => {
+    it('DH1 01 vs 75 is 7 DoS, not the DH2 8 (the reported card)', () => {
+        expect(printedDegrees('gen1', true, 75, 1)).toBe(7);
+        expect(printedDegrees('gen2', true, 75, 1)).toBe(8);
+    });
+
+    it('reproduces the DH1 core example: Fellowship 44, roll 12 → 3 degrees', () => {
+        expect(printedDegrees('gen1', true, 44, 12)).toBe(3);
+    });
+
+    it('a Gen 1 pass by under 10 is a success with 0 degrees; Gen 2 counts the base and the tens step', () => {
+        expect(printedDegrees('gen1', true, 41, 39)).toBe(0);
+        expect(printedDegrees('gen2', true, 41, 39)).toBe(2);
+        expect(printedDegrees('gen2', true, 45, 41)).toBe(1);
+    });
+
+    it('counts failures the same way', () => {
+        expect(printedDegrees('gen1', false, 30, 55)).toBe(2);
+        expect(printedDegrees('gen2', false, 30, 55)).toBe(3);
+    });
+
+    it('converts the engine count: Gen 1 drops the base degree, never below 0', () => {
+        expect(printedDegreesFromCount('gen1', 8)).toBe(7);
+        expect(printedDegreesFromCount('gen1', 1)).toBe(0);
+        expect(printedDegreesFromCount('gen2', 8)).toBe(8);
+    });
+});
+
+describe('degreesResultFormula — the card readout per method (#335)', () => {
+    const format = (key: string, data: Record<string, string>): string =>
+        `${key}|${Object.entries(data)
+            .map(([k, v]) => `${k}=${v}`)
+            .sort((a, b) => a.localeCompare(b))
+            .join(',')}`;
+
+    it('Gen 1 phrases the margin over ten with the printed count', () => {
+        expect(degreesResultFormula({ method: 'gen1', success: true, count: 8, roll: 1, target: 75 }, format)).toBe(
+            'WH40K.Roll.ResultFormula.SuccessGen1|dos=7,margin=74,roll=1,target=75',
+        );
+        expect(degreesResultFormula({ method: 'gen1', success: false, count: 3, roll: 55, target: 30 }, format)).toBe(
+            'WH40K.Roll.ResultFormula.FailureGen1|dof=2,margin=25,roll=55,target=30',
+        );
+    });
+
+    it('Gen 2 keeps "1 + further degrees"', () => {
+        expect(degreesResultFormula({ method: 'gen2', success: true, count: 8, roll: 1, target: 75 }, format)).toBe(
+            'WH40K.Roll.ResultFormula.Success|degree=7,dos=8,roll=1,target=75',
+        );
+        expect(degreesResultFormula({ method: 'gen2', success: false, count: 3, roll: 55, target: 30 }, format)).toBe(
+            'WH40K.Roll.ResultFormula.Failure|degree=2,dof=3,roll=55,target=30',
+        );
+    });
+});
+
+describe('actorGameSystemId — a character field or an NPC class static (#335)', () => {
+    class NpcModel {
+        static gameSystem = 'dh1';
+    }
+
+    it('reads the schema field a character carries', () => {
+        expect(actorGameSystemId({ system: { gameSystem: 'rt' } })).toBe('rt');
+    });
+
+    it("reads an NPC DataModel's static line when it has no field", () => {
+        expect(actorGameSystemId({ system: new NpcModel() })).toBe('dh1');
+    });
+
+    it('is undefined for no actor, no system or an empty line', () => {
+        expect(actorGameSystemId(null)).toBeUndefined();
+        expect(actorGameSystemId({ system: null })).toBeUndefined();
+        expect(actorGameSystemId({ system: { gameSystem: '' } })).toBeUndefined();
     });
 });

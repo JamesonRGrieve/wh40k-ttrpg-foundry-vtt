@@ -28,7 +28,7 @@
                 {{!-- Degrees & Result --}}
                 {{#if success}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
-                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-success-secondary)]">{{dos}}</span>
+                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-success-secondary)]" data-wh40k-hook="degrees-count">{{#if printedDegrees}}{{printedDegrees.dos}}{{else}}{{dos}}{{/if}}</span>
                         <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfSuccess"}}</span>
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
@@ -37,7 +37,7 @@
                         value=roll.total}}
                 {{else}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md">
-                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]">{{dof}}</span>
+                        <span class="tw-text-[1.5rem] tw-font-bold tw-text-[var(--wh40k-danger-secondary)]" data-wh40k-hook="degrees-count">{{#if printedDegrees}}{{printedDegrees.dof}}{{else}}{{dof}}{{/if}}</span>
                         <span class="tw-text-[0.8rem] tw-uppercase tw-tracking-[0.1em] tw-opacity-80">{{localize "WH40K.Roll.DegreesOfFailure"}}</span>
                     </div>
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
@@ -45,6 +45,7 @@
                         label=(localize "WH40K.Psychic.PowerFailed")
                         value=roll.total}}
                 {{/if}}
+                {{> systems/wh40k-rpg/templates/chat/partial/result-formula.hbs}}
 
                 {{!-- Controls --}}
                 <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">

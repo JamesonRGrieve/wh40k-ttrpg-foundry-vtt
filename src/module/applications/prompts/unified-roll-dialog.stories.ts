@@ -471,3 +471,24 @@ export const Dh2BurstModes: Story = {
         await expect(modeLabel(canvasElement, 'fullAuto')).toBe('-10');
     },
 };
+
+/* ------------------------------------------------------------------ */
+/*  Manual-roll preview prints the line's own degrees (#335)           */
+/* ------------------------------------------------------------------ */
+
+/** DH1 (Gen 1): 01 vs 75 previews 7 DoS — the dialog passes the printed count. */
+export const Dh1ManualDegrees: Story = {
+    args: baseContext({
+        finalTarget: 75,
+        manualRollTens: 0,
+        manualRollUnits: 1,
+        manualRollTotal: 1,
+        hasManualRoll: true,
+        rollResult: { success: true, dos: 7, dof: 0 },
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText(/7 DoS/)).toBeTruthy();
+    },
+};

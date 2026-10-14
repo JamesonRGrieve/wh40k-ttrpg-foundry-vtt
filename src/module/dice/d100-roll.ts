@@ -1,5 +1,13 @@
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.ts';
-import { isD100Success } from '../rolls/roll-helpers.ts';
+import {
+    actorGameSystemId,
+    type DegreesMethod,
+    type GameSystemBearer,
+    getDegreeForMode,
+    isD100Success,
+    printedDegreesFromCount,
+    resolveDegreesMethod,
+} from '../rolls/roll-helpers.ts';
 import BasicRollWH40K from './basic-roll.ts';
 
 /**
@@ -77,23 +85,40 @@ export default class D100Roll extends BasicRollWH40K {
     }
 
     /**
-     * Calculate degrees of success (if successful)
-     * WH40K RPG: DoS = floor((target - roll) / 10) + 1
+     * The rolling actor's degrees method (#335): its line's, unless the world
+     * `degreesMode` setting forces one.
+     */
+    get degreesMethod(): DegreesMethod {
+        return resolveDegreesMethod(actorGameSystemId(this.configuration['actor'] as GameSystemBearer | null | undefined));
+    }
+
+    /**
+     * Degrees of success (if successful), normalised like every roll engine count:
+     * the base success plus the method's further degrees (#335). The card prints
+     * {@link printedDegrees}, which under Gen 1 drops the base degree.
      * @type {number}
      */
     get degreesOfSuccess(): number {
         if (!this.isSuccess) return 0;
-        return Math.floor((this.target - this.evaluatedTotal) / 10) + 1;
+        return Math.max(1, 1 + getDegreeForMode(this.degreesMethod, this.target, this.evaluatedTotal));
     }
 
     /**
-     * Calculate degrees of failure (if failed)
-     * WH40K RPG: DoF = floor((roll - target) / 10) + 1
+     * Degrees of failure (if failed), normalised the same way.
      * @type {number}
      */
     get degreesOfFailure(): number {
         if (this.isSuccess) return 0;
-        return Math.floor((this.evaluatedTotal - this.target) / 10) + 1;
+        return Math.max(1, 1 + getDegreeForMode(this.degreesMethod, this.evaluatedTotal, this.target));
+    }
+
+    /** The degrees the card prints (#335): Gen 1 lines have no base degree. */
+    get printedDegrees(): { dos: number; dof: number } {
+        const method = this.degreesMethod;
+        return {
+            dos: this.isSuccess ? printedDegreesFromCount(method, this.degreesOfSuccess) : 0,
+            dof: this.isSuccess ? 0 : printedDegreesFromCount(method, this.degreesOfFailure),
+        };
     }
 
     /**
@@ -234,6 +259,7 @@ export default class D100Roll extends BasicRollWH40K {
                 success: d100Roll.isSuccess,
                 dos: d100Roll.degreesOfSuccess,
                 dof: d100Roll.degreesOfFailure,
+                printedDegrees: d100Roll.printedDegrees,
                 isCriticalSuccess: d100Roll.isCriticalSuccess,
                 isCriticalFailure: d100Roll.isCriticalFailure,
                 isDoubles: d100Roll.isDoubles,

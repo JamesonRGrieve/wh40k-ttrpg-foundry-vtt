@@ -49,6 +49,7 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
 import type { HitCeilingCard } from './hit-ceiling.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
+import { actorGameSystemId, type DegreesMethod, printedDegreesFromCount } from './roll-helpers.ts';
 import type { RollKeepMode } from './roll-keep.ts';
 
 // Re-exported for existing consumers (chat-card cap surfacing, tests) that
@@ -306,6 +307,13 @@ export class RollData {
      * numbers are known; empty until the roll resolves.
      */
     resultFormula: string = '';
+    /**
+     * The degrees method the roll resolved under (#335), stamped where `dos` / `dof`
+     * are computed. `dos` / `dof` are the engine's normalised counts (base result
+     * plus further degrees) that every degree-scaled rule reads; the card prints
+     * {@link printedDegrees}, which under Gen 1 drops the base degree.
+     */
+    degreesMethod: DegreesMethod = 'gen2';
 
     // For name getter compatibility
     weapon?: WH40KItem;
@@ -338,9 +346,23 @@ export class RollData {
         return '';
     }
 
-    /** The rolling actor's game line (`dh2`, `rt`, …), scoping per-system content lookups; undefined with no actor. */
+    /**
+     * The rolling actor's game line (`dh2`, `rt`, …), scoping per-system content
+     * lookups; undefined with no actor. A character carries its line as a schema
+     * field; an NPC DataModel carries it only as a static on its class, so that is
+     * read when the field is absent — otherwise every NPC roll fell back to DH2's
+     * rules (degrees method, burst bonus, …).
+     */
     get gameSystemId(): string | undefined {
-        return (this.sourceActor?.system as { gameSystem?: string } | undefined)?.gameSystem;
+        return actorGameSystemId(this.sourceActor);
+    }
+
+    /** The degrees the card prints (#335): Gen 1 lines have no base degree. */
+    get printedDegrees(): { dos: number; dof: number } {
+        return {
+            dos: this.success ? printedDegreesFromCount(this.degreesMethod, this.dos) : 0,
+            dof: this.success ? 0 : printedDegreesFromCount(this.degreesMethod, this.dof),
+        };
     }
 
     get effectString(): string {
