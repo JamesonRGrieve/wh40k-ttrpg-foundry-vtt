@@ -71,6 +71,41 @@ export const NoDamageDash: Story = {
     },
 };
 
+/** The penetration tile and its label, read from the rendered sheet. */
+function penetrationTile(canvasElement: HTMLElement): { value: HTMLElement | null; label: HTMLElement | null; tile: HTMLElement | null } {
+    const value = canvasElement.querySelector<HTMLElement>('[data-weapon-penetration]');
+    const tile = value?.closest<HTMLElement>('[data-tooltip]') ?? null;
+    return { value, label: value?.nextElementSibling instanceof HTMLElement ? value.nextElementSibling : null, tile };
+}
+
+/** The penetration tile's label fits inside its one-column tile, unclipped (#614). */
+export const PenetrationLabelFits: Story = {
+    play: async ({ canvasElement }) => {
+        const { value, label, tile } = penetrationTile(canvasElement);
+        await expect(value?.textContent.trim()).toBe('4');
+        await expect(label?.textContent.trim()).toBe('Pen');
+        await expect(tile?.getAttribute('data-tooltip')).toBe('Penetration');
+        // The label's box lies within the tile's (the clip read "ENETRATION").
+        const tileBox = tile?.getBoundingClientRect();
+        const labelBox = label?.getBoundingClientRect();
+        await expect(labelBox !== undefined && tileBox !== undefined && labelBox.left >= tileBox.left && labelBox.right <= tileBox.right).toBe(true);
+    },
+};
+
+/** A weapon whose damage comes in range bands (#608) shows each band's penetration, not 0 (#614). */
+export const RangeBandPenetration: Story = {
+    args: {
+        overrides: { fullDamageFormula: '1d10+9 E / 3d10+9 E / 6d10+12 E', penetrationLabel: '2/8/14' },
+    },
+    play: async ({ canvasElement }) => {
+        const { value, tile } = penetrationTile(canvasElement);
+        await expect(value?.textContent.trim()).toBe('2/8/14');
+        const tileBox = tile?.getBoundingClientRect();
+        const valueBox = value?.getBoundingClientRect();
+        await expect(valueBox !== undefined && tileBox !== undefined && valueBox.left >= tileBox.left && valueBox.right <= tileBox.right).toBe(true);
+    },
+};
+
 export const RendersWeaponName: Story = {
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);

@@ -687,7 +687,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
             },
             qualitiesArray: [],
             fullDamageFormula: '1d10+5',
-            effectivePenetration: 4,
+            penetrationLabel: '4',
             effectiveToHit: 10,
             effectiveWeight: 8.5,
             hasModificationEffects: true,

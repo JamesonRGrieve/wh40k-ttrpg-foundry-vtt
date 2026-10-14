@@ -641,6 +641,11 @@ recordDimension('origin-prompt.flow', covered['origin-prompt.flow'], ORIGIN_PROM
 const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently'];
 recordDimension('per-line-sheet-theme.flow', covered['per-line-sheet-theme.flow'], PER_LINE_SHEET_THEME_FLOWS);
 
+// The weapon sheet's Penetration tile (#614), tests/e2e/weapon-sheet-penetration.spec.ts.
+// Keep in sync with WEAPON_PENETRATION_FLOWS there.
+const WEAPON_PENETRATION_FLOWS = ['label-fits-default-width', 'label-fits-min-width', 'banded-weapon-shows-band-penetration', 'own-penetration-unchanged'];
+recordDimension('weapon-penetration.flow', covered['weapon-penetration.flow'], WEAPON_PENETRATION_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

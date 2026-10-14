@@ -148,6 +148,17 @@ export function bandProvenance(bands: readonly DamageBand[], index: number, dist
     };
 }
 
+/**
+ * The penetration a banded weapon's sheet shows (#614): one value when every band
+ * shares it, else each band's in authored order, compact (`2/8/14`) to fit one stat
+ * tile. An empty list reads as 0.
+ */
+export function bandPenetrationLabel(penetrations: readonly number[]): string {
+    const distinct = new Set(penetrations);
+    if (distinct.size <= 1) return String(penetrations.at(0) ?? 0);
+    return penetrations.map(String).join('/');
+}
+
 /* -------------------------------------------- */
 /*  Roll-table damage                           */
 /* -------------------------------------------- */

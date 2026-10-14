@@ -73,7 +73,8 @@ interface WeaponSheetContext extends Record<string, unknown> {
     qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null }>;
     prepareQualityTooltip: (identifier: string, level?: number | null) => string;
     effectiveDamageLabel: string;
-    effectivePenetration: number;
+    /** The penetration tile's value: the weapon's own, or its range bands' (#614). */
+    penetrationLabel: string;
     effectiveToHit: number;
     effectiveWeight: number;
     magazineBuildingEnabled: boolean;
@@ -238,7 +239,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
 
         // Add effective* getters to context for easy template access
         context.effectiveDamageLabel = system.effectiveDamageFormula !== '' ? system.effectiveDamageFormula : system.damageLabel;
-        context.effectivePenetration = system.effectivePenetration;
+        context.penetrationLabel = system.penetrationLabel;
         context.effectiveToHit = system.effectiveToHit;
         context.effectiveWeight = system.effectiveWeight;
         // A weapon that deals no damage (#601) shows the book's dash, not a blank.

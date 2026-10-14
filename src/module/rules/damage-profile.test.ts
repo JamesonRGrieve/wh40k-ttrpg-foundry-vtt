@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+    bandPenetrationLabel,
     bandProvenance,
     type BorrowCandidate,
     type DamageBand,
@@ -65,6 +66,21 @@ describe('bandProvenance (#608)', () => {
     it('gives the first band no lower bound and the last no upper bound', () => {
         expect(bandProvenance(BEAM_BANDS, 0, 3)).toMatchObject({ minRange: null, maxRange: 15 });
         expect(bandProvenance(BEAM_BANDS, 2, 90)).toMatchObject({ minRange: 50, maxRange: null });
+    });
+});
+
+describe('bandPenetrationLabel (#614)', () => {
+    it("lists each band's penetration in authored order, compact enough for one stat tile", () => {
+        expect(bandPenetrationLabel(BEAM_BANDS.map((b) => b.penetration))).toBe('2/8/14');
+    });
+
+    it('shows one value when every band shares it', () => {
+        expect(bandPenetrationLabel([4, 4, 4])).toBe('4');
+        expect(bandPenetrationLabel([0])).toBe('0');
+    });
+
+    it('reads an empty band list as 0', () => {
+        expect(bandPenetrationLabel([])).toBe('0');
     });
 });
 

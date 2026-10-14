@@ -6,6 +6,7 @@ import { t } from '../../i18n/t.ts';
 import {
     type BorrowCandidate,
     type BorrowedDamageSource,
+    bandPenetrationLabel,
     bandProvenance,
     type DamageProfileContext,
     type DamageTableDraw,
@@ -1378,6 +1379,16 @@ export default class WeaponData extends ItemDataModel.mixin(
         // folded via `_modificationModifiers` (#ammo-system).
         const override = this.loadedAmmo?.damageOverride ?? null;
         return this.#composePenetration(override !== null ? override.penetration : this.damage.penetration || 0);
+    }
+
+    /**
+     * The penetration the sheet shows (#614). A weapon whose damage comes in range
+     * bands (#608) has no penetration of its own: it shows each band's, folded
+     * through the firing mode and modifications as the attack resolves it.
+     */
+    get penetrationLabel(): string {
+        if (this.damageProfileKind !== 'bands') return String(this.effectivePenetration);
+        return bandPenetrationLabel(this.damage.bands.map((band) => this.#composePenetration(band.penetration)));
     }
 
     /**

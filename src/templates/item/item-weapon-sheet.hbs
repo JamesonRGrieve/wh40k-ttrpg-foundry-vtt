@@ -67,8 +67,9 @@
       </div>
       {{/if}}
 
-      {{!-- ICONIC STAT MOSAIC --}}
-      <div class="tw-grid tw-grid-cols-6 tw-auto-rows-[minmax(60px,auto)] [grid-auto-flow:dense] tw-gap-[var(--wh40k-space-sm)] tw-p-3">
+      {{!-- ICONIC STAT MOSAIC — as many 4.5rem tiles as the sheet's width holds, so no
+            tile (and no tile label) is ever narrower than its content (#614). --}}
+      <div class="tw-grid tw-grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] tw-auto-rows-[minmax(60px,auto)] [grid-auto-flow:dense] tw-gap-[var(--wh40k-space-sm)] tw-p-3">
         {{!-- Attack Action Card (if owned by actor) --}}
         {{#if isOwnedByActor}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(115,177,113,0.5)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.25),rgba(12,16,24,0.7))]"
@@ -106,9 +107,12 @@
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-location-arrow"></i>
           </div>
-          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-gold)] tw-leading-[1.1]">{{effectivePenetration}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Combat.Penetration"}}</span>
+          {{!-- The tile is one grid column wide: the abbreviated label (as RoF) fits at
+                every sheet width, the full word is the tile's tooltip, and a range-band
+                weapon's per-band list wraps inside the tile (#614). --}}
+          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-max-w-full tw-min-w-0 tw-text-center">
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-gold)] tw-leading-[1.1] tw-break-words" data-weapon-penetration>{{penetrationLabel}}</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)] tw-whitespace-nowrap">{{localize "WH40K.Weapon.Pen"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
           {{#if hasModificationEffects}}<span class="tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
