@@ -118,3 +118,38 @@ export const RogueTraderYourTurn: Story = {
     },
     render: (args) => renderPanel(args),
 };
+
+/** Panel widths from a cramped column up to the panel's usual width. */
+const NARROW_WIDTHS_PX = [180, 220, 280] as const;
+
+/**
+ * The selected mode's check sits inside its row at every width (#617): the label and
+ * distance column shrinks first, so the check is never pushed past the row's clipped
+ * edge. A three-digit Run distance is the widest the row has to hold.
+ */
+export const RunSelectedCheckFitsNarrowWidths: Story = {
+    name: 'Run selected — the check fits at narrow widths',
+    render: () => {
+        const root = document.createElement('div');
+        for (const width of NARROW_WIDTHS_PX) {
+            const panel = renderPanel({
+                system: { movement: { ...RATES, run: 120 }, lifting: LIFTING },
+                combatMovement: { inCombat: true, disabled: false, selectedMode: 'run', remaining: 120 },
+            });
+            panel.style.maxWidth = `${width}px`;
+            root.append(panel);
+        }
+        return root;
+    },
+    play: async ({ canvasElement }) => {
+        const checks = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-move-mode-selected]'));
+        await expect(checks.length).toBe(NARROW_WIDTHS_PX.length);
+        const clipped = checks.filter((check) => {
+            const row = check.closest('[aria-pressed]')?.getBoundingClientRect();
+            const box = check.getBoundingClientRect();
+            return row === undefined || box.left < row.left - 1 || box.right > row.right + 1;
+        });
+        await expect(clipped.length).toBe(0);
+        await expect(pressedModes(canvasElement)).toEqual(['run', 'run', 'run']);
+    },
+};

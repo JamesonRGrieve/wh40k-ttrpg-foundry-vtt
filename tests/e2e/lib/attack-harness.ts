@@ -32,6 +32,8 @@ export interface HarnessTokenSpec {
     items?: object[];
     /** Actor system data overrides. */
     system?: object;
+    /** Actor flags (e.g. the authored-build marker that skips the origin-path prompt). */
+    flags?: object;
 }
 
 /** What {@link HarnessApi.setup} placed. */
@@ -166,7 +168,13 @@ export async function installAttackHarness(page: Page): Promise<void> {
                 for (const t of spec.tokens) {
                     // eslint-disable-next-line no-await-in-loop -- sequential by design: each actor is created before its token
                     const actor = await helpers.withTimeout(
-                        g.Actor.create({ name: t.name, type: t.type, items: t.items ?? [], ...(t.system === undefined ? {} : { system: t.system }) }),
+                        g.Actor.create({
+                            name: t.name,
+                            type: t.type,
+                            items: t.items ?? [],
+                            ...(t.system === undefined ? {} : { system: t.system }),
+                            ...(t.flags === undefined ? {} : { flags: t.flags }),
+                        }),
                         `create ${t.name}`,
                     );
                     if (actor === null) throw new Error(`could not create ${t.name}`);

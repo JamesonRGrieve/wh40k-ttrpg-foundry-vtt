@@ -5,6 +5,11 @@
 
 module.exports = {
     ".wh40k-rpg.sheet.actor.player": {
+        // The narrowest a PC / NPC sheet resizes to (Foundry clamps a window's width
+        // to its computed min-width): the sidebar plus one 20rem Combat-tab column,
+        // the armour silhouette's six locations, which stack there (#620). Below it
+        // the body column vanished entirely.
+        "min-width": "600px",
         // Wins over tailwind/legacy-components.js's actorSheetOverrides
         // `.wh40k-rpg.sheet.actor .window-content { display: flex }` on
         // specificity alone: (0,5,0) against (0,4,0). Both rules used to carry a

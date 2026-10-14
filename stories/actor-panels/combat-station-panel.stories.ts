@@ -124,3 +124,59 @@ export const NpcFateHidden: Story = {
         await expect(canvasElement.querySelector('[data-field="system.fate.value"]')).toBeNull();
     },
 };
+
+/** Widths of the Combat tab body across the sheet's range: its minimum up to a widened sheet. */
+const LAYOUT_WIDTHS_PX = [560, 720, 960] as const;
+
+/** The armour locations and the selected move-mode check that drew outside their box. */
+function clippedPieces(root: HTMLElement): string[] {
+    const clipped: string[] = [];
+    const outside = (inner: Element, outer: Element | null): boolean => {
+        if (outer === null) return true;
+        const a = inner.getBoundingClientRect();
+        const b = outer.getBoundingClientRect();
+        return a.left < b.left - 1 || a.right > b.right + 1;
+    };
+    for (const location of root.querySelectorAll('[data-location]')) {
+        if (outside(location, location.closest('.wh40k-panel'))) clipped.push(location.getAttribute('data-location') ?? '?');
+    }
+    for (const check of root.querySelectorAll('[data-move-mode-selected]')) {
+        if (outside(check, check.closest('[aria-pressed]'))) clipped.push('move-mode check');
+    }
+    return clipped;
+}
+
+/** The Combat tab at each width, with Run selected, for one sheet context. */
+function atEveryWidth(context: object): HTMLElement {
+    const root = document.createElement('div');
+    for (const width of LAYOUT_WIDTHS_PX) {
+        const el = renderSheet(combatStationSrc, { ...context, combatMovement: { inCombat: true, disabled: false, selectedMode: 'run', remaining: 18 } });
+        el.style.width = `${width}px`;
+        el.dataset['layoutWidth'] = String(width);
+        root.append(el);
+    }
+    return root;
+}
+
+/**
+ * Every armour location (L.ARM / L.LEG were cut off, #620) and the selected move
+ * mode's check (#617) lie inside their panel at every width: Armour and Movement sit
+ * side by side only when both fit, else they stack.
+ */
+export const PlayerArmourAndMovementFitEveryWidth: Story = {
+    render: () => atEveryWidth(combatContext(mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'combat' }))),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-location]').length).toBe(6 * LAYOUT_WIDTHS_PX.length);
+        await expect(canvasElement.querySelectorAll('[data-move-mode-selected]').length).toBe(LAYOUT_WIDTHS_PX.length);
+        await expect(clippedPieces(canvasElement)).toEqual([]);
+    },
+};
+
+/** The NPC Combat tab shares the layout (#620 was seen on NPC sheets first). */
+export const NpcArmourAndMovementFitEveryWidth: Story = {
+    render: () => atEveryWidth(combatContext(mockNpcSheetContext({ systemId: 'dh2' }), { isNPC: true, npcFateHidden: true })),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-location]').length).toBe(6 * LAYOUT_WIDTHS_PX.length);
+        await expect(clippedPieces(canvasElement)).toEqual([]);
+    },
+};

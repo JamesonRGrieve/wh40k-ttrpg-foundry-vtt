@@ -656,6 +656,11 @@ recordDimension('damage-card-layout.flow', covered['damage-card-layout.flow'], D
 const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept'];
 recordDimension('area-difficulty-row.flow', covered['area-difficulty-row.flow'], AREA_DIFFICULTY_ROW_FLOWS);
 
+// The Combat tab's Armour | Movement row fits the sheet (#617, #620), tests/e2e/combat-tab-layout.spec.ts.
+// Keep in sync with COMBAT_TAB_LAYOUT_FLOWS there.
+const COMBAT_TAB_LAYOUT_FLOWS = ['pc-default-width', 'pc-min-width', 'npc-default-width', 'npc-min-width'];
+recordDimension('combat-tab-layout.flow', covered['combat-tab-layout.flow'], COMBAT_TAB_LAYOUT_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [
