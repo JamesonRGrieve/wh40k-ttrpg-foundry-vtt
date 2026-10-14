@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { foundryTestDataDir } from './lib/data-dir';
 import { joinOrSkip } from './lib/join';
+import { closeApp, openPackDocument, type PackDocumentRef } from './lib/pack-document';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -41,13 +42,10 @@ const SOURCE_REFERENCE = /, p\.\d+/;
  * A pack document to open, by pack id and document name. Art is shown on the
  * document's own sheet (an actor's portrait) or, for items whose sheets carry
  * no picture, as the thumbnail in the compendium window searched to the name.
- * `reveal` is a sheet action to run first when the sheet starts collapsed.
+ * `reveal` is a sheet action to click first when the sheet starts collapsed.
  */
-interface Sample {
+interface Sample extends PackDocumentRef {
     label: string;
-    pack: string;
-    name: string;
-    view: 'sheet' | 'compendium';
     reveal?: string;
 }
 
@@ -64,6 +62,8 @@ const FANDOM_SAMPLES: readonly Sample[] = [
     { label: 'fandom-actor-astropath', pack: 'dh2-core-actors-bestiary', name: 'Astropath', view: 'sheet' },
     { label: 'fandom-actor-apex-noble', pack: 'dh2-core-actors-bestiary', name: 'Apex Noble', view: 'sheet' },
     { label: 'fandom-actor-dark-eldar-grotesque', pack: 'dh2-without-actors-bestiary', name: 'Dark Eldar Grotesque', view: 'sheet' },
+    // A Black Crusade NPC: its sheet crashed on open until #628.
+    { label: 'fandom-actor-asphodel-kroot-warrior', pack: 'bc-blood-actors-bestiary', name: 'Asphodel Kroot Warrior', view: 'sheet' },
     { label: 'fandom-item-bolt-pistol', pack: 'dh2-core-items-weapons', name: 'Bolt Pistol', view: 'compendium' },
     { label: 'fandom-item-autocannon', pack: 'dh2-core-items-weapons', name: 'Autocannon', view: 'compendium' },
     { label: 'fandom-item-archeotech-laspistol', pack: 'rt-core-items-weapons', name: 'Archeotech Laspistol', view: 'compendium' },
@@ -95,86 +95,14 @@ function lastLaunchLines(): string[] {
     return lines.slice(start + 1, end + 1);
 }
 
-interface OpenedSheet {
-    appId: string | null;
-    img: string | null;
-    detail: string | null;
-}
-
-/**
- * Open a pack document by pack id and name: its own sheet, or (view
- * `compendium`) the compendium window, which shows each entry's art thumbnail.
- */
-async function openPackDocument(page: Page, sample: Sample): Promise<OpenedSheet> {
-    return page.evaluate(
-        async ({ packId, docName, view }): Promise<OpenedSheet> => {
-            interface AppLike {
-                id: string;
-                rendered: boolean;
-                render: (o: { force: boolean }) => Promise<object>;
-            }
-            interface PackLike {
-                apps: AppLike[];
-                render: (force: boolean) => void;
-                getIndex: () => Promise<Iterable<{ _id: string; name: string }>>;
-                getDocument: (id: string) => Promise<{ img: string; sheet: AppLike } | null>;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.packs` is injected by the licensed app; no shipped types
-            const g = globalThis as unknown as { game: { packs: { get: (id: string) => PackLike | undefined } } };
-            const { pollUntil } = globalThis.wh40kE2E;
-            const pack = g.game.packs.get(`wh40k-rpg.${packId}`);
-            if (pack === undefined) return { appId: null, img: null, detail: `pack ${packId} not loaded` };
-            const hit = Array.from(await pack.getIndex()).find((e) => e.name === docName);
-            if (hit === undefined) return { appId: null, img: null, detail: `${docName} not in ${packId}` };
-            const doc = await pack.getDocument(hit._id);
-            if (doc === null) return { appId: null, img: null, detail: `${packId} could not load ${hit._id}` };
-            if (view === 'compendium') {
-                pack.render(true);
-                await pollUntil(() => pack.apps.some((a) => a.rendered));
-                const app = pack.apps.find((a) => a.rendered);
-                return app === undefined
-                    ? { appId: null, img: doc.img, detail: `${packId} window did not render` }
-                    : { appId: app.id, img: doc.img, detail: null };
-            }
-            await doc.sheet.render({ force: true });
-            await pollUntil(() => doc.sheet.rendered);
-            return { appId: doc.sheet.id, img: doc.img, detail: null };
-        },
-        { packId: sample.pack, docName: sample.name, view: sample.view },
-    );
-}
-
-/**
- * Run a sheet's `data-action` handler against its control. A locked compendium
- * sheet disables every form control, the view-only toggles included, so the
- * handler is invoked directly rather than by a click on the disabled button.
- */
-async function runSheetAction(page: Page, appId: string, action: string): Promise<void> {
-    await page.evaluate(
-        ({ id, name }) => {
-            type ActionHandler = (this: object, event: Event, target: HTMLElement) => void;
-            interface SheetLike {
-                element: HTMLElement;
-                options: { actions: Record<string, ActionHandler | undefined> };
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
-            const g = globalThis as unknown as { foundry: { applications: { instances: Map<string, SheetLike> } } };
-            const sheet = g.foundry.applications.instances.get(id);
-            const target = sheet?.element.querySelector<HTMLElement>(`[data-action="${name}"]`);
-            if (sheet === undefined || target === null || target === undefined) return;
-            sheet.options.actions[name]?.call(sheet, new PointerEvent('click'), target);
-        },
-        { id: appId, name: action },
-    );
-}
-
 /**
  * Put the sample's art (or source label) on screen: run its `reveal` action,
  * and in a compendium window search to its name so its entry is the one shown.
  */
 async function presentSample(page: Page, sample: Sample, appId: string): Promise<void> {
     const app = page.locator(`#${appId}`);
-    if (sample.reveal !== undefined) await runSheetAction(page, appId, sample.reveal);
+    // A real click: the view-only toggle stays enabled on a locked compendium sheet (#629).
+    if (sample.reveal !== undefined) await app.locator(`[data-action="${sample.reveal}"]`).first().click();
     if (sample.view === 'compendium') await app.locator('input[name="search"]').fill(sample.name);
     await page.waitForTimeout(scaledMs(1_500));
 }
@@ -204,15 +132,6 @@ async function loadsInPage(page: Page, src: string): Promise<ImgLoad> {
 /** The visible text of a rendered application. */
 async function appText(page: Page, appId: string): Promise<string> {
     return page.locator(`#${appId}`).innerText();
-}
-
-/** Close a rendered application by its id. */
-async function closeApp(page: Page, appId: string): Promise<void> {
-    await page.evaluate(async (id) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
-        const g = globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: (o: object) => Promise<void> }> } } };
-        await g.foundry.applications.instances.get(id)?.close({ animate: false });
-    }, appId);
 }
 
 /** Open each sample's sheet, check its art decodes, capture it, close it; returns the failures. */
