@@ -3,7 +3,7 @@
  * Central configuration object for the WH40K RPG RPG system.
  */
 
-import { getDegreeForMode, isD100Success, resolveDegreesMethod } from './rolls/roll-helpers.ts';
+import { isD100Success, printedDegrees, resolveDegreesMethod } from './rolls/roll-helpers.ts';
 import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
 import { capitalize } from './utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from './utils/quality-id.ts';
@@ -887,8 +887,10 @@ WH40K.calculateDegrees = (roll, target) => {
     const success = isD100Success(roll, target);
     // No actor context here; resolve the method from the homebrew degreesMode
     // setting (defaults to the per-system rule, which is gen2 when unscoped).
+    // A labelled, displayed count, so it is the one the method prints (#335): a
+    // forced Gen 1 has no base degree. Nothing reads it as a rule input.
     const method = resolveDegreesMethod(undefined);
-    const degrees = 1 + (success ? getDegreeForMode(method, target, roll) : getDegreeForMode(method, roll, target));
+    const degrees = printedDegrees(method, success, target, roll);
 
     return {
         success,

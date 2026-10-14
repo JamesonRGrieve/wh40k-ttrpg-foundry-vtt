@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ALL_SYSTEM_IDS } from './config/game-systems/types.ts';
 import { WH40K } from './config.ts';
 import { buildQualityLabel, parseQualityLevel, withoutRatingPlaceholder } from './utils/quality-id.ts';
@@ -105,5 +105,31 @@ describe('WH40K.currencies — per-line acquisition currency registry', () => {
 
     it('has no native acquisition currency for Imperium Maledictum (solars post-date the six-line shape)', () => {
         expect(entries.some(([, currency]) => currency.line === 'im')).toBe(false);
+    });
+});
+
+/**
+ * `WH40K.calculateDegrees` is a labelled display count with no actor, so it prints
+ * the degrees the active method gives (#335): under a forced Gen 1 there is no base
+ * degree (DH1 core p. 184), under Gen 2 (the unscoped default) there is.
+ */
+describe('WH40K.calculateDegrees prints the method’s own count (#335)', () => {
+    function stubMode(mode: string): void {
+        vi.stubGlobal('game', {
+            settings: { get: (): string => mode },
+            i18n: { format: (key: string, data: Record<string, string>): string => `${key}:${data['degrees'] ?? ''}` },
+        });
+    }
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('Gen 2 (unscoped default): 01 vs 75 is 8 degrees', () => {
+        stubMode('raw');
+        expect(WH40K.calculateDegrees(1, 75)).toMatchObject({ success: true, degrees: 8, label: 'WH40K.Degrees.Success:8' });
+    });
+
+    it('a forced Gen 1: 01 vs 75 is 7 degrees, and a narrow failure 0', () => {
+        stubMode('gen1');
+        expect(WH40K.calculateDegrees(1, 75)).toMatchObject({ success: true, degrees: 7, label: 'WH40K.Degrees.Success:7' });
+        expect(WH40K.calculateDegrees(80, 75).label).toBe('WH40K.Degrees.Failure:0');
     });
 });

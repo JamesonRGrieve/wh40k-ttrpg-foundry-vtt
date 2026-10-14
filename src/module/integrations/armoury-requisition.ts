@@ -31,7 +31,7 @@ import { logisticsRows } from '../applications/prompts/logistics-test-rows.ts';
 import { acquisitionLadderFor, weaponModificationRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
-import { getDegreeForMode, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { getDegreeForMode, printedDegreesFromCount, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import { isD100Success } from '../rules/_dice.ts';
 import {
     type AcquisitionLadder,
@@ -169,6 +169,7 @@ interface ArmouryAttempt {
     /** OW: the Logistics Test the target came from (its Table 6-2 / 6-6 rows). */
     logistics?: { context: LogisticsContext; breakdown: LogisticsBreakdown } | undefined;
     roll?: number | undefined;
+    /** Degrees as the line prints them (Gen 1 has no base degree, #335): the card's count. */
     dos?: number | undefined;
     dof?: number | undefined;
     cost?: number | undefined;
@@ -250,8 +251,11 @@ export function resolveArmouryRequisition(input: {
             breakdown: plan.gate.breakdown,
             logistics: plan.gate.logistics,
             roll: rolled?.total,
-            dos: rolled?.dos,
-            dof: rolled?.dof,
+            // The card prints the line's own count (#335). The rule above reads the
+            // engine's count, whose base degree `ratingAfterFailure` drops itself for
+            // a full-tens line (DH1).
+            dos: rolled === undefined ? undefined : printedDegreesFromCount(input.degreesMethod, rolled.dos),
+            dof: rolled === undefined ? undefined : printedDegreesFromCount(input.degreesMethod, rolled.dof),
             cost: plan.gate.cost,
         });
         if (!result.transfer) {

@@ -9,7 +9,7 @@ import {
     reconcileResourceDeltas,
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
-import { applyRollModeWhispers, getDegreeForMode, isD100Success, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import { actorGameSystemId, applyRollModeWhispers, isD100Success, printedDegrees, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
 import { startingCorruptionHoldsMalignancy } from '../rules/chaos-backgrounds.ts';
 import {
     NAVIGATOR_LEVEL_LABEL_KEY,
@@ -786,8 +786,9 @@ export class WH40KItem extends WH40KItemContainer {
         const rollTotal: number = roll.total;
 
         const success = isD100Success(rollTotal, opts.targetValue);
-        const method = resolveDegreesMethod((this.actor?.system as { gameSystem?: string } | undefined)?.gameSystem);
-        const degrees = 1 + (success ? getDegreeForMode(method, opts.targetValue, rollTotal) : getDegreeForMode(method, rollTotal, opts.targetValue));
+        // The card prints the line's own count (#335): Gen 1 has no base degree.
+        const method = resolveDegreesMethod(actorGameSystemId(this.actor));
+        const degrees = printedDegrees(method, success, opts.targetValue, rollTotal);
 
         const cardData = {
             item: this,

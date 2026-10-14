@@ -178,7 +178,9 @@ describe('resolveArmouryRequisition', () => {
                 rollD100: () => 24,
                 degreesMethod,
             }).attempts[0]?.dof;
-        expect(fail('gen1')).toBe(1);
+        // The card prints the line's own count (#335): Gen 1 has no base degree, so a
+        // miss by 9 points is 0 DoF (DH1 core p. 184), Gen 2's crossed tens digit 2.
+        expect(fail('gen1')).toBe(0);
         expect(fail('gen2')).toBe(2);
         const pass = (degreesMethod: 'gen1' | 'gen2'): number | undefined =>
             resolve({
@@ -191,8 +193,30 @@ describe('resolveArmouryRequisition', () => {
                 rollD100: () => 19,
                 degreesMethod,
             }).attempts[0]?.dos;
-        expect(pass('gen1')).toBe(1);
+        expect(pass('gen1')).toBe(0);
         expect(pass('gen2')).toBe(2);
+    });
+
+    it('DH1: the rating loss reads the engine count, so 4 printed DoF (and not 3) costs Influence (#335)', () => {
+        const run = (roll: number): ReturnType<typeof resolve> =>
+            resolve({
+                economy: 'influence',
+                // DH1's printed loss: 1 Influence at 4+ degrees of failure, counted in full tens.
+                ladder: { ...DH2_ACQUISITION_LADDER, failureLoss: { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' } },
+                requester: { rating: 35 },
+                entries: [entry(item({ availability: 'rare' }))],
+                infiniteStock: true,
+                rollD100: () => roll,
+                degreesMethod: 'gen1',
+            });
+        // Target 15. A 55 misses by 40: 4 DoF printed, Influence 35 → 34.
+        const four = run(55);
+        expect(four.attempts[0]?.dof).toBe(4);
+        expect(four.after.rating).toBe(34);
+        // A 54 misses by 39: 3 DoF printed, no loss.
+        const three = run(54);
+        expect(three.attempts[0]?.dof).toBe(3);
+        expect(three.after.rating).toBe(35);
     });
 
     it('DH2: weapon-modification parts take +30, printed as their own row (core p. 162, #136)', () => {
