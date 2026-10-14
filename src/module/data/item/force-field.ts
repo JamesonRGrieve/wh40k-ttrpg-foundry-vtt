@@ -272,42 +272,4 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         const parent = this.parent as ForceFieldParent | undefined;
         return parent?.update?.({ 'system.state.overloaded': false });
     }
-
-    /**
-     * Roll protection check against incoming damage.
-     * @param {object} [options] - Roll options
-     * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: rollProtection result varies; consumers cast as needed
-    async rollProtection(options: { speaker?: ReturnType<(typeof ChatMessage)['getSpeaker']> } = {}): Promise<unknown> {
-        if (!this.isProtecting) {
-            return { isProtected: false, overloaded: false, roll: null, inactive: true };
-        }
-
-        // Roll d100
-        const roll = await new Roll('1d100').evaluate();
-
-        // Check if protected (roll <= protection rating)
-        const isProtected = roll.total <= this.protectionRating;
-
-        // Check if overloaded (roll in overload range)
-        const overloaded = this.checksOverload(roll.total);
-
-        // Show roll to chat
-        await roll.toMessage({
-            flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
-                name: (this.parent as { name?: string } | undefined)?.name ?? game.i18n.localize('WH40K.Roll.ForceFieldTitle'),
-                isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),
-                overloaded: overloaded ? ` (${game.i18n.localize('WH40K.ForceField.Overloaded')}!)` : '',
-            }),
-            speaker: options.speaker,
-        });
-
-        // Update overload state if necessary
-        if (overloaded) {
-            await this.setOverloaded(true);
-        }
-
-        return { isProtected, overloaded, roll };
-    }
 }

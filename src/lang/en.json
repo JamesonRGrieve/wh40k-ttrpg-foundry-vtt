@@ -589,10 +589,7 @@
             "Active": "Active",
             "Inactive": "Inactive",
             "Off": "Off",
-            "Overloaded": "Overloaded",
-            "Protected": "Protected",
-            "NotProtected": "Not protected",
-            "ProtectionRoll": "{name} protection roll: {isProtected}{overloaded}"
+            "Overloaded": "Overloaded"
         },
         "Vitals": {
             "Label": "Vitals"

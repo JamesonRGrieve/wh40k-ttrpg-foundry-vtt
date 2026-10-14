@@ -16,9 +16,10 @@ import { test } from './lib/test';
  *     constructor + `update()` (location-armour resolution branch) +
  *     `finalize()` (full reduction → wounds/critical/fatigue allocator
  *     branch matrix).
- *   - `force-field-data.ts` (28.2% / 0%) — `ForceFieldData` constructor
- *     + `craftsmanshipToOverload()` (every choice in the switch) +
- *     `finalize()` (rolls 1d100, evaluates success/overload thresholds).
+ *   - `force-field-data.ts` — `ForceFieldActionData` / `ForceFieldRollData`
+ *     construction from a real force-field item (#645), the overload band
+ *     for every craftsmanship, and `finalize()` (rolls 1d100, resolves
+ *     protection and overload).
  *   - `d100-roll.ts` (51.7% / 9.5%) — `D100Roll.test()` static entry
  *     point with a known formula so the chat-template render branch is
  *     exercised end-to-end.
@@ -86,24 +87,21 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[] }> {
         interface AssignDamageCtor {
             new (actor: FakeActor, options: AssignDamageOptions): AssignDamageInstance;
         }
-        interface ForceFieldInstance {
+        interface ForceFieldRollInstance {
             protectionRating: number;
+            baseTarget: number;
+            overloadMin: number;
             overloadRating: number;
             success: boolean;
+            overload: boolean;
             roll: { total: number } | null;
-            craftsmanshipToOverload: (craftsmanship: string) => number;
             finalize: () => Promise<void>;
         }
-        interface FakeForceFieldSystem {
-            protectionRating: number;
-            craftsmanship: string;
-        }
-        interface FakeForceField {
-            system: FakeForceFieldSystem;
-            update: (data: Partial<{ system: Partial<FakeForceFieldSystem> }>) => Promise<FakeForceField>;
-        }
-        interface ForceFieldCtor {
-            new (actor: FakeActor, item: FakeForceField): ForceFieldInstance;
+        /** An in-memory document (never saved): a real force-field item and its owner. */
+        type DocumentCtor = new (data: object) => object;
+        interface ForceFieldModule {
+            ForceFieldRollData: new (actor: object, item: object) => ForceFieldRollInstance;
+            ForceFieldActionData: new (actor: object, item: object) => { rollData: ForceFieldRollInstance; template: string };
         }
         interface D100RollResult {
             total?: number;
@@ -245,65 +243,60 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[] }> {
 
         // ---------- force-field-data ----------
         async function probeForceField(): Promise<void> {
-            let ffMod: { ForceFieldData: ForceFieldCtor } | null = null;
+            let ffMod: ForceFieldModule | null = null;
             try {
-                ffMod = (await import(`${base}/rolls/force-field-data.js`)) as { ForceFieldData: ForceFieldCtor };
+                ffMod = (await import(`${base}/rolls/force-field-data.js`)) as ForceFieldModule;
             } catch (err) {
                 for (const f of ROLL_DATA_FLOWS.filter((k) => k.startsWith('force-field-')))
                     record(f, false, `import: ${err instanceof Error ? err.message : String(err)}`);
                 ffMod = null;
             }
             if (ffMod != null) {
-                const { ForceFieldData } = ffMod;
-
-                const fakeActor: FakeActor = {
-                    system: {},
-                    update: async () => {
-                        await Promise.resolve();
-                    },
-                };
-                // fakeFFShared must be declared before buildFF so the closure captures the reference
-                // rather than the undefined value — reassigned below after buildFF is defined.
-                // eslint-disable-next-line prefer-const -- closure forward-reference requires let
-                let fakeFFShared: FakeForceField;
-                const buildFF = (craftsmanship: string, rating: number): FakeForceField => ({
-                    system: { protectionRating: rating, craftsmanship },
-                    update: async (data: Partial<{ system: Partial<FakeForceFieldSystem> }>) => {
-                        await Promise.resolve();
-                        return Object.assign({}, fakeFFShared, { system: { ...fakeFFShared.system, ...data.system } });
-                    },
-                });
-                fakeFFShared = buildFF('Common', 40);
+                const { ForceFieldActionData, ForceFieldRollData } = ffMod;
+                // Real (unsaved) documents, so the roll reads the item DataModel's own overload band (#645).
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry document classes have no repo types
+                const docs = globalThis as unknown as { Actor: DocumentCtor; Item: DocumentCtor };
+                const owner = new docs.Actor({ name: 'probe-force-field-owner', type: 'dh2-character', system: { gameSystem: 'dh2' } });
+                const field = (craftsmanship: string, protectionRating: number): object =>
+                    new docs.Item({ name: 'probe-refractor', type: 'forceField', system: { protectionRating, craftsmanship } });
 
                 try {
-                    const ff = new ForceFieldData(fakeActor, fakeFFShared);
+                    const action = new ForceFieldActionData(owner, field('common', 40));
+                    const rd = action.rollData;
                     record(
                         'force-field-constructor',
-                        ff instanceof ForceFieldData && ff.protectionRating === 40 && ff.overloadRating === 10,
-                        `pr=${ff.protectionRating} or=${ff.overloadRating}`,
+                        rd instanceof ForceFieldRollData &&
+                            rd.protectionRating === 40 &&
+                            rd.baseTarget === 40 &&
+                            rd.overloadMin === 1 &&
+                            rd.overloadRating === 10 &&
+                            action.template.endsWith('force-field-roll-chat.hbs'),
+                        `pr=${rd.protectionRating} target=${rd.baseTarget} band=${rd.overloadMin}-${rd.overloadRating}`,
                     );
                 } catch (err) {
                     record('force-field-constructor', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    // Exercise every craftsmanship branch.
-                    const ff = new ForceFieldData(fakeActor, buildFF('Common', 30));
-                    const poor = ff.craftsmanshipToOverload('Poor');
-                    const common = ff.craftsmanshipToOverload('Common');
-                    const good = ff.craftsmanshipToOverload('Good');
-                    const dflt = ff.craftsmanshipToOverload('Best');
-                    const ok = poor === 15 && common === 10 && good === 5 && dflt === 1;
-                    record('force-field-craftsmanship-overload', ok, `poor=${poor} common=${common} good=${good} default=${dflt}`);
+                    // The overload band by craftsmanship (DH2 core Table 5–13): 01–15 / 01–10 / 01–05 / 01.
+                    const band = (craftsmanship: string): number => new ForceFieldRollData(owner, field(craftsmanship, 30)).overloadRating;
+                    const poor = band('poor');
+                    const common = band('common');
+                    const good = band('good');
+                    const best = band('best');
+                    const ok = poor === 15 && common === 10 && good === 5 && best === 1;
+                    record('force-field-craftsmanship-overload', ok, `poor=${poor} common=${common} good=${good} best=${best}`);
                 } catch (err) {
                     record('force-field-craftsmanship-overload', false, err instanceof Error ? err.message : String(err));
                 }
 
                 try {
-                    const ff = new ForceFieldData(fakeActor, buildFF('Common', 100));
-                    await ff.finalize();
-                    // With protectionRating=100, success should be true (roll ≤ 100).
-                    record('force-field-finalize', ff.success && ff.roll !== null, `success=${ff.success} roll=${ff.roll?.total}`);
+                    const rd = new ForceFieldRollData(owner, field('common', 100));
+                    await rd.finalize();
+                    // Protection rating 100: every d100 protects; overload follows the 01–10 band.
+                    const total = rd.roll?.total ?? 0;
+                    const ok = rd.roll !== null && rd.success && rd.overload === total <= 10;
+                    record('force-field-finalize', ok, `success=${rd.success} overload=${rd.overload} roll=${total}`);
                 } catch (err) {
                     record('force-field-finalize', false, err instanceof Error ? err.message : String(err));
                 }
