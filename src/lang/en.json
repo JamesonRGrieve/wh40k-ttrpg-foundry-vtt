@@ -4283,20 +4283,20 @@
             "ChatTitle": "Reinforcement Character called",
             "CalledBy": "Called by {name}",
             "Paid": "{name} spends {amount} Influence",
-            "Problem": {
-                "noTerms": "This NPC has no printed Influence Minimum and Cost.",
-                "noCaller": "Choose the calling Acolyte.",
-                "belowMinimum": "The caller's Influence is below the Influence Minimum.",
-                "contributionCap": "The rest of the warband may contribute at most half the cost, rounded up.",
             "LacksSkill": "lacks the required skill",
             "CallerSkill": "The caller must have {skill} at {rank} or better.",
             "CallerCorruption": "The caller gains {formula} Corruption points.",
             "ChatCorruption": "{name} gains {amount} Corruption ({formula})",
+            "Problem": {
+                "noTerms": "This NPC has no printed Influence Minimum and Cost.",
+                "noCaller": "Choose the calling Acolyte.",
+                "belowMinimum": "The caller's Influence is below the Influence Minimum.",
+                "callerSkill": "The caller does not have the skill this Reinforcement Character requires.",
+                "contributionCap": "The rest of the warband may contribute at most half the cost, rounded up.",
                 "contributorShort": "A contributor is spending more Influence than they have.",
                 "callerShort": "The caller cannot cover the rest of the cost."
             }
         },
-                "callerSkill": "The caller does not have the skill this Reinforcement Character requires.",
         "Inquest": {
             "PanelHeader": "Inquests",
             "OpenTracker": "Inquest tracker",

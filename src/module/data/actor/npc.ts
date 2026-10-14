@@ -21,7 +21,7 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
-import { skillCharacteristicMap, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
+import { SKILL_DEFINITIONS, skillCharacteristicMap, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
@@ -47,6 +47,9 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
 
 /** Skill catalog for a model class registered without a line (DH2 is the canonical default). */
 const DEFAULT_SKILL_CATALOG_SYSTEM = 'dh2';
+
+/** Every catalog skill's display label by key, specialist skills included (Forbidden Lore, Trade, …). */
+const SKILL_LABELS = new Map(Object.entries(SKILL_DEFINITIONS).map(([key, definition]) => [key, definition.label]));
 
 /**
  * Data model for NPC V2 actors.
@@ -836,6 +839,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     get standardSkills(): StandardSkillEntry[] {
         return NPCData.standardSkillsFor((this.constructor as { gameSystem?: string }).gameSystem);
+    }
+
+    /** A skill key's display label from the skill catalog (specialist skills included), or the key itself when unknown. */
+    skillLabel(skillKey: string): string {
+        return SKILL_LABELS.get(skillKey) ?? skillKey;
     }
 
     /** The non-specialist skill catalog of a model class's line, DH2 for a class registered without one. */

@@ -122,10 +122,12 @@ describe('caller terms', () => {
         expect(callerRequirementView(NO_CALLER_TERMS, '')).toBeNull();
         expect(callerRequirementView({ ...NO_CALLER_TERMS, corruption: '2' }, '')).toEqual({ skillLabel: '', rank: null, rankKey: '', corruption: '2' });
     });
-    it("reads the skill's display name from the actor's skill rows", () => {
-        expect(requiredSkillLabel({ forbiddenLore: { label: 'Forbidden Lore' } }, DAEMONHOST.caller)).toBe('Forbidden Lore');
-        expect(requiredSkillLabel({}, DAEMONHOST.caller)).toBe('forbiddenLore');
-        expect(requiredSkillLabel({ forbiddenLore: { label: 'Forbidden Lore' } }, NO_CALLER_TERMS)).toBe('');
+    it("reads the skill's display name through the RC's catalog lookup", () => {
+        const labels: Record<string, string> = { forbiddenLore: 'Forbidden Lore' };
+        const labelOf = (skill: string): string => labels[skill] ?? skill;
+        expect(requiredSkillLabel(labelOf, DAEMONHOST.caller)).toBe('Forbidden Lore');
+        expect(requiredSkillLabel((skill) => skill, DAEMONHOST.caller)).toBe('forbiddenLore');
+        expect(requiredSkillLabel(labelOf, NO_CALLER_TERMS)).toBe('');
     });
 });
 

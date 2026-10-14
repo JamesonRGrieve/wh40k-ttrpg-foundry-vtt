@@ -33,7 +33,6 @@ import {
     type ReinforcementCandidate,
     type ReinforcementCallerTerms,
     type ReinforcementTerms,
-    type SkillLabelSource,
 } from './reinforcement-call-view.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -47,7 +46,8 @@ interface ReinforcementActor {
     readonly system: {
         readonly isReinforcement: boolean;
         readonly reinforcement: ReinforcementTerms;
-        readonly skills: SkillLabelSource;
+        /** A skill key's display label (the NPC data model's catalog lookup). */
+        skillLabel: (skillKey: string) => string;
     };
 }
 
@@ -183,7 +183,8 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
                 peerDiscount: this.#peerDiscount,
                 gmAdjustment: this.#gmAdjustment,
             },
-            requiredSkillLabel(this.#rc.system.skills, terms.caller),
+            // An NPC has no PC-style `skills` rows: the label comes from its skill catalog.
+            requiredSkillLabel((skill) => this.#rc.system.skillLabel(skill), terms.caller),
         );
     }
 

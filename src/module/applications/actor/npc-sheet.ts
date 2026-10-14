@@ -436,7 +436,11 @@ export default class NPCSheet extends CharacterSheet {
                 influenceCost: terms.influenceCost,
                 peer: terms.peerDiscount.peer,
                 peerAmount: terms.peerDiscount.amount,
-                callerRequirement: callerRequirementView(terms.caller, requiredSkillLabel(npc.skills, terms.caller)),
+                // An NPC has no PC-style `skills` rows: the label comes from its skill catalog.
+                callerRequirement: callerRequirementView(
+                    terms.caller,
+                    requiredSkillLabel((skill) => npc.skillLabel(skill), terms.caller),
+                ),
             };
         }
 

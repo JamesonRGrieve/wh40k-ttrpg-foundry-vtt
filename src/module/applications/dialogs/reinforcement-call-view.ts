@@ -113,13 +113,14 @@ export function callerRequirementView(caller: ReinforcementCallerTerms, skillLab
     };
 }
 
-/** An actor's skill rows, read for their display labels. */
-export type SkillLabelSource = Readonly<Record<string, { readonly label?: string | undefined } | undefined>>;
-
-/** The required skill's display name from an actor's skill rows, or '' when the RC requires none. */
-export function requiredSkillLabel(skills: SkillLabelSource, caller: ReinforcementCallerTerms): string {
+/**
+ * The required skill's display name through `labelOf` (the RC's skill catalog
+ * lookup), or '' when the RC requires none. The RC is an NPC, whose data model
+ * holds no PC-style `skills` rows to read a label from.
+ */
+export function requiredSkillLabel(labelOf: (skill: string) => string, caller: ReinforcementCallerTerms): string {
     if (caller.skill === '') return '';
-    return skills[caller.skill]?.label ?? caller.skill;
+    return labelOf(caller.skill);
 }
 
 /** One skill row as the character DataModel exposes it: a rank, and specialist entries. */
