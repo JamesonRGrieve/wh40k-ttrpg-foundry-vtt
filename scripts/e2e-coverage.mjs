@@ -636,6 +636,11 @@ recordDimension('npc-armour.flow', covered['npc-armour.flow'], NPC_ARMOUR_FLOWS)
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];
 recordDimension('origin-prompt.flow', covered['origin-prompt.flow'], ORIGIN_PROMPT_FLOWS);
 
+// A character sheet reads its own line from its class (#596), tests/e2e/per-line-sheet-theme.spec.ts.
+// Keep in sync with PER_LINE_SHEET_THEME_FLOWS there.
+const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently'];
+recordDimension('per-line-sheet-theme.flow', covered['per-line-sheet-theme.flow'], PER_LINE_SHEET_THEME_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

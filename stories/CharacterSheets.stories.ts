@@ -119,3 +119,44 @@ export const ImperiumMaledictumNpc: Story = {
         await expect(queries.getByText('Scale to Threat')).toBeVisible();
     },
 };
+
+/** The theme-relevant computed colours of every per-line-variant element in a frame. */
+function themedColours(frame: Element): string[] {
+    return Array.from(frame.querySelectorAll<HTMLElement>('[class*="dh2:"], [class*="rt:"]')).map((el) => {
+        const style = getComputedStyle(el);
+        return `${style.color}|${style.backgroundColor}|${style.borderBottomColor}|${style.borderTopColor}`;
+    });
+}
+
+/**
+ * Per-line theming (#596): a sheet stamps its line on its root as
+ * `data-wh40k-system` and the context's `_gameSystemId`, which the `<line>:tw-*`
+ * variants and `themeClassFor` read. The same sheet body on DH2 and on RT shows the
+ * two lines' palettes.
+ */
+export const PerLineThemeDH2AndRT: Story = {
+    name: 'Per-line theme — DH2 and RT side by side',
+    render: () => {
+        const root = document.createElement('div');
+        for (const systemId of ['dh2', 'rt'] as const) {
+            const args = { ...buildPlayerArgs(systemId), _gameSystemId: systemId };
+            const frame = renderCharacterSheet(args, biographyTemplate);
+            frame.classList.add('wh40k-rpg');
+            frame.dataset['wh40kSystem'] = systemId;
+            root.append(frame);
+        }
+        return root;
+    },
+    play: async ({ canvasElement }) => {
+        const dh2 = canvasElement.querySelector('[data-wh40k-system="dh2"]');
+        const rt = canvasElement.querySelector('[data-wh40k-system="rt"]');
+        await expect(dh2).not.toBeNull();
+        await expect(rt).not.toBeNull();
+        const dh2Colours = dh2 === null ? [] : themedColours(dh2);
+        const rtColours = rt === null ? [] : themedColours(rt);
+        await expect(dh2Colours.length).toBeGreaterThan(0);
+        await expect(dh2Colours.length).toBe(rtColours.length);
+        // The same elements take a different colour on each line.
+        await expect(dh2Colours.some((colour, index) => colour !== rtColours[index])).toBe(true);
+    },
+};

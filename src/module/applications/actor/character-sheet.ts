@@ -732,7 +732,13 @@ export default class CharacterSheet extends BaseActorSheet {
     /* eslint-enable no-restricted-syntax */
     declare _throttleTimers?: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
-    private readonly _gameSystemId?: GameSystemId;
+    /**
+     * The line this sheet class renders, set on the PROTOTYPE by `makeSystemVariant()`
+     * (game-system-sheets.ts). `declare` emits no own property: a plain class field
+     * initialises to `undefined` on every instance and shadows the prototype value,
+     * which left every per-line sheet resolving its line from the actor alone (#596).
+     */
+    declare readonly _gameSystemId?: GameSystemId;
 
     /** Origin-path option cache keyed by game system id (packs don't change at runtime). */
     readonly #originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();

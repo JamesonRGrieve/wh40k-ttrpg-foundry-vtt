@@ -31,9 +31,7 @@ interface BcGiftSheetLike {
  * or the Gift was edited) is ignored, so a double click cannot roll twice.
  */
 export async function bcRollGiftCharacteristic(this: BcGiftSheetLike, _event: Event, target: HTMLElement): Promise<void> {
-    // The actor's own line, like every BC action (#596). The sheet instance's
-    // `_gameSystemId` is not reliable here: CharacterSheet's class field shadows
-    // the per-line prototype value with `undefined`, so a sheet-side gate never opened.
+    // The actor's own line, like every BC action (#596).
     if (!isActorOnLine(this.actor, 'bc')) return;
     const { itemId, characteristic } = target.dataset;
     if (itemId === undefined || characteristic === undefined) return;
