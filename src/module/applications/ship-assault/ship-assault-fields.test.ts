@@ -10,7 +10,17 @@ function form(html: string): HTMLElement {
     return root;
 }
 
-const SHIP = { name: 'A', hullType: 'frigate', manoeuvrability: 10, armour: 18, turretRating: 1, crewPopulation: 50, hullIntegrity: 35, morale: 60 };
+const SHIP = {
+    name: 'A',
+    hullType: 'frigate',
+    manoeuvrability: 10,
+    crippledManoeuvrability: 0,
+    armour: 18,
+    turretRating: 1,
+    crewPopulation: 50,
+    hullIntegrity: 35,
+    morale: 60,
+};
 
 describe('readAssaultForm', () => {
     it('reads numbers, text, checkboxes, selects and the checked radio', () => {

@@ -17,11 +17,12 @@
  */
 
 import type { ShipTestComponent, ShipTestResult, SituationalModifier } from '../../rules/ship-assault.ts';
-import { isCrippled } from '../../rules/ship-crew-morale.ts';
+import { crippledCriticalRolls, suffersCrippledEffects } from '../../rules/ship-crippled.ts';
 import {
     allocateSalvoShields,
     applyVoidShields,
     composeGunneryTest,
+    damagePastArmour,
     defaultShieldedBattery,
     isSalvoCriticalHit,
     isShipCriticalHit,
@@ -132,6 +133,8 @@ interface FireRolled {
     critRoll: number | null;
     before: ShipVitals;
     salvo: SalvoRolled | null;
+    /** Critical Hits a Crippled target takes from damage past its Armour (#187), valued at that damage. */
+    crippledCriticals: number[];
 }
 
 /** A row of the target's before / after vitals table. */
@@ -162,6 +165,8 @@ type FireCardData = {
     allShielded: boolean;
     critical: string;
     salvoCriticalLimit: boolean;
+    /** One line per Critical Hit a Crippled target took from damage past its Armour. */
+    crippledCriticals: string[];
     vitalsTitle: string;
     vitals: VitalsRow[];
     applied: boolean;
@@ -255,6 +260,7 @@ function fireCardData(input: ShipWeaponFireInput, ctx: ShipAssaultContext, rolle
         allShielded: anyHit && rolled.shielded.remaining === 0,
         critical: rolled.critRoll === null ? '' : ctx.localize('WH40K.Voidcraft.Fire.Critical', { rolled: rolled.critRoll, ship: target }),
         salvoCriticalLimit: rolled.salvo !== null && rolled.critRoll !== null,
+        crippledCriticals: rolled.crippledCriticals.map((damage) => ctx.localize('WH40K.Voidcraft.Crippled.FireCritical', { ship: target, damage })),
         vitalsTitle: ctx.localize('WH40K.Voidcraft.Fire.VitalsTitle', { ship: target }),
         vitals: vitalsRows(ctx, rolled.before, after),
         applied: after !== null,
@@ -374,6 +380,8 @@ interface FireStep {
 interface FireTarget {
     before: ShipVitals;
     defences: { name: string; armour: number };
+    /** The target's line and Hull before the shot: a Crippled RT target takes Critical Hits from damage past Armour. */
+    hullState: { gameSystem: string; hullIntegrity: { value: number; max: number } };
 }
 
 /** The 1d5 Critical Hit roll, when the shot caused one. */
@@ -399,6 +407,7 @@ async function resolveSingleShot(weapon: ShipWeaponFireWeapon, lead: { shot: Sal
             critRoll: critDie === null ? null : rollTotal(critDie),
             before: target.before,
             salvo: null,
+            crippledCriticals: crippledCriticalRolls(target.hullState, damagePastArmour(weapon.weaponClass, rolled.damage, target.defences.armour)),
         },
         rolls: [lead.roll, ...rolled.rolls, ...(critDie === null ? [] : [critDie])],
     };
@@ -445,6 +454,7 @@ async function resolveSalvo(
             critRoll: critDie === null ? null : rollTotal(critDie),
             before: target.before,
             salvo: { batteries },
+            crippledCriticals: crippledCriticalRolls(target.hullState, damagePastArmour('macrobattery', damage, target.defences.armour)),
         },
         rolls: [...fired.map(({ roll }) => roll), ...damageRolls, ...(critDie === null ? [] : [critDie])],
     };
@@ -494,11 +504,12 @@ export function createShipWeaponFireFlow(input: ShipWeaponFireInput): ShipAssaul
             const gunnery: Gunnery = {
                 ballisticSkill: form.number('gunnerSkill', input.ballisticSkill),
                 situational: readSituational(form, 'situational'),
-                crippled: isCrippled(ctx.attacker.hullIntegrity),
+                crippled: suffersCrippledEffects({ gameSystem: ctx.attacker.system.gameSystem, hullIntegrity: ctx.attacker.hullIntegrity }),
             };
             const target: FireTarget = {
                 before: readVitals(ctx.defender),
                 defences: { name: ctx.defender.name, armour: ctx.defender.assaultProfile.armour },
+                hullState: { gameSystem: ctx.defender.system.gameSystem, hullIntegrity: { ...ctx.defender.hullIntegrity } },
             };
             const { primary, companions } = chosenBatteries(input, salvoCompanions, form);
             const lead = await fireBattery(primary, gunnery);
@@ -525,6 +536,10 @@ export function createShipWeaponFireFlow(input: ShipWeaponFireInput): ShipAssaul
             if (rolled.shielded.cancelled > 0) await target.overloadVoidShields(rolled.shielded.cancelled);
             if (rolled.hull.hullLoss > 0) await target.applyHullDamage(rolled.hull.hullLoss);
             if (rolled.critRoll !== null) await target.rollShipCriticalHit(rolled.critRoll);
+            for (const damage of rolled.crippledCriticals) {
+                // eslint-disable-next-line no-await-in-loop -- each Critical Hit is drawn and recorded in turn, so the statuses land in the order taken
+                await target.takeCrippledCriticalHit(damage);
+            }
             return { card: { template: TEMPLATE, data: fireCardData(input, ctx, rolled, readVitals(target), false) }, rolls: [] };
         },
     });

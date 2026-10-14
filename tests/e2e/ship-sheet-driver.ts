@@ -612,6 +612,35 @@ export async function readShieldsUp(page: Page, actorId: string): Promise<number
     }, actorId);
 }
 
+/** Set a ship's current Hull Integrity (fixture setup, not a feature step). */
+export async function setHull(page: Page, actorId: string, value: number): Promise<void> {
+    await page.evaluate(
+        async ({ id, hull }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+            const g = globalThis as unknown as { game: { actors: { get: (i: string) => { update: (data: object) => Promise<object> } | undefined } } };
+            await g.game.actors.get(id)?.update({ 'system.hullIntegrity.value': hull });
+        },
+        { id: actorId, hull: value },
+    );
+}
+
+/** A ship's Crippled / destroyed state (#187), failing if the Document and its DataModel disagree. */
+export async function readHullCondition(page: Page, actorId: string): Promise<{ crippled: boolean; destroyed: boolean }> {
+    return page.evaluate((id: string) => {
+        interface Condition {
+            isCrippled: boolean;
+            isDestroyed: boolean;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { actors: { get: (i: string) => (Condition & { system: Condition }) | undefined } } };
+        const actor = g.game.actors.get(id);
+        if (actor === undefined) throw new Error(`no actor ${id}`);
+        if (actor.isCrippled !== actor.system.isCrippled) throw new Error('the Document and DataModel disagree on isCrippled');
+        if (actor.isDestroyed !== actor.system.isDestroyed) throw new Error('the Document and DataModel disagree on isDestroyed');
+        return { crippled: actor.isCrippled, destroyed: actor.isDestroyed };
+    }, actorId);
+}
+
 /** The card root hook each assault action posts, by its `data-assault`. */
 const ASSAULT_CARD_HOOKS = {
     'ram': 'ship-ramming-card',

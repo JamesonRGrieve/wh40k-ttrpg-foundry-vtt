@@ -21,6 +21,7 @@ export const ATTACKER_SHIP: ShipAssaultShip = {
     name: 'The Errant Vector',
     hullType: 'frigate',
     manoeuvrability: 15,
+    crippledManoeuvrability: 0,
     armour: 18,
     turretRating: 1,
     crewPopulation: 80,
@@ -33,6 +34,7 @@ export const DEFENDER_SHIP: ShipAssaultShip = {
     name: 'Whispering Star',
     hullType: 'raider',
     manoeuvrability: 20,
+    crippledManoeuvrability: 0,
     armour: 16,
     turretRating: 1,
     crewPopulation: 55,
@@ -54,6 +56,7 @@ export function storyShipActor(profile: ShipAssaultShip, crewRating = 45, voidSh
         applyHullDamage: async (amount: number) => Promise.resolve({ hullLoss: amount, crewLoss: amount, moraleLoss: amount }),
         applyCrewMoraleDamage: async (crew: number, morale: number) => Promise.resolve({ crewLoss: crew, moraleLoss: morale }),
         rollShipCriticalHit: async () => Promise.resolve(),
+        takeCrippledCriticalHit: async () => Promise.resolve(),
     };
 }
 
@@ -83,12 +86,13 @@ export function queueStoryRolls(...totals: number[]): void {
  * A story ship for the RT ship-action roll (#186, #189): the players' frigate
  * with two Weapon Components; effects are accepted and dropped.
  */
-export function storyActionShip(restored = 3): ShipActionShip {
+export function storyActionShip(restored = 3, hull = ATTACKER_SHIP.hullIntegrity): ShipActionShip {
     return {
         name: ATTACKER_SHIP.name,
         system: { gameSystem: 'rt', crew: { crewRating: 40 } },
         manoeuvrability: ATTACKER_SHIP.manoeuvrability,
         detection: 25,
+        hullIntegrity: { value: hull, max: ATTACKER_SHIP.hullIntegrity },
         shipActionEffects: [],
         shipWeaponChoices: [
             { id: 'macro', name: 'Sunsear Laser Battery' },

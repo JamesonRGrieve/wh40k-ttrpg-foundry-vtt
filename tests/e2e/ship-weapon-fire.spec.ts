@@ -13,9 +13,11 @@ import {
     openSheet,
     provenanceRows,
     readCard,
+    readHullCondition,
     readShieldsUp,
     readShip,
     RT_FRIGATE,
+    setHull,
     setVoidShields,
     showTab,
     snapDamageControl,
@@ -73,30 +75,6 @@ async function openWeaponSheet(page: Page, actorId: string, itemId: string): Pro
     );
     await page.locator(`#${appId}`).waitFor({ state: 'visible' });
     return appId;
-}
-
-/** Set a ship's current Hull Integrity (fixture setup, not a feature step). */
-async function setHull(page: Page, actorId: string, value: number): Promise<void> {
-    await page.evaluate(
-        async ({ id, hull }) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
-            const g = globalThis as unknown as { game: { actors: { get: (i: string) => { update: (data: object) => Promise<object> } | undefined } } };
-            await g.game.actors.get(id)?.update({ 'system.hullIntegrity.value': hull });
-        },
-        { id: actorId, hull: value },
-    );
-}
-
-/** The live `isCrippled` getter of a ship actor. */
-async function readCrippled(page: Page, actorId: string): Promise<boolean> {
-    return page.evaluate((id: string) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
-        const g = globalThis as unknown as { game: { actors: { get: (i: string) => { isCrippled: boolean; system: { isCrippled: boolean } } | undefined } } };
-        const actor = g.game.actors.get(id);
-        if (actor === undefined) throw new Error(`no actor ${id}`);
-        if (actor.isCrippled !== actor.system.isCrippled) throw new Error('the Document and DataModel disagree on isCrippled');
-        return actor.isCrippled;
-    }, actorId);
 }
 
 test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #184, #187)', () => {
@@ -161,9 +139,9 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
         try {
             // RT Core "Crippled Ships": Crippled is 0 Hull Integrity — half Hull is only damaged.
             await setHull(page, sabre.id, 17);
-            expect(await readCrippled(page, sabre.id), 'half Hull is not Crippled').toBe(false);
+            expect((await readHullCondition(page, sabre.id)).crippled, 'half Hull is not Crippled').toBe(false);
             await setHull(page, sabre.id, 0);
-            expect(await readCrippled(page, sabre.id)).toBe(true);
+            expect(await readHullCondition(page, sabre.id)).toEqual({ crippled: true, destroyed: false });
 
             // The book's shot: 3 hits, but a Crippled Strength 3 battery lands 2; the shield takes one; 9 vs Armour 15.
             const fired = await fireWeaponFromSheet(page, sabre.id, {

@@ -267,13 +267,23 @@ const RECORDED_CRITICALS = [
         index: 0,
         label: 'Fire!',
         rolled: 5,
+        rollLabel: storyLocalize('WH40K.Voidcraft.Critical.RollLabel', { rolled: 5 }),
         text: '<p><b>Fire!</b>: Alarms scream through the hull as hungry flames roar through passageways and compartments.</p>',
     },
     {
         index: 1,
         label: 'Sensors Damaged',
         rolled: 3,
+        rollLabel: storyLocalize('WH40K.Voidcraft.Critical.RollLabel', { rolled: 3 }),
         text: "<p><b>Sensors Damaged</b>: The ship's auspex arrays have been knocked out, leaving the vessel blind.</p>",
+    },
+    {
+        // #187: a Crippled ship's critical, read at its damage past Armour rather than rolled on 1d5.
+        index: 2,
+        label: 'Holed',
+        rolled: 1,
+        rollLabel: storyLocalize('WH40K.Voidcraft.Critical.CrippledRollLabel', { rolled: 1 }),
+        text: "<p><b>Holed</b>: A lucky hit has wrenched open the ship's hull, exposing it to space.</p>",
     },
 ];
 
@@ -287,8 +297,10 @@ export const DamageControlCriticals: Story = {
         const shields = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-void-shields"] [data-shields-up]');
         await expect(shields?.textContent.trim()).toBe('0 / 1');
         const criticals = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="ship-criticals"] li')];
-        await expect(criticals.map((row) => row.querySelector('span')?.firstChild?.textContent?.trim())).toEqual(['Fire!', 'Sensors Damaged']);
+        await expect(criticals.map((row) => row.querySelector('span')?.firstChild?.textContent?.trim())).toEqual(['Fire!', 'Sensors Damaged', 'Holed']);
         await expect(view.getByText(/Rolled 5 on 1d5/)).toBeVisible();
+        // A Crippled ship's critical names the damage it was read at, not a 1d5 (#187).
+        await expect(view.getByText('Crippled: 1 damage past Armour')).toBeVisible();
         // The table's HTML renders as text, not escaped markup.
         await expect(canvasElement.querySelector('[data-wh40k-hook="ship-criticals"] b')?.textContent).toBe('Fire!');
         const clicks = captureActionClicks(canvasElement);
@@ -299,6 +311,51 @@ export const DamageControlCriticals: Story = {
             ['removeShipStatus', '1'],
             ['restoreVoidShields', ''],
         ]);
+    },
+};
+
+const atZeroHull: SheetContextLike = {
+    ...defaultCtxWithSource,
+    source: { ...defaultCtxWithSource.source, hullIntegrity: { value: 0, max: 35 } },
+};
+
+export const CrippledAtZeroHull: Story = {
+    name: 'Issue #187 — an RT ship at 0 Hull is Crippled, not destroyed',
+    args: { ...atZeroHull, shipCondition: { crippled: true, destroyed: false } },
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        const badge = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-condition-crippled"]');
+        await expect(badge?.textContent).toContain('Crippled');
+        await expect(badge?.textContent).toContain('half Speed, weapons at half Strength');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-condition-destroyed"]')).toBeNull();
+    },
+};
+
+export const DestroyedByCritical: Story = {
+    name: 'Issue #187 — destroyed only by a Critical Hit result',
+    args: { ...atZeroHull, shipCondition: { crippled: true, destroyed: true } },
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-condition-destroyed"]')?.textContent).toContain(
+            'A Critical Hit result destroyed this ship.',
+        );
+        // The destroyed state replaces the Crippled one rather than stacking beside it.
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-condition-crippled"]')).toBeNull();
+    },
+};
+
+export const OtherLineAtZeroHull: Story = {
+    name: 'Issue #187 — another line’s ship at 0 Hull shows no RT condition',
+    args: {
+        ...atZeroHull,
+        actor: withSystem(mockActor({ _id: 'dh2-zero-hull', name: 'Aquila Lander', type: 'rt-starship' }), 'dh2', 'vehicle') as SheetContextLike['actor'],
+        // The sheet gates the condition on the Rogue Trader line, so a DH2 hull at 0 gets neither.
+        shipCondition: { crippled: false, destroyed: false },
+    },
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-condition-crippled"]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-condition-destroyed"]')).toBeNull();
     },
 };
 

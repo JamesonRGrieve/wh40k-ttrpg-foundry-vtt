@@ -123,7 +123,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             shipUpgrades?: ShipWeaponDoc[];
             weaponsByLocation?: WeaponsByLocation;
             createEmbeddedDocuments?: (kind: string, data: object[]) => Promise<ShipWeaponDoc[]>;
-            update?: (data: Record<string, number | string>) => Promise<void>;
+            update?: (data: Record<string, number | string | object[]>) => Promise<void>;
             fireWeapon?: (weaponId: string) => Promise<void>;
             rollInitiative?: () => Promise<object | null>;
             delete?: () => Promise<void>;
@@ -424,8 +424,20 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             record('get-isCrippled-true', false, err instanceof Error ? err.message : String(err));
         }
         try {
-            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 0 }), 'hull zero for destroyed');
-            record('get-isDestroyed-true', live()?.isDestroyed === true, `value=${live()?.hullIntegrity?.value}`);
+            // #187 (operator ruling): an RT ship at 0 Hull is Crippled, never destroyed by Hull. It is
+            // destroyed only by a Critical Hit result whose table entry destroys it.
+            const atZero = live()?.isDestroyed;
+            await withTimeout(
+                live()?.update?.({
+                    'system.shipStatuses': [{ id: 'catastrophic', name: 'Catastrophic Damage', rolled: 11, text: '', appliedAt: 0, destroysShip: true }],
+                }),
+                'destroying critical recorded',
+            );
+            record(
+                'get-isDestroyed-true',
+                atZero === false && live()?.isDestroyed === true,
+                `at 0 Hull=${String(atZero)}, after the critical=${String(live()?.isDestroyed)}`,
+            );
         } catch (err) {
             record('get-isDestroyed-true', false, err instanceof Error ? err.message : String(err));
         }

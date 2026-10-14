@@ -5,7 +5,9 @@ import {
     averageDamage,
     composeGunneryTest,
     crippledStrength,
+    damagePastArmour,
     defaultShieldedBattery,
+    type HitDamageRoll,
     isSalvoCriticalHit,
     isShipCriticalHit,
     salvoHitComponents,
@@ -176,6 +178,24 @@ describe('ship weapon fire (#184)', () => {
         const through = resolveHullDamage('macrobattery', [{ total: 18, formula: '1d10' }], raider, true);
         expect(through.hullLoss).toBe(3);
         expect(through.components.map((row) => row.labelKey)).not.toContain('WH40K.Voidcraft.Fire.Component.CriticalPoint');
+    });
+});
+
+describe('ship-weapon-fire — damage past Armour (the value a Crippled target’s Critical Hit is read at, #187)', () => {
+    const hits = (...totals: number[]): HitDamageRoll[] => totals.map((total) => ({ total, formula: '1d10' }));
+
+    it('takes a macrobattery’s summed hits less Armour, once', () => {
+        expect(damagePastArmour('macrobattery', hits(9, 7), 15)).toEqual([1]);
+        expect(damagePastArmour('macrobattery', hits(6), 15)).toEqual([-9]);
+    });
+
+    it('takes each lance hit in full, Armour ignored', () => {
+        expect(damagePastArmour('lance', hits(9, 6), 15)).toEqual([9, 6]);
+    });
+
+    it('applies nothing when no hit got through', () => {
+        expect(damagePastArmour('macrobattery', [], 15)).toEqual([]);
+        expect(damagePastArmour('lance', [], 15)).toEqual([]);
     });
 });
 

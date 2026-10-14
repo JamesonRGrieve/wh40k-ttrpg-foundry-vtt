@@ -573,6 +573,9 @@ recordDimension('ship-assault.flow', covered['ship-assault.flow'], SHIP_ASSAULT_
 // tests/e2e/ship-weapon-fire.spec.ts — the Weapons tab's Fire dialog and the Weapon Component sheet.
 const SHIP_WEAPON_FLOWS = ['macrobattery', 'crippled-half-strength', 'macrobattery-salvo', 'lance-critical', 'miss', 'other-line-gated', 'item-sheet-labels'];
 recordDimension('ship-weapon.flow', covered['ship-weapon.flow'], SHIP_WEAPON_FLOWS);
+// tests/e2e/ship-crippled.spec.ts — Crippled and destroyed RT ships (#187).
+const SHIP_CRIPPLED_FLOWS = ['crippled-condition', 'combined-test-row', 'crippled-target-critical', 'destroyed-by-critical', 'other-line-unchanged'];
+recordDimension('ship-crippled.flow', covered['ship-crippled.flow'], SHIP_CRIPPLED_FLOWS);
 
 // Character-generation modes (point-buy + roll) exercised by
 // tests/e2e/char-gen-modes.spec.ts. Keep in sync with CHAR_GEN_MODES there.

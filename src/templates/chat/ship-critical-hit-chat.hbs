@@ -29,5 +29,11 @@
         <div class="tw-text-[12px] tw-text-[#5a5a5a]">
             {{localize "WH40K.Voidcraft.Critical.PersistsUntilRepaired"}}
         </div>
+        {{#if destroyedLabel}}
+            {{!-- A result the table marks as destroying the ship (RT Core Table 8-12, #187). --}}
+            <div data-wh40k-hook="ship-critical-destroyed" class="tw-font-bold tw-text-[#c0392b]">
+                <i class="fas fa-explosion"></i> {{destroyedLabel}}
+            </div>
+        {{/if}}
     </div>
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

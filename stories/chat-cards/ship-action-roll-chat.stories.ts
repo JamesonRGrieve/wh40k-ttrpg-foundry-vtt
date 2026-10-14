@@ -23,11 +23,12 @@ import { renderSheet } from '../test-helpers';
 initializeStoryHandlebars();
 
 /** Roll the action on the given d100 and render its card. */
-async function card(order: ShipActionOrder, roll: number, fields: string): Promise<HTMLElement> {
+async function card(order: ShipActionOrder, roll: number, fields: string, hull?: number): Promise<HTMLElement> {
     queueStoryRolls(roll);
     const form = document.createElement('form');
     form.innerHTML = fields;
-    const rolled = await rollShipAction({ ship: storyActionShip(), order, localize: storyLocalize, degreesMethod: 'gen1' }, readAssaultForm(form));
+    const ship = storyActionShip(3, hull);
+    const rolled = await rollShipAction({ ship, order, localize: storyLocalize, degreesMethod: 'gen1' }, readAssaultForm(form));
     const wrapper = document.createElement('div');
     wrapper.className = 'wh40k-rpg tw-p-4';
     wrapper.setAttribute('data-wh40k-system', 'rt');
@@ -72,6 +73,29 @@ export const LockOnTargetSucceeds: Story = {
         await expect(canvasElement.querySelector('[data-outcome="success"]')?.textContent).toContain(
             '+10 to Ballistic Skill Tests to fire Titanforge Lance, this turn.',
         );
+    },
+};
+
+export const LockOnTargetCrippled: Story = {
+    name: 'Lock on Target from a Crippled ship — the −10 Detection is its own row (#187)',
+    loaders: [
+        async () => ({
+            el: await card(
+                STORY_LOCK_ON_TARGET,
+                40,
+                '<input name="skill" value="40" /><select name="weapon"><option value="lance" selected>Lance</option></select>',
+                0,
+            ),
+        }),
+    ],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]')].map((row) =>
+            row.textContent.replace(/\s+/gu, ' ').trim(),
+        );
+        // The ship's live Detection (25) already carries the penalty: 35 on the hull, −10 for being Crippled.
+        await expect(rows).toContain('Crippled ship (−10 Detection) -10');
+        await expect(rows).toContain('Detection (The Errant Vector) +35');
     },
 };
 

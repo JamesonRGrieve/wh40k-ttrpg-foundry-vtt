@@ -16,6 +16,7 @@ const SHIP: ShipAssaultShip = {
     name: 'Errant Vector',
     hullType: 'frigate',
     manoeuvrability: 15,
+    crippledManoeuvrability: 0,
     armour: 18,
     turretRating: 1,
     crewPopulation: 80,
@@ -55,6 +56,18 @@ describe('ship-assault — derivation', () => {
             { labelKey: 'hard', value: -20 },
         ]);
         expect(derivation.target).toBe(35);
+    });
+
+    it('splits a Crippled ship’s −10 out of its Manoeuvrability as a named row (#187)', () => {
+        // The ship's live Manoeuvrability (5) already carries the −10; the card shows 15 and −10.
+        const crippled = { ...SHIP, manoeuvrability: 5, crippledManoeuvrability: -10 };
+        const derivation = composePilotManoeuvrabilityTest({ pilotSkill: 40, ship: crippled, difficulty: -20, difficultyKey: 'hard' });
+        expect(derivation.modifiers).toEqual([
+            { labelKey: MANOEUVRABILITY_KEY, value: 15, data: { ship: 'Errant Vector' } },
+            { labelKey: 'WH40K.Voidcraft.Crippled.Component.Manoeuvrability', value: -10 },
+            { labelKey: 'hard', value: -20 },
+        ]);
+        expect(derivation.target).toBe(25);
     });
 });
 

@@ -78,11 +78,14 @@ export class RollTableUtils {
         // surfaced as "perils of the warp / psychic phenomena print the number
         // instead of evaluating the target". Clamp the rolled value to the
         // closest in-range result so the player always sees a resolved effect.
-        if (rollResult.results.length === 0 && Array.isArray(table.results) && table.results.length > 0) {
+        // `table.results` is an EmbeddedCollection at runtime, not an Array: an
+        // `Array.isArray` guard made this clamp (and the escalation below) dead in
+        // play, so an out-of-range roll drew nothing (#187).
+        // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; iterating to compute closest range
+        const tableRows = Array.from(table.results as Iterable<{ range: [number, number] }>);
+        if (rollResult.results.length === 0 && tableRows.length > 0) {
             const total = rollResult.roll.total ?? 0;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; iterating to compute closest range
-            const results = Array.from(table.results as Iterable<{ range: [number, number] }>);
-            const clamped = results.reduce(
+            const clamped = tableRows.reduce(
                 (best, current) => {
                     const distance = Math.min(Math.abs(total - current.range[0]), Math.abs(total - current.range[1]));
                     return distance < best.distance ? { distance, result: current } : best;
@@ -97,9 +100,8 @@ export class RollTableUtils {
 
         // Ladder escalation (#137). Applied AFTER the out-of-range clamp above so a
         // clamped result escalates from where it actually landed, not from nothing.
-        if (escalateRows > 0 && rollResult.results.length > 0 && Array.isArray(table.results) && table.results.length > 0) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: table.results is Foundry's untyped Collection; ordering is the ladder
-            const ordered = Array.from(table.results as Iterable<{ range: [number, number] }>);
+        if (escalateRows > 0 && rollResult.results.length > 0 && tableRows.length > 0) {
+            const ordered = tableRows;
             // eslint-disable-next-line no-restricted-syntax -- boundary: rollResult.results is Foundry's untyped result array; matched against the ordered rows by identity then range
             const drawn = rollResult.results[0] as unknown as { range: [number, number] };
             let index = ordered.indexOf(drawn);

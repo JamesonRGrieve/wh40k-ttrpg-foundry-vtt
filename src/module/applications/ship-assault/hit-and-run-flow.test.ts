@@ -13,6 +13,7 @@ const RAIDER: ShipAssaultShip = {
     name: 'Errant Vector',
     hullType: 'frigate',
     manoeuvrability: 15,
+    crippledManoeuvrability: 0,
     armour: 18,
     turretRating: 1,
     crewPopulation: 80,

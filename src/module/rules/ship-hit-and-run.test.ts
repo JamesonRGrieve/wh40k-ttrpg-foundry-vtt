@@ -30,6 +30,7 @@ function target(turretRating: number): ShipAssaultShip {
         name: 'Whispering Star',
         hullType: 'raider',
         manoeuvrability: 20,
+        crippledManoeuvrability: 0,
         armour: 16,
         turretRating,
         crewPopulation: 55,

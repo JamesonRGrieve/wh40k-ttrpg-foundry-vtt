@@ -1,5 +1,12 @@
 import { isCrippled as isCrippledRule, type PriorTurnDamageSnapshot } from '../../rules/ship-crew-morale.ts';
+import { crippledStatChanges, isShipDestroyed, type CrippledStat } from '../../rules/ship-crippled.ts';
 import VehicleData, { LOCOMOTION_CHOICES } from './vehicle.ts';
+
+/** The stats the Crippled rule changes, in Build Summary order. */
+const CRIPPLED_STATS: readonly CrippledStat[] = ['speed', 'manoeuvrability', 'detection'];
+
+/** The Build Summary source type of a Crippled-ship stat change (#187). */
+export const CRIPPLED_SOURCE_TYPE = 'crippled';
 
 /** Subset of ship-component item.system fields used in voidcraft preparation. */
 interface ShipComponentSystem {
@@ -85,7 +92,7 @@ export type ShipModifierStatKey = (typeof SHIP_MODIFIER_STAT_KEYS)[number];
 export interface ShipStatModifierSource {
     /** Display name from the owning item. */
     name: string;
-    /** Item type (`shipComponent` | `shipUpgrade` | `shipRole`). */
+    /** Item type (`shipComponent` | `shipUpgrade` | `shipRole`), or `crippled` for the Crippled-ship rule (#187). */
     type: string;
     /** The world-instance UUID for hover-link / inspection. */
     uuid: string;
@@ -240,6 +247,10 @@ export default class VoidcraftData extends VehicleData {
         rolled: number;
         text: string;
         appliedAt: number;
+        /** The drawn result destroys the ship (`flags['wh40k-rpg'].destroysShip` on the table result). */
+        destroysShip: boolean;
+        /** `rolled` is a Crippled ship's damage past its Armour rather than a 1d5 (#187). */
+        pastArmour: boolean;
     }>;
 
     /**
@@ -415,9 +426,15 @@ export default class VoidcraftData extends VehicleData {
                 new fields.SchemaField({
                     id: new fields.StringField({ required: true, blank: false, initial: 'critical' }),
                     name: new fields.StringField({ required: true, blank: true, initial: '' }),
-                    rolled: new fields.NumberField({ required: true, initial: 1, min: 1, max: 5, integer: true }),
+                    // A weapon's Crit Rating rolls 1d5; a Crippled ship's critical is the damage past its
+                    // Armour (#187), which can run past the chart — so no upper bound here.
+                    rolled: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
                     text: new fields.StringField({ required: true, blank: true, initial: '' }),
                     appliedAt: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    // The drawn table result destroys the ship (authored on the result, #187).
+                    destroysShip: new fields.BooleanField({ required: true, initial: false }),
+                    // `rolled` is a Crippled ship's damage past its Armour, not a 1d5 (#187).
+                    pastArmour: new fields.BooleanField({ required: true, initial: false }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -654,6 +671,22 @@ export default class VoidcraftData extends VehicleData {
     }
 
     /**
+     * RT "Crippled Ships" (#187): at 0 Hull Integrity, −10 Manoeuvrability and
+     * Detection and half Speed — each recorded as a named source on the Build
+     * Summary rollup and folded into the live stat. Nothing on other lines.
+     */
+    _applyCrippledStatChanges(applied: Record<ShipModifierStatKey, ShipAppliedModifier>): void {
+        const crippled = crippledStatChanges({ gameSystem: this.gameSystem, hullIntegrity: this.hullIntegrity }, this.speed);
+        for (const stat of CRIPPLED_STATS) {
+            const value = crippled[stat];
+            if (value === 0) continue;
+            applied[stat].total += value;
+            applied[stat].sources.push({ name: '', type: CRIPPLED_SOURCE_TYPE, uuid: '', sourceUuid: '', value });
+            this[stat] += value;
+        }
+    }
+
+    /**
      * Calculate stats from equipped components.
      * Called by the Document after items are ready.
      */
@@ -790,6 +823,8 @@ export default class VoidcraftData extends VehicleData {
         this.weaponCapacity.starboard = Math.max(0, this.baseStatSnapshot.weaponCapacityStarboard + applied.weaponCapacityStarboard.total);
         this.weaponCapacity.keel = Math.max(0, this.baseStatSnapshot.weaponCapacityKeel + applied.weaponCapacityKeel.total);
 
+        this._applyCrippledStatChanges(applied);
+
         // Detection bonus is derived from (modified) detection — recompute so
         // initiative rolls and the chat card pull the right value after a role
         // bonus or auger array adjusts detection upward.
@@ -846,6 +881,16 @@ export default class VoidcraftData extends VehicleData {
      */
     get isCrippled(): boolean {
         return isCrippledRule(this.hullIntegrity);
+    }
+
+    /**
+     * Is the ship destroyed? A Rogue Trader ship only by a Critical Hit result
+     * that destroys it (RT Core Table 8-12) — 0 Hull only Cripples it. Other
+     * lines keep the 0-Hull reading.
+     * @type {boolean}
+     */
+    get isDestroyed(): boolean {
+        return isShipDestroyed({ gameSystem: this.gameSystem, hullIntegrity: this.hullIntegrity, statuses: this.shipStatuses });
     }
 
     /**

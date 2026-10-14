@@ -30,6 +30,8 @@ interface CardArgs {
     rollLabel: string;
     image: string;
     gameSystem: string;
+    /** Set when the drawn result destroys the ship (#187). */
+    destroyedLabel?: string;
 }
 
 /** One Table 8-12 result as the compendium table draws it: its name and its HTML text. */
@@ -85,6 +87,34 @@ export const ThrustersDamaged: Story = {
 /** Rolled a 5. */
 export const Fire: Story = {
     args: { ...result(5, 'Fire!', 'Alarms scream through the hull as hungry flames roar through passageways and compartments.'), image: 'icons/svg/fire.svg' },
+};
+
+const CATASTROPHIC = 'A succession of powerful blows and explosions rip through the ship, causing horrendous damage.';
+
+/**
+ * A Crippled ship takes 14 damage past its Armour (#187): the value runs past
+ * the chart and lands on its last result, Catastrophic Damage, which the table
+ * marks as destroying the ship.
+ */
+export const CrippledCatastrophicDestroyed: Story = {
+    args: {
+        ...result(14, 'Catastrophic Damage', CATASTROPHIC),
+        rollLabel: storyLocalize('WH40K.Voidcraft.Critical.CrippledRollLabel', { rolled: 14 }),
+        destroyedLabel: storyLocalize('WH40K.Voidcraft.Critical.Destroyed', { ship: 'Whispering Star' }),
+    },
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('Crippled: 14 damage past Armour')).toBeTruthy();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-critical-destroyed"]')?.textContent).toContain('Whispering Star is destroyed.');
+    },
+};
+
+/** Every other result leaves the ship standing: no destroyed line. */
+export const NotDestroyed: Story = {
+    args: result(2, 'Internal Damage', 'The force of the hit ruptures bulkheads and smashes machinery.'),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-critical-destroyed"]')).toBeNull();
+    },
 };
 
 /**

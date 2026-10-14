@@ -6,6 +6,7 @@
  */
 
 import VoidcraftData, {
+    CRIPPLED_SOURCE_TYPE,
     ESSENTIAL_SHIP_SLOTS,
     SHIP_MODIFIER_STAT_KEYS,
     type ShipAppliedModifier,
@@ -20,6 +21,7 @@ import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
 import type { ShipTestComponent } from '../../rules/ship-assault.ts';
+import { criticalRollLabelKey, shipConditionView } from '../../rules/ship-crippled.ts';
 import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
@@ -84,6 +86,8 @@ interface ShipCriticalRow {
     index: number;
     label: string;
     rolled: number;
+    /** How the result was rolled, as the Damage Control row prints it. */
+    rollLabel: string;
     text: string;
 }
 
@@ -91,11 +95,13 @@ interface ShipCriticalRow {
  * The ship's recorded Critical Hits (#187) as Stats-tab rows. A status saved
  * before statuses carried the drawn result's name is labelled by its roll.
  */
-function shipCriticalRows(statuses: readonly { name: string; rolled: number; text: string }[]): ShipCriticalRow[] {
+function shipCriticalRows(statuses: readonly { name: string; rolled: number; text: string; pastArmour: boolean }[]): ShipCriticalRow[] {
     return statuses.map((status, index) => ({
         index,
         label: status.name !== '' ? status.name : game.i18n.format('WH40K.Voidcraft.Critical.ResultLabel', { rolled: String(status.rolled) }),
         rolled: status.rolled,
+        // A weapon's 1d5, or a Crippled ship's damage past its Armour (#187).
+        rollLabel: game.i18n.format(criticalRollLabelKey(status.pastArmour), { rolled: String(status.rolled) }),
         text: status.text,
     }));
 }
@@ -320,6 +326,13 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         context['voidShieldsUp'] = actor.activeVoidShields;
         context['voidShieldsMax'] = actor.voidShields;
         context['shipCriticals'] = shipCriticalRows(actor.system.shipStatuses);
+        // RT ship condition (#187): Crippled at 0 Hull, destroyed only by a Critical Hit result.
+        // Other lines' voidcraft show neither — their sheet is unchanged.
+        context['shipCondition'] = shipConditionView({
+            gameSystem: actor.system.gameSystem,
+            hullIntegrity: actor.hullIntegrity,
+            statuses: actor.system.shipStatuses,
+        });
     }
 
     /**
@@ -395,7 +408,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 base: baseValue,
                 modifier: entry.total,
                 total: baseValue + entry.total,
-                sources: entry.sources,
+                // The Crippled-ship rule has no item to name it; it is named by the langpack (#187).
+                sources: entry.sources.map((src) =>
+                    src.type === CRIPPLED_SOURCE_TYPE ? { ...src, name: game.i18n.localize('WH40K.Voidcraft.Crippled.SourceName') } : src,
+                ),
             });
         }
 

@@ -20,6 +20,7 @@ import {
     type PriorTurnPool,
     type ShipCombatState,
 } from '../rules/ship-crew-morale.ts';
+import { criticalRollLabelKey, crippledStatChanges, isShipDestroyed } from '../rules/ship-crippled.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KBaseActor } from './base-actor.ts';
@@ -67,6 +68,10 @@ interface ShipStatus {
     rolled: number;
     text: string;
     appliedAt: number;
+    /** The drawn result destroys the ship (#187), from the result's `flags['wh40k-rpg'].destroysShip`. */
+    destroysShip: boolean;
+    /** `rolled` is a Crippled ship's damage past its Armour rather than a 1d5 (#187). */
+    pastArmour: boolean;
 }
 
 /**
@@ -85,6 +90,8 @@ interface DrawnCriticalResult {
     name?: string | null;
     description?: string | null;
     text?: string | null;
+    /** `flags['wh40k-rpg'].destroysShip` marks a result that destroys the ship (#187). */
+    flags?: { 'wh40k-rpg'?: { destroysShip?: boolean } } | null;
 }
 
 /**
@@ -178,11 +185,13 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Is the ship destroyed?
+     * Is the ship destroyed? A Rogue Trader ship only by a Critical Hit result
+     * that destroys it (RT Core Table 8-12); at 0 Hull it is Crippled, not
+     * destroyed (#187). Other lines keep the 0-Hull reading.
      * @type {boolean}
      */
     get isDestroyed(): boolean {
-        return this.hullIntegrity.value <= 0;
+        return isShipDestroyed({ gameSystem: this.system.gameSystem, hullIntegrity: this.hullIntegrity, statuses: this.system.shipStatuses });
     }
 
     /**
@@ -358,6 +367,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             name: this.name,
             hullType: this.hullType,
             manoeuvrability: this.manoeuvrability,
+            crippledManoeuvrability: crippledStatChanges({ gameSystem: this.system.gameSystem, hullIntegrity: this.hullIntegrity }, this.speed).manoeuvrability,
             armour: this.armour,
             turretRating: this.turretRating,
             crewPopulation: this.crew.population,
@@ -426,8 +436,11 @@ export class WH40KVoidcraft extends WH40KBaseActor {
      * Roll on the Rogue Trader Critical Hit chart (issue #187) and record the
      * result as a persistent ship status, posting the critical-hit chat card.
      *
-     * `rolled` pre-selects the 1d5 result — Hit and Run (#188) rolls 1d5 twice
-     * and lets the raider choose — otherwise the table rolls its own die.
+     * `rolled` pre-selects the result — Hit and Run (#188) rolls 1d5 twice and
+     * lets the raider choose, and a Crippled ship's critical is the damage past
+     * its Armour (#187; a value past the chart lands on its last result) —
+     * otherwise the table rolls its own die. A result whose table entry
+     * destroys the ship records `destroysShip`, which `isDestroyed` reads.
      * Resolution order: world `RollTable` "Critical Hit", then the RT
      * ship-combat compendium pack, then a bare 1d5 with the
      * table-unavailable message so the GM applies the effect by hand.
@@ -435,7 +448,25 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     async rollShipCriticalHit(rolled?: number): Promise<void> {
         // The weapon chart is 1d5, but the table's own formula spans the whole
         // chart (1d11) — so the die is always rolled here, never by the table.
-        const preRoll = await new Roll(rolled === undefined ? WEAPON_CRITICAL_DIE : String(rolled)).evaluate();
+        await this._recordCriticalHit(rolled === undefined ? WEAPON_CRITICAL_DIE : String(rolled), false);
+    }
+
+    /**
+     * A Crippled ship takes damage past its Armour (RT Core "Crippled Ships",
+     * #187): "Compare the value of the damage that exceeded the Armour to the
+     * Critical Hit chart." Recorded and posted like any other Critical Hit.
+     */
+    async takeCrippledCriticalHit(damagePastArmour: number): Promise<void> {
+        await this._recordCriticalHit(String(damagePastArmour), true);
+    }
+
+    /**
+     * Draw `formula` on the Critical Hit chart, record the status and post its
+     * card. `pastArmour` marks a Crippled ship's critical, read at its damage
+     * past Armour rather than rolled on 1d5, so its label says so.
+     */
+    protected async _recordCriticalHit(formula: string, pastArmour: boolean): Promise<void> {
+        const preRoll = await new Roll(formula).evaluate();
         const result = Math.trunc(preRoll.total);
         const draw = await RollTableUtils.rollTable(CRITICAL_HIT_TABLE_NAME, { displayChat: false, pack: CRITICAL_HIT_TABLE_PACK, roll: preRoll });
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable#roll returns an untyped TableResult array; reading the drawn result's id, name and text
@@ -448,7 +479,11 @@ export class WH40KVoidcraft extends WH40KBaseActor {
         const statusId = found ? drawn.id ?? `critical-${result}` : `critical-${result}`;
 
         // Persistent until cleared by an Emergency Repair or Quick Repair action.
-        const next: ShipStatus[] = [...this.system.shipStatuses, { id: statusId, name: statusLabel, rolled: result, text: statusText, appliedAt: Date.now() }];
+        const destroysShip = found && drawn.flags?.['wh40k-rpg']?.destroysShip === true;
+        const next: ShipStatus[] = [
+            ...this.system.shipStatuses,
+            { id: statusId, name: statusLabel, rolled: result, text: statusText, appliedAt: Date.now(), destroysShip, pastArmour },
+        ];
         // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.update signature is untyped at our narrow view
         await (this as unknown as { update: (data: Record<string, unknown>) => Promise<unknown> }).update({ 'system.shipStatuses': next });
 
@@ -459,7 +494,8 @@ export class WH40KVoidcraft extends WH40KBaseActor {
             resultText: statusText,
             statusLabel,
             rolled: result,
-            rollLabel: t('WH40K.Voidcraft.Critical.RollLabel', { rolled: result }),
+            rollLabel: t(criticalRollLabelKey(pastArmour), { rolled: result }),
+            destroyedLabel: destroysShip ? t('WH40K.Voidcraft.Critical.Destroyed', { ship: this.name }) : '',
             image: 'icons/svg/explosion.svg',
             gameSystem: this.system.gameSystem,
         });

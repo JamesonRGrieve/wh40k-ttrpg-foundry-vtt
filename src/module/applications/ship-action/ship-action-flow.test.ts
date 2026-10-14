@@ -29,12 +29,15 @@ interface RecordingActionShip extends ShipActionShip {
     modifiers: ShipModifierInput[];
 }
 
-function ship(options: { restored?: number; weapons?: { id: string; name: string }[]; effects?: ShipEffectView[] } = {}): RecordingActionShip {
+function ship(
+    options: { restored?: number; weapons?: { id: string; name: string }[]; effects?: ShipEffectView[]; hull?: number; gameSystem?: string } = {},
+): RecordingActionShip {
     const recording: RecordingActionShip = {
         name: 'Errant Vector',
-        system: { gameSystem: 'rt', crew: { crewRating: 40 } },
+        system: { gameSystem: options.gameSystem ?? 'rt', crew: { crewRating: 40 } },
         manoeuvrability: 20,
         detection: 25,
+        hullIntegrity: { value: options.hull ?? 35, max: 35 },
         shipActionEffects: options.effects ?? [],
         shipWeaponChoices: options.weapons ?? [],
         reductions: [],
@@ -160,6 +163,25 @@ describe('Lock on Target (RT Core p.218, #186)', () => {
                 expiry: 'turnEnd',
             },
         ]);
+    });
+
+    it('names a Crippled ship’s −10 Detection as its own row on the Combined Skill Test (#187)', async () => {
+        // The ship's live Detection (25) already carries the −10: the card shows 35 and −10, still 65 in all.
+        const crippled = ship({ weapons: [{ id: 'macro', name: 'Macrobattery' }], hull: 0 });
+        queueRolls(40);
+        const { card } = await rollShipAction(context(crippled, LOCK), formValues({ skill: 40, weapon: 'macro' }));
+        expect(card.data.test.target).toBe(65);
+        expect(card.data.test.modifierSources.map((row) => [row.label, row.value])).toEqual([
+            ['WH40K.Voidcraft.ShipAction.Component.Detection{"ship":"Errant Vector"}', 35],
+            ['WH40K.Voidcraft.Crippled.Component.Detection', -10],
+        ]);
+    });
+
+    it('adds no Crippled row for another line’s ship at 0 Hull', async () => {
+        const other = ship({ weapons: [{ id: 'macro', name: 'Macrobattery' }], hull: 0, gameSystem: 'dh2' });
+        queueRolls(40);
+        const { card } = await rollShipAction(context(other, LOCK), formValues({ skill: 40, weapon: 'macro' }));
+        expect(card.data.test.modifierSources.map((row) => row.value)).toEqual([25]);
     });
 
     it('refuses with a player-facing message when the ship has no Weapon Component', async () => {

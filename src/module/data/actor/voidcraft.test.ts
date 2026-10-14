@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { importModelOrSkip } from '../../testing/model-import.ts';
+import type { ShipAppliedModifier, ShipModifierStatKey } from './voidcraft.ts';
 
 /**
  * Tests for StarshipData.
@@ -257,5 +258,68 @@ describe('StarshipData', () => {
         // The formula's only @-term must be a published key.
         const term = mod.VOIDCRAFT_INITIATIVE_FORMULA.replace('1d10 + @', '');
         expect(Object.keys(rollData)).toContain(term);
+    });
+
+    it('folds the Crippled −10 Manoeuvrability / Detection and half Speed into the stats as named sources (#187)', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+
+        type StarshipLike = {
+            gameSystem: string;
+            hullIntegrity: { max: number; value: number };
+            speed: number;
+            manoeuvrability: number;
+            detection: number;
+            _applyCrippledStatChanges: (applied: Record<ShipModifierStatKey, ShipAppliedModifier>) => void;
+        };
+        const ship = Object.create(mod.default.prototype) as StarshipLike;
+        Object.assign(ship, { gameSystem: 'rt', hullIntegrity: { max: 35, value: 0 }, speed: 7, manoeuvrability: 15, detection: 20 });
+        const applied = mod.default._emptyAppliedModifiers();
+        ship._applyCrippledStatChanges(applied);
+        expect([ship.speed, ship.manoeuvrability, ship.detection]).toEqual([4, 5, 10]);
+        expect(applied.speed.sources).toEqual([{ name: '', type: mod.CRIPPLED_SOURCE_TYPE, uuid: '', sourceUuid: '', value: -3 }]);
+        expect(applied.detection.total).toBe(-10);
+
+        // Another line at 0 Hull, and an RT ship at 1 Hull, are left alone.
+        for (const state of [
+            { gameSystem: 'dh2', hullIntegrity: { max: 35, value: 0 } },
+            { gameSystem: 'rt', hullIntegrity: { max: 35, value: 1 } },
+        ]) {
+            Object.assign(ship, state, { speed: 7, manoeuvrability: 15, detection: 20 });
+            const untouched = mod.default._emptyAppliedModifiers();
+            ship._applyCrippledStatChanges(untouched);
+            expect([ship.speed, ship.manoeuvrability, ship.detection]).toEqual([7, 15, 20]);
+            expect(untouched.manoeuvrability.sources).toEqual([]);
+        }
+    });
+
+    it('keeps an RT ship at 0 Hull Crippled, not destroyed, until a destroying Critical Hit (#187)', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+
+        type StarshipLike = {
+            gameSystem: string;
+            hullIntegrity: { max: number; value: number };
+            shipStatuses: { destroysShip: boolean }[];
+            isCrippled: boolean;
+            isDestroyed: boolean;
+        };
+        const ship = Object.create(mod.default.prototype) as StarshipLike;
+        ship.gameSystem = 'rt';
+        ship.hullIntegrity = { max: 35, value: 0 };
+        ship.shipStatuses = [{ destroysShip: false }];
+        expect(ship.isCrippled).toBe(true);
+        expect(ship.isDestroyed).toBe(false);
+        ship.shipStatuses = [{ destroysShip: false }, { destroysShip: true }];
+        expect(ship.isDestroyed).toBe(true);
+
+        // Another line keeps the 0-Hull reading.
+        ship.gameSystem = 'dh2';
+        ship.shipStatuses = [];
+        expect(ship.isDestroyed).toBe(true);
+        ship.hullIntegrity = { max: 35, value: 1 };
+        expect(ship.isDestroyed).toBe(false);
     });
 });

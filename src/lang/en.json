@@ -4957,7 +4957,20 @@
                 "SourceType": {
                     "shipComponent": "Component",
                     "shipUpgrade": "Upgrade",
-                    "shipRole": "Role"
+                    "shipRole": "Role",
+                    "crippled": "RT Core: Crippled Ships"
+                }
+            },
+            "Crippled": {
+                "SourceName": "Crippled ship (0 Hull Integrity)",
+                "Status": "Crippled",
+                "StatusHint": "0 Hull Integrity: −10 Manoeuvrability and Detection, half Speed, weapons at half Strength, and damage past Armour causes a Critical Hit. Lasts until the ship regains 1 Hull Integrity.",
+                "Destroyed": "Destroyed",
+                "DestroyedHint": "A Critical Hit result destroyed this ship.",
+                "FireCritical": "{ship} is Crippled: {damage} damage past its Armour is a Critical Hit on Table 8-12.",
+                "Component": {
+                    "Manoeuvrability": "Crippled ship (−10 Manoeuvrability)",
+                    "Detection": "Crippled ship (−10 Detection)"
                 }
             },
             "Critical": {
@@ -4966,6 +4979,8 @@
                 "RollTooltip": "Roll 1d5 on the Critical Hit chart (RT Core Table 8-12)",
                 "ChatSubtitle": "Ship Critical Hit",
                 "RollLabel": "Rolled {rolled} on 1d5",
+                "CrippledRollLabel": "Crippled: {rolled} damage past Armour",
+                "Destroyed": "{ship} is destroyed.",
                 "ResultLabel": "Critical Hit {rolled}",
                 "StatusApplied": "Status Applied",
                 "PersistsUntilRepaired": "Persists until cleared by Emergency Repair or Quick Repair.",

@@ -47,6 +47,8 @@ export interface RecordingShip extends AssaultShipActor {
     hullHits: number[];
     crewHits: [number, number][];
     criticalHits: (number | undefined)[];
+    /** Each Crippled-ship Critical Hit taken, by its damage past Armour (#187). */
+    crippledCriticalHits: number[];
     /** Each `overloadVoidShields` call's count. */
     shieldOverloads: number[];
 }
@@ -63,6 +65,7 @@ export function recordingShip(profile: ShipAssaultShip, options: { crewRating?: 
         hullHits: [],
         crewHits: [],
         criticalHits: [],
+        crippledCriticalHits: [],
         shieldOverloads: [],
         overloadVoidShields: async (count: number) => {
             ship.shieldOverloads.push(count);
@@ -70,6 +73,10 @@ export function recordingShip(profile: ShipAssaultShip, options: { crewRating?: 
         },
         rollShipCriticalHit: async (rolled?: number) => {
             ship.criticalHits.push(rolled);
+            return Promise.resolve();
+        },
+        takeCrippledCriticalHit: async (damagePastArmour: number) => {
+            ship.crippledCriticalHits.push(damagePastArmour);
             return Promise.resolve();
         },
         applyHullDamage: async (amount: number) => {

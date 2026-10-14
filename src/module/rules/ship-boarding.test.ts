@@ -28,6 +28,7 @@ function ship(overrides: Partial<ShipAssaultShip> = {}): ShipAssaultShip {
         name: 'Ship',
         hullType: 'frigate',
         manoeuvrability: 10,
+        crippledManoeuvrability: 0,
         armour: 18,
         turretRating: 0,
         crewPopulation: 50,

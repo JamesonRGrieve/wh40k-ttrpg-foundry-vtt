@@ -38,6 +38,7 @@ import {
 import { shipActionTestLabel } from '../../rules/ship-actions.ts';
 import { resolveShipTest, sumComponents, type ShipTestComponent } from '../../rules/ship-assault.ts';
 import type { PriorTurnPool } from '../../rules/ship-crew-morale.ts';
+import { crippledStatComponents } from '../../rules/ship-crippled.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { buildTestView, componentRow, type AssaultComponentRow, type AssaultTestView, type Localize } from '../ship-assault/ship-assault-card.ts';
 import { readSituational, situationalFields } from '../ship-assault/ship-assault-fields.ts';
@@ -58,6 +59,8 @@ export interface ShipActionShip {
     readonly system: { readonly gameSystem: string; readonly crew: { readonly crewRating: number } };
     readonly manoeuvrability: number;
     readonly detection: number;
+    /** Read for the Crippled-ship penalty row on a Combined Skill Test (#187). */
+    readonly hullIntegrity: { readonly value: number; readonly max: number };
     readonly shipActionEffects: ShipEffectView[];
     readonly shipWeaponChoices: { id: string; name: string }[];
     reducePriorTurnDamage: (pool: PriorTurnPool, amount: number) => Promise<number>;
@@ -256,7 +259,17 @@ export async function rollShipAction(
         skill: form.number('skill', ship.system.crew.crewRating),
         ship: ship.name,
         difficulty: order.test.modifier,
-        shipStat: isShipTestStat(stat) ? { stat, value: ship[stat], modifiers: collectShipModifierComponents(ship.shipActionEffects, { target: stat }) } : null,
+        shipStat: isShipTestStat(stat)
+            ? {
+                  stat,
+                  value: ship[stat],
+                  // Every named term inside the ship's stat: live ship actions, and the Crippled −10 (#187).
+                  modifiers: [
+                      ...collectShipModifierComponents(ship.shipActionEffects, { target: stat }),
+                      ...crippledStatComponents({ gameSystem: ship.system.gameSystem, hullIntegrity: ship.hullIntegrity }, stat),
+                  ],
+              }
+            : null,
         situational: readSituational(form, 'situational'),
     });
 

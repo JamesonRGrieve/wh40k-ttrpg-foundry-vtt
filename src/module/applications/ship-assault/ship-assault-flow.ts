@@ -68,6 +68,7 @@ export interface AssaultShipActor {
     applyHullDamage: WH40KVoidcraft['applyHullDamage'];
     applyCrewMoraleDamage: WH40KVoidcraft['applyCrewMoraleDamage'];
     rollShipCriticalHit: WH40KVoidcraft['rollShipCriticalHit'];
+    takeCrippledCriticalHit: WH40KVoidcraft['takeCrippledCriticalHit'];
     readonly hullIntegrity: { readonly value: number; readonly max: number };
     /** Void shields currently raised (not overloaded). */
     readonly activeVoidShields: number;

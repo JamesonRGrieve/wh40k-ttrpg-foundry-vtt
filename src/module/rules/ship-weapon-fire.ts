@@ -234,6 +234,18 @@ export function resolveHullDamage(weaponClass: ShipWeaponClass, damage: readonly
     return { components, hullLoss: Math.max(0, sumComponents(components)) };
 }
 
+/**
+ * The damage past Armour of each application of a shot's damage, the value a
+ * Crippled target's Critical Hit is read at (#187). A macrobattery (and a
+ * salvo) applies its summed hits once, less Armour; a lance applies each hit
+ * on its own and ignores Armour, so each hit is all past it.
+ */
+export function damagePastArmour(weaponClass: ShipWeaponClass, damage: readonly HitDamageRoll[], armour: number): number[] {
+    if (weaponClass === 'lance') return damage.map((roll) => roll.total);
+    const total = damage.reduce((sum, roll) => sum + roll.total, 0);
+    return damage.length === 0 ? [] : [total - armour];
+}
+
 /* -------------------------------------------- */
 /*  Macrobattery salvos                         */
 /* -------------------------------------------- */

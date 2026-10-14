@@ -66,7 +66,10 @@ export interface ShipTestResult extends ShipTestDerivation {
 export interface ShipAssaultShip {
     readonly name: string;
     readonly hullType: string;
+    /** Manoeuvrability as the ship has it now, any Crippled penalty included. */
     readonly manoeuvrability: number;
+    /** The Crippled penalty inside `manoeuvrability` (−10 for an RT ship at 0 Hull, #187), else 0. */
+    readonly crippledManoeuvrability: number;
     readonly armour: number;
     readonly turretRating: number;
     readonly crewPopulation: number;
@@ -88,6 +91,9 @@ export const HARD_DIFFICULTY_KEY = 'WH40K.Voidcraft.Assault.Component.Hard';
 
 /** Langpack key for a manoeuvrability row. */
 export const MANOEUVRABILITY_KEY = 'WH40K.Voidcraft.Assault.Component.Manoeuvrability';
+
+/** Langpack key for the Crippled-ship Manoeuvrability penalty row (shared with the ship-action tests). */
+export const CRIPPLED_MANOEUVRABILITY_KEY = 'WH40K.Voidcraft.Crippled.Component.Manoeuvrability';
 
 /**
  * Turn a GM-entered situational modifier into a component, or nothing when it
@@ -165,8 +171,11 @@ export const PILOT_SKILL_KEY = 'WH40K.Voidcraft.Assault.Component.PilotSkill';
  * ram and locks two ships together for a boarding action (RT Core p.215).
  */
 export function composePilotManoeuvrabilityTest(input: PilotManoeuvrabilityInput): ShipTestDerivation {
+    const crippled = input.ship.crippledManoeuvrability;
     return deriveTarget({ labelKey: PILOT_SKILL_KEY, value: input.pilotSkill }, [
-        { labelKey: MANOEUVRABILITY_KEY, value: input.ship.manoeuvrability, data: { ship: input.ship.name } },
+        { labelKey: MANOEUVRABILITY_KEY, value: input.ship.manoeuvrability - crippled, data: { ship: input.ship.name } },
+        // RT "Crippled Ships" (#187): the −10 is its own row, not folded into the stat.
+        ...(crippled === 0 ? [] : [{ labelKey: CRIPPLED_MANOEUVRABILITY_KEY, value: crippled }]),
         { labelKey: input.difficultyKey, value: input.difficulty },
         ...situationalComponents(input.situational),
     ]);

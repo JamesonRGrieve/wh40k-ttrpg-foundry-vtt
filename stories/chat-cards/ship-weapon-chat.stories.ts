@@ -72,6 +72,8 @@ const BROADSIDE: ShipWeaponFireInput['weapon'] = {
 /** How a story fires: the firing ship's Hull (0 fires it Crippled), and the macrobatteries it may combine. */
 interface FireSetup {
     attackerHull?: number;
+    /** The target's current Hull Integrity; 0 makes it a Crippled target (#187). */
+    targetHull?: number;
     companions?: ShipWeaponFireInput['companions'];
 }
 
@@ -86,7 +88,7 @@ function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, setup
         companions: setup.companions ?? [],
     }).start({
         attacker: { ...storyShipActor(ATTACKER_SHIP, 48), hullIntegrity: { value: attackerHull, max: ATTACKER_SHIP.hullIntegrity } },
-        defender: storyShipActor(RAIDER, 40, shields),
+        defender: { ...storyShipActor(RAIDER, 40, shields), hullIntegrity: { value: setup.targetHull ?? RAIDER.hullIntegrity, max: RAIDER.hullIntegrity } },
         localize: storyLocalize,
         degreesMethod: 'gen1',
     });
@@ -128,6 +130,8 @@ export const MacrobatteryBookExample: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText(DEFENDER_SHIP.name, { selector: '[data-wh40k-hook="ship-weapon-target"]' })).toBeTruthy();
+        // An undamaged target is not Crippled: damage past Armour causes no Critical Hit (#187).
+        await expect(canvasElement.querySelector('[data-wh40k-hook="ship-weapon-crippled-critical"]')).toBeNull();
         await expect(provenance(canvasElement)).toEqual([
             'Lock on Target +10',
             'Within half range (6 VU weapon) +10',
@@ -161,6 +165,17 @@ export const CrippledFiringShip: Story = {
         await expect(rows.some((row) => row.startsWith('Hit 2'))).toBe(false);
         const hitsTotal = canvasElement.querySelector('[data-wh40k-hook="ship-assault-damage"]')?.textContent ?? '';
         await expect(hitsTotal.replace(/\s+/gu, ' ')).toMatch(/Total 1\b/u);
+    },
+};
+
+export const CrippledTargetCritical: Story = {
+    name: 'Crippled target — damage past Armour is a Critical Hit (#187)',
+    // The book's macrobattery shot into a raider at 0 Hull: 16 against Armour 15 is 1 past it.
+    loaders: [async () => ({ el: await card(MACROBATTERY, 1, [29, 9, 7], 38, { targetHull: 0 }) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const lines = [...canvasElement.querySelectorAll('[data-wh40k-hook="ship-weapon-crippled-critical"]')].map((el) => el.textContent.trim());
+        await expect(lines).toEqual([`${DEFENDER_SHIP.name} is Crippled: 1 damage past its Armour is a Critical Hit on Table 8-12.`]);
     },
 };
 

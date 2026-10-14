@@ -24,9 +24,9 @@ initializeStoryHandlebars();
 const FLOW = createRammingFlow(async () => Promise.resolve({ damage: [{ hullType: 'frigate', formula: '1d10' }], reboundDamage: '1d5' }));
 
 /** Run the flow on the given dice (and optional bonus die) and render its final card. */
-async function card(rolls: number[], bonus: boolean): Promise<HTMLElement> {
+async function card(rolls: number[], bonus: boolean, attacker = ATTACKER_SHIP): Promise<HTMLElement> {
     const session = FLOW.start({
-        attacker: storyShipActor(ATTACKER_SHIP),
+        attacker: storyShipActor(attacker),
         defender: storyShipActor(DEFENDER_SHIP),
         localize: storyLocalize,
         degreesMethod: 'gen1',
@@ -59,6 +59,19 @@ export const RamLands: Story = {
         // Rammed ship: 7 + 18 prow armour + 6 bonus; rammer: 16 Armour + 3.
         await expect(within(damage[0] as HTMLElement).getByText('31')).toBeTruthy();
         await expect(within(damage[1] as HTMLElement).getByText('19')).toBeTruthy();
+    },
+};
+
+export const RamFromCrippledShip: Story = {
+    name: 'Ram from a Crippled ship — the −10 Manoeuvrability is its own row (#187)',
+    // A Crippled rammer's live Manoeuvrability (5) carries the −10: the card shows 15 and −10.
+    loaders: [async () => ({ el: await card([20, 7, 3], false, { ...ATTACKER_SHIP, manoeuvrability: 5, crippledManoeuvrability: -10 }) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="ship-assault-test"] [data-wh40k-tooltip="modifier"]')].map((row) =>
+            row.textContent.replace(/\s+/gu, ' ').trim(),
+        );
+        await expect(rows).toEqual([`Manoeuvrability (${ATTACKER_SHIP.name}) +15`, 'Crippled ship (−10 Manoeuvrability) -10', 'Hard (−20) -20']);
     },
 };
 

@@ -14,6 +14,7 @@ const SABRE: ShipAssaultShip = {
     name: 'Sabre',
     hullType: 'frigate',
     manoeuvrability: 15,
+    crippledManoeuvrability: 0,
     armour: 18,
     turretRating: 1,
     crewPopulation: 80,
@@ -149,6 +150,60 @@ describe('ship weapon fire flow (#184)', () => {
         const hits = (session.previewCard()?.data as CardData)['hits'] as { total: number; rows: { label: string }[] };
         expect(hits.total).toBe(3);
         expect(hits.rows.some((row) => row.label.includes('CrippledStrength'))).toBe(false);
+    });
+
+    describe('a Crippled target takes a Critical Hit from damage past its Armour (RT Core "Crippled Ships", #187)', () => {
+        function crippledTarget(gameSystem = 'rt', shields = 1): RecordingShip {
+            const target = recordingShip(RAIDER, { voidShields: shields });
+            return Object.assign(target, { hullIntegrity: { value: 0, max: 30 }, system: { ...target.system, gameSystem } });
+        }
+
+        it('reads a macrobattery’s total past Armour on the chart', async () => {
+            const target = crippledTarget();
+            const session = createShipWeaponFireFlow({ weapon: MACROBATTERY, ballisticSkill: 48, shipModifiers: [], companions: [] }).start(
+                assaultContext(recordingShip(SABRE), target),
+            );
+            // 3 hits, the shield takes one; 9 + 7 = 16 against Armour 15 is 1 past it.
+            queueRolls(29, 9, 7);
+            await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+            const data = (await session.apply(formValues({})))?.card.data as CardData;
+            expect(target.crippledCriticalHits).toEqual([1]);
+            expect(data['crippledCriticals']).toEqual(['WH40K.Voidcraft.Crippled.FireCritical{"ship":"Raider","damage":1}']);
+        });
+
+        it('reads each lance hit on its own, beside the Crit Rating’s 1d5', async () => {
+            const target = crippledTarget('rt', 0);
+            const session = createShipWeaponFireFlow({ weapon: LANCE, ballisticSkill: 48, shipModifiers: [], companions: [] }).start(
+                assaultContext(recordingShip(SABRE), target),
+            );
+            queueRolls(11, 9, 5);
+            await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+            await session.apply(formValues({}));
+            expect(target.criticalHits).toEqual([5]);
+            expect(target.crippledCriticalHits).toEqual([9]);
+        });
+
+        it('takes none when the damage stopped at Armour', async () => {
+            const target = crippledTarget();
+            const session = createShipWeaponFireFlow({ weapon: MACROBATTERY, ballisticSkill: 48, shipModifiers: [], companions: [] }).start(
+                assaultContext(recordingShip(SABRE), target),
+            );
+            queueRolls(29, 3, 2);
+            await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+            await session.apply(formValues({}));
+            expect(target.crippledCriticalHits).toEqual([]);
+        });
+
+        it('takes none on another line', async () => {
+            const target = crippledTarget('dh2');
+            const session = createShipWeaponFireFlow({ weapon: MACROBATTERY, ballisticSkill: 48, shipModifiers: [], companions: [] }).start(
+                assaultContext(recordingShip(SABRE), target),
+            );
+            queueRolls(29, 9, 7);
+            await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+            await session.apply(formValues({}));
+            expect(target.crippledCriticalHits).toEqual([]);
+        });
     });
 
     it('rolls nothing more on a miss and leaves the target untouched', async () => {

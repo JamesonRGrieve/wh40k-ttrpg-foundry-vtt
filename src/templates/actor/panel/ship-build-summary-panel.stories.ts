@@ -8,8 +8,11 @@
  *                    source detection / armour rollups are visible.
  *   3. WithRole    — adds a Ship Role on top of the Components state to
  *                    verify role bonuses appear in the same panel.
+ *   4. CrippledShip — the RT Crippled-ship rule (#187) as its own named source
+ *                    on Speed, Manoeuvrability and Detection.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './ship-build-summary-panel.hbs?raw';
@@ -110,6 +113,43 @@ export const Components: Story = {
         hasAppliedModifiers: true,
     },
     render: (args) => renderPanel(args),
+};
+
+/** The Crippled-ship rule as the sheet hands it to the panel: no item, named by the langpack (#187). */
+const CRIPPLED_SOURCE = { name: 'Crippled ship (0 Hull Integrity)', type: 'crippled', uuid: '', sourceUuid: '' };
+
+export const CrippledShip: Story = {
+    name: 'Crippled ship (#187) — −10 Manoeuvrability and Detection, half Speed, each a named source',
+    args: {
+        buildSummaryRows: [
+            row('speed', 'WH40K.Voidcraft.Build.Stat.Speed', 8, [{ ...CRIPPLED_SOURCE, value: -4 }]),
+            row('manoeuvrability', 'WH40K.Voidcraft.Build.Stat.Manoeuvrability', 15, [{ ...CRIPPLED_SOURCE, value: -10 }]),
+            row('detection', 'WH40K.Voidcraft.Build.Stat.Detection', 10, [
+                {
+                    name: 'Mark-201.b Auger Array',
+                    type: 'shipComponent',
+                    uuid: 'Actor.demo.Item.augur',
+                    sourceUuid: 'Compendium.wh40k-rpg.rt-items.augur1',
+                    value: 8,
+                },
+                { ...CRIPPLED_SOURCE, value: -10 },
+            ]),
+        ],
+        hasAppliedModifiers: true,
+    },
+    render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        const rows = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="ship-build-summary__row"]')];
+        const totals = rows.map((el) => [el.dataset['stat'], el.querySelector('[data-field="total"]')?.textContent.trim()]);
+        await expect(totals).toEqual([
+            ['speed', '4'],
+            ['manoeuvrability', '5'],
+            ['detection', '8'],
+        ]);
+        const crippled = [...canvasElement.querySelectorAll<HTMLElement>('[data-source-type="crippled"]')];
+        await expect(crippled).toHaveLength(3);
+        await expect(crippled[0]?.textContent.replace(/\s+/gu, ' ').trim()).toBe('Crippled ship (0 Hull Integrity) (RT Core: Crippled Ships) -4');
+    },
 };
 
 export const WithRole: Story = {
