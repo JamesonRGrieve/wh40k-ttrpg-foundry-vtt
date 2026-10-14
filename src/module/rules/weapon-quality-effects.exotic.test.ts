@@ -4,8 +4,9 @@ import { calculateExoticQualityDamageModifiers, EXOTIC_DAMAGE_MODIFIER_IDS, EXOT
 
 type ExoticContext = Parameters<typeof calculateExoticQualityDamageModifiers>[0];
 
-const weaponWith = (qualities: ReadonlyArray<string>, isMeleeWeapon = false): NonNullable<ExoticContext['weapon']> =>
-    ({ system: { special: new Set(qualities), isMeleeWeapon } } as NonNullable<ExoticContext['weapon']>);
+const weaponWith = (qualities: ReadonlyArray<string>, isMeleeWeapon = false): NonNullable<ExoticContext['weapon']> => ({
+    system: { special: new Set(qualities), isMeleeWeapon },
+});
 
 const actorWith = (system: object): NonNullable<ExoticContext['actor']> => ({ system } as NonNullable<ExoticContext['actor']>);
 

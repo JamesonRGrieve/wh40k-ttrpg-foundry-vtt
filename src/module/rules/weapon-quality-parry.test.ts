@@ -21,7 +21,7 @@ import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts
 type QualityWeapon = Parameters<typeof canWeaponParry>[0];
 
 function weaponWith(qualities: ReadonlyArray<string>): QualityWeapon {
-    return { system: { special: new Set(qualities) } } as QualityWeapon;
+    return { system: { special: new Set(qualities) } };
 }
 
 function armour(coverage: string[], properties: string[] = [], equipped = true): WornArmourCandidate {

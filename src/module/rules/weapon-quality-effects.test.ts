@@ -38,7 +38,7 @@ import { setWeaponQualityPayloadsForTesting, type WeaponQualityMechanicsInput, w
 type QualityWeapon = Parameters<typeof resolvePowerFieldParryDestroys>[0];
 
 function weaponWith(qualities: ReadonlyArray<string>): QualityWeapon {
-    return { system: { special: new Set(qualities) } } as QualityWeapon;
+    return { system: { special: new Set(qualities) } };
 }
 
 // Read the real weaponQuality pack `_source` and build the by-identifier mechanics

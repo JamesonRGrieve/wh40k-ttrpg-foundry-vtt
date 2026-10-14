@@ -59,7 +59,7 @@ export function failureConsequenceField(consequence: SituationalFailureConsequen
 }
 
 /** The round-use flag: each row's use key → the round it was last used in. */
-type SituationalRoundUses =Readonly<Record<string, CombatRoundStamp>>;
+type SituationalRoundUses = Readonly<Record<string, CombatRoundStamp>>;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor flags and authored pack data are untyped JSON; narrowed field by field below
 function isRecord(value: unknown): value is Record<string, unknown> {
