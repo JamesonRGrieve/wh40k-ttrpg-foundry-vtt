@@ -53,14 +53,17 @@ interface ProbeState {
 
 /**
  * Catalog statuses whose condition documents author a visual, and how each shows:
- * a preset (Prone) and a filter (Unconscious). Fire, Stunned, Pinned and Blood
- * Loss are left out only because their HUD icons still point at the removed
- * vendored art, which Foundry logs as an invalid asset when the status icon draws
- * (the pending icon repoint, unrelated to the visual).
+ * a preset (Prone, Fire, Stunned, Pinned, Blood Loss) or a filter (Unconscious).
+ * Fire, Stunned, Pinned and Blood Loss draw their HUD icons from game-icons.net
+ * since #625, so the console guard no longer sees an invalid-asset error.
  */
 const CATALOG_PROBES: ReadonlyArray<{ id: string; shows: 'container' | 'filter' }> = [
     { id: 'prone', shows: 'container' },
     { id: 'unconscious', shows: 'filter' },
+    { id: 'on-fire', shows: 'container' },
+    { id: 'stunned', shows: 'container' },
+    { id: 'pinned', shows: 'container' },
+    { id: 'blood-loss', shows: 'container' },
 ];
 
 interface ItemLike {
