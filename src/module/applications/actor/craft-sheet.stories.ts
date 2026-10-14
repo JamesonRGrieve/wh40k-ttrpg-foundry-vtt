@@ -19,6 +19,7 @@ import combatTabSrc from '../../../templates/actor/craft/tab-combat.hbs?raw';
 import componentsTabSrc from '../../../templates/actor/craft/tab-components.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
 import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
+import { nameFitClass } from '../../handlebars/name-fit.ts';
 
 initializeStoryHandlebars();
 
@@ -465,3 +466,63 @@ export const SystemBC: Story = makePerSystemCraftStory('bc', 'Hellblade Skiff');
 export const SystemOW: Story = makePerSystemCraftStory('ow', 'Leman Russ Battle Tank');
 export const SystemDW: Story = makePerSystemCraftStory('dw', 'Land Raider Crusader');
 export const SystemIM: Story = makePerSystemCraftStory('im', 'Goliath Truck');
+
+// ── Long vehicle names fit the sidebar (#630) ────────────────────────────────
+
+/** The live sheet's sidebar column width; the header renders inside it. */
+const SIDEBAR_WIDTH_PX = 190;
+
+/**
+ * Real vehicle names, one per line; the RT one is longer than any step. Storybook
+ * renders without Foundry's Signika, so the pixel fit is measured on the live sheet
+ * (Tier B, npc-sidebar-fit.spec.ts); here the field's fit class, ellipsis and
+ * full-name tooltip are asserted.
+ */
+const LONG_CRAFT_NAMES: readonly { systemId: SystemId; name: string }[] = [
+    { systemId: 'dh1', name: 'Chimera Armoured Transport' },
+    { systemId: 'dh2', name: 'Repressor Armoured Transport' },
+    { systemId: 'rt', name: 'Trojan Support Vehicle (Idumea Sub-Pattern 99X)' },
+    { systemId: 'bc', name: 'Chaos Space Marine Dreadnought' },
+    { systemId: 'dw', name: 'Adeptus Astartes Dreadnought' },
+    { systemId: 'ow', name: 'Salamander Reconnaissance Vehicle' },
+];
+
+/** Each line's craft header in a sidebar-width column, named with a long real vehicle name. */
+function renderLongNameHeaders(): HTMLElement {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '12px';
+    for (const { systemId, name } of LONG_CRAFT_NAMES) {
+        const actor = withSystem(mockActor({ _id: randomId(`${systemId}-long`, rng), name, type: 'terracraft' }), systemId, 'vehicle');
+        const column = document.createElement('div');
+        column.style.width = `${SIDEBAR_WIDTH_PX}px`;
+        column.dataset['craftLine'] = systemId;
+        column.appendChild(
+            renderSheetParts([{ template: headerSrc }], { ...defaultCraftCtx, actor: actor as SheetContextLike['actor'], system: actor.system }, { systemId }),
+        );
+        row.appendChild(column);
+    }
+    return row;
+}
+
+/** #630: a long vehicle name steps its font size down to fit the sidebar, on every line, with the full name in the tooltip. */
+export const LongNamesFitSidebar: Story = {
+    name: 'Long names fit the sidebar — all six lines',
+    args: defaultCraftCtx,
+    render: () => renderLongNameHeaders(),
+    play: async ({ canvasElement }) => {
+        // Each line's field: its name, its step-down size class, the ellipsis past the
+        // last step, and the full name in its tooltip.
+        const fields = LONG_CRAFT_NAMES.map(({ systemId, name }) => {
+            const input = canvasElement.querySelector<HTMLInputElement>(`[data-craft-line="${systemId}"] input[name="name"]`);
+            return {
+                systemId,
+                value: input?.value ?? null,
+                tooltip: input?.dataset['tooltip'] ?? null,
+                fitted: input?.classList.contains(nameFitClass(name)) ?? false,
+                ellipsis: input?.classList.contains('tw-text-ellipsis') ?? false,
+            };
+        });
+        await expect(fields).toEqual(LONG_CRAFT_NAMES.map(({ systemId, name }) => ({ systemId, value: name, tooltip: name, fitted: true, ellipsis: true })));
+    },
+};

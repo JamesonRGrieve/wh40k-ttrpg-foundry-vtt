@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { NAME_FIT_MAX_FITTED_CHARS, nameFitClass } from './name-fit.ts';
 
@@ -25,5 +27,39 @@ describe('nameFitClass (#630)', () => {
 
     it('treats an empty name as short', () => {
         expect(nameFitClass('')).toBe('tw-text-[1.05rem]');
+    });
+
+    it('sizes the two clipped vehicle names the freeze audit found', () => {
+        expect(nameFitClass('Chimera Armoured Transport')).toBe('tw-text-[0.7rem]');
+        expect(nameFitClass('Adeptus Astartes Dreadnought')).toBe('tw-text-[0.65rem]');
+    });
+});
+
+describe('every sidebar name renders through the one fitted name field (#630)', () => {
+    const templates = resolve(__dirname, '../../templates/actor');
+    const read = (path: string): string => readFileSync(join(templates, path), 'utf8');
+    const FIELD = 'templates/actor/partial/actor-name-field.hbs';
+
+    it('the shared field fits the name and keeps the full name in its tooltip', () => {
+        const field = read('partial/actor-name-field.hbs');
+        expect(field).toContain('{{#if fitName}}{{nameFitClass actor.name}} tw-text-ellipsis');
+        expect(field).toContain('data-tooltip="{{actor.name}}"');
+    });
+
+    it('the character / NPC / voidcraft identity block uses it', () => {
+        expect(read('partial/actor-identity.hbs')).toContain(`${FIELD} nameLabelKey=nameLabelKey fitName=fitName placeholderKey=placeholderKey`);
+        expect(read('partial/actor-identity.hbs')).not.toContain('name="name"');
+    });
+
+    it('the vehicle (craft) sidebar uses it, fitted — it used to carry its own unfitted input', () => {
+        const header = read('craft/header.hbs');
+        expect(header).toMatch(new RegExp(`${FIELD.replace(/\./g, '\\.')} fitName=true`));
+        expect(header).not.toContain('name="name"');
+    });
+
+    it('the voidcraft sidebar fits its name, with no inline label taking half the field', () => {
+        const header = read('voidcraft/header.hbs');
+        expect(header).toContain('actor-identity.hbs fitName=true placeholderKey="WH40K.Voidcraft.Name"');
+        expect(header).not.toContain('nameLabelKey');
     });
 });

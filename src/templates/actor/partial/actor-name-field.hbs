@@ -1,0 +1,20 @@
+{{!-- Shared actor name field: the sidebar's name input, with an optional label.
+
+     Used by `actor-identity.hbs` (character, NPC, voidcraft) and by the craft
+     sheet header, so every sidebar name is one field with one sizing rule.
+
+     Parameters (passed via {{> ... key=value }} on the partial invocation):
+
+       - nameLabelKey    i18n key for an inline label before the input; omit for a
+                         bare input.
+       - placeholderKey  i18n key for the input's placeholder; omit for none.
+       - fitName         When true, the input steps its font size down as the name
+                         grows (`nameFitClass`) so a long name fits the narrow
+                         sidebar; past the last step it ends in an ellipsis. The
+                         full name is always the input's tooltip (#630). --}}
+<div class="tw-flex tw-w-full tw-min-w-0 tw-items-baseline tw-gap-2.5">
+    {{#if nameLabelKey}}
+    <span class="tw-shrink-0 tw-min-w-[70px] tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize nameLabelKey}}</span>
+    {{/if}}
+    <input class="tw-min-w-0 tw-min-w-[80px] tw-flex-1 tw-text-center tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 {{#if fitName}}{{nameFitClass actor.name}} tw-text-ellipsis{{else}}tw-text-[1.05rem]{{/if}} tw-font-bold tw-max-w-[320px] tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" data-tooltip="{{actor.name}}"{{#if placeholderKey}} placeholder="{{localize placeholderKey}}"{{/if}} />
+</div>

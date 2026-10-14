@@ -5,7 +5,10 @@
 {{#> systems/wh40k-rpg/templates/actor/partial/header-base.hbs
     cardClass="wh40k-ship-header"
     innerClass="tw-flex tw-flex-col tw-items-stretch tw-gap-3"}}
-    {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Voidcraft.Name"}}
+    {{!-- No inline "Ship Name" label: it took half the sidebar, so a ship name such as
+         "Vagabond-class Merchant Trader" showed only "Vagabond". The label is the
+         placeholder instead, and the name is fitted like the craft sidebar's (#630). --}}
+    {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs fitName=true placeholderKey="WH40K.Voidcraft.Name"}}
 
     <div class="tw-flex tw-flex-col tw-gap-2">
         <label class="tw-flex tw-flex-col tw-gap-0.5">

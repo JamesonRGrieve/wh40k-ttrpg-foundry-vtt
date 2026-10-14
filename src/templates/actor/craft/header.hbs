@@ -8,9 +8,9 @@
         {{> systems/wh40k-rpg/templates/actor/partial/portrait-journal-link.hbs}}
     </div>
 
-    {{!-- Name --}}
-    <input type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'WH40K.Vehicle.Name'}}"
-           class="tw-w-full tw-text-center tw-text-[1.1rem] tw-font-display tw-font-bold tw-bg-transparent tw-border-0 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-gold)] tw-pb-1 focus:tw-outline-none focus:tw-border-b-gold" />
+    {{!-- Name: the shared sidebar name field, fitted so a long vehicle name
+         ("Adeptus Astartes Dreadnought") is not clipped (#630). --}}
+    {{> systems/wh40k-rpg/templates/actor/partial/actor-name-field.hbs fitName=true placeholderKey="WH40K.Vehicle.Name"}}
 
     {{!-- Locomotion --}}
     <div class="tw-w-full tw-flex tw-flex-col tw-gap-1">

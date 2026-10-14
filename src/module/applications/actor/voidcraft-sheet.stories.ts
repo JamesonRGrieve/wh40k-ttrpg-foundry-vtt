@@ -20,6 +20,7 @@ import crewTabSrc from '../../../templates/actor/voidcraft/tab-crew.hbs?raw';
 import extendedActionsTabSrc from '../../../templates/actor/voidcraft/tab-extended-actions.hbs?raw';
 import manoeuvreActionsTabSrc from '../../../templates/actor/voidcraft/tab-manoeuvre-actions.hbs?raw';
 import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
+import { nameFitClass } from '../../handlebars/name-fit.ts';
 import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { shipActionModifierRows } from '../ship-action/ship-action-flow.ts';
@@ -180,6 +181,39 @@ export const SystemBC: Story = makePerSystemVoidcraftStory('bc', 'Despoiler-clas
 export const SystemOW: Story = makePerSystemVoidcraftStory('ow', 'Carrack-class Transport');
 export const SystemDW: Story = makePerSystemVoidcraftStory('dw', 'Strike Cruiser');
 export const SystemIM: Story = makePerSystemVoidcraftStory('im', 'Vagabond-class Merchantman');
+
+/**
+ * #630: a long ship name gets the whole sidebar-width field, fitted (an inline label
+ * used to leave room for "Vagabond" alone). The pixel fit is measured on the live
+ * sheet (Tier B, npc-sidebar-fit.spec.ts), since Storybook lacks Foundry's fonts.
+ */
+export const LongShipNameFitsSidebar: Story = {
+    name: 'Long ship name fits the sidebar',
+    args: (() => {
+        const ship = withSystem(
+            mockActor({ _id: randomId('rt-long-ship', rng), name: 'Vagabond-class Merchant Trader', type: 'rt-starship' }),
+            'rt',
+            'vehicle',
+        );
+        return { ...defaultCtxWithSource, actor: ship as SheetContextLike['actor'], system: ship.system };
+    })(),
+    render: (args) => {
+        const column = document.createElement('div');
+        column.style.width = '190px';
+        column.appendChild(renderSheetParts([{ template: headerSrc }], args, { systemId: 'rt' }));
+        return column;
+    },
+    play: async ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('input[name="name"]');
+        await expect(input).not.toBeNull();
+        if (input === null) return;
+        await expect(input.dataset['tooltip']).toBe('Vagabond-class Merchant Trader');
+        await expect(input.className).toContain(nameFitClass('Vagabond-class Merchant Trader'));
+        // The field spans the sidebar: no inline label takes half of it.
+        await expect(input.parentElement?.children.length).toBe(1);
+        await expect(input.placeholder).toBe('Ship Name');
+    },
+};
 
 // ── Issue #186 — Starship Extended Actions panel ─────────────────────────────
 //
