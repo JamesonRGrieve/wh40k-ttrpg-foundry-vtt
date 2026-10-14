@@ -11,6 +11,7 @@ import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
+import { callerRequirementView } from '../dialogs/reinforcement-call-view.ts';
 
 initializeStoryHandlebars();
 
@@ -165,6 +166,72 @@ function fatiguedNpcContext(): SheetContextLike {
     ctx.system.fatigue = { value: 3, max: 6 };
     return ctx;
 }
+
+// ── Reinforcement Character panel (#77) ─────────────────────────────────────
+// `NPCSheet._prepareContext` builds `reinforcementPanel` only for the GM, on a
+// DH2 NPC flagged `isReinforcement`. These stories render the whole NPC tab so
+// the panel is reviewed in place among the GM tools.
+
+/** A DH2 RC NPC context: the Thrice-Bound Daemonhost's printed terms (Enemies Beyond p. 38). */
+function daemonhostRcContext(): SheetContextLike {
+    return mockNpcSheetContext({
+        systemId: 'dh2',
+        actorOverrides: { name: 'Thrice-Bound Daemonhost' },
+        contextOverrides: {
+            reinforcementPanel: {
+                hasTerms: true,
+                influenceMinimum: 50,
+                influenceCost: 5,
+                peer: '',
+                peerAmount: '',
+                callerRequirement: callerRequirementView(
+                    { skill: 'forbiddenLore', specialization: 'Daemonology', rank: 2, corruption: '1d5' },
+                    'Forbidden Lore',
+                ),
+            },
+        },
+    });
+}
+
+/** Record every `callReinforcement` click that reaches the NPC tab root, as the sheet's action dispatch would see it. */
+function recordCallClicks(canvasElement: HTMLElement): { count: () => number } {
+    let clicks = 0;
+    canvasElement.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-action="callReinforcement"]') !== null) clicks += 1;
+    });
+    return { count: () => clicks };
+}
+
+export const ReinforcementCharacterPanel: Story = {
+    name: 'Reinforcement Character — Daemonhost call terms (#77)',
+    args: daemonhostRcContext(),
+    render: (args) => renderNPCSheet(args),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="rc-panel"]');
+        await expect(panel).not.toBeNull();
+        await expect(panel?.textContent).toContain('50');
+        await expect(panel?.querySelector('[data-wh40k-hook="rc-caller-skill"]')?.textContent).toContain('Forbidden Lore (Daemonology)');
+        await expect(panel?.querySelector('[data-wh40k-hook="rc-caller-corruption"]')?.textContent).toContain('1d5');
+        const clicks = recordCallClicks(canvasElement);
+        const call = panel?.querySelector<HTMLButtonElement>('[data-action="callReinforcement"]');
+        await expect(call?.disabled).toBe(false);
+        clickAction(canvasElement, 'callReinforcement');
+        await expect(clicks.count()).toBe(1);
+    },
+};
+
+export const ReinforcementPanelAbsentOffDh2: Story = {
+    name: 'Reinforcement Character — no panel outside DH2 (#77)',
+    // The sheet never builds `reinforcementPanel` for another line, so the include renders nothing.
+    args: mockNpcSheetContext({ systemId: 'dh1', actorOverrides: { name: 'Heretek' } }),
+    render: (args) => renderNPCSheet(args),
+    play: async ({ canvasElement }) => {
+        const view = within(canvasElement);
+        await expect(view.getByText('GM Tools')).toBeVisible();
+        await expect(canvasElement.querySelector('[data-wh40k-hook="rc-panel"]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-action="callReinforcement"]')).toBeNull();
+    },
+};
 
 export const FatiguePanel: Story = {
     name: 'Fatigue panel — editable on NPC body (#420)',
