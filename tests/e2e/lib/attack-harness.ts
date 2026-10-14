@@ -186,9 +186,9 @@ export async function installAttackHarness(page: Page): Promise<void> {
                 await scene.view();
                 if (g.game.paused) g.game.togglePause(false);
                 const tokens: Record<string, string> = {};
-                spec.tokens.forEach((t, i) => {
-                    tokens[t.key] = placed[i]?.id ?? '';
-                });
+                // By name, not position: the created documents do not come back in input order
+                // (the first area run aimed its Blast at the flanker). Token names are unique per spec.
+                for (const t of spec.tokens) tokens[t.key] = placed.find((doc) => doc.name === t.name)?.id ?? '';
                 await helpers.waitFor(
                     () => g.canvas.ready && Object.values(tokens).every((id) => g.canvas.tokens?.get(id)?.actor != null),
                     'harness tokens drawn',

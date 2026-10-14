@@ -1,6 +1,8 @@
 import type { Page } from '@playwright/test';
+import { canvasClip } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
@@ -14,14 +16,14 @@ import { scaledMs } from './lib/timing';
  * The diameter is measured, not assumed: the opaque run across the middle row of
  * each token's generated bust RenderTexture, scaled by what the canvas applies to
  * it (the ring subject scale for the ringed token, nothing for the ringless one).
- * A zoomed screenshot (screenshots/token-bust-parity.png) records the pair for
+ * A zoomed screenshot (.e2e-screenshots/game__token-bust-parity-pc-and-npc.png) records the pair for
  * visual review. The pure maths is unit-tested in src/module/canvas/token-mask.test.ts.
  *
  * Each flow records under `token-bust-parity.flow`. Keys MUST match the
  * TOKEN_BUST_PARITY_FLOWS constant in scripts/e2e-coverage.mjs.
  */
 
-const TOKEN_BUST_PARITY_FLOWS = ['ringless-npc-busted', 'pc-and-npc-same-diameter'] as const;
+const TOKEN_BUST_PARITY_FLOWS = ['ringless-npc-busted', 'pc-and-npc-same-diameter', 'npc-bust-same-opacity'] as const;
 
 type FlowName = (typeof TOKEN_BUST_PARITY_FLOWS)[number];
 
@@ -45,6 +47,13 @@ const BUST_RT_SIZE = 512;
 const PC_SUBJECT_SCALE = 0.8;
 /** Diameters are compared as token fractions; one RT pixel is ~0.002, so allow a few. */
 const DIAMETER_TOLERANCE = 0.01;
+/** The PC and NPC token centres the probe places (100px grid, tokens at x 300 / 400, y 300). */
+const TOKEN_CENTRES = [
+    { x: 350, y: 350 },
+    { x: 450, y: 350 },
+] as const;
+/** Canvas pixels of margin around the token pair in the capture. */
+const CAPTURE_PAD = 90;
 
 interface TokenDocLike {
     id: string;
@@ -68,7 +77,9 @@ interface TextureLike {
 
 interface TokenPlaceableLike {
     id: string;
-    mesh?: { texture?: TextureLike };
+    alpha: number;
+    document: { hidden: boolean; alpha: number };
+    mesh?: { texture?: TextureLike; alpha: number; worldAlpha: number };
 }
 
 interface ProbeGlobals {
@@ -154,6 +165,34 @@ async function probeParity(page: Page, portrait: string): Promise<ProbeState> {
                     same ? null : `PC bust ${pcDiameter.toFixed(3)} of the token vs ringless NPC ${npcDiameter.toFixed(3)}`,
                 );
 
+                // The capture shows the ringless NPC's bust paler than the PC's. The bust must
+                // keep the art's own opacity: both meshes draw fully visible to the GM, and the
+                // two busts' centre pixels carry the same alpha. (The probe art, core's
+                // anvil-bg.png, is itself translucent; the PC's ring backing is what makes
+                // its bust look solid.)
+                const shown = (id: string): string => {
+                    const t = g.canvas.tokens?.placeables.find((p) => p.id === id);
+                    return `hidden=${String(t?.document.hidden)} doc.alpha=${String(t?.document.alpha)} alpha=${String(t?.alpha)} mesh.alpha=${String(
+                        t?.mesh?.alpha,
+                    )} mesh.worldAlpha=${String(t?.mesh?.worldAlpha)}`;
+                };
+                await settle(1000);
+                const centreAlpha = (tex: TextureLike): number => {
+                    const px = g.canvas.app.renderer.extract.pixels(tex);
+                    const mid = Math.floor(args.rtSize / 2);
+                    return px[(mid * args.rtSize + mid) * 4 + 3] ?? 0;
+                };
+                const npcAlpha = g.canvas.tokens?.placeables.find((p) => p.id === npcTok.id)?.mesh?.worldAlpha ?? 0;
+                const pcAlpha = g.canvas.tokens?.placeables.find((p) => p.id === pcTok.id)?.mesh?.worldAlpha ?? 0;
+                const sameOpacity = npcAlpha >= 0.99 && pcAlpha >= 0.99 && centreAlpha(npcTex) === centreAlpha(pcTex);
+                record(
+                    'npc-bust-same-opacity',
+                    sameOpacity,
+                    sameOpacity
+                        ? null
+                        : `NPC ${shown(npcTok.id)} centre pixel alpha ${centreAlpha(npcTex)}; PC ${shown(pcTok.id)} centre pixel alpha ${centreAlpha(pcTex)}`,
+                );
+
                 await g.canvas.animatePan({ x: 400, y: 350, scale: 3, duration: 0 });
                 await settle(1000);
             } catch (err) {
@@ -202,11 +241,11 @@ test.describe.serial('PC vs NPC token bust parity (Tier B, #501)', () => {
         let state: ProbeState = { results: [], sceneId: null, actorIds: [] };
         try {
             state = await probeParity(page, PORTRAIT);
-            const vp = page.viewportSize() ?? { width: 1280, height: 720 };
-            await page.screenshot({
-                path: 'tests/e2e/screenshots/token-bust-parity.png',
-                clip: { x: vp.width / 2 - 300, y: vp.height / 2 - 300, width: 600, height: 600 },
-            });
+            await clearScreenOverlays(page);
+            // Let the tokens finish their draw-in fade before the capture.
+            await page.waitForTimeout(scaledMs(800));
+            const clip = await canvasClip(page, TOKEN_CENTRES, CAPTURE_PAD);
+            await snap(page, 'token-bust-parity-pc-and-npc', clip === null ? { selector: '#board' } : { clip });
         } finally {
             await cleanupProbe(page, state.sceneId, state.actorIds);
         }

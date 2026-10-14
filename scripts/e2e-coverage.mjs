@@ -588,7 +588,7 @@ recordDimension('token-mask.flow', covered['token-mask.flow'], TOKEN_MASK_FLOWS)
 
 // PC vs NPC bust-diameter parity (#501) exercised by tests/e2e/token-bust-parity.spec.ts.
 // Keep in sync with TOKEN_BUST_PARITY_FLOWS there.
-const TOKEN_BUST_PARITY_FLOWS = ['ringless-npc-busted', 'pc-and-npc-same-diameter'];
+const TOKEN_BUST_PARITY_FLOWS = ['ringless-npc-busted', 'pc-and-npc-same-diameter', 'npc-bust-same-opacity'];
 recordDimension('token-bust-parity.flow', covered['token-bust-parity.flow'], TOKEN_BUST_PARITY_FLOWS);
 
 // Status-effect token visuals (#595) exercised by tests/e2e/status-visuals.spec.ts:
@@ -604,6 +604,49 @@ const STATUS_VISUAL_FLOWS = [
     'token-delete-destroys-visuals',
 ];
 recordDimension('status-visual.flow', covered['status-visual.flow'], STATUS_VISUAL_FLOWS);
+
+// The world-time widget's day-phase line (#593), tests/e2e/world-time-day-phase.spec.ts.
+// Keep in sync with WORLD_TIME_FLOWS there.
+const WORLD_TIME_FLOWS = ['phase-label-renders', 'phase-follows-clock'];
+recordDimension('world-time.flow', covered['world-time.flow'], WORLD_TIME_FLOWS);
+
+// The compendium join of lean owned weapons (#574, #598), tests/e2e/lean-weapon-hydrate.spec.ts.
+// Keep in sync with LEAN_WEAPON_HYDRATE_FLOWS there.
+const LEAN_WEAPON_HYDRATE_FLOWS = ['lean-weapon-joins-canonical', 'instance-state-kept', 'optional-field-writable'];
+recordDimension('lean-weapon-hydrate.flow', covered['lean-weapon-hydrate.flow'], LEAN_WEAPON_HYDRATE_FLOWS);
+
+// Spray / Blast area templates and the no-damage area card (#599, #600, #601),
+// tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
+const AREA_ATTACK_FLOWS = [
+    'spray-places-cone',
+    'spray-card-no-attack-roll',
+    'spray-resolves-caught',
+    'blast-places-circle',
+    'blast-resolves-caught',
+    'blast-rolls-damage-per-creature',
+    'no-damage-area-card',
+];
+recordDimension('area-attack.flow', covered['area-attack.flow'], AREA_ATTACK_FLOWS);
+
+// No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
+// Keep in sync with DAMAGE_PROFILE_FLOWS there.
+const DAMAGE_PROFILE_FLOWS = ['no-damage-attack-card', 'no-damage-weapon-card', 'no-damage-sheet-dash', 'band-near-damage', 'band-far-damage'];
+recordDimension('damage-profile.flow', covered['damage-profile.flow'], DAMAGE_PROFILE_FLOWS);
+
+// Attack cues on a live canvas (#594), tests/e2e/attack-cues.spec.ts.
+// Keep in sync with ATTACK_CUE_FLOWS there.
+const ATTACK_CUE_FLOWS = ['hit-draws-cue', 'miss-draws-cue', 'world-switch-off-draws-nothing', 'settings-listed'];
+recordDimension('attack-cue.flow', covered['attack-cue.flow'], ATTACK_CUE_FLOWS);
+
+// The move mode cleared at turn end and encounter end (#610), tests/e2e/move-mode-turn-end.spec.ts.
+// Keep in sync with MOVE_MODE_FLOWS there.
+const MOVE_MODE_FLOWS = ['toggle-sets-mode', 'turn-change-clears-mode', 'combat-end-clears-mode'];
+recordDimension('move-mode.flow', covered['move-mode.flow'], MOVE_MODE_FLOWS);
+
+// Event completion hooks, adventure graphs and the PC portrait journal (#591, #592, #590),
+// tests/e2e/event-tracker-auto.spec.ts. Keep in sync with EVENT_TRACKER_AUTO_FLOWS there.
+const EVENT_TRACKER_AUTO_FLOWS = ['item-acquired-auto-resolves', 'gm-undo-persists', 'adventure-graph-loads', 'pc-portrait-journal-opens'];
+recordDimension('event-tracker-auto.flow', covered['event-tracker-auto.flow'], EVENT_TRACKER_AUTO_FLOWS);
 
 // Subtlety adjuster dimension exercised by tests/e2e/subtlety.spec.ts.
 // Direction #7: per-flow drive of the content-agnostic adjuster surface
