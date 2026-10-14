@@ -296,3 +296,43 @@ export const Issue19NonReactionLocalDescription: Story = {
         await expect(document.querySelector('ol#chat-log .chat-message')).toBeNull();
     },
 };
+
+// ── #245: block-only groups never iterate the sheet's owned items ──────────────
+
+const REACTION_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/** The panel once per line, each with owned `items` in its context — what the Reactions group used to iterate. */
+function renderReactionsPerLine(): HTMLElement {
+    const row = document.createElement('div');
+    row.style.display = 'grid';
+    row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+    row.style.gap = '12px';
+    for (const line of REACTION_LINES) {
+        const column = document.createElement('div');
+        column.className = 'wh40k-rpg theme-dark';
+        column.dataset['wh40kSystem'] = line;
+        column.innerHTML = combatActionsPanelTpl({
+            ...buildCombatPanelContext(),
+            items: [
+                { id: `${line}-owned-lasgun`, name: 'Lasgun', type: 'weapon' },
+                { id: `${line}-owned-flak`, name: 'Flak Armour', type: 'armour' },
+            ],
+        });
+        row.appendChild(column);
+    }
+    return row;
+}
+
+export const Issue245ReactionsOnlyDodgeParry: Story = {
+    name: 'Issue #245 — Reactions row is Dodge and Parry only, on every line',
+    args: mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'combat' }),
+    render: () => renderReactionsPerLine(),
+    play: async ({ canvasElement }) => {
+        const rows = REACTION_LINES.map((line) => {
+            const grid = canvasElement.querySelector(`[data-wh40k-system="${line}"] [data-action="dodge"]`)?.parentElement;
+            return { line, actions: Array.from(grid?.querySelectorAll('button') ?? []).map((button) => button.dataset['action'] ?? '') };
+        });
+        await expect(rows).toEqual(REACTION_LINES.map((line) => ({ line, actions: ['dodge', 'parry'] })));
+        await expect(canvasElement.textContent).not.toContain('Lasgun');
+    },
+};

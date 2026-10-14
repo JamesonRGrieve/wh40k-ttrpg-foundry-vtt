@@ -40,7 +40,7 @@ function render(items: ActionEntry[]): HTMLElement {
     const html = template({
         heading: 'Movement Actions',
         icon: 'fa-walking',
-        items,
+        groupEntries: items,
         mode: 'action',
         dataAction: 'vocalizeCombatAction',
         actionColor: '--wh40k-accent-equipment',

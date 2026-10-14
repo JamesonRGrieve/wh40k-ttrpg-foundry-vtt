@@ -17,9 +17,9 @@ describe('combat panel no longer lists per-weapon attack actions (#227)', () => 
         expect(panel).not.toContain('heading="Attack Actions"');
         expect(panel).not.toContain('heading="Melee Attacks"');
         expect(panel).not.toContain('heading="Ranged Attacks"');
-        expect(panel).not.toContain('items=generalAttacks');
-        expect(panel).not.toContain('items=meleeAttacks');
-        expect(panel).not.toContain('items=rangedAttacks');
+        expect(panel).not.toContain('groupEntries=generalAttacks');
+        expect(panel).not.toContain('groupEntries=meleeAttacks');
+        expect(panel).not.toContain('groupEntries=rangedAttacks');
     });
 
     it('keeps the non-per-weapon action groups', () => {

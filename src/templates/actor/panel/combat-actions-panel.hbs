@@ -24,7 +24,7 @@
             {{> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
                 heading=(localize "WH40K.Combat.Actions.CombatTalents")
                 icon="fa-star"
-                items=combatTalents
+                groupEntries=combatTalents
                 mode="item"
                 dataAction="combatTalentDescribe"
                 actionColor="--wh40k-accent-combat"}}
@@ -78,7 +78,7 @@
         {{#> systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs
             heading=(localize "WH40K.Combat.Actions.UtilityActions")
             icon="fa-tools"
-            items=dh.combatActions.utility
+            groupEntries=dh.combatActions.utility
             mode="action"
             dataAction="vocalizeCombatAction"
             actionColor="--wh40k-accent-talents"}}

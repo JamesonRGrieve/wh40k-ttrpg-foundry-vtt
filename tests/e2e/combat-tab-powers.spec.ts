@@ -171,4 +171,25 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
         await snap(page, 'combat-tab-no-powers', { selector: `#${sheetId}` });
         recordCoverage('panel.render', 'CombatTab.noPowers');
     });
+
+    test('the Reactions row is Dodge and Parry only, however many items the character owns (#245)', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openCombatTab(page, {}, [
+            { name: 'Lasgun', type: 'weapon' },
+            { name: 'Flak Armour', type: 'armour' },
+        ]);
+        const reactions = page.locator(`#${sheetId} [data-action="dodge"]`).locator('xpath=..');
+        await expect(reactions.locator('button')).toHaveCount(2);
+        expect(await reactions.locator('button').evaluateAll((buttons) => buttons.map((b) => (b as HTMLElement).dataset['action'] ?? ''))).toEqual([
+            'dodge',
+            'parry',
+        ]);
+        await clearScreenOverlays(page, sheetId);
+        const panel = reactions.locator('xpath=ancestor::div[contains(@class, "wh40k-panel")][1]');
+        await panel.evaluate((el) => {
+            el.id = 'e2e-combat-actions-panel';
+        });
+        await snap(page, 'combat-tab-reactions-dodge-parry', { selector: '#e2e-combat-actions-panel' });
+        recordCoverage('panel.render', 'CombatTab.reactions');
+    });
 });
