@@ -9,6 +9,7 @@
 --}}
 <div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-bg-[rgba(16,8,12,0.9)]"
      data-wh40k-system="{{gameSystem}}"
+     data-wh40k-surface="dark"
      data-wh40k-hook="daemonology-ritual-card"
      data-ritual-mode="{{mode}}">
 
@@ -85,7 +86,8 @@
         rawModifierTotal=attemptTest.rawModifierTotal
         modifierTotal=attemptTest.modifierTotal}}
 
-    <table class="tw-w-full tw-text-[0.8rem] tw-tabular-nums tw-border-collapse" data-wh40k-hook="exorcism-attempts">
+    {{!-- Cells never break mid-word (Foundry's chat log breaks anywhere, splitting "Roll" into "Ro / ll"). --}}
+    <table class="tw-w-full tw-text-[0.8rem] tw-tabular-nums tw-border-collapse [&_th]:tw-whitespace-nowrap [&_td]:tw-whitespace-nowrap [&_th]:tw-px-1 [&_td]:tw-px-1 [&_th]:tw-break-normal" data-wh40k-hook="exorcism-attempts">
         <thead>
             <tr class="tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.7rem] tw-uppercase">
                 <th class="tw-text-left tw-font-normal">#</th>

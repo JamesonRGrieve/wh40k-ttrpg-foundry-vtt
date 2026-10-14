@@ -176,6 +176,26 @@ const semantic = {
     '--wh40k-danger-bg': 'rgba(220, 38, 38, 0.1)',
 };
 
+// A dark card surface (chat cards drawn on a near-black panel). The element that
+// paints the dark background declares `data-wh40k-surface="dark"`, and these
+// tokens re-point the text tokens its children read — the shared
+// modifier-breakdown partial (`--wh40k-card-text` / `--wh40k-card-muted`), the
+// theme text tokens (which follow the BODY theme, so a light-theme world would
+// otherwise put dark-brown text on the black card) and the card's own text
+// colour (Foundry's chat message colour is dark). Every value is ≥ 7:1 on
+// rgba(16, 8, 12, 0.9) over either chat background.
+const darkSurface = {
+    'color': '#e8e4d9',
+    '--wh40k-card-text': '#e8e4d9',
+    '--wh40k-card-muted': '#b8ae9c',
+    '--wh40k-text-bright': '#f2ead8',
+    '--wh40k-text-dark': '#e8dcc8',
+    '--wh40k-text-medium': '#d4c8b4',
+    '--wh40k-text-muted': '#b8ae9c',
+    '--wh40k-border-color': 'rgba(180, 140, 100, 0.4)',
+    '--wh40k-border-color-light': 'rgba(180, 140, 100, 0.25)',
+};
+
 // Wrapped in `@layer wh40k-tokens` to bypass Tailwind v3's addBase rule-merging:
 // without the layer wrapper, addBase silently DROPS the `body.theme-dark` rule
 // because it shares property names with the earlier `:root, body.theme-light`
@@ -196,5 +216,6 @@ module.exports = {
         ':root, body.theme-light': lightTheme,
         'body.theme-dark': darkTheme,
         ':root, body.theme-light, body.theme-dark': semantic,
+        '[data-wh40k-surface="dark"]': darkSurface,
     },
 };

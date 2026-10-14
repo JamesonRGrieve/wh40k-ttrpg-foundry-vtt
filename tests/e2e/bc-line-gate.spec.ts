@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { showChatMessage } from './lib/chat-capture';
+import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -91,8 +92,12 @@ async function confirmDialog(page: Page, button: Locator, label: string, fill?: 
 /** Snap a chat card with the chat log in view and no window over it (closes the sheets: snap them first). */
 async function snapCard(page: Page, id: string, label: string): Promise<void> {
     await clearScreenOverlays(page);
-    const shot = await snap(page, label, { selector: await showChatMessage(page, id) });
+    const selector = await showChatMessage(page, id);
+    const shot = await snap(page, label, { selector });
     expect(shot, `snap ${label}`).not.toBeNull();
+    // Every BC card is a dark surface whose text clears WCAG AA (the crimson-on-dark-red headers did not).
+    await expect(page.locator(`${selector} [data-wh40k-surface="dark"]`)).toBeVisible();
+    expect(await scanContrast(page, `${selector} [data-wh40k-surface="dark"]`), `${label} contrast`).toEqual([]);
 }
 
 test.describe.serial('BC line gate (Tier B, #596)', () => {

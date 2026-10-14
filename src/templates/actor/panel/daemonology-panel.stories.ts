@@ -36,6 +36,8 @@ export const Daemonologist: Story = {
         await expect(exorcise).not.toBeNull();
         await expect(exorcise?.disabled).toBe(false);
         await expect(canvasElement.querySelector('[data-action="performSummoning"]')).not.toBeNull();
+        // The Summon button's icon is one the bundled Font Awesome has (fa-pentagram is not, and rendered blank).
+        await expect(canvasElement.querySelector('[data-action="performSummoning"] i')?.className).toContain('fa-hat-wizard');
     },
 };
 

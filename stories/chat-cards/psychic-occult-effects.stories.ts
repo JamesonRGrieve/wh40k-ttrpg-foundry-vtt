@@ -37,6 +37,8 @@ interface PsychicCardArgs {
     discipline: 'malefic' | 'sanctic';
     success: boolean;
     phenomenaNegated: boolean;
+    /** Offer the Spend-Fate re-roll (a third control on a successful cast). */
+    withReroll?: boolean;
 }
 
 /** The effect rows the cast pipeline adds for these args. */
@@ -61,7 +63,7 @@ function renderPsychicCard(args: PsychicCardArgs): HTMLElement {
         id: randomId('roll', rng),
         label: 'Acolyte Vex',
         effectOutput: effectRows(args),
-        rerollOptions: [],
+        rerollOptions: args.withReroll === true ? [{ id: 'fate', kind: 'fate', label: 'Spend Fate', modifier: 0, disabled: false }] : [],
         rollData: {
             name: args.powerName,
             action: 'Focus Power',
@@ -109,6 +111,26 @@ export const MaleficCorruptionCharged: Story = {
         await expect(row).not.toBeNull();
         await expect(row?.textContent).toContain(`+${PSY_RATING} Corruption`);
         await expect(row?.textContent).toContain(`Psy Rating ${PSY_RATING}`);
+    },
+};
+
+/** A successful cast with a re-roll offer: three controls in a 300px chat log wrap rather than clip the last one. */
+export const ControlsWrapAtChatWidth: Story = {
+    args: { withReroll: true },
+    render: (args) => {
+        const card = renderPsychicCard(args);
+        card.style.maxWidth = '300px';
+        return card;
+    },
+    play: async ({ canvasElement }) => {
+        const row = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="psychic-card-controls"]');
+        await expect(row).not.toBeNull();
+        await expect(row?.className).toContain('tw-flex-wrap');
+        await expect(row?.querySelectorAll('button').length).toBe(3);
+        // No control extends past the row's right edge.
+        const right = row?.getBoundingClientRect().right ?? 0;
+        const overflowing = [...(row?.querySelectorAll('button') ?? [])].filter((button) => button.getBoundingClientRect().right > right + 1);
+        await expect(overflowing).toEqual([]);
     },
 };
 
@@ -162,5 +184,8 @@ export const SancticPurityNegatedCard: Story = {
         await expect(card?.textContent).toContain('Sister Ophelia');
         await expect(card?.textContent).toContain(`-${SANCTIC_PURITY_FATE_COST}`);
         await expect(card?.textContent.replace(/\s+/g, ' ')).toContain('2 → 1');
+        // Legibility: the card is its own dark surface on DH2 too (it used to wash to a 30% amber, putting the gold title on tan).
+        await expect(card?.getAttribute('data-wh40k-surface')).toBe('dark');
+        await expect(card?.className).not.toContain('tw-bg-amber-900/30');
     },
 };

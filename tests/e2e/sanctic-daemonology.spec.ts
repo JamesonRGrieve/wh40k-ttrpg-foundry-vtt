@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -264,6 +265,16 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
         expect(corruption).toBe(pr);
         await expect.poll(async () => readActorSystem(page, actorId, 'corruption')).toBe(Number(corruption));
         await snapMessage(page, 'malefic-cast-card-corruption', card.id);
+        // In the 300px chat log the controls wrap instead of clipping the last button.
+        const controls = page.locator(`#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-hook="psychic-card-controls"]`);
+        await expect(controls).toBeVisible();
+        const overflow = await controls.evaluate((row) => {
+            const right = row.getBoundingClientRect().right;
+            return [...row.querySelectorAll('button')].filter((b) => b.getBoundingClientRect().right > right + 1 || b.scrollWidth > b.clientWidth + 1).length;
+        });
+        expect(overflow, 'no control overflows the card').toBe(0);
+        await clearScreenOverlays(page);
+        await snap(page, 'psychic-action-card-controls', { selector: `#sidebar .chat-log .message[data-message-id="${card.id}"]` });
         recordCoverage('chat.render', 'psychic-action-chat.malefic');
     });
 
@@ -287,6 +298,10 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
         await expect.poll(async () => readActorSystem(page, actorId, 'fate.value')).toBe(1);
         expect(negated.content).toMatch(/2\s*(→|&rarr;)\s*1/);
         await snapMessage(page, 'sanctic-purity-negated-card', negated.id);
+        // The DH2 variant keeps its dark panel, so the gold title is legible (it was gold on a tan wash).
+        const negatedRoot = `#sidebar .chat-log .message[data-message-id="${negated.id}"] [data-wh40k-surface="dark"]`;
+        await expect(page.locator(negatedRoot)).toBeVisible();
+        expect(await scanContrast(page, negatedRoot)).toEqual([]);
 
         const cast = await waitForMessage(page, [...before, negated.id], 'Phenomena roll is suppressed');
         // A Sanctic power costs no Corruption.

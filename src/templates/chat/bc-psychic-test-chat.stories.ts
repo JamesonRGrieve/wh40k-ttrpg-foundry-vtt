@@ -9,6 +9,7 @@
  *                    sustain penalty engaged.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import { maxPushLevel, resolvePsychicTest, type PsyMode, type PsykerClass } from '../../module/rules/bc-psychic-strength';
@@ -85,6 +86,12 @@ export const Fettered: Story = {
     name: 'Fettered — half PR, no phenomena',
     args: buildCtx({ psykerClass: 'bound', mode: 'fettered', basePR: 5, pushLevel: 0, sustainedPowerCount: 0 }),
     render: (args) => renderCard(args),
+    // Legibility: a dark surface whose header and accents use the light crimson, not the panel's own dark red.
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-bc-psy-mode]')?.getAttribute('data-wh40k-surface')).toBe('dark');
+        await expect(canvasElement.innerHTML).not.toMatch(/bc:tw-text-crimson(?![-\w])/);
+        await expect(canvasElement.innerHTML).toContain('bc:tw-text-crimson-l40');
+    },
 };
 
 export const Unfettered: Story = {

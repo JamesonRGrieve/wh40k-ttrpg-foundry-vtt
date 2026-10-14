@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
@@ -76,6 +77,11 @@ test.describe.serial('Daemonology rituals from the sheet (Tier B)', () => {
         // The readout is the lore row's live total, not a placeholder.
         const total = await panel.locator('strong').first().innerText();
         expect(Number(total)).toBeGreaterThan(0);
+        // Both launcher icons draw a glyph (the Summon icon was `fa-pentagram`, absent from the bundled Font Awesome: blank).
+        for (const action of ['performSummoning', 'performExorcism']) {
+            const glyph = await panel.locator(`[data-action="${action}"] i`).evaluate((i) => getComputedStyle(i, '::before').content);
+            expect(glyph, `${action} icon glyph`).not.toMatch(/^(none|normal|""|)$/);
+        }
         await snapElement(page, 'daemonology-panel', `#${sheetId} ${PANEL}`, sheetId);
         recordCoverage('panel.render', 'DaemonologyPanel');
     });
@@ -127,6 +133,10 @@ test.describe.serial('Daemonology rituals from the sheet (Tier B)', () => {
         expect(await readActorSystem(page, actorId, 'corruption')).toBe(0);
         expect(await readActorSystem(page, actorId, 'fatigue.value')).toBe(0);
         await snapMessage(page, 'daemonology-exorcism-card-banished', card.id);
+        // The breakdown rows and the attempts table are legible on the dark card (they inherited dark text before).
+        const cardRoot = `#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-surface="dark"]`;
+        await expect(page.locator(cardRoot)).toBeVisible();
+        expect(await scanContrast(page, cardRoot)).toEqual([]);
         recordCoverage('dialog.render', 'DaemonologyRitualDialog.exorcism');
         recordCoverage('chat.render', 'daemonology-ritual-chat.exorcism-banished');
     });

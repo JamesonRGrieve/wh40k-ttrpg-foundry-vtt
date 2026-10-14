@@ -8,6 +8,11 @@
     wh40k-tooltip "modifier" type; otherwise it falls back to the legacy
     label→value map in `activeModifiers`.
 
+    Text colours come from `--wh40k-card-text` / `--wh40k-card-muted`. On a
+    light card they are unset and the rows take the card's own colour; a dark
+    card declares `data-wh40k-surface="dark"` on its root, which re-points them
+    to light values (tailwind/design-tokens.js), so the rows stay legible on both.
+
     Hash params:
         baseTarget        — required, the base value before modifiers
         activeModifiers   — required, object/map of label → numeric delta (fallback)

@@ -90,6 +90,11 @@ export const Banished: Story = {
         });
         await expect(parseable).toBe(true);
         await expect(canvasElement.querySelectorAll('[data-wh40k-hook="exorcism-attempts"] tbody tr').length).toBeGreaterThan(0);
+        // Legibility: the card is a dark surface, so the shared breakdown rows and the attempts table read the light text tokens.
+        const root = canvasElement.querySelector('[data-wh40k-hook="daemonology-ritual-card"]');
+        await expect(root?.getAttribute('data-wh40k-surface')).toBe('dark');
+        const muted = getComputedStyle(canvasElement.querySelector('[data-wh40k-tooltip="modifier"] span') ?? document.body).color;
+        await expect(muted).not.toBe('rgb(106, 90, 67)');
     },
 };
 

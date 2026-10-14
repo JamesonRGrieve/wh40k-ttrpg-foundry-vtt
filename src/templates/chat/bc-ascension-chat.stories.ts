@@ -11,6 +11,7 @@
  * no stats for either fate.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import { resolveApotheosis, type DaemonPrinceAlignment } from '../../module/rules/bc-daemon-prince';
@@ -49,14 +50,24 @@ const meta: Meta<AscensionChatCtx> = {
 export default meta;
 type Story = StoryObj<AscensionChatCtx>;
 
+/** The card is a dark surface and draws its accents in the light crimson, never the dark one its panel is tinted with. */
+const assertLegible: Story['play'] = async ({ canvasElement }) => {
+    const card = canvasElement.querySelector('[data-bc-alignment]');
+    await expect(card?.getAttribute('data-wh40k-surface')).toBe('dark');
+    await expect(canvasElement.innerHTML).not.toMatch(/bc:tw-text-crimson(?![-\w])/);
+    await expect(canvasElement.querySelector('[data-wh40k-hook="bc-ascension-outcome"]')?.className).toContain('bc:tw-text-crimson-l40');
+};
+
 export const Tzeentch: Story = {
     name: 'Tzeentch — Infamy met, Daemon Prince',
     args: buildCtx({ ascendedAt: 7, alignmentAtAscension: 'tzeentch', infamy: 100 }),
     render: (args) => renderCard(args),
+    play: assertLegible,
 };
 
 export const Khorne: Story = {
     name: 'Khorne — Infamy short, Chaos Spawn',
     args: buildCtx({ ascendedAt: 12, alignmentAtAscension: 'khorne', infamy: 60 }),
     render: (args) => renderCard(args),
+    play: assertLegible,
 };

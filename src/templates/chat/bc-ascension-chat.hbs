@@ -3,12 +3,13 @@
 {{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
 <div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(20,8,8,0.88)]"
      data-wh40k-system="{{gameSystem}}"
+     data-wh40k-surface="dark"
      data-bc-alignment="{{alignmentAtAscension}}">
 
     {{!-- Header --}}
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-crown tw-text-[1.1rem] bc:tw-text-crimson"></i>
-        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+        <i class="fas fa-crown tw-text-[1.1rem] bc:tw-text-crimson-l40"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson-l40">
             {{localize "WH40K.BC.DaemonPrince.Chat.Title"}}
         </div>
     </div>
@@ -22,7 +23,7 @@
     </div>
 
     {{!-- Outcome: the book prints no stats for either fate; the champion leaves play. --}}
-    <p data-wh40k-hook="bc-ascension-outcome" class="tw-m-0 tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+    <p data-wh40k-hook="bc-ascension-outcome" class="tw-m-0 tw-text-[0.85rem] tw-font-bold tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson-l40">
         {{#if isDaemonPrince}}
             {{localize "WH40K.BC.DaemonPrince.Outcome.DaemonPrince"}}
         {{else}}

@@ -3,13 +3,14 @@
 {{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
 <div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(20,8,8,0.88)]"
      data-wh40k-system="{{gameSystem}}"
+     data-wh40k-surface="dark"
      data-bc-psyker-class="{{psykerClass}}"
      data-bc-psy-mode="{{mode}}">
 
     {{!-- Header --}}
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-brain tw-text-[1.1rem] bc:tw-text-crimson"></i>
-        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">
+        <i class="fas fa-brain tw-text-[1.1rem] bc:tw-text-crimson-l40"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson-l40">
             {{localize "WH40K.BC.Psychic.ChatTitle"}}
         </div>
     </div>
@@ -18,7 +19,7 @@
     <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(0,0,0,0.18)]">
         <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultMode"}}</span>
         <span class="tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
-            {{localize modeLabelKey}} <i class="fas fa-circle tw-mx-2 tw-text-[0.45rem] bc:tw-text-crimson"></i> {{localize classLabelKey}}
+            {{localize modeLabelKey}} <i class="fas fa-circle tw-mx-2 tw-text-[0.45rem] bc:tw-text-crimson-l40"></i> {{localize classLabelKey}}
         </span>
     </div>
 
@@ -36,7 +37,7 @@
         {{/if}}
         <li class="tw-flex tw-justify-between tw-gap-3">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultEffectivePR"}}</span>
-            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson">{{effectivePR}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-bright)] bc:tw-text-crimson-l40">{{effectivePR}}</span>
         </li>
         <li class="tw-flex tw-justify-between tw-gap-3">
             <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.Psychic.ResultSustainPenalty"}}</span>
@@ -49,7 +50,7 @@
     </ul>
 
     {{#if phenomenaRolls}}
-        <div class="tw-text-xs tw-italic bc:tw-text-crimson tw-text-[color:var(--wh40k-text-muted)]">
+        <div class="tw-text-xs tw-italic bc:tw-text-crimson-l40 tw-text-[color:var(--wh40k-text-muted)]">
             <i class="fas fa-exclamation-triangle"></i>
             {{localize "WH40K.BC.Psychic.Phenomena.Triggered"}}
         </div>

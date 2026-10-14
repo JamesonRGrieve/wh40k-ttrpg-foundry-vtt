@@ -47,8 +47,8 @@
                 {{/if}}
                 {{> systems/wh40k-rpg/templates/chat/partial/result-formula.hbs}}
 
-                {{!-- Controls --}}
-                <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
+                {{!-- Controls: wrap onto a second line in the 300px chat log instead of clipping the last button (buttons size to their label). --}}
+                <div data-wh40k-hook="psychic-card-controls" class="tw-flex tw-flex-wrap tw-gap-1.5 [&>button]:tw-flex-auto tw-px-2 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                     {{#if success}}
                         <button class="roll-control__hide-control tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-toggle="{{@root.id}}">
                             <span class="material-icons tw-text-[16px]">bolt</span>
