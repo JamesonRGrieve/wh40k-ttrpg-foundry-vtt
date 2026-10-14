@@ -408,4 +408,29 @@ describe('EffectCreationDialog renders its template (#516)', () => {
         // A nested <form> inside the form root would never submit through the window's handler.
         expect(template).not.toMatch(/<form\b/);
     });
+
+    it('picking a condition requests a real form submit, so the handler runs and the window closes', async () => {
+        const Mod = await loadDialog();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: fail loudly if the stub could not load the dialog, never skip silently
+        if (Mod === undefined) throw new Error('EffectCreationDialog failed to load under the ApplicationV2 stub');
+        void Mod.default.show(mockOwner(createSpy()));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: render() must have captured the instance
+        if (capturedDialog === undefined) throw new Error('render() did not capture the dialog instance');
+
+        // The window root is the form (`tag: 'form'`): the dialog's element.
+        const form = document.createElement('form');
+        form.innerHTML = '<input type="hidden" name="effectType" value="custom"><input type="hidden" name="conditionId">';
+        const requestSubmit = vi.fn();
+        form.requestSubmit = requestSubmit;
+        Object.defineProperty(capturedDialog, 'element', { value: form });
+        const row = document.createElement('div');
+        row.dataset['conditionId'] = 'stunned';
+
+        Mod.default._onSelectCondition.call(capturedDialog, new Event('click'), row);
+
+        expect((form.elements.namedItem('effectType') as HTMLInputElement).value).toBe('condition');
+        expect((form.elements.namedItem('conditionId') as HTMLInputElement).value).toBe('stunned');
+        // ApplicationV2#submit would run the handler but never honour closeOnSubmit.
+        expect(requestSubmit).toHaveBeenCalledOnce();
+    });
 });

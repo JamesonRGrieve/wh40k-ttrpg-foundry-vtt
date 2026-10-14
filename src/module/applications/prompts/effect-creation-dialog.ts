@@ -78,7 +78,6 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
     declare owner: EffectsOwner;
     declare defaults: EffectCreationDefaults;
     declare selectedCategory: string;
-    declare submit: () => Promise<void>;
 
     /** Promise-resolution plumbing (#287); dismissal without a submit resolves null. */
     readonly #resolution = new DialogResolution<ActiveEffectLike | null>(null);
@@ -219,7 +218,9 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
         if (form instanceof HTMLFormElement) {
             (form.elements.namedItem('effectType') as HTMLInputElement).value = 'condition';
             (form.elements.namedItem('conditionId') as HTMLInputElement).value = conditionId;
-            void this.submit();
+            // requestSubmit, not ApplicationV2#submit: only the form's submit event runs
+            // the configured handler AND honours closeOnSubmit.
+            form.requestSubmit();
         }
     }
 
