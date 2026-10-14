@@ -136,8 +136,9 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get craftsmanship-derived modifiers for force fields.
      * Applies WH40K RPG force field craftsmanship rules:
      *
-     * FORCE FIELDS:
-     * - Poor: Overload on 01-20
+     * FORCE FIELDS (Field Overload Chance: DH2 core Table 5–13, pp. 169–170;
+     * OW core Table 6–18; BC core p. 179, all alike):
+     * - Poor: Overload on 01-15
      * - Common: Overload on 01-10
      * - Good: Overload on 01-05
      * - Best: Overload on 01 only (1% chance)
@@ -151,7 +152,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         };
 
         const OVERLOAD_MAX_BY_CRAFT: Record<string, number> = {
-            poor: 20, // 01-20 overload (20% chance)
+            poor: 15, // 01-15 overload (15% chance)
             common: 10, // 01-10 overload (10% chance)
             good: 5, // 01-05 overload (5% chance)
             best: 1, // 01 only overload (1% chance)

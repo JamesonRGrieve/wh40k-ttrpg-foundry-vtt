@@ -5929,7 +5929,11 @@
                 "Overload": "Field Overload!",
                 "OverloadDetail": "The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).",
                 "Activated": "The field activates successfully! Attack is nullified.",
-                "Failed": "The field fails to protect and the attack proceeds as normal."
+                "Failed": "The field fails to protect and the attack proceeds as normal.",
+                "ProtectionRoll": "Protection roll",
+                "ProtectionFormula": "d100 {roll} vs PR {rating}",
+                "OverloadCheck": "Overload check",
+                "OverloadBand": "d100 {roll} vs {min}–{max}"
             },
             "Item": {
                 "Novice": "Novice",

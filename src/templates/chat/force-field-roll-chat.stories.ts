@@ -18,6 +18,8 @@ interface ForceFieldCardCtx {
     forceField: { name: string; system: { description: { value: string; chat: string; summary: string } } };
     roll: { total: number };
     protectionRating: number;
+    overloadMin: number;
+    overloadRating: number;
     success: boolean;
     overload: boolean;
     isTargetOnly: boolean;
@@ -34,6 +36,8 @@ function card(gameSystem: string, success: boolean): ForceFieldCardCtx {
         },
         roll: { total: success ? 12 : 64 },
         protectionRating: 30,
+        overloadMin: 1,
+        overloadRating: 10,
         success,
         overload: false,
         isTargetOnly: false,
@@ -75,5 +79,30 @@ export const FailedWithDescription: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.textContent).toContain('Field Failed');
         await expect(canvasElement.textContent).not.toContain('[object Object]');
+    },
+};
+
+/**
+ * The card prints the whole resolution (#645): the d100 against the protection
+ * rating, and the overload band it was checked against.
+ */
+export const ProtectionFormula: Story = {
+    args: card('dh2', true),
+    render: (args) => render(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="force-field-formula"]')?.textContent).toContain('d100 12 vs PR 30');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="force-field-overload-band"]')?.textContent).toContain('d100 12 vs 1–10');
+        await expect(canvasElement.textContent).not.toContain('Field Overload!');
+    },
+};
+
+/** A roll inside the overload band protects and overloads at once. */
+export const ProtectedAndOverloaded: Story = {
+    args: { ...card('dh2', true), roll: { total: 7 }, overload: true },
+    render: (args) => render(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.textContent).toContain('Field Activated');
+        await expect(canvasElement.textContent).toContain('Field Overload!');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="force-field-overload-band"]')?.textContent).toContain('d100 7 vs 1–10');
     },
 };

@@ -482,11 +482,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         return 'simple';
     }
 
-    /** @returns {object} The underlying roll data (ForceFieldData IS the rollData) */
+    /** @returns {object} The action's roll data (every action carries one, the force-field roll included, #645) */
     // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries roll-type-specific extension fields read by templates
     get rollData(): RollData & Record<string, unknown> {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-restricted-syntax -- rollData may be absent on subclasses at runtime; cast is boundary: heterogeneous roll data bag
-        return (this.actionData.rollData ?? this.actionData) as RollData & Record<string, unknown>;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous roll data bag; the subclass fields are read by key below
+        return this.actionData.rollData as RollData & Record<string, unknown>;
     }
 
     /** Get the current difficulty preset */
@@ -790,8 +790,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const isPsychic = this.rollType === 'psychic';
         const isSimple = this.rollType === 'simple';
 
-        // Actor info (ForceFieldData uses .actor, ActionData uses .sourceActor or .actor)
-        const actor = (rollData.sourceActor ?? rollData['actor']) as { name?: string; img?: string } | null | undefined;
+        // Actor info
+        const actor = rollData.sourceActor as { name?: string; img?: string } | null;
         const actorName = actor?.name ?? '';
         const actorImg = actor?.img ?? '';
 
@@ -2725,7 +2725,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         } else if (rollType === 'forceField') {
             if (!this._validateForceFieldRoll()) return;
             await (this.rollData['finalize'] as () => Promise<void>)();
-            await (this.rollData['performActionAndSendToChat'] as () => Promise<void>)();
+            await this.actionData.performActionAndSendToChat();
         } else {
             await this.rollData.calculateTotalModifiers();
             await this.actionData.calculateSuccessOrFailure();
@@ -2915,15 +2915,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // Manual roll - compute results without finalize() (which calls roll1d100)
             // rd.roll is already set by _submitToChat() as a fake Roll object
             const rollTotal = (rd.roll as Roll).total ?? 0;
-            rd.success = rollTotal <= (rd['protectionRating'] as number);
-            rd['overload'] = rollTotal <= (rd['overloadRating'] as number);
+            // The same resolution the digital roll makes (#645): protection rating and overload band.
+            (rd as { resolve?: (total: number) => void }).resolve?.(rollTotal);
             rd['isManualRoll'] = true;
         } else {
             // Target-only - no roll, no finalize
             rd['isTargetOnly'] = true;
         }
 
-        await (rd['performActionAndSendToChat'] as () => Promise<void>)();
+        await this.actionData.performActionAndSendToChat();
     }
 
     _validateWeaponRoll(): boolean {

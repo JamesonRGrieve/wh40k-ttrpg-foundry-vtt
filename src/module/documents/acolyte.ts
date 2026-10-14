@@ -8,7 +8,6 @@ import type { SituationalModifierRow } from '../data/shared/modifiers-template.t
 import type D100Roll from '../dice/d100-roll.ts';
 import { t } from '../i18n/t.ts';
 import {
-    type ActionData,
     type ChemLike,
     ChemUseActionData,
     type CoatableWeapon,
@@ -27,7 +26,7 @@ import {
 } from '../rolls/action-data.ts';
 import { EvasionActionData } from '../rolls/evasion-action-data.ts';
 import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
-import { ForceFieldData } from '../rolls/force-field-data.ts';
+import { ForceFieldActionData } from '../rolls/force-field-data.ts';
 import { resolveGainedMalignancy } from '../rolls/malignancy-outcome.ts';
 import { openDamagePrompt, openRollPrompt } from '../rolls/roll-prompt.ts';
 import { firstTargetedActor, promptItemChoice } from '../rolls/skill-use-picker.ts';
@@ -40,6 +39,7 @@ import {
 import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import { formulaWithBonus } from '../rules/damage-profile.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
+import { isForceFieldItem } from '../rules/force-field-protection.ts';
 import { isGrenadeWeapon } from '../rules/grenade-weapon.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
@@ -1035,13 +1035,12 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (!item) return;
 
         // PC-only branch: force fields must be equipped AND activated.
-        if (item.type === 'forceField') {
-            if (item.system.state.equipped !== true || item.system.state.activated !== true) {
+        if (isForceFieldItem(item)) {
+            if (!item.system.state.equipped || !item.system.state.activated) {
                 ui.notifications.warn(game.i18n.localize('WH40K.Notify.Acolyte.ForceFieldNotReady'));
                 return;
             }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ForceFieldData ctor accepts the item document via per-system-typed slot
-            openRollPrompt(new ForceFieldData(this, item as unknown as ConstructorParameters<typeof ForceFieldData>[1]) as unknown as ActionData);
+            openRollPrompt(new ForceFieldActionData(this, item));
             return;
         }
 

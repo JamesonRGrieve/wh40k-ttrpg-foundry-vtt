@@ -15,6 +15,15 @@
                     {{localize "WH40K.Chat.Roll.AwaitingPhysicalRoll"}}
                 </div>
             {{else}}
+                {{! The full resolution (#645): the d100 against the protection rating, and the overload band it was checked against. }}
+                <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]" data-wh40k-hook="force-field-formula">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Chat.ForceField.ProtectionRoll"}}</span>
+                    <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{localize "WH40K.Chat.ForceField.ProtectionFormula" roll=roll.total rating=protectionRating}}</span>
+                </div>
+                <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]" data-wh40k-hook="force-field-overload-band">
+                    <span class="tw-text-[color:var(--wh40k-text-muted)] tw-font-medium">{{localize "WH40K.Chat.ForceField.OverloadCheck"}}</span>
+                    <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{localize "WH40K.Chat.ForceField.OverloadBand" roll=roll.total min=overloadMin max=overloadRating}}</span>
+                </div>
                 {{#if overload}}
                     <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[#ffd700] tw-rounded-md tw-text-center">
                         <div class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[#ffd700] tw-uppercase tw-tracking-[0.15em] tw-[text-shadow:0_0_10px_rgba(255,215,0,0.5)]">⚠ {{localize "WH40K.Chat.ForceField.Overload"}} ⚠</div>
