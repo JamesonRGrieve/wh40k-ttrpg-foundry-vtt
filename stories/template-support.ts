@@ -3,6 +3,7 @@ import enLang from '../src/lang/en.json';
 import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
 import { truncate } from '../src/module/handlebars/handlebars-helpers.ts';
+import { inlineTernary } from '../src/module/handlebars/inline-ternary.ts';
 import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
@@ -188,10 +189,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         return Math.min(100, Math.max(0, ((Number.isFinite(v) ? v : 0) / m) * 100));
     });
     HandlebarsLib.registerHelper('inc', (value: HbsValue) => Number(value) + 1);
-    HandlebarsLib.registerHelper('iff', (cond: HbsValue, ifTrue: HbsValue, ifFalse: HbsValue) => {
-        const b = Boolean(cond);
-        return b ? ifTrue : ifFalse ?? '';
-    });
+    HandlebarsLib.registerHelper('iff', (...args: HbsValue[]) => inlineTernary(args));
     HandlebarsLib.registerHelper('object', (options: { hash?: HbsRecord }) => {
         return options.hash ?? {};
     });

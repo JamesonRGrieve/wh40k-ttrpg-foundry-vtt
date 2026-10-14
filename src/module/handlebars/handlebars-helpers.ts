@@ -9,6 +9,7 @@ import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
+import { inlineTernary } from './inline-ternary.ts';
 import { buildSafeAttrs } from './safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
@@ -605,9 +606,7 @@ export function registerHandlebarsHelpers(): void {
      * optional and defaults to "" — useful when the caller wants a class string
      * that's empty when the condition fails.
      */
-    Handlebars.registerHelper('iff', (cond: TplValue, ifTrue: TplValue, ifFalse: TplValue): TplValue => {
-        return isTruthy(cond) ? ifTrue : ifFalse ?? '';
-    });
+    Handlebars.registerHelper('iff', (...args: TplValue[]): TplValue => inlineTernary(args));
 
     /**
      * Build an object literal from hash arguments — mainly so partials can pass
