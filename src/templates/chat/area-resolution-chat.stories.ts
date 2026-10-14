@@ -10,10 +10,16 @@
  *   3. BlastResults   — a hit area: everyone inside hit, no tests.
  *   4. NoDamageBlast  — a no-damage weapon (#601): everyone caught listed, no Roll Damage.
  *   5. PerSystem      — the Spray card framed under each of the six FFG lines.
+ *   6. TrainedSprayNoZeroRows   — a +0 test by a trained wielder: no "Difficulty 0" row (#616).
+ *   7. HardSprayKeepsDifficulty — a −10 test keeps its difficulty row (#616).
+ *
+ * Provenance rows come from the resolution path's own `areaAvoidanceComponents`.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
+import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../stories/test-helpers';
+import { type AreaAvoidanceRule, type AvoidanceWielder, areaAvoidanceComponents } from '../../module/rules/area-template.ts';
 import cardSrc from './area-resolution-chat.hbs?raw';
 
 type SystemId = 'bc' | 'dh1' | 'dh2' | 'dw' | 'ow' | 'rt';
@@ -53,7 +59,15 @@ function avoidance(name: string, base: number, roll: number, components: Compone
 }
 
 const SPRAY_SUMMARY = 'Spray: no attack roll. Targets in the cone test Agility (+0).';
-const UNTRAINED = [row('Difficulty', 0, 'difficulty'), row('Wielder lacks the Weapon Training', 20, 'weapon-training')];
+const SPRAY_RULE: AreaAvoidanceRule = { modifier: 0, untrainedBonus: 20, unbracedHeavyBonus: 30 };
+
+/** The provenance rows the resolution path builds for a rule and wielder, labelled from the langpack. */
+function componentRows(rule: AreaAvoidanceRule, wielder: AvoidanceWielder): ComponentRow[] {
+    return areaAvoidanceComponents(rule, wielder).map((component) => row(localizeKey(component.label), component.value, component.source));
+}
+
+const UNTRAINED = componentRows(SPRAY_RULE, { trained: false, heavyUnbraced: false });
+const TRAINED = componentRows(SPRAY_RULE, { trained: true, heavyUnbraced: false });
 
 function sprayCtx(results: ResultRow[], gameSystem?: SystemId): AreaResolutionCtx {
     const ctx: AreaResolutionCtx = { rollId: 'roll-spray', weaponName: 'Hand Flamer', summary: SPRAY_SUMMARY, results, anyHit: results.some((r) => r.hit) };
@@ -90,10 +104,11 @@ export const SprayResults: Story = {
         // Base, every modifier with its provenance, then the d100 against the target.
         await expect(targets[0]?.querySelector('[data-area-base]')?.textContent.trim()).toBe('30');
         await expect(targets[0]?.querySelector('[data-area-roll]')?.textContent).toContain('71 vs 50');
+        // The +0 difficulty adds no row (#616); the untrained bonus keeps its provenance.
         const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]'));
-        await expect(rows.length).toBe(4);
+        await expect(rows.length).toBe(2);
         const sources = rows.map((r) => (JSON.parse(r.dataset['wh40kTooltipData'] ?? '{}') as { source?: string }).source);
-        await expect(sources).toEqual(['difficulty', 'weapon-training', 'difficulty', 'weapon-training']);
+        await expect(sources).toEqual(['weapon-training', 'weapon-training']);
         const damage = canvasElement.querySelector<HTMLButtonElement>('.roll-control__roll-damage');
         await expect(damage?.dataset['rollId']).toBe('roll-spray');
     },
@@ -101,11 +116,38 @@ export const SprayResults: Story = {
 
 export const AllAvoided: Story = {
     name: 'Spray — everyone avoided, no Roll Damage',
-    args: sprayCtx([avoidance('Cultist', 40, 12, [row('Difficulty', 0, 'difficulty')])]),
+    args: sprayCtx([avoidance('Cultist', 40, 12, TRAINED)]),
     render: (args) => renderCard(args),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-area-outcome]')?.textContent.trim()).toBe('Avoided');
         await expect(canvasElement.querySelector('.roll-control__roll-damage')).toBeNull();
+    },
+};
+
+/** A trained wielder against a +0 test: nothing changes the target, so no provenance rows (#616). */
+export const TrainedSprayNoZeroRows: Story = {
+    name: 'Spray — trained wielder, +0 test: no "Difficulty 0" row',
+    args: sprayCtx([avoidance('Mark', 30, 96, TRAINED), avoidance('Flanker', 30, 5, TRAINED)]),
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBe(0);
+        await expect(canvasElement.textContent).not.toMatch(/Difficulty\s*0/u);
+        // The test's named difficulty stays in the statement heading.
+        await expect(canvasElement.querySelector('[data-area-statement]')?.textContent).toContain('(+0)');
+        await expect(canvasElement.querySelector('[data-area-roll]')?.textContent).toContain('96 vs 30');
+    },
+};
+
+/** A harder avoidance test keeps its difficulty row, with its provenance (#616). */
+export const HardSprayKeepsDifficulty: Story = {
+    name: 'Spray — a −10 test keeps its difficulty row',
+    args: sprayCtx([avoidance('Mark', 30, 40, componentRows({ ...SPRAY_RULE, modifier: -10 }, { trained: true, heavyUnbraced: false }))]),
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-tooltip="modifier"]'));
+        await expect(rows.map((r) => (JSON.parse(r.dataset['wh40kTooltipData'] ?? '{}') as { source?: string; value?: number }).value)).toEqual([-10]);
+        await expect(rows[0]?.textContent).toContain(localizeKey('WH40K.AreaAttack.Avoid.Difficulty'));
+        await expect(canvasElement.querySelector('[data-area-roll]')?.textContent).toContain('40 vs 20');
     },
 };
 

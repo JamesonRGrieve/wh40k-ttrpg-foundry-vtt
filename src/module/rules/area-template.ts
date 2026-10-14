@@ -257,12 +257,15 @@ export interface AvoidanceWielder {
 }
 
 /**
- * The modifiers on an avoidance test, each with its provenance. The difficulty row is
- * always present so the card shows "(+0)". The wielder bonus does not stack: it is the
- * untrained bonus, rising to the unbraced-Heavy bonus when that applies.
+ * The modifiers on an avoidance test, each with its provenance; only the ones that
+ * change the target. The wielder bonus does not stack: it is the untrained bonus,
+ * rising to the unbraced-Heavy bonus when that applies.
  */
 export function areaAvoidanceComponents(rule: AreaAvoidanceRule, wielder: AvoidanceWielder): AvoidanceComponent[] {
-    const components: AvoidanceComponent[] = [{ label: 'WH40K.AreaAttack.Avoid.Difficulty', value: rule.modifier, source: 'difficulty' }];
+    // A Challenging (+0) difficulty changes nothing; the card's statement already
+    // names the test's difficulty, so a zero row would only be noise (#616).
+    const components: AvoidanceComponent[] =
+        rule.modifier === 0 ? [] : [{ label: 'WH40K.AreaAttack.Avoid.Difficulty', value: rule.modifier, source: 'difficulty' }];
     const untrained = wielder.trained ? 0 : rule.untrainedBonus;
     const unbraced = wielder.heavyUnbraced ? rule.unbracedHeavyBonus : 0;
     if (unbraced > 0 && unbraced >= untrained) {

@@ -190,31 +190,39 @@ describe('scatterOffset — the scatter diagram is relative to the line of fire'
 });
 
 describe('areaAvoidanceComponents — modifiers with provenance', () => {
-    it('a trained, braced wielder: just the +0 difficulty', () => {
-        expect(areaAvoidanceComponents(SPRAY_RULE, { trained: true, heavyUnbraced: false })).toEqual([
-            { label: 'WH40K.AreaAttack.Avoid.Difficulty', value: 0, source: 'difficulty' },
+    it('a trained, braced wielder against a +0 test: no rows, since nothing changes the target (#616)', () => {
+        expect(areaAvoidanceComponents(SPRAY_RULE, { trained: true, heavyUnbraced: false })).toEqual([]);
+    });
+
+    it('a non-zero difficulty keeps its provenance row (#616)', () => {
+        const hard: AreaAvoidanceRule = { ...SPRAY_RULE, modifier: -10 };
+        expect(areaAvoidanceComponents(hard, { trained: true, heavyUnbraced: false })).toEqual([
+            { label: 'WH40K.AreaAttack.Avoid.Difficulty', value: -10, source: 'difficulty' },
         ]);
+        expect(areaAvoidanceComponents(hard, { trained: false, heavyUnbraced: false }).map((c) => c.source)).toEqual(['difficulty', 'weapon-training']);
     });
 
     it('an untrained wielder gives the targets +20', () => {
-        expect(areaAvoidanceComponents(SPRAY_RULE, { trained: false, heavyUnbraced: false })[1]).toEqual({
-            label: 'WH40K.AreaAttack.Avoid.Untrained',
-            value: 20,
-            source: 'weapon-training',
-        });
+        expect(areaAvoidanceComponents(SPRAY_RULE, { trained: false, heavyUnbraced: false })).toEqual([
+            {
+                label: 'WH40K.AreaAttack.Avoid.Untrained',
+                value: 20,
+                source: 'weapon-training',
+            },
+        ]);
     });
 
     it('a Heavy weapon fired unbraced raises it to +30, not +50', () => {
         for (const trained of [true, false]) {
             const components = areaAvoidanceComponents(SPRAY_RULE, { trained, heavyUnbraced: true });
-            expect(components.map((c) => c.value)).toEqual([0, 30]);
-            expect(components[1]?.source).toBe('heavy-unbraced');
+            expect(components.map((c) => c.value)).toEqual([30]);
+            expect(components[0]?.source).toBe('heavy-unbraced');
         }
     });
 
     it('a line without the wielder bonuses (BC / OW Spray) adds nothing', () => {
         const rule: AreaAvoidanceRule = { modifier: 0, untrainedBonus: 0, unbracedHeavyBonus: 0 };
-        expect(areaAvoidanceComponents(rule, { trained: false, heavyUnbraced: true })).toHaveLength(1);
+        expect(areaAvoidanceComponents(rule, { trained: false, heavyUnbraced: true })).toHaveLength(0);
     });
 });
 

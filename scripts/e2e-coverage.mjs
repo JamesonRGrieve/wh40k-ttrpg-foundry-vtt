@@ -651,6 +651,11 @@ recordDimension('weapon-penetration.flow', covered['weapon-penetration.flow'], W
 const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line'];
 recordDimension('damage-card-layout.flow', covered['damage-card-layout.flow'], DAMAGE_CARD_LAYOUT_FLOWS);
 
+// The area results card's provenance rows (#616), tests/e2e/area-difficulty-row.spec.ts.
+// Keep in sync with AREA_DIFFICULTY_ROW_FLOWS there.
+const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept'];
+recordDimension('area-difficulty-row.flow', covered['area-difficulty-row.flow'], AREA_DIFFICULTY_ROW_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [
