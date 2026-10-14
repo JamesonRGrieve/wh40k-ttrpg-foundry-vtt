@@ -112,6 +112,35 @@ function readModifiersFromForm(form: HTMLFormElement | null): RitualModifier[] {
     return modifiers;
 }
 
+/** The ritual dialog body (preloaded in handlebars-manager). */
+const BC_RITUAL_DIALOG_TEMPLATE = 'systems/wh40k-rpg/templates/prompt/bc-ritual-dialog.hbs';
+
+/** One pre-allocated modifier row of the ritual dialog. */
+export interface RitualDialogRow {
+    index: number;
+    value: number;
+    kinds: Array<{ value: RitualModifierKind; label: string; selected: boolean }>;
+}
+
+/**
+ * The dialog's four pre-allocated Table 6-7 rows: cult affiliation, sacrifice,
+ * Daemonic Mastery (seeded from the actor's ritual mastery) and the GM
+ * catch-all. Each lists every kind so a row can be repurposed.
+ */
+export function buildRitualDialogRows(initialMastery: number, localize: (key: string) => string): RitualDialogRow[] {
+    const defaults: ReadonlyArray<[RitualModifierKind, number]> = [
+        ['cult-affiliation', 0],
+        ['sacrifice', 0],
+        ['daemonic-mastery', initialMastery],
+        ['gm-other', 0],
+    ];
+    return defaults.map(([defaultKind, value], index) => ({
+        index,
+        value,
+        kinds: MODIFIER_KINDS.map((kind) => ({ value: kind, label: localize(MODIFIER_LABEL_KEYS[kind]), selected: kind === defaultKind })),
+    }));
+}
+
 /**
  * Prompt the operator for ritual template id + base target + a list of
  * stacked Table 6-7 modifiers. Returns null if the dialog API is
@@ -126,44 +155,9 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
     const dialogApi = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
     if (!dialogApi) return null;
 
-    const i18n = game.i18n;
-    const templateIdLabel = i18n.localize('WH40K.BC.Ritual.DialogTemplateId');
-    const baseTargetLabel = i18n.localize('WH40K.BC.Ritual.DialogBaseTarget');
-    const modifiersHeader = i18n.localize('WH40K.BC.Ritual.DialogModifiersHeader');
-    const kindLabel = i18n.localize('WH40K.BC.Ritual.DialogModifierKind');
-    const valueLabel = i18n.localize('WH40K.BC.Ritual.DialogModifierValue');
-    const descriptionLabel = i18n.localize('WH40K.BC.Ritual.DialogModifierDescription');
-
-    const modifierRow = (index: number, defaultKind: RitualModifierKind, defaultValue: number): string => `
-        <div class="form-group" data-mod-row="${index}">
-            <label>${kindLabel}</label>
-            <select name="mod-kind-${index}">
-                ${MODIFIER_KINDS.map(
-                    (kind) => `<option value="${kind}" ${kind === defaultKind ? 'selected' : ''}>${i18n.localize(MODIFIER_LABEL_KEYS[kind])}</option>`,
-                ).join('')}
-            </select>
-            <label>${valueLabel}</label>
-            <input type="number" name="mod-value-${index}" step="1" value="${defaultValue}" />
-            <label>${descriptionLabel}</label>
-            <input type="text" name="mod-description-${index}" value="" />
-        </div>
-    `;
-
-    const content = `
-        <div class="form-group">
-            <label>${templateIdLabel}</label>
-            <input type="text" name="templateId" value="" />
-        </div>
-        <div class="form-group">
-            <label>${baseTargetLabel}</label>
-            <input type="number" name="baseTarget" min="0" step="1" value="30" />
-        </div>
-        <h3>${modifiersHeader}</h3>
-        ${modifierRow(0, 'cult-affiliation', 0)}
-        ${modifierRow(1, 'sacrifice', 0)}
-        ${modifierRow(2, 'daemonic-mastery', args.initialMastery)}
-        ${modifierRow(3, 'gm-other', 0)}
-    `;
+    const content = await foundry.applications.handlebars.renderTemplate(BC_RITUAL_DIALOG_TEMPLATE, {
+        rows: buildRitualDialogRows(args.initialMastery, (key) => game.i18n.localize(key)),
+    });
 
     // DialogV2.prompt resolves to the ok.callback return value OR null on close;
     // Foundry's typing collapses both to unknown. Accept the looser shape at
@@ -171,6 +165,9 @@ async function promptBcRitualInputs(args: { initialMastery: number }): Promise<B
     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt resolves to callback return OR null on close; narrowed via shape guards below
     const result = (await dialogApi.prompt({
         window: { title: 'WH40K.BC.Ritual.DialogTitle' },
+        // `wh40k-rpg` scopes the template's Tailwind utilities (they are `important: '.wh40k-rpg'`).
+        classes: ['wh40k-rpg'],
+        position: { width: 480 },
         content,
         ok: {
             label: 'WH40K.BC.Ritual.DialogSubmit',

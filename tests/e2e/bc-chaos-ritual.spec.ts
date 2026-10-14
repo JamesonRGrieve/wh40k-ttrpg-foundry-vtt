@@ -133,4 +133,56 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
 
         recordCoverage('panel.render', 'BcChaosRitualPanel');
     });
+
+    test('Perform Ritual opens the dialog with every Kind select showing its whole label', async ({ page }) => {
+        await joinOrSkip(page);
+        const name = 'e2e-bc-ritual-dialog';
+        const sheetId = await page.evaluate(async (actorName) => {
+            interface DialogProbe {
+                Actor: { create: (d: object) => Promise<{ sheet: { id: string; render: (o: { force: boolean }) => Promise<void> } } | null> };
+                game: { actors: { getName: (n: string) => { delete: () => Promise<void> } | undefined } };
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as DialogProbe;
+            await w.game.actors.getName(actorName)?.delete();
+            const actor = await w.Actor.create({ name: actorName, type: 'bc-character', system: { gameSystem: 'bc', ritualMastery: 2 } });
+            if (actor === null) throw new Error('Actor.create returned null');
+            await actor.sheet.render({ force: true });
+            return actor.sheet.id;
+        }, name);
+        try {
+            await page.locator(`#${sheetId} section.wh40k-bc-ritual-panel [data-action="bcPerformRitual"]`).click();
+            const dialog = page.locator('dialog.application[open]', { has: page.locator('[data-wh40k-hook="bc-ritual-dialog"]') });
+            await expect(dialog).toBeVisible();
+            await dialog.locator('select[name="mod-kind-0"]').selectOption('component-reagent');
+            await dialog.locator('select[name="mod-kind-1"]').selectOption('sanctified-ground');
+            // No select clips its chosen label: the select is at least as wide as the label it shows.
+            const clipped = await dialog.locator('select[name^="mod-kind-"]').evaluateAll((selects) =>
+                (selects as HTMLSelectElement[])
+                    .filter((s) => {
+                        const probe = document.createElement('span');
+                        probe.style.font = getComputedStyle(s).font;
+                        probe.style.position = 'absolute';
+                        probe.style.visibility = 'hidden';
+                        probe.textContent = s.selectedOptions.item(0)?.textContent ?? '';
+                        document.body.appendChild(probe);
+                        const textWidth = probe.getBoundingClientRect().width;
+                        probe.remove();
+                        return s.clientWidth < textWidth + 16;
+                    })
+                    .map((s) => s.name),
+            );
+            expect(clipped).toEqual([]);
+            const dialogId = (await dialog.getAttribute('id')) ?? '';
+            await snap(page, 'bc-ritual-dialog-kind-selects', { selector: `#${dialogId}` });
+            await dialog.locator('button[data-action="close"], button[data-action="cancel"]').first().click();
+        } finally {
+            await page.evaluate(async (actorName) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+                const w = globalThis as unknown as { game: { actors: { getName: (n: string) => { delete: () => Promise<void> } | undefined } } };
+                await w.game.actors.getName(actorName)?.delete();
+            }, name);
+        }
+        recordCoverage('dialog.render', 'BcChaosRitualDialog');
+    });
 });

@@ -19,7 +19,7 @@ const warn = vi.fn();
 beforeEach(() => {
     prompt.mockReset().mockResolvedValue(null);
     warn.mockReset();
-    vi.stubGlobal('foundry', { applications: { api: { DialogV2: { prompt } } } });
+    vi.stubGlobal('foundry', { applications: { api: { DialogV2: { prompt } }, handlebars: { renderTemplate: vi.fn().mockResolvedValue('') } } });
     vi.stubGlobal('game', { i18n: { localize: (key: string): string => key, format: (key: string): string => key } });
     vi.stubGlobal('ui', { notifications: { warn } });
     vi.spyOn(WH40KSettings, 'getApotheosisInfamyThreshold').mockReturnValue(50);

@@ -300,6 +300,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/possession-frenzy-chat.hbs',
             'systems/wh40k-rpg/templates/actor/panel/daemonology-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/daemonology-ritual-dialog.hbs',
+            'systems/wh40k-rpg/templates/prompt/bc-ritual-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemonology-ritual-chat.hbs',
             'systems/wh40k-rpg/templates/chat/partial/daemonology-test-row.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/daemonology-circumstance-row.hbs',

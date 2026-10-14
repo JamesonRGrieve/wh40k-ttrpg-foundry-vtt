@@ -1,0 +1,39 @@
+{{!--
+    BC Chaos Ritual dialog (Black Crusade core, Table 6-7). Rendered into a
+    DialogV2 by `promptBcRitualInputs` (bc-ritual-actions.ts).
+
+    Each modifier row stacks its controls: the Kind select spans the full row
+    so its longest label ("Component / Reagent", "Sanctified Ground") is never
+    cut, with Value and Description beneath it.
+
+    Context: rows[{ index, value, kinds[{ value, label, selected }] }]
+--}}
+<div class="tw-flex tw-flex-col tw-gap-3" data-wh40k-system="bc" data-wh40k-hook="bc-ritual-dialog">
+    <div class="tw-grid tw-grid-cols-[1fr_8rem] tw-gap-3">
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
+            {{localize "WH40K.BC.Ritual.DialogTemplateId"}}
+            <input type="text" name="templateId" value="" class="tw-w-full tw-normal-case tw-font-normal" />
+        </label>
+        <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
+            {{localize "WH40K.BC.Ritual.DialogBaseTarget"}}
+            <input type="number" name="baseTarget" min="0" step="1" value="30" class="tw-w-full tw-normal-case tw-font-normal" />
+        </label>
+    </div>
+
+    <h3 class="tw-m-0 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-border-none">{{localize "WH40K.BC.Ritual.DialogModifiersHeader"}}</h3>
+
+    {{#each rows as |row|}}
+    <fieldset class="tw-m-0 tw-p-2 tw-grid tw-grid-cols-[6rem_1fr] tw-gap-x-3 tw-gap-y-2 tw-items-center tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(128,128,128,0.4)]" data-mod-row="{{row.index}}">
+        <label class="tw-text-xs tw-font-semibold tw-uppercase" for="bc-ritual-mod-kind-{{row.index}}">{{localize "WH40K.BC.Ritual.DialogModifierKind"}}</label>
+        <select id="bc-ritual-mod-kind-{{row.index}}" name="mod-kind-{{row.index}}" class="tw-w-full tw-min-w-0">
+            {{#each row.kinds as |kind|}}
+            <option value="{{kind.value}}" {{#if kind.selected}}selected{{/if}}>{{kind.label}}</option>
+            {{/each}}
+        </select>
+        <label class="tw-text-xs tw-font-semibold tw-uppercase" for="bc-ritual-mod-value-{{row.index}}">{{localize "WH40K.BC.Ritual.DialogModifierValue"}}</label>
+        <input id="bc-ritual-mod-value-{{row.index}}" type="number" name="mod-value-{{row.index}}" step="1" value="{{row.value}}" class="tw-w-24" />
+        <label class="tw-text-xs tw-font-semibold tw-uppercase" for="bc-ritual-mod-description-{{row.index}}">{{localize "WH40K.BC.Ritual.DialogModifierDescription"}}</label>
+        <input id="bc-ritual-mod-description-{{row.index}}" type="text" name="mod-description-{{row.index}}" value="" class="tw-w-full tw-min-w-0" />
+    </fieldset>
+    {{/each}}
+</div>
