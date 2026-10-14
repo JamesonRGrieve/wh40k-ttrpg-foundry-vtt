@@ -1,178 +1,299 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the BC Gifts of the Gods panel (#180).
+ * Tier B coverage of the Black Crusade Gifts of the Gods (#180, #597) on real
+ * Foundry, driven the way a GM and player use them:
  *
- * Renders the Handlebars partial into the deployed Foundry world via the
- * `templates/actor/panel/bc-gifts-panel.hbs` URL with a hand-built
- * context that drives every visible branch (multi-gift list, rider tag,
- * sub-table label, per-gift delta chips, merged delta footer). Follows
- * the bc-alignment-advancement.spec.ts shape — the rendered DOM stays
- * anchored to a globalThis handle so snap() captures the live pixels,
- * and is torn down after capture so the next serial test starts clean.
+ *   1. A Khorne Heretic's sheet lists the Gifts with the Khorne rider applied and
+ *      the merged characteristic footer; the same Gifts read for Tzeentch once the
+ *      alignment changes.
+ *   2. The pending acquisition roll's button rolls the dice, posts the roll to
+ *      chat and stores the signed result on the Gift, which then folds into the
+ *      characteristic total.
+ *   3. The Gift's own sheet (opened from the panel) edits a rider's
+ *      characteristic change, and the actor's panel follows.
+ *
+ * The Gifts are structural fixtures built in the spec, not catalogue content.
  */
-test.describe.serial('BcGiftsPanel (Tier B)', () => {
-    test('renders gift list with riders, deltas, and merged-delta footer and snaps', async ({ page }) => {
+
+const ACTOR_NAME = 'e2e-bc-gifts-heretic';
+const PANEL = 'section.wh40k-bc-gifts-panel';
+const FREEFORM_SETTING = 'freeform-characters';
+
+/** A Gift whose Khorne and Tzeentch riders change different characteristics, on the Limb sub-table. */
+const MIEN_GIFT = {
+    name: 'Fixture Gift — Crimson Mien',
+    type: 'mutation',
+    system: {
+        category: 'gift',
+        effect: '<p>The bearer’s features twist into something feral.</p>',
+        modifiers: { characteristics: { strength: 3 } },
+        gift: {
+            grants: [],
+            subTable: 'limb',
+            characteristicRolls: [],
+            riders: [
+                { alignment: 'khorne', description: '<p>Rage made flesh.</p>', characteristics: { strength: 5 }, skills: {}, grants: [], activeEffect: '' },
+                {
+                    alignment: 'tzeentch',
+                    description: '<p>Ever-changing skin.</p>',
+                    characteristics: { toughness: 2 },
+                    skills: {},
+                    grants: [],
+                    activeEffect: '',
+                },
+            ],
+        },
+    },
+};
+
+/** A Gift that lowers Intelligence by a rolled 1d10+5 when gained. */
+const WITLESS_GIFT = {
+    name: 'Fixture Gift — Witless',
+    type: 'mutation',
+    system: {
+        category: 'gift',
+        effect: '<p>The mind dims.</p>',
+        modifiers: { characteristics: {} },
+        gift: { grants: [], subTable: '', riders: [], characteristicRolls: [{ characteristic: 'intelligence', formula: '1d10+5', direction: 'loss' }] },
+    },
+};
+
+interface ProbeItem {
+    id: string;
+    name: string;
+    system: { modifiers: { characteristics: Record<string, number> } };
+    sheet: { id: string; render: (opts: { force: boolean }) => Promise<void>; close: () => Promise<void> };
+}
+interface ProbeActor {
+    id: string;
+    system: { characteristics: Partial<Record<string, { total: number }>> };
+    items: { getName: (name: string) => ProbeItem | undefined; contents: ProbeItem[] };
+    sheet: { id: string; render: (opts: { force: boolean }) => Promise<void>; close: () => Promise<void> };
+    update: (data: object) => Promise<object>;
+    delete: () => Promise<void>;
+}
+interface ProbeWindow {
+    Actor: { create: (data: object) => Promise<ProbeActor | null> };
+    game: {
+        actors: { getName: (name: string) => ProbeActor | undefined };
+        messages: { contents: Array<{ id: string; flavor?: string }> };
+        settings: { get: (ns: string, key: string) => boolean; set: (ns: string, key: string, value: boolean) => Promise<boolean> };
+    };
+    ui: { sidebar?: { changeTab?: (tab: string, group: string) => void; expand?: () => void } };
+}
+
+/** Create the Heretic with both Gifts and open its sheet; returns the sheet's app id. */
+async function openHeretic(page: Page, alignment: string): Promise<string> {
+    const sheetId = await page.evaluate(
+        async ({ name, items, chaosAlignment }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (Actor, game) have no repo types
+            const w = globalThis as unknown as ProbeWindow;
+            await w.game.actors.getName(name)?.delete();
+            const actor = await w.Actor.create({
+                name,
+                type: 'bc-character',
+                system: { gameSystem: 'bc', chaosAlignment, characteristics: { intelligence: { base: 40, advance: 0, modifier: 0 } } },
+                items,
+            });
+            if (actor === null) throw new Error('Actor.create returned null');
+            await actor.sheet.render({ force: true });
+            return actor.sheet.id;
+        },
+        { name: ACTOR_NAME, items: [MIEN_GIFT, WITLESS_GIFT], chaosAlignment: alignment },
+    );
+    await expect(page.locator(`#${sheetId} ${PANEL}`)).toBeVisible();
+    return sheetId;
+}
+
+async function actorState(page: Page): Promise<{ strength: number; toughness: number; intelligence: number; witlessRoll: number | null }> {
+    return page.evaluate((name) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        const actor = w.game.actors.getName(name);
+        if (actor === undefined) throw new Error('probe actor missing');
+        const chars = actor.system.characteristics;
+        const witless = actor.items.getName('Fixture Gift — Witless')?.system.modifiers.characteristics['intelligence'];
+        return {
+            strength: chars['strength']?.total ?? NaN,
+            toughness: chars['toughness']?.total ?? NaN,
+            intelligence: chars['intelligence']?.total ?? NaN,
+            witlessRoll: witless ?? null,
+        };
+    }, ACTOR_NAME);
+}
+
+/** The Crimson Mien Gift's stored `system`, as JSON. */
+async function giftSystemJson(page: Page): Promise<string> {
+    return page.evaluate((name) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const item = (globalThis as unknown as ProbeWindow).game.actors.getName(name)?.items.getName('Fixture Gift — Crimson Mien');
+        return item === undefined ? '' : JSON.stringify(item.system);
+    }, ACTOR_NAME);
+}
+
+async function snapPanel(page: Page, sheetId: string, label: string): Promise<void> {
+    await clearScreenOverlays(page, sheetId);
+    const shot = await snap(page, label, { selector: `#${sheetId} ${PANEL}` });
+    expect(shot, `snap ${label}`).not.toBeNull();
+}
+
+test.describe.serial('BC Gifts of the Gods (Tier B)', () => {
+    test.afterEach(async ({ page }) => {
+        await page.evaluate(
+            async ({ name, setting }) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+                const w = globalThis as unknown as ProbeWindow;
+                await w.game.actors.getName(name)?.delete();
+                if (w.game.settings.get('wh40k-rpg', setting)) await w.game.settings.set('wh40k-rpg', setting, false);
+            },
+            { name: ACTOR_NAME, setting: FREEFORM_SETTING },
+        );
+    });
+
+    test('the panel applies the rider of the current alignment and merges the changes', async ({ page }) => {
         await joinOrSkip(page);
-
-        const result = await page.evaluate(async () => {
-            const templateUrl = '/systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs';
-            let error: string | null = null;
-            let rendered = false;
-            let giftEntries = 0;
-            let hasMergedFooter = false;
-            let firstGiftRider = '';
-            let mergedDeltaCount = 0;
-            let currentAlignment = '';
-            let hasDeltaChips = false;
-            let hasSubTable = false;
-
-            try {
-                /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
-                const g = globalThis as unknown as {
-                    fetch: (u: string) => Promise<Response>;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars compile context is opaque template data
-                    Handlebars: { compile: (s: string) => (ctx: unknown) => string };
-                };
-                const src = await (await g.fetch(templateUrl)).text();
-                const HandlebarsInstance = g.Handlebars;
-                if (typeof HandlebarsInstance.compile !== 'function') {
-                    return {
-                        rendered,
-                        giftEntries,
-                        hasMergedFooter,
-                        firstGiftRider,
-                        mergedDeltaCount,
-                        currentAlignment,
-                        hasDeltaChips,
-                        hasSubTable,
-                        error: 'Handlebars not available on globalThis',
-                    };
-                }
-                const tpl = HandlebarsInstance.compile(src);
-                const html = tpl({
-                    giftsPanel: {
-                        currentAlignment: 'khorne',
-                        gifts: [
-                            {
-                                id: 'bestial_aspect',
-                                name: 'Bestial Aspect',
-                                baseDescription: 'A feral, monstrous mien — beasts cower.',
-                                riderDescription: 'Khorne marks the bearer: rage incarnate; +5 WS.',
-                                appliedAlignment: 'khorne',
-                                subTableKey: '',
-                                characteristicDelta: [
-                                    { key: 's', label: 's', value: 5 },
-                                    { key: 'ws', label: 'ws', value: 5 },
-                                ],
-                                skillDelta: [],
-                                grants: [],
-                                pendingRolls: [],
-                            },
-                            {
-                                id: 'additional_limb',
-                                name: 'Additional Limb',
-                                baseDescription: 'A new limb sprouts.',
-                                riderDescription: 'A chitinous bone-blade arm; +5 S.',
-                                appliedAlignment: 'khorne',
-                                subTableKey: 'WH40K.BC.Gifts.SubTable.Limb',
-                                characteristicDelta: [
-                                    { key: 'ag', label: 'ag', value: 3 },
-                                    { key: 's', label: 's', value: 5 },
-                                ],
-                                skillDelta: [],
-                                grants: [],
-                                pendingRolls: [],
-                            },
-                        ],
-                        mergedDelta: [
-                            { key: 's', label: 's', value: 10 },
-                            { key: 'ws', label: 'ws', value: 5 },
-                            { key: 'ag', label: 'ag', value: 3 },
-                        ],
-                    },
-                });
-
-                const host = document.createElement('div');
-                // Tailwind utilities are scoped to .wh40k-rpg via tailwind.config.js
-                // `important: '.wh40k-rpg'`; without an ancestor with that class
-                // every tw-* class is dropped. See CLAUDE.md
-                // "Check the .wh40k-rpg ancestor for ALL tw-* utilities".
-                host.className = 'wh40k-rpg';
-                host.dataset['wh40kSystem'] = 'bc';
-                host.style.position = 'fixed';
-                host.style.top = '40px';
-                host.style.right = '40px';
-                host.style.width = '400px';
-                host.style.zIndex = '99999';
-                host.innerHTML = html;
-                document.body.appendChild(host);
-                rendered = host.firstElementChild instanceof HTMLElement;
-
-                if (rendered) {
-                    giftEntries = host.querySelectorAll('[data-wh40k-hook="bc-gift-entry"]').length;
-                    hasMergedFooter = host.querySelector('[data-wh40k-hook="bc-gifts-merged"]') !== null;
-                    firstGiftRider = host.querySelector('[data-wh40k-hook="bc-gift-entry"]')?.getAttribute('data-applied-alignment') ?? '';
-                    mergedDeltaCount = host.querySelectorAll('[data-wh40k-hook="bc-gifts-merged-delta"]').length;
-                    currentAlignment = host.querySelector('section.wh40k-bc-gifts-panel')?.getAttribute('data-bc-current-alignment') ?? '';
-                    hasDeltaChips = host.querySelectorAll('[data-wh40k-hook="bc-gift-delta"]').length > 0;
-                    hasSubTable = host.querySelector('[data-wh40k-hook="bc-gift-subtable"]') !== null;
-                }
-
-                // Hold the host on a global handle so snap() (called
-                // outside this evaluate) captures the live DOM. Tearing
-                // it down here would leave the screenshot empty.
-                // eslint-disable-next-line no-restricted-syntax -- boundary: stashing a DOM host on globalThis for cross-evaluate cleanup; no shipped types
-                (globalThis as unknown as { __bcGiftsPanelHost: HTMLElement | undefined }).__bcGiftsPanelHost = host;
-            } catch (err) {
-                error = String((err as Error).message);
-            }
-
-            return {
-                rendered,
-                giftEntries,
-                hasMergedFooter,
-                firstGiftRider,
-                mergedDeltaCount,
-                currentAlignment,
-                hasDeltaChips,
-                hasSubTable,
-                error,
-            };
+        const baseline = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as ProbeWindow;
+            const bare = await w.Actor.create({ name: 'e2e-bc-gifts-baseline', type: 'bc-character', system: { gameSystem: 'bc' } });
+            const chars = bare?.system.characteristics;
+            const out = { strength: chars?.['strength']?.total ?? NaN, toughness: chars?.['toughness']?.total ?? NaN };
+            await bare?.delete();
+            return out;
         });
 
-        const hookCounts = await countHooks(page);
+        const sheetId = await openHeretic(page, 'khorne');
+        const panel = page.locator(`#${sheetId} ${PANEL}`);
+        await expect(panel).toHaveAttribute('data-bc-current-alignment', 'khorne');
+        const mien = panel.locator('[data-wh40k-hook="bc-gift-entry"]', { hasText: 'Crimson Mien' });
+        await expect(mien).toHaveAttribute('data-applied-alignment', 'khorne');
+        await expect(mien).toContainText('Rage made flesh.');
+        await expect(mien.locator('[data-wh40k-hook="bc-gift-subtable"]')).toBeVisible();
+        await expect(mien.locator('[data-wh40k-hook="bc-gift-delta"][data-delta-key="strength"]')).toHaveAttribute('data-delta-value', '8');
+        await expect(panel.locator('[data-wh40k-hook="bc-gifts-merged-delta"][data-delta-key="strength"]')).toHaveAttribute('data-delta-value', '8');
+        // The Khorne rider's +5 on top of the base +3 reaches the characteristic total.
+        expect((await actorState(page)).strength).toBe(baseline.strength + 8);
+        await snapPanel(page, sheetId, 'bc-gifts-panel-khorne');
 
-        await snap(page, 'bc-gifts-panel');
+        // Re-aligning to Tzeentch swaps the rider: Strength keeps only the base +3, Toughness gains +2.
+        await page.evaluate(async (name) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as ProbeWindow;
+            await w.game.actors.getName(name)?.update({ 'system.chaosAlignment': 'tzeentch' });
+        }, ACTOR_NAME);
+        await expect(panel).toHaveAttribute('data-bc-current-alignment', 'tzeentch');
+        await expect(mien).toHaveAttribute('data-applied-alignment', 'tzeentch');
+        await expect(mien).toContainText('Ever-changing skin.');
+        await expect(mien).not.toContainText('Rage made flesh.');
+        await expect(panel.locator('[data-wh40k-hook="bc-gifts-merged-delta"][data-delta-key="toughness"]')).toHaveAttribute('data-delta-value', '2');
+        const tzeentch = await actorState(page);
+        expect(tzeentch.strength).toBe(baseline.strength + 3);
+        expect(tzeentch.toughness).toBe(baseline.toughness + 2);
+        await snapPanel(page, sheetId, 'bc-gifts-panel-tzeentch');
 
-        // Panel captured; tear it down so it doesn't leak into the next
-        // serial test's DOM.
-        await page.evaluate(() => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: reading back DOM host stashed on globalThis from the prior evaluate; no shipped types
-            const g = globalThis as unknown as { __bcGiftsPanelHost: HTMLElement | undefined };
-            try {
-                g.__bcGiftsPanelHost?.remove();
-            } catch {
-                /* ignore */
-            }
-            g.__bcGiftsPanelHost = undefined;
+        recordCoverage('panel.render', 'BcGiftsPanel.alignmentRider');
+    });
+
+    test('the acquisition roll button rolls once, posts the roll and lowers the characteristic', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openHeretic(page, 'khorne');
+        const before = await actorState(page);
+        expect(before.witlessRoll, 'no roll stored before the button is pressed').toBeNull();
+
+        const button = page.locator(`#${sheetId} ${PANEL} [data-action="bcRollGiftCharacteristic"][data-characteristic="intelligence"]`);
+        await expect(button).toContainText('1d10+5');
+        await snapPanel(page, sheetId, 'bc-gifts-pending-roll');
+
+        const messagesBefore = await page.evaluate(() => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            return (globalThis as unknown as ProbeWindow).game.messages.contents.length;
         });
+        await button.click();
+        await expect.poll(async () => (await actorState(page)).witlessRoll).not.toBeNull();
+        const after = await actorState(page);
+        const rolled = after.witlessRoll ?? 0;
+        // 1d10+5 as a loss: −6 to −15.
+        expect(rolled).toBeLessThanOrEqual(-6);
+        expect(rolled).toBeGreaterThanOrEqual(-15);
+        expect(after.intelligence).toBe(before.intelligence + rolled);
+        // The roll is made once: the button is gone and the result shows as a delta chip.
+        await expect(button).toHaveCount(0);
+        await expect(
+            page.locator(`#${sheetId} ${PANEL} [data-wh40k-hook="bc-gift-entry"]`, { hasText: 'Witless' }).locator('[data-delta-key="intelligence"]'),
+        ).toHaveAttribute('data-delta-value', String(rolled));
+        await snapPanel(page, sheetId, 'bc-gifts-roll-resolved');
 
-        expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.rendered, 'panel did not render').toBe(true);
-        expectHooks(hookCounts, ['bc-gift-entry', 'bc-gift-subtable', 'bc-gift-delta', 'bc-gifts-merged', 'bc-gifts-merged-delta']);
-        expect(result.giftEntries, 'expected two gift entries').toBe(2);
-        expect(result.hasMergedFooter, 'merged-delta footer should render when any deltas present').toBe(true);
-        expect(result.firstGiftRider, 'first gift should report Khorne as applied alignment').toBe('khorne');
-        expect(result.mergedDeltaCount, 'merged delta should expose three keys (s, ws, ag)').toBe(3);
-        expect(result.currentAlignment, 'current-alignment data attr should round-trip').toBe('khorne');
-        expect(result.hasDeltaChips, 'per-gift delta chips should render').toBe(true);
-        expect(result.hasSubTable, 'sub-table label should render when the gift carries one').toBe(true);
+        const message = await page.evaluate((count) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as ProbeWindow;
+            w.ui.sidebar?.expand?.();
+            w.ui.sidebar?.changeTab?.('chat', 'primary');
+            const posted = w.game.messages.contents.slice(count);
+            return posted.length === 1 ? { id: posted[0]?.id ?? '', flavor: posted[0]?.flavor ?? '' } : null;
+        }, messagesBefore);
+        expect(message, 'exactly one roll message is posted').not.toBeNull();
+        expect(message?.flavor).toContain('Witless');
+        const card = page.locator(`#sidebar li.chat-message[data-message-id="${message?.id ?? ''}"]`);
+        await expect(card).toBeVisible();
+        await clearScreenOverlays(page);
+        await snap(page, 'bc-gifts-roll-chat', { selector: `#sidebar li.chat-message[data-message-id="${message?.id ?? ''}"]` });
 
-        recordCoverage('panel.render', 'BcGiftsPanel');
+        recordCoverage('action', 'bcRollGiftCharacteristic');
+    });
+
+    test('editing a rider on the Gift sheet updates the Heretic’s panel (#597)', async ({ page }) => {
+        await joinOrSkip(page);
+        // The mutation sheet is freeform-gated: a GM turns freeform editing on to edit a world Gift.
+        await page.evaluate(async (setting) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            await (globalThis as unknown as ProbeWindow).game.settings.set('wh40k-rpg', setting, true);
+        }, FREEFORM_SETTING);
+        const sheetId = await openHeretic(page, 'khorne');
+        const baseStrength = (await actorState(page)).strength;
+
+        // Open the Gift from its panel entry.
+        await page.locator(`#${sheetId} ${PANEL} [data-action="itemEdit"]`, { hasText: 'Crimson Mien' }).click();
+        const itemSheetId = await page.evaluate((name) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            return (globalThis as unknown as ProbeWindow).game.actors.getName(name)?.items.getName('Fixture Gift — Crimson Mien')?.sheet.id ?? '';
+        }, ACTOR_NAME);
+        const itemSheet = page.locator(`#${itemSheetId}`);
+        await expect(itemSheet.locator('[data-gift-panel]')).toBeVisible();
+        await expect(itemSheet.locator('[data-gift-rider]')).toHaveCount(2);
+        // snap() alone: closing the other windows would close the Heretic's sheet, checked below.
+        await snap(page, 'bc-gifts-mutation-sheet-read-only', { selector: `#${itemSheetId}` });
+
+        await itemSheet.locator('[data-action="toggleEditMode"]').click();
+        const khorneStrength = itemSheet.locator('[name="system.gift.riders.0.characteristics.strength"]');
+        await expect(khorneStrength).toHaveValue('5');
+        await khorneStrength.fill('10');
+        await khorneStrength.dispatchEvent('change');
+
+        // The edit is saved on the Gift (#612: the sheet's form used to drop it), and it is still a Gift.
+        await expect.poll(async () => giftSystemJson(page)).toContain('"strength":10');
+        const saved = await giftSystemJson(page);
+        expect(saved, saved).toContain('"category":"gift"');
+
+        // Base +3 and the edited Khorne +10: the panel and the characteristic follow.
+        await expect(page.locator(`#${sheetId} ${PANEL} [data-wh40k-hook="bc-gifts-merged-delta"][data-delta-key="strength"]`)).toHaveAttribute(
+            'data-delta-value',
+            '13',
+        );
+        await expect.poll(async () => (await actorState(page)).strength).toBe(baseStrength + 5);
+        await expect(khorneStrength).toHaveValue('10');
+        await snap(page, 'bc-gifts-mutation-sheet-edited', { selector: `#${itemSheetId}` });
+
+        await page.evaluate((name) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            void (globalThis as unknown as ProbeWindow).game.actors.getName(name)?.items.getName('Fixture Gift — Crimson Mien')?.sheet.close();
+        }, ACTOR_NAME);
+        await snapPanel(page, sheetId, 'bc-gifts-panel-after-edit');
+
+        recordCoverage('sheet.edit', 'MutationSheet.giftRider');
     });
 });

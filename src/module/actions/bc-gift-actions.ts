@@ -17,12 +17,11 @@
 import { labelOf } from '../applications/actor/bc-gifts-panel-context.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { isGiftItem, pendingGiftRolls, signedGiftRoll } from '../rules/bc-gifts.ts';
+import { isActorOnLine, type LineBearer } from './actor-line-gate.ts';
 
 /** Minimum surface the handler reads off the bound sheet. */
 interface BcGiftSheetLike {
-    /** The sheet's active game system (set per line by `game-system-sheets.ts`). */
-    readonly _gameSystemId?: string | undefined;
-    readonly actor: WH40KBaseActor;
+    readonly actor: WH40KBaseActor & { readonly system: LineBearer['system'] };
 }
 
 /**
@@ -32,7 +31,10 @@ interface BcGiftSheetLike {
  * or the Gift was edited) is ignored, so a double click cannot roll twice.
  */
 export async function bcRollGiftCharacteristic(this: BcGiftSheetLike, _event: Event, target: HTMLElement): Promise<void> {
-    if (this._gameSystemId !== 'bc') return;
+    // The actor's own line, like every BC action (#596). The sheet instance's
+    // `_gameSystemId` is not reliable here: CharacterSheet's class field shadows
+    // the per-line prototype value with `undefined`, so a sheet-side gate never opened.
+    if (!isActorOnLine(this.actor, 'bc')) return;
     const { itemId, characteristic } = target.dataset;
     if (itemId === undefined || characteristic === undefined) return;
 

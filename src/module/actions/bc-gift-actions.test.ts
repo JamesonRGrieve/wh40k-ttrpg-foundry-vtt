@@ -53,13 +53,18 @@ function gift(category: string, rolls: GiftCharacteristicRoll[], rolled: Record<
 
 const LOSS: GiftCharacteristicRoll = { characteristic: 'intelligence', formula: '1d10+5', direction: 'loss' };
 
+/**
+ * The bound sheet. Like a live CharacterSheet instance it carries no
+ * `_gameSystemId` of its own (the class field shadows the per-line prototype
+ * value with `undefined`), so the line comes only from the actor (#596).
+ */
 function sheet(item: StubItem, gameSystem = 'bc'): ThisParameterType<typeof bcRollGiftCharacteristic> {
     const actor = {
         items: { get: (id: string) => (id === 'gift-1' ? item : undefined) },
-        system: { characteristics: { intelligence: { label: 'Intelligence' } } },
+        system: { gameSystem, characteristics: { intelligence: { label: 'Intelligence' } } },
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: the handler's `this` is a sheet bound to a Foundry WH40KBaseActor document; the stub supplies only the surface it reads
-    return { _gameSystemId: gameSystem, actor } as unknown as ThisParameterType<typeof bcRollGiftCharacteristic>;
+    return { _gameSystemId: undefined, actor } as unknown as ThisParameterType<typeof bcRollGiftCharacteristic>;
 }
 
 function button(characteristic: string): HTMLElement {
@@ -83,7 +88,7 @@ afterEach(() => {
 });
 
 describe('bcRollGiftCharacteristic', () => {
-    it('rolls the pending formula, posts it, and stores the signed result on the Gift', async () => {
+    it('rolls the pending formula, posts it, and stores the signed result on the Gift (regression: gated on the actor, not the sheet)', async () => {
         const item = gift('gift', [LOSS]);
         await bcRollGiftCharacteristic.call(sheet(item), new Event('click'), button('intelligence'));
 

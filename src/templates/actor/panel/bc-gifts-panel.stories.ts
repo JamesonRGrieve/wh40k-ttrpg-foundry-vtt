@@ -23,7 +23,7 @@ import { mockActor } from '../../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import { buildBcGiftsPanel, type BcGiftsPanelContext, type GiftPanelItem } from '../../../module/applications/actor/bc-gifts-panel-context';
 import type { ChaosAlignment } from '../../../module/config/game-systems/types';
 import type { GiftData, GiftRider } from '../../../module/rules/bc-gifts';
@@ -158,6 +158,14 @@ export const PendingRoll: Story = {
         await expect(buttonEl?.dataset['itemId']).toBe('gamma');
         await expect(buttonEl?.dataset['characteristic']).toBe('intelligence');
         await expect(buttonEl?.textContent).toContain('1d10+5');
+        // The roll button and the Gift's name (which opens its sheet) send their actions with the owned item.
+        const clicks = captureActionClicks(canvasElement);
+        buttonEl?.click();
+        canvasElement.querySelector<HTMLElement>('[data-action="itemEdit"]')?.click();
+        await expect(clicks).toEqual([
+            { action: 'bcRollGiftCharacteristic', dataset: { itemId: 'gamma', characteristic: 'intelligence' } },
+            { action: 'itemEdit', dataset: { itemId: 'gamma' } },
+        ]);
     },
 };
 

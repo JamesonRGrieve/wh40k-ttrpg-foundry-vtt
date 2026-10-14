@@ -70,6 +70,14 @@ describe('BC Gifts of the Gods panel', () => {
         expect(button?.textContent).toContain('1d10+5');
     });
 
+    it('opens the owned Gift from its name, so its riders and rolls can be edited (#597)', () => {
+        const row = render(true, 'khorne', [GIFT]).querySelector<HTMLElement>('[data-wh40k-hook="bc-gift-entry"]');
+        const nameButton = row?.querySelector<HTMLButtonElement>('button[data-action="itemEdit"]');
+
+        expect(nameButton?.dataset['itemId']).toBe('g1');
+        expect(nameButton?.textContent).toContain('Fixture Gift');
+    });
+
     it('sums the characteristic changes in the footer', () => {
         const merged = render(true, 'khorne', [GIFT]).querySelector<HTMLElement>('[data-wh40k-hook="bc-gifts-merged-delta"]');
         expect(merged?.dataset['deltaKey']).toBe('strength');
