@@ -16,9 +16,10 @@
                                {{#if this.system.active}}checked{{/if}} />
                         {{this.name}}
                     </div>
-                    {{#if this.system.description}}
-                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2">
-                        {{{this.system.description}}}
+                    {{!-- `system.description` is the structured {value, chat, summary} record. --}}
+                    {{#if this.system.description.value}}
+                    <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2" data-wh40k-hook="craft-component-description">
+                        {{{this.system.description.value}}}
                     </div>
                     {{/if}}
                 </div>

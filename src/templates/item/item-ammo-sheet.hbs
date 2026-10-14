@@ -251,7 +251,9 @@
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-1">
                         <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Ammunition.CostThrones"}}</label>
-                        <input type="number" name="system.cost" value="{{item.system.cost}}" data-dtype="Number" min="0"
+                        {{!-- `system.cost` is the per-line cost record; the Thrones field is the
+                              same path the gear / armour / force-field sheets edit. --}}
+                        <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{item.system.cost.dh2.homebrew.throneGelt}}" data-dtype="Number" min="0"
                                class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)] {{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                                {{#unless inEditMode}}readonly{{/unless}} />
                     </div>

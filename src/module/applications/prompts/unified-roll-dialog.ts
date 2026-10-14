@@ -792,7 +792,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
         /* eslint-disable @typescript-eslint/no-unnecessary-condition -- rollData.action may be absent at runtime on uninitialised roll data despite its type */
         const rollSubtitle = isForceField
-            ? 'Force Field Activation'
+            ? game.i18n.localize('WH40K.Chat.ForceField.Activation')
             : (typeof rollData.type === 'string' && rollData.type.length > 0 ? rollData.type : null) ?? rollData.action ?? '';
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 

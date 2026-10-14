@@ -2,7 +2,7 @@
 {{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
     overline=actor.name
     title=forceField.name
-    subtitle="Force Field Activation"
+    subtitle=(localize "WH40K.Chat.ForceField.Activation")
     playerRolledBadge=isManualRoll
     bgClass="tw-bg-[var(--wh40k-panel-bg-solid)]"
     gameSystem=gameSystem}}
@@ -25,7 +25,7 @@
                 {{#if success}}
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="success"
-                        label="Field Activated"
+                        label=(localize "WH40K.Chat.ForceField.FieldActivated")
                         value=roll.total
                         valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
                     <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-gold im:tw-border-l-failure tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">
@@ -34,7 +34,7 @@
                 {{else}}
                     {{> systems/wh40k-rpg/templates/chat/partial/result-callout.hbs
                         variant="danger"
-                        label="Field Failed"
+                        label=(localize "WH40K.Chat.ForceField.FieldFailed")
                         value=roll.total
                         valueShadowClass="tw-[text-shadow:0_2px_8px_var(--wh40k-shadow-medium)]"}}
                     <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">
@@ -42,9 +42,9 @@
                     </div>
                 {{/if}}
 
-                {{#if forceField.system.description}}
+                {{#if forceField.system.description.value}}
                     <div class="tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-gold)_20%,var(--wh40k-gold)_80%,transparent_100%)] tw-my-2.5 tw-opacity-50"></div>
-                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0">{{forceField.system.description}}</div>
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0" data-wh40k-hook="force-field-description">{{{forceField.system.description.value}}}</div>
                 {{/if}}
             {{/if}}{{! end isTargetOnly else }}
 {{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

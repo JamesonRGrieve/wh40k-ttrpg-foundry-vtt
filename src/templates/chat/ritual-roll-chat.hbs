@@ -5,7 +5,7 @@
     image=item.img
     imageAlt=item.name
     title=item.name
-    subtitle="Ritual"
+    subtitle=(localize "WH40K.Items.Ritual")
     gameSystem=gameSystem
     footerLabel=actor
 }}
@@ -37,9 +37,11 @@
     </div>
     {{/if}}
 
-    {{#if item.system.duration}}
-    <div class="tw-mt-1 tw-text-sm">
-        <strong>{{localize "WH40K.Chat.Label.Duration"}}</strong> {{item.system.duration}}
+    {{!-- `system.duration` is the structured {value, units, sustained} activation
+          duration; `durationLabel` is its localised display ("3 Rounds", "Sustained"). --}}
+    {{#if item.system.durationLabel}}
+    <div class="tw-mt-1 tw-text-sm" data-wh40k-hook="ritual-duration">
+        <strong>{{localize "WH40K.Chat.Label.Duration"}}</strong> {{item.system.durationLabel}}
     </div>
     {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs}}

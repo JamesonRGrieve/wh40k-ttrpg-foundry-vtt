@@ -5876,6 +5876,9 @@
             },
             "ForceField": {
                 "ProtectionRating": "Protection Rating",
+                "Activation": "Force Field Activation",
+                "FieldActivated": "Field Activated",
+                "FieldFailed": "Field Failed",
                 "Overload": "Field Overload!",
                 "OverloadDetail": "The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).",
                 "Activated": "The field activates successfully! Attack is nullified.",

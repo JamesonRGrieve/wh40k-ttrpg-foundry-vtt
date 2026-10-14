@@ -32,6 +32,8 @@ interface AmmoArgs {
             weaponTypes: { size: number };
             addedQualities: { size: number };
             removedQualities: { size: number };
+            /** The per-line cost record (PhysicalItemTemplate); the sheet edits its Thrones entry. */
+            cost?: { dh2: { homebrew: { throneGelt: number | null } } };
         };
     };
     system: AmmoArgs['item']['system'];
@@ -77,6 +79,27 @@ export const HighDamage: Story = {
         },
         system: { ...baseSystem(), modifiers: { ...baseSystem().modifiers, damage: 3, penetration: 2 } },
         CONFIG: { WH40K: { weaponTypes: {} } },
+    },
+};
+
+/**
+ * The Thrones cost field reads and writes the cost record's Thrones entry, the
+ * path the gear / armour / force-field sheets use. It was bound to the whole
+ * record (`system.cost`), so it showed "[object Object]" and a save would have
+ * overwritten the per-line record with a number.
+ */
+export const CostThrones: Story = {
+    args: {
+        item: { name: 'Bolt Rounds (Standard)', img: 'icons/svg/bullet.svg', system: { ...baseSystem(), cost: { dh2: { homebrew: { throneGelt: 12 } } } } },
+        system: baseSystem(),
+        CONFIG: { WH40K: { weaponTypes: {} } },
+    },
+    play: async ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('input[name="system.cost.dh2.homebrew.throneGelt"]');
+        await expect(input).not.toBeNull();
+        await expect(input?.getAttribute('value')).toBe('12');
+        await expect(canvasElement.querySelector('input[name="system.cost"]')).toBeNull();
+        await expect(canvasElement.innerHTML).not.toContain('[object Object]');
     },
 };
 

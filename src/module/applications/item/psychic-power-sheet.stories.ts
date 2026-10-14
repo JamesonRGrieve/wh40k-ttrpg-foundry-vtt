@@ -114,6 +114,25 @@ export const SourceReferenceReadOnly: Story = {
     },
 };
 
+/**
+ * The damage field edits the damage profile's formula. It was bound to the whole
+ * `system.damage` record, so it showed "[object Object]" and a save would have
+ * overwritten the profile with a string.
+ */
+export const DamageFormulaField: Story = {
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true });
+        ctx.item.system['damage'] = { formula: '1d10+PR', type: 'energy', bonus: 0, penetration: 0, none: false, bands: [], table: '', from: '' };
+        return renderSheet(templateSrc, ctx);
+    },
+    play: ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('input[name="system.damage.formula"]');
+        void expect(input?.value).toBe('1d10+PR');
+        void expect(canvasElement.querySelector('input[name="system.damage"]')).toBeNull();
+        void expect(canvasElement.innerHTML).not.toContain('[object Object]');
+    },
+};
+
 export const SourceReferenceEmpty: Story = {
     render: () => {
         const ctx = makeCtx();

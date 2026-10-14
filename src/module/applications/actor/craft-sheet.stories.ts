@@ -219,7 +219,8 @@ export const Components: Story = {
             {
                 _id: 'component-1',
                 name: 'Reinforced Hull',
-                system: { description: '<p>Improves structural resilience.</p>', active: true },
+                // The structured description record a VehicleUpgrade item carries.
+                system: { description: { value: '<p>Improves structural resilience.</p>', chat: '', summary: '' }, active: true },
             },
         ],
         vehicleUpgrades: [],
@@ -228,6 +229,11 @@ export const Components: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText('Reinforced Hull')).toBeVisible();
+        // The description renders its text, never the record as "[object Object]".
+        await expect(canvasElement.querySelector('[data-wh40k-hook="craft-component-description"]')?.textContent.trim()).toBe(
+            'Improves structural resilience.',
+        );
+        await expect(canvasElement.textContent).not.toContain('[object Object]');
     },
 };
 
