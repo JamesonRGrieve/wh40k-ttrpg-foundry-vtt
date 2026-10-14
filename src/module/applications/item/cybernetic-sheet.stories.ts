@@ -6,6 +6,7 @@ import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-cybernetic-sheet.hbs?raw';
@@ -106,8 +107,11 @@ export const RendersCyberneticName: Story = {
 export const RendersTypeLabel: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText('Mechadendrite')).toBeTruthy();
+        // The header's type badge (the type summary and the type select repeat the label).
+        const badge = canvasElement.querySelector<HTMLElement>(`[title="${localizeKey('WH40K.ItemSheet.Cybernetic.TypeTooltip')}"]`);
+        await expect(badge).toBeTruthy();
+        if (badge === null) return;
+        await expect(within(badge).getByText('Mechadendrite')).toBeTruthy();
     },
 };
 

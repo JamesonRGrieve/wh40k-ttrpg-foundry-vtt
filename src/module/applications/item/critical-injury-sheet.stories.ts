@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-critical-injury-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../../stories/test-helpers';
 
 interface CritArgs {
@@ -86,7 +87,9 @@ export const RendersHeader: Story = {
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);
         await expect(withinCanvas.getByDisplayValue('Cauterised Arm')).toBeTruthy();
-        await expect(withinCanvas.getByText(/Severity 4/)).toBeTruthy();
+        // The header's severity badge (the slider below it repeats the level).
+        const badge = canvasElement.querySelector(`[title="${localizeKey('WH40K.ItemSheet.CriticalInjury.SeverityLevel')}"]`);
+        await expect(badge?.textContent).toMatch(/Severity 4/);
     },
 };
 

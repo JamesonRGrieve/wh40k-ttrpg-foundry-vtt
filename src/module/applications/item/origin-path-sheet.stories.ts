@@ -114,8 +114,12 @@ export const RendersOriginName: Story = {
 export const RendersStepBadge: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
-        const view = within(canvasElement);
-        await expect(view.getByText('Home World')).toBeTruthy();
+        // The header's step badge (titled with the step), not the Step Type select's option of the same name.
+        const badge = canvasElement.querySelector<HTMLElement>('span[title="Home World"]');
+        await expect(badge).toBeTruthy();
+        if (badge === null) return;
+        await expect(within(badge).getByText('Home World')).toBeTruthy();
+        await expect(canvasElement.querySelector<HTMLSelectElement>('select[name="system.step"]')?.value).toBe('homeWorld');
     },
 };
 

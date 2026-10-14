@@ -46,10 +46,35 @@ export function renderSheet(templateSource: string, context: Context = {}): HTML
         const name = `__renderSheet_${renderSheetCounter++}`;
         HbsStory.registerPartial(name, templateSource);
         const wrapper = HbsStory.compile(`{{#> ${name}}}{{/${name}}}`);
-        return renderStoryTemplate(wrapper, context);
+        return syncSelectedOptions(renderStoryTemplate(wrapper, context));
     }
     const tpl = HbsStory.compile(templateSource);
-    return renderStoryTemplate(tpl, context);
+    return syncSelectedOptions(renderStoryTemplate(tpl, context));
+}
+
+/**
+ * Make every `<select>` under `root` select the option its markup marks
+ * `selected`, and return `root`.
+ *
+ * A browser already does this when it parses the markup. happy-dom (the unit
+ * test DOM) does not when whitespace separates the options, which is how every
+ * template writes them: it counts the text nodes, so `<option selected>` in
+ * third place reads back as the second option, and a story's `select.value` /
+ * `assertField` checks fail there and only there. Re-applying the authored
+ * `selected` attribute makes both DOMs agree; in a browser it changes nothing.
+ * For a single select the last marked option wins, as in HTML parsing.
+ */
+export function syncSelectedOptions<T extends ParentNode>(root: T): T {
+    for (const select of Array.from(root.querySelectorAll('select'))) {
+        const options = Array.from(select.options);
+        if (select.multiple) {
+            for (const option of options) option.selected = option.hasAttribute('selected');
+            continue;
+        }
+        const marked = options.filter((option) => option.hasAttribute('selected')).at(-1);
+        if (marked !== undefined) select.selectedIndex = options.indexOf(marked);
+    }
+    return root;
 }
 
 /**
@@ -103,7 +128,7 @@ export function renderSheetParts(
         slot.innerHTML = html;
         wrapper.appendChild(slot);
     }
-    return wrapper;
+    return syncSelectedOptions(wrapper);
 }
 
 function asParent(node: ParentNode | HTMLElement): ParentNode {

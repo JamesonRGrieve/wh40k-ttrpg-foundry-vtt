@@ -76,11 +76,14 @@ export const NotStackable: Story = {
 
 export const RendersTabs: Story = {
     play: async ({ canvasElement }) => {
-        const view = within(canvasElement);
-        await expect(view.getByText('Details')).toBeTruthy();
-        await expect(view.getByText('Description')).toBeTruthy();
-        await expect(view.getByText('Effects')).toBeTruthy();
-        const tabBtn = canvasElement.querySelector('[data-tab="description"]');
-        await expect(tabBtn).toBeTruthy();
+        // The tab strip, not the panels: the Description panel repeats its tab's label as a heading.
+        const strip = canvasElement.querySelector<HTMLElement>('nav[data-group="primary"]');
+        await expect(strip).toBeTruthy();
+        if (strip === null) return;
+        const tabs = within(strip);
+        await expect(tabs.getByText('Details')).toBeTruthy();
+        await expect(tabs.getByText('Description')).toBeTruthy();
+        await expect(tabs.getByText('Effects')).toBeTruthy();
+        await expect(strip.querySelector('[data-tab="description"]')).toBeTruthy();
     },
 };
