@@ -168,7 +168,6 @@ import { runTokenImageGeneration, type TokenImageActor } from './rules/token-ima
 import { buildWarpWeaknessField, isWarpWeak, WARP_WEAKNESS_INPUT_NAME, type WarpWeaknessScene } from './rules/warp-weakness.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
 import { DHTourMain } from './tours/main-tour.ts';
-import type { WH40KGameSystem } from './types/global.d.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { hooksOn } from './utils/hooks-on.ts';
 import { inferActiveGameLine } from './utils/item-variant-utils.ts';
@@ -1050,8 +1049,8 @@ export class HooksManager {
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
             D100Roll: dice.D100Roll,
-            // tooltips is initialized in ready()
-            tooltips: null as unknown as WH40KGameSystem['tooltips'],
+            // `tooltips` is set last in ready(); until then it is absent, which is how
+            // the system signals it has finished loading (e2e join waits for it).
         };
         /* eslint-enable no-restricted-syntax */
 

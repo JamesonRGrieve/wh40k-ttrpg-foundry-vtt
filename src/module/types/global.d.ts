@@ -512,7 +512,12 @@ export interface WH40KGameSystem {
     dice: typeof dice;
     BasicRollWH40K: typeof dice.BasicRollWH40K;
     D100Roll: typeof dice.D100Roll;
-    tooltips: TooltipsWH40K;
+    /**
+     * The rich tooltip system. Absent until the system's `ready` handler has
+     * finished (it is set last, after the condition catalog and the other
+     * indexes load), so its presence marks the system as ready.
+     */
+    tooltips?: TooltipsWH40K;
 }
 
 // =========================================================================
