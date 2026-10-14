@@ -245,6 +245,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                             // TABS declare langpack keys; the shared tab-strip partial prints label verbatim.
                             label: game.i18n.localize(config.label),
                             id: tab,
+                            // The shared tab strips emit `data-tab="{{tab}}"` per entry.
+                            tab,
                             group: 'primary',
                             active: this.tabGroups['primary'] === tab,
                             cssClass: this.tabGroups['primary'] === tab ? 'active' : '',
@@ -325,7 +327,14 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 if (!nav || !content) continue;
 
                 const group = nav.dataset['group'] ?? 'primary';
-                const activeTab = this.tabGroups[group] ?? initial;
+                // The remembered/default tab, if this template has a panel for it; else the panel the
+                // template itself marks active (a sheet's default can name a tab its template lacks, which
+                // would hide every panel).
+                const remembered = this.tabGroups[group] ?? initial;
+                const panels = this._tabPanels(group, content);
+                const activeTab = panels.some((p) => p.dataset['tab'] === remembered)
+                    ? remembered
+                    : (panels.find((p) => p.classList.contains('active')) ?? panels.at(0))?.dataset['tab'];
 
                 for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                     tabLink.addEventListener('click', (event) => {
@@ -360,13 +369,26 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
             }
 
-            for (const tabContent of content.querySelectorAll<HTMLElement>(':scope > [data-tab]')) {
+            for (const tabContent of this._tabPanels(group, content)) {
                 const isActive = tabContent.dataset['tab'] === tab;
                 tabContent.classList.toggle('active', isActive);
             }
 
             this.element.className = this.element.className.replace(/\btab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
+        }
+
+        /**
+         * A tab group's panels: the content container's `[data-tab]` children, plus
+         * any `.tab` panel of the group elsewhere in the sheet (a template whose
+         * panels are themselves `.wh40k-tab-content` sections, like the storage
+         * location's, has no wrapping container).
+         * @protected
+         */
+        _tabPanels(group: string, content: HTMLElement): HTMLElement[] {
+            const panels = new Set<HTMLElement>(content.querySelectorAll<HTMLElement>(':scope > [data-tab]'));
+            for (const panel of this.element.querySelectorAll<HTMLElement>(`.tab[data-group="${group}"][data-tab]`)) panels.add(panel);
+            return [...panels];
         }
 
         /* -------------------------------------------- */

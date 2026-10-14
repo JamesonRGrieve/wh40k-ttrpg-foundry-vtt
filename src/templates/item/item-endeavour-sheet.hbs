@@ -23,16 +23,17 @@
     </div>
 
     {{! Tabs }}
-    <nav class="tw-flex tw-shrink-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)]" data-group="primary">
+    {{! `tabs` nav + `.tab` panels: Foundry's core `tab` action switches them (changeTab finds tabs by `.tabs [data-tab]`). }}
+    <nav class="tabs tw-flex tw-shrink-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-faint,#3a2a1a)]" data-group="primary">
         {{#each tabs as |tab|}}
-            <a class="tw-px-3 tw-py-2 tw-text-xs tw-uppercase tw-tracking-wide tw-cursor-pointer {{#if tab.active}}tw-text-gold tw-border-b-2 tw-border-solid tw-border-gold{{else}}tw-opacity-70 hover:tw-opacity-100{{/if}}" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.tab}}">{{localize tab.label}}</a>
+            <a class="{{#if tab.active}}active {{/if}}tw-px-3 tw-py-2 tw-text-xs tw-uppercase tw-tracking-wide tw-cursor-pointer tw-opacity-70 hover:tw-opacity-100 [&.active]:tw-opacity-100 [&.active]:tw-text-gold [&.active]:tw-border-b-2 [&.active]:tw-border-solid [&.active]:tw-border-gold" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.tab}}">{{localize tab.label}}</a>
         {{/each}}
     </nav>
 
     {{! Tab content }}
     <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-p-3">
         {{! ===== DETAILS TAB ===== }}
-        <section class="tw-flex tw-flex-col tw-gap-3 {{#unless tabs.details.active}}tw-hidden{{/unless}}" data-tab="details">
+        <section class="tab {{#if tabs.details.active}}active {{/if}}tw-flex-col tw-gap-3 [&.active]:tw-flex" data-tab="details" data-group="primary">
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
                 <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Endeavours.APEarned"}}</label>
@@ -61,7 +62,7 @@
         </section>
 
         {{! ===== OBJECTIVES TAB ===== }}
-        <section class="tw-flex tw-flex-col tw-gap-2 {{#unless tabs.objectives.active}}tw-hidden{{/unless}}" data-tab="objectives">
+        <section class="tab {{#if tabs.objectives.active}}active {{/if}}tw-flex-col tw-gap-2 [&.active]:tw-flex" data-tab="objectives" data-group="primary">
             <div class="tw-flex tw-items-center tw-justify-between">
                 <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold rt:tw-text-gold tw-text-base tw-m-0">
                     <span class="material-icons tw-text-base">checklist</span>
@@ -105,7 +106,7 @@
         </section>
 
         {{! ===== DESCRIPTION TAB ===== }}
-        <section class="tw-flex tw-flex-col tw-gap-2 {{#unless tabs.description.active}}tw-hidden{{/unless}}" data-tab="description">
+        <section class="tab {{#if tabs.description.active}}active {{/if}}tw-flex-col tw-gap-2 [&.active]:tw-flex" data-tab="description" data-group="primary">
             <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold rt:tw-text-gold tw-text-base tw-mt-0 tw-mb-2 tw-pb-1 tw-border-b tw-border-solid">
                 <span class="material-icons tw-text-base">description</span>
                 {{localize "WH40K.Endeavours.DescriptionHeader"}}

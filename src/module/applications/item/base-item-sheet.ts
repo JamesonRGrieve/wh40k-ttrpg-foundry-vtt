@@ -266,7 +266,8 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
                 id: tab,
                 tab,
                 group,
-                label,
+                // TABS declare langpack keys; the shared tab strip prints the label verbatim (#638).
+                label: label === undefined ? undefined : game.i18n.localize(label),
                 active: this.tabGroups[group] === tab,
                 cssClass: this.tabGroups[group] === tab ? 'active' : '',
             };

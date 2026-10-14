@@ -36,7 +36,18 @@ export default meta;
 
 type Story = StoryObj<Args>;
 
-export const Default: Story = {};
+/** Every strip tab, Effects included, has a `.tab` panel, inside a `.tabs` nav Foundry and the sheet both bind. */
+export const Default: Story = {
+    play: async ({ canvasElement }) => {
+        const nav = canvasElement.querySelector('nav[data-group="primary"]');
+        await expect(nav?.classList.contains('tabs')).toBe(true);
+        await expect(nav?.classList.contains('wh40k-tabs')).toBe(true);
+        const listed = [...(nav?.querySelectorAll<HTMLElement>('[data-tab]') ?? [])].map((b) => b.dataset['tab']);
+        await expect(listed).toContain('effects');
+        const panels = new Set([...canvasElement.querySelectorAll<HTMLElement>('.tab[data-group="primary"]')].map((p) => p.dataset['tab']));
+        await expect(listed.filter((tab) => !panels.has(tab))).toEqual([]);
+    },
+};
 
 export const UsesExhausted: Story = {
     args: {

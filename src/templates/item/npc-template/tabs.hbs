@@ -1,9 +1,9 @@
 {{!-- NPC Template Sheet Tabs Navigation.
      Routed through the shared item-tab-strip partial. NPC-template TABS carry
-     full Font Awesome class strings (e.g. "fa-solid fa-user") and drive tab
-     switching via the Foundry `changeTab` action, so pass iconClassFull + the
-     dataAction. --}}
+     full Font Awesome class strings (e.g. "fa-solid fa-user") and switch tabs
+     through Foundry's core `tab` action (there is no `changeTab` action), so
+     pass iconClassFull + the dataAction. --}}
 {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs
     tabs=tabs
-    dataAction="changeTab"
+    dataAction="tab"
     iconClassFull=true}}

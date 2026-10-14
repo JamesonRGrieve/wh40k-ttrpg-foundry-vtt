@@ -11,12 +11,14 @@ const PsychicPowerSheet = defineSimpleItemSheet({
     template: 'systems/wh40k-rpg/templates/item/item-psychic-power-sheet.hbs',
     width: 550,
     height: 500,
+    // The tabs the template's strip renders (#638): a default naming a tab the template lacks hid every panel.
     tabs: [
-        { tab: 'details', group: 'primary', label: 'WH40K.Tabs.Details' },
+        { tab: 'power', group: 'primary', label: 'WH40K.ItemSheet.PsychicPower.PowerTab' },
+        { tab: 'damage', group: 'primary', label: 'WH40K.Weapon.Damage' },
         { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
         { tab: 'effects', group: 'primary', label: 'WH40K.Tabs.Effects' },
     ],
-    defaultTab: 'details',
+    defaultTab: 'power',
 });
 
 export default PsychicPowerSheet;

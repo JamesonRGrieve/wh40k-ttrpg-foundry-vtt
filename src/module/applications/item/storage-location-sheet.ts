@@ -13,11 +13,12 @@ const StorageLocationSheet = defineSimpleItemSheet({
     template: 'systems/wh40k-rpg/templates/item/item-storage-location-sheet.hbs',
     width: 550,
     height: 500,
+    // The template's strip and panels name the contents tab `items` (#638).
     tabs: [
-        { tab: 'contents', group: 'primary', label: 'WH40K.Tabs.Contents' },
+        { tab: 'items', group: 'primary', label: 'WH40K.Tabs.Contents' },
         { tab: 'description', group: 'primary', label: 'WH40K.Tabs.Description' },
     ],
-    defaultTab: 'contents',
+    defaultTab: 'items',
 });
 
 export default StorageLocationSheet;

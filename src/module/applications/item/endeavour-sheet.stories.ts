@@ -73,7 +73,18 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
+export const Default: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    // Foundry's core `tab` action drives the tabs: a `.tabs` nav and one `.tab` panel per tab, only the active one marked.
+    play: async ({ canvasElement }): Promise<void> => {
+        await expect(canvasElement.querySelector('nav.tabs[data-group="primary"]')).not.toBeNull();
+        const panels = [...canvasElement.querySelectorAll<HTMLElement>('section.tab[data-group="primary"]')];
+        await expect(panels.map((p) => p.dataset['tab'])).toEqual(['details', 'objectives', 'description']);
+        await expect(panels.filter((p) => p.classList.contains('active')).map((p) => p.dataset['tab'])).toEqual(['details']);
+        const links = [...canvasElement.querySelectorAll<HTMLElement>('nav.tabs [data-action="tab"]')];
+        await expect(links.map((a) => a.dataset['tab'])).toEqual(['details', 'objectives', 'description']);
+    },
+};
 
 export const RendersProgressBar: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
