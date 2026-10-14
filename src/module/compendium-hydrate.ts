@@ -517,6 +517,32 @@ export async function hydrateActorInMemory(actor: HydratableActor): Promise<numb
     return (await hydrateActorReporting(actor)).patched;
 }
 
+/** A just-created item as the `createItem` hook hands it over: embedded on an actor, or a world / pack item. */
+type CreatedItem = {
+    parent: (HydratableActor & { documentName?: string; render?: (force?: boolean) => void }) | null;
+    render?: (force?: boolean) => void;
+};
+
+/**
+ * Join a lean compendium item dropped on an EXISTING actor the moment it is created
+ * (#621), with the same in-memory contract as {@link hydrateActorInMemory}: no
+ * database write. The boot, import and sheet-render joins all run before or after
+ * the drop, so until this the new item read its schema defaults (a Hand Flamer at
+ * clip 2/0 with no profile). When the join changed anything, the actor's and the
+ * item's open sheets re-render so they show the joined profile at once. A world or
+ * pack item (no owning actor) has nothing to join to.
+ */
+export async function hydrateCreatedItemInMemory(item: CreatedItem): Promise<number> {
+    const actor = item.parent;
+    if (actor?.documentName !== 'Actor') return 0;
+    const patched = await hydrateActorInMemory(actor);
+    if (patched > 0) {
+        actor.render?.(false);
+        item.render?.(false);
+    }
+    return patched;
+}
+
 /**
  * Commit the joined `system` as a wholesale replacement, not a recursive merge.
  *

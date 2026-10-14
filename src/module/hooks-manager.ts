@@ -101,7 +101,7 @@ import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.t
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
 import { onRefreshToken } from './canvas/token-mask.ts';
 import { onRefreshRoundedToken } from './canvas/token-rounded-ring.ts';
-import { hydrateActorInMemory } from './compendium-hydrate.ts';
+import { hydrateActorInMemory, hydrateCreatedItemInMemory } from './compendium-hydrate.ts';
 import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
 import type { WH40KSystemConfig } from './config.ts';
 import { DEAD_STATUS_ID, SYSTEM_ID } from './constants.ts';
@@ -451,6 +451,15 @@ export class HooksManager {
             // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
             hydrateActorInMemory(actor).catch((err: unknown) => {
                 console.error('compendium-hydrate: createActor hydration failed', err);
+            });
+        });
+        // A lean compendium item dropped on an EXISTING actor joins its compendium body
+        // the moment it is created (#621) — the same in-memory contract, every client.
+        // eslint-disable-next-line no-restricted-syntax -- boundary: createItem hook payload is framework-typed; narrowed inside compendium-hydrate.ts
+        hooksOn('createItem', (item: Parameters<typeof hydrateCreatedItemInMemory>[0]) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            hydrateCreatedItemInMemory(item).catch((err: unknown) => {
+                console.error('compendium-hydrate: createItem hydration failed', err);
             });
         });
 

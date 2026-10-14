@@ -678,6 +678,11 @@ const GRENADE_THROW_FLOWS = [
 ];
 recordDimension('grenade-throw.flow', covered['grenade-throw.flow'], GRENADE_THROW_FLOWS);
 
+// A lean item added to an existing actor joins at once (#621), tests/e2e/created-item-hydrate.spec.ts.
+// Keep in sync with CREATED_ITEM_HYDRATE_FLOWS there.
+const CREATED_ITEM_HYDRATE_FLOWS = ['created-item-joined-at-once', 'joined-without-db-write', 'item-sheet-shows-profile'];
+recordDimension('created-item-hydrate.flow', covered['created-item-hydrate.flow'], CREATED_ITEM_HYDRATE_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [
