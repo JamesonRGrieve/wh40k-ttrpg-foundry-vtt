@@ -117,7 +117,8 @@ async function setup(page: Page, line: 'dh2' | 'dw', xenos: boolean): Promise<Se
                         sheetId: '',
                     };
                 }
-                const weapon = embedded.at(0);
+                // By type, not position: the created documents need not come back in the order given.
+                const weapon = embedded.find((item) => item.type === 'weapon');
                 const weaponItem = weapon === undefined ? undefined : actor.items.get(weapon.id);
                 if (weaponItem === undefined) return { error: 'the weapon was not embedded', actorId: actor.id, weaponId: '', sheetId: '' };
                 await weaponItem.sheet.render(true);
