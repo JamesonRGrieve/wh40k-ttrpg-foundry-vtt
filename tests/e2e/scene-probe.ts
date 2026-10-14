@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { showChatMessage } from './lib/chat-capture';
+import { popOutChatMessage } from './lib/chat-capture';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { scaledMs } from './lib/timing';
 
@@ -61,7 +61,7 @@ export async function createProbeScene(page: Page, name: string, actors: readonl
             const out: ProbeScene = { sceneId: '', actorIds: [], tokenIds: [], combatId: null, error: null };
             try {
                 const flags = args.environment === undefined ? {} : { 'wh40k-rpg': { environment: args.environment } };
-                const scene = await g.Scene.create({ name: args.name, width: 1200, height: 900, grid: { size: args.grid }, flags });
+                const scene = await g.Scene.create({ name: args.name, width: 1200, height: 900, grid: { size: args.grid, distance: 1, units: 'm' }, flags });
                 if (scene === null) return { ...out, error: 'Scene.create returned null' };
                 out.sceneId = scene.id;
                 const tokens: object[] = [];
@@ -88,6 +88,18 @@ export async function createProbeScene(page: Page, name: string, actors: readonl
         },
         { name, actors, environment, grid: PROBE_GRID },
     );
+}
+
+/** Make the probe token with this id the user's only target. */
+export async function targetToken(page: Page, tokenId: string): Promise<void> {
+    await page.evaluate((id: string) => {
+        interface TokenLayer {
+            get: (tokenId: string) => { setTarget: (targeted: boolean, options: object) => void } | undefined;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `canvas` global is injected by the licensed app; no shipped types
+        const c = (globalThis as unknown as { canvas: { tokens: TokenLayer } }).canvas;
+        c.tokens.get(id)?.setTarget(true, { releaseOthers: true });
+    }, tokenId);
 }
 
 /** Control (select) the probe tokens with these ids on the canvas, releasing any others. */
@@ -221,12 +233,11 @@ export async function firstNewCard(page: Page, before: readonly string[]): Promi
 }
 
 /**
- * Show the chat log, clear overlays and capture one posted card by its message id.
- * Floating windows are closed except those whose id contains `keepWindow`.
+ * Capture one posted card whole, by its message id, in core's chat popout (which
+ * closes every other floating window).
  */
-export async function snapChatCard(page: Page, label: string, messageId: string, keepWindow?: string): Promise<string | null> {
-    await clearScreenOverlays(page, keepWindow);
-    const selector = await showChatMessage(page, messageId);
+export async function snapChatCard(page: Page, label: string, messageId: string): Promise<string | null> {
+    const selector = await popOutChatMessage(page, messageId);
     await page.waitForSelector(selector, { timeout: CARD_RENDER_TIMEOUT_MS });
     return snap(page, label, { selector });
 }
