@@ -9,6 +9,8 @@
  * vehicle-trait `crewExposure`), so genuine authoring/import errors — a ranged
  * weapon stored as `class: "melee"`, a blank-but-required enum — are caught at
  * commit time rather than silently dropped when the DataModel loads it in play.
+ * It also refuses any reference to the unlicensed `_vendored-ui` icon packs
+ * (#625), wherever in the document it appears.
  *
  * Every content field may be authored plainly OR as a per-line variant container
  * (`{ dh2: … , dw: … }`) OR a per-book container (`{ __books: … }`); the `variant`
@@ -59,8 +61,29 @@ export function variant(inner) {
 // tests/validate-pack-schema.test.ts pins that so a new DataModel class can't be rejected here.
 export const WEAPON_CLASS = ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic', 'placed', 'ranged', 'vehicle', 'mounted'];
 export const WEAPON_TYPE = [
-    'primitive', 'las', 'solid-projectile', 'solid_projectile', 'bolt', 'melta', 'plasma', 'flame', 'launcher', 'explosive',
-    'power', 'chain', 'shock', 'force', 'exotic', 'xenos', 'energy', 'melee', 'shield', 'low-tech', 'impact', 'grenade', 'rending',
+    'primitive',
+    'las',
+    'solid-projectile',
+    'solid_projectile',
+    'bolt',
+    'melta',
+    'plasma',
+    'flame',
+    'launcher',
+    'explosive',
+    'power',
+    'chain',
+    'shock',
+    'force',
+    'exotic',
+    'xenos',
+    'energy',
+    'melee',
+    'shield',
+    'low-tech',
+    'impact',
+    'grenade',
+    'rending',
 ];
 export const ATTACK_KIND = ['ranged', 'melee', 'thrown'];
 export const CREW_EXPOSURE = ['', 'open', 'enclosed'];
@@ -117,7 +140,16 @@ export const damageProfileShape = z
 // Mirror `RIDER_TEST_CHARACTERISTICS` / `RIDER_DURATION_KINDS` / `RIDER_AREA_MEASURES` /
 // `RIDER_AFFECTS` (src/module/rules/grenade-rider.ts); tests/validate-pack-schema.test.ts pins the match.
 export const RIDER_TEST_CHARACTERISTIC = [
-    '', 'weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship',
+    '',
+    'weaponSkill',
+    'ballisticSkill',
+    'strength',
+    'toughness',
+    'agility',
+    'intelligence',
+    'perception',
+    'willpower',
+    'fellowship',
 ];
 export const RIDER_DURATION_KIND = ['', 'degreesOfFailure', 'roll', 'encounter'];
 export const RIDER_AREA_MEASURE = ['radius', 'diameter'];
@@ -223,13 +255,38 @@ function coherenceIssue(system) {
 }
 
 /**
+ * Art the system holds no licence for: the GameDevMarket icon packs, parked
+ * unserved in the private submodule's `_vendored-ui/`, and the old served
+ * location they were pulled from (#625). Every match renders a broken icon and
+ * trips Foundry's invalid-asset error, so the gate refuses it anywhere in a
+ * document — `img`, an embedded item's `img`, a token texture, an effect icon.
+ */
+export const UNLICENSED_ART = /_vendored-ui\/|systems\/wh40k-rpg\/icons\/(?:talents|psykana|items)\//;
+
+/**
+ * JSON-pointer-style paths of every string in `node` that references
+ * {@link UNLICENSED_ART}.
+ * @param {unknown} node
+ * @param {string} [at]
+ * @returns {string[]}
+ */
+export function unlicensedArtPaths(node, at = '') {
+    if (typeof node === 'string') return UNLICENSED_ART.test(node) ? [at || '<root>'] : [];
+    if (Array.isArray(node)) return node.flatMap((v, i) => unlicensedArtPaths(v, `${at}/${i}`));
+    if (node !== null && typeof node === 'object') return Object.entries(node).flatMap(([k, v]) => unlicensedArtPaths(v, `${at}/${k}`));
+    return [];
+}
+
+/**
  * Validate one `_source` document. Returns an array of human-readable error
  * strings (empty when the document is well-formed).
  * @param {unknown} doc  Parsed `_source/*.json`.
  * @returns {string[]}
  */
 export function validateDoc(doc) {
-    const errors = [];
+    const errors = unlicensedArtPaths(doc).map(
+        (at) => `${at}: references unlicensed art (_vendored-ui) — use the game-icons.net icon scripts/pack-icon-map.mjs picks for the document`,
+    );
     // Whole-file `reference` stubs are pointers to another pack's canonical document
     // (resolved at build time); they carry no name/type/system, so skip them.
     if (doc !== null && typeof doc === 'object' && typeof doc.reference === 'string' && doc.type === undefined) return errors;

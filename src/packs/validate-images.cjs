@@ -40,14 +40,23 @@ function nonEmptyString(v) {
 }
 
 /**
+ * The game-icons.net CDN (scripts/pack-icon-map.json). Its icons are generic
+ * glyphs chosen by a document's function (#625), so a hotlink to one is a
+ * default, not curated art, even though it is an `https://` URL.
+ */
+const GAME_ICONS_CDN_PREFIX = `${require('../../scripts/pack-icon-map.json').cdn}/`;
+
+/**
  * True when `img` is genuine curated art — a hotlinked image or a `…/images/**`
  * asset — rather than a Foundry/vendored default icon. Mirrors the Artwork &
  * Tokens contract: `icons/**`, `systems/wh40k-rpg/icons/**`,
- * `…/_vendored-ui/icons/**`, mystery-man and item-bag are all replaceable
- * defaults; curated art lives under `…/images/**` or is an `https://` hotlink.
+ * `…/_vendored-ui/icons/**`, the game-icons.net function icons, mystery-man and
+ * item-bag are all replaceable defaults; curated art lives under `…/images/**`
+ * or is any other `https://` hotlink.
  */
 function hasRealArt(img) {
     if (!nonEmptyString(img)) return false;
+    if (img.startsWith(GAME_ICONS_CDN_PREFIX)) return false;
     if (/^https?:\/\//i.test(img)) return true;
     if (/\/images\//.test(img)) return true;
     return false;

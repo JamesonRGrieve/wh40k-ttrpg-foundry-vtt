@@ -32,6 +32,9 @@ describe('isDefaultImage', () => {
         expect(isDefaultImage('systems/wh40k-rpg/icons/foo.png')).toBe(true);
         expect(isDefaultImage('systems/wh40k-rpg/packs/_vendored-ui/icons/talents/b_01.png')).toBe(true);
     });
+    it('treats a game-icons.net function icon as a placeholder, not real art (#625)', () => {
+        expect(isDefaultImage('https://cdn.jsdelivr.net/gh/game-icons/icons@master/lorc/tank.svg')).toBe(true);
+    });
     it('treats real pack art and https hotlinks as real', () => {
         expect(isDefaultImage('systems/wh40k-rpg/packs/images/bestiary/dh2/pdf-trooper.jpeg')).toBe(false);
         expect(isDefaultImage('https://static.wikia.nocookie.net/warhammer40k/foo.jpg')).toBe(false);

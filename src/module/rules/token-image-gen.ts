@@ -25,8 +25,15 @@ export function coerceTokenImageGenMode(value: string | undefined): TokenImageGe
 
 /** Paths that count as a placeholder rather than real art: a spawn on one of these
  *  has "no image" for the `if-no-image` mode. Real art lives under
- *  `systems/wh40k-rpg/packs/images/**` or an `https://` hotlink. */
-const PLACEHOLDER_IMG_PATTERNS: readonly RegExp[] = [/^icons\//, /mystery-?man/i, /^systems\/wh40k-rpg\/icons\//, /_vendored-ui\/icons\//];
+ *  `systems/wh40k-rpg/packs/images/**` or an `https://` hotlink — except the
+ *  game-icons.net CDN, whose generic glyphs stand in for missing art (#625). */
+const PLACEHOLDER_IMG_PATTERNS: readonly RegExp[] = [
+    /^icons\//,
+    /mystery-?man/i,
+    /^systems\/wh40k-rpg\/icons\//,
+    /_vendored-ui\/icons\//,
+    /^https:\/\/cdn\.jsdelivr\.net\/gh\/game-icons\/icons@/,
+];
 
 /** True when `img` is empty or a framework/system placeholder rather than real art. */
 export function isDefaultImage(img: string | null | undefined): boolean {

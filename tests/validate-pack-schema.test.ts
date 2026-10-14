@@ -7,6 +7,7 @@ import {
     RIDER_AREA_MEASURE,
     RIDER_DURATION_KIND,
     RIDER_TEST_CHARACTERISTIC,
+    unlicensedArtPaths,
     validateDoc,
     variant,
     WEAPON_CLASS,
@@ -179,5 +180,54 @@ describe('grenade riders (#135)', () => {
     it('requires a dice formula exactly for a rolled duration', () => {
         expect(validateDoc(grenade(rider({ duration: { kind: 'roll', base: 0, formula: '' } }))).length).toBeGreaterThan(0);
         expect(validateDoc(grenade(rider({ duration: { kind: 'encounter', base: 0, formula: '1d5' } }))).length).toBeGreaterThan(0);
+    });
+});
+
+/**
+ * The unlicensed-art gate (#625): the GameDevMarket icon packs are parked unserved
+ * in `_vendored-ui/`, so a reference to them anywhere in a document is a broken
+ * icon and an invalid-asset console error. The gate must name every such field
+ * and leave a game-icons hotlink, core icon or curated art alone.
+ */
+describe('unlicensed art gate (#625)', () => {
+    const VENDORED = 'systems/wh40k-rpg/packs/_vendored-ui/icons/items/grenade/grenade_07.png';
+    const GAME_ICON = 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/lorc/grenade.svg';
+
+    it('flags a vendored img on the document itself', () => {
+        const errs = validateDoc({ name: 'Frag Grenade', type: 'weapon', img: VENDORED, system: {} });
+        expect(errs).toHaveLength(1);
+        expect(errs[0]).toMatch(/^\/img: references unlicensed art/);
+    });
+
+    it('flags it on embedded items, token textures and effect icons, by path', () => {
+        const actor = {
+            name: 'Ganger',
+            type: 'dh2-npc',
+            img: 'https://static.wikia.nocookie.net/warhammer40k/images/x.png',
+            prototypeToken: { texture: { src: VENDORED } },
+            items: [
+                { name: 'Knife', type: 'weapon', img: GAME_ICON },
+                { name: 'Frag Grenade', type: 'weapon', img: VENDORED },
+            ],
+            effects: [{ name: 'Stunned', icon: VENDORED }],
+        };
+        expect(unlicensedArtPaths(actor)).toEqual(['/prototypeToken/texture/src', '/items/1/img', '/effects/0/icon']);
+        expect(validateDoc(actor)).toHaveLength(3);
+    });
+
+    it('flags the old served location the packs were pulled from', () => {
+        expect(validateDoc({ name: 'Dodge', type: 'talent', img: 'systems/wh40k-rpg/icons/talents/violet/p_10.png', system: {} })).toHaveLength(1);
+        expect(validateDoc({ name: 'Smite', type: 'psychicPower', img: 'systems/wh40k-rpg/icons/psykana/fire-red-1.jpg', system: {} })).toHaveLength(1);
+    });
+
+    it('flags a vendored override on a reference stub', () => {
+        expect(validateDoc({ reference: '../other/_source/x.json', img: VENDORED })).toHaveLength(1);
+    });
+
+    it('passes game-icons hotlinks, Foundry core icons and curated art', () => {
+        expect(validateDoc({ name: 'Frag Grenade', type: 'weapon', img: GAME_ICON, system: {} })).toEqual([]);
+        expect(validateDoc({ name: 'Prone', type: 'condition', img: 'icons/svg/falling.svg', system: {} })).toEqual([]);
+        expect(validateDoc({ name: 'Webber', type: 'weapon', img: 'systems/wh40k-rpg/packs/images/items/dh2/webber.webp', system: {} })).toEqual([]);
+        expect(unlicensedArtPaths('systems/wh40k-rpg/icons/whatever.svg')).toEqual([]);
     });
 });

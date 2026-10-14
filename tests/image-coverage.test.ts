@@ -34,6 +34,11 @@ describe('hasRealArt', () => {
         }
     });
 
+    it('treats a game-icons.net function icon as a default, though it is an https hotlink (#625)', () => {
+        expect(hasRealArt('https://cdn.jsdelivr.net/gh/game-icons/icons@master/lorc/grenade.svg')).toBe(false);
+        expect(hasRealArt('https://cdn.jsdelivr.net/gh/other/repo@master/art.png')).toBe(true);
+    });
+
     it('treats a missing / empty img as not covered', () => {
         expect(hasRealArt(undefined)).toBe(false);
         expect(hasRealArt('')).toBe(false);

@@ -15,6 +15,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { PackIconDoc } from '../scripts/pack-icon-map.d.mts';
 import { ICON_TABLE, iconRoleFor, iconUrl, iconUrlFor, isGameIconUrl } from '../scripts/pack-icon-map.mjs';
+import { isDefaultImage } from '../src/module/rules/token-image-gen.ts';
 
 const ATTRIBUTION = readFileSync(resolve(__dirname, '../src/icons/ATTRIBUTION.md'), 'utf8');
 
@@ -80,6 +81,11 @@ describe('pack icon table', () => {
 
     it('never points at the unlicensed _vendored-ui art', () => {
         expect(JSON.stringify([ICON_TABLE.cdn, ICON_TABLE.icons])).not.toMatch(/_vendored-ui|wh40k-rpg\/icons\//);
+    });
+
+    it('counts as a placeholder for token image generation, like any default icon', () => {
+        expect(isDefaultImage(iconUrl('vehicle.default'))).toBe(true);
+        expect(isDefaultImage(iconUrl('weapon.las'))).toBe(true);
     });
 
     it('rejects an unknown role', () => {

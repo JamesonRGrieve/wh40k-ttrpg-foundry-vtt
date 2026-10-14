@@ -30,5 +30,11 @@ export declare const vehicleTraitSystemSchema: ZodTypeAny;
 export declare const SYSTEM_SCHEMAS: Record<string, ZodTypeAny>;
 export declare const documentEnvelope: ZodTypeAny;
 
+/** Paths to the unlicensed, unserved icon packs (`_vendored-ui`, #625). */
+export declare const UNLICENSED_ART: RegExp;
+
+/** Pointer paths of every string in `node` that references {@link UNLICENSED_ART}. */
+export declare function unlicensedArtPaths(node: unknown, at?: string): string[];
+
 /** Validate one `_source` document; returns human-readable error strings ([] when clean). */
 export declare function validateDoc(doc: unknown): string[];

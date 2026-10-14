@@ -12,6 +12,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { UNLICENSED_ART } from '../scripts/validate-pack-schema.mjs';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
@@ -55,6 +56,13 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('compendium image paths (#239)', () => {
         expect(offenders, `pack docs with external module image paths:\n${offenders.join('\n')}`).toEqual([]);
     });
 
+    it('no pack document references the unlicensed _vendored-ui icon packs (#625)', () => {
+        // Those GameDevMarket icons are parked unserved in the private submodule:
+        // every reference renders broken and trips Foundry's invalid-asset error.
+        const offenders = documents.filter((doc) => UNLICENSED_ART.test(doc.text)).map((doc) => doc.file);
+        expect(offenders, `pack docs referencing unlicensed art:\n${offenders.join('\n')}`).toEqual([]);
+    });
+
     it('specifically never reintroduces the dead game-icons-net-font module', () => {
         const offenders = documents.filter((doc) => doc.text.includes('modules/game-icons-net-font/')).map((doc) => doc.file);
         expect(offenders).toEqual([]);
@@ -75,13 +83,12 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('compendium image paths (#239)', () => {
      *
      * So: resolve every bundled ref against disk, case-sensitively.
      *
-     * Ratcheted rather than asserted-zero because 277 refs are genuinely missing
-     * art that needs assets, not a code fix. The count may only FALL — a new
-     * broken reference fails the build. Lower BROKEN_REF_BASELINE in the same
-     * commit that fixes refs; when it reaches 0, replace it with a plain
-     * `toEqual([])` and this becomes a hard gate.
+     * This began as a ratchet (277 refs were genuinely missing art). The count
+     * has since reached 0 (#625 repointed the last one), so the baseline is 0:
+     * any broken bundled reference fails the build, and the worst-offender list
+     * below names it.
      */
-    const BROKEN_REF_BASELINE = 277;
+    const BROKEN_REF_BASELINE = 0;
 
     it('bundled image references resolve on disk (case-sensitively)', () => {
         const SRC_ROOT = resolve(__dirname, '../src');
