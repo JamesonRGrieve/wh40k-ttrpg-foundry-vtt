@@ -5,6 +5,7 @@ import {
     effectTargets,
     extraDegreesOfSuccess,
     hasShipEffect,
+    liveShipModifiers,
     readShipModifierFlag,
     SHIP_MODIFIER_COMPONENT_KEY,
     shipEffectMagnitude,
@@ -129,6 +130,26 @@ describe('collectShipModifierComponents', () => {
     it('collects the stat modifiers for a combined test', () => {
         expect(collectShipModifierComponents(effects, { target: 'detection' }).map((row) => row.value)).toEqual([5]);
         expect(collectShipModifierComponents(effects, { target: 'manoeuvrability' })).toEqual([]);
+    });
+});
+
+describe('liveShipModifiers', () => {
+    it('lists every live, non-zero ship-action modifier with its action name, in effect order', () => {
+        const effects: ShipEffectView[] = [
+            { name: 'Lock on Target', active: true, modifier: { target: 'weaponBallisticSkill', value: 10, weaponId: 'lance' } },
+            { name: 'Come to New Heading', active: false, modifier: { target: 'ballisticSkill', value: -20, weaponId: '' } },
+            { name: 'Flank Speed', active: true, modifier: { target: 'speed', value: 0, weaponId: '' } },
+            { name: 'Stunned', active: true, modifier: null },
+            { name: 'Aid the Machine Spirit', active: true, modifier: { target: 'detection', value: 5, weaponId: '' } },
+        ];
+        expect(liveShipModifiers(effects)).toEqual([
+            { name: 'Lock on Target', target: 'weaponBallisticSkill', value: 10, weaponId: 'lance' },
+            { name: 'Aid the Machine Spirit', target: 'detection', value: 5, weaponId: '' },
+        ]);
+    });
+
+    it('is empty for a ship with no ship-action effects', () => {
+        expect(liveShipModifiers([])).toEqual([]);
     });
 });
 

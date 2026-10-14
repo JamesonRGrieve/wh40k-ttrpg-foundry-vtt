@@ -24,6 +24,7 @@ import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
 import shipWeaponChatSrc from '../../../templates/chat/ship-weapon-chat.hbs?raw';
 import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
+import { shipActionModifierRows } from '../ship-action/ship-action-flow.ts';
 import { componentRow, type AssaultComponentRow } from '../ship-assault/ship-assault-card.ts';
 
 initializeStoryHandlebars();
@@ -623,5 +624,48 @@ export const ManoeuvreActions: Story = {
         await expect(dispatchButtons.length).toBe(8);
         // #186: Come to New Heading and Evasive Manoeuvres roll; movement-only manoeuvres stay rules cards.
         await expect(canvasElement.querySelectorAll('[data-action="rollShipAction"]').length).toBe(2);
+    },
+};
+
+// ── Issue #186 — Ship Actions in Effect, composed into the Extended tab ──────
+//
+// After Lock on Target and Come to New Heading are rolled, the tab lists both
+// live modifiers above the actions, built by the same row builder the sheet
+// uses. The composed render shows the panel, the assault panel and the action
+// list stacking inside the sheet body.
+
+export const ExtendedActionsInEffect: Story = {
+    name: 'Issue #186 — Extended Actions with Ship Actions in Effect',
+    args: {
+        ...defaultCtxWithSource,
+        tab: { id: 'extendedActions', group: 'primary', active: true, cssClass: 'tab-extended-actions' },
+        // eslint-disable-next-line no-restricted-syntax -- boundary: SheetContextLike is an open record for story context
+        extendedActions: shipActionRows(rtShipOrders, 'extended'),
+        shipActionModifiers: shipActionModifierRows(
+            {
+                shipWeaponChoices: [{ id: 'macro', name: 'Sunsear Laser Battery' }],
+                shipActionEffects: [
+                    { name: 'Lock on Target', active: true, modifier: { target: 'weaponBallisticSkill', value: 15, weaponId: 'macro' } },
+                    { name: 'Come to New Heading', active: true, modifier: { target: 'ballisticSkill', value: -20, weaponId: '' } },
+                ],
+            },
+            storyLocalize,
+        ),
+    },
+    render: (args) => renderActionsPanel(extendedActionsTabSrc, args),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="ship-action-modifiers"]');
+        await expect(panel).toBeTruthy();
+        const rows = [...(panel?.querySelectorAll('li') ?? [])].map((row) => row.textContent.replace(/\s+/gu, ' ').trim());
+        await expect(rows).toEqual([
+            'Lock on Target Ballistic Skill Tests to fire Sunsear Laser Battery +15',
+            "Come to New Heading every Ballistic Skill Test to fire the ship's weapons -20",
+        ]);
+        // The live effects sit above the action list, which still offers every Roll.
+        const firstRoll = canvasElement.querySelector('[data-action="rollShipAction"]');
+        await expect(firstRoll).toBeTruthy();
+        const followsPanel = panel !== null && firstRoll !== null && (panel.compareDocumentPosition(firstRoll) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        await expect(followsPanel).toBe(true);
+        await expect(canvasElement.querySelectorAll('[data-action="rollShipAction"]').length).toBe(5);
     },
 };

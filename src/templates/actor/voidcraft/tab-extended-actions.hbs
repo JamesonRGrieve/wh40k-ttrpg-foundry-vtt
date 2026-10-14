@@ -1,5 +1,6 @@
 {{!-- Voidcraft Extended Actions Tab — issue #186 --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} tw-border-t {{themeClassFor 'border'}}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{> systems/wh40k-rpg/templates/actor/voidcraft/ship-action-modifiers-panel.hbs modifiers=shipActionModifiers}}
     {{> systems/wh40k-rpg/templates/actor/voidcraft/ship-assault-panel.hbs assaults=shipAssaults}}
     <div class="wh40k-panel">
         <h1 class="wh40k-panel-header tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.Voidcraft.ExtendedAction.Header"}}</h1>

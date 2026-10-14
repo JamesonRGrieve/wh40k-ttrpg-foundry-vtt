@@ -4735,7 +4735,8 @@
                         "crewPopulation": "The ship took no Crew Population damage last turn that is left to cancel."
                     }
                 },
-                "BsBase": "Crew Rating (Ballistic Skill)"
+                "BsBase": "Crew Rating (Ballistic Skill)",
+                "InEffect": "Ship Actions in Effect"
             },
             "Assault": {
                 "Header": "Ship Assault Actions",

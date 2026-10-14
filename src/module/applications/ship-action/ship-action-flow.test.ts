@@ -7,6 +7,7 @@ import {
     isRollableShipAction,
     rollShipAction,
     shipActionInputGroups,
+    shipActionModifierRows,
     type ShipActionContext,
     type ShipActionOrder,
     type ShipActionShip,
@@ -195,5 +196,26 @@ describe('Evasive Manoeuvres (RT Core p.215, #186)', () => {
         expect(card.data.test.target).toBe(50);
         // 50 − 20 = 30 → 3 degrees → −10 × 4.
         expect(target.modifiers.map((input) => [input.target, input.value, input.rounds, input.expiry])).toEqual([['ballisticSkill', -40, 1, 'turnStart']]);
+    });
+});
+
+describe('shipActionModifierRows (the sheet’s "Ship Actions in Effect" list, #186)', () => {
+    it('lists each live modifier signed, naming the Weapon Component a Lock on Target aims', () => {
+        const target = ship({
+            weapons: [{ id: 'lance', name: 'Titanforge Lance' }],
+            effects: [
+                { name: 'Lock on Target', active: true, modifier: { target: 'weaponBallisticSkill', value: 15, weaponId: 'lance' } },
+                { name: 'Come to New Heading', active: true, modifier: { target: 'ballisticSkill', value: -20, weaponId: '' } },
+                { name: 'Flank Speed', active: false, modifier: { target: 'speed', value: 3, weaponId: '' } },
+            ],
+        });
+        expect(shipActionModifierRows(target, echoLocalize)).toEqual([
+            { name: 'Lock on Target', target: 'WH40K.Voidcraft.ShipAction.Target.weaponBallisticSkill{"weapon":"Titanforge Lance"}', value: '+15' },
+            { name: 'Come to New Heading', target: 'WH40K.Voidcraft.ShipAction.Target.ballisticSkill{"weapon":""}', value: '-20' },
+        ]);
+    });
+
+    it('is empty when nothing is in effect', () => {
+        expect(shipActionModifierRows(ship(), echoLocalize)).toEqual([]);
     });
 });

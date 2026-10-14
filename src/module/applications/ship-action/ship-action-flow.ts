@@ -28,6 +28,7 @@ import {
     isModifierTarget,
     isPoolTarget,
     isShipTestStat,
+    liveShipModifiers,
     shipEffectMagnitudeComponents,
     type ShipEffectData,
     type ShipEffectView,
@@ -110,9 +111,29 @@ export function isRollableShipAction(order: ShipActionOrder): boolean {
     return hasShipEffect(order.shipEffect) && effectTargets(order.shipEffect).length > 0;
 }
 
-/** Localized label of one target, for the choice select and the outcome line. */
+/** Localized label of one target, for the choice select, the outcome line and the "in effect" list. */
 function targetLabel(localize: Localize, target: string, weaponName = ''): string {
     return localize(`WH40K.Voidcraft.ShipAction.Target.${target}`, { weapon: weaponName });
+}
+
+/** One row of the voidcraft sheet's "Ship Actions in Effect" list. */
+export interface ShipActionModifierRow {
+    /** The action that left the modifier. */
+    name: string;
+    /** What it modifies, localized; a Lock on Target names its Weapon Component. */
+    target: string;
+    /** The signed amount. */
+    value: string;
+}
+
+/** The ship-action modifiers in effect on a ship, as the action tabs list them. */
+export function shipActionModifierRows(ship: Pick<ShipActionShip, 'shipActionEffects' | 'shipWeaponChoices'>, localize: Localize): ShipActionModifierRow[] {
+    const weapons = new Map(ship.shipWeaponChoices.map((weapon) => [weapon.id, weapon.name]));
+    return liveShipModifiers(ship.shipActionEffects).map((modifier) => ({
+        name: modifier.name,
+        target: targetLabel(localize, modifier.target, weapons.get(modifier.weaponId) ?? ''),
+        value: formatSigned(modifier.value),
+    }));
 }
 
 /** The fields shown before rolling: the character's skill, a situational modifier, and any choice. */

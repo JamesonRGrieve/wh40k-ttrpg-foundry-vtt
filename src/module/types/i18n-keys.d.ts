@@ -6201,6 +6201,7 @@ export type I18nKey =
     | 'WH40K.Voidcraft.ShipAction.Field.Skill'
     | 'WH40K.Voidcraft.ShipAction.Field.Target'
     | 'WH40K.Voidcraft.ShipAction.Field.Weapon'
+    | 'WH40K.Voidcraft.ShipAction.InEffect'
     | 'WH40K.Voidcraft.ShipAction.Magnitude.Base'
     | 'WH40K.Voidcraft.ShipAction.Magnitude.Degrees'
     | 'WH40K.Voidcraft.ShipAction.MagnitudeTitle'

@@ -249,13 +249,29 @@ function modifierApplies(modifier: ShipModifierFlag, query: ShipModifierQuery): 
  * penalties reach every one.
  */
 export function collectShipModifierComponents(effects: Iterable<ShipEffectView>, query: ShipModifierQuery): ShipTestComponent[] {
-    const rows: ShipTestComponent[] = [];
+    return liveShipModifiers(effects)
+        .filter((modifier) => modifierApplies(modifier, query))
+        .map((modifier) => ({ labelKey: SHIP_MODIFIER_COMPONENT_KEY, value: modifier.value, data: { name: modifier.name } }));
+}
+
+/** A ship-action modifier in effect: the action's name and its payload. */
+export interface LiveShipModifier extends ShipModifierFlag {
+    name: string;
+}
+
+/**
+ * Every ship-action modifier currently in effect on the ship, in effect order:
+ * live (not disabled, suppressed or expired) and non-zero. The collector reads
+ * these for later tests; the voidcraft sheet lists them so the GM can see what
+ * a rolled action left on the ship.
+ */
+export function liveShipModifiers(effects: Iterable<ShipEffectView>): LiveShipModifier[] {
+    const live: LiveShipModifier[] = [];
     for (const effect of effects) {
         if (!effect.active || effect.modifier === null || effect.modifier.value === 0) continue;
-        if (!modifierApplies(effect.modifier, query)) continue;
-        rows.push({ labelKey: SHIP_MODIFIER_COMPONENT_KEY, value: effect.modifier.value, data: { name: effect.name } });
+        live.push({ name: effect.name, ...effect.modifier });
     }
-    return rows;
+    return live;
 }
 
 /* -------------------------------------------- */

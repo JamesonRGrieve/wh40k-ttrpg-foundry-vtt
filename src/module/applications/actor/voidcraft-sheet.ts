@@ -23,6 +23,7 @@ import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
 import { openShipActionDialog } from '../ship-action/ship-action-dialog.ts';
+import { shipActionModifierRows, type ShipActionModifierRow } from '../ship-action/ship-action-flow.ts';
 import { componentRow } from '../ship-assault/ship-assault-card.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
@@ -407,11 +408,13 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         if (partId === 'extendedActions') {
             partContext['extendedActions'] = await this._prepareExtendedActions();
             partContext['shipAssaults'] = this._prepareShipAssaults('extended');
+            partContext['shipActionModifiers'] = this._prepareShipActionModifiers();
         }
 
         if (partId === 'manoeuvreActions') {
             partContext['manoeuvreActions'] = await this._prepareManoeuvreActions();
             partContext['shipAssaults'] = this._prepareShipAssaults('manoeuvre');
+            partContext['shipActionModifiers'] = this._prepareShipActionModifiers();
         }
 
         return partContext;
@@ -441,6 +444,19 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         const actor = this.actor as unknown as WH40KVoidcraft;
         if (!actor.supportsShipAssault) return [];
         return shipAssaultButtons(tab, foundryLocalize);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * The ship-action modifiers in effect on this ship (Lock on Target, Aid the
+     * Machine Spirit, Evasive Manoeuvres …, #186), localized for the action
+     * tabs' "in effect" list. A Ballistic Skill modifier aimed at one Weapon
+     * Component names it.
+     */
+    _prepareShipActionModifiers(): ShipActionModifierRow[] {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        return shipActionModifierRows(this.actor as unknown as WH40KVoidcraft, foundryLocalize);
     }
 
     /* -------------------------------------------- */
