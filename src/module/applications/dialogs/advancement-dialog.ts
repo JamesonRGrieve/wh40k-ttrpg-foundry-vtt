@@ -14,7 +14,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
-import { psychicPowerCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
+import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
@@ -1033,11 +1033,17 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Two-pass build so tree-path prerequisites (UUIDs) can be resolved
         // to display names. First pass: index every entry across all packs
         // into a uuid→name map. Second pass: build the prepared power list.
-        type RawEntry = CompendiumIndexEntry & { system?: { prCost?: number; discipline?: string; requires?: string[] }; uuid?: string };
+        // `cost` is the raw, unmigrated index value: an XP number, a per-line map or a
+        // stray currency record, narrowed by `psychicPowerXpCost` (#642).
+        type RawEntry = CompendiumIndexEntry & {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex returns the raw source value of `system.cost`, narrowed by the psychicPowerXpCost guard below
+            system?: { prCost?: number; cost?: unknown; discipline?: string; requires?: string[] };
+            uuid?: string;
+        };
         const rawEntries: RawEntry[] = [];
         for (const pack of packs) {
             // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
-            const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.requires'] });
+            const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.cost', 'system.requires'] });
             for (const rawEntry of index) {
                 const entry = rawEntry as RawEntry;
                 if (entry.type !== 'psychicPower') continue;
@@ -1055,9 +1061,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
             const entrySys = entry.system ?? {};
             const prCost = entrySys.prCost ?? 1;
-            // Heuristic XP cost (shared with the DataModel's derived-spend calc — see
-            // rules/xp-costs.ts, #240): max(100, 200 × prCost). DH2 core powers: 100-600 XP.
-            const cost = psychicPowerCost(prCost);
+            // The printed XP cost when the power carries one, else the PR heuristic —
+            // the same charge the DataModel's derived-spend calc counts (rules/xp-costs.ts,
+            // #240, #642). The raw index is unmigrated, so a per-line map or a stray
+            // currency record reads as "not authored" here.
+            const cost = psychicPowerCharge(psychicPowerXpCost(entrySys.cost), prCost);
             const owned = ownedPowers.has(entry.name.toLowerCase());
             const prGate = prCost > currentRating;
             const discipline = normalizeDiscipline(entrySys.discipline);

@@ -1,3 +1,4 @@
+import { psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -19,6 +20,8 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare identifier: string;
     declare discipline: string;
     declare prCost: number;
+    /** The printed XP cost, or null when not authored (#642). */
+    declare cost: number | null;
     declare focusPower: { characteristic: string; modifier: number; threshold: number; opposed: boolean; opposedCharacteristic: string; skill: string };
     declare effect: string;
     declare overbleed: string;
@@ -55,6 +58,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
             // Psy Rating cost
             prCost: new fields.NumberField({ required: true, initial: 1, min: 0, integer: true }),
+
+            // XP cost the book prints ("Value: 300 xp", DH2 core p. 206), #642.
+            // Null when not authored: the advancement charge and the XP-spend
+            // calculation then fall back to the PR heuristic (`psychicPowerCost`).
+            cost: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
 
             // Focus Power Test
             focusPower: new fields.SchemaField({
@@ -127,6 +135,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         if (typeof source['discipline'] === 'string') {
             source['discipline'] = normalisePsychicDiscipline(source['discipline']);
         }
+        // Runs after the line containers are flattened (super), so a per-line XP map
+        // has already collapsed to the active line's number. A stray acquisition-
+        // currency record (`{throneGelt, …}`, carried by some pack documents) is not
+        // an XP cost and loads as "not authored" (#642).
+        if ('cost' in source) source['cost'] = psychicPowerXpCost(source['cost']);
     }
 
     /* -------------------------------------------- */

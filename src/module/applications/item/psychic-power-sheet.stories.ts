@@ -133,6 +133,41 @@ export const DamageFormulaField: Story = {
     },
 };
 
+// ── XP cost (#642) ──────────────────────────────────────────────────────────
+//
+// The XP Cost input binds `system.cost`, which the schema now carries (the
+// book's "Value: N xp"); before, the field was absent and a save dropped it.
+
+export const XpCostAuthored: Story = {
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true });
+        ctx.item.system['cost'] = 300;
+        return renderSheet(templateSrc, ctx);
+    },
+    play: ({ canvasElement }) => {
+        const input = canvasElement.querySelector<HTMLInputElement>('input[name="system.cost"]');
+        void expect(input?.value).toBe('300');
+        void expect(input?.min).toBe('0');
+        // The header shows the printed cost as an XP badge.
+        void expect(canvasElement.querySelector('.fa-gem')).not.toBeNull();
+        void expect(within(canvasElement).getAllByText('300').length).toBeGreaterThan(0);
+    },
+};
+
+export const XpCostNotAuthored: Story = {
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true });
+        ctx.item.system['cost'] = null;
+        return renderSheet(templateSrc, ctx);
+    },
+    play: ({ canvasElement }) => {
+        // Null means "not authored": an empty input and no header badge.
+        const input = canvasElement.querySelector<HTMLInputElement>('input[name="system.cost"]');
+        void expect(input?.value).toBe('');
+        void expect(canvasElement.querySelector('.fa-gem')).toBeNull();
+    },
+};
+
 export const SourceReferenceEmpty: Story = {
     render: () => {
         const ctx = makeCtx();

@@ -1,6 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
-import { psyRatingTotalCost, psychicPowerCost } from '../../rules/xp-costs.ts';
+import { psyRatingTotalCost, psychicPowerCharge } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
@@ -1090,10 +1090,9 @@ export default class CharacterData extends CreatureTemplate {
                 talents += cost;
                 purchases.push({ name: item.name, cost, category: 'talent' });
             } else if (item.isPsychicPower) {
-                // Psychic powers carry no XP cost in the compendium; prefer a stored cost
-                // when present, else fall back to the same heuristic the dialog charges.
-                const stored = parseInt(String(sys.cost ?? '0'), 10);
-                const cost = stored > 0 ? stored : psychicPowerCost(Number(sys.prCost ?? 1));
+                // The power's printed XP cost when authored, else the PR heuristic — the
+                // same charge the Advancement Dialog makes (#642).
+                const cost = psychicPowerCharge(parseInt(String(sys.cost ?? '0'), 10), Number(sys.prCost ?? 1));
                 psychicPowers += cost;
                 purchases.push({ name: item.name, cost, category: 'psychicPower' });
             }

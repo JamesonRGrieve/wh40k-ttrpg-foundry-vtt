@@ -141,7 +141,8 @@ describe('character DataModel experience derivation (#240)', () => {
         // private helper that owns its category.
         const cluster = spendDerivationSource(charSrc);
         expect(cluster, 'psy rating spend derived from rating').toMatch(/psyRatingTotalCost/);
-        expect(cluster, 'psychic powers fall back to the shared heuristic').toMatch(/psychicPowerCost/);
+        // The printed cost when authored, else the PR heuristic: the same charge the Advancement Dialog makes (#642).
+        expect(cluster, 'psychic powers use the shared charge').toMatch(/psychicPowerCharge/);
         expect(cluster, 'BC infamy summed from the chaosAdvancements ledger').toMatch(/category === 'infamy'/);
         // …and each helper's subtotal must actually reach the totals it feeds.
         expect(body, 'psy rating + owned powers share the psychic bucket').toMatch(/spentPsychicPowers\s*=\s*ratingSpend\s*\+/);

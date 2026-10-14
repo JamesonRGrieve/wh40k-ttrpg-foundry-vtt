@@ -37,3 +37,27 @@ export function psychicPowerCost(prCost: number): number {
     const pr = Number.isFinite(prCost) && prCost > 0 ? prCost : 1;
     return Math.max(100, 200 * pr);
 }
+
+/**
+ * The XP a psychic power costs: the value the book prints when the power carries
+ * one (DH2 core: "Value: 300 xp", p. 206), else the PR heuristic (#642). The
+ * Advancement Dialog charges this and the character's spend calculation counts it,
+ * so the two cannot disagree.
+ * @param printed  The power's authored `cost`, or null / undefined when absent.
+ * @param prCost   The power's PR requirement.
+ */
+export function psychicPowerCharge(printed: number | null | undefined, prCost: number): number {
+    return printed !== null && printed !== undefined && printed > 0 ? printed : psychicPowerCost(prCost);
+}
+
+/**
+ * A stored psychic-power `cost` as an XP number, or null when it is not one: a
+ * non-negative integer passes; anything else — absent, blank, or a stray
+ * acquisition-currency record such as `{ throneGelt: null }` — is "not authored".
+ * @param raw  The stored value, already collapsed to the active line.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: a migrating DataModel source value is untyped until this guard narrows it
+export function psychicPowerXpCost(raw: unknown): number | null {
+    const value = typeof raw === 'string' && raw.trim() !== '' ? Number(raw) : raw;
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 ? value : null;
+}
