@@ -275,17 +275,20 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[] }> {
             }
 
             // ---- Flow: d100-success-degrees-of-success ----
-            // target 60, roll 28 → success; DoS = floor((60-28)/10)+1 = 4.
+            // target 60, roll 28 → success. An actor-less roll counts by the DH2 method
+            // (#335): one degree, plus the target's tens digit minus the roll's
+            // (DH2 core p. 25: BS 51, roll 13 → 1 + 4) = 1 + (6 − 2) = 5. The Gen 1
+            // full-tens margin, floor(32 / 10) + 1 = 4, is DH1 / RT / DW only.
             try {
                 const roll = await makeD100(28, { target: 60 });
-                const ok = roll.isSuccess && !roll.isFailure && roll.degreesOfSuccess === 4 && roll.degreesOfFailure === 0;
+                const ok = roll.isSuccess && !roll.isFailure && roll.degreesOfSuccess === 5 && roll.degreesOfFailure === 0;
                 record('d100-success-degrees-of-success', ok, `isSuccess=${roll.isSuccess} dos=${roll.degreesOfSuccess} dof=${roll.degreesOfFailure}`);
             } catch (err) {
                 record('d100-success-degrees-of-success', false, err instanceof Error ? err.message : String(err));
             }
 
             // ---- Flow: d100-failure-degrees-of-failure ----
-            // target 35, roll 67 → failure; DoF = floor((67-35)/10)+1 = 4.
+            // target 35, roll 67 → failure; DoF = 1 + (6 − 3) = 4 by the DH2 method.
             try {
                 const roll = await makeD100(67, { target: 35 });
                 const ok = !roll.isSuccess && roll.isFailure && roll.degreesOfFailure === 4 && roll.degreesOfSuccess === 0;
@@ -298,9 +301,9 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[] }> {
             // success → degrees positive == DoS; failure → degrees negative;
             // absoluteDegrees is |degrees|.
             try {
-                const success = await makeD100(28, { target: 60 }); // DoS 4
+                const success = await makeD100(28, { target: 60 }); // DoS 5 (DH2 method, above)
                 const failure = await makeD100(67, { target: 35 }); // DoF 4
-                const ok = success.degrees === 4 && success.absoluteDegrees === 4 && failure.degrees === -4 && failure.absoluteDegrees === 4;
+                const ok = success.degrees === 5 && success.absoluteDegrees === 5 && failure.degrees === -4 && failure.absoluteDegrees === 4;
                 record(
                     'd100-degrees-signed-and-absolute',
                     ok,
