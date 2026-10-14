@@ -51,7 +51,8 @@ interface SpecialistEntry {
 /** The parts of a character the rituals read. */
 export interface RitualActorSystem {
     readonly characteristics: Readonly<Record<string, { readonly total: number; readonly bonus: number }>>;
-    readonly skills: Readonly<Record<string, { readonly current: number; readonly entries?: readonly SpecialistEntry[] | undefined }>>;
+    /** A character's skill rows. An NPC's system has none (its skills are sparse `trainedSkills`), and the NPC sheet shares this path. */
+    readonly skills?: Readonly<Record<string, { readonly current: number; readonly entries?: readonly SpecialistEntry[] | undefined }>> | undefined;
     readonly fatigue: { readonly value: number; readonly max: number };
     readonly corruption: number;
 }
@@ -64,7 +65,7 @@ export function ritualCharacteristic(system: RitualActorSystem, key: 'willpower'
 }
 
 function forbiddenLoreSkill(system: RitualActorSystem): { readonly current: number; readonly entries?: readonly SpecialistEntry[] | undefined } | undefined {
-    return system.skills['forbiddenLore'];
+    return system.skills?.['forbiddenLore'];
 }
 
 /** The specialisation the rituals test (Forbidden Lore (Daemonology), pp. 59 / 71). */

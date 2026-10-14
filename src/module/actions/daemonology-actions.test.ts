@@ -66,6 +66,14 @@ describe('Forbidden Lore (Daemonology) lookup', () => {
         expect(findDaemonologyLore(actor({ lore: null }))).toBeUndefined();
         expect(daemonologyLoreTotal(actor({ lore: null }))).toBe(20);
     });
+
+    // A DH2 NPC's system has no PC skill rows; the NPC sheet shares this lookup, and
+    // reading `skills.forbiddenLore` off it threw, so a blank DH2 NPC's sheet never rendered.
+    it('finds nothing, and does not throw, on a system with no skill rows (an NPC)', () => {
+        const { skills: _rows, ...npc } = actor();
+        expect(findDaemonologyLore(npc)).toBeUndefined();
+        expect(daemonologyLoreTotal(npc)).toBe(0);
+    });
 });
 
 describe('parseExorcismForm', () => {
