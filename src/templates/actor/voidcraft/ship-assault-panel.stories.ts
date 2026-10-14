@@ -4,7 +4,8 @@
  *
  *   1. Manoeuvres — the Rogue Trader Manoeuvres-tab buttons, each opening the
  *      assault dialog through `data-action="openShipAssault"`.
- *   2. PerSystem — the panel framed under every game line: only Rogue Trader
+ *   2. ExtendedActions — the Extended Actions tab's single button, Hit and Run.
+ *   3. PerSystem — the panel framed under every game line: only Rogue Trader
  *      offers the actions; the other lines' sheets pass an empty list and the
  *      panel renders nothing (the gate is explicit, never accidental).
  */
@@ -46,6 +47,22 @@ export const Manoeuvres: Story = {
         await expect(buttons.length).toBeGreaterThan(0);
         await expect(Array.from(buttons).every((button) => (button.dataset['assault'] ?? '') !== '')).toBe(true);
         await expect(canvasElement.querySelector('[data-assault="board"]')).toBeTruthy();
+    },
+};
+
+export const ExtendedActions: Story = {
+    render: () => {
+        const frame = document.createElement('div');
+        frame.classList.add('wh40k-rpg', 'sheet');
+        frame.dataset['wh40kSystem'] = 'rt';
+        frame.append(renderSheet(panelSrc, { assaults: shipAssaultButtons('extended', storyLocalize) }));
+        return frame;
+    },
+    play: async ({ canvasElement }) => {
+        // Hit and Run is an Extended Action; ramming and boarding stay on the Manoeuvres tab.
+        const ids = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="openShipAssault"]')].map((button) => button.dataset['assault']);
+        await expect(ids).toEqual(['hit-and-run']);
+        await expect(canvasElement.textContent).toContain('Hit and Run');
     },
 };
 

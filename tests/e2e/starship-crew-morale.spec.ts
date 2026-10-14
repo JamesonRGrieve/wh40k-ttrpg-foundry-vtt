@@ -1,357 +1,142 @@
+import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import {
+    chatMessageIds,
+    createShip,
+    joinShipWorld,
+    deleteActors,
+    deleteCombat,
+    deleteMessages,
+    messagesSince,
+    openSheet,
+    readShip,
+    RT_FRIGATE,
+    rollShipActionFromSheet,
+    setCombatRound,
+    showTab,
+    snapShipVitals,
+    snapWindow,
+    startCombat,
+    type ShipFixture,
+    type ShownVitals,
+} from './ship-sheet-driver';
 
 /**
- * Tier B coverage of the Rogue Trader Crew Population & Morale combat
- * economy (issue #189). Probes the starship document's
- * `applyHullDamage` / `reducePriorTurnDamage` / `replenishBetweenCombat`
- * methods against a freshly-created RT starship actor, then snaps the
- * open sheet's Crew tab so the visual review captures the panel after
- * the state mutations have propagated.
+ * Tier B coverage of the Rogue Trader Crew Population & Morale economy (#189,
+ * RT Core p.218). A hull hit in Strategic Turn 1 costs the ship Crew and
+ * Morale too; in Turn 2 the GM rolls Hold Fast! and Triage from the voidcraft
+ * sheet's Extended Actions tab, and each success cancels part of the previous
+ * turn's Morale or Crew Population loss — never Hull Integrity, and never more
+ * than the pool lost. The Crew tab is captured after the hit and after the
+ * actions; each dialog and card is captured as it is rolled.
  *
- * Mirrors `tests/e2e/disorder-roll-dialog.spec.ts` — JS-only probe
- * via `page.evaluate`, leaves the sheet open for `snap()`, tears it
- * down in a follow-up evaluate.
+ * The hit itself is fixture setup through `applyHullDamage`, the path every
+ * void-combat hit takes; the actions are real clicks. Dice are queued per roll.
  */
 
-test.describe.serial('Starship Crew/Morale economy (Tier B · issue #189)', () => {
-    test('applyHullDamage decrements crew + morale and renders the Crew tab', async ({ page }) => {
-        await joinOrSkip(page);
+const SHIP: ShipFixture = { ...RT_FRIGATE, name: 'Crew Economy Frigate', population: 100, morale: 100, crewRating: 30 };
 
-        const result = await page.evaluate(async () => {
-            interface StarshipCrew {
-                population?: number;
-                crewRating?: number;
-                morale?: { value?: number; max?: number };
-            }
-            interface StarshipSystem {
-                hullIntegrity?: { value?: number; max?: number };
-                crew?: StarshipCrew;
-                gameSystem?: string;
-            }
-            interface StarshipSheet {
-                render?: (opts: { force: boolean }) => Promise<void>;
-                close?: () => Promise<void>;
-                changeTab?: (tab: string, group: string) => void;
-                element?: { querySelector?: (sel: string) => Element | null } | null;
-            }
-            interface StarshipActor {
-                id?: string;
-                system?: StarshipSystem;
-                usesRTCrewEconomy?: boolean;
-                applyHullDamage?: (n: number) => Promise<void>;
-                reducePriorTurnDamage?: (pool: 'morale' | 'crewPopulation', amount: number) => Promise<number>;
-                replenishBetweenCombat?: () => Promise<void>;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update accepts arbitrary partial-update payloads
-                update?: (data: Record<string, unknown>) => Promise<void>;
-                delete?: () => Promise<void>;
-                sheet?: StarshipSheet;
-            }
-            interface ActorClass {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create accepts arbitrary creation data
-                create?: (data: Record<string, unknown>) => Promise<StarshipActor | null | undefined>;
-            }
-            interface CombatLike {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.activate returns the untyped document
-                activate?: () => Promise<unknown>;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.update accepts arbitrary partial-update payloads
-                update?: (data: Record<string, unknown>) => Promise<unknown>;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.delete returns the untyped document
-                delete?: () => Promise<unknown>;
-            }
-            interface CombatClass {
-                create?: (data: Record<string, never>) => Promise<CombatLike | null>;
-            }
-            interface FoundryGame {
-                combats?: { active?: { round?: number } | null };
-            }
-            interface FoundryGlobal {
-                Actor?: ActorClass;
-                Combat?: CombatClass;
-                game?: FoundryGame;
-                __c9starship?: StarshipActor | undefined;
-                __c9starshipDh?: StarshipActor | undefined;
-                __c9combat?: CombatLike | undefined;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-            const fg = globalThis as unknown as FoundryGlobal;
+/** Apply a hull hit through the document (the path weapon fire and ramming take). */
+async function hullHit(page: Page, actorId: string, amount: number): Promise<void> {
+    await page.evaluate(
+        async ({ id, value }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+            const g = globalThis as unknown as { game: { actors: { get: (i: string) => { applyHullDamage: (n: number) => Promise<object> } | undefined } } };
+            await g.game.actors.get(id)?.applyHullDamage(value);
+        },
+        { id: actorId, value: amount },
+    );
+}
 
-            let error: string | null = null;
-            let actorCreated = false;
-            let sheetRendered = false;
-            let hullBefore = 0;
-            let hullAfter = 0;
-            let crewBefore = 0;
-            let crewAfter = 0;
-            let dbgGameSystem: string | null = null;
-            let dbgRtEconomy: boolean | null = null;
-            let moraleBefore = 0;
-            let moraleAfter = 0;
-            let cancelRestored = false;
-            let replenishedMorale = 0;
-            let nonRtCrewUnchanged = false;
+/** Snap the sheet's Crew tab and its sidebar vitals; returns the vitals it shows. */
+async function snapCrewTab(page: Page, actorId: string, label: string): Promise<ShownVitals> {
+    const sheetId = await openSheet(page, actorId);
+    await showTab(page, sheetId, 'crew');
+    expect(await snapWindow(page, label, sheetId), `${label} screenshot`).not.toBeNull();
+    return snapShipVitals(page, actorId, `${label}-vitals`);
+}
 
-            try {
-                const ActorCls = fg.Actor;
-                if (typeof ActorCls?.create !== 'function') {
-                    return {
-                        actorCreated,
-                        sheetRendered,
-                        hullBefore,
-                        hullAfter,
-                        crewBefore,
-                        crewAfter,
-                        moraleBefore,
-                        moraleAfter,
-                        cancelRestored,
-                        replenishedMorale,
-                        nonRtCrewUnchanged,
-                        dbgGameSystem,
-                        dbgRtEconomy,
-                        error: 'Actor.create not available',
-                    };
-                }
+test.describe.serial('Starship Crew/Morale economy (Tier B · #189)', () => {
+    test('Hold Fast! and Triage, rolled from the sheet, cancel last turn’s Morale and Crew losses', async ({ page }) => {
+        await joinShipWorld(page);
+        const ship = await createShip(page, SHIP);
+        const combat = await startCombat(page);
+        const before = await chatMessageIds(page);
+        try {
+            // Strategic Turn 1: a 5-point hull hit also costs 5 Crew Population and 5 Morale.
+            await hullHit(page, ship.id, 5);
+            expect(await readShip(page, ship.id)).toMatchObject({ hull: 30, population: 95, morale: 95 });
+            expect(await snapCrewTab(page, ship.id, 'starship-crew-morale-after-hit')).toEqual({ hull: '30', morale: '95', population: '95' });
 
-                // Ephemeral RT starship — RT system gating drives the
-                // crew/morale tick.
-                const actor = await ActorCls.create({
-                    name: 'Crew Economy Probe',
-                    type: 'rt-voidcraft',
-                    system: {
-                        gameSystem: 'rt',
-                        hullIntegrity: { value: 35, max: 35 },
-                        crew: { population: 100, crewRating: 30, morale: { value: 100, max: 100 } },
-                    },
-                });
-                actorCreated = actor !== undefined && actor !== null;
+            await setCombatRound(page, combat, 2);
 
-                // Nested create values don't reliably persist (Foundry nested-create
-                // merge); set hull + crew via update() — the canonical mutation path
-                // the void-combat flow uses — so applyHullDamage operates on the
-                // intended baseline (hull 35, crew 100).
-                if (typeof actor?.update === 'function') {
-                    await actor.update({
-                        'system.gameSystem': 'rt',
-                        'system.hullIntegrity.value': 35,
-                        'system.hullIntegrity.max': 35,
-                        'system.crew.population': 100,
-                        'system.crew.crewRating': 30,
-                        'system.crew.morale.value': 100,
-                        'system.crew.morale.max': 100,
-                    });
-                }
+            // Willpower 50, roll 10: 4 extra degrees → 1 + 4 = 5 Morale restored.
+            const holdFast = await rollShipActionFromSheet(page, ship.id, {
+                tab: 'extendedActions',
+                action: 'Hold Fast!',
+                label: 'ship-action-hold-fast',
+                skill: 50,
+                faces: [10],
+            });
+            expect(holdFast.dialogTitle).toBe('Hold Fast!');
+            expect(holdFast.unusedDice).toBe(0);
+            expect(holdFast.card.text).toContain("Last turn's Morale damage reduced: 5 Morale restored.");
+            expect(await readShip(page, ship.id)).toMatchObject({ hull: 30, population: 95, morale: 100 });
 
-                dbgGameSystem = actor?.system?.gameSystem ?? null;
-                dbgRtEconomy = typeof actor?.usesRTCrewEconomy === 'boolean' ? actor.usesRTCrewEconomy : null;
-                hullBefore = Number(actor?.system?.hullIntegrity?.value ?? 0);
-                crewBefore = Number(actor?.system?.crew?.population ?? 0);
-                moraleBefore = Number(actor?.system?.crew?.morale?.value ?? 0);
+            // Medicae 60 − 10 = 50, roll 10: 4 extra degrees → 5 Crew Population restored.
+            const triage = await rollShipActionFromSheet(page, ship.id, {
+                tab: 'extendedActions',
+                action: 'Triage',
+                label: 'ship-action-triage',
+                skill: 60,
+                faces: [10],
+            });
+            expect(triage.card.text).toContain('Printed difficulty');
+            expect(triage.card.text).toContain("Last turn's Crew Population damage reduced: 5 Crew Population restored.");
+            // Neither action restores Hull Integrity.
+            expect(await readShip(page, ship.id)).toMatchObject({ hull: 30, population: 100, morale: 100 });
+            expect(await snapCrewTab(page, ship.id, 'starship-crew-morale-after-hold-fast-triage')).toEqual({ hull: '30', morale: '100', population: '100' });
 
-                // Create + activate a real Combat at round 1 so the document's
-                // `_currentStrategicTurn()` reads a genuine strategic round.
-                // The active-combat `round` getter is read-only, so assigning
-                // `combats.active` is a silent no-op — a live Combat is the only
-                // reliable way to drive the strategic turn under Tier B.
-                let combat: CombatLike | null = null;
-                try {
-                    const CombatCls = fg.Combat;
-                    if (typeof CombatCls?.create === 'function') {
-                        combat = (await CombatCls.create({})) ?? null;
-                        if (combat != null) {
-                            if (typeof combat.activate === 'function') await combat.activate();
-                            if (typeof combat.update === 'function') await combat.update({ round: 1 });
-                        }
-                    }
-                } catch {
-                    /* ignore — falls back to the no-combat turn=1 path */
-                }
-                fg.__c9combat = combat ?? undefined;
-
-                // Drive the document method directly — this is what
-                // void-combat hits route through via `#fireShipWeapon`.
-                // Recorded against strategic turn 1 (the active combat round).
-                if (typeof actor?.applyHullDamage === 'function') {
-                    await actor.applyHullDamage(5);
-                } else {
-                    error = 'applyHullDamage missing from starship document';
-                }
-
-                hullAfter = Number(actor?.system?.hullIntegrity?.value ?? 0);
-                crewAfter = Number(actor?.system?.crew?.population ?? 0);
-                moraleAfter = Number(actor?.system?.crew?.morale?.value ?? 0);
-
-                // Advance the strategic turn so the turn-1 losses are the
-                // previous turn's (Hold Fast! / Triage, RT Core p.218).
-                if (combat != null && typeof combat.update === 'function') {
-                    await combat.update({ round: 2 });
-                }
-                if (typeof actor?.reducePriorTurnDamage === 'function') {
-                    // Hold Fast! reduces Morale only, Triage Crew Population only;
-                    // neither restores Hull Integrity (#189).
-                    await actor.reducePriorTurnDamage('morale', 5);
-                    await actor.reducePriorTurnDamage('crewPopulation', 5);
-                    cancelRestored =
-                        Number(actor.system?.crew?.population ?? 0) === crewBefore &&
-                        Number(actor.system?.crew?.morale?.value ?? 0) === moraleBefore &&
-                        Number(actor.system?.hullIntegrity?.value ?? 0) === hullAfter;
-                }
-
-                // Drop morale, then replenishBetweenCombat → morale back to max.
-                await actor?.update?.({ 'system.crew.morale.value': 25 });
-                if (typeof actor?.replenishBetweenCombat === 'function') {
-                    await actor.replenishBetweenCombat();
-                    replenishedMorale = Number(actor.system?.crew?.morale?.value ?? 0);
-                }
-
-                // Per-system gating: a non-RT hull should NOT have crew
-                // touched by applyHullDamage.
-                const dhActor = await ActorCls.create({
-                    name: 'DH2 Hull Probe',
-                    type: 'rt-voidcraft',
-                    system: {
-                        gameSystem: 'dh2',
-                        hullIntegrity: { value: 30, max: 30 },
-                        crew: { population: 50, crewRating: 30, morale: { value: 50, max: 50 } },
-                    },
-                });
-                // Same nested-create-merge quirk: set the deep crew/hull fields via
-                // update() with dotted paths so the gating assertion measures the
-                // intended baseline (hull 30, crew 50, morale 50) rather than schema
-                // defaults.
-                if (typeof dhActor?.update === 'function') {
-                    await dhActor.update({
-                        'system.gameSystem': 'dh2',
-                        'system.hullIntegrity.value': 30,
-                        'system.hullIntegrity.max': 30,
-                        'system.crew.population': 50,
-                        'system.crew.crewRating': 30,
-                        'system.crew.morale.value': 50,
-                        'system.crew.morale.max': 50,
-                    });
-                }
-                if (typeof dhActor?.applyHullDamage === 'function') {
-                    await dhActor.applyHullDamage(4);
-                    nonRtCrewUnchanged =
-                        Number(dhActor.system?.crew?.population ?? 0) === 50 &&
-                        Number(dhActor.system?.crew?.morale?.value ?? 0) === 50 &&
-                        Number(dhActor.system?.hullIntegrity?.value ?? 0) === 26;
-                }
-
-                // Open the RT actor's sheet so snap() captures the Crew tab.
-                if (actor?.sheet?.render !== undefined) {
-                    await actor.sheet.render({ force: true });
-                    // Activate the Crew tab so the screenshot captures it.
-                    await globalThis.wh40kE2E.settle(120);
-                    const sheetEl = actor.sheet.element;
-                    if (sheetEl != null) {
-                        const crewTab = sheetEl.querySelector?.('[data-tab="crew"]') ?? null;
-                        const crewNav = sheetEl.querySelector?.('nav [data-tab="crew"]') ?? null;
-                        if (crewNav != null && typeof actor.sheet.changeTab === 'function') {
-                            try {
-                                actor.sheet.changeTab('crew', 'primary');
-                            } catch {
-                                /* ignore */
-                            }
-                        }
-                        sheetRendered = crewTab !== null;
-                    }
-                }
-
-                // Leak the actor on globalThis so the spec's cleanup
-                // evaluate can delete it after snap().
-                fg.__c9starship = actor ?? undefined;
-                fg.__c9starshipDh = dhActor ?? undefined;
-            } catch (err) {
-                error = err instanceof Error ? err.message : String(err);
-            }
-
-            return {
-                actorCreated,
-                sheetRendered,
-                hullBefore,
-                hullAfter,
-                crewBefore,
-                crewAfter,
-                moraleBefore,
-                moraleAfter,
-                cancelRestored,
-                replenishedMorale,
-                nonRtCrewUnchanged,
-                dbgGameSystem,
-                dbgRtEconomy,
-                error,
-            };
-        });
-
-        // Snap the open sheet on the Crew tab. The sheet is left open
-        // by the probe above so the capture sees the live DOM.
-        await snap(page, 'starship-crew-morale-after-hit');
-
-        // Tear down so the actor doesn't leak into the next serial test.
-        await page.evaluate(async () => {
-            interface StarshipSheet {
-                close?: () => Promise<void>;
-            }
-            interface StarshipActor {
-                delete?: () => Promise<void>;
-                sheet?: StarshipSheet;
-            }
-            interface CombatLike {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Combat.delete returns the untyped document
-                delete?: () => Promise<unknown>;
-            }
-            interface FoundryGlobal {
-                __c9starship?: StarshipActor | undefined;
-                __c9starshipDh?: StarshipActor | undefined;
-                __c9combat?: CombatLike | undefined;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-            const fg = globalThis as unknown as FoundryGlobal;
-            const a = fg.__c9starship;
-            const dh = fg.__c9starshipDh;
-            const combat = fg.__c9combat;
-            try {
-                await a?.sheet?.close?.();
-            } catch {
-                /* ignore */
-            }
-            try {
-                await a?.delete?.();
-            } catch {
-                /* ignore */
-            }
-            try {
-                await dh?.delete?.();
-            } catch {
-                /* ignore */
-            }
-            try {
-                await combat?.delete?.();
-            } catch {
-                /* ignore */
-            }
-            fg.__c9starship = undefined;
-            fg.__c9starshipDh = undefined;
-            fg.__c9combat = undefined;
-        });
-
-        expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.actorCreated, 'RT starship actor should be created').toBe(true);
-        // Hull damage propagated.
-        expect(result.hullAfter, 'hull should drop by exactly 5').toBe(result.hullBefore - 5);
-        expect(result.crewAfter, `crew drop by 5 (gameSystem=${String(result.dbgGameSystem)} rtEconomy=${String(result.dbgRtEconomy)})`).toBe(
-            result.crewBefore - 5,
-        );
-        expect(result.moraleAfter, 'morale should drop by exactly 5').toBe(result.moraleBefore - 5);
-        // Hold Fast! / Triage reduced the previous turn's morale / crew losses, not hull.
-        expect(result.cancelRestored, 'Hold Fast! / Triage should restore morale + crew and leave hull alone').toBe(true);
-        // Replenish between combat brings morale back to max.
-        expect(result.replenishedMorale, 'replenishBetweenCombat should refill morale to max').toBe(100);
-        // Non-RT hull damage path leaves crew untouched.
-        expect(result.nonRtCrewUnchanged, 'non-RT hull should take hull damage only').toBe(true);
-
+            // The previous turn's Morale loss is spent: a second Hold Fast! has nothing to cancel.
+            const again = await rollShipActionFromSheet(page, ship.id, {
+                tab: 'extendedActions',
+                action: 'Hold Fast!',
+                label: 'ship-action-hold-fast-nothing-left',
+                skill: 50,
+                faces: [10],
+            });
+            expect(again.card.text).toContain('The ship took no Morale damage last turn that is left to cancel.');
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [ship.id]);
+            await deleteCombat(page, combat);
+        }
+        recordCoverage('ship-action.flow', 'hold-fast');
+        recordCoverage('ship-action.flow', 'triage');
         recordCoverage('starship.applyHullDamage', 'CrewMoraleEconomy');
+    });
+
+    test('replenishing between combats refills Morale; a non-RT hull’s hits leave its crew alone', async ({ page }) => {
+        await joinShipWorld(page);
+        const ship = await createShip(page, { ...SHIP, morale: 100 });
+        const dh2 = await createShip(page, { ...SHIP, name: 'DH2 Hull Probe', gameSystem: 'dh2', hullIntegrity: 30, population: 50, morale: 50 });
+        try {
+            await hullHit(page, ship.id, 5);
+            await page.evaluate(async (id: string) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+                const g = globalThis as unknown as { game: { actors: { get: (i: string) => { replenishBetweenCombat: () => Promise<void> } | undefined } } };
+                await g.game.actors.get(id)?.replenishBetweenCombat();
+            }, ship.id);
+            // Morale refills; Crew Population does not (recruitment is an Endeavour).
+            expect(await readShip(page, ship.id)).toMatchObject({ hull: 30, population: 95, morale: 100 });
+
+            await hullHit(page, dh2.id, 4);
+            expect(await readShip(page, dh2.id)).toMatchObject({ hull: 26, population: 50, morale: 50 });
+            expect(await snapCrewTab(page, dh2.id, 'starship-crew-morale-non-rt-hit')).toEqual({ hull: '26', morale: '50', population: '50' });
+        } finally {
+            await deleteActors(page, [ship.id, dh2.id]);
+        }
+        recordCoverage('starship.applyHullDamage', 'NonRtGate');
     });
 });

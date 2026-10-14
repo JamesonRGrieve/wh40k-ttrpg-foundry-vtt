@@ -1,81 +1,116 @@
 import { recordCoverage } from './lib/coverage-tracker';
-import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
-import { countDamageSections, deleteChatMessage, postShipAssaultCard } from './lib/ship-assault';
 import { expect, test } from './lib/test';
+import {
+    chatMessageIds,
+    createShip,
+    joinShipWorld,
+    deleteActors,
+    deleteMessages,
+    messagesSince,
+    provenanceRows,
+    readShip,
+    RT_FRIGATE,
+    runAssaultFromSheet,
+    snapShipVitals,
+    type ShipFixture,
+} from './ship-sheet-driver';
 
 /**
- * Tier B coverage of the Rogue Trader Boarding Action chat card (GitHub
- * #188 — RT Core p.215). Drives the real boarding-round flow with fixed dice:
- * the opposed Command Test (Crew and Turret bonuses on the attacker), the
- * winner spending its degrees on Hull and on 1d5 Crew + 1d5 Morale, and the
- * loser's Morale check. Renders `ship-boarding-chat.hbs`, posts it via
- * `ChatMessage.create`, and asserts the damage sections + per-system anchor.
+ * Tier B coverage of the Boarding Action (#188 — RT Core p.215), run from the
+ * voidcraft sheet's Manoeuvres-tab Ship Assault panel the way a GM does:
  *
- * Card is left open through `snap()` to capture the live DOM, then
- * removed in a cleanup pass to avoid leaking into other serial tests.
+ *   1. Board — the Hard (−20) Pilot (Space Craft) + Manoeuvrability Test that
+ *      locks the two ships together.
+ *   2. Boarding Round — the opposed Command Test (Crew Population, Hull
+ *      Integrity and Turret bonuses), the winner spending each degree on 1 Hull
+ *      Integrity or 1d5 Crew Population + 1d5 Morale, and the loser's Morale
+ *      check. The damage lands on the losing ship.
  */
-test.describe.serial('Ship Boarding chat card (Tier B)', () => {
-    test('posts the boarding breach card and snaps', async ({ page }) => {
-        await joinOrSkip(page);
 
-        // Attacker Command 50 +20 Crew (80 vs 55) +10 Turrets = 80, rolls 50 → 4 DoS.
-        // Defender Command 45 +10 Turrets = 55, rolls 60 → fails. The attacker wins by 4
-        // and spends 1 degree on Hull, 3 on 1d5 Crew + 1d5 Morale.
-        const result = await postShipAssaultCard(page, {
-            flowModule: 'boarding-flow',
-            flowExport: 'BOARDING_ROUND_FLOW',
-            attacker: {
-                profile: {
-                    name: 'The Errant Vector',
-                    hullType: 'frigate',
-                    manoeuvrability: 15,
-                    armour: 18,
-                    turretRating: 1,
-                    crewPopulation: 80,
-                    hullIntegrity: 35,
-                    morale: 75,
-                },
-                crewRating: 50,
-            },
-            defender: {
-                profile: {
-                    name: 'Eldar Corsair',
-                    hullType: 'raider',
-                    manoeuvrability: 20,
-                    armour: 16,
-                    turretRating: 1,
-                    crewPopulation: 55,
-                    hullIntegrity: 28,
-                    morale: 60,
-                },
-                crewRating: 45,
-            },
-            rolls: [{ total: 50 }, { total: 60 }, { total: 9, dice: [2, 3, 4] }, { total: 6, dice: [1, 2, 3] }, { total: 40 }],
-            form: { attackerCommand: 50, defenderCommand: 45, hullDegrees: 1 },
-            labels: {
-                hull: { key: 'WH40K.Voidcraft.Boarding.HullDamage' },
-                winner: { key: 'WH40K.Voidcraft.Boarding.Winner', data: { winner: 'The Errant Vector', degrees: 4 } },
-            },
-        });
+const BOARDER: ShipFixture = { ...RT_FRIGATE, name: 'Errant Vector (Boarding)', crewRating: 50 };
+const CORSAIR: ShipFixture = {
+    ...RT_FRIGATE,
+    name: 'Eldar Corsair',
+    hullType: 'raider',
+    manoeuvrability: 20,
+    armour: 16,
+    hullIntegrity: 28,
+    population: 55,
+    morale: 60,
+    crewRating: 45,
+};
 
-        await snap(page, 'ship-boarding-chat');
-        await deleteChatMessage(page, result.messageId);
+test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', () => {
+    test('Board locks the ships together', async ({ page }) => {
+        await joinShipWorld(page);
+        const boarder = await createShip(page, BOARDER);
+        const corsair = await createShip(page, CORSAIR);
+        const before = await chatMessageIds(page);
+        try {
+            // Pilot 50 + Manoeuvrability 15 − 20 = 45, rolls 30.
+            const ran = await runAssaultFromSheet(page, boarder.id, {
+                tab: 'manoeuvreActions',
+                assault: 'board',
+                label: 'ship-boarding-lock',
+                defender: CORSAIR.name,
+                inputs: { pilotSkill: 50 },
+                choices: {},
+                faces: [30],
+            });
+            expect(ran.unusedDice).toBe(0);
+            expect(ran.card.text).toContain('Boarding Action — Lock On');
+            expect(ran.card.text).toContain('Manoeuvrability (Errant Vector (Boarding))');
+            expect(ran.card.text).toContain('The ships crash together and are locked.');
+            expect(provenanceRows(ran.card.html), 'Manoeuvrability and the Hard difficulty').toBeGreaterThanOrEqual(2);
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [boarder.id, corsair.id]);
+        }
+        recordCoverage('ship-assault.flow', 'board');
+    });
 
-        expect(result.error, `ship-boarding flow error: ${result.error ?? ''}`).toBeNull();
-        expect(result.html.length, 'ship-boarding card did not render').toBeGreaterThan(0);
-        expect(result.html, 'card root [data-wh40k-hook="ship-boarding-card"] missing').toContain('data-wh40k-hook="ship-boarding-card"');
-        expect(result.html, 'per-system data-wh40k-system anchor missing').toContain('data-wh40k-system="rt"');
-        expect(result.html, 'the round winner and its degrees should render').toContain(result.labels['winner']);
-        expect(result.html, 'damage block should render on a breach').toContain(result.labels['hull']);
-        expect(countDamageSections(result.html), 'Hull, Crew and Morale damage sections').toBe(3);
-        expect(result.unusedRolls, 'the flow should consume every queued die').toBe(0);
-        // The loser takes 1 Hull per degree spent on charges, and the summed d5s.
-        expect(result.defender.hull).toEqual([1]);
-        expect(result.defender.crewMorale).toEqual([[9, 6]]);
-        expect(result.attacker.hull).toEqual([]);
-        expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();
+    test('a Boarding Round deals the winner’s degrees to the loser and tests its Morale', async ({ page }) => {
+        await joinShipWorld(page);
+        const boarder = await createShip(page, BOARDER);
+        const corsair = await createShip(page, CORSAIR);
+        const before = await chatMessageIds(page);
+        try {
+            // Boarder: Command 50 + 20 (Crew 80 vs 55) + 10 (Turrets) = 80, rolls 50 → 4 degrees over the Corsair,
+            // whose Command 45 + 10 = 55 fails on 60. One degree goes on Hull, three on 3d5 Crew + 3d5 Morale;
+            // the Corsair then tests its reduced Morale on a 40.
+            const ran = await runAssaultFromSheet(page, boarder.id, {
+                tab: 'manoeuvreActions',
+                assault: 'boarding-round',
+                label: 'ship-boarding-round',
+                defender: CORSAIR.name,
+                inputs: { attackerCommand: 50, defenderCommand: 45 },
+                choices: { hullDegrees: 1 },
+                faces: [50, 60, 2, 3, 4, 1, 2, 3, 40],
+            });
+            expect(ran.inputNames).toEqual(
+                expect.arrayContaining(['attackerCommand', 'attackerFailedBreakFree', 'defenderCommand', 'defenderFailedBreakFree']),
+            );
+            expect(ran.preview, 'the resolved dialog previews both Command Tests').toContain('Errant Vector (Boarding) wins the Command Test by 4 degree(s).');
+            expect(ran.unusedDice).toBe(0);
 
-        recordCoverage('chat.render', 'ShipBoarding');
+            expect(ran.card.html).toContain('data-wh40k-system="rt"');
+            expect(ran.card.text).toContain('Larger Crew Population (80 vs 55)');
+            expect(ran.card.text).toContain('Turret Rating 1');
+            expect(ran.card.text).toContain('Hull Integrity damage (1 per degree)');
+            expect(ran.card.text).toContain('Crew Population damage (1d5 per degree)');
+            expect(ran.card.text).toContain('Morale damage (1d5 per degree)');
+            expect(ran.card.text).toContain('Eldar Corsair tests Morale: rolled 40 against 53.');
+            expect(ran.card.text).toContain('The crew fights on.');
+            expect(ran.card.html.split('data-wh40k-hook="ship-assault-damage"').length - 1, 'Hull, Crew and Morale sections').toBe(3);
+
+            // Hull 28 − 1 (which also costs 1 Crew and 1 Morale), then 2+3+4 = 9 Crew and 1+2+3 = 6 Morale.
+            expect(await readShip(page, corsair.id)).toMatchObject({ hull: 27, population: 45, morale: 53 });
+            expect(await readShip(page, boarder.id)).toMatchObject({ hull: 35, population: 80, morale: 75 });
+            expect(await snapShipVitals(page, corsair.id, 'ship-boarding-round-loser-after')).toEqual({ hull: '27', morale: '53', population: '45' });
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [boarder.id, corsair.id]);
+        }
+        recordCoverage('ship-assault.flow', 'boarding-round');
     });
 });

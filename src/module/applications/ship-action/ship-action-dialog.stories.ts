@@ -5,6 +5,7 @@
  *   1. Hold Fast! — the acting character's Willpower target (crew rating by
  *      default) and a situational modifier; no effect choice.
  *   2. Lock on Target — adds the Weapon Component select.
+ *   3. Aid the Machine Spirit — a two-stat effect: the "Apply to" select.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent } from 'storybook/test';
@@ -52,6 +53,29 @@ export const HoldFast: Story = {
         }
         await expect(readAssaultForm(canvasElement).number('skill', 0)).toBe(52);
         await expect(canvasElement.querySelector('[data-action="rollShipAction"]')).toBeTruthy();
+    },
+};
+
+/** Aid the Machine Spirit as the RT pack authors it: a choice of two stats. */
+const AID_THE_MACHINE_SPIRIT: ShipActionOrder = {
+    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.MfflpLsJRiNPVpsn',
+    name: 'Aid the Machine Spirit',
+    img: '',
+    test: { skill: 'Tech-Use', characteristic: '', modifier: 0, shipStat: '' },
+    shipEffect: { kind: 'shipModifier', targets: ['manoeuvrability', 'detection'], base: 5, step: 5, per: 2, rounds: 0, expiry: 'turnEnd' },
+};
+
+export const AidTheMachineSpirit: Story = {
+    args: { order: AID_THE_MACHINE_SPIRIT, requirements: '' },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.textContent).toContain('Tech-Use target');
+        const target = canvasElement.querySelector<HTMLSelectElement>('select[name="target"]');
+        await expect([...(target?.options ?? [])].map((option) => option.textContent)).toEqual(['Manoeuvrability', 'Detection']);
+        await expect(readAssaultForm(canvasElement).text('target', '')).toBe('manoeuvrability');
+        if (target !== null) await userEvent.selectOptions(target, 'detection');
+        await expect(readAssaultForm(canvasElement).text('target', '')).toBe('detection');
+        // A stat bonus aims no weapon.
+        await expect(canvasElement.querySelector('select[name="weapon"]')).toBeNull();
     },
 };
 
