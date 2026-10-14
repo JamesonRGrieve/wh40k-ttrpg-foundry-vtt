@@ -47,6 +47,9 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
         const result = await page.evaluate(async (): Promise<SkillDropdownProbeResult> => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
             const mod = (await import(/* @vite-ignore */ modUrl)) as UnifiedRollDialogModule;
+            // Every production caller hands the dialog a real RollData, so the probe extends one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { RollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { RollData: new () => object };
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
@@ -84,8 +87,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
                 },
             };
 
-            class SimpleRollData {
-                name = 'Athletics Test';
+            class SimpleRollData extends RollDataBase {
                 nameOverride = 'Athletics Test';
                 type = 'Skill';
                 rollKey = 'athletics';

@@ -31,13 +31,16 @@ test.describe.serial('extended test toggle (#59)', () => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
             // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed module shape
             const mod = (await import(/* @vite-ignore */ modUrl)) as unknown as UnifiedRollDialogModule;
+            // Every production caller hands the dialog a real RollData, so the probe extends one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { RollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { RollData: new () => object };
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', snaps: null };
             }
 
-            class SimpleRollData {
-                name = 'probe-skill';
+            class SimpleRollData extends RollDataBase {
+                nameOverride = 'probe-skill';
                 baseTarget = 30;
                 modifiers: Record<string, number> = {};
                 rangeBonus = 0;

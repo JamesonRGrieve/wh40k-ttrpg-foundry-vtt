@@ -196,6 +196,15 @@ async function openDialog(page: Page, name: string, url: string, seeds: SeedIds)
                 seedArgs['SpecialistSkillDialog'] = dh2Actor;
             }
             if (rtActor !== undefined) seedArgs['AcquisitionDialog'] = rtActor;
+            if (dh2Actor !== undefined && probeName === 'UnifiedRollDialog') {
+                // The roll dialog renders a prepared ActionData, built the way an actor's skill roll builds one.
+                // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func -- browser-side: Playwright evaluate context requires Function constructor to perform dynamic import; static import() is hoisted and cannot be used here
+                const importAction = new Function('u', 'return import(u)') as (u: string) => Promise<{ SimpleSkillData: new () => { rollData: object } }>;
+                const { SimpleSkillData } = await importAction('/systems/wh40k-rpg/module/rolls/action-data.js');
+                const action = new SimpleSkillData();
+                Object.assign(action.rollData, { nameOverride: 'Awareness', type: 'Skill', baseTarget: 35, sourceActor: dh2Actor });
+                seedArgs['UnifiedRollDialog'] = action;
+            }
 
             const tag = (el: Element): string => {
                 el.setAttribute('data-screenshot-id', `dialog-${probeName}`);

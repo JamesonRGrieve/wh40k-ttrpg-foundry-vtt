@@ -28,6 +28,9 @@ test.describe.serial('psychic push selector', () => {
             }
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
             const mod = (await import(/* @vite-ignore */ modUrl)) as DialogModule;
+            // Every production caller hands the dialog a real RollData, so the probe extends one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { PsychicRollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { PsychicRollData: new () => object };
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing' };
@@ -36,8 +39,8 @@ test.describe.serial('psychic push selector', () => {
             // Synthetic ActionData with a `PsychicRollData`-shaped rollData.
             // The dialog branches on `rollData.constructor.name === 'PsychicRollData'`,
             // so we shim a custom class for that exact identity.
-            class PsychicRollData {
-                name = 'probe-power';
+            class PsychicRollData extends RollDataBase {
+                nameOverride = 'probe-power';
                 baseTarget = 30;
                 modifiers: Record<string, number> = {};
                 difficulties = { '-30': 'Hard (-30)', '0': 'Routine (+0)', '30': 'Easy (+30)' };

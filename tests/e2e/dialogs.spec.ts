@@ -277,17 +277,20 @@ async function probeDialogs(page: Page): Promise<{
             const sampleLocations = { head: 'Head', body: 'Body', rightArm: 'Right Arm', leftArm: 'Left Arm', rightLeg: 'Right Leg', leftLeg: 'Left Leg' };
             const sampleDamageType = { e: 'Energy', i: 'Impact', r: 'Rending', x: 'Explosive' };
             const sampleDifficulties = { '-30': 'Hard (-30)', '0': 'Routine (+0)', '30': 'Easy (+30)' };
+            // Every production caller hands the roll dialog a real RollData, so the probe builds one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { RollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { RollData: new () => object };
             const sampleActionData = {
                 name: 'probe',
-                rollData: {
-                    name: 'probe',
+                rollData: Object.assign(new RollDataBase(), {
+                    nameOverride: 'probe',
                     baseTarget: 30,
                     modifiers: emptyModifiers,
                     difficulties: sampleDifficulties,
                     calculateTotalModifiers: async (): Promise<void> => {
                         /* no-op */
                     },
-                },
+                }),
                 actor: actorDoc,
                 calculateSuccessOrFailure: async (): Promise<void> => {
                     /* no-op */

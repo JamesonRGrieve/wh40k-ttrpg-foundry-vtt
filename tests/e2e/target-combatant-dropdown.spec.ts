@@ -44,6 +44,9 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
         const result = await page.evaluate(async (): Promise<ProbeResult> => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
             const mod = (await import(/* @vite-ignore */ modUrl)) as UnifiedRollDialogModule;
+            // Every production caller hands the dialog a real RollData, so the probe extends one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { WeaponRollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { WeaponRollData: new () => object };
             const Cls = mod.default;
             if (typeof Cls !== 'function') return { error: 'UnifiedRollDialog default export missing', state: null };
 
@@ -66,12 +69,14 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
                 getActiveTokens: () => [],
                 skills: {},
                 characteristics: { ballisticSkill: { total: 40, label: 'Ballistic Skill', short: 'BS' } },
-                items: { find: () => undefined, filter: () => [] },
+                // An actor's items are an iterable collection; the attack's passive to-hit walks them.
+                items: [],
+                // Every actor carries its DataModel; this one has no passive modifier sources.
+                system: {},
             };
 
             // Named WeaponRollData so dialog.rollType === 'weapon' (see get rollType()).
-            class WeaponRollData {
-                name = 'Hand Cannon Attack';
+            class WeaponRollData extends RollDataBase {
                 nameOverride = 'Hand Cannon Attack';
                 type = 'Weapon';
                 baseTarget = 40;
@@ -88,7 +93,10 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
                     img: 'icons/svg/item-bag.svg',
                     isRanged: true,
                     isThrown: false,
-                    system: { attack: { rateOfFire: { single: true, semi: 0, full: 0 }, range: 30 }, special: [] },
+                    // A weapon item's embedded modifications (none fitted).
+                    items: [],
+                    // A weapon's qualities are a Set on its DataModel (SetField), as the quality lookup reads them.
+                    system: { attack: { rateOfFire: { single: true, semi: 0, full: 0 }, range: 30 }, special: new Set<string>() },
                 };
                 weapons = [];
                 calculateTotalModifiers = async (): Promise<void> => {};

@@ -35,6 +35,9 @@ test.describe.serial('trying again warning (#62)', () => {
             const modUrl = '/systems/wh40k-rpg/module/applications/prompts/unified-roll-dialog.js';
             // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
             const mod = (await import(/* @vite-ignore */ modUrl)) as unknown as DialogModule;
+            // Every production caller hands the dialog a real RollData, so the probe extends one.
+            const rollDataUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const { RollData: RollDataBase } = (await import(/* @vite-ignore */ rollDataUrl)) as { RollData: new () => object };
             const Cls = mod.default;
             if (typeof Cls !== 'function') {
                 return { error: 'UnifiedRollDialog default export missing', rendered: false };
@@ -70,8 +73,8 @@ test.describe.serial('trying again warning (#62)', () => {
 
             // Synthetic Skill-shaped rollData. `type: 'Skill'` + `rollKey: 'inquiry'`
             // are what trigger the try-again advisory lookup.
-            class SkillRollData {
-                name = 'Inquiry';
+            class SkillRollData extends RollDataBase {
+                nameOverride = 'Inquiry';
                 type = 'Skill';
                 rollKey = 'inquiry';
                 baseTarget = 40;
