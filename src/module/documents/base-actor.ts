@@ -49,6 +49,7 @@ import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH4
 import { findCharacteristic } from '../utils/characteristic-lookup.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { materializeOwnedItemSources } from '../utils/item-variant-utils.ts';
+import { canonicalClipMax, fullMagazineFor, loadableFromSource } from '../utils/magazine-load.ts';
 import { handleTalentRemoval, processTalentGrants } from '../utils/talent-grants.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -883,7 +884,24 @@ export class WH40KBaseActor extends Actor {
             }
         }
         this.updateSource(initData);
+        await this.#loadEmbeddedMagazines();
         return undefined;
+    }
+
+    /**
+     * Weapons embedded in the creation data (a compendium import, a duplicate)
+     * arrive with a full magazine (#574). Their creation never passes through
+     * `WH40KItem.createDocuments`, which loads weapons added to an existing actor.
+     * A pending embedded item shares its source with this actor's, so its
+     * `updateSource` lands in the actor's creation payload.
+     */
+    async #loadEmbeddedMagazines(): Promise<void> {
+        await Promise.all(
+            this.items.contents.map(async (item) => {
+                const rounds = await fullMagazineFor(loadableFromSource(item._source), canonicalClipMax);
+                if (rounds !== null) item.updateSource({ system: { clip: { value: rounds } } });
+            }),
+        );
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {

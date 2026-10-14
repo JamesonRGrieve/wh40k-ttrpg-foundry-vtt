@@ -615,6 +615,11 @@ recordDimension('world-time.flow', covered['world-time.flow'], WORLD_TIME_FLOWS)
 const LEAN_WEAPON_HYDRATE_FLOWS = ['lean-weapon-joins-canonical', 'instance-state-kept', 'optional-field-writable'];
 recordDimension('lean-weapon-hydrate.flow', covered['lean-weapon-hydrate.flow'], LEAN_WEAPON_HYDRATE_FLOWS);
 
+// Weapons created on an actor arrive with a full magazine (#574), tests/e2e/npc-magazine-loaded.spec.ts.
+// Keep in sync with NPC_MAGAZINE_FLOWS there.
+const NPC_MAGAZINE_FLOWS = ['compendium-npc-arrives-loaded', 'added-weapon-arrives-loaded'];
+recordDimension('npc-magazine.flow', covered['npc-magazine.flow'], NPC_MAGAZINE_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

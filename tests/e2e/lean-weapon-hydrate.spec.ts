@@ -63,6 +63,7 @@ interface ItemLike {
 interface ActorLike {
     id: string;
     items: { contents: ItemLike[] };
+    reset: () => void;
 }
 
 async function probeLeanWeapon(page: Page, uuid: string): Promise<ProbeState> {
@@ -77,14 +78,15 @@ async function probeLeanWeapon(page: Page, uuid: string): Promise<ProbeState> {
         const state: ProbeState = { results: out, actorId: null, sheetAppId: null };
         try {
             // Two lean stubs of the same compendium weapon (canonical clip 2): one with a
-            // round left, one whose magazine the actor has emptied (clip.value 0 IS the
-            // schema initial, which the join must still keep as the actor's own state).
+            // round left, and one the actor fires empty AFTER creation (a weapon arrives
+            // loaded, #574; clip.value 0 IS the schema initial, which the join must still
+            // keep as the actor's own state once it is stored).
             const actor = await g.Actor.create({
                 name: 'lean-weapon probe',
                 type: 'dh2-character',
                 items: [
                     { name: 'Hand Flamer', type: 'weapon', _stats: { compendiumSource: sourceUuid }, system: { clip: { value: 1 } } },
-                    { name: 'Hand Flamer (spent)', type: 'weapon', _stats: { compendiumSource: sourceUuid }, system: { clip: { value: 0 } } },
+                    { name: 'Hand Flamer (spent)', type: 'weapon', _stats: { compendiumSource: sourceUuid } },
                 ],
             });
             if (actor === null) {
@@ -123,12 +125,21 @@ async function probeLeanWeapon(page: Page, uuid: string): Promise<ProbeState> {
                       } special=[${[...s.special].join(',')}] clip.max=${s.clip.max}`,
             );
 
-            // 2. instance state keeps the actor's value even when it equals the default
-            const kept = spent.system.clip.value === 0 && spent.system.clip.max === 2 && fresh.system.clip.value === 1;
+            // 2. instance state keeps the actor's value even when it equals the default:
+            // the spent stub arrived loaded, is fired empty, and stays empty through a
+            // re-prepare from its stored source.
+            const arrivedLoaded = spent.system.clip.value === 2;
+            await spent.update({ 'system.clip.value': 0 });
+            actor.reset();
+            const kept = arrivedLoaded && spent.system.clip.value === 0 && spent.system.clip.max === 2 && fresh.system.clip.value === 1;
             record(
                 'instance-state-kept',
                 kept,
-                kept ? null : `spent clip ${spent.system.clip.value}/${spent.system.clip.max}, fresh clip ${fresh.system.clip.value}/${fresh.system.clip.max}`,
+                kept
+                    ? null
+                    : `spent arrived loaded=${String(arrivedLoaded)}, spent clip ${spent.system.clip.value}/${spent.system.clip.max}, fresh clip ${
+                          fresh.system.clip.value
+                      }/${fresh.system.clip.max}`,
             );
 
             // 3. an optional field the stub never stored is writable through the seal

@@ -41,7 +41,7 @@ function deepClone<T>(value: T): T {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown input at module entry
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
     return value !== null && value !== undefined && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Set) && !(value instanceof Map);
 }
 

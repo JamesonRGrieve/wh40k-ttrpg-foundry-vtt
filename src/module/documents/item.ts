@@ -30,6 +30,7 @@ import {
     rememberLineVariantSource,
     resolveOwnedLineContent,
 } from '../utils/item-variant-utils.ts';
+import { canonicalClipMax, withFullMagazine } from '../utils/magazine-load.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
@@ -121,8 +122,19 @@ export class WH40KItem extends WH40KItemContainer {
         operation?: foundry.abstract.Document.Database.CreateOperation<foundry.documents.BaseItem.Database.Create<Temporary>>,
     ): Promise<Array<foundry.documents.BaseItem.TemporaryIf<Temporary>>> {
         const line = ownerGameLine(operation?.parent);
-        const prepared = line === null ? data : await Promise.all(data.map(async (entry) => WH40KItem.#resolveForOwnerLine(entry, line)));
+        const resolved = line === null ? data : await Promise.all(data.map(async (entry) => WH40KItem.#resolveForOwnerLine(entry, line)));
+        const prepared =
+            operation?.parent?.documentName === 'Actor' ? await Promise.all(resolved.map(async (entry) => WH40KItem.#loadMagazine(entry))) : resolved;
         return super.createDocuments(prepared, operation);
+    }
+
+    /**
+     * A weapon created on an actor arrives with a full magazine (#574): the
+     * compendium join keeps a stored `clip.value` as instance state, so a weapon
+     * that never stored one would read as fired empty forever.
+     */
+    static async #loadMagazine(entry: foundry.documents.BaseItem.CreateInput): Promise<foundry.documents.BaseItem.CreateInput> {
+        return withFullMagazine(entry, canonicalClipMax);
     }
 
     /**

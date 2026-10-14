@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from './constants.ts';
+import { type ClipMaxResolver, canonicalClipMax, fullMagazineFor, loadableFromSource } from './utils/magazine-load.ts';
 import { type GridScale, legacyFootprintUpgrade, type PhysicalDimensions } from './utils/token-footprint.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
@@ -14,10 +15,13 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
  * To add a step: give it the next version, gate it on `currentVersion < N`, and
  * raise {@link WORLD_VERSION} to N.
  */
-const WORLD_VERSION = 4;
+const WORLD_VERSION = 5;
 
 /** v4 (#501): size the tokens of Hulking-and-larger actors that predate the size ladder. */
 const TOKEN_FOOTPRINT_VERSION = 4;
+
+/** v5 (#574): load the empty magazines of compendium weapons that predate arrive-loaded creation. */
+const MAGAZINE_LOAD_VERSION = 5;
 
 /** The actor facts the footprint step reads. */
 interface FootprintSystem {
@@ -101,12 +105,71 @@ async function migrateTokenFootprints(actors: Iterable<FootprintActor>, scenes: 
     }
 }
 
+/** An embedded item, as far as the magazine step reads it. */
+interface MagazineItem {
+    id: string | null;
+    name: string;
+    _source: object;
+}
+
+/** An actor (world or token-synthetic), as far as the magazine step touches it. */
+interface MagazineActor {
+    name: string;
+    items: Iterable<MagazineItem>;
+    updateEmbeddedDocuments: (type: 'Item', updates: Array<{ '_id': string; 'system.clip.value': number }>) => Promise<object[]>;
+}
+
+/** A world actor or a scene's placed tokens, each holding a magazine actor. */
+interface MagazineScene {
+    tokens: Iterable<{ actorLink: boolean; actor: MagazineActor | null }>;
+}
+
+/**
+ * v5 (#574): a compendium weapon created before weapons arrived loaded stored
+ * no round count, and the compendium join keeps a stored `clip.value` (instance
+ * state) — so every such weapon reads as fired empty. Load each COMPENDIUM-LINKED
+ * weapon whose stored magazine is empty and whose clip size (its own, else its
+ * compendium source's) is positive, on world actors and on unlinked placed
+ * tokens' actors (a linked token IS its world actor). The join cannot tell
+ * "never loaded" from "fired empty", so a weapon genuinely fired empty is refilled
+ * once, here — the accepted cost. Each actor is migrated independently; every
+ * change is logged.
+ */
+async function migrateEmptyMagazines(actors: Iterable<MagazineActor>, scenes: Iterable<MagazineScene>, resolveMax: ClipMaxResolver): Promise<void> {
+    const targets: MagazineActor[] = [...actors];
+    for (const scene of scenes) {
+        for (const token of scene.tokens) if (!token.actorLink && token.actor !== null) targets.push(token.actor);
+    }
+    for (const actor of targets) {
+        const updates: Array<{ '_id': string; 'system.clip.value': number }> = [];
+        const loaded: string[] = [];
+        for (const item of actor.items) {
+            const weapon = loadableFromSource(item._source);
+            if (item.id === null || weapon.compendiumSource === null) continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential: compendium lookups are cached per pack; one actor at a time keeps the migration's writes ordered
+            const rounds = await fullMagazineFor(weapon, resolveMax);
+            if (rounds === null) continue;
+            updates.push({ '_id': item.id, 'system.clip.value': rounds });
+            loaded.push(`${item.name} (${rounds})`);
+        }
+        if (updates.length === 0) continue;
+        try {
+            // eslint-disable-next-line no-await-in-loop -- sequential: one write at a time keeps a large world's migration from flooding the server
+            await actor.updateEmbeddedDocuments('Item', updates);
+            console.warn(`WH40K | magazine migration (#574): loaded ${actor.name}: ${loaded.join(', ')}`);
+        } catch (err) {
+            console.error(`WH40K | magazine migration (#574): ${actor.name} update failed`, err);
+        }
+    }
+}
+
 export async function checkAndMigrateWorld(): Promise<void> {
     if (!game.user.isGM) return;
     const currentVersion = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion));
     if (currentVersion >= WORLD_VERSION) return;
 
     if (currentVersion < TOKEN_FOOTPRINT_VERSION) await migrateTokenFootprints(game.actors, game.scenes);
+    if (currentVersion < MAGAZINE_LOAD_VERSION) await migrateEmptyMagazines(game.actors, game.scenes, canonicalClipMax);
 
     await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
 }
