@@ -646,6 +646,11 @@ recordDimension('per-line-sheet-theme.flow', covered['per-line-sheet-theme.flow'
 const WEAPON_PENETRATION_FLOWS = ['label-fits-default-width', 'label-fits-min-width', 'banded-weapon-shows-band-penetration', 'own-penetration-unchanged'];
 recordDimension('weapon-penetration.flow', covered['weapon-penetration.flow'], WEAPON_PENETRATION_FLOWS);
 
+// The damage card's chrome (#615), tests/e2e/damage-card-layout.spec.ts.
+// Keep in sync with DAMAGE_CARD_LAYOUT_FLOWS there.
+const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line'];
+recordDimension('damage-card-layout.flow', covered['damage-card-layout.flow'], DAMAGE_CARD_LAYOUT_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

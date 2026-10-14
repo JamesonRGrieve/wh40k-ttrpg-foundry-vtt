@@ -5709,6 +5709,7 @@
                 "Failure": "Failure!"
             },
             "Damage": {
+                "Overline": "Damage Roll",
                 "Formula": "Formula",
                 "BaseDamage": "Base Damage",
                 "EffectiveVs": "Effective vs {target}",

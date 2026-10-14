@@ -857,6 +857,7 @@ export type I18nKey =
     | 'WH40K.Chat.Damage.Effective'
     | 'WH40K.Chat.Damage.EffectiveVs'
     | 'WH40K.Chat.Damage.Formula'
+    | 'WH40K.Chat.Damage.Overline'
     | 'WH40K.Chat.Damage.Profile'
     | 'WH40K.Chat.Damage.ProfileBandAny'
     | 'WH40K.Chat.Damage.ProfileBandBeyond'
