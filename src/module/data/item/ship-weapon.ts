@@ -123,6 +123,9 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     static #migrateNumericFields(source: Record<string, unknown>): void {
         const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
         for (const field of numericFields) {
+            // An absent field is left for the schema: a partial update (only the
+            // changed keys) must not overwrite the stored value with 0.
+            if (!(field in source)) continue;
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
                 source[field] = 0;
             } else if (typeof source[field] === 'string') {
