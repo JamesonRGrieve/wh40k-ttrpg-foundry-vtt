@@ -2638,21 +2638,28 @@
             "Pinned": "Pinned",
             "FavourableBonus": "In Cover / Not Targeted"
         },
-        "WithinGrenade": {
+        "GrenadeRider": {
             "DialogTitle": "Throw Grenade",
             "GrenadeLabel": "Grenade",
-            "BlastRadius": "Blast",
+            "NoGrenades": "No grenade with a rider is carried.",
+            "Area": "Area",
+            "AreaRadius": "{size} m radius",
+            "AreaDiameter": "{size} m diameter",
             "Damage": "Damage",
-            "SaveLabel": "Save",
-            "FailEffectLabel": "On Failed Save",
+            "Test": "Test",
+            "TestFormat": "{characteristic} {modifier}",
+            "NoTest": "None",
+            "Duration": "Duration",
+            "DurationPerDegree": "1 round per degree of failure",
+            "DurationBasePerDegree": "{base} round(s), plus 1 per degree of failure",
+            "DurationRoll": "{formula} rounds",
+            "DurationEncounter": "Until the end of the encounter",
+            "EffectRollShift": "{step} to the effect roll per degree of failure (max {max})",
+            "OnFailedTest": "On a failed test",
+            "Effect": "Effect",
             "ThrowButton": "Throw",
-            "ChatTitle": "Grenade Thrown",
-            "Names": {
-                "photonFlash": "Photon Flash Grenade",
-                "psychotroke": "Psychotroke Grenade",
-                "tearsOfTheEmperor": "Tears of the Emperor",
-                "smoke": "Smoke Grenade"
-            }
+            "Cancel": "Cancel",
+            "ChatTitle": "Grenade Thrown"
         },
         "Daemonhost": {
             "DialogTitle": "Bind Daemonhost",

@@ -1,102 +1,55 @@
 /**
- * @file GrenadeThrowDialog — GM-only picker for the Within-supplement
- * grenade registry (#135).
+ * @file GrenadeThrowDialog — the throw prompt for a grenade that carries a rider (#135).
  *
- * Lists each grenade in `WITHIN_GRENADES`, lets the GM pick one, and on
- * "Throw" emits a chat card showing the grenade's blast radius, damage,
- * special qualities, on-target save, and failure effect.
- *
- * The dialog is a thin emitter — all grenade definitions live in
- * `src/module/rules/within-grenades.ts`. Adding a new grenade means
- * adding a registry entry + label key; the dialog and chat card pick
- * it up without changes.
+ * Opened by the actor sheet's Throw on a grenade whose compendium document authors a
+ * rider (`system.rider`). Lists every rider grenade the thrower carries, the thrown one
+ * selected, and on "Throw" posts a chat card with the grenade's area, damage, qualities,
+ * test, duration and effect. Every value comes from the grenade's own data; the view
+ * model is `grenade-throw-view.ts`.
  */
 
+import { characteristicLabel } from '../../helpers/characteristic-labels.ts';
+import { t } from '../../i18n/t.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
-import { type GrenadeDefinition, type GrenadeSaveCharacteristic, getWithinGrenade, listWithinGrenades } from '../../rules/within-grenades.ts';
+import { resolveThrow } from '../../rules/combat-actions.ts';
+import { ownerGameLine } from '../../utils/item-variant-utils.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels, type GrenadeThrowViewContext } from './grenade-throw-view.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-interface GrenadeChoice {
-    id: string;
-    label: string;
-    blastRadius: number;
-    damage: string;
-    specialQualities: readonly string[];
-    saveLabel: string;
-    failEffect: string;
-    accentClass: string;
-    isSelected: boolean;
+/** The thrower the dialog reads its grenades from. */
+export interface GrenadeThrower {
+    name: string;
+    type: string;
+    items: Iterable<{ id: string | null; name: string; isThrown: boolean; system: GrenadeItemView['system'] }>;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-interface GrenadeThrowContext extends Record<string, unknown> {
-    grenades: GrenadeChoice[];
-    selectedId: string;
-    selectedGrenade: GrenadeChoice | null;
+interface GrenadeThrowContext extends Record<string, unknown>, GrenadeThrowViewContext {
+    gameSystem: string;
 }
 
-interface AnyGame {
-    user?: { id?: string; isGM?: boolean };
-    i18n?: {
-        localize?: (k: string) => string;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's i18n.format signature accepts a free-form interpolation map
-        format?: (k: string, data: Record<string, unknown>) => string;
-    };
-}
+const LABELS: GrenadeLabels = { localize: t, characteristic: characteristicLabel };
 
-function localize(key: string): string {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game` global is not typed on globalThis
-    const g = globalThis as unknown as { game?: AnyGame };
-    // Inline-chained call preserves `this` binding; extracting via
-    // `const fn = g.game?.i18n?.localize` and calling `fn(key)` loses it,
-    // causing Foundry's localize to throw "Cannot read properties of
-    // undefined (reading 'translations')" when it accesses `this.translations`.
-    return g.game?.i18n?.localize?.(key) ?? key;
-}
-
-/** Langpack key of each characteristic a grenade save can test. */
-const SAVE_CHARACTERISTIC_LABEL_KEY: Record<GrenadeSaveCharacteristic, string> = {
-    toughness: 'WH40K.Characteristic.Toughness',
-    agility: 'WH40K.Characteristic.Agility',
-    willpower: 'WH40K.Characteristic.Willpower',
-};
-
-function formatDifficulty(mod: number): string {
-    if (mod === 0) return `${localize('WH40K.Difficulty.Ordinary')} (+0)`;
-    if (mod > 0) return `+${mod}`;
-    return String(mod);
-}
-
-function saveLabelFor(def: GrenadeDefinition): string {
-    return `${localize(SAVE_CHARACTERISTIC_LABEL_KEY[def.save.characteristic])} ${formatDifficulty(def.save.difficulty)}`;
-}
-
-function toChoice(def: GrenadeDefinition, selectedId: string): GrenadeChoice {
-    return {
-        id: def.id,
-        label: localize(def.labelKey),
-        blastRadius: def.blastRadius,
-        damage: def.damage,
-        specialQualities: def.specialQualities,
-        saveLabel: saveLabelFor(def),
-        failEffect: def.failEffect,
-        accentClass: def.accentClass,
-        isSelected: def.id === selectedId,
-    };
+/** The rider grenades the thrower carries: thrown weapons whose Throw opens this dialog. */
+function riderGrenades(actor: GrenadeThrower): GrenadeItemView[] {
+    return Array.from(actor.items).flatMap((item) =>
+        item.id !== null && item.isThrown && resolveThrow(item.system).path === 'grenade-dialog' ? [{ id: item.id, name: item.name, system: item.system }] : [],
+    );
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
 export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
-    declare selectedId: string;
+    readonly #actor: GrenadeThrower;
 
-    constructor(options: ApplicationV2Config.DefaultOptions & { grenadeId?: string } = {}) {
+    #selectedId: string;
+
+    constructor(options: ApplicationV2Config.DefaultOptions & { actor: GrenadeThrower; itemId: string }) {
         super(options);
-        const requested = (options as { grenadeId?: string }).grenadeId;
-        const initial = typeof requested === 'string' && getWithinGrenade(requested) !== null ? requested : listWithinGrenades()[0]?.id ?? '';
-        this.selectedId = initial;
+        this.#actor = options.actor;
+        this.#selectedId = options.itemId;
     }
 
     /** @override */
@@ -113,7 +66,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         },
         position: { width: 560 },
         window: {
-            title: 'WH40K.WithinGrenade.DialogTitle',
+            title: 'WH40K.GrenadeRider.DialogTitle',
             resizable: false,
         },
     };
@@ -127,40 +80,37 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         },
     };
 
+    /** The thrower's line, which scopes the per-system styling of the dialog and its card. */
+    get #gameSystem(): string {
+        return ownerGameLine(this.#actor) ?? '';
+    }
+
     /** @inheritDoc */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<GrenadeThrowContext> {
-        const context = (await super._prepareContext(options)) as GrenadeThrowContext;
-        const grenades = listWithinGrenades().map((g) => toChoice(g, this.selectedId));
-        const selectedGrenade = grenades.find((g) => g.isSelected) ?? null;
-        return {
-            ...context,
-            grenades,
-            selectedId: this.selectedId,
-            selectedGrenade,
-        };
+        const context = await super._prepareContext(options);
+        const view = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, LABELS);
+        this.#selectedId = view.selectedId;
+        return { ...context, ...view, gameSystem: this.#gameSystem };
     }
 
     static async #onSelectGrenade(this: GrenadeThrowDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const next = target.dataset['grenadeId'] ?? '';
-        if (next !== '' && getWithinGrenade(next) !== null) {
-            this.selectedId = next;
-            await this.render();
-        }
+        if (next === '' || !riderGrenades(this.#actor).some((item) => item.id === next)) return;
+        this.#selectedId = next;
+        await this.render();
     }
 
     static async #onThrow(this: GrenadeThrowDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const def = getWithinGrenade(this.selectedId);
-        if (def === null) return;
-
-        const choice = toChoice(def, this.selectedId);
-        const templateData = {
-            ...choice,
-            gameSystem: 'dh2',
-        };
-
-        await emitChatFromTemplate('systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs', templateData);
+        const { selectedGrenade } = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, LABELS);
+        if (selectedGrenade === null) return;
+        const gameSystem = this.#gameSystem;
+        await emitChatFromTemplate(
+            'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
+            { ...selectedGrenade, gameSystem, _gameSystemId: gameSystem },
+            { speaker: { alias: this.#actor.name } },
+        );
         await this.close();
     }
 
@@ -170,8 +120,8 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
     }
 }
 
-/** Convenience opener — mirror of openFearTestDialog. */
-export function openGrenadeThrowDialog(opts: { grenadeId?: string } = {}): void {
+/** Open the throw dialog for `actor`, on the grenade `itemId`. */
+export function openGrenadeThrowDialog(opts: { actor: GrenadeThrower; itemId: string }): void {
     const dialog = new GrenadeThrowDialog(opts);
     void dialog.render({ force: true });
 }

@@ -650,7 +650,7 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Dialogs/GrenadeThrowDialog',
-        exports: ['Psychotroke', 'PhotonFlash', 'TearsOfTheEmperor', 'Smoke', 'RenderSmoke'],
+        exports: ['Psychotroke', 'PhotonFlash', 'TearsOfTheEmperor', 'Smoke', 'PickerActions', 'NoRiderGrenade', 'ThrownPhotonFlashOpensOnIt', 'ThrownCard'],
     },
     {
         title: 'Dialogs/IncorruptibleDevotionDialog',

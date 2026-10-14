@@ -15,6 +15,7 @@ import {
     type ResolvedDamageProfile,
     selectDamageBand,
 } from '../../rules/damage-profile.ts';
+import type { GrenadeRiderData } from '../../rules/grenade-rider.ts';
 import { consumeRounds, frontSegment, type MagazineSegment, magazineFromLegacy, magazineTotal } from '../../rules/magazine.ts';
 import {
     classifyDamageProfile,
@@ -58,6 +59,7 @@ import AttackTemplate from '../shared/attack-template.ts';
 import DamageTemplate, { type DamageProfileData } from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate, { type EquippableState } from '../shared/equippable-template.ts';
+import { grenadeRiderField } from '../shared/grenade-rider-field.ts';
 import { renameKeys } from '../shared/migrate-rename.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
@@ -357,6 +359,8 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare activeMode: number;
     /** Content-authored attack cue (#594): procedural look, tint, animation and sound files per cue event. */
     declare cue: AttackCueData;
+    /** Content-authored grenade rider (#135): the save-or-suffer payload, or null for none. */
+    declare rider: GrenadeRiderData | null;
 
     // Properties from AttackTemplate
     declare attack: {
@@ -529,6 +533,11 @@ export default class WeaponData extends ItemDataModel.mixin(
             // attacks look and sound on the canvas. Authored in the compendium
             // `_source`; `rules/attack-cue.ts` maps the resolved outcome onto it.
             cue: attackCueField(),
+
+            // Grenade rider (#135, content-driven, Direction #7): the save-or-suffer
+            // payload a grenade carries (a Photon Flash's blinding, a Smoke grenade's
+            // screen). Authored in the compendium `_source`; null on every other weapon.
+            rider: grenadeRiderField(),
 
             // (Loaded ammunition is no longer stored — the chambered round is the
             // front of `clip.magazine`; `loadedAmmo` is a derived getter.)

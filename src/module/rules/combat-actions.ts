@@ -1,8 +1,8 @@
 import type { WeaponRollData } from '../rolls/roll-data.ts';
+import { hasGrenadeRider, type RiderWeaponSystem } from './grenade-rider.ts';
 import { type GrenadeWeaponSystem, isGrenadeWeapon } from './grenade-weapon.ts';
 import { hitLocationNames } from './hit-locations.ts';
 import { resolveTwoWeaponPenalties, type TwoWeaponTalent } from './two-weapon-fighting.ts';
-import { type GrenadeDefinition, withinGrenadeForItem } from './within-grenades.ts';
 
 type CombatAction = {
     name: string;
@@ -165,30 +165,27 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
 /**
  * How a thrown weapon's Throw half-action resolves.
  *
- * - `grenade-dialog`: a grenade whose payload is a save-or-suffer rider the
- *   Within-grenade registry describes (Photon Flash, Smoke, …). The
- *   {@link GrenadeThrowDialog} posts its blast, save and failure effect, opened
- *   on that grenade.
+ * - `grenade-dialog`: a grenade whose compendium document authors a rider
+ *   (`system.rider`, #135) — a save-or-suffer payload such as a Photon Flash's
+ *   blinding or a Smoke grenade's screen. The {@link GrenadeThrowDialog} posts
+ *   its area, test and effect, opened on that grenade.
  * - `weapon-roll`: every other thrown weapon — a damage grenade (Frag, Krak)
  *   and an ordinary thrown weapon (knife, throwing axe) alike. The weapon-roll
  *   pipeline throws on BS, scatters a miss and places and resolves a Blast
  *   (`rolls/action-data.ts`, #599).
  */
-export type ThrowResolution = { path: 'grenade-dialog'; grenade: GrenadeDefinition } | { path: 'weapon-roll' };
+export type ThrowResolution = { path: 'grenade-dialog' } | { path: 'weapon-roll' };
 
 /** The weapon fields the throw classifier reads (WeaponData's). */
-export interface ThrowableWeaponSystem extends GrenadeWeaponSystem {
-    identifier?: string;
-}
+export interface ThrowableWeaponSystem extends GrenadeWeaponSystem, RiderWeaponSystem {}
 
 /**
  * Decide how a thrown weapon's Throw action resolves, from the weapon's own data
- * (Direction #7 — never its name): a grenade ({@link isGrenadeWeapon}) the registry
- * holds an entry for goes to the grenade dialog, everything else to the weapon roll.
+ * (Direction #7 — never its name): a grenade ({@link isGrenadeWeapon}) that carries a
+ * rider goes to the grenade dialog, everything else to the weapon roll.
  */
 export function resolveThrow(system: ThrowableWeaponSystem): ThrowResolution {
-    const grenade = isGrenadeWeapon(system) && system.identifier !== undefined ? withinGrenadeForItem(system.identifier) : null;
-    return grenade === null ? { path: 'weapon-roll' } : { path: 'grenade-dialog', grenade };
+    return isGrenadeWeapon(system) && hasGrenadeRider(system) ? { path: 'grenade-dialog' } : { path: 'weapon-roll' };
 }
 
 export function allCombatActions(): CombatAction[] {

@@ -114,6 +114,28 @@ export const damageProfileShape = z
     })
     .loose();
 
+// Mirror `RIDER_TEST_CHARACTERISTICS` / `RIDER_DURATION_KINDS` / `RIDER_AREA_MEASURES`
+// (src/module/rules/grenade-rider.ts); tests/validate-pack-schema.test.ts pins the match.
+export const RIDER_TEST_CHARACTERISTIC = [
+    '', 'weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship',
+];
+export const RIDER_DURATION_KIND = ['', 'degreesOfFailure', 'roll', 'encounter'];
+export const RIDER_AREA_MEASURE = ['radius', 'diameter'];
+
+/** A grenade's rider (#135): its test, area, duration, effect-roll step and effect, authored whole. */
+export const grenadeRiderShape = z
+    .object({
+        test: z.object({ characteristic: z.enum(RIDER_TEST_CHARACTERISTIC), modifier: z.number().int() }).strict(),
+        area: z.object({ size: z.string(), measure: z.enum(RIDER_AREA_MEASURE) }).strict(),
+        duration: z.object({ kind: z.enum(RIDER_DURATION_KIND), base: z.number().int().nonnegative(), formula: z.string() }).strict(),
+        effectRollShift: z.object({ perDegree: z.number().int().nonnegative(), max: z.number().int().nonnegative() }).strict(),
+        effect: z.string().min(1),
+    })
+    .strict()
+    .refine((rider) => (rider.duration.kind === 'roll') === (rider.duration.formula !== ''), {
+        message: 'duration.formula is set exactly when duration.kind is "roll"',
+    });
+
 /** Weapon `system` — strict only on the corruption-prone fields; extras pass. */
 export const weaponSystemSchema = z
     .object({
@@ -122,6 +144,7 @@ export const weaponSystemSchema = z
         melee: variant(z.boolean()).nullable().optional(),
         attack: variant(attackShape).nullable().optional(),
         damage: variant(z.union([z.string(), damageProfileShape])).optional(),
+        rider: variant(grenadeRiderShape).nullable().optional(),
     })
     .loose();
 

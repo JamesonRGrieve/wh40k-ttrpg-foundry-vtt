@@ -2,6 +2,16 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
 import { allCombatActions, resolveThrow, updateAvailableCombatActions } from './combat-actions.ts';
+import type { GrenadeRiderData } from './grenade-rider.ts';
+
+/** A rider as a grenade's compendium document authors it (#135). */
+const RIDER: GrenadeRiderData = {
+    test: { characteristic: 'agility', modifier: 10 },
+    area: { size: '', measure: 'radius' },
+    duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
+    effectRollShift: { perDegree: 0, max: 0 },
+    effect: 'Blinded for a number of rounds equal to his degrees of failure.',
+};
 
 /**
  * "Throw" half-action coverage (DH2 Core "Throw"): hurl a grenade or
@@ -112,22 +122,25 @@ describe('Throw combat action — availability gating', () => {
         expect(names).not.toContain('Throw');
     });
 
-    it('routes a save-rider grenade to the grenade dialog on that grenade (#619)', () => {
+    it('routes a grenade that carries a rider to the grenade dialog (#619, #135)', () => {
         // The DH2 Photon Flash Grenade as the packs author it: thrown, type grenade,
-        // `special` a Set. The old `.includes` check never matched a Set.
-        const resolution = resolveThrow({ class: 'thrown', type: 'grenade', identifier: 'photon-flash-grenade', special: new Set(['blast-6']) });
-        expect(resolution.path).toBe('grenade-dialog');
-        expect(resolution.path === 'grenade-dialog' ? resolution.grenade.id : null).toBe('photonFlash');
+        // `special` a Set, and its rider on `system.rider`.
+        expect(resolveThrow({ class: 'thrown', type: 'grenade', special: new Set(['blast-6']), rider: RIDER }).path).toBe('grenade-dialog');
         // An RT / DW grenade is typed explosive.
-        expect(resolveThrow({ class: 'thrown', type: 'explosive', identifier: 'smoke-grenade', special: new Set(['smoke']) }).path).toBe('grenade-dialog');
+        expect(resolveThrow({ class: 'thrown', type: 'explosive', special: new Set(['smoke']), rider: RIDER }).path).toBe('grenade-dialog');
+    });
+
+    it('reads the rider, never the weapon identifier (#135)', () => {
+        // A grenade whose identifier the old registry knew, but which carries no rider.
+        expect(resolveThrow({ class: 'thrown', type: 'grenade', special: new Set(['blast-6']), rider: null }).path).toBe('weapon-roll');
     });
 
     it('throws a damage grenade and an ordinary thrown weapon through the weapon roll (#619)', () => {
         // The Frag Grenade's Blast is placed and resolved by the weapon roll (#599).
-        expect(resolveThrow({ class: 'thrown', type: 'grenade', identifier: 'frag-grenade', special: new Set(['blast-3']) }).path).toBe('weapon-roll');
-        // A throwing knife, and a weapon that names a registry grenade but is not one.
-        expect(resolveThrow({ class: 'thrown', type: 'primitive', identifier: 'throwing-knife', special: new Set(['balanced']) }).path).toBe('weapon-roll');
-        expect(resolveThrow({ class: 'basic', type: 'launcher', identifier: 'smoke-grenade' }).path).toBe('weapon-roll');
+        expect(resolveThrow({ class: 'thrown', type: 'grenade', special: new Set(['blast-3']), rider: null }).path).toBe('weapon-roll');
+        // A throwing knife, and a rider on a weapon that is not a grenade.
+        expect(resolveThrow({ class: 'thrown', type: 'primitive', special: new Set(['balanced']) }).path).toBe('weapon-roll');
+        expect(resolveThrow({ class: 'basic', type: 'launcher', rider: RIDER }).path).toBe('weapon-roll');
         expect(resolveThrow({}).path).toBe('weapon-roll');
     });
 

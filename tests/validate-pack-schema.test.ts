@@ -1,8 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { DAMAGE_SOURCE, DAMAGE_TYPE, validateDoc, variant, WEAPON_CLASS } from '../scripts/validate-pack-schema.mjs';
+import {
+    DAMAGE_SOURCE,
+    DAMAGE_TYPE,
+    RIDER_AREA_MEASURE,
+    RIDER_DURATION_KIND,
+    RIDER_TEST_CHARACTERISTIC,
+    validateDoc,
+    variant,
+    WEAPON_CLASS,
+} from '../scripts/validate-pack-schema.mjs';
 import { WEAPON_CLASS_CHOICES } from '../src/module/data/shared/weapon-class.ts';
 import { DAMAGE_SOURCE_CHOICES, DAMAGE_TYPE_CHOICES } from '../src/module/rules/damage-profile.ts';
+import { RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../src/module/rules/grenade-rider.ts';
 
 /**
  * Unit coverage for the Zod v4 compendium content-schema gate
@@ -114,5 +124,43 @@ describe('contextual damage profiles (#608)', () => {
         expect(validateDoc(table({ formula: '' })).length).toBeGreaterThan(0);
         expect(validateDoc(table({ formula: '3d10', type: 'warp' })).length).toBeGreaterThan(0);
         expect(validateDoc({ name: 'Plain', results: [{ range: [1, 10], text: 'x' }] })).toEqual([]);
+    });
+});
+
+describe('grenade riders (#135)', () => {
+    const rider = (overrides: object = {}): object => ({
+        test: { characteristic: 'agility', modifier: 10 },
+        area: { size: '', measure: 'radius' },
+        duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
+        effectRollShift: { perDegree: 0, max: 0 },
+        effect: 'Blinded for a number of rounds equal to the degrees of failure.',
+        ...overrides,
+    });
+    const grenade = (value: object | null): object => ({ name: 'Photon Flash Grenade', type: 'weapon', system: { rider: value } });
+
+    it('keeps the gate lists in step with the DataModel choices', () => {
+        expect(RIDER_TEST_CHARACTERISTIC).toEqual(['', ...RIDER_TEST_CHARACTERISTICS]);
+        expect(RIDER_DURATION_KIND).toEqual([...RIDER_DURATION_KINDS]);
+        expect(RIDER_AREA_MEASURE).toEqual([...RIDER_AREA_MEASURES]);
+    });
+
+    it('accepts a whole rider, a per-line container of riders, and no rider', () => {
+        expect(validateDoc(grenade(rider()))).toEqual([]);
+        expect(validateDoc(grenade({ dh2: rider(), rt: rider({ duration: { kind: 'roll', base: 0, formula: '1d5' } }) }))).toEqual([]);
+        expect(validateDoc(grenade(null))).toEqual([]);
+        expect(validateDoc({ name: 'Frag Grenade', type: 'weapon', system: {} })).toEqual([]);
+    });
+
+    it('rejects an unknown characteristic, duration kind or measure, a blank effect and a stray key', () => {
+        expect(validateDoc(grenade(rider({ test: { characteristic: 'influence', modifier: 0 } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ duration: { kind: 'scene', base: 0, formula: '' } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ area: { size: '6', measure: 'cone' } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ effect: '' }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ accentClass: 'tw-text-white' }))).length).toBeGreaterThan(0);
+    });
+
+    it('requires a dice formula exactly for a rolled duration', () => {
+        expect(validateDoc(grenade(rider({ duration: { kind: 'roll', base: 0, formula: '' } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ duration: { kind: 'encounter', base: 0, formula: '1d5' } }))).length).toBeGreaterThan(0);
     });
 });

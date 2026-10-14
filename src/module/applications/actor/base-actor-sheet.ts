@@ -2113,17 +2113,16 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
         if (itemId === undefined || itemId === '') return;
 
-        // Throw half-action: a grenade whose payload is a save-or-suffer rider opens
-        // the grenade dialog on that grenade (#619). Every other thrown weapon —
-        // damage grenades included — takes the normal roll, which throws on BS,
-        // scatters a miss and resolves its Blast.
+        // Throw half-action: a grenade whose compendium document authors a rider
+        // (#135) opens the grenade dialog on that grenade (#619). Every other thrown
+        // weapon — damage grenades included — takes the normal roll, which throws on
+        // BS, scatters a miss and resolves its Blast.
         const item = this.actor.items.get(itemId);
         if (item?.isThrown === true) {
             const { resolveThrow } = await import('../../rules/combat-actions.ts');
-            const resolution = resolveThrow(item.system);
-            if (resolution.path === 'grenade-dialog') {
+            if (resolveThrow(item.system).path === 'grenade-dialog') {
                 const { openGrenadeThrowDialog } = await import('../prompts/grenade-throw-dialog.ts');
-                openGrenadeThrowDialog({ grenadeId: resolution.grenade.id });
+                openGrenadeThrowDialog({ actor: this.actor, itemId });
                 return;
             }
         }

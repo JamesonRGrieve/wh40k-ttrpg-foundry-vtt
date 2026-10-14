@@ -1,48 +1,54 @@
-{{!-- Within-supplement grenade throw dialog (#135). --}}
-{{!-- GM picks a grenade; "Throw" emits the chat card with the mechanical rider. --}}
-<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="dh2">
-
-    <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
-        {{localize "WH40K.WithinGrenade.DialogTitle"}}
-    </div>
+{{!-- Grenade throw dialog (#135): the thrower's rider grenades, read from each grenade's own data. --}}
+{{!-- "Throw" posts the chat card with the selected grenade's area, test and effect. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="{{gameSystem}}">
 
     {{!-- Grenade picker list --}}
-    <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-4" role="radiogroup" aria-label="{{localize "WH40K.WithinGrenade.GrenadeLabel"}}">
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-mb-4" role="radiogroup" aria-label="{{localize "WH40K.GrenadeRider.GrenadeLabel"}}">
         {{#each grenades}}
             <button type="button"
                     data-action="selectGrenade"
                     data-grenade-id="{{this.id}}"
                     role="radio"
                     aria-checked="{{#if this.isSelected}}true{{else}}false{{/if}}"
-                    class="tw-flex tw-flex-col tw-gap-1 tw-w-full tw-text-left tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if this.isSelected}}tw-border-gold tw-bg-[rgba(201,162,39,0.12)]{{else}}tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.35)]{{/if}}">
-                <div class="tw-flex tw-items-center tw-gap-2">
-                    <i class="fas fa-bomb {{this.accentClass}}"></i>
-                    <span class="tw-font-display tw-text-sm tw-uppercase tw-tracking-[0.08em] {{this.accentClass}}">{{this.label}}</span>
-                </div>
-                <div class="tw-flex tw-flex-wrap tw-gap-x-3 tw-gap-y-1 tw-text-[0.75rem] tw-text-[#9a9a8a]">
-                    <span>{{localize "WH40K.WithinGrenade.BlastRadius"}}: <span class="tw-text-[#e8e4d9] tw-tabular-nums">{{this.blastRadius}}m</span></span>
-                    {{#if this.damage}}
-                        <span>{{localize "WH40K.WithinGrenade.Damage"}}: <span class="tw-text-[#e8e4d9]">{{this.damage}}</span></span>
+                    class="tw-flex tw-flex-col tw-items-start tw-gap-1 tw-w-full tw-h-auto tw-text-left tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if this.isSelected}}tw-border-gold tw-bg-[rgba(201,162,39,0.12)]{{else}}tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.35)]{{/if}}">
+                <span class="tw-flex tw-items-center tw-gap-2">
+                    <i class="fas fa-bomb tw-text-gold" aria-hidden="true"></i>
+                    <span class="tw-font-display tw-text-sm tw-uppercase tw-tracking-[0.08em] tw-text-gold">{{this.name}}</span>
+                </span>
+                <span class="tw-flex tw-flex-wrap tw-gap-x-3 tw-gap-y-1 tw-text-[0.75rem] tw-text-[#9a9a8a]">
+                    {{#if this.areaLabel}}
+                        <span>{{localize "WH40K.GrenadeRider.Area"}}: <span class="tw-text-[#e8e4d9] tw-tabular-nums">{{this.areaLabel}}</span></span>
                     {{/if}}
-                    <span>{{localize "WH40K.WithinGrenade.SaveLabel"}}: <span class="tw-text-[#e8e4d9]">{{this.saveLabel}}</span></span>
-                </div>
+                    {{#if this.damage}}
+                        <span>{{localize "WH40K.GrenadeRider.Damage"}}: <span class="tw-text-[#e8e4d9]">{{this.damage}}</span></span>
+                    {{/if}}
+                    <span>{{localize "WH40K.GrenadeRider.Test"}}: <span class="tw-text-[#e8e4d9]">{{this.testLabel}}</span></span>
+                </span>
             </button>
+        {{else}}
+            <p class="tw-m-0 tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">{{localize "WH40K.GrenadeRider.NoGrenades"}}</p>
         {{/each}}
     </div>
 
     {{!-- Selected grenade detail --}}
     {{#if selectedGrenade}}
-        <div class="tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-mb-4">
+        <div class="tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-mb-4" data-grenade-detail>
             <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-mb-2">
-                <span class="tw-text-[#9a9a8a] tw-text-xs tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.WithinGrenade.FailEffectLabel"}}</span>
-                <span class="tw-text-xs tw-tabular-nums {{selectedGrenade.accentClass}}">{{selectedGrenade.saveLabel}}</span>
+                <span class="tw-text-[#9a9a8a] tw-text-xs tw-uppercase tw-tracking-[0.08em]">{{selectedGrenade.effectLabel}}</span>
+                <span class="tw-text-xs tw-tabular-nums tw-text-gold">{{selectedGrenade.testLabel}}</span>
             </div>
-            <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">
-                {{selectedGrenade.failEffect}}
-            </div>
-            {{#if selectedGrenade.specialQualities.length}}
+            <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]">{{selectedGrenade.effect}}</div>
+            {{#if selectedGrenade.durationLabel}}
+                <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#9a9a8a]">
+                    {{localize "WH40K.GrenadeRider.Duration"}}: <span class="tw-text-[#e8e4d9]">{{selectedGrenade.durationLabel}}</span>
+                </div>
+            {{/if}}
+            {{#if selectedGrenade.shiftLabel}}
+                <div class="tw-mt-1 tw-text-[0.8rem] tw-text-[#e8e4d9]">{{selectedGrenade.shiftLabel}}</div>
+            {{/if}}
+            {{#if selectedGrenade.qualities.length}}
                 <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-2">
-                    {{#each selectedGrenade.specialQualities}}
+                    {{#each selectedGrenade.qualities}}
                         <span class="tw-text-[0.7rem] tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.35)] tw-text-[#c4871d]">{{this}}</span>
                     {{/each}}
                 </div>
@@ -55,9 +61,9 @@
         rootClass="tw-border-[rgba(201,162,39,0.2)]"
         confirmAction="throw"
         confirmIcon="fa-bomb"
-        confirmLabelKey="WH40K.WithinGrenade.ThrowButton"
+        confirmLabelKey="WH40K.GrenadeRider.ThrowButton"
         confirmClass="tw-border-none tw-bg-gradient-to-br tw-from-gold tw-to-[#8b6914] dh2:tw-from-bronze tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)]"
         confirmDisabled=(eq selectedGrenade null)
-        cancelLabelKey="WH40K.Daemonhost.Cancel"}}
+        cancelLabelKey="WH40K.GrenadeRider.Cancel"}}
 
 </div>
