@@ -130,6 +130,14 @@ describe('Throw combat action — availability gating', () => {
         expect(resolveThrow({ class: 'thrown', type: 'explosive', special: new Set(['smoke']), rider: RIDER }).path).toBe('grenade-dialog');
     });
 
+    it('throws a rider grenade that deals damage through the weapon roll, its rider after the damage (#622)', () => {
+        // Rad, Psyk-out, Whitefire, Tears of the Emperor: BS test, scatter, Blast, damage — then the rider.
+        const rad = { class: 'thrown', type: 'explosive', special: new Set(['blast-2']), rider: RIDER, dealsDamage: true };
+        expect(resolveThrow(rad).path).toBe('weapon-roll');
+        // A Photon Flash ("–" damage) still opens the dialog, whose card carries the rider.
+        expect(resolveThrow({ ...rad, dealsDamage: false }).path).toBe('grenade-dialog');
+    });
+
     it('reads the rider, never the weapon identifier (#135)', () => {
         // A grenade whose identifier the old registry knew, but which carries no rider.
         expect(resolveThrow({ class: 'thrown', type: 'grenade', special: new Set(['blast-6']), rider: null }).path).toBe('weapon-roll');

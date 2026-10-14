@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { blastRating, type GrenadeRiderData, hasGrenadeRider, RIDER_TEST_CHARACTERISTICS, riderArea, riderHasTest } from './grenade-rider.ts';
+import {
+    blastRating,
+    type GrenadeRiderData,
+    hasGrenadeRider,
+    RIDER_TEST_CHARACTERISTICS,
+    riderArea,
+    riderHasTest,
+    riderTakesWeaponRoll,
+} from './grenade-rider.ts';
 
 /**
  * The grenade rider readers (#135): a rider is content on the grenade's compendium
@@ -23,6 +31,15 @@ describe('hasGrenadeRider', () => {
         expect(hasGrenadeRider({ rider: rider() })).toBe(true);
         expect(hasGrenadeRider({ rider: null })).toBe(false);
         expect(hasGrenadeRider({})).toBe(false);
+    });
+});
+
+describe('riderTakesWeaponRoll', () => {
+    it('sends a grenade that rolls damage through the weapon roll, and one that deals none to the dialog (#622)', () => {
+        expect(riderTakesWeaponRoll({ rider: rider(), dealsDamage: true })).toBe(true);
+        expect(riderTakesWeaponRoll({ rider: rider(), dealsDamage: false })).toBe(false);
+        // An unknown damage line is not assumed to roll.
+        expect(riderTakesWeaponRoll({ rider: rider() })).toBe(false);
     });
 });
 

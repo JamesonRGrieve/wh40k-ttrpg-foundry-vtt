@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { GrenadeRiderData } from '../../rules/grenade-rider.ts';
 import { buildLangStub } from '../../testing/lang-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
-import { buildGrenadeChoice, buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } from './grenade-throw-view.ts';
+import { buildDamageCardRider, buildGrenadeChoice, buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } from './grenade-throw-view.ts';
 
 /**
  * The grenade throw view (#135): every word on the dialog and its card comes from the
@@ -111,6 +111,25 @@ describe('buildGrenadeChoice', () => {
 
     it('is null for a weapon without a rider', () => {
         expect(buildGrenadeChoice(grenade('f', 'Frag Grenade', null), 'f', LABELS)).toBeNull();
+    });
+});
+
+describe('buildDamageCardRider', () => {
+    const rad = rider({ test: { characteristic: 'toughness', modifier: -20 }, duration: { kind: '', base: 0, formula: '' }, effect: '2d10 Toughness damage.' });
+
+    it('states a damaging grenade’s rider after its damage, naming each creature struck once (#622)', () => {
+        const card = buildDamageCardRider(
+            grenade('r', 'Rad Grenade', rad, { effectiveSpecial: new Set(['blast-2']), fullDamageFormula: '1d10' }),
+            ['Heretic', 'Accomplice', 'Heretic', ''],
+            LABELS,
+        );
+        expect(card?.struck).toEqual(['Heretic', 'Accomplice']);
+        expect(card?.rider).toMatchObject({ name: 'Rad Grenade', areaLabel: '2 m radius', testLabel: 'Toughness -20', effect: '2d10 Toughness damage.' });
+    });
+
+    it('is null for a weapon without a rider, and for a roll with no weapon', () => {
+        expect(buildDamageCardRider(grenade('f', 'Frag Grenade', null), ['Heretic'], LABELS)).toBeNull();
+        expect(buildDamageCardRider(null, ['Heretic'], LABELS)).toBeNull();
     });
 });
 

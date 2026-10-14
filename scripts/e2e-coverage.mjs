@@ -679,6 +679,8 @@ const GRENADE_THROW_FLOWS = [
     'save-grenade-card-posted',
     'rider-card-reads-pack-data',
     'damage-grenade-throws-with-blast',
+    'damaging-rider-grenade-takes-weapon-roll',
+    'damaging-rider-follows-damage',
 ];
 recordDimension('grenade-throw.flow', covered['grenade-throw.flow'], GRENADE_THROW_FLOWS);
 

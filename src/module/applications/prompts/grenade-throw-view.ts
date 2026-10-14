@@ -128,6 +128,23 @@ export function buildGrenadeChoice(item: GrenadeItemView, selectedId: string, la
     };
 }
 
+/** A grenade's rider as the damage card states it, after the damage it follows (#622). */
+export interface DamageCardRider {
+    rider: GrenadeChoice;
+    /** The names of the creatures the attack struck, once each, in the order struck. */
+    struck: string[];
+}
+
+/**
+ * The rider a damage card states: the weapon's rider and who the attack struck. Null when
+ * the weapon carries no rider (or the roll was no weapon's).
+ */
+export function buildDamageCardRider(item: GrenadeItemView | null, struck: readonly string[], labels: GrenadeLabels): DamageCardRider | null {
+    if (item === null) return null;
+    const rider = buildGrenadeChoice(item, item.id, labels);
+    return rider === null ? null : { rider, struck: [...new Set(struck.filter((name) => name !== ''))] };
+}
+
 /** The dialog context: every rider grenade the thrower carries, with `selectedId` (or the first) selected. */
 export function buildGrenadeThrowContext(items: readonly GrenadeItemView[], selectedId: string, labels: GrenadeLabels): GrenadeThrowViewContext {
     const riders = items.filter((item) => hasGrenadeRider(item.system));

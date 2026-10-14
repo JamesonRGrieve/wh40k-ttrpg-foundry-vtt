@@ -3,6 +3,8 @@
 // module's graph and formed 72 of the repo's import cycles for one symbol.
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
+import { GRENADE_LABELS } from '../applications/prompts/grenade-labels.ts';
+import { buildDamageCardRider, type DamageCardRider } from '../applications/prompts/grenade-throw-view.ts';
 import { tokensInAreaTemplate } from '../canvas/area-template-canvas.ts';
 import { WH40K } from '../config.ts';
 import { SYSTEM_ID } from '../constants.ts';
@@ -468,6 +470,9 @@ export class BasicActionManager {
             canReplaceDie: true,
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
+            // A rider grenade that deals damage (#622): its rider follows the damage onto
+            // everyone the attack struck.
+            damageRider: this.#damageCardRider(actionData, targetName),
             // `templateData` carries no `actor`/`sourceActor` key and no speaker,
             // so the helper cannot derive `_gameSystemId` — keep it set from the
             // rolling actor for per-system theming (#422).
@@ -476,6 +481,18 @@ export class BasicActionManager {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         await emitChatFromTemplate(template, templateData, { rolls: damageRolls, applyWhispers: true });
+    }
+
+    /**
+     * The rider a damage card states after its hits (#622): the weapon's rider and the
+     * creatures it struck — each area hit's own creature, else the card's target. Null
+     * when the roll's weapon carries no rider.
+     */
+    #damageCardRider(actionData: ActionData, cardTargetName: string | null): DamageCardRider | null {
+        const weapon = actionData.rollData.weapon;
+        if (weapon?.id == null) return null;
+        const struck = (actionData.damageData?.hits ?? []).map((hit) => (hit.targetName !== '' ? hit.targetName : cardTargetName ?? ''));
+        return buildDamageCardRider({ id: weapon.id, name: weapon.name, system: weapon.system }, struck, GRENADE_LABELS);
     }
 
     /**

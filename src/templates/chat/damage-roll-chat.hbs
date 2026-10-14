@@ -145,4 +145,22 @@
                     {{/if}}
                 </div>
             {{/each}}
+
+            {{!-- A grenade's rider (#622): a grenade that deals damage throws, scatters and
+                  rolls its damage like any weapon, and its rider then applies to everyone
+                  the blast struck — listed here after the damage it follows. --}}
+            {{#if damageRider}}
+                <div class="tw-my-3 tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] tw-bg-[rgba(15,12,8,0.6)]" data-damage-rider>
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+                        <i class="fas fa-bomb tw-text-gold" aria-hidden="true"></i>
+                        <span class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.85rem] tw-text-gold">{{localize "WH40K.GrenadeRider.FollowsDamage"}}</span>
+                    </div>
+                    {{#if damageRider.struck.length}}
+                        <div class="tw-text-[0.8rem] tw-text-[#9a9a8a] tw-mb-2" data-damage-rider-struck>
+                            {{localize "WH40K.GrenadeRider.Struck"}}: <span class="tw-text-[#e8e4d9]">{{join damageRider.struck ", "}}</span>
+                        </div>
+                    {{/if}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/grenade-rider-summary.hbs rider=damageRider.rider}}
+                </div>
+            {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

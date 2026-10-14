@@ -12,7 +12,8 @@ import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } fr
  * Grenade throw dialog and its chat card (#135). Each grenade's rider is its compendium
  * document's `system.rider`; the fixtures below carry the DH2 values the packs author
  * (Photon Flash and Smoke, Core p.158 / p.149; Psychotroke and Tears of the Emperor,
- * Enemies Within pp.44–45), plus a Frag Grenade with no rider.
+ * Enemies Within pp.44–45), plus a Frag Grenade with no rider. Tears of the Emperor
+ * deals damage, so it takes the weapon roll and the dialog does not list it (#622).
  */
 
 const CHARACTERISTIC_NAMES: Record<string, string> = { agility: 'Agility', toughness: 'Toughness', willpower: 'Willpower' };
@@ -100,8 +101,16 @@ interface Args {
     selectedId: string;
 }
 
+/** Whether the grenade's Throw opens this dialog — the gate the dialog itself lists by (#622: a damaging rider grenade does not). */
+function opensDialog(item: GrenadeItemView): boolean {
+    return resolveThrow({ class: 'thrown', type: 'grenade', ...item.system, dealsDamage: item.system.fullDamageFormula !== '' }).path === 'grenade-dialog';
+}
+
+/** The grenades the dialog lists, as the dialog filters the thrower's items. */
+const DIALOG_ITEMS = ITEMS.filter(opensDialog);
+
 function renderDialog(selectedId: string): HTMLElement {
-    return renderSheet(templateSrc, { ...buildGrenadeThrowContext(ITEMS, selectedId, LABELS), gameSystem: 'dh2' });
+    return renderSheet(templateSrc, { ...buildGrenadeThrowContext(DIALOG_ITEMS, selectedId, LABELS), gameSystem: 'dh2' });
 }
 
 const meta = {
@@ -113,11 +122,14 @@ export default meta;
 
 type Story = StoryObj<Args>;
 
-/** The picker lists the rider grenades only — the Frag Grenade, which has none, takes the normal roll. */
+/**
+ * The picker lists the rider grenades that deal no damage — the Frag Grenade (no rider)
+ * and Tears of the Emperor (a rider, but 1d10 X damage, #622) take the normal roll.
+ */
 export const Psychotroke: Story = {
     play: async ({ canvasElement }) => {
         const ids = Array.from(canvasElement.querySelectorAll('[data-grenade-id]')).map((el) => el.getAttribute('data-grenade-id'));
-        await expect(ids).toEqual(['photon', 'psychotroke', 'tears', 'smoke']);
+        await expect(ids).toEqual(['photon', 'psychotroke', 'smoke']);
         const view = within(canvasElement);
         await expect(view.getByText('+1 to the effect roll per degree of failure (max 10)')).toBeTruthy();
         await expect(view.getByText('1 round(s), plus 1 per degree of failure')).toBeTruthy();
@@ -136,15 +148,18 @@ export const PhotonFlash: Story = {
     },
 };
 
-/** A grenade with no test shows its effect under "Effect", and its damage beside the area. */
-export const TearsOfTheEmperor: Story = {
+/**
+ * Tears of the Emperor deals 1d10 X, so its Throw takes the weapon roll and its rider
+ * follows its damage on the damage card (#622): the dialog does not offer it, even when
+ * it is the grenade thrown, and opens on the first grenade it does list.
+ */
+export const TearsOfTheEmperorTakesTheWeaponRoll: Story = {
     args: { selectedId: 'tears' },
     play: async ({ canvasElement }) => {
-        const detail = canvasElement.querySelector<HTMLElement>('[data-grenade-detail]');
-        await expect(detail?.textContent).toContain('Effect');
-        await expect(detail?.textContent).toContain('Until the end of the encounter');
-        await expect(detail?.textContent).toContain('Perils of the Warp');
-        await expect(within(canvasElement).getByText('1d10 X')).toBeTruthy();
+        const tears = ITEMS.find((item) => item.id === 'tears');
+        await expect(tears !== undefined && opensDialog(tears)).toBe(false);
+        await expect(canvasElement.querySelector('[data-grenade-id="tears"]')).toBeNull();
+        await expect(canvasElement.querySelector('[role="radio"][aria-checked="true"]')?.getAttribute('data-grenade-id')).toBe('photon');
     },
 };
 
@@ -195,8 +210,7 @@ export const NoRiderGrenade: Story = {
 export const ThrownPhotonFlashOpensOnIt: Story = {
     render: () => {
         const photon = ITEMS.find((item) => item.id === 'photon');
-        const opens = photon !== undefined && resolveThrow({ class: 'thrown', type: 'grenade', ...photon.system }).path === 'grenade-dialog';
-        return renderDialog(opens ? 'photon' : '');
+        return renderDialog(photon !== undefined && opensDialog(photon) ? 'photon' : '');
     },
     play: async ({ canvasElement }) => {
         const checked = Array.from(canvasElement.querySelectorAll('[data-grenade-id][aria-checked="true"]')).map((el) => el.getAttribute('data-grenade-id'));
@@ -208,8 +222,8 @@ export const ThrownPhotonFlashOpensOnIt: Story = {
 /** The chat card the Throw posts, built from the same choice the dialog shows. */
 export const ThrownCard: Story = {
     render: () => {
-        const { selectedGrenade } = buildGrenadeThrowContext(ITEMS, 'photon', LABELS);
-        return renderSheet(chatTemplateSrc, { ...selectedGrenade, gameSystem: 'dh2' });
+        const { selectedGrenade } = buildGrenadeThrowContext(DIALOG_ITEMS, 'photon', LABELS);
+        return renderSheet(chatTemplateSrc, { rider: selectedGrenade, gameSystem: 'dh2' });
     },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-grenade-card]')?.getAttribute('data-wh40k-system')).toBe('dh2');

@@ -8,14 +8,13 @@
  * model is `grenade-throw-view.ts`.
  */
 
-import { characteristicLabel } from '../../helpers/characteristic-labels.ts';
-import { t } from '../../i18n/t.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { resolveThrow } from '../../rules/combat-actions.ts';
 import { ownerGameLine } from '../../utils/item-variant-utils.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels, type GrenadeThrowViewContext } from './grenade-throw-view.ts';
+import { GRENADE_LABELS } from './grenade-labels.ts';
+import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeThrowViewContext } from './grenade-throw-view.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -31,9 +30,10 @@ interface GrenadeThrowContext extends Record<string, unknown>, GrenadeThrowViewC
     gameSystem: string;
 }
 
-const LABELS: GrenadeLabels = { localize: t, characteristic: characteristicLabel };
-
-/** The rider grenades the thrower carries: thrown weapons whose Throw opens this dialog. */
+/**
+ * The rider grenades the thrower carries: thrown weapons whose Throw opens this dialog.
+ * A rider grenade that deals damage takes the weapon roll instead (#622), so it is not listed.
+ */
 function riderGrenades(actor: GrenadeThrower): GrenadeItemView[] {
     return Array.from(actor.items).flatMap((item) =>
         item.id !== null && item.isThrown && resolveThrow(item.system).path === 'grenade-dialog' ? [{ id: item.id, name: item.name, system: item.system }] : [],
@@ -88,7 +88,7 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
     /** @inheritDoc */
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<GrenadeThrowContext> {
         const context = await super._prepareContext(options);
-        const view = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, LABELS);
+        const view = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, GRENADE_LABELS);
         this.#selectedId = view.selectedId;
         return { ...context, ...view, gameSystem: this.#gameSystem };
     }
@@ -103,12 +103,12 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
 
     static async #onThrow(this: GrenadeThrowDialog, event: Event, _target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { selectedGrenade } = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, LABELS);
+        const { selectedGrenade } = buildGrenadeThrowContext(riderGrenades(this.#actor), this.#selectedId, GRENADE_LABELS);
         if (selectedGrenade === null) return;
         const gameSystem = this.#gameSystem;
         await emitChatFromTemplate(
             'systems/wh40k-rpg/templates/chat/grenade-throw-chat.hbs',
-            { ...selectedGrenade, gameSystem, _gameSystemId: gameSystem },
+            { rider: selectedGrenade, gameSystem, _gameSystemId: gameSystem },
             { speaker: { alias: this.#actor.name } },
         );
         await this.close();

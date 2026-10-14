@@ -52,6 +52,8 @@ export interface RiderWeaponSystem {
     rider?: GrenadeRiderData | null;
     /** The weapon's quality ids. */
     special?: ReadonlySet<string>;
+    /** Whether the weapon rolls damage (WeaponData's getter; false for a "–" damage line). */
+    dealsDamage?: boolean;
 }
 
 /** The Blast quality's id; its rating is the blast radius in metres. */
@@ -65,6 +67,15 @@ export function hasGrenadeRider<T extends RiderWeaponSystem>(system: T): system 
 /** Whether the rider has its targets test (a Smoke grenade's screen, Tears of the Emperor's strike, have none). */
 export function riderHasTest(rider: GrenadeRiderData): boolean {
     return rider.test.characteristic !== '';
+}
+
+/**
+ * Whether a rider grenade takes the weapon roll (#622): one that deals damage throws on
+ * BS, scatters, places its Blast and rolls its damage before its rider applies. One that
+ * deals none is thrown from the grenade dialog, whose card carries the rider.
+ */
+export function riderTakesWeaponRoll(system: RiderWeaponSystem): boolean {
+    return system.dealsDamage === true;
 }
 
 /** The weapon's Blast rating in metres, or null when it has no rated Blast. */

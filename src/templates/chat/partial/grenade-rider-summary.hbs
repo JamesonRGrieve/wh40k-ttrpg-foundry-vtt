@@ -1,0 +1,36 @@
+{{!--
+    A grenade's rider (#135, #622): its area, test, duration and effect, read from the
+    grenade's own `system.rider` through `grenade-throw-view.ts`. Shared by the throw card
+    (a grenade that deals no damage) and the damage card (one that does, whose rider
+    follows its damage onto everyone the blast caught).
+
+    Hash params:
+        rider  — required, a GrenadeChoice {areaLabel, testLabel, durationLabel, shiftLabel, effectLabel, effect}
+--}}
+<div data-grenade-rider>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-mb-3">
+        {{#if rider.areaLabel}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.GrenadeRider.Area"}}</span>
+                <span class="tw-font-bold tw-tabular-nums tw-text-[#e8e4d9]">{{rider.areaLabel}}</span>
+            </li>
+        {{/if}}
+        <li class="tw-flex tw-justify-between tw-gap-3">
+            <span class="tw-text-[#9a9a8a]">{{localize "WH40K.GrenadeRider.Test"}}</span>
+            <span class="tw-font-bold tw-tabular-nums tw-text-gold" data-grenade-test>{{rider.testLabel}}</span>
+        </li>
+        {{#if rider.durationLabel}}
+            <li class="tw-flex tw-justify-between tw-gap-3">
+                <span class="tw-text-[#9a9a8a]">{{localize "WH40K.GrenadeRider.Duration"}}</span>
+                <span class="tw-font-bold tw-text-right tw-text-[#e8e4d9]">{{rider.durationLabel}}</span>
+            </li>
+        {{/if}}
+    </ul>
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.3)] tw-bg-[rgba(0,0,0,0.25)]">
+        <div class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a] tw-mb-1">{{rider.effectLabel}}</div>
+        <div class="tw-text-[0.85rem] tw-text-[#e8e4d9]" data-grenade-effect>{{rider.effect}}</div>
+        {{#if rider.shiftLabel}}
+            <div class="tw-mt-1 tw-text-[0.8rem] tw-text-[#e8e4d9]">{{rider.shiftLabel}}</div>
+        {{/if}}
+    </div>
+</div>

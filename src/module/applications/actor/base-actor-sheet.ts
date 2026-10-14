@@ -2114,9 +2114,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (itemId === undefined || itemId === '') return;
 
         // Throw half-action: a grenade whose compendium document authors a rider
-        // (#135) opens the grenade dialog on that grenade (#619). Every other thrown
-        // weapon — damage grenades included — takes the normal roll, which throws on
-        // BS, scatters a miss and resolves its Blast.
+        // (#135) and deals no damage opens the grenade dialog on that grenade (#619).
+        // Every other thrown weapon — damage grenades, and rider grenades that deal
+        // damage (#622), included — takes the normal roll, which throws on BS,
+        // scatters a miss and resolves its Blast.
         const item = this.actor.items.get(itemId);
         if (item?.isThrown === true) {
             const { resolveThrow } = await import('../../rules/combat-actions.ts');

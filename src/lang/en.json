@@ -2666,7 +2666,9 @@
             "Effect": "Effect",
             "ThrowButton": "Throw",
             "Cancel": "Cancel",
-            "ChatTitle": "Grenade Thrown"
+            "ChatTitle": "Grenade Thrown",
+            "FollowsDamage": "Rider — after the damage",
+            "Struck": "Struck"
         },
         "Daemonhost": {
             "DialogTitle": "Bind Daemonhost",

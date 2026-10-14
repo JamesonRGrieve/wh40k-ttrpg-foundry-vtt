@@ -30,7 +30,10 @@ import { scaledMs } from './lib/timing';
  * - its Throw posts the card with the Photon Flash's pack rider: Agility +10, the
  *   Blast (6) radius, rounds per degree of failure and the book's effect;
  * - throwing the Frag Grenade at a target takes the weapon roll, which places its
- *   Blast and resolves who it catches.
+ *   Blast and resolves who it catches;
+ * - Tears of the Emperor is a rider grenade that deals damage (#622): its Throw takes
+ *   the weapon roll too (BS test, Blast, damage), and its damage card states its rider
+ *   after the hits, for both creatures the Blast caught.
  *
  * Grid: 100 px = 1 m. Each flow records under `grenade-throw.flow`. Keys MUST match
  * GRENADE_THROW_FLOWS in scripts/e2e-coverage.mjs.
@@ -47,6 +50,8 @@ const GRENADE_THROW_FLOWS = [
     'save-grenade-card-posted',
     'rider-card-reads-pack-data',
     'damage-grenade-throws-with-blast',
+    'damaging-rider-grenade-takes-weapon-roll',
+    'damaging-rider-follows-damage',
 ] as const;
 type FlowName = (typeof GRENADE_THROW_FLOWS)[number];
 
@@ -57,7 +62,10 @@ const PHOTON_FLASH = `${WEAPONS}.rpn0j61j1euqi000`;
 const SMOKE_GRENADE = `${WEAPONS}.v5W6x7Y8z9A0b1C2`;
 const PSYCHOTROKE = `${WITHIN_WEAPONS}.11H4xA4yCvZojuHn`;
 const TEARS = `${WITHIN_WEAPONS}.WUQMZb3rGzvRiJi8`;
-const RIDER_GRENADES = ['Photon Flash Grenade', 'Smoke Grenade', 'Psychotroke Grenade', 'Tears of the Emperor'];
+/** The rider grenades the dialog lists: those that deal no damage. Tears of the Emperor deals 1d10 X, so it takes the weapon roll (#622). */
+const RIDER_GRENADES = ['Photon Flash Grenade', 'Smoke Grenade', 'Psychotroke Grenade'];
+/** Tears of the Emperor's damage card (Enemies Within p.45): its rider, after the damage, on both creatures its Blast (2) caught. */
+const TEARS_DAMAGE_CARD_TEXT = ['Rider — after the damage', 'Struck: Heretic, Accomplice', 'Perils of the Warp', 'Until the end of the encounter'];
 /** The Photon Flash rider the DH2 pack authors (Core p.158), as its card prints it. */
 const PHOTON_CARD_TEXT = ['Agility +10', '6 m radius', '1 round per degree of failure', 'Ordinary (+10) Agility test or be blinded'];
 /** Psychotroke's step-up (Enemies Within p.44), as the dialog prints it. */
@@ -238,6 +246,89 @@ async function pickInDialog(page: Page, dialogId: string, actorId: string, weapo
     return (await page.locator(`#${dialogId} [data-grenade-detail]`).textContent()) ?? '';
 }
 
+/** A grenade thrown through the weapon roll: its attack card, and the card resolving its Blast. */
+interface WeaponRollThrow {
+    blastCard: string | null;
+    resolved: string | null;
+    detail: string;
+}
+
+/** Throw `weaponName` at the target through the weapon roll (a BS hit), then resolve its Blast from the attack card. */
+async function throwThroughWeaponRoll(page: Page, scene: HarnessScene, weaponName: string): Promise<WeaponRollThrow> {
+    const thrown = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+        firer: scene.tokens['thrower'] ?? '',
+        target: scene.tokens['target'] ?? '',
+        weaponName,
+        faces: [[20, 100]] as Array<[number, number]>,
+    });
+    const blastCard = await page.evaluate(async (ids: readonly string[]) => {
+        for (const id of ids) {
+            const sel = `#sidebar .chat-log .message[data-message-id="${id}"]`;
+            // eslint-disable-next-line no-await-in-loop -- each card is read once it renders
+            await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
+            if (document.querySelector(`${sel} .roll-control__resolve-area`) !== null) return id;
+        }
+        return null;
+    }, thrown.messageIds);
+    let resolved: string | null = null;
+    if (blastCard !== null) {
+        const posted = await page.evaluate(
+            async (id: string) =>
+                globalThis.wh40kAttack.clickInMessage({ messageId: id, buttonSelector: '.roll-control__resolve-area', faces: [], expectMessages: 1 }),
+            blastCard,
+        );
+        resolved = posted.at(-1) ?? null;
+    }
+    const detail = `${weaponName}: thrown messages ${thrown.messageIds.length}, blast card ${String(blastCard)}, results ${String(
+        resolved,
+    )}; notices ${thrown.notices.join(' | ')}`;
+    return { blastCard, resolved, detail };
+}
+
+/** The damage card a Roll Damage posts: its text, and whether its rider block follows every hit. */
+interface DamageCardRead {
+    id: string;
+    text: string;
+    riderAfterHits: boolean;
+}
+
+/** Click Roll Damage on an area-results card and read the damage card it posts. */
+async function rollDamageFrom(page: Page, resultsCard: string): Promise<DamageCardRead | null> {
+    const posted = await page.evaluate(
+        async (id: string) =>
+            globalThis.wh40kAttack.clickInMessage({ messageId: id, buttonSelector: '.roll-control__roll-damage', faces: [[5, 10]], expectMessages: 1 }),
+        resultsCard,
+    );
+    const damageCard = posted.at(-1);
+    if (damageCard === undefined) return null;
+    return page.evaluate(async (messageId: string): Promise<DamageCardRead> => {
+        const sel = `#sidebar .chat-log .message[data-message-id="${messageId}"]`;
+        await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
+        const root = document.querySelector<HTMLElement>(sel);
+        const rider = root?.querySelector('[data-damage-rider]') ?? null;
+        const hits = Array.from(root?.querySelectorAll('[data-damage-effective], [data-hit-target]') ?? []);
+        const riderAfterHits = rider !== null && hits.every((el) => (el.compareDocumentPosition(rider) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0);
+        return { id: messageId, text: (root?.textContent ?? '').replace(/\s+/g, ' '), riderAfterHits };
+    }, damageCard);
+}
+
+/** How the sheet's Throw resolves the named weapon: `grenade-dialog` or `weapon-roll` (#619, #622). */
+async function throwPathOf(page: Page, actorId: string, weaponName: string): Promise<string> {
+    return page.evaluate(
+        async (args: { actorId: string; weaponName: string }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as Globals;
+            const item = g.game.actors.get(args.actorId)?.items.contents.find((i) => i.name === args.weaponName);
+            const rulesRoot = '/systems/wh40k-rpg/module/rules';
+            const combat = (await import(/* @vite-ignore */ `${rulesRoot}/combat-actions.js`)) as {
+                resolveThrow: (s: object) => { path: string };
+            };
+            return item === undefined ? 'missing' : combat.resolveThrow(item.system).path;
+        },
+        { actorId, weaponName },
+    );
+}
+
 test.describe.serial('grenade detection (Tier B, #619)', () => {
     test.setTimeout(scaledMs(300_000));
     test('a grenade is read from its class and type: no training, no SB, the right throw path', async ({ page }) => {
@@ -324,39 +415,34 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
             }
 
             // --- Frag: the weapon roll throws it and places its Blast ------------
-            const thrown = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
-                firer: scene.tokens['thrower'] ?? '',
-                target: scene.tokens['target'] ?? '',
-                weaponName: 'Frag Grenade',
-                faces: [[20, 100]] as Array<[number, number]>,
-            });
-            const blastCard = await page.evaluate(async (ids: readonly string[]) => {
-                for (const id of ids) {
-                    const sel = `#sidebar .chat-log .message[data-message-id="${id}"]`;
-                    // eslint-disable-next-line no-await-in-loop -- each card is read once it renders
-                    await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
-                    if (document.querySelector(`${sel} .roll-control__resolve-area`) !== null) return id;
-                }
-                return null;
-            }, thrown.messageIds);
-            let resolved: string | null = null;
-            if (blastCard !== null) {
-                const posted = await page.evaluate(
-                    async (id: string) =>
-                        globalThis.wh40kAttack.clickInMessage({ messageId: id, buttonSelector: '.roll-control__resolve-area', faces: [], expectMessages: 1 }),
-                    blastCard,
-                );
-                resolved = posted.at(-1) ?? null;
-            }
+            const fragThrow = await throwThroughWeaponRoll(page, scene, 'Frag Grenade');
+            record('damage-grenade-throws-with-blast', fragThrow.blastCard !== null && fragThrow.resolved !== null, fragThrow.detail);
+            if (fragThrow.blastCard !== null)
+                await snap(page, 'grenade-frag-thrown-attack-card', { selector: await popOutChatMessage(page, fragThrow.blastCard) });
+            if (fragThrow.resolved !== null)
+                await snap(page, 'grenade-frag-blast-results-card', { selector: await popOutChatMessage(page, fragThrow.resolved) });
+
+            // --- Tears of the Emperor: a rider grenade that deals damage (#622) ---
+            const tearsPath = await throwPathOf(page, throwerId, 'Tears of the Emperor');
+            const tears = await throwThroughWeaponRoll(page, scene, 'Tears of the Emperor');
             record(
-                'damage-grenade-throws-with-blast',
-                blastCard !== null && resolved !== null,
-                `thrown messages ${thrown.messageIds.length}, blast card ${String(blastCard)}, results ${String(resolved)}; notices ${thrown.notices.join(
-                    ' | ',
-                )}`,
+                'damaging-rider-grenade-takes-weapon-roll',
+                tearsPath === 'weapon-roll' && tears.blastCard !== null && tears.resolved !== null,
+                `throw path ${tearsPath}; ${tears.detail}`,
             );
-            if (blastCard !== null) await snap(page, 'grenade-frag-thrown-attack-card', { selector: await popOutChatMessage(page, blastCard) });
-            if (resolved !== null) await snap(page, 'grenade-frag-blast-results-card', { selector: await popOutChatMessage(page, resolved) });
+            const tearsDamage = tears.resolved === null ? null : await rollDamageFrom(page, tears.resolved);
+            const tearsMissing = TEARS_DAMAGE_CARD_TEXT.filter((fragment) => tearsDamage?.text.includes(fragment) !== true);
+            record(
+                'damaging-rider-follows-damage',
+                tearsDamage !== null && tearsDamage.riderAfterHits && tearsMissing.length === 0,
+                `damage card ${JSON.stringify(tearsDamage)} lacks ${JSON.stringify(tearsMissing)}`,
+            );
+            if (tearsDamage !== null) {
+                const popout = await popOutChatMessage(page, tearsDamage.id);
+                await snap(page, 'grenade-tears-damage-card-with-rider', { selector: popout });
+                // Two hits outgrow the window, so the rider block below them gets its own capture.
+                await snap(page, 'grenade-tears-damage-card-rider-block', { selector: `${popout} [data-damage-rider]` });
+            }
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
         }

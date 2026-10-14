@@ -1,5 +1,5 @@
 import type { WeaponRollData } from '../rolls/roll-data.ts';
-import { hasGrenadeRider, type RiderWeaponSystem } from './grenade-rider.ts';
+import { hasGrenadeRider, type RiderWeaponSystem, riderTakesWeaponRoll } from './grenade-rider.ts';
 import { type GrenadeWeaponSystem, isGrenadeWeapon } from './grenade-weapon.ts';
 import { hitLocationNames } from './hit-locations.ts';
 import { resolveTwoWeaponPenalties, type TwoWeaponTalent } from './two-weapon-fighting.ts';
@@ -166,13 +166,15 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
  * How a thrown weapon's Throw half-action resolves.
  *
  * - `grenade-dialog`: a grenade whose compendium document authors a rider
- *   (`system.rider`, #135) — a save-or-suffer payload such as a Photon Flash's
- *   blinding or a Smoke grenade's screen. The {@link GrenadeThrowDialog} posts
- *   its area, test and effect, opened on that grenade.
- * - `weapon-roll`: every other thrown weapon — a damage grenade (Frag, Krak)
- *   and an ordinary thrown weapon (knife, throwing axe) alike. The weapon-roll
- *   pipeline throws on BS, scatters a miss and places and resolves a Blast
- *   (`rolls/action-data.ts`, #599).
+ *   (`system.rider`, #135) and deals no damage — a save-or-suffer payload such as
+ *   a Photon Flash's blinding or a Smoke grenade's screen. The
+ *   {@link GrenadeThrowDialog} posts its area, test and effect, opened on that
+ *   grenade.
+ * - `weapon-roll`: every other thrown weapon — a damage grenade (Frag, Krak), a
+ *   rider grenade that also deals damage (Rad, Psyk-out, Whitefire, Tears of the
+ *   Emperor, #622: its rider follows its damage) and an ordinary thrown weapon
+ *   (knife, throwing axe) alike. The weapon-roll pipeline throws on BS, scatters a
+ *   miss and places and resolves a Blast (`rolls/action-data.ts`, #599).
  */
 export type ThrowResolution = { path: 'grenade-dialog' } | { path: 'weapon-roll' };
 
@@ -182,10 +184,11 @@ export interface ThrowableWeaponSystem extends GrenadeWeaponSystem, RiderWeaponS
 /**
  * Decide how a thrown weapon's Throw action resolves, from the weapon's own data
  * (Direction #7 — never its name): a grenade ({@link isGrenadeWeapon}) that carries a
- * rider goes to the grenade dialog, everything else to the weapon roll.
+ * rider and deals no damage goes to the grenade dialog, everything else to the weapon
+ * roll — a rider grenade that deals damage included ({@link riderTakesWeaponRoll}).
  */
 export function resolveThrow(system: ThrowableWeaponSystem): ThrowResolution {
-    return isGrenadeWeapon(system) && hasGrenadeRider(system) ? { path: 'grenade-dialog' } : { path: 'weapon-roll' };
+    return isGrenadeWeapon(system) && hasGrenadeRider(system) && !riderTakesWeaponRoll(system) ? { path: 'grenade-dialog' } : { path: 'weapon-roll' };
 }
 
 export function allCombatActions(): CombatAction[] {
