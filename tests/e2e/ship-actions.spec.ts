@@ -207,7 +207,8 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
                 choices: { weapon: MACROBATTERY.name },
                 faces: [21],
             });
-            expect(lock.dialogOptions['weapon']).toEqual([LANCE.name, MACROBATTERY.name]);
+            // Listed by sheet order, then name: never the embedded collection's iteration order (#186).
+            expect(lock.dialogOptions['weapon']).toEqual([MACROBATTERY.name, LANCE.name]);
             expect(lock.unusedDice).toBe(0);
             expect(lock.card.text, 'the Combined Skill Test splits Detection from the live Aid the Machine Spirit bonus').toContain(
                 'Detection (Ship Actions Frigate)',

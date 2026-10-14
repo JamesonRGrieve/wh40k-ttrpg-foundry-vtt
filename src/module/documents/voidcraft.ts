@@ -8,6 +8,7 @@ import {
     type ShipEffectView,
     type ShipModifierInput,
 } from '../rules/ship-action-effects.ts';
+import { shipWeaponChoices, type ShipWeaponChoice } from '../rules/ship-actions.ts';
 import { supportsShipAssault, type ShipAssaultShip } from '../rules/ship-assault.ts';
 import {
     emptySnapshot,
@@ -543,8 +544,8 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /** The ship's Weapon Components, for choosing the one Lock on Target aims (#186). */
-    get shipWeaponChoices(): { id: string; name: string }[] {
-        return this.shipWeapons.map((weapon) => ({ id: weapon.id ?? '', name: weapon.name }));
+    get shipWeaponChoices(): ShipWeaponChoice[] {
+        return shipWeaponChoices(this.shipWeapons.map((weapon) => ({ id: weapon.id ?? '', name: weapon.name, sort: weapon.sort })));
     }
 
     /**

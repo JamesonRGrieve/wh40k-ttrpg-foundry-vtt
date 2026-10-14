@@ -127,3 +127,18 @@ export function migrateLegacyOrderTest(source: Record<string, unknown>): void {
     delete source['skill'];
     delete source['modifier'];
 }
+
+/** A Weapon Component as a ship action offers it for choosing (Lock on Target, #186). */
+export interface ShipWeaponChoice {
+    readonly id: string;
+    readonly name: string;
+}
+
+/**
+ * The ship's Weapon Components in the order a choice lists them: the sheet's
+ * own order (each item's `sort`), then by name. An embedded collection does
+ * not promise an iteration order, so the list must not depend on it.
+ */
+export function shipWeaponChoices(weapons: Iterable<ShipWeaponChoice & { readonly sort: number }>): ShipWeaponChoice[] {
+    return [...weapons].sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name)).map(({ id, name }) => ({ id, name }));
+}

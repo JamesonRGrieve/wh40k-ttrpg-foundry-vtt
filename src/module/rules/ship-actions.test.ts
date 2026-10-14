@@ -1,7 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import { isLineOrHomebrewPack } from '../utils/compendium-query.ts';
 import type { ShipEffectData } from './ship-action-effects.ts';
-import { shipActionRows, shipActionTestLabel, toShipActionRow, type ShipActionOrderView } from './ship-actions.ts';
+import { shipActionRows, shipActionTestLabel, shipWeaponChoices, toShipActionRow, type ShipActionOrderView } from './ship-actions.ts';
+
+describe('shipWeaponChoices', () => {
+    it('lists the Weapon Components by their sheet order, then by name — never by collection order', () => {
+        const lance = { id: 'l', name: 'Titanforge Lance', sort: 0 };
+        const battery = { id: 'm', name: 'Sunsear Laser Battery', sort: 0 };
+        const expected = [
+            { id: 'm', name: 'Sunsear Laser Battery' },
+            { id: 'l', name: 'Titanforge Lance' },
+        ];
+        // The same weapons, whichever order the embedded collection iterates them in.
+        expect(shipWeaponChoices([lance, battery])).toEqual(expected);
+        expect(shipWeaponChoices([battery, lance])).toEqual(expected);
+        // A GM-arranged sheet order wins over the name.
+        expect(shipWeaponChoices([battery, { ...lance, sort: -100 }]).map((weapon) => weapon.id)).toEqual(['l', 'm']);
+    });
+});
 
 /** Voidcraft Extended / Manoeuvre Action rows (#185, #186). */
 
