@@ -59,11 +59,19 @@ function tsFiles(dir: string): string[] {
     });
 }
 
-describe('no generator creates the retired npcV2 type', () => {
+describe('no code uses the retired npcV2 type', () => {
+    const root = resolve(__dirname, '../..');
+
     it('no application source writes `type: npcV2`', () => {
-        const root = resolve(__dirname, '../..');
         const offenders = tsFiles(join(root, 'applications'))
             .filter((file) => /type:\s*'npcV2'/.test(readFileSync(file, 'utf8')))
+            .map((file) => relative(root, file));
+        expect(offenders).toEqual([]);
+    });
+
+    it('no module source compares or names it as a string, so nothing still keys on it (the sheet auto-select did)', () => {
+        const offenders = tsFiles(root)
+            .filter((file) => /['"]npcV2['"]/.test(readFileSync(file, 'utf8')))
             .map((file) => relative(root, file));
         expect(offenders).toEqual([]);
     });

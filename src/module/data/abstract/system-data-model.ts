@@ -15,7 +15,7 @@ import type { SystemDataModelMetadata } from './_types.ts';
 export default class SystemDataModel extends foundry.abstract.TypeDataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
     /* eslint-enable @typescript-eslint/no-explicit-any */
     /**
-     * System type that this data model represents (e.g. "acolyte", "npcV2", "vehicle").
+     * System type that this data model represents (e.g. "dh2-character", "dh2-npc", "dh2-terracraft").
      * @type {string}
      */
     static _systemType: string;

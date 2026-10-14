@@ -14,7 +14,7 @@ interface NpcArmourChange {
 }
 
 /**
- * Document class for npcV2 type actors.
+ * Document class for the per-line NPC actor types (`dh2-npc`, `rt-npc`, …).
  * Simplified NPC implementation without the full PC overhead.
  *
  * @extends {WH40KBaseActor}

@@ -292,9 +292,6 @@ export class HooksManager {
         registerStackedTokenPicker();
         // Status-effect visuals on tokens (#595), rendered from document state on every client.
         registerStatusVisuals();
-        hooksOn('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
-            HooksManager.getActorSheetClass(actor, sheetData),
-        );
 
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
@@ -1512,30 +1509,5 @@ export class HooksManager {
 
         const actions = header.querySelector('.header-actions');
         if (actions !== null) actions.prepend(browserBtn);
-    }
-
-    /**
-     * Auto-select appropriate sheet for npcV2 actors based on primaryUse field.
-     * Hook: getActorSheetClass
-     */
-    static getActorSheetClass(actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>): string | null {
-        // Only handle npcV2 actors
-        if ((actor.type as string) !== 'npcV2') return null;
-
-        // Check primaryUse field
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is DataModel-backed but primaryUse field access requires index signature; fix defineSchema() is tracked separately
-        const primaryUse = (actor.system as Record<string, unknown>)['primaryUse'];
-
-        // Auto-select a craft sheet for vehicle/ship NPCs
-        if (primaryUse === 'vehicle' || primaryUse === 'ship') {
-            // Find the first registered craft/voidcraft sheet
-            const craftSheet = Object.values(sheetData).find((s) => /Craft|Voidcraft/.test(s.id));
-            if (craftSheet) {
-                return craftSheet.id;
-            }
-        }
-
-        // Default to NPCSheet for standard NPCs
-        return null; // Let default handling work
     }
 }
