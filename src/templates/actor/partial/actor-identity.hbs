@@ -17,14 +17,23 @@
                             button on the portrait (character sheet only).
        - portraitWidthClass Tailwind size class for the portrait container.
                             Defaults to "tw-w-full tw-max-w-[160px]" (sidebar).
-                            Vehicle/starship pass "tw-w-44" for fixed width. --}}
+                            Vehicle/starship pass "tw-w-44" for fixed width.
+       - fitName            When true, the name input steps its font size down
+                            as the name grows (`nameFitClass`) so a long name
+                            fits the narrow sidebar; past the last step it ends
+                            in an ellipsis. The full name is always the input's
+                            tooltip (#630).
+
+     An actor carrying the Daemonic trait (`isDaemonic`) gets its immunities pill
+     overlaid along the portrait's bottom edge rather than stacked under it, so it
+     never pushes the sidebar fields (Threat / Tier) below the fold (#630). --}}
 
 <div class="tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-w-full tw-min-w-0">
     <div class="tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
         {{#if nameLabelKey}}
         <span class="tw-shrink-0 tw-min-w-[70px] tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize nameLabelKey}}</span>
         {{/if}}
-        <input class="tw-min-w-0 tw-min-w-[80px] tw-flex-1 tw-text-center tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[1.05rem] tw-font-bold tw-max-w-[320px] tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" />
+        <input class="tw-min-w-0 tw-min-w-[80px] tw-flex-1 tw-text-center tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 {{#if fitName}}{{nameFitClass actor.name}} tw-text-ellipsis{{else}}tw-text-[1.05rem]{{/if}} tw-font-bold tw-max-w-[320px] tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" data-tooltip="{{actor.name}}" />
     </div>
     {{#unless isNPC}}
     {{#if system.bio}}
@@ -80,6 +89,12 @@
         </div>
         {{/if}}{{/if}}
         <img class="tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+        {{#if isDaemonic}}
+        {{!-- Bottom-left, clear of the journal control in the bottom-right corner. --}}
+        <div class="tw-absolute tw-bottom-1 tw-left-1 tw-z-10 tw-flex tw-min-w-0 {{#if portraitJournal}}tw-right-10{{else}}tw-right-1{{/if}}">
+            {{> systems/wh40k-rpg/templates/actor/partial/daemonic-immunities-badge.hbs}}
+        </div>
+        {{/if}}
         {{> systems/wh40k-rpg/templates/actor/partial/portrait-journal-link.hbs}}
     </div>
 </div>

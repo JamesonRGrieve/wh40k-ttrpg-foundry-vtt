@@ -1,23 +1,26 @@
 {{!-- Daemonic Immunities badge (#143 — DH2 Errata L69-73).
 
-     Rendered into the actor sheet header for actors carrying the
-     Daemonic trait. Surfaces a crimson skull pill summarising the
-     three immunities granted by the trait (disease / poison / Undying).
-     The tooltip elaborates what Undying covers.
+     A crimson skull pill summarising the three immunities granted by the
+     Daemonic trait (disease / poison / Undying). `actor-identity.hbs` overlays
+     it on the portrait's bottom edge for actors carrying the trait.
+
+     One line, always (#630): the immunities run out to an ellipsis rather than
+     wrapping, so the pill keeps a fixed height whatever its width. The tooltip
+     (and the accessible name) carries the full text.
 
      Context: rendered only when the parent template gates on
      `isDaemonic` — the partial assumes the gate has already fired
      and emits the badge unconditionally.
 
-     Pure presentation: no actions, no data attributes, no event
-     handlers. Composes with the underlying engine helpers in
-     `src/module/rules/daemonic-immunities.ts`. --}}
-<div data-wh40k-hook="daemonic-immunities-badge" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-2 tw-py-1 tw-rounded-md tw-border tw-border-solid tw-border-crimson tw-bg-crimson/20 tw-text-crimson-light tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-wide tw-select-none"
+     Pure presentation: no actions, no event handlers. Composes with the
+     underlying engine helpers in `src/module/rules/daemonic-immunities.ts`. --}}
+<div data-wh40k-hook="daemonic-immunities-badge" class="tw-flex tw-min-w-0 tw-max-w-full tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded-md tw-border tw-border-solid tw-border-crimson tw-bg-black/80 tw-text-crimson-light tw-text-[0.65rem] tw-leading-tight tw-font-bold tw-uppercase tw-tracking-wide tw-whitespace-nowrap tw-select-none"
      data-tooltip="{{localize "WH40K.DaemonicImmunities.Tooltip"}}"
-     aria-label="{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}">
-    <i class="fa-solid fa-skull tw-text-crimson-light" aria-hidden="true"></i>
-    <span data-wh40k-hook="daemonic-immunities-badge__label">{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}</span>
-    <span class="tw-font-normal tw-normal-case tw-tracking-normal tw-opacity-90">
+     role="img"
+     aria-label="{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}: {{localize "WH40K.DaemonicImmunities.DiseaseImmune"}}, {{localize "WH40K.DaemonicImmunities.PoisonImmune"}}, {{localize "WH40K.DaemonicImmunities.Undying"}}">
+    <i class="fa-solid fa-skull tw-shrink-0 tw-text-crimson-light" aria-hidden="true"></i>
+    <span data-wh40k-hook="daemonic-immunities-badge__label" class="tw-shrink-0">{{localize "WH40K.DaemonicImmunities.BadgeLabel"}}</span>
+    <span data-wh40k-hook="daemonic-immunities-badge__immunities" class="tw-min-w-0 tw-truncate tw-font-normal tw-normal-case tw-tracking-normal tw-opacity-90">
         {{localize "WH40K.DaemonicImmunities.DiseaseImmune"}} · {{localize "WH40K.DaemonicImmunities.PoisonImmune"}} · {{localize "WH40K.DaemonicImmunities.Undying"}}
     </span>
 </div>

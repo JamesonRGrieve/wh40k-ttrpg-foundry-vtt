@@ -10,6 +10,7 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { inlineTernary } from './inline-ternary.ts';
+import { nameFitClass } from './name-fit.ts';
 import { buildSafeAttrs } from './safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
 
@@ -149,6 +150,9 @@ export function registerHandlebarsHelpers(): void {
         const floor = Number(min);
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
+
+    /** Font-size class that fits an actor name into the sidebar name input (#630). */
+    Handlebars.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));
 
     Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.
