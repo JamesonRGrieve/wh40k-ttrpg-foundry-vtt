@@ -18,6 +18,7 @@ import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import ReinforcementCallDialog from '../dialogs/reinforcement-call-dialog.ts';
 import { callerRequirementView, requiredSkillLabel } from '../dialogs/reinforcement-call-view.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
+import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
@@ -1349,8 +1350,7 @@ export default class NPCSheet extends CharacterSheet {
      */
     static #calculateDifficulty(this: NPCSheet, event: Event, _target: HTMLElement): void {
         event.preventDefault();
-        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.npc;
-        DiffCalcDialog.show(this.npcActor);
+        DifficultyCalculatorDialog.show(this.npcActor);
     }
 
     /* -------------------------------------------- */

@@ -3,7 +3,6 @@
  * Career-based advancement with 3 skill ranks.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -11,7 +10,7 @@ import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
@@ -116,12 +115,12 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return {};
     }
 
-    resolveCareerKey(actor: WH40KBaseActor): string | null {
-        const career = actor.system.originPath?.career;
+    resolveCareerKey(actor: SystemConfigActor): string | null {
+        const career = actor.system.originPath?.['career'];
         return typeof career === 'string' ? career : null;
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         // Divination renders as the italic quote beneath the portrait
         // (sidebar-header), so it is not repeated as a static row here (#226).
         return [

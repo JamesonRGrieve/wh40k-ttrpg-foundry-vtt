@@ -1,7 +1,6 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import type { ActionData } from './action-data.ts';
 import { keepModeFormula, type RollKeepMode } from './roll-keep.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: recursive dot-notation traversal; values are unknown by design
@@ -397,9 +396,21 @@ export async function postFlattenedInstanceToChat(instance: object, template: st
     return postChatCard(html, { rolls: opts.rolls, flags: opts.flags });
 }
 
+/**
+ * The part of an ActionData the chat helpers read. Declared structurally so this
+ * module stays out of the action-data import graph: action-data imports this file,
+ * so naming its class here closed every roll-pipeline cycle through roll-helpers.
+ */
+interface PostableAction {
+    template: string;
+    messageId: string | null;
+    chatFlags: ChatCardFlags;
+    rollData: { sourceActor: object | null; roll: Roll | null; isManualRoll?: boolean };
+}
+
 /** The render options an action card is posted — and re-rendered — with. */
-function actionDataRenderOptions(actionData: ActionData): PostInstanceOptions {
-    const rollData = actionData.rollData as typeof actionData.rollData & { isManualRoll?: boolean };
+function actionDataRenderOptions(actionData: PostableAction): PostInstanceOptions {
+    const rollData = actionData.rollData;
     const roll = rollData.roll;
     return {
         actor: actionData.rollData.sourceActor,
@@ -415,7 +426,7 @@ function actionDataRenderOptions(actionData: ActionData): PostInstanceOptions {
  * Post an action's card.
  * @returns {Promise<string | null>}  The posted message's id, for an in-place re-render ({@link rerenderActionDataInChat}).
  */
-export async function sendActionDataToChat(actionData: ActionData): Promise<string | null> {
+export async function sendActionDataToChat(actionData: PostableAction): Promise<string | null> {
     return postFlattenedInstanceToChat(actionData, actionData.template, actionDataRenderOptions(actionData));
 }
 
@@ -425,7 +436,7 @@ export async function sendActionDataToChat(actionData: ActionData): Promise<stri
  * that posted the card holds its ActionData, and the poster owns the message, so
  * the update is permitted there. A card that was never posted is left alone.
  */
-export async function rerenderActionDataInChat(actionData: ActionData): Promise<void> {
+export async function rerenderActionDataInChat(actionData: PostableAction): Promise<void> {
     if (actionData.messageId === null) return;
     const message = game.messages.get(actionData.messageId);
     if (message === undefined) return;

@@ -3,10 +3,9 @@
  * Reuses the aptitude-driven four-rank character framework for now.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
@@ -53,7 +52,7 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
         };
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.Patron', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Faction', 'background'),

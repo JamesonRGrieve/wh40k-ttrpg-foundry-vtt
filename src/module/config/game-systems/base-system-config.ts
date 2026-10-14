@@ -3,7 +3,6 @@
  * Each WH40K RPG game line provides a concrete subclass.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -21,6 +20,7 @@ import type {
     AdvanceCostResult,
     AdvanceOption,
     SidebarHeaderField,
+    SystemConfigActor,
     SystemTheme,
 } from './types.ts';
 
@@ -181,7 +181,7 @@ export abstract class BaseSystemConfig {
      * @param currentTier Number of advances already purchased (0-based)
      * @returns Cost result, or null if maxed
      */
-    abstract getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null;
+    abstract getCharacteristicAdvanceCost(actor: SystemConfigActor, charKey: string, currentTier: number): AdvanceCostResult | null;
 
     /**
      * Compute the XP cost for advancing a skill to its next rank.
@@ -192,7 +192,7 @@ export abstract class BaseSystemConfig {
      * @returns Cost in XP, or null if not advanceable
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context is a system-specific extension point; concrete types are defined by each system's implementation
-    abstract getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
+    abstract getSkillAdvanceCost(actor: SystemConfigActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
 
     /**
      * Compute the XP cost for acquiring a talent.
@@ -202,14 +202,14 @@ export abstract class BaseSystemConfig {
      * @returns Cost in XP, or null if not available
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context are system-specific extension points; concrete types vary per system
-    abstract getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null;
+    abstract getTalentAdvanceCost(actor: SystemConfigActor, talent: unknown, context?: Record<string, unknown>): number | null;
 
     /**
      * Get the list of advances available to a character.
      * Career-based systems return a career-filtered list.
      * Aptitude-based systems return empty (all skills/talents available, costs computed dynamically).
      */
-    abstract getAvailableAdvances(actor: WH40KBaseActor): AdvanceOption[];
+    abstract getAvailableAdvances(actor: SystemConfigActor): AdvanceOption[];
 
     // ── Psyker Gating ────────────────────────────────────────────
 
@@ -222,7 +222,7 @@ export abstract class BaseSystemConfig {
      * item (DH2: 'Psyker' elite advance; BC: 'Psyker' archetype; OW:
      * 'Sanctioned Psyker' speciality).
      */
-    isPsyker(_actor: WH40KBaseActor): boolean {
+    isPsyker(_actor: SystemConfigActor): boolean {
         return false;
     }
 
@@ -234,7 +234,7 @@ export abstract class BaseSystemConfig {
      * The single `system.step` narrowing lives here rather than at every
      * `isPsyker` call site.
      */
-    protected ownsOriginPathItem(actor: WH40KBaseActor, step: string, name: string): boolean {
+    protected ownsOriginPathItem(actor: SystemConfigActor, step: string, name: string): boolean {
         const target = name.toLowerCase();
         return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === step && i.name.toLowerCase() === target);
     }
@@ -256,7 +256,7 @@ export abstract class BaseSystemConfig {
      * Implementations should return strings that match the existing per-system shape so the form parser
      * (which is path-sensitive on `name=`) keeps writing into the same schema slots.
      */
-    abstract getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[];
+    abstract getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[];
 
     /**
      * Build a single header-field row. All systems share the same shape; this helper is the only
@@ -282,7 +282,7 @@ export abstract class BaseSystemConfig {
     /**
      * The "Player" row that prefixes every system's header field list.
      */
-    protected makePlayerField(actor: WH40KBaseActor): SidebarHeaderField {
+    protected makePlayerField(actor: SystemConfigActor): SidebarHeaderField {
         const playerName = actor.system.bio?.playerName;
         return this.makeField(
             game.i18n.localize('WH40K.Character.Player'),
@@ -298,7 +298,7 @@ export abstract class BaseSystemConfig {
      * header builders don't repeat the same null-safety dance against the freeform
      * `originPath` record.
      */
-    protected readOriginPathField(actor: WH40KBaseActor, key: string): string | number {
+    protected readOriginPathField(actor: SystemConfigActor, key: string): string | number {
         const source = actor.system.originPath;
         if (source == null) return '';
         const value = source[key];
@@ -313,7 +313,7 @@ export abstract class BaseSystemConfig {
      * `getHeaderFields` be a flat row list with no `readOriginPathField` closure and no repeated
      * `system.originPath.` prefix. Placeholder defaults to the label (via {@link makeField}).
      */
-    protected makeOriginField(actor: WH40KBaseActor, labelKey: string, originKey: string): SidebarHeaderField {
+    protected makeOriginField(actor: SystemConfigActor, labelKey: string, originKey: string): SidebarHeaderField {
         return this.makeField(game.i18n.localize(labelKey), `system.originPath.${originKey}`, this.readOriginPathField(actor, originKey));
     }
 

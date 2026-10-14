@@ -8,9 +8,8 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Proficient / Expert (5 tiers).
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
-import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
+import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption, SystemConfigActor } from './types.ts';
 
 interface TalentLike {
     system?: { aptitudes?: string[]; tier?: number };
@@ -176,7 +175,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * so they resolve to just the universal set. Case-insensitive dedupe keeps a
      * granted "General" from doubling the injected one.
      */
-    getCharacterAptitudes(actor: WH40KBaseActor): string[] {
+    getCharacterAptitudes(actor: SystemConfigActor): string[] {
         const apts = actor.system.aptitudes;
         const granted = apts === undefined ? [] : Array.isArray(apts) ? [...apts] : [...apts];
         const result = [...granted];
@@ -198,7 +197,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * Compute match metadata for an advance's aptitudes. Used by the advancement
      * dialog to render 2/1/0 indicator dots and show which aptitudes matched.
      */
-    getAdvanceMatchInfo(actor: WH40KBaseActor, advanceAptitudes: string[]): { matches: number; matched: string[]; unmatched: string[]; all: string[] } {
+    getAdvanceMatchInfo(actor: SystemConfigActor, advanceAptitudes: string[]): { matches: number; matched: string[]; unmatched: string[]; all: string[] } {
         const characterAptitudes = this.getCharacterAptitudes(actor);
         const charSet = new Set(characterAptitudes.map((a) => a.toLowerCase()));
         const matched: string[] = [];
@@ -212,7 +211,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: SystemConfigActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -229,7 +228,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAptitudes extracted and typed by extractContextAptitudes
-    getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
+    getSkillAdvanceCost(actor: SystemConfigActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         if (currentRank >= this.skillRankCount) return null;
 
         const charAptitudes = this.getCharacterAptitudes(actor);
@@ -240,7 +239,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context match abstract base signature; talent cast to TalentLike below; context validated by extractContextAptitudes
-    getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
+    getTalentAdvanceCost(actor: SystemConfigActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
         const talentSystem = (talent as TalentLike | undefined)?.system;
         const advAptitudes = extractContextAptitudes(context) ?? talentSystem?.aptitudes ?? [];
@@ -250,7 +249,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return (this.getTalentCostTable()[tier] as Record<number, number> | undefined)?.[matches] ?? null;
     }
 
-    getAvailableAdvances(_actor: WH40KBaseActor): AdvanceOption[] {
+    getAvailableAdvances(_actor: SystemConfigActor): AdvanceOption[] {
         // Aptitude-based: all skills/talents available. The advancement dialog
         // queries compendiums and computes costs dynamically.
         return [];

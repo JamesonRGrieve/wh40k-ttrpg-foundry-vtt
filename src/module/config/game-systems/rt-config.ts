@@ -4,7 +4,6 @@
  */
 
 // The RT career registry is read from the compendium-backed boot cache.
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -14,7 +13,7 @@ import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/
 import { getCareerKeyFromName } from '../advancements/index.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Profit Factor Acquisition Test — core Table 9-35: Acquisition Modifiers
@@ -116,13 +115,13 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         return getCareerAdvancementRegistry();
     }
 
-    resolveCareerKey(actor: WH40KBaseActor): string | null {
-        const careerName = actor.system.originPath?.career;
+    resolveCareerKey(actor: SystemConfigActor): string | null {
+        const careerName = actor.system.originPath?.['career'];
         return typeof careerName === 'string' && careerName !== '' ? getCareerKeyFromName(careerName) : null;
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
-        const rank = actor.system.rank;
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
+        const rank = typeof actor.system.rank === 'number' ? actor.system.rank : '';
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Career', 'career'),

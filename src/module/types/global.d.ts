@@ -9,10 +9,8 @@
  * lint rules at the file level here. New non-boundary code MUST NOT live in this file.
  */
 
-import type * as characterCreation from '../applications/character-creation/_module.ts';
 import type { CogitatorTerminal, CogitatorTerminalOptions } from '../applications/cogitator/cogitator-terminal.ts';
 import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
-import type * as npcApplications from '../applications/npc/_module.ts';
 import type { WH40KSystemConfig } from '../config.ts';
 import type ActorDataModel from '../data/abstract/actor-data-model.ts';
 import type ItemDataModel from '../data/abstract/item-data-model.ts';
@@ -432,6 +430,16 @@ interface WH40KPromptLaunchers {
     openSisterOfBattleDialog: () => void;
 }
 
+/**
+ * A class or helper namespace published on `game.wh40k` for macros and modules
+ * (the origin-path builder, the NPC GM tools). Declared as `object` rather than
+ * `typeof` the module for the same reason as {@link WH40KPromptLaunchers}: a
+ * `typeof` import of the character-creation or NPC barrel from this file closed
+ * the import cycles through the whole roll layer (measured: 36 `no-circular`
+ * edges). Code that calls into these imports the module directly.
+ */
+type WH40KPublishedExport = object;
+
 // =========================================================================
 // WH40K System Namespace on Game
 // =========================================================================
@@ -471,12 +479,12 @@ export interface WH40KGameSystem {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag (`game.wh40k.openCompendiumBrowser`)
     openCompendiumBrowser: (options?: Record<string, unknown>) => Promise<RTCompendiumBrowser>;
     openCogitator: (options?: CogitatorTerminalOptions) => Promise<CogitatorTerminal>;
-    OriginPathBuilder: typeof characterCreation.OriginPathBuilder;
+    OriginPathBuilder: WH40KPublishedExport;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag + heterogeneous result (`game.wh40k.openOriginPathBuilder`)
     openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => Promise<unknown>;
-    npc: typeof npcApplications;
-    applications: typeof npcApplications;
-    ThreatCalculator: typeof npcApplications.ThreatCalculator;
+    npc: Readonly<Record<string, WH40KPublishedExport>>;
+    applications: Readonly<Record<string, WH40KPublishedExport>>;
+    ThreatCalculator: WH40KPublishedExport;
     // eslint-disable-next-line no-restricted-syntax -- boundary: open NPC-generator config + heterogeneous Foundry Actor result (`game.wh40k.quickCreateNPC`)
     quickCreateNPC: (config?: unknown) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: open NPC-generator config + heterogeneous Foundry Actor result (`game.wh40k.batchCreateNPCs`)
@@ -489,10 +497,10 @@ export interface WH40KGameSystem {
     importStatBlock: (input?: unknown) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 render-options bag + heterogeneous result (`game.wh40k.openTemplateSelector`)
     openTemplateSelector: (options?: Record<string, unknown>) => Promise<unknown>;
-    DifficultyCalculatorDialog: typeof npcApplications.DifficultyCalculatorDialog;
+    DifficultyCalculatorDialog: WH40KPublishedExport;
     // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.calculateDifficulty`)
     calculateDifficulty: (actor: WH40KBaseActor) => Promise<unknown>;
-    CombatPresetDialog: typeof npcApplications.CombatPresetDialog;
+    CombatPresetDialog: WH40KPublishedExport;
     // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.savePreset`)
     savePreset: (actor: WH40KBaseActor) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: heterogeneous Foundry dialog result (`game.wh40k.loadPreset`)

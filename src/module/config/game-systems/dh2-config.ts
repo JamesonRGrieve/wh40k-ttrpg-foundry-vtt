@@ -3,7 +3,6 @@
  * Aptitude-based advancement with 4 skill ranks.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -13,7 +12,7 @@ import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Core Table 5-2: Craftsmanship, Requisition, and Repair (p. 141) — one column
@@ -214,11 +213,11 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * DH2e: psyker unlock is the "Psyker" elite advance (step='elite').
      * Compendium item: dh2-core-origins-elite-advances/psyker.
      */
-    override isPsyker(actor: WH40KBaseActor): boolean {
+    override isPsyker(actor: SystemConfigActor): boolean {
         return this.ownsOriginPathItem(actor, 'elite', 'psyker');
     }
 
-    getHeaderFields(_actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(_actor: SystemConfigActor): SidebarHeaderField[] {
         // Home World / Background / Role are shown as origin-path bubbles, and
         // Divination already renders as the italic quote beneath the portrait
         // (sidebar-header). Listing any of them again as static text rows here is

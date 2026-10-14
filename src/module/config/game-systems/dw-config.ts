@@ -3,12 +3,11 @@
  * Career/specialty-based advancement with 3 skill ranks.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
@@ -84,12 +83,12 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         return {};
     }
 
-    resolveCareerKey(actor: WH40KBaseActor): string | null {
-        const speciality = actor.system.originPath?.speciality;
+    resolveCareerKey(actor: SystemConfigActor): string | null {
+        const speciality = actor.system.originPath?.['speciality'];
         return typeof speciality === 'string' ? speciality : null;
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.Chapter', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'role'),

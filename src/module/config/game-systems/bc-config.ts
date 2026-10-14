@@ -15,7 +15,6 @@
  * skill-bonus plumbing is content-agnostic and unaffected by this change.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import {
@@ -41,7 +40,7 @@ import {
     skillAdvanceCost,
     talentAdvanceCost,
 } from './bc-advancement-config.ts';
-import type { AdvanceCostResult, CharacteristicTierDef, ChaosAlignment, OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { AdvanceCostResult, CharacteristicTierDef, ChaosAlignment, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /** Subset of system.* that BC config reads off the actor. Avoids `any` casts. */
 interface BcCharacterSystem {
@@ -52,7 +51,7 @@ interface BcCharacterSystem {
     infamy?: number;
 }
 
-function readBcSystem(actor: WH40KBaseActor): BcCharacterSystem {
+function readBcSystem(actor: SystemConfigActor): BcCharacterSystem {
     // BC fields are declared on CharacterData but typed as a union with
     // NPC data on the actor; this narrow cast is the documented Foundry
     // boundary (Record-cast policy in CLAUDE.md).
@@ -183,12 +182,12 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * characters lose Psyker Trait counts even while owning the archetype
      * (`core.md` :2750-2754).
      */
-    override isPsyker(actor: WH40KBaseActor): boolean {
+    override isPsyker(actor: SystemConfigActor): boolean {
         if (!this.ownsOriginPathItem(actor, 'archetype', 'psyker')) return false;
         return !psykerLockedByAlignment(this.getCharacterAlignment(actor));
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
             // BC's first origin step is Race; it is stored in the shared `homeWorld` slot.
             this.makeOriginField(actor, 'WH40K.OriginPath.Race', 'homeWorld'),
@@ -221,14 +220,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * advance-tally-derived alignment is exposed separately via
      * `deriveAlignmentFor` for UI surfaces and update-time refresh.
      */
-    getCharacterAlignment(actor: WH40KBaseActor): ChaosAlignment {
+    getCharacterAlignment(actor: SystemConfigActor): ChaosAlignment {
         return readBcSystem(actor).chaosAlignment ?? 'unaligned';
     }
 
     /**
      * Pure tally of the actor's `chaosAdvancements` log. Exposed for UI.
      */
-    getAlignmentTally(actor: WH40KBaseActor): AlignmentTally {
+    getAlignmentTally(actor: SystemConfigActor): AlignmentTally {
         const advances = readBcSystem(actor).chaosAdvancements ?? [];
         return tallyAdvancesByAlignment(advances);
     }
@@ -238,7 +237,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Does not mutate the actor; callers compare to `getCharacterAlignment`
      * to detect a pending flip.
      */
-    deriveAlignmentFor(actor: WH40KBaseActor): ChaosAlignment {
+    deriveAlignmentFor(actor: SystemConfigActor): ChaosAlignment {
         return deriveAlignmentFromTally(this.getAlignmentTally(actor));
     }
 
@@ -246,7 +245,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Whether the actor should re-check Alignment right now (crossed a
      * fresh 10-CP threshold since the last recorded checkpoint).
      */
-    shouldRecheckAlignment(actor: WH40KBaseActor): boolean {
+    shouldRecheckAlignment(actor: SystemConfigActor): boolean {
         const sys = readBcSystem(actor);
         return shouldRecheckAlignment(sys.corruption ?? 0, sys.alignmentCheckpoint ?? 0);
     }
@@ -256,12 +255,12 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * actually fires (the floor of the actor's current corruption to a
      * 10-CP multiple).
      */
-    nextCheckpointFor(actor: WH40KBaseActor): number {
+    nextCheckpointFor(actor: SystemConfigActor): number {
         return nextAlignmentCheckpoint(readBcSystem(actor).corruption ?? 0);
     }
 
     /** Whether this actor is currently psyker-locked by their Alignment. */
-    isAlignmentBlockingPsyker(actor: WH40KBaseActor): boolean {
+    isAlignmentBlockingPsyker(actor: SystemConfigActor): boolean {
         return psykerLockedByAlignment(this.getCharacterAlignment(actor));
     }
 
@@ -281,7 +280,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * (Table 2-6). The aptitude-based base method is bypassed — BC has no
      * aptitudes (`core.md` :2557).
      */
-    override getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {
+    override getCharacteristicAdvanceCost(actor: SystemConfigActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const charAlignment = this.getCharacterAlignment(actor);
         const advAlignment = this.getCharacteristicAlignment(charKey);
         const cost = characteristicAdvanceCost(charAlignment, advAlignment, currentTier);
@@ -300,7 +299,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * advances" treatment in :2599).
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAlignment is extracted and narrowed below
-    override getSkillAdvanceCost(actor: WH40KBaseActor, _skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
+    override getSkillAdvanceCost(actor: SystemConfigActor, _skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const advAlignment = this.#extractAdvanceAlignment(context) ?? 'unaligned';
         return skillAdvanceCost(this.getCharacterAlignment(actor), advAlignment, currentRank);
     }
@@ -311,7 +310,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * data (compendium content); callers may override via `context`.
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: talent and context match abstract base signature; both are validated through narrowed reads below
-    override getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
+    override getTalentAdvanceCost(actor: SystemConfigActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const talentSystem = this.#readTalentSystem(talent);
         const advAlignment = this.#extractAdvanceAlignment(context) ?? talentSystem?.chaosAlignment ?? 'unaligned';
         const ctxTier = typeof context?.['tier'] === 'number' ? context['tier'] : undefined;
@@ -324,7 +323,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * (`core.md` :2667). Independent of Alignment — Infamy is unaligned
      * (`core.md` :2586).
      */
-    getInfamyAdvanceCost(actor: WH40KBaseActor): number | null {
+    getInfamyAdvanceCost(actor: SystemConfigActor): number | null {
         return infamyAdvanceCost(readBcSystem(actor).infamy ?? 0);
     }
 

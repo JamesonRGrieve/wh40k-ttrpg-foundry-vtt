@@ -4,14 +4,13 @@
  * Uses the same cost tables and aptitude system as DH2e.
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Logistics test — core Table 6-2: Availability by Front Conditions, its
@@ -178,7 +177,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
         };
     }
 
-    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+    getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Regiment', 'background'),
@@ -191,7 +190,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * OW: psyker unlock is the "Sanctioned Psyker" speciality (step='speciality').
      * Compendium item: ow-core-specialities/sanctioned-psyker.
      */
-    override isPsyker(actor: WH40KBaseActor): boolean {
+    override isPsyker(actor: SystemConfigActor): boolean {
         return this.ownsOriginPathItem(actor, 'speciality', 'sanctioned psyker');
     }
 

@@ -8,9 +8,8 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Expert (4 tiers).
  */
 
-import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
-import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
+import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption, SystemConfigActor } from './types.ts';
 
 interface CareerEntry {
     CHARACTERISTIC_COSTS?: { [charKey: string]: { [tier: string]: number | undefined } };
@@ -49,11 +48,11 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     abstract getCareerRegistry(): Record<string, unknown>;
 
     /** Resolve the character's career key from actor data */
-    abstract resolveCareerKey(actor: WH40KBaseActor): string | null;
+    abstract resolveCareerKey(actor: SystemConfigActor): string | null;
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: SystemConfigActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -70,19 +69,19 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return { cost, tier: tierKey };
     }
 
-    getSkillAdvanceCost(_actor: WH40KBaseActor, _skillKey: string, _currentRank: number): number | null {
+    getSkillAdvanceCost(_actor: SystemConfigActor, _skillKey: string, _currentRank: number): number | null {
         // Career-based: cost is embedded in the AdvanceOption from the career table.
         // The advancement dialog reads cost from the advance entry directly.
         return null;
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: talent type is system-specific; unknown matches base class abstract signature
-    getTalentAdvanceCost(_actor: WH40KBaseActor, _talent: unknown): number | null {
+    getTalentAdvanceCost(_actor: SystemConfigActor, _talent: unknown): number | null {
         // Same: cost is in the career advance entry.
         return null;
     }
 
-    getAvailableAdvances(actor: WH40KBaseActor): AdvanceOption[] {
+    getAvailableAdvances(actor: SystemConfigActor): AdvanceOption[] {
         const careerKey = this.resolveCareerKey(actor);
         if (careerKey === null || careerKey === '') return [];
 

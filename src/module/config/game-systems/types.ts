@@ -170,6 +170,32 @@ export interface FatePointUseDef {
     burn?: boolean;
 }
 
+/** An owned item, as far as the line configs read it. */
+export interface SystemConfigActorItem {
+    readonly name: string;
+    readonly isOriginPath: boolean;
+    readonly system: object;
+}
+
+/**
+ * The part of an actor the line configs read: the origin path, rank, aptitudes,
+ * player name and owned origin-path items. Declared structurally, not as the
+ * actor document class, so the configs stay out of the documents import graph.
+ * `documents/base-actor.ts` reaches the configs back through the roll layer,
+ * and naming it here put every config in that import cycle.
+ */
+export interface SystemConfigActor {
+    readonly system: {
+        bio?: { playerName?: string | undefined } | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.originPath` open sub-object, narrowed per key by the readers
+        originPath?: Readonly<Record<string, unknown>> | undefined;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: only the character DataModels declare `rank`; the others carry it under their open index signature
+        rank?: unknown;
+        aptitudes?: Set<string> | string[] | undefined;
+    };
+    readonly items: { some: (predicate: (item: SystemConfigActorItem) => boolean) => boolean };
+}
+
 /** Sidebar header field row used by the player sheet identity panel. */
 export interface SidebarHeaderField {
     label: string;
