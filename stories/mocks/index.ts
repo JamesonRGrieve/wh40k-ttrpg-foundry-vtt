@@ -281,11 +281,12 @@ interface MockModifierGroupEntry {
     nature?: 'positive' | 'negative' | 'neutral';
 }
 
+/** The `EffectView` shape (helpers/effects.ts buildEffectView) the effect templates render. */
 export interface MockActiveEffect {
     id: string;
-    label: string;
+    name: string;
     disabled: boolean;
-    icon?: string;
+    img?: string;
     sourceName?: string;
     duration?: { label: string } | null;
     changes?: Array<{ label: string; value: string }>;
@@ -318,9 +319,9 @@ export function mockActiveEffect(overrides?: DeepPartial<MockActiveEffect>): Moc
     const id = `effect-${Math.random().toString(36).slice(2, 8)}`;
     const base: MockActiveEffect = {
         id,
-        label: 'Blessed Ammunition',
+        name: 'Blessed Ammunition',
         disabled: false,
-        icon: 'icons/svg/aura.svg',
+        img: 'icons/svg/aura.svg',
         sourceName: 'Litany of Wrath',
         duration: { label: '3 rounds remaining' },
         changes: [
@@ -615,7 +616,7 @@ export function mockActiveEffectsContext(overrides?: DeepPartial<MockObjectMap>)
                 name: 'Godwyn Pattern Boltgun',
                 isOwner: true,
             }),
-            effects: [mockActiveEffect(), mockActiveEffect({ label: 'Overheated', disabled: true, duration: null })],
+            effects: [mockActiveEffect(), mockActiveEffect({ name: 'Overheated', disabled: true, duration: null })],
         },
         overrides,
     );
@@ -738,7 +739,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                     effects: ['+10 when aiming'],
                 },
             ],
-            effects: [mockActiveEffect(), mockActiveEffect({ label: 'Machine Spirit Agitation', disabled: true })],
+            effects: [mockActiveEffect(), mockActiveEffect({ name: 'Machine Spirit Agitation', disabled: true })],
         },
         overrides,
     );
@@ -793,7 +794,7 @@ export function mockArmourSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 bulky: 'Bulky',
             },
             modificationsArray: [{ name: 'Ceramite Plating', summary: '+2 vs flame', description: 'Extra protection against flame weapons.' }],
-            effects: [mockActiveEffect({ label: 'Blessing of Saint Drusus' })],
+            effects: [mockActiveEffect({ name: 'Blessing of Saint Drusus' })],
         },
         overrides,
     );
@@ -837,7 +838,7 @@ export function mockGearSheetContext(overrides?: DeepPartial<MockObjectMap>): Mo
             hideThroneGelt: false,
             editable: true,
             inEditMode: false,
-            effects: [mockActiveEffect({ label: 'Combat Stimm Residue', disabled: true })],
+            effects: [mockActiveEffect({ name: 'Combat Stimm Residue', disabled: true })],
         },
         overrides,
     );

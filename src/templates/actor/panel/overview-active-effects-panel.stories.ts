@@ -8,14 +8,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
+import { buildEffectView, type EffectView, type EffectViewSource } from '../../../module/helpers/effects';
 import panelSrc from './overview-active-effects-panel.hbs?raw';
 
-interface EffectChip {
-    id: string;
-    name: string;
-    icon: string;
-    disabled: boolean;
-}
+type EffectChip = EffectView<EffectViewSource>;
 
 interface PanelCtx {
     effects: EffectChip[];
@@ -34,10 +30,12 @@ function renderPanel(ctx: PanelCtx): HTMLElement {
     return wrapper;
 }
 
-const EFFECTS: EffectChip[] = [
-    { id: 'e1', name: 'Stunned', icon: 'icons/svg/daze.svg', disabled: false },
-    { id: 'e2', name: 'Blessed +10', icon: 'icons/svg/upgrade.svg', disabled: true },
-];
+/** An ActiveEffect as the sheet reads it, mapped through the sheet's own view builder. */
+function chip(id: string, name: string, img: string, disabled: boolean): EffectChip {
+    return buildEffectView({ id, name, img, disabled, sourceName: '', remainingLabel: null, isExpiring: false }, []);
+}
+
+const EFFECTS: EffectChip[] = [chip('e1', 'Stunned', 'icons/svg/daze.svg', false), chip('e2', 'Blessed +10', 'icons/svg/upgrade.svg', true)];
 
 /** The create control dispatches `createEffect`, the action that opens the dialog. */
 function assertCreateControl(canvasElement: HTMLElement): void {
@@ -57,6 +55,10 @@ export const WithEffects: Story = {
         const scope = within(canvasElement);
         await expect(scope.getByText('Stunned')).toBeTruthy();
         await expect(canvasElement.querySelectorAll('[data-action="toggleEffect"]').length).toBe(EFFECTS.length);
+        // Every chip carries its effect's name and icon (the Combat tab's chips had neither).
+        const chips = [...canvasElement.querySelectorAll<HTMLElement>('div[data-effect-id]')];
+        await expect(chips.map((c) => c.querySelector('span')?.textContent)).toEqual(['Stunned', 'Blessed +10']);
+        await expect(chips.map((c) => c.querySelector('img')?.getAttribute('src'))).toEqual(['icons/svg/daze.svg', 'icons/svg/upgrade.svg']);
         await expect(scope.getByText('Create Effect')).toBeTruthy();
         assertCreateControl(canvasElement);
     },

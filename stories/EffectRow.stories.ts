@@ -24,7 +24,7 @@ function makeEffects(): ReturnType<typeof mockActiveEffect>[] {
     return [
         mockActiveEffect({
             id: 'eff-1',
-            label: 'Blessed Ammunition',
+            name: 'Blessed Ammunition',
             sourceName: 'Litany of Wrath',
             changes: [
                 { label: 'Strength', value: '+5' },
@@ -33,7 +33,7 @@ function makeEffects(): ReturnType<typeof mockActiveEffect>[] {
         }),
         mockActiveEffect({
             id: 'eff-2',
-            label: 'Overheated',
+            name: 'Overheated',
             disabled: true,
             sourceName: 'Plasma Misfire',
             duration: { label: '1 round remaining' },

@@ -43,8 +43,8 @@ type Story = StoryObj;
 function manaclesEffect(overrides: ActiveEffectOverrides = {}): MockActiveEffect {
     return mockActiveEffect({
         id: 'ae-manacled',
-        label: MANACLES_EFFECT_NAME,
-        icon: 'icons/svg/chains.svg',
+        name: MANACLES_EFFECT_NAME,
+        img: 'icons/svg/chains.svg',
         sourceName: 'Manacles',
         duration: { label: 'Until removed' },
         changes: [
@@ -114,8 +114,8 @@ export const ActorPanelStacked: Story = {
                 manaclesEffect(),
                 mockActiveEffect({
                     id: 'ae-stunned',
-                    label: 'Stunned',
-                    icon: 'icons/svg/daze.svg',
+                    name: 'Stunned',
+                    img: 'icons/svg/daze.svg',
                     sourceName: 'Concussive',
                     duration: { label: '1 round' },
                     changes: [{ label: 'Defense', value: '-20' }],

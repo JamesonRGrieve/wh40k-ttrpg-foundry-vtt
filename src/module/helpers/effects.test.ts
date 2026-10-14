@@ -4,7 +4,42 @@
  * keys / non-numeric values.
  */
 import { describe, expect, it } from 'vitest';
-import { changeType, formatChangeValue, getChangeLabel, summarizeChange, summarizeChanges } from './effects';
+import { buildEffectView, changeType, type EffectViewSource, formatChangeValue, getChangeLabel, summarizeChange, summarizeChanges } from './effects';
+
+describe('buildEffectView — the one effect shape every sheet surface renders', () => {
+    const source = (overrides: Partial<EffectViewSource> = {}): EffectViewSource => ({
+        id: 'fx1',
+        name: 'Stunned',
+        img: 'icons/svg/daze.svg',
+        disabled: false,
+        sourceName: 'Concussive',
+        remainingLabel: null,
+        isExpiring: false,
+        ...overrides,
+    });
+
+    it('carries the name and img the chip and row templates read (not `label` / the deprecated `icon`)', () => {
+        const view = buildEffectView(source(), []);
+        expect(view.name).toBe('Stunned');
+        expect(view.img).toBe('icons/svg/daze.svg');
+        expect(view).not.toHaveProperty('label');
+        expect(view).not.toHaveProperty('icon');
+    });
+
+    it('adds the in-universe time remaining only for a timed effect (#456)', () => {
+        expect(buildEffectView(source(), [])).not.toHaveProperty('duration');
+        const timed = buildEffectView(source({ remainingLabel: '2 rounds', isExpiring: true }), []);
+        expect(timed.duration).toEqual({ label: '2 rounds' });
+        expect(timed.isExpiring).toBe(true);
+    });
+
+    it('summarises the changes and keeps the document', () => {
+        const effect = source();
+        const view = buildEffectView(effect, [{ key: 'system.characteristics.strength.modifier', value: 5, type: 'add' }]);
+        expect(view.changes).toHaveLength(1);
+        expect(view.document).toBe(effect);
+    });
+});
 
 describe('changeType — V14 string over deprecated numeric mode (#507)', () => {
     it('prefers the string `type`', () => {

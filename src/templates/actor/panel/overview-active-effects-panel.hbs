@@ -17,7 +17,7 @@
                               icon-only nodes per effect and no name was ever
                               findable (effect-row.hbs already puts it on the row). --}}
                         <div class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-px-1.5 tw-py-[3px] tw-bg-[var(--color-bg-option)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] {{#if effect.disabled}}tw-opacity-50{{/if}}" data-effect-id="{{effect.id}}" title="{{effect.name}}">
-                            <img src="{{effect.icon}}" alt="" class="tw-w-[14px] tw-h-[14px] tw-rounded-[var(--wh40k-radius-sm)]" />
+                            <img src="{{effect.img}}" alt="" class="tw-w-[14px] tw-h-[14px] tw-rounded-[var(--wh40k-radius-sm)]" />
                             <span class="tw-text-[color:var(--color-text-secondary)] tw-max-w-[80px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{effect.name}}</span>
                             <div class="tw-flex tw-gap-[2px] tw-ml-[2px]">
                                 <button type="button" class="tw-w-[16px] tw-h-[16px] tw-p-0 tw-flex tw-items-center tw-justify-center tw-bg-transparent tw-border-none tw-rounded-[var(--wh40k-radius-sm)] tw-text-[0.6rem] tw-cursor-pointer tw-text-[color:var(--color-text-tertiary)]"

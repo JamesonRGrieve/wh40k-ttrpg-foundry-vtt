@@ -39,8 +39,9 @@ import { SYSTEM_ID } from '../../constants.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
 import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
+import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { summarizeChanges, type EffectChangeRaw } from '../../helpers/effects.ts';
+import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
@@ -2705,6 +2706,14 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
+    /** The actor's ActiveEffects in the one view shape the chips, rows and dashboard all render. */
+    #effectViews(): EffectView<WH40KActiveEffect>[] {
+        return this.actor.effects.map((effect) =>
+            // eslint-disable-next-line no-restricted-syntax -- boundary: effect.changes is Foundry EffectChange[]; double-cast to EffectChangeRaw[] which is this codebase's typed wrapper
+            buildEffectView(effect, effect.changes as unknown as EffectChangeRaw[]),
+        );
+    }
+
     /**
      * Combat move-mode cluster state (#235): the selected move mode + whether the
      * cluster is turn-gated (greyed) for this player + metres left this turn. GMs are
@@ -2906,26 +2915,8 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
             });
 
-        // Prepare active effects data — emit the canonical {label, value}
-        // change shape consumed by `effect-row.hbs`.
-        sheetContext.effects = this.actor.effects.map((effect) => {
-            // #456: surface the live in-universe time remaining so timed effects
-            // (drugs, War Cry, conditions) count down on the panel and expire when
-            // the GM advances the clock.
-            const remainingLabel = effect.remainingLabel;
-            return {
-                id: effect.id,
-                label: effect.name,
-                // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
-                icon: effect.icon,
-                disabled: effect.disabled,
-                sourceName: effect.sourceName,
-                ...(remainingLabel !== null ? { duration: { label: remainingLabel }, isExpiring: effect.isExpiring } : {}),
-                // eslint-disable-next-line no-restricted-syntax -- boundary: effect.changes is Foundry EffectChange[]; double-cast to EffectChangeRaw[] which is this codebase's typed wrapper
-                changes: summarizeChanges(effect.changes as unknown as EffectChangeRaw[]),
-                document: effect,
-            };
-        });
+        // Active effects in the one view shape every effect surface renders (#456 time remaining included).
+        sheetContext.effects = this.#effectViews();
 
         // Extract combat talents for display in combat actions panel
         const talents = this.actor.items.filter((i) => i.type === 'talent') as TalentLike[];
@@ -3156,13 +3147,7 @@ export default class CharacterSheet extends BaseActorSheet {
     _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
         const ctx = context as CharacterSheetContext;
         // Add Active Effects data
-        ctx.effects = this.actor.effects.map((effect) => ({
-            id: effect.id,
-            name: effect.name,
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
-            icon: effect.icon,
-            document: effect,
-        }));
+        ctx.effects = this.#effectViews();
 
         // Add favorite talents for display
         ctx.favoriteTalents = this._prepareFavoriteTalents();
@@ -3186,15 +3171,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await this._prepareTabPartContext('overview', context, options);
 
         // Add Active Effects data for dashboard preview
-        const effects = this.actor.effects.map((effect) => ({
-            id: effect.id,
-            name: effect.name,
-            // eslint-disable-next-line @typescript-eslint/no-deprecated -- legacy field still consumed by templates pending V14 migration
-            icon: effect.icon,
-            disabled: effect.disabled,
-            document: effect,
-        }));
-        ctx.effects = effects;
+        ctx.effects = this.#effectViews();
 
         // Ensure combat data is available (for primaryWeapon, dodgeTarget, parryTarget)
         // This is already prepared in _prepareContext via _prepareCombatData

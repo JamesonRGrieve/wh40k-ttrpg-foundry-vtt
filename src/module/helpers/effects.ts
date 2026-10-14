@@ -154,3 +154,52 @@ export function summarizeChanges(changes: readonly EffectChangeRaw[] | undefined
     if (changes === undefined || changes.length === 0) return [];
     return changes.map(summarizeChange);
 }
+
+/** What {@link buildEffectView} reads off an ActiveEffect (the WH40K effect document satisfies it). */
+export interface EffectViewSource {
+    id: string | null;
+    name: string;
+    img: string | null;
+    disabled: boolean;
+    sourceName: string;
+    /** In-universe time remaining (#456), or null for an effect without a timed duration. */
+    remainingLabel: string | null;
+    isExpiring: boolean;
+}
+
+/** One effect as every actor-sheet effect surface renders it: chip, row and dashboard preview. */
+export interface EffectView<D> {
+    id: string | null;
+    name: string;
+    /** The effect's icon (V14 `img`; the old `icon` getter is deprecated and empty). */
+    img: string | null;
+    disabled: boolean;
+    sourceName: string;
+    duration?: { label: string };
+    isExpiring?: boolean;
+    changes: EffectChangeSummary[];
+    document: D;
+}
+
+/**
+ * The single view shape of an actor's ActiveEffect. The Combat tab, the Overview
+ * and the dashboard each built their own — one mapped the name to `label` while
+ * the shared chip template read `name`, and all three read the deprecated
+ * `icon` — so the Combat tab's chips showed no name and no icon.
+ */
+export function buildEffectView<D extends EffectViewSource>(effect: D, changes: readonly EffectChangeRaw[]): EffectView<D> {
+    const view: EffectView<D> = {
+        id: effect.id,
+        name: effect.name,
+        img: effect.img,
+        disabled: effect.disabled,
+        sourceName: effect.sourceName,
+        changes: summarizeChanges(changes),
+        document: effect,
+    };
+    if (effect.remainingLabel !== null) {
+        view.duration = { label: effect.remainingLabel };
+        view.isExpiring = effect.isExpiring;
+    }
+    return view;
+}
