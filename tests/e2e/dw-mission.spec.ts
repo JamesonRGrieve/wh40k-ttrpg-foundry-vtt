@@ -123,6 +123,7 @@ test.describe.serial('DwMissionPanel (Tier B)', () => {
                 });
                 const host = document.createElement('div');
                 host.className = 'wh40k-rpg';
+                host.dataset['e2eCapture'] = '';
                 host.dataset['wh40kSystem'] = 'dw';
                 host.style.position = 'fixed';
                 host.style.top = '40px';

@@ -69,6 +69,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
             const mountHost = (html: string, side: 'left' | 'right'): HTMLElement => {
                 const host = document.createElement('div');
                 host.className = 'wh40k-rpg';
+                host.dataset['e2eCapture'] = '';
                 host.dataset['wh40kSystem'] = 'bc';
                 host.style.position = 'fixed';
                 host.style.top = '40px';

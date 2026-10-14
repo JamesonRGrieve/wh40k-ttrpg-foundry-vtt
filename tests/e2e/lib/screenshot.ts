@@ -47,6 +47,11 @@ function ensureDir(): void {
 
 const counters = new Map<string, number>();
 
+/** The app ids of the persistent HUD windows (world time, scene environment), open in every world. */
+const PERSISTENT_HUD_IDS = ['wh40k-world-time-widget', 'wh40k-scene-environment-widget'];
+/** `:not(...)` excluding every persistent HUD window from an application selector. */
+const NOT_HUD = PERSISTENT_HUD_IDS.map((id) => `:not(#${id})`).join('');
+
 function sanitize(s: string): string {
     return s.replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
 }
@@ -88,10 +93,13 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
 
     // Selector cascade — most specific first. ApplicationV2 uses
     // `.application`; older dialogs use `.window-app` / `#sheet-*`.
+    // The always-on HUD windows are never the default subject: they re-render
+    // on every time or scene change, so one is often the last application in
+    // the DOM and was captured in place of the window a spec had just opened.
     const candidates = [
-        '.application[data-application-part]',
+        `.application[data-application-part]${NOT_HUD}`,
         'dialog.application[open]',
-        '.application:not([hidden])',
+        `.application:not([hidden])${NOT_HUD}`,
         '.window-app:not(.minimized)',
         '#sheet-character',
         '#sheet-item',
@@ -134,6 +142,15 @@ async function prepareApplicationForCapture(page: Page): Promise<Locator | null>
  * also hidden while the PNG is taken.
  */
 const CAPTURE_STYLE = '#notifications, #chat-notifications .chat-message { visibility: hidden !important; }';
+
+/**
+ * The default (subject-picking) capture also hides the persistent HUD windows:
+ * they float over the window being captured (the time widget covered a Head Hit
+ * card's critical effects). Explicit `selector` / `clip` captures keep them, since
+ * the widget specs aim at them. `display`, not `visibility`: the widget's buttons
+ * set their own visibility and showed through a hidden parent.
+ */
+const DEFAULT_CAPTURE_STYLE = `${CAPTURE_STYLE} ${PERSISTENT_HUD_IDS.map((id) => `#${id}`).join(', ')} { display: none !important; }`;
 
 /** What {@link clearOverlays} clears beyond the cheap pass. */
 interface OverlayClearOptions {
@@ -227,6 +244,30 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
     await clearOverlays(page, { closeWindows: true, keepIdFragment: keepIdFragment ?? null });
 }
 
+/** Pixels of margin kept around the marked capture hosts. */
+const CAPTURE_HOST_MARGIN_PX = 8;
+
+/**
+ * The viewport region covering every element marked `data-e2e-capture`, or null
+ * when none is mounted. A spec that renders a template into a page-mounted host
+ * (rather than an application window) tags the host so the default capture finds
+ * it: an unmarked host is invisible to the application picker, which then took
+ * whatever window was open, usually a HUD widget.
+ */
+async function captureHostClip(page: Page): Promise<{ x: number; y: number; width: number; height: number } | null> {
+    return page.evaluate((margin: number) => {
+        const rects = Array.from(document.querySelectorAll<HTMLElement>('[data-e2e-capture]'))
+            .map((el) => el.getBoundingClientRect())
+            .filter((r) => r.width > 0 && r.height > 0);
+        if (rects.length === 0) return null;
+        const left = Math.max(0, Math.min(...rects.map((r) => r.left)) - margin);
+        const top = Math.max(0, Math.min(...rects.map((r) => r.top)) - margin);
+        const right = Math.min(window.innerWidth, Math.max(...rects.map((r) => r.right)) + margin);
+        const bottom = Math.min(window.innerHeight, Math.max(...rects.map((r) => r.bottom)) + margin);
+        return { x: left, y: top, width: right - left, height: bottom - top };
+    }, CAPTURE_HOST_MARGIN_PX);
+}
+
 /**
  * Capture a PNG of the active sheet/dialog/application (default) or
  * the full page.
@@ -293,17 +334,24 @@ export async function snap(
             // application capture so the spec still gets a PNG.
         }
 
+        // A page-mounted template host the spec marked for capture.
+        const hostClip = await captureHostClip(page);
+        if (hostClip !== null) {
+            await page.screenshot({ path, clip: hostClip, style: DEFAULT_CAPTURE_STYLE });
+            return path;
+        }
+
         // Default: prep + capture the most recent ApplicationV2 / sheet /
         // dialog element on-screen.
         const appLoc = await prepareApplicationForCapture(page);
         if (appLoc !== null) {
-            await appLoc.screenshot({ path, style: CAPTURE_STYLE });
+            await appLoc.screenshot({ path, style: DEFAULT_CAPTURE_STYLE });
             return path;
         }
 
         // Last-resort fallback: full-page capture so the spec still has
         // a record of the runtime state for debugging.
-        await page.screenshot({ path, fullPage: true, style: CAPTURE_STYLE });
+        await page.screenshot({ path, fullPage: true, style: DEFAULT_CAPTURE_STYLE });
         return path;
     } catch {
         return null;

@@ -132,6 +132,7 @@ test.describe.serial('DwAstartesPanel (Tier B)', () => {
                 // every tw-* class is dropped. See CLAUDE.md
                 // "Check the .wh40k-rpg ancestor for ALL tw-* utilities".
                 host.className = 'wh40k-rpg';
+                host.dataset['e2eCapture'] = '';
                 host.dataset['wh40kSystem'] = 'dw';
                 host.style.position = 'fixed';
                 host.style.top = '40px';

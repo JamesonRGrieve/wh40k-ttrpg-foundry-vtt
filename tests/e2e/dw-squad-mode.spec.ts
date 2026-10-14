@@ -92,6 +92,7 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                 // dropped. The data-wh40k-system attribute anchors the
                 // dw:tw-* per-system variants the panel uses.
                 host.className = 'wh40k-rpg';
+                host.dataset['e2eCapture'] = '';
                 host.dataset['wh40kSystem'] = 'dw';
                 host.style.position = 'fixed';
                 host.style.top = '40px';

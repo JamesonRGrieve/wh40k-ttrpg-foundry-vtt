@@ -34,7 +34,6 @@ test.describe.serial('assistance chips (#60)', () => {
             interface DialogInstance {
                 render: (force: boolean) => Promise<void>;
                 element?: HTMLElement;
-                close?: () => Promise<void>;
             }
             interface DialogModule {
                 default: new (actionData: object) => DialogInstance;
@@ -104,11 +103,7 @@ test.describe.serial('assistance chips (#60)', () => {
                 chips: root.querySelectorAll('[data-wh40k-hook="assist-chip"]').length,
             };
 
-            try {
-                await dialog.close?.();
-            } catch {
-                /* ignore teardown failures */
-            }
+            // The dialog stays open for the snap below (the page is discarded with the test).
             return { error: null, state: probe };
         });
 

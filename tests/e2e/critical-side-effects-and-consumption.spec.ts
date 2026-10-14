@@ -490,6 +490,7 @@ test.describe.serial('critical side effects + consumption (Tier B)', () => {
             const host = document.createElement('div');
             host.id = '__c9critsfx';
             host.className = 'wh40k-rpg';
+            host.dataset['e2eCapture'] = '';
             host.style.position = 'fixed';
             host.style.top = '40px';
             host.style.left = '40px';

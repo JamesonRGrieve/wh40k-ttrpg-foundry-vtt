@@ -78,7 +78,24 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
         // only triggers the test on a successful melee attack).
         expect(result.withTalentMissed).not.toContain('roll-control__assassins-strike');
 
-        // Snapshot the talent-present render for visual regression.
+        // Snapshot the talent-present render for visual regression, mounted under a
+        // `.wh40k-rpg` ancestor so the Tailwind scoping applies as on a chat message.
+        await page.evaluate((html: string) => {
+            const host = document.createElement('div');
+            host.id = '__assassinsStrike';
+            host.className = 'wh40k-rpg';
+            host.dataset['e2eCapture'] = '';
+            host.style.position = 'fixed';
+            host.style.top = '40px';
+            host.style.left = '40px';
+            host.style.width = '440px';
+            host.style.zIndex = '99999';
+            host.innerHTML = html;
+            document.body.appendChild(host);
+        }, result.withTalent);
         await snap(page, 'assassins-strike-button');
+        await page.evaluate(() => {
+            document.getElementById('__assassinsStrike')?.remove();
+        });
     });
 });

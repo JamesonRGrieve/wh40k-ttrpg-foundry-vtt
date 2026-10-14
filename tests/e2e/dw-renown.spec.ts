@@ -89,6 +89,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                 // tailwind.config.js `important: '.wh40k-rpg'`; without an
                 // ancestor with that class every tw-* class is dropped.
                 host.className = 'wh40k-rpg';
+                host.dataset['e2eCapture'] = '';
                 host.dataset['wh40kSystem'] = 'dw';
                 host.style.position = 'fixed';
                 host.style.top = '40px';
