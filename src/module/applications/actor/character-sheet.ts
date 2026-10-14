@@ -121,6 +121,7 @@ import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
+import { ORIGIN_PROMPT_DISMISSED_FLAG, originPathPromptContent, SHEET_SOURCE_FLAG, shouldPromptOriginPath } from '../../utils/origin-path-prompt.ts';
 import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
@@ -5412,23 +5413,28 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * On first open of an unbuilt character/NPC, prompt to run the origin-path
-     * builder — the d20 on the portrait isn't obvious enough. A completed origin
-     * path (all three core steps set) never prompts; "don't show again" sets a
-     * per-actor flag so it stops nagging. The d20 stays the always-on entry point.
+     * On first open of an unbuilt character, prompt to run the origin-path
+     * builder — the d20 on the portrait isn't obvious enough. NPCs, a completed
+     * origin path, an authored-build pregen (#541) and a "don't show again"
+     * never prompt; see {@link shouldPromptOriginPath}. The d20 stays the
+     * always-on entry point.
      */
     async #maybePromptOriginPathIncomplete(): Promise<void> {
-        if (!this.actor.isOwner) return;
-        if (!WH40KSettings.isOriginPathPromptEnabled()) return;
-        if ((this.actor.type as string).includes('npc')) return;
-        const op = this.actor.system.originPath;
-        const built = op.homeWorld !== '' && op.background !== '' && op.role !== '';
-        if (built) return;
-        if (this.actor.getFlag('wh40k-rpg', 'originPromptDismissed') === true) return;
+        const sheetSource = this.actor.getFlag('wh40k-rpg', SHEET_SOURCE_FLAG);
+        const prompt = shouldPromptOriginPath({
+            isOwner: this.actor.isOwner,
+            promptEnabled: WH40KSettings.isOriginPathPromptEnabled(),
+            actorType: this.actor.type,
+            originPath: this.actor.system.originPath,
+            dismissed: this.actor.getFlag('wh40k-rpg', ORIGIN_PROMPT_DISMISSED_FLAG) === true,
+            sheetSource: typeof sheetSource === 'string' ? sheetSource : undefined,
+        });
+        if (!prompt) return;
 
-        const message = game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Message');
-        const dontShow = game.i18n.localize('WH40K.OriginPath.IncompletePrompt.DontShowAgain');
-        const content = `<div class="wh40k-rpg"><p>${message}</p><label class="tw-flex tw-items-center tw-gap-2 tw-mt-2"><input type="checkbox" name="dontShowAgain" /> <span>${dontShow}</span></label></div>`;
+        const content = originPathPromptContent(
+            game.i18n.localize('WH40K.OriginPath.IncompletePrompt.Message'),
+            game.i18n.localize('WH40K.OriginPath.IncompletePrompt.DontShowAgain'),
+        );
 
         const readDontShow = (button: HTMLElement): boolean => {
             const form = (button as HTMLElement & { form?: HTMLFormElement }).form;
@@ -5470,7 +5476,7 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         if (promptState.dismiss) {
-            await this.actor.setFlag('wh40k-rpg', 'originPromptDismissed', true);
+            await this.actor.setFlag('wh40k-rpg', ORIGIN_PROMPT_DISMISSED_FLAG, true);
         }
         if (choice === 'build') {
             await this._openOriginPathBuilder();
