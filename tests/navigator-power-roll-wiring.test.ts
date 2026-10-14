@@ -50,3 +50,23 @@ describe('rollNavigatorPower wiring', () => {
         expect(sheetSrc).toContain('name="system.mastery"');
     });
 });
+
+/**
+ * The sheet's Use Power button (`rollPower` → `actor.rollItem` →
+ * `_dispatchItemRoll`) reaches that engine. It used to fall through to the
+ * description vocalize for every item that is not a weapon or psychic power,
+ * so on Tier B the button posted the power's text and never rolled (#194).
+ */
+describe('Use Power dispatch', () => {
+    const actorSrc = readFileSync(resolve(__dirname, '../src/module/documents/base-actor.ts'), 'utf8');
+    const start = actorSrc.indexOf('protected async _dispatchItemRoll(');
+    const dispatch = actorSrc.slice(start, actorSrc.indexOf('protected async _vocalizeItem(', start));
+
+    it('routes Navigator powers, ship orders and rituals to their own roll before the vocalize fallback', () => {
+        expect(start).toBeGreaterThan(-1);
+        const route = dispatch.indexOf('item.isNavigatorPower || item.isOrder || item.isRitual');
+        expect(route).toBeGreaterThan(-1);
+        expect(dispatch.indexOf('item.performAction()', route)).toBeGreaterThan(route);
+        expect(dispatch.indexOf('this._vocalizeItem(item)')).toBeGreaterThan(route);
+    });
+});

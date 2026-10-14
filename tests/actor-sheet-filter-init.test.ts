@@ -58,7 +58,8 @@ describe('actor sheet filter state initialization', () => {
         // Sanity: if this set is empty, the regex broke and the rest of the test is vacuous.
         expect(reads.size).toBeGreaterThan(0);
         expect(reads).toContain('_traitsFilter');
-        expect(reads).toContain('_powersFilter');
+        // The ship-orders filter (the old `_powersFilter.orderCategory`, now on the Combat tab, #194).
+        expect(reads).toContain('_orderCategoryFilter');
     });
 
     it.each(Array.from(reads))('%s has a real class-field initializer (not just declare)', (propName) => {
@@ -75,8 +76,8 @@ describe('actor sheet filter state initialization', () => {
         expect(baseSrc).toMatch(/_traitsFilter[^=]*=\s*\{\s*search:\s*''\s*,\s*category:\s*''\s*,\s*hasLevel:\s*false\s*\}/);
     });
 
-    it('_powersFilter initializer has the documented shape', () => {
-        expect(charSrc).toMatch(/_powersFilter[^=]*=\s*\{\s*discipline:\s*''\s*,\s*orderCategory:\s*''\s*\}/);
+    it('_orderCategoryFilter initializer is the all-categories default', () => {
+        expect(charSrc).toMatch(/_orderCategoryFilter\s*=\s*''/);
     });
 });
 

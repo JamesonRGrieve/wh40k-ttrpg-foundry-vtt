@@ -717,7 +717,8 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: holds a slice of Foundry's untyped sheet-context payload
     #combatDataCache: Record<string, unknown> | null = null;
-    _powersFilter: { discipline: string; orderCategory: string } = { discipline: '', orderCategory: '' };
+    /** The ship-orders panel's active category filter (`''` = all). */
+    _orderCategoryFilter = '';
     /**
      * Ephemeral BC Psychic Strength selections (#178). Mode and push
      * level are render-only UI state — they are not persisted on the
@@ -939,7 +940,6 @@ export default class CharacterSheet extends BaseActorSheet {
             'vocalizeOrder': CharacterSheet.#vocalizeOrder,
             'rollPhenomena': CharacterSheet.#rollPhenomena,
             'rollPerils': CharacterSheet.#rollPerils,
-            'filterPowers': CharacterSheet.#filterPowers,
             'filterOrders': CharacterSheet.#filterOrders,
 
             // Acquisition actions
@@ -1052,11 +1052,6 @@ export default class CharacterSheet extends BaseActorSheet {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        powers: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
         biography: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -1077,7 +1072,6 @@ export default class CharacterSheet extends BaseActorSheet {
         // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', tooltip: 'WH40K.Tabs.Tooltip.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'WH40K.Tabs.Equipment', tooltip: 'WH40K.Tabs.Tooltip.Equipment', group: 'primary', cssClass: 'tab-equipment' },
-        // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
         { tab: 'biography', label: 'WH40K.Tabs.Biography', tooltip: 'WH40K.Tabs.Tooltip.Biography', group: 'primary', cssClass: 'tab-biography' },
     ];
 
@@ -1337,7 +1331,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (partId === 'tabs') return this._prepareTabsContext(partContext, options);
         if (partId === 'biography') return this._prepareBiographyContext(partContext, options);
         if (partId === 'overview') return this._prepareOverviewDashboardContext(partContext, options);
-        if (partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'powers' || partId === 'dynasty') {
+        if (partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'dynasty') {
             // Provide tab object for the template
             return this._prepareTabPartContext(partId, partContext, options);
         }
@@ -1388,15 +1382,14 @@ export default class CharacterSheet extends BaseActorSheet {
             sheetContext.aptitudePills = this._prepareAptitudePills();
         }
 
-        // Add powers context for powers tab
-        if (partId === 'powers') {
-            const powersData = this._preparePowersContext();
-            Object.assign(context, powersData);
+        // Navigator powers, rituals and ship orders live on the Combat tab (#194).
+        if (partId === 'combat') {
+            Object.assign(context, this._prepareCombatPowerPanelsContext());
         }
 
         // Loadout/combat-station data does not survive into the isolated part
         // context, so re-prepare it for the tabs that render inventory and the
-        // combat station (mirrors the skills/powers re-prep above). Without this
+        // combat station (mirrors the skills re-prep above). Without this
         // the Equipment tab renders an empty inventory even though the actor
         // carries items.
         if (partId === 'equipment' || partId === 'combat') {
@@ -2754,11 +2747,13 @@ export default class CharacterSheet extends BaseActorSheet {
                 identified: sys.state?.identified !== false,
             };
         });
-        sheetContext.showPsychicPanel = powers.length > 0;
         // eslint-disable-next-line no-restricted-syntax -- boundary: `psy` is an FFG-line actor field (currentRating/rating); `psyRating` is the BC-line field; neither is on the shared system union
         const psySystem = this.actor.system as { psy?: { currentRating?: number; rating?: number }; psyRating?: number };
         const psyRating = psySystem.psy?.currentRating ?? psySystem.psy?.rating ?? psySystem.psyRating;
         if (psyRating !== undefined) sheetContext.psyRating = psyRating;
+        // A psyker is anyone with a Psy Rating or a known power: they get the
+        // power rows and the Perils / Phenomena controls (#194).
+        sheetContext.showPsychicPanel = powers.length > 0 || (psyRating ?? 0) > 0;
     }
 
     /**
@@ -3562,32 +3557,18 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare powers tab context.
-     * Prepares psychic powers, navigator powers, rituals, and orders.
-     * @returns {object} Powers context data
+     * Context of the Combat tab's Navigator-powers, rituals and ship-orders
+     * panels (#194). Each panel renders only when the character owns items of
+     * its type, on every line: the gate is item ownership, never the game line,
+     * so a Navigator in any line's sheet can use the power it holds.
+     * @returns {object} Panel context data
      * @protected
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display data for Handlebars; no concrete exported type
-    _preparePowersContext(): Record<string, unknown> {
-        // Get all power items
-        const psychicPowers = this.actor.items.filter((i) => (i.type as string) === 'psychicPower');
+    _prepareCombatPowerPanelsContext(): Record<string, unknown> {
         const navigatorPowers = this.actor.items.filter((i) => (i.type as string) === 'navigatorPower');
         const rituals = this.actor.items.filter((i) => (i.type as string) === 'ritual');
         const orders = this.actor.items.filter((i) => (i.type as string) === 'order');
-
-        // Extract unique disciplines for filtering
-        const disciplines = new Map<string, { id: string; label: string }>();
-        for (const power of psychicPowers) {
-            const sys = power.system as WH40KItemSystemData & { discipline?: string; disciplineLabel?: string };
-            const disc = sys.discipline;
-            if (disc !== undefined && disc !== '' && !disciplines.has(disc)) {
-                disciplines.set(disc, {
-                    id: disc,
-                    label: sys.disciplineLabel !== undefined && sys.disciplineLabel !== '' ? sys.disciplineLabel : capitalize(disc),
-                });
-            }
-        }
-        const psychicDisciplines = Array.from(disciplines.values());
 
         // Extract unique order categories
         const categories = new Map<string, { id: string; label: string }>();
@@ -3603,39 +3584,21 @@ export default class CharacterSheet extends BaseActorSheet {
         }
         const orderCategories = Array.from(categories.values());
 
-        // Get filter state
-        const activeDiscipline = this._powersFilter.discipline;
-        const activeOrderCategory = this._powersFilter.orderCategory;
-
-        // Apply discipline filter to psychic powers
-        let filteredPsychicPowers = psychicPowers;
-        if (activeDiscipline !== '') {
-            filteredPsychicPowers = psychicPowers.filter((p) => (p.system as WH40KItemSystemData & { discipline?: string }).discipline === activeDiscipline);
-        }
-
         // Apply category filter to orders
+        const activeOrderCategory = this._orderCategoryFilter;
         let filteredOrders = orders;
         if (activeOrderCategory !== '') {
             filteredOrders = orders.filter((o) => (o.system as WH40KItemSystemData & { category?: string }).category === activeOrderCategory);
         }
 
         return {
-            // Item arrays
-            psychicPowers: filteredPsychicPowers,
             navigatorPowers,
             rituals,
             orders: filteredOrders,
-
-            // Counts
-            psychicPowersCount: psychicPowers.length,
             navigatorPowersCount: navigatorPowers.length,
             ritualsCount: rituals.length,
             ordersCount: orders.length,
-
-            // Filter data
-            psychicDisciplines,
             orderCategories,
-            activeDiscipline,
             activeOrderCategory,
         };
     }
@@ -6495,29 +6458,6 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Handle filtering psychic powers by discipline.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #filterPowers(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const discipline = target.dataset['discipline'] ?? '';
-
-        this._powersFilter.discipline = discipline;
-
-        // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
-        filterBtns.forEach((btn: Element) => {
-            btn.classList.toggle('active', (btn as HTMLElement).dataset['discipline'] === discipline);
-        });
-
-        // Re-render the powers part
-        await this.render({ parts: ['powers'] });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
      * Handle filtering orders by category.
      * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
@@ -6526,7 +6466,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #filterOrders(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         const category = target.dataset['category'] ?? '';
 
-        this._powersFilter.orderCategory = category;
+        this._orderCategoryFilter = category;
 
         // Update active class on filter buttons
         const filterBtns = this.element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
@@ -6534,8 +6474,8 @@ export default class CharacterSheet extends BaseActorSheet {
             btn.classList.toggle('active', (btn as HTMLElement).dataset['category'] === category);
         });
 
-        // Re-render the powers part
-        await this.render({ parts: ['powers'] });
+        // The ship-orders panel lives on the Combat tab (#194).
+        await this.render({ parts: ['combat'] });
     }
 
     /* -------------------------------------------- */

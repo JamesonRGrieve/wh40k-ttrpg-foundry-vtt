@@ -2,4 +2,21 @@
 {{!-- This part renders the Combat tab content with weapons and reactions --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-hidden tw-flex-col tw-gap-3 tw-p-3 {{#if tab.active}}tw-flex{{/if}} bc:tw-bg-crimson/[2%] dh1:tw-bg-gold-dark/[2%] dh2:tw-bg-gold-dark/[2%] dw:tw-bg-accent-combat/[2%] ow:tw-bg-brass/[2%] rt:tw-bg-gold/[2%] im:tw-bg-failure/[2%]" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{> systems/wh40k-rpg/templates/actor/panel/combat-station-panel.hbs}}
+
+    {{!-- Navigator powers, rituals and ship orders (#194). Each shows only when the
+         character owns items of that type — on every line; the gate is ownership,
+         never the game system. --}}
+    {{#if (or navigatorPowersCount ritualsCount ordersCount)}}
+    <div class="wh40k-combat-power-panels tw-grid tw-grid-cols-2 tw-gap-3 tw-items-start">
+        {{#if navigatorPowersCount}}
+        {{> systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel.hbs}}
+        {{/if}}
+        {{#if ritualsCount}}
+        {{> systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs}}
+        {{/if}}
+        {{#if ordersCount}}
+        {{> systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs}}
+        {{/if}}
+    </div>
+    {{/if}}
 </section>

@@ -1,6 +1,19 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 
 /**
+ * Langpack key of an activation type: `half-action` → `WH40K.ActionType.HalfAction`.
+ * The schema's activation types are kebab-case; the langpack names them in
+ * PascalCase under `WH40K.ActionType`.
+ */
+export function activationLabelKey(type: string): string {
+    const pascal = type
+        .split('-')
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+    return `WH40K.ActionType.${pascal}`;
+}
+
+/**
  * Template for items with activation requirements (actions, powers).
  * @mixin
  */
@@ -94,7 +107,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @type {string}
      */
     get activationLabel(): string {
-        return game.i18n.localize(`WH40K.Activation.${this.activation.type.capitalize()}`);
+        return game.i18n.localize(activationLabelKey(this.activation.type));
     }
 
     /* -------------------------------------------- */

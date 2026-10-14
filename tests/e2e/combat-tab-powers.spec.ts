@@ -1,0 +1,174 @@
+import type { Page } from '@playwright/test';
+import { showChatMessage } from './lib/chat-capture';
+import { recordCoverage } from './lib/coverage-tracker';
+import { joinOrSkip } from './lib/join';
+import { clearScreenOverlays, snap } from './lib/screenshot';
+import { expect, test } from './lib/test';
+
+/**
+ * Tier B coverage of the Combat tab's power panels (#194) on real Foundry.
+ *
+ * The character sheet's Powers tab was never reachable, so its panels moved to
+ * the Combat tab: the psyker controls (Psychic Phenomena / Perils of the Warp)
+ * in the psychic panel, and the rituals and ship-orders panels, each shown only
+ * when the character owns items of that type. (Navigator powers are driven from
+ * the same tab by navigator-powers.spec.ts.)
+ */
+
+const ACTOR_NAME = 'e2e-combat-tab-powers';
+
+interface ProbeActor {
+    sheet: { id: string; render: (opts: { force: boolean }) => Promise<void> };
+    delete: () => Promise<void>;
+}
+interface ProbeWindow {
+    Actor: { create: (data: object) => Promise<ProbeActor | null> };
+    game: { actors: { getName: (name: string) => ProbeActor | undefined }; messages: { contents: Array<{ id: string; rolls: object[] }> } };
+    ui: { sidebar?: { changeTab?: (tab: string, group: string) => void; expand?: () => void } };
+}
+
+/** Create the character and open its sheet on the Combat tab; returns the sheet's app id. */
+async function openCombatTab(page: Page, system: object, items: object[] = []): Promise<string> {
+    const sheetId = await page.evaluate(
+        async ({ name, sys, owned }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as ProbeWindow;
+            await w.game.actors.getName(name)?.delete();
+            const actor = await w.Actor.create({ name, type: 'dh2-character', system: { gameSystem: 'dh2', ...sys }, items: owned });
+            if (actor === null) throw new Error('Actor.create returned null');
+            return actor.sheet.id;
+        },
+        { name: ACTOR_NAME, sys: system, owned: items },
+    );
+    await showCombatTab(page);
+    return sheetId;
+}
+
+/** Open the character's sheet and switch it to the Combat tab. */
+async function showCombatTab(page: Page): Promise<void> {
+    const sheetId = await page.evaluate(async (name) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const actor = (globalThis as unknown as ProbeWindow).game.actors.getName(name);
+        if (actor === undefined) throw new Error('probe character missing');
+        await actor.sheet.render({ force: true });
+        return actor.sheet.id;
+    }, ACTOR_NAME);
+    await page.locator(`#${sheetId} [data-action="tab"][data-tab="combat"]`).first().click();
+    await expect(page.locator(`#${sheetId} section.tab[data-tab="combat"]`)).toHaveClass(/active/);
+}
+
+async function messageCount(page: Page): Promise<number> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+    return page.evaluate(() => (globalThis as unknown as ProbeWindow).game.messages.contents.length);
+}
+
+/** Click a psyker control on the Combat tab, then snap the chat message it posts (the sheet closes so nothing covers the card). */
+async function rollAndSnap(page: Page, action: string, label: string): Promise<void> {
+    await showCombatTab(page);
+    const before = await messageCount(page);
+    await page.locator(`.wh40k-combat-psyker-controls [data-action="${action}"]`).click();
+    await expect.poll(async () => messageCount(page)).toBeGreaterThan(before);
+    const id = await page.evaluate(() => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        return (globalThis as unknown as ProbeWindow).game.messages.contents.at(-1)?.id ?? '';
+    });
+    await clearScreenOverlays(page);
+    const selector = await showChatMessage(page, id);
+    await expect(page.locator(`#sidebar li.chat-message[data-message-id="${id}"]`)).toBeVisible();
+    const shot = await snap(page, label, { selector });
+    expect(shot, `snap ${label}`).not.toBeNull();
+}
+
+test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
+    test.afterEach(async ({ page }) => {
+        await page.evaluate(async (name) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            await (globalThis as unknown as ProbeWindow).game.actors.getName(name)?.delete();
+        }, ACTOR_NAME);
+    });
+
+    test('a psyker rolls Psychic Phenomena and Perils of the Warp from the Combat tab', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openCombatTab(page, { psy: { rating: 3 } });
+        const controls = page.locator(`#${sheetId} .wh40k-combat-psyker-controls`);
+        await expect(controls).toBeVisible();
+        await expect(controls.locator('[data-action="rollPhenomena"]')).toBeVisible();
+        await expect(controls.locator('[data-action="rollPerils"]')).toBeVisible();
+        await clearScreenOverlays(page, sheetId);
+        await snap(page, 'combat-tab-psyker-controls', { selector: `#${sheetId} .wh40k-combat-psyker-controls` });
+
+        await rollAndSnap(page, 'rollPhenomena', 'combat-tab-phenomena-card');
+        await rollAndSnap(page, 'rollPerils', 'combat-tab-perils-card');
+        recordCoverage('action', 'CharacterSheet.rollPhenomena+rollPerils');
+    });
+
+    test('hovering a psychic power row reveals its invoke button, which opens the roll', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openCombatTab(page, { psy: { rating: 3 } }, [{ name: 'e2e Fixture Power', type: 'psychicPower' }]);
+        const row = page.locator(`#${sheetId} [data-item-type="psychicPower"]`).first();
+        const invoke = row.locator('button[data-action="rollPower"]');
+        const opacity = async (): Promise<string> => invoke.evaluate((el) => getComputedStyle(el).opacity);
+        // Hidden until the row is hovered: the group-hover variant must actually apply.
+        await expect.poll(opacity).toBe('0');
+        await row.hover();
+        await expect.poll(opacity).toBe('1');
+        await clearScreenOverlays(page, sheetId);
+        await row.hover();
+        await snap(page, 'combat-tab-psychic-row-hover', { selector: `#${sheetId} [data-item-type="psychicPower"]` });
+
+        await invoke.click();
+        const dialog = page.locator('.unified-roll-dialog');
+        await expect(dialog).toBeVisible();
+        const dialogId = (await dialog.getAttribute('id')) ?? '';
+        await clearScreenOverlays(page, dialogId);
+        await snap(page, 'combat-tab-psychic-invoke-dialog', { selector: `#${dialogId}` });
+        await page.evaluate(async (id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+            const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<void> }> } } }).foundry
+                .applications.instances;
+            await apps.get(id)?.close();
+        }, dialogId);
+        recordCoverage('action', 'CombatPsychicPanel.invokeOnHover');
+    });
+
+    test('owned rituals and ship orders show their panels on the Combat tab', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openCombatTab(page, {}, [
+            { name: 'e2e Fixture Rite', type: 'ritual' },
+            { name: 'e2e Fixture Order', type: 'order' },
+        ]);
+        const panels = page.locator(`#${sheetId} .wh40k-combat-power-panels`);
+        // Match the panel roots by id: each panel's drop zone repeats the root class.
+        await expect(panels.locator('div[data-panel-id="rituals"]')).toContainText('e2e Fixture Rite');
+        await expect(panels.locator('div[data-panel-id="orders"]')).toContainText('e2e Fixture Order');
+        await expect(panels.locator('div[data-panel-id="navigator-powers"]')).toHaveCount(0);
+        await expect(panels.locator('[data-action="rollRitual"]')).toBeVisible();
+        await expect(panels.locator('[data-action="rollOrder"]')).toBeVisible();
+        await clearScreenOverlays(page, sheetId);
+        await snap(page, 'combat-tab-rituals-orders', { selector: `#${sheetId} .wh40k-combat-power-panels` });
+
+        // Perform Ritual rolls the ritual (it used to post only the ritual's text).
+        const before = await messageCount(page);
+        await panels.locator('[data-action="rollRitual"]').click();
+        await expect.poll(async () => messageCount(page)).toBeGreaterThan(before);
+        const posted = await page.evaluate(() => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const message = (globalThis as unknown as ProbeWindow).game.messages.contents.at(-1);
+            return { id: message?.id ?? '', rolls: message?.rolls.length ?? 0 };
+        });
+        expect(posted.rolls, 'the ritual card carries its d100 roll').toBeGreaterThan(0);
+        await clearScreenOverlays(page);
+        await snap(page, 'combat-tab-ritual-roll-card', { selector: await showChatMessage(page, posted.id) });
+        recordCoverage('panel.render', 'CombatTab.rituals+orders');
+    });
+
+    test('a character owning none of them gets no power panels and no psyker controls', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await openCombatTab(page, {});
+        await expect(page.locator(`#${sheetId} .wh40k-combat-power-panels`)).toHaveCount(0);
+        await expect(page.locator(`#${sheetId} .wh40k-combat-psyker-controls`)).toHaveCount(0);
+        await clearScreenOverlays(page, sheetId);
+        await snap(page, 'combat-tab-no-powers', { selector: `#${sheetId}` });
+        recordCoverage('panel.render', 'CombatTab.noPowers');
+    });
+});

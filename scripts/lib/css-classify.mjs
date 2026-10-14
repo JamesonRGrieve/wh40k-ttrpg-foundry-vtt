@@ -167,8 +167,8 @@ const JS_HOOKS = new Set([
     // Foundry dialog button role classes not already listed.
     'default',
     'secondary',
-    // character-sheet.ts queries `.wh40k-panel-psychic-powers .wh40k-filter-btn` and
-    // `.wh40k-panel-orders .wh40k-filter-btn` to toggle active state on filter buttons.
+    // character-sheet.ts queries `.wh40k-panel-orders .wh40k-filter-btn` to toggle
+    // active state on filter buttons.
     // The class is a permanent JS selector; active-state styling is handled by tw- classes
     // conditionally rendered by HBS ({{#unless activeOrderCategory}}tw-bg-accent-powers…{{/unless}}).
     'wh40k-filter-btn',

@@ -304,6 +304,20 @@
             "Reaction": "Reaction",
             "Special": "Special"
         },
+        "OrderCategory": {
+            "Combat": "Combat",
+            "Maneuver": "Manoeuvre",
+            "Command": "Command",
+            "Support": "Support",
+            "Special": "Special"
+        },
+        "RitualType": {
+            "Prayer": "Prayer",
+            "Rite": "Rite",
+            "Invocation": "Invocation",
+            "Ceremony": "Ceremony",
+            "TechRite": "Tech-Rite"
+        },
         "Acquisition": "Acquisition",
         "Actions": "Actions",
         "Notify": {

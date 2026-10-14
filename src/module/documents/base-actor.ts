@@ -1392,6 +1392,13 @@ export class WH40KBaseActor extends Actor {
             }
             return;
         }
+        // Navigator powers, ship orders and rituals roll through their own engine
+        // (#194): the sheet's Use Power / Execute Order / Perform Ritual buttons
+        // arrive here, and used to fall through to the description vocalize.
+        if (item.isNavigatorPower || item.isOrder || item.isRitual) {
+            await item.performAction();
+            return;
+        }
         await this._vocalizeItem(item);
     }
 

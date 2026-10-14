@@ -11,7 +11,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import psychicPanelSrc from '../../src/templates/actor/panel/combat-psychic-panel.hbs?raw';
-import { renderSheet, renderSheetParts } from '../test-helpers';
+import { captureActionClicks, clickAction, renderSheet, renderSheetParts } from '../test-helpers';
 
 interface PsychicPowerRow {
     id: string;
@@ -29,7 +29,11 @@ interface PsychicPanelContext {
     psyRating?: number;
     showPsychicPanel: boolean;
     isGM: boolean;
+    /** The actor's `system.psy` block, read by the psyker-controls footer (#194). */
+    system?: { psy: { rating: number; currentRating: number; sustained: number; class: string; hasFocus: boolean } };
 }
+
+const PSY = { rating: 4, currentRating: 4, sustained: 1, class: 'bound', hasFocus: true };
 
 const POWERS: PsychicPowerRow[] = [
     { id: 'pwr-smite', name: 'Smite', img: null, disciplineLabel: 'Telekinesis', focusTestLabel: 'Willpower', prCost: 4, isAttack: true, identified: true },
@@ -69,11 +73,20 @@ type Story = StoryObj<PsychicPanelContext>;
 
 export const Default: Story = {
     name: 'Known powers with invoke controls',
-    args: { psychicPowers: POWERS, psyRating: 4, showPsychicPanel: true, isGM: true },
+    args: { psychicPowers: POWERS, psyRating: 4, showPsychicPanel: true, isGM: true, system: { psy: PSY } },
     play: async ({ canvasElement }) => {
         const body = within(canvasElement);
+        // The psyker controls (#194): Phenomena and Perils send their roll actions; Sustained stays editable.
+        const clicks = captureActionClicks(canvasElement);
+        clickAction(canvasElement, 'rollPhenomena');
+        clickAction(canvasElement, 'rollPerils');
+        await expect(clicks.map((c) => c.action)).toEqual(['rollPhenomena', 'rollPerils']);
+        await expect(canvasElement.querySelector<HTMLInputElement>('.wh40k-combat-psyker-controls [name="system.psy.sustained"]')?.value).toBe('1');
+        // Psy Rating is build config: read-only outside the freeform bypass.
+        await expect(canvasElement.querySelector('[name="system.psy.rating"]')).toBeNull();
         // Every power surfaces a row with an invoke (rollPower) control.
-        const invokeButtons = canvasElement.querySelectorAll('[data-action="rollPower"]');
+        // (The row itself also carries `rollPower`, so count the invoke buttons.)
+        const invokeButtons = canvasElement.querySelectorAll('button[data-action="rollPower"]');
         await expect(invokeButtons.length).toBe(POWERS.length);
         // Focus test + discipline are visible.
         await expect(body.getByText('Smite')).toBeTruthy();
@@ -82,10 +95,12 @@ export const Default: Story = {
 };
 
 export const NoPowers: Story = {
-    name: 'Empty state (psyker without powers)',
-    args: { psychicPowers: [], psyRating: 3, showPsychicPanel: true, isGM: true },
+    name: 'Empty state (psyker without powers) — the Perils / Phenomena controls still show',
+    args: { psychicPowers: [], psyRating: 3, showPsychicPanel: true, isGM: true, system: { psy: { ...PSY, rating: 3, currentRating: 3 } } },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(0);
+        await expect(canvasElement.querySelector('[data-action="rollPerils"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-action="rollPhenomena"]')).not.toBeNull();
     },
 };
 
@@ -131,7 +146,7 @@ export const WithHandBudget: Story = {
     play: async ({ canvasElement }) => {
         const badge = canvasElement.querySelector('[data-testid="hand-budget"]');
         await expect(badge?.textContent).toContain('1/2');
-        await expect(canvasElement.querySelectorAll('[data-action="rollPower"]').length).toBe(POWERS.length);
+        await expect(canvasElement.querySelectorAll('button[data-action="rollPower"]').length).toBe(POWERS.length);
     },
 };
 

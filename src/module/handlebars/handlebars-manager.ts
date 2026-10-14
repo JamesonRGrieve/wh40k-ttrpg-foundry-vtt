@@ -110,7 +110,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
-            'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-dynasty.hbs',
             'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
 
@@ -148,8 +147,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/backpack-split-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/psy-rating-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/psychic-powers-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',

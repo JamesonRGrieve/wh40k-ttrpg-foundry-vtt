@@ -231,9 +231,7 @@ const actorSheetOverrides = {
         },
         // Tab show/hide. This pair (0,5,0)–(0,6,1) owns it: the `tw-hidden` +
         // `{{#if tab.active}}tw-flex{{/if}}` pattern the combat / equipment /
-        // voidcraft tab templates carry is (0,2,0), and actor/player/tab-powers.hbs's
-        // `[&.active]:tw-block` — the one important-modifier utility that used to
-        // reach these declarations — is (0,3,0) since its flag was dropped.
+        // voidcraft tab templates carry is (0,2,0).
         '& .wh40k-body .tab, & #tab-body .tab, & .wh40k-body section.tab, & #tab-body section.tab': {
             display: 'none',
         },
