@@ -49,7 +49,7 @@
                             {{localize this.effectKey}}
                         </span>
                         {{/if}}
-                        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" rootClass="wh40k-ow-orders-cost ow:tw-text-brass" labelKey=this.actionCostKey}}
+                        {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" sectionLabelClass="wh40k-ow-orders-cost ow:tw-text-brass" labelKey=this.actionCostKey}}
                     </div>
                     {{#if this.canIssue}}
                         <button type="button"

@@ -17,8 +17,9 @@
         (/) systems/wh40k-rpg/templates/actor/partial/item-table.hbs
 
     Hash arguments:
-        rootClass     — extra classes appended to `wh40k-table--border`
-                        (e.g. `wh40k-weapontable--border`).
+        tableClass    — extra classes appended to `wh40k-table--border`
+                        (e.g. `wh40k-weapontable--border`). Not `rootClass`,
+                        which inside a panel block is the panel's own class.
         headers       — array of column-header descriptors. Each entry is a
                         plain object with:
                           labelKey  — i18n key (preferred)
@@ -38,7 +39,7 @@
     Per-system theming: the table border + header background lift via inline
     `<system>:tw-*` variants so each game system gets a distinct visual tone.
 --}}
-<div class="tw-rounded-md tw-overflow-hidden dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if rootClass}} {{rootClass}}{{/if}}" data-table>
+<div class="tw-rounded-md tw-overflow-hidden dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if tableClass}} {{tableClass}}{{/if}}" data-table>
     <div class="dh2:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10" data-table-header>
         {{#each headers as |header|}}
             <div class="{{#if header.cellClass}}{{header.cellClass}}{{/if}}">

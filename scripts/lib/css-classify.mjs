@@ -79,6 +79,14 @@ const JS_HOOKS = new Set([
     'wh40k-panel-title',
     'wh40k-panel-body',
     'wh40k-panel-count',
+    // Role classes of the elements a panel body renders through leaf partials (drop zone,
+    // empty state, caption span, stat chip). They give those elements their own selector
+    // instead of the panel root class that leaked onto them; tests/panel-class-leak.test.ts
+    // and the panel e2e specs query them by class name — test selectors, no CSS rules.
+    'wh40k-panel__dropzone',
+    'wh40k-panel__empty',
+    'wh40k-panel__section-label',
+    'wh40k-panel__stat-chip',
     // tests/vital-partials.test.ts queries threshold markers by class name — test selector
     'wh40k-threshold-marker',
     // tests/vital-partials.test.ts queries panel chevron and badge label by class — test selectors

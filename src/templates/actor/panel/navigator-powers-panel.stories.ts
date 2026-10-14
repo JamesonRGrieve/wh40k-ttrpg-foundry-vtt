@@ -111,6 +111,10 @@ export const Empty: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-action="rollPower"]')).toBeNull();
         await expect(canvasElement.querySelector('[data-drop-zone="powers"][data-accepts="navigatorPower"]')).not.toBeNull();
+        // The panel's root class is on the panel only; the drop zone and empty state carry their own role classes.
+        await expect(canvasElement.querySelectorAll('.wh40k-panel-navigator-powers').length).toBe(1);
+        await expect(canvasElement.querySelector('.wh40k-panel__dropzone')?.classList.contains('wh40k-panel-navigator-powers')).toBe(false);
+        await expect(canvasElement.querySelector('.wh40k-panel__empty')).not.toBeNull();
     },
 };
 

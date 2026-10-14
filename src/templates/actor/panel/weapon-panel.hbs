@@ -4,7 +4,7 @@
     rootClass="tw-col-auto"
     rootAttrs='data-drop-zone="general" data-accepts="weapon"'}}
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
-        rootClass="wh40k-weapontable--border"
+        tableClass="wh40k-weapontable--border"
         addAction="itemCreate"
         addType="weapon"
         addTitleKey="WH40K.Combat.AddWeapon"
@@ -34,27 +34,27 @@
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]" {{#unless (or item.system.state.identified @root.isGM)}}title="{{localize "WH40K.Weapon.ConcealedHint"}}"{{/unless}}>{{#if (or item.system.state.identified @root.isGM)}}{{item.system.damageLabel}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.Pen"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.Pen"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{#if (or item.system.state.identified @root.isGM)}}{{item.system.damage.penetration}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.Range"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.Range"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{#if (or item.system.state.identified @root.isGM)}}{{item.system.rangeLabel}}{{else}}{{localize "WH40K.Weapon.ConcealedStat"}}{{/if}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.RoF"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.RoF"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.rateOfFireLabel}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.Clip"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.Clip"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.clip.value}} / {{item.system.effectiveClipMax}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.Reload"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.Reload"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{item.system.reload}}</span>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" rootClass="tw-font-bold" labelKey="WH40K.Weapon.Special"}}
+                            {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.65rem]" sectionLabelClass="tw-font-bold" labelKey="WH40K.Weapon.Special"}}
                             <span class="tw-text-sm tw-font-semibold tw-text-[color:var(--wh40k-text-primary)]">{{specialDisplay item.system.special}}</span>
                         </div>
                     </div>

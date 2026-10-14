@@ -10,9 +10,12 @@
         text       — plain English fallback message (used when textKey is absent).
         textKey    — i18n key resolved via {{localize}}. Preferred over `text`.
         padding    — "sm" (default) | "md". Controls vertical padding.
-        rootClass  — extra utility classes appended to the wrapper.
+        emptyClass — extra utility classes appended to the wrapper. Not
+                     `rootClass`: inside a panel block that name is the
+                     PANEL's root class (block bodies see the enclosing
+                     partial's hash), so it leaked onto this element.
 --}}
-<div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-[color:var(--wh40k-text-muted)] tw-text-center {{#if (eq padding "md")}}tw-p-6{{else}}tw-p-4{{/if}}{{#if rootClass}} {{rootClass}}{{/if}}">
+<div class="wh40k-panel__empty tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-[color:var(--wh40k-text-muted)] tw-text-center {{#if (eq padding "md")}}tw-p-6{{else}}tw-p-4{{/if}}{{#if emptyClass}} {{emptyClass}}{{/if}}">
     <i class="fas {{icon}} tw-text-2xl tw-mb-2 tw-opacity-60 tw-text-gold {{themeClassFor 'accent'}}"></i>
     <p class="tw-italic tw-m-0">{{#if textKey}}{{localize textKey}}{{else}}{{text}}{{/if}}</p>
 </div>
