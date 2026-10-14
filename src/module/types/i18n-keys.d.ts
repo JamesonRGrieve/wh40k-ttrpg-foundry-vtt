@@ -4375,6 +4375,7 @@ export type I18nKey =
     | 'WH40K.OtherBonuses'
     | 'WH40K.PartyOverview.Header'
     | 'WH40K.PassiveModifiers.AlreadyApplied'
+    | 'WH40K.PassiveModifiers.AlreadyAppliedCharacteristic'
     | 'WH40K.PassiveModifiers.Label'
     | 'WH40K.Pinning.EscapeLabel'
     | 'WH40K.Pinning.FavourableBonus'

@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { type ModifierSourcesShape, selectPassiveModifierRows } from './passive-modifiers.ts';
+import { type ModifierSourcesShape, passiveBaseKind, passiveModifierNoteKey, selectPassiveModifierRows } from './passive-modifiers.ts';
 
 const superiorChirurgeon: ModifierSourcesShape = {
     skills: { medicae: [{ name: 'Superior Chirurgeon', type: 'talent', value: 20 }] },
@@ -87,5 +87,32 @@ describe('selectPassiveModifierRows (#484 read-only passive display)', () => {
     it('defaults a missing name / type to empty strings rather than dropping the row', () => {
         const sources: ModifierSourcesShape = { skills: { medicae: [{ value: 5 }] } };
         expect(selectPassiveModifierRows('Skill', 'medicae', sources)).toEqual([{ label: '', value: 5, valueLabel: '–', type: '' }]);
+    });
+});
+
+/**
+ * The note under the passive rows names the base they are folded into (#525): a
+ * weapon attack rolls a characteristic (WS / BS), so "Included in base skill."
+ * was wrong there.
+ */
+describe('passiveBaseKind / passiveModifierNoteKey — the note names the right base (#525)', () => {
+    it('a skill test reads "Included in base skill."', () => {
+        expect(passiveBaseKind('Skill', 'medicae')).toBe('skill');
+        expect(passiveModifierNoteKey('skill')).toBe('WH40K.PassiveModifiers.AlreadyApplied');
+    });
+
+    it('a weapon attack (no rollKey, a characteristic base) reads "Included in base characteristic."', () => {
+        expect(passiveBaseKind('Attack', '')).toBe('characteristic');
+        expect(passiveModifierNoteKey(passiveBaseKind('Attack', ''))).toBe('WH40K.PassiveModifiers.AlreadyAppliedCharacteristic');
+    });
+
+    it('a characteristic test reads the characteristic note', () => {
+        expect(passiveBaseKind('Characteristic', 'ballisticSkill')).toBe('characteristic');
+    });
+
+    it('agrees with the bucket the rows are drawn from', () => {
+        // An attack's rows come from the characteristic bucket, so its note must too.
+        expect(selectPassiveModifierRows('Attack', '', superiorChirurgeon, 'intelligence')).toHaveLength(1);
+        expect(passiveBaseKind('Attack', '')).toBe('characteristic');
     });
 });

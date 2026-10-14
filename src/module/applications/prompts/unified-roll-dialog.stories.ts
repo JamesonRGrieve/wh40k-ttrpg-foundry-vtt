@@ -59,6 +59,7 @@ function baseContext(overrides: Ctx = {}): Ctx {
         difficultyMod: 0,
         situationalMod: 10,
         customMod: 0,
+        passiveModifierNoteKey: 'WH40K.PassiveModifiers.AlreadyApplied',
         // context-panel — collapsed by default
         hasContextPanel: false,
         isWeapon: false,
@@ -469,6 +470,39 @@ export const Dh2BurstModes: Story = {
     play: async ({ canvasElement }) => {
         await expect(modeLabel(canvasElement, 'semiAuto')).toBe('+0');
         await expect(modeLabel(canvasElement, 'fullAuto')).toBe('-10');
+    },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Passive-effects note names the base kind (#525)                    */
+/* ------------------------------------------------------------------ */
+
+const PASSIVE_ROWS = [{ label: 'Weapon Training (Las)', value: 10, valueLabel: '–', type: 'talent' }];
+
+/** A weapon attack rolls a characteristic, so its passive note says "characteristic". */
+export const PassiveNoteWeaponAttack: Story = {
+    args: baseContext({
+        rollName: 'Ballistic Skill Test',
+        hasPassiveModifiers: true,
+        passiveModifiers: PASSIVE_ROWS,
+        passiveModifierNoteKey: 'WH40K.PassiveModifiers.AlreadyAppliedCharacteristic',
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dw' }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="passive-modifier-note"]')?.textContent).toBe('Included in base characteristic.');
+    },
+};
+
+/** A skill test keeps "Included in base skill." */
+export const PassiveNoteSkillTest: Story = {
+    args: baseContext({
+        rollName: 'Medicae Test',
+        hasPassiveModifiers: true,
+        passiveModifiers: [{ label: 'Superior Chirurgeon', value: 20, valueLabel: '–', type: 'talent' }],
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'bc' }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="passive-modifier-note"]')?.textContent).toBe('Included in base skill.');
     },
 };
 

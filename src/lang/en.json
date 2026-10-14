@@ -891,7 +891,8 @@
         },
         "PassiveModifiers": {
             "Label": "Passive Effects",
-            "AlreadyApplied": "Included in base skill."
+            "AlreadyApplied": "Included in base skill.",
+            "AlreadyAppliedCharacteristic": "Included in base characteristic."
         },
         "GearAssist": {
             "Label": "Gear"

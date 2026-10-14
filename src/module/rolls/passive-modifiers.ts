@@ -60,6 +60,25 @@ export function passiveCombatModifiers(sources: ModifierSourcesShape | undefined
     return totals;
 }
 
+/** What a roll's base target is: a skill, or a characteristic. */
+export type PassiveBaseKind = 'skill' | 'characteristic';
+
+/**
+ * Which kind of base the passive rows are folded into (#525), so the note under
+ * them names it. A skill test's rows are in the skill; a characteristic test's,
+ * and an attack rolled on a characteristic (WS / BS / S, which has no `rollKey`),
+ * are in the characteristic. Mirrors the bucket choice in
+ * {@link selectPassiveModifierRows}.
+ */
+export function passiveBaseKind(type: string, rollKey: string): PassiveBaseKind {
+    return type === 'Skill' && rollKey !== '' ? 'skill' : 'characteristic';
+}
+
+/** The langpack key of the note under the passive rows for a base kind (#525). */
+export function passiveModifierNoteKey(kind: PassiveBaseKind): 'WH40K.PassiveModifiers.AlreadyApplied' | 'WH40K.PassiveModifiers.AlreadyAppliedCharacteristic' {
+    return kind === 'skill' ? 'WH40K.PassiveModifiers.AlreadyApplied' : 'WH40K.PassiveModifiers.AlreadyAppliedCharacteristic';
+}
+
 /** The `modifierSources` bucket a roll of the given `type` reads from. */
 function bucketForType(type: string, sources: ModifierSourcesShape): Record<string, PassiveModifierEntry[] | undefined> | undefined {
     if (type === 'Skill') return sources.skills;

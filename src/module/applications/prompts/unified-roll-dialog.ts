@@ -15,7 +15,13 @@ import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
-import { type ModifierSourcesShape, type PassiveModifierRow, selectPassiveModifierRows } from '../../rolls/passive-modifiers.ts';
+import {
+    type ModifierSourcesShape,
+    type PassiveModifierRow,
+    passiveBaseKind,
+    passiveModifierNoteKey,
+    selectPassiveModifierRows,
+} from '../../rolls/passive-modifiers.ts';
 import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
 import { degreesResultFormula, getDegreeForMode, isD100Success, printedDegrees, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { isRollKeepMode, keepModeOptions, type RollKeepMode } from '../../rolls/roll-keep.ts';
@@ -921,6 +927,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // into the base value this dialog starts from.
             passiveModifiers: this._passiveModifierRows(),
             hasPassiveModifiers: this._passiveModifierRows().length > 0,
+            // The note names the base the rows are folded into (#525): a weapon
+            // attack's base is a characteristic, not a skill.
+            passiveModifierNoteKey: passiveModifierNoteKey(passiveBaseKind(rollData.type, rollData.rollKey)),
             extended: this._extended,
             extendedThreshold: this._extendedThreshold,
             tryAgainAdvice,
