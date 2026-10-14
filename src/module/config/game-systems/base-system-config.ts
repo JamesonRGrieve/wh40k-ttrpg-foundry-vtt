@@ -5,7 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
@@ -117,10 +117,11 @@ export abstract class BaseSystemConfig {
     abstract readonly burstRules: BurstCapRules | null;
 
     /**
-     * The line's printed to-hit modifier for a Semi-Auto / Full Auto Burst (#607),
-     * or `null` for a line that prints no rate-of-fire bursts.
+     * The line's printed Semi-Auto / Full Auto Burst rules (#607): each burst's
+     * to-hit modifier and action cost, or `null` for a line that prints no
+     * rate-of-fire bursts.
      */
-    abstract readonly burstAttackModifiers: BurstAttackModifiers | null;
+    abstract readonly burstActions: BurstActionRules | null;
 
     /**
      * The line's printed evasion rule for multi-hit attacks (#414): which attacks

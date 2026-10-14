@@ -12,7 +12,7 @@ import {
     RANGED_ATTACK_MODES,
     RANGED_SITUATIONAL_MODIFIERS,
 } from './attack-options';
-import { allCombatActions, combatActionAttackModifier } from './combat-actions';
+import { allCombatActions, combatActionAttackModifier, combatActionCostLabel } from './combat-actions';
 
 describe('attack-options situational modifiers', () => {
     describe('ranged set', () => {
@@ -116,6 +116,33 @@ describe('ranged Rate-of-Fire to-hit modifiers (#231, #607)', () => {
         expect(shownRanged('standard', line)?.modifier).toBe(0);
         expect(shownRanged('semiAuto', line)?.modifier).toBe(semi);
         expect(shownRanged('fullAuto', line)?.modifier).toBe(full);
+    });
+
+    // DH1 core "(Full Action)", DW / RT "Type: Full Action"; DH2 / BC / OW "Type: Half Action".
+    it.each([
+        ['dh1', 'Full'],
+        ['dw', 'Full'],
+        ['rt', 'Full'],
+        ['dh2', 'Half'],
+        ['bc', 'Half'],
+        ['ow', 'Half'],
+    ] as const)('%s: the burst cards cost a %s action', (line, cost) => {
+        const modes = getAvailableAttackModes(AUTO_WEAPON, line);
+        expect(modes.find((m) => m.key === 'semiAuto')?.actionCost).toBe(cost);
+        expect(modes.find((m) => m.key === 'fullAuto')?.actionCost).toBe(cost);
+        expect(modes.find((m) => m.key === 'standard')?.actionCost).toBe('Half');
+    });
+
+    it('every card shows the cost its action has in the registry, falling back to its own', () => {
+        const melee: AttackOptionWeapon = { isRanged: false, system: {} };
+        for (const line of ['dh1', 'dh2']) {
+            for (const mode of [...getAvailableAttackModes(AUTO_WEAPON, line), ...getAvailableAttackModes(melee, line), ...getMeleeSpecialOptions(line)]) {
+                expect(mode.actionCost).toBe(
+                    combatActionCostLabel(mode.actionName, line) ??
+                        [...RANGED_ATTACK_MODES, ...MELEE_ATTACK_MODES, ...MELEE_SPECIAL_OPTIONS].find((m) => m.key === mode.key)?.actionCost,
+                );
+            }
+        }
     });
 
     it('an unresolved line shows DH2, the family default', () => {

@@ -4,7 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
+import type { BurstActionCost, BurstActionRule, BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
@@ -126,8 +126,23 @@ const DEFAULT_BURST_LINE = 'dh2';
  * @param mode  The burst whose modifier is wanted.
  */
 export function burstAttackModifierFor(line: string | undefined, mode: BurstMode): number {
+    return burstActionRuleFor(line, mode)?.attackModifier ?? 0;
+}
+
+/**
+ * The action a burst costs in a line (#607): Half in DH2 / BC / OW, Full in DH1 /
+ * DW / RT. An unresolved line reads DH2's; a line that prints no bursts has none.
+ * @param line  `system.gameSystem` id.
+ * @param mode  The burst whose cost is wanted.
+ */
+export function burstActionCostFor(line: string | undefined, mode: BurstMode): BurstActionCost | null {
+    return burstActionRuleFor(line, mode)?.actionCost ?? null;
+}
+
+/** A line's printed rule for one burst, DH2's for an unresolved line, null where the line prints no bursts. */
+function burstActionRuleFor(line: string | undefined, mode: BurstMode): BurstActionRule | null {
     const config = SystemConfigRegistry.getOrNull(line ?? DEFAULT_BURST_LINE) ?? SystemConfigRegistry.getOrNull(DEFAULT_BURST_LINE);
-    return config?.burstAttackModifiers?.[mode] ?? 0;
+    return config?.burstActions?.[mode] ?? null;
 }
 
 /**

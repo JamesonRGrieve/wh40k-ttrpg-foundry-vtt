@@ -6,7 +6,7 @@
 // The RT career registry is read from the compendium-backed boot cache.
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -56,10 +56,14 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * RT core (1.4 errata) p. 242: Semi-Auto Burst "a Ballistic Skill Test with a
-     * +10 bonus"; Full Auto Burst "with a +20 bonus" — #607.
+     * RT core (1.4 errata) p. 242: Semi-Auto Burst (Type: Full Action) "a Ballistic
+     * Skill Test with a +10 bonus"; Full Auto Burst (Type: Full Action) "with a +20
+     * bonus" — #607.
      */
-    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 10, full: 20 };
+    readonly burstActions: BurstActionRules = {
+        semi: { attackModifier: 10, actionCost: 'full' },
+        full: { attackModifier: 20, actionCost: 'full' },
+    };
     /** RT core: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

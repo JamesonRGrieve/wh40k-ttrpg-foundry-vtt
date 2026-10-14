@@ -89,7 +89,10 @@ interface WeaponQualityDefinition {
 interface CombatActionConfig {
     key: string;
     label: string;
+    /** The action cost. A burst's (see `burst`) is the line's own and is resolved at use. */
     type: string;
+    /** A Semi-Auto / Full Auto Burst, whose action cost is printed per line (#607). */
+    burst?: 'semi' | 'full';
     description: string;
     icon: string;
     subtypes: string[];
@@ -1173,7 +1176,9 @@ WH40K.combatActions = {
         {
             key: 'semiAutoBurst',
             label: 'WH40K.Combat.Action.SemiAutoBurst',
-            type: 'full',
+            // DH2's Half Action; the actor's line decides at use (burstActionCostFor, #607).
+            type: 'half',
+            burst: 'semi',
             description: 'WH40K.Combat.Action.SemiAutoBurstDesc',
             icon: 'fa-stream',
             subtypes: ['Attack', 'Ranged'],
@@ -1181,7 +1186,9 @@ WH40K.combatActions = {
         {
             key: 'fullAutoBurst',
             label: 'WH40K.Combat.Action.FullAutoBurst',
-            type: 'full',
+            // DH2's Half Action; the actor's line decides at use (burstActionCostFor, #607).
+            type: 'half',
+            burst: 'full',
             description: 'WH40K.Combat.Action.FullAutoBurstDesc',
             icon: 'fa-wind',
             subtypes: ['Attack', 'Ranged'],

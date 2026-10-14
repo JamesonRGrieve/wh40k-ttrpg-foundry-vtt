@@ -17,7 +17,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import {
     type ChaosAdvanceEntry,
     deriveAlignmentFromTally,
@@ -82,10 +82,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * BC core, Combat Actions: Semi-Auto Burst "with a +0 bonus"; Full Auto Burst "with a
-     * −10 bonus to his attack" — #607.
+     * BC core, Combat Actions: Semi-Auto Burst (Type: Half Action) "with a +0
+     * bonus"; Full Auto Burst (Type: Half Action) "with a −10 bonus to his
+     * attack" — #607.
      */
-    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 0, full: -10 };
+    readonly burstActions: BurstActionRules = {
+        semi: { attackModifier: 0, actionCost: 'half' },
+        full: { attackModifier: -10, actionCost: 'half' },
+    };
     /**
      * BC core: "When Evading Full Auto or Semi-Auto Bursts, each Degree of Success
      * on the Dodge Test negates one additional hit. When Evading Swift or Lightning

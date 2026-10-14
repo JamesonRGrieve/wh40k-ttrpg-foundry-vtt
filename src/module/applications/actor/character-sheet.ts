@@ -58,6 +58,7 @@ import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type DaemonPrince
 import { isGiftItem } from '../../rules/bc-gifts.ts';
 import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
 import { daemonEngineRageBonus } from '../../rules/bc-supplement-mechanics.ts';
+import { configuredActionType } from '../../rules/combat-actions.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
 import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
 import {
@@ -3886,13 +3887,15 @@ export default class CharacterSheet extends BaseActorSheet {
             ...(wh40kConfig?.combatActions?.attacks ?? []),
             ...(wh40kConfig?.combatActions?.movement ?? []),
             ...(wh40kConfig?.combatActions?.utility ?? []),
-        ] as Array<{ key: string; label: string; description: string; type?: string; icon?: string; subtypes?: string[] }>;
+        ] as Array<{ key: string; label: string; description: string; type?: string; burst?: 'semi' | 'full'; icon?: string; subtypes?: string[] }>;
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
         if (actionConfig === undefined) {
             this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownCombatAction', { action: actionKey }), { duration: 3000 });
             return;
         }
+        // A burst costs what the actor's line prints: Full in DH1 / DW / RT (#607).
+        const actionType = configuredActionType(actionConfig.type, actionConfig.burst, firstSystemId(this.actor));
 
         const actionName = game.i18n.localize(actionConfig.label);
         const actionDescription = game.i18n.localize(actionConfig.description);
@@ -3910,7 +3913,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     _gameSystemId: firstSystemId(this.actor),
                     name: actionName,
                     actor: this.actor.name,
-                    actionType: actionConfig.type ?? '',
+                    actionType: actionType ?? '',
                     description: actionDescription,
                     subtypes: actionConfig.subtypes?.join(', ') ?? '',
                     icon: actionConfig.icon ?? '',
@@ -3921,7 +3924,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Spend the action's economy cost when it maps cleanly to one action
             // kind. Compound / variable costs ('half-full', 'varies', …) are left
             // for the player to spend manually via the action-economy readout.
-            const kind = CharacterSheet.#actionKindFor(actionConfig.type);
+            const kind = CharacterSheet.#actionKindFor(actionType);
             const actorId = this.actor.id;
             if (kind !== null && actorId !== null) {
                 spendActionForActor(actorId, kind);

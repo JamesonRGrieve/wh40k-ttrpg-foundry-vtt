@@ -1,6 +1,6 @@
-import { burstAttackModifierFor } from '../config/game-systems/index.ts';
+import { burstActionCostFor, burstAttackModifierFor } from '../config/game-systems/index.ts';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
-import { burstAttackModeForAction } from './auto-fire.ts';
+import { type BurstActionCost, burstAttackModeForAction, type BurstMode } from './auto-fire.ts';
 import { hasGrenadeRider, type RiderWeaponSystem, riderTakesWeaponRoll } from './grenade-rider.ts';
 import { type GrenadeWeaponSystem, isGrenadeWeapon } from './grenade-weapon.ts';
 import { hitLocationNames } from './hit-locations.ts';
@@ -36,7 +36,7 @@ export type CombatActionModifierInput = Pick<
 export function combatActionAttackModifier(actionName: string, line: string | undefined): number {
     const burst = burstAttackModeForAction(actionName);
     if (burst !== null) return burstAttackModifierFor(line, burst);
-    return allCombatActions().find((action) => action.name === actionName)?.attack?.modifier ?? 0;
+    return allCombatActions(line).find((action) => action.name === actionName)?.attack?.modifier ?? 0;
 }
 
 /** The canonical action name whose penalties {@link resolveTwoWeaponPenalties} owns. */
@@ -128,7 +128,7 @@ export function updateAvailableCombatActions(rollData: WeaponRollData): void {
     // with range derived from the weapon's own range data (Strength-Bonus based).
     const isThrownWeapon = rollData.weapon.isThrown;
 
-    const actions = allCombatActions()
+    const actions = allCombatActions(rollData.gameSystemId)
         .filter((action) => action.subtype.includes('Attack'))
         .filter((action) => {
             const isThrowAction = action.subtype.includes('Thrown');
@@ -208,7 +208,62 @@ export function resolveThrow(system: ThrowableWeaponSystem): ThrowResolution {
     return isGrenadeWeapon(system) && hasGrenadeRider(system) && !riderTakesWeaponRoll(system) ? { path: 'grenade-dialog' } : { path: 'weapon-roll' };
 }
 
-export function allCombatActions(): CombatAction[] {
+/** The registry's action-type label for an action cost. */
+const ACTION_TYPE_LABEL: Readonly<Record<BurstActionCost, string>> = { half: 'Half', full: 'Full' };
+
+/**
+ * A burst's action type in a line (#607): Half in DH2 / BC / OW, Full in DH1 / DW /
+ * RT, read from the line's config. A line that prints no bursts keeps Half.
+ */
+function burstActionType(line: string | undefined, mode: BurstMode): string[] {
+    return [ACTION_TYPE_LABEL[burstActionCostFor(line, mode) ?? 'half']];
+}
+
+/**
+ * The action a combat action costs in a line, as the action economy spends it
+ * (`'half'` / `'full'`), or null for a variable or non-action cost. A burst reads
+ * the line's config (#607); every other action its registry entry.
+ * @param actionName  The combat action's canonical name.
+ * @param line        The acting actor's game line.
+ */
+export function combatActionCost(actionName: string, line: string | undefined): BurstActionCost | null {
+    const type = allCombatActions(line).find((action) => action.name === actionName)?.type;
+    if (type?.length !== 1) return null;
+    const [only] = type;
+    if (only === 'Half') return 'half';
+    if (only === 'Full') return 'full';
+    return null;
+}
+
+/**
+ * The action type a configured combat action costs for an actor of `line`: a
+ * burst's is the line's printed cost (#607), any other action keeps its own.
+ * @param type   The configured type (`'half'`, `'full'`, …).
+ * @param burst  Set on a Semi-Auto / Full Auto Burst entry.
+ * @param line   The acting actor's game line.
+ */
+export function configuredActionType(type: string | undefined, burst: BurstMode | undefined, line: string | undefined): string | undefined {
+    if (burst === undefined) return type;
+    return burstActionCostFor(line, burst) ?? type;
+}
+
+/**
+ * The action-cost label ("Half" / "Full") the attack-mode cards print for an
+ * action in a line, or null when the registry gives none (#607).
+ * @param actionName  The combat action's canonical name.
+ * @param line        The acting actor's game line.
+ */
+export function combatActionCostLabel(actionName: string, line: string | undefined): string | null {
+    const cost = combatActionCost(actionName, line);
+    return cost === null ? null : ACTION_TYPE_LABEL[cost];
+}
+
+/**
+ * Every combat action, as the given line prints it: the burst action types are the
+ * line's own (#607), the rest are the same in every line.
+ * @param line  The acting actor's game line (DH2's when unresolved).
+ */
+export function allCombatActions(line?: string): CombatAction[] {
     return [
         {
             name: 'Standard Attack',
@@ -306,9 +361,9 @@ export function allCombatActions(): CombatAction[] {
         },
         {
             name: 'Full Auto Burst',
-            type: ['Half'],
+            type: burstActionType(line, 'full'),
             subtype: ['Attack', 'Ranged'],
-            // The to-hit modifier is per line (combatActionAttackModifier, #607).
+            // The to-hit modifier and the action type are per line (#607).
             description: 'Each DoS adds a hit; 94+ jams; hits spread 2m.',
         },
         {
@@ -380,9 +435,9 @@ export function allCombatActions(): CombatAction[] {
         },
         {
             name: 'Semi-Auto Burst',
-            type: ['Half'],
+            type: burstActionType(line, 'semi'),
             subtype: ['Attack', 'Ranged'],
-            // The to-hit modifier is per line (combatActionAttackModifier, #607).
+            // The to-hit modifier and the action type are per line (#607).
             description: 'Every 2 DoS beyond the first adds a hit; 94+ jams; hits spread 2m.',
         },
         {

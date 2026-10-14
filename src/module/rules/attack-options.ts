@@ -4,7 +4,7 @@
  * Used by the unified roll dialog weapon panel to render selectable cards.
  */
 
-import { combatActionAttackModifier } from './combat-actions.ts';
+import { combatActionAttackModifier, combatActionCostLabel } from './combat-actions.ts';
 
 /** The weapon surface the attack-mode availability reads: its class and rate of fire. */
 export interface AttackOptionWeapon {
@@ -32,9 +32,11 @@ type AttackModeOption = {
 
 /**
  * A mode as the dialog shows it: whether the weapon can take it, and the to-hit
- * modifier its combat action applies in the rolling actor's line — read from the
- * same source the roll uses ({@link combatActionAttackModifier}), so the card and
- * the roll cannot disagree (#231, #607).
+ * modifier and action cost its combat action has in the rolling actor's line —
+ * read from the same source the roll uses ({@link combatActionAttackModifier},
+ * {@link combatActionCostLabel}), so the card and the roll cannot disagree (#231,
+ * #607). A mode's own `actionCost` is the fallback for an action the registry
+ * gives no single cost.
  */
 type AttackModeAvailability = AttackModeOption & {
     available: boolean;
@@ -89,7 +91,8 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         key: 'semiAuto',
         label: 'Semi-Auto',
         actionName: 'Semi-Auto Burst',
-        actionCost: 'Half',
+        // Half or Full per line, from the action registry (#607).
+        actionCost: null,
         icon: 'fas fa-burst',
         tooltip: 'Fire a burst. Additional hit per 2 DoS. Jam on 94+.',
         requires: (weapon) => (weapon.system.attack?.rateOfFire?.semi ?? 0) > 0,
@@ -98,7 +101,8 @@ export const RANGED_ATTACK_MODES: AttackModeOption[] = [
         key: 'fullAuto',
         label: 'Full-Auto',
         actionName: 'Full Auto Burst',
-        actionCost: 'Half',
+        // Half or Full per line, from the action registry (#607).
+        actionCost: null,
         icon: 'fas fa-arrows-split-up-and-left',
         tooltip: 'Spray fire. Additional hit per DoS. Jam on 94+.',
         requires: (weapon) => (weapon.system.attack?.rateOfFire?.full ?? 0) > 0,
@@ -448,6 +452,7 @@ export function getAvailableAttackModes(weapon: AttackOptionWeapon, line: string
         ...mode,
         available: mode.requires ? mode.requires(weapon) : true,
         modifier: combatActionAttackModifier(mode.actionName, line),
+        actionCost: combatActionCostLabel(mode.actionName, line) ?? mode.actionCost,
     }));
 }
 
@@ -461,6 +466,7 @@ export function getMeleeSpecialOptions(line: string | undefined): AttackModeAvai
         ...opt,
         available: true,
         modifier: combatActionAttackModifier(opt.actionName, line),
+        actionCost: combatActionCostLabel(opt.actionName, line) ?? opt.actionCost,
     }));
 }
 

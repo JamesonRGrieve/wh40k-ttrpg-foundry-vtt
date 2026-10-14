@@ -70,13 +70,23 @@ export interface BurstCapComponent {
 /** Which rate-of-fire entry a burst action draws its ceiling and ammunition from. */
 export type BurstMode = 'semi' | 'full';
 
-/**
- * A line's printed to-hit modifier for each burst action (#607): DH2 / BC / OW
- * Semi-Auto +0 and Full Auto −10; DH1 / DW / RT Semi-Auto +10 and Full Auto +20.
- */
-export type BurstAttackModifiers = Readonly<Record<BurstMode, number>>;
+/** The action a burst costs: DH2 / BC / OW print both bursts as Half Actions, DH1 / DW / RT as Full Actions. */
+export type BurstActionCost = 'half' | 'full';
 
-/** The burst actions whose to-hit modifier is the line's {@link BurstAttackModifiers} entry. */
+/** How a line prints one burst action (#607): its to-hit modifier and its action cost. */
+export interface BurstActionRule {
+    readonly attackModifier: number;
+    readonly actionCost: BurstActionCost;
+}
+
+/**
+ * A line's printed rule for each burst action (#607): DH2 / BC / OW Semi-Auto +0
+ * and Full Auto −10, both Half Actions; DH1 / DW / RT Semi-Auto +10 and Full Auto
+ * +20, both Full Actions.
+ */
+export type BurstActionRules = Readonly<Record<BurstMode, BurstActionRule>>;
+
+/** The burst actions whose modifier and cost are the line's {@link BurstActionRules} entry. */
 const BURST_ATTACK_ACTIONS: Readonly<Record<string, BurstMode>> = {
     'Semi-Auto Burst': 'semi',
     'Full Auto Burst': 'full',

@@ -4,7 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
@@ -28,10 +28,14 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * DW core p. 242: Semi-Auto Burst "a Ballistic Skill Test with a +10 bonus";
-     * p. 239: Full Auto Burst "with a +20 bonus" — #607.
+     * DW core p. 242: Semi-Auto Burst (Type: Full Action) "a Ballistic Skill Test
+     * with a +10 bonus"; p. 239: Full Auto Burst (Type: Full Action) "with a +20
+     * bonus" — #607.
      */
-    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 10, full: 20 };
+    readonly burstActions: BurstActionRules = {
+        semi: { attackModifier: 10, actionCost: 'full' },
+        full: { attackModifier: 20, actionCost: 'full' },
+    };
     /** DW core: "When Dodging Full Auto or Semi-Auto Bursts, each Degree of Success on the Dodge Test negates one additional hit." — #414. */
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

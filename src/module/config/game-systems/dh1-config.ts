@@ -5,7 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
-import type { BurstAttackModifiers, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -38,10 +38,14 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * DH1 core p. 191: Semi-Auto Burst "grants a +10 modifier to your Ballistic
-     * Skill Test"; p. 190: Full Auto Burst "grants a +20 modifier" — #607.
+     * DH1 core p. 191: "Semi-Auto Burst (Full Action)" "grants a +10 modifier to
+     * your Ballistic Skill Test"; p. 190: "Full Auto Burst (Full Action)" "grants a
+     * +20 modifier" — #607.
      */
-    readonly burstAttackModifiers: BurstAttackModifiers = { semi: 10, full: 20 };
+    readonly burstActions: BurstActionRules = {
+        semi: { attackModifier: 10, actionCost: 'full' },
+        full: { attackModifier: 20, actionCost: 'full' },
+    };
     /** DH1 core: "When Dodging Full or Semi-Automatic fire, each degree of success negates an additional hit." — #414. */
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

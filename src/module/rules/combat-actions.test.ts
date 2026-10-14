@@ -1,5 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { allCombatActions, calculateCombatActionModifier, combatActionAttackModifier, type CombatActionModifierInput, isChargeAction } from './combat-actions';
+import {
+    allCombatActions,
+    calculateCombatActionModifier,
+    combatActionAttackModifier,
+    combatActionCost,
+    combatActionCostLabel,
+    type CombatActionModifierInput,
+    configuredActionType,
+    isChargeAction,
+} from './combat-actions';
 
 /** An owned talent as the stub actor carries it: document identifier + picked specialisation. */
 interface StubTalent {
@@ -289,6 +298,51 @@ describe('burst to-hit modifier per line (#607)', () => {
                 allCombatActions().find((a) => a.name === 'Suppressing Fire - Full')?.attack?.modifier ?? 0,
             );
         }
+    });
+});
+
+/**
+ * The burst action cost each line prints (#607): DH1 core p. 191 / p. 190
+ * "(Full Action)", DW and RT "Type: Full Action"; DH2, BC and OW "Type: Half Action".
+ */
+const BURST_COST_BY_LINE: ReadonlyArray<readonly [string, 'half' | 'full']> = [
+    ['dh1', 'full'],
+    ['dw', 'full'],
+    ['rt', 'full'],
+    ['dh2', 'half'],
+    ['bc', 'half'],
+    ['ow', 'half'],
+];
+
+describe('burst action cost per line (#607)', () => {
+    it.each(BURST_COST_BY_LINE)('%s: both bursts cost a %s action', (line, cost) => {
+        expect(combatActionCost('Semi-Auto Burst', line)).toBe(cost);
+        expect(combatActionCost('Full Auto Burst', line)).toBe(cost);
+        const label = cost === 'full' ? 'Full' : 'Half';
+        const registry = allCombatActions(line);
+        expect(registry.find((a) => a.name === 'Semi-Auto Burst')?.type).toEqual([label]);
+        expect(registry.find((a) => a.name === 'Full Auto Burst')?.type).toEqual([label]);
+        expect(combatActionCostLabel('Semi-Auto Burst', line)).toBe(label);
+    });
+
+    it('other actions keep their own cost in every line', () => {
+        for (const [line] of BURST_COST_BY_LINE) {
+            expect(combatActionCost('Standard Attack', line)).toBe('half');
+            expect(combatActionCost('Called Shot', line)).toBe('full');
+            expect(combatActionCost('Reload', line)).toBeNull();
+        }
+    });
+
+    it('an unresolved line reads DH2; IM (no bursts) keeps Half', () => {
+        expect(combatActionCost('Full Auto Burst', undefined)).toBe('half');
+        expect(combatActionCost('Full Auto Burst', 'im')).toBe('half');
+    });
+
+    it('the sheet spends a configured burst at its line cost, other actions at their own type', () => {
+        expect(configuredActionType('half', 'semi', 'dh1')).toBe('full');
+        expect(configuredActionType('half', 'full', 'dh2')).toBe('half');
+        expect(configuredActionType('half', 'full', 'im')).toBe('half');
+        expect(configuredActionType('full', undefined, 'dh1')).toBe('full');
     });
 });
 

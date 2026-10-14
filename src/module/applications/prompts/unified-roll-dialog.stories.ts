@@ -563,7 +563,13 @@ function modeLabel(root: HTMLElement, key: string): string {
     return card?.lastElementChild?.textContent.trim() ?? '';
 }
 
-/** DH1 core p. 191 / p. 190: Semi-Auto Burst +10, Full Auto Burst +20 (DW and RT print the same). */
+/** The action-cost badge on a mode card (icon, label, cost, modifier). */
+function modeCost(root: HTMLElement, key: string): string {
+    const card = root.querySelector<HTMLElement>(`[data-action="selectAttackMode"][data-mode-key="${key}"]`);
+    return card?.children.item(2)?.textContent.trim() ?? '';
+}
+
+/** DH1 core p. 191 / p. 190: Semi-Auto Burst +10, Full Auto Burst +20, both Full Actions (DW and RT print the same). */
 export const Dh1BurstModes: Story = {
     args: burstPanel('dh1'),
     render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),
@@ -571,6 +577,9 @@ export const Dh1BurstModes: Story = {
         await expect(modeLabel(canvasElement, 'semiAuto')).toBe('+10');
         await expect(modeLabel(canvasElement, 'fullAuto')).toBe('+20');
         await expect(modeLabel(canvasElement, 'standard')).toBe('+0');
+        await expect(modeCost(canvasElement, 'semiAuto')).toBe('Full');
+        await expect(modeCost(canvasElement, 'fullAuto')).toBe('Full');
+        await expect(modeCost(canvasElement, 'standard')).toBe('Half');
     },
 };
 
@@ -581,6 +590,8 @@ export const Dh2BurstModes: Story = {
     play: async ({ canvasElement }) => {
         await expect(modeLabel(canvasElement, 'semiAuto')).toBe('+0');
         await expect(modeLabel(canvasElement, 'fullAuto')).toBe('-10');
+        await expect(modeCost(canvasElement, 'semiAuto')).toBe('Half');
+        await expect(modeCost(canvasElement, 'fullAuto')).toBe('Half');
     },
 };
 
