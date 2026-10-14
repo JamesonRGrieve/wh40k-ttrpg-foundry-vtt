@@ -399,7 +399,8 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
         await prepareStage(page);
         const ritualist = await createActor(page, {
             data: character('dh1', 'Adept Corvane', { willpower: { base: 75, advance: 0, modifier: 0 } }),
-            items: [{ name: 'Rite of Warding', type: 'ritual', system: {} }],
+            // A 3-round activation duration: the card prints "3 Rounds", not the duration record (#229).
+            items: [{ name: 'Rite of Warding', type: 'ritual', system: { duration: { value: 3, units: 'rounds', sustained: false } } }],
         });
         try {
             const sheetId = await openActorSheet(page, ritualist.id, 'combat');
@@ -416,6 +417,8 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
                 const card = await awaitCard(page, before, 'Rite of Warding');
                 // Willpower 75, roll 01: DH1 gives ⌊74 ÷ 10⌋ = 7 degrees, not DH2's 1 + 7.
                 expect(card.html, 'the ritual card prints DH1’s count').toMatch(/\(7 [^)]*\)/);
+                expect(card.html, 'the duration prints as its label').toMatch(/data-wh40k-hook="ritual-duration"[\s\S]*3 Rounds/);
+                expect(card.html).not.toContain('[object Object]');
                 expect(card.html).not.toMatch(/\(8 [^)]*\)/);
                 expect(await snapCard(page, 'roll-dialog-dh1-ritual-degrees-card', card.id)).not.toBeNull();
             } finally {
