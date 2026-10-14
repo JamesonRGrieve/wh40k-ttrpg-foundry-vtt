@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     applyVoidShields,
     composeGunneryTest,
+    crippledStrength,
     isShipCriticalHit,
     rangeBandReach,
     resolveGunneryTest,
@@ -64,20 +65,60 @@ describe('ship weapon fire (#184)', () => {
     it('scores a macrobattery 1 hit + 1 per degree, capped at Strength', () => {
         const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
         const hit = resolveGunneryTest(target, 29);
-        expect(scoreHits('macrobattery', 3, hit).hits).toBe(3);
-        const capped = scoreHits('macrobattery', 2, hit);
+        expect(scoreHits('macrobattery', 3, hit, false).hits).toBe(3);
+        const capped = scoreHits('macrobattery', 2, hit, false);
         expect(capped.hits).toBe(2);
         expect(capped.components.map((row) => row.value)).toEqual([1, 2, -1]);
         expect(capped.components.at(-1)?.labelKey).toBe('WH40K.Voidcraft.Fire.Component.StrengthCap');
-        expect(scoreHits('macrobattery', 3, resolveGunneryTest(target, 90)).hits).toBe(0);
+        expect(scoreHits('macrobattery', 3, resolveGunneryTest(target, 90), false).hits).toBe(0);
     });
 
     it('scores a lance 1 hit + 1 per three degrees, capped at Strength', () => {
         const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
         const four = resolveGunneryTest(target, 11);
-        expect(scoreHits('lance', 3, four).hits).toBe(2);
-        expect(scoreHits('lance', 1, four).hits).toBe(1);
-        expect(scoreHits('lance', 3, resolveGunneryTest(target, 29)).hits).toBe(1);
+        expect(scoreHits('lance', 3, four, false).hits).toBe(2);
+        expect(scoreHits('lance', 1, four, false).hits).toBe(1);
+        expect(scoreHits('lance', 3, resolveGunneryTest(target, 29), false).hits).toBe(1);
+    });
+
+    describe('a Crippled firing ship (RT Core "Crippled Ships": Strength halved, round up)', () => {
+        const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
+        const CRIPPLED_KEY = 'WH40K.Voidcraft.Fire.Component.CrippledStrength';
+
+        it('halves Strength rounding up', () => {
+            expect([1, 2, 3, 4, 5, 6].map(crippledStrength)).toEqual([1, 1, 2, 2, 3, 3]);
+        });
+
+        it('caps a macrobattery at half Strength, as its own provenance row', () => {
+            // The book's shot: 3 hits on a Strength 3 battery; Crippled, Strength is 2.
+            const scored = scoreHits('macrobattery', 3, resolveGunneryTest(target, 29), true);
+            expect(scored.hits).toBe(2);
+            expect(scored.components.at(-1)).toEqual({ labelKey: CRIPPLED_KEY, value: -1, data: { strength: 3, halved: 2 } });
+            expect(scored.components.reduce((sum, row) => sum + row.value, 0)).toBe(2);
+        });
+
+        it('stacks under the Strength cap without double counting', () => {
+            // Roll 01 against 58: 5 degrees, 6 raw hits on a Strength 4 battery → 4, then Crippled → 2.
+            const scored = scoreHits('macrobattery', 4, resolveGunneryTest(target, 1), true);
+            expect(scored.components.map((row) => row.value)).toEqual([1, 5, -2, -2]);
+            expect(scored.hits).toBe(2);
+        });
+
+        it('shows a 0 row when the halved Strength costs nothing this shot', () => {
+            const scored = scoreHits('macrobattery', 3, resolveGunneryTest(target, 58), true);
+            expect(scored.hits).toBe(1);
+            expect(scored.components.at(-1)).toMatchObject({ labelKey: CRIPPLED_KEY, value: 0 });
+        });
+
+        it('halves a lance too ("all weapon Components")', () => {
+            // Roll 01: 5 degrees, 1 + 1 = 2 lance hits; Strength 3 Crippled is 2, Strength 2 Crippled is 1.
+            expect(scoreHits('lance', 3, resolveGunneryTest(target, 1), true).hits).toBe(2);
+            expect(scoreHits('lance', 2, resolveGunneryTest(target, 1), true).hits).toBe(1);
+        });
+
+        it('adds nothing to a miss', () => {
+            expect(scoreHits('macrobattery', 3, resolveGunneryTest(target, 90), true)).toEqual({ components: [], hits: 0 });
+        });
     });
 
     it('lets each raised void shield cancel one hit, then overload', () => {

@@ -349,7 +349,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                 notes['starship-hull-and-shields'] = 'no starship available';
             } else {
                 const maxHull = s.system?.hullIntegrity?.max ?? 0;
-                // Drop hull to 40% to trigger isCrippled (≤ half).
+                // Drop hull to 40%: damaged, but not Crippled — RT Core "Crippled Ships" (#187) is 0 Hull.
                 const damaged = Math.floor(maxHull * 0.4);
                 await withTimeout(
                     s.update({
@@ -362,13 +362,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                 const hullVal = post?.system?.hullIntegrity?.value ?? -1;
                 const shields = post?.system?.voidShields ?? -1;
                 const hullPct = post?.system?.hullPercentage ?? -1;
-                const isCrippled = post?.system?.isCrippled ?? false;
-                if (hullVal === damaged && shields === 0 && hullPct === 40 && isCrippled) {
+                const isCrippled = post?.system?.isCrippled ?? true;
+                if (hullVal === damaged && shields === 0 && hullPct === 40 && !isCrippled) {
                     fired['starship-hull-and-shields'] = true;
                 } else {
                     notes[
                         'starship-hull-and-shields'
-                    ] = `expected hull=${damaged}/shields=0/pct=40/crippled=true, got hull=${hullVal} shields=${shields} pct=${hullPct} crippled=${isCrippled}`;
+                    ] = `expected hull=${damaged}/shields=0/pct=40/crippled=false, got hull=${hullVal} shields=${shields} pct=${hullPct} crippled=${isCrippled}`;
                 }
             }
         } catch (err) {

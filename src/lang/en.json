@@ -5003,6 +5003,7 @@
                     "DegreeHits": "{dos} DoS: +1 hit each",
                     "LanceDegreeHits": "{dos} DoS: +1 hit per 3",
                     "StrengthCap": "Capped at Strength {strength}",
+                    "CrippledStrength": "Crippled: Strength halved ({strength} → {halved})",
                     "VoidShields": "Void shields ({ship}, {shields} up)",
                     "HitDamage": "Hit {hit} ({formula})",
                     "Armour": "Armour ({ship}, {armour})",

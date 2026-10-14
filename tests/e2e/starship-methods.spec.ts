@@ -415,8 +415,10 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 
         // -------- isCrippled-true / isDestroyed-true: damage the hull --------
         try {
-            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 10 }), 'hull damage for crippled');
-            // 10 <= floor(40/2)=20 → crippled
+            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 10 }), 'hull damage, not yet crippled');
+            // RT Core "Crippled Ships" (#187): Crippled is 0 Hull Integrity, so a quarter Hull is only damaged.
+            if (live()?.isCrippled !== false) throw new Error(`10 / 40 Hull reads as Crippled`);
+            await withTimeout(live()?.update?.({ 'system.hullIntegrity.value': 0 }), 'hull zero for crippled');
             record('get-isCrippled-true', live()?.isCrippled === true, `value=${live()?.hullIntegrity?.value}`);
         } catch (err) {
             record('get-isCrippled-true', false, err instanceof Error ? err.message : String(err));

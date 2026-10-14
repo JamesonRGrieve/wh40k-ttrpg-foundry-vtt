@@ -203,25 +203,32 @@ describe('replenishBetweenCombat', () => {
     });
 });
 
-describe('isCrippled (composition)', () => {
-    it('is true when hull value is at or below floor(max / 2)', () => {
-        expect(isCrippled({ value: 17, max: 35 })).toBe(true);
-        expect(isCrippled({ value: 18, max: 35 })).toBe(false);
+describe('isCrippled (RT Core "Crippled Ships": 0 Hull Integrity)', () => {
+    it('is true only at 0 Hull Integrity', () => {
         expect(isCrippled({ value: 0, max: 35 })).toBe(true);
+        expect(isCrippled({ value: 1, max: 35 })).toBe(false);
+    });
+
+    it('regression: half Hull is damaged, not Crippled', () => {
+        // The old threshold was value ≤ ⌊max / 2⌋.
+        expect(isCrippled({ value: 17, max: 35 })).toBe(false);
+        expect(isCrippled({ value: 10, max: 40 })).toBe(false);
     });
 
     it('is false for a max of 0 (degenerate / unconfigured hull)', () => {
         expect(isCrippled({ value: 0, max: 0 })).toBe(false);
     });
 
-    it('composes with applyHullDamageToCrew — a hit that drops to floor crosses the threshold', () => {
+    it('composes with applyHullDamageToCrew — the hit that takes the last point Cripples the ship', () => {
         let state: ShipCombatState = {
-            hullIntegrity: { value: 18, max: 35 },
+            hullIntegrity: { value: 2, max: 35 },
             crew: { population: 50, morale: { value: 60, max: 100 } },
         };
-        expect(isCrippled(state.hullIntegrity)).toBe(false);
         ({ next: state } = applyHullDamageToCrew(state, 1));
-        expect(state.hullIntegrity.value).toBe(17);
+        expect(state.hullIntegrity.value).toBe(1);
+        expect(isCrippled(state.hullIntegrity)).toBe(false);
+        ({ next: state } = applyHullDamageToCrew(state, 5));
+        expect(state.hullIntegrity.value).toBe(0);
         expect(isCrippled(state.hullIntegrity)).toBe(true);
     });
 });

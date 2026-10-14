@@ -55,12 +55,14 @@ const LANCE: ShipWeaponFireInput['weapon'] = {
 /** The book's raider: Armour 15. */
 const RAIDER = { ...DEFENDER_SHIP, armour: 15 };
 
-function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number): ShipAssaultSession {
+/** Fire from the players' frigate; `attackerHull` 0 fires it Crippled. */
+function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, attackerHull = ATTACKER_SHIP.hullIntegrity): ShipAssaultSession {
     const lock = { labelKey: 'WH40K.Voidcraft.ShipAction.Component.Effect', value: 10, data: { name: 'Lock on Target' } };
     return createShipWeaponFireFlow({ weapon, ballisticSkill: 48, shipModifiers: weapon.weaponClass === 'macrobattery' ? [lock] : [] }).start({
-        attacker: storyShipActor(ATTACKER_SHIP, 48),
+        attacker: { ...storyShipActor(ATTACKER_SHIP, 48), hullIntegrity: { value: attackerHull, max: ATTACKER_SHIP.hullIntegrity } },
         defender: storyShipActor(RAIDER, 40, shields),
         localize: storyLocalize,
+        degreesMethod: 'gen1',
     });
 }
 
@@ -72,8 +74,8 @@ function gunneryForm(gunnerSkill: number): HTMLFormElement {
 }
 
 /** Fire, apply, and render the posted card. */
-async function card(weapon: ShipWeaponFireInput['weapon'], shields: number, rolls: number[], gunnerSkill = 38): Promise<HTMLElement> {
-    const session = startFire(weapon, shields);
+async function card(weapon: ShipWeaponFireInput['weapon'], shields: number, rolls: number[], gunnerSkill = 38, attackerHull?: number): Promise<HTMLElement> {
+    const session = startFire(weapon, shields, attackerHull);
     queueStoryRolls(...rolls);
     await session.roll(readAssaultForm(gunneryForm(gunnerSkill)));
     const applied = await session.apply(readAssaultForm(document.createElement('form')));
@@ -116,6 +118,22 @@ export const MacrobatteryBookExample: Story = {
             `Hull Integrity ${DEFENDER_SHIP.hullIntegrity} / ${DEFENDER_SHIP.hullIntegrity} ${DEFENDER_SHIP.hullIntegrity} / ${DEFENDER_SHIP.hullIntegrity}`,
         );
         await expect(view.getByText('After')).toBeTruthy();
+    },
+};
+
+export const CrippledFiringShip: Story = {
+    name: 'Crippled firing ship — Strength halved, round up (#187)',
+    // The book's macrobattery shot from a ship at 0 Hull Integrity: 3 hits, but a
+    // Crippled Strength 3 battery lands only 2; the shield takes one; 9 vs Armour 15.
+    loaders: [async () => ({ el: await card(MACROBATTERY, 1, [29, 9], 38, 0) })],
+    render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
+    play: async ({ canvasElement }) => {
+        const rows = provenance(canvasElement);
+        await expect(rows).toContain('Crippled: Strength halved (3 → 2) -1');
+        await expect(rows).toContain('Hit 1 (1d10) 9');
+        await expect(rows.some((row) => row.startsWith('Hit 2'))).toBe(false);
+        const hitsTotal = canvasElement.querySelector('[data-wh40k-hook="ship-assault-damage"]')?.textContent ?? '';
+        await expect(hitsTotal.replace(/\s+/gu, ' ')).toMatch(/Total 1\b/u);
     },
 };
 

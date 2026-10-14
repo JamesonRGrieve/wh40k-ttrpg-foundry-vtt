@@ -119,6 +119,36 @@ describe('ship weapon fire flow (#184)', () => {
         expect((applied?.card.data as CardData)['allShielded']).toBe(true);
     });
 
+    it('fires a Crippled ship’s weapon at half Strength, named on the hits derivation (RT Core "Crippled Ships")', async () => {
+        // The firing ship is at 0 Hull Integrity: the book's 3-hit shot from a Strength 3 battery lands 2.
+        const firer: RecordingShip = { ...recordingShip(SABRE), hullIntegrity: { value: 0, max: 35 } };
+        const target = recordingShip(RAIDER, { voidShields: 1 });
+        const session = createShipWeaponFireFlow({ weapon: MACROBATTERY, ballisticSkill: 48, shipModifiers: [] }).start(assaultContext(firer, target));
+        queueRolls(29, 9);
+        await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+        // 2 hits, one shielded: a single damage die.
+        expect(QueuedRollStub.formulas).toEqual(['1d100', '1d10']);
+        const data = (await session.apply(formValues({})))?.card.data as CardData;
+        const hits = data['hits'] as { total: number; rows: { label: string; value: number }[] };
+        expect(hits.total).toBe(1);
+        expect(hits.rows.map((row) => row.value)).toEqual([1, 2, -1, -1]);
+        expect(hits.rows[2]?.label).toBe('WH40K.Voidcraft.Fire.Component.CrippledStrength{"strength":3,"halved":2}');
+        // 9 against Armour 15: nothing gets through.
+        expect(target.hullHits).toEqual([]);
+    });
+
+    it('fires an undamaged-enough ship at full Strength: half Hull is not Crippled', async () => {
+        const firer: RecordingShip = { ...recordingShip(SABRE), hullIntegrity: { value: 17, max: 35 } };
+        const session = createShipWeaponFireFlow({ weapon: MACROBATTERY, ballisticSkill: 48, shipModifiers: [] }).start(
+            assaultContext(firer, recordingShip(RAIDER, { voidShields: 0 })),
+        );
+        queueRolls(29, 9, 7, 1);
+        await session.roll(formValues({ gunnerSkill: 48, rangeBand: 'close' }));
+        const hits = (session.previewCard()?.data as CardData)['hits'] as { total: number; rows: { label: string }[] };
+        expect(hits.total).toBe(3);
+        expect(hits.rows.some((row) => row.label.includes('CrippledStrength'))).toBe(false);
+    });
+
     it('rolls nothing more on a miss and leaves the target untouched', async () => {
         const { session, target } = fire(MACROBATTERY);
         queueRolls(90);

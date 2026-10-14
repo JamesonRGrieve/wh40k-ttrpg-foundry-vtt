@@ -11,6 +11,7 @@
  */
 
 import type { ShipTestComponent, ShipTestResult } from '../../rules/ship-assault.ts';
+import { isCrippled } from '../../rules/ship-crew-morale.ts';
 import {
     applyVoidShields,
     composeGunneryTest,
@@ -223,7 +224,7 @@ export function createShipWeaponFireFlow(input: ShipWeaponFireInput): ShipAssaul
                 rollTotal(bsRoll),
             );
             const before = readVitals(ctx.defender);
-            const scored = scoreHits(weapon.weaponClass, weapon.strength, test);
+            const scored = scoreHits(weapon.weaponClass, weapon.strength, test, isCrippled(ctx.attacker.hullIntegrity));
             const shielded = applyVoidShields(scored.hits, before.shields);
             const damageRolls: Roll[] = [];
             for (let hit = 0; hit < shielded.remaining; hit += 1) {

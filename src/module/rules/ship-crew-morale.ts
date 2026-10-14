@@ -218,13 +218,15 @@ export function replenishBetweenCombat(state: ShipCombatState): ShipCombatState 
 }
 
 /**
- * Pure "is the ship crippled?" composition — value ≤ ⌊max/2⌋. Mirrors
- * `WH40KStarship.isCrippled` so tests can exercise the rule without
- * the Document layer.
+ * Is the ship Crippled? RT Core 1.4 errata, "Crippled Ships": "When a ship
+ * reaches 0 Hull Integrity, it becomes Crippled … A ship will remain Crippled
+ * … until it has regained at least 1 Hull Integrity." The single definition
+ * the voidcraft DataModel and Document getters and the fire path read. A hull
+ * with no maximum is unconfigured, not Crippled.
  */
 export function isCrippled(hullIntegrity: { value: number; max: number }): boolean {
     if (hullIntegrity.max <= 0) return false;
-    return hullIntegrity.value <= Math.floor(hullIntegrity.max / 2);
+    return hullIntegrity.value <= 0;
 }
 
 /**

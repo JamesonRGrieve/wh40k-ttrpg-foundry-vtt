@@ -74,6 +74,30 @@ async function openWeaponSheet(page: Page, actorId: string, itemId: string): Pro
     return appId;
 }
 
+/** Set a ship's current Hull Integrity (fixture setup, not a feature step). */
+async function setHull(page: Page, actorId: string, value: number): Promise<void> {
+    await page.evaluate(
+        async ({ id, hull }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+            const g = globalThis as unknown as { game: { actors: { get: (i: string) => { update: (data: object) => Promise<object> } | undefined } } };
+            await g.game.actors.get(id)?.update({ 'system.hullIntegrity.value': hull });
+        },
+        { id: actorId, hull: value },
+    );
+}
+
+/** The live `isCrippled` getter of a ship actor. */
+async function readCrippled(page: Page, actorId: string): Promise<boolean> {
+    return page.evaluate((id: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { actors: { get: (i: string) => { isCrippled: boolean; system: { isCrippled: boolean } } | undefined } } };
+        const actor = g.game.actors.get(id);
+        if (actor === undefined) throw new Error(`no actor ${id}`);
+        if (actor.isCrippled !== actor.system.isCrippled) throw new Error('the Document and DataModel disagree on isCrippled');
+        return actor.isCrippled;
+    }, actorId);
+}
+
 test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #184, #187)', () => {
     test("the book's macrobattery shot lands on the target ship, through its void shield and Armour", async ({ page }) => {
         await joinShipWorld(page);
@@ -125,6 +149,42 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
             await deleteActors(page, [sabre.id, raider.id]);
         }
         recordCoverage('ship-weapon.flow', 'macrobattery');
+    });
+
+    test('a Crippled ship (0 Hull Integrity) fires its macrobattery at half Strength, named on the card (#187)', async ({ page }) => {
+        await joinShipWorld(page);
+        const sabre = await createShip(page, SABRE);
+        const raider = await createShip(page, RAIDER);
+        await setVoidShields(page, raider.id, 1);
+        const before = await chatMessageIds(page);
+        try {
+            // RT Core "Crippled Ships": Crippled is 0 Hull Integrity — half Hull is only damaged.
+            await setHull(page, sabre.id, 17);
+            expect(await readCrippled(page, sabre.id), 'half Hull is not Crippled').toBe(false);
+            await setHull(page, sabre.id, 0);
+            expect(await readCrippled(page, sabre.id)).toBe(true);
+
+            // The book's shot: 3 hits, but a Crippled Strength 3 battery lands 2; the shield takes one; 9 vs Armour 15.
+            const fired = await fireWeaponFromSheet(page, sabre.id, {
+                weaponId: sabre.weaponIds[0] ?? '',
+                defender: RAIDER.name,
+                gunnerSkill: 48,
+                rangeBand: 'close',
+                faces: [29, 9],
+                label: 'ship-weapon-fire-crippled',
+            });
+            expect(fired.unusedDice).toBe(0);
+            expect(fired.preview).toContain('Crippled: Strength halved (3 → 2) -1');
+            expect(fired.card.text).toContain('Crippled: Strength halved (3 → 2) -1');
+            expect(fired.card.text).toContain('Hit 1 (1d10) 9');
+            expect(fired.card.text).not.toContain('Hit 2 (1d10)');
+            expect(await readShip(page, raider.id)).toMatchObject({ hull: 30 });
+            expect(await readShieldsUp(page, raider.id)).toBe(0);
+        } finally {
+            await deleteMessages(page, await messagesSince(page, before));
+            await deleteActors(page, [sabre.id, raider.id]);
+        }
+        recordCoverage('ship-weapon.flow', 'crippled-half-strength');
     });
 
     test("the book's lance shot ignores Armour and its Critical Hit draws Table 8-12", async ({ page }) => {

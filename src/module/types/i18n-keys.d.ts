@@ -6209,6 +6209,7 @@ export type I18nKey =
     | 'WH40K.Voidcraft.Fire.Component.Armour'
     | 'WH40K.Voidcraft.Fire.Component.ArmourIgnored'
     | 'WH40K.Voidcraft.Fire.Component.BaseHit'
+    | 'WH40K.Voidcraft.Fire.Component.CrippledStrength'
     | 'WH40K.Voidcraft.Fire.Component.CriticalPoint'
     | 'WH40K.Voidcraft.Fire.Component.DegreeHits'
     | 'WH40K.Voidcraft.Fire.Component.GunnerSkill'

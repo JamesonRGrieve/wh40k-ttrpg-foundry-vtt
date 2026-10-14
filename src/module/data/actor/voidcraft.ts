@@ -1,4 +1,4 @@
-import type { PriorTurnDamageSnapshot } from '../../rules/ship-crew-morale.ts';
+import { isCrippled as isCrippledRule, type PriorTurnDamageSnapshot } from '../../rules/ship-crew-morale.ts';
 import VehicleData, { LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /** Subset of ship-component item.system fields used in voidcraft preparation. */
@@ -841,11 +841,11 @@ export default class VoidcraftData extends VehicleData {
     }
 
     /**
-     * Is the ship crippled (below half hull)?
+     * Is the ship Crippled (0 Hull Integrity, RT Core "Crippled Ships")?
      * @type {boolean}
      */
     get isCrippled(): boolean {
-        return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
+        return isCrippledRule(this.hullIntegrity);
     }
 
     /**

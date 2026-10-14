@@ -123,10 +123,22 @@ export interface ScoredHits {
 const LANCE_DEGREES_PER_HIT = 3;
 
 /**
+ * A Crippled ship's weapon Strength: "reduce the strength of all weapon
+ * Components by half (round up)" (RT Core 1.4 errata, "Crippled Ships").
+ */
+export function crippledStrength(strength: number): number {
+    return Math.ceil(strength / 2);
+}
+
+/**
  * The hits a resolved test scores: one for the success plus the class's extra
  * hits for its degrees, capped at the weapon's Strength. A miss scores none.
+ *
+ * When the firing ship is Crippled its weapons fire at half Strength (round
+ * up). That cap is its own row, so the card shows the Crippled state as the
+ * reason hits were lost — even when it cost nothing this shot (a 0 row).
  */
-export function scoreHits(weaponClass: ShipWeaponClass, strength: number, shot: ShipTestResult): ScoredHits {
+export function scoreHits(weaponClass: ShipWeaponClass, strength: number, shot: ShipTestResult, crippled: boolean): ScoredHits {
     if (!shot.success || strength <= 0) return { components: [], hits: 0 };
     const extra = weaponClass === 'lance' ? Math.floor(shot.dos / LANCE_DEGREES_PER_HIT) : shot.dos;
     const components: ShipTestComponent[] = [{ labelKey: 'WH40K.Voidcraft.Fire.Component.BaseHit', value: 1 }];
@@ -135,8 +147,12 @@ export function scoreHits(weaponClass: ShipWeaponClass, strength: number, shot: 
         components.push({ labelKey: key, value: extra, data: { dos: shot.dos } });
     }
     const raw = 1 + extra;
+    const capped = Math.min(raw, strength);
     if (raw > strength) components.push({ labelKey: 'WH40K.Voidcraft.Fire.Component.StrengthCap', value: strength - raw, data: { strength } });
-    return { components, hits: Math.min(raw, strength) };
+    if (!crippled) return { components, hits: capped };
+    const halved = crippledStrength(strength);
+    components.push({ labelKey: 'WH40K.Voidcraft.Fire.Component.CrippledStrength', value: Math.min(0, halved - capped), data: { strength, halved } });
+    return { components, hits: Math.min(capped, halved) };
 }
 
 /** Hits after the target's void shields. */
