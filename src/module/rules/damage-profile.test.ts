@@ -7,6 +7,7 @@ import {
     damageTypeAbbreviation,
     describeDamageProvenance,
     drawDamageTable,
+    formulaWithBonus,
     pickBorrowedWeapon,
     pickDamageTableRow,
     projectDamageTableRows,
@@ -66,6 +67,15 @@ describe('bandProvenance (#608)', () => {
     it('gives the first band no lower bound and the last no upper bound', () => {
         expect(bandProvenance(BEAM_BANDS, 0, 3)).toMatchObject({ minRange: null, maxRange: 15 });
         expect(bandProvenance(BEAM_BANDS, 2, 90)).toMatchObject({ minRange: 50, maxRange: null });
+    });
+});
+
+describe('formulaWithBonus', () => {
+    it('prints dice with a signed flat bonus, as the books do', () => {
+        expect(formulaWithBonus('3d10', 9)).toBe('3d10+9');
+        expect(formulaWithBonus('1d5', -2)).toBe('1d5-2');
+        // A grenade's damage takes no Strength Bonus (#619): the Frag Grenade's 2d10 stays 2d10.
+        expect(formulaWithBonus('2d10', 0)).toBe('2d10');
     });
 });
 

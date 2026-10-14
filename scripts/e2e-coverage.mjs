@@ -666,6 +666,18 @@ recordDimension('combat-tab-layout.flow', covered['combat-tab-layout.flow'], COM
 const EVENT_TRACKER_TITLE_FLOWS = ['adventure-world-titled-after-adventure', 'campaign-world-titled-after-world'];
 recordDimension('event-tracker-title.flow', covered['event-tracker-title.flow'], EVENT_TRACKER_TITLE_FLOWS);
 
+// Grenade detection from structured weapon data (#619), tests/e2e/grenade-throw.spec.ts.
+// Keep in sync with GRENADE_THROW_FLOWS there.
+const GRENADE_THROW_FLOWS = [
+    'frag-reads-as-grenade',
+    'grenade-needs-no-training',
+    'grenade-damage-adds-no-strength-bonus',
+    'save-grenade-opens-dialog-on-it',
+    'save-grenade-card-posted',
+    'damage-grenade-throws-with-blast',
+];
+recordDimension('grenade-throw.flow', covered['grenade-throw.flow'], GRENADE_THROW_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

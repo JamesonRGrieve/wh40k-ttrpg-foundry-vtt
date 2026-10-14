@@ -148,6 +148,13 @@ export function bandProvenance(bands: readonly DamageBand[], index: number, dist
     };
 }
 
+/** Dice plus a signed flat bonus, as the books print them (`3d10+9`, `1d5-2`, `2d10`). */
+export function formulaWithBonus(formula: string, bonus: number): string {
+    if (bonus > 0) return `${formula}+${bonus}`;
+    if (bonus < 0) return `${formula}${bonus}`;
+    return formula;
+}
+
 /**
  * The penetration a banded weapon's sheet shows (#614): one value when every band
  * shares it, else each band's in authored order, compact (`2/8/14`) to fit one stat

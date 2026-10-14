@@ -6632,6 +6632,7 @@ export type I18nKey =
     | 'WH40K.WeaponType.Explosive'
     | 'WH40K.WeaponType.Flame'
     | 'WH40K.WeaponType.Force'
+    | 'WH40K.WeaponType.Grenade'
     | 'WH40K.WeaponType.Las'
     | 'WH40K.WeaponType.Launcher'
     | 'WH40K.WeaponType.Melta'

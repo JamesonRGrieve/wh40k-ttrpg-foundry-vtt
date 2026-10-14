@@ -30,6 +30,8 @@ interface GrenadeSave {
 export interface GrenadeDefinition {
     /** Stable registry key. */
     id: string;
+    /** The `identifier` of the weapon item this entry resolves when it is thrown (#619). */
+    itemIdentifier: string;
     /** i18n key under `WH40K.WithinGrenade.Names.*`. */
     labelKey: string;
     /** Blast radius in metres (from Blast (X) special quality). */
@@ -52,6 +54,7 @@ export interface GrenadeDefinition {
 export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
     photonFlash: {
         id: 'photonFlash',
+        itemIdentifier: 'photon-flash-grenade',
         labelKey: 'WH40K.WithinGrenade.Names.photonFlash',
         blastRadius: 6,
         damage: '',
@@ -62,6 +65,7 @@ export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
     },
     psychotroke: {
         id: 'psychotroke',
+        itemIdentifier: 'psychotroke-grenade',
         labelKey: 'WH40K.WithinGrenade.Names.psychotroke',
         blastRadius: 3,
         damage: '',
@@ -72,6 +76,7 @@ export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
     },
     tearsOfTheEmperor: {
         id: 'tearsOfTheEmperor',
+        itemIdentifier: 'tears-of-the-emperor',
         labelKey: 'WH40K.WithinGrenade.Names.tearsOfTheEmperor',
         blastRadius: 2,
         damage: '1d10 X',
@@ -82,6 +87,7 @@ export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
     },
     smoke: {
         id: 'smoke',
+        itemIdentifier: 'smoke-grenade',
         labelKey: 'WH40K.WithinGrenade.Names.smoke',
         blastRadius: 4,
         damage: '',
@@ -99,6 +105,11 @@ export const WITHIN_GRENADES: Record<string, GrenadeDefinition> = {
  */
 export function getWithinGrenade(id: string): GrenadeDefinition | null {
     return WITHIN_GRENADES[id] ?? null;
+}
+
+/** The entry for a thrown weapon item, by its `identifier`; null when the registry has none. */
+export function withinGrenadeForItem(identifier: string): GrenadeDefinition | null {
+    return listWithinGrenades().find((grenade) => grenade.itemIdentifier === identifier) ?? null;
 }
 
 /** Ordered list — used by the picker so the dialog renders deterministically. */

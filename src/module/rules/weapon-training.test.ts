@@ -24,9 +24,10 @@ function actorWith(talents: string[]): ChkActor {
 }
 
 /** A weapon as WeaponData shapes it: `special` is a Set of quality ids. */
-function weaponNeeding(requiredTraining?: string, special?: readonly string[]): ChkWeapon {
+function weaponNeeding(requiredTraining?: string, special?: readonly string[], kind: { class?: string; type?: string } = {}): ChkWeapon {
     const w = {
         system: {
+            ...kind,
             ...(requiredTraining === undefined ? {} : { requiredTraining }),
             ...(special === undefined ? {} : { special: new Set(special) }),
         },
@@ -46,6 +47,15 @@ describe('checkWeaponTraining', () => {
         const result = checkWeaponTraining(actorWith([]), weaponNeeding('Las', ['grenade', 'blast-3']));
         expect(result.trained).toBe(true);
         expect(result.talent).toBeNull();
+    });
+
+    // #619: no DH2 pack weapon carries the Grenade quality; a grenade is read from its
+    // thrown class and grenade type, as the Frag Grenade is authored.
+    it('treats a thrown grenade-type weapon as needing no training (#619)', () => {
+        const frag = weaponNeeding('Thrown', ['blast-3'], { class: 'thrown', type: 'grenade' });
+        expect(checkWeaponTraining(actorWith([]), frag).trained).toBe(true);
+        const knife = weaponNeeding('Thrown', ['balanced'], { class: 'thrown', type: 'primitive' });
+        expect(checkWeaponTraining(actorWith([]), knife).trained).toBe(false);
     });
 
     // Tier B (#608): `special` is a Set, and `special.includes` threw for every weapon with a

@@ -38,7 +38,9 @@ import {
     RemoveModificationActionData,
 } from '../rolls/weapon-modification-action-data.ts';
 import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
+import { formulaWithBonus } from '../rules/damage-profile.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
+import { isGrenadeWeapon } from '../rules/grenade-weapon.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { activeFailureConsequence, type CollectedSituationalModifier, failureConsequenceField } from '../rules/situational-limits.ts';
@@ -976,28 +978,26 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Calculate damage with Strength Bonus for melee/thrown weapons
         const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;
         const isThrown = weapon.system.class === 'thrown';
-        const special = weapon.system['special'] as string | string[] | undefined;
-        const isGrenade = Array.isArray(special) ? special.includes('grenade') : typeof special === 'string' && special.includes('grenade');
-
-        // Add SB for melee weapons and thrown weapons (except grenades)
-        const includeStrengthBonus = isMelee || (isThrown && !isGrenade);
+        // Add SB for melee weapons and thrown weapons, except grenades (#619)
+        const includeStrengthBonus = isMelee || (isThrown && !isGrenadeWeapon(weapon.system));
         const strengthBonus = includeStrengthBonus ? this.system.characteristics.strength.bonus : 0;
 
-        // Build damage object with SB included
-        // weapon.system.damage can be a string formula or an object with formula/bonus fields
-        const rawDamage = weapon.system.damage as { formula?: string; value?: string; bonus?: number } | string | undefined;
+        // The prompt takes the formula, type and penetration as its fields show them.
+        // weapon.system.damage can be a string formula or an object with formula/bonus fields;
+        // the prompt was handed that object whole, so it showed "[object Object]" (#619).
+        const rawDamage = weapon.system.damage as
+            | { formula?: string; value?: string; bonus?: number; type?: string; penetration?: number }
+            | string
+            | undefined;
         const damageFormula = typeof rawDamage === 'string' ? rawDamage : rawDamage?.formula ?? rawDamage?.value ?? '';
         const damageBonus = typeof rawDamage === 'object' ? rawDamage.bonus ?? 0 : 0;
-        const damageData = {
-            formula: damageFormula,
-            bonus: damageBonus + strengthBonus,
-        };
 
         openDamagePrompt({
             name: weapon.name,
-            damage: damageData,
-            damageType: weapon.system['damageType'],
-            penetration: weapon.system.penetration,
+            damage: formulaWithBonus(damageFormula, damageBonus + strengthBonus),
+            // The prompt's type select lists the capitalised names (`rules/config.ts` damage_types).
+            damageType: typeof rawDamage === 'object' ? rawDamage.type?.capitalize() : undefined,
+            penetration: typeof rawDamage === 'object' ? rawDamage.penetration : undefined,
             targetActor: () => {
                 const targetedObjects = game.user.targets;
                 if (targetedObjects.size > 0) {

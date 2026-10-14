@@ -94,6 +94,7 @@ import {
     type GrappleState,
     type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
+import { isGrenadeWeapon } from '../../rules/grenade-weapon.ts';
 import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
 import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
@@ -2868,11 +2869,8 @@ export default class CharacterSheet extends BaseActorSheet {
         // Sidearm: Pistol class weapon
         sheetContext.sidearm = weapons.find((w) => w.system.class === 'Pistol' && w !== sheetContext.primaryWeapon && w !== sheetContext.secondaryWeapon);
 
-        // Grenades: Thrown class weapons
-        sheetContext.grenades = weapons.filter((w) => {
-            const sys = w.system;
-            return sys.class === 'Thrown' || sys.type === 'grenade';
-        });
+        // Grenades, read from each weapon's class and type (#619)
+        sheetContext.grenades = weapons.filter((w) => isGrenadeWeapon(w.system));
 
         // Other weapons (not in slots)
         const slotWeapons = [sheetContext.primaryWeapon, sheetContext.secondaryWeapon, sheetContext.sidearm, ...(sheetContext.grenades as WeaponLike[])].filter(

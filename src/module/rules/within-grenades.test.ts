@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { WITHIN_GRENADES, getWithinGrenade, listWithinGrenades } from './within-grenades';
+import { WITHIN_GRENADES, getWithinGrenade, listWithinGrenades, withinGrenadeForItem } from './within-grenades';
 
 /**
  * Within-supplement grenade registry tests (#135).
@@ -76,5 +76,24 @@ describe('listWithinGrenades', () => {
     it('returns the same four entries in object-insertion order', () => {
         const ids = listWithinGrenades().map((g) => g.id);
         expect(ids).toEqual(['photonFlash', 'psychotroke', 'tearsOfTheEmperor', 'smoke']);
+    });
+});
+
+describe('withinGrenadeForItem (#619)', () => {
+    it('finds the entry a thrown weapon item resolves to, by the item identifier the packs carry', () => {
+        expect(withinGrenadeForItem('photon-flash-grenade')?.id).toBe('photonFlash');
+        expect(withinGrenadeForItem('psychotroke-grenade')?.id).toBe('psychotroke');
+        expect(withinGrenadeForItem('tears-of-the-emperor')?.id).toBe('tearsOfTheEmperor');
+        expect(withinGrenadeForItem('smoke-grenade')?.id).toBe('smoke');
+    });
+
+    it('returns null for a grenade the registry does not describe (a damage grenade)', () => {
+        expect(withinGrenadeForItem('frag-grenade')).toBeNull();
+        expect(withinGrenadeForItem('')).toBeNull();
+    });
+
+    it('links every entry to a distinct item', () => {
+        const identifiers = listWithinGrenades().map((g) => g.itemIdentifier);
+        expect(new Set(identifiers).size).toBe(identifiers.length);
     });
 });

@@ -134,6 +134,9 @@ const WEAPON_TYPE_CHOICES = [
     'flame',
     'launcher',
     'explosive',
+    // The DH1 / DH2 packs type every grenade `grenade` (RT / DW use `explosive`); the
+    // grenade classifier reads it (#619).
+    'grenade',
     'power',
     'chain',
     'shock',
@@ -1702,6 +1705,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             'flame': 'fa-fire',
             'launcher': 'fa-rocket',
             'explosive': 'fa-bomb',
+            'grenade': 'fa-bomb',
             'power': 'fa-bolt-lightning',
             'chain': 'fa-link-slash',
             'shock': 'fa-bolt',

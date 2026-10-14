@@ -1,5 +1,12 @@
 import { t } from '../../i18n/t.ts';
-import { DAMAGE_SOURCE_CHOICES, DAMAGE_TYPE_CHOICES, type DamageBand, type DamageSourceKind, damageTypeAbbreviation } from '../../rules/damage-profile.ts';
+import {
+    DAMAGE_SOURCE_CHOICES,
+    DAMAGE_TYPE_CHOICES,
+    type DamageBand,
+    type DamageSourceKind,
+    damageTypeAbbreviation,
+    formulaWithBonus,
+} from '../../rules/damage-profile.ts';
 import { normalizeNoDamageNotation } from '../../rules/no-damage.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
@@ -166,19 +173,12 @@ export default class DamageTemplate extends SystemDataModel {
         const dmg = this.damage;
         // Damage resolved at attack time (#608) labels what it depends on.
         if (dmg.bands.length > 0)
-            return dmg.bands.map((band) => `${DamageTemplate.#diceLabel(band.formula, band.bonus)} ${damageTypeAbbreviation(band.type)}`).join(' / ');
+            return dmg.bands.map((band) => `${formulaWithBonus(band.formula, band.bonus)} ${damageTypeAbbreviation(band.type)}`).join(' / ');
         if (dmg.table !== '') return t('WH40K.Weapon.DamageProfile.Table');
         if (dmg.from === 'mount') return t('WH40K.Weapon.DamageProfile.Mount');
         if (dmg.from === 'wielder-melee') return t('WH40K.Weapon.DamageProfile.WielderMelee');
         if (dmg.formula === '') return '-';
-        return `${DamageTemplate.#diceLabel(dmg.formula, dmg.bonus)} ${this.damageTypeAbbr}`;
-    }
-
-    /** Dice plus a signed flat bonus, as the books print them (`3d10+9`). */
-    static #diceLabel(formula: string, bonus: number): string {
-        if (bonus > 0) return `${formula}+${bonus}`;
-        if (bonus < 0) return `${formula}${bonus}`;
-        return formula;
+        return `${formulaWithBonus(dmg.formula, dmg.bonus)} ${this.damageTypeAbbr}`;
     }
 
     /* -------------------------------------------- */

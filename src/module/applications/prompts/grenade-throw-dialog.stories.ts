@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/grenade-throw-dialog.hbs?raw';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { resolveThrow } from '../../rules/combat-actions.ts';
 import { WITHIN_GRENADES, listWithinGrenades } from '../../rules/within-grenades.ts';
 
 interface Args {
@@ -100,6 +101,24 @@ export const RenderSmoke: Story = {
             }),
         );
         // Throw button is present.
-        await expect(view.getByText(/Throw/i)).toBeTruthy();
+        await expect(view.getByRole('button', { name: /Throw/i })).toBeTruthy();
+    },
+};
+
+/**
+ * Throwing a save-rider grenade from the sheet opens the dialog on THAT grenade
+ * (#619): the selection is what `resolveThrow` reads off the thrown weapon's own
+ * class, type and identifier (a Photon Flash Grenade as the DH2 pack authors it).
+ */
+export const ThrownPhotonFlashOpensOnIt: Story = {
+    render: () => {
+        const resolution = resolveThrow({ class: 'thrown', type: 'grenade', identifier: 'photon-flash-grenade', special: new Set(['blast-6']) });
+        const selectedId = resolution.path === 'grenade-dialog' ? resolution.grenade.id : '';
+        return renderSheet(templateSrc, { ...buildContext({ selectedId }) });
+    },
+    play: async ({ canvasElement }) => {
+        const checked = Array.from(canvasElement.querySelectorAll('[data-grenade-id][aria-checked="true"]')).map((el) => el.getAttribute('data-grenade-id'));
+        await expect(checked).toEqual(['photonFlash']);
+        await expect(canvasElement.textContent).toContain('Blinded');
     },
 };

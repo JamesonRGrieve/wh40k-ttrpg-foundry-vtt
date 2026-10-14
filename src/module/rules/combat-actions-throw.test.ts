@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { WeaponRollData } from '../rolls/roll-data.ts';
 import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
-import { allCombatActions, throwResolutionPath, updateAvailableCombatActions } from './combat-actions.ts';
+import { allCombatActions, resolveThrow, updateAvailableCombatActions } from './combat-actions.ts';
 
 /**
  * "Throw" half-action coverage (DH2 Core "Throw"): hurl a grenade or
@@ -112,15 +112,23 @@ describe('Throw combat action — availability gating', () => {
         expect(names).not.toContain('Throw');
     });
 
-    it('routes a thrown grenade to the grenade dialog (blast/scatter reuse) and a plain thrown weapon to the weapon roll', () => {
-        // Grenade marker is the `grenade` weapon-quality — the same classifier
-        // acolyte.ts uses; throwing one reuses the GrenadeThrowDialog path
-        // instead of duplicating the blast logic.
-        expect(throwResolutionPath({ isThrown: true, system: { special: ['blast', 'grenade'] } })).toBe('grenade-dialog');
-        expect(throwResolutionPath({ isThrown: true, system: { special: 'grenade (3)' } })).toBe('grenade-dialog');
-        // An ordinary thrown weapon (throwing knife) resolves as a normal roll.
-        expect(throwResolutionPath({ isThrown: true, system: { special: ['balanced'] } })).toBe('weapon-roll');
-        expect(throwResolutionPath({ isThrown: true, system: {} })).toBe('weapon-roll');
+    it('routes a save-rider grenade to the grenade dialog on that grenade (#619)', () => {
+        // The DH2 Photon Flash Grenade as the packs author it: thrown, type grenade,
+        // `special` a Set. The old `.includes` check never matched a Set.
+        const resolution = resolveThrow({ class: 'thrown', type: 'grenade', identifier: 'photon-flash-grenade', special: new Set(['blast-6']) });
+        expect(resolution.path).toBe('grenade-dialog');
+        expect(resolution.path === 'grenade-dialog' ? resolution.grenade.id : null).toBe('photonFlash');
+        // An RT / DW grenade is typed explosive.
+        expect(resolveThrow({ class: 'thrown', type: 'explosive', identifier: 'smoke-grenade', special: new Set(['smoke']) }).path).toBe('grenade-dialog');
+    });
+
+    it('throws a damage grenade and an ordinary thrown weapon through the weapon roll (#619)', () => {
+        // The Frag Grenade's Blast is placed and resolved by the weapon roll (#599).
+        expect(resolveThrow({ class: 'thrown', type: 'grenade', identifier: 'frag-grenade', special: new Set(['blast-3']) }).path).toBe('weapon-roll');
+        // A throwing knife, and a weapon that names a registry grenade but is not one.
+        expect(resolveThrow({ class: 'thrown', type: 'primitive', identifier: 'throwing-knife', special: new Set(['balanced']) }).path).toBe('weapon-roll');
+        expect(resolveThrow({ class: 'basic', type: 'launcher', identifier: 'smoke-grenade' }).path).toBe('weapon-roll');
+        expect(resolveThrow({}).path).toBe('weapon-roll');
     });
 
     it('reads the range source from the weapon item, not a hardcoded constant', () => {

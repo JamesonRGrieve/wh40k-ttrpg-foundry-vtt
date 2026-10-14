@@ -505,6 +505,7 @@ WH40K.weaponTypes = {
     'flame': { label: 'WH40K.WeaponType.Flame' },
     'launcher': { label: 'WH40K.WeaponType.Launcher' },
     'explosive': { label: 'WH40K.WeaponType.Explosive' },
+    'grenade': { label: 'WH40K.WeaponType.Grenade' },
     'power': { label: 'WH40K.WeaponType.Power' },
     'chain': { label: 'WH40K.WeaponType.Chain' },
     'shock': { label: 'WH40K.WeaponType.Shock' },
