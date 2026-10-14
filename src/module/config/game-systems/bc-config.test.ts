@@ -234,3 +234,13 @@ describe('BCSystemConfig: tier and rank definitions (core.md :2581, :2677)', () 
         }
     });
 });
+
+describe('BCSystemConfig: no aptitudes (#631)', () => {
+    it('declares no universal aptitude, so a BC sheet shows no lone "General" pill', () => {
+        expect(cfg.universalAptitudes).toEqual([]);
+    });
+
+    it('resolves an actor with no granted aptitudes to an empty set', () => {
+        expect(cfg.getCharacterAptitudes(makeActor())).toEqual([]);
+    });
+});

@@ -190,6 +190,16 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
+    /**
+     * BC has no aptitudes, so it has no universal one either (#631). Advance cost
+     * is set by the advance's Chaos alignment against the character's — True,
+     * Allied or Opposed (core p.76, Tables 2-4 / 2-5) — and an adversary profile
+     * lists characteristics, skills, talents, traits and weapons with no
+     * aptitudes (core p.352). The inherited `['General']` would put a lone
+     * "General" pill on every BC sheet's Aptitudes panel.
+     */
+    override readonly universalAptitudes: readonly string[] = [];
+
     // Characteristic + skill aptitude pairs are inherited from AptitudeBasedSystemConfig (#298).
     // BC uses them only for the shared skill-bonus display formula (gated on `usesAptitudes`);
     // its advancement cost runs through the True/Allied/Opposed matrix, not these tables.
