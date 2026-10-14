@@ -23,7 +23,7 @@ import { mockActor } from '../../../../stories/mocks';
 import { mockGenericItem, withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import { conferralRefusal, conferralRenown, readDwRenown, readSpecialAbility, type ConferralActor } from '../../../module/actions/dw-distinction-actions.ts';
 import { canGainSpecialAbility, type MarkGrantSource, mergeMarkGrants, specialAbilityCategoryLabelKey } from '../../../module/rules/dw-distinction.ts';
 import { getRenownRank, renownRankLabelKey } from '../../../module/rules/dw-renown.ts';
@@ -140,6 +140,11 @@ export const BattleBrother: Story = {
         const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="dw-distinction-entry"]'));
         await expect(rows.map((row) => row.dataset['category'])).toEqual(['speciality', 'advanced', 'distinction', 'mark']);
         await expect(rows.every((row) => row.dataset['action'] === 'itemEdit')).toBe(true);
+        // Clicking a row (even a rank-locked one) opens that ability's own sheet.
+        const clicks = captureActionClicks(canvasElement);
+        canvasElement.querySelector<HTMLElement>('[data-item-id="adv1"]')?.click();
+        await expect(clicks.map((c) => [c.action, c.dataset['itemId']])).toEqual([['itemEdit', 'adv1']]);
+        await expect(canvasElement.querySelector('.wh40k-dw-distinction-panel')).not.toBeNull();
         await expect(canvasElement.querySelectorAll('[data-wh40k-hook="dw-distinction-locked"]').length).toBe(1);
         await expect(canvasElement.querySelector('[data-item-id="adv1"]')?.getAttribute('data-rank-too-low')).toBe('true');
         await expect(canvasElement.querySelector('[data-wh40k-hook="dw-distinction-cost"]')?.textContent).toContain('1100');
