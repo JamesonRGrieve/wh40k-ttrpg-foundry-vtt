@@ -10,6 +10,7 @@ import {
     deleteDocuments,
     enterRoll,
     messageIds,
+    openActorSheet,
     prepareStage,
     restoreSettings,
     selectAttackMode,
@@ -52,7 +53,15 @@ import { expect, test } from './lib/test';
  * sync with the denominator in scripts/e2e-coverage.mjs.
  */
 
-const ROLL_DIALOG_FLOWS = ['parry-rows', 'environment-rows', 'passive-note', 'dh1-burst-and-degrees', 'dh2-full-auto', 'fit-availability'] as const;
+const ROLL_DIALOG_FLOWS = [
+    'parry-rows',
+    'environment-rows',
+    'passive-note',
+    'dh1-burst-and-degrees',
+    'dh2-full-auto',
+    'fit-availability',
+    'dh1-ritual-degrees',
+] as const;
 
 const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
 const DH2_AUTOGUN_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.r5S6t7U8v9W0x1Y2';
@@ -276,6 +285,7 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
             await page.mouse.move(1, 1);
             const semiCard = page.locator(`#${dialogId} [data-action="selectAttackMode"][data-mode-key="semiAuto"]`);
             await expect(semiCard, 'the mode card shows DH1’s +10').toContainText('+10');
+            await expect(semiCard, 'DH1 prints Semi-Auto Burst as a Full Action').toContainText('Full');
             await expect(page.locator(`#${dialogId} [data-action="selectAttackMode"][data-mode-key="fullAuto"]`), 'and Full Auto +20').toContainText('+20');
             const breakdown = await readBreakdown(page, dialogId);
             const burstRow = breakdown.rows.find((row) => row.key === 'combat-action');
@@ -313,6 +323,10 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
             await expect(page.locator(`#${dialogId} [data-wh40k-hook="roll-subtitle"]`)).toHaveText('Full Auto Burst');
             await page.mouse.move(1, 1);
             await expect(page.locator(`#${dialogId} [data-action="selectAttackMode"][data-mode-key="fullAuto"]`)).toContainText('-10');
+            await expect(
+                page.locator(`#${dialogId} [data-action="selectAttackMode"][data-mode-key="fullAuto"]`),
+                'DH2 prints it as a Half Action',
+            ).toContainText('Half');
             await expect(page.locator(`#${dialogId} [data-action="selectAttackMode"][data-mode-key="semiAuto"]`)).toContainText('+0');
             const breakdown = await readBreakdown(page, dialogId);
             expect(breakdown.rows.find((row) => row.key === 'combat-action')?.value).toBe(-10);
@@ -380,7 +394,45 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
         }
     });
 
+    test('DH1: a ritual performed from the combat tab prints DH1 degrees on its card (#335)', async ({ page }) => {
+        await joinOrSkip(page);
+        await prepareStage(page);
+        const ritualist = await createActor(page, {
+            data: character('dh1', 'Adept Corvane', { willpower: { base: 75, advance: 0, modifier: 0 } }),
+            items: [{ name: 'Rite of Warding', type: 'ritual', system: {} }],
+        });
+        try {
+            const sheetId = await openActorSheet(page, ritualist.id, 'combat');
+            const before = await messageIds(page);
+            // Pin Foundry's die to a 01 for this roll only (a uniform of 0.995 rolls the d100's lowest face).
+            await page.evaluate(() => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `CONFIG` global has no browser-side types
+                const g = globalThis as unknown as { CONFIG: { Dice: { randomUniform: () => number } }; savedRitualDie?: () => number };
+                g.savedRitualDie = g.CONFIG.Dice.randomUniform;
+                g.CONFIG.Dice.randomUniform = (): number => 0.995;
+            });
+            try {
+                await page.locator(`#${sheetId} [data-action="rollRitual"]`).first().click();
+                const card = await awaitCard(page, before, 'Rite of Warding');
+                // Willpower 75, roll 01: DH1 gives ⌊74 ÷ 10⌋ = 7 degrees, not DH2's 1 + 7.
+                expect(card.html, 'the ritual card prints DH1’s count').toMatch(/\(7 [^)]*\)/);
+                expect(card.html).not.toMatch(/\(8 [^)]*\)/);
+                expect(await snapCard(page, 'roll-dialog-dh1-ritual-degrees-card', card.id)).not.toBeNull();
+            } finally {
+                await page.evaluate(() => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `CONFIG` global has no browser-side types
+                    const g = globalThis as unknown as { CONFIG: { Dice: { randomUniform: () => number } }; savedRitualDie?: () => number };
+                    if (g.savedRitualDie !== undefined) g.CONFIG.Dice.randomUniform = g.savedRitualDie;
+                });
+            }
+            await closeWindow(page, sheetId);
+            recordCoverage('roll-dialog.flow', 'dh1-ritual-degrees');
+        } finally {
+            await deleteDocuments(page, { actors: [ritualist.id] });
+        }
+    });
+
     test('every flow has a case', () => {
-        expect(ROLL_DIALOG_FLOWS).toHaveLength(6);
+        expect(ROLL_DIALOG_FLOWS).toHaveLength(7);
     });
 });
