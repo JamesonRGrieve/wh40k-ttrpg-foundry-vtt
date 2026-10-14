@@ -377,7 +377,8 @@
                 "GraphNotLoaded": "Event graph not loaded. Run deploy.sh --restart to write the GM-only event-graph document into the world.",
                 "SettingName": "Event Tracker State",
                 "SettingHint": "Stores which campaign events have been resolved.",
-                "DialogTitle": "Solenne Campaign — Event Tracker",
+                "DialogTitle": "{name} — Event Tracker",
+                "DialogTitleFallback": "Event Tracker",
                 "DayEnd": "[DAY END]",
                 "Excuse": "Excuse: {excuse}"
             },

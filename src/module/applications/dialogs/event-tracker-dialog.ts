@@ -30,7 +30,15 @@ import {
     stepCampaignDay,
     type VaultJournalIdentity,
 } from '../../managers/event-graph.ts';
-import { ALL_GRAPHS, asEventTrackerTab, asGraphFilter, buildEventTrackerView, type EventTrackerTab, type EventTrackerView } from './event-tracker-view.ts';
+import {
+    ALL_GRAPHS,
+    asEventTrackerTab,
+    asGraphFilter,
+    buildEventTrackerView,
+    type EventTrackerTab,
+    type EventTrackerView,
+    eventTrackerTitleName,
+} from './event-tracker-view.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -90,7 +98,7 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
         classes: ['wh40k-rpg', 'event-tracker-dialog'],
         tag: 'div',
         window: {
-            title: 'WH40K.Notify.EventTracker.DialogTitle',
+            title: 'WH40K.Notify.EventTracker.DialogTitleFallback',
             icon: 'fa-solid fa-project-diagram',
             resizable: true,
         },
@@ -142,9 +150,10 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
         return dialog;
     }
 
-    /** @override */
+    /** @override The loaded scenario's or the world's name (#618), else the plain name. */
     get title(): string {
-        return t('WH40K.Notify.EventTracker.DialogTitle');
+        const name = eventTrackerTitleName(this.#source.sources, game.world.title);
+        return name === null ? t('WH40K.Notify.EventTracker.DialogTitleFallback') : t('WH40K.Notify.EventTracker.DialogTitle', { name });
     }
 
     /** @override */

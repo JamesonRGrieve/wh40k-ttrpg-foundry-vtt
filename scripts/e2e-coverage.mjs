@@ -661,6 +661,11 @@ recordDimension('area-difficulty-row.flow', covered['area-difficulty-row.flow'],
 const COMBAT_TAB_LAYOUT_FLOWS = ['pc-default-width', 'pc-min-width', 'npc-default-width', 'npc-min-width'];
 recordDimension('combat-tab-layout.flow', covered['combat-tab-layout.flow'], COMBAT_TAB_LAYOUT_FLOWS);
 
+// The Event Tracker's window title (#618), tests/e2e/event-tracker-title.spec.ts.
+// Keep in sync with EVENT_TRACKER_TITLE_FLOWS there.
+const EVENT_TRACKER_TITLE_FLOWS = ['adventure-world-titled-after-adventure', 'campaign-world-titled-after-world'];
+recordDimension('event-tracker-title.flow', covered['event-tracker-title.flow'], EVENT_TRACKER_TITLE_FLOWS);
+
 // Spray / Blast area templates and the no-damage area card (#599, #600, #601),
 // tests/e2e/area-attacks.spec.ts. Keep in sync with AREA_ATTACK_FLOWS there.
 const AREA_ATTACK_FLOWS = [

@@ -6,6 +6,7 @@ import {
     asGraphFilter,
     buildEventTrackerView,
     type EventGroupView,
+    eventTrackerTitleName,
     type EventTrackerViewInput,
     requirementIndentClass,
     stateToneClass,
@@ -298,5 +299,31 @@ describe('buildEventTrackerView — adventure graphs (#592)', () => {
         expect(asGraphFilter('', SOURCES)).toBe('');
         expect(asGraphFilter('gone', SOURCES)).toBe(ALL_GRAPHS);
         expect(asGraphFilter(undefined, SOURCES)).toBe(ALL_GRAPHS);
+    });
+});
+
+describe('eventTrackerTitleName (#618)', () => {
+    const CAMPAIGN = { id: '', label: '' };
+    const VOIDSHIP = { id: 'voidship-escapade', label: 'Voidship Escapade' };
+    const ASHFORD = { id: 'ashford-mill', label: 'The Ashford Mill' };
+
+    it("names a world that holds only one adventure after that adventure, never the world's title", () => {
+        expect(eventTrackerTitleName([VOIDSHIP], 'Tier B Test World')).toBe('Voidship Escapade');
+    });
+
+    it("names a campaign world, or one with several adventures, after the world's title", () => {
+        expect(eventTrackerTitleName([CAMPAIGN], 'The Long Watch')).toBe('The Long Watch');
+        expect(eventTrackerTitleName([CAMPAIGN, ASHFORD], 'The Long Watch')).toBe('The Long Watch');
+        expect(eventTrackerTitleName([VOIDSHIP, ASHFORD], 'The Long Watch')).toBe('The Long Watch');
+    });
+
+    it('returns null when nothing names the world, so the langpack fallback is used', () => {
+        expect(eventTrackerTitleName([], '  ')).toBeNull();
+        expect(eventTrackerTitleName([CAMPAIGN], '')).toBeNull();
+        expect(eventTrackerTitleName([{ id: 'nameless', label: '' }], '')).toBeNull();
+    });
+
+    it("falls back to the world's title when the lone adventure has no name", () => {
+        expect(eventTrackerTitleName([{ id: 'nameless', label: ' ' }], 'The Long Watch')).toBe('The Long Watch');
     });
 });

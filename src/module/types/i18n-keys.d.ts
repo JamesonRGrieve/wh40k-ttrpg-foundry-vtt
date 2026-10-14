@@ -3659,6 +3659,7 @@ export type I18nKey =
     | 'WH40K.Notify.Encounter.TemplateSaved'
     | 'WH40K.Notify.EventTracker.DayEnd'
     | 'WH40K.Notify.EventTracker.DialogTitle'
+    | 'WH40K.Notify.EventTracker.DialogTitleFallback'
     | 'WH40K.Notify.EventTracker.Excuse'
     | 'WH40K.Notify.EventTracker.GmOnly'
     | 'WH40K.Notify.EventTracker.GraphNotLoaded'

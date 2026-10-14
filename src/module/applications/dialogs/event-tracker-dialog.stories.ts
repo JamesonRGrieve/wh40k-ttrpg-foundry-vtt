@@ -14,13 +14,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { seedRandom } from '../../../../stories/mocks/extended';
+import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { assertActiveTab, renderSheetParts } from '../../../../stories/test-helpers';
 import bodySrc from '../../../templates/dialogs/event-tracker/body.hbs?raw';
 import headerSrc from '../../../templates/dialogs/event-tracker/header.hbs?raw';
 import { CAMPAIGN_GRAPH_ID, type GraphSource } from '../../managers/adventure-event-graph.ts';
 import { type CharacterState, type EventGraph, type PcAttitudeMap, type ResolvedState, stepCampaignDay, withPcAttitude } from '../../managers/event-graph.ts';
-import { ALL_GRAPHS, asEventTrackerTab, asGraphFilter, buildEventTrackerView, type EventTrackerTab } from './event-tracker-view.ts';
+import { ALL_GRAPHS, asEventTrackerTab, asGraphFilter, buildEventTrackerView, type EventTrackerTab, eventTrackerTitleName } from './event-tracker-view.ts';
 
 initializeStoryHandlebars();
 seedRandom(0xe7e7);
@@ -253,6 +254,44 @@ export const Adventures: Story = {
         // Filter to the campaign: the adventure's events are gone.
         canvasElement.querySelector<HTMLElement>(`[data-action="selectGraph"][data-graph="${CAMPAIGN_GRAPH_ID}"]`)?.click();
         await expect(groupKeys()).not.toContain('ashford-mill:Chapter 1 — Arrival');
+    },
+};
+
+/**
+ * The window title the dialog's `title` getter builds (#618): the world's (or the lone
+ * adventure's) name in the langpack pattern, else the langpack's plain name. Rendered
+ * in a window-header frame, as Foundry draws the dialog's chrome.
+ */
+function mountTitle(sources: readonly GraphSource[], worldTitle: string): HTMLElement {
+    const name = eventTrackerTitleName(sources, worldTitle);
+    const frame = document.createElement('div');
+    frame.className = 'wh40k-rpg application event-tracker-dialog';
+    const header = document.createElement('header');
+    header.className = 'window-header';
+    const title = document.createElement('h1');
+    title.className = 'window-title';
+    title.textContent =
+        name === null ? localizeKey('WH40K.Notify.EventTracker.DialogTitleFallback') : formatKey('WH40K.Notify.EventTracker.DialogTitle', { name });
+    header.append(title);
+    frame.append(header, mountTracker('timeline'));
+    return frame;
+}
+
+export const WindowTitle: Story = {
+    render: () => {
+        const root = document.createElement('div');
+        root.append(
+            mountTitle([{ id: 'voidship-escapade', label: 'Voidship Escapade' }], 'Tier B Test World'),
+            mountTitle(SOURCES, 'The Long Watch'),
+            mountTitle([], ''),
+        );
+        return root;
+    },
+    play: async ({ canvasElement }) => {
+        const titles = [...canvasElement.querySelectorAll('h1.window-title')].map((title) => title.textContent);
+        await expect(titles).toEqual(['Voidship Escapade — Event Tracker', 'The Long Watch — Event Tracker', 'Event Tracker']);
+        // No campaign name is baked into the dashboard's chrome.
+        await expect(canvasElement.textContent).not.toContain('Solenne');
     },
 };
 

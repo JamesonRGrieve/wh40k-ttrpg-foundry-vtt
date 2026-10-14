@@ -46,6 +46,19 @@ export function asGraphFilter(raw: string | undefined, sources: readonly GraphSo
 }
 
 /**
+ * The name the dashboard's window title carries (#618): the lone imported adventure's
+ * name when no campaign graph is loaded (an adventure world is that scenario), else
+ * the world's own title. `null` when neither names anything, so the title falls back
+ * to the langpack's plain name. The campaign name lives in the world, never in src/.
+ */
+export function eventTrackerTitleName(sources: readonly GraphSource[], worldTitle: string): string | null {
+    const adventures = sources.filter((source) => source.id !== CAMPAIGN_GRAPH_ID);
+    const onlyAdventure = adventures.length === 1 && adventures.length === sources.length ? adventures[0] : undefined;
+    const name = [onlyAdventure?.label ?? '', worldTitle].map((candidate) => candidate.trim()).find((candidate) => candidate !== '');
+    return name ?? null;
+}
+
+/**
  * The key a group is filed under: its name, scoped to its graph so two
  * adventures' "Chapter 1" never merge. Campaign groups keep the bare name.
  */
