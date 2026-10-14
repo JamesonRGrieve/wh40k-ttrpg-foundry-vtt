@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ALL_SYSTEM_IDS } from './config/game-systems/types.ts';
 import { WH40K } from './config.ts';
-import { buildQualityLabel, parseQualityLevel } from './utils/quality-id.ts';
+import { buildQualityLabel, parseQualityLevel, withoutRatingPlaceholder } from './utils/quality-id.ts';
 
 /**
  * Guard for the #300 quality-level primitives extracted from the three sites
@@ -60,6 +60,16 @@ describe('buildQualityLabel (#300)', () => {
         expect(buildQualityLabel('Snare (X)', true, 1)).toBe('Snare (1)');
         expect(buildQualityLabel('Blast (X)', true, null, '10+1d10')).toBe('Blast (10+1d10)');
         expect(buildQualityLabel('Blast (X)', true, null)).toBe('Blast (X)');
+    });
+});
+
+describe('withoutRatingPlaceholder', () => {
+    // The weapon card appends `(level)` to WeaponData.qualitiesArray's label itself, and
+    // read "Snare (X) (1)" while the label kept the book's placeholder.
+    it('drops only a trailing (X)', () => {
+        expect(withoutRatingPlaceholder('Snare (X)')).toBe('Snare');
+        expect(withoutRatingPlaceholder('Tearing')).toBe('Tearing');
+        expect(withoutRatingPlaceholder('Proven (X) Rounds')).toBe('Proven (X) Rounds');
     });
 });
 

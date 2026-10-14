@@ -49,7 +49,7 @@ import {
     type SupportedLineKey,
     tryResolveLineVariant,
 } from '../../utils/item-variant-utils.ts';
-import { buildQualityLabel, parseQualityLevel } from '../../utils/quality-id.ts';
+import { buildQualityLabel, parseQualityLevel, withoutRatingPlaceholder } from '../../utils/quality-id.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import { type AttackCueData, attackCueField, migrateLegacyAttackSounds } from '../shared/attack-cue-field.ts';
@@ -1803,11 +1803,14 @@ export default class WeaponData extends ItemDataModel.mixin(
             const definition = CONFIG.wh40k.getQualityDefinition(qualityId);
 
             const fallbackLabel = qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+            const name = definition !== null ? game.i18n.localize(definition.label) : fallbackLabel;
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                // A dice rating has no numeric `level` slot, so it travels in the label.
-                label: buildQualityLabel(definition !== null ? game.i18n.localize(definition.label) : fallbackLabel, false, null, formula),
+                // A dice rating has no numeric `level` slot, so it travels in the label. A numeric
+                // level is appended by the templates, so the name drops the book's "(X)" for it
+                // (the weapon card read "Snare (X) (1)").
+                label: buildQualityLabel(level !== null ? withoutRatingPlaceholder(name) : name, false, null, formula),
                 description: definition !== null ? game.i18n.localize(definition.description) : '',
                 level: level,
                 hasLevel: definition !== null ? definition.hasLevel : false,
