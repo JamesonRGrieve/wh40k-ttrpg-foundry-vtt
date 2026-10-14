@@ -800,7 +800,11 @@
                 "XenosLore": "Hard (−20): xenos device",
                 "XenosRepair": "Xenos device: alien nature",
                 "XenosLoreInsight": "Forbidden Lore insight (+5 per DoS)",
-                "ModificationAvailability": "Modification Availability"
+                "ModificationAvailability": "Modification Availability",
+                "Fatigue": "Fatigue",
+                "GangUp": "Ganging Up",
+                "TryAgain": "Trying Again",
+                "ClimbSurface": "Climbing Surface"
             },
             "ModifierCap": {
                 "Label": "Modifier cap (±60)",

@@ -2,7 +2,7 @@
 <div class="tw-flex tw-flex-col tw-items-center tw-p-5 tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.1)_100%)]">
     <div class="tw-flex tw-items-center tw-gap-5">
         <div class="tw-flex tw-items-baseline tw-gap-1">
-            <div class="urd-target__number tw-font-display tw-text-[4rem] tw-font-bold tw-leading-none tw-[font-variant-numeric:tabular-nums] tw-transition-[color,text-shadow] tw-duration-500 tw-ease-in-out {{targetColorClass}}" data-value="{{finalTarget}}" data-tooltip="{{targetBreakdownTooltip}}">{{finalTarget}}</div>
+            <div class="urd-target__number tw-font-display tw-text-[4rem] tw-font-bold tw-leading-none tw-[font-variant-numeric:tabular-nums] tw-transition-[color,text-shadow] tw-duration-500 tw-ease-in-out {{targetColorClass}}" data-value="{{finalTarget}}" data-tooltip="{{localize "WH40K.Roll.TargetLabel"}}" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{targetTooltipData}}">{{finalTarget}}</div>
             <div class="tw-text-lg tw-text-[rgba(201,162,39,0.5)] tw-font-normal">%</div>
         </div>
 
@@ -33,27 +33,22 @@
         {{/if}}
     </div>
 
-    {{!-- Breakdown line --}}
+    {{!-- Breakdown line (#489): the base, then one hoverable row per component of
+          the target — the rows the chat card will print, from the same builder. --}}
     {{#unless isForceField}}
-    <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-2.5 tw-text-xs tw-text-[#6a6a6a]">
-        <span>{{localize "WH40K.CharacteristicSetup.Base"}} {{baseTarget}}</span>
-        {{#if (ne difficultyMod 0)}}
-            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
-            <span class="{{#if (gt difficultyMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-                {{difficulty.label}} {{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-x-1.5 tw-gap-y-0.5 tw-mt-2.5 tw-max-w-full tw-text-xs tw-text-[#8a8a7a]" data-wh40k-hook="target-breakdown">
+        <span data-wh40k-hook="target-base">{{localize "WH40K.CharacteristicSetup.Base"}} {{baseTarget}}</span>
+        {{#each targetComponents as |component|}}
+            <span class="tw-text-[rgba(201,162,39,0.3)]" aria-hidden="true">|</span>
+            <span class="tw-cursor-help tw-whitespace-nowrap {{#if (gt component.value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}"
+                  data-wh40k-hook="target-component" data-component-key="{{component.key}}"
+                  data-tooltip="{{component.source}}" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}">
+                {{component.label}} {{#if (gt component.value 0)}}+{{/if}}{{component.value}}
             </span>
-        {{/if}}
-        {{#if (ne situationalMod 0)}}
-            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
-            <span class="{{#if (gt situationalMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-                {{localize "WH40K.Prompt.Unified.Mods"}} {{#if (gt situationalMod 0)}}+{{/if}}{{situationalMod}}
-            </span>
-        {{/if}}
-        {{#if (ne customMod 0)}}
-            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
-            <span class="{{#if (gt customMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-                {{localize "WH40K.Prompt.Unified.Custom"}} {{#if (gt customMod 0)}}+{{/if}}{{customMod}}
-            </span>
+        {{/each}}
+        {{#if targetCapFired}}
+            <span class="tw-text-[rgba(201,162,39,0.3)]" aria-hidden="true">|</span>
+            <span class="tw-italic tw-text-[#f87171]" data-wh40k-hook="target-cap" data-tooltip="{{localize "WH40K.Roll.ModifierCap.Tooltip"}}">{{localize "WH40K.Roll.ModifierCap.Value" raw=targetRawModifierTotal capped=targetModifierTotal}}</span>
         {{/if}}
     </div>
     {{/unless}}

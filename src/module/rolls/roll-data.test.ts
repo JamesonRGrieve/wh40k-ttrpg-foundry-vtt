@@ -3,7 +3,7 @@ import { buildConditionCatalog, setConditionCatalog } from '../rules/condition-r
 import { TARGET_CONDITION_BUCKET } from '../rules/targeted-conditions.ts';
 import { conditionPackFixture } from '../testing/condition-catalog.ts';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { clampModifierToCap, collectTargetConditionRows, RollData, ROLL_MODIFIER_CAP, WeaponRollData } from './roll-data';
+import { buildModifierComponents, clampModifierToCap, collectTargetConditionRows, RollData, ROLL_MODIFIER_CAP, WeaponRollData } from './roll-data';
 
 /**
  * Regression tests for the ±60 modifier cap (DH2 core.md L1050).
@@ -219,6 +219,44 @@ describe('RollData.gameSystemId reads an NPC DataModel static (#335, #607)', () 
         // eslint-disable-next-line no-restricted-syntax -- test: an NPC actor reduced to the DataModel surface the getter reads
         rd.sourceActor = { system: new Dh1NpcModel() } as unknown as RollData['sourceActor'];
         expect(rd.gameSystemId).toBe('dh1');
+    });
+});
+
+describe('assembleFinalModifiers — the record the dialog previews and the card commits (#489)', () => {
+    it('a plain test commits the modifiers it is given, without touching its own', () => {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one pure method
+        const rd = Object.create(RollData.prototype) as RollData;
+        rd.modifiers = { difficulty: 10 };
+        expect(rd.assembleFinalModifiers({ ...rd.modifiers, fatigue: -10 })).toEqual({ difficulty: 10, fatigue: -10 });
+        expect(rd.modifiers).toEqual({ difficulty: 10 });
+    });
+});
+
+describe('buildModifierComponents — one builder for card and dialog (#489)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', { i18n: { localize: (k: string) => k } });
+    });
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('itemises collector buckets, named keys and dialog keys as hoverable rows', () => {
+        const rows = buildModifierComponents(
+            { 'parrying-weapon': 15, 'environment': -20, 'modification-availability': -10, 'fatigue': -10, 'gang-up': 10, 'difficulty': 0 },
+            {
+                'parrying-weapon': [{ key: 'parrying-weapon-defensive', label: 'Defensive (Sword)', value: 15, source: 'Sword' }],
+                'environment': [{ key: 'zero-g', label: 'Zero gravity', value: -20, source: 'Environment' }],
+            },
+        );
+        expect(rows.map((r) => [r.label, r.value])).toEqual([
+            ['Defensive (Sword)', 15],
+            ['Zero gravity', -20],
+            ['WH40K.Roll.ModifierSource.ModificationAvailability', -10],
+            ['WH40K.Roll.ModifierSource.Fatigue', -10],
+            ['WH40K.Roll.ModifierSource.GangUp', 10],
+        ]);
+        for (const row of rows) {
+            const payload = JSON.parse(row.tooltipData ?? '') as { title: string; sources: Array<{ name: string; value: number }> };
+            expect(payload.sources[0]?.value).toBe(row.value);
+        }
     });
 });
 

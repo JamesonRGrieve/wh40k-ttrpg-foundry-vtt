@@ -13,6 +13,7 @@
 import { SYSTEM_ID } from '../../constants.ts';
 import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
+import { aggregateModifierTotal } from '../../rolls/aggregate-target.ts';
 import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import {
@@ -22,7 +23,7 @@ import {
     passiveModifierNoteKey,
     selectPassiveModifierRows,
 } from '../../rolls/passive-modifiers.ts';
-import type { RollData, RollModifierComponent } from '../../rolls/roll-data.ts';
+import { buildModifierComponents, type RollData, type RollModifierComponent } from '../../rolls/roll-data.ts';
 import { degreesResultFormula, getDegreeForMode, isD100Success, printedDegrees, resolveDegreesMethod, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { isRollKeepMode, keepModeOptions, type RollKeepMode } from '../../rolls/roll-keep.ts';
 import { ASSIST_BONUS_PER_ALLY, DEFAULT_ASSISTANT_CAP, getAssistanceBonus } from '../../rules/assistance.ts';
@@ -72,6 +73,7 @@ import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { hooksOn } from '../../utils/hooks-on.ts';
+import { prepareModifierTooltipData } from '../../utils/modifier-tooltip.ts';
 import { calculateTokenDistance, RANGE_BRACKETS, tokenElevation } from '../../utils/range-calculator.ts';
 import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -557,52 +559,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._cachedSituationalModifiers = this._collectSituationalModifiers();
         }
 
-        // Calculate modifiers (force fields have no modifiers)
-        const difficultyMod = isForceField ? 0 : this._currentDifficulty.modifier;
-        const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
+        // The controls' own values (force fields have no modifiers). The target is
+        // NOT summed from these: it is summed below from the committed record.
         const customMod = isForceField ? 0 : this._customModifier;
-        const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
-        const psyMod =
-            this.rollType === 'psychic'
-                ? resolvePsyMode({ mode: this._psyMode, basePR: Number(rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier
-                : 0;
         const selectedAssistants = this._selectedAssistants();
         const assistanceMod = isForceField ? 0 : getAssistanceBonus(selectedAssistants.length);
-
-        // Fatigue (#415) — a flat penalty applied to EVERY test (characteristic /
-        // skill / weapon), the first concrete consumer of the effective-value split.
-        // Read from the source actor's fatigue level; force-field activations aren't
-        // Tests, so they're exempt.
-        const fatigueMod = isForceField ? 0 : this._calculateFatigueModifier();
-
-        // Ganging Up (#417) — melee outnumbering: +10 to hit per additional ally
-        // engaged with the target, capped per game line (auto-computed from token
-        // adjacency, so it shows on the breakdown without a manual toggle).
-        const gangUpMod = !isForceField && this.rollType === 'weapon' ? this._calculateGangUpModifier() : 0;
-
-        // Try-Again advisory (#62) — only for Skill rolls with a known rollKey.
-        // Reads actor.flags.wh40k['try-again'][rollKey] (a Record<string, number>)
-        // populated by chat-card emission. Surfaces a soft warning and pre-applies
-        // the cumulative penalty for CUMULATIVE_PENALTY_SKILLS.
-        let tryAgainAdvice: RetryAdvice | null = null;
-        let tryAgainPenalty = 0;
-        if (!isForceField && rollData.type === 'Skill') {
-            const skillKey = (rollData.rollKey as string | null | undefined) ?? null;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
-            const actorRef = (rollData.sourceActor ?? rollData['actor']) as { getFlag?: (scope: string, key: string) => unknown } | null | undefined;
-            if (skillKey !== null && typeof actorRef?.getFlag === 'function') {
-                const flagBag = actorRef.getFlag('wh40k-rpg', 'try-again');
-                // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
-                const attempts = flagBag != null && typeof flagBag === 'object' ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0) : 0;
-                if (attempts > 0) {
-                    const advice = getTryAgainAdvice(skillKey, attempts);
-                    if (advice.blocksByConvention || advice.cumulativePenalty !== 0) {
-                        tryAgainAdvice = advice;
-                        tryAgainPenalty = advice.cumulativePenalty;
-                    }
-                }
-            }
-        }
+        const tryAgainAdvice = isForceField ? null : this._tryAgainAdvice();
+        const tryAgainPenalty = tryAgainAdvice?.cumulativePenalty ?? 0;
 
         // Skill panel — alt-characteristic dropdown + untrained-halving indicator (#61).
         // Reads `altCharacteristics` from the matching compendium/world skill item on the
@@ -738,52 +701,20 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
         const baseTarget = isForceField ? Number(rollData['protectionRating']) || 0 : (skillBaseOverride ?? rollData.baseTarget) || 0;
 
-        // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational', 'psy-mode', 'assistance']);
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
-        const safeModifiers = rollData.modifiers ?? {};
-        const weaponModSum = !isForceField
-            ? Object.entries(safeModifiers)
-                  .filter(([k]) => !dialogManagedKeys.has(k))
-                  .reduce((sum, [, v]) => sum + (Number(v) || 0), 0) + (Number(rollData.rangeBonus) || 0)
-            : 0;
-
-        // Climbing surface modifier (#146 — errata L113). Only applied on Athletics rolls.
-        const rollKeyValue = (rollData.rollKey as string | null | undefined) ?? null;
-        const isAthletics = this.rollType === 'simple' && rollData.type === 'Skill' && rollKeyValue === 'athletics';
-        const climbMod = isAthletics ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
-
-        const finalTarget = Math.max(
-            0,
-            baseTarget +
-                weaponModSum +
-                difficultyMod +
-                situationalMod +
-                customMod +
-                combatSitMod +
-                psyMod +
-                assistanceMod +
-                fatigueMod +
-                gangUpMod +
-                tryAgainPenalty +
-                climbMod,
-        );
-
-        // Build target breakdown tooltip
-        const tooltipParts = [`Base: ${baseTarget}`];
-        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${formatSigned(weaponModSum)}`);
-        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${formatSigned(difficultyMod)}`);
-        if (situationalMod !== 0) tooltipParts.push(`Situational: ${formatSigned(situationalMod)}`);
-        if (customMod !== 0) tooltipParts.push(`Custom: ${formatSigned(customMod)}`);
-        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${formatSigned(combatSitMod)}`);
-        if (psyMod !== 0) tooltipParts.push(`Psy Mode: ${formatSigned(psyMod)}`);
-        if (assistanceMod !== 0) tooltipParts.push(`Assistance: +${assistanceMod}`);
-        if (fatigueMod !== 0) tooltipParts.push(`Fatigue: ${formatSigned(fatigueMod)}`);
-        if (gangUpMod !== 0) tooltipParts.push(`Gang Up: ${formatSigned(gangUpMod)}`);
-        if (tryAgainPenalty !== 0) tooltipParts.push(`Try-Again: ${tryAgainPenalty}`);
-        if (climbMod !== 0) tooltipParts.push(`Climb Surface: ${formatSigned(climbMod)}`);
-        tooltipParts.push(`= ${finalTarget}`);
-        const targetBreakdownTooltip = tooltipParts.join('\n');
+        // The target and its breakdown come from the SAME record and the SAME
+        // component builder the chat card commits (#489): the roll's assembled
+        // modifiers (collector buckets, attack specials, passive to-hit, range …)
+        // with the dialog's pending modifiers merged over them. Every component the
+        // card will print is a hoverable row here, and the ±60 cap applies here too.
+        const breakdown = isForceField ? null : this._targetBreakdown(baseTarget);
+        const finalTarget = breakdown?.finalTarget ?? Math.max(0, baseTarget);
+        const targetComponents = breakdown?.components ?? [];
+        const targetTooltipData = prepareModifierTooltipData(game.i18n.localize('WH40K.Roll.TargetLabel'), [
+            { name: game.i18n.localize('WH40K.CharacteristicSetup.Base'), value: baseTarget },
+            ...targetComponents.map((component) => ({ name: component.label, value: component.value })),
+        ]);
+        const isAthletics = this._isAthletics();
+        const climbMod = this._climbModifier();
 
         // Dynamic color class based on success chance (tw-* arbitrary values for color + text-shadow)
         let targetColorClass: string;
@@ -843,10 +774,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Test variants (#246) — homebrew-gated skill sub-tests.
         const skillVariants = this._getSkillVariants();
 
-        // Modifier aggregate
-        const modifierAggregate =
-            difficultyMod + situationalMod + customMod + combatSitMod + psyMod + assistanceMod + fatigueMod + gangUpMod + tryAgainPenalty + climbMod;
-
         // Roll type specific data
         const isWeapon = this.rollType === 'weapon';
         const isPsychic = this.rollType === 'psychic';
@@ -882,13 +809,15 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             baseTarget,
             finalTarget,
             targetColorClass,
-            targetBreakdownTooltip,
+            // One hoverable row per component of the target, the card's rows (#489).
+            targetComponents,
+            targetTooltipData,
+            targetCapFired: breakdown?.capFired ?? false,
+            targetRawModifierTotal: breakdown?.rawModifierTotal ?? 0,
+            targetModifierTotal: breakdown?.modifierTotal ?? 0,
             previousTarget: this._previousTarget,
             difficulty,
-            difficultyMod,
-            situationalMod,
-            customMod: this._customModifier,
-            modifierAggregate,
+            customMod,
             difficultyPicker,
             difficultyPickerOpen: this._difficultyPickerOpen,
             situationalModifiers,
@@ -1566,23 +1495,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
-     * Calculate sum of active combat situational card modifiers.
-     * @returns {number}
-     */
-    _calculateCombatSituationalModifiers(): number {
-        if (this._activeCombatSituationals.size === 0) return 0;
-        const isRanged = this.rollData.weapon?.isRanged === true;
-        const situationals = getSituationalModifiers(isRanged);
-        let total = 0;
-        for (const s of situationals) {
-            if (this._activeCombatSituationals.has(s.key)) {
-                total += s.modifier;
-            }
-        }
-        return total;
-    }
-
-    /**
      * Fatigue test modifier for the active roll (#114). The per-system model
      * (halving / flat / condition, plus the world "fatigue mode" override) is
      * resolved once in the creature DataModel, which stores the flat/condition
@@ -1620,6 +1532,125 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (like !== null) tokens.push(like);
         }
         return computeGangUpModifier({ attacker, target, tokens, gridSize, config }).bonus;
+    }
+
+    /**
+     * Try-Again advisory (#62) — only for Skill rolls with a known rollKey. Reads
+     * the actor's `try-again` flag (a per-skill attempt counter populated by
+     * chat-card emission). Null when the skill has not been attempted, or when
+     * the retry is neither blocked by convention nor penalised.
+     */
+    _tryAgainAdvice(): RetryAdvice | null {
+        const rd = this.rollData;
+        if (rd.type !== 'Skill') return null;
+        const skillKey = (rd.rollKey as string | null | undefined) ?? null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a heterogeneous actor handle (sourceActor or legacy 'actor'); getFlag is Foundry Document API
+        const actorRef = (rd.sourceActor ?? rd['actor']) as { getFlag?: (scope: string, key: string) => unknown } | null | undefined;
+        if (skillKey === null || typeof actorRef?.getFlag !== 'function') return null;
+        const flagBag = actorRef.getFlag('wh40k-rpg', 'try-again');
+        // eslint-disable-next-line no-restricted-syntax -- boundary: getFlag returns unknown; the per-skill counter bag is Record<string, number> by construction
+        const attempts = flagBag != null && typeof flagBag === 'object' ? Number((flagBag as Record<string, unknown>)[skillKey] ?? 0) : 0;
+        if (attempts <= 0) return null;
+        const advice = getTryAgainAdvice(skillKey, attempts);
+        return advice.blocksByConvention || advice.cumulativePenalty !== 0 ? advice : null;
+    }
+
+    /** Whether this is an Athletics skill test, the only test a climbing surface modifies (#146). */
+    _isAthletics(): boolean {
+        const rd = this.rollData;
+        const rollKey = (rd.rollKey as string | null | undefined) ?? null;
+        return this.rollType === 'simple' && rd.type === 'Skill' && rollKey === 'athletics';
+    }
+
+    /** Climbing surface modifier (#146 — errata L113), applied on Athletics rolls only. */
+    _climbModifier(): number {
+        return this._isAthletics() ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
+    }
+
+    /**
+     * Every modifier the dialog owns, with the sourced parts of its lumped buckets
+     * (#489) — derived ONCE, so the target the dialog shows and the record
+     * {@link _applyModifiersToRollData} commits cannot drift. Keys follow the roll's
+     * own modifier keys, so a component labels identically on the card.
+     *
+     * Fatigue (#415), Ganging Up (#417), the Try-Again penalty (#62) and the
+     * climbing surface (#146) used to move the dialog's number without ever being
+     * committed, so the card's target differed from the one the player accepted.
+     */
+    _dialogModifierContributions(): { modifiers: Record<string, number>; expandedBuckets: Record<string, RollModifierComponent[]> } {
+        const isWeapon = this.rollType === 'weapon';
+        const difficulty = this._currentDifficulty;
+        const assistants = this._selectedAssistants();
+        const modifiers: Record<string, number> = {
+            'difficulty': difficulty.modifier,
+            'situational': this._calculateSituationalModifiers(),
+            'modifier': this._customModifier,
+            'assistance': getAssistanceBonus(assistants.length),
+            'fatigue': this._calculateFatigueModifier(),
+            'try-again': this._tryAgainAdvice()?.cumulativePenalty ?? 0,
+            'climb-surface': this._climbModifier(),
+        };
+        const expandedBuckets: Record<string, RollModifierComponent[]> = {
+            // The difficulty band's own label is its provenance; situational entries
+            // carry their originating item; each assistant is named.
+            situational: this._activeSituationalComponents(),
+            difficulty:
+                difficulty.modifier === 0
+                    ? []
+                    : [
+                          {
+                              key: 'difficulty',
+                              label: game.i18n.localize('WH40K.Roll.ModifierSource.Difficulty'),
+                              value: difficulty.modifier,
+                              source: difficulty.label,
+                          },
+                      ],
+            assistance: assistants.map((assistant) => ({
+                key: `assistance_${assistant.id}`,
+                label: assistant.name,
+                value: ASSIST_BONUS_PER_ALLY,
+                source: assistant.name,
+            })),
+        };
+        if (this.rollType === 'psychic') {
+            modifiers['psy-mode'] = resolvePsyMode({ mode: this._psyMode, basePR: Number(this.rollData['pr']) || 0, pushLevel: this._pushLevel }).focusModifier;
+        }
+        if (isWeapon) {
+            const isRanged = this.rollData.weapon?.isRanged === true;
+            const combatSitSource = game.i18n.localize('WH40K.Roll.ModifierSource.CombatSituational');
+            const combatSitComponents: RollModifierComponent[] = getSituationalModifiers(isRanged)
+                .filter((s) => this._activeCombatSituationals.has(s.key))
+                .map((s) => ({ key: s.key, label: s.label, value: s.modifier, source: combatSitSource }));
+            modifiers['combat-situational'] = combatSitComponents.reduce((total, c) => total + c.value, 0);
+            expandedBuckets['combat-situational'] = combatSitComponents;
+            modifiers['gang-up'] = this._calculateGangUpModifier();
+        }
+        return { modifiers, expandedBuckets };
+    }
+
+    /**
+     * The target number and its component rows as the card will commit them
+     * (#489): the roll's assembled record (`assembleFinalModifiers`, which folds in
+     * collector buckets, attack specials, passive to-hit and range) over the
+     * roll's modifiers with the dialog's pending ones merged in, summed through
+     * the shared ±60-capped aggregator and itemised by the shared builder.
+     * @param baseTarget  The base the dialog shows (an alternate characteristic or
+     *                    an untrained halving may override the roll's own).
+     */
+    _targetBreakdown(baseTarget: number): {
+        finalTarget: number;
+        components: RollModifierComponent[];
+        capFired: boolean;
+        rawModifierTotal: number;
+        modifierTotal: number;
+    } {
+        const rd = this.rollData;
+        const pending = this._dialogModifierContributions();
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- rollData.modifiers always present per type; runtime data may be uninitialised; ?? {} is defensive
+        const record = rd.assembleFinalModifiers({ ...(rd.modifiers ?? {}), ...pending.modifiers });
+        const components = buildModifierComponents(record, { ...rd.expandedBuckets, ...pending.expandedBuckets });
+        const { total, raw, capFired } = aggregateModifierTotal(record);
+        return { finalTarget: Math.max(0, baseTarget + total), components, capFired, rawModifierTotal: raw, modifierTotal: total };
     }
 
     /**
@@ -2690,9 +2721,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- rd.modifiers may be absent at runtime on uninitialised roll data despite its type
         if (!rd.modifiers) return;
-        rd.modifiers['difficulty'] = this._currentDifficulty.modifier;
-        rd.modifiers['situational'] = this._calculateSituationalModifiers();
-        rd.modifiers['modifier'] = this._customModifier;
+        // Every dialog-owned modifier and its sourced parts, from the one
+        // derivation the live target uses (#489), so the card commits exactly the
+        // target and rows the player saw.
+        const pending = this._dialogModifierContributions();
+        Object.assign(rd.modifiers, pending.modifiers);
+        Object.assign(rd.expandedBuckets, pending.expandedBuckets);
         // The selected test variant (Visual / Auditory …), read by the condition
         // auto-fail resolution in `ActionData._calculateHit`.
         const selectedVariant = this._selectedSkillVariant;
@@ -2700,41 +2734,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         // Roll-twice-keep-one mode; `_calculateHit` honours it only while the setting is on.
         rd.keepMode = this._keepMode;
 
-        // Provenance for the lumped buckets so the chat card renders each modifier
-        // as a sourced, hoverable row instead of a summed total (#…). The
-        // difficulty band's own label is its provenance; situational entries carry
-        // their originating item/source.
-        rd.expandedBuckets['situational'] = this._activeSituationalComponents();
-        rd.expandedBuckets['difficulty'] =
-            this._currentDifficulty.modifier === 0
-                ? []
-                : [
-                      {
-                          key: 'difficulty',
-                          label: game.i18n.localize('WH40K.Roll.ModifierSource.Difficulty'),
-                          value: this._currentDifficulty.modifier,
-                          source: this._currentDifficulty.label,
-                      },
-                  ];
-        // Assistance modifier (#60). +10 per selected ally up to DEFAULT_ASSISTANT_CAP.
-        const assistants = this._selectedAssistants();
-        rd.modifiers['assistance'] = getAssistanceBonus(assistants.length);
-        // Name each assistant on the chat card instead of a lumped "ASSISTANCE +20".
-        // `expandedBuckets` is the same provenance channel difficulty/situational use,
-        // so the breakdown partial renders one hoverable row per ally with no
-        // template change.
-        rd.expandedBuckets['assistance'] = assistants.map((assistant) => ({
-            key: `assistance_${assistant.id}`,
-            label: assistant.name,
-            value: ASSIST_BONUS_PER_ALLY,
-            source: assistant.name,
-        }));
-
-        // Apply psychic Push / Fettered / Unfettered selector (#69)
+        // Psychic Push / Fettered / Unfettered selector (#69): its focus modifier is
+        // in the contributions; the power's other effects ride on the roll data.
         if (this.rollType === 'psychic') {
             const basePR = Number(rd['pr']) || 0;
             const breakdown = resolvePsyMode({ mode: this._psyMode, basePR, pushLevel: this._pushLevel });
-            rd.modifiers['psy-mode'] = breakdown.focusModifier;
             rd['psyMode'] = this._psyMode;
             rd['psyEffectivePR'] = breakdown.effectivePR;
             rd['psyForcePhenomena'] = breakdown.forcePhenomena;
@@ -2742,22 +2746,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             if (this._psyMode === 'push') rd['psyPushLevel'] = this._pushLevel;
         }
 
-        // Apply combat situational card modifiers (weapon panel)
         if (this.rollType === 'weapon') {
             const isRanged = rd.weapon?.isRanged === true;
-            const situationals = getSituationalModifiers(isRanged);
-            let combatSitTotal = 0;
-            const combatSitComponents: RollModifierComponent[] = [];
-            const combatSitSource = game.i18n.localize('WH40K.Roll.ModifierSource.CombatSituational');
-            for (const s of situationals) {
-                if (this._activeCombatSituationals.has(s.key)) {
-                    combatSitTotal += s.modifier;
-                    combatSitComponents.push({ key: s.key, label: s.label, value: s.modifier, source: combatSitSource });
-                }
-            }
-            rd.modifiers['combat-situational'] = combatSitTotal;
-            rd.expandedBuckets['combat-situational'] = combatSitComponents;
-
             // Propagate damage-side effects (Cover AP, forced hit location)
             // from active situationals onto WeaponRollData so AssignDamageData
             // sees them at apply time.

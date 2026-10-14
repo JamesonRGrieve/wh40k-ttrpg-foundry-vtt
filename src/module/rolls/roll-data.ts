@@ -110,6 +110,10 @@ const MODIFIER_KEY_META: Record<string, string> = {
     'xenos-repair': 'XenosRepair',
     'xenos-lore-insight': 'XenosLoreInsight',
     'modification-availability': 'ModificationAvailability',
+    'fatigue': 'Fatigue',
+    'gang-up': 'GangUp',
+    'try-again': 'TryAgain',
+    'climb-surface': 'ClimbSurface',
     [TARGET_CONDITION_BUCKET]: 'TargetConditions',
 };
 
@@ -152,6 +156,47 @@ function prettyModifierKey(key: string): string {
         .split(/[-_ ]+/)
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(' ');
+}
+
+/**
+ * The provenance-bearing components a modifier record sums to (#489): one row per
+ * non-zero modifier, lumped buckets replaced by their sourced `expandedBuckets`
+ * parts (a summed `SITUATIONAL +30` renders as its "+10 Aim / +20 Deadeye / …"
+ * parts). Named keys resolve a localised label via {@link MODIFIER_KEY_META},
+ * falling back to a title-cased display. Each row carries its hover payload in the
+ * shared wh40k-tooltip "modifier" shape.
+ *
+ * The ONE builder both the chat card ({@link RollData.buildModifierSources}) and
+ * the roll dialog's target breakdown read, so a component on the card is a row
+ * in the dialog too. Content-agnostic: no modifier value is invented here; the
+ * returned objects are fresh, so the caller's `expandedBuckets` arrays are never
+ * mutated.
+ * @param modifiers        The modifier record the target is summed from.
+ * @param expandedBuckets  Sourced parts of lumped buckets, keyed by bucket.
+ */
+export function buildModifierComponents(
+    modifiers: Readonly<Record<string, number>>,
+    expandedBuckets: Readonly<Record<string, readonly RollModifierComponent[]>>,
+): RollModifierComponent[] {
+    const sources: RollModifierComponent[] = [];
+    const i18n = runtimeI18n();
+    for (const [key, value] of Object.entries(modifiers)) {
+        if (!Number.isFinite(value) || value === 0) continue;
+        const expansion = expandedBuckets[key];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off, eslint's program) types expandedBuckets[key] as always present; tsconfig.json (flag on) types it `| undefined` and requires this guard
+        if (expansion !== undefined && expansion.length > 0) {
+            sources.push(...expansion);
+            continue;
+        }
+        const suffix = MODIFIER_KEY_META[key];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) types MODIFIER_KEY_META[key] as always present; tsconfig.json (flag on) types it `| undefined` and requires this guard
+        const label = suffix !== undefined ? i18n?.localize?.(`WH40K.Roll.ModifierSource.${suffix}`) ?? prettyModifierKey(key) : prettyModifierKey(key);
+        sources.push({ key, label, value, source: label });
+    }
+    return sources.map((c) => ({
+        ...c,
+        tooltipData: JSON.stringify({ title: c.label, sources: [{ name: c.source, value: c.value }] }),
+    }));
 }
 
 /**
@@ -463,31 +508,20 @@ export class RollData {
      * modifier value is invented here. Purely additive to the total math.
      */
     buildModifierSources(): void {
-        const sources: RollModifierComponent[] = [];
-        for (const key of Object.keys(this.modifiers)) {
-            const value = this.modifiers[key];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: modifiers[key] may be undefined despite Record<string, number> type
-            if (value === undefined || value === 0) continue;
-            const expansion = this.expandedBuckets[key];
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: expandedBuckets[key] may be undefined despite Record<string, …[]> type
-            if (expansion !== undefined && expansion.length > 0) {
-                sources.push(...expansion);
-                continue;
-            }
-            const suffix = MODIFIER_KEY_META[key];
-            const i18n = runtimeI18n();
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: MODIFIER_KEY_META[key] may be undefined despite Record<string, string> type
-            const label = suffix !== undefined ? i18n?.localize?.(`WH40K.Roll.ModifierSource.${suffix}`) ?? prettyModifierKey(key) : prettyModifierKey(key);
-            sources.push({ key, label, value, source: label });
-        }
-        // Attach the hover payload uniformly (one sourced row per component), so
-        // the card row emits `data-wh40k-tooltip-data` verbatim — same shape as
-        // the shared wh40k-tooltip "modifier" builder. Fresh objects, so the
-        // dialog's `expandedBuckets` arrays are never mutated.
-        this.modifierSources = sources.map((c) => ({
-            ...c,
-            tooltipData: JSON.stringify({ title: c.label, sources: [{ name: c.source, value: c.value }] }),
-        }));
+        this.modifierSources = buildModifierComponents(this.modifiers, this.expandedBuckets);
+    }
+
+    /**
+     * The full modifier record the target is summed from at commit, given the
+     * roll's modifiers (`this.modifiers` by default). A plain test commits its
+     * modifiers as they are; an attack folds in its context-dependent bonuses (see
+     * the subclass overrides). The roll dialog calls this with its own pending
+     * modifiers merged in, so the target it shows is the one the card will commit
+     * (#489). Pure with respect to `this.modifiers`.
+     * @param modifiers  The modifiers to assemble from.
+     */
+    assembleFinalModifiers(modifiers: Readonly<Record<string, number>> = this.modifiers): Record<string, number> {
+        return { ...modifiers };
     }
 
     /**
@@ -1041,8 +1075,9 @@ export class WeaponRollData extends RollData {
      * selected modifier inputs. The attack-bonus calculators it invokes each
      * reset their own scratch map (`specialModifiers` / `weaponModifiers`)
      * before recomputing, so repeated calls are idempotent.
+     * @param modifiers  The roll's modifiers to assemble from (`this.modifiers` by default).
      */
-    assembleFinalModifiers(): Record<string, number> {
+    override assembleFinalModifiers(modifiers: Readonly<Record<string, number>> = this.modifiers): Record<string, number> {
         calculateAmmoAttackBonuses(this as Parameters<typeof calculateAmmoAttackBonuses>[0]);
         calculateAttackSpecialAttackBonuses(this);
         calculateWeaponModifiersAttackBonuses(this);
@@ -1053,7 +1088,7 @@ export class WeaponRollData extends RollData {
         }
 
         return {
-            ...this.modifiers,
+            ...modifiers,
             ...this.specialModifiers,
             ...this.weaponModifiers,
             ...this.dynamicAttackModifiers,
@@ -1202,13 +1237,23 @@ export class PsychicRollData extends RollData {
     }
 
     async finalize(): Promise<void> {
-        calculateAttackSpecialAttackBonuses(this);
         // Psychic attacks take the same data-driven to-hit hooks as weapon attacks
         // (#519). Omitting them here would leave a hook like "+10 vs Daemons"
         // working on a bolter and silently doing nothing on a smite — the same
         // shape of invisible gap this channel was fixed for.
         await this.applyDynamicAttackModifiers();
-        this.modifiers = { ...this.modifiers, ...this.specialModifiers, ...this.dynamicAttackModifiers, ...this.passiveAttackModifiers() };
+        this.modifiers = this.assembleFinalModifiers();
         await this.calculateTotalModifiers();
+    }
+
+    /**
+     * A psychic attack folds its attack specials, data-driven to-hit hooks and the
+     * psyker's passive to-hit modifiers into the roll's modifiers. Shared by
+     * {@link finalize} and the roll dialog's live target (#489).
+     * @param modifiers  The roll's modifiers to assemble from (`this.modifiers` by default).
+     */
+    override assembleFinalModifiers(modifiers: Readonly<Record<string, number>> = this.modifiers): Record<string, number> {
+        calculateAttackSpecialAttackBonuses(this);
+        return { ...modifiers, ...this.specialModifiers, ...this.dynamicAttackModifiers, ...this.passiveAttackModifiers() };
     }
 }

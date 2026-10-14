@@ -41,6 +41,11 @@ const DIFFICULTY_PICKER = [
     { index: 3, label: 'Hard', modifier: -10, isCurrent: false },
 ];
 
+/** One target component as the dialog's shared builder emits it (#489): a hoverable, sourced row. */
+function component(key: string, label: string, value: number, source: string): Ctx {
+    return { key, label, value, source, tooltipData: JSON.stringify({ title: label, sources: [{ name: source, value }] }) };
+}
+
 function baseContext(overrides: Ctx = {}): Ctx {
     return {
         // header
@@ -51,13 +56,12 @@ function baseContext(overrides: Ctx = {}): Ctx {
         finalTarget: 48,
         baseTarget: 38,
         targetColorClass: 'tw-text-gold-raw',
-        targetBreakdownTooltip: 'Base 38 | Standard +0 | Aim +10',
+        targetComponents: [component('situational', 'Aim', 10, 'Aim (Half Action)')],
+        targetTooltipData: '{"title":"Target","sources":[{"name":"Base","value":38},{"name":"Aim","value":10}]}',
         isForceField: false,
         difficulty: { label: 'Standard', modifier: 0 },
         difficultyPickerOpen: false,
         difficultyPicker: DIFFICULTY_PICKER,
-        difficultyMod: 0,
-        situationalMod: 10,
         customMod: 0,
         passiveModifierNoteKey: 'WH40K.PassiveModifiers.AlreadyApplied',
         // context-panel — collapsed by default
@@ -416,6 +420,113 @@ export const OncePerRoundAvailable: Story = {
         await expect(push?.getAttribute('aria-pressed')).toBe('false');
         await expect(push?.dataset['situationalSpent']).toBeUndefined();
         await expect(push?.dataset['tooltip']).toContain('4+ DoF');
+    },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Target breakdown — every component a hoverable row (#489)          */
+/* ------------------------------------------------------------------ */
+
+/** The rows the breakdown line shows, as `label value` text, in order. */
+function breakdownRows(root: HTMLElement): string[] {
+    return Array.from(root.querySelectorAll<HTMLElement>('[data-wh40k-hook="target-component"]'), (row) => row.textContent.replace(/\s+/g, ' ').trim());
+}
+
+/** Assert every breakdown row is hoverable to its own source through the shared modifier tooltip. */
+async function expectHoverableRows(root: HTMLElement): Promise<void> {
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-wh40k-hook="target-component"]'));
+    const described = rows.map((row) => {
+        const payload = JSON.parse(row.dataset['wh40kTooltipData'] ?? '{}') as { sources?: Array<{ value?: number }> };
+        return { type: row.dataset['wh40kTooltip'], value: payload.sources?.[0]?.value, tooltip: row.dataset['tooltip'] ?? '' };
+    });
+    await expect(described.every((row) => row.type === 'modifier' && row.value !== undefined && row.tooltip !== '')).toBe(true);
+    // Hovering a row reaches the row itself, where Foundry's tooltip manager reads its data-tooltip.
+    const first = rows.at(0);
+    if (first !== undefined) {
+        let hovered = false;
+        first.addEventListener('pointerover', () => {
+            hovered = true;
+        });
+        await userEvent.hover(first);
+        await expect(hovered).toBe(true);
+    }
+}
+
+/**
+ * A Parry (#489): the parrying weapon's Defensive quality and an `onParry` hook
+ * are collector rows. The target read 45 over "Base 30" with neither shown; now
+ * each is a row and the rows sum to the target.
+ */
+export const ParryBreakdown: Story = {
+    args: baseContext({
+        rollName: 'Parry',
+        rollSubtitle: 'Evasion',
+        baseTarget: 30,
+        finalTarget: 45,
+        targetComponents: [component('parrying-weapon-defensive', 'Defensive (Mono-sword)', 15, 'Mono-sword')],
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh2' }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="target-base"]')?.textContent).toContain('30');
+        await expect(breakdownRows(canvasElement)).toEqual(['Defensive (Mono-sword) +15']);
+        await expect(canvasElement.querySelector('.urd-target__number')?.textContent).toContain('45');
+        await expectHoverableRows(canvasElement);
+    },
+};
+
+/** A BS attack in a zero-gravity, storm-lashed scene (#604): both environment rows show. */
+export const EnvironmentBreakdown: Story = {
+    args: baseContext({
+        rollName: 'Ballistic Skill Test',
+        rollSubtitle: 'Autogun',
+        baseTarget: 50,
+        finalTarget: 10,
+        targetComponents: [
+            component('zero-gravity', 'Zero gravity', -20, 'Scene environment'),
+            component('harsh-conditions', 'Harsh conditions', -20, 'Scene environment'),
+        ],
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'ow' }),
+    play: async ({ canvasElement }) => {
+        await expect(breakdownRows(canvasElement)).toEqual(['Zero gravity -20', 'Harsh conditions -20']);
+        await expectHoverableRows(canvasElement);
+    },
+};
+
+/** Fitting a weapon modification (#136): the Availability row is shown, not folded away. */
+export const FitAvailabilityBreakdown: Story = {
+    args: baseContext({
+        rollName: 'Trade (Armourer): fit Red-Dot Laser Sight',
+        rollSubtitle: 'Skill',
+        baseTarget: 41,
+        finalTarget: 31,
+        targetComponents: [component('modification-availability', 'Modification Availability', -10, 'Modification Availability')],
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),
+    play: async ({ canvasElement }) => {
+        await expect(breakdownRows(canvasElement)).toEqual(['Modification Availability -10']);
+        await expectHoverableRows(canvasElement);
+    },
+};
+
+/** Past the ±60 cap the breakdown says so, as the card does. */
+export const CappedBreakdown: Story = {
+    args: baseContext({
+        baseTarget: 40,
+        finalTarget: 100,
+        targetComponents: [
+            component('aim', 'Aim', 20, 'Aim'),
+            component('range', 'Range', 30, 'Point Blank'),
+            component('combat-action', 'Combat Action', 30, 'All Out Attack'),
+        ],
+        targetCapFired: true,
+        targetRawModifierTotal: 80,
+        targetModifierTotal: 60,
+    }),
+    render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'rt' }),
+    play: async ({ canvasElement }) => {
+        await expect(breakdownRows(canvasElement)).toHaveLength(3);
+        await expect(canvasElement.querySelector('[data-wh40k-hook="target-cap"]')?.textContent).toContain('80');
     },
 };
 
