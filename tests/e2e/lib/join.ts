@@ -174,6 +174,15 @@ export async function joinAsGM(page: Page): Promise<boolean> {
         } catch {
             /* setting not registered (older build) — non-fatal */
         }
+        // Core floats "+(Blinded)" over a token for two seconds whenever a status
+        // toggles; canvas captures caught it mid-flight as garbled overlapping text.
+        try {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.settings` is injected by the licensed app; no shipped types
+            const g = globalThis as unknown as { game?: { settings?: { set?: (s: string, k: string, v: boolean) => Promise<unknown> } } };
+            await g.game?.settings?.set?.('core', 'scrollingStatusText', false);
+        } catch {
+            /* non-fatal */
+        }
     });
     // Core starts the welcome tour a moment after ready; its overlay would swallow
     // the spec's first click. The cheap overlay clear ends it and neuters its start.
