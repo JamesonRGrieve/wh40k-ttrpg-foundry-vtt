@@ -66,21 +66,21 @@
     {{/if}}
 
     {{!-- Action buttons --}}
-    <div class="tw-flex tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(129,140,248,0.25)]">
+    <div class="tw-flex tw-flex-wrap tw-gap-2.5 tw-mt-5 tw-pt-5 tw-border-t tw-border-[rgba(129,140,248,0.25)]">
         <button type="button"
                 data-action="resolveJourney"
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-indigo-500 tw-to-purple-700 tw-text-[#f5f3ff]">
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-whitespace-nowrap tw-px-4 tw-py-3 tw-border-none tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-gradient-to-br tw-from-indigo-500 tw-to-purple-700 tw-text-[#f5f3ff]">
             <i class="fas fa-route"></i> {{localize "WH40K.WarpTravel.Button.Resolve"}}
         </button>
         <button type="button"
                 data-action="postChat"
                 {{#unless result}}disabled{{/unless}}
-                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-5 tw-py-3 tw-border tw-border-[rgba(129,140,248,0.35)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(99,102,241,0.18)] tw-text-indigo-200 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-whitespace-nowrap tw-px-4 tw-py-3 tw-border tw-border-[rgba(129,140,248,0.35)] tw-rounded-md tw-font-ui tw-text-[0.9rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(99,102,241,0.18)] tw-text-indigo-200 disabled:tw-opacity-50 disabled:tw-cursor-not-allowed">
             <i class="fas fa-scroll"></i> {{localize "WH40K.WarpTravel.Button.PostChat"}}
         </button>
         <button type="button"
                 data-action="rollPeril"
-                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-3 tw-border tw-border-red-700 tw-rounded-md tw-font-ui tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(127,29,29,0.35)] tw-text-red-200">
+                class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-whitespace-nowrap tw-px-4 tw-py-3 tw-border tw-border-red-700 tw-rounded-md tw-font-ui tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-cursor-pointer tw-bg-[rgba(127,29,29,0.35)] tw-text-red-200">
             <i class="fas fa-fire"></i> {{localize "WH40K.WarpTravel.Button.RollPeril"}}
         </button>
         <button type="button"
