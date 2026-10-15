@@ -15,50 +15,14 @@
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { contrast, hexRgb, objectLiteral, over, type Rgb } from './lib/contrast.ts';
 
 const ROOT = resolve(__dirname, '..');
 
 const read = (rel: string): string => readFileSync(join(ROOT, rel), 'utf8');
 
-interface Rgb {
-    r: number;
-    g: number;
-    b: number;
-}
-
-function hexRgb(hex: string): Rgb {
-    return { r: parseInt(hex.slice(1, 3), 16), g: parseInt(hex.slice(3, 5), 16), b: parseInt(hex.slice(5, 7), 16) };
-}
-
-function channel(v: number): number {
-    const s = v / 255;
-    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-}
-
-function luminance({ r, g, b }: Rgb): number {
-    return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
-}
-
-function contrast(a: Rgb, b: Rgb): number {
-    const la = luminance(a);
-    const lb = luminance(b);
-    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
-}
-
-/** A card panel `rgba(r, g, b, alpha)` composited over the chat message underneath. */
-function over(panel: Rgb, alpha: number, under: Rgb): Rgb {
-    const mix = (top: number, bottom: number): number => top * alpha + bottom * (1 - alpha);
-    return { r: mix(panel.r, under.r), g: mix(panel.g, under.g), b: mix(panel.b, under.b) };
-}
-
 /** Foundry's light parchment chat message: the worst case under a translucent card. */
 const PARCHMENT: Rgb = { r: 235, g: 225, b: 205 };
-
-/** The `'key': 'value'` pairs of a JS object literal named `name` in `source`. */
-function objectLiteral(source: string, name: string): Map<string, string> {
-    const body = new RegExp(`const ${name} = \\{([^}]*)\\}`).exec(source)?.[1] ?? '';
-    return new Map([...body.matchAll(/'([^']+)':\s*'([^']+)'/g)].map((m) => [m[1], m[2]]));
-}
 
 const DARK_CARDS = [
     'src/templates/chat/bc-ascension-chat.hbs',
