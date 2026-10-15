@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { WH40K } from '../config.ts';
-import { hullTypeLabelKey, shipAvailabilityChoices, shipHullTypeChoices, voidcraftHullTypeOptions } from './ship-choices.ts';
+import { hullTypeLabelKey, shipAvailabilityChoices, shipComponentTypeLabelKey, shipHullTypeChoices, voidcraftHullTypeOptions } from './ship-choices.ts';
 
 /**
  * Ship dropdown choices derive from the canonical `WH40K.hullTypes` /
@@ -83,6 +83,39 @@ describe('voidcraft hull type (#647)', () => {
         };
         const keys = voidcraftHullTypeOptions('').map((o) => o.labelKey ?? '');
         expect(keys.filter((key) => typeof labelOf(key) !== 'string')).toEqual([]);
+    });
+});
+
+describe('ship component type label (#662)', () => {
+    /** Resolve a dotted langpack key against en.json, to its string or undefined. */
+    function langValue(key: string): string | undefined {
+        interface LangNode {
+            [name: string]: LangNode | string | undefined;
+        }
+        const lang = JSON.parse(readFileSync(resolve(__dirname, '../../lang/en.json'), 'utf8')) as LangNode;
+        let node: LangNode | string | undefined = lang;
+        for (const part of key.split('.')) node = typeof node === 'object' ? node[part] : undefined;
+        return typeof node === 'string' ? node : undefined;
+    }
+
+    it('names the label key of each component type, under the Type group the langpack uses', () => {
+        expect(shipComponentTypeLabelKey('auger')).toBe('WH40K.ShipComponent.Type.Auger');
+        expect(shipComponentTypeLabelKey('gellarField')).toBe('WH40K.ShipComponent.Type.GellarField');
+        for (const offEnum of ['', 'Auger', 'toString']) expect(shipComponentTypeLabelKey(offEnum)).toBeNull();
+    });
+
+    it('resolves every component type the schema offers to a langpack string', () => {
+        const model = readFileSync(resolve(__dirname, '../data/item/ship-component.ts'), 'utf8');
+        const choices = /componentType: new fields\.StringField\(\{[\s\S]*?choices: \[([\s\S]*?)\]/.exec(model)?.[1] ?? '';
+        const ids = Array.from(choices.matchAll(/'([^']+)'/g), (match) => String(match[1]));
+        expect(ids.length).toBeGreaterThan(10);
+        expect(ids.filter((id) => langValue(shipComponentTypeLabelKey(id) ?? '') === undefined)).toEqual([]);
+    });
+
+    it('the componentTypeLabel getter reads its key through shipComponentTypeLabelKey (no key built from the id)', () => {
+        const model = readFileSync(resolve(__dirname, '../data/item/ship-component.ts'), 'utf8');
+        expect(model).toContain('const key = shipComponentTypeLabelKey(this.componentType);');
+        expect(model).not.toContain('`WH40K.ShipComponent.${');
     });
 });
 

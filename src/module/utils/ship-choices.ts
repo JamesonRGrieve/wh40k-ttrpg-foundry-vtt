@@ -34,6 +34,16 @@ export function hullTypeLabelKey(hullType: string): string | null {
 }
 
 /**
+ * The langpack key of a ship component type's label, or null when the value is
+ * not one of the `WH40K.shipComponentTypes` ids. The component table showed the
+ * raw key (`WH40K.ShipComponent.Auger`): the label was built from the id
+ * without the `Type.` segment the langpack nests it under.
+ */
+export function shipComponentTypeLabelKey(componentType: string): string | null {
+    return Object.entries(WH40K.shipComponentTypes).find(([id]) => id === componentType)?.[1].label ?? null;
+}
+
+/**
  * One option of the voidcraft hull-type select (#647). `labelKey` is the option's
  * langpack label; null for a stored value that is not a hull type id, which the
  * template shows as-is.

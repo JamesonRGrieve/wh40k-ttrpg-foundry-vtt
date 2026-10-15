@@ -1,4 +1,5 @@
 import { formatSigned } from '../../utils/format.ts';
+import { shipComponentTypeLabelKey } from '../../utils/ship-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -152,7 +153,8 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @type {string}
      */
     get componentTypeLabel(): string {
-        return game.i18n.localize(`WH40K.ShipComponent.${this.componentType.capitalize()}`);
+        const key = shipComponentTypeLabelKey(this.componentType);
+        return key === null ? this.componentType : game.i18n.localize(key);
     }
 
     /**
