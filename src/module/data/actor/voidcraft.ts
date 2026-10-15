@@ -1,5 +1,6 @@
 import { isCrippled as isCrippledRule, type PriorTurnDamageSnapshot } from '../../rules/ship-crew-morale.ts';
 import { crippledStatChanges, isShipDestroyed, type CrippledStat } from '../../rules/ship-crippled.ts';
+import { hullTypeLabelKey } from '../../utils/ship-choices.ts';
 import VehicleData, { LOCOMOTION_CHOICES } from './vehicle.ts';
 
 /** The stats the Crippled rule changes, in Build Summary order. */
@@ -854,17 +855,13 @@ export default class VoidcraftData extends VehicleData {
     /* -------------------------------------------- */
 
     /**
-     * Get the hull type label.
-     * @type {string}
+     * The hull type's display label, from the `WH40K.hullTypes` table (#647). A
+     * stored value that is not one of its ids (a pack's "space-station") shows as
+     * stored, never as a missing langpack key.
      */
     get hullTypeLabel(): string {
-        if (!this.hullType) return '';
-        return game.i18n.localize(
-            `WH40K.HullType.${this.hullType
-                .split('-')
-                .map((s) => s.capitalize())
-                .join('')}`,
-        );
+        const key = hullTypeLabelKey(this.hullType);
+        return key === null ? this.hullType : game.i18n.localize(key);
     }
 
     /**

@@ -11,10 +11,30 @@
     {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs fitName=true placeholderKey="WH40K.Voidcraft.Name"}}
 
     <div class="tw-flex tw-flex-col tw-gap-2">
-        <label class="tw-flex tw-flex-col tw-gap-0.5">
-            <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.HullType"}}</span>
-            <input class="tw-w-full tw-border-0 tw-border-b tw-border-solid tw-border-b-[var(--wh40k-border-color-light)] tw-bg-transparent tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)] focus:tw-border-b-gold focus:tw-outline-none" name="system.hullType" type="text" value="{{source.hullType}}" />
-        </label>
+        {{!-- Hull type (#647): an id from WH40K.hullTypes that ship components match
+             against, so it is a select over them in edit mode and its label otherwise.
+             The pencil enters edit mode (BaseActorSheet's toggleEditMode). --}}
+        <div class="tw-flex tw-flex-col tw-gap-0.5" data-wh40k-hook="voidcraft-hull-type">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2">
+                <label for="{{actor.id}}-hull-type" class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.HullType"}}</label>
+                {{#if editable}}
+                {{#if inEditMode}}
+                {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-lock-open" isActive=true titleKey="WH40K.Common.ExitEditMode" sizeClass="tw-w-[18px] tw-h-[18px]" iconClass="tw-text-[0.6rem]"}}
+                {{else}}
+                {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-pen-to-square" titleKey="WH40K.Common.EnterEditMode" sizeClass="tw-w-[18px] tw-h-[18px]" iconClass="tw-text-[0.6rem]"}}
+                {{/if}}
+                {{/if}}
+            </div>
+            {{#if inEditMode}}
+            <select id="{{actor.id}}-hull-type" name="system.hullType" class="tw-w-full tw-h-8 tw-py-0 tw-px-1 tw-leading-normal tw-text-[0.85rem] tw-bg-[var(--wh40k-input-bg)] tw-text-[color:var(--wh40k-text-dark)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm">
+                {{#each hullTypeOptions as |option|}}
+                <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{#if option.labelKey}}{{localize option.labelKey}}{{else}}{{option.value}}{{/if}}</option>
+                {{/each}}
+            </select>
+            {{else}}
+            <span id="{{actor.id}}-hull-type" data-wh40k-hook="voidcraft-hull-type-label" class="tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">{{#if hullTypeLabel}}{{hullTypeLabel}}{{else}}{{localize "WH40K.Voidcraft.HullTypeUnset"}}{{/if}}</span>
+            {{/if}}
+        </div>
         <label class="tw-flex tw-flex-col tw-gap-0.5">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.HullClass"}}</span>
             <input class="tw-w-full tw-border-0 tw-border-b tw-border-solid tw-border-b-[var(--wh40k-border-color-light)] tw-bg-transparent tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)] focus:tw-border-b-gold focus:tw-outline-none" name="system.hullClass" type="text" value="{{source.hullClass}}" />

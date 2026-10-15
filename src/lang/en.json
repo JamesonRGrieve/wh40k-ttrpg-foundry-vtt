@@ -4613,6 +4613,7 @@
         "Voidcraft": {
             "Name": "Ship Name",
             "HullType": "Hull Type",
+            "HullTypeUnset": "Not set",
             "HullClass": "Hull Class",
             "Tabs": {
                 "Stats": "Stats",

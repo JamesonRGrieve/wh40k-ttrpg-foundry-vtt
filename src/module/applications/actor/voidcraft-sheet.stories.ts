@@ -23,6 +23,7 @@ import statsTabSrc from '../../../templates/actor/voidcraft/tab-stats.hbs?raw';
 import { nameFitClass } from '../../handlebars/name-fit.ts';
 import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
+import { voidcraftHullTypeOptions } from '../../utils/ship-choices.ts';
 import { shipActionModifierRows } from '../ship-action/ship-action-flow.ts';
 
 initializeStoryHandlebars();
@@ -58,7 +59,7 @@ const defaultCtxWithSource: SheetContextLike = {
     ...defaultStarshipCtx,
     source: {
         ...defaultStarshipCtx.source,
-        hullType: 'Sword-class Frigate',
+        hullType: 'frigate',
         hullClass: 'Frigate',
         speed: 8,
         manoeuvrability: 15,
@@ -568,5 +569,79 @@ export const ExtendedActionsInEffect: Story = {
         const followsPanel = panel !== null && firstRoll !== null && (panel.compareDocumentPosition(firstRoll) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
         await expect(followsPanel).toBe(true);
         await expect(canvasElement.querySelectorAll('[data-action="rollShipAction"]').length).toBe(5);
+    },
+};
+
+// ── Hull type: a select in edit mode, its label otherwise (#647) ─────────────
+
+/** The hull-type context the sheet builds (`_prepareShipData`) for a stored hull type and its label. */
+function hullTypeCtx(hullType: string, hullTypeLabel: string, inEditMode: boolean): SheetContextLike {
+    return {
+        ...defaultCtxWithSource,
+        editable: true,
+        inEditMode,
+        source: { ...defaultCtxWithSource.source, hullType },
+        hullTypeLabel,
+        hullTypeOptions: voidcraftHullTypeOptions(hullType),
+    };
+}
+
+function hullTypeBlock(canvasElement: HTMLElement): HTMLElement | null {
+    return canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="voidcraft-hull-type"]');
+}
+
+/** Read mode: the hull type's label, no free-text input, and the pencil that enters edit mode. */
+export const HullTypeReadMode: Story = {
+    args: hullTypeCtx('light-cruiser', 'Light Cruiser', false),
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        const block = hullTypeBlock(canvasElement);
+        await expect(block?.querySelector('[data-wh40k-hook="voidcraft-hull-type-label"]')?.textContent.trim()).toBe('Light Cruiser');
+        await expect(block?.querySelector('[name="system.hullType"]')).toBeNull();
+        await expect(block?.querySelector('[data-action="toggleEditMode"]')).not.toBeNull();
+    },
+};
+
+/** Edit mode: a select over every WH40K.hullTypes id, the stored one selected. */
+export const HullTypeEditMode: Story = {
+    args: hullTypeCtx('light-cruiser', 'Light Cruiser', true),
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        const select = hullTypeBlock(canvasElement)?.querySelector<HTMLSelectElement>('select[name="system.hullType"]') ?? null;
+        await expect(select).not.toBeNull();
+        if (select === null) return;
+        await expect(select.value).toBe('light-cruiser');
+        await expect([...select.options].map((option) => option.value)).toEqual([
+            '',
+            'transport',
+            'raider',
+            'frigate',
+            'light-cruiser',
+            'cruiser',
+            'battlecruiser',
+            'grand-cruiser',
+        ]);
+        await expect(select.selectedOptions.item(0)?.textContent.trim()).toBe('Light Cruiser');
+        // Its label is associated, for assistive tech.
+        await expect(canvasElement.querySelector(`label[for="${select.id}"]`)).not.toBeNull();
+    },
+};
+
+/**
+ * A stored value outside the hull types (a pack's "space-station") reads as stored,
+ * and in edit mode keeps its own selected option, so a save never rewrites it.
+ */
+export const HullTypeOutsideTheEnum: Story = {
+    args: hullTypeCtx('space-station', 'space-station', true),
+    render: (args) => {
+        const column = document.createElement('div');
+        column.append(renderVoidcraftSheet(args), renderVoidcraftSheet(hullTypeCtx('space-station', 'space-station', false)));
+        return column;
+    },
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.hullType"]');
+        await expect(select?.value).toBe('space-station');
+        await expect(select?.selectedOptions.item(0)?.textContent.trim()).toBe('space-station');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="voidcraft-hull-type-label"]')?.textContent.trim()).toBe('space-station');
     },
 };

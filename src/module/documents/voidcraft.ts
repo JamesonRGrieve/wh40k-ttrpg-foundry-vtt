@@ -29,6 +29,8 @@ import type { WH40KItem } from './item.ts';
 
 type VoidcraftSystemData = WH40KBaseActor['system'] & {
     hullType: string;
+    /** The hull type's display label (VoidcraftData's getter, #647). */
+    readonly hullTypeLabel: string;
     hullClass: string;
     gameSystem: string;
     hullIntegrity: { value: number; max: number };

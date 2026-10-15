@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 import type { ShipAppliedModifier, ShipModifierStatKey } from './voidcraft.ts';
 
@@ -321,5 +321,21 @@ describe('StarshipData', () => {
         expect(ship.isDestroyed).toBe(true);
         ship.hullIntegrity = { max: 35, value: 1 };
         expect(ship.isDestroyed).toBe(false);
+    });
+
+    it('hullTypeLabel reads the label from WH40K.hullTypes, and shows a value outside it as stored (#647)', async () => {
+        const mod = await importModelOrSkip(import('./voidcraft.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        vi.stubGlobal('game', { i18n: { localize: (key: string): string => `loc:${key}` } });
+        const ship = Object.create(mod.default.prototype) as { hullType: string; hullTypeLabel: string };
+        ship.hullType = 'light-cruiser';
+        expect(ship.hullTypeLabel).toBe('loc:WH40K.HullType.LightCruiser');
+        // A pack's off-enum value (the Wayfarer Station's "space-station") is not a missing langpack key.
+        ship.hullType = 'space-station';
+        expect(ship.hullTypeLabel).toBe('space-station');
+        ship.hullType = '';
+        expect(ship.hullTypeLabel).toBe('');
+        vi.unstubAllGlobals();
     });
 });

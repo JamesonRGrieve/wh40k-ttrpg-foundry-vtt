@@ -25,6 +25,7 @@ import { criticalRollLabelKey, shipConditionView } from '../../rules/ship-crippl
 import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
+import { voidcraftHullTypeOptions } from '../../utils/ship-choices.ts';
 import { openShipActionDialog } from '../ship-action/ship-action-dialog.ts';
 import { shipActionModifierRows, type ShipActionModifierRow } from '../ship-action/ship-action-flow.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
@@ -264,6 +265,10 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
         const items = actor.items;
+
+        // Hull type (#647): a select over WH40K.hullTypes in edit mode, its label read-only.
+        context['hullTypeOptions'] = voidcraftHullTypeOptions(actor.system.hullType);
+        context['hullTypeLabel'] = actor.system.hullTypeLabel;
 
         // Get ship components grouped by type
         context['shipComponents'] = items.filter((item: WH40KItem) => item.type === 'shipComponent');

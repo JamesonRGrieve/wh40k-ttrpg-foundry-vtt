@@ -6319,6 +6319,7 @@ export type I18nKey =
     | 'WH40K.Voidcraft.HitAndRun.TurnedBackExplain'
     | 'WH40K.Voidcraft.HullClass'
     | 'WH40K.Voidcraft.HullType'
+    | 'WH40K.Voidcraft.HullTypeUnset'
     | 'WH40K.Voidcraft.ManoeuvreAction.ChatHeader'
     | 'WH40K.Voidcraft.ManoeuvreAction.ChatSubtitle'
     | 'WH40K.Voidcraft.ManoeuvreAction.Description'
