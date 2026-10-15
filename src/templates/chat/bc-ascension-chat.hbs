@@ -16,7 +16,7 @@
 
     {{!-- Patron summary --}}
     <div class="tw-flex tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-mb-3 tw-px-2 tw-py-2 tw-rounded-sm tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] bc:tw-border-crimson tw-bg-[rgba(0,0,0,0.18)]">
-        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=alignmentAtAscension}}</span>
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=(localize (chaosAlignmentLabelKey alignmentAtAscension))}}</span>
         <span class="tw-font-bold tw-text-[color:var(--wh40k-text-bright)]">
             {{localize "WH40K.BC.DaemonPrince.Status.ResolvedAt" when=ascendedAt}}
         </span>

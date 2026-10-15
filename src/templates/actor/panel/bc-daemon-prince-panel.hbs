@@ -44,7 +44,7 @@
                 {{localize "WH40K.BC.DaemonPrince.Status.ResolvedAt" when=daemonPrincePanel.ascendedAt}}
             </span>
             <span class="tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=daemonPrincePanel.alignmentAtAscension}}
+                {{localize "WH40K.BC.DaemonPrince.Status.AlignmentAt" alignment=(localize (chaosAlignmentLabelKey daemonPrincePanel.alignmentAtAscension))}}
             </span>
         </div>
     {{else}}

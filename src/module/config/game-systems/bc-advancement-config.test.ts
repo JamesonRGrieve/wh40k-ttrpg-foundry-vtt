@@ -12,6 +12,8 @@
  *   - Infamy advance: :2667 (500 xp / +5, capped at 40)
  *   - Khorne / psyker lock: :2750
  */
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
     BC_ALIGNMENT_CHECK_CP_INTERVAL,
@@ -22,6 +24,8 @@ import {
     BC_INFAMY_INCREMENT,
     BC_SKILL_RANK_KEYS,
     alignmentBlocksPsyker,
+    chaosAlignmentLabelKey,
+    isChaosAlignment,
     characteristicAdvanceCost,
     characteristicAffiliation,
     infamyAdvanceCost,
@@ -226,5 +230,40 @@ describe('BC alignment constants (core.md :2559, :2569)', () => {
 
     it('exposes a 10-CP re-check interval', () => {
         expect(BC_ALIGNMENT_CHECK_CP_INTERVAL).toBe(10);
+    });
+});
+
+describe('Chaos alignment labels (#646)', () => {
+    const lang = JSON.parse(readFileSync(resolve(__dirname, '../../../lang/en.json'), 'utf8')) as {
+        WH40K: { BC: { Advancement: { Alignment: Record<string, string> } } };
+    };
+
+    it.each([
+        ['khorne', 'Khorne'],
+        ['nurgle', 'Nurgle'],
+        ['slaanesh', 'Slaanesh'],
+        ['tzeentch', 'Tzeentch'],
+        ['unaligned', 'Unaligned'],
+    ])('the stored id %s names the %s label, which the langpack carries', (id, label) => {
+        expect(chaosAlignmentLabelKey(id)).toBe(`WH40K.BC.Advancement.Alignment.${label}`);
+        expect(lang.WH40K.BC.Advancement.Alignment[label]).toBe(label);
+    });
+
+    it('a value that is not an alignment id passes through unchanged', () => {
+        expect(isChaosAlignment('Khorne')).toBe(false);
+        expect(chaosAlignmentLabelKey('Khorne')).toBe('Khorne');
+        expect(chaosAlignmentLabelKey('')).toBe('');
+        expect(isChaosAlignment('toString')).toBe(false);
+    });
+
+    it('the Apotheosis panel and the ascension card name the alignment through its label, as the other BC panels do', () => {
+        const template = (path: string): string => readFileSync(resolve(__dirname, '../../../templates', path), 'utf8');
+        expect(template('actor/panel/bc-daemon-prince-panel.hbs')).toContain(
+            'alignment=(localize (chaosAlignmentLabelKey daemonPrincePanel.alignmentAtAscension))',
+        );
+        expect(template('chat/bc-ascension-chat.hbs')).toContain('alignment=(localize (chaosAlignmentLabelKey alignmentAtAscension))');
+        for (const path of ['actor/panel/bc-gifts-panel.hbs', 'actor/panel/bc-alignment-panel.hbs']) {
+            expect(template(path)).not.toContain('"WH40K.BC.Advancement.Alignment." (capitalize');
+        }
     });
 });

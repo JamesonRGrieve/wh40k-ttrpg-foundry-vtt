@@ -121,7 +121,7 @@
         <footer data-wh40k-hook="bc-gifts-merged" class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.25)]"
                 data-merged-delta-count="{{giftsPanel.mergedDelta.length}}">
             <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)]">
-                {{localize "WH40K.BC.Gifts.Resolved.AppliedAlignment"}}: <span class="tw-text-[color:var(--wh40k-text-bright)]">{{localize (concat "WH40K.BC.Advancement.Alignment." (capitalize giftsPanel.currentAlignment))}}</span>
+                {{localize "WH40K.BC.Gifts.Resolved.AppliedAlignment"}}: <span class="tw-text-[color:var(--wh40k-text-bright)]">{{localize (chaosAlignmentLabelKey giftsPanel.currentAlignment)}}</span>
             </span>
             <div class="tw-flex tw-flex-wrap tw-gap-1">
                 {{#each giftsPanel.mergedDelta as |delta|}}

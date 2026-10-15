@@ -1,3 +1,4 @@
+import { chaosAlignmentLabelKey } from '../config/game-systems/bc-advancement-config.ts';
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import { WH40K } from '../config.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
@@ -150,6 +151,11 @@ export function registerHandlebarsHelpers(): void {
         const floor = Number(min);
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
+
+    /** Langpack key of a Chaos alignment id's label: `{{localize (chaosAlignmentLabelKey id)}}` (#646). */
+    Handlebars.registerHelper('chaosAlignmentLabelKey', (alignment: TplValue): string =>
+        chaosAlignmentLabelKey(typeof alignment === 'string' ? alignment : ''),
+    );
 
     /** Font-size class that fits an actor name into the sidebar name input (#630). */
     Handlebars.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));

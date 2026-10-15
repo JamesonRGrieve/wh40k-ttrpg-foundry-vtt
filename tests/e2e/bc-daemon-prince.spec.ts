@@ -11,6 +11,7 @@ interface DaemonPrinceProbeResult {
     ascendButtonDisabled: boolean;
     hasThresholdReadout: boolean;
     hasOutcome: boolean;
+    ascendedText: string;
     ascendedHasButton: boolean;
     ascendButtonClicked: boolean;
     error: string | null;
@@ -61,6 +62,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 ascendButtonDisabled: true,
                 hasThresholdReadout: false,
                 hasOutcome: false,
+                ascendedText: '',
                 ascendedHasButton: true,
                 ascendButtonClicked: false,
                 error: null,
@@ -137,6 +139,7 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
                 );
                 out.ascendedRendered = ascendedHost.firstElementChild instanceof HTMLElement;
                 out.hasOutcome = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-outcome"]') !== null;
+                out.ascendedText = ascendedHost.textContent.replace(/\s+/g, ' ');
                 out.ascendedHasButton = ascendedHost.querySelector('[data-wh40k-hook="bc-dp-ascend-btn"]') !== null;
                 g.__bcDaemonPrincePanelHostAscended = ascendedHost;
             } catch (err) {
@@ -172,6 +175,9 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
         expect(result.ascendButtonDisabled, 'resolve button should be enabled at 100 Corruption').toBe(false);
         expect(result.hasThresholdReadout, 'requirement readout should render before the claim').toBe(true);
         expect(result.hasOutcome, 'outcome text should render once claimed').toBe(true);
+        // #646: the patron is the alignment's label, not its raw id.
+        expect(result.ascendedText).toContain('Patron: Tzeentch');
+        expect(result.ascendedText).not.toContain('Patron: tzeentch');
         expect(result.ascendedHasButton, 'no resolve button once claimed').toBe(false);
         expect(result.ascendButtonClicked, 'resolve button should be clickable').toBe(true);
 

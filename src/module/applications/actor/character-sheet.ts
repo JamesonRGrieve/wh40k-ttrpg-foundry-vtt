@@ -32,7 +32,7 @@ import { owRegimentEdit, resolveRegimentCatalog } from '../../actions/ow-regimen
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
-import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
+import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
@@ -5655,8 +5655,8 @@ export default class CharacterSheet extends BaseActorSheet {
             const messageKey = flipped ? 'WH40K.BC.Advancement.RecheckFlippedTo' : 'WH40K.BC.Advancement.RecheckUnchanged';
             const formatted = flipped
                 ? game.i18n.format(messageKey, {
-                      previous: game.i18n.localize(`WH40K.BC.Advancement.Alignment.${this.#capitalizeAlignment(previous)}`),
-                      next: game.i18n.localize(`WH40K.BC.Advancement.Alignment.${this.#capitalizeAlignment(next)}`),
+                      previous: game.i18n.localize(chaosAlignmentLabelKey(previous)),
+                      next: game.i18n.localize(chaosAlignmentLabelKey(next)),
                   })
                 : game.i18n.localize(messageKey);
             await ChatMessage.create({
@@ -5737,11 +5737,6 @@ export default class CharacterSheet extends BaseActorSheet {
             this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.InfamyPurchaseFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('BC infamy advance purchase error:', error);
         }
-    }
-
-    /** Capitalize a ChaosAlignment string for use in the langpack key suffix. */
-    #capitalizeAlignment(alignment: ChaosAlignment): string {
-        return capitalize(alignment);
     }
 
     /**

@@ -174,6 +174,12 @@ test.describe.serial('BC line gate (Tier B, #596)', () => {
             )
             .not.toBeNull();
         await expect(ascend).toHaveCount(0);
+        // #646: the panel and the card name the patron by its label, never the raw id "khorne".
+        await expect(panel).toContainText('Patron: Khorne');
+        await expect(panel).not.toContainText('Patron: khorne');
+        const cardText = await page.evaluate((messageId) => document.querySelector(`[data-message-id="${messageId}"]`)?.textContent ?? '', id);
+        expect(cardText).toContain('Patron: Khorne');
+        expect(cardText).not.toContain('Patron: khorne');
         await clearScreenOverlays(page, sheetId);
         await snap(page, 'bc-line-gate-apotheosis-ascended', { selector: `#${sheetId} section.wh40k-bc-daemon-prince-panel` });
         await snapCard(page, id, 'bc-line-gate-apotheosis-card');

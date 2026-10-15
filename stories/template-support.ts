@@ -1,5 +1,6 @@
 import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
+import { chaosAlignmentLabelKey } from '../src/module/config/game-systems/bc-advancement-config.ts';
 import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
 import { truncate } from '../src/module/handlebars/handlebars-helpers.ts';
@@ -142,6 +143,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
     HandlebarsLib.registerHelper('nameFitClass', (name: HbsValue) => nameFitClass(typeof name === 'string' ? name : ''));
+    HandlebarsLib.registerHelper('chaosAlignmentLabelKey', (alignment: HbsValue) => chaosAlignmentLabelKey(typeof alignment === 'string' ? alignment : ''));
     HandlebarsLib.registerHelper('eq', (a: HbsValue, b: HbsValue) => a === b);
     HandlebarsLib.registerHelper('ne', (a: HbsValue, b: HbsValue) => a !== b);
     HandlebarsLib.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));

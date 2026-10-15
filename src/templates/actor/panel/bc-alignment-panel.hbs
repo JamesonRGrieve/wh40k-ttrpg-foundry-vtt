@@ -36,7 +36,7 @@
         <span data-wh40k-hook="bc-current-alignment" class="tw-font-bold tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]"
               data-alignment="{{alignmentPanel.current}}"
               title="{{localize 'WH40K.BC.Advancement.CurrentAlignment'}}">
-            {{localize (concat "WH40K.BC.Advancement.Alignment." (capitalize alignmentPanel.current))}}
+            {{localize (chaosAlignmentLabelKey alignmentPanel.current)}}
         </span>
     {{/inline}}
 

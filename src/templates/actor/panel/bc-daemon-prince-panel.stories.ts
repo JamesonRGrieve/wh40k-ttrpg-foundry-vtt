@@ -124,6 +124,40 @@ export const Ascended: Story = {
     },
 };
 
+/** Every alignment the record can hold, with the label the panel must print for it (#646). */
+const ALIGNMENT_LABELS: ReadonlyArray<{ id: DaemonPrinceAlignment; label: string }> = [
+    { id: 'khorne', label: 'Khorne' },
+    { id: 'nurgle', label: 'Nurgle' },
+    { id: 'slaanesh', label: 'Slaanesh' },
+    { id: 'tzeentch', label: 'Tzeentch' },
+    { id: 'unaligned', label: 'Unaligned' },
+];
+
+/** #646: a claimed champion's patron line names the alignment ("Patron: Khorne"), never its raw id. */
+export const AscendedPatronEveryAlignment: Story = {
+    name: 'Claimed — patron label, every alignment',
+    args: buildCtx({ infamy: 100, corruption: 100, ascendedAt: 12, alignmentAtAscension: 'tzeentch' }),
+    render: (args) => {
+        const column = document.createElement('div');
+        column.style.display = 'grid';
+        column.style.gap = '8px';
+        for (const { id } of ALIGNMENT_LABELS) {
+            const panel = renderPanel({ ...args, daemonPrincePanel: { ...args.daemonPrincePanel, alignmentAtAscension: id } });
+            panel.dataset['alignmentCase'] = id;
+            column.appendChild(panel);
+        }
+        return column;
+    },
+    play: async ({ canvasElement }) => {
+        const raw = ALIGNMENT_LABELS.map(({ id }) => canvasElement.querySelector(`[data-alignment-case="${id}"]`)?.textContent.includes(`Patron: ${id}`));
+        await expect(raw).toEqual(ALIGNMENT_LABELS.map(() => false));
+        const labels = ALIGNMENT_LABELS.map(({ id, label }) =>
+            canvasElement.querySelector(`[data-alignment-case="${id}"]`)?.textContent.includes(`Patron: ${label}`),
+        );
+        await expect(labels).toEqual(ALIGNMENT_LABELS.map(() => true));
+    },
+};
+
 export const OtherLine: Story = {
     name: 'Other line (DH2) — no apotheosis panel',
     args: buildCtx({ infamy: 60, corruption: 100, ascendedAt: null, alignmentAtAscension: 'unaligned' }, 'dh2'),

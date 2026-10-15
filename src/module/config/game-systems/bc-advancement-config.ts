@@ -20,6 +20,7 @@
  * (alignment tally → current alignment).
  */
 
+import type { I18nKey } from '../../types/i18n-keys';
 import type { ChaosAlignment } from './types.ts';
 
 /** Patron Status for a given advance, given the character's current alignment. */
@@ -221,4 +222,26 @@ export function characteristicAffiliation(charKey: string): ChaosAlignment {
  */
 export function alignmentBlocksPsyker(alignment: ChaosAlignment): boolean {
     return alignment === 'khorne';
+}
+
+/** Each Chaos alignment's display label (#646): the stored id is lower-case ("khorne"). */
+const CHAOS_ALIGNMENT_LABEL_KEYS: Readonly<Record<ChaosAlignment, I18nKey>> = {
+    khorne: 'WH40K.BC.Advancement.Alignment.Khorne',
+    nurgle: 'WH40K.BC.Advancement.Alignment.Nurgle',
+    slaanesh: 'WH40K.BC.Advancement.Alignment.Slaanesh',
+    tzeentch: 'WH40K.BC.Advancement.Alignment.Tzeentch',
+    unaligned: 'WH40K.BC.Advancement.Alignment.Unaligned',
+};
+
+/** Whether a value is one of the Chaos alignment ids. */
+export function isChaosAlignment(value: string): value is ChaosAlignment {
+    return Object.hasOwn(CHAOS_ALIGNMENT_LABEL_KEYS, value);
+}
+
+/**
+ * The langpack key of an alignment's display label, for `{{localize (chaosAlignmentLabelKey id)}}`.
+ * A value that is not an alignment id comes back unchanged, so it shows rather than vanishing.
+ */
+export function chaosAlignmentLabelKey(alignment: string): string {
+    return isChaosAlignment(alignment) ? CHAOS_ALIGNMENT_LABEL_KEYS[alignment] : alignment;
 }

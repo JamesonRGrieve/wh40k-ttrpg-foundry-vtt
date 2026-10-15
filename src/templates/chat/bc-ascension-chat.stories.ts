@@ -71,3 +71,37 @@ export const Khorne: Story = {
     render: (args) => renderCard(args),
     play: assertLegible,
 };
+
+/** Every alignment the record can hold, with the label the card must print for it (#646). */
+const ALIGNMENT_LABELS: ReadonlyArray<{ id: DaemonPrinceAlignment; label: string }> = [
+    { id: 'khorne', label: 'Khorne' },
+    { id: 'nurgle', label: 'Nurgle' },
+    { id: 'slaanesh', label: 'Slaanesh' },
+    { id: 'tzeentch', label: 'Tzeentch' },
+    { id: 'unaligned', label: 'Unaligned' },
+];
+
+/** #646: the patron line names the alignment ("Patron: Khorne"), never its raw id ("Patron: khorne"). */
+export const PatronLabelEveryAlignment: Story = {
+    name: 'Patron label — every alignment',
+    args: buildCtx({ ascendedAt: 7, alignmentAtAscension: 'tzeentch', infamy: 100 }),
+    render: (args) => {
+        const column = document.createElement('div');
+        column.style.display = 'grid';
+        column.style.gap = '8px';
+        for (const { id } of ALIGNMENT_LABELS) {
+            const card = renderCard({ ...args, alignmentAtAscension: id });
+            card.dataset['alignmentCase'] = id;
+            column.appendChild(card);
+        }
+        return column;
+    },
+    play: async ({ canvasElement }) => {
+        const patrons = ALIGNMENT_LABELS.map(({ id }) => canvasElement.querySelector(`[data-alignment-case="${id}"]`)?.textContent.includes(`Patron: ${id}`));
+        await expect(patrons).toEqual(ALIGNMENT_LABELS.map(() => false));
+        const labels = ALIGNMENT_LABELS.map(({ id, label }) =>
+            canvasElement.querySelector(`[data-alignment-case="${id}"]`)?.textContent.includes(`Patron: ${label}`),
+        );
+        await expect(labels).toEqual(ALIGNMENT_LABELS.map(() => true));
+    },
+};
