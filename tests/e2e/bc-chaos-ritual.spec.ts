@@ -174,6 +174,19 @@ test.describe.serial('BcChaosRitualPanel (Tier B)', () => {
                     .map((s) => s.name),
             );
             expect(clipped).toEqual([]);
+            // #634: the first field is labelled "Ritual" (not "Ritual Template ID"), and no row label wraps.
+            await expect(dialog.locator('label', { has: page.locator('[name="templateId"]') })).toContainText('Ritual');
+            await expect(dialog.locator('label', { has: page.locator('[name="templateId"]') })).not.toContainText('Template');
+            const wrapped = await dialog.locator('[data-mod-row] label').evaluateAll((labels) =>
+                labels
+                    .filter((labelEl) => {
+                        const style = getComputedStyle(labelEl);
+                        const lineHeight = Number.isNaN(parseFloat(style.lineHeight)) ? parseFloat(style.fontSize) * 1.2 : parseFloat(style.lineHeight);
+                        return labelEl.getBoundingClientRect().height > lineHeight * 1.5;
+                    })
+                    .map((labelEl) => labelEl.textContent.trim()),
+            );
+            expect(wrapped, 'row labels on two lines').toEqual([]);
             const dialogId = (await dialog.getAttribute('id')) ?? '';
             await snap(page, 'bc-ritual-dialog-kind-selects', { selector: `#${dialogId}` });
             await dialog.locator('button[data-action="close"], button[data-action="cancel"]').first().click();

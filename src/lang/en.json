@@ -3304,7 +3304,7 @@
                 "DialogTitle": "Perform Chaos Ritual",
                 "DialogSubmit": "Roll Contempt of the Warp",
                 "DialogCancel": "Cancel",
-                "DialogTemplateId": "Ritual Template ID",
+                "DialogRitual": "Ritual",
                 "DialogBaseTarget": "Base Target (d100)",
                 "DialogAddModifier": "Add Modifier",
                 "DialogModifiersHeader": "Modifiers (Table 6-7)",

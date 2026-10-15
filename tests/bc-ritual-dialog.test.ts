@@ -8,6 +8,8 @@
  * the select spans the row, Value and Description sit beneath it.
  */
 
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildRitualDialogRows } from '../src/module/actions/bc-ritual-actions';
 import templateSrc from '../src/templates/prompt/bc-ritual-dialog.hbs?raw';
@@ -58,11 +60,25 @@ describe('bc-ritual-dialog.hbs', () => {
         expect(select?.classList.contains('tw-w-full')).toBe(true);
         // The row is a two-column label/control grid: one control per line.
         const row = el.querySelector('[data-mod-row="0"]');
-        expect(row?.className).toContain('tw-grid-cols-[6rem_1fr]');
+        expect(row?.className).toContain('tw-grid-cols-[max-content_1fr]');
         expect(row?.querySelectorAll('select, input')).toHaveLength(3);
         // Every control has its own associated label.
         for (const control of row?.querySelectorAll<HTMLElement>('select, input') ?? []) {
             expect(row?.querySelector(`label[for="${control.id}"]`)).not.toBeNull();
         }
+    });
+
+    it('labels the ritual field "Ritual", not the internal template id (#634)', () => {
+        const field = root().querySelector('[name="templateId"]')?.closest('label');
+        expect(field?.textContent.trim()).toBe('Ritual');
+        const lang = JSON.parse(readFileSync(resolve(__dirname, '../src/lang/en.json'), 'utf8')) as { WH40K: { BC: { Ritual: Record<string, string> } } };
+        expect(lang.WH40K.BC.Ritual['DialogRitual']).toBe('Ritual');
+        expect(lang.WH40K.BC.Ritual['DialogTemplateId']).toBeUndefined();
+    });
+
+    it('sizes the label column to its longest label, which never wraps (#634)', () => {
+        const labels = [...(root().querySelector('[data-mod-row="0"]')?.querySelectorAll('label') ?? [])];
+        expect(labels).toHaveLength(3);
+        expect(labels.filter((labelEl) => !labelEl.classList.contains('tw-whitespace-nowrap'))).toEqual([]);
     });
 });

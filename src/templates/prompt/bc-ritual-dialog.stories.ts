@@ -62,3 +62,19 @@ export const LongestKind: Story = {
         await expect(select.getBoundingClientRect().width).toBeGreaterThan(200);
     },
 };
+
+/** #634: the first field is the player-facing "Ritual", and no row label wraps onto a second line. */
+export const LabelsReadAndFit: Story = {
+    play: async ({ canvasElement }) => {
+        const ritualLabel = canvasElement.querySelector('[name="templateId"]')?.closest('label');
+        await expect(ritualLabel?.textContent.trim()).toBe(localizeKey('WH40K.BC.Ritual.DialogRitual'));
+        const labels = [...canvasElement.querySelectorAll<HTMLLabelElement>('[data-mod-row] label')];
+        await expect(labels.length).toBe(12);
+        const wrapped = labels.filter((labelEl) => {
+            const style = getComputedStyle(labelEl);
+            const lineHeight = Number.isNaN(parseFloat(style.lineHeight)) ? parseFloat(style.fontSize) * 1.2 : parseFloat(style.lineHeight);
+            return labelEl.getBoundingClientRect().height > lineHeight * 1.5;
+        });
+        await expect(wrapped.map((labelEl) => labelEl.textContent.trim())).toEqual([]);
+    },
+};
