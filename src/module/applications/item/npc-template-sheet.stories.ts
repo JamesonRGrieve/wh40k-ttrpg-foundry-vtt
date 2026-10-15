@@ -10,6 +10,7 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
 import basicsSrc from '../../../templates/item/npc-template/tab-basics.hbs?raw';
+import characteristicsSrc from '../../../templates/item/npc-template/tab-characteristics.hbs?raw';
 import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
 
 initializeStoryHandlebars();
@@ -62,12 +63,26 @@ function makeCtx(overrides: Record<string, unknown> = {}): Record<string, unknow
             { key: 'elite', name: 'Elite', selected: false },
             { key: 'master', name: 'Master', selected: false },
         ],
+        // The sheet's `_getTabs` hands the strip localized labels and full icon classes.
         tabs: [
-            { tab: 'basics', icon: 'fa-scroll', label: 'WH40K.NPC.Template.Tabs.Basics', active: true },
-            { tab: 'characteristics', icon: 'fa-dna', label: 'WH40K.NPC.Template.Tabs.Characteristics', active: false },
-            { tab: 'equipment', icon: 'fa-shield', label: 'WH40K.NPC.Template.Tabs.Equipment', active: false },
-            { tab: 'abilities', icon: 'fa-star', label: 'WH40K.NPC.Template.Tabs.Abilities', active: false },
-            { tab: 'preview', icon: 'fa-eye', label: 'WH40K.NPC.Template.Tabs.Preview', active: false },
+            { tab: 'basics', icon: 'fa-solid fa-user', label: 'Basics', active: true },
+            { tab: 'characteristics', icon: 'fa-solid fa-chart-bar', label: 'Characteristics', active: false },
+            { tab: 'equipment', icon: 'fa-solid fa-swords', label: 'Equipment', active: false },
+            { tab: 'abilities', icon: 'fa-solid fa-sparkles', label: 'Abilities', active: false },
+            { tab: 'preview', icon: 'fa-solid fa-eye', label: 'Preview', active: false },
+        ],
+        // The characteristics tab's list, as `_prepareContext` builds it.
+        characteristics: [
+            { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS', value: 30, unnatural: 0 },
+            { key: 'ballisticSkill', label: 'Ballistic Skill', short: 'BS', value: 25, unnatural: 0 },
+            { key: 'strength', label: 'Strength', short: 'S', value: 30, unnatural: 0 },
+            { key: 'toughness', label: 'Toughness', short: 'T', value: 30, unnatural: 0 },
+            { key: 'agility', label: 'Agility', short: 'Ag', value: 30, unnatural: 0 },
+            { key: 'intelligence', label: 'Intelligence', short: 'Int', value: 25, unnatural: 0 },
+            { key: 'perception', label: 'Perception', short: 'Per', value: 25, unnatural: 0 },
+            { key: 'willpower', label: 'Willpower', short: 'WP', value: 25, unnatural: 0 },
+            { key: 'fellowship', label: 'Fellowship', short: 'Fel', value: 20, unnatural: 0 },
+            { key: 'influence', label: 'Influence', short: 'Inf', value: 20, unnatural: 0 },
         ],
         canEdit: true,
         inEditMode: false,
@@ -168,3 +183,64 @@ export const HomologationBC: Story = systemStory('bc');
 export const HomologationOW: Story = systemStory('ow');
 export const HomologationDW: Story = systemStory('dw');
 export const HomologationIM: Story = systemStory('im');
+
+/** The sheet's default width (NPCTemplateSheet `position.width`). */
+const DEFAULT_WIDTH_PX = 700;
+
+const GAME_LINES: readonly SystemId[] = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'];
+
+/** Where `inner` ends horizontally: the right edge of its text, not of its box. */
+function textRight(inner: Element): number {
+    const range = document.createRange();
+    range.selectNodeContents(inner);
+    return range.getBoundingClientRect().right;
+}
+
+/**
+ * #656: at the default width the tab row cut off its fifth tab, the Base
+ * Characteristics heading ran into its subtitle, and the Trained Skills "+" sat
+ * glued to its heading. Under every line: each tab sits inside the strip, the
+ * subtitle sits below the heading, and the "+" clears the heading text.
+ */
+export const DefaultWidthLayout: Story = {
+    render: () => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-4';
+        for (const systemId of GAME_LINES) {
+            const sheet = renderSheetParts(
+                [
+                    { template: tabsSrc, partClass: 'wh40k-part-tabs' },
+                    { template: characteristicsSrc, partClass: 'wh40k-part-characteristics' },
+                ],
+                makeCtx({ tab: { cssClass: 'active' } }),
+                { systemId },
+            );
+            sheet.style.width = `${DEFAULT_WIDTH_PX}px`;
+            host.append(sheet);
+        }
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        const problems: string[] = [];
+        for (const nav of Array.from(canvasElement.querySelectorAll('nav.tabs'))) {
+            const box = nav.getBoundingClientRect();
+            for (const tab of Array.from(nav.querySelectorAll('[data-tab]'))) {
+                const r = tab.getBoundingClientRect();
+                if (r.right > box.right + 0.5 || r.left < box.left - 0.5) problems.push(`tab ${tab.getAttribute('data-tab') ?? ''} outside the strip`);
+            }
+        }
+        for (const heading of Array.from(canvasElement.querySelectorAll('[data-field="base-characteristics-heading"]'))) {
+            const title = heading.firstElementChild;
+            const subtitle = heading.lastElementChild;
+            if (title === null || subtitle === null || title === subtitle) problems.push('heading without its subtitle');
+            else if (subtitle.getBoundingClientRect().top < title.getBoundingClientRect().bottom - 0.5) problems.push('subtitle overlaps the heading');
+        }
+        for (const add of Array.from(canvasElement.querySelectorAll('[data-action="addSkill"]'))) {
+            const title = add.parentElement?.querySelector('h3');
+            if (title == null) problems.push('add-skill without its heading');
+            else if (add.getBoundingClientRect().left - textRight(title) < 8) problems.push('add-skill glued to its heading');
+        }
+        await expect(canvasElement.querySelectorAll('nav.tabs').length).toBe(GAME_LINES.length);
+        await expect(problems).toEqual([]);
+    },
+};

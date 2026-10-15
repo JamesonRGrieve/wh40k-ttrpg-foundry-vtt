@@ -3,15 +3,20 @@
     {{!-- Base Characteristics --}}
     <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
         <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
-            <h3 class="tw-text-gold {{themeClassFor 'accent'}}"><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
-            <span class="tw-text-sm tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
+            {{!-- The subtitle takes its own line under the heading; side by side they collided (#656). --}}
+            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-min-w-0" data-field="base-characteristics-heading">
+                <h3 class="tw-m-0 tw-text-gold {{themeClassFor 'accent'}}"><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
+                <span class="tw-text-xs tw-font-normal tw-normal-case tw-tracking-normal tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
+            </div>
         </header>
         <div>
             <div class="tw-grid tw-grid-cols-5 tw-gap-3">
-                {{#each characteristics as |char key|}}
+                {{!-- `characteristics` is a list of { key, label, short, value, unnatural }: name
+                      each input by the characteristic's key, not the list index. --}}
+                {{#each characteristics as |char|}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-text-xs tw-font-semibold tw-uppercase">{{char.label}}</label>
-                    <input class="tw-w-[50px] tw-text-center tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.baseCharacteristics.{{key}}"
+                    <input class="tw-w-[50px] tw-text-center tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.baseCharacteristics.{{char.key}}"
                            value="{{char.value}}" min="0" max="100" />
                 </div>
                 {{/each}}
@@ -26,11 +31,11 @@
         </header>
         <div>
             <div class="tw-grid tw-grid-cols-[repeat(10,1fr)] tw-gap-3">
-                {{#each characteristics as |char key|}}
+                {{#each characteristics as |char|}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                     <label class="tw-text-[0.625rem] tw-font-semibold tw-uppercase">{{char.short}}</label>
-                    <input class="tw-w-[35px] tw-text-center tw-p-1 tw-text-sm tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.unnaturalCharacteristics.{{key}}"
-                           value="{{lookup ../system.unnaturalCharacteristics key}}" min="0" max="10" />
+                    <input class="tw-w-[35px] tw-text-center tw-p-1 tw-text-sm tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm" type="number" name="system.unnaturals.{{char.key}}"
+                           value="{{char.unnatural}}" min="0" max="10" />
                 </div>
                 {{/each}}
             </div>
@@ -54,9 +59,12 @@
                     <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseMovement" value="{{source.baseMovement}}" min="0" />
                 </div>
 
+                {{!-- Shown here, edited on the Equipment tab beside its notes. A second
+                      `system.baseArmour` input made the form submit an array for it, which
+                      failed validation and dropped every edit on the sheet (#656). --}}
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                    <label class="tw-font-semibold">{{localize "WH40K.NPC.Armour"}}</label>
-                    <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseArmour" value="{{source.baseArmour}}" min="0" />
+                    <span class="tw-font-semibold">{{localize "WH40K.NPC.Armour"}}</span>
+                    <span class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" data-field="vital-armour">{{source.baseArmour}}</span>
                 </div>
             </div>
         </div>
@@ -65,8 +73,9 @@
     {{!-- Trained Skills --}}
     <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
         <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
-            <h3><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="addSkill">
+            <h3 class="tw-m-0 tw-flex-1"><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
+            {{!-- Pushed to the header's right edge, clear of the heading (#656). --}}
+            <button type="button" class="tw-ml-2 tw-shrink-0 tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="addSkill">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
