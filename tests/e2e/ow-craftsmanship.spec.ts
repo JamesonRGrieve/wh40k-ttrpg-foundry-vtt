@@ -138,7 +138,7 @@ test.describe.serial('OwCraftsmanshipPanel (Tier B)', () => {
             };
         });
 
-        await snap(page, 'ow-craftsmanship-panel');
+        await snap(page, 'ow-craftsmanship-panel', { selector: '.wh40k-ow-craftsmanship-panel' });
 
         await page.evaluate(async () => {
             interface CreatedActor {

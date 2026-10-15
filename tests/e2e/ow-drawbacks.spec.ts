@@ -193,7 +193,7 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
                 };
             }, actorId);
 
-            await snap(page, 'ow-drawback-panel');
+            await snap(page, 'ow-drawback-panel', { selector: '.wh40k-ow-drawback-panel' });
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async () => {

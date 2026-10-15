@@ -186,7 +186,7 @@ test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
                 };
             }, actorId);
 
-            await snap(page, 'ow-comrade-healing-panel');
+            await snap(page, 'ow-comrade-healing-panel', { selector: '.wh40k-ow-healing-panel' });
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async (): Promise<void> => {

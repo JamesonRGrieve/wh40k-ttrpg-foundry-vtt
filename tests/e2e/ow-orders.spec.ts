@@ -161,7 +161,7 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
                 };
             }, actorId);
 
-            await snap(page, 'ow-orders-panel');
+            await snap(page, 'ow-orders-panel', { selector: '.wh40k-ow-orders-panel' });
 
             await page.evaluate(async () => {
                 interface CleanupGlobals {

@@ -143,7 +143,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
             const hookCounts = await countHooks(page);
             const authoredHooks = await fetchAuthoredHooks(page, '/systems/wh40k-rpg/templates/actor/panel/ow-battlefield-panel.hbs');
 
-            await snap(page, 'ow-battlefield-panel');
+            await snap(page, 'ow-battlefield-panel', { selector: '.wh40k-ow-battlefield-panel' });
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async () => {

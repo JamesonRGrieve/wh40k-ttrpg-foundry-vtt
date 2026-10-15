@@ -97,7 +97,7 @@ test.describe.serial('OwRegimentPanel (Tier B)', () => {
             return { error, rendered, hasBudget, hasKit, hasEditBtn, categoryCount };
         });
 
-        await snap(page, 'ow-regiment-panel');
+        await snap(page, 'ow-regiment-panel', { selector: '.wh40k-ow-regiment-panel' });
 
         await page.evaluate(async () => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globalThis handle is runtime-only, no shipped types

@@ -167,7 +167,7 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
 
             const hookCounts = await countHooks(page);
 
-            await snap(page, 'ow-mount-panel');
+            await snap(page, 'ow-mount-panel', { selector: '.wh40k-ow-mount-panel' });
 
             await page.evaluate(async () => {
                 interface SheetCloseable {

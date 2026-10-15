@@ -1,6 +1,5 @@
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -92,8 +91,6 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                 randomIssueRoll,
             };
         });
-
-        await snap(page, 'ow-mission-gear-engine');
 
         expect(result.error, `engine probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.hasApplyTable63Modifiers, 'applyTable63Modifiers must be exported').toBe(true);

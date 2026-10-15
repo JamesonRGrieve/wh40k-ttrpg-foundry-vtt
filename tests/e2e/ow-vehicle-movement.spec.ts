@@ -187,7 +187,7 @@ test.describe.serial('OW Vehicle Movement panel (Tier B, #156)', () => {
 
             const hookCounts = await countHooks(page);
 
-            await snap(page, 'ow-vehicle-movement-panel');
+            await snap(page, 'ow-vehicle-movement-panel', { selector: '.wh40k-ow-vehicle-movement-panel' });
 
             await page.evaluate(async (): Promise<void> => {
                 interface FoundryGlobal {

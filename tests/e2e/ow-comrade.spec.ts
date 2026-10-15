@@ -182,7 +182,7 @@ test.describe.serial('OW Comrade panel (Tier B, #152)', () => {
 
             const hookCounts = await countHooks(page);
 
-            await snap(page, 'ow-comrade-panel');
+            await snap(page, 'ow-comrade-panel', { selector: '[data-wh40k-hook="ow-comrade-panel"]' });
 
             // Tear down so the open sheet doesn't leak into the next test's DOM.
             await page.evaluate(async (): Promise<void> => {
