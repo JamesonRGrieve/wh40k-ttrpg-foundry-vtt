@@ -11,8 +11,9 @@
  * Canonical rules referenced here:
  *   - Each PC has exactly ONE Comrade. Comrades take no Tests and no
  *     Reactions of their own; they act on the PC's turn.
- *   - Cohesion: the Comrade is "in Cohesion" while within 5 metres of
- *     their PC AND the PC has visual line on them. The "Maintain / Break
+ *   - Cohesion (OW Core p.269): the Comrade is "in Cohesion" while within
+ *     5 metres of their PC AND "they are not separated by a solid barrier"
+ *     (the `hasVisualLine` flag records that). The "Maintain / Break
  *     Cohesion" action is a Half Action handled by the caller — this
  *     module only resolves the boolean check.
  *   - State track: unharmed → wounded → dead. A Comrade hit advances
@@ -66,16 +67,18 @@ type ComradeHitTransferReason = 'doubles' | 'blast-spray' | 'none';
 export interface InCohesionArgs {
     /** Distance from the PC to the Comrade, in metres. */
     distanceM: number;
-    /** Whether the PC has visual line of sight on the Comrade. */
+    /** Whether no solid barrier separates the PC and the Comrade (RAW Cohesion, p.269). */
     hasVisualLine: boolean;
 }
 
 /**
  * Resolve whether a Comrade is currently "in Cohesion" with their PC.
  *
- * RAW (p.12137): Cohesion is maintained while the Comrade is within
- * 5 metres of their PC AND the PC has visual line on them. Both
- * conditions must hold; either failing breaks Cohesion.
+ * RAW (OW Core p.269): Cohesion holds while the Comrade is within 5 metres
+ * of their PC and "they are not separated by a solid barrier, such as if
+ * the Player Character is inside a sealed bunker while the Comrade is
+ * trapped in the open outside". `hasVisualLine` records that no such barrier
+ * stands between them. Both conditions must hold; either failing breaks it.
  *
  * The 5 m threshold is inclusive — a Comrade exactly 5 m away is still
  * in support; 5.0001 m is not. Negative or non-finite distances are
@@ -144,6 +147,76 @@ export function replaceComrade(state: ComradeState, replacementAvailable: boolea
         return { newState: 'unharmed', transitioned: true, replaced: true };
     }
     return { newState: state, transitioned: false, replaced: false };
+}
+
+/* -------------------------------------------- */
+/*  Panel view                                  */
+/* -------------------------------------------- */
+
+/** The stored Comrade the panel reads (`system.comrade`). */
+export interface ComradeRecord {
+    name: string;
+    state: ComradeState;
+    distanceM: number;
+    /** Whether PC and Comrade are free of a solid barrier between them (RAW Cohesion, p.269). */
+    hasVisualLine: boolean;
+}
+
+/** Langpack label of each Comrade state. */
+export const COMRADE_STATE_LABEL_KEYS: Readonly<Record<ComradeState, string>> = {
+    unharmed: 'WH40K.OW.Comrade.State.Unharmed',
+    wounded: 'WH40K.OW.Comrade.State.Wounded',
+    dead: 'WH40K.OW.Comrade.State.Dead',
+};
+
+/** Everything the "Comrade in Combat" panel (ow-comrade-panel.hbs) renders (#152). */
+export interface ComradePanelView {
+    name: string;
+    state: ComradeState;
+    stateLabelKey: string;
+    distanceM: number;
+    hasVisualLine: boolean;
+    cohesionRangeM: number;
+    inCohesion: boolean;
+    isUnharmed: boolean;
+    isWounded: boolean;
+    isDead: boolean;
+    /** Wound is available unless the Comrade is already dead. */
+    canWound: boolean;
+    /** Heal is available only for a wounded Comrade. */
+    canHeal: boolean;
+    /** Replace is available only for a dead Comrade while the squad is in camp. */
+    canReplace: boolean;
+    inCamp: boolean;
+}
+
+/**
+ * The panel's view of a Comrade (#152): its cohesion against the RAW 5 m radius and
+ * the state-track gates, each from the same rule the action applies, so a button
+ * is enabled exactly when its action changes something.
+ *
+ * `inCamp` is the squad's return to camp for refitting (RAW p.110 / p.271: a dead
+ * Comrade is replaced "at the next available opportunity (such as when the Squad
+ * returns to camp for refitting and rearming)") — the actor's `refitAvailable` flag.
+ */
+export function buildComradePanel(comrade: ComradeRecord, inCamp: boolean): ComradePanelView {
+    const { state } = comrade;
+    return {
+        name: comrade.name,
+        state,
+        stateLabelKey: COMRADE_STATE_LABEL_KEYS[state],
+        distanceM: sanitiseNonNegativeDistance(comrade.distanceM),
+        hasVisualLine: comrade.hasVisualLine,
+        cohesionRangeM: COMRADE_COHESION_RANGE_M,
+        inCohesion: inCohesion({ distanceM: comrade.distanceM, hasVisualLine: comrade.hasVisualLine }),
+        isUnharmed: state === 'unharmed',
+        isWounded: state === 'wounded',
+        isDead: state === 'dead',
+        canWound: applyComradeHit(state).transitioned,
+        canHeal: healComrade(state).transitioned,
+        canReplace: replaceComrade(state, inCamp).replaced,
+        inCamp,
+    };
 }
 
 /* -------------------------------------------- */

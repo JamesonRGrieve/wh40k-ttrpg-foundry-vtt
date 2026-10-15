@@ -17,14 +17,15 @@
           - "Replace" — replace a dead Comrade with a fresh one;
             requires both `isDead === true` AND `inCamp === true`.
 
-    Sheet context (built by character-sheet `_prepareContext`):
+    Sheet context: `buildComradePanel` (rules/ow-comrade.ts), which the sheet's
+    `_prepareOwComradePanel` passes through unchanged (#152):
 
       comradePanel: {
         name:            string  // sys.comrade.name (or '' → render fallback)
         state:           'unharmed' | 'wounded' | 'dead'
         stateLabelKey:   string   // WH40K.OW.Comrade.State.<Unharmed|Wounded|Dead>
         distanceM:       number   // sys.comrade.distanceM
-        hasVisualLine:   boolean  // sys.comrade.hasVisualLine
+        hasVisualLine:   boolean  // sys.comrade.hasVisualLine: no solid barrier between (RAW p.269)
         cohesionRangeM:  number   // COMRADE_COHESION_RANGE_M (5)
         inCohesion:      boolean  // pre-resolved via inCohesion(...)
         isUnharmed:      boolean
@@ -33,7 +34,7 @@
         canWound:        boolean  // !isDead
         canHeal:         boolean  // isWounded
         canReplace:      boolean  // isDead && inCamp
-        inCamp:          boolean  // GM-toggle / scene-flag passed through
+        inCamp:          boolean  // sys.refitAvailable: back in camp for refitting (RAW p.110 / p.271)
       }
 
     Rendered only for OW actors; the include in the appropriate
@@ -54,9 +55,9 @@
             </span>
         </h3>
         <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
-                     {{#if comradePanel.isUnharmed}}tw-border-success tw-text-success-l20tw-bg-success/10{{/if}}
+                     {{#if comradePanel.isUnharmed}}tw-border-success tw-text-success-l20 tw-bg-success/10{{/if}}
                      {{#if comradePanel.isWounded}}tw-border-gold tw-text-gold tw-bg-gold/10{{/if}}
-                     {{#if comradePanel.isDead}}tw-border-crimson tw-text-crimson-l40tw-bg-crimson/10{{/if}}"
+                     {{#if comradePanel.isDead}}tw-border-crimson tw-text-crimson-l40 tw-bg-crimson/10{{/if}}"
               data-state-badge="{{comradePanel.state}}">
             {{localize comradePanel.stateLabelKey}}
         </span>

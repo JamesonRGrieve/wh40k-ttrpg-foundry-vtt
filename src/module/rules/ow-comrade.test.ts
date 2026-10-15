@@ -4,6 +4,8 @@ import {
     COMRADE_CORRUPTION_DEATH_THRESHOLD,
     COMRADE_INSANITY_DEATH_THRESHOLD,
     applyComradeHit,
+    buildComradePanel,
+    type ComradeRecord,
     comradeDiesFromMentalDamage,
     comradeMirrorsFearPinning,
     healComrade,
@@ -264,5 +266,66 @@ describe('ow-comrade — comradeDiesFromMentalDamage', () => {
     it('floors fractional inputs (9.9 Insanity is still under threshold)', () => {
         expect(comradeDiesFromMentalDamage({ insanityThisRound: 9.9, corruptionThisRound: 0 })).toBe(false);
         expect(comradeDiesFromMentalDamage({ insanityThisRound: 10.7, corruptionThisRound: 0 })).toBe(true);
+    });
+});
+
+describe('ow-comrade — buildComradePanel (#152)', () => {
+    const comrade = (over: Partial<ComradeRecord> = {}): ComradeRecord => ({
+        name: 'Trooper Vask',
+        state: 'unharmed',
+        distanceM: 3,
+        hasVisualLine: true,
+        ...over,
+    });
+
+    it('defines every value the panel renders (the sheet passed only {comrade}, so each read as undefined)', () => {
+        const view = buildComradePanel(comrade(), false);
+        const keys = [
+            'name',
+            'state',
+            'stateLabelKey',
+            'distanceM',
+            'hasVisualLine',
+            'cohesionRangeM',
+            'inCohesion',
+            'isUnharmed',
+            'isWounded',
+            'isDead',
+            'canWound',
+            'canHeal',
+            'canReplace',
+            'inCamp',
+        ] as const;
+        expect(Object.keys(view).sort()).toEqual([...keys].sort());
+        expect(Object.values(view)).not.toContain(undefined);
+        expect(view).toMatchObject({
+            name: 'Trooper Vask',
+            stateLabelKey: 'WH40K.OW.Comrade.State.Unharmed',
+            distanceM: 3,
+            cohesionRangeM: COMRADE_COHESION_RANGE_M,
+        });
+    });
+
+    it('is in Cohesion within 5 m with no barrier between, and out of it otherwise (OW Core p.269)', () => {
+        expect(buildComradePanel(comrade({ distanceM: 5 }), false).inCohesion).toBe(true);
+        expect(buildComradePanel(comrade({ distanceM: 6 }), false).inCohesion).toBe(false);
+        expect(buildComradePanel(comrade({ hasVisualLine: false }), false).inCohesion).toBe(false);
+    });
+
+    it('enables each action exactly when it would change the state', () => {
+        const gates = (state: ComradeRecord['state'], inCamp: boolean): object => {
+            const { canWound, canHeal, canReplace } = buildComradePanel(comrade({ state }), inCamp);
+            return { canWound, canHeal, canReplace };
+        };
+        expect(gates('unharmed', false)).toEqual({ canWound: true, canHeal: false, canReplace: false });
+        expect(gates('wounded', false)).toEqual({ canWound: true, canHeal: true, canReplace: false });
+        expect(gates('dead', false)).toEqual({ canWound: false, canHeal: false, canReplace: false });
+        // A dead Comrade is replaced only back in camp for refitting (OW Core p.110 / p.271).
+        expect(gates('dead', true)).toEqual({ canWound: false, canHeal: false, canReplace: true });
+    });
+
+    it('shows a non-finite or negative distance as 0', () => {
+        expect(buildComradePanel(comrade({ distanceM: Number.NaN }), false).distanceM).toBe(0);
+        expect(buildComradePanel(comrade({ distanceM: -2 }), false).distanceM).toBe(0);
     });
 });

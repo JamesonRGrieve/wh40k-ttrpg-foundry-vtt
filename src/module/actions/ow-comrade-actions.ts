@@ -11,11 +11,9 @@
  *                          is unharmed or dead.
  *   - `owComradeReplace` — replace a dead Comrade via
  *                          {@link replaceComrade}. The "replacement
- *                          available" gate is read from a sheet-level
- *                          camp toggle exposed on `target.dataset['inCamp']`
- *                          (the panel templates this as the disabled
- *                          attribute); the action itself defends against
- *                          the misuse path.
+ *                          available" gate is the actor's `refitAvailable`
+ *                          (back in camp for refitting); the panel disables
+ *                          the button on the same gate.
  *
  * Each method emits an OW Comrade chat card so the table can see the
  * track change without inspecting the sheet.
@@ -36,13 +34,7 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import { type ComradeState, applyComradeHit, healComrade, replaceComrade } from '../rules/ow-comrade.ts';
-
-const STATE_LABEL_KEY: Record<ComradeState, string> = {
-    unharmed: 'WH40K.OW.Comrade.State.Unharmed',
-    wounded: 'WH40K.OW.Comrade.State.Wounded',
-    dead: 'WH40K.OW.Comrade.State.Dead',
-};
+import { type ComradeRecord, type ComradeState, applyComradeHit, COMRADE_STATE_LABEL_KEYS, healComrade, replaceComrade } from '../rules/ow-comrade.ts';
 
 /**
  * Structural type the OW Comrade handlers expect. The character sheet
@@ -53,12 +45,9 @@ interface OwComradeHost {
     actor: WH40KBaseActor & {
         name: string;
         system: {
-            comrade: {
-                name: string;
-                state: ComradeState;
-                distanceM: number;
-                hasVisualLine: boolean;
-            };
+            comrade: ComradeRecord;
+            /** Back in camp for refitting: a dead Comrade can be replaced (#152). */
+            refitAvailable: boolean;
         };
     };
     // eslint-disable-next-line no-restricted-syntax -- boundary: forwards arbitrary system-field values to Foundry's Document.update() via the sheet helper
@@ -85,8 +74,8 @@ async function emitStateChangeChat(host: Host, payload: StateChangePayload): Pro
             reason: 'none',
             previousState: payload.previousState,
             newState: payload.newState,
-            previousStateKey: STATE_LABEL_KEY[payload.previousState],
-            newStateKey: STATE_LABEL_KEY[payload.newState],
+            previousStateKey: COMRADE_STATE_LABEL_KEYS[payload.previousState],
+            newStateKey: COMRADE_STATE_LABEL_KEYS[payload.newState],
             transitioned: payload.transitioned,
             replaced: payload.replaced,
         },
@@ -154,20 +143,19 @@ export async function owComradeHeal(this: Host, event: Event, _target: HTMLEleme
 /* -------------------------------------------- */
 
 /**
- * Replace a dead Comrade with a fresh one. RAW: only legal while the
- * existing Comrade is dead AND a replacement is available (camp /
- * downtime / Regiment Resource spend). The panel surfaces
- * `data-in-camp="true"` on the button when the scene allows it.
+ * Replace a dead Comrade with a fresh one. RAW (OW Core p.110 / p.271): only
+ * legal while the existing Comrade is dead AND the squad is back in camp for
+ * refitting — the actor's `refitAvailable` flag, which the panel gates on too.
  *
  * Wired to `data-action="owComradeReplace"`. The button is `disabled`
  * unless dead + in camp, so the negative branches here are
  * defence-in-depth.
  */
-export async function owComradeReplace(this: Host, event: Event, target: HTMLElement): Promise<void> {
+export async function owComradeReplace(this: Host, event: Event, _target: HTMLElement): Promise<void> {
     event.stopPropagation();
     const previousState = this.actor.system.comrade.state;
-    const replacementAvailable = target.dataset['inCamp'] === 'true' || target.dataset['replacementAvailable'] === 'true';
-    const result = replaceComrade(previousState, replacementAvailable);
+    // In camp for refitting is the actor's `refitAvailable` (#152), the same flag the panel gates on.
+    const result = replaceComrade(previousState, this.actor.system.refitAvailable);
     if (result.transitioned) {
         await this._updateSystemField('system.comrade.state', result.newState);
     }

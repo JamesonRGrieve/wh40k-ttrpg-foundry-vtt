@@ -109,6 +109,7 @@ import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHand
 import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
+import { buildComradePanel, type ComradePanelView } from '../../rules/ow-comrade.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
@@ -395,10 +396,8 @@ type DwRequisitionPanelContext = {
 /** OW Regiment panel (#151). */
 type OwRegimentPanelContext = RegimentPanelSummary;
 
-/** OW Comrade panel (#152). */
-type OwComradePanelContext = {
-    comrade: unknown;
-};
+/** The OW "Comrade in Combat" panel context: the rules layer's view (#152). */
+type OwComradePanelContext = ComradePanelView;
 
 /** OW Logistics panel (#154). */
 type OwLogisticsPanelContext = {
@@ -1860,14 +1859,13 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * OW Comrade panel (#152). Surfaces the comrade's persisted state
-     * (name / state / distance / line-of-sight) for the panel partial.
+     * OW Comrade panel (#152). The values come from the rules layer's
+     * `buildComradePanel`; the sheet only passes the Comrade record and the
+     * camp (refit) flag through.
      */
     _prepareOwComradePanel(): OwComradePanelContext {
         const sys = this.actor.system;
-        return {
-            comrade: sys.comrade,
-        };
+        return buildComradePanel(sys.comrade, sys.refitAvailable);
     }
 
     /* -------------------------------------------- */
