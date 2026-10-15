@@ -105,6 +105,10 @@ const lightTheme = {
     '--wh40k-btn-bg-hover': 'rgba(255, 255, 255, 0.6)',
     '--wh40k-accent-overlay': 'rgba(36, 107, 131, 0.12)',
     '--wh40k-accent-border': 'rgba(36, 107, 131, 0.25)',
+    // Category accent label colours (#655): each ≥ 4.5:1 on its accent wash.
+    '--wh40k-talents-primary': '#6e500c',
+    '--wh40k-traits-primary': '#6a2090',
+    '--wh40k-dynasty-primary': '#74560c',
 };
 
 const darkTheme = {
@@ -132,6 +136,10 @@ const darkTheme = {
     '--wh40k-btn-bg-hover': 'rgba(80, 72, 62, 0.6)',
     '--wh40k-accent-overlay': 'rgba(212, 175, 55, 0.08)',
     '--wh40k-accent-border': 'rgba(212, 175, 55, 0.2)',
+    // Category accent label colours (#655): each ≥ 4.5:1 on its accent wash.
+    '--wh40k-talents-primary': '#e0b84a',
+    '--wh40k-traits-primary': '#c99be6',
+    '--wh40k-dynasty-primary': '#d4a520',
 };
 
 // Theme-invariant semantic tokens — same value in light and dark, applied to
@@ -151,10 +159,8 @@ const semantic = {
     '--wh40k-skills-bg': 'rgba(42, 122, 154, 0.08)',
     '--wh40k-skills-border': 'rgba(42, 122, 154, 0.4)',
     '--wh40k-combat-border': 'rgba(168, 32, 32, 0.4)',
-    '--wh40k-talents-primary': '#a07818',
     '--wh40k-talents-bg': 'rgba(160, 120, 24, 0.08)',
     '--wh40k-talents-border': 'rgba(160, 120, 24, 0.4)',
-    '--wh40k-traits-primary': '#6a2090',
     '--wh40k-traits-bg': 'rgba(106, 32, 144, 0.08)',
     '--wh40k-equipment-bg': 'rgba(58, 95, 95, 0.08)',
     '--wh40k-equipment-border': 'rgba(58, 95, 95, 0.4)',
@@ -162,7 +168,6 @@ const semantic = {
     '--wh40k-powers-secondary': '#8a40b0',
     '--wh40k-powers-bg': 'rgba(106, 32, 144, 0.08)',
     '--wh40k-powers-border': 'rgba(106, 32, 144, 0.4)',
-    '--wh40k-dynasty-primary': '#d4a520',
     '--wh40k-dynasty-bg': 'rgba(212, 165, 32, 0.08)',
     '--wh40k-bio-border': 'rgba(106, 90, 74, 0.3)',
     '--wh40k-success-primary': '#2d5a2d',

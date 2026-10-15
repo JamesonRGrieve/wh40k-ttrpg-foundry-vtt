@@ -71,3 +71,28 @@ export const RendersBadges: Story = {
         void expect(storyCanvas.getAllByText('Physical').length).toBeGreaterThan(0);
     },
 };
+
+/** The fixed purple both themes used to share (#655), purple on a purple wash on the dark sheet. */
+const OLD_TRAIT_PURPLE = 'rgb(106, 32, 144)';
+
+/**
+ * #655: the active tab label and the Level value take the themed trait accent, which
+ * clears 4.5:1 on its wash on both themes (tests/accent-tab-contrast.test.ts); on
+ * the dark Storybook theme that is the light purple, not the old dark one.
+ */
+export const ActiveTabAndLevelReadable: Story = {
+    play: async ({ canvasElement }) => {
+        const label = canvasElement.querySelector('.wh40k-tab.active span');
+        const level = canvasElement.querySelector('[data-field="trait-level"]');
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--wh40k-traits-primary)';
+        canvasElement.append(probe);
+        const accent = getComputedStyle(probe).color;
+        probe.remove();
+        await expect(label).not.toBeNull();
+        await expect(level?.textContent.trim()).toBe('3');
+        await expect(label === null ? '' : getComputedStyle(label).color).toBe(accent);
+        await expect(level === null ? '' : getComputedStyle(level).color).toBe(accent);
+        if (document.body.classList.contains('theme-dark')) await expect(accent).not.toBe(OLD_TRAIT_PURPLE);
+    },
+};
