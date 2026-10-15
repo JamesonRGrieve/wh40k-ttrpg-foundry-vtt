@@ -42,7 +42,11 @@
                 <button type="button" class="tw-p-1 tw-px-2 tw-shrink-0 tw-bg-[var(--wh40k-bronze,#cd7f32)] tw-border tw-border-[color:var(--wh40k-gold,var(--wh40k-color-gold))] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-font-bold tw-cursor-pointer hover:tw-bg-[var(--wh40k-gold,var(--wh40k-color-gold))]" data-action="advanceCustom">{{localize "WH40K.WorldTime.Advance"}}</button>
             </div>
 
-            <button type="button" class="tw-p-1 tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze,#cd7f32)]" data-action="editBodies"><i class="fas fa-earth-europe" aria-hidden="true"></i> {{localize "WH40K.CelestialBodies.Edit"}}</button>
+            {{!-- One line at the widget's width (#473): "Celestial Bodies & Weather" wrapped and
+                 overflowed the button, which the GM-controls box narrows to ~185px. The button
+                 shows the short label and keeps the full name as its tooltip; it never wraps, and
+                 a langpack label too long for it ends in an ellipsis. --}}
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-p-1 tw-px-2 tw-whitespace-nowrap tw-bg-[var(--wh40k-iron,#3e3e3e)] tw-border tw-border-[var(--wh40k-bronze,#cd7f32)] tw-text-[color:var(--wh40k-bone,#e8dcc8)] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze,#cd7f32)]" data-action="editBodies" data-tooltip="{{localize "WH40K.CelestialBodies.Edit"}}" aria-label="{{localize "WH40K.CelestialBodies.Edit"}}"><i class="fas fa-earth-europe tw-shrink-0" aria-hidden="true"></i><span class="tw-min-w-0 tw-overflow-hidden tw-text-ellipsis">{{localize "WH40K.CelestialBodies.EditShort"}}</span></button>
 
         </div>
     {{/if}}

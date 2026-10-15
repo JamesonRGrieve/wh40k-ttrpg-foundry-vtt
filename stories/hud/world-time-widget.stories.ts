@@ -131,3 +131,28 @@ export const NoBodiesConfigured: Story = {
         void expect(canvasElement.querySelector('[data-action="editBodies"]')).not.toBeNull();
     },
 };
+
+/** The widget's window width (WorldTimeWidget DEFAULT_OPTIONS.position.width). */
+const WIDGET_WIDTH_PX = 260;
+
+/** #473: at the widget's width, the Celestial Bodies & Weather button's label sits on one line. */
+export const CelestialButtonOneLine: Story = {
+    name: 'GM view — Celestial Bodies & Weather label on one line',
+    args: { ...BASE, isGM: true },
+    render: (args) => {
+        const widget = renderWidget(args);
+        widget.style.width = `${WIDGET_WIDTH_PX}px`;
+        return widget;
+    },
+    play: async ({ canvasElement }) => {
+        const button = canvasElement.querySelector<HTMLElement>('[data-action="editBodies"]');
+        const label = button?.querySelector('span') ?? null;
+        await expect(label?.textContent.trim()).toBe('Bodies & Weather');
+        await expect(button?.dataset['tooltip']).toBe('Celestial Bodies & Weather');
+        // The whole short label shows: nothing is cut to an ellipsis.
+        await expect((label?.scrollWidth ?? 0) <= (label?.clientWidth ?? 0)).toBe(true);
+        await expect(button?.classList.contains('tw-whitespace-nowrap')).toBe(true);
+        // One line box for the label, however the font measures.
+        await expect(label?.getClientRects().length).toBe(1);
+    },
+};

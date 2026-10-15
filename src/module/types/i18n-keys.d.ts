@@ -744,6 +744,7 @@ export type I18nKey =
     | 'WH40K.Career.WH40KRPG'
     | 'WH40K.CelestialBodies.Add'
     | 'WH40K.CelestialBodies.Edit'
+    | 'WH40K.CelestialBodies.EditShort'
     | 'WH40K.CelestialBodies.Empty'
     | 'WH40K.CelestialBodies.GmOnly'
     | 'WH40K.CelestialBodies.Intro'

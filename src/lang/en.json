@@ -7614,6 +7614,7 @@
             "Remove": "Remove Body",
             "Save": "Save",
             "Edit": "Celestial Bodies & Weather",
+            "EditShort": "Bodies & Weather",
             "Empty": "No celestial bodies yet. Add one to drive scene lighting from in-universe time.",
             "GmOnly": "Only the GM can edit celestial bodies."
         },

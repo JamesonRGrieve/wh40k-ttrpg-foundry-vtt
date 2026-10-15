@@ -137,4 +137,28 @@ test.describe.serial('world-time widget day phase (Tier B, #593)', () => {
         }
         expect(failures, failures.join('\n')).toEqual([]);
     });
+
+    test('the Celestial Bodies & Weather button label fits on one line (#473)', async ({ page }) => {
+        await joinOrSkip(page);
+        await clearScreenOverlays(page);
+        await showHour(page, 12);
+        const button = await page.evaluate((widgetId) => {
+            const el = document.querySelector<HTMLElement>(`#${widgetId} [data-action="editBodies"]`);
+            const label = el?.querySelector('span') ?? null;
+            if (el === null || label === null) return null;
+            const style = getComputedStyle(el);
+            const lineHeight = Number.isNaN(parseFloat(style.lineHeight)) ? parseFloat(style.fontSize) * 1.2 : parseFloat(style.lineHeight);
+            return {
+                text: label.textContent.trim(),
+                lines: label.getClientRects().length,
+                truncated: label.scrollWidth > label.clientWidth,
+                // The button's content box holds one line of its text.
+                oneLine: el.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) < lineHeight * 1.5,
+                tooltip: el.dataset['tooltip'] ?? null,
+            };
+        }, WIDGET_ID);
+        expect(button).toEqual({ text: 'Bodies & Weather', lines: 1, truncated: false, oneLine: true, tooltip: 'Celestial Bodies & Weather' });
+        await clearScreenOverlays(page, WIDGET_ID);
+        await snap(page, 'world-time-celestial-bodies-button', { selector: `#${WIDGET_ID}` });
+    });
 });
