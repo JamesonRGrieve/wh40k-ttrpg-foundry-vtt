@@ -11,12 +11,12 @@
 
                 <div class="tw-mb-4">
                     <label for="search-input" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Common.Search"}}</label>
-                    <input type="text" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" placeholder="{{localize 'WH40K.CompendiumBrowser.SearchPlaceholder'}}" value="{{filters.search}}">
+                    <input type="text" id="search-input" data-wh40k-hook="cb-search" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" placeholder="{{localize 'WH40K.CompendiumBrowser.SearchPlaceholder'}}" value="{{filters.search}}">
                 </div>
 
                 <div class="tw-mb-4">
                     <label for="filter-source" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Common.Source"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-source" data-wh40k-hook="cb-filter-source" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">{{localize "WH40K.CompendiumBrowser.AllSources"}}</option>
                         {{#each sources}}
                         <option value="{{this}}" {{#if (eq ../filters.source this)}}selected{{/if}}>{{this}}</option>
@@ -26,7 +26,7 @@
 
                 <div class="tw-mb-4">
                     <label for="filter-category" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Gear.Category"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-category" data-wh40k-hook="cb-filter-category" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">{{localize "WH40K.CompendiumBrowser.AllCategories"}}</option>
                         {{#each categories}}
                         <option value="{{this}}" {{#if (eq ../filters.category this)}}selected{{/if}}>{{this}}</option>
@@ -36,7 +36,7 @@
 
                 <div class="tw-mb-4">
                     <label for="filter-group-by" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.GroupBy"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-group-by" data-wh40k-hook="cb-group-by" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         {{#each groupByOptions}}
                         <option value="{{value}}" {{#if (eq ../filters.groupBy value)}}selected{{/if}}>{{label}}</option>
                         {{/each}}
@@ -49,7 +49,7 @@
 
                 <div class="tw-mb-4">
                     <label for="filter-armour-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.ArmourType"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-armour-type" data-wh40k-hook="cb-filter-armour-type" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">{{localize "WH40K.CompendiumBrowser.AllTypes"}}</option>
                         {{#each armourTypes as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.armourType key)}}selected{{/if}}>
@@ -61,12 +61,12 @@
 
                 <div class="tw-mb-4">
                     <label for="filter-min-ap" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.MinimumAP"}}</label>
-                    <input type="number" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" min="0" max="20" value="{{filters.minAP}}" placeholder="{{localize 'WH40K.Common.Any'}}">
+                    <input type="number" id="filter-min-ap" data-wh40k-hook="cb-filter-min-ap" class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded" min="0" max="20" value="{{filters.minAP}}" placeholder="{{localize 'WH40K.Common.Any'}}">
                 </div>
 
                 <div class="tw-mb-4">
                     <label for="filter-coverage" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.Armour.Coverage"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-coverage" data-wh40k-hook="cb-filter-coverage" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all" {{#if (eq filters.coverage "all")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.AllCoverage"}}</option>
                         <option value="full" {{#if (eq filters.coverage "full")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.FullBody"}}</option>
                         <option value="partial" {{#if (eq filters.coverage "partial")}}selected{{/if}}>{{localize "WH40K.CompendiumBrowser.Partial"}}</option>
@@ -80,7 +80,7 @@
 
                 <div class="tw-mb-4">
                     <label for="filter-mod-type" class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">{{localize "WH40K.CompendiumBrowser.AppliesTo"}}</label>
-                    <select class="tw-w-full tw-p-2 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
+                    <select id="filter-mod-type" data-wh40k-hook="cb-filter-mod-type" class="tw-w-full tw-h-10 tw-py-0 tw-px-2 tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)] tw-rounded">
                         <option value="all">{{localize "WH40K.CompendiumBrowser.AllArmourTypes"}}</option>
                         {{#each armourTypesForMods as |type key|}}
                         <option value="{{key}}" {{#if (eq ../filters.modType key)}}selected{{/if}}>
@@ -92,14 +92,14 @@
 
                 <div class="tw-mb-4">
                     <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
-                        <input type="checkbox" class="tw-cursor-pointer" {{#if filters.hasModifiers}}checked{{/if}}>
+                        <input type="checkbox" data-wh40k-hook="cb-filter-has-modifiers" class="tw-cursor-pointer" {{#if filters.hasModifiers}}checked{{/if}}>
                         {{localize "WH40K.CompendiumBrowser.HasStatModifiers"}}
                     </label>
                 </div>
 
                 <div class="tw-mb-4">
                     <label class="tw-block tw-mb-1 tw-font-bold tw-text-[color:var(--color-text-light)]">
-                        <input type="checkbox" class="tw-cursor-pointer" {{#if filters.hasProperties}}checked{{/if}}>
+                        <input type="checkbox" data-wh40k-hook="cb-filter-has-properties" class="tw-cursor-pointer" {{#if filters.hasProperties}}checked{{/if}}>
                         {{localize "WH40K.CompendiumBrowser.ChangesProperties"}}
                     </label>
                 </div>
@@ -119,13 +119,13 @@
             <div class="tw-flex-1 tw-overflow-y-auto tw-p-4">
                 {{#if results.length}}
                     {{#each groupedResults}}
-                    <div class="tw-mb-6">
+                    <div class="tw-mb-6" data-result-group="{{label}}">
                         <div class="tw-flex tw-items-center tw-justify-between tw-m-0 tw-mb-3 tw-py-1 tw-px-3 tw-border-l-[3px] tw-border-l-[var(--color-warm-2)] tw-bg-[rgba(0,0,0,0.25)] tw-text-[color:var(--color-text-light)]">
                             <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.08em]">{{label}}</span>
                             <span class="tw-text-[0.75rem] tw-py-[0.15rem] tw-px-2 tw-rounded-full tw-bg-[rgba(0,0,0,0.4)]">{{items.length}}</span>
                         </div>
                         {{#each items}}
-                        <div class="tw-flex tw-items-center tw-p-3 tw-mb-2 tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--color-border-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer hover:tw-bg-[rgba(0,0,0,0.4)] hover:tw-border-[var(--color-warm-2)] hover:tw-translate-x-1" data-uuid="{{uuid}}" draggable="true">
+                        <div class="tw-flex tw-items-center tw-p-3 tw-mb-2 tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[var(--color-border-dark)] tw-rounded-[var(--wh40k-radius-md)] tw-cursor-pointer hover:tw-bg-[rgba(0,0,0,0.4)] hover:tw-border-[var(--color-warm-2)] hover:tw-translate-x-1" data-wh40k-hook="cb-item" data-uuid="{{uuid}}" draggable="true">
                             <img src="{{img}}" alt="{{name}}" class="tw-w-10 tw-h-10 tw-object-cover tw-rounded-[var(--wh40k-radius-md)] tw-mr-4 tw-border tw-border-[var(--color-border-dark)]" />
                             <div class="tw-flex-1">
                                 <h4 class="tw-m-0 tw-mb-1 tw-text-base tw-text-[color:var(--color-text-light)]">{{name}}</h4>
@@ -186,8 +186,9 @@
 
                                 <div class="tw-flex tw-gap-2 tw-flex-wrap">
                                     <span class="tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-cool-4)] tw-text-white">{{type}}</span>
-                                {{#if sourceLabel}}
-                                <span class="tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-warm-4)] tw-text-white">{{sourceLabel}}</span>
+                                {{!-- `this.`: a bare `sourceLabel` resolves to the registered helper of that name, which renders nothing here. --}}
+                                {{#if this.sourceLabel}}
+                                <span class="tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-warm-4)] tw-text-white" data-field="result-source">{{this.sourceLabel}}</span>
                                 {{/if}}
                                     <span class="tw-text-[0.75rem] tw-py-1 tw-px-2 tw-rounded tw-bg-[var(--color-border-dark)] tw-text-[color:var(--color-text-light)]">{{pack}}</span>
                                 </div>

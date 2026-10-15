@@ -5990,7 +5990,12 @@
         },
         "CompendiumBrowser": {
             "Title": "Compendium Browser",
-            "Subtitle": "Browse, filter, and search through all Rogue Trader compendia",
+            "Subtitle": "Browse, filter, and search through every compendium",
+            "UnknownSource": "Unknown Source",
+            "UnknownPack": "Unknown Pack",
+            "UnknownType": "Unknown Type",
+            "Uncategorized": "Uncategorized",
+            "UnknownQuality": "Unknown Quality",
             "SearchPlaceholder": "Search by name...",
             "AllSources": "All Sources",
             "AllCategories": "All Categories",

@@ -6,6 +6,7 @@
 import { HIT_LOCATION_IDS, hitLocationAbbreviation } from '../rules/hit-locations.ts';
 import { queryItemIndex } from '../utils/compendium-query.ts';
 import { formatSigned } from '../utils/format.ts';
+import { indexEntrySourceBook, packLine } from '../utils/index-source.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
@@ -206,24 +207,38 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
-        // Set up event listeners
-        this.element.querySelector<HTMLInputElement>('.search-input')?.addEventListener('input', (e) => this._onSearch(e as InputEvent));
-        this.element.querySelector<HTMLSelectElement>('.filter-source')?.addEventListener('change', (e) => this._onFilterSource(e));
-        this.element.querySelector<HTMLSelectElement>('.filter-category')?.addEventListener('change', (e) => this._onFilterCategory(e));
-        this.element.querySelector<HTMLSelectElement>('.filter-group-by')?.addEventListener('change', (e) => this._onGroupBy(e));
+        // Set up event listeners. The controls are found by their hooks: the template's
+        // move to Tailwind dropped the old `.search-input` / `.filter-*` / `.compendium-item`
+        // classes, so none of these listeners attached and every filter was dead (#658).
+        const search = this.element.querySelector<HTMLInputElement>('[data-wh40k-hook="cb-search"]');
+        search?.addEventListener('input', (e) => this._onSearch(e as InputEvent));
+        if (this.#refocusSearch && search !== null) {
+            this.#refocusSearch = false;
+            search.focus();
+            search.setSelectionRange(search.value.length, search.value.length);
+        }
+        this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-filter-source"]')?.addEventListener('change', (e) => this._onFilterSource(e));
+        this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-filter-category"]')?.addEventListener('change', (e) => this._onFilterCategory(e));
+        this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-group-by"]')?.addEventListener('change', (e) => this._onGroupBy(e));
 
         // Armour-specific filters
-        this.element.querySelector<HTMLSelectElement>('.filter-armour-type')?.addEventListener('change', (e) => this._onFilterArmourType(e));
-        this.element.querySelector<HTMLInputElement>('.filter-min-ap')?.addEventListener('input', (e) => this._onFilterMinAP(e));
-        this.element.querySelector<HTMLSelectElement>('.filter-coverage')?.addEventListener('change', (e) => this._onFilterCoverage(e));
+        this.element
+            .querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-filter-armour-type"]')
+            ?.addEventListener('change', (e) => this._onFilterArmourType(e));
+        this.element.querySelector<HTMLInputElement>('[data-wh40k-hook="cb-filter-min-ap"]')?.addEventListener('input', (e) => this._onFilterMinAP(e));
+        this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-filter-coverage"]')?.addEventListener('change', (e) => this._onFilterCoverage(e));
 
         // Armour modification filters
-        this.element.querySelector<HTMLSelectElement>('.filter-mod-type')?.addEventListener('change', (e) => this._onFilterModType(e));
-        this.element.querySelector<HTMLInputElement>('.filter-has-modifiers')?.addEventListener('change', (e) => this._onFilterHasModifiers(e));
-        this.element.querySelector<HTMLInputElement>('.filter-has-properties')?.addEventListener('change', (e) => this._onFilterHasProperties(e));
+        this.element.querySelector<HTMLSelectElement>('[data-wh40k-hook="cb-filter-mod-type"]')?.addEventListener('change', (e) => this._onFilterModType(e));
+        this.element
+            .querySelector<HTMLInputElement>('[data-wh40k-hook="cb-filter-has-modifiers"]')
+            ?.addEventListener('change', (e) => this._onFilterHasModifiers(e));
+        this.element
+            .querySelector<HTMLInputElement>('[data-wh40k-hook="cb-filter-has-properties"]')
+            ?.addEventListener('change', (e) => this._onFilterHasProperties(e));
 
         // Set up drag handlers for compendium items
-        this.element.querySelectorAll('.compendium-item').forEach((el) => {
+        this.element.querySelectorAll('[data-wh40k-hook="cb-item"]').forEach((el) => {
             const hEl = el as HTMLElement;
             hEl.setAttribute('draggable', 'true');
             hEl.addEventListener('dragstart', this._onDragStart.bind(this));
@@ -242,8 +257,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         const collected = await queryItemIndex(
             ['system.source'],
             // eslint-disable-next-line no-restricted-syntax -- boundary: index entry's system field is an untyped compendium payload
-            (entry) => {
-                const s = this._getEntrySource(entry);
+            (entry, pack) => {
+                const s = this._getEntrySource(entry, pack.metadata.id);
                 return s !== '' ? s : undefined;
             },
             true,
@@ -291,9 +306,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             ],
             (entry, pack) => {
                 const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
-                if (!this._passesFilters(e, pack as unknown as CompendiumPack)) return undefined;
+                if (!this._passesFilters(e, pack)) return undefined;
 
-                const sourceLabel = this._getEntrySource(e);
+                const sourceLabel = this._getEntrySource(e, pack.metadata.id);
                 const categoryLabel = this._getEntryCategory(e);
 
                 const result: BrowserResult = {
@@ -471,7 +486,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             console.warn('WH40K | CONFIG.wh40k not available in compendium browser');
             return {
                 identifier: system['identifier'] ?? '',
-                label: system['name'] ?? 'Unknown Quality',
+                label: system['name'] ?? game.i18n.localize('WH40K.CompendiumBrowser.UnknownQuality'),
                 description: '',
             };
         }
@@ -486,7 +501,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             label = game.i18n.localize(def.label);
         } else {
             // Fallback to system name
-            label = system['name'] ?? 'Unknown Quality';
+            label = system['name'] ?? game.i18n.localize('WH40K.CompendiumBrowser.UnknownQuality');
         }
 
         // Get description (truncated for browser display)
@@ -554,23 +569,16 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     _getGroupLabel(entry: BrowserResult): string {
         const groupBy = this._filters.groupBy;
-        if (groupBy === 'pack') return entry.pack !== '' ? entry.pack : 'Unknown Pack';
-        if (groupBy === 'type') return entry.type !== undefined && entry.type !== '' ? entry.type : 'Unknown Type';
-        if (groupBy === 'category') return entry.categoryLabel !== '' ? entry.categoryLabel : 'Uncategorized';
-        return entry.sourceLabel !== '' ? entry.sourceLabel : 'Unknown Source';
+        if (groupBy === 'pack') return entry.pack !== '' ? entry.pack : game.i18n.localize('WH40K.CompendiumBrowser.UnknownPack');
+        if (groupBy === 'type') return entry.type !== undefined && entry.type !== '' ? entry.type : game.i18n.localize('WH40K.CompendiumBrowser.UnknownType');
+        if (groupBy === 'category') return entry.categoryLabel !== '' ? entry.categoryLabel : game.i18n.localize('WH40K.CompendiumBrowser.Uncategorized');
+        return entry.sourceLabel !== '' ? entry.sourceLabel : game.i18n.localize('WH40K.CompendiumBrowser.UnknownSource');
     }
 
     /* eslint-disable no-restricted-syntax -- boundary: entry.system and entry.flags are Foundry compendium index payloads with no typed schema */
-    _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }): string {
-        const rawSource = entry.system?.['source'];
-        if (rawSource === undefined || rawSource === null) return '';
-        if (typeof rawSource === 'string') return rawSource;
-        if (typeof rawSource === 'object') {
-            const src = rawSource as Record<string, unknown>;
-            const val = src['book'] ?? src['custom'];
-            return typeof val === 'string' ? val : '';
-        }
-        return '';
+    /** The entry's source book, from the per-line `system.source` the packs store (#658). */
+    _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }, packId: string): string {
+        return indexEntrySourceBook(entry.system?.['source'], packLine(packId));
     }
 
     _getEntryCategory(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }): string {
@@ -592,7 +600,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /* eslint-disable no-restricted-syntax -- boundary: entry.system is a compendium payload; _passesFilters operates on raw index data */
     // eslint-disable-next-line complexity -- filter method is inherently branchy: each filter type adds 2–4 branches; extracting sub-methods would scatter the guard logic
-    _passesFilters(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }, _pack: CompendiumPack): boolean {
+    _passesFilters(
+        entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
+        pack: { readonly metadata: { readonly id: string } },
+    ): boolean {
         // Search filter
         if (this._filters.search !== '') {
             const searchLower = this._filters.search.toLowerCase();
@@ -601,7 +612,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         // Source filter
         if (this._filters.source !== 'all') {
-            if (this._getEntrySource(entry) !== this._filters.source) return false;
+            if (this._getEntrySource(entry, pack.metadata.id) !== this._filters.source) return false;
         }
 
         // Category filter
@@ -673,8 +684,13 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     _onSearch(event: InputEvent): void {
         this._filters.search = (event.target as HTMLInputElement).value;
+        // Each keystroke re-renders the window; keep typing in the box.
+        this.#refocusSearch = true;
         void this.render();
     }
+
+    /** Set by a search keystroke so the re-render hands focus back to the search box. */
+    #refocusSearch = false;
 
     _onFilterSource(event: Event): void {
         this._filters.source = (event.target as HTMLSelectElement).value;
