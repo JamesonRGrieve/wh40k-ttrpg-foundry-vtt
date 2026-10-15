@@ -100,6 +100,7 @@ test.describe.serial('TwoWeaponRefocus (Tier B)', () => {
                     host = document.createElement('div');
                     host.id = '__c9_twr_host';
                     host.className = 'wh40k-rpg';
+                    host.dataset['e2eCapture'] = '';
                     host.style.cssText = 'position:fixed;top:40px;left:40px;width:420px;z-index:100000;';
                     document.body.appendChild(host);
                 }
