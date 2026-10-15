@@ -27,13 +27,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label>{{localize "WH40K.ItemSheet.Ship.HullTypes"}}</label>
-                            <select name="system.hullType" multiple>
-                                {{selectOptions hullTypes selected=source.hullType}}
-                            </select>
-                            <p class="hint">{{localize "WH40K.ItemSheet.Ship.HullTypeHint"}}</p>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/item/partial/ship-hull-types-field.hbs}}
 
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability.Label"}}</label>

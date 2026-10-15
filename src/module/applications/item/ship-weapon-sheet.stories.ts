@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { expectHullTypeCheckboxes, storyHullTypeChoices } from '../../../../stories/ship-hull-types';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/ship-weapon-sheet.hbs?raw';
@@ -18,6 +19,8 @@ interface ShipWeaponCtx {
     source: ReturnType<typeof mockItem>['system'];
     weaponTypes: Record<string, { label: string }>;
     locations: Record<string, { label: string }>;
+    /** Value → label, as `shipHullTypeChoices()` builds them. */
+    hullTypes: Record<string, string>;
     canEdit: boolean;
     inEditMode: boolean;
     editable: boolean;
@@ -65,6 +68,7 @@ function makeCtx(overrides: Partial<ShipWeaponCtx> = {}): ShipWeaponCtx {
             starboard: { label: 'Starboard' },
             keel: { label: 'Keel' },
         },
+        hullTypes: storyHullTypeChoices(),
         canEdit: true,
         inEditMode: false,
         editable: true,
@@ -85,6 +89,15 @@ type Story = StoryObj;
 export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
+
+/** #657: the Hull Types field is a checkbox per hull type, the stored ones checked. */
+export const HullTypesAsCheckboxes: Story = {
+    render: () => {
+        const ctx = makeCtx();
+        return renderSheet(templateSrc, { ...ctx, source: { ...ctx.source, hullType: ['all'] } });
+    },
+    play: async ({ canvasElement }) => expectHullTypeCheckboxes(canvasElement, ['all']),
+};
 
 export const RendersWeaponName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),

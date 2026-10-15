@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { expectHullTypeCheckboxes, storyHullTypeChoices } from '../../../../stories/ship-hull-types';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/ship-component-sheet.hbs?raw';
@@ -36,7 +37,8 @@ interface ShipComponentCtx {
     system: ReturnType<typeof mockItem>['system'];
     source: ReturnType<typeof mockItem>['system'];
     componentTypes: Record<string, { label: string }>;
-    hullTypes: Record<string, { label: string }>;
+    /** Value → label, as `shipHullTypeChoices()` builds them. */
+    hullTypes: Record<string, string>;
     canEdit: boolean;
     inEditMode: boolean;
     editable: boolean;
@@ -74,11 +76,7 @@ function makeCtx(overrides: Partial<ShipComponentCtx> = {}): ShipComponentCtx {
             weapon: { label: 'Weapon' },
             augur: { label: 'Augur Array' },
         },
-        hullTypes: {
-            frigate: { label: 'Frigate' },
-            cruiser: { label: 'Cruiser' },
-            transport: { label: 'Transport' },
-        },
+        hullTypes: storyHullTypeChoices(),
         canEdit: true,
         inEditMode: false,
         editable: true,
@@ -99,6 +97,15 @@ type Story = StoryObj;
 export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
+
+/** #657: the Hull Types field is a checkbox per hull type, the stored ones checked. */
+export const HullTypesAsCheckboxes: Story = {
+    render: () => {
+        const ctx = makeCtx();
+        return renderSheet(templateSrc, { ...ctx, source: { ...ctx.source, hullType: ['frigate', 'transport'] } });
+    },
+    play: async ({ canvasElement }) => expectHullTypeCheckboxes(canvasElement, ['transport', 'frigate']),
+};
 
 export const RendersComponentName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),

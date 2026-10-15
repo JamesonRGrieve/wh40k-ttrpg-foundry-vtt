@@ -6248,7 +6248,7 @@
                 "Condition": "Condition",
                 "Location": "Location",
                 "HullTypes": "Hull Types",
-                "HullTypeHint": "Hold Ctrl/Cmd to select multiple hull types",
+                "HullTypeHint": "Tick each hull type this fits, or All Ships for any hull",
                 "ResourceRequirements": "Resource Requirements",
                 "Used": "(Used)",
                 "Generated": "(Generated)",

@@ -1,0 +1,16 @@
+{{!--
+    The Hull Types field of the ship weapon and ship component sheets (#657): one
+    checkbox per hull type, through Foundry's <multi-checkbox>, which submits the
+    checked set as `system.hullType`. The multi-select it replaces was about two
+    lines tall and clipped its options.
+
+    Context: `hullTypes` (value → label, the "All" sentinel then WH40K.hullTypes)
+    and `source.hullType` (the stored set).
+--}}
+<div class="form-group stacked" data-field="hull-types">
+    <label>{{localize "WH40K.ItemSheet.Ship.HullTypes"}}</label>
+    <multi-checkbox name="system.hullType" class="tw-w-full">
+        {{selectOptions hullTypes selected=source.hullType}}
+    </multi-checkbox>
+    <p class="hint">{{localize "WH40K.ItemSheet.Ship.HullTypeHint"}}</p>
+</div>
