@@ -17,11 +17,19 @@ import { readRepoFile } from './lib/repo-file.ts';
 const PARTIAL = 'systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs';
 const contextPanel = readRepoFile('src/templates/prompt/unified/context-panel.hbs');
 
+const effectDialog = readRepoFile('src/templates/dialogs/effect-creation-dialog.hbs');
+
 /**
- * Prompt templates whose selects still carry vertical padding (listed on #624 for
- * migration to the shared prompt select). Remove a file once it is migrated; never add one.
+ * Prompt and dialog templates whose selects still carry vertical padding (listed on
+ * #624 for migration to the shared prompt select). Remove a file once it is migrated;
+ * never add one.
  */
 const PADDED_SELECTS_TO_MIGRATE: readonly string[] = [
+    'src/templates/dialogs/inventory-generator-dialog.hbs',
+    'src/templates/dialogs/npc-quick-create.hbs',
+    'src/templates/dialogs/roll-configuration.hbs',
+    'src/templates/dialogs/talent-editor-dialog.hbs',
+    'src/templates/dialogs/template-selector.hbs',
     'src/templates/prompt/add-speciality-prompt.hbs',
     'src/templates/prompt/assign-damage-prompt.hbs',
     'src/templates/prompt/cybernetics-install-dialog.hbs',
@@ -65,10 +73,26 @@ describe('prompt selects show their whole value (#624)', () => {
         expect(contextPanel).not.toContain('<select');
     });
 
-    it('no new prompt select is padded vertically; the known ones may only be fixed (a one-way ratchet)', () => {
+    it('the Create Active Effect dialog selects render through it ("Strenath" was clipped)', () => {
+        for (const name of ['characteristic', 'skill', 'combatType']) {
+            expect(effectDialog).toContain(`{{#> ${PARTIAL} name="${name}" id="${name}"}}`);
+        }
+        expect(effectDialog).not.toContain('<select');
+    });
+
+    it('carries an id for a <label for>, when given one', () => {
+        HbsStory.registerPartial('prompt-select-with-id', promptSelectSrc);
+        const host = document.createElement('div');
+        host.innerHTML = HbsStory.compile('{{#> prompt-select-with-id name="skill" id="skill"}}<option>x</option>{{/prompt-select-with-id}}')({});
+        expect(host.querySelector('select')?.id).toBe('skill');
+    });
+
+    it('no new prompt or dialog select is padded vertically; the known ones may only be fixed (a one-way ratchet)', () => {
         const root = resolve(__dirname, '..');
-        const offenders = hbsFiles(join(root, 'src/templates/prompt'))
-            .filter((file) => [...readFileSync(file, 'utf8').matchAll(/<select[^>]*class="([^"]*)"/g)].some((m) => /tw-py-(?!0\b)/.test(m[1])))
+        // Vertical padding in any form: tw-p-N, tw-py-N, tw-pt-N, tw-pb-N (N > 0 or arbitrary).
+        const verticalPadding = /tw-p[ytb]?-(?:\[|[1-9])/;
+        const offenders = [...hbsFiles(join(root, 'src/templates/prompt')), ...hbsFiles(join(root, 'src/templates/dialogs'))]
+            .filter((file) => [...readFileSync(file, 'utf8').matchAll(/<select[^>]*class="([^"]*)"/g)].some((m) => verticalPadding.test(m[1])))
             .map((file) => relative(root, file));
         expect(offenders.filter((file) => !PADDED_SELECTS_TO_MIGRATE.includes(file))).toEqual([]);
     });

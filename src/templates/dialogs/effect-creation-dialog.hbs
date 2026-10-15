@@ -2,10 +2,12 @@
 {{!-- The window root is the form (EffectCreationDialog `tag: 'form'`), so this is its content, not a nested form. --}}
 <div class="tw-flex tw-flex-col tw-gap-4 tw-p-3">
 
-    {{!-- Category Selection Tabs --}}
+    {{!-- Category Selection Tabs. Five to a row at the 520px default width, so a long
+         label wraps inside its own button (the langpack soft-hyphenates
+         "Characteristics") and the button grows to hold it (#651). --}}
     <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-black/30 tw-rounded-lg tw-border tw-border-solid {{themeClassFor 'border'}}">
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'condition')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="condition">
@@ -13,7 +15,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Condition"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'characteristic')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="characteristic">
@@ -21,7 +23,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Characteristic"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'skill')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="skill">
@@ -29,7 +31,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Skill"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'combat')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="combat">
@@ -37,7 +39,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Combat"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-p-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-none"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-white/5 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-white/10 hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'custom')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="custom">
@@ -94,12 +96,12 @@
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="characteristic">{{localize "WH40K.Characteristic.SelectLabel"}}</label>
-                <select name="characteristic" id="characteristic" class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)]">
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="characteristic" id="characteristic"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCharacteristic"}}</option>
                     {{#each characteristics as |char|}}
                         <option value="{{char.id}}">{{char.label}}</option>
                     {{/each}}
-                </select>
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
@@ -140,12 +142,12 @@
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="skill">{{localize "WH40K.Skills.Skill"}}</label>
-                <select name="skill" id="skill" class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)]">
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="skill" id="skill"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectSkill"}}</option>
                     {{#each skills as |skill|}}
                         <option value="{{skill.id}}">{{skill.label}}</option>
                     {{/each}}
-                </select>
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
@@ -185,12 +187,12 @@
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="combatType">{{localize "WH40K.Dialog.EffectCreation.CombatStat"}}</label>
-                <select name="combatType" id="combatType" class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)]">
+                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="combatType" id="combatType"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCombatStat"}}</option>
                     {{#each combatTypes as |type|}}
                         <option value="{{type.id}}">{{type.label}}</option>
                     {{/each}}
-                </select>
+                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
             <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">

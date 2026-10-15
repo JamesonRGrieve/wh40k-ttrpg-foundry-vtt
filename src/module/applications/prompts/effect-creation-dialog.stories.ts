@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/effect-creation-dialog.hbs?raw';
 import { captureActionClicks, clickAction, renderSheet, submitForm } from '../../../../stories/test-helpers';
+import { overflowingLabels } from '../../testing/label-fit';
 
 /** One `{id, label}` option row, the shape `_prepareContext` hands the three pickers. */
 interface PickerOption {
@@ -167,5 +168,37 @@ export const CategoryTabsDispatch: Story = {
         const clicks = captureActionClicks(canvasElement);
         clickAction(canvasElement, 'selectCategory');
         await expect(clicks[0]?.dataset['category']).toBe('condition');
+    },
+};
+
+/** The window's default width (EffectCreationDialog `position.width`) less its 1rem content padding. */
+const DEFAULT_CONTENT_WIDTH_PX = 520 - 32;
+
+/** Every game line; the dialog is shared by all six. */
+const GAME_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/**
+ * #651: at its default width the dialog's five category tabs overran each other —
+ * "CONDITIONS" ran into "CHARACTERISTICS" and the active label overflowed its
+ * button. Every label now sits inside its own button, under each line's theme.
+ */
+export const CategoryTabsFitDefaultWidth: Story = {
+    render: (args) => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const line of GAME_LINES) {
+            const form = document.createElement('form');
+            form.className = 'wh40k-rpg wh40k-effect-creation-dialog';
+            form.dataset['wh40kSystem'] = line;
+            form.style.width = `${DEFAULT_CONTENT_WIDTH_PX}px`;
+            form.append(renderSheet(templateSrc, { ...args, selectedCategory: 'characteristic' }));
+            host.append(form);
+        }
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        const tabs = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-action="selectCategory"]'));
+        await expect(tabs.length).toBe(5 * GAME_LINES.length);
+        await expect(overflowingLabels(tabs)).toEqual([]);
     },
 };

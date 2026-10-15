@@ -1,9 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
+import { overflowingLabels } from '../../src/module/testing/label-fit';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
+import { readSelectFit } from './select-fit';
 
 /**
  * Tier B — the Effect Creation dialog from the actor sheet and the item sheet
@@ -67,6 +69,11 @@ async function effectsOf(page: Page, collection: 'actors' | 'items', id: string)
     );
 }
 
+/** The category tabs whose label spills out of its button (#651). */
+async function overflowingTabLabels(dialog: Locator): Promise<string[]> {
+    return dialog.locator('[data-action="selectCategory"]').evaluateAll(overflowingLabels);
+}
+
 /** The window id of an open dialog, for an in-place `snap` by selector. */
 async function dialogId(dialog: Locator): Promise<string> {
     const id = await dialog.getAttribute('id');
@@ -108,6 +115,10 @@ test.describe.serial('Effect creation dialog (Tier B, #516)', () => {
             await dialog.locator('[data-action="selectCategory"][data-category="characteristic"]').click();
             await expect(dialog.locator('[data-action="selectCategory"][data-category="characteristic"]')).toHaveAttribute('data-active', 'true');
             await dialog.locator('select[name="characteristic"]').selectOption('strength');
+            // #624: the select shows its whole value ("Strength" was clipped to "Strenath").
+            const fit = await readSelectFit(page, `#${await dialogId(dialog)} select[name="characteristic"]`);
+            expect(fit?.text).toBe('Strength');
+            expect(fit?.fits, `line ${fit?.lineHeight ?? 0}px in a ${fit?.contentHeight ?? 0}px box`).toBe(true);
             await dialog.locator('input[name="modifierValue"]').fill('10');
             await dialog.locator('input[name="duration.rounds"]').fill('3');
             // Snapped in place: the sheet stays open behind the dialog to show the result.
@@ -163,6 +174,8 @@ test.describe.serial('Effect creation dialog (Tier B, #516)', () => {
             await expect(conditions.first()).toBeVisible();
             expect(await conditions.count(), 'the condition picker lists the line catalogue').toBeGreaterThan(0);
             expect(await snap(page, 'effect-creation-dialog-from-item', { selector: `#${await dialogId(dialog)}` })).not.toBeNull();
+            // #651: at the dialog's default width every category label sits inside its own button.
+            expect(await overflowingTabLabels(dialog)).toEqual([]);
 
             const pick = conditions.first();
             const conditionName = (await pick.innerText()).trim();
