@@ -1,223 +1,156 @@
 import type { Page } from '@playwright/test';
+import { createActor, deleteDocuments, openActorSheet } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the Only War Comrade Healing panel + actions
- * (GitHub #157).
+ * Tier B for the Only War "Healing Comrades" panel (#157 — OW Core p.271).
  *
- * Creates an `ow-character` actor in the seed world seeded with a
- * dead Comrade, mid-recovery clock, and refit available; opens its
- * sheet; asserts the panel renders with all three RAW affordances;
- * drives `owComradeTickDay` on a wounded variant and asserts the
- * clock advances; snapshots the rendered sheet.
+ * The sheet built only part of the panel's context, so the panel read
+ * "Auto-recovery: undefined days". Wounding the Comrade never started the
+ * recovery clock, a finished clock never returned the Comrade to unharmed,
+ * the one-Medicae-per-wound cap was not kept, and nothing on the sheet could
+ * mark the squad back in camp. This walks the whole cycle through the
+ * sheet's own buttons, clicked the way a player clicks them:
+ *   Wound → 7-day clock → Tick Day → Medicae (3 DoS) → ticks to 0 → unharmed;
+ *   Wound ×2 → dead → camp refit on → Replace → unharmed, refit used up.
  */
 
-interface ActorRef {
-    id: string;
+const DIALOG = 'dialog.application[open]';
+const HEALING = '.wh40k-ow-healing-panel';
+const COMRADE = '[data-wh40k-hook="ow-comrade-panel"]';
+
+/** The actor's persisted Comrade-healing state. */
+interface HealingState {
+    state: string;
+    days: number;
+    refit: boolean;
+    medicaeUsed: boolean;
 }
 
-/**
- * Minimal browser-side shapes for the untyped Foundry V14 globals used in
- * this probe. Foundry ships no types into the Playwright `page.evaluate`
- * surface, so these stand in for that framework boundary.
- */
-interface FoundryProbeSheet {
-    render: (options: { force: boolean }) => Promise<void>;
-    element: HTMLElement | null;
-    close?: () => Promise<void>;
-}
-interface FoundryProbeActor {
-    id?: string;
-    system?: { comradeRecoveryDays?: number | null };
-    sheet: FoundryProbeSheet | null;
-    delete?: () => Promise<void>;
-}
-interface FoundryGlobal {
-    Actor?: { create?: (data: object) => Promise<FoundryProbeActor | null> };
-    game?: { actors?: { get?: (id: string) => FoundryProbeActor | undefined } };
-    __c157sheet?: FoundryProbeSheet | undefined;
-}
-
-interface HealingProbeResult {
-    rendered?: boolean;
-    hasPanel?: boolean;
-    hasTickBtn?: boolean;
-    hasMedicaeBtn?: boolean;
-    hasReplaceBtn?: boolean;
-    hasStatusBadge?: boolean;
-    recoveryBefore?: number | null;
-    recoveryAfter?: number | null;
-    tickDispatched?: boolean;
-    error?: string | null;
-}
-
-async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async (): Promise<{ id: string | null; error: string | null }> => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.Actor surface
-        const { Actor: ActorCtor } = globalThis as unknown as FoundryGlobal;
-        if (!ActorCtor?.create) return { id: null, error: 'Actor.create unavailable' };
-        try {
-            const actor = await ActorCtor.create({
-                name: 'probe-ow-comrade-healing-pc',
-                type: 'ow-character',
-                system: {
-                    gameSystem: 'ow',
-                    comrade: { name: 'Comrade Probe', state: 'wounded', distanceM: 3, hasVisualLine: true },
-                    comradeRecoveryDays: 5,
-                    refitAvailable: true,
-                },
-            });
-            if (!actor) return { id: null, error: 'Actor.create returned null' };
-            return { id: actor.id ?? null, error: null };
-        } catch (err) {
-            return { id: null, error: err instanceof Error ? err.message : String(err) };
+async function healingState(page: Page, actorId: string): Promise<HealingState> {
+    return page.evaluate((id) => {
+        interface System {
+            comrade: { state: string };
+            comradeRecoveryDays: number;
+            refitAvailable: boolean;
+            comradeMedicaeUsed: boolean;
         }
-    });
-    if (result.id === null) return { error: result.error ?? 'unknown create error' };
-    return { id: result.id };
-}
-
-async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string): Promise<void> => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
-        const { game: foundryGame } = globalThis as unknown as FoundryGlobal;
-        const actor = foundryGame?.actors?.get?.(id);
-        await actor?.delete?.();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { actors: { get: (i: string) => { system: System } | undefined } } };
+        const sys = g.game.actors.get(id)?.system;
+        if (sys === undefined) throw new Error('actor not found');
+        return { state: sys.comrade.state, days: sys.comradeRecoveryDays, refit: sys.refitAvailable, medicaeUsed: sys.comradeMedicaeUsed };
     }, actorId);
 }
 
+/** What the healing panel shows. */
+interface PanelReading {
+    status: string | null;
+    clockText: string;
+    hasUndefined: boolean;
+    /** Enabled state of Tick Day / Medicae / Replace, in that order. */
+    enabled: boolean[];
+}
+
+async function readPanel(page: Page, sheetId: string): Promise<PanelReading> {
+    return page.evaluate(
+        ({ sheet, panelSel }) => {
+            const panel = document.querySelector<HTMLElement>(`#${sheet} ${panelSel}`);
+            if (panel === null) return { status: null, clockText: '', hasUndefined: true, enabled: [] };
+            return {
+                status: panel.querySelector<HTMLElement>('[data-recovery-status]')?.dataset['recoveryStatus'] ?? null,
+                clockText: (panel.querySelector('[data-field="recovery-days"]')?.textContent ?? '').replace(/\s+/g, ' ').trim(),
+                hasUndefined: panel.textContent.includes('undefined'),
+                enabled: ['owComradeTickDay', 'owComradeMedicae', 'owComradeReplace2'].map(
+                    (action) => panel.querySelector<HTMLButtonElement>(`button[data-action="${action}"]`)?.disabled === false,
+                ),
+            };
+        },
+        { sheet: sheetId, panelSel: HEALING },
+    );
+}
+
 test.describe.serial('OW Comrade Healing panel (Tier B, #157)', () => {
-    test('renders the panel, drives owComradeTickDay, asserts the clock ticks, snaps', async ({ page }) => {
+    test('walks the recovery clock, the Medicae attempt and the camp replacement through the panel', async ({ page }) => {
         await joinOrSkip(page);
-
-        const created = await createOwActor(page);
-        if ('error' in created) {
-            test.skip(true, `ow-character creation failed: ${created.error}`);
-            return;
-        }
-        const actorId = created.id;
-
+        const actor = await createActor(page, {
+            data: {
+                name: 'e2e-157 Guardsman',
+                type: 'ow-character',
+                system: { gameSystem: 'ow', comrade: { name: 'Comrade Probe', state: 'unharmed', distanceM: 3, hasVisualLine: true } },
+            },
+        });
         try {
-            const result = await page.evaluate(async (id: string): Promise<HealingProbeResult> => {
-                const base: HealingProbeResult = {
-                    rendered: false,
-                    hasPanel: false,
-                    hasTickBtn: false,
-                    hasMedicaeBtn: false,
-                    hasReplaceBtn: false,
-                    hasStatusBadge: false,
-                    recoveryBefore: null,
-                    recoveryAfter: null,
-                    tickDispatched: false,
-                    error: null,
-                };
-                // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis.game surface
-                const g = globalThis as unknown as FoundryGlobal;
-                const actor = g.game?.actors?.get?.(id);
-                if (actor == null) return { ...base, error: 'actor lookup failed' };
-                let rendered = false;
-                let hasPanel = false;
-                let hasTickBtn = false;
-                let hasMedicaeBtn = false;
-                let hasReplaceBtn = false;
-                let hasStatusBadge = false;
-                let recoveryBefore: number | null = null;
-                let recoveryAfter: number | null = null;
-                let tickDispatched = false;
-                let probeError: string | null = null;
+            const sheetId = await openActorSheet(page, actor.id, 'overview');
+            const healing = page.locator(`#${sheetId} ${HEALING}`);
+            const comrade = page.locator(`#${sheetId} ${COMRADE}`);
+            const click = async (panel: typeof healing, action: string): Promise<void> => {
+                await panel.locator(`button[data-action="${action}"]`).click();
+            };
+            const settled = async (expected: Partial<HealingState>): Promise<void> => {
+                await expect.poll(async () => healingState(page, actor.id)).toMatchObject(expected);
+                await expect.poll(async () => (await readPanel(page, sheetId)).status).not.toBeNull();
+            };
 
-                try {
-                    recoveryBefore = actor.system?.comradeRecoveryDays ?? null;
-                    const sheet = actor.sheet;
-                    if (sheet == null) return { error: 'actor.sheet is null' };
-                    // Park the sheet for teardown BEFORE any await, so the spec can
-                    // always close it even if a probe below throws mid-flight.
-                    g.__c157sheet = sheet;
-                    await sheet.render({ force: true });
-                    // Wait for the healing panel to render (the checks below report a miss).
-                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-healing-panel') != null);
-                    rendered = sheet.element instanceof HTMLElement;
+            await healing.scrollIntoViewIfNeeded();
+            const ready = await readPanel(page, sheetId);
+            await snap(page, 'ow-comrade-healing-ready', { selector: `#${sheetId} ${HEALING}` });
+            expect(ready.hasUndefined, 'no panel value may render as "undefined"').toBe(false);
+            expect(ready.clockText).toContain('Auto-recovery: 7 days');
+            expect(ready).toMatchObject({ status: 'ready', enabled: [false, false, false] });
 
-                    if (rendered && sheet.element != null) {
-                        const el: HTMLElement = sheet.element;
-                        const panel = el.querySelector('.wh40k-ow-healing-panel');
-                        hasPanel = panel !== null;
-                        hasTickBtn = el.querySelector('button[data-action="owComradeTickDay"]') !== null;
-                        hasMedicaeBtn = el.querySelector('button[data-action="owComradeMedicae"]') !== null;
-                        hasReplaceBtn = el.querySelector('button[data-action="owComradeReplace2"]') !== null;
-                        hasStatusBadge = el.querySelector('[data-recovery-status]') !== null;
+            // A wound starts the seven-day clock with its one Medicae attempt.
+            await click(comrade, 'owComradeWound');
+            await settled({ state: 'wounded', days: 7, medicaeUsed: false });
+            await expect.poll(async () => readPanel(page, sheetId)).toMatchObject({ status: 'recovering', enabled: [true, true, false] });
+            await snap(page, 'ow-comrade-healing-wounded', { selector: `#${sheetId} ${HEALING}` });
+            expect((await readPanel(page, sheetId)).clockText).toContain('7 days until recovery');
 
-                        // Read the LIVE actor: the captured reference can be replaced
-                        // by a re-render, and the click routes through `actor.update()`
-                        // — a full socket round-trip that a fixed 150 ms sleep raced
-                        // under parallel load. Settle on the observed change, capped.
-                        const recoveryDays = (): number | null => g.game?.actors?.get?.(id)?.system?.comradeRecoveryDays ?? null;
-                        const settle = async (from: number | null): Promise<void> => {
-                            await globalThis.wh40kE2E.pollUntil(() => recoveryDays() !== from, globalThis.wh40kE2E.scaledMs(2000), 100);
-                        };
+            await click(healing, 'owComradeTickDay');
+            await settled({ state: 'wounded', days: 6 });
 
-                        const tickBtn = el.querySelector<HTMLButtonElement>('button[data-action="owComradeTickDay"]');
-                        if (tickBtn !== null && !tickBtn.disabled) {
-                            const startDays = recoveryDays();
-                            tickBtn.click();
-                            await settle(startDays);
-                            tickDispatched = true;
-                        }
-                        recoveryAfter = recoveryDays();
-                    }
-                } catch (err) {
-                    probeError = err instanceof Error ? err.message : String(err);
-                }
+            // The Medicae Test's Degrees of Success come off the clock, once.
+            await click(healing, 'owComradeMedicae');
+            const dialog = page.locator(DIALOG).last();
+            await expect(dialog).toBeVisible();
+            await dialog.locator('input[name="degreesOfSuccess"]').fill('3');
+            await dialog.locator('button[data-action="ok"]').click();
+            await settled({ state: 'wounded', days: 3, medicaeUsed: true });
+            await expect.poll(async () => (await readPanel(page, sheetId)).enabled).toEqual([true, false, false]);
+            await snap(page, 'ow-comrade-healing-after-medicae', { selector: `#${sheetId} ${HEALING}` });
 
-                return {
-                    rendered,
-                    hasPanel,
-                    hasTickBtn,
-                    hasMedicaeBtn,
-                    hasReplaceBtn,
-                    hasStatusBadge,
-                    recoveryBefore,
-                    recoveryAfter,
-                    tickDispatched,
-                    error: probeError,
-                };
-            }, actorId);
-
-            await snap(page, 'ow-comrade-healing-panel', { selector: '.wh40k-ow-healing-panel' });
-
-            // Tear down so the open sheet doesn't leak into the next test's DOM.
-            await page.evaluate(async (): Promise<void> => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry browser-side globalThis surface
-                const g = globalThis as unknown as FoundryGlobal;
-                try {
-                    await g.__c157sheet?.close?.();
-                } catch {
-                    /* ignore */
-                }
-                g.__c157sheet = undefined;
-            });
-
-            expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'sheet did not render').toBe(true);
-            // Panel + buttons only render once the orchestrator wires the
-            // include into tab-status.hbs; the probe asserts presence so
-            // post-wire-up the spec exercises the full interaction.
-            expect(result.hasPanel, 'comrade healing panel should render in OW sheet').toBe(true);
-            expect(result.hasTickBtn, 'Tick Day button should render').toBe(true);
-            expect(result.hasMedicaeBtn, 'Medicae Attempt button should render').toBe(true);
-            expect(result.hasReplaceBtn, 'Replace at Camp button should render').toBe(true);
-            expect(result.hasStatusBadge, 'recovery status badge should render').toBe(true);
-            expect(result.recoveryBefore, 'initial recovery days should be 5').toBe(5);
-            if (result.tickDispatched === true) {
-                expect(result.recoveryAfter, 'recovery should tick 5 → 4 after one day').toBe(4);
+            // The day the clock runs out, the Comrade is back on their feet.
+            for (const days of [2, 1]) {
+                await click(healing, 'owComradeTickDay');
+                await settled({ days });
             }
+            await click(healing, 'owComradeTickDay');
+            await settled({ state: 'unharmed', days: 0 });
+            await expect.poll(async () => (await readPanel(page, sheetId)).status).toBe('ready');
+
+            // Killed, then replaced once the squad is back in camp.
+            await click(comrade, 'owComradeWound');
+            await settled({ state: 'wounded', days: 7 });
+            await click(comrade, 'owComradeWound');
+            await settled({ state: 'dead', days: 0 });
+            await expect.poll(async () => readPanel(page, sheetId)).toMatchObject({ status: 'dead', enabled: [false, false, false] });
+            await click(healing, 'owComradeToggleRefit');
+            await settled({ refit: true });
+            await expect.poll(async () => (await readPanel(page, sheetId)).enabled).toEqual([false, false, true]);
+            await snap(page, 'ow-comrade-healing-dead-in-camp', { selector: `#${sheetId} ${HEALING}` });
+
+            await click(healing, 'owComradeReplace2');
+            await settled({ state: 'unharmed', days: 0, refit: false });
+            await expect.poll(async () => (await readPanel(page, sheetId)).status).toBe('ready');
+            await snap(page, 'ow-comrade-healing-replaced', { selector: `#${sheetId} ${HEALING}` });
+            expect((await readPanel(page, sheetId)).hasUndefined).toBe(false);
 
             recordCoverage('panel.render', 'OwComradeHealingPanel');
         } finally {
-            await deleteActor(page, actorId);
+            await deleteDocuments(page, { actors: [actor.id] });
         }
     });
 });

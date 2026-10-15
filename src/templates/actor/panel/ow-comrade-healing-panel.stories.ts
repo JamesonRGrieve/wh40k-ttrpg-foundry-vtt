@@ -1,31 +1,28 @@
 /**
- * Storybook stories for the Only War Comrade Healing panel
- * (#157 — core.md §"Healing Comrades" p.12269; replacement p.12261).
+ * Storybook stories for the Only War Comrade Healing panel (#157 — OW Core
+ * p.271, Healing Comrades and replacement on return to camp).
  *
- * Three visual states an operator needs to verify:
+ *   1. Wounded mid-recovery — yellow badge, 5 of 7 days left, Tick Day and
+ *      Medicae enabled, Replace disabled.
+ *   2. Wounded after Medicae — the attempt is spent, so Medicae is disabled.
+ *   3. Ready — green badge, recovery complete, nothing to tick.
+ *   4. Dead at camp — red badge, refit available, Replace enabled.
  *
- *   1. Wounded mid-recovery — yellow badge, 5 days remaining of the
- *      RAW 7-day clock, refit unavailable, Tick Day + Medicae enabled,
- *      Replace disabled.
- *   2. Wounded after Medicae — yellow badge, the Medicae attempt
- *      shaved DoS off the clock, refit still unavailable.
- *   3. Dead at camp — green Ready badge cleared, Replace button
- *      enabled because state is dead AND refit is in reach.
- *
- * Every value is fixed for diff stability (no Math.random); recovery
- * arithmetic is resolved through the canonical rules module so any
- * change to the 7-day auto-recovery / Medicae DoS reduction surfaces
- * here first.
+ * Each context is built by `buildComradeHealingPanel` — the builder the
+ * character sheet passes through — so a value it leaves out shows here as
+ * "undefined" text, which the plays reject.
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
-import type { ComradeState } from '../../../module/rules/ow-comrade';
+import { captureActionClicks, clickAction, renderSheet } from '../../../../stories/test-helpers';
 import {
     applyMedicaeAttempt,
+    buildComradeHealingPanel,
+    type ComradeHealingPanelView,
+    type ComradeHealingRecord,
     OW_COMRADE_AUTO_RECOVERY_DAYS,
-    OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER,
     tickComradeRecovery,
 } from '../../../module/rules/ow-comrade-healing';
 import panelSrc from './ow-comrade-healing-panel.hbs?raw';
@@ -33,38 +30,11 @@ import panelSrc from './ow-comrade-healing-panel.hbs?raw';
 initializeStoryHandlebars();
 
 interface ComradeHealingPanelCtx {
-    comradeHealingPanel: {
-        recoveryDays: number;
-        autoRecoveryTotal: number;
-        refitAvailable: boolean;
-        comradeState: ComradeState;
-        isRecovering: boolean;
-        isReady: boolean;
-        canTick: boolean;
-        canMedicae: boolean;
-        canReplace: boolean;
-        medicaeDifficulty: number;
-    };
+    comradeHealingPanel: ComradeHealingPanelView;
 }
 
-function buildContext(opts: { recoveryDays: number; refitAvailable: boolean; comradeState: ComradeState }): ComradeHealingPanelCtx {
-    const isRecovering = opts.recoveryDays > 0;
-    const isReady = !isRecovering && opts.comradeState === 'unharmed';
-    const isDead = opts.comradeState === 'dead';
-    return {
-        comradeHealingPanel: {
-            recoveryDays: opts.recoveryDays,
-            autoRecoveryTotal: OW_COMRADE_AUTO_RECOVERY_DAYS,
-            refitAvailable: opts.refitAvailable,
-            comradeState: opts.comradeState,
-            isRecovering,
-            isReady,
-            canTick: isRecovering,
-            canMedicae: isRecovering,
-            canReplace: isDead && opts.refitAvailable,
-            medicaeDifficulty: OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER,
-        },
-    };
+function buildContext(record: ComradeHealingRecord): ComradeHealingPanelCtx {
+    return { comradeHealingPanel: buildComradeHealingPanel(record) };
 }
 
 function renderPanel(ctx: ComradeHealingPanelCtx): HTMLElement {
@@ -75,32 +45,75 @@ function renderPanel(ctx: ComradeHealingPanelCtx): HTMLElement {
     return wrapper;
 }
 
+/** The enabled state of Tick Day / Medicae / Replace, in that order. */
+function enabled(root: HTMLElement): boolean[] {
+    return ['owComradeTickDay', 'owComradeMedicae', 'owComradeReplace2'].map(
+        (action) => root.querySelector<HTMLButtonElement>(`button[data-action="${action}"]`)?.disabled === false,
+    );
+}
+
+async function expectAllDefined(root: HTMLElement): Promise<void> {
+    await expect(root.textContent).not.toContain('undefined');
+    await expect(root.querySelector('[data-field="recovery-days"]')?.textContent).toContain('Auto-recovery: 7 days');
+}
+
 const meta: Meta<ComradeHealingPanelCtx> = {
     title: 'Actor/Character/OwComradeHealingPanel',
+    render: (args) => renderPanel(args),
 };
 export default meta;
 type Story = StoryObj<ComradeHealingPanelCtx>;
 
-// Story 1 — wounded mid-recovery: tick the 7-day clock down by 2.
+// Two days of rest off the seven-day clock.
 const midRecovery = tickComradeRecovery({ remainingDays: OW_COMRADE_AUTO_RECOVERY_DAYS, daysElapsed: 2 });
 
 export const WoundedMidRecovery: Story = {
     name: 'Wounded — 5 days remaining on the 7-day auto-recovery clock',
-    args: buildContext({ recoveryDays: midRecovery.remainingDays, refitAvailable: false, comradeState: 'wounded' }),
-    render: (args) => renderPanel(args),
+    args: buildContext({ state: 'wounded', recoveryDays: midRecovery.remainingDays, refitAvailable: false, medicaeUsed: false }),
+    play: async ({ canvasElement }) => {
+        await expectAllDefined(canvasElement);
+        await expect(canvasElement.querySelector<HTMLElement>('[data-recovery-status]')?.dataset['recoveryStatus']).toBe('recovering');
+        await expect(canvasElement.querySelector('[data-remaining-days]')?.textContent).toContain('5 days until recovery');
+        await expect(enabled(canvasElement)).toEqual([true, true, false]);
+        const clicks = captureActionClicks(canvasElement);
+        clickAction(canvasElement, 'owComradeTickDay');
+        clickAction(canvasElement, 'owComradeToggleRefit');
+        await expect(clicks.map((c) => c.action)).toEqual(['owComradeTickDay', 'owComradeToggleRefit']);
+    },
 };
 
-// Story 2 — Medicae attempt with 3 DoS shaves 3 days off the clock.
+// The wound's one Medicae Test, with 3 Degrees of Success.
 const afterMedicae = applyMedicaeAttempt({ remainingDays: midRecovery.remainingDays, degreesOfSuccess: 3 });
 
 export const WoundedAfterMedicae: Story = {
-    name: 'Wounded — Medicae(-10) shaved 3 DoS off recovery',
-    args: buildContext({ recoveryDays: afterMedicae.remainingDays, refitAvailable: false, comradeState: 'wounded' }),
-    render: (args) => renderPanel(args),
+    name: 'Wounded — the one Medicae(-10) attempt is spent',
+    args: buildContext({ state: 'wounded', recoveryDays: afterMedicae.remainingDays, refitAvailable: false, medicaeUsed: true }),
+    play: async ({ canvasElement }) => {
+        await expectAllDefined(canvasElement);
+        await expect(enabled(canvasElement)).toEqual([true, false, false]);
+        await expect(canvasElement.querySelector('[data-action="owComradeMedicae"]')?.getAttribute('title')).toBe(
+            "This wound's one Medicae Test has been made",
+        );
+    },
+};
+
+export const Ready: Story = {
+    name: 'Ready — recovered, nothing to tick',
+    args: buildContext({ state: 'unharmed', recoveryDays: 0, refitAvailable: false, medicaeUsed: false }),
+    play: async ({ canvasElement }) => {
+        await expectAllDefined(canvasElement);
+        await expect(canvasElement.querySelector('[data-recovery-status]')?.textContent.trim()).toBe('Comrade ready for duty');
+        await expect(enabled(canvasElement)).toEqual([false, false, false]);
+    },
 };
 
 export const DeadAtCampReplaceReady: Story = {
     name: 'Dead at camp — refit available, Replace button enabled',
-    args: buildContext({ recoveryDays: 0, refitAvailable: true, comradeState: 'dead' }),
-    render: (args) => renderPanel(args),
+    args: buildContext({ state: 'dead', recoveryDays: 0, refitAvailable: true, medicaeUsed: false }),
+    play: async ({ canvasElement }) => {
+        await expectAllDefined(canvasElement);
+        await expect(canvasElement.querySelector<HTMLElement>('[data-recovery-status]')?.dataset['recoveryStatus']).toBe('dead');
+        await expect(canvasElement.querySelector('[data-action="owComradeToggleRefit"]')?.getAttribute('aria-pressed')).toBe('true');
+        await expect(enabled(canvasElement)).toEqual([false, false, true]);
+    },
 };

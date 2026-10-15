@@ -16,6 +16,9 @@
  *     unharmed. Defaults to `false` so a fresh actor must be opted
  *     into refit by GM-toggle, Regiment Resource spend, or Munitorum
  *     supply.
+ *   - `comradeMedicaeUsed` — whether the current wound's single
+ *     Difficult (-10) Medicae Test has been made (OW Core p.271). A new
+ *     wound clears it.
  *
  * No actor coupling — the pure rules in
  * {@link ../../../rules/ow-comrade-healing} own the arithmetic and the
@@ -37,6 +40,7 @@ const { NumberField, BooleanField } = foundry.data.fields;
 export interface OwComradeHealingDeclarations {
     comradeRecoveryDays: number;
     refitAvailable: boolean;
+    comradeMedicaeUsed: boolean;
 }
 
 /**
@@ -61,5 +65,6 @@ export function owComradeHealingSchemaFields(): Record<string, foundry.data.fiel
             integer: true,
         }),
         refitAvailable: new BooleanField({ required: true, initial: false }),
+        comradeMedicaeUsed: new BooleanField({ required: true, initial: false }),
     };
 }

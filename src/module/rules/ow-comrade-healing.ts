@@ -27,10 +27,10 @@
  *     stays wounded; a living Comrade is unaffected. The replacement
  *     enters play unharmed.
  *
- * Out of scope this round (DataModel slot for `remainingRecoveryDays`,
- * sheet panel showing the clock, downtime chat card, scheduler hook):
- * those land in follow-ups so this engine stays a pure rules module
- * with no Foundry coupling. Hit-track transitions and Cohesion live
+ * It also owns the actor update every Comrade state change makes
+ * ({@link comradeStateChange}) and the healing panel's view
+ * ({@link buildComradeHealingPanel}). It stays a pure rules module with no
+ * Foundry coupling. Hit-track transitions and Cohesion live
  * in {@link ../rules/ow-comrade}; this module imports the {@link ComradeState}
  * union from there to stay schema-aligned.
  */
@@ -176,6 +176,114 @@ export function processReplacement(req: ReplacementRequest): ReplacementResult {
         return { replaced: false, newState: req.stateAtCamp, reason: 'no-refit' };
     }
     return { replaced: true, newState: 'unharmed' };
+}
+
+/* -------------------------------------------- */
+/*  State changes and the panel view            */
+/* -------------------------------------------- */
+
+/**
+ * The actor-system update one Comrade state change makes, keyed by update path.
+ * Every action that moves the Comrade's state (Wound, Heal, Replace, a recovery
+ * tick or a Medicae test that finishes the clock) writes it in one update so the
+ * recovery clock never disagrees with the state.
+ */
+export interface ComradeStateChange {
+    'system.comrade.state': ComradeState;
+    'system.comradeRecoveryDays': number;
+    'system.comradeMedicaeUsed'?: boolean;
+    'system.refitAvailable'?: boolean;
+}
+
+/**
+ * The update for a Comrade moving from `previous` to `next` (OW Core p.271):
+ *   - newly wounded: the seven-day recovery clock starts and the wound gets its
+ *     one Medicae attempt;
+ *   - still wounded (a no-op hit): the clock keeps running;
+ *   - unharmed (healed, recovered or replaced): the clock clears; a dead
+ *     Comrade coming back is a replacement, which uses up the camp refit;
+ *   - dead: the clock clears.
+ */
+export function comradeStateChange(previous: ComradeState, next: ComradeState, remainingDays: number): ComradeStateChange {
+    if (next === 'wounded') {
+        return previous === 'wounded'
+            ? { 'system.comrade.state': next, 'system.comradeRecoveryDays': sanitiseNonNegativeInt(remainingDays) }
+            : { 'system.comrade.state': next, 'system.comradeRecoveryDays': OW_COMRADE_AUTO_RECOVERY_DAYS, 'system.comradeMedicaeUsed': false };
+    }
+    if (next === 'unharmed') {
+        const change: ComradeStateChange = { 'system.comrade.state': next, 'system.comradeRecoveryDays': 0, 'system.comradeMedicaeUsed': false };
+        if (previous === 'dead') change['system.refitAvailable'] = false;
+        return change;
+    }
+    return { 'system.comrade.state': next, 'system.comradeRecoveryDays': 0 };
+}
+
+/** The Comrade-healing state the actor persists. */
+export interface ComradeHealingRecord {
+    state: ComradeState;
+    /** Days of recovery still owed (`system.comradeRecoveryDays`). */
+    recoveryDays: number;
+    /** Back in camp for refitting (`system.refitAvailable`). */
+    refitAvailable: boolean;
+    /** The wound's one Medicae attempt is spent (`system.comradeMedicaeUsed`). */
+    medicaeUsed: boolean;
+}
+
+/** The healing panel's status badge. */
+export type ComradeHealingStatus = 'recovering' | 'ready' | 'dead';
+
+const HEALING_STATUS_LABEL_KEYS: Record<ComradeHealingStatus, string> = {
+    recovering: 'WH40K.OW.ComradeHealing.Status.Recovering',
+    ready: 'WH40K.OW.ComradeHealing.Status.Ready',
+    dead: 'WH40K.OW.Comrade.State.Dead',
+};
+
+/** Every value the "Healing Comrades" panel renders (#157). */
+export interface ComradeHealingPanelView {
+    comradeState: ComradeState;
+    recoveryDays: number;
+    autoRecoveryTotal: number;
+    refitAvailable: boolean;
+    medicaeUsed: boolean;
+    medicaeDifficulty: number;
+    status: ComradeHealingStatus;
+    statusKey: string;
+    isRecovering: boolean;
+    isReady: boolean;
+    isDead: boolean;
+    canTick: boolean;
+    canMedicae: boolean;
+    canReplace: boolean;
+}
+
+/**
+ * The healing panel's view of the Comrade. The button gates come from the same
+ * rules the actions apply: a recovery day and the one Medicae attempt only
+ * while a wound is healing, and replacement only for a dead Comrade back in
+ * camp ({@link processReplacement}).
+ */
+export function buildComradeHealingPanel(record: ComradeHealingRecord): ComradeHealingPanelView {
+    const recoveryDays = sanitiseNonNegativeInt(record.recoveryDays);
+    const isRecovering = record.state === 'wounded';
+    const isDead = record.state === 'dead';
+    const status: ComradeHealingStatus = isDead ? 'dead' : isRecovering ? 'recovering' : 'ready';
+    const healing = isRecovering && recoveryDays > 0;
+    return {
+        comradeState: record.state,
+        recoveryDays,
+        autoRecoveryTotal: OW_COMRADE_AUTO_RECOVERY_DAYS,
+        refitAvailable: record.refitAvailable,
+        medicaeUsed: record.medicaeUsed,
+        medicaeDifficulty: OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER,
+        status,
+        statusKey: HEALING_STATUS_LABEL_KEYS[status],
+        isRecovering,
+        isReady: status === 'ready',
+        isDead,
+        canTick: healing,
+        canMedicae: healing && !record.medicaeUsed,
+        canReplace: processReplacement({ stateAtCamp: record.state, refitAvailable: record.refitAvailable }).replaced,
+    };
 }
 
 /* -------------------------------------------- */

@@ -22,7 +22,7 @@ import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisiti
 import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
 import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
-import { owComradeMedicae, owComradeReplace2, owComradeTickDay } from '../../actions/ow-comrade-healing-actions.ts';
+import { owComradeMedicae, owComradeReplace2, owComradeTickDay, owComradeToggleRefit } from '../../actions/ow-comrade-healing-actions.ts';
 import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/ow-drawback-actions.ts';
 import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
@@ -109,6 +109,7 @@ import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHand
 import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
+import { buildComradeHealingPanel, type ComradeHealingPanelView } from '../../rules/ow-comrade-healing.ts';
 import { buildComradePanel, type ComradePanelView } from '../../rules/ow-comrade.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
@@ -545,14 +546,8 @@ type OwMountPanelContext = {
     actions: Array<{ actionId: string; timing: string; nameKey: string; descriptionKey: string; timingKey: string }>;
 };
 
-type OwComradeHealingPanelContext = {
-    recoveryDays: number;
-    refitAvailable: boolean;
-    canTick: boolean;
-    canMedicae: boolean;
-    canReplace: boolean;
-    statusKey: string;
-};
+/** The OW "Healing Comrades" panel context: the rules layer's view (#157). */
+type OwComradeHealingPanelContext = ComradeHealingPanelView;
 
 type OwCraftsmanshipPanelContext = ReturnType<typeof buildOwCraftsmanshipPanel>;
 
@@ -914,6 +909,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'owComradeTickDay': owComradeTickDay,
             'owComradeMedicae': owComradeMedicae,
             'owComradeReplace2': owComradeReplace2,
+            'owComradeToggleRefit': owComradeToggleRefit,
             // Batch-4 actions (#159, #160, #161)
             'owMountedAction': owMountedAction,
             'owToggleDrawback': owToggleDrawback,
@@ -2228,25 +2224,18 @@ export default class CharacterSheet extends BaseActorSheet {
         return { mount, actions };
     }
 
-    /** OW Comrade Healing panel (#157). */
+    /**
+     * OW Comrade Healing panel (#157). The values come from the rules layer's
+     * `buildComradeHealingPanel`; the sheet only passes the persisted state through.
+     */
     _prepareOwComradeHealingPanel(): OwComradeHealingPanelContext {
         const sys = this.actor.system;
-        const recoveryDays = sys.comradeRecoveryDays;
-        const refitAvailable = sys.refitAvailable;
-        const statusKey =
-            recoveryDays > 0
-                ? 'WH40K.OW.ComradeHealing.Status.Recovering'
-                : refitAvailable
-                ? 'WH40K.OW.ComradeHealing.Status.RefitAvailable'
-                : 'WH40K.OW.ComradeHealing.Status.Ready';
-        return {
-            recoveryDays,
-            refitAvailable,
-            canTick: recoveryDays > 0,
-            canMedicae: recoveryDays > 0,
-            canReplace: refitAvailable,
-            statusKey,
-        };
+        return buildComradeHealingPanel({
+            state: sys.comrade.state,
+            recoveryDays: sys.comradeRecoveryDays,
+            refitAvailable: sys.refitAvailable,
+            medicaeUsed: sys.comradeMedicaeUsed,
+        });
     }
 
     /* -------------------------------------------- */

@@ -1,26 +1,24 @@
 /**
- * Only War Comrade-Healing action handlers (#157 — core.md
- * §"Healing Comrades" p.12269; replacement p.12261).
+ * Only War Comrade-Healing action handlers (#157 — OW Core p.271,
+ * "Healing Comrades" and replacement on return to camp).
  *
- * Three sheet-action methods wired into the character-sheet action map:
+ * Four sheet-action methods wired into the character-sheet action map:
  *
- *   - `owComradeTickDay`  — advance the recovery clock by one day of
- *                            in-fiction rest. Defence-in-depth no-op
- *                            when `comradeRecoveryDays === 0`.
- *   - `owComradeMedicae`  — prompt the operator for the Difficult(-10)
- *                            Medicae Test's Degrees of Success and
- *                            apply it to the clock.
- *   - `owComradeReplace2` — return-to-camp replacement attempt. Reads
- *                            `refitAvailable` off the button dataset
- *                            (mirrored from `system.refitAvailable`)
- *                            and the current `comrade.state`. Distinct
- *                            from #152's `owComradeReplace`: this one
- *                            also flips `comradeRecoveryDays` back to
- *                            0 on success and routes through the
- *                            replacement chat card.
+ *   - `owComradeTickDay`     — advance the recovery clock by one day of
+ *                               in-fiction rest; the last day returns
+ *                               the Comrade to unharmed.
+ *   - `owComradeMedicae`     — prompt for the wound's single
+ *                               Difficult(-10) Medicae Test's Degrees of
+ *                               Success and apply it to the clock.
+ *   - `owComradeReplace2`    — return-to-camp replacement of a dead
+ *                               Comrade, gated on `system.refitAvailable`.
+ *   - `owComradeToggleRefit` — mark the squad back in camp for refitting.
  *
- * Each method emits an OW Comrade Healing chat card so the table
- * sees the resolution without inspecting the sheet.
+ * Every state change goes through the rules layer's
+ * {@link comradeStateChange}, the same update #152's Wound / Heal /
+ * Replace make. The tick, Medicae and replace actions emit an OW Comrade
+ * Healing chat card, so the table sees the resolution without inspecting
+ * the sheet.
  *
  * Handlers are exported as `this`-typed free functions; the Foundry
  * V14 ApplicationV2 action map binds `this` to the sheet instance at
@@ -38,7 +36,7 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
-import { applyMedicaeAttempt, processReplacement, type ReplacementSkipReason, tickComradeRecovery } from '../rules/ow-comrade-healing.ts';
+import { applyMedicaeAttempt, comradeStateChange, processReplacement, type ReplacementSkipReason, tickComradeRecovery } from '../rules/ow-comrade-healing.ts';
 import type { ComradeState } from '../rules/ow-comrade.ts';
 
 /**
@@ -54,6 +52,7 @@ interface OwComradeHealingHost {
         system: {
             comradeRecoveryDays: number;
             refitAvailable: boolean;
+            comradeMedicaeUsed: boolean;
             comrade: {
                 name: string;
                 state: ComradeState;
@@ -107,17 +106,23 @@ async function emitHealingChat(host: Host, event: ChatPayload): Promise<void> {
 /* -------------------------------------------- */
 
 /**
+ * Write the recovery clock after a tick or a Medicae test. The day the clock
+ * reaches 0 the wounded Comrade is back on their feet (OW Core p.271), so the
+ * state moves to unharmed in the same update.
+ */
+async function saveRecoveryClock(host: Host, remainingDays: number, extra: { 'system.comradeMedicaeUsed'?: boolean } = {}): Promise<void> {
+    const { state } = host.actor.system.comrade;
+    const change = remainingDays === 0 && state === 'wounded' ? comradeStateChange(state, 'unharmed', 0) : { 'system.comradeRecoveryDays': remainingDays };
+    await host.actor.update({ ...change, ...extra });
+}
+
+/**
  * Tick the Comrade's recovery clock down by one in-fiction day of
- * rest.
+ * rest. The day that brings it to 0 returns the Comrade to unharmed.
  *
  * Wired to `data-action="owComradeTickDay"`. The button is `disabled`
- * unless `comradeRecoveryDays > 0`, so the no-op branch is
+ * unless a wounded Comrade still owes days, so the no-op branch is
  * defence-in-depth.
- *
- * On the day that brings remainingDays to 0 the auto-recovery clock
- * is satisfied; the caller (or a separate "flip state on recovered"
- * action) is responsible for moving the Comrade's track back to
- * `unharmed` — this handler only owns the clock.
  */
 export async function owComradeTickDay(this: Host, event: Event, _target: HTMLElement): Promise<void> {
     event.stopPropagation();
@@ -125,7 +130,7 @@ export async function owComradeTickDay(this: Host, event: Event, _target: HTMLEl
         remainingDays: this.actor.system.comradeRecoveryDays,
         daysElapsed: 1,
     });
-    await this._updateSystemField('system.comradeRecoveryDays', result.remainingDays);
+    await saveRecoveryClock(this, result.remainingDays);
     await emitHealingChat(this, {
         kind: 'tick',
         daysElapsed: 1,
@@ -187,22 +192,21 @@ async function promptDegreesOfSuccess(): Promise<number | null> {
  * Apply one Difficult(-10) Medicae Test result to the Comrade's
  * recovery clock.
  *
- * Wired to `data-action="owComradeMedicae"`. The button is `disabled`
- * unless `comradeRecoveryDays > 0`. The "one attempt per wound" RAW
- * gate is the caller's responsibility (panel state / dataset);
- * this handler defers to the rules module's arithmetic.
+ * Wired to `data-action="owComradeMedicae"`. RAW allows a single test per
+ * wound (OW Core p.271): the attempt is recorded as `comradeMedicaeUsed`, and
+ * the panel disables the button once it is spent or when no wound is healing.
+ * A test that clears the clock returns the Comrade to unharmed.
  */
 export async function owComradeMedicae(this: Host, event: Event, _target: HTMLElement): Promise<void> {
     event.stopPropagation();
+    if (this.actor.system.comradeMedicaeUsed) return;
     const dos = await promptDegreesOfSuccess();
     if (dos == null) return; // operator cancelled
     const result = applyMedicaeAttempt({
         remainingDays: this.actor.system.comradeRecoveryDays,
         degreesOfSuccess: dos,
     });
-    if (result.reducedBy > 0) {
-        await this._updateSystemField('system.comradeRecoveryDays', result.remainingDays);
-    }
+    await saveRecoveryClock(this, result.remainingDays, { 'system.comradeMedicaeUsed': true });
     await emitHealingChat(this, {
         kind: 'medicae',
         degreesOfSuccess: dos,
@@ -223,31 +227,35 @@ export async function owComradeMedicae(this: Host, event: Event, _target: HTMLEl
  * unless `system.comrade.state === 'dead'` AND `system.refitAvailable`
  * is true.
  *
- * Distinct from #152's `owComradeReplace`: this handler routes
- * through the {@link processReplacement} gate, also resets the
- * recovery clock to 0 on success, and emits the healing-namespace
- * chat card so the resolution is consistent with the rest of the
- * healing engine.
+ * It applies the same {@link comradeStateChange} as #152's
+ * `owComradeReplace`: the recovery clock clears and the camp refit is
+ * used up. It emits the healing-namespace chat card, so the resolution is
+ * reported like the rest of the healing engine.
  */
-export async function owComradeReplace2(this: Host, event: Event, target: HTMLElement): Promise<void> {
+export async function owComradeReplace2(this: Host, event: Event, _target: HTMLElement): Promise<void> {
     event.stopPropagation();
-    const refitFromDataset = target.dataset['refitAvailable'] === 'true';
-    const refitAvailable = refitFromDataset || this.actor.system.refitAvailable;
-    const result = processReplacement({
-        stateAtCamp: this.actor.system.comrade.state,
-        refitAvailable,
-    });
+    const { state } = this.actor.system.comrade;
+    const result = processReplacement({ stateAtCamp: state, refitAvailable: this.actor.system.refitAvailable });
     if (result.replaced) {
-        await this._updateSystemField('system.comrade.state', result.newState);
-        await this._updateSystemField('system.comradeRecoveryDays', 0);
-        // refit is consumed on a successful replacement: the squad
-        // has burned its window of resupply. Persist that so the
-        // panel correctly disables Replace until refit is re-enabled.
-        await this._updateSystemField('system.refitAvailable', false);
+        await this.actor.update({ ...comradeStateChange(state, result.newState, 0) });
     }
     await emitHealingChat(this, {
         kind: 'replace',
         replaced: result.replaced,
         ...(result.reason !== undefined ? { reason: result.reason } : {}),
     });
+}
+
+/* -------------------------------------------- */
+/*  owComradeToggleRefit — back in camp          */
+/* -------------------------------------------- */
+
+/**
+ * Mark the squad as back in camp for refitting, or as having left it. While it
+ * is, a dead Comrade can be replaced (OW Core p.271). Wired to
+ * `data-action="owComradeToggleRefit"` on the healing panel's refit row.
+ */
+export async function owComradeToggleRefit(this: Host, event: Event, _target: HTMLElement): Promise<void> {
+    event.stopPropagation();
+    await this._updateSystemField('system.refitAvailable', !this.actor.system.refitAvailable);
 }

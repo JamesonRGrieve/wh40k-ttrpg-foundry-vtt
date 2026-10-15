@@ -8232,8 +8232,10 @@
                 "Medicae": {
                     "Title": "Medicae Attempt",
                     "Difficulty": "Difficult (-10) Medicae Test",
-                    "ReducedBy": "Recovery reduced by {days} days"
+                    "ReducedBy": "Recovery reduced by {days} days",
+                    "Used": "This wound's one Medicae Test has been made"
                 },
+                "Refit": "Camp refit",
                 "Recovery": {
                     "Complete": "Comrade has fully recovered"
                 },

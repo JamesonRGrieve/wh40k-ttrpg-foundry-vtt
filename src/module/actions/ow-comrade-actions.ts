@@ -34,12 +34,12 @@
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
+import { comradeStateChange } from '../rules/ow-comrade-healing.ts';
 import { type ComradeRecord, type ComradeState, applyComradeHit, COMRADE_STATE_LABEL_KEYS, healComrade, replaceComrade } from '../rules/ow-comrade.ts';
 
 /**
- * Structural type the OW Comrade handlers expect. The character sheet
- * already exposes `actor` + `_updateSystemField`; the additional
- * narrowing here is the OW-specific `system.comrade` sub-document.
+ * Structural type the OW Comrade handlers expect: the character sheet's
+ * `actor`, narrowed to the OW Comrade fields.
  */
 interface OwComradeHost {
     actor: WH40KBaseActor & {
@@ -48,13 +48,18 @@ interface OwComradeHost {
             comrade: ComradeRecord;
             /** Back in camp for refitting: a dead Comrade can be replaced (#152). */
             refitAvailable: boolean;
+            /** Days of recovery the Comrade still owes (#157). */
+            comradeRecoveryDays: number;
         };
     };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: forwards arbitrary system-field values to Foundry's Document.update() via the sheet helper
-    _updateSystemField: (field: string, value: unknown) => Promise<void>;
 }
 
 type Host = OwComradeHost;
+
+/** Save a state change with the recovery clock it implies (#157), in one update. */
+async function saveState(host: Host, previous: ComradeState, next: ComradeState): Promise<void> {
+    await host.actor.update({ ...comradeStateChange(previous, next, host.actor.system.comradeRecoveryDays) });
+}
 
 /** Result payload threaded into the chat card after a state-change action. */
 interface StateChangePayload {
@@ -102,7 +107,7 @@ export async function owComradeWound(this: Host, event: Event, _target: HTMLElem
     const previousState = this.actor.system.comrade.state;
     const result = applyComradeHit(previousState);
     if (result.transitioned) {
-        await this._updateSystemField('system.comrade.state', result.newState);
+        await saveState(this, previousState, result.newState);
     }
     await emitStateChangeChat(this, {
         previousState,
@@ -128,7 +133,7 @@ export async function owComradeHeal(this: Host, event: Event, _target: HTMLEleme
     const previousState = this.actor.system.comrade.state;
     const result = healComrade(previousState);
     if (result.transitioned) {
-        await this._updateSystemField('system.comrade.state', result.newState);
+        await saveState(this, previousState, result.newState);
     }
     await emitStateChangeChat(this, {
         previousState,
@@ -146,6 +151,7 @@ export async function owComradeHeal(this: Host, event: Event, _target: HTMLEleme
  * Replace a dead Comrade with a fresh one. RAW (OW Core p.110 / p.271): only
  * legal while the existing Comrade is dead AND the squad is back in camp for
  * refitting — the actor's `refitAvailable` flag, which the panel gates on too.
+ * The replacement uses up that refit and clears the recovery clock (#157).
  *
  * Wired to `data-action="owComradeReplace"`. The button is `disabled`
  * unless dead + in camp, so the negative branches here are
@@ -157,7 +163,7 @@ export async function owComradeReplace(this: Host, event: Event, _target: HTMLEl
     // In camp for refitting is the actor's `refitAvailable` (#152), the same flag the panel gates on.
     const result = replaceComrade(previousState, this.actor.system.refitAvailable);
     if (result.transitioned) {
-        await this._updateSystemField('system.comrade.state', result.newState);
+        await saveState(this, previousState, result.newState);
     }
     await emitStateChangeChat(this, {
         previousState,

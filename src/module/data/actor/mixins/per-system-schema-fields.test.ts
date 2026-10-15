@@ -95,7 +95,7 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['dwRequisitionSchemaFields', dwRequisitionSchemaFields, ['requisitionPoints', 'missionRating']],
     ['dwVehicleSchemaFields', dwVehicleSchemaFields, ['vehicleIntegrity', 'overIntegrity']],
     ['owBattlefieldSchemaFields', owBattlefieldSchemaFields, ['supportCooldown', 'regimentalAwards']],
-    ['owComradeHealingSchemaFields', owComradeHealingSchemaFields, ['comradeRecoveryDays', 'refitAvailable']],
+    ['owComradeHealingSchemaFields', owComradeHealingSchemaFields, ['comradeRecoveryDays', 'refitAvailable', 'comradeMedicaeUsed']],
     ['owComradeSchemaFields', owComradeSchemaFields, ['comrade']],
     ['owCraftsmanshipSchemaFields', owCraftsmanshipSchemaFields, []],
     ['owDrawbackSchemaFields', owDrawbackSchemaFields, ['regimentDrawbacks', 'multiComradeRoster']],

@@ -2,6 +2,7 @@
 // Run `pnpm i18n:gen` (or commit; the pre-commit hook regenerates) to refresh.
 
 export type I18nKey =
+    | 'TYPES.Actor.aircraft'
     | 'TYPES.Actor.bc-aircraft'
     | 'TYPES.Actor.bc-character'
     | 'TYPES.Actor.bc-npc'
@@ -50,7 +51,10 @@ export type I18nKey =
     | 'TYPES.Actor.rt-voidcraft'
     | 'TYPES.Actor.rt-watercraft'
     | 'TYPES.Actor.starship'
+    | 'TYPES.Actor.terracraft'
     | 'TYPES.Actor.vehicle'
+    | 'TYPES.Actor.voidcraft'
+    | 'TYPES.Actor.watercraft'
     | 'TYPES.Item.ammunition'
     | 'TYPES.Item.aptitude'
     | 'TYPES.Item.armour'
@@ -68,6 +72,7 @@ export type I18nKey =
     | 'TYPES.Item.gear'
     | 'TYPES.Item.journalEntry'
     | 'TYPES.Item.lead'
+    | 'TYPES.Item.location'
     | 'TYPES.Item.malignancy'
     | 'TYPES.Item.mentalDisorder'
     | 'TYPES.Item.miscellaneous'
@@ -3882,7 +3887,9 @@ export type I18nKey =
     | 'WH40K.OW.ComradeHealing.Medicae.Difficulty'
     | 'WH40K.OW.ComradeHealing.Medicae.ReducedBy'
     | 'WH40K.OW.ComradeHealing.Medicae.Title'
+    | 'WH40K.OW.ComradeHealing.Medicae.Used'
     | 'WH40K.OW.ComradeHealing.Recovery.Complete'
+    | 'WH40K.OW.ComradeHealing.Refit'
     | 'WH40K.OW.ComradeHealing.RemainingDays'
     | 'WH40K.OW.ComradeHealing.Replacement.Available'
     | 'WH40K.OW.ComradeHealing.Replacement.NoRefit'
