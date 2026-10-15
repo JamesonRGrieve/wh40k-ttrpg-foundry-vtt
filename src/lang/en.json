@@ -890,7 +890,7 @@
         },
         "Assistance": {
             "Label": "Assistants",
-            "Tooltip": "Each assistant grants +10 to the test, up to the table cap (core.md §\"Assistance\", p. 25).",
+            "Tooltip": "Each assistant grants +10 to the test, up to the table cap.",
             "PlusButton": "Add an assistant (+10)",
             "MinusButton": "Remove an assistant",
             "BreakdownLine": "Assistance"
@@ -3215,7 +3215,7 @@
             "ChatTitle": "Right Stuff",
             "SpendButton": "Spend Fate (Right Stuff)",
             "Cancel": "Cancel",
-            "NotAce": "Only an Ace may invoke Right Stuff (without.md p. 39).",
+            "NotAce": "Only an Ace may invoke Right Stuff (Enemies Without, p. 39).",
             "NoFate": "No Fate points remaining to spend.",
             "Skill": {
                 "operate": "Operate",
