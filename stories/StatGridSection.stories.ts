@@ -8,6 +8,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HandlebarsLib from 'handlebars';
+import { expect } from 'storybook/test';
 import movementFullSrc from '../src/templates/actor/panel/movement-panel-full.hbs?raw';
 import statGridSrc from '../src/templates/actor/partial/stat-grid-section.hbs?raw';
 import vitalShellSrc from '../src/templates/actor/partial/vital-panel-shell.hbs?raw';
@@ -75,17 +76,19 @@ export const Athletics: Story = {
     },
 };
 
+const CARRYING_CAPACITY: GridArgs = {
+    heading: 'Carrying Capacity',
+    headingIcon: 'fa-weight-hanging',
+    columns: 3,
+    stats: [
+        { label: 'Lift', value: 100, unit: 'kg' },
+        { label: 'Carry', value: 50, unit: 'kg' },
+        { label: 'Push/Drag', value: 250, unit: 'kg' },
+    ],
+};
+
 export const CarryingCapacity: Story = {
-    args: {
-        heading: 'Carrying Capacity',
-        headingIcon: 'fa-weight-hanging',
-        columns: 3,
-        stats: [
-            { label: 'Lift', value: 100, unit: 'kg' },
-            { label: 'Carry', value: 50, unit: 'kg' },
-            { label: 'Push/Drag', value: 250, unit: 'kg' },
-        ],
-    },
+    args: CARRYING_CAPACITY,
 };
 
 /**
@@ -157,4 +160,54 @@ export const ComposedFullPanel: Story = {
                 },
             },
         ),
+};
+
+/* ------------------------------------------------------------------ */
+/*  #260: the cells read the theme tokens on every line                */
+/* ------------------------------------------------------------------ */
+
+const THEMED_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/** The value a theme token resolves to on the page right now. */
+function tokenValue(token: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    document.body.appendChild(probe);
+    const value = getComputedStyle(probe).color;
+    probe.remove();
+    return value;
+}
+
+/** The carrying-capacity grid once per line, as each line's sheet renders it. */
+export const ThemedCellsEveryLine: Story = {
+    name: '#260 — cells take the theme background and text on every line',
+    args: CARRYING_CAPACITY,
+    render: (args) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+        row.style.gap = '12px';
+        for (const line of THEMED_LINES) {
+            const column = renderSheet(statGridSrc, { ...args });
+            column.dataset['wh40kSystem'] = line;
+            row.appendChild(column);
+        }
+        return row;
+    },
+    play: async ({ canvasElement }) => {
+        const background = tokenValue('--wh40k-panel-bg');
+        const text = tokenValue('--wh40k-text-dark');
+        const cells = THEMED_LINES.map((line) => {
+            const cell = canvasElement.querySelector<HTMLElement>(`[data-wh40k-system="${line}"] [data-wh40k-hook="stat-grid-cell"]`);
+            const value = cell?.querySelector<HTMLElement>('span.tw-font-alt') ?? null;
+            return {
+                line,
+                background: cell === null ? '' : getComputedStyle(cell).backgroundColor,
+                text: value === null ? '' : getComputedStyle(value).color,
+            };
+        });
+        await expect(cells).toEqual(THEMED_LINES.map((line) => ({ line, background, text })));
+        // Not the old fixed white wash, which went grey on the dark theme.
+        await expect(background).not.toBe('rgba(255, 255, 255, 0.5)');
+    },
 };
