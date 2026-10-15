@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { clearTransientOverlays } from './screenshot';
 import { test } from './test';
 import { scaledMs } from './timing';
 
@@ -174,6 +175,9 @@ export async function joinAsGM(page: Page): Promise<boolean> {
             /* setting not registered (older build) — non-fatal */
         }
     });
+    // Core starts the welcome tour a moment after ready; its overlay would swallow
+    // the spec's first click. The cheap overlay clear ends it and neuters its start.
+    await clearTransientOverlays(page);
     return true;
 }
 

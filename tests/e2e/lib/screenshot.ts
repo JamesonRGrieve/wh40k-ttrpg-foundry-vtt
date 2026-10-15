@@ -235,6 +235,16 @@ async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<
 }
 
 /**
+ * The cheap clear on its own: unpause, end and neuter the welcome tour, hide the
+ * hover tooltip and dismiss notifications, leaving every window open. Run once at
+ * join so a spec's first click is never intercepted by the tour overlay (a hazards
+ * run timed out clicking the scene controls under it).
+ */
+export async function clearTransientOverlays(page: Page): Promise<void> {
+    await clearOverlays(page, { closeWindows: false, keepIdFragment: null });
+}
+
+/**
  * The full clear: the cheap pass {@link snap} always runs, plus closing every
  * floating application window whose id does not contain `keepIdFragment` (stray
  * windows such as In-Universe Time overlapped sheets; a sheet's app id embeds its
