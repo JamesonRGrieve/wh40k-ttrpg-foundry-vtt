@@ -163,3 +163,40 @@ export const HandBudgetOverCommitted: Story = {
         await expect(badge?.className).toContain('accent-combat');
     },
 };
+
+const PSYCHIC_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/** Whether a button's box overlaps the PR cost cell of its row. */
+function prCovered(row: Element): boolean {
+    const pr = row.querySelector('[data-wh40k-hook="psychic-power-pr"]')?.getBoundingClientRect();
+    if (pr === undefined) return true;
+    return [...row.querySelectorAll('button')].some((button) => {
+        const b = button.getBoundingClientRect();
+        return b.left < pr.right && b.right > pr.left && b.top < pr.bottom && b.bottom > pr.top;
+    });
+}
+
+/**
+ * #412: the invoke and delete buttons have their own column, so they never cover the
+ * PR cost (they used to float over it on hover). Buttons take their space even while
+ * hidden, so the layout is asserted without a hover, on every line.
+ */
+export const ActionsNeverCoverPrCost: Story = {
+    name: 'Invoke / delete buttons never cover the PR cost',
+    args: { psychicPowers: POWERS, psyRating: 4, showPsychicPanel: true, isGM: true, system: { psy: PSY } },
+    render: (args) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+        row.style.gap = '12px';
+        for (const line of PSYCHIC_LINES) row.appendChild(renderSheetParts([{ template: psychicPanelSrc }], args, { systemId: line }));
+        return row;
+    },
+    play: async ({ canvasElement }) => {
+        const rows = [...canvasElement.querySelectorAll('[data-item-type="psychicPower"]')];
+        await expect(rows).toHaveLength(PSYCHIC_LINES.length * POWERS.length);
+        await expect(rows.filter(prCovered)).toHaveLength(0);
+        // Each row's buttons sit in its own action cell, in the flow rather than absolutely positioned.
+        await expect(rows.filter((row) => row.querySelectorAll('[data-wh40k-hook="psychic-power-actions"] button').length !== 2)).toHaveLength(0);
+    },
+};

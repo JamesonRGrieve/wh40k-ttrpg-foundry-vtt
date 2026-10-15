@@ -112,6 +112,19 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
         await expect.poll(opacity).toBe('0');
         await row.hover();
         await expect.poll(opacity).toBe('1');
+        // #412: the hover buttons sit in their own column; neither covers the PR cost, which stays visible.
+        const layout = await row.evaluate((el) => {
+            const pr = el.querySelector<HTMLElement>('[data-wh40k-hook="psychic-power-pr"]');
+            const rect = pr?.getBoundingClientRect() ?? null;
+            const covered = [...el.querySelectorAll<HTMLElement>('button')].filter((button) => {
+                const b = button.getBoundingClientRect();
+                return rect !== null && b.left < rect.right && b.right > rect.left && b.top < rect.bottom && b.bottom > rect.top;
+            });
+            return { prText: pr?.textContent.trim() ?? '', prWidth: rect?.width ?? 0, covering: covered.map((button) => button.dataset['action'] ?? '') };
+        });
+        expect(layout.covering, 'buttons over the PR cost').toEqual([]);
+        expect(layout.prText).not.toBe('');
+        expect(layout.prWidth).toBeGreaterThan(0);
         await clearScreenOverlays(page, sheetId);
         await row.hover();
         await snap(page, 'combat-tab-psychic-row-hover', { selector: `#${sheetId} [data-item-type="psychicPower"]` });
