@@ -98,6 +98,11 @@ test.describe.serial('Environmental hazards (Tier B, #118)', () => {
             await dialog.locator('input[name="metres"]').press('Tab');
             await expect(subjectRow(dialog, DH2_NAME)).toContainText('1d10+6');
             await expect(dialog.locator('[data-action="resolve"]')).toBeEnabled();
+            // The shared prompt footer keeps each button's label on one line ("Resolve Hazard" wrapped).
+            const wrappedFooter = await dialog
+                .locator('button[data-action="resolve"], button[data-action="cancel"]')
+                .evaluateAll((buttons) => buttons.filter((b) => globalThis.wh40kE2E.textLines(b) > 1).map((b) => b.textContent.trim()));
+            expect(wrappedFooter, 'footer button labels that wrap').toEqual([]);
             expect(await snapWindow(page, 'hazards-falling-dialog', dialog)).not.toBeNull();
 
             const before = await chatMessageIds(page);

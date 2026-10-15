@@ -160,43 +160,13 @@ async function wrappedWeaponCardText(page: Page, cardSelector: string): Promise<
     return page.evaluate((selector: string) => {
         const card = document.querySelector<HTMLElement>(selector);
         if (card === null) return null;
-        // Lines of TEXT only: a button's icon sits at a different top from its label.
-        const lines = (el: HTMLElement): number => {
-            const tops = new Set<number>();
-            for (const node of Array.from(el.childNodes)) {
-                if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? '').trim() === '') continue;
-                const range = document.createRange();
-                range.selectNodeContents(node);
-                for (const rect of Array.from(range.getClientRects())) if (rect.width > 0) tops.add(Math.round(rect.top));
-            }
-            return tops.size;
-        };
-        // A word drawn across two lines: its characters' rects sit at more than one top.
-        const splitWords = (root: HTMLElement): string[] => {
-            const split: string[] = [];
-            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-            for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
-                const text = node.textContent ?? '';
-                for (const match of text.matchAll(/\S+/gu)) {
-                    const range = document.createRange();
-                    range.setStart(node, match.index);
-                    range.setEnd(node, match.index + match[0].length);
-                    const tops = new Set(
-                        Array.from(range.getClientRects())
-                            .filter((rect) => rect.width > 0)
-                            .map((rect) => Math.round(rect.top)),
-                    );
-                    if (tops.size > 1) split.push(match[0]);
-                }
-            }
-            return split;
-        };
         const targets = [
             ...card.querySelectorAll<HTMLElement>('span.tw-uppercase'),
             ...card.querySelectorAll<HTMLElement>('button[data-action][data-item-uuid]'),
         ];
         const grid = card.querySelector<HTMLElement>('.tw-grid');
-        return [...targets.filter((el) => lines(el) > 1).map((el) => el.textContent.trim()), ...(grid === null ? [] : splitWords(grid))];
+        const { textLines, splitWords } = globalThis.wh40kE2E;
+        return [...targets.filter((el) => textLines(el) > 1).map((el) => el.textContent.trim()), ...(grid === null ? [] : splitWords(grid))];
     }, cardSelector);
 }
 

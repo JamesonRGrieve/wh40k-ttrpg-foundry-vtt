@@ -5,9 +5,10 @@ import { E2E_OP_TIMEOUT_MS, E2E_TIMEOUT_SCALE } from './timing';
 const WAIT_FOR_POLL_MS = 50;
 
 /**
- * Timing helpers for code running inside `page.evaluate`, which cannot import
- * Node-side modules. Installed once per page by {@link installInPageHelpers}; every
- * budget is derived from the Node-side `E2E_TIMEOUT_SCALE` (see timing.ts).
+ * Timing and text-layout helpers for code running inside `page.evaluate`, which
+ * cannot import Node-side modules. Installed once per page by
+ * {@link installInPageHelpers}; every budget is derived from the Node-side
+ * `E2E_TIMEOUT_SCALE` (see timing.ts).
  */
 interface E2EPageHelpers {
     /** Default budget for one in-page operation (scaled 5000 ms). */
@@ -37,6 +38,14 @@ interface E2EPageHelpers {
      * an assertion then checks (use {@link waitFor} for that).
      */
     readonly settle: (baseMs: number) => Promise<void>;
+    /**
+     * How many lines `el`'s own text occupies: distinct line tops among the rects of
+     * its direct text nodes (a button's icon sits at another top, so it is skipped).
+     * A label or button that must not wrap reads 1.
+     */
+    readonly textLines: (el: Element) => number;
+    /** Every word under `root` drawn across more than one line (a mid-word break). */
+    readonly splitWords: (root: Element) => string[];
 }
 
 declare global {
@@ -91,6 +100,34 @@ export async function installInPageHelpers(page: Page): Promise<void> {
                 pollUntil,
                 settle: async (baseMs: number): Promise<void> => {
                     await sleepMs(scaledMs(baseMs));
+                },
+                textLines: (el: Element): number => {
+                    const tops = new Set<number>();
+                    for (const node of Array.from(el.childNodes)) {
+                        if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? '').trim() === '') continue;
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+                        for (const rect of Array.from(range.getClientRects())) if (rect.width > 0) tops.add(Math.round(rect.top));
+                    }
+                    return tops.size;
+                },
+                splitWords: (root: Element): string[] => {
+                    const split: string[] = [];
+                    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+                    for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+                        for (const match of (node.textContent ?? '').matchAll(/\S+/gu)) {
+                            const range = document.createRange();
+                            range.setStart(node, match.index);
+                            range.setEnd(node, match.index + match[0].length);
+                            const tops = new Set(
+                                Array.from(range.getClientRects())
+                                    .filter((rect) => rect.width > 0)
+                                    .map((rect) => Math.round(rect.top)),
+                            );
+                            if (tops.size > 1) split.push(match[0]);
+                        }
+                    }
+                    return split;
                 },
             };
         },
