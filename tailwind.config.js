@@ -1370,6 +1370,16 @@ module.exports = {
     plugin(function ({ addBase }) {
       addBase(designTokens);
     }),
+    // The one piece of preflight the system needs. `tw-border-solid` sets the style
+    // on all four sides, so with preflight off a side-only width (`tw-border-l-2`)
+    // left the other three at the browser's `medium` width in currentColor — a stray
+    // frame around the Inquests header and the dialog footers. Every class list using
+    // `tw-border-solid` declares its own width (tests/border-solid-width.test.ts), so
+    // zeroing the width here — same specificity as the utilities, earlier in the
+    // cascade — removes only the sides nothing asked for.
+    plugin(function ({ addBase }) {
+      addBase({ '.wh40k-rpg .tw-border-solid': { 'border-width': '0' } });
+    }),
     // Per-system theme variants — apply a utility only when the sheet root
     // (or any ancestor) carries the matching `data-wh40k-system="<id>"` attr.
     // Usage in templates: `tw-bg-gold dh2:tw-bg-bronze rt:tw-bg-amber-700`.
