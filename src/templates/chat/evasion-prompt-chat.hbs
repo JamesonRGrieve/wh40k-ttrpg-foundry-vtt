@@ -13,7 +13,7 @@
 {{#> systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs
     overline=(localize "WH40K.Evasion.PromptOverline")
     title=prompt.defenderName
-    subtitle=(localize "WH40K.Evasion.PromptLine" attacker=prompt.attackerName weapon=prompt.weaponName hits=prompt.hitsLanded)}}
+    subtitle=(localize (pluralKey "WH40K.Evasion.PromptLine" prompt.hitsLanded) attacker=prompt.attackerName weapon=prompt.weaponName hits=prompt.hitsLanded)}}
     <div class="tw-flex tw-flex-col tw-gap-1.5" data-evasion-prompt="{{prompt.attackId}}">
         {{#if parryPenaltyNote}}
             <p class="tw-m-0 tw-flex tw-justify-between tw-text-[0.8rem] tw-text-[var(--wh40k-card-muted)]" data-parry-penalty>

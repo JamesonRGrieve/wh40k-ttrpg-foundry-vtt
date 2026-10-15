@@ -79,6 +79,8 @@ export const RangedBurst: Story = {
         await expect(canvasElement.querySelector('[data-parry-blocked]')?.textContent).toContain('only a melee attack can be Parried');
         await expect(canvasElement.querySelector('[data-evasion-prompt]')?.getAttribute('data-evasion-prompt')).toBe('atk-burst');
         await expect(canvasElement.textContent).toContain('Lucius Varn');
+        // The plural form, not "hit(s)" (#414).
+        await expect(canvasElement.textContent).toContain('Cultist hits with Autogun: 4 hits incoming');
     },
 };
 
@@ -92,6 +94,8 @@ export const MeleeFastWeapon: Story = {
         const penalty = canvasElement.querySelector<HTMLElement>('[data-parry-penalty]');
         await expect(penalty?.textContent).toContain('Parrying Shock Maul');
         await expect(penalty?.textContent).toContain('-20');
+        // One hit takes the singular form (#414).
+        await expect(canvasElement.textContent).toContain('Arbitrator hits with Shock Maul: 1 hit incoming');
     },
 };
 

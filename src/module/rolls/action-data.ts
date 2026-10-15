@@ -5,6 +5,7 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import type { AreaTargetResult, AreaTemplateSpec } from '../rules/area-template.ts';
@@ -2042,7 +2043,11 @@ export class ChemUseActionData extends SimpleSkillData {
             await weapon.update({ 'system.state.coating': { name: chemName, charges } });
             this.addEffect(
                 t(EFFECT_TITLE.chemUse),
-                game.i18n.format('WH40K.SkillUse.Chem.Coated', { chem: chemName, weapon: weapon.name, charges: String(charges) }),
+                game.i18n.format(pluralKey('WH40K.SkillUse.Chem.Coated', charges, game.i18n.lang), {
+                    chem: chemName,
+                    weapon: weapon.name,
+                    charges: String(charges),
+                }),
             );
             return;
         }

@@ -10,6 +10,7 @@ import { itemTableColumnsHelper } from '../src/module/handlebars/item-table-colu
 import { nameFitClass } from '../src/module/handlebars/name-fit.ts';
 import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
+import { pluralKey } from '../src/module/i18n/plural.ts';
 import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
 import { combatActionIcon, combatTimingKey } from '../src/module/rules/combat-action-display.ts';
 import { hitLocationLabelKey } from '../src/module/rules/hit-locations.ts';
@@ -144,6 +145,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         const floor = Number(min);
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
+    HandlebarsLib.registerHelper('pluralKey', (base: HbsValue, count: HbsValue) => pluralKey(typeof base === 'string' ? base : '', Number(count), 'en'));
     HandlebarsLib.registerHelper('itemTableColumns', (headers: HbsValue, addAction: HbsValue) => itemTableColumnsHelper(headers, addAction));
     HandlebarsLib.registerHelper('nameFitClass', (name: HbsValue) => nameFitClass(typeof name === 'string' ? name : ''));
     HandlebarsLib.registerHelper('hasText', (value: HbsValue) => hasTextHelper(value));

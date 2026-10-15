@@ -844,7 +844,10 @@
         "Evasion": {
             "EffectTitle": "Evasion",
             "PromptOverline": "Evasion",
-            "PromptLine": "{attacker} hits with {weapon}: {hits} hit(s) incoming",
+            "PromptLine": {
+                "One": "{attacker} hits with {weapon}: {hits} hit incoming",
+                "Other": "{attacker} hits with {weapon}: {hits} hits incoming"
+            },
             "PromptNotice": "{defender} is hit by {attacker}: Dodge, Parry or take the hit in chat.",
             "TakeHit": "Take the hit",
             "TakeHitTooltip": "Make no evasion test: the attack's damage proceeds.",
@@ -1200,7 +1203,10 @@
                 "NoChem": "You carry no chem with a dose left and a declared effect.",
                 "NoWeapon": "You carry no weapon to coat.",
                 "Applied": "{chem} is administered to {target}.",
-                "Coated": "{weapon} is coated with {chem} ({charges} hit(s)).",
+                "Coated": {
+                    "One": "{weapon} is coated with {chem} ({charges} hit).",
+                    "Other": "{weapon} is coated with {chem} ({charges} hits)."
+                },
                 "Botched": "The application goes wrong — {chem} afflicts {actor} instead.",
                 "Failed": "The {chem} application fails."
             },

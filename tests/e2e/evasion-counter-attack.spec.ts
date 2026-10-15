@@ -145,6 +145,9 @@ test.describe.serial('Evasion and Counter Attack (Tier B, DH2)', () => {
             expect(prompt.html).toContain('data-skill="dodge"');
             expect(prompt.html).toContain('data-skill="parry"');
             expect(prompt.html).toContain('roll-control__take-hit');
+            // One hit reads in the singular, not "hit(s)" (#414).
+            expect(prompt.html).toContain('1 hit incoming');
+            expect(prompt.html).not.toContain('(s)');
             expect(await snapCard(page, 'evasion-prompt', prompt.id)).not.toBeNull();
             recordCoverage('evasion.flow', 'prompt');
 

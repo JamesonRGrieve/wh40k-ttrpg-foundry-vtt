@@ -1,6 +1,7 @@
 import { chaosAlignmentLabelKey } from '../config/game-systems/bc-advancement-config.ts';
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import { WH40K } from '../config.ts';
+import { pluralKey } from '../i18n/plural.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { HIT_LOCATION_IDS, hitLocationAbbreviation, hitLocationLabel } from '../rules/hit-locations.ts';
 import { corruptionTrackModifier, DAMNED_CORRUPTION } from '../rules/malignancy-test.ts';
@@ -163,6 +164,11 @@ export function registerHandlebarsHelpers(): void {
     Handlebars.registerHelper('hasText', (value: TplValue): boolean => hasTextHelper(value));
     Handlebars.registerHelper('hasNonZero', (value: TplValue): boolean => hasNonZeroHelper(value));
     Handlebars.registerHelper('hasDisplayedModifiers', (value: TplValue): boolean => hasDisplayedModifiersHelper(value));
+
+    /** The key of the plural form a count takes: `{{localize (pluralKey "WH40K.X" count) …}}` (#414). */
+    Handlebars.registerHelper('pluralKey', (base: TplValue, count: TplValue): string =>
+        pluralKey(typeof base === 'string' ? base : '', typeof count === 'number' ? count : Number(count), game.i18n.lang),
+    );
 
     /** The shared item table's grid columns, from its header list (#662). */
     Handlebars.registerHelper('itemTableColumns', (headers: TplValue, addAction: TplValue): string => itemTableColumnsHelper(headers, addAction));
