@@ -83,7 +83,8 @@ describe('storybook chat card templates', () => {
         const element = compileToElement(simpleRollChatSrc, mockRollData());
 
         expect(element.textContent).toContain('Ballistic Skill Test');
-        expect(element.textContent).toContain('Routine (+20)');
+        // The subtitle is the test type; the difficulty is a breakdown row, not a subtitle suffix.
+        expect(element.querySelector('h2')?.nextElementSibling?.textContent.trim()).toBe('Attack');
         expect(element.textContent).toContain('Degrees of Success');
         expect(element.querySelector('.wh40k-roll-card__value--negative')?.textContent).toContain('-20');
     });

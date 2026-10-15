@@ -322,10 +322,6 @@ export function mockRollData(overrides?: DeepPartial<MockObjectMap>): MockObject
                 sheetName: 'Acolyte Vex',
                 name: 'Ballistic Skill Test',
                 type: 'Attack',
-                difficulty: 'routine',
-                difficulties: {
-                    routine: 'Routine (+20)',
-                },
                 isManualRoll: false,
                 baseTarget: 42,
                 activeModifiers: {
