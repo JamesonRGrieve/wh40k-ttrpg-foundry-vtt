@@ -1,6 +1,7 @@
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import { readSelectFit } from './select-fit';
 
 interface SkillDropdownState {
     label: string;
@@ -116,7 +117,9 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
             }
 
             // Wait for the characteristic dropdown to render (the assertions report a miss).
-            await globalThis.wh40kE2E.pollUntil(() => dialog.element?.querySelector('[data-wh40k-hook="skill-char-override__select"]') != null);
+            await globalThis.wh40kE2E.pollUntil(
+                () => dialog.element?.querySelector('[data-wh40k-hook="skill-char-override"] select[name="characteristicOverride"]') != null,
+            );
             const rawRoot = dialog.element;
             if (!(rawRoot instanceof HTMLElement)) {
                 return { error: 'dialog.element is not an HTMLElement', snaps: null };
@@ -124,7 +127,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
             const root: HTMLElement = rawRoot;
 
             function readState(label: string): SkillDropdownState {
-                const charSelect = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override__select"]');
+                const charSelect = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override"] select[name="characteristicOverride"]');
                 const target = root.querySelector<HTMLElement>('.urd-target__number');
                 const halved = root.querySelector<HTMLElement>('[data-testid="skill-untrained-halved"]');
                 const blocked = root.querySelector<HTMLElement>('[data-testid="skill-untrained-advanced"]');
@@ -142,7 +145,7 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
             const initial = readState('initial');
 
             // Switch the dropdown to toughness.
-            const select = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override__select"]');
+            const select = root.querySelector<HTMLSelectElement>('[data-wh40k-hook="skill-char-override"] select[name="characteristicOverride"]');
             if (select !== null) {
                 select.value = 'toughness';
                 select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -166,6 +169,10 @@ test.describe.serial('skill alt-characteristic dropdown (#61)', () => {
         // After swap to Toughness the alt option is selected; if the
         // characteristic totals differ the base target updates too.
         expect(snaps.afterSwap.currentValue).toBe('toughness');
+
+        // #624: the chosen characteristic fits the select's box instead of being clipped below it.
+        const fit = await readSelectFit(page, '[data-wh40k-hook="skill-char-override"] select[name="characteristicOverride"]');
+        expect(fit?.fits, `characteristic select ${JSON.stringify(fit)}`).toBe(true);
 
         await snap(page, 'skill-altchar-dropdown');
     });

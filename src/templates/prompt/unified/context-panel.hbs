@@ -28,13 +28,11 @@
                     <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
                         {{localize "WH40K.Climbing.SurfaceLabel"}}
                     </h4>
-                    <select data-wh40k-hook="climb-surface-picker__select" class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
-                            name="climbSurface"
-                            data-action="setClimbSurface">
+                    {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="climbSurface" action="setClimbSurface"}}
                         {{#each climbSurfaceOptions as |opt|}}
                             <option value="{{opt.value}}" {{#if opt.isCurrent}}selected{{/if}}>{{opt.label}}</option>
                         {{/each}}
-                    </select>
+                    {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
                     {{#if (eq climbSurface "sheer")}}
                         <div data-wh40k-hook="climb-surface-picker__sheer-indicator" class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-mt-2 tw-rounded-md tw-bg-blue-900/40 tw-text-blue-200 tw-border tw-border-blue-400/40 tw-text-[0.8rem]" title="{{localize "WH40K.Climbing.SheerTooltip"}}">
                             <i class="fas fa-icicles tw-text-blue-300"></i>
@@ -46,17 +44,15 @@
             {{#if hasSkillPanel}}
                 {{#with skillPanel as |panel|}}
                     {{#if panel.altOptions.length}}
-                        <div class="tw-mb-3">
+                        <div data-wh40k-hook="skill-char-override" class="tw-mb-3">
                             <h4 class="tw-font-display tw-text-xs tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">
                                 {{localize "WH40K.UntrainedSkill.CharacteristicLabel"}}
                             </h4>
-                            <select data-wh40k-hook="skill-char-override__select" class="tw-py-2.5 tw-px-[14px] tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
-                                    name="characteristicOverride"
-                                    data-action="setCharacteristicOverride">
+                            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="characteristicOverride" action="setCharacteristicOverride"}}
                                 {{#each panel.altOptions as |opt|}}
                                     <option value="{{opt.value}}" {{#if opt.isCurrent}}selected{{/if}}>{{opt.label}}</option>
                                 {{/each}}
-                            </select>
+                            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
                         </div>
                     {{/if}}
                     {{#if panel.halved}}

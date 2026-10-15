@@ -1,0 +1,25 @@
+{{!-- A full-width select for the roll prompts, its <option>s as the block content.
+
+     Foundry's chrome gives a select a fixed height and a line height to match, so
+     vertical padding on top pushes the chosen option's line below the box and
+     clips it ("Standard (no modifier)" cut off at the bottom, #624). This select
+     sets its own height, clears its vertical padding and uses a normal line height
+     (the damage-type select's fix, 4a1980836), so every prompt select built on it
+     shows its whole value.
+
+     Hash arguments:
+       - name    form field name (required).
+       - action  data-action the change dispatches, if any.
+
+     A hook for the select belongs on its caller's wrapper, written literally, so the
+     hook-orphan audit can see who produces it; find the select by its name inside it.
+
+     Usage:
+       {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="climbSurface" action="…"}}
+           <option …>…</option>
+       {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}} --}}
+<select class="tw-h-10 tw-py-0 tw-px-[14px] tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
+        name="{{name}}"{{#if action}}
+        data-action="{{action}}"{{/if}}>
+    {{> @partial-block}}
+</select>

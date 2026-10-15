@@ -1,6 +1,7 @@
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import { readSelectFit } from './select-fit';
 
 /**
  * e2e coverage for #146 — Climbing Surface picker on the unified roll dialog.
@@ -93,7 +94,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
             }
             function readState(label: string): SurfaceState {
                 const wrapper = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="climb-surface-picker"]');
-                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
+                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker"] select[name="climbSurface"]');
                 const sheerIndicator = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="climb-surface-picker__sheer-indicator"]');
                 return {
                     label,
@@ -104,7 +105,7 @@ test.describe.serial('climbing surface picker (#146)', () => {
             }
 
             async function setSurface(value: string): Promise<void> {
-                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
+                const select = rootEl.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker"] select[name="climbSurface"]');
                 if (select === null) return;
                 select.value = value;
                 select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -140,10 +141,16 @@ test.describe.serial('climbing surface picker (#146)', () => {
         expect(snaps.afterReset.selectValue).toBe('standard');
         expect(snaps.afterReset.sheerVisible).toBe(false);
 
+        // #624: "Standard (no modifier)" fits the select's box instead of being clipped at its bottom.
+        const fit = await readSelectFit(page, '[data-wh40k-hook="climb-surface-picker"] select[name="climbSurface"]');
+        expect(fit?.text).toBe('Standard (no modifier)');
+        expect(fit?.fits, `climb surface select ${JSON.stringify(fit)}`).toBe(true);
+        await snap(page, 'climbing-surface-standard-unclipped');
+
         // Visual record with the picker on Sheer.
         await page.evaluate(async () => {
             const root = document.querySelector<HTMLElement>('.application[data-application-part]');
-            const select = root?.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker__select"]');
+            const select = root?.querySelector<HTMLSelectElement>('[data-wh40k-hook="climb-surface-picker"] select[name="climbSurface"]');
             if (select !== null && select !== undefined && select.value !== 'sheer') {
                 select.value = 'sheer';
                 select.dispatchEvent(new Event('change', { bubbles: true }));

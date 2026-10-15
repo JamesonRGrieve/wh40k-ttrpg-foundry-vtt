@@ -275,6 +275,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',

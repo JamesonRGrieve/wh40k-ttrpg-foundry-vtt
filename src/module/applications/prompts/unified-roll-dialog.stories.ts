@@ -197,6 +197,69 @@ export const AthleticsClimb: Story = {
     },
 };
 
+/** The context panel's selects for an Athletics roll that may swap its characteristic. */
+function promptSelectsContext(): Ctx {
+    return baseContext({
+        rollName: 'Athletics (Climb)',
+        hasContextPanel: true,
+        isAthletics: true,
+        contextExpanded: true,
+        climbSurface: 'standard',
+        climbSurfaceOptions: [
+            { value: 'standard', label: 'Standard (no modifier)', isCurrent: true },
+            { value: 'sheer', label: 'Sheer Surface', isCurrent: false },
+        ],
+        hasSkillPanel: true,
+        skillPanel: {
+            altOptions: [
+                { value: 'strength', label: 'Strength', isCurrent: true },
+                { value: 'toughness', label: 'Toughness', isCurrent: false },
+            ],
+        },
+    });
+}
+
+/** Whether a select's chosen option line fits its content box (Foundry fixes a select's height). */
+function selectLineFits(select: HTMLSelectElement): boolean {
+    const style = getComputedStyle(select);
+    const contentHeight = select.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const parsedLine = parseFloat(style.lineHeight);
+    // `line-height: normal` reports no pixel value; it is ~1.2× the font size.
+    const lineHeight = Number.isNaN(parsedLine) ? parseFloat(style.fontSize) * 1.2 : parsedLine;
+    return lineHeight <= contentHeight;
+}
+
+const PROMPT_SELECT_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/**
+ * #624: the climb-surface and characteristic selects are the shared prompt select, which
+ * sets its own height, no vertical padding and a normal line height, so "Standard (no
+ * modifier)" is not clipped at the bottom of its box — on every line.
+ */
+export const PromptSelectsUnclipped: Story = {
+    args: promptSelectsContext(),
+    render: (args: Ctx) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+        row.style.gap = '12px';
+        for (const line of PROMPT_SELECT_LINES) row.appendChild(renderSheetParts([{ template: contextSrc }], args, { systemId: line }));
+        return row;
+    },
+    play: async ({ canvasElement }) => {
+        const selects = Array.from(canvasElement.querySelectorAll<HTMLSelectElement>('select[name="climbSurface"], select[name="characteristicOverride"]'));
+        await expect(selects).toHaveLength(PROMPT_SELECT_LINES.length * 2);
+        const read = selects.map((select) => ({
+            name: select.name,
+            sized: ['tw-h-10', 'tw-py-0', 'tw-leading-normal'].every((cls) => select.classList.contains(cls)),
+            padded: select.classList.contains('tw-py-2.5'),
+            fits: selectLineFits(select),
+        }));
+        await expect(read).toEqual(selects.map((select) => ({ name: select.name, sized: true, padded: false, fits: true })));
+        await expect(selects[0]?.selectedOptions[0]?.textContent.trim()).toBe('Standard (no modifier)');
+    },
+};
+
 /** Weapon attack with the #250 combatant target dropdown (active combat present). */
 export const WeaponTargetDropdown: Story = {
     args: baseContext({
