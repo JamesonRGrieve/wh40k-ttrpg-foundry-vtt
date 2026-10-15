@@ -12,6 +12,7 @@ import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper } from './
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { inlineTernary } from './inline-ternary.ts';
+import { itemTableColumnsHelper } from './item-table-columns.ts';
 import { nameFitClass } from './name-fit.ts';
 import { buildSafeAttrs } from './safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from './source-label.ts';
@@ -162,6 +163,9 @@ export function registerHandlebarsHelpers(): void {
     Handlebars.registerHelper('hasText', (value: TplValue): boolean => hasTextHelper(value));
     Handlebars.registerHelper('hasNonZero', (value: TplValue): boolean => hasNonZeroHelper(value));
     Handlebars.registerHelper('hasDisplayedModifiers', (value: TplValue): boolean => hasDisplayedModifiersHelper(value));
+
+    /** The shared item table's grid columns, from its header list (#662). */
+    Handlebars.registerHelper('itemTableColumns', (headers: TplValue, addAction: TplValue): string => itemTableColumnsHelper(headers, addAction));
 
     /** Font-size class that fits an actor name into the sidebar name input (#630). */
     Handlebars.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));

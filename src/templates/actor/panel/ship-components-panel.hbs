@@ -4,7 +4,7 @@
         addType="shipComponent"
         addTitleKey="WH40K.Common.AddShipComponent"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Components.Name")
+            (object weight=2 labelKey="WH40K.Voidcraft.Components.Name")
             (object labelKey="WH40K.Voidcraft.Components.Type")
             (object labelKey="WH40K.Voidcraft.Components.Power")
             (object labelKey="WH40K.Voidcraft.Components.Space")
@@ -16,8 +16,8 @@
                     showImg=true
                     editAction=false
                     cells=(array
-                        (object value=item.system.componentTypeLabel cellClass="table-cell" title=item.system.componentTypeLabel)
-                        (object value=item.system.powerDisplay cellClass=(concat "table-cell " (iff (gt item.system.power.generated 0) "tw-text-success-l20tw-font-semibold" (iff (gt item.system.power.used 0) "tw-text-crimson-l40" ""))))
+                        (object value=item.system.componentTypeLabel title=item.system.componentTypeLabel)
+                        (object value=item.system.powerDisplay cellClass=(iff (gt item.system.power.generated 0) "tw-text-success-l20 tw-font-semibold" (iff (gt item.system.power.used 0) "tw-text-crimson-l40" "")))
                         (object value=item.system.space)
                         (object value=item.system.shipPoints))
                     actions=(array

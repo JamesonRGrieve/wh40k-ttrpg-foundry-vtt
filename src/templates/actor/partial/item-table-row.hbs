@@ -32,10 +32,14 @@
         showImg          — bool. If true, the name cell renders the item image
                            inline before the name (used by ship/vehicle panels
                            that don't have an expand toggle).
-        editAction       — data-action for the leading settings cell. Pass
-                           false to suppress the leading settings cell entirely
-                           (used by panels that wrap the name itself in the
-                           edit-button — e.g. ship-weapons, vehicle-weapons).
+        editAction       — data-action for the settings cog at the start of the
+                           name cell. Pass false to suppress the cog (used by
+                           panels that wrap the name itself in the edit
+                           button — e.g. ship-weapons, vehicle-weapons).
+
+    Layout (#662): the row is a subgrid across the table's columns, one cell
+    per header — name, then one per `cells` entry, then the action toolbar. The
+    expandable description spans the full width beneath.
         editIconKey      — icon registry key for the edit cell
                            (default 'fa:cog').
         editTitleKey     — i18n key for the edit button title.
@@ -50,33 +54,31 @@
     Theming: the row hover background uses inline per-system variants so each
     game system tints its hover highlight distinctly without a helper.
 --}}
-<div class="tw-border-b dh2:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
-    {{#unless (eq editAction false)}}
-        <div>
-            <label class="item-edit tw-cursor-pointer hover:tw-opacity-100" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}"{{#if editTitleKey}} title="{{localize editTitleKey}}" aria-label="{{localize editTitleKey}}"{{/if}}>
+<div class="tw-grid tw-grid-cols-subgrid tw-col-span-full tw-items-center tw-text-[0.8rem] tw-border-0 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
+    <div class="tw-flex tw-items-center tw-gap-1 tw-min-w-0 tw-px-1.5 tw-py-1 tw-break-words" data-item-table-cell="name">
+        {{#unless (eq editAction false)}}
+            <label class="item-edit tw-shrink-0 tw-cursor-pointer hover:tw-opacity-100" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}"{{#if editTitleKey}} title="{{localize editTitleKey}}" aria-label="{{localize editTitleKey}}"{{/if}}>
                 <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg (defaultVal editIconKey 'fa:cog') class="tw-w-3.5 tw-h-3.5"}}</span>
             </label>
-        </div>
-    {{/unless}}
-    <div>
+        {{/unless}}
         {{#if nameToggleId}}
             {{> systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs toggle=nameToggleId text=item.name}}
         {{else if showImg}}
-            <button class="tw-cursor-pointer tw-bg-transparent tw-border-none tw-text-left" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}" type="button">
-                {{#if item.img}}<img class="tw-w-6 tw-h-6 tw-object-cover tw-rounded-sm" src="{{item.img}}" alt="{{item.name}}" />{{/if}}
-                {{item.name}}
+            <button class="tw-flex tw-items-center tw-gap-1.5 tw-min-w-0 tw-p-0 tw-cursor-pointer tw-bg-transparent tw-border-none tw-text-left tw-text-[color:var(--wh40k-text-bright)]" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}" type="button">
+                {{#if item.img}}<img class="tw-shrink-0 tw-w-6 tw-h-6 tw-object-cover tw-rounded-sm tw-border-0" src="{{item.img}}" alt="{{item.name}}" />{{/if}}
+                <span class="tw-min-w-0">{{item.name}}</span>
             </button>
         {{else}}
-            <span>{{item.name}}</span>
+            <span class="tw-min-w-0">{{item.name}}</span>
         {{/if}}
     </div>
     {{#each cells as |cell|}}
-        <div class="{{#if cell.cellClass}}{{cell.cellClass}}{{/if}}"{{#if cell.title}} title="{{cell.title}}"{{/if}}>
+        <div class="tw-min-w-0 tw-px-1.5 tw-py-1 tw-break-words{{#if cell.cellClass}} {{cell.cellClass}}{{/if}}"{{#if cell.title}} title="{{cell.title}}"{{/if}} data-item-table-cell="value">
             {{#if cell.isHtml}}{{{cell.value}}}{{else}}<span>{{cell.value}}</span>{{/if}}
         </div>
     {{/each}}
     {{#if actions.length}}
-        <div>
+        <div class="tw-flex tw-items-center tw-justify-end tw-gap-1 tw-px-1.5 tw-py-1" data-item-table-cell="actions">
             {{#each actions as |btn|}}
                 <label class="tw-cursor-pointer hover:tw-opacity-100 {{#if btn.hoverClass}}{{btn.hoverClass}}{{/if}}" data-action="{{btn.action}}" data-item-id="{{../item.id}}"{{#if btn.titleKey}} title="{{localize btn.titleKey}}" aria-label="{{localize btn.titleKey}}"{{else if btn.title}} title="{{btn.title}}"{{/if}}{{#if btn.dataAttrs}} {{{btn.dataAttrs}}}{{/if}}>
                     <span class="tw-pt-[3px] tw-pl-[2px] tw-inline-grid tw-opacity-50">{{iconSvg btn.iconKey class="tw-w-3.5 tw-h-3.5"}}</span>
@@ -85,7 +87,7 @@
         </div>
     {{/if}}
     {{#if nameToggleId}}
-        <div data-description-id="{{nameToggleId}}" {{hideIfNot (isExpanded nameToggleId)}}>
+        <div class="tw-col-span-full tw-px-1.5 tw-pb-1.5" data-description-id="{{nameToggleId}}" {{hideIfNot (isExpanded nameToggleId)}}>
             {{> @partial-block}}
         </div>
     {{/if}}

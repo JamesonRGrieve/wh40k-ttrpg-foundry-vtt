@@ -6,7 +6,6 @@
  * recipe.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HBS from 'handlebars';
 import { expect, within } from 'storybook/test';
 import armourPanelSrc from '../src/templates/actor/panel/armour-panel.hbs?raw';
 import shipComponentsPanelSrc from '../src/templates/actor/panel/ship-components-panel.hbs?raw';
@@ -129,12 +128,57 @@ function makeArmour(): MockArmour[] {
     ];
 }
 
+/** Every game line; the item table is shared by all six. */
+const GAME_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/** The header row of one item table. */
+function headerCells(table: Element): HTMLElement[] {
+    return Array.from(table.querySelector('[data-table-header]')?.children ?? []).filter((el): el is HTMLElement => el instanceof HTMLElement);
+}
+
+/** The cells of one row, without the full-width expandable description. */
+function rowCells(row: Element): HTMLElement[] {
+    return Array.from(row.children).filter((el): el is HTMLElement => el instanceof HTMLElement && !el.hasAttribute('data-description-id'));
+}
+
+/**
+ * #662: each item table is laid out as a grid. Its header cells sit side by side on
+ * one line, and every row has one cell under each header, starting at the same x.
+ * The legacy CSS was deleted, so they used to stack into one column.
+ */
+async function expectTablesOnGrid(canvasElement: HTMLElement): Promise<void> {
+    const left = (cell: Element): number => Math.round(cell.getBoundingClientRect().left);
+    const tables = Array.from(canvasElement.querySelectorAll('[data-table]'));
+    const problems = tables.flatMap((table, index): string[] => {
+        const headers = headerCells(table);
+        const headerLefts = headers.map(left);
+        // Cells are vertically centred, so their tops differ with their height; on one line
+        // they still overlap (the lowest top is above the highest bottom).
+        const onOneLine =
+            Math.max(...headers.map((cell) => cell.getBoundingClientRect().top)) < Math.min(...headers.map((cell) => cell.getBoundingClientRect().bottom));
+        const rows = Array.from(table.querySelectorAll(':scope > [data-item-id]'));
+        const found: string[] = [];
+        if (headers.length < 2) found.push(`table ${index}: ${headers.length} header cells`);
+        if (!onOneLine) found.push(`table ${index}: header cells stack onto more than one line`);
+        if (new Set(headerLefts).size !== headers.length) found.push(`table ${index}: header cells share a column`);
+        if (rows.length === 0) found.push(`table ${index}: no rows`);
+        rows.forEach((row, rowIndex) => {
+            const lefts = rowCells(row).map(left);
+            if (lefts.join() !== headerLefts.join())
+                found.push(`table ${index} row ${rowIndex}: cells at [${lefts.join()}], headers at [${headerLefts.join()}]`);
+        });
+        return found;
+    });
+    await expect(tables.length).toBeGreaterThan(0);
+    await expect(problems).toEqual([]);
+}
+
 /** Direct partial — table chrome only (header + add cell, no rows). */
 export const TableChromeOnly: Story = {
     name: 'Table / Chrome only',
     render: () =>
         renderSheet(itemTableSrc, {
-            headers: [{ cellClass: 'table-cell--span2', label: 'Name' }, { label: 'Class' }, { label: 'Type' }, { label: 'Equipped' }],
+            headers: [{ weight: 2, label: 'Name' }, { label: 'Class' }, { label: 'Type' }, { label: 'Equipped' }],
             addAction: 'itemCreate',
             addType: 'weapon',
             addTitleKey: 'WH40K.Combat.AddWeapon',
@@ -159,8 +203,6 @@ export const RowSimple: Story = {
 export const RowExpanded: Story = {
     name: 'Row / With description toggle',
     render: () => {
-        const tpl = HBS.compile(itemTableRowSrc);
-        // Compose by hand to slot block content into the description.
         const wrapper = document.createElement('div');
         wrapper.classList.add('wh40k-rpg', 'sheet');
         wrapper.dataset.wh40kSystem = 'dh2';
@@ -174,8 +216,13 @@ export const RowExpanded: Story = {
                 { action: 'itemDelete', iconKey: 'fa:trash', title: 'Delete' },
             ],
         };
-        wrapper.innerHTML = tpl(ctx);
+        // The row is a block partial; renderSheet invokes it as one so its description slot resolves.
+        wrapper.appendChild(renderSheet(itemTableRowSrc, ctx));
         return wrapper;
+    },
+    play: async ({ canvasElement }) => {
+        const description = canvasElement.querySelector('[data-description-id="description_r-2"]');
+        await expect(description?.classList.contains('tw-col-span-full')).toBe(true);
     },
 };
 
@@ -201,6 +248,7 @@ export const WeaponPanelDH2: Story = {
         // The toolbar dispatch action ids are intact.
         const rollBtns = canvasElement.querySelectorAll('[data-action="itemRoll"]');
         await expect(rollBtns.length).toBe(2);
+        await expectTablesOnGrid(canvasElement);
     },
 };
 
@@ -211,6 +259,26 @@ export const WeaponPanelIM: Story = {
         wrapper.dataset.wh40kSystem = 'im';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
+};
+
+/** The weapon table under each of the six lines' themes: the grid holds in every one (#662). */
+export const WeaponPanelAllLines: Story = {
+    name: 'Composed / Weapon panel (all six lines)',
+    render: () => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const line of GAME_LINES) {
+            const wrapper = renderSheetParts([{ template: weaponPanelSrc, context: makeWeaponContext(line) }], {});
+            wrapper.dataset.wh40kSystem = line;
+            host.appendChild(wrapper);
+        }
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-table]').length).toBe(GAME_LINES.length);
+        await expectTablesOnGrid(canvasElement);
+    },
 };
 
 export const WeaponPanelRT: Story = {
@@ -220,6 +288,7 @@ export const WeaponPanelRT: Story = {
         wrapper.dataset.wh40kSystem = 'rt';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 export const ArmourPanelDH2: Story = {
@@ -229,6 +298,7 @@ export const ArmourPanelDH2: Story = {
         wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 export const ArmourPanelIM: Story = {
@@ -238,6 +308,7 @@ export const ArmourPanelIM: Story = {
         wrapper.dataset.wh40kSystem = 'im';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 /** Verify that mockItem-based weapon/armour also flow through the panel correctly. */
@@ -363,6 +434,7 @@ export const ShipWeaponsPanelDH2: Story = {
         // Each ship-weapon row carries the fire + delete actions.
         await expect(canvasElement.querySelectorAll('[data-action="fireShipWeapon"]').length).toBe(2);
         await expect(canvasElement.querySelectorAll('[data-action="itemDelete"]').length).toBe(2);
+        await expectTablesOnGrid(canvasElement);
     },
 };
 
@@ -373,6 +445,7 @@ export const ShipWeaponsPanelRT: Story = {
         wrapper.dataset.wh40kSystem = 'rt';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 export const ShipComponentsPanelDH2: Story = {
@@ -386,6 +459,7 @@ export const ShipComponentsPanelDH2: Story = {
         await expect(canvasElement.querySelector('.material-icons')).toBeNull();
         // Each row exposes both itemEdit (cog) and itemDelete actions in the toolbar.
         await expect(canvasElement.querySelectorAll('[data-action="itemEdit"]').length).toBeGreaterThanOrEqual(2);
+        await expectTablesOnGrid(canvasElement);
     },
 };
 
@@ -396,6 +470,7 @@ export const ShipUpgradesPanelDH2: Story = {
         wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 export const ShipCrewPanelDH2: Story = {
@@ -405,6 +480,7 @@ export const ShipCrewPanelDH2: Story = {
         wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
 interface MockVehicleWeapon {
@@ -473,6 +549,7 @@ export const VehicleWeaponsPanelDH2: Story = {
         // The editor + add button live OUTSIDE the migrated table — they must remain.
         const addBtn = canvasElement.querySelector('[data-action="itemCreate"][data-type="weapon"]');
         await expect(addBtn).toBeTruthy();
+        await expectTablesOnGrid(canvasElement);
     },
 };
 
@@ -483,4 +560,5 @@ export const VehicleUpgradesPanelDH2: Story = {
         wrapper.dataset.wh40kSystem = 'dh2';
         return wrapper;
     },
+    play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };

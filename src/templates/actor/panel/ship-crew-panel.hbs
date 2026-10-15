@@ -26,17 +26,17 @@
     <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Voidcraft.Crew.OfficersDesc"}}</p>
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Role")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Officer")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Crew.Bonus"))}}
+            (object labelKey="WH40K.Voidcraft.Crew.Role")
+            (object labelKey="WH40K.Voidcraft.Crew.Officer")
+            (object weight=2 labelKey="WH40K.Voidcraft.Crew.Bonus"))}}
         {{#each shipRoles as |role|}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                 item=role
                 showImg=true
                 editAction=false
                 cells=(array
-                    (object value=role.system.officer cellClass="table-cell--span2")
-                    (object value=role.system.effect cellClass="table-cell--span2"))}}
+                    (object value=role.system.officer)
+                    (object value=role.system.effect))}}
             {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
         {{/each}}
     {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}

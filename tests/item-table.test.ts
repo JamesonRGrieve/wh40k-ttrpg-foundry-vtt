@@ -34,7 +34,7 @@ function renderRow(hashLiteral: string, body = '', context: object = {}): HTMLEl
 describe('item-table.hbs', () => {
     it('renders one header cell per entry plus the trailing add cell', () => {
         const root = renderTable(
-            'addAction="itemCreate" addType="weapon" headers=(array (object cellClass="table-cell--span2" label="Name") (object label="Class") (object label="Type"))',
+            'addAction="itemCreate" addType="weapon" headers=(array (object weight=2 label="Name") (object label="Class") (object label="Type"))',
         );
         const headRow = root.querySelector('[data-table-header]');
         expect(headRow).not.toBeNull();
@@ -48,7 +48,37 @@ describe('item-table.hbs', () => {
 
     it('omits the add cell when addAction is absent', () => {
         const root = renderTable('headers=(array (object label="A"))');
-        expect(root.querySelector('.table-cell--last')).toBeNull();
+        expect(root.querySelector('[data-table-header]')?.children).toHaveLength(1);
+        expect(root.querySelector('[data-action="itemCreate"]')).toBeNull();
+    });
+
+    // #662: the legacy CSS that laid the table out was deleted, so the header and every
+    // row stacked into one column. The table now carries its own grid.
+    it('lays the table out as a grid whose columns come from its headers', () => {
+        const root = renderTable('addAction="itemCreate" headers=(array (object weight=2 label="Name") (object label="Class") (object fit=true label="Go"))');
+        const table = root.querySelector<HTMLElement>('[data-table]');
+        expect(table?.classList.contains('tw-grid')).toBe(true);
+        expect(table?.classList.contains('tw-grid-cols-[var(--wh40k-item-table-cols)]')).toBe(true);
+        expect(table?.style.getPropertyValue('--wh40k-item-table-cols')).toBe('minmax(0, 2fr) minmax(0, 1fr) max-content max-content');
+        const header = root.querySelector('[data-table-header]');
+        expect(header?.classList.contains('tw-grid-cols-subgrid')).toBe(true);
+        expect(header?.classList.contains('tw-col-span-full')).toBe(true);
+    });
+
+    it('renders a row with exactly one cell per column, so it lines up under the header', () => {
+        const tpl = HbsLib.compile(
+            '{{#> item-table-test addAction="itemCreate" headers=(array (object weight=2 label="Name") (object label="Class") (object label="Type"))}}' +
+                '{{#> item-table-row-test item=item cells=(array (object value="Basic") (object value="Las")) actions=(array (object action="itemDelete" iconKey="fa:trash" title="Delete"))}}{{/item-table-row-test}}' +
+                '{{/item-table-test}}',
+        );
+        const root = dom(tpl({ item: { id: 'w1', name: 'Lasgun' } }));
+        const header = root.querySelector('[data-table-header]');
+        const row = root.querySelector('[data-item-id="w1"]');
+        expect(row?.classList.contains('tw-grid-cols-subgrid')).toBe(true);
+        expect(row?.children.length).toBe(header?.children.length);
+        // The edit cog shares the name column instead of taking a column of its own.
+        expect(row?.children[0]?.querySelector('.item-edit')).not.toBeNull();
+        expect(row?.children[0]?.textContent).toContain('Lasgun');
     });
 
     it('emits the addType on the add control button', () => {
@@ -148,6 +178,8 @@ describe('item-table-row.hbs', () => {
         expect(descCell).not.toBeNull();
         const descCellEl = descCell as Element;
         expect(descCellEl.getAttribute('data-description-id')).toBe('description_itm-1');
+        // The description spans the whole row beneath the cells (#662).
+        expect(descCellEl.classList.contains('tw-col-span-full')).toBe(true);
         expect(descCellEl.querySelector('.custom-desc')?.textContent).toBe('desc body');
     });
 

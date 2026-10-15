@@ -6,6 +6,7 @@ import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper } from '..
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
 import { truncate } from '../src/module/handlebars/handlebars-helpers.ts';
 import { inlineTernary } from '../src/module/handlebars/inline-ternary.ts';
+import { itemTableColumnsHelper } from '../src/module/handlebars/item-table-columns.ts';
 import { nameFitClass } from '../src/module/handlebars/name-fit.ts';
 import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
 import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
@@ -143,6 +144,7 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
         const floor = Number(min);
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
+    HandlebarsLib.registerHelper('itemTableColumns', (headers: HbsValue, addAction: HbsValue) => itemTableColumnsHelper(headers, addAction));
     HandlebarsLib.registerHelper('nameFitClass', (name: HbsValue) => nameFitClass(typeof name === 'string' ? name : ''));
     HandlebarsLib.registerHelper('hasText', (value: HbsValue) => hasTextHelper(value));
     HandlebarsLib.registerHelper('hasNonZero', (value: HbsValue) => hasNonZeroHelper(value));

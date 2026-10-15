@@ -4,10 +4,10 @@
         addType="shipUpgrade"
         addTitleKey="WH40K.Common.AddShipUpgrade"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Upgrades.Name")
+            (object weight=2 labelKey="WH40K.Voidcraft.Upgrades.Name")
             (object labelKey="WH40K.Voidcraft.Upgrades.Power")
             (object labelKey="WH40K.Voidcraft.Upgrades.Space")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Voidcraft.Upgrades.Effect"))}}
+            (object weight=2 labelKey="WH40K.Voidcraft.Upgrades.Effect"))}}
         {{#each actor.items as |item|}}
             {{#if item.isShipUpgrade}}
                 {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
@@ -17,7 +17,7 @@
                     cells=(array
                         (object value=item.system.power)
                         (object value=item.system.space)
-                        (object value=item.system.effect cellClass="table-cell--span2 tw-text-sm tw-leading-snug" isHtml=true))
+                        (object value=item.system.effect cellClass="tw-text-sm tw-leading-snug" isHtml=true))
                     actions=(array
                         (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
                 {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}

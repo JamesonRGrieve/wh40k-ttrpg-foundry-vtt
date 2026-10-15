@@ -4,11 +4,11 @@
         {{#if weapons}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
                 headers=(array
-                    (object cellClass="table-cell--span2" labelKey="WH40K.Weapon.Name")
+                    (object weight=2 labelKey="WH40K.Weapon.Name")
                     (object labelKey="WH40K.Weapon.Class")
                     (object labelKey="WH40K.Weapon.Range")
                     (object labelKey="WH40K.Weapon.Damage")
-                    (object cellClass="table-cell--last" labelKey="WH40K.Actions"))}}
+                    (object fit=true cellClass="tw-text-right" labelKey="WH40K.Actions"))}}
                 {{#each weapons as |weapon|}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                         item=weapon

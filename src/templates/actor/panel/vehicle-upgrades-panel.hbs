@@ -4,10 +4,10 @@
         addType="vehicleUpgrade"
         addTitleKey="WH40K.Common.AddVehicleUpgrade"
         headers=(array
-            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.UpgradesName")
+            (object weight=2 labelKey="WH40K.Vehicle.UpgradesName")
             (object labelKey="WH40K.VehicleUpgrade.Type")
             (object labelKey="WH40K.VehicleUpgrade.Difficulty")
-            (object cellClass="table-cell--span2" labelKey="WH40K.Vehicle.UpgradesModifiers"))}}
+            (object weight=2 labelKey="WH40K.Vehicle.UpgradesModifiers"))}}
         {{#each upgrades as |item|}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                 item=item
@@ -16,7 +16,7 @@
                 cells=(array
                     (object value=item.system.upgradeTypeLabel)
                     (object value=item.system.difficultyFormatted)
-                    (object cellClass="table-cell--span2 tw-flex tw-flex-col tw-gap-0.5" isHtml=true value=item.system.modifiersHtml))
+                    (object cellClass="tw-flex tw-flex-col tw-gap-0.5" isHtml=true value=item.system.modifiersHtml))
                 actions=(array
                     (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
             {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
