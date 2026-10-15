@@ -76,30 +76,24 @@
       </div>
       {{/each}}
 
-      {{!-- Description --}}
-      <div class="tw-mb-3">
-        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-book" labelKey="WH40K.Item.Tabs.Description"}}
-        <div class="tw-px-1">
+      {{!-- Description, the type-specific HTML fields, Notes and Modifiers: each section
+           shows in edit mode, and in read-only mode only when it has content (#597). --}}
+      {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-book" labelKey="WH40K.Item.Tabs.Description" show=(or inEditMode (hasText system.description.value))}}
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           {{else}}
           <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold">{{{system.description.value}}}</div>
           {{/if}}
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
 
-      {{!-- Type-specific HTML fields --}}
       {{#each contentFields}}
-      <div class="tw-mb-3">
-        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-bolt" labelKey=this.labelKey}}
-        <div class="tw-px-1">
-          {{#if ../inEditMode}}
-          {{editor this.value target=this.name button=true editable=../editable engine="prosemirror"}}
+      {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-bolt" labelKey=this.labelKey show=(or @root.inEditMode (hasText this.value))}}
+          {{#if @root.inEditMode}}
+          {{editor this.value target=this.name button=true editable=@root.editable engine="prosemirror"}}
           {{else}}
           <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold">{{{this.value}}}</div>
           {{/if}}
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
       {{/each}}
 
       {{!-- Gift of the Gods (mutation, category gift only) --}}
@@ -112,29 +106,21 @@
       {{> systems/wh40k-rpg/templates/item/partial/special-ability-distinction-panel.hbs panel=distinctionPanel inEditMode=inEditMode}}
       {{/if}}
 
-      {{!-- Notes --}}
-      <div class="tw-mb-3">
-        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-sticky-note" labelKey="WH40K.Item.Tabs.Notes"}}
-        <div class="tw-px-1">
+      {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-sticky-note" labelKey="WH40K.Item.Tabs.Notes" show=(or inEditMode (hasText item.system.notes))}}
           {{#if inEditMode}}
           <textarea name="system.notes" rows="3" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           {{else}}
           <div class="tw-text-sm tw-whitespace-pre-line">{{item.system.notes}}</div>
           {{/if}}
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
 
-      {{!-- Modifiers --}}
-      <div class="tw-mb-3">
-        {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon="fa-chart-line" labelKey="WH40K.Item.Tabs.Modifiers"}}
-        <div class="tw-px-1">
+      {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-chart-line" labelKey="WH40K.Item.Tabs.Modifiers" show=(or inEditMode (hasDisplayedModifiers item.system.modifiers))}}
           {{#if inEditMode}}
           {{> systems/wh40k-rpg/templates/item/panel/modifiers-editor-panel.hbs config=dh}}
           {{else}}
           {{> systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs}}
           {{/if}}
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
 
     </section>
 

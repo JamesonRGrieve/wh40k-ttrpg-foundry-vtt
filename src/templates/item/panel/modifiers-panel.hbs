@@ -5,7 +5,10 @@
 <div class="tw-flex tw-flex-col tw-gap-3">
 
   {{!-- Characteristic Modifiers --}}
-  {{#if item.system.modifiers.characteristics}}
+  {{!-- A group shows only when it holds a non-zero modifier: the stored groups are
+       objects (often all zeros), which are truthy, so an empty group used to print
+       its heading over nothing (#597). --}}
+  {{#if (hasNonZero item.system.modifiers.characteristics)}}
   <div class="tw-flex tw-flex-col tw-gap-1.5">
     <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
       <i class="fas fa-user-circle"></i>
@@ -27,7 +30,7 @@
   {{/if}}
 
   {{!-- Skill Modifiers --}}
-  {{#if item.system.modifiers.skills}}
+  {{#if (hasNonZero item.system.modifiers.skills)}}
   <div class="tw-flex tw-flex-col tw-gap-1.5">
     <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
       <i class="fas fa-book"></i>
@@ -49,7 +52,7 @@
   {{/if}}
 
   {{!-- Combat Modifiers --}}
-  {{#if item.system.modifiers.combat}}
+  {{#if (hasNonZero item.system.modifiers.combat)}}
   <div class="tw-flex tw-flex-col tw-gap-1.5">
     <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
       <i class="fas fa-crosshairs"></i>
@@ -71,7 +74,7 @@
   {{/if}}
 
   {{!-- Resource Modifiers --}}
-  {{#if item.system.modifiers.resources}}
+  {{#if (hasNonZero item.system.modifiers.resources)}}
   <div class="tw-flex tw-flex-col tw-gap-1.5">
     <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
       <i class="fas fa-heart"></i>
@@ -113,7 +116,7 @@
   {{/if}}
 
   {{!-- No Modifiers Message --}}
-  {{#unless (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.resources item.system.modifiers.other.length)}}
+  {{#unless (hasDisplayedModifiers item.system.modifiers)}}
   <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-10 tw-px-5 tw-text-center tw-text-gray-500">
     <i class="fas fa-info-circle tw-text-4xl tw-mb-3 tw-opacity-30"></i>
     <p class="tw-m-1 tw-text-sm">{{localize "WH40K.ItemSheet.Modifiers.None"}}</p>

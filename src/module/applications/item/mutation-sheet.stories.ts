@@ -289,6 +289,47 @@ function renderForSystem(systemId: SystemId): HTMLElement {
     return el;
 }
 
+const EMPTY_SECTION_LINES: readonly SystemId[] = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'];
+
+/** A read-only mutation with nothing in its Description, Effect, Drawback, Notes or Modifiers. */
+const emptyArgs = (): MutationArgs => {
+    const system: MutationSystem = { ...baseSystem(), effect: '', drawback: '<p></p>', notes: '', description: { value: '<p><br></p>' } };
+    return {
+        ...baseArgs(false, false),
+        item: { name: 'Unwritten Gift', img: 'icons/svg/mystery-man.svg', system },
+        system,
+        contentFields: [
+            { name: 'system.effect', labelKey: 'WH40K.Mutation.Effect', value: system.effect },
+            { name: 'system.drawback', labelKey: 'WH40K.Mutation.Drawback', value: system.drawback },
+        ],
+    };
+};
+
+/** #597: a read-only mutation prints no heading over an empty section, on every line; Category and Visible still show. */
+export const ReadOnlyEmptySections: Story = {
+    args: emptyArgs(),
+    render: (args) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+        row.style.gap = '12px';
+        for (const line of EMPTY_SECTION_LINES) {
+            const sheet = renderSheet(templateSrc, args);
+            sheet.dataset['wh40kSystem'] = line;
+            row.appendChild(sheet);
+        }
+        return row;
+    },
+    play: async ({ canvasElement }) => {
+        const shown = EMPTY_SECTION_LINES.map((line) => ({
+            line,
+            sections: [...canvasElement.querySelectorAll(`[data-wh40k-system="${line}"] [data-content-section]`)].length,
+            headings: [...canvasElement.querySelectorAll(`[data-wh40k-system="${line}"] section.wh40k-tab-content h3`)].map((h) => h.textContent.trim()),
+        }));
+        await expect(shown).toEqual(EMPTY_SECTION_LINES.map((line) => ({ line, sections: 0, headings: ['Category', 'Visible'] })));
+    },
+};
+
 export const HomologationDH2: Story = {
     render: () => renderForSystem('dh2'),
     play: async ({ canvasElement }) => {

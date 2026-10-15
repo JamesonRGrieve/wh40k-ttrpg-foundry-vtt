@@ -231,6 +231,7 @@ export class HandlebarManager {
 
             // Content-block item sheet partials (mutation Gift / special-ability Distinction panels, #597)
             'systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs',
+            'systems/wh40k-rpg/templates/item/partial/content-block-section.hbs',
             'systems/wh40k-rpg/templates/item/partial/reference-list.hbs',
             'systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs',
             'systems/wh40k-rpg/templates/item/partial/mutation-gift-panel.hbs',

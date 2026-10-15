@@ -1,0 +1,26 @@
+{{!--
+  A section of the content-block item sheet (item-content-block-sheet.hbs): its
+  heading above the block content. Rendered only when `show` is true, so a
+  read-only sheet hides a section with nothing in it rather than printing its
+  heading over nothing (#597); edit mode always shows it, to be filled in.
+
+  Hash arguments:
+    icon     — Font Awesome icon class of the heading (e.g. "fa-book"). Required.
+    labelKey — i18n key of the heading text. Required.
+    show     — whether to render the section. Required.
+
+  The section carries `data-content-section="<labelKey>"`, so tests find it by its heading.
+
+  Usage:
+    {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-book" labelKey="…" show=(or inEditMode (hasText value))}}
+        … the section's content …
+    {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
+--}}
+{{#if show}}
+<div class="tw-mb-3" data-content-section="{{labelKey}}">
+  {{> systems/wh40k-rpg/templates/item/partial/content-block-heading.hbs icon=icon labelKey=labelKey}}
+  <div class="tw-px-1">
+    {{> @partial-block}}
+  </div>
+</div>
+{{/if}}

@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import type { Page } from '@playwright/test';
+import { emptyContentSections, shownContentSections } from './content-sections';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -208,6 +209,11 @@ test.describe.serial('DW Distinctions (Tier B)', () => {
         }, ACTOR_NAME);
         const itemSheet = page.locator(`#${itemSheetId}`);
         await expect(itemSheet.locator('[data-distinction-panel]')).toBeVisible();
+        // #597: read-only, no section heading sits over nothing (the fixture Mark has no Description or Benefit).
+        expect(await emptyContentSections(page, itemSheetId)).toEqual([]);
+        const shown = await shownContentSections(page, itemSheetId);
+        expect(shown).not.toContain('WH40K.Item.Tabs.Description');
+        expect(shown).not.toContain('WH40K.SpecialAbility.Benefit');
         // snap() alone: closing the other windows would close the Battle-Brother's sheet, checked below.
         await snap(page, 'dw-special-ability-sheet-read-only', { selector: `#${itemSheetId}` });
 

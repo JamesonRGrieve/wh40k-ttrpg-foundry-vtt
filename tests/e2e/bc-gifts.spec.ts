@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { emptyContentSections, shownContentSections } from './content-sections';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -265,6 +266,11 @@ test.describe.serial('BC Gifts of the Gods (Tier B)', () => {
         const itemSheet = page.locator(`#${itemSheetId}`);
         await expect(itemSheet.locator('[data-gift-panel]')).toBeVisible();
         await expect(itemSheet.locator('[data-gift-rider]')).toHaveCount(2);
+        // #597: read-only, no section heading sits over nothing (the fixture has no Description or Drawback).
+        expect(await emptyContentSections(page, itemSheetId)).toEqual([]);
+        const shown = await shownContentSections(page, itemSheetId);
+        expect(shown).not.toContain('WH40K.Item.Tabs.Description');
+        expect(shown).not.toContain('WH40K.Mutation.Drawback');
         // snap() alone: closing the other windows would close the Heretic's sheet, checked below.
         await snap(page, 'bc-gifts-mutation-sheet-read-only', { selector: `#${itemSheetId}` });
 

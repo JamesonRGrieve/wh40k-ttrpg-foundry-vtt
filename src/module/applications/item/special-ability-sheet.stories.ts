@@ -300,3 +300,37 @@ export const HomologationRT: Story = {
         await expect(canvasElement.querySelector('.wh40k-story-editor')).not.toBeNull();
     },
 };
+
+const EMPTY_SECTION_LINES: readonly SystemId[] = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'];
+
+/** A read-only ability with nothing in its Description, Benefit, Notes or Modifiers. */
+const emptyArgs = (): SpecialAbilityArgs => {
+    const system: SpecialAbilitySystem = { benefit: '<p></p>', notes: '', description: { value: '' }, modifiers: {} };
+    return {
+        ...baseArgs(false, false),
+        item: { name: 'Unwritten Ability', img: 'icons/svg/upgrade.svg', system },
+        system,
+        contentFields: [{ name: 'system.benefit', labelKey: 'WH40K.SpecialAbility.Benefit', value: system.benefit }],
+    };
+};
+
+/** #597: a read-only ability prints no heading over an empty section, on every line; the Category still shows. */
+export const ReadOnlyEmptySections: Story = {
+    args: emptyArgs(),
+    render: (args) => {
+        const row = document.createElement('div');
+        row.style.display = 'grid';
+        row.style.gridTemplateColumns = 'repeat(3, minmax(0, 1fr))';
+        row.style.gap = '12px';
+        for (const line of EMPTY_SECTION_LINES) row.appendChild(renderForSystem(args, line));
+        return row;
+    },
+    play: async ({ canvasElement }) => {
+        const shown = EMPTY_SECTION_LINES.map((line) => ({
+            line,
+            sections: [...canvasElement.querySelectorAll(`[data-wh40k-system="${line}"] [data-content-section]`)].length,
+            headings: [...canvasElement.querySelectorAll(`[data-wh40k-system="${line}"] section.wh40k-tab-content h3`)].map((h) => h.textContent.trim()),
+        }));
+        await expect(shown).toEqual(EMPTY_SECTION_LINES.map((line) => ({ line, sections: 0, headings: ['Ability Category'] })));
+    },
+};
