@@ -1,233 +1,114 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+import { createActor, deleteDocuments, openActorSheet } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the Only War Regimental Drawbacks + Multiple
- * Comrades panel (GitHub #160).
+ * Tier B for the Only War Regimental Drawbacks panel (#160).
  *
- * Creates an `ow-character` actor in the seed world seeded with two
- * Regimental Drawback ids and an explicit Multiple Comrades roster;
- * opens its sheet; asserts the panel renders with the drawback list,
- * the refund badge, the merged-penalty surface (when populated by the
- * orchestrator's `_prepareContext` builder), the budget readout, and
- * the roster row; clicks the toggle on the first drawback and asserts
- * the system field shrinks by one entry; snapshots the rendered sheet.
+ * The OW character holds two real drawbacks from Hammer of the Emperor,
+ * stored as compendium UUIDs, and a Multiple Comrades roster of Comrade
+ * names. The old fixture used invented ids ("short-rations"), which the panel
+ * could only print raw. The panel must show each drawback by its document's
+ * name, never a UUID, a raw id or "[broken link]". The drawback documents do
+ * not carry their Regiment Creation Points yet, so the refund reads "—" rather
+ * than a false "+0". The spec then removes a drawback, adds a Comrade through
+ * the prompt, and removes one, all through the panel's own buttons.
  */
 
-interface ActorRef {
-    id: string;
+const DOOMED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
+const THE_FEW = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.0e3e5f403cafdd8a';
+const PANEL = '.wh40k-ow-drawback-panel';
+const DIALOG = 'dialog.application[open]';
+
+interface DrawbackState {
+    drawbacks: string[];
+    primary: string | null;
+    additional: string[];
 }
 
-interface DrawbackProbeResult {
-    rendered?: boolean;
-    hasPanel?: boolean;
-    hasRefundBadge?: boolean;
-    hasBudgetRow?: boolean;
-    hasRoster?: boolean;
-    rosterCountBefore?: number | null;
-    drawbacksBefore?: number | null;
-    drawbacksAfter?: number | null;
-    toggleDispatched?: boolean;
-    error?: string | null;
-}
-
-async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
-        interface FoundryGlobal {
-            Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
+async function drawbackState(page: Page, actorId: string): Promise<DrawbackState> {
+    return page.evaluate((id) => {
+        interface System {
+            regimentDrawbacks: string[];
+            multiComradeRoster: { primaryId: string; additionalIds: string[] } | null;
         }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (Actor), no type surface in browser context
-        const { Actor: ActorGlobal } = globalThis as unknown as FoundryGlobal;
-        if (!ActorGlobal?.create) return { id: null, error: 'Actor.create unavailable' };
-        try {
-            const actor = await ActorGlobal.create({
-                name: 'probe-ow-drawbacks-pc',
-                type: 'ow-character',
-                system: {
-                    gameSystem: 'ow',
-                    comrade: { name: 'Comrade Probe', state: 'unharmed', distanceM: 3, hasVisualLine: true },
-                    regimentDrawbacks: ['demolitions-paranoia', 'short-rations'],
-                    multiComradeRoster: {
-                        primaryId: 'guardsman-vellis',
-                        additionalIds: ['guardsman-arkos', 'guardsman-jadek'],
-                    },
-                },
-            });
-            if (!actor) return { id: null, error: 'Actor.create returned null' };
-            return { id: actor.id ?? null, error: null };
-        } catch (err) {
-            return { id: null, error: err instanceof Error ? err.message : String(err) };
-        }
-    });
-    if (result.id === null) return { error: result.error ?? 'unknown create error' };
-    return { id: result.id };
-}
-
-async function deleteActor(page: Page, actorId: string): Promise<void> {
-    await page.evaluate(async (id: string) => {
-        interface FoundryGlobal {
-            game?: { actors?: { get?: (id: string) => { delete?: () => Promise<void> } | undefined } };
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (game), no type surface in browser context
-        const { game: gameGlobal } = globalThis as unknown as FoundryGlobal;
-        const actor = gameGlobal?.actors?.get?.(id);
-        await actor?.delete?.();
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { actors: { get: (i: string) => { system: System } | undefined } } };
+        const sys = g.game.actors.get(id)?.system;
+        if (sys === undefined) throw new Error('actor not found');
+        return {
+            drawbacks: [...sys.regimentDrawbacks],
+            primary: sys.multiComradeRoster?.primaryId ?? null,
+            additional: [...(sys.multiComradeRoster?.additionalIds ?? [])],
+        };
     }, actorId);
 }
 
+/** The drawback rows as shown: name and refund label. */
+async function shownRows(panel: Locator): Promise<Array<{ name: string; refund: string }>> {
+    return panel.locator('li[data-drawback-id]').evaluateAll((items) =>
+        items.map((li) => ({
+            name: li.querySelector('[data-field="drawback-name"]')?.textContent.trim() ?? '',
+            refund: li.querySelector('[data-field="drawback-refund"]')?.textContent.trim() ?? '',
+        })),
+    );
+}
+
 test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
-    test('renders the panel, drives owToggleDrawback, asserts the list shrinks, snaps', async ({ page }) => {
+    test('names real drawbacks and Comrades, and removes and adds through the panel', async ({ page }) => {
         await joinOrSkip(page);
-
-        const created = await createOwActor(page);
-        if ('error' in created) {
-            test.skip(true, `ow-character creation failed: ${created.error}`);
-            return;
-        }
-        const actorId = created.id;
-
+        const actor = await createActor(page, {
+            data: {
+                name: 'e2e-160 Guardsman',
+                type: 'ow-character',
+                system: {
+                    gameSystem: 'ow',
+                    comrade: { name: 'Trooper Vellis', state: 'unharmed', distanceM: 3, hasVisualLine: true },
+                    regimentDrawbacks: [DOOMED, THE_FEW],
+                    multiComradeRoster: { primaryId: 'Trooper Vellis', additionalIds: ['Trooper Arkos', 'Trooper Jadek'] },
+                },
+            },
+        });
         try {
-            const result = await page.evaluate(async (id: string): Promise<DrawbackProbeResult> => {
-                interface ActorSheet {
-                    render: (options: { force?: boolean }) => Promise<void>;
-                    element?: HTMLElement | null;
-                    close?: () => Promise<void>;
-                }
-                interface ActorDoc {
-                    system?: {
-                        regimentDrawbacks?: string[];
-                        multiComradeRoster?: { additionalIds?: string[] };
-                    };
-                    sheet?: ActorSheet | null;
-                }
-                interface FoundryGlobal {
-                    game?: { actors?: { get?: (id: string) => ActorDoc | undefined } };
-                    __c160sheet?: ActorSheet;
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime global (game), no type surface in browser context
-                const g = globalThis as unknown as FoundryGlobal;
-                const actor = g.game?.actors?.get?.(id);
-                if (actor == null) {
-                    return {
-                        rendered: false,
-                        hasPanel: false,
-                        hasRefundBadge: false,
-                        hasBudgetRow: false,
-                        hasRoster: false,
-                        rosterCountBefore: null,
-                        drawbacksBefore: null,
-                        drawbacksAfter: null,
-                        toggleDispatched: false,
-                        error: 'actor lookup failed',
-                    };
-                }
-                let rendered = false;
-                let hasPanel = false;
-                let hasRefundBadge = false;
-                let hasBudgetRow = false;
-                let hasRoster = false;
-                let rosterCountBefore: number | null = null;
-                let drawbacksBefore: number | null = null;
-                let drawbacksAfter: number | null = null;
-                let toggleDispatched = false;
-                let probeError: string | null = null;
+            const sheetId = await openActorSheet(page, actor.id, 'overview');
+            const panel = page.locator(`#${sheetId} ${PANEL}`);
+            await panel.scrollIntoViewIfNeeded();
+            await expect
+                .poll(async () => shownRows(panel))
+                .toEqual([
+                    { name: 'Doomed', refund: '—' },
+                    { name: 'The Few', refund: '—' },
+                ]);
+            await snap(page, 'ow-drawback-panel', { selector: `#${sheetId} ${PANEL}` });
+            const text = (await panel.textContent()) ?? '';
+            for (const bad of ['Compendium.', '[broken link]', '+0', 'undefined']) expect(text, `the panel must not show "${bad}"`).not.toContain(bad);
+            const roster = panel.locator('[data-field="multi-comrade-roster"]');
+            await expect(roster.locator('[data-primary-id]')).toContainText('Trooper Vellis');
+            await expect(roster.locator('li[data-comrade-id]')).toHaveText(['Trooper Arkos', 'Trooper Jadek']);
 
-                try {
-                    drawbacksBefore = (actor.system?.regimentDrawbacks ?? []).length;
-                    rosterCountBefore = actor.system?.multiComradeRoster?.additionalIds?.length ?? null;
-                    const sheet = actor.sheet;
-                    if (sheet == null) return { error: 'actor.sheet is null' };
-                    // Park the sheet for teardown BEFORE any await, so the spec can
-                    // always close it even if a probe below throws mid-flight.
-                    g.__c160sheet = sheet;
-                    await sheet.render({ force: true });
-                    // Wait for the drawback panel to render (the checks below report a miss).
-                    await globalThis.wh40kE2E.pollUntil(() => sheet.element?.querySelector('.wh40k-ow-drawback-panel') != null);
-                    rendered = sheet.element instanceof HTMLElement;
+            // Remove Doomed.
+            await panel.locator(`li[data-drawback-id="${DOOMED}"] button[data-action="owToggleDrawback"]`).click();
+            await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([THE_FEW]);
+            await expect.poll(async () => shownRows(panel)).toEqual([{ name: 'The Few', refund: '—' }]);
 
-                    if (rendered && sheet.element != null) {
-                        const el: HTMLElement = sheet.element;
-                        const panel = el.querySelector('.wh40k-ow-drawback-panel');
-                        hasPanel = panel !== null;
-                        hasRefundBadge = el.querySelector('[data-refund-total]') !== null;
-                        hasBudgetRow = el.querySelector('[data-adjusted-budget]') !== null;
-                        hasRoster = el.querySelector('[data-field="multi-comrade-roster"]') !== null;
-
-                        // Read the LIVE actor each time: the captured reference can
-                        // be replaced out from under us by a re-render.
-                        const drawbackCount = (): number => (g.game?.actors?.get?.(id)?.system?.regimentDrawbacks ?? []).length;
-                        // `owToggleDrawback` routes through `actor.update()`, a full
-                        // socket round-trip — the fixed 150 ms sleep this used to do
-                        // raced it. Settle on the observed change instead, capped.
-                        const settle = async (from: number): Promise<void> => {
-                            await globalThis.wh40kE2E.pollUntil(() => drawbackCount() !== from, globalThis.wh40kE2E.scaledMs(2000), 100);
-                        };
-
-                        const toggleBtn = el.querySelector('button[data-action="owToggleDrawback"]');
-                        if (toggleBtn instanceof HTMLButtonElement && !toggleBtn.disabled) {
-                            const startCount = drawbackCount();
-                            toggleBtn.click();
-                            await settle(startCount);
-                            toggleDispatched = true;
-                        }
-                        drawbacksAfter = drawbackCount();
-                    }
-                } catch (err) {
-                    probeError = err instanceof Error ? err.message : String(err);
-                }
-
-                return {
-                    rendered,
-                    hasPanel,
-                    hasRefundBadge,
-                    hasBudgetRow,
-                    hasRoster,
-                    rosterCountBefore,
-                    drawbacksBefore,
-                    drawbacksAfter,
-                    toggleDispatched,
-                    error: probeError,
-                };
-            }, actorId);
-
-            await snap(page, 'ow-drawback-panel', { selector: '.wh40k-ow-drawback-panel' });
-
-            // Tear down so the open sheet doesn't leak into the next test's DOM.
-            await page.evaluate(async () => {
-                interface FoundryGlobal {
-                    __c160sheet?: { close?: () => Promise<void> };
-                }
-                // eslint-disable-next-line no-restricted-syntax -- boundary: parked sheet on Foundry runtime global, no type surface in browser context
-                const g = globalThis as unknown as FoundryGlobal;
-                try {
-                    await g.__c160sheet?.close?.();
-                } catch {
-                    /* ignore */
-                }
-                g.__c160sheet = undefined;
-            });
-
-            expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
-            expect(result.rendered, 'sheet did not render').toBe(true);
-            // Panel + buttons only render once the orchestrator wires the
-            // include into tab-overview.hbs; the probe asserts presence so
-            // post-wire-up the spec exercises the full interaction.
-            expect(result.hasPanel, 'drawback panel should render in OW sheet').toBe(true);
-            expect(result.hasRefundBadge, 'refund badge should render').toBe(true);
-            expect(result.hasBudgetRow, 'budget readout should render').toBe(true);
-            expect(result.hasRoster, 'multi-comrade roster section should render').toBe(true);
-            expect(result.drawbacksBefore, 'initial drawback count should be 2').toBe(2);
-            expect(result.rosterCountBefore, 'initial additional-comrade count should be 2').toBe(2);
-            if (result.toggleDispatched === true) {
-                expect(result.drawbacksAfter, 'one click should remove one drawback id').toBe(1);
-            }
+            // Add a Comrade by name through the prompt, then remove one.
+            await roster.locator('button[data-action="owAddComrade"]').click();
+            const dialog = page.locator(DIALOG).last();
+            await expect(dialog).toBeVisible();
+            await dialog.locator('input[name="comradeId"]').fill('Trooper Orlan');
+            await dialog.locator('button[data-action="ok"]').click();
+            await expect.poll(async () => (await drawbackState(page, actor.id)).additional).toEqual(['Trooper Arkos', 'Trooper Jadek', 'Trooper Orlan']);
+            await roster.locator('li[data-comrade-id="Trooper Arkos"] button[data-action="owRemoveComrade"]').click();
+            await expect.poll(async () => (await drawbackState(page, actor.id)).additional).toEqual(['Trooper Jadek', 'Trooper Orlan']);
+            await expect(roster.locator('li[data-comrade-id]')).toHaveText(['Trooper Jadek', 'Trooper Orlan']);
+            await snap(page, 'ow-drawback-panel-after-edits', { selector: `#${sheetId} ${PANEL}` });
 
             recordCoverage('panel.render', 'OwDrawbackPanel');
         } finally {
-            await deleteActor(page, actorId);
+            await deleteDocuments(page, { actors: [actor.id] });
         }
     });
 });

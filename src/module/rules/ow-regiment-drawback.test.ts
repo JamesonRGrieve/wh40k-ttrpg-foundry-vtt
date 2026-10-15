@@ -226,40 +226,63 @@ describe('Multiple Comrades roster', () => {
 
 describe('buildDrawbackPanel', () => {
     const roster: MultiComradeRoster = { primaryId: 'comrade-primary', additionalIds: ['comrade-a', 'comrade-b'] };
+    /** A name lookup that shows each id as stored. */
+    const ownId = (id: string): string => id;
 
     it('carries the id on every row so the remove control can dispatch', () => {
         // The defect this projection exists to fix: the panel used to receive the
         // raw `string[]`, so `data-drawback-id` rendered empty and owToggleDrawback
         // treated every click as a no-op.
-        const panel = buildDrawbackPanel(['dw-a', 'dw-b'], null, () => undefined, REGIMENT_BUDGET);
+        const panel = buildDrawbackPanel(['dw-a', 'dw-b'], null, () => undefined, ownId, REGIMENT_BUDGET);
         expect(panel.drawbacks.map((row) => row.id)).toEqual(['dw-a', 'dw-b']);
     });
 
-    it('falls back to the id as the label when no descriptor resolves', () => {
-        const panel = buildDrawbackPanel(['dw-a'], null, () => undefined, REGIMENT_BUDGET);
-        expect(panel.drawbacks[0]).toEqual({ id: 'dw-a', description: 'dw-a', refund: 0 });
-        expect(panel.appliedRefund).toBe(0);
-        expect(panel.adjustedBudget).toBe(REGIMENT_BUDGET);
+    it('names each row through nameOf: a drawback document UUID reads as its name (#160)', () => {
+        const uuid = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
+        const panel = buildDrawbackPanel(
+            [uuid],
+            null,
+            () => undefined,
+            (id) => (id === uuid ? 'Doomed' : id),
+            REGIMENT_BUDGET,
+        );
+        expect(panel.drawbacks[0]).toMatchObject({ id: uuid, name: 'Doomed' });
     });
 
-    it('uses the resolved descriptor for label, refund and budget', () => {
-        const panel = buildDrawbackPanel([drawbackA.id], null, () => drawbackA, REGIMENT_BUDGET);
-        expect(panel.drawbacks[0]?.description).toBe(drawbackA.description);
+    it('shows an unknown refund as "—", not "+0", and so the totals too (#160)', () => {
+        const panel = buildDrawbackPanel(['dw-a'], null, () => undefined, ownId, REGIMENT_BUDGET);
+        expect(panel.drawbacks[0]).toEqual({ id: 'dw-a', name: 'dw-a', refund: null, refundLabel: '—' });
+        expect(panel).toMatchObject({ refundKnown: false, appliedRefundLabel: '—', adjustedBudgetLabel: '—' });
+    });
+
+    it('shows exact totals when nothing is selected', () => {
+        const panel = buildDrawbackPanel([], null, () => undefined, ownId, REGIMENT_BUDGET);
+        expect(panel).toMatchObject({ refundKnown: true, appliedRefundLabel: '+0', adjustedBudgetLabel: String(REGIMENT_BUDGET) });
+    });
+
+    it('uses the resolved descriptor for refund and budget', () => {
+        const panel = buildDrawbackPanel([drawbackA.id], null, () => drawbackA, ownId, REGIMENT_BUDGET);
         expect(panel.drawbacks[0]?.refund).toBe(drawbackA.refund);
+        expect(panel.drawbacks[0]?.refundLabel).toBe(`+${drawbackA.refund}`);
         expect(panel.appliedRefund).toBe(drawbackA.refund);
         expect(panel.adjustedBudget).toBe(REGIMENT_BUDGET + drawbackA.refund);
+        expect(panel).toMatchObject({
+            refundKnown: true,
+            appliedRefundLabel: `+${drawbackA.refund}`,
+            adjustedBudgetLabel: String(REGIMENT_BUDGET + drawbackA.refund),
+        });
         expect(panel.hasDrawbacks).toBe(true);
     });
 
     it('skips empty ids rather than rendering an undismissable row', () => {
-        const panel = buildDrawbackPanel(['', 'dw-a', ''], null, () => undefined, REGIMENT_BUDGET);
+        const panel = buildDrawbackPanel(['', 'dw-a', ''], null, () => undefined, ownId, REGIMENT_BUDGET);
         expect(panel.drawbacks).toHaveLength(1);
     });
 
     it('projects characteristics as key/value ROWS, not the engine Record', () => {
         // The template iterates and reads `char.key` / `char.value`, and guards on
         // `.length` — a Record has none, so the engine shape rendered nothing.
-        const panel = buildDrawbackPanel([drawbackA.id], null, () => drawbackA, REGIMENT_BUDGET);
+        const panel = buildDrawbackPanel([drawbackA.id], null, () => drawbackA, ownId, REGIMENT_BUDGET);
         for (const entry of panel.penalty.characteristics) {
             expect(typeof entry.key).toBe('string');
             expect(typeof entry.value).toBe('number');
@@ -268,13 +291,13 @@ describe('buildDrawbackPanel', () => {
     });
 
     it('reports no penalty row when nothing resolves', () => {
-        const panel = buildDrawbackPanel(['dw-a'], null, () => undefined, REGIMENT_BUDGET);
+        const panel = buildDrawbackPanel(['dw-a'], null, () => undefined, ownId, REGIMENT_BUDGET);
         expect(panel.hasPenaltyRow).toBe(false);
         expect(panel.penalty.characteristics).toEqual([]);
     });
 
     it('flattens the roster for the template, and reports absence as the RAW default', () => {
-        const withRoster = buildDrawbackPanel([], roster, () => undefined, REGIMENT_BUDGET);
+        const withRoster = buildDrawbackPanel([], roster, () => undefined, ownId, REGIMENT_BUDGET);
         expect(withRoster.roster).toEqual({
             present: true,
             primaryId: 'comrade-primary',
@@ -282,7 +305,7 @@ describe('buildDrawbackPanel', () => {
             totalCount: totalComradeCount(roster),
         });
 
-        const withoutRoster = buildDrawbackPanel([], null, () => undefined, REGIMENT_BUDGET);
+        const withoutRoster = buildDrawbackPanel([], null, () => undefined, ownId, REGIMENT_BUDGET);
         expect(withoutRoster.roster.present).toBe(false);
         expect(withoutRoster.roster.totalCount).toBe(0);
     });

@@ -27,8 +27,11 @@ interface ActorRef {
     id: string;
 }
 
+const MOUNT_HORSE = 'Compendium.wh40k-rpg.ow-hammer-actors-mounts.Actor.4bceba2781bd8d4f';
+const READOUT = '.wh40k-ow-mount-panel [data-wh40k-hook="ow-mount-current-readout"]';
+
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
+    const result = await page.evaluate(async (mountUuid: string) => {
         interface FoundryGlobal {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         }
@@ -41,9 +44,11 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
                 type: 'ow-character',
                 system: {
                     gameSystem: 'ow',
+                    // A real mount (Hammer of the Emperor's Horse) and two of its traits:
+                    // an invented UUID read "[broken link]" (#159).
                     mountedOn: {
-                        mountId: 'Compendium.wh40k-rpg.ow-mounts.Actor.test-warhorse',
-                        traits: ['bred-for-war', 'loyal', 'terrain-master'],
+                        mountId: mountUuid,
+                        traits: ['bred-for-war', 'loyal'],
                     },
                 },
             });
@@ -52,7 +57,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
         } catch (err) {
             return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
-    });
+    }, MOUNT_HORSE);
     if (result.id === null) return { error: result.error ?? 'unknown create error' };
     return { id: result.id };
 }
@@ -168,6 +173,11 @@ test.describe.serial('OW Mounted Combat panel (Tier B, #159)', () => {
             const hookCounts = await countHooks(page);
 
             await snap(page, 'ow-mount-panel', { selector: '.wh40k-ow-mount-panel' });
+            // The mount is named from its document, and its traits from the langpack (#159).
+            const readout = page.locator(READOUT).first();
+            await expect(readout).toContainText('Horse');
+            await expect(readout).toContainText('Bred for War');
+            await expect(readout).not.toContainText('[broken link]');
 
             await page.evaluate(async () => {
                 interface SheetCloseable {

@@ -24,10 +24,14 @@
       drawbackPanel: {
         drawbacks: Array<{
             id:          string  // compendium UUID, for action dataset
-            description: string  // resolved label / fluff text
-            refund:      number  // positive points returned
+            name:        string  // the drawback document's name (UUID → uuidNameCache)
+            refund:      number | null  // points returned; null when no content supplies them
+            refundLabel: string  // "+N", or "—" when unknown
         }>
-        appliedRefund:   number   // sum of every entry's refund
+        appliedRefund:   number   // sum of every known entry's refund
+        refundKnown:     boolean  // every selected drawback's refund is known
+        appliedRefundLabel:  string  // "+N", or "—" while any refund is unknown
+        adjustedBudgetLabel: string  // the adjusted budget, or "—" likewise
         baseBudget:      number   // RAW 12 by default
         adjustedBudget:  number   // baseBudget + appliedRefund
         penalty: {
@@ -57,7 +61,7 @@
         <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-px-2 tw-py-0.5 tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]
  {{#if drawbackPanel.hasDrawbacks}}tw-border-gold tw-text-gold tw-bg-gold/10{{else}}tw-border-[color:var(--wh40k-border-color-light)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
               data-refund-total="{{drawbackPanel.appliedRefund}}">
-            {{localize "WH40K.OW.RegimentDrawback.Refund"}}: +{{drawbackPanel.appliedRefund}}
+            {{localize "WH40K.OW.RegimentDrawback.Refund"}}: {{drawbackPanel.appliedRefundLabel}}
         </span>
     {{/inline}}
 
@@ -68,11 +72,11 @@
  tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
  tw-text-[0.78rem]"
                 data-drawback-id="{{drawback.id}}">
-                <span class="tw-text-[color:var(--wh40k-text-bright)]">
-                    {{drawback.description}}
+                <span class="tw-text-[color:var(--wh40k-text-bright)]" data-field="drawback-name">
+                    {{drawback.name}}
                 </span>
-                <span class="tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold tw-tabular-nums tw-text-gold">
-                    +{{drawback.refund}}
+                <span class="tw-ml-auto tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold tw-tabular-nums tw-text-gold" data-field="drawback-refund">
+                    {{drawback.refundLabel}}
                 </span>
                 <button type="button"
                         class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
@@ -101,7 +105,7 @@
             {{#if drawbackPanel.penalty.characteristics.length}}
                 <ul class="tw-flex tw-flex-wrap tw-gap-1 tw-list-none tw-m-0 tw-p-0">
                     {{#each drawbackPanel.penalty.characteristics as |char|}}
-                        <li class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson/50 tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]"
+                        <li class="tw-inline-flex tw-items-center tw-gap-1 tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-crimson/50 tw-text-crimson-l40 tw-tabular-nums tw-text-[0.72rem]"
                             data-char-key="{{char.key}}"
                             data-char-value="{{char.value}}">
                             <span>{{char.key}}</span>
@@ -111,27 +115,27 @@
                 </ul>
             {{/if}}
             {{#if drawbackPanel.penalty.skills.length}}
-                <span class="tw-text-crimson-l40tw-text-[0.72rem]">
+                <span class="tw-text-crimson-l40 tw-text-[0.72rem]">
                     {{#each drawbackPanel.penalty.skills as |skill|}}{{skill}}{{#unless @last}}, {{/unless}}{{/each}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.talents.length}}
-                <span class="tw-text-crimson-l40tw-text-[0.72rem]">
+                <span class="tw-text-crimson-l40 tw-text-[0.72rem]">
                     {{#each drawbackPanel.penalty.talents as |talent|}}{{talent}}{{#unless @last}}, {{/unless}}{{/each}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.wounds}}
-                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="wounds">
+                <span class="tw-text-crimson-l40 tw-tabular-nums tw-text-[0.72rem]" data-field="wounds">
                     {{localize "WH40K.OW.RegimentDrawback.PenaltyWounds" value=drawbackPanel.penalty.wounds}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.logistics}}
-                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="logistics">
+                <span class="tw-text-crimson-l40 tw-tabular-nums tw-text-[0.72rem]" data-field="logistics">
                     {{localize "WH40K.OW.RegimentDrawback.PenaltyLogistics" value=drawbackPanel.penalty.logistics}}
                 </span>
             {{/if}}
             {{#if drawbackPanel.penalty.kitModifier}}
-                <span class="tw-text-crimson-l40tw-tabular-nums tw-text-[0.72rem]" data-field="kit">
+                <span class="tw-text-crimson-l40 tw-tabular-nums tw-text-[0.72rem]" data-field="kit">
                     {{localize "WH40K.OW.RegimentDrawback.PenaltyKit" value=drawbackPanel.penalty.kitModifier}}
                 </span>
             {{/if}}
@@ -144,11 +148,11 @@
  tw-text-[0.78rem]"
          data-field="adjusted-budget">
         <span class="tw-text-[color:var(--wh40k-text-muted)]">
-            {{drawbackPanel.baseBudget}} + {{drawbackPanel.appliedRefund}}
+            {{drawbackPanel.baseBudget}} + {{#if drawbackPanel.refundKnown}}{{drawbackPanel.appliedRefund}}{{else}}&mdash;{{/if}}
         </span>
         <span class="tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold tw-tabular-nums"
-              data-adjusted-budget="{{drawbackPanel.adjustedBudget}}">
-            = {{drawbackPanel.adjustedBudget}}
+              data-adjusted-budget="{{drawbackPanel.adjustedBudgetLabel}}">
+            = {{drawbackPanel.adjustedBudgetLabel}}
         </span>
     </div>
 

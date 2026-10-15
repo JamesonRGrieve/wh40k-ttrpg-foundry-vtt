@@ -207,11 +207,20 @@ export interface BattlefieldPanelData {
  *
  * Content-agnostic per Direction #7: this engine never enumerates Awards.
  *
+ * An unresolved id is labelled through `nameOf`, so a stored award document
+ * UUID still reads as the document's name (#161).
+ *
  * @param conferredIds The actor's persisted `system.regimentalAwards`.
  * @param supportCooldown The actor's persisted `system.supportCooldown` (rounds remaining).
  * @param resolve Id → descriptor lookup.
+ * @param nameOf Id → display name, for an id no descriptor resolves.
  */
-export function buildBattlefieldPanel(conferredIds: readonly string[], supportCooldown: number, resolve: RegimentalAwardResolver): BattlefieldPanelData {
+export function buildBattlefieldPanel(
+    conferredIds: readonly string[],
+    supportCooldown: number,
+    resolve: RegimentalAwardResolver,
+    nameOf: (id: string) => string,
+): BattlefieldPanelData {
     const cooldown = Number.isFinite(supportCooldown) && supportCooldown > 0 ? Math.trunc(supportCooldown) : 0;
 
     const descriptors: RegimentalAward[] = [];
@@ -222,7 +231,7 @@ export function buildBattlefieldPanel(conferredIds: readonly string[], supportCo
         if (descriptor !== undefined) descriptors.push(descriptor);
         availableAwards.push({
             id,
-            name: descriptor?.name ?? id,
+            name: descriptor?.name ?? nameOf(id),
             description: descriptor?.description ?? '',
             conferred: true,
         });

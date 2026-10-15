@@ -131,6 +131,7 @@ import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation, type ArmourSystemLike } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
+import { contentRefName } from '../../utils/content-ref-name.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -170,6 +171,11 @@ const toast = (foundry.applications as unknown as { api?: { Toast?: Record<strin
  */
 function titleCase(s: string): string {
     return s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
+}
+
+/** The name to show for a stored content reference: a document UUID's name, or the value as stored (#160, #161). */
+function cachedRefName(ref: string): string {
+    return contentRefName(ref, (uuid) => uuidNameCache.getName(uuid));
 }
 
 /** Currency wallets another sheet panel already edits (RT Dynasty tab, OW Logistics panel), so the Resources panel skips them. */
@@ -684,10 +690,10 @@ const PANEL_BUILDERS: SystemPanels = {
                 const record = owSystemRecord(s);
                 const ids = Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
                 const roster = (record['multiComradeRoster'] ?? null) as MultiComradeRoster | null;
-                // Descriptors live on compendium documents (Direction #7). Until a
-                // drawback content pack exists nothing resolves, and each row falls
-                // back to its own id — which still removes correctly.
-                return buildDrawbackPanel(ids, roster, () => undefined, REGIMENT_BUDGET);
+                // Each id is a drawback document UUID, shown by its name (#160). The
+                // drawback documents do not yet carry their Regiment Creation Points,
+                // so no descriptor resolves and the refund reads as unknown.
+                return buildDrawbackPanel(ids, roster, () => undefined, cachedRefName, REGIMENT_BUDGET);
             },
         },
         {
@@ -705,10 +711,11 @@ const PANEL_BUILDERS: SystemPanels = {
                 const record = owSystemRecord(s);
                 const ids = Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
                 const cooldown = typeof record['supportCooldown'] === 'number' ? record['supportCooldown'] : 0;
-                // Award descriptors live on compendium documents (Direction #7). Until an
-                // award content pack exists nothing resolves and each row falls back to
-                // its own id — which still toggles off correctly.
-                return buildBattlefieldPanel(ids, cooldown, () => undefined);
+                // Award descriptors live on compendium documents (Direction #7). No award
+                // content pack exists yet, so nothing resolves; a stored award UUID is
+                // still shown by its document's name (#161), and a row keeps its id so
+                // it toggles off correctly.
+                return buildBattlefieldPanel(ids, cooldown, () => undefined, cachedRefName);
             },
         },
     ],

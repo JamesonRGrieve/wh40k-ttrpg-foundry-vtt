@@ -113,6 +113,14 @@ describe('buildBattlefieldPanel', () => {
         [WOUND_BADGE.id]: WOUND_BADGE,
     };
     const resolve = (id: string): RegimentalAward | undefined => CATALOGUE[id];
+    /** A name lookup that shows each id as stored. */
+    const ownId = (id: string): string => id;
+
+    it('labels an unresolved award document UUID by the name nameOf gives it (#161)', () => {
+        const uuid = 'Item.award0000000001';
+        const panel = buildBattlefieldPanel([uuid], 0, resolve, (id) => (id === uuid ? 'Cadian Valour' : id));
+        expect(panel.availableAwards[0]).toMatchObject({ id: uuid, name: 'Cadian Valour' });
+    });
 
     it('gates the Request Support button on the cooldown, in both directions', () => {
         // The live defect this builder fixes: the sheet supplied no `canRequestSupport`
@@ -121,26 +129,26 @@ describe('buildBattlefieldPanel', () => {
         // never be requested, cooldown or not. The ready case below is the half that was
         // broken; assert both so the gate cannot regress to a constant in either
         // direction.
-        const onCooldown = buildBattlefieldPanel([], 3, resolve);
+        const onCooldown = buildBattlefieldPanel([], 3, resolve, ownId);
         expect(onCooldown.canRequestSupport).toBe(false);
         expect(onCooldown.cooldownActive).toBe(true);
         expect(onCooldown.supportCooldown).toBe(3);
 
-        const ready = buildBattlefieldPanel([], 0, resolve);
+        const ready = buildBattlefieldPanel([], 0, resolve, ownId);
         expect(ready.canRequestSupport).toBe(true);
         expect(ready.cooldownActive).toBe(false);
     });
 
     it('normalises a negative or non-finite cooldown to ready', () => {
         for (const bad of [-1, Number.NaN, Number.POSITIVE_INFINITY]) {
-            const panel = buildBattlefieldPanel([], bad, resolve);
+            const panel = buildBattlefieldPanel([], bad, resolve, ownId);
             expect(panel.supportCooldown).toBe(0);
             expect(panel.canRequestSupport).toBe(true);
         }
     });
 
     it('projects conferred ids into rows and merges their bonuses', () => {
-        const panel = buildBattlefieldPanel([VALOUR.id, WOUND_BADGE.id], 0, resolve);
+        const panel = buildBattlefieldPanel([VALOUR.id, WOUND_BADGE.id], 0, resolve, ownId);
 
         expect(panel.availableAwards.map((r) => r.name)).toEqual(['Medallion Crimson', 'Wound Badge']);
         expect(panel.availableAwards.every((r) => r.conferred)).toBe(true);
@@ -154,7 +162,7 @@ describe('buildBattlefieldPanel', () => {
         // A row whose content pack is absent must still carry a non-empty
         // `data-award-id`, or `owToggleAward` no-ops and the award can never be
         // removed — strictly worse than a bare label.
-        const panel = buildBattlefieldPanel(['award-missing'], 0, resolve);
+        const panel = buildBattlefieldPanel(['award-missing'], 0, resolve, ownId);
 
         expect(panel.availableAwards).toHaveLength(1);
         expect(panel.availableAwards[0]?.id).toBe('award-missing');
@@ -165,13 +173,13 @@ describe('buildBattlefieldPanel', () => {
     });
 
     it('skips empty ids without emitting a dead row', () => {
-        const panel = buildBattlefieldPanel(['', VALOUR.id, ''], 0, resolve);
+        const panel = buildBattlefieldPanel(['', VALOUR.id, ''], 0, resolve, ownId);
         expect(panel.availableAwards).toHaveLength(1);
         expect(panel.availableAwards[0]?.id).toBe(VALOUR.id);
     });
 
     it('reports hasAny false when nothing is conferred', () => {
-        const panel = buildBattlefieldPanel([], 0, resolve);
+        const panel = buildBattlefieldPanel([], 0, resolve, ownId);
         expect(panel.availableAwards).toEqual([]);
         expect(panel.merged.hasAny).toBe(false);
         expect(panel.merged.entryCount).toBe(0);

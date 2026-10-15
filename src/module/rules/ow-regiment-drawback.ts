@@ -276,12 +276,21 @@ export function removeComrade(roster: MultiComradeRoster, comradeId: string): Mu
 /*  Sheet projection                                                    */
 /* -------------------------------------------------------------------- */
 
-/** One rendered drawback row. `id` is what the remove control dispatches on. */
+/**
+ * One rendered drawback row. `id` is what the remove control dispatches on;
+ * `name` is the referenced document's name (#160). `refund` is null when no
+ * descriptor supplies the drawback's Regiment Creation Points, and the row
+ * then shows "—" rather than claiming "+0".
+ */
 interface DrawbackPanelRow {
     readonly id: string;
-    readonly description: string;
-    readonly refund: number;
+    readonly name: string;
+    readonly refund: number | null;
+    readonly refundLabel: string;
 }
+
+/** The label for a points value that no descriptor supplies. */
+const UNKNOWN_POINTS = '—';
 
 /**
  * The merged penalty as the panel renders it. `characteristics` is a ROW LIST,
@@ -305,6 +314,12 @@ export interface DrawbackPanelData {
     readonly baseBudget: number;
     readonly appliedRefund: number;
     readonly adjustedBudget: number;
+    /** Whether every selected drawback's refund is known, so the totals are exact. */
+    readonly refundKnown: boolean;
+    /** "+N", or "—" while any selected drawback's refund is unknown. */
+    readonly appliedRefundLabel: string;
+    /** The adjusted budget, or "—" while any selected drawback's refund is unknown. */
+    readonly adjustedBudgetLabel: string;
     readonly hasPenaltyRow: boolean;
     readonly penalty: DrawbackPanelPenalty;
     readonly roster: {
@@ -352,13 +367,16 @@ function hasAnyPenalty(penalty: DrawbackPanelPenalty): boolean {
  * `data-drawback-id=""` — which `owToggleDrawback` treats as a no-op. The
  * control therefore did nothing at all.
  *
- * `resolve` supplies the descriptor for an id. An id that does not resolve
- * still gets a row carrying its own id, so the remove control keeps working
- * for a selection whose content pack is absent or renamed — a drawback you
- * cannot remove is strictly worse than one with a bare label.
+ * `resolve` supplies the descriptor (refund and penalty) for an id, and
+ * `nameOf` the name to show — the drawback document's name for a stored UUID
+ * (#160). An id that does not resolve still gets a row carrying its own id, so
+ * the remove control keeps working for a selection whose content pack is
+ * absent or renamed — a drawback you cannot remove is strictly worse than one
+ * with a bare label. Its refund is unknown, and so are the totals.
  * @param {readonly string[]} ids  The persisted drawback ids.
  * @param {MultiComradeRoster | null} roster  The Multiple Comrades roster, or null for the RAW default.
  * @param {DrawbackResolver} resolve  Id → descriptor lookup.
+ * @param {(id: string) => string} nameOf  Id → display name.
  * @param {number} baseBudget  The pre-refund Regiment Creation budget.
  * @returns {DrawbackPanelData}  The panel context.
  */
@@ -366,6 +384,7 @@ export function buildDrawbackPanel(
     ids: readonly string[],
     roster: MultiComradeRoster | null,
     resolve: DrawbackResolver,
+    nameOf: (id: string) => string,
     baseBudget: number,
 ): DrawbackPanelData {
     const descriptors: RegimentDrawback[] = [];
@@ -374,15 +393,13 @@ export function buildDrawbackPanel(
         if (id === '') continue;
         const descriptor = resolve(id);
         if (descriptor !== undefined) descriptors.push(descriptor);
-        rows.push({
-            id,
-            description: descriptor?.description ?? id,
-            refund: descriptor?.refund ?? 0,
-        });
+        const refund = descriptor === undefined || !Number.isFinite(descriptor.refund) ? null : descriptor.refund;
+        rows.push({ id, name: nameOf(id), refund, refundLabel: refund === null ? UNKNOWN_POINTS : `+${refund}` });
     }
 
     const budget = applyDrawbacksToBudget(baseBudget, descriptors);
     const penalty = toPanelPenalty(mergeDrawbackPenalties(descriptors));
+    const refundKnown = rows.every((row) => row.refund !== null);
 
     return {
         drawbacks: rows,
@@ -390,6 +407,9 @@ export function buildDrawbackPanel(
         baseBudget,
         appliedRefund: budget.appliedRefund,
         adjustedBudget: budget.adjustedBudget,
+        refundKnown,
+        appliedRefundLabel: refundKnown ? `+${budget.appliedRefund}` : UNKNOWN_POINTS,
+        adjustedBudgetLabel: refundKnown ? String(budget.adjustedBudget) : UNKNOWN_POINTS,
         hasPenaltyRow: hasAnyPenalty(penalty),
         penalty,
         roster: {
