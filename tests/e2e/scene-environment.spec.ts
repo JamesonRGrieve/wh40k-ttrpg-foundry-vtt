@@ -106,6 +106,11 @@ async function openCombatTab(page: Page, actorId: string): Promise<string> {
     return sheetId;
 }
 
+/** The sheet's Movement panel: the one holding the move-mode rows the assertions read. */
+function movementPanel(sheetId: string): string {
+    return `#${sheetId} .wh40k-panel:has([data-movement-type="half"])`;
+}
+
 /** The movement rates the sheet's move-mode cluster shows, by mode. */
 async function sheetMovement(page: Page, sheetId: string): Promise<Record<string, string>> {
     const out: Record<string, string> = {};
@@ -220,13 +225,13 @@ test.describe.serial('Scene environment (Tier B, #604)', () => {
             // Low gravity: Agility Bonus +2 for movement (6 → 6 / 12 / 18 / 36).
             await expect.poll(async () => sheetMovement(page, sheetId)).toEqual({ half: '6', full: '12', charge: '18', run: '36' });
             await clearScreenOverlays(page, sheetId);
-            expect(await snap(page, 'scene-env-sheet-low-gravity-movement', { selector: `#${sheetId}` })).not.toBeNull();
+            expect(await snap(page, 'scene-env-sheet-low-gravity-movement', { selector: movementPanel(sheetId) })).not.toBeNull();
 
             await setSceneEnvironment(page, probe.sceneId, { gravity: 'zero', harshConditions: false, atmosphere: 'breathable' });
             // Zero gravity: difficult terrain, movement halved.
             await expect.poll(async () => sheetMovement(page, sheetId)).toEqual({ half: '2', full: '4', charge: '6', run: '12' });
             await clearScreenOverlays(page, sheetId);
-            expect(await snap(page, 'scene-env-sheet-zero-gravity-movement', { selector: `#${sheetId}` })).not.toBeNull();
+            expect(await snap(page, 'scene-env-sheet-zero-gravity-movement', { selector: movementPanel(sheetId) })).not.toBeNull();
             recordCoverage('scene-environment.flow', 'sheet-movement');
         } finally {
             await deleteProbeScene(page, probe);
