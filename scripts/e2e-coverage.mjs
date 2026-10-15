@@ -541,7 +541,15 @@ recordDimension('evasion.flow', covered['evasion.flow'], EVASION_FLOWS);
 const AUTO_FIRE_FLOWS = ['dh2-capped', 'dh2-under-cap', 'dh1-capped', 'dh1-under-cap'];
 recordDimension('auto-fire.flow', covered['auto-fire.flow'], AUTO_FIRE_FLOWS);
 // tests/e2e/roll-dialog-breakdown.spec.ts — ROLL_DIALOG_FLOWS.
-const ROLL_DIALOG_FLOWS = ['parry-rows', 'environment-rows', 'passive-note', 'dh1-burst-and-degrees', 'dh2-full-auto', 'fit-availability', 'dh1-ritual-degrees'];
+const ROLL_DIALOG_FLOWS = [
+    'parry-rows',
+    'environment-rows',
+    'passive-note',
+    'dh1-burst-and-degrees',
+    'dh2-full-auto',
+    'fit-availability',
+    'dh1-ritual-degrees',
+];
 recordDimension('roll-dialog.flow', covered['roll-dialog.flow'], ROLL_DIALOG_FLOWS);
 // tests/e2e/without-talents.spec.ts — WITHOUT_TALENT_FLOWS.
 const WITHOUT_TALENT_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
@@ -736,7 +744,14 @@ recordDimension('area-attack.flow', covered['area-attack.flow'], AREA_ATTACK_FLO
 
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
-const DAMAGE_PROFILE_FLOWS = ['no-damage-attack-card', 'no-damage-weapon-card', 'no-damage-sheet-dash', 'band-near-damage', 'band-far-damage'];
+const DAMAGE_PROFILE_FLOWS = [
+    'no-damage-attack-card',
+    'no-damage-weapon-card',
+    'no-damage-sheet-dash',
+    'band-near-damage',
+    'band-far-damage',
+    'weapon-card-unwrapped',
+];
 recordDimension('damage-profile.flow', covered['damage-profile.flow'], DAMAGE_PROFILE_FLOWS);
 
 // Attack cues on a live canvas (#594), tests/e2e/attack-cues.spec.ts.
@@ -943,12 +958,7 @@ recordDimension('compendium-browser.flow', covered['compendium-browser.flow'], C
 // MUST match the recordCoverage('managers.flow', ...) calls in the spec.
 // (The native transaction-manager flows were removed with the Item Piles
 // trading consolidation.)
-const MANAGER_FLOWS = [
-    'grants-talent-grants-skill',
-    'grants-talent-grants-talent',
-    'grants-revoke-on-item-delete',
-    'grants-special-ability-on-actor',
-];
+const MANAGER_FLOWS = ['grants-talent-grants-skill', 'grants-talent-grants-talent', 'grants-revoke-on-item-delete', 'grants-special-ability-on-actor'];
 recordDimension('managers.flow', covered['managers.flow'], MANAGER_FLOWS);
 
 // Handlebars helpers, typed i18n wrapper, uuid-name-cache helper paths,

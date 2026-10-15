@@ -24,7 +24,14 @@ import { scaledMs } from './lib/timing';
  * DAMAGE_PROFILE_FLOWS in scripts/e2e-coverage.mjs.
  */
 
-const DAMAGE_PROFILE_FLOWS = ['no-damage-attack-card', 'no-damage-weapon-card', 'no-damage-sheet-dash', 'band-near-damage', 'band-far-damage'] as const;
+const DAMAGE_PROFILE_FLOWS = [
+    'no-damage-attack-card',
+    'no-damage-weapon-card',
+    'no-damage-sheet-dash',
+    'band-near-damage',
+    'band-far-damage',
+    'weapon-card-unwrapped',
+] as const;
 
 type FlowName = (typeof DAMAGE_PROFILE_FLOWS)[number];
 
@@ -143,9 +150,61 @@ async function setSetting(page: Page, key: string, value: boolean): Promise<bool
     );
 }
 
-async function snapCard(page: Page, label: string, messageId: string): Promise<void> {
+/**
+ * The text of every stat label and action button on the weapon card at `cardSelector`
+ * that runs onto a second line, plus every stat word split across lines (null when the
+ * card is not on screen). Labels once broke mid-word ("DAMAG E"), Attack stacked one
+ * letter per line beside Damage and Reload, and values split ("ACTIO NS").
+ */
+async function wrappedWeaponCardText(page: Page, cardSelector: string): Promise<string[] | null> {
+    return page.evaluate((selector: string) => {
+        const card = document.querySelector<HTMLElement>(selector);
+        if (card === null) return null;
+        // Lines of TEXT only: a button's icon sits at a different top from its label.
+        const lines = (el: HTMLElement): number => {
+            const tops = new Set<number>();
+            for (const node of Array.from(el.childNodes)) {
+                if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? '').trim() === '') continue;
+                const range = document.createRange();
+                range.selectNodeContents(node);
+                for (const rect of Array.from(range.getClientRects())) if (rect.width > 0) tops.add(Math.round(rect.top));
+            }
+            return tops.size;
+        };
+        // A word drawn across two lines: its characters' rects sit at more than one top.
+        const splitWords = (root: HTMLElement): string[] => {
+            const split: string[] = [];
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+            for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+                const text = node.textContent ?? '';
+                for (const match of text.matchAll(/\S+/gu)) {
+                    const range = document.createRange();
+                    range.setStart(node, match.index);
+                    range.setEnd(node, match.index + match[0].length);
+                    const tops = new Set(
+                        Array.from(range.getClientRects())
+                            .filter((rect) => rect.width > 0)
+                            .map((rect) => Math.round(rect.top)),
+                    );
+                    if (tops.size > 1) split.push(match[0]);
+                }
+            }
+            return split;
+        };
+        const targets = [
+            ...card.querySelectorAll<HTMLElement>('span.tw-uppercase'),
+            ...card.querySelectorAll<HTMLElement>('button[data-action][data-item-uuid]'),
+        ];
+        const grid = card.querySelector<HTMLElement>('.tw-grid');
+        return [...targets.filter((el) => lines(el) > 1).map((el) => el.textContent.trim()), ...(grid === null ? [] : splitWords(grid))];
+    }, cardSelector);
+}
+
+/** Capture a message in its own popout; returns the popout's selector. */
+async function snapCard(page: Page, label: string, messageId: string): Promise<string> {
     const selector = await popOutChatMessage(page, messageId);
     await snap(page, label, { selector });
+    return selector;
 }
 
 /** Fire the beamer at one target and roll its damage from the hit card; returns the damage card. */
@@ -220,7 +279,11 @@ test.describe.serial('no-damage and range-band damage profiles (Tier B, #601, #6
                 `bolas card damage button ${String(bolasCard?.hasWeaponDamageButton)}, hand flamer ${String(flamerCard?.hasWeaponDamageButton)}`,
             );
             if (bolasCardId !== null) await snapCard(page, 'damage-no-damage-weapon-card', bolasCardId);
-            if (flamerCardId !== null) await snapCard(page, 'damage-hand-flamer-weapon-card', flamerCardId);
+            if (flamerCardId !== null) {
+                const flamerSelector = await snapCard(page, 'damage-hand-flamer-weapon-card', flamerCardId);
+                const wrapped = await wrappedWeaponCardText(page, flamerSelector);
+                pass('weapon-card-unwrapped', wrapped !== null && wrapped.length === 0, `wrapped labels / buttons, split words: ${JSON.stringify(wrapped)}`);
+            }
 
             const bolasSheet = await openWeaponSheet(page, snarerId, 'Bolas');
             pass(

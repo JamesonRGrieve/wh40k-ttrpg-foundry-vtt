@@ -8,6 +8,9 @@
  *                       offers no Damage button; Attack stays.
  *   3. AutoApplyDamage — with auto-apply-damage on (#248) the Damage button hides.
  *   4. PerSystem      — the no-damage card framed under each of the six FFG lines.
+ *   5. ChatWidth      — at the chat sidebar's width no stat label or action button
+ *                       wraps (labels broke mid-word as "DAMAG E" / "REL OAD", and
+ *                       Attack stacked one letter per line beside Damage and Reload).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
@@ -161,5 +164,37 @@ export const PerSystem: Story = {
             return frame === null || button(frame, 'attack') === null || button(frame, 'rollDamage') !== null;
         });
         await expect(wrong).toEqual([]);
+    },
+};
+
+/** The chat log's message width in Foundry's sidebar: the narrowest the card is drawn. */
+const CHAT_MESSAGE_WIDTH_PX = 270;
+
+/** How many lines `el`'s own text occupies (distinct line tops; a button's icon sits at another top). */
+function lineCount(el: HTMLElement): number {
+    const tops = new Set<number>();
+    for (const node of Array.from(el.childNodes)) {
+        if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? '').trim() === '') continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        for (const rect of Array.from(range.getClientRects())) if (rect.width > 0) tops.add(Math.round(rect.top));
+    }
+    return tops.size;
+}
+
+export const ChatWidth: Story = {
+    render: () => {
+        const frame = document.createElement('div');
+        frame.style.width = `${CHAT_MESSAGE_WIDTH_PX}px`;
+        frame.appendChild(renderSheet(cardSrc, { item: HAND_FLAMER, hasActions: true, autoApplyDamage: false, noDamage: false }));
+        return frame;
+    },
+    play: async ({ canvasElement }) => {
+        const labels = Array.from(canvasElement.querySelectorAll<HTMLElement>('span.tw-uppercase'));
+        const buttons = Array.from(canvasElement.querySelectorAll<HTMLElement>('button[data-action]'));
+        await expect(labels.length).toBeGreaterThan(0);
+        await expect(buttons.map((b) => b.dataset['action'])).toEqual(['attack', 'rollDamage', 'reload']);
+        const wrapped = [...labels, ...buttons].filter((el) => lineCount(el) > 1).map((el) => el.textContent.trim());
+        await expect(wrapped).toEqual([]);
     },
 };
