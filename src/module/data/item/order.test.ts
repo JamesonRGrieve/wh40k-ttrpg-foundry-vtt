@@ -1,8 +1,9 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { isShipEffectKind, type ShipEffectData } from '../../rules/ship-action-effects.ts';
 import type { ShipActionOrderSystem, ShipActionOrderView } from '../../rules/ship-actions.ts';
+import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
 
@@ -14,62 +15,11 @@ import { readRepoFile } from '../../testing/repo-file.ts';
  * real schema and assert both lists come out full.
  *
  * `order.ts` evaluates `foundry.abstract` / `foundry.data.fields` at module load,
- * so a recording stub is installed BEFORE the dynamic import (the mutation.test.ts
- * recipe). Each stub field records its options so the schema can be walked.
+ * so the recording stub (testing/foundry-data-stub.ts) is installed BEFORE the
+ * dynamic import. Each stub field records its options so the schema can be walked.
  */
 
-type AnyCtor = abstract new (...args: never[]) => object;
-
-interface FieldOptions {
-    initial?: string | number | boolean | readonly string[] | null;
-    choices?: readonly string[];
-}
-
-/** A leaf field: records its options. */
-class LeafField {
-    readonly options: FieldOptions;
-    constructor(options: FieldOptions = {}) {
-        this.options = options;
-    }
-}
-/** A collection field: records its element field and options. */
-class ElementField {
-    readonly element: object;
-    readonly options: FieldOptions;
-    constructor(element: object, options: FieldOptions = {}) {
-        this.element = element;
-        this.options = options;
-    }
-}
-/** A SchemaField: records its sub-fields. */
-class SchemaRecord {
-    readonly fields: Record<string, object>;
-    constructor(fields: Record<string, object>) {
-        this.fields = fields;
-    }
-}
-
-const STUB_FIELDS: Record<string, AnyCtor> = { ArrayField: ElementField, SetField: ElementField, SchemaField: SchemaRecord };
-
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: (_target, name: string): AnyCtor => STUB_FIELDS[name] ?? LeafField }) },
-    utils: { mergeObject: <T extends object>(original: T, other: object): T => ({ ...original, ...other }) },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: OrderData } = await import('./order.ts');
 const { migrateLegacyOrderTest, ORDER_ACTION_TYPES, shipActionRows } = await import('../../rules/ship-actions.ts');
@@ -317,5 +267,52 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT ship orders through the schema (#186)'
             'Come to New Heading',
             'Evasive Manoeuvres',
         ]);
+    });
+});
+
+describe('OrderData.testLabel and its chat line (#648)', () => {
+    interface OrderLike {
+        category: string;
+        actionType: string;
+        test: { skill: string; modifier: number };
+        readonly testLabel: string;
+        readonly chatProperties: string[];
+    }
+    const order = (skill: string, modifier: number): OrderLike => {
+        const instance = Object.create(OrderData.prototype) as OrderLike;
+        instance.category = 'movement';
+        instance.actionType = 'extended';
+        instance.test = { skill, modifier };
+        // The other chat-line labels lean on Foundry's String#capitalize; they are not under test here.
+        Object.defineProperties(instance, { categoryLabel: { value: 'Movement' }, actionTypeLabel: { value: 'Extended Action' } });
+        return instance;
+    };
+
+    beforeEach(() => {
+        vi.stubGlobal('game', {
+            i18n: {
+                localize: (key: string): string => key,
+                format: (key: string, data: Record<string, string>): string => (key === 'WH40K.Chat.TestProperty' ? `Test: ${data['test'] ?? ''}` : key),
+            },
+        });
+    });
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('names a skill key by its catalog label, not the key ("TEST command" on the Ship Orders panel)', () => {
+        expect(order('command', 0).testLabel).toBe('Command');
+        expect(order('command', 10).testLabel).toBe('Command +10');
+        expect(order('awareness', -20).testLabel).toBe('Awareness -20');
+    });
+
+    it('keeps skill text the content authored as display text', () => {
+        expect(order('Pilot (Spacecraft)', 0).testLabel).toBe('Pilot (Spacecraft)');
+        expect(order('Tech-Use', 10).testLabel).toBe('Tech-Use +10');
+    });
+
+    it('takes the chat line from the langpack, not a hard-coded "Test:"', () => {
+        expect(order('command', 10).chatProperties).toContain('Test: Command +10');
+        expect(readRepoFile('src/module/data/item/order.ts')).not.toContain('`Test: ');
     });
 });

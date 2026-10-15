@@ -2,6 +2,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { formatTestLabel, skillLabel } from '../shared/skill-definitions.ts';
 
 /**
  * Data model for Ritual items.
@@ -111,9 +112,10 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get testLabel(): string {
-        const base = this.test.skill ? this.test.skill : game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
-        const suffix = this.test.modifier !== 0 ? ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}` : '';
-        return base + suffix;
+        // A skill test names the skill's display label, not its key (#648); else the characteristic.
+        const tested =
+            this.test.skill !== '' ? skillLabel(this.test.skill) : game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
+        return formatTestLabel(tested, this.test.modifier);
     }
 
     /* -------------------------------------------- */
@@ -122,7 +124,11 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate)];
+        const props = [
+            this.typeLabel,
+            game.i18n.format('WH40K.Chat.TestProperty', { test: this.testLabel }),
+            ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate),
+        ];
 
         return props;
     }

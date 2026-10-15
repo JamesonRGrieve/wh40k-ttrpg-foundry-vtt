@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
+import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
 
 /**
  * MutationData schema contract (#180): the Gift of the Gods additions are
@@ -7,66 +8,12 @@ import { afterAll, describe, expect, it } from 'vitest';
  * unchanged while a Black Crusade Gift validates.
  *
  * `mutation.ts` evaluates `foundry.abstract` / `foundry.data.fields` at module
- * load, so a recording stub is installed BEFORE the dynamic import. Each stub
- * field records the options (and, for container fields, the inner field) it was
- * built with, which is the contract asserted here.
+ * load, so the recording stub (testing/foundry-data-stub.ts) is installed BEFORE
+ * the dynamic import. Each stub field records the options (and, for container
+ * fields, the inner field) it was built with, which is the contract asserted here.
  */
 
-type AnyCtor = abstract new (...args: never[]) => object;
-
-/** The construction options the contract cares about. */
-interface FieldOptions {
-    initial?: string | number | boolean | readonly string[] | Record<string, number> | null;
-    choices?: readonly string[];
-    blank?: boolean;
-    required?: boolean;
-}
-
-/** A leaf field (StringField, ObjectField, …): records its options. */
-class LeafField {
-    readonly options: FieldOptions;
-    constructor(options: FieldOptions = {}) {
-        this.options = options;
-    }
-}
-/** A collection field (ArrayField, SetField): records its element field and options. */
-class ElementField {
-    readonly element: object;
-    readonly options: FieldOptions;
-    constructor(element: object, options: FieldOptions = {}) {
-        this.element = element;
-        this.options = options;
-    }
-}
-/** A SchemaField: records its sub-fields. */
-class SchemaRecord {
-    readonly fields: Record<string, object>;
-    constructor(fields: Record<string, object>) {
-        this.fields = fields;
-    }
-}
-
-const STUB_FIELDS: Record<string, AnyCtor> = { ArrayField: ElementField, SetField: ElementField, SchemaField: SchemaRecord };
-
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: (_target, name: string): AnyCtor => STUB_FIELDS[name] ?? LeafField }) },
-    utils: { mergeObject: <T extends object>(original: T, other: object): T => ({ ...original, ...other }) },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: MutationData } = await import('./mutation.ts');
 const { MUTATION_CATEGORIES } = await import('../../rules/mutation-categories.ts');

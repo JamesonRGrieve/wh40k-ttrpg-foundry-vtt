@@ -9,10 +9,10 @@ import {
 import { migrateLegacyOrderTest, ORDER_ACTION_TYPES, type OrderActionType } from '../../rules/ship-actions.ts';
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
 import type { RammingProfile } from '../../rules/ship-ramming.ts';
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { formatTestLabel, skillLabel } from '../shared/skill-definitions.ts';
 
 /**
  * Data model for Order items (ship orders/commands).
@@ -213,12 +213,8 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * @type {string}
      */
     get testLabel(): string {
-        const { skill, modifier } = this.test;
-        let label = skill;
-        if (modifier !== 0) {
-            label += ` ${formatSigned(modifier)}`;
-        }
-        return label;
+        // The skill's display label, not its key: the Ship Orders panel showed "TEST command" (#648).
+        return formatTestLabel(skillLabel(this.test.skill), this.test.modifier);
     }
 
     /* -------------------------------------------- */
@@ -227,7 +223,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
 
     /** @override */
     get chatProperties(): string[] {
-        const props = [this.categoryLabel, this.actionTypeLabel, `Test: ${this.testLabel}`];
+        const props = [this.categoryLabel, this.actionTypeLabel, game.i18n.format('WH40K.Chat.TestProperty', { test: this.testLabel })];
 
         return props;
     }

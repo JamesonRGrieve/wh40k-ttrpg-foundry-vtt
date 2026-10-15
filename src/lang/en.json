@@ -5859,6 +5859,7 @@
             "NoItemFound": "No item found on this chat card.",
             "ItemNotFound": "The item could not be found. It may have been deleted.",
             "NoTokensTargeted": "No tokens are currently targeted. Target one or more tokens to apply damage.",
+            "TestProperty": "Test: {test}",
             "Label": {
                 "Effect": "Effect:",
                 "Notes": "Notes:",

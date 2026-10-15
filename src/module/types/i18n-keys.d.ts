@@ -921,6 +921,7 @@ export type I18nKey =
     | 'WH40K.Chat.Skill.SpecialRules'
     | 'WH40K.Chat.Skill.Uses'
     | 'WH40K.Chat.Talent.Rank'
+    | 'WH40K.Chat.TestProperty'
     | 'WH40K.Chat.Weapon.DamageBonus'
     | 'WH40K.Chat.Weapon.RoF'
     | 'WH40K.Chat.Weapon.ToHit'

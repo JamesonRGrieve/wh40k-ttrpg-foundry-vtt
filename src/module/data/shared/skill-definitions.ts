@@ -198,3 +198,23 @@ export function skillCharacteristicShortMap(): Record<string, string> {
 export function skillAdvancedMap(): Record<string, boolean> {
     return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, d.advanced]));
 }
+
+const SKILL_LABELS: ReadonlyMap<string, string> = new Map(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, d.label]));
+
+/**
+ * A skill's display label: the catalog label of a skill key (`command` → "Command",
+ * `commonLore` → "Common Lore"). Content that names a skill in display text instead
+ * ("Pilot (Spacecraft)", "Tech-Use") is returned as authored.
+ */
+export function skillLabel(skill: string): string {
+    return SKILL_LABELS.get(skill) ?? skill;
+}
+
+/**
+ * A test's description: what is tested and, when not zero, its signed modifier
+ * ("Command +10", "Willpower -20", #648).
+ */
+export function formatTestLabel(tested: string, modifier: number): string {
+    if (!Number.isFinite(modifier) || modifier === 0) return tested;
+    return `${tested} ${modifier > 0 ? '+' : ''}${modifier}`;
+}

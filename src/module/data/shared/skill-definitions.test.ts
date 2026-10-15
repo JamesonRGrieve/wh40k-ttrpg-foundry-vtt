@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CHARACTERISTIC_SHORT_TO_FULL } from './characteristics.ts';
-import { SKILL_DEFINITIONS, skillCharacteristicMap, standardSkillsForSystem } from './skill-definitions.ts';
+import { formatTestLabel, SKILL_DEFINITIONS, skillCharacteristicMap, skillLabel, standardSkillsForSystem } from './skill-definitions.ts';
 
 /**
  * The skill keys + their order are schema-significant: CreatureTemplate builds its
@@ -144,5 +144,30 @@ describe('standardSkillsForSystem', () => {
     it('carries the catalog label, characteristic and advanced flag', () => {
         const acrobatics = standardSkillsForSystem('dh2').find((s) => s.key === 'acrobatics');
         expect(acrobatics).toEqual({ key: 'acrobatics', label: 'Acrobatics', char: 'Ag', advanced: true });
+    });
+});
+
+describe('skillLabel (#648)', () => {
+    it('gives every catalog key its catalog label, specialist skills included', () => {
+        expect(
+            Object.entries(SKILL_DEFINITIONS)
+                .filter(([key, definition]) => skillLabel(key) !== definition.label)
+                .map(([key]) => key),
+        ).toEqual([]);
+        expect(skillLabel('command')).toBe('Command');
+        expect(skillLabel('commonLore')).toBe('Common Lore');
+    });
+
+    it('returns text that is not a catalog key as authored', () => {
+        for (const authored of ['Pilot (Spacecraft)', 'Tech-Use', 'Intimidate or Charm', '']) expect(skillLabel(authored)).toBe(authored);
+    });
+});
+
+describe('formatTestLabel (#648)', () => {
+    it('adds a signed modifier, and nothing for zero', () => {
+        expect(formatTestLabel('Command', 0)).toBe('Command');
+        expect(formatTestLabel('Command', 10)).toBe('Command +10');
+        expect(formatTestLabel('Willpower', -20)).toBe('Willpower -20');
+        expect(formatTestLabel('Command', Number.NaN)).toBe('Command');
     });
 });

@@ -134,13 +134,22 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
     test('owned rituals and ship orders show their panels on the Combat tab', async ({ page }) => {
         await joinOrSkip(page);
         const sheetId = await openCombatTab(page, {}, [
-            { name: 'e2e Fixture Rite', type: 'ritual' },
-            { name: 'e2e Fixture Order', type: 'order' },
+            {
+                name: 'e2e Fixture Rite',
+                type: 'ritual',
+                system: { test: { characteristic: 'willpower', skill: 'forbiddenLore', modifier: -10, threshold: 0 } },
+            },
+            { name: 'e2e Fixture Order', type: 'order', system: { test: { skill: 'command', modifier: 10 } } },
         ]);
         const panels = page.locator(`#${sheetId} .wh40k-combat-power-panels`);
         // Match the panel roots by id: each panel's drop zone repeats the root class.
         await expect(panels.locator('div[data-panel-id="rituals"]')).toContainText('e2e Fixture Rite');
         await expect(panels.locator('div[data-panel-id="orders"]')).toContainText('e2e Fixture Order');
+        // #648: each test names the skill's label, not its key ("TEST command").
+        await expect(panels.locator('div[data-panel-id="orders"]')).toContainText('Command +10');
+        await expect(panels.locator('div[data-panel-id="orders"]')).not.toContainText('command');
+        await expect(panels.locator('div[data-panel-id="rituals"]')).toContainText('Forbidden Lore -10');
+        await expect(panels.locator('div[data-panel-id="rituals"]')).not.toContainText('forbiddenLore');
         await expect(panels.locator('div[data-panel-id="navigator-powers"]')).toHaveCount(0);
         await expect(panels.locator('[data-action="rollRitual"]')).toBeVisible();
         await expect(panels.locator('[data-action="rollOrder"]')).toBeVisible();
