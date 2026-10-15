@@ -1,10 +1,12 @@
 import type { Page } from '@playwright/test';
+import { overflowingLabels } from '../../src/module/testing/label-fit';
 import {
     actorFlag,
     attackWith,
     awaitCard,
     awaitRollDialog,
     type ChatCard,
+    cardControl,
     cardHtml,
     clickInCard,
     createActor,
@@ -153,6 +155,8 @@ test.describe.serial('Evasion and Counter Attack (Tier B, DH2)', () => {
             expect(parryCard.html, 'the Parry evades the attack').toContain('evades the attack');
             expect(parryCard.html, 'a successful Parry offers Counter Attack').toContain('roll-control__counter-attack');
             expect(await snapCard(page, 'evasion-parry-card-counter-offer', parryCard.id)).not.toBeNull();
+            // #603: at chat width the Counter Attack label stays inside its button.
+            expect(await page.locator(cardControl(parryCard.id, '.roll-control__counter-attack')).evaluateAll(overflowingLabels)).toEqual([]);
             await expect
                 .poll(async () => cardHtml(page, first.attack.id), { message: 'the attack card re-renders resolved' })
                 .toContain('data-evasion-status="resolved"');

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
+import { overflowingLabels } from '../src/module/testing/label-fit';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
 import simpleRollChatSrc from '../src/templates/chat/simple-roll-chat.hbs?raw';
@@ -171,6 +172,54 @@ export const SimpleParryCounterAttackSpent: Story = {
         const notes = canvasElement.querySelectorAll('[data-counter-attack-spent]');
         await expect(notes.length).toBe(3);
         await expect(canvasElement.querySelector('[data-counter-attack-spent]')?.textContent).toContain('Counter Attack already used this round');
+    },
+};
+
+/** Foundry's chat log card width: the sidebar's message column. */
+const CHAT_CARD_WIDTH_PX = 280;
+
+/** Every game line; the roll card is shared by all six. */
+const GAME_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
+
+/**
+ * #603: with a long attacker name, the Counter Attack label ran past its button's
+ * border at chat width. It now wraps inside the button, under every line's theme.
+ */
+export const SimpleParryCounterAttackChatWidth: Story = {
+    name: 'Simple Roll / Parry — Counter Attack label fits at chat width',
+    render: () => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const line of GAME_LINES) {
+            const card = document.createElement('div');
+            card.className = 'wh40k-rpg chat-message';
+            card.dataset['wh40kSystem'] = line;
+            card.style.width = `${CHAT_CARD_WIDTH_PX}px`;
+            card.append(
+                renderSheet(
+                    simpleRollChatSrc,
+                    mockRollData({
+                        rollData: { name: 'Parry Test', type: 'Skill' },
+                        counterAttack: {
+                            sourceName: 'Counter Attack',
+                            attackModifier: -20,
+                            limit: 'perRound',
+                            actorUuid: 'Actor.lucius',
+                            attackerUuid: 'Actor.duellist',
+                            attackerName: 'Heretic Duellist of the Crimson Path',
+                            weaponId: 'sword',
+                        },
+                    }),
+                ),
+            );
+            host.append(card);
+        }
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        const buttons = Array.from(canvasElement.querySelectorAll('.roll-control__counter-attack'));
+        await expect(buttons.length).toBe(GAME_LINES.length);
+        await expect(overflowingLabels(buttons)).toEqual([]);
     },
 };
 
