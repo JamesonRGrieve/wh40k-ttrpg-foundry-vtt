@@ -104,7 +104,8 @@ test('dark-pact-panel renders rows for actors with active pacts (#84)', async ({
 
     expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
 
-    await snap(page, 'dark-pact-panel-with-pacts');
+    // The panel sits below the fold of the Overview tab; an element capture scrolls it into view.
+    await snap(page, 'dark-pact-panel-with-pacts', { selector: '.wh40k-dark-pact-panel' });
 
     expect(result.rowCount, `expected at least one [data-wh40k-hook="dark-pact-row"]; got ${result.rowCount}`).toBeGreaterThanOrEqual(2);
 
