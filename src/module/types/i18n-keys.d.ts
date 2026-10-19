@@ -2103,7 +2103,6 @@ export type I18nKey =
     | 'WH40K.Encumbrance.BackpackCurrent'
     | 'WH40K.Encumbrance.BackpackMax'
     | 'WH40K.Encumbrance.Current'
-    | 'WH40K.Encumbrance.Label'
     | 'WH40K.Encumbrance.Max'
     | 'WH40K.Encumbrance.Title'
     | 'WH40K.Encumbrance.TitleOverweight'

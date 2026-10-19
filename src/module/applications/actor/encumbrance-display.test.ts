@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { readRepoFile } from '../../testing/repo-file.ts';
 import { encumbranceDisplay } from './encumbrance-display.ts';
 
 /**
@@ -12,22 +13,23 @@ describe('encumbranceDisplay', () => {
         expect(encumbranceDisplay({ name: 'Cult Demagogue' })).toEqual({ tracksEncumbrance: false });
     });
 
-    it('gives an actor that tracks encumbrance the bar with its load and backpack fill', () => {
-        const actor = { encumbrance: { value: 30, max: 60, over: false, backpack_value: 9, backpack_max: 12 } };
-        expect(encumbranceDisplay(actor)).toEqual({ tracksEncumbrance: true, encumbrancePercent: 50, backpackPercent: 75 });
+    it('gives an actor that tracks encumbrance the bar with its load fill', () => {
+        const actor = { encumbrance: { value: 30, max: 60, over: false } };
+        expect(encumbranceDisplay(actor)).toEqual({ tracksEncumbrance: true, encumbrancePercent: 50 });
     });
 
-    it('caps the fill at 100%, and counts a missing or zero maximum as 1', () => {
-        expect(encumbranceDisplay({ encumbrance: { value: 90, max: 60, over: true } })).toEqual({
-            tracksEncumbrance: true,
-            encumbrancePercent: 100,
-            backpackPercent: 0,
-        });
-        expect(encumbranceDisplay({ encumbrance: { value: 0, max: 0, over: false, backpack_value: 0, backpack_max: 0 } })).toEqual({
-            tracksEncumbrance: true,
-            encumbrancePercent: 0,
-            backpackPercent: 0,
-        });
+    it('caps the fill at 100%, and counts a zero maximum as 1', () => {
+        expect(encumbranceDisplay({ encumbrance: { value: 90, max: 60, over: true } })).toEqual({ tracksEncumbrance: true, encumbrancePercent: 100 });
+        expect(encumbranceDisplay({ encumbrance: { value: 0, max: 0, over: false } })).toEqual({ tracksEncumbrance: true, encumbrancePercent: 0 });
+    });
+
+    it('draws exactly one Carry bar on the Inventory tab, in the panel header, for a PC carrying a load', () => {
+        // The tab once drew a second, separate load bar above the panel for any PC carrying more than 0 kg.
+        const tab = readRepoFile('src/templates/actor/player/tab-equipment.hbs');
+        const panel = readRepoFile('src/templates/actor/panel/backpack-split-panel.hbs');
+        expect(tab).not.toContain('encumbrancePercent');
+        expect(tab).not.toContain('WH40K.Common.Kilograms');
+        expect(panel.match(/data-carry-bar/g)).toHaveLength(1);
     });
 
     it('still shows the bar for a PC carrying nothing', () => {

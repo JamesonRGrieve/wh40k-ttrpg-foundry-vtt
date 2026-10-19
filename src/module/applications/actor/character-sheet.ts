@@ -327,7 +327,6 @@ type CharacterSheetContextDeclaredFields = {
     equippedCount?: number;
     tracksEncumbrance?: boolean;
     encumbrancePercent?: number;
-    backpackPercent?: number;
     hasFanatic?: boolean;
     hasCrusader?: boolean;
     grappleState?: GrappleState;

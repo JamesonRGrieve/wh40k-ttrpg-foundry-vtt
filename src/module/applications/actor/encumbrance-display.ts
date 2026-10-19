@@ -9,26 +9,16 @@
 
 import type { WH40KEncumbrance } from '../../types/global.d.ts';
 
-/** What the Carry bar renders from. The percentages are present only when the actor tracks encumbrance. */
+/** What the Carry bar renders from. The fill is present only when the actor tracks encumbrance. */
 interface EncumbranceDisplay {
     tracksEncumbrance: boolean;
     encumbrancePercent?: number;
-    backpackPercent?: number;
 }
 
-/** A fill percentage, 0–100; a missing or non-positive maximum counts as 1. Pure. */
-function fillPercent(value: number | undefined, max: number | undefined): number {
-    const cap = max !== undefined && max > 0 ? max : 1;
-    return Math.min(100, Math.round(((value ?? 0) / cap) * 100));
-}
-
-/** The Carry bar context for an actor document. Pure. */
+/** The Carry bar context for an actor document: the load as a 0–100 fill, a non-positive maximum counting as 1. Pure. */
 export function encumbranceDisplay(actor: object): EncumbranceDisplay {
     if (!('encumbrance' in actor)) return { tracksEncumbrance: false };
     const enc = actor.encumbrance as WH40KEncumbrance;
-    return {
-        tracksEncumbrance: true,
-        encumbrancePercent: fillPercent(enc.value, enc.max),
-        backpackPercent: fillPercent(enc.backpack_value, enc.backpack_max),
-    };
+    const max = enc.max > 0 ? enc.max : 1;
+    return { tracksEncumbrance: true, encumbrancePercent: Math.min(100, Math.round((enc.value / max) * 100)) };
 }

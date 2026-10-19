@@ -75,11 +75,14 @@ export const InventoryCarryBar: Story = {
     args: pcInventoryContext(),
     render: (args) => renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' }], args, { systemId: systemIdOf(args) }),
     play: async ({ canvasElement }) => {
-        const bar = canvasElement.querySelector<HTMLElement>('[data-carry-bar]');
-        await expect(bar).not.toBeNull();
-        if (bar === null) return;
-        await expect(bar).toBeVisible();
-        await expect(bar.textContent.replace(/\s+/g, ' ')).toContain('30 / 60');
+        // Exactly one Carry bar, in the panel header, even with a load on (the tab once drew a second one).
+        const bars = canvasElement.querySelectorAll<HTMLElement>('[data-carry-bar]');
+        await expect(bars).toHaveLength(1);
+        for (const bar of bars) {
+            void expect(bar).toBeVisible();
+            void expect(bar.textContent.replace(/\s+/g, ' ')).toContain('30 / 60');
+        }
+        await expect(canvasElement.textContent.match(/\bkg\b/gi)).toHaveLength(1);
     },
 };
 

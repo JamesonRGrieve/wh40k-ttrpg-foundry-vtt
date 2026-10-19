@@ -8099,7 +8099,6 @@
             "ExitEditMode": "Exit Edit Mode"
         },
         "Encumbrance": {
-            "Label": "Carrying",
             "Title": "Encumbrance",
             "TitleOverweight": "Encumbrance (overweight)",
             "Current": "Current Enc.",
