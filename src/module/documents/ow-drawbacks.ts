@@ -12,7 +12,7 @@ import type { RegimentDrawback } from '../rules/ow-regiment-drawback.ts';
 import { pickCompendiumItemUuid } from './compendium-pick.ts';
 
 /** The origin-path step a Regimental Drawback is authored on. */
-export const DRAWBACK_STEP = 'regimentalDrawback';
+const DRAWBACK_STEP = 'regimentalDrawback';
 
 /** The part of an origin-path item a drawback is read from. */
 export interface DrawbackSource {
