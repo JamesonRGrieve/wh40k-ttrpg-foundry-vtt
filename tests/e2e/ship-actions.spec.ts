@@ -148,6 +148,8 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             // #186: the tab's intro paragraph meets WCAG AA on the dark sheet body (it was dim brown at 80%).
             const extendedIntro = `${extended} [data-wh40k-hook="ship-action-tab-description"]`;
             expect(await scanContrast(page, extendedIntro)).toEqual([]);
+            // #260: the action rows were a white wash (grey slabs on the dark sheet, "Skill: …" grey on grey).
+            expect(await scanContrast(page, `${extended} ul`)).toEqual([]);
             expect(
                 await snapWindow(
                     page,
@@ -165,6 +167,7 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(manoeuvreButtons.assaults).toEqual(['ram', 'board', 'boarding-round']);
             expect(await snapWindow(page, 'ship-actions-manoeuvre-tab', sheetId)).not.toBeNull();
             expect(await scanContrast(page, `${manoeuvre} [data-wh40k-hook="ship-action-tab-description"]`)).toEqual([]);
+            expect(await scanContrast(page, `${manoeuvre} ul`)).toEqual([]);
 
             // The actions and assaults are Rogue Trader rules: a DH2 hull's tabs offer neither.
             const dh2Tab = await snapActionTab(page, dh2.id, 'extendedActions', 'ship-actions-extended-tab-dh2');

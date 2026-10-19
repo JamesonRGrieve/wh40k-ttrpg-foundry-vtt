@@ -12,11 +12,11 @@
         <h1 class="wh40k-panel-header tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.Voidcraft.Assault.Header"}}</h1>
         <ul class="tw-flex tw-flex-col tw-gap-1.5 tw-list-none tw-p-2 tw-m-0">
             {{#each assaults as |assault|}}
-                <li class="tw-flex tw-items-center tw-gap-2 tw-px-2.5 tw-py-1.5 tw-rounded-md tw-border tw-border-[rgba(74,55,40,0.2)] tw-bg-white/60">
-                    <i class="fas {{assault.icon}} tw-w-6 tw-text-center tw-text-[#4a3728]" aria-hidden="true"></i>
+                <li class="tw-flex tw-items-center tw-gap-2 tw-px-2.5 tw-py-1.5 tw-rounded-md tw-border tw-border-[var(--wh40k-border-color-light)] tw-bg-[var(--wh40k-panel-bg)]">
+                    <i class="fas {{assault.icon}} tw-w-6 tw-text-center tw-text-[color:var(--wh40k-text-dark)]" aria-hidden="true"></i>
                     <div class="tw-flex tw-flex-col tw-flex-1 tw-min-w-0">
-                        <span class="tw-font-semibold tw-text-[0.95em] tw-text-[#4a3728] tw-uppercase tw-tracking-wide">{{assault.label}}</span>
-                        <span class="tw-text-[0.75em] tw-text-[#6a5239] tw-opacity-80">{{assault.hint}}</span>
+                        <span class="tw-font-semibold tw-text-[0.95em] tw-text-[color:var(--wh40k-text-dark)] tw-uppercase tw-tracking-wide">{{assault.label}}</span>
+                        <span class="tw-text-[0.75em] tw-text-[color:var(--wh40k-text-muted)]">{{assault.hint}}</span>
                     </div>
                     <button type="button"
                             class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#6a2a2a] tw-bg-[linear-gradient(180deg,#8a4a4a_0%,#7a3a3a_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"

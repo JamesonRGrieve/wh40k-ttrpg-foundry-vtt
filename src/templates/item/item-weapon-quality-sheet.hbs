@@ -35,7 +35,7 @@
          STAT BAR: Quick reference stats
     ═══════════════════════════════════════════════════════════════════ }}
         <div class="tw-flex tw-flex-wrap tw-gap-0.5 tw-p-2 tw-bg-black/5 tw-border-b tw-border-solid tw-border-black/10">
-            <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-white/5 tw-rounded-md tw-border tw-border-solid tw-border-black/10">
+            <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-solid tw-border-black/10">
                 <div class="tw-text-base tw-text-orange-500/80 tw-mb-1">
                     <i class="fas fa-fingerprint"></i>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-white/5 tw-rounded-md tw-border tw-border-solid tw-border-black/10">
+            <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-solid tw-border-black/10">
                 <div class="tw-text-base tw-text-orange-500/80 tw-mb-1">
                     <i class="fas fa-sort-numeric-up"></i>
                 </div>
@@ -56,7 +56,7 @@
             </div>
 
             {{#if system.hasLevel}}
-                <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-white/5 tw-rounded-md tw-border tw-border-solid tw-border-black/10">
+                <div class="tw-flex tw-flex-col tw-items-center tw-flex-1 tw-min-w-[80px] tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-md tw-border tw-border-solid tw-border-black/10">
                     <div class="tw-text-base tw-text-orange-500/80 tw-mb-1">
                         <i class="fas fa-hashtag"></i>
                     </div>
@@ -94,7 +94,7 @@
             {{! EFFECT TAB (Primary) }}
             <div class="tab active" data-tab="effect" data-group="primary">
 
-                <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-orange-500/30 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-orange-500/30 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-gradient-to-r tw-from-orange-500/12 tw-to-transparent tw-border-b tw-border-solid tw-border-orange-500/20">
                         <i class="fas fa-bolt tw-text-orange-500 tw-text-sm"></i>
                         <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.MechanicalEffect"}}</h3>
@@ -105,7 +105,7 @@
                 </div>
 
                 {{#if system.hasLevel}}
-                    <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                    <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                         <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                             <i class="fas fa-info-circle tw-text-bronze tw-text-sm"></i>
                             <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanation"}}</h3>
@@ -125,7 +125,7 @@
             {{! DETAILS TAB }}
             <div class="tab" data-tab="details" data-group="primary">
 
-                <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-cog tw-text-bronze tw-text-sm"></i>
                         <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.QualityProperties"}}</h3>
@@ -134,12 +134,12 @@
 
                         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
                             <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.Identifier"}}</label>
-                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body" name="system.identifier" value="{{source.identifier}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.IdentifierPlaceholder'}}" />
+                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body" name="system.identifier" value="{{source.identifier}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.IdentifierPlaceholder'}}" />
                             <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.IdentifierHint"}}</p>
                         </div>
 
                         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
-                            <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-rounded-md tw-p-1.5 hover:tw-bg-white/5 tw-transition-colors">
+                            <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-rounded-md tw-p-1.5 hover:tw-bg-[var(--wh40k-panel-bg-translucent)] tw-transition-colors">
                                 <input type="checkbox" class="tw-w-4 tw-h-4 tw-cursor-pointer" name="system.hasLevel" {{checked system.hasLevel}} />
                                 <span class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.WeaponQuality.HasNumericLevel"}}</span>
                             </label>
@@ -149,7 +149,7 @@
                         {{#if system.hasLevel}}
                             <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
                                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.DefaultLevel"}}</label>
-                                <input type="number" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.level" value="{{source.level}}" data-dtype="Number" min="0" />
+                                <input type="number" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.level" value="{{source.level}}" data-dtype="Number" min="0" />
                                 <p class="tw-m-0 tw-mt-0.5 tw-text-xs tw-italic tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.DefaultLevelHint"}}</p>
                             </div>
                         {{/if}}
@@ -157,13 +157,13 @@
                     </div>
                 </div>
 
-                <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-sticky-note tw-text-bronze tw-text-sm"></i>
                         <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.Tabs.Notes"}}</h3>
                     </div>
                     <div class="tw-p-3">
-                        <textarea class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body tw-resize-y" name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.NotesPlaceholder'}}">{{system.notes}}</textarea>
+                        <textarea class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body tw-resize-y" name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.NotesPlaceholder'}}">{{system.notes}}</textarea>
                     </div>
                 </div>
 
@@ -172,7 +172,7 @@
             {{! DESCRIPTION TAB }}
             <div class="tab" data-tab="description" data-group="primary">
 
-                <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-book tw-text-bronze tw-text-sm"></i>
                         <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.FullDescription"}}</h3>
@@ -182,7 +182,7 @@
                     </div>
                 </div>
 
-                <div class="tw-bg-white/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
+                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
                         <i class="fas fa-book-open tw-text-bronze tw-text-sm"></i>
                         <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.Common.Source"}}</h3>
@@ -191,16 +191,16 @@
                         <div class="tw-grid tw-grid-cols-[2fr_1fr] tw-gap-2 tw-mb-3">
                             <div class="tw-flex tw-flex-col tw-gap-0.5">
                                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.NPC.SourceBook"}}</label>
-                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.book" value="{{source.source.book}}" placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" />
+                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.book" value="{{source.source.book}}" placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-0.5">
                                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.Source.Page"}}</label>
-                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.page" value="{{source.source.page}}" placeholder="127" />
+                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.page" value="{{source.source.page}}" placeholder="127" />
                             </div>
                         </div>
                         <div class="tw-flex tw-flex-col tw-gap-0.5">
                             <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
-                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-white/5 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.url" value="{{source.source.url}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.UrlPlaceholder'}}" />
+                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.url" value="{{source.source.url}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.UrlPlaceholder'}}" />
                         </div>
                     </div>
                 </div>

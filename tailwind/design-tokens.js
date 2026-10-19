@@ -109,6 +109,8 @@ const lightTheme = {
     '--wh40k-talents-primary': '#6e500c',
     '--wh40k-traits-primary': '#6a2090',
     '--wh40k-dynasty-primary': '#74560c',
+    // Gold label text on panel washes (#260): ≥ 4.5:1 on the theme's panel.
+    '--wh40k-accent-gold-text': '#6e500c',
 };
 
 const darkTheme = {
@@ -140,6 +142,8 @@ const darkTheme = {
     '--wh40k-talents-primary': '#e0b84a',
     '--wh40k-traits-primary': '#c99be6',
     '--wh40k-dynasty-primary': '#d4a520',
+    // Gold label text on panel washes (#260): ≥ 4.5:1 on the theme's panel.
+    '--wh40k-accent-gold-text': '#e0b84a',
 };
 
 // Theme-invariant semantic tokens — same value in light and dark, applied to

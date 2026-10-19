@@ -1,6 +1,6 @@
 {{!-- Voidcraft Stats Tab — built on the shared panel + field-row partials (the
      same dark-theme chrome as the craft/vehicle overview). It used to carry its
-     own light-parchment rows (`tw-bg-white/60` with dark-gold labels), which
+     own light-parchment rows (`tw-bg-[var(--wh40k-panel-bg)]` with dark-gold labels), which
      rendered as grey bars with ~2:1 label contrast on the dark sheet. --}}
 {{!-- Top accent rule in the line's theme colour, as on the character overview. --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} tw-border-0 tw-border-t-2 tw-border-solid {{themeClassFor 'border'}}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
