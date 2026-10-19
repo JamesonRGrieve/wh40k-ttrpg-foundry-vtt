@@ -25,6 +25,10 @@ interface WidthProbe {
     skillRows: number;
     /** The grid container's rendered width — ~0 means the Statistics tab is hidden. */
     gridWidth: number;
+    /** Skill and specialist names cut off by their cell ("Acrobatic", "Awarene"). */
+    clippedNames: string[];
+    /** Columns of the Talents & Traits grid. */
+    talentTraitColumns: number;
 }
 interface ResponsiveResult {
     setupOk: boolean;
@@ -127,7 +131,14 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
                 const iconWidth = icon !== null ? Math.round(icon.getBoundingClientRect().width) : -1;
                 const skillRows = grid?.querySelectorAll('[data-testid="skill-icon"]').length ?? 0;
                 const gridWidth = grid !== null ? Math.round(grid.getBoundingClientRect().width) : 0;
-                probes.push({ width, columns, iconWidth, skillRows, gridWidth });
+                const clippedNames = [...rootEl.querySelectorAll<HTMLElement>('[data-testid="skill-name"]')]
+                    .filter((name) => name.offsetParent !== null && name.scrollWidth > name.clientWidth + 1)
+                    .map((name) => name.textContent.trim());
+                const talentTraits = rootEl.querySelector('[data-testid="talents-traits-grid"]');
+                const ttTracks = talentTraits !== null ? getComputedStyle(talentTraits).gridTemplateColumns.trim() : '';
+                // auto-fit keeps a collapsed empty track in the computed value as "0px": count the real ones.
+                const talentTraitColumns = ttTracks === '' || ttTracks === 'none' ? 0 : ttTracks.split(/\s+/).filter((track) => parseFloat(track) > 0).length;
+                probes.push({ width, columns, iconWidth, skillRows, gridWidth, clippedNames, talentTraitColumns });
             }
             return { setupOk: true, gridFound: true, probes, error: null };
         },
@@ -166,5 +177,10 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
     // width — the name span (tw-truncate) absorbs the width change instead.
     for (const probe of result.probes) {
         expect(probe.iconWidth, `skill icon stays 16px at width ${probe.width} (got ${probe.iconWidth})`).toBe(16);
+        // A narrow row drops its pips and value to a second line rather than clip the name.
+        expect(probe.clippedNames, `no skill name is clipped at width ${probe.width}`).toEqual([]);
     }
+    // Talents & Traits sit side by side when wide and stack when narrow (was a fixed 2fr/1fr).
+    expect(wide.talentTraitColumns, 'Talents & Traits side by side when wide').toBe(2);
+    expect(narrow.talentTraitColumns, 'Talents & Traits stack when narrow').toBe(1);
 });

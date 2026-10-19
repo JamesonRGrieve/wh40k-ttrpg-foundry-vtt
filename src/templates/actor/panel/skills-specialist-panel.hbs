@@ -33,9 +33,11 @@
                     <!-- Entries -->
                     <div class="tw-block tw-p-1">
                         {{#each entry.[1].entries as |spec|}}
-                        <div class="tw-grid tw-grid-cols-[1fr_auto_50px] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-mb-[2px] hover:tw-bg-[var(--wh40k-bg-paper)] hover:tw-border-[var(--wh40k-border-medium)]" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">
-                            <div class="tw-flex tw-items-center tw-gap-1 tw-min-w-0">
-                                <span class="tw-flex-1 tw-truncate tw-text-[0.9rem]">{{spec.name}}</span>
+                        <div class="tw-grid tw-grid-cols-[1fr_auto_50px] tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-mb-[2px] hover:tw-bg-[var(--wh40k-bg-paper)] hover:tw-border-[var(--wh40k-border-medium)]" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}" style="container-type: inline-size;">
+                            {{!-- Narrower than 22rem the name takes the whole first line and the
+                                 pips and value drop below it, rather than truncating (#267). --}}
+                            <div class="tw-flex tw-items-center tw-gap-1 tw-min-w-0 [@container(max-width:22rem)]:tw-col-span-full" data-testid="skill-name-cell">
+                                <span class="tw-flex-1 tw-min-w-0 tw-leading-tight tw-text-[0.9rem]" data-testid="skill-name">{{spec.name}}</span>
                                 <button type="button" class="tw-bg-transparent tw-border-none tw-cursor-pointer tw-p-[4px] tw-rounded-md tw-shrink-0 tw-text-[color:var(--wh40k-text-muted)] hover:tw-bg-[var(--wh40k-bg-subtle)] hover:tw-text-[color:var(--wh40k-accent-talents)]"
                                         data-action="roll" data-roll-type="skill"
                                         data-roll-target="{{spec.skillKey}}"
@@ -51,7 +53,7 @@
                                     <i class="{{#if spec.isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                                 </button>
                             </div>
-                            <div class="tw-flex tw-gap-[2px]">
+                            <div class="tw-flex tw-gap-[2px] [@container(max-width:22rem)]:tw-col-start-2">
                                 {{#each spec.trainingIndicators as |ind|}}
                                 {{#if @root.inEditMode}}
                                 <button type="button" class="tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-[4px] tw-py-[2px] tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.25)] tw-border-[rgb(from_var(--wh40k-accent-talents)_r_g_b_/_0.55)] tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-[rgba(255,255,255,0.35)] tw-border-[rgba(120,46,34,0.35)] tw-text-[#3a2820] tw-opacity-50{{/if}}" title="{{localize 'WH40K.Skills.CycleHint' tooltip=ind.tooltip}}" data-action="cycleSpecialistTraining" data-skill="{{../spec.skillKey}}" data-index="{{../spec.entryIndex}}">{{ind.label}}</button>
