@@ -163,52 +163,22 @@ describe('resolveTokenFrameFlag', () => {
     });
 });
 
-describe('resolveBustContent (global no-clip enforcement)', () => {
-    it('normalises to a constant final bust regardless of ring subject scale', () => {
-        const atScale1 = resolveBustContent(0, true, 1);
-        const atScale08 = resolveBustContent(0, true, 0.8);
-        expect(atScale1).toBeCloseTo(0.6, 6); // scale 1 → content 0.6
-        expect(atScale08).toBeCloseTo(0.75, 6); // scale 0.8 → content 0.75
-        // final size (content × subjectScale) is identical → never clips
-        expect(atScale1 * 1).toBeCloseTo(atScale08 * 0.8, 6);
+describe('resolveBustContent (#501)', () => {
+    it('bakes the enforced 0.75 for every token: ringed and ringless tokens draw the subject at the baked size', () => {
+        expect(resolveBustContent(0)).toBeCloseTo(0.75, 6);
     });
 
     it('honours an explicit authored content, clamped to 1', () => {
-        expect(resolveBustContent(0.5, true, 1)).toBe(0.5);
-        expect(resolveBustContent(2, true, 1)).toBe(1);
-    });
-
-    it('bakes the enforced fraction into a ringless bust, ignoring the inert subject scale', () => {
-        expect(resolveBustContent(0, false, 1)).toBeCloseTo(0.6, 6);
-        expect(resolveBustContent(0, false, 0.8)).toBeCloseTo(0.6, 6);
-    });
-
-    it('clamps to 1 and guards a zero/negative subject scale', () => {
-        expect(resolveBustContent(0, true, 0.5)).toBe(1); // 0.6 / 0.5 = 1.2 → clamp
-        expect(resolveBustContent(0, true, 0)).toBeCloseTo(0.6, 6); // scale 0 → treated as 1
+        expect(resolveBustContent(0.5)).toBe(0.5);
+        expect(resolveBustContent(2)).toBe(1);
     });
 });
-
-/** The on-token bust diameter (fraction of the token) a plan renders at: a ringed
- *  token draws its subject at `content × subjectScale`, a ringless one at `content`. */
-function renderedDiameter(content: number, ringEnabled: boolean, subjectScale: number): number {
-    return ringEnabled ? content * subjectScale : content;
-}
 
 /** Narrow a plan that the test expects to exist; a null plan fails the test. */
 function requirePlan(plan: BustPlan | null): BustPlan {
     if (plan === null) throw new Error('expected a bust plan, got null');
     return plan;
 }
-
-describe('bust diameter parity, ring vs ringless (#501)', () => {
-    it.each([0.8, 1])('a ringed token at subject scale %s draws the same bust as a ringless one', (subjectScale) => {
-        const ringed = resolveBustContent(0, true, subjectScale);
-        const ringless = resolveBustContent(0, false, subjectScale);
-        expect(renderedDiameter(ringed, true, subjectScale)).toBeCloseTo(renderedDiameter(ringless, false, subjectScale), 6);
-        expect(renderedDiameter(ringless, false, subjectScale)).toBeCloseTo(0.6, 6);
-    });
-});
 
 describe('isPortraitActorType', () => {
     it('accepts characters and NPCs of every line, and the generic fallbacks', () => {
@@ -221,13 +191,14 @@ describe('isPortraitActorType', () => {
 });
 
 describe('resolveBustPlan (#501)', () => {
-    const plan = (flag: object | boolean | undefined | null, ringEnabled: boolean, actorType: string | null, subjectScale = 1): BustPlan | null =>
-        resolveBustPlan({ flag, ringEnabled, subjectScale, actorType });
+    const plan = (flag: object | boolean | undefined | null, ringEnabled: boolean, actorType: string | null): BustPlan | null =>
+        resolveBustPlan({ flag, ringEnabled, actorType });
 
-    it('busts a ringless, unframed NPC (the mystery-man Citizen) at the PC diameter', () => {
+    it('bakes a ringless, unframed NPC (the mystery-man Citizen) and a ringed, framed PC at the same content', () => {
         const citizen = requirePlan(plan(null, false, 'dh2-npc'));
-        const pc = requirePlan(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', 0.8));
-        expect(renderedDiameter(citizen.content, false, 1)).toBeCloseTo(renderedDiameter(pc.content, true, 0.8), 6);
+        const pc = requirePlan(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character'));
+        expect(citizen.content).toBeCloseTo(0.75, 6);
+        expect(pc.content).toBeCloseTo(citizen.content, 6);
     });
 
     it('gives an unframed portrait the head-biased default frame', () => {
@@ -237,8 +208,8 @@ describe('resolveBustPlan (#501)', () => {
 
     it('keeps authored frame values and defaults only the missing ones', () => {
         // the live PC frame: centre authored, zoom missing
-        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', 0.8)?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1.67 });
-        expect(plan({ cx: 0.51, cy: 0.27, zoom: 1.55 }, true, 'dh2-npc', 0.8)?.frame).toEqual({ cx: 0.51, cy: 0.27, content: 0, zoom: 1.55 });
+        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character')?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1.67 });
+        expect(plan({ cx: 0.51, cy: 0.27, zoom: 1.55 }, true, 'dh2-npc')?.frame).toEqual({ cx: 0.51, cy: 0.27, content: 0, zoom: 1.55 });
     });
 
     it('leaves loot, containers and frameless vehicles on their raw art', () => {
@@ -253,6 +224,6 @@ describe('resolveBustPlan (#501)', () => {
     });
 
     it('busts a framed ringless token of any type', () => {
-        expect(plan({ cx: 0.4 }, false, 'loot')?.content).toBeCloseTo(0.6, 6);
+        expect(plan({ cx: 0.4 }, false, 'loot')?.content).toBeCloseTo(0.75, 6);
     });
 });

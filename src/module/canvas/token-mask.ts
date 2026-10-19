@@ -11,7 +11,11 @@ import { isCharacterActorType, isNpcActorType } from '../documents/actor-types.t
  * content circle and alpha-masked into a RenderTexture. Every actor-portrait
  * token — ring or not — draws its bust at the same final diameter
  * ({@link ENFORCED_BUST_FRACTION} of the token), so a ringless Citizen and a
- * ringed PC read as the same size (#501).
+ * ringed PC read as the same size (#501). A ringed token draws its subject at the
+ * baked size: the ring's subject scale resizes core's ring geometry around the
+ * subject, not the subject itself (measured on screen in Foundry V14 — dividing
+ * the content by a 0.8 subject scale drew the PC bust 1.25× the Citizen's). So
+ * every token bakes the same content circle.
  *
  * Why a RenderTexture swap and not `mesh.mask`: the ring band and the
  * subject are drawn by the SAME mesh (the ring sampler shader sources the
@@ -48,18 +52,11 @@ export interface FrameTransform {
 
 /** Render-texture edge size: bust resolution independent of source size. */
 const RT_SIZE = 512;
-/** Content-circle fraction when the Dynamic Ring needs band clearance. */
-const RING_CONTENT = 0.75;
-/** Ring subject scale the player-character tokens use. The enforced final bust
- * fraction is derived against it so every token matches the party look. */
-const REFERENCE_SUBJECT_SCALE = 0.8;
 /** The on-token bust diameter (fraction of the token) enforced for EVERY
- * actor-portrait token, ring or not. For a ringed token `content ×
- * subjectScale` is normalised to this, so a freshly spawned token (subject scale
- * 1) seats inside the band exactly like a PC token (subject scale 0.8) — the
- * global no-clip guarantee. A ringless token has no subject scale (its mesh fills
- * the footprint), so its content circle IS this fraction (#501). */
-const ENFORCED_BUST_FRACTION = RING_CONTENT * REFERENCE_SUBJECT_SCALE; // 0.6
+ * actor-portrait token, ring or not: the size live PC busts have always drawn at
+ * (it fills the Dynamic Ring's inner area inside the band), so ringless NPCs grow
+ * to match the PCs rather than the PCs shrinking (#501). */
+const ENFORCED_BUST_FRACTION = 0.75;
 
 /** Default bust centre: horizontally centred, head-biased vertically. */
 const DEFAULT_BUST_CX = 0.5;
@@ -187,7 +184,7 @@ interface MaskableToken extends FrameFlagSource {
     document: {
         getFlag: (scope: string, key: string) => object | boolean | undefined;
         texture: { src: string | null };
-        ring: { enabled: boolean; subject?: { scale?: number | null } | null };
+        ring: { enabled: boolean };
     };
     actor?: (NonNullable<FrameFlagSource['actor']> & { type: string }) | null;
     mesh: MeshLike | null;
@@ -221,19 +218,13 @@ function buildBustTexture(source: PIXI.Texture, frame: Required<TokenFrameFlag>,
 }
 
 /**
- * The content-circle fraction to bake into the bust so the FINAL rendered bust is
- * {@link ENFORCED_BUST_FRACTION} of the token, ring or not. An explicit authored
- * `content` wins. A ring-enabled token draws its subject at `content ×
- * subjectScale`, so it normalises against that scale (clamped ≤ 1) — the global
- * no-clip enforcement, holding for ANY subject scale. A ringless token's mesh
- * fills its footprint with no subject scale, so it bakes the fraction directly;
- * before #501 it used the full frame and drew ~1.7× larger than a ringed PC.
- * Pure, so it is unit-tested.
+ * The content-circle fraction to bake: an explicit authored `content` (clamped to
+ * the frame), else {@link ENFORCED_BUST_FRACTION} — the same for a ringed and a
+ * ringless token, since both draw the subject at the baked size. Pure, so it is
+ * unit-tested.
  */
-export function resolveBustContent(authoredContent: number, ringEnabled: boolean, subjectScale: number): number {
-    if (authoredContent > 0) return Math.min(1, authoredContent);
-    const scale = ringEnabled && subjectScale > 0 ? subjectScale : 1;
-    return Math.min(1, ENFORCED_BUST_FRACTION / scale);
+export function resolveBustContent(authoredContent: number): number {
+    return authoredContent > 0 ? Math.min(1, authoredContent) : ENFORCED_BUST_FRACTION;
 }
 
 /**
@@ -249,8 +240,6 @@ export interface BustPlanInput {
     /** The resolved `tokenFrame` flag (token's own, else the prototype's). */
     flag: object | boolean | undefined | null;
     ringEnabled: boolean;
-    /** `ring.subject.scale` (only meaningful with the ring on). */
-    subjectScale: number;
     /** The owning actor's type, or null for an actorless token. */
     actorType: string | null | undefined;
 }
@@ -277,7 +266,7 @@ export function resolveBustPlan(input: BustPlanInput): BustPlan | null {
     const wantsDefault = input.ringEnabled || (input.flag !== false && isPortraitActorType(input.actorType));
     const frame = authored ?? (wantsDefault ? parseTokenFrameFlag(true) : null);
     if (frame === null) return null;
-    return { frame, content: resolveBustContent(frame.content, input.ringEnabled, input.subjectScale) };
+    return { frame, content: resolveBustContent(frame.content) };
 }
 
 /**
@@ -290,7 +279,6 @@ export function onRefreshToken(token: MaskableToken): void {
     const plan = resolveBustPlan({
         flag: resolveTokenFrameFlag(token),
         ringEnabled: token.document.ring.enabled,
-        subjectScale: token.document.ring.subject?.scale ?? 1,
         actorType: token.actor?.type,
     });
     if (plan === null) return;

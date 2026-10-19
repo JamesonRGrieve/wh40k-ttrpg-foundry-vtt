@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { canvasClip } from './lib/canvas-capture';
+import { canvasClip, lightDiscFractions } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -13,9 +13,12 @@ import { scaledMs } from './lib/timing';
  * from the same portrait must draw their circular busts at the SAME on-token
  * diameter. Before #501 the ringless NPC kept its raw art and drew ~1.7× larger.
  *
- * The diameter is measured, not assumed: the opaque run across the middle row of
- * each token's generated bust RenderTexture, scaled by what the canvas applies to
- * it (the ring subject scale for the ringed token, nothing for the ringless one).
+ * The diameter is measured ON SCREEN: the light disc through each token's centre in
+ * a real screenshot, as a fraction of the token. It used to be the bust
+ * RenderTexture's opaque run times the configured ring subject scale, which
+ * passed while the capture showed the PC 1.25× the Citizen — core does not shrink
+ * a 512 px bust by the subject scale. The portrait is a light, opaque core texture
+ * so the disc stands out from the canvas and the ring's dark background.
  * A zoomed screenshot (.e2e-screenshots/game__token-bust-parity-pc-and-npc.png) records the pair for
  * visual review. The pure maths is unit-tested in src/module/canvas/token-mask.test.ts.
  *
@@ -39,14 +42,19 @@ interface ProbeState {
     actorIds: string[];
 }
 
-/** A rectangular raster that ships with Foundry core, so the bust is distinguishable from the raw art. */
-const PORTRAIT = 'ui/anvil-bg.png';
+/** A light, opaque raster that ships with Foundry core: it reads clearly against the canvas
+ * and a ring's dark background, and its 236 px edge tells it apart from the 512 px bust. */
+const PORTRAIT = 'ui/parchment-white.jpg';
 /** The generated bust's RenderTexture edge, in px (`RT_SIZE` in token-mask.ts). */
 const BUST_RT_SIZE = 512;
 /** The live PC tokens' ring subject scale. */
 const PC_SUBJECT_SCALE = 0.8;
-/** Diameters are compared as token fractions; one RT pixel is ~0.002, so allow a few. */
-const DIAMETER_TOLERANCE = 0.01;
+/** The bust diameter every actor-portrait token draws at (ENFORCED_BUST_FRACTION in token-mask.ts). */
+const ENFORCED_BUST_FRACTION = 0.75;
+/** On-screen diameters are compared as token fractions; one screen pixel at zoom 3 is ~0.003, so allow a few. */
+const DIAMETER_TOLERANCE = 0.015;
+/** The scene's grid size, in canvas pixels: a 1×1 token's edge. */
+const TOKEN_SIZE = 100;
 /** The PC and NPC token centres the probe places (100px grid, tokens at x 300 / 400, y 300). */
 const TOKEN_CENTRES = [
     { x: 350, y: 350 },
@@ -96,7 +104,7 @@ interface ProbeGlobals {
 
 async function probeParity(page: Page, portrait: string): Promise<ProbeState> {
     return page.evaluate(
-        async (args: { src: string; rtSize: number; subjectScale: number; tolerance: number }): Promise<ProbeState> => {
+        async (args: { src: string; rtSize: number; subjectScale: number }): Promise<ProbeState> => {
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -148,28 +156,8 @@ async function probeParity(page: Page, portrait: string): Promise<ProbeState> {
                     return state;
                 }
 
-                // Opaque run across the bust's middle row, as a fraction of the RT edge.
-                const diameter = (tex: TextureLike): number => {
-                    const px = g.canvas.app.renderer.extract.pixels(tex);
-                    const row = Math.floor(args.rtSize / 2);
-                    let opaque = 0;
-                    for (let x = 0; x < args.rtSize; x++) if ((px[(row * args.rtSize + x) * 4 + 3] ?? 0) > 0) opaque++;
-                    return opaque / args.rtSize;
-                };
-                const pcDiameter = diameter(pcTex) * args.subjectScale;
-                const npcDiameter = diameter(npcTex);
-                const same = Math.abs(pcDiameter - npcDiameter) <= args.tolerance;
-                record(
-                    'pc-and-npc-same-diameter',
-                    same,
-                    same ? null : `PC bust ${pcDiameter.toFixed(3)} of the token vs ringless NPC ${npcDiameter.toFixed(3)}`,
-                );
-
-                // The capture shows the ringless NPC's bust paler than the PC's. The bust must
-                // keep the art's own opacity: both meshes draw fully visible to the GM, and the
-                // two busts' centre pixels carry the same alpha. (The probe art, core's
-                // anvil-bg.png, is itself translucent; the PC's ring backing is what makes
-                // its bust look solid.)
+                // The bust must keep the art's own opacity: both meshes draw fully visible
+                // to the GM, and the two busts' centre pixels carry the same alpha.
                 const shown = (id: string): string => {
                     const t = g.canvas.tokens?.placeables.find((p) => p.id === id);
                     return `hidden=${String(t?.document.hidden)} doc.alpha=${String(t?.document.alpha)} alpha=${String(t?.alpha)} mesh.alpha=${String(
@@ -200,7 +188,7 @@ async function probeParity(page: Page, portrait: string): Promise<ProbeState> {
             }
             return state;
         },
-        { src: portrait, rtSize: BUST_RT_SIZE, subjectScale: PC_SUBJECT_SCALE, tolerance: DIAMETER_TOLERANCE },
+        { src: portrait, rtSize: BUST_RT_SIZE, subjectScale: PC_SUBJECT_SCALE },
     );
 }
 
@@ -246,6 +234,25 @@ test.describe.serial('PC vs NPC token bust parity (Tier B, #501)', () => {
             await page.waitForTimeout(scaledMs(800));
             const clip = await canvasClip(page, TOKEN_CENTRES, CAPTURE_PAD);
             await snap(page, 'token-bust-parity-pc-and-npc', clip === null ? { selector: '#board' } : { clip });
+            if (state.results.every((r) => r.name !== 'pc-and-npc-same-diameter')) {
+                const fractions = (await lightDiscFractions(page, TOKEN_CENTRES, TOKEN_SIZE)) ?? [];
+                const pc = fractions.at(0);
+                const npc = fractions.at(1);
+                const ok =
+                    pc !== undefined &&
+                    npc !== undefined &&
+                    Math.abs(pc - npc) <= DIAMETER_TOLERANCE &&
+                    Math.abs(npc - ENFORCED_BUST_FRACTION) <= DIAMETER_TOLERANCE;
+                state.results.push({
+                    name: 'pc-and-npc-same-diameter',
+                    ok,
+                    detail: ok
+                        ? null
+                        : `on screen the PC bust is ${pc?.toFixed(3) ?? '?'} of the token, the ringless NPC ${
+                              npc?.toFixed(3) ?? '?'
+                          } (want both ${ENFORCED_BUST_FRACTION})`,
+                });
+            }
         } finally {
             await cleanupProbe(page, state.sceneId, state.actorIds);
         }
