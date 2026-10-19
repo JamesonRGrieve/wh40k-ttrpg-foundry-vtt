@@ -1,0 +1,18 @@
+{{!--
+    Grapple Ready / Use Item dialog (#665; DH2 core p. 222): the controller picks
+    which of its own items the option names. Ready lists the items it carries but
+    has not readied; Use Item lists its readied ones. Rendered into a DialogV2 by
+    `promptGrappleItem` (actions/grapple-controls.ts).
+
+    Context: legend (localised), items[{ uuid, name, img, checked }].
+--}}
+<fieldset class="tw-m-0 tw-p-2 tw-flex tw-flex-col tw-gap-1 tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(128,128,128,0.4)]" data-wh40k-hook="grapple-item-dialog">
+    <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em]">{{legend}}</legend>
+    {{#each items as |item|}}
+    <label class="tw-flex tw-items-center tw-gap-2 tw-p-1 tw-text-sm tw-rounded-sm tw-cursor-pointer hover:tw-bg-[rgba(128,128,128,0.15)]">
+        <input type="radio" name="itemUuid" value="{{item.uuid}}" {{#if item.checked}}checked{{/if}} />
+        <img src="{{item.img}}" alt="" class="tw-w-6 tw-h-6 tw-border-none tw-shrink-0" />
+        <span class="tw-truncate">{{item.name}}</span>
+    </label>
+    {{/each}}
+</fieldset>

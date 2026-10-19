@@ -313,6 +313,8 @@ export class Hit {
     coverAP = 0;
 
     totalFatigue = 0;
+    /** What the hit's Fatigue comes from (a grapple's Damage Opponent, #665), for the card's row; '' when none is stated. */
+    fatigueSource = '';
 
     damage = 0;
     damageRoll: Roll | undefined = undefined;

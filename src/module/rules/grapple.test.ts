@@ -16,6 +16,11 @@ import {
     GRAPPLE_FLAG,
     grappleEndWrites,
     grappleFlagValue,
+    grappleHalfMove,
+    GRAPPLE_PUSH_DIRECTIONS,
+    grapplePushDistance,
+    grapplePushOffset,
+    isGrapplePushDirection,
     type GrappleOptionId,
     grappleOptionsFor,
     grappleOptionWrites,
@@ -508,5 +513,83 @@ describe('starting a grapple (#450; DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243
     it('participants carry their UUID (empty for an unsaved actor)', () => {
         expect(asGrappleParticipant({ name: 'A', uuid: 'Actor.a', system: {} }).uuid).toBe('Actor.a');
         expect(asGrappleParticipant({ name: 'A', uuid: null, system: {} }).uuid).toBe('');
+    });
+});
+
+describe('Damage Opponent and Push Opponent per line (#665)', () => {
+    it.each(['dh2', 'rt', 'bc', 'dw', 'ow'])(
+        '%s: the hit lands on the Body with one level of Fatigue, and the push is 1 m + 1 m/DoS up to Half Move',
+        (line) => {
+            const rules = rulesOf(line);
+            expect(rules.damage).toEqual({ location: 'body', fatigue: 1 });
+            expect(rules.push).toEqual({ baseMetres: 1, metresPerDegree: 1, capAtHalfMove: true });
+        },
+    );
+
+    it('dh1: the injure names no location (the test roll places it), adds one Fatigue, and there is no push', () => {
+        const rules = rulesOf('dh1');
+        expect(rules.damage).toEqual({ location: null, fatigue: 1 });
+        expect(rules.push).toBeNull();
+    });
+});
+
+describe('grapplePushDistance (#665)', () => {
+    const rule = { baseMetres: 1, metresPerDegree: 1, capAtHalfMove: true };
+
+    it.each([
+        [1, 4, 2],
+        [2, 4, 3],
+        [3, 4, 4],
+    ])('%i DoS with a %i m Half Move pushes %i m', (degrees, halfMove, metres) => {
+        expect(grapplePushDistance(rule, degrees, halfMove)).toMatchObject({ metres, capped: false, uncapped: metres });
+    });
+
+    it('caps at the Half Move and says so', () => {
+        expect(grapplePushDistance(rule, 6, 3)).toEqual({ baseMetres: 1, degrees: 6, fromDegrees: 6, uncapped: 7, halfMove: 3, capped: true, metres: 3 });
+    });
+
+    it('an uncapped rule ignores the Half Move', () => {
+        expect(grapplePushDistance({ ...rule, capAtHalfMove: false }, 6, 3)).toMatchObject({ halfMove: null, capped: false, metres: 7 });
+    });
+
+    it('negative degrees count as none', () => {
+        expect(grapplePushDistance(rule, -2, 4)).toMatchObject({ degrees: 0, fromDegrees: 0, metres: 1 });
+    });
+});
+
+describe('grapplePushOffset (#665)', () => {
+    const grid = { size: 100, distance: 1 };
+
+    it.each([
+        ['n', 0, -300],
+        ['ne', 300, -300],
+        ['e', 300, 0],
+        ['se', 300, 300],
+        ['s', 0, 300],
+        ['sw', -300, 300],
+        ['w', -300, 0],
+        ['nw', -300, -300],
+    ] as const)('%s moves three whole squares', (direction, x, y) => {
+        expect(grapplePushOffset(direction, 3, grid)).toEqual({ x, y, squares: 3 });
+    });
+
+    it('rounds down to whole squares so a push never overshoots', () => {
+        expect(grapplePushOffset('e', 5, { size: 100, distance: 2 })).toEqual({ x: 200, y: 0, squares: 2 });
+    });
+
+    it('a grid with no distance moves nothing', () => {
+        expect(grapplePushOffset('e', 3, { size: 100, distance: 0 }).squares).toBe(0);
+    });
+
+    it('knows its directions', () => {
+        expect(GRAPPLE_PUSH_DIRECTIONS.filter(isGrapplePushDirection)).toHaveLength(8);
+        expect(isGrapplePushDirection('up')).toBe(false);
+    });
+});
+
+describe('grappleHalfMove (#665)', () => {
+    it('reads the participant’s Half Move, else 0', () => {
+        expect(grappleHalfMove(asGrappleParticipant({ name: 'A', uuid: 'Actor.a', system: { movement: { half: 4 } } }))).toBe(4);
+        expect(grappleHalfMove(asGrappleParticipant({ name: 'A', uuid: 'Actor.a', system: {} }))).toBe(0);
     });
 });

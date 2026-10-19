@@ -20,6 +20,7 @@ import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
 import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
 import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
 import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
+import { promptGrappleItem } from '../../actions/grapple-controls.ts';
 import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
 import { owComradeMedicae, owComradeReplace2, owComradeTickDay, owComradeToggleRefit } from '../../actions/ow-comrade-healing-actions.ts';
@@ -40,6 +41,7 @@ import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/acto
 import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
+import { WH40KBaseActor } from '../../documents/base-actor.ts';
 import {
     chooseCompendiumDarkPact,
     type DarkPactItem,
@@ -56,7 +58,8 @@ import { pluralKey } from '../../i18n/plural.ts';
 import type { SimpleSkillData } from '../../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
-import { type GrappleActorDoc, performGrappleOption } from '../../rolls/grapple-flow.ts';
+import { dealGrappleDamage } from '../../rolls/grapple-damage.ts';
+import { performGrappleOption } from '../../rolls/grapple-flow.ts';
 import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
@@ -5240,11 +5243,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * grapple flag, else the user's single targeted token's actor. Null when
      * neither names someone other than this actor.
      */
-    async #grappleOpponent(): Promise<GrappleActorDoc | null> {
+    async #grappleOpponent(): Promise<WH40KBaseActor | null> {
         const recorded = readGrappleOpponentUuid(this.actor.flags, SYSTEM_ID);
         const fromFlag = recorded === null ? null : await fromUuid(recorded);
-        if (fromFlag instanceof Actor && fromFlag.id !== this.actor.id) return fromFlag;
-        const targeted = Array.from(game.user.targets).flatMap((token) => (token.actor !== null && token.actor.id !== this.actor.id ? [token.actor] : []));
+        if (fromFlag instanceof WH40KBaseActor && fromFlag.id !== this.actor.id) return fromFlag;
+        const targeted = Array.from(game.user.targets).flatMap((token) =>
+            token.actor instanceof WH40KBaseActor && token.actor.id !== this.actor.id ? [token.actor] : [],
+        );
         return targeted.length === 1 ? targeted.at(0) ?? null : null;
     }
 
@@ -5270,8 +5275,8 @@ export default class CharacterSheet extends BaseActorSheet {
             // The other role's options are the GM's, taken for the opponent.
             const actsForOpponent = option.role !== ownRole;
             if (actsForOpponent && !game.user.isGM) return;
-            const actor: GrappleActorDoc = actsForOpponent ? opponent : this.actor;
-            const other: GrappleActorDoc = actsForOpponent ? this.actor : opponent;
+            const actor: WH40KBaseActor = actsForOpponent ? opponent : this.actor;
+            const other: WH40KBaseActor = actsForOpponent ? this.actor : opponent;
             const actorRole: GrappleRole = option.role;
             await performGrappleOption({
                 option,
@@ -5283,6 +5288,10 @@ export default class CharacterSheet extends BaseActorSheet {
                 rollSkill: async (skill, instance) => {
                     if (isSkillRoller(actor)) await actor.rollSkill(skill, undefined, { instance });
                 },
+                dealDamage: async (rule, testRoll) => {
+                    await dealGrappleDamage({ controller: actor, opponent: other, rule, testRoll });
+                },
+                pickItem: async (declared) => promptGrappleItem(actor, declared),
             });
         } catch (error) {
             this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.GrappleFailed', { error: errorMessage(error) }), { duration: 5000 });

@@ -13,7 +13,7 @@ import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { printedGrappleOptions } from './base-system-config.ts';
+import { printedGrappleRules } from './base-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -134,7 +134,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * controller who has thrown its opponent down gains "+10 to all further Opposed
      * tests made during this Grapple until the Prone opponent manages to stand".
      */
-    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('acrobatics'), thrownDownBonus: 10 };
+    readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],

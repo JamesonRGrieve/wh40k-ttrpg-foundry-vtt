@@ -50,6 +50,7 @@ import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { grapplePushFromCard } from './grapple-controls.ts';
 import { applyGrappleWritesFromMessage, postGrappleStart } from './grapple-relay.ts';
 import { type RiderSource, type RiderToken, resolveRiderAgainst, riderSourceOf } from './grenade-rider-actions.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -136,6 +137,13 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__begin-grapple').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._beginGrapple(ev);
+                });
+            });
+            // A won Push Opponent (#665): the GM confirms the direction and moves the tokens.
+            html.querySelectorAll<HTMLButtonElement>('.roll-control__grapple-push').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    ev.preventDefault();
+                    void grapplePushFromCard(el);
                 });
             });
             html.querySelectorAll('.roll-control__apply-damage').forEach((el) => {

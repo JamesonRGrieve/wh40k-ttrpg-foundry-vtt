@@ -16,6 +16,7 @@
  * sheet's grapple panel prompts the rolls and posts the chat cards.
  */
 
+import type { I18nKey } from '../types/i18n-keys';
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
 import { type OpposedSide, resolveOpposed } from './opposed.ts';
 
@@ -197,10 +198,101 @@ export interface GrappleRules {
      * OW core: "+10"); 0 for a line that prints none.
      */
     readonly thrownDownBonus: number;
+    /** What a won Damage Opponent deals with the controller's unarmed hit. */
+    readonly damage: GrappleDamageRule;
+    /** How far a won Push Opponent moves the opponent; null for a line that prints no Push Opponent. */
+    readonly push: GrapplePushRule | null;
+}
+
+/**
+ * A won Damage Opponent: the controller's unarmed hit, through the normal damage
+ * path. DH2, RT, BC, DW and OW print "unarmed damage (1d5-3+SB) to his opponent's
+ * Body location and one level of Fatigue"; DH1 prints "normal unarmed Damage … and
+ * one level of Fatigue" and names no location.
+ */
+export interface GrappleDamageRule {
+    /** The hit-location id the hit lands on; null when the line names none, so it lands where the controller's test roll puts it, as any attack. */
+    readonly location: string | null;
+    /** Levels of Fatigue the hit adds. */
+    readonly fatigue: number;
+}
+
+/**
+ * A won Push Opponent: "he pushes his opponent one metre in a direction of his
+ * choice, plus one additional metre for each degree of success. This pushed
+ * distance cannot exceed the active character's Half Move distance" (DH2 core
+ * p. 221; RT, BC, DW and OW word it alike).
+ */
+export interface GrapplePushRule {
+    readonly baseMetres: number;
+    readonly metresPerDegree: number;
+    /** Whether the push is capped at the controller's Half Move. */
+    readonly capAtHalfMove: boolean;
+}
+
+/** How far a push goes, and how it was reached (the card prints each part). */
+export interface GrapplePushDistance {
+    readonly baseMetres: number;
+    readonly degrees: number;
+    /** Metres the degrees add. */
+    readonly fromDegrees: number;
+    /** Base plus the degrees, before the cap. */
+    readonly uncapped: number;
+    /** The controller's Half Move, when the line caps the push at it; null otherwise. */
+    readonly halfMove: number | null;
+    /** Whether the cap cut the push short. */
+    readonly capped: boolean;
+    readonly metres: number;
+}
+
+/** The push distance for the controller's degrees of success on the won test. */
+export function grapplePushDistance(rule: GrapplePushRule, degrees: number, halfMove: number): GrapplePushDistance {
+    const fromDegrees = Math.max(0, degrees) * rule.metresPerDegree;
+    const uncapped = rule.baseMetres + fromDegrees;
+    const cap = rule.capAtHalfMove ? Math.max(0, halfMove) : null;
+    const capped = cap !== null && uncapped > cap;
+    return { baseMetres: rule.baseMetres, degrees: Math.max(0, degrees), fromDegrees, uncapped, halfMove: cap, capped, metres: capped ? cap : uncapped };
+}
+
+/** The eight directions a push may go, clockwise from north (the top of the scene). */
+export const GRAPPLE_PUSH_DIRECTIONS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
+export type GrapplePushDirection = (typeof GRAPPLE_PUSH_DIRECTIONS)[number];
+
+const DIRECTION_STEPS: Readonly<Record<GrapplePushDirection, { dx: number; dy: number }>> = {
+    n: { dx: 0, dy: -1 },
+    ne: { dx: 1, dy: -1 },
+    e: { dx: 1, dy: 0 },
+    se: { dx: 1, dy: 1 },
+    s: { dx: 0, dy: 1 },
+    sw: { dx: -1, dy: 1 },
+    w: { dx: -1, dy: 0 },
+    nw: { dx: -1, dy: -1 },
+};
+
+/** Whether a value names one of the push directions. */
+export function isGrapplePushDirection(value: string): value is GrapplePushDirection {
+    return (GRAPPLE_PUSH_DIRECTIONS as readonly string[]).includes(value);
+}
+
+/**
+ * The token offset, in pixels, of a push of `metres` in `direction` on a square
+ * grid of `size` pixels per `distance` metres. The push moves whole squares,
+ * rounded down so it never goes further than the distance allows, and a diagonal
+ * step counts as one square, as the scene's own measurement does by default. The
+ * GM can still adjust the token afterwards.
+ */
+export function grapplePushOffset(
+    direction: GrapplePushDirection,
+    metres: number,
+    grid: { size: number; distance: number },
+): { x: number; y: number; squares: number } {
+    const squares = grid.distance > 0 ? Math.floor(metres / grid.distance) : 0;
+    const step = DIRECTION_STEPS[direction];
+    return { x: step.dx * squares * grid.size, y: step.dy * squares * grid.size, squares };
 }
 
 /** The langpack label of each grapple option (the panel buttons and the result card share them). */
-export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleOptionId, string>> = {
+export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleOptionId, I18nKey>> = {
     'damage-opponent': 'WH40K.Grapple.DamageOpponent',
     'throw-down-opponent': 'WH40K.Grapple.ThrowDownOpponent',
     'push-opponent': 'WH40K.Grapple.PushOpponent',
@@ -213,7 +305,7 @@ export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleOptionId, string>
 };
 
 /** The langpack text stating what each option does when it succeeds (the result card's effect line). */
-export const GRAPPLE_EFFECT_KEYS: Readonly<Record<GrappleOptionId, string>> = {
+export const GRAPPLE_EFFECT_KEYS: Readonly<Record<GrappleOptionId, I18nKey>> = {
     'damage-opponent': 'WH40K.Grapple.Effect.DamageOpponent',
     'throw-down-opponent': 'WH40K.Grapple.Effect.ThrowDownOpponent',
     'push-opponent': 'WH40K.Grapple.Effect.PushOpponent',
@@ -324,10 +416,10 @@ export function grapplePanelSections(
 /** A modifier on one side of a grapple test, with its source (#120: shown as a row on the card). */
 export interface GrappleModifier {
     readonly key: string;
-    readonly labelKey: string;
+    readonly labelKey: I18nKey;
     readonly value: number;
     /** The option it comes from, as a langpack key. */
-    readonly sourceKey: string;
+    readonly sourceKey: I18nKey;
 }
 
 /**
@@ -354,8 +446,8 @@ export function grappleSideModifiers(role: GrappleRole, thrownDown: boolean, rul
  *   opponent becomes the Grappled target".
  * - Throw Down, in a line with a thrown-down bonus, marks the opponent thrown down.
  * - Stand puts both back on their feet, which ends that bonus.
- * Damage, Push, Ready and Use Item change no grapple state; their effect is stated
- * on the card.
+ * Damage, Push, Ready and Use Item change no grapple state: Damage posts its hit,
+ * Push offers the GM the token move, and Ready and Use Item name their item.
  */
 export function grappleOptionWrites(
     id: GrappleOptionId,
@@ -470,6 +562,46 @@ export interface GrappleParticipant {
         size?: number;
         // eslint-disable-next-line no-restricted-syntax -- boundary: the actor's skill map is keyed by skill slug
         skills?: Record<string, { current?: number } | undefined>;
+        movement?: { half?: number };
+    };
+}
+
+/** A participant's Half Move in metres (the cap on a push, #665); 0 when the actor type has no movement. */
+export function grappleHalfMove(participant: GrappleParticipant): number {
+    return participant.system.movement?.half ?? 0;
+}
+
+/**
+ * The push a won Push Opponent offers the GM: its distance, as the card prints
+ * it, and who moves (the card's button carries it to `actions/grapple-controls`).
+ */
+export interface GrapplePushCard extends GrapplePushDistance {
+    readonly controllerUuid: string;
+    readonly targetUuid: string;
+    readonly targetName: string;
+}
+
+/** The item a Ready or Use Item names (#665). */
+export interface GrappleItemChoice {
+    readonly uuid: string;
+    readonly name: string;
+}
+
+/** The push a won Push Opponent offers, or null for any other option, a lost test, or a line with no push. */
+export function grapplePushCard(
+    option: GrappleOptionId,
+    won: boolean,
+    rules: GrappleRules,
+    degrees: number,
+    controller: GrappleParticipant,
+    target: GrappleParticipant,
+): GrapplePushCard | null {
+    if (option !== 'push-opponent' || !won || rules.push === null) return null;
+    return {
+        ...grapplePushDistance(rules.push, degrees, grappleHalfMove(controller)),
+        controllerUuid: controller.uuid,
+        targetUuid: target.uuid,
+        targetName: target.name,
     };
 }
 

@@ -2882,7 +2882,7 @@
                 "Declare": "No test"
             },
             "Effect": {
-                "DamageOpponent": "Unarmed damage (1d5−3+SB) to the opponent's Body, and one level of Fatigue.",
+                "DamageOpponent": "The controller's unarmed hit on the opponent, with one level of Fatigue.",
                 "ThrowDownOpponent": "The opponent is knocked Prone.",
                 "PushOpponent": "Push the opponent 1 m plus 1 m per degree of success, up to your Half Move; move with them to keep the grapple.",
                 "Ready": "Ready one of your own items (or, if the GM allows, one of your opponent's).",
@@ -2896,6 +2896,48 @@
                 "ThrownDown": "Opponent thrown down"
             },
             "NoOpponent": "Target the combatant in the grapple with you: every grapple action is an Opposed Strength test against them.",
+            "Damage": {
+                "Title": "Damage Opponent: {weapon}",
+                "EffectBody": "Won the grapple test: the unarmed hit lands on the Body, with {fatigue} level of Fatigue.",
+                "EffectRolledLocation": "Won the grapple test: the unarmed hit lands where the test roll puts it, with {fatigue} level of Fatigue.",
+                "NoUnarmedStrike": "{actor} has no unarmed strike to deal the grapple's damage with."
+            },
+            "Push": {
+                "Heading": "Push",
+                "Base": "Base",
+                "Degrees": "Degrees of success ({degrees})",
+                "HalfMove": "Half Move cap",
+                "Capped": "capped",
+                "Distance": "Push distance",
+                "Metres": "{metres} m",
+                "Button": "Move tokens (GM)",
+                "DialogTitle": "Push {target} {metres} m",
+                "Direction": "Direction",
+                "Controller": "The controller",
+                "Follow": "Move with the opponent (keeps the grapple)",
+                "LetGo": "Let go (ends the grapple, keeps its ground)",
+                "Submit": "Push",
+                "GMOnly": "Only the GM moves the tokens for a push.",
+                "NoToken": "{name} has no token on this scene.",
+                "Done": "{target} pushed {metres} m ({squares} squares).",
+                "Dir": {
+                    "n": "North",
+                    "ne": "North-east",
+                    "e": "East",
+                    "se": "South-east",
+                    "s": "South",
+                    "sw": "South-west",
+                    "w": "West",
+                    "nw": "North-west"
+                }
+            },
+            "Item": {
+                "DialogTitle": "{option}: choose an item",
+                "Legend": "Items of {actor}",
+                "Submit": "Choose",
+                "NoItems": "{actor} has no item to choose for {option}.",
+                "Chosen": "Item"
+            },
             "Start": {
                 "Button": "Begin Grapple",
                 "Title": "Grapple",
@@ -6024,6 +6066,7 @@
                 "Overline": "Damage Roll",
                 "Formula": "Formula",
                 "BaseDamage": "Base Damage",
+                "Fatigue": "Fatigue",
                 "EffectiveVs": "Effective vs {target}",
                 "Effective": "Effective",
                 "AfterArmour": "after armour {armour} (post-pen) + TB {toughness}",

@@ -7,7 +7,7 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
-import type { GrappleOptionRule, GrappleRules } from '../../rules/grapple.ts';
+import type { GrappleDamageRule, GrappleOptionRule, GrapplePushRule, GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -34,7 +34,7 @@ import type {
  * and Slip Free ("a Challenging (+0) <skill> test").
  * @param slipFreeSkill  The skill the line's Slip Free tests.
  */
-export function printedGrappleOptions(slipFreeSkill: string): GrappleOptionRule[] {
+function printedGrappleOptions(slipFreeSkill: string): GrappleOptionRule[] {
     const opposed = { kind: 'opposed-strength' } as const;
     return [
         { id: 'damage-opponent', role: 'controller', test: opposed },
@@ -47,6 +47,24 @@ export function printedGrappleOptions(slipFreeSkill: string): GrappleOptionRule[
         { id: 'slip-free', role: 'target', test: { kind: 'skill', skill: slipFreeSkill, modifier: 0 } },
         { id: 'take-control', role: 'target', test: opposed },
     ];
+}
+
+/**
+ * Damage Opponent as DH2 (core p. 221), RT, BC, DW and OW print it: the unarmed
+ * hit lands on the opponent's "Body location", with "one level of Fatigue".
+ */
+const PRINTED_GRAPPLE_DAMAGE: GrappleDamageRule = { location: 'body', fatigue: 1 };
+
+/**
+ * Push Opponent as DH2 (core p. 221), RT, BC, DW and OW print it: "one metre …
+ * plus one additional metre for each degree of success", capped at "the active
+ * character's Half Move distance".
+ */
+const PRINTED_GRAPPLE_PUSH: GrapplePushRule = { baseMetres: 1, metresPerDegree: 1, capAtHalfMove: true };
+
+/** The grapple rules a line printing the full option lists has, with its Slip Free skill and thrown-down bonus. */
+export function printedGrappleRules(slipFreeSkill: string, thrownDownBonus: number): GrappleRules {
+    return { options: printedGrappleOptions(slipFreeSkill), thrownDownBonus, damage: PRINTED_GRAPPLE_DAMAGE, push: PRINTED_GRAPPLE_PUSH };
 }
 
 /**

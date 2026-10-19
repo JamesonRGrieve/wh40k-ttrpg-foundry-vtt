@@ -8,10 +8,14 @@
  *   modifiers (the thrown-down bonus) are rows with their source on the card.
  * - A plain skill test (Slip Free) goes through the actor's own skill pipeline, so
  *   the roll dialog and the card show its modifiers like any other test.
- * - Ready and Use Item have no test; the card states the option.
+ * - Ready and Use Item have no test; the controller picks the item, and the card
+ *   states the option and links the item (#665).
  * A won option that changes the grapple (Break Free, Slip Free, Take Control,
  * Throw Down's thrown-down mark, Stand) carries both participants' flag writes
- * on its card for the active GM (`grapple-relay`).
+ * on its card for the active GM (`grapple-relay`). A won Damage Opponent deals the
+ * controller's unarmed hit through the normal damage path (`grapple-damage`); a
+ * won Push Opponent prints its distance and offers the GM the token move
+ * (`actions/grapple-controls`).
  */
 
 import { SYSTEM_ID } from '../constants.ts';
@@ -24,11 +28,14 @@ import {
     GRAPPLE_UPDATE_FLAG,
     type GrappleCardModifier,
     type GrappleCardSideInput,
+    type GrappleDamageRule,
     type GrappleFlagWrite,
+    type GrappleItemChoice,
     type GrappleModifier,
     type GrappleOptionId,
     type GrappleOptionRule,
     type GrappleParticipant,
+    grapplePushCard,
     type GrappleRole,
     type GrappleRules,
     grappleOptionWrites,
@@ -40,7 +47,6 @@ import {
     readGrappleThrownDown,
     resolveGrappleOpposed,
 } from '../rules/grapple.ts';
-import type { I18nKey } from '../types/i18n-keys';
 import { SimpleSkillData } from './action-data.ts';
 import { emitChatFromTemplate } from './roll-helpers.ts';
 
@@ -55,13 +61,13 @@ export interface GrappleActorDoc {
 }
 
 /** The other role of a grapple. */
-export function otherGrappleRole(role: GrappleRole): GrappleRole {
+function otherGrappleRole(role: GrappleRole): GrappleRole {
     return role === 'controller' ? 'target' : 'controller';
 }
 
 /** One side's modifier rows, localised for the card. */
 function cardModifiers(modifiers: readonly GrappleModifier[]): GrappleCardModifier[] {
-    return modifiers.map((modifier) => ({ label: t(modifier.labelKey as I18nKey), value: modifier.value, source: t(modifier.sourceKey as I18nKey) }));
+    return modifiers.map((modifier) => ({ label: t(modifier.labelKey), value: modifier.value, source: t(modifier.sourceKey) }));
 }
 
 /** The skill's label off the actor's skill map, else the skill key. */
@@ -76,7 +82,7 @@ function skillLabel(participant: GrappleParticipant, skill: string): string {
  * Acrobatics test"). The roll goes through the skill pipeline; a success carries the
  * grapple flag writes the option makes on its card, and states its effect.
  */
-export class GrappleSkillActionData extends SimpleSkillData {
+class GrappleSkillActionData extends SimpleSkillData {
     readonly optionId: GrappleOptionId;
     readonly writesOnSuccess: readonly GrappleFlagWrite[] | null;
 
@@ -90,7 +96,7 @@ export class GrappleSkillActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         await super.descriptionText();
         if (!this.rollData.success) return;
-        this.addEffect(t(GRAPPLE_ACTION_LABEL_KEYS[this.optionId] as I18nKey), t(GRAPPLE_EFFECT_KEYS[this.optionId] as I18nKey));
+        this.addEffect(t(GRAPPLE_ACTION_LABEL_KEYS[this.optionId]), t(GRAPPLE_EFFECT_KEYS[this.optionId]));
         if (this.writesOnSuccess !== null) this.chatFlags = { ...this.chatFlags, [GRAPPLE_UPDATE_FLAG]: [...this.writesOnSuccess] };
     }
 }
@@ -106,6 +112,10 @@ export interface GrappleOptionRequest {
     gameSystem: string;
     /** Opens the actor's skill test with the given action (a skill-tested option). */
     rollSkill: (skill: string, instance: SimpleSkillData) => Promise<void>;
+    /** Deals a won Damage Opponent's hit (`grapple-damage`), given the controller's test roll. */
+    dealDamage: (rule: GrappleDamageRule, testRoll: number) => Promise<void>;
+    /** Asks the actor which of its items a Ready or Use Item names; null when none is chosen. */
+    pickItem: (option: GrappleOptionId) => Promise<GrappleItemChoice | null>;
     /** The roll each side makes (`1d100`), injectable for tests. */
     rollD100?: () => Promise<Roll>;
 }
@@ -126,6 +136,8 @@ export async function performGrappleOption(request: GrappleOptionRequest): Promi
     const test = option.test;
 
     if (test.kind === 'declare') {
+        const item = await request.pickItem(option.id);
+        if (item === null) return;
         await emitChatFromTemplate(
             GRAPPLE_CARD,
             {
@@ -134,6 +146,7 @@ export async function performGrappleOption(request: GrappleOptionRequest): Promi
                 actionLabelKey: GRAPPLE_ACTION_LABEL_KEYS[option.id],
                 effectKey: GRAPPLE_EFFECT_KEYS[option.id],
                 actorName: actor.name,
+                item,
             },
             { speaker },
         );
@@ -183,8 +196,10 @@ export async function performGrappleOption(request: GrappleOptionRequest): Promi
         {
             gameSystem: request.gameSystem,
             ended: resolution.success && (option.id === 'break-free' || option.id === 'slip-free'),
+            push: grapplePushCard(option.id, resolution.success, rules, resolution.actorDoS, grappler, other),
             ...buildGrappleCard(resolution, actorSide, opponentSide),
         },
         { speaker, rolls: [actorRoll, opponentRoll], ...(writes !== null ? { flags: { [GRAPPLE_UPDATE_FLAG]: writes } } : {}) },
     );
+    if (option.id === 'damage-opponent' && resolution.success) await request.dealDamage(rules.damage, actorSide.roll);
 }

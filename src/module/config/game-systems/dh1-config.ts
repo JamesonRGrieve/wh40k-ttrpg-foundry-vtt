@@ -52,9 +52,13 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      * Strength test to injure; the grappled may break free or take control with an
      * Opposed Strength test, or escape with "a Contortionist Test opposed by the
      * grappler's Strength Test" (Contortionist, Escape Grapple). DH1 prints no Throw
-     * Down, Push, Ready, Stand or Use Item.
+     * Down, Push, Ready, Stand or Use Item. A won injure deals "normal unarmed Damage
+     * (1d5–3 plus SB, with Armour Points counting double) and one level of
+     * Fatigue"; DH1 names no location, so the hit lands where the test roll puts it.
      */
     readonly grappleRules: GrappleRules = {
+        damage: { location: null, fatigue: 1 },
+        push: null,
         options: [
             { id: 'damage-opponent', role: 'controller', test: { kind: 'opposed-strength' } },
             { id: 'break-free', role: 'target', test: { kind: 'opposed-strength' } },

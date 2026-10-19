@@ -1,7 +1,8 @@
 /**
- * Runs the #120 grapple stories' `play` assertions under vitest, so the panel's
- * per-line, per-role options and the option card are checked on every test run,
- * not only in the Storybook browser suite. Same runner shape as
+ * Runs the #120 / #665 grapple stories' `play` assertions under vitest, so the
+ * panel's per-line, per-role options, the option card (its push and named item),
+ * the Damage Opponent damage card and the push / item dialogs are checked on every
+ * test run, not only in the Storybook browser suite. Same runner shape as
  * `npc-sidebar-aptitude-stories.test.ts`.
  */
 import { describe, expect, it } from 'vitest';
@@ -26,7 +27,12 @@ interface ViteGlobMeta {
 }
 
 const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(
-    ['../stories/actor-panels/grapple-controller-panel.stories.ts', '../src/templates/chat/grapple-opposed-chat.stories.ts'],
+    [
+        '../stories/actor-panels/grapple-controller-panel.stories.ts',
+        '../src/templates/chat/grapple-opposed-chat.stories.ts',
+        '../stories/chat-cards/grapple-damage-card.stories.ts',
+        '../src/templates/prompt/grapple-dialogs.stories.ts',
+    ],
     { eager: true },
 );
 
@@ -61,8 +67,21 @@ describe.each([
     { path: '../stories/actor-panels/grapple-controller-panel.stories.ts', expected: ['Controller', 'Target', 'GameMaster', 'PerLineRoles'] },
     {
         path: '../src/templates/chat/grapple-opposed-chat.stories.ts',
-        expected: ['ControllerWins', 'ThrownDownBonus', 'TakeControlWins', 'ContortionistEscape', 'ReadyDeclared', 'PerSystem'],
+        expected: [
+            'ControllerWins',
+            'ThrownDownBonus',
+            'TakeControlWins',
+            'ContortionistEscape',
+            'ReadyDeclared',
+            'PushWon',
+            'PushCapped',
+            'PushLost',
+            'UseItemNamed',
+            'PerSystem',
+        ],
     },
+    { path: '../stories/chat-cards/grapple-damage-card.stories.ts', expected: ['DamageOpponentHit', 'DH1RolledLocation', 'NoFatigueRow', 'PerSystem'] },
+    { path: '../src/templates/prompt/grapple-dialogs.stories.ts', expected: ['PushDialog', 'PushLetGo', 'ItemDialog'] },
 ])('#120 stories in $path', ({ path, expected }) => {
     const module = moduleAt(path);
     const meta = module['default'] ?? {};

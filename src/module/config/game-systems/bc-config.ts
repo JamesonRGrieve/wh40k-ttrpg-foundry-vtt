@@ -30,7 +30,7 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import { capitalize } from '../../utils/format.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { printedGrappleOptions } from './base-system-config.ts';
+import { printedGrappleRules } from './base-system-config.ts';
 import {
     BC_CHARACTERISTIC_TIERS,
     BC_INFAMY_ADVANCE_CAP,
@@ -103,7 +103,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * also use Acrobatics to escape from a grapple", BC core, Special Uses for
      * Acrobatics), so it rolls Acrobatics. Throw Down only makes the opponent Prone.
      */
-    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('acrobatics'), thrownDownBonus: 0 };
+    readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 0);
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],

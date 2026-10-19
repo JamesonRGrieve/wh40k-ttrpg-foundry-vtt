@@ -1,0 +1,42 @@
+{{!--
+    Grapple Push Opponent dialog (#665; DH2 core p. 221): the GM picks the
+    direction the controller pushes its opponent, and whether the controller moves
+    with it ("must move with his Grappled opponent in order to maintain the
+    Grapple") or lets go ("which ends the Grapple, but allows the active character
+    to keep his ground"). Rendered into a DialogV2 by `promptGrapplePush`
+    (actions/grapple-controls.ts).
+
+    The directions are a compass: three rows of three, with the opponent in the
+    centre cell.
+
+    Context: targetName, metres, directions[{ value, labelKey, checked }] in
+    compass order (nw n ne / w · e / sw s se).
+--}}
+<div class="tw-flex tw-flex-col tw-gap-3" data-wh40k-hook="grapple-push-dialog">
+    <fieldset class="tw-m-0 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(128,128,128,0.4)]">
+        <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.Grapple.Push.Direction"}}</legend>
+        <div class="tw-grid tw-grid-cols-3 tw-gap-1" data-grapple-push-compass>
+            {{#each directions as |direction|}}
+            {{#if direction.value}}
+            <label class="tw-flex tw-items-center tw-gap-1 tw-p-1 tw-text-xs tw-rounded-sm tw-cursor-pointer hover:tw-bg-[rgba(128,128,128,0.15)]">
+                <input type="radio" name="direction" value="{{direction.value}}" {{#if direction.checked}}checked{{/if}} />
+                <span>{{localize direction.labelKey}}</span>
+            </label>
+            {{else}}
+            <span class="tw-flex tw-items-center tw-justify-center tw-p-1 tw-text-xs tw-font-bold tw-truncate" data-grapple-push-centre>{{@root.targetName}}</span>
+            {{/if}}
+            {{/each}}
+        </div>
+    </fieldset>
+    <fieldset class="tw-m-0 tw-p-2 tw-flex tw-flex-col tw-gap-1 tw-rounded-sm tw-border tw-border-solid tw-border-[rgba(128,128,128,0.4)]">
+        <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.Grapple.Push.Controller"}}</legend>
+        <label class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-cursor-pointer">
+            <input type="radio" name="controller" value="follow" checked />
+            <span>{{localize "WH40K.Grapple.Push.Follow"}}</span>
+        </label>
+        <label class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-cursor-pointer">
+            <input type="radio" name="controller" value="let-go" />
+            <span>{{localize "WH40K.Grapple.Push.LetGo"}}</span>
+        </label>
+    </fieldset>
+</div>

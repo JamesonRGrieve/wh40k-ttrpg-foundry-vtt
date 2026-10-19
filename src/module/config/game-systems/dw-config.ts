@@ -7,7 +7,7 @@ import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
-import { printedGrappleOptions } from './base-system-config.ts';
+import { printedGrappleRules } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
@@ -42,7 +42,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      * DW core, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
      * Throw Down only makes the opponent Prone: DW prints no further bonus.
      */
-    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('contortionist'), thrownDownBonus: 0 };
+    readonly grappleRules: GrappleRules = printedGrappleRules('contortionist', 0);
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

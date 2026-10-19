@@ -9,7 +9,9 @@
     (Ready, Use Item) states the option and its effect.
 
     Context: buildGrappleCard (rules/grapple.ts) + gameSystem + ended (the grapple
-    is over for both); or declared + actionLabelKey + effectKey + actorName.
+    is over for both) + push (a won Push Opponent's GrapplePushCard, or null); or
+    declared + actionLabelKey + effectKey + actorName + item (the item a Ready or
+    Use Item names, {uuid, name}).
 --}}
 <div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-slate-500 tw-bg-[rgba(22,24,30,0.92)]"
      data-wh40k-system="{{gameSystem}}"
@@ -24,6 +26,13 @@
     {{#if declared}}
     <p class="tw-m-0 tw-mb-2 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Chat.Declared" actor=actorName}}</p>
     <div class="tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-slate-400/60 tw-bg-slate-800/40 tw-text-[0.85rem]" data-wh40k-hook="grapple-effect">{{localize effectKey}}</div>
+    {{#if item}}
+    {{!-- The item a Ready / Use Item names (#665): a content link that opens its sheet. --}}
+    <div class="tw-mt-2 tw-flex tw-items-center tw-gap-2 tw-text-[0.85rem]" data-wh40k-hook="grapple-item">
+        <span class="tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Item.Chosen"}}</span>
+        <a class="content-link" draggable="true" data-link data-uuid="{{item.uuid}}" data-type="Item" data-tooltip="{{item.name}}"><i class="fas fa-suitcase" aria-hidden="true"></i>{{item.name}}</a>
+    </div>
+    {{/if}}
     {{else}}
     <p class="tw-m-0 tw-mb-2 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Chat.Opposed" actor=actor.name opponent=opponent.name}}</p>
 
@@ -57,5 +66,39 @@
         {{#if effectKey}}<div class="tw-mt-1 tw-font-normal" data-wh40k-hook="grapple-effect">{{localize effectKey}}</div>{{/if}}
         {{#if ended}}<div class="tw-mt-1 tw-font-normal" data-wh40k-hook="grapple-ended">{{localize "WH40K.Grapple.Ended"}}</div>{{/if}}
     </div>
+
+    {{#if push}}
+    {{!-- A won Push Opponent (#665): how far the push goes, part by part, and the GM's token move. --}}
+    <div class="tw-mt-2 tw-flex tw-flex-col tw-gap-0.5 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-slate-400/60 tw-bg-slate-800/40 tw-text-[0.8rem]" data-wh40k-hook="grapple-push">
+        <div class="tw-font-bold tw-uppercase tw-tracking-[0.08em]">{{localize "WH40K.Grapple.Push.Heading"}}</div>
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[color:var(--wh40k-text-muted)]" data-grapple-push-row="base">
+            <span>{{localize "WH40K.Grapple.Push.Base"}}</span>
+            <span class="tw-tabular-nums">{{localize "WH40K.Grapple.Push.Metres" metres=push.baseMetres}}</span>
+        </div>
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[color:var(--wh40k-text-muted)]" data-grapple-push-row="degrees">
+            <span>{{localize "WH40K.Grapple.Push.Degrees" degrees=push.degrees}}</span>
+            <span class="tw-tabular-nums">+{{localize "WH40K.Grapple.Push.Metres" metres=push.fromDegrees}}</span>
+        </div>
+        {{#if push.capped}}
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[var(--wh40k-warning-secondary)]" data-grapple-push-row="cap">
+            <span>{{localize "WH40K.Grapple.Push.HalfMove"}} ({{localize "WH40K.Grapple.Push.Capped"}})</span>
+            <span class="tw-tabular-nums">{{localize "WH40K.Grapple.Push.Metres" metres=push.halfMove}}</span>
+        </div>
+        {{/if}}
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-font-bold" data-grapple-push-row="distance">
+            <span>{{localize "WH40K.Grapple.Push.Distance"}}</span>
+            <span class="tw-tabular-nums" data-grapple-push-metres="{{push.metres}}">{{localize "WH40K.Grapple.Push.Metres" metres=push.metres}}</span>
+        </div>
+        <button type="button"
+                class="roll-control__grapple-push tw-mt-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-sm tw-border tw-border-solid tw-border-slate-300 tw-bg-slate-700/60 tw-text-[color:var(--wh40k-text-bright)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer hover:tw-bg-slate-600/70"
+                data-controller-uuid="{{push.controllerUuid}}"
+                data-target-uuid="{{push.targetUuid}}"
+                data-target-name="{{push.targetName}}"
+                data-metres="{{push.metres}}">
+            <i class="fas fa-up-down-left-right" aria-hidden="true"></i>
+            <span>{{localize "WH40K.Grapple.Push.Button"}}</span>
+        </button>
+    </div>
+    {{/if}}
     {{/if}}
 </div>
