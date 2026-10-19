@@ -90,9 +90,14 @@ export function hitLocationShortLabel(id: HitLocationId): string {
     return game.i18n.localize(HIT_LOCATION_DEFS[id].shortLabelKey);
 }
 
+/** The langpack key of a hit location's letter abbreviation. */
+export function hitLocationAbbreviationKey(id: HitLocationId): I18nKey {
+    return HIT_LOCATION_DEFS[id].abbrKey;
+}
+
 /** Localized letter abbreviation of a hit location ("RA"). */
 export function hitLocationAbbreviation(id: HitLocationId): string {
-    return game.i18n.localize(HIT_LOCATION_DEFS[id].abbrKey);
+    return game.i18n.localize(hitLocationAbbreviationKey(id));
 }
 
 /** The Table 7-3 reversed-roll band of a location, as the printed `01-10` / `86-00` range. */

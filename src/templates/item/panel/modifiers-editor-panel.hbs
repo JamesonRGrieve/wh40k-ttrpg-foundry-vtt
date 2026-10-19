@@ -32,7 +32,7 @@
       <div class="tw-grid tw-grid-cols-3 tw-gap-2">
         {{#each config.characteristics}}
         <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center" title="{{label}}">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center" title="{{localize label}}">
             {{short}}
           </label>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
@@ -200,8 +200,9 @@
           <select class="tw-w-36 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
                   name="system.modifiers.situational.characteristics.{{@index}}.key">
             <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCharacteristic"}}</option>
-            {{#each ../../config.characteristics}}
-            <option value="{{@key}}" {{selected (eq @key ../key)}}>{{label}}</option>
+            {{!-- One level up is the panel's own context: `../../` walked past it and listed no characteristics. --}}
+            {{#each ../config.characteristics}}
+            <option value="{{@key}}" {{#if (eq @key ../key)}}selected{{/if}}>{{localize label}}</option>
             {{/each}}
           </select>
           <input class="tw-w-16 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm tw-text-center"
@@ -260,11 +261,12 @@
                  placeholder="0" />
           <select class="tw-w-24 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
                   name="system.modifiers.other.{{@index}}.mode">
-            <option value="add" {{selected (eq mode "add")}}>{{localize "WH40K.Dialog.TalentEditor.ModeAdd"}}</option>
-            <option value="multiply" {{selected (eq mode "multiply")}}>{{localize "WH40K.Dialog.TalentEditor.ModeMultiply"}}</option>
-            <option value="override" {{selected (eq mode "override")}}>{{localize "WH40K.Dialog.TalentEditor.ModeOverride"}}</option>
-            <option value="upgrade" {{selected (eq mode "upgrade")}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeUpgrade"}}</option>
-            <option value="downgrade" {{selected (eq mode "downgrade")}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeDowngrade"}}</option>
+            {{!-- Foundry has no `selected` helper (#613): the option marks itself. --}}
+            <option value="add" {{#if (eq mode "add")}}selected{{/if}}>{{localize "WH40K.Dialog.TalentEditor.ModeAdd"}}</option>
+            <option value="multiply" {{#if (eq mode "multiply")}}selected{{/if}}>{{localize "WH40K.Dialog.TalentEditor.ModeMultiply"}}</option>
+            <option value="override" {{#if (eq mode "override")}}selected{{/if}}>{{localize "WH40K.Dialog.TalentEditor.ModeOverride"}}</option>
+            <option value="upgrade" {{#if (eq mode "upgrade")}}selected{{/if}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeUpgrade"}}</option>
+            <option value="downgrade" {{#if (eq mode "downgrade")}}selected{{/if}}>{{localize "WH40K.ItemSheet.ModifiersEditor.ModeDowngrade"}}</option>
           </select>
           <button type="button"
                   class="tw-inline-flex tw-h-7 tw-w-7 tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-text-crimson tw-font-bold tw-cursor-pointer hover:tw-scale-[1.08] hover:tw-shadow-[0_2px_6px_var(--wh40k-shadow-soft)]"

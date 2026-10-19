@@ -1,19 +1,7 @@
 import HandlebarsLib from 'handlebars';
 import enLang from '../src/lang/en.json';
-import { chaosAlignmentLabelKey } from '../src/module/config/game-systems/bc-advancement-config.ts';
-import { type GameSystemId, SystemConfigRegistry, type SystemThemeRole, themeClassFor } from '../src/module/config/game-systems/index.ts';
-import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper } from '../src/module/handlebars/content-presence.ts';
-import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass } from '../src/module/handlebars/degree-ladders.ts';
-import { truncate } from '../src/module/handlebars/handlebars-helpers.ts';
-import { inlineTernary } from '../src/module/handlebars/inline-ternary.ts';
-import { itemTableColumnsHelper } from '../src/module/handlebars/item-table-columns.ts';
-import { nameFitClass } from '../src/module/handlebars/name-fit.ts';
-import { buildSafeAttrs } from '../src/module/handlebars/safe-attrs.ts';
-import { formatSourceLabel, type SourceInput } from '../src/module/handlebars/source-label.ts';
-import { pluralKey } from '../src/module/i18n/plural.ts';
-import { ICON_REGISTRY } from '../src/module/icons/registry.generated.ts';
-import { combatActionIcon, combatTimingKey } from '../src/module/rules/combat-action-display.ts';
-import { hitLocationLabelKey } from '../src/module/rules/hit-locations.ts';
+import { type HelperLanguage, registerHandlebarsHelpers } from '../src/module/handlebars/handlebars-helpers.ts';
+import { registerIconHelper } from '../src/module/icons/helper.ts';
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
 const SOURCE_ROOT = '../src/templates/';
@@ -83,6 +71,11 @@ function applySubstitutions(value: string, data: HbsRecord): string {
     });
 }
 
+/** Handlebars' own truthiness: everything but undefined, null, false, 0 and ''. */
+function isTruthy(value: HbsValue): boolean {
+    return value !== undefined && value !== null && value !== false && value !== 0 && value !== '';
+}
+
 function asArray(value: HbsValue): HbsValue[] {
     if (Array.isArray(value)) return value;
     if (value instanceof Set) return Array.from(value) as HbsValue[];
@@ -134,260 +127,46 @@ function buildOptionTag(option: { value: string; label: string }, selected: HbsV
     return `<option value="${HandlebarsLib.escapeExpression(option.value)}"${selectedAttr}${attrs}>${HandlebarsLib.escapeExpression(option.label)}</option>`;
 }
 
-export function initializeStoryHandlebars(): typeof HandlebarsLib {
-    const globalState = globalThis as typeof globalThis & { [INIT_KEY]?: boolean };
-    if (globalState[INIT_KEY] === true) return HandlebarsLib;
+/** The harness's language: English, read from the langpack. */
+const STORY_LANGUAGE: HelperLanguage = {
+    localize: (key) => lookupLocalization(key, enLang) ?? key,
+    lang: () => 'en',
+};
 
-    HandlebarsLib.registerHelper('join', (arr: HbsValue, sep: string) => asArray(arr).join(typeof sep === 'string' ? sep : ', '));
-    HandlebarsLib.registerHelper('sourceLabel', (source: HbsValue) => formatSourceLabel(source as SourceInput));
-    HandlebarsLib.registerHelper('inputSize', (value: HbsValue, min: HbsValue) => {
-        const text = typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '';
-        const floor = Number(min);
-        return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
+/**
+ * Stand-ins for the helpers Foundry core registers (and the one a sheet supplies
+ * on its render context), which the templates call. Production's own helpers
+ * come from the shared registry; these are the ones it never registers.
+ */
+export const FOUNDRY_CORE_HELPERS = [
+    'localize',
+    'checked',
+    'disabled',
+    'editor',
+    'selectOptions',
+    'formInput',
+    'ne',
+    'not',
+    'setToArray',
+    'setIncludes',
+] as const;
+
+function registerFoundryCoreHelpers(): void {
+    HandlebarsLib.registerHelper('localize', (key: string, options?: { hash?: HbsRecord }) => {
+        const resolved = lookupLocalization(key, enLang);
+        if (resolved === null) return key;
+        if (options?.hash && Object.keys(options.hash).length > 0) {
+            return applySubstitutions(resolved, options.hash);
+        }
+        return resolved;
     });
-    HandlebarsLib.registerHelper('pluralKey', (base: HbsValue, count: HbsValue) => pluralKey(typeof base === 'string' ? base : '', Number(count), 'en'));
-    HandlebarsLib.registerHelper('itemTableColumns', (headers: HbsValue, addAction: HbsValue) => itemTableColumnsHelper(headers, addAction));
-    HandlebarsLib.registerHelper('nameFitClass', (name: HbsValue) => nameFitClass(typeof name === 'string' ? name : ''));
-    HandlebarsLib.registerHelper('hasText', (value: HbsValue) => hasTextHelper(value));
-    HandlebarsLib.registerHelper('hasNonZero', (value: HbsValue) => hasNonZeroHelper(value));
-    HandlebarsLib.registerHelper('hasDisplayedModifiers', (value: HbsValue) => hasDisplayedModifiersHelper(value));
-    HandlebarsLib.registerHelper('chaosAlignmentLabelKey', (alignment: HbsValue) => chaosAlignmentLabelKey(typeof alignment === 'string' ? alignment : ''));
-    HandlebarsLib.registerHelper('eq', (a: HbsValue, b: HbsValue) => a === b);
+    HandlebarsLib.registerHelper('checked', (value: HbsValue) => (isTruthy(value) ? 'checked' : ''));
+    HandlebarsLib.registerHelper('disabled', (value: HbsValue) => (isTruthy(value) ? 'disabled' : ''));
     HandlebarsLib.registerHelper('ne', (a: HbsValue, b: HbsValue) => a !== b);
-    HandlebarsLib.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
-    HandlebarsLib.registerHelper('lt', (a: number, b: number) => Number(a) < Number(b));
-    HandlebarsLib.registerHelper('gte', (a: number, b: number) => Number(a) >= Number(b));
-    HandlebarsLib.registerHelper('lte', (a: number, b: number) => Number(a) <= Number(b));
-    HandlebarsLib.registerHelper('divide', (a: number, b: number) => {
-        const denom = Number(b);
-        return denom === 0 ? 0 : Number(a) / denom;
-    });
-    HandlebarsLib.registerHelper('concat', (...args: HbsValue[]) => {
-        args.pop();
-        return args.join('');
-    });
-    HandlebarsLib.registerHelper('combatTimingKey', (value: HbsValue) => combatTimingKey(typeof value === 'string' ? value : undefined));
-    HandlebarsLib.registerHelper('combatActionIcon', (icon: HbsValue, timing: HbsValue) =>
-        combatActionIcon(typeof icon === 'string' ? icon : undefined, typeof timing === 'string' ? timing : undefined),
-    );
-    HandlebarsLib.registerHelper('isExpanded', () => false);
-    HandlebarsLib.registerHelper('hideIfNot', (check: HbsValue) => {
-        const b = Boolean(check);
-        return b ? '' : new HandlebarsLib.SafeString('style="display:none;"');
-    });
-    HandlebarsLib.registerHelper('defaultVal', (value: HbsValue, fallback: HbsValue) => (value != null && value !== false && value !== '' ? value : fallback));
-    HandlebarsLib.registerHelper('and', (...args: HbsValue[]) => {
-        args.pop();
-        return args.every(Boolean);
-    });
-    HandlebarsLib.registerHelper(
-        'safeAttrs',
-        (...args: HbsValue[]) => new HandlebarsLib.SafeString(buildSafeAttrs(args.slice(0, -1), (s) => HandlebarsLib.escapeExpression(s))),
-    );
-    HandlebarsLib.registerHelper('or', (...args: HbsValue[]) => {
-        args.pop();
-        return args.find(Boolean) ?? args[args.length - 1] ?? '';
-    });
-    HandlebarsLib.registerHelper('add', (...args: HbsValue[]) => {
-        args.pop();
-        return args.reduce<number>((sum, value) => sum + Number(value ?? 0), 0);
-    });
-    HandlebarsLib.registerHelper('multiply', (a: HbsValue, b: HbsValue) => Number(a ?? 0) * Number(b ?? 0));
-    HandlebarsLib.registerHelper('subtract', (a: HbsValue, b: HbsValue) => Number(a ?? 0) - Number(b ?? 0));
-    HandlebarsLib.registerHelper('percent', (value: HbsValue, max: HbsValue) => {
-        const v = Number(value);
-        const m = Number(max);
-        if (!Number.isFinite(m) || m <= 0) return 0;
-        return Math.min(100, Math.max(0, ((Number.isFinite(v) ? v : 0) / m) * 100));
-    });
-    HandlebarsLib.registerHelper('inc', (value: HbsValue) => Number(value) + 1);
-    HandlebarsLib.registerHelper('iff', (...args: HbsValue[]) => inlineTernary(args));
-    HandlebarsLib.registerHelper('object', (options: { hash?: HbsRecord }) => {
-        return options.hash ?? {};
-    });
-    HandlebarsLib.registerHelper('array', (...args: HbsValue[]) => args.slice(0, -1));
-    HandlebarsLib.registerHelper('checked', (value: HbsValue) => {
-        const b = Boolean(value);
-        return b ? 'checked' : '';
-    });
-    HandlebarsLib.registerHelper('signedNumber', (value: HbsValue) => {
-        const num = Number(value ?? 0);
-        if (num > 0) return `+${num}`;
-        if (num === 0) return '0';
-        return String(num);
-    });
-    // The production helper's function, so a story renders what Foundry renders (#613).
-    HandlebarsLib.registerHelper('truncate', (value: HbsValue, length: HbsValue) =>
-        truncate(typeof value === 'string' ? value : '', typeof length === 'number' ? length : undefined),
-    );
+    HandlebarsLib.registerHelper('not', (value: HbsValue) => !isTruthy(value));
+    // AmmoSheet supplies `setToArray` and `setIncludes` on its render context; Handlebars calls them like helpers.
     HandlebarsLib.registerHelper('setToArray', (value: HbsValue) => asArray(value));
-    HandlebarsLib.registerHelper('specialQualities', (value: HbsValue) => asArray(value));
-    HandlebarsLib.registerHelper('arrayToObject', (array: HbsValue): Record<string, string> => {
-        const obj: Record<string, string> = {};
-        if (array === null || array === undefined) return obj;
-        if (Array.isArray(array)) {
-            for (const a of array) {
-                const key = String(a);
-                obj[key] = key;
-            }
-            return obj;
-        }
-        if (typeof array === 'object') {
-            for (const key of Object.keys(array)) obj[key] = key;
-            return obj;
-        }
-        return obj;
-    });
-    HandlebarsLib.registerHelper('capitalize', (text: HbsValue): string => {
-        const s = unknownToStr(text ?? '');
-        return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : '';
-    });
-    HandlebarsLib.registerHelper('toLowerCase', (str: HbsValue): string => unknownToStr(str ?? '').toLowerCase());
-    HandlebarsLib.registerHelper('removeMarkup', (text: HbsValue): string => unknownToStr(text ?? '').replace(/<[^>]*>/g, ''));
-    HandlebarsLib.registerHelper('cleanFieldName', (text: HbsValue): string => unknownToStr(text ?? '').replace(/[^a-zA-Z0-9]/g, ''));
-    HandlebarsLib.registerHelper('hideIf', (check: HbsValue) => {
-        const b = Boolean(check);
-        return b ? new HandlebarsLib.SafeString('style="display:none;"') : '';
-    });
-    HandlebarsLib.registerHelper('arrayIncludes', (field: HbsValue, list: HbsValue): boolean => Array.isArray(list) && list.includes(field));
-    HandlebarsLib.registerHelper('includes', (list: HbsValue, value: HbsValue): boolean => Array.isArray(list) && list.includes(value));
-    HandlebarsLib.registerHelper('option', (option: HbsValue, current: HbsValue, name: HbsValue): string => {
-        const v = unknownToStr(option ?? '');
-        const label = name !== undefined ? unknownToStr(name) : v;
-        const selected = current === option ? ' selected' : '';
-        return `<option value="${HandlebarsLib.escapeExpression(v)}"${selected}>${HandlebarsLib.escapeExpression(label)}</option>`;
-    });
-    HandlebarsLib.registerHelper('slice', (arr: HbsValue, start: HbsValue, end: HbsValue) => {
-        if (!Array.isArray(arr)) return [];
-        return arr.slice(Number(start ?? 0), end === undefined ? undefined : Number(end));
-    });
-    HandlebarsLib.registerHelper('range', (start: HbsValue, end: HbsValue) => {
-        const s = Number(start ?? 0);
-        const e = Number(end ?? 0);
-        const result: number[] = [];
-        if (e < s) return result;
-        for (let i = s; i <= e; i++) result.push(i);
-        return result;
-    });
-    HandlebarsLib.registerHelper('times', function timesHelper(this: HbsValue, count: HbsValue, options: { fn: (ctx: number) => string }): string {
-        const n = Number(count ?? 0);
-        let out = '';
-        for (let i = 0; i < n; i++) out += options.fn(i);
-        return out;
-    });
-    // NB: cannot register a helper named `percent` here — many templates use
-    // `{{percent}}` as a plain context variable (e.g. vital-progress-bar.hbs)
-    // and a same-named helper shadows the lookup, returning 0. Use a distinct
-    // identifier for the helper version if/when needed.
-    HandlebarsLib.registerHelper('inversePercent', (value: HbsValue, max: HbsValue): number => {
-        const v = Number(value ?? 0);
-        const m = Number(max ?? 0);
-        return m > 0 ? Math.max(0, 100 - Math.round((v / m) * 100)) : 0;
-    });
-    HandlebarsLib.registerHelper('colorCode', (positive: HbsValue, negative: HbsValue): string => {
-        const isPositive = Boolean(positive);
-        const isNegative = Boolean(negative);
-        return isPositive ? 'positive' : isNegative ? 'negative' : 'neutral';
-    });
-    HandlebarsLib.registerHelper('isError', (value: HbsValue): boolean => value === 'error' || value === false);
-    HandlebarsLib.registerHelper('isSuccess', (value: HbsValue): boolean => value === 'success' || value === true);
-    // Delegates to the REAL resolver rather than inventing a class name. The old
-    // stub emitted `wh40k-theme-<role>`, which matches no CSS rule anywhere — so
-    // every themed element in a story rendered unstyled, and a themed badge with
-    // dark text on its (now absent) light background was invisible in the
-    // screenshots. Same drift the degree ladders had: a story-registry
-    // reimplementation that silently diverges from what the app does.
-    HandlebarsLib.registerHelper('themeClassFor', function themeClassForStoryHelper(this: HbsValue, role: HbsValue, ...rest: HbsValue[]): string {
-        if (typeof role !== 'string') return '';
-        const userArgs = rest.slice(0, -1);
-        const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } } | undefined;
-        const explicit = typeof userArgs[0] === 'string' ? userArgs[0] : undefined;
-        const fromRoot = opts?.data?.root?._gameSystemId ?? opts?.data?.root?.gameSystemId;
-        const candidate = explicit ?? fromRoot ?? 'rt';
-        const systemId: GameSystemId = SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : 'rt';
-        return themeClassFor(systemId, role as SystemThemeRole);
-    });
-    HandlebarsLib.registerHelper('select', function selectHelper(this: HbsValue, selected: HbsValue, options: { fn: (ctx: HbsValue) => string }): string {
-        const html = options.fn(this);
-        const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
-        return html.replace(/<option([^>]*?)value=(["'])(.*?)\2([^>]*)>/g, (_match, before: string, q: string, value: string, after: string) => {
-            const alreadySelected = /\bselected\b/.test(before) || /\bselected\b/.test(after);
-            const isMatch = value === target;
-            const tail = alreadySelected || !isMatch ? '' : ' selected';
-            return `<option${before}value=${q}${value}${q}${after}${tail}>`;
-        });
-    });
-    HandlebarsLib.registerHelper('any', (list: HbsValue, prop: HbsValue) => {
-        if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return false;
-        return list.some((item: HbsValue) => Boolean(getProp(item, prop)));
-    });
-    HandlebarsLib.registerHelper('countType', (list: HbsValue, prop: HbsValue) => {
-        if (!Array.isArray(list) || typeof prop !== 'string' || prop === '') return 0;
-        return list.filter((item: HbsValue) => Boolean(getProp(item, prop))).length;
-    });
-    HandlebarsLib.registerHelper('specialDisplay', (special: HbsValue): string => {
-        if (special === null || special === undefined || special === '') return '';
-        if (Array.isArray(special)) {
-            return special
-                .map((q: HbsValue) => {
-                    if (typeof q === 'string') return q;
-                    const obj = asRecord(q);
-                    if (obj !== null) {
-                        const name = unknownToStr(obj['name'] ?? obj['label'] ?? '');
-                        const value = obj['value'];
-                        return value !== undefined && value !== null && value !== '' ? `${name} (${unknownToStr(value)})` : name;
-                    }
-                    return unknownToStr(q);
-                })
-                .filter((s) => s !== '')
-                .join(', ');
-        }
-        return unknownToStr(special);
-    });
-    HandlebarsLib.registerHelper('armourDisplay', (armour: HbsValue): string => {
-        const a = asRecord(armour);
-        if (a === null) return '0';
-        const num = (v: HbsValue): number => Number(v ?? 0);
-        const body = num(a['body']);
-        const locations = ['body', 'head', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg'] as const;
-        const same = locations.every((loc) => num(a[loc]) === body);
-        return same ? String(body) : locations.map((loc) => num(a[loc])).join('/');
-    });
-    HandlebarsLib.registerHelper('hitLocationLabel', (location: HbsValue): string => {
-        const value = typeof location === 'string' ? location : '';
-        const key = hitLocationLabelKey(value);
-        return key === undefined ? value : lookupLocalization(key, enLang) ?? value;
-    });
-    HandlebarsLib.registerHelper('armourLocation', (armour: HbsValue, location: HbsValue): number => {
-        if (typeof location !== 'string') return 0;
-        return Number(getProp(armour, location) ?? 0);
-    });
-    HandlebarsLib.registerHelper('displayStrength', (strength: HbsValue): string => {
-        const n = Number(strength ?? 0);
-        return n > 0 ? String(n) : '-';
-    });
-    /**
-     * Narrow an arbitrary template value to the degree-ladder boundary shape.
-     * Anything that is not a number or numeric string scores 0, which is what the
-     * ladders already did with it.
-     */
-    function asDegreeScore(value: HbsValue): DegreeScore {
-        return typeof value === 'number' || typeof value === 'string' ? value : undefined;
-    }
-
-    // The Corruption / Insanity degree helpers, from the SAME module the runtime
-    // registry uses (`handlebars/degree-ladders.ts`). The story registry used to
-    // omit them entirely, so any template reaching them — the shared Vitals body,
-    // and therefore the whole Combat tab — could not be rendered in a story at all.
-    HandlebarsLib.registerHelper('corruptionDegree', (v: HbsValue): string => corruptionDegree(asDegreeScore(v)));
-    HandlebarsLib.registerHelper('corruptionDegreeClass', (v: HbsValue): string => corruptionDegreeClass(asDegreeScore(v)));
-    HandlebarsLib.registerHelper('insanityDegree', (v: HbsValue): string => insanityDegree(asDegreeScore(v)));
-    HandlebarsLib.registerHelper('insanityDegreeClass', (v: HbsValue): string => insanityDegreeClass(asDegreeScore(v)));
-
-    HandlebarsLib.registerHelper('displayCrit', (crit: HbsValue): string => {
-        const n = Number(crit ?? 0);
-        return n > 0 ? `${n}+` : '-';
-    });
+    HandlebarsLib.registerHelper('setIncludes', (key: HbsValue, set: HbsValue) => asArray(set).includes(key));
     HandlebarsLib.registerHelper('selectOptions', (options: HbsValue, helperOptions?: { hash?: HbsRecord }) => {
         const hash = helperOptions?.hash ?? {};
         const selected = hash.selected;
@@ -425,20 +204,62 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
             )}</div>`,
         );
     });
-    HandlebarsLib.registerHelper('localize', (key: string, options?: { hash?: HbsRecord }) => {
-        const resolved = lookupLocalization(key, enLang);
-        if (resolved === null) return key;
-        if (options?.hash && Object.keys(options.hash).length > 0) {
-            return applySubstitutions(resolved, options.hash);
+    // Foundry's `{{formInput field value=…}}` renders the field's own input. A story's
+    // field has no schema behind it, so this draws its enriched HTML when given, else a
+    // text input named for the field.
+    HandlebarsLib.registerHelper('formInput', (field: HbsValue, options?: { hash?: HbsRecord }) => {
+        const hash = options?.hash ?? {};
+        const name = unknownToStr(getProp(field, 'fieldPath') ?? hash.name ?? '');
+        if (hash.enriched !== undefined) {
+            return new HandlebarsLib.SafeString(
+                `<div class="editor-content" data-edit="${HandlebarsLib.escapeExpression(name)}">${unknownToStr(hash.enriched)}</div>`,
+            );
         }
-        return resolved;
+        return new HandlebarsLib.SafeString(
+            `<input type="text" name="${HandlebarsLib.escapeExpression(name)}" value="${HandlebarsLib.escapeExpression(unknownToStr(hash.value))}" />`,
+        );
     });
-    HandlebarsLib.registerHelper('format', (key: string, options?: { hash?: HbsRecord }) => {
-        const resolved = lookupLocalization(key, enLang);
-        const template = resolved ?? key;
-        return applySubstitutions(template, options?.hash ?? {});
-    });
+}
 
+/**
+ * Production helpers that read live Foundry state (CONFIG.wh40k, the world settings,
+ * the UUID cache, the debug logger), which a story has none of. Each is re-registered
+ * here over production's with a story equivalent; every other helper a story renders
+ * is production's own (#613).
+ */
+export const STORY_OVERRIDES = [
+    'dhlog',
+    'isExpanded',
+    'isFreeformCreation',
+    'isFreeformCharacters',
+    'getBioOptions',
+    'skillIcon',
+    'specialQualities',
+    'craftsmanshipQualities',
+    'qualityLookup',
+    'uuid-name',
+    'uuid-expand',
+] as const;
+
+function registerStoryOverrides(): void {
+    HandlebarsLib.registerHelper('dhlog', () => '');
+    HandlebarsLib.registerHelper('isExpanded', () => false);
+    HandlebarsLib.registerHelper('isFreeformCreation', () => false);
+    HandlebarsLib.registerHelper('isFreeformCharacters', () => false);
+    HandlebarsLib.registerHelper('getBioOptions', () => []);
+    // Production's own fallback icon, which ships with Foundry.
+    HandlebarsLib.registerHelper('skillIcon', () => 'icons/svg/target.svg');
+    HandlebarsLib.registerHelper('specialQualities', (value: HbsValue) => asArray(value));
+    HandlebarsLib.registerHelper('craftsmanshipQualities', () => []);
+    HandlebarsLib.registerHelper('qualityLookup', (identifier: HbsValue) => {
+        const id = unknownToStr(identifier);
+        return { identifier: id, label: id, description: '', level: null };
+    });
+    HandlebarsLib.registerHelper('uuid-name', (uuid: HbsValue) => unknownToStr(uuid));
+    HandlebarsLib.registerHelper('uuid-expand', (text: HbsValue) => unknownToStr(text));
+}
+
+function registerTemplatePartials(): void {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Vite augments import.meta with glob() at build time; fvtt-types' ImportMeta doesn't model it
     const partials = (import.meta as unknown as ViteImportMeta).glob('../src/templates/**/*.hbs', {
         query: '?raw',
@@ -459,27 +280,18 @@ export function initializeStoryHandlebars(): typeof HandlebarsLib {
             HandlebarsLib.registerPartial(`${TEMPLATE_PREFIX}${noExt}`, source);
         }
     }
+}
 
-    // Register the {{icon}} helper using the same registry the runtime uses.
-    // We don't import src/module/icons/helper.ts directly because it touches
-    // the global Handlebars (Foundry-style) and not the bundled storybook copy.
-    HandlebarsLib.registerHelper('iconSvg', function iconStoryHelper(key: HbsValue, options: { hash?: HbsRecord }) {
-        if (typeof key !== 'string' || !Object.hasOwn(ICON_REGISTRY, key)) {
-            return new HandlebarsLib.SafeString('');
-        }
-        const hash = options.hash ?? {};
-        const svg = ICON_REGISTRY[key];
-        const klass = typeof hash.class === 'string' ? hash.class : '';
-        const label = typeof hash.label === 'string' ? hash.label : '';
-        const labelAttrs = label ? `role="img" aria-label="${String(label).replace(/"/g, '&quot;')}"` : `aria-hidden="true" focusable="false"`;
-        const sizeRaw = hash.size;
-        const size = typeof sizeRaw === 'number' ? `${sizeRaw}px` : typeof sizeRaw === 'string' ? sizeRaw : '';
-        const sizeAttr = size ? ` style="width:${size};height:${size};"` : '';
-        const classes = ['wh40k-icon', `wh40k-icon--${key.replace(':', '-')}`];
-        if (klass) classes.push(klass);
-        const out = svg.replace(/^<svg([^>]*)>/, `<svg$1 class="${classes.join(' ')}" ${labelAttrs}${sizeAttr}>`);
-        return new HandlebarsLib.SafeString(out);
-    });
+export function initializeStoryHandlebars(): typeof HandlebarsLib {
+    const globalState = globalThis as typeof globalThis & { [INIT_KEY]?: boolean };
+    if (globalState[INIT_KEY] === true) return HandlebarsLib;
+
+    // Production's helpers, from the very registry Foundry runs, so the two sets can't drift (#613).
+    registerHandlebarsHelpers(HandlebarsLib, STORY_LANGUAGE);
+    registerIconHelper(HandlebarsLib);
+    registerFoundryCoreHelpers();
+    registerStoryOverrides();
+    registerTemplatePartials();
 
     globalState[INIT_KEY] = true;
     return HandlebarsLib;

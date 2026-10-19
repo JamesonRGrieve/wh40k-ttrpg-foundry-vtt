@@ -3,7 +3,7 @@ import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeCla
 import { WH40K } from '../config.ts';
 import { pluralKey } from '../i18n/plural.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
-import { HIT_LOCATION_IDS, hitLocationAbbreviation, hitLocationLabel } from '../rules/hit-locations.ts';
+import { HIT_LOCATION_IDS, hitLocationAbbreviationKey, hitLocationLabelKey } from '../rules/hit-locations.ts';
 import { corruptionTrackModifier, DAMNED_CORRUPTION } from '../rules/malignancy-test.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
@@ -124,7 +124,28 @@ function asDegreeScore(value: TplValue): DegreeScore {
     return typeof value === 'number' || typeof value === 'string' ? value : undefined;
 }
 
-export function registerHandlebarsHelpers(): void {
+/** The part of a Handlebars instance the helpers need: Foundry's global one, or the Storybook harness's copy (#613). */
+export type HelperHost = Pick<typeof Handlebars, 'registerHelper' | 'SafeString' | 'escapeExpression'>;
+
+/** Where the helpers read the language: Foundry's `game.i18n`, or the harness's langpack lookup. */
+export interface HelperLanguage {
+    localize: (key: string) => string;
+    lang: () => string;
+}
+
+/** The live language, read when a helper runs. */
+const FOUNDRY_LANGUAGE: HelperLanguage = {
+    localize: (key) => game.i18n.localize(key),
+    lang: () => game.i18n.lang,
+};
+
+/**
+ * Register the system's Handlebars helpers on `hbs`. Foundry passes its global
+ * Handlebars; the Storybook harness passes its own copy and its langpack lookup,
+ * so the two share one registry and cannot drift (#613).
+ */
+export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language: HelperLanguage = FOUNDRY_LANGUAGE): void {
+    const { localize } = language;
     /**
      * Resolve a per-system theme role into a Tailwind utility class.
      * Reads `_gameSystemId` from the surrounding sheet via Handlebars
@@ -140,7 +161,7 @@ export function registerHandlebarsHelpers(): void {
      * so callers can guard with `{{#if (sourceLabel item.system.source)}}`.
      * Fixes the `[object Object]` render of structured sources (#229).
      */
-    Handlebars.registerHelper('sourceLabel', (source: TplValue): string => formatSourceLabel(source as SourceInput));
+    hbs.registerHelper('sourceLabel', (source: TplValue): string => formatSourceLabel(source as SourceInput));
 
     /**
      * Character count for an `<input size="…">`, so a text input shrinks/grows to
@@ -149,34 +170,32 @@ export function registerHandlebarsHelpers(): void {
      * runtimes ignore). Floors at the supplied `min` (so the placeholder still
      * fits when empty) and a hard floor of 2 (#249).
      */
-    Handlebars.registerHelper('inputSize', (value: TplValue, min: TplValue): number => {
+    hbs.registerHelper('inputSize', (value: TplValue, min: TplValue): number => {
         const text = typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '';
         const floor = Number(min);
         return Math.max(text.length, Number.isFinite(floor) ? floor : 0, 2);
     });
 
     /** Langpack key of a Chaos alignment id's label: `{{localize (chaosAlignmentLabelKey id)}}` (#646). */
-    Handlebars.registerHelper('chaosAlignmentLabelKey', (alignment: TplValue): string =>
-        chaosAlignmentLabelKey(typeof alignment === 'string' ? alignment : ''),
-    );
+    hbs.registerHelper('chaosAlignmentLabelKey', (alignment: TplValue): string => chaosAlignmentLabelKey(typeof alignment === 'string' ? alignment : ''));
 
     /** Section-presence tests: a read-only sheet hides an empty section (#597). */
-    Handlebars.registerHelper('hasText', (value: TplValue): boolean => hasTextHelper(value));
-    Handlebars.registerHelper('hasNonZero', (value: TplValue): boolean => hasNonZeroHelper(value));
-    Handlebars.registerHelper('hasDisplayedModifiers', (value: TplValue): boolean => hasDisplayedModifiersHelper(value));
+    hbs.registerHelper('hasText', (value: TplValue): boolean => hasTextHelper(value));
+    hbs.registerHelper('hasNonZero', (value: TplValue): boolean => hasNonZeroHelper(value));
+    hbs.registerHelper('hasDisplayedModifiers', (value: TplValue): boolean => hasDisplayedModifiersHelper(value));
 
     /** The key of the plural form a count takes: `{{localize (pluralKey "WH40K.X" count) …}}` (#414). */
-    Handlebars.registerHelper('pluralKey', (base: TplValue, count: TplValue): string =>
-        pluralKey(typeof base === 'string' ? base : '', typeof count === 'number' ? count : Number(count), game.i18n.lang),
+    hbs.registerHelper('pluralKey', (base: TplValue, count: TplValue): string =>
+        pluralKey(typeof base === 'string' ? base : '', typeof count === 'number' ? count : Number(count), language.lang()),
     );
 
     /** The shared item table's grid columns, from its header list (#662). */
-    Handlebars.registerHelper('itemTableColumns', (headers: TplValue, addAction: TplValue): string => itemTableColumnsHelper(headers, addAction));
+    hbs.registerHelper('itemTableColumns', (headers: TplValue, addAction: TplValue): string => itemTableColumnsHelper(headers, addAction));
 
     /** Font-size class that fits an actor name into the sidebar name input (#630). */
-    Handlebars.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));
+    hbs.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));
 
-    Handlebars.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
+    hbs.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.
         const userArgs = rest.slice(0, -1);
         const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } };
@@ -197,7 +216,7 @@ export function registerHandlebarsHelpers(): void {
      * Why: vault content + sheets that already use the block form would
      * silently break under V14 with "Missing helper: select" otherwise.
      */
-    Handlebars.registerHelper('select', function selectHelper(this: TplValue, selected: TplValue, options: { fn: (ctx: TplValue) => string }): string {
+    hbs.registerHelper('select', function selectHelper(this: TplValue, selected: TplValue, options: { fn: (ctx: TplValue) => string }): string {
         const html = options.fn(this);
         const target = typeof selected === 'string' || typeof selected === 'number' || typeof selected === 'boolean' ? String(selected) : '';
         // Match `<option ... value="X"` and append `selected` if it matches the
@@ -210,7 +229,7 @@ export function registerHandlebarsHelpers(): void {
         });
     });
 
-    Handlebars.registerHelper('isPsychicAttack', (power: TplValue): boolean => {
+    hbs.registerHelper('isPsychicAttack', (power: TplValue): boolean => {
         if (!isTplObject(power)) return false;
         const sys = power['system'];
         if (!isTplObject(sys)) return false;
@@ -219,13 +238,13 @@ export function registerHandlebarsHelpers(): void {
         return false;
     });
 
-    Handlebars.registerHelper('dhlog', (object: TplValue) => {
+    hbs.registerHelper('dhlog', (object: TplValue) => {
         if (object !== undefined && object !== null) {
             game.wh40k.log('hb template', object);
         }
     });
 
-    Handlebars.registerHelper('concat', (...args: TplValue[]): string => {
+    hbs.registerHelper('concat', (...args: TplValue[]): string => {
         let outStr = '';
         for (const arg of args) {
             // Skip Handlebars options object (last arg) and any object/array values.
@@ -241,12 +260,12 @@ export function registerHandlebarsHelpers(): void {
     // entry's `type` is not a real action-economy timing (a raw item type from a
     // malformed feeder), so the template renders no badge instead of an
     // unresolved key (#245).
-    Handlebars.registerHelper('combatTimingKey', (value: TplValue): string => combatTimingKey(typeof value === 'string' ? value : undefined));
+    hbs.registerHelper('combatTimingKey', (value: TplValue): string => combatTimingKey(typeof value === 'string' ? value : undefined));
 
     // A combat-action button's Font Awesome class: the entry's own icon, else a
     // per-timing default, else a generic glyph — never empty, so no button is
     // ever iconless (#245).
-    Handlebars.registerHelper('combatActionIcon', (icon: TplValue, timing: TplValue): string =>
+    hbs.registerHelper('combatActionIcon', (icon: TplValue, timing: TplValue): string =>
         combatActionIcon(typeof icon === 'string' ? icon : undefined, typeof timing === 'string' ? timing : undefined),
     );
 
@@ -256,25 +275,25 @@ export function registerHandlebarsHelpers(): void {
     // stringified (a boolean renders "true"/"false", matching an inline
     // {{#if}}…{{else}}…), HTML-escaped, and null/undefined/empty-name pairs are
     // skipped. Output goes into a triple-stache so it is not double-escaped.
-    Handlebars.registerHelper(
+    hbs.registerHelper(
         'safeAttrs',
         // Drop the trailing Handlebars options object; the builder is shared with the story template support.
-        (...args: TplValue[]): Handlebars.SafeString => new Handlebars.SafeString(buildSafeAttrs(args.slice(0, -1), (s) => Handlebars.escapeExpression(s))),
+        (...args: TplValue[]): Handlebars.SafeString => new hbs.SafeString(buildSafeAttrs(args.slice(0, -1), (s) => hbs.escapeExpression(s))),
     );
 
     // Truthiness helper: preserves Handlebars-style truthy semantics for templates.
     const isTruthy = (v: TplValue): boolean => v !== undefined && v !== null && v !== false && v !== 0 && v !== '';
 
-    Handlebars.registerHelper('hideIf', (check: TplValue) => {
+    hbs.registerHelper('hideIf', (check: TplValue) => {
         if (isTruthy(check)) {
-            return new Handlebars.SafeString('style="display:none;"');
+            return new hbs.SafeString('style="display:none;"');
         }
         return '';
     });
 
-    Handlebars.registerHelper('hideIfNot', (check: TplValue) => {
+    hbs.registerHelper('hideIfNot', (check: TplValue) => {
         if (!isTruthy(check)) {
-            return new Handlebars.SafeString('style="display:none;"');
+            return new hbs.SafeString('style="display:none;"');
         }
         return '';
     });
@@ -284,7 +303,7 @@ export function registerHandlebarsHelpers(): void {
      * Checks actor flags first, falls back to global CONFIG for compatibility
      * Usage: {{isExpanded 'panel_name' @root.actor}}
      */
-    Handlebars.registerHelper('isExpanded', (field: string, actor: TplValue): boolean => {
+    hbs.registerHelper('isExpanded', (field: string, actor: TplValue): boolean => {
         // Try to get from actor flags first (new system)
         interface ActorWithFlags {
             flags?: { 'wh40k-rpg'?: { ui?: { expanded?: string[] } } };
@@ -306,7 +325,7 @@ export function registerHandlebarsHelpers(): void {
      * render drop-to-add zones that bypass the XP/advancement flow:
      *   {{#if (isFreeformCreation)}}…{{/if}}
      */
-    Handlebars.registerHelper('isFreeformCreation', (): boolean => WH40KSettings.isFreeformCreation());
+    hbs.registerHelper('isFreeformCreation', (): boolean => WH40KSettings.isFreeformCreation());
 
     /**
      * Returns true when the world-level "freeform characters" setting is enabled
@@ -316,13 +335,13 @@ export function registerHandlebarsHelpers(): void {
      * only appear when the GM has opted into the bypass:
      *   {{#if (and inEditMode (isFreeformCharacters))}}…{{/if}}
      */
-    Handlebars.registerHelper('isFreeformCharacters', (): boolean => WH40KSettings.isFreeformCharactersEnabled());
+    hbs.registerHelper('isFreeformCharacters', (): boolean => WH40KSettings.isFreeformCharactersEnabled());
 
-    Handlebars.registerHelper('toLowerCase', (str: string) => {
+    hbs.registerHelper('toLowerCase', (str: string) => {
         return str.toLowerCase();
     });
 
-    Handlebars.registerHelper('removeMarkup', (text: TplValue): string => {
+    hbs.registerHelper('removeMarkup', (text: TplValue): string => {
         if (text === null || text === undefined) return '';
         let textStr: string;
         if (typeof text === 'string') textStr = text;
@@ -332,25 +351,25 @@ export function registerHandlebarsHelpers(): void {
         return textStr.replace(markup, '');
     });
 
-    Handlebars.registerHelper('cleanFieldName', (text: string) => {
+    hbs.registerHelper('cleanFieldName', (text: string) => {
         return text === 'Name' ? 'character_name' : text.toLowerCase().replace(/ /g, '_');
     });
 
-    Handlebars.registerHelper('capitalize', (text: string) => {
+    hbs.registerHelper('capitalize', (text: string) => {
         return capitalize(text);
     });
 
     // The voidcraft Weapons tab's Strength / Crit columns (ship-weapons-panel.hbs).
-    Handlebars.registerHelper('displayStrength', (strength: number) => displayStrength(strength));
-    Handlebars.registerHelper('displayCrit', (crit: number) => displayCrit(crit));
+    hbs.registerHelper('displayStrength', (strength: number) => displayStrength(strength));
+    hbs.registerHelper('displayCrit', (crit: number) => displayCrit(crit));
 
-    Handlebars.registerHelper('getBioOptions', (field: string): TplValue => {
+    hbs.registerHelper('getBioOptions', (field: string): TplValue => {
         const bioConfig = CONFIG.wh40k as { bio?: Record<string, TplValue> };
         return bioConfig.bio?.[field];
     });
 
     // Truthy `and` for Handlebars callers — must preserve template truthiness semantics.
-    Handlebars.registerHelper('and', (obj1: TplValue, obj2: TplValue): TplValue => {
+    hbs.registerHelper('and', (obj1: TplValue, obj2: TplValue): TplValue => {
         return isTruthy(obj1) ? obj2 : obj1;
     });
 
@@ -359,7 +378,7 @@ export function registerHandlebarsHelpers(): void {
      * Usage: {{or value1 value2 "default"}}
      * Commonly used with editor helper: {{editor content=(or system.field "") ...}}
      */
-    Handlebars.registerHelper('or', (...args: TplValue[]): TplValue => {
+    hbs.registerHelper('or', (...args: TplValue[]): TplValue => {
         // Handlebars appends an options object as the last argument
         const lastArg = args[args.length - 1];
         const isOptions = lastArg !== null && lastArg !== undefined && typeof lastArg === 'object' && 'hash' in lastArg;
@@ -374,19 +393,19 @@ export function registerHandlebarsHelpers(): void {
         return values[values.length - 1] ?? '';
     });
 
-    Handlebars.registerHelper('arrayIncludes', (field: TplValue, array: TplValue): boolean => {
+    hbs.registerHelper('arrayIncludes', (field: TplValue, array: TplValue): boolean => {
         if (Array.isArray(array)) return array.includes(field);
         if (array instanceof Set) return array.has(field);
         return false;
     });
 
-    Handlebars.registerHelper('includes', (array: TplValue, value: TplValue): boolean => {
+    hbs.registerHelper('includes', (array: TplValue, value: TplValue): boolean => {
         if (Array.isArray(array)) return array.includes(value);
         if (array instanceof Set) return array.has(value);
         return false;
     });
 
-    Handlebars.registerHelper('any', (list: TplValue, prop: string): boolean => {
+    hbs.registerHelper('any', (list: TplValue, prop: string): boolean => {
         if (!Array.isArray(list) || prop === '') return false;
         return list.some((item: TplValue) => {
             if (!isTplObject(item)) return false;
@@ -398,7 +417,7 @@ export function registerHandlebarsHelpers(): void {
      * Count items in a list that have a specific property
      * Usage: {{countType actor.items "isMalignancy"}}
      */
-    Handlebars.registerHelper('countType', (list: TplValue, prop: string): number => {
+    hbs.registerHelper('countType', (list: TplValue, prop: string): number => {
         if (!Array.isArray(list) || prop === '') return 0;
         return list.filter((item: TplValue) => {
             if (!isTplObject(item)) return false;
@@ -410,7 +429,7 @@ export function registerHandlebarsHelpers(): void {
      * Convert array or CONFIG object to simple key-value object for selectOptions
      * Handles both arrays ["value1", "value2"] and CONFIG objects {key: {label: "..."}}
      */
-    Handlebars.registerHelper('arrayToObject', (array: TplValue): Record<string, string> => {
+    hbs.registerHelper('arrayToObject', (array: TplValue): Record<string, string> => {
         const obj: Record<string, string> = {};
         if (array === null || array === undefined) return obj;
 
@@ -440,7 +459,7 @@ export function registerHandlebarsHelpers(): void {
         return '';
     };
 
-    Handlebars.registerHelper('option', (option: TplValue, current: TplValue, name: TplValue) => {
+    hbs.registerHelper('option', (option: TplValue, current: TplValue, name: TplValue) => {
         const selected = current === option ? 'selected="selected"' : '';
         let optionValue: string | number;
         if (typeof option === 'number' && Number.isInteger(option)) {
@@ -450,10 +469,10 @@ export function registerHandlebarsHelpers(): void {
         }
         const nameStr = stringifyTpl(name);
         const label = nameStr !== '' ? nameStr : stringifyTpl(option);
-        return new Handlebars.SafeString(`<option value=${optionValue} ${selected}>${label}</option>`);
+        return new hbs.SafeString(`<option value=${optionValue} ${selected}>${label}</option>`);
     });
 
-    Handlebars.registerHelper('getCharacteristicValue', (name: string, characteristics: Record<string, { short?: string; total?: number }>): number => {
+    hbs.registerHelper('getCharacteristicValue', (name: string, characteristics: Record<string, { short?: string; total?: number }>): number => {
         for (const key of Object.keys(characteristics)) {
             const char = characteristics[key] as { short?: string; total?: number } | undefined;
             if (char?.short === name) {
@@ -463,15 +482,15 @@ export function registerHandlebarsHelpers(): void {
         return 0;
     });
 
-    Handlebars.registerHelper('isError', (value: TplValue) => {
+    hbs.registerHelper('isError', (value: TplValue) => {
         return isTruthy(value) ? 'error' : '';
     });
 
-    Handlebars.registerHelper('isSuccess', (value: TplValue) => {
+    hbs.registerHelper('isSuccess', (value: TplValue) => {
         return isTruthy(value) ? 'success' : '';
     });
 
-    Handlebars.registerHelper('inc', (value: TplValue): number => {
+    hbs.registerHelper('inc', (value: TplValue): number => {
         return Number.parseInt(String(value), 10) + 1;
     });
 
@@ -479,7 +498,7 @@ export function registerHandlebarsHelpers(): void {
      * Create an array of numbers for iteration
      * Usage: {{#each (array 1 2 3 4 5)}}
      */
-    Handlebars.registerHelper('array', (...args: TplValue[]): TplValue[] => {
+    hbs.registerHelper('array', (...args: TplValue[]): TplValue[] => {
         // Remove the options object that Handlebars adds
         return args.slice(0, -1);
     });
@@ -489,7 +508,7 @@ export function registerHandlebarsHelpers(): void {
      * Usage: {{truncate entry.system.description 150}}. Without a length the
      * last argument is Handlebars' options object, so the default applies.
      */
-    Handlebars.registerHelper('truncate', (text: TplValue, maxLength: TplValue): string =>
+    hbs.registerHelper('truncate', (text: TplValue, maxLength: TplValue): string =>
         truncate(typeof text === 'string' ? text : '', typeof maxLength === 'number' ? maxLength : undefined),
     );
 
@@ -497,7 +516,7 @@ export function registerHandlebarsHelpers(): void {
      * Extract a slice of an array
      * Usage: {{#each (slice array 0 3)}}
      */
-    Handlebars.registerHelper('slice', (array: TplValue, start: TplValue, end: TplValue): TplValue[] => {
+    hbs.registerHelper('slice', (array: TplValue, start: TplValue, end: TplValue): TplValue[] => {
         if (!Array.isArray(array)) return [];
         const s = Number(start);
         const sValid = Number.isFinite(s) ? s : 0;
@@ -509,7 +528,7 @@ export function registerHandlebarsHelpers(): void {
      * Create a numeric range for iteration
      * Usage: {{#each (range 1 5)}}
      */
-    Handlebars.registerHelper('range', (start: TplValue, end: TplValue): number[] => {
+    hbs.registerHelper('range', (start: TplValue, end: TplValue): number[] => {
         const out: number[] = [];
         const sRaw = Number(start);
         const eRaw = Number(end);
@@ -524,7 +543,7 @@ export function registerHandlebarsHelpers(): void {
      * Repeat a block N times with 1-based index.
      * Usage: {{#times 5}}{{this}}{{/times}}
      */
-    Handlebars.registerHelper('times', (count: TplValue, options: { fn: (ctx: number) => string }): string => {
+    hbs.registerHelper('times', (count: TplValue, options: { fn: (ctx: number) => string }): string => {
         const num = Number(count);
         const total = Math.max(0, Number.isFinite(num) ? num : 0);
         let output = '';
@@ -538,7 +557,7 @@ export function registerHandlebarsHelpers(): void {
      * Add two numbers
      * Usage: {{add value 1}}
      */
-    Handlebars.registerHelper('add', (a: TplValue, b: TplValue): number => {
+    hbs.registerHelper('add', (a: TplValue, b: TplValue): number => {
         const aN = Number(a);
         const bN = Number(b);
         return (Number.isFinite(aN) ? aN : 0) + (Number.isFinite(bN) ? bN : 0);
@@ -548,7 +567,7 @@ export function registerHandlebarsHelpers(): void {
      * Compute a percentage for progress bars
      * Usage: {{percent value max}}
      */
-    Handlebars.registerHelper('percent', (value: TplValue, max: TplValue): number => {
+    hbs.registerHelper('percent', (value: TplValue, max: TplValue): number => {
         const vRaw = Number(value);
         const mRaw = Number(max);
         const v = Number.isFinite(vRaw) ? vRaw : 0;
@@ -561,7 +580,7 @@ export function registerHandlebarsHelpers(): void {
      * Compute an inverse percentage (full at 0, empty at max).
      * Usage: {{inversePercent value max}}
      */
-    Handlebars.registerHelper('inversePercent', (value: TplValue, max: TplValue): number => {
+    hbs.registerHelper('inversePercent', (value: TplValue, max: TplValue): number => {
         const vRaw = Number(value);
         const mRaw = Number(max);
         const v = Number.isFinite(vRaw) ? vRaw : 0;
@@ -570,7 +589,7 @@ export function registerHandlebarsHelpers(): void {
         return Math.min(100, Math.max(0, 100 - (v / m) * 100));
     });
 
-    Handlebars.registerHelper('colorCode', (positive: TplValue, negative: TplValue): string => {
+    hbs.registerHelper('colorCode', (positive: TplValue, negative: TplValue): string => {
         // Positive Precedence
         if (isTruthy(positive)) {
             return 'success';
@@ -581,18 +600,18 @@ export function registerHandlebarsHelpers(): void {
     });
 
     // Comparison helpers — template-supplied operands may be string or number; coerce numerically.
-    Handlebars.registerHelper('gt', (a: TplValue, b: TplValue): boolean => Number(a) > Number(b));
-    Handlebars.registerHelper('lt', (a: TplValue, b: TplValue): boolean => Number(a) < Number(b));
-    Handlebars.registerHelper('gte', (a: TplValue, b: TplValue): boolean => Number(a) >= Number(b));
-    Handlebars.registerHelper('lte', (a: TplValue, b: TplValue): boolean => Number(a) <= Number(b));
+    hbs.registerHelper('gt', (a: TplValue, b: TplValue): boolean => Number(a) > Number(b));
+    hbs.registerHelper('lt', (a: TplValue, b: TplValue): boolean => Number(a) < Number(b));
+    hbs.registerHelper('gte', (a: TplValue, b: TplValue): boolean => Number(a) >= Number(b));
+    hbs.registerHelper('lte', (a: TplValue, b: TplValue): boolean => Number(a) <= Number(b));
 
-    Handlebars.registerHelper('multiply', (a: TplValue, b: TplValue): number => {
+    hbs.registerHelper('multiply', (a: TplValue, b: TplValue): number => {
         const aN = Number(a);
         const bN = Number(b);
         return (Number.isFinite(aN) ? aN : 0) * (Number.isFinite(bN) ? bN : 0);
     });
 
-    Handlebars.registerHelper('divide', (a: TplValue, b: TplValue): number => {
+    hbs.registerHelper('divide', (a: TplValue, b: TplValue): number => {
         const divisorRaw = Number(b);
         const divisor = Number.isFinite(divisorRaw) ? divisorRaw : 0;
         if (divisor === 0) return 0;
@@ -600,7 +619,7 @@ export function registerHandlebarsHelpers(): void {
         return (Number.isFinite(aN) ? aN : 0) / divisor;
     });
 
-    Handlebars.registerHelper('subtract', (a: TplValue, b: TplValue): number => {
+    hbs.registerHelper('subtract', (a: TplValue, b: TplValue): number => {
         const aN = Number(a);
         const bN = Number(b);
         return (Number.isFinite(aN) ? aN : 0) - (Number.isFinite(bN) ? bN : 0);
@@ -610,7 +629,7 @@ export function registerHandlebarsHelpers(): void {
      * Floor a number
      * Usage: {{floor value}}
      */
-    Handlebars.registerHelper('floor', (value: TplValue): number => {
+    hbs.registerHelper('floor', (value: TplValue): number => {
         const n = Number(value);
         return Math.floor(Number.isFinite(n) ? n : 0);
     });
@@ -619,12 +638,12 @@ export function registerHandlebarsHelpers(): void {
      * Format a number with a + or - sign
      * Usage: {{signedNumber 5}} → "+5", {{signedNumber -3}} → "-3"
      */
-    Handlebars.registerHelper('signedNumber', (value: TplValue): string => formatSigned(Number(value)));
+    hbs.registerHelper('signedNumber', (value: TplValue): string => formatSigned(Number(value)));
 
-    Handlebars.registerHelper('eq', (a: TplValue, b: TplValue): boolean => a === b);
-    Handlebars.registerHelper('neq', (a: TplValue, b: TplValue): boolean => a !== b);
+    hbs.registerHelper('eq', (a: TplValue, b: TplValue): boolean => a === b);
+    hbs.registerHelper('neq', (a: TplValue, b: TplValue): boolean => a !== b);
 
-    Handlebars.registerHelper('defaultVal', (value: TplValue, defaultVal: TplValue): TplValue => (isTruthy(value) ? value : defaultVal));
+    hbs.registerHelper('defaultVal', (value: TplValue, defaultVal: TplValue): TplValue => (isTruthy(value) ? value : defaultVal));
 
     /**
      * Inline ternary helper. `if` is taken as a block helper, so we expose `iff`
@@ -632,17 +651,17 @@ export function registerHandlebarsHelpers(): void {
      * optional and defaults to "" — useful when the caller wants a class string
      * that's empty when the condition fails.
      */
-    Handlebars.registerHelper('iff', (...args: TplValue[]): TplValue => inlineTernary(args));
+    hbs.registerHelper('iff', (...args: TplValue[]): TplValue => inlineTernary(args));
 
     /**
      * Build an object literal from hash arguments — mainly so partials can pass
      * structured data through subexpression syntax: `(object at=25 label="25%")`.
      */
-    Handlebars.registerHelper('object', function objectHelper(this: TplValue, options: { hash?: Record<string, TplValue> }): Record<string, TplValue> {
+    hbs.registerHelper('object', function objectHelper(this: TplValue, options: { hash?: Record<string, TplValue> }): Record<string, TplValue> {
         return options.hash ?? {};
     });
 
-    Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire: TplValue): string => {
+    hbs.registerHelper('rateOfFireDisplay', (rateOfFire: TplValue): string => {
         if (!isTplObject(rateOfFire)) return '';
         // RoF segments use canonical "S/B/F" format. Each segment is either:
         //   - 'S' / numeric count (when the mode is supported), or
@@ -658,7 +677,7 @@ export function registerHandlebarsHelpers(): void {
         return `${single}/${semi}/${full}`;
     });
 
-    Handlebars.registerHelper('specialDisplay', (special: TplValue): string => {
+    hbs.registerHelper('specialDisplay', (special: TplValue): string => {
         if (special === null || special === undefined || special === '') return '';
         if (Array.isArray(special)) {
             return special
@@ -674,7 +693,7 @@ export function registerHandlebarsHelpers(): void {
         return stringifyTpl(special);
     });
 
-    Handlebars.registerHelper('json', (value: TplValue): string => {
+    hbs.registerHelper('json', (value: TplValue): string => {
         try {
             return JSON.stringify(value ?? {}, null, 2);
         } catch {
@@ -682,7 +701,7 @@ export function registerHandlebarsHelpers(): void {
         }
     });
 
-    Handlebars.registerHelper('armourDisplay', (armour: TplValue): string => {
+    hbs.registerHelper('armourDisplay', (armour: TplValue): string => {
         const getValue = (location: string): number => getArmourAPForLocation(armour, location);
         const first = getValue('body');
         const same = HIT_LOCATION_IDS.every((location) => getValue(location) === first);
@@ -691,17 +710,21 @@ export function registerHandlebarsHelpers(): void {
         }
 
         return HIT_LOCATION_IDS.filter((location) => getValue(location) > 0)
-            .map((location) => `${getValue(location)} ${hitLocationAbbreviation(location)}`)
+            .map((location) => `${getValue(location)} ${localize(hitLocationAbbreviationKey(location))}`)
             .join(', ');
     });
 
-    Handlebars.registerHelper('hitLocationLabel', (location: TplValue): string => hitLocationLabel(typeof location === 'string' ? location : ''));
+    hbs.registerHelper('hitLocationLabel', (location: TplValue): string => {
+        const value = typeof location === 'string' ? location : '';
+        const key = hitLocationLabelKey(value);
+        return key === undefined ? value : localize(key);
+    });
 
-    Handlebars.registerHelper('armourLocation', (armour: TplValue, location: string): number => {
+    hbs.registerHelper('armourLocation', (armour: TplValue, location: string): number => {
         return getArmourAPForLocation(armour, location);
     });
 
-    Handlebars.registerHelper('skillIcon', (skillKey: string): string => {
+    hbs.registerHelper('skillIcon', (skillKey: string): string => {
         const rtConfig = getRtConfig();
         const wh40kConfig = CONFIG.wh40k as WH40KConfig;
         const config: WH40KConfig | typeof WH40K = rtConfig?.getSkillIcon !== undefined ? wh40kConfig : WH40K;
@@ -719,10 +742,10 @@ export function registerHandlebarsHelpers(): void {
         r: 'DAMAGE_TYPE.RENDING',
         x: 'DAMAGE_TYPE.EXPLOSIVE',
     };
-    Handlebars.registerHelper('damageTypeLong', (damageType: TplValue) => {
+    hbs.registerHelper('damageTypeLong', (damageType: TplValue) => {
         const normalizedType = (typeof damageType === 'string' && damageType !== '' ? damageType : 'i').toLowerCase();
         const key = DAMAGE_TYPE_KEYS[normalizedType] ?? 'DAMAGE_TYPE.IMPACT';
-        return game.i18n.localize(key);
+        return localize(key);
     });
 
     /**
@@ -734,12 +757,12 @@ export function registerHandlebarsHelpers(): void {
         return Number.isFinite(n) ? n : 0;
     };
 
-    Handlebars.registerHelper('corruptionDegree', (corruption: TplValue): string => corruptionDegree(asDegreeScore(corruption)));
+    hbs.registerHelper('corruptionDegree', (corruption: TplValue): string => corruptionDegree(asDegreeScore(corruption)));
 
     /**
      * Get corruption modifier for checks
      */
-    Handlebars.registerHelper('corruptionModifier', (corruption: TplValue): string => {
+    hbs.registerHelper('corruptionModifier', (corruption: TplValue): string => {
         const points = numberOr0(corruption);
         return points >= DAMNED_CORRUPTION ? 'DEAD' : formatSigned(corruptionTrackModifier(points));
     });
@@ -748,12 +771,12 @@ export function registerHandlebarsHelpers(): void {
      * Get insanity degree from insanity points (0-100)
      * STABLE (0-9), UNSETTLED (10-39) +10, DISTURBED (40-59) +0, UNHINGED (60-79) -10, DERANGED (80-99) -20, TERMINALLY INSANE (100)
      */
-    Handlebars.registerHelper('insanityDegree', (insanity: TplValue): string => insanityDegree(asDegreeScore(insanity)));
+    hbs.registerHelper('insanityDegree', (insanity: TplValue): string => insanityDegree(asDegreeScore(insanity)));
 
     /**
      * Get insanity modifier for checks
      */
-    Handlebars.registerHelper('insanityModifier', (insanity: TplValue): string =>
+    hbs.registerHelper('insanityModifier', (insanity: TplValue): string =>
         thresholdLadder(
             numberOr0(insanity),
             [
@@ -770,35 +793,25 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Clamp critical damage to max 10
      */
-    Handlebars.registerHelper('clampCritical', (value: TplValue): number => {
+    hbs.registerHelper('clampCritical', (value: TplValue): number => {
         return Math.min(Math.max(numberOr0(value), 0), 10);
-    });
-
-    /**
-     * Return the smaller of two values.
-     */
-    Handlebars.registerHelper('min', (a: TplValue, b: TplValue): number | string => {
-        const left = Number(a);
-        const right = Number(b);
-        if (Number.isNaN(left) || Number.isNaN(right)) return '';
-        return Math.min(left, right);
     });
 
     /**
      * Get CSS class for corruption degree
      */
-    Handlebars.registerHelper('corruptionDegreeClass', (corruption: TplValue): string => corruptionDegreeClass(asDegreeScore(corruption)));
+    hbs.registerHelper('corruptionDegreeClass', (corruption: TplValue): string => corruptionDegreeClass(asDegreeScore(corruption)));
 
     /**
      * Get CSS class for insanity degree
      */
-    Handlebars.registerHelper('insanityDegreeClass', (insanity: TplValue): string => insanityDegreeClass(asDegreeScore(insanity)));
+    hbs.registerHelper('insanityDegreeClass', (insanity: TplValue): string => insanityDegreeClass(asDegreeScore(insanity)));
 
     /**
      * Join an array with a separator
      * Usage: {{join myArray ", "}}
      */
-    Handlebars.registerHelper('join', (array: TplValue, separator: TplValue): string => {
+    hbs.registerHelper('join', (array: TplValue, separator: TplValue): string => {
         if (array === null || array === undefined) return '';
         if (!Array.isArray(array)) return stringifyTpl(array);
         const sep = typeof separator === 'string' && separator !== '' ? separator : ', ';
@@ -814,7 +827,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {string} category - Talent category
      * @returns {string} Font Awesome icon class
      */
-    Handlebars.registerHelper('talentIcon', (category: string): string => lookupOr(TALENT_ICONS, category, 'fa-circle'));
+    hbs.registerHelper('talentIcon', (category: string): string => lookupOr(TALENT_ICONS, category, 'fa-circle'));
 
     /**
      * Get CSS class for talent tier color.
@@ -822,13 +835,13 @@ export function registerHandlebarsHelpers(): void {
      * @param {number} tier - Talent tier (0-3)
      * @returns {string} CSS class name
      */
-    Handlebars.registerHelper('tierColor', (tier: TplValue): string => lookupOr(TIER_COLORS, Number(tier), 'tier-none'));
+    hbs.registerHelper('tierColor', (tier: TplValue): string => lookupOr(TIER_COLORS, Number(tier), 'tier-none'));
 
     /**
      * Format prerequisites object as readable string.
      * Usage: {{formatPrerequisites prerequisites}}
      */
-    Handlebars.registerHelper('formatPrerequisites', (prereqs: TplValue): string => {
+    hbs.registerHelper('formatPrerequisites', (prereqs: TplValue): string => {
         if (prereqs === null || prereqs === undefined || typeof prereqs !== 'object') return '';
         const p = prereqs as { text?: string; characteristics?: Record<string, number>; skills?: string[]; talents?: string[] };
         if (typeof p.text === 'string' && p.text !== '') return p.text;
@@ -856,17 +869,17 @@ export function registerHandlebarsHelpers(): void {
     /**
      * Get icon for trait category.
      */
-    Handlebars.registerHelper('traitIcon', (category: string): string => lookupOr(TRAIT_ICONS, category, 'fa-shield-alt'));
+    hbs.registerHelper('traitIcon', (category: string): string => lookupOr(TRAIT_ICONS, category, 'fa-shield-alt'));
 
     /**
      * Get color class for trait category.
      */
-    Handlebars.registerHelper('traitCategoryColor', (category: string): string => lookupOr(TRAIT_CATEGORY_COLORS, category, 'trait-general'));
+    hbs.registerHelper('traitCategoryColor', (category: string): string => lookupOr(TRAIT_CATEGORY_COLORS, category, 'trait-general'));
 
     /**
      * Format trait name with level (if present).
      */
-    Handlebars.registerHelper('formatTraitName', (name: string, level: TplValue): string => {
+    hbs.registerHelper('formatTraitName', (name: string, level: TplValue): string => {
         const lvl = Number(level);
         if (Number.isFinite(lvl) && lvl > 0) {
             return `${name} (${lvl})`;
@@ -879,7 +892,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {Set<string>} specialSet    Set of quality identifiers
      * @returns {object[]}                Array of quality definition objects
      */
-    Handlebars.registerHelper('specialQualities', (specialSet: TplValue): WeaponQuality[] => {
+    hbs.registerHelper('specialQualities', (specialSet: TplValue): WeaponQuality[] => {
         if (specialSet === null || specialSet === undefined) return [];
 
         // Convert to array if it's a Set; otherwise expect an array of identifier strings.
@@ -914,7 +927,7 @@ export function registerHandlebarsHelpers(): void {
                     identifier,
                     baseIdentifier: baseId,
                     label: identifier,
-                    description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
+                    description: localize('WH40K.WeaponQuality.Unknown'),
                     hasLevel: false,
                     level: null,
                 });
@@ -922,13 +935,13 @@ export function registerHandlebarsHelpers(): void {
             }
 
             // Build rich quality object
-            const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level, formula);
+            const label = buildQualityLabel(localize(def.label), def.hasLevel === true, level, formula);
 
             qualities.push({
                 identifier,
                 baseIdentifier: baseId,
                 label,
-                description: game.i18n.localize(def.description),
+                description: localize(def.description),
                 ...(def.hasLevel !== undefined ? { hasLevel: def.hasLevel } : {}),
                 level,
             });
@@ -942,7 +955,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {object} weaponSystem    Weapon system data
      * @returns {object[]}             Array of quality objects
      */
-    Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): WeaponQuality[] => {
+    hbs.registerHelper('craftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): WeaponQuality[] => {
         const rtConfig = getRtConfig();
         if (rtConfig?.getQualityDefinition === undefined) {
             console.warn('WH40K | CONFIG.wh40k.getQualityDefinition not available');
@@ -964,8 +977,8 @@ export function registerHandlebarsHelpers(): void {
             if (def === null) return;
             qualities.push({
                 identifier,
-                label: game.i18n.localize(def.label),
-                description: game.i18n.localize(def.description),
+                label: localize(def.label),
+                description: localize(def.description),
                 hasLevel: false,
                 level: null,
             });
@@ -985,7 +998,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {object} weaponSystem    Weapon system data
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasCraftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): boolean => {
+    hbs.registerHelper('hasCraftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): boolean => {
         const craft = weaponSystem.craftsmanship;
         const isMelee = weaponSystem.melee === true;
 
@@ -999,7 +1012,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {object[]} items    Array of embedded items
      * @returns {boolean}
      */
-    Handlebars.registerHelper('hasEmbeddedQualities', (items: Array<{ type?: string }> | null | undefined): boolean => {
+    hbs.registerHelper('hasEmbeddedQualities', (items: Array<{ type?: string }> | null | undefined): boolean => {
         if (items === null || items === undefined || items.length === 0) return false;
         return items.some((item) => item.type === 'attackSpecial');
     });
@@ -1011,7 +1024,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {*} value                        Value to look for
      * @returns {boolean}
      */
-    Handlebars.registerHelper('has', (collection: TplValue, value: TplValue): boolean => {
+    hbs.registerHelper('has', (collection: TplValue, value: TplValue): boolean => {
         if (collection instanceof Set) return collection.has(value);
         if (Array.isArray(collection)) return collection.includes(value);
         if (isTplObject(collection)) {
@@ -1025,7 +1038,7 @@ export function registerHandlebarsHelpers(): void {
      * @param {string} identifier    Quality identifier
      * @returns {object}
      */
-    Handlebars.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
+    hbs.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
         const rtConfig = getRtConfig();
         const { baseId, level, formula } = parseQualityLevel(identifier);
         const def = rtConfig?.getQualityDefinition?.(baseId) ?? null;
@@ -1033,18 +1046,18 @@ export function registerHandlebarsHelpers(): void {
             return {
                 identifier,
                 label: identifier,
-                description: game.i18n.localize('WH40K.WeaponQuality.Unknown'),
+                description: localize('WH40K.WeaponQuality.Unknown'),
                 level: null,
             };
         }
 
-        const label = buildQualityLabel(game.i18n.localize(def.label), def.hasLevel === true, level, formula);
+        const label = buildQualityLabel(localize(def.label), def.hasLevel === true, level, formula);
 
         return {
             identifier,
             baseIdentifier: baseId,
             label,
-            description: game.i18n.localize(def.description),
+            description: localize(def.description),
             ...(def.hasLevel !== undefined ? { hasLevel: def.hasLevel } : {}),
             level,
         };
@@ -1058,7 +1071,7 @@ export function registerHandlebarsHelpers(): void {
      * @example  {{uuid-name grant.uuid}}
      * @example  {{uuid-name "Compendium.wh40k-rpg.dh2-core-items-talents.Item.…"}}
      */
-    Handlebars.registerHelper('uuid-name', (uuid: TplValue): string => {
+    hbs.registerHelper('uuid-name', (uuid: TplValue): string => {
         if (typeof uuid !== 'string' || uuid.length === 0) return '';
         return uuidNameCache.getName(uuid);
     });
@@ -1070,7 +1083,7 @@ export function registerHandlebarsHelpers(): void {
      *
      * @example  {{uuid-expand item.system.prerequisites.text}}
      */
-    Handlebars.registerHelper('uuid-expand', (text: TplValue): string => {
+    hbs.registerHelper('uuid-expand', (text: TplValue): string => {
         if (typeof text !== 'string') return '';
         return uuidNameCache.expandTemplates(text);
     });

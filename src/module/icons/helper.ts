@@ -31,12 +31,12 @@ interface HandlebarsHelperOptions {
  * is responsible for ensuring referenced keys are bundled, and the typed
  * `IconKey` union catches misspellings in TS call sites.
  */
-export function registerIconHelper(): void {
+export function registerIconHelper(hbs: Pick<typeof Handlebars, 'registerHelper' | 'SafeString'> = Handlebars): void {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars passes raw unknown to helpers; immediately type-guarded below
-    Handlebars.registerHelper('iconSvg', function iconHelper(key: unknown, options: HandlebarsHelperOptions) {
+    hbs.registerHelper('iconSvg', function iconHelper(key: unknown, options: HandlebarsHelperOptions) {
         if (typeof key !== 'string' || !hasIcon(key)) {
             console.warn(`[wh40k-icons] unknown icon key: ${String(key)}`);
-            return new Handlebars.SafeString('');
+            return new hbs.SafeString('');
         }
         const hash: HandlebarsHelperHash = options.hash ?? {};
         const opts: IconOptions = {};
@@ -45,6 +45,6 @@ export function registerIconHelper(): void {
         if (typeof hash.size === 'string' || typeof hash.size === 'number') {
             opts.size = hash.size;
         }
-        return new Handlebars.SafeString(icon(key, opts));
+        return new hbs.SafeString(icon(key, opts));
     });
 }

@@ -1,19 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import HbsStory from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 
+// The harness supplies AmmoSheet's setIncludes / setToArray context functions (#613).
 initializeStoryHandlebars();
-// AmmoSheet exposes setIncludes / setToArray on its render context. The story
-// reproduces the same surface so the template can render without the sheet.
-HbsStory.registerHelper('setIncludes', (key: string | number, set: Set<string | number> | ReadonlyArray<string | number> | null | undefined) => {
-    if (set instanceof Set) return set.has(key);
-    if (Array.isArray(set)) return set.includes(key);
-    return false;
-});
 
 interface AmmoArgs {
     item: {

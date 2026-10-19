@@ -102,3 +102,90 @@ test.describe.serial('Templates that call truncate render live (Tier B, #613)', 
         recordCoverage('dialog.render', 'TemplateSelector');
     });
 });
+
+/** The live surface the two shadowed-helper checks touch. */
+interface HelperProbeWindow {
+    Actor: { create: (data: object) => Promise<{ id: string; sheet: { id: string; render: (o: object) => Promise<object> } } | null> };
+    Item: { create: (data: object) => Promise<{ id: string; sheet: { id: string; render: (o: object) => Promise<object> } } | null> };
+    game: {
+        actors: { get: (id: string) => { delete: () => Promise<object> } | undefined };
+        items: { get: (id: string) => { delete: () => Promise<object> } | undefined };
+        settings: { get: (scope: string, key: string) => boolean; set: (scope: string, key: string, value: boolean) => Promise<object> };
+    };
+}
+
+test.describe.serial('Helpers the story harness shared with production (Tier B, #613)', () => {
+    test('a craft’s armour inputs keep their min="0" (a `min` helper used to blank it)', async ({ page }) => {
+        await joinOrSkip(page);
+        const ids = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as HelperProbeWindow;
+            const actor = await w.Actor.create({ name: 'e2e-613 Chimera', type: 'dh2-vehicle', system: { gameSystem: 'dh2' } });
+            if (actor === null) throw new Error('Actor.create returned null');
+            await actor.sheet.render({ force: true });
+            return { actorId: actor.id, sheetId: actor.sheet.id };
+        });
+        try {
+            const sheet = page.locator(`#${ids.sheetId}`);
+            await sheet.locator('[data-action="tab"][data-tab="combat"]').first().click();
+            for (const facing of ['front', 'side', 'rear']) {
+                // eslint-disable-next-line no-await-in-loop -- three inputs on one rendered tab, checked in turn
+                await expect(sheet.locator(`input[name="system.armour.${facing}.value"]`)).toHaveAttribute('min', '0');
+            }
+            await clearScreenOverlays(page, ids.sheetId);
+            await snap(page, 'craft-armour-min', { selector: `#${ids.sheetId}` });
+        } finally {
+            await page.evaluate(async (id) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+                await (globalThis as unknown as HelperProbeWindow).game.actors.get(id)?.delete();
+            }, ids.actorId);
+        }
+    });
+
+    test('the modifiers editor renders its rows and marks their selected options (it called a missing `selected` helper)', async ({ page }) => {
+        await joinOrSkip(page);
+        const errors: string[] = [];
+        page.on('pageerror', (err) => errors.push(err.message));
+        const setup = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as HelperProbeWindow;
+            const freeform = w.game.settings.get('wh40k-rpg', 'freeform-characters');
+            await w.game.settings.set('wh40k-rpg', 'freeform-characters', true);
+            const item = await w.Item.create({
+                name: 'e2e-613 Phobia',
+                type: 'mentalDisorder',
+                system: {
+                    modifiers: {
+                        situational: { characteristics: [{ key: 'strength', value: 5, condition: 'When cornered', icon: 'fa-exclamation-triangle' }] },
+                        other: [{ key: 'fear', label: 'Fear', value: 2, mode: 'multiply' }],
+                    },
+                },
+            });
+            if (item === null) throw new Error('Item.create returned null');
+            await item.sheet.render({ force: true });
+            return { itemId: item.id, sheetId: item.sheet.id, freeform };
+        });
+        try {
+            const sheet = page.locator(`#${setup.sheetId}`);
+            await sheet.locator('[data-action="toggleEditMode"]').first().click();
+            await sheet.locator('[data-tab="situational"][data-group="modifiers"]').first().click();
+            const characteristic = sheet.locator('select[name="system.modifiers.situational.characteristics.0.key"]');
+            await expect(characteristic).toHaveValue('strength');
+            // The options read the characteristics' names, not their langpack keys.
+            await expect(characteristic.locator('option:checked')).toHaveText('Strength');
+            await sheet.locator('[data-tab="advanced"][data-group="modifiers"]').first().click();
+            await expect(sheet.locator('select[name="system.modifiers.other.0.mode"]')).toHaveValue('multiply');
+            expect(errors.filter((message) => message.includes('Missing helper'))).toEqual([]);
+            await clearScreenOverlays(page, setup.sheetId);
+            await sheet.locator('select[name="system.modifiers.other.0.mode"]').scrollIntoViewIfNeeded();
+            await snap(page, 'modifiers-editor-other-mode', { selector: `#${setup.sheetId}` });
+        } finally {
+            await page.evaluate(async ({ itemId, freeform }) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+                const w = globalThis as unknown as HelperProbeWindow;
+                await w.game.items.get(itemId)?.delete();
+                await w.game.settings.set('wh40k-rpg', 'freeform-characters', freeform);
+            }, setup);
+        }
+    });
+});

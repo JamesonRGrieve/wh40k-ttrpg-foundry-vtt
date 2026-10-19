@@ -74,8 +74,9 @@ function registeredIn(files: readonly string[]): Set<string> {
 
 /** Names a production sheet supplies as a function on its render context, which Handlebars calls like a helper. */
 const CONTEXT_FUNCTIONS = new Set([
-    // AmmoSheet._prepareContext: `context['setToArray']`.
+    // AmmoSheet._prepareContext: `context['setToArray']` and `context['setIncludes']`.
     'setToArray',
+    'setIncludes',
 ]);
 
 const production = registeredIn(filesUnder(join(ROOT, 'src/module'), '.ts').filter((file) => !/\.(test|stories)\.ts$/.test(file)));

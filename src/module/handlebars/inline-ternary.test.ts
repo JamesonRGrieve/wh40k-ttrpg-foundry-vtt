@@ -43,10 +43,13 @@ describe('inlineTernary', () => {
         expect(tpl({ empty: true })).toBe('<div class="panel is-empty"></div>');
     });
 
-    it('is the implementation behind both the production and the story `iff` helper', () => {
+    it('is the implementation behind the `iff` helper, which the story harness takes from production', () => {
         expect(readRepoFile('src/module/handlebars/handlebars-helpers.ts')).toContain(
             "registerHelper('iff', (...args: TplValue[]): TplValue => inlineTernary(args))",
         );
-        expect(readRepoFile('stories/template-support.ts')).toContain("registerHelper('iff', (...args: HbsValue[]) => inlineTernary(args))");
+        // #613: the harness registers production's helpers, not a copy of its own.
+        const harness = readRepoFile('stories/template-support.ts');
+        expect(harness).toContain('registerHandlebarsHelpers(HandlebarsLib');
+        expect(harness).not.toContain("registerHelper('iff'");
     });
 });
