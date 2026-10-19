@@ -13,6 +13,7 @@ import { clickAction, renderSheetParts } from '../../../../stories/test-helpers'
 import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
 import equipmentTabSrc from '../../../templates/actor/player/tab-equipment.hbs?raw';
 import { callerRequirementView } from '../dialogs/reinforcement-call-view.ts';
+import { encumbranceDisplay } from './encumbrance-display.ts';
 
 initializeStoryHandlebars();
 
@@ -262,6 +263,18 @@ export const CarriedEquipment: Story = {
         await expect(within(panel).getByText('Carried Equipment')).toBeVisible();
         const rows = Array.from(panel.querySelectorAll('li'), (li) => li.textContent.replace(/\s+/g, ' ').trim());
         await expect(rows).toEqual(['Ration Pack ×3', 'Cult Icon ×1']);
+    },
+};
+
+/** An NPC tracks no encumbrance, so its Inventory header has no Carry bar and no empty "/ KG" (#545). */
+export const InventoryNoCarryBar: Story = {
+    name: 'Inventory — no Carry bar for an NPC (#545)',
+    args: { ...npcWithCarriedEquipment([]), ...encumbranceDisplay(npcWithCarriedEquipment([]).actor) },
+    render: (args) => renderNpcEquipmentTab(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('.wh40k-panel-header')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-carry-bar]')).toBeNull();
+        await expect(canvasElement.textContent).not.toMatch(/\/\s*kg/i);
     },
 };
 

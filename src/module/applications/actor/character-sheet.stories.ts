@@ -14,7 +14,9 @@ import { clickAction, renderSheetParts } from '../../../../stories/test-helpers'
 import combatActionsPanelSrc from '../../../templates/actor/panel/combat-actions-panel.hbs?raw';
 import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
 import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
+import equipmentTabSrc from '../../../templates/actor/player/tab-equipment.hbs?raw';
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
+import { encumbranceDisplay } from './encumbrance-display.ts';
 
 initializeStoryHandlebars();
 
@@ -56,6 +58,28 @@ export const DarkHeresy2Default: Story = {
         const storyCanvas = within(canvasElement);
         await expect(storyCanvas.getByDisplayValue('Acolyte Vex')).toBeVisible();
         await expect(storyCanvas.getByText('Biography')).toBeVisible();
+    },
+};
+
+// ── Inventory Carry bar (#545) ────────────────────────────────────────────────
+
+/** A DH2 PC on the Inventory tab, carrying 30 of 60 kg; the flag and fill come from the sheet's own `encumbranceDisplay`. */
+function pcInventoryContext(): SheetContextLike {
+    const ctx = mockPlayerSheetContext({ systemId: 'dh2', activeTab: 'equipment' });
+    const actor = { ...ctx.actor, encumbrance: { value: 30, max: 60, over: false, encumbered: false } };
+    return { ...ctx, ...encumbranceDisplay(actor), actor };
+}
+
+export const InventoryCarryBar: Story = {
+    name: 'Inventory — Carry bar for a PC (#545)',
+    args: pcInventoryContext(),
+    render: (args) => renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' }], args, { systemId: systemIdOf(args) }),
+    play: async ({ canvasElement }) => {
+        const bar = canvasElement.querySelector<HTMLElement>('[data-carry-bar]');
+        await expect(bar).not.toBeNull();
+        if (bar === null) return;
+        await expect(bar).toBeVisible();
+        await expect(bar.textContent.replace(/\s+/g, ' ')).toContain('30 / 60');
     },
 };
 

@@ -161,6 +161,7 @@ import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
 import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 import { buildBcGiftsPanel, labelOf, type BcGiftsPanelContext, type GiftPanelItem } from './bc-gifts-panel-context.ts';
+import { encumbranceDisplay } from './encumbrance-display.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
@@ -324,6 +325,7 @@ type CharacterSheetContextDeclaredFields = {
     cyberneticCount?: number;
     gearCount?: number;
     equippedCount?: number;
+    tracksEncumbrance?: boolean;
     encumbrancePercent?: number;
     backpackPercent?: number;
     hasFanatic?: boolean;
@@ -2680,23 +2682,9 @@ export default class CharacterSheet extends BaseActorSheet {
         loadoutContext.gearCount = loadoutContext.gearItems.length;
         loadoutContext.equippedCount = loadoutContext.equippedItems.length;
 
-        this._prepareEncumbrancePercents(loadoutContext);
-    }
-
-    /**
-     * Compute encumbrance + backpack fill percentages for the loadout bar.
-     * Split out so NPCSheet (which inherits this whole loadout pipeline but
-     * whose underlying WH40KNPC document has no `encumbrance` getter) can
-     * skip it. The `'encumbrance' in this.actor` guard reflects the real
-     * domain: only PC-like actors (WH40KAcolyte) track encumbrance.
-     */
-    protected _prepareEncumbrancePercents(loadoutContext: { encumbrancePercent?: number; backpackPercent?: number }): void {
-        if (!('encumbrance' in this.actor)) return;
-        const enc = (this.actor as { encumbrance: { max?: number; value?: number; backpack_max?: number; backpack_value?: number } }).encumbrance;
-        const encMax = enc.max !== undefined && enc.max > 0 ? enc.max : 1;
-        loadoutContext.encumbrancePercent = Math.min(100, Math.round(((enc.value ?? 0) / encMax) * 100));
-        const backpackMax = enc.backpack_max ?? 1;
-        loadoutContext.backpackPercent = Math.min(100, Math.round(((enc.backpack_value ?? 0) / backpackMax) * 100));
+        // The Carry bar: NPCSheet inherits this pipeline, but only a document that
+        // tracks encumbrance (the PC's) gets the bar, through the explicit flag (#545).
+        Object.assign(loadoutContext, encumbranceDisplay(this.actor));
     }
 
     /* -------------------------------------------- */

@@ -7,7 +7,9 @@
         <div class="tw-flex tw-items-center tw-gap-3">
             {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=(localize "WH40K.Tabs.Equipment") icon="fa-boxes"}}
         </div>
-        <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-secondary)]">
+        {{!-- Only an actor that tracks encumbrance gets the bar: the sheet says so (#545). --}}
+        {{#if tracksEncumbrance}}
+        <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-secondary)]" data-carry-bar>
             <span>{{localize "WH40K.Backpack.Carry"}}</span>
             <div class="tw-relative tw-h-2 tw-w-24 tw-rounded-full tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-overflow-hidden">
                 <div class="tw-h-full tw-rounded-full tw-transition-all {{#if (gte encumbrancePercent 100)}}tw-bg-accent-combat{{else if (gte encumbrancePercent 75)}}tw-bg-yellow-500{{else if (gte encumbrancePercent 50)}}tw-bg-yellow-400{{else}}tw-bg-success{{/if}}"
@@ -18,6 +20,7 @@
             <i class="fas fa-exclamation-triangle tw-text-accent-combat-l30 tw-animate-pulse-glow" title="{{localize 'WH40K.Backpack.Encumbered'}}"></i>
             {{/if}}
         </div>
+        {{/if}}
     </div>
 
     {{!-- Split Panel Body --}}
