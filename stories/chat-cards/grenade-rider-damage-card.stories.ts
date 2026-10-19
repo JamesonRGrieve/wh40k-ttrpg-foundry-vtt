@@ -21,6 +21,7 @@ const LABELS: GrenadeLabels = {
     localize: (key, params) =>
         params === undefined ? localizeKey(key) : formatKey(key, Object.fromEntries(Object.entries(params).map(([name, value]) => [name, String(value)]))),
     characteristic: (key) => (key === 'toughness' ? 'Toughness' : key),
+    lang: 'en',
 };
 
 const RAD_RIDER: GrenadeRiderData = riderFixture({

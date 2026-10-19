@@ -9,8 +9,11 @@
 /** The plural forms a langpack group carries. */
 const PLURAL_FORMS = { one: 'One', other: 'Other' } as const;
 
+/** The two keys of the plural group `B`; with a literal base, both are typed langpack keys. */
+export type PluralKey<B extends string> = `${B}.One` | `${B}.Other`;
+
 /** The key of the form of the plural group `base` that `count` takes in `locale`. */
-export function pluralKey(base: string, count: number, locale: string): string {
+export function pluralKey<B extends string>(base: B, count: number, locale: string): PluralKey<B> {
     const category = new Intl.PluralRules(locale).select(Number.isFinite(count) ? count : 0);
-    return `${base}.${category === 'one' ? PLURAL_FORMS.one : PLURAL_FORMS.other}`;
+    return category === 'one' ? `${base}.${PLURAL_FORMS.one}` : `${base}.${PLURAL_FORMS.other}`;
 }

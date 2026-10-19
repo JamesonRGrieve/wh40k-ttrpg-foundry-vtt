@@ -1361,7 +1361,9 @@ export class PsychicActionData extends ActionData {
         // much (the #449 margin) — a resisted power is already marked unsuccessful by
         // checkForOpposed, and the margin scales its magnitude where the content reads it.
         if (this.rollData.isOpposed && this.rollData.targetActor !== null) {
-            const key = this.rollData.success ? 'WH40K.Psychic.OpposedOvercome' : 'WH40K.Psychic.OpposedResisted';
+            const key = this.rollData.success
+                ? pluralKey('WH40K.Psychic.OpposedOvercome', this.rollData.opposedMargin, game.i18n.lang)
+                : 'WH40K.Psychic.OpposedResisted';
             this.addEffect(
                 t(EFFECT_TITLE.psychic),
                 game.i18n.format(key, { target: this.rollData.targetActor.name, margin: String(this.rollData.opposedMargin) }),
@@ -1564,8 +1566,18 @@ export class MedicaeActionData extends SimpleSkillData {
 
         const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
         parts.push(game.i18n.format('WH40K.SkillUse.PatientTier', { tier: game.i18n.localize(DAMAGE_TIER_LABEL_KEYS[tier]) }));
-        if (outcome.woundsRestored > 0) parts.push(game.i18n.format('WH40K.SkillUse.HealedWounds', { wounds: String(outcome.woundsRestored) }));
-        if (outcome.criticalResolved > 0) parts.push(game.i18n.format('WH40K.SkillUse.ResolvedCritical', { tiers: String(outcome.criticalResolved) }));
+        if (outcome.woundsRestored > 0) {
+            parts.push(
+                game.i18n.format(pluralKey('WH40K.SkillUse.HealedWounds', outcome.woundsRestored, game.i18n.lang), { wounds: String(outcome.woundsRestored) }),
+            );
+        }
+        if (outcome.criticalResolved > 0) {
+            parts.push(
+                game.i18n.format(pluralKey('WH40K.SkillUse.ResolvedCritical', outcome.criticalResolved, game.i18n.lang), {
+                    tiers: String(outcome.criticalResolved),
+                }),
+            );
+        }
         if (outcome.bloodLossStopped) parts.push(game.i18n.localize('WH40K.SkillUse.BloodLossStopped'));
         this.addEffect(t(EFFECT_TITLE.medicae), parts.join(' '));
     }
@@ -1622,7 +1634,7 @@ export class InterrogationActionData extends SimpleSkillData {
                 });
                 this.addEffect(
                     t(EFFECT_TITLE.interrogation),
-                    game.i18n.format('WH40K.SkillUse.Interrogation.Lockout', { subject: target.name, days: String(days) }),
+                    game.i18n.format(pluralKey('WH40K.SkillUse.Interrogation.Lockout', days, game.i18n.lang), { subject: target.name, days: String(days) }),
                 );
             }
         }
@@ -1696,6 +1708,12 @@ export class MalignancyTestActionData extends SimpleSkillData {
     }
 }
 
+/** An opposed result's line with the winner's degrees of victory after it, when a margin decided it (#449). */
+function withOpposedMargin(base: string, margin: number): string {
+    if (margin <= 0) return base;
+    return `${base} ${game.i18n.format(pluralKey('WH40K.Opposed.Margin', margin, game.i18n.lang), { margin: String(margin) })}`;
+}
+
 /**
  * A targeted opposed detection roll (#434) — Stealth/Awareness/Scrutiny/Sleight
  * of Hand vs the target's opposing characteristic (`isOpposed`/`opposedChar` set
@@ -1705,10 +1723,8 @@ export class MalignancyTestActionData extends SimpleSkillData {
 export class DetectionActionData extends SimpleSkillData {
     override async descriptionText(): Promise<void> {
         const base = game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Detection.Win' : 'WH40K.SkillUse.Detection.Lose');
-        const margin = this.rollData.opposedMargin;
         // #449: surface the winner's degrees of victory when the contest was decided by a margin.
-        const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
-        this.addEffect(t(EFFECT_TITLE.detection), text);
+        this.addEffect(t(EFFECT_TITLE.detection), withOpposedMargin(base, this.rollData.opposedMargin));
         return Promise.resolve();
     }
 }
@@ -1766,7 +1782,7 @@ export class SocialInfluenceActionData extends SimpleSkillData {
         const band = game.i18n.localize(`WH40K.Disposition.${labelForDisposition(clampDisposition(before + outcome.dispositionDelta))}`);
         this.addEffect(
             t(EFFECT_TITLE.social),
-            game.i18n.format('WH40K.SkillUse.Social.Shift', {
+            game.i18n.format(pluralKey('WH40K.SkillUse.Social.Shift', Math.abs(outcome.dispositionDelta), game.i18n.lang), {
                 use: useLabel,
                 target: targetName,
                 bands: String(Math.abs(outcome.dispositionDelta)),
@@ -1797,9 +1813,7 @@ export class ContestActionData extends SimpleSkillData {
 
     override async descriptionText(): Promise<void> {
         const base = game.i18n.localize(this.rollData.success ? 'WH40K.SkillUse.Contest.Won' : 'WH40K.SkillUse.Contest.Lost');
-        const margin = this.rollData.opposedMargin;
-        const text = margin > 0 ? `${base} ${game.i18n.format('WH40K.Opposed.Margin', { margin: String(margin) })}` : base;
-        this.addEffect(t(EFFECT_TITLE.contest), text);
+        this.addEffect(t(EFFECT_TITLE.contest), withOpposedMargin(base, this.rollData.opposedMargin));
         return Promise.resolve();
     }
 }
@@ -2082,7 +2096,7 @@ export class SocialBuffActionData extends SimpleSkillData {
 
         if (this.buff === 'blather') {
             const rounds = blatherRounds(this.rollData.success, this.rollData.opposedMargin);
-            const key = rounds > 0 ? 'WH40K.SkillUse.Buff.BlatherHeld' : 'WH40K.SkillUse.Buff.BlatherResist';
+            const key = rounds > 0 ? pluralKey('WH40K.SkillUse.Buff.BlatherHeld', rounds, game.i18n.lang) : 'WH40K.SkillUse.Buff.BlatherResist';
             this.addEffect(t(EFFECT_TITLE.blather), game.i18n.format(key, { target: targetName, rounds: String(rounds) }));
             return;
         }

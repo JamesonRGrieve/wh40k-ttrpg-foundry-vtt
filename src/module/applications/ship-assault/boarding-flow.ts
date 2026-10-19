@@ -9,6 +9,7 @@
  * `rules/ship-boarding.ts`; this module only rolls, applies and renders.
  */
 
+import { pluralKey } from '../../i18n/plural.ts';
 import { composePilotManoeuvrabilityTest, resolveShipTest, type ShipTestComponent, type ShipTestResult } from '../../rules/ship-assault.ts';
 import {
     allocateBoardingDegrees,
@@ -147,7 +148,7 @@ function damageViews(
 ): { hull: AssaultDamageView | null; crew: AssaultDamageView | null; morale: AssaultDamageView | null } {
     const source = ctx.localize(CITATION_KEY);
     const hullComponents: ShipTestComponent[] = [
-        { labelKey: 'WH40K.Voidcraft.Boarding.Component.ChargeDegrees', value: hullDegrees, data: { degrees: hullDegrees } },
+        { labelKey: pluralKey('WH40K.Voidcraft.Boarding.Component.ChargeDegrees', hullDegrees, ctx.lang), value: hullDegrees, data: { degrees: hullDegrees } },
     ];
     return {
         hull: hullDegrees > 0 ? buildDamageView(ctx.localize('WH40K.Voidcraft.Boarding.HullDamage'), hullComponents, source, ctx.localize) : null,
@@ -233,7 +234,10 @@ export const BOARDING_ROUND_FLOW = defineShipAssault<BoardingRound>({
         const { winner } = standings(ctx, rolled.round);
         return [
             {
-                legend: ctx.localize('WH40K.Voidcraft.Boarding.ChoiceLegend', { winner: winner.name, degrees: rolled.round.degrees }),
+                legend: ctx.localize(pluralKey('WH40K.Voidcraft.Boarding.ChoiceLegend', rolled.round.degrees, ctx.lang), {
+                    winner: winner.name,
+                    degrees: rolled.round.degrees,
+                }),
                 fields: [
                     {
                         name: 'hullDegrees',

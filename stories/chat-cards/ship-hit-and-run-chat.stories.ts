@@ -28,6 +28,7 @@ async function card(rolls: number[]): Promise<HTMLElement> {
         attacker: storyShipActor(ATTACKER_SHIP, 50),
         defender: storyShipActor({ ...DEFENDER_SHIP, turretRating: 2 }, 40),
         localize: storyLocalize,
+        lang: 'en',
         degreesMethod: 'gen1',
     });
     queueStoryRolls(...rolls);

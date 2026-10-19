@@ -18,6 +18,7 @@ import type OrderData from '../../data/item/order.ts';
 import type ShipWeaponData from '../../data/item/ship-weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
+import { pluralKey } from '../../i18n/plural.ts';
 import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOrderView, type ShipActionRow } from '../../rules/ship-actions.ts';
 import type { ShipTestComponent } from '../../rules/ship-assault.ts';
@@ -736,7 +737,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             }
             if (validation.missingEssentialSlots.length > 0) {
                 parts.push(
-                    i18n.format('WH40K.Voidcraft.Build.NotifyMissingSlots', {
+                    i18n.format(pluralKey('WH40K.Voidcraft.Build.NotifyMissingSlots', validation.missingEssentialSlots.length, i18n.lang), {
                         count: String(validation.missingEssentialSlots.length),
                     }),
                 );

@@ -9,4 +9,11 @@ import { t } from '../../i18n/t.ts';
 import type { GrenadeLabels } from './grenade-throw-view.ts';
 
 /** The langpack and the characteristic names, as the grenade dialog and the chat cards read them. */
-export const GRENADE_LABELS: GrenadeLabels = { localize: t, characteristic: characteristicLabel };
+export const GRENADE_LABELS: GrenadeLabels = {
+    localize: t,
+    characteristic: characteristicLabel,
+    // Read when a label is built, so a language change after load still picks the right plural.
+    get lang(): string {
+        return game.i18n.lang;
+    },
+};

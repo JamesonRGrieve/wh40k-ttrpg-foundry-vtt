@@ -72,6 +72,10 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(ran.card.text).toContain('Critical Hit rolls: 2 and 5.');
             expect(ran.card.text).toContain('Inflicted: Critical Hit roll 5.');
             expect(ran.card.text).toContain('Hull Integrity damage (1 per degree won by)');
+            // #663: the counts read as plurals, not "degree(s)".
+            expect(ran.card.text).toContain('The raiders win by 4 degrees and cause mayhem.');
+            expect(ran.card.text).toContain('4 degrees won by');
+            expect(ran.card.text).not.toContain('(s)');
 
             // 4 Hull (and on an RT hull 4 Crew and 4 Morale), plus the chosen Critical Hit as a ship status.
             expect(await readShip(page, target.id)).toMatchObject({ hull: 24, population: 51, morale: 56, statuses: 1 });

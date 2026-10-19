@@ -7,6 +7,7 @@
  * come through {@link GrenadeLabels} — so the dialog, its story and its tests share it.
  */
 
+import { pluralKey } from '../../i18n/plural.ts';
 import { type GrenadeRiderData, hasGrenadeRider, type RiderDurationKind, riderArea, riderHasTest, riderIsResolvable } from '../../rules/grenade-rider.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 
@@ -39,6 +40,8 @@ export interface GrenadeItemView {
 export interface GrenadeLabels {
     localize: (key: I18nKey, params?: Record<string, string | number>) => string;
     characteristic: (key: string) => string;
+    /** The language `localize` reads, which picks a count's plural form (#663). */
+    readonly lang: string;
 }
 
 /** One grenade as the dialog's picker and the chat card show it. */
@@ -95,7 +98,9 @@ function testLabel(rider: GrenadeRiderData, labels: GrenadeLabels): string {
 /** How each printed duration kind reads. */
 const DURATION_LABELS: Record<Exclude<RiderDurationKind, ''>, (duration: GrenadeRiderData['duration'], labels: GrenadeLabels) => string> = {
     degreesOfFailure: ({ base }, labels) =>
-        base === 0 ? labels.localize('WH40K.GrenadeRider.DurationPerDegree') : labels.localize('WH40K.GrenadeRider.DurationBasePerDegree', { base }),
+        base === 0
+            ? labels.localize('WH40K.GrenadeRider.DurationPerDegree')
+            : labels.localize(pluralKey('WH40K.GrenadeRider.DurationBasePerDegree', base, labels.lang), { base }),
     roll: ({ formula }, labels) => labels.localize('WH40K.GrenadeRider.DurationRoll', { formula }),
     encounter: (_duration, labels) => labels.localize('WH40K.GrenadeRider.DurationEncounter'),
 };

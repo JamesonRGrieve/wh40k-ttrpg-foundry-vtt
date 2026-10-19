@@ -86,7 +86,7 @@ const PSYK_OUT_RESULTS_TEXT = ['Willpower -10', 'Psykers only', 'Rogue Psyker', 
 const PHOTON_RIDER_FACE = 60;
 const RAD_RIDER_FACE = 30;
 /** The Photon Flash results card (Core p.158): Agility +10, the Heretic blinded for its three degrees, the Accomplice resisting. */
-const PHOTON_RESULTS_TEXT = ['Grenade Rider', 'Agility +10', 'Heretic', 'Accomplice', 'Blinded for 3 round(s)', 'Applied', 'Resisted', '3 DoF'];
+const PHOTON_RESULTS_TEXT = ['Grenade Rider', 'Agility +10', 'Heretic', 'Accomplice', 'Blinded for 3 rounds', 'Applied', 'Resisted', '3 DoF'];
 /** The Rad Grenade results card (Enemies Within p.44): Toughness −20, the Heretic suffering its effect, the Accomplice resisting. */
 const RAD_RESULTS_TEXT = ['Grenade Rider', 'Toughness -20', 'Heretic', 'Accomplice', 'Suffers the effect', 'Resisted', '2d10 Toughness damage'];
 /** The rider grenades the dialog lists: those that deal no damage. Tears of the Emperor deals 1d10 X, so it takes the weapon roll (#622). */

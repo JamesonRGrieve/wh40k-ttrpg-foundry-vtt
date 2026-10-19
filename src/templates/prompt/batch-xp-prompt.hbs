@@ -39,7 +39,7 @@
     {{#if (ne xpAmount 0)}}
     <div class="tw-mb-4 tw-p-3 tw-rounded-md tw-border {{#if isAddition}}tw-bg-[rgba(42,139,74,0.1)] tw-border-[rgba(74,222,128,0.3)]{{else}}tw-bg-[rgba(139,42,42,0.1)] tw-border-[rgba(248,113,113,0.3)]{{/if}}">
         <div class="tw-text-center tw-text-[1rem] tw-font-semibold {{#if isAddition}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
-            {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} {{localize "WH40K.Prompt.BatchXp.ToCharacters" count=selectedCount}}
+            {{#if isAddition}}+{{else}}-{{/if}}{{absAmount}} {{localize (pluralKey "WH40K.Prompt.BatchXp.ToCharacters" selectedCount) count=selectedCount}}
         </div>
     </div>
     {{/if}}

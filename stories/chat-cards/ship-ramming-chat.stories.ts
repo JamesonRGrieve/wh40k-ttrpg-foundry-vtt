@@ -29,6 +29,7 @@ async function card(rolls: number[], bonus: boolean, attacker = ATTACKER_SHIP): 
         attacker: storyShipActor(attacker),
         defender: storyShipActor(DEFENDER_SHIP),
         localize: storyLocalize,
+        lang: 'en',
         degreesMethod: 'gen1',
     });
     queueStoryRolls(...rolls);

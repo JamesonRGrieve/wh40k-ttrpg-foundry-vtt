@@ -26,6 +26,7 @@ const LABELS: GrenadeLabels = {
     localize: (key, params) =>
         params === undefined ? localizeKey(key) : formatKey(key, Object.fromEntries(Object.entries(params).map(([name, value]) => [name, String(value)]))),
     characteristic: (key) => NAMES[key] ?? key,
+    lang: 'en',
 };
 const CONDITIONS: Record<string, string> = { blinded: 'Blinded', stunned: 'Stunned' };
 
@@ -121,14 +122,14 @@ export const PhotonFlashBlinds: Story = {
         await expect(accomplice.dataset['riderOutcome']).toBe('suffers');
         await expect(accomplice.querySelector('[data-rider-roll]')?.textContent).toContain('68');
         await expect(accomplice.querySelector('[data-rider-roll]')?.textContent).toContain('3 DoF');
-        await expect(accomplice.querySelector('[data-rider-effect]')?.textContent).toContain('Blinded for 3 round(s)');
+        await expect(accomplice.querySelector('[data-rider-effect]')?.textContent).toContain('Blinded for 3 rounds');
         await expect(accomplice.querySelector('[data-rider-applied]')).toBeTruthy();
         // The grenade's +10 is a provenance row, hoverable through the "modifier" tooltip.
         const component = accomplice.querySelector<HTMLElement>('[data-rider-component]');
         await expect(component?.dataset['wh40kTooltip']).toBe('modifier');
         await expect(JSON.parse(component?.dataset['wh40kTooltipData'] ?? '{}')).toEqual({ source: 'grenade', label: 'Photon Flash Grenade', value: 10 });
         // A natural 100 always fails: 45 against 100 is six degrees.
-        await expect(rowOf(canvasElement, 'Lookout').querySelector('[data-rider-effect]')?.textContent).toContain('Blinded for 6 round(s)');
+        await expect(rowOf(canvasElement, 'Lookout').querySelector('[data-rider-effect]')?.textContent).toContain('Blinded for 6 rounds');
         await expect(view.getByText('Grenade Rider')).toBeTruthy();
     },
 };
@@ -144,7 +145,7 @@ export const PsykOutTouchesPsykersOnly: Story = {
         await expect(canvasElement.textContent).toContain('Psykers only');
         const psyker = rowOf(canvasElement, 'Rogue Psyker');
         await expect(psyker.dataset['riderOutcome']).toBe('suffers');
-        await expect(psyker.querySelector('[data-rider-effect]')?.textContent).toContain('Stunned for 6 round(s)');
+        await expect(psyker.querySelector('[data-rider-effect]')?.textContent).toContain('Stunned for 6 rounds');
         await expect(psyker.querySelector('[data-rider-not-applied]')?.textContent).toContain('The GM applies it');
         const soldier = rowOf(canvasElement, 'Guardsman');
         await expect(soldier.dataset['riderOutcome']).toBe('unaffected');

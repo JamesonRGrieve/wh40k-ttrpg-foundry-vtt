@@ -98,7 +98,7 @@ export function echoLocalize(key: string, data?: Readonly<Record<string, string 
 
 /** A flow context between two recording ships. Degrees count the Rogue Trader way unless `degreesMethod` overrides it. */
 export function assaultContext(attacker: RecordingShip, defender: RecordingShip, degreesMethod: DegreesMethod = 'gen1'): ShipAssaultContext {
-    return { attacker, defender, localize: echoLocalize, degreesMethod };
+    return { attacker, defender, localize: echoLocalize, lang: 'en', degreesMethod };
 }
 
 /** Form values backed by a plain record. */

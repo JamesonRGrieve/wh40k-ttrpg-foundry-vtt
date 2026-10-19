@@ -28,7 +28,7 @@
         {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=command.attackerTest}}
         {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=command.defenderTest}}
         {{#if command.success}}
-            <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-semibold tw-text-emerald-300">{{localize "WH40K.Voidcraft.HitAndRun.RaidSucceeds" degrees=command.netDoS}}</p>
+            <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-semibold tw-text-emerald-300">{{localize (pluralKey "WH40K.Voidcraft.HitAndRun.RaidSucceeds" command.netDoS) degrees=command.netDoS}}</p>
         {{else}}
             <p class="tw-m-0 tw-text-[0.85rem] tw-text-violet-300">{{localize "WH40K.Voidcraft.HitAndRun.RaidRepelled"}}</p>
         {{/if}}

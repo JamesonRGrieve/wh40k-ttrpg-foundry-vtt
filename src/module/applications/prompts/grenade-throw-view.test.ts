@@ -19,6 +19,7 @@ const LABELS: GrenadeLabels = {
     localize: (key, params) =>
         params === undefined ? lang.localize(key) : lang.format(key, Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))),
     characteristic: (key) => CHARACTERISTIC_NAMES[key] ?? key,
+    lang: 'en',
 };
 
 /** A Photon Flash-like rider under `overrides`. */
@@ -90,7 +91,7 @@ describe('buildGrenadeChoice', () => {
         });
         expect(buildGrenadeChoice(grenade('p', 'Psychotroke Grenade', psychotroke), '', LABELS)).toMatchObject({
             testLabel: 'Toughness -40',
-            durationLabel: '1 round(s), plus 1 per degree of failure',
+            durationLabel: '1 round, plus 1 per degree of failure',
             shiftLabel: '+1 to the effect roll per degree of failure (max 10)',
         });
         const smoke = rider({

@@ -36,7 +36,7 @@
             {{#if crew.unfilled}}
             <p class="tw-mt-3 tw-mb-0 tw-text-[0.75rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-accent-combat)]">
                 <i class="fas fa-triangle-exclamation"></i>
-                {{localize "WH40K.Vehicle.UnfilledCrew" count=crew.unfilled}}
+                {{localize (pluralKey "WH40K.Vehicle.UnfilledCrew" crew.unfilled) count=crew.unfilled}}
             </p>
             {{/if}}
             {{#if isGM}}

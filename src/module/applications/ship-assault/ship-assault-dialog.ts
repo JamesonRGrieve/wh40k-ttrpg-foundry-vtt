@@ -123,6 +123,7 @@ class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as A
             attacker: this.attacker,
             defender,
             localize: foundryLocalize,
+            lang: game.i18n.lang,
             degreesMethod: resolveDegreesMethod(this.attacker.system.gameSystem),
         });
     }

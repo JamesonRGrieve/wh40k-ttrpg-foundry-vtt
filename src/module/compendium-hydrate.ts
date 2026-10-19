@@ -33,6 +33,7 @@
  * because it never persists.
  */
 
+import { pluralKey } from './i18n/plural.ts';
 import { recoverOwnedItemLink } from './utils/compendium-query.ts';
 import {
     inferActiveGameLine,
@@ -361,7 +362,7 @@ function reportUnresolvedJoins(actorName: string, actorKey: string, unresolved: 
     if (typeof ui === 'undefined' || typeof game === 'undefined') return;
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `ui.notifications` is undefined until Foundry's `setup` phase
     ui.notifications?.warn(
-        game.i18n.format('WH40K.Warning.HydrationFailed', {
+        game.i18n.format(pluralKey('WH40K.Warning.HydrationFailed', unresolved.length, game.i18n.lang), {
             actor: actorName,
             count: String(unresolved.length),
             items,

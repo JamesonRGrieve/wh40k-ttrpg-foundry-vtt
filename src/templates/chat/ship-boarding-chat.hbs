@@ -29,7 +29,7 @@
         {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=round.attackerTest}}
         {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=round.defenderTest}}
         <p class="tw-m-0 tw-mb-2 tw-text-[0.9rem] tw-font-semibold tw-text-rose-200">
-            {{localize "WH40K.Voidcraft.Boarding.Winner" winner=round.winnerName degrees=round.degrees}}
+            {{localize (pluralKey "WH40K.Voidcraft.Boarding.Winner" round.degrees) winner=round.winnerName degrees=round.degrees}}
         </p>
 
         {{#if damage}}

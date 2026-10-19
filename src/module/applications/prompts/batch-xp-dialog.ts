@@ -2,6 +2,7 @@
  * @file BatchXPDialog — GM dialog to award XP to multiple characters at once (#553).
  */
 
+import { pluralKey } from '../../i18n/plural.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
@@ -127,7 +128,7 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
         }
 
         ui.notifications.info(
-            game.i18n.format(this.xpAmount > 0 ? 'WH40K.Notify.Xp.BatchAdded' : 'WH40K.Notify.Xp.BatchRemoved', {
+            game.i18n.format(pluralKey(this.xpAmount > 0 ? 'WH40K.Notify.Xp.BatchAdded' : 'WH40K.Notify.Xp.BatchRemoved', count, game.i18n.lang), {
                 amount: String(Math.abs(this.xpAmount)),
                 count: String(count),
             }),

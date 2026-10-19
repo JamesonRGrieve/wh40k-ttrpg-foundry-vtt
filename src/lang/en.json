@@ -413,7 +413,10 @@
                 "Cancelled": "What-If mode cancelled - changes discarded"
             },
             "OriginPath": {
-                "SelectionLimit": "You can only select {count} option(s).",
+                "SelectionLimit": {
+                    "One": "You can only select {count} option.",
+                    "Other": "You can only select {count} options."
+                },
                 "CompleteChoices": "Please complete all required choices.",
                 "ItemNotFound": "Could not find that item.",
                 "NoThronesFormula": "No thrones formula available yet — select an origin with a throne gelt formula."
@@ -429,8 +432,14 @@
                 "NoCharacteristic": "Your controlled Actor does not have a characteristic named {characteristic}"
             },
             "Xp": {
-                "BatchAdded": "{amount} XP added to {count} character(s).",
-                "BatchRemoved": "{amount} XP removed from {count} character(s)."
+                "BatchAdded": {
+                    "One": "{amount} XP added to {count} character.",
+                    "Other": "{amount} XP added to {count} characters."
+                },
+                "BatchRemoved": {
+                    "One": "{amount} XP removed from {count} character.",
+                    "Other": "{amount} XP removed from {count} characters."
+                }
             },
             "Skill": {
                 "NotSpecialist": "{skill} is not a specialist skill.",
@@ -457,8 +466,14 @@
                 "NoneSelected": "No items selected to transfer.",
                 "NoneSelectedToGive": "No items selected to give.",
                 "NoRecipients": "No other actors available to give items to.",
-                "Gave": "Gave {count} item(s) to {target}.",
-                "GiveTo": "Give {count} item(s) to:",
+                "Gave": {
+                    "One": "Gave {count} item to {target}.",
+                    "Other": "Gave {count} items to {target}."
+                },
+                "GiveTo": {
+                    "One": "Give {count} item to:",
+                    "Other": "Give {count} items to:"
+                },
                 "GiveTitle": "Give Items",
                 "GiveButton": "Give"
             },
@@ -659,7 +674,10 @@
             "LootDropDenied": "You do not have permission to drop this item.",
             "LootTokenLocked": "Loot piles can't be moved. Pick it up from the Token HUD instead.",
             "GiveTargetNotOwned": "You can't give items to a character you don't control.",
-            "HydrationFailed": "{actor}: {count} item(s) could not load their compendium data and are incomplete — {items}",
+            "HydrationFailed": {
+                "One": "{actor}: {count} item could not load its compendium data and is incomplete — {items}",
+                "Other": "{actor}: {count} items could not load their compendium data and are incomplete — {items}"
+            },
             "UnresolvedWeaponVariant": "{item}: could not determine the '{field}' value for this game line ({actor}). Treated as not-set rather than guessed — check the weapon's per-line authoring.",
             "MissingDamageProfile": "{item} has no damage profile, so it deals no damage. Author its dice, or mark it as dealing none.",
             "AutoDamageFailed": "Auto-roll damage failed for {attacker} ({weapon}) against {target}. Use the Roll Damage button on the attack card; see the console for details.",
@@ -1124,8 +1142,14 @@
             "NoTarget": "Choose a target for {use} before rolling.",
             "Applied": "{medic} applies {use} to {patient}.",
             "PatientTier": "Patient is {tier}.",
-            "HealedWounds": "Restored {wounds} wound(s).",
-            "ResolvedCritical": "Removed {tiers} critical-injury tier(s).",
+            "HealedWounds": {
+                "One": "Restored {wounds} wound.",
+                "Other": "Restored {wounds} wounds."
+            },
+            "ResolvedCritical": {
+                "One": "Removed {tiers} critical-injury tier.",
+                "Other": "Removed {tiers} critical-injury tiers."
+            },
             "BloodLossStopped": "Blood loss closed.",
             "Failed": "The {use} attempt fails.",
             "Tier": {
@@ -1217,7 +1241,10 @@
                 "Interrogate": "Interrogate",
                 "Extracted": "Extracted tier-{tier} information from {subject} ({fatigue} fatigue).",
                 "Resisted": "{subject} resists interrogation ({fatigue} fatigue).",
-                "Lockout": "The session breaks down — {subject} cannot be interrogated again for {days} day(s)."
+                "Lockout": {
+                    "One": "The session breaks down — {subject} cannot be interrogated again for {days} day.",
+                    "Other": "The session breaks down — {subject} cannot be interrogated again for {days} days."
+                }
             },
             "Readout": {
                 "Knowledge": {
@@ -1257,7 +1284,10 @@
                 "Perform": "Charming Performance",
                 "Won": "{use} succeeds against {target}.",
                 "Lost": "{target} resists your {use}.",
-                "Shift": "{use} shifts {target} {bands} band(s) — now {band}."
+                "Shift": {
+                    "One": "{use} shifts {target} {bands} band — now {band}.",
+                    "Other": "{use} shifts {target} {bands} bands — now {band}."
+                }
             },
             "Buff": {
                 "Inspire": "Inspire",
@@ -1268,7 +1298,10 @@
                 "InspireApplied": "{target} gains +10 to their next Skill or Characteristic Test.",
                 "TerrifyApplied": "{target} and allies ignore the target creature's Fear for this encounter.",
                 "WarCryApplied": "{target} suffers −10 to Parry and Dodge until your next turn.",
-                "BlatherHeld": "{target} is held in bemused inaction for {rounds} round(s).",
+                "BlatherHeld": {
+                    "One": "{target} is held in bemused inaction for {rounds} round.",
+                    "Other": "{target} is held in bemused inaction for {rounds} rounds."
+                },
                 "BlatherResist": "{target} sees through the blather and is unaffected."
             },
             "SenseBlocked": {
@@ -1277,7 +1310,10 @@
             }
         },
         "Opposed": {
-            "Margin": "(by {margin} degree(s) of victory)",
+            "Margin": {
+                "One": "(by {margin} degree of victory)",
+                "Other": "(by {margin} degrees of victory)"
+            },
             "Stalemate": "Opposed test — stalemate (both failed)."
         },
         "Addiction": {
@@ -1289,7 +1325,10 @@
             "Death": "{actor}'s fatigue is fatal — they succumb."
         },
         "Psychic": {
-            "OpposedOvercome": "{target} fails to resist — the power takes hold (by {margin} degree(s)).",
+            "OpposedOvercome": {
+                "One": "{target} fails to resist — the power takes hold (by {margin} degree).",
+                "Other": "{target} fails to resist — the power takes hold (by {margin} degrees)."
+            },
             "OpposedResisted": "{target} resists the power — it fails.",
             "PowerManifested": "Power Manifested",
             "PowerFailed": "Power Failed"
@@ -2178,7 +2217,10 @@
             "OtherWeapons": "Other Weapons",
             "Hands": "Hands",
             "HandBudgetTooltip": "Equipped weapons consume hands. Keep the total within your available hands.",
-            "HandBudgetExceeded": "Cannot draw {weapon}: it needs {cost} hand(s) but only {remaining} of {available} are free.",
+            "HandBudgetExceeded": {
+                "One": "Cannot draw {weapon}: it needs {cost} hand but only {remaining} of {available} are free.",
+                "Other": "Cannot draw {weapon}: it needs {cost} hands but only {remaining} of {available} are free."
+            },
             "PsychicPowers": "Psychic Powers",
             "NoPsychicPowers": "No psychic powers known",
             "InvokePower": "Invoke Power",
@@ -2675,7 +2717,10 @@
             "NoTest": "None",
             "Duration": "Duration",
             "DurationPerDegree": "1 round per degree of failure",
-            "DurationBasePerDegree": "{base} round(s), plus 1 per degree of failure",
+            "DurationBasePerDegree": {
+                "One": "{base} round, plus 1 per degree of failure",
+                "Other": "{base} rounds, plus 1 per degree of failure"
+            },
             "DurationRoll": "{formula} rounds",
             "DurationEncounter": "Until the end of the encounter",
             "EffectRollShift": "{step} to the effect roll per degree of failure (max {max})",
@@ -2701,7 +2746,10 @@
                 "Grenade": "{name}",
                 "Psyker": "Psyker"
             },
-            "ConditionRounds": "{condition} for {rounds} round(s)",
+            "ConditionRounds": {
+                "One": "{condition} for {rounds} round",
+                "Other": "{condition} for {rounds} rounds"
+            },
             "ConditionEncounter": "{condition} until the end of the encounter",
             "EffectShift": "{step} to the effect roll",
             "SuffersEffect": "Suffers the effect",
@@ -3046,7 +3094,10 @@
                 "ChatSubjectNoDaemon": "{summoner} performs a summoning ritual.",
                 "RitualTest": "Ritual — Forbidden Lore (Daemonology) test",
                 "DaemonRoll": "Daemon: rolled {roll} against Willpower {target}",
-                "Bound": "The Daemon is bound to serve for {hours} hour(s).",
+                "Bound": {
+                    "One": "The Daemon is bound to serve for {hours} hour.",
+                    "Other": "The Daemon is bound to serve for {hours} hours."
+                },
                 "BoundHint": "When the binding lapses, another Daemonic Mastery test extends it; an order against its nature needs a further test at −30.",
                 "Free": "The summoner fails to master the Daemon — it is free to act as it wills.",
                 "Stalemate": "Both fail the Mastery test — the Daemon is not bound (the GM may call for a re-roll).",
@@ -4053,7 +4104,6 @@
             "MakeChoice": "Make Choice",
             "ChangeChoice": "Change Choice",
             "ChoicesRequired": "Choices Required",
-            "ChoicesRemaining": "{count} choice(s) remaining",
             "SelectOption": "Select an option",
             "ConfirmChoices": "Confirm Selections",
             "InvalidStep": "This item cannot be placed in this slot",
@@ -4929,7 +4979,10 @@
                 "Locked": "The ships crash together and are locked. Neither may take Manoeuvre or Shooting Actions; resolve a boarding round each Strategic Turn.",
                 "LockFailed": "The helmsman fails to bring the ships together; no boarding action begins.",
                 "CommandTestTitle": "Command — {ship}",
-                "Winner": "{winner} wins the Command Test by {degrees} degree(s).",
+                "Winner": {
+                    "One": "{winner} wins the Command Test by {degrees} degree.",
+                    "Other": "{winner} wins the Command Test by {degrees} degrees."
+                },
                 "HullDamage": "Hull Integrity damage (1 per degree)",
                 "CrewDamage": "Crew Population damage (1d5 per degree)",
                 "MoraleDamage": "Morale damage (1d5 per degree)",
@@ -4942,7 +4995,10 @@
                 "Round": "Boarding Round",
                 "RoundHint": "Once per Strategic Turn while locked: opposed Command Test; the winner deals damage per degree, the loser tests Morale.",
                 "SideLegend": "{ship}",
-                "ChoiceLegend": "{winner} won by {degrees} degree(s). Each degree deals 1 Hull Integrity, or 1d5 Crew Population and 1d5 Morale.",
+                "ChoiceLegend": {
+                    "One": "{winner} won by {degrees} degree. Each degree deals 1 Hull Integrity, or 1d5 Crew Population and 1d5 Morale.",
+                    "Other": "{winner} won by {degrees} degrees. Each degree deals 1 Hull Integrity, or 1d5 Crew Population and 1d5 Morale."
+                },
                 "Field": {
                     "Command": "Warrior leader's Command skill",
                     "FailedBreakFree": "Tried and failed to break free this turn (−20)",
@@ -4954,7 +5010,10 @@
                     "HullAdvantage": "Higher Hull Integrity ({mine} vs {theirs})",
                     "Turrets": "Turret Rating {rating}",
                     "FailedBreakFree": "Failed to break free",
-                    "ChargeDegrees": "{degrees} degree(s) setting charges",
+                    "ChargeDegrees": {
+                        "One": "{degrees} degree setting charges",
+                        "Other": "{degrees} degrees setting charges"
+                    },
                     "CrewDegree": "1d5 — degree {degree}"
                 }
             },
@@ -4967,7 +5026,10 @@
                 "CommandTitle": "Command — {ship}",
                 "RaidLegend": "Raid leader of {ship}",
                 "DefenceLegend": "Troop commander of {ship}",
-                "RaidSucceeds": "The raiders win by {degrees} degree(s) and cause mayhem.",
+                "RaidSucceeds": {
+                    "One": "The raiders win by {degrees} degree and cause mayhem.",
+                    "Other": "The raiders win by {degrees} degrees and cause mayhem."
+                },
                 "RaidRepelled": "The raiders are forced back to their boarding craft without causing mayhem.",
                 "TurnedBackExplain": "The boarding craft is forced to return to its ship.",
                 "ShotDownExplain": "Failed by four or more degrees: the boarding craft is shot down. The pilot is stranded in a crippled craft or killed at the GM's discretion.",
@@ -4985,7 +5047,10 @@
                     "Turrets": "Turret Rating {rating} ({ship})",
                     "CommandSkill": "Command",
                     "CommandDifficulty": "Ordinary (+10)",
-                    "NetDegrees": "{degrees} degree(s) won by"
+                    "NetDegrees": {
+                        "One": "{degrees} degree won by",
+                        "Other": "{degrees} degrees won by"
+                    }
                 }
             },
             "History": {
@@ -5011,7 +5076,10 @@
                 "Commit": "Save Build",
                 "NotifyValid": "Starship build is valid.",
                 "NotifyOverBudgetBy": "Over budget by {amount} SP",
-                "NotifyMissingSlots": "{count} essential slot(s) unfilled",
+                "NotifyMissingSlots": {
+                    "One": "{count} essential slot unfilled",
+                    "Other": "{count} essential slots unfilled"
+                },
                 "NotifyCannotCommit": "Cannot save: starship build is invalid.",
                 "NotifyCommitted": "Starship build saved.",
                 "SummaryHeader": "Build Summary",
@@ -5851,7 +5919,10 @@
             "NoTokenSelected": "Select the token that should board, then use this control.",
             "Occupants": "Aboard",
             "NoOccupants": "Nobody is aboard.",
-            "UnfilledCrew": "{count} crew position(s) unfilled",
+            "UnfilledCrew": {
+                "One": "{count} crew position unfilled",
+                "Other": "{count} crew positions unfilled"
+            },
             "EmbarkSelected": "Embark Selected Tokens",
             "SelectTokenFirst": "Select one or more character tokens on the canvas first.",
             "Role": {
@@ -6641,7 +6712,10 @@
                 "Configure": "Configure roll…"
             },
             "BatchXp": {
-                "ToCharacters": "XP to {count} character(s)"
+                "ToCharacters": {
+                    "One": "XP to {count} character",
+                    "Other": "XP to {count} characters"
+                }
             },
             "DisorderRoll": {
                 "InsanityPoints": "IP"
@@ -7890,8 +7964,14 @@
             "Label": "Effect",
             "ActiveLabel": "Active Effects",
             "HeaderShort": "EFFECTS",
-            "RemainingRounds": "{n} round(s) left",
-            "RemainingTurns": "{n} turn(s) left",
+            "RemainingRounds": {
+                "One": "{n} round left",
+                "Other": "{n} rounds left"
+            },
+            "RemainingTurns": {
+                "One": "{n} turn left",
+                "Other": "{n} turns left"
+            },
             "Create": "Create Effect",
             "CreateFirst": "Create your first effect",
             "Edit": "Edit Effect",
@@ -8082,7 +8162,10 @@
             "NothingStaged": "Stage at least one item before applying.",
             "NothingApplied": "No items could be resolved from the compendium.",
             "PermissionDenied": "You do not have permission to modify this actor.",
-            "Applied": "Added {count} item(s) to {actor}."
+            "Applied": {
+                "One": "Added {count} item to {actor}.",
+                "Other": "Added {count} items to {actor}."
+            }
         },
         "Loot": {
             "DefaultName": "Dropped: {item}",

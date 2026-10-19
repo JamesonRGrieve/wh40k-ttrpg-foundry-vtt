@@ -31,6 +31,7 @@ function startSession(): ShipAssaultSession {
         attacker: storyShipActor(ATTACKER_SHIP),
         defender: storyShipActor(DEFENDER_SHIP),
         localize: storyLocalize,
+        lang: 'en',
         degreesMethod: 'gen1',
     });
 }

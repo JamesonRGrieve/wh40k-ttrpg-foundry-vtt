@@ -51,6 +51,7 @@ import {
 } from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
+import { pluralKey } from '../../i18n/plural.ts';
 import type { SimpleSkillData } from '../../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
@@ -4191,7 +4192,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const remaining = Math.max(0, available - otherEquippedCosts.reduce((sum, c) => sum + c, 0));
                 this._notify(
                     'warning',
-                    game.i18n.format('WH40K.Combat.HandBudgetExceeded', {
+                    game.i18n.format(pluralKey('WH40K.Combat.HandBudgetExceeded', cost, game.i18n.lang), {
                         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
                         weapon: item.name ?? '',
                         cost: String(cost),
@@ -4393,7 +4394,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         const options = targets.map((a) => `<option value="${a.id}">${a.name}</option>`).join('');
-        const content = `<form><div class="form-group"><label>${game.i18n.format('WH40K.Notify.Transfer.GiveTo', {
+        const content = `<form><div class="form-group"><label>${game.i18n.format(pluralKey('WH40K.Notify.Transfer.GiveTo', itemIds.length, game.i18n.lang), {
             count: String(itemIds.length),
         })}</label><select name="targetActorId">${options}</select></div></form>`;
 
@@ -4435,7 +4436,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments data param type doesn't accept our Record shape; double-cast to satisfy the overload
         await targetActor.createEmbeddedDocuments('Item', itemsData as unknown as Parameters<typeof targetActor.createEmbeddedDocuments<'Item'>>[1]);
         await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
-        ui.notifications.info(game.i18n.format('WH40K.Notify.Transfer.Gave', { count: String(itemsData.length), target: targetActor.name }));
+        ui.notifications.info(
+            game.i18n.format(pluralKey('WH40K.Notify.Transfer.Gave', itemsData.length, game.i18n.lang), {
+                count: String(itemsData.length),
+                target: targetActor.name,
+            }),
+        );
     }
 
     /* -------------------------------------------- */

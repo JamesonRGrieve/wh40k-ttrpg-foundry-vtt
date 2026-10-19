@@ -22,6 +22,7 @@ const LABELS: GrenadeLabels = {
     localize: (key, params) =>
         params === undefined ? localizeKey(key) : formatKey(key, Object.fromEntries(Object.entries(params).map(([name, value]) => [name, String(value)]))),
     characteristic: (key) => CHARACTERISTIC_NAMES[key] ?? key,
+    lang: 'en',
 };
 
 const rider = riderFixture;
@@ -125,7 +126,7 @@ export const Psychotroke: Story = {
         await expect(ids).toEqual(['photon', 'psychotroke', 'smoke']);
         const view = within(canvasElement);
         await expect(view.getByText('+1 to the effect roll per degree of failure (max 10)')).toBeTruthy();
-        await expect(view.getByText('1 round(s), plus 1 per degree of failure')).toBeTruthy();
+        await expect(view.getByText('1 round, plus 1 per degree of failure')).toBeTruthy();
         await expect(canvasElement.querySelector('[role="radio"][aria-checked="true"]')?.getAttribute('data-grenade-id')).toBe('psychotroke');
     },
 };

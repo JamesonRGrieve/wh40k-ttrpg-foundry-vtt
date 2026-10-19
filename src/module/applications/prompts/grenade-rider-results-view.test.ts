@@ -17,6 +17,7 @@ const LABELS: GrenadeLabels = {
     localize: (key, params) =>
         params === undefined ? lang.localize(key) : lang.format(key, Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))),
     characteristic: (key) => ({ agility: 'Agility', willpower: 'Willpower', toughness: 'Toughness' }[key] ?? key),
+    lang: 'en',
 };
 const CONDITION_NAMES: Record<string, string> = { blinded: 'Blinded', stunned: 'Stunned' };
 const conditionName = (id: string): string => CONDITION_NAMES[id] ?? id;
@@ -67,7 +68,7 @@ describe('buildRiderResultsCard', () => {
         const accomplice = card.rows.at(1);
         expect(heretic).toMatchObject({ name: 'Heretic', outcome: 'resisted', outcomeLabel: 'Resisted', effectLabel: '', applied: null });
         expect(heretic?.test).toMatchObject({ label: 'Agility test', base: 30, target: 40, roll: 20, degreesLabel: '' });
-        expect(accomplice).toMatchObject({ outcome: 'suffers', outcomeLabel: 'Suffers', effectLabel: 'Blinded for 3 round(s)', applied: true });
+        expect(accomplice).toMatchObject({ outcome: 'suffers', outcomeLabel: 'Suffers', effectLabel: 'Blinded for 3 rounds', applied: true });
         expect(accomplice?.test?.degreesLabel).toBe('3 DoF');
         expect(accomplice?.test?.components).toEqual([
             { label: 'Photon Flash Grenade', value: 10, tooltipData: JSON.stringify({ source: 'grenade', label: 'Photon Flash Grenade', value: 10 }) },
@@ -90,7 +91,7 @@ describe('buildRiderResultsCard', () => {
             'willpower',
         );
         expect(stunned.affectsLabel).toBe('Psykers only');
-        expect(stunned.rows[0]).toMatchObject({ effectLabel: 'Stunned for 6 round(s)', applied: false });
+        expect(stunned.rows[0]).toMatchObject({ effectLabel: 'Stunned for 6 rounds', applied: false });
         expect(stunned.rows[0]?.test?.components.map((c) => c.label)).toEqual(['Psyk-Out Grenade', 'Psyker']);
 
         const encounter = riderFixture({ condition: 'stunned', duration: { kind: 'encounter', base: 0, formula: '' } });

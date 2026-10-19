@@ -91,7 +91,7 @@ test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', 
             expect(ran.inputNames).toEqual(
                 expect.arrayContaining(['attackerCommand', 'attackerFailedBreakFree', 'defenderCommand', 'defenderFailedBreakFree']),
             );
-            expect(ran.preview, 'the resolved dialog previews both Command Tests').toContain('Errant Vector (Boarding) wins the Command Test by 3 degree(s).');
+            expect(ran.preview, 'the resolved dialog previews both Command Tests').toContain('Errant Vector (Boarding) wins the Command Test by 3 degrees.');
             expect(ran.unusedDice).toBe(0);
 
             expect(ran.card.html).toContain('data-wh40k-system="rt"');
@@ -105,6 +105,10 @@ test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', 
             expect(ran.card.text).toContain('Morale damage (1d5 per degree)');
             expect(ran.card.text).toContain('Eldar Corsair tests Morale: rolled 40 against 56.');
             expect(ran.card.text).toContain('The crew fights on.');
+            // #663: one degree on Hull reads singular, the 3-degree win plural, and nothing hedges "(s)".
+            expect(ran.card.text).toContain('1 degree setting charges');
+            expect(ran.card.text).toContain('wins the Command Test by 3 degrees.');
+            expect(ran.card.text).not.toContain('(s)');
             expect(ran.card.html.split('data-wh40k-hook="ship-assault-damage"').length - 1, 'Hull, Crew and Morale sections').toBe(3);
 
             // Hull 28 − 1 (which also costs 1 Crew and 1 Morale), then 2+3 = 5 Crew and 1+2 = 3 Morale.

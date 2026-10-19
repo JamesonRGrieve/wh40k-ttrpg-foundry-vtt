@@ -1,5 +1,6 @@
 import type { AnyMutableObject } from 'fvtt-types/utils';
 import { type EffectChangeRaw, formatChangeValue, getChangeLabel } from '../helpers/effects.ts';
+import { pluralKey } from '../i18n/plural.ts';
 import { bearerLine, conditionEffectData, type EffectChange as ConditionEffectChange } from '../rules/condition-registry.ts';
 import { formatRemaining } from '../rules/world-time.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
@@ -363,8 +364,8 @@ export class WH40KActiveEffect extends ActiveEffect {
         const remaining = this.#remainingWithUnit();
         if (remaining === null) return null;
         if (remaining.unit === 'seconds') return formatRemaining(remaining.value);
-        const key = remaining.unit === 'rounds' ? 'WH40K.Effects.RemainingRounds' : 'WH40K.Effects.RemainingTurns';
-        return game.i18n.format(key, { n: String(remaining.value) });
+        const base = remaining.unit === 'rounds' ? 'WH40K.Effects.RemainingRounds' : 'WH40K.Effects.RemainingTurns';
+        return game.i18n.format(pluralKey(base, remaining.value, game.i18n.lang), { n: String(remaining.value) });
     }
 
     /**

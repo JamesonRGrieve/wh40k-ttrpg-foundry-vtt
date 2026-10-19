@@ -80,6 +80,8 @@ export interface ShipAssaultContext {
     attacker: AssaultShipActor;
     defender: AssaultShipActor;
     localize: Localize;
+    /** The language `localize` reads, which picks a count's plural form (#663). */
+    lang: string;
     /** How the action's tests count degrees: the attacker's line, or the `degreesMode` world override. */
     degreesMethod: DegreesMethod;
 }

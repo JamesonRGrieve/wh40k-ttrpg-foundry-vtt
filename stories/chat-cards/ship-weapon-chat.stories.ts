@@ -90,6 +90,7 @@ function startFire(weapon: ShipWeaponFireInput['weapon'], shields: number, setup
         attacker: { ...storyShipActor(ATTACKER_SHIP, 48), hullIntegrity: { value: attackerHull, max: ATTACKER_SHIP.hullIntegrity } },
         defender: { ...storyShipActor(RAIDER, 40, shields), hullIntegrity: { value: setup.targetHull ?? RAIDER.hullIntegrity, max: RAIDER.hullIntegrity } },
         localize: storyLocalize,
+        lang: 'en',
         degreesMethod: 'gen1',
     });
 }

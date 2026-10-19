@@ -43,7 +43,7 @@
         </div>
         {{#if summonerWon}}
             <div class="tw-mt-3 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-emerald-600/60 tw-bg-emerald-900/30 tw-text-[0.85rem]" data-wh40k-hook="summoning-outcome" data-summoning-outcome="bound">
-                <div class="tw-font-bold">{{localize "WH40K.Daemonology.Summoning.Bound" hours=contest.boundHours}}</div>
+                <div class="tw-font-bold">{{localize (pluralKey "WH40K.Daemonology.Summoning.Bound" contest.boundHours) hours=contest.boundHours}}</div>
                 <div class="tw-mt-1 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Daemonology.Summoning.BoundHint"}}</div>
             </div>
         {{/if}}

@@ -16,6 +16,7 @@
 
 import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import type { InventoryCandidate } from '../inventory/inventory-generator.ts';
 import { gameSystemPackPrefix } from '../utils/game-system-pack-prefix.ts';
@@ -138,7 +139,7 @@ export class InventoryGeneratorManager {
         }
 
         const applied = plan.creates.length + plan.updates.length;
-        ui.notifications.info(t('WH40K.InventoryGenerator.Applied', { count: applied, actor: actor.name }));
+        ui.notifications.info(t(pluralKey('WH40K.InventoryGenerator.Applied', applied, game.i18n.lang), { count: applied, actor: actor.name }));
         return applied;
     }
 }

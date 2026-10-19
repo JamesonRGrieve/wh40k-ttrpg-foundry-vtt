@@ -6,6 +6,7 @@
  * condition names through `conditionName`, so the card, its story and its tests share it.
  */
 
+import { pluralKey } from '../../i18n/plural.ts';
 import type { RiderComponentSource, RiderTargetResult } from '../../rules/grenade-rider-resolution.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 import type { GrenadeChoice, GrenadeLabels } from './grenade-throw-view.ts';
@@ -26,7 +27,7 @@ export interface RiderResultRow {
     outcome: RiderOutcome;
     outcomeLabel: string;
     test: { label: string; base: number; roll: number; target: number; degreesLabel: string; components: RiderComponentRow[] } | null;
-    /** What the rider did: "Blinded for 3 round(s)", "+2 to the effect roll", or '' when nothing landed. */
+    /** What the rider did: "Blinded for 3 rounds", "+2 to the effect roll", or '' when nothing landed. */
     effectLabel: string;
     /** Whether the condition was applied to the creature; null when there is no condition to apply. */
     applied: boolean | null;
@@ -62,7 +63,11 @@ export function riderOutcome(result: RiderTargetResult): RiderOutcome {
 function effectLabel(result: RiderTargetResult, conditionName: string, labels: GrenadeLabels): string {
     if (!result.suffers) return '';
     if (result.condition !== '') {
-        if (result.rounds !== null) return labels.localize('WH40K.GrenadeRider.ConditionRounds', { condition: conditionName, rounds: result.rounds });
+        if (result.rounds !== null)
+            return labels.localize(pluralKey('WH40K.GrenadeRider.ConditionRounds', result.rounds, labels.lang), {
+                condition: conditionName,
+                rounds: result.rounds,
+            });
         if (result.untilEncounterEnd) return labels.localize('WH40K.GrenadeRider.ConditionEncounter', { condition: conditionName });
         return conditionName;
     }

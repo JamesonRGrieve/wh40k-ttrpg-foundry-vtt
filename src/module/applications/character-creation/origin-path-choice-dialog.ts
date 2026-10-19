@@ -8,6 +8,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
+import { pluralKey } from '../../i18n/plural.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -549,7 +550,9 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 }
                 selections.add(compositeValue);
             } else {
-                ui.notifications.warn(game.i18n.format('WH40K.Notify.OriginPath.SelectionLimit', { count: String(choice.count) }));
+                ui.notifications.warn(
+                    game.i18n.format(pluralKey('WH40K.Notify.OriginPath.SelectionLimit', choice.count, game.i18n.lang), { count: String(choice.count) }),
+                );
                 return;
             }
         }

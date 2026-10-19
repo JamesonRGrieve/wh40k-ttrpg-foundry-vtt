@@ -9,6 +9,7 @@
  * `rules/ship-hit-and-run.ts`; this module only rolls, applies and renders.
  */
 
+import { pluralKey } from '../../i18n/plural.ts';
 import { resolveShipTest, type ShipTestResult } from '../../rules/ship-assault.ts';
 import {
     composeApproachTest,
@@ -174,7 +175,13 @@ export const HIT_AND_RUN_FLOW = defineShipAssault<HitAndRunRolled>({
         }
         const hullView = buildDamageView(
             ctx.localize('WH40K.Voidcraft.HitAndRun.HullDamage'),
-            [{ labelKey: 'WH40K.Voidcraft.HitAndRun.Component.NetDegrees', value: hull, data: { degrees: command.outcome.netDoS } }],
+            [
+                {
+                    labelKey: pluralKey('WH40K.Voidcraft.HitAndRun.Component.NetDegrees', command.outcome.netDoS, ctx.lang),
+                    value: hull,
+                    data: { degrees: command.outcome.netDoS },
+                },
+            ],
             ctx.localize(CITATION_KEY),
             ctx.localize,
         );
