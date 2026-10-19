@@ -15,6 +15,9 @@ export function firstTargetedActor(): WH40KBaseActor | null {
     return first.actor ?? null;
 }
 
+/** The picker's width: room for two or three choices a row. */
+const ITEM_CHOICE_WIDTH_PX = 480;
+
 /** Minimal shape the item picker needs — id + display name. */
 export interface PickableItem {
     readonly id: string;
@@ -36,14 +39,60 @@ export async function promptItemChoice<T extends PickableItem>(items: readonly T
     const dialogApi = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
     if (dialogApi === undefined) return first;
 
-    const buttons = items.map((item) => ({ action: item.id, label: item.name, callback: (): string => item.id }));
-    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.wait resolves to the selected button callback's return (an item id) OR null when dismissed
+    // The choices are buttons in the content, laid out as a wrapping grid, so a long name
+    // or many choices never overflow a single footer row (#668); the footer keeps Cancel.
+    // Each choice button's action (its item id) records the pick and closes the dialog, and
+    // `close` hands that pick to `wait`.
+    let picked: string | null = null;
+    const actions = Object.fromEntries(
+        items.map((item) => [
+            item.id,
+            async function choose(this: { close: () => Promise<object> }): Promise<void> {
+                picked = item.id;
+                await this.close();
+            },
+        ]),
+    );
+    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.wait resolves to the `close` callback's return (an item id) OR null when cancelled
     const chosen = (await dialogApi.wait({
         window: { title },
-        content: `<p>${hint}</p>`,
-        buttons,
+        position: { width: ITEM_CHOICE_WIDTH_PX },
+        content: itemChoiceContent(items, hint),
+        buttons: [{ action: 'cancel', label: 'WH40K.Cancel', default: true }],
+        actions,
+        close: () => picked,
         rejectClose: false,
     })) as string | null;
 
     return items.find((i) => i.id === chosen) ?? null;
+}
+
+/**
+ * The picker's content: the hint, then one button per item (its action is the item's
+ * id), in a grid that wraps each long name inside its own button. Built as elements,
+ * so an item's name is text and never markup. DialogV2 takes a bare `<div>` and uses
+ * its children.
+ */
+export function itemChoiceContent(items: readonly PickableItem[], hint: string): HTMLDivElement {
+    const content = document.createElement('div');
+    const prompt = document.createElement('p');
+    prompt.textContent = hint;
+    const scope = document.createElement('div');
+    scope.className = 'wh40k-rpg';
+    const grid = document.createElement('div');
+    grid.className = 'tw-grid tw-grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] tw-gap-1.5';
+    grid.dataset['itemChoices'] = '';
+    for (const item of items) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset['action'] = item.id;
+        button.className = 'tw-h-auto tw-min-h-[2rem] tw-min-w-0 tw-px-2 tw-py-1 tw-whitespace-normal tw-break-words tw-leading-tight';
+        const label = document.createElement('span');
+        label.textContent = item.name;
+        button.append(label);
+        grid.append(button);
+    }
+    scope.append(grid);
+    content.append(prompt, scope);
+    return content;
 }

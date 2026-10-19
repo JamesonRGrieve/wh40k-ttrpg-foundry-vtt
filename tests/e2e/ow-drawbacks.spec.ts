@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import { overflowingLabels } from '../../src/module/testing/label-fit';
 import { createActor, deleteDocuments, openActorSheet } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
@@ -166,6 +167,10 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             await panel.locator('button[data-action="owAddDrawback"]').click();
             const dialog = page.locator(DIALOG).last();
             await expect(dialog).toBeVisible();
+            // #668: every name, "Lost Home World" included, fits inside its button.
+            const choices = dialog.locator('[data-item-choices] button');
+            await expect(choices.filter({ hasText: /^Lost Home World$/ })).toHaveCount(1);
+            expect(await choices.evaluateAll(overflowingLabels)).toEqual([]);
             await snap(page, 'ow-drawback-picker', { selector: 'dialog.application[open]' });
             await dialog.locator('button', { hasText: /^Doomed$/ }).click();
             await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([dropped.uuid, DOOMED]);
