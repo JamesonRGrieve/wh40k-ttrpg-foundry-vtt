@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { installFoundryDataStub } from './testing/foundry-data-stub.ts';
 
 /**
  * #484 end to end, on the two stale owned-item shapes found on the live world:
@@ -11,31 +12,10 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vites
  * read-only passive row the Roll Test dialog renders.
  *
  * `creature.ts` needs `foundry.abstract` + `foundry.data.fields` at module
- * evaluation, so the stub is installed BEFORE the dynamic imports (the recipe of
- * `creature-item-modifiers.test.ts`).
+ * evaluation, so the shared Foundry data stub is installed BEFORE the dynamic
+ * imports.
  */
-
-type AnyCtor = abstract new (...args: never[]) => object;
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-class StubField {}
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: () => StubField }) },
-    utils: { mergeObject: <T extends object>(original: T, other: object): T => ({ ...original, ...other }) },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: CreatureTemplate } = await import('./data/actor/templates/creature.ts');
 const { hydrateActorInMemory } = await import('./compendium-hydrate.ts');

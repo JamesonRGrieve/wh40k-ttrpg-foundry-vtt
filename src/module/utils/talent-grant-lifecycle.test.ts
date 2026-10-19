@@ -1,4 +1,5 @@
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { installFoundryDataStub } from '../testing/foundry-data-stub.ts';
 
 /**
  * Regression contract for the talent grant-on-drop / grant-on-delete lifecycle
@@ -12,27 +13,10 @@ import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
  *
  * talent-grants.ts statically imports GrantsManager, which transitively evaluates
  * `extends foundry.abstract.DataModel` at module-load (undefined under happy-dom).
- * Stub a no-op DataModel base BEFORE a dynamic import (static imports hoist above
- * the stub), exactly as grants-manager.test.ts does.
+ * The shared Foundry data stub is installed BEFORE a dynamic import (static imports
+ * hoist above it).
  */
-
-class FakeDataModel {
-    isFakeDataModel = true;
-}
-type AnyCtor = abstract new (...args: never[]) => object;
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel } };
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { GrantsManager } = await import('../managers/grants-manager.ts');
 const { processTalentGrants, handleTalentRemoval } = await import('./talent-grants.ts');

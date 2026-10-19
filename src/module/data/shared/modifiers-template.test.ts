@@ -1,5 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest';
 // Type-only import (erased at runtime, so it does not evaluate the module before the stub is installed).
+import { installFoundryDataStub, SchemaRecord, subField as schemaSubField, StubField } from '../../testing/foundry-data-stub.ts';
 import type { DynamicModifierEntry } from './modifiers-template.ts';
 
 /**
@@ -23,71 +24,7 @@ import type { DynamicModifierEntry } from './modifiers-template.ts';
  * schema tree without a live Foundry runtime.
  */
 
-/** A recording stand-in for a `foundry.data.fields.*` instance. */
-class RecordingField {
-    readonly _kind: string;
-    /** The exact constructor arguments (every field arg is an object). */
-    readonly _args: readonly object[];
-    constructor(kind: string, args: readonly object[]) {
-        this._kind = kind;
-        this._args = args;
-    }
-
-    /** Positional constructor argument `i`, which the stub guarantees is present. */
-    arg(i: number): object {
-        const a = this._args[i];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `object`, tsconfig.json (flag on) sees `object | undefined` and requires this guard.
-        if (a === undefined) throw new Error(`missing arg ${i} on ${this._kind}`);
-        return a;
-    }
-}
-
-/** The `{ fieldName: DataField }` map a `SchemaField` is constructed from. */
-interface FieldMap {
-    readonly [key: string]: RecordingField;
-}
-
-// Concrete ctor for the recording classes; broad abstract ctor for the stub slot
-// (the real `foundry.data.fields` exposes `DataField` as an abstract ctor, and
-// `foundry.abstract.*` are abstract, so the slots must admit abstract ctors).
-type FieldCtor = new (...args: object[]) => RecordingField;
-type AnyCtor = abstract new (...args: never[]) => object;
-
-/** Build a recording field class that tags its instances with `kind`. */
-function makeField(kind: string): FieldCtor {
-    return class extends RecordingField {
-        constructor(...args: object[]) {
-            super(kind, args);
-        }
-    };
-}
-
-const fields = {
-    ArrayField: makeField('ArrayField'),
-    ObjectField: makeField('ObjectField'),
-    NumberField: makeField('NumberField'),
-    SchemaField: makeField('SchemaField'),
-    StringField: makeField('StringField'),
-    BooleanField: makeField('BooleanField'),
-};
-
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    data: { fields },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 // Imported after the stub is in place (the module evaluates `foundry.*` at load).
 const modifiersModule = await import('./modifiers-template.ts');
@@ -106,17 +43,17 @@ const {
     DYNAMIC_DURATION_STACKING,
 } = modifiersModule;
 
-/** Narrow a schema slot to the recording-field the stub guarantees it is. */
-function field(x: object): RecordingField {
-    return x as RecordingField;
+/** Narrow a schema slot to the stub field the shared stub guarantees it is. */
+function field(x: object): StubField {
+    if (!(x instanceof StubField)) throw new Error('expected a stub field');
+    return x;
 }
 
 /** A named sub-field of a `SchemaField`. */
-function subField(schemaField: RecordingField, key: string): RecordingField {
-    const map = schemaField.arg(0) as FieldMap;
-    const child = map[key];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) sees `RecordingField`, tsconfig.json (flag on) sees `RecordingField | undefined` and requires this guard.
-    if (child === undefined) throw new Error(`missing field: ${key}`);
+function subField(schemaField: StubField, key: string): StubField {
+    if (!(schemaField instanceof SchemaRecord)) throw new Error(`${schemaField.kind} is not a SchemaField`);
+    const child = schemaSubField(schemaField, key);
+    if (!(child instanceof StubField)) throw new Error(`missing field: ${key}`);
     return child;
 }
 
@@ -128,18 +65,18 @@ interface Descriptor {
     readonly fields?: Readonly<Record<string, Descriptor>>;
 }
 
-function describeField(f: RecordingField): Descriptor {
-    if (f._kind === 'ArrayField') {
+function describeField(f: StubField): Descriptor {
+    if (f.kind === 'ArrayField') {
         return { kind: 'ArrayField', options: f.arg(1), element: describeField(field(f.arg(0))) };
     }
-    if (f._kind === 'SchemaField') {
+    if (f.kind === 'SchemaField') {
         const out: Record<string, Descriptor> = {};
         for (const key of Object.keys(f.arg(0))) {
             out[key] = describeField(subField(f, key));
         }
         return { kind: 'SchemaField', fields: out };
     }
-    return { kind: f._kind, options: f.arg(0) };
+    return { kind: f.kind, options: f.arg(0) };
 }
 
 describe('situationalEntrySchema (via ModifiersTemplate.defineSchema)', () => {
@@ -180,7 +117,7 @@ describe('situationalEntrySchema (via ModifiersTemplate.defineSchema)', () => {
     };
 
     it('the failure consequence is optional and nullable, defaulting to none (#101)', () => {
-        const element = subField(situational, 'skills').arg(0) as RecordingField;
+        const element = field(subField(situational, 'skills').arg(0));
         expect(subField(element, 'failureConsequence').arg(1)).toEqual({ required: false, nullable: true, initial: null });
     });
 
@@ -221,7 +158,7 @@ describe('dynamicModifiers schema (data-driven modifier hooks, Direction #7)', (
     const dynamic = subField(field(modifiersSlot), 'dynamicModifiers');
 
     it('is an ArrayField initialising to empty (legacy items carry none)', () => {
-        expect(dynamic._kind).toBe('ArrayField');
+        expect(dynamic.kind).toBe('ArrayField');
         expect(dynamic.arg(1)).toEqual({ required: true, initial: [] });
     });
 

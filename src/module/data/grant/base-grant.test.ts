@@ -1,31 +1,16 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { asBaseActor } from '../../testing/actor-stub.ts';
+import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
 
 /**
  * base-grant.ts evaluates `extends foundry.abstract.DataModel` at module-load —
- * undefined under happy-dom. Stub a no-op base BEFORE the dynamic import so the
- * class loads; `_reverseWithDeltaMap` is a pure method that never touches the
- * schema. (Same recipe as grants-manager.test.)
+ * undefined under happy-dom. The shared Foundry data stub is installed BEFORE the
+ * dynamic import so the class loads; `_reverseWithDeltaMap` is a pure method that
+ * never touches the schema.
  */
-class FakeDataModel {
-    isFakeDataModel = true;
-}
-type AnyCtor = abstract new (...args: never[]) => object;
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel } };
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: BaseGrantData } = await import('./base-grant.ts');
 

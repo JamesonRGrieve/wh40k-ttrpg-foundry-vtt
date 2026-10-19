@@ -1,20 +1,16 @@
 import { afterAll, describe, expect, it, type Mock, vi } from 'vitest';
+import { installFoundryDataStub } from '../testing/foundry-data-stub.ts';
 
 /**
  * grants-manager.ts transitively imports the grant DataModels, which evaluate
  * `extends foundry.abstract.DataModel` at module-load — undefined under
- * happy-dom. Stub a no-op DataModel base BEFORE a dynamic import (static imports
- * hoist above the stub; a top-level `await import` runs in source order after
- * it). The pure methods under test never instantiate a grant, so a no-op base
- * is sufficient.
+ * happy-dom. The shared Foundry data stub (whose `utils.getProperty` the resource
+ * reversal reads through) is installed BEFORE a dynamic import (static imports
+ * hoist above it; a top-level `await import` runs in source order after it). The
+ * pure methods under test never instantiate a grant.
  */
-class FakeDataModel {
-    isFakeDataModel = true;
-}
-// Broad abstract-constructor type so the stub accepts both the concrete
-// FakeDataModel value and the real (abstract) foundry DataModel ctor — keeps the
-// `globalThis as GlobalShim` cast valid.
-type AnyCtor = abstract new (...args: never[]) => object;
+afterAll(installFoundryDataStub());
+
 /** A nested numeric fixture, the shape of an actor's resource fields. */
 type Tree = { [key: string]: number | Tree };
 
@@ -23,29 +19,6 @@ interface ResourceActorStub {
     system: Tree;
     update: Mock<(data: Record<string, number>) => Promise<undefined>>;
 }
-
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    utils: { getProperty: (target: ResourceActorStub, path: string) => number | Tree | undefined };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-
-/** `foundry.utils.getProperty` for a `system.…` path on the stub actor. */
-function readSystemPath(target: ResourceActorStub, path: string): number | Tree | undefined {
-    let node: number | Tree | undefined = target.system;
-    for (const part of path.split('.').slice(1)) node = typeof node === 'object' ? node[part] : undefined;
-    return node;
-}
-
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = { abstract: { DataModel: FakeDataModel, TypeDataModel: FakeDataModel }, utils: { getProperty: readSystemPath } };
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
 
 const { generateDeterministicId, GrantsManager } = await import('./grants-manager.ts');
 

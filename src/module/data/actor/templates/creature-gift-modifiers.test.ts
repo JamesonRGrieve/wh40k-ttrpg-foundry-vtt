@@ -1,6 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChaosAlignment } from '../../../config/game-systems/types.ts';
 import type { GiftData, GiftRider } from '../../../rules/bc-gifts.ts';
+import { installFoundryDataStub } from '../../../testing/foundry-data-stub.ts';
 
 /**
  * Black Crusade Gifts of the Gods (#180) through the central modifier path: an
@@ -11,31 +12,10 @@ import type { GiftData, GiftRider } from '../../../rules/bc-gifts.ts';
  *
  * Same harness as `creature-item-modifiers.test.ts`: `creature.ts` needs only
  * `foundry.abstract` + `foundry.data.fields` at module evaluation, so a stub is
- * installed BEFORE the dynamic import and the preparation methods are driven on
- * hand-set data, in `prepareEmbeddedData` order.
+ * installed BEFORE the dynamic import (the shared Foundry data stub) and the
+ * preparation methods are driven on hand-set data, in `prepareEmbeddedData` order.
  */
-
-type AnyCtor = abstract new (...args: never[]) => object;
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-class StubField {}
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: () => StubField }) },
-    utils: { mergeObject: <T extends object>(original: T, other: object): T => ({ ...original, ...other }) },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: CreatureTemplate } = await import('./creature.ts');
 

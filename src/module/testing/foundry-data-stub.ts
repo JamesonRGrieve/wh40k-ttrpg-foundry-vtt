@@ -22,11 +22,31 @@ export interface FieldOptions {
     required?: boolean;
 }
 
+/**
+ * Every stub field: the Foundry field class it stands for (`kind`, e.g. "NumberField")
+ * and the arguments it was constructed with, so a test can assert either.
+ */
+export class StubField {
+    readonly kind: string = 'DataField';
+    readonly args: readonly object[];
+    constructor(args: readonly object[]) {
+        this.args = args;
+    }
+
+    /** Constructor argument `index`; throws when the field was built without it. */
+    arg(index: number): object {
+        const value = this.args.at(index);
+        if (value === undefined) throw new Error(`${this.kind} has no constructor argument ${index}`);
+        return value;
+    }
+}
+
 /** A leaf field (StringField, NumberField, ObjectField, …): records its options. */
-export class LeafField {
+export class LeafField extends StubField {
     readonly options: FieldOptions;
-    constructor(options: FieldOptions = {}) {
-        this.options = options;
+    constructor(options?: FieldOptions, ...rest: object[]) {
+        super(options === undefined ? rest : [options, ...rest]);
+        this.options = options ?? {};
     }
 }
 
@@ -34,27 +54,57 @@ export class LeafField {
 class ObjectLeaf extends LeafField {}
 
 /** A collection field (ArrayField, SetField): records its element field and options. */
-export class ElementField {
+export class ElementField extends StubField {
     readonly element: object;
     readonly options: FieldOptions;
-    constructor(element: object, options: FieldOptions = {}) {
+    constructor(element: object, options?: FieldOptions) {
+        super(options === undefined ? [element] : [element, options]);
         this.element = element;
-        this.options = options;
+        this.options = options ?? {};
     }
 }
 
-/** A SchemaField: records its sub-fields. */
-export class SchemaRecord {
+/** A SchemaField: records its sub-fields and options. */
+export class SchemaRecord extends StubField {
     readonly fields: Record<string, object>;
-    constructor(fields: Record<string, object>) {
+    readonly options: FieldOptions;
+    constructor(fields: Record<string, object>, options?: FieldOptions) {
+        super(options === undefined ? [fields] : [fields, options]);
         this.fields = fields;
+        this.options = options ?? {};
     }
 }
 
-const STUB_FIELDS: Record<string, AnyCtor> = { ArrayField: ElementField, SetField: ElementField, SchemaField: SchemaRecord, ObjectField: ObjectLeaf };
+const NAMED_FIELDS = new Map<string, AnyCtor>();
+
+/** The stub class standing for `foundry.data.fields[name]`, its instances tagged with that name. */
+function stubFieldClass(name: string): AnyCtor {
+    const cached = NAMED_FIELDS.get(name);
+    if (cached !== undefined) return cached;
+    let named: AnyCtor;
+    if (name === 'ArrayField' || name === 'SetField') {
+        named = class extends ElementField {
+            override readonly kind = name;
+        };
+    } else if (name === 'SchemaField') {
+        named = class extends SchemaRecord {
+            override readonly kind = name;
+        };
+    } else if (name === 'ObjectField') {
+        named = class extends ObjectLeaf {
+            override readonly kind = name;
+        };
+    } else {
+        named = class extends LeafField {
+            override readonly kind = name;
+        };
+    }
+    NAMED_FIELDS.set(name, named);
+    return named;
+}
 
 /** A SchemaField's sub-field by key, or undefined when it declares none. */
-function subField(record: SchemaRecord, key: string): object | undefined {
+export function subField(record: SchemaRecord, key: string): object | undefined {
     return Object.entries(record.fields).find(([name]) => name === key)?.[1];
 }
 
@@ -93,24 +143,64 @@ export function schemaHasPath(fields: Record<string, object>, path: string, keys
     return true;
 }
 
+/** A value `getProperty` walks: a plain JSON-shaped tree. */
+type PropertyValue = string | number | boolean | null | undefined | PropertyTree;
+interface PropertyTree {
+    readonly [key: string]: PropertyValue;
+}
+
+/** `foundry.utils.getProperty`: the value at a dotted path, or undefined. */
+function readProperty(object: PropertyTree, path: string): PropertyValue {
+    let cursor: PropertyValue = object;
+    for (const key of path.split('.')) {
+        if (typeof cursor !== 'object' || cursor === null) return undefined;
+        cursor = cursor[key];
+    }
+    return cursor;
+}
+
+/**
+ * Stands in for Foundry's DataModel base. `shimData` returns the source it was
+ * given, as Foundry's does once its own shims have run.
+ */
+class StubDataModel {
+    static shimData<T extends object>(data: T): T {
+        return data;
+    }
+}
+
+/** Stands in for Foundry's TypeDataModel, a DataModel. */
+class StubTypeDataModel extends StubDataModel {}
+
+/** What a suite adds to the stub: Foundry's application API, or more `foundry.utils` functions. */
+export interface FoundryStubExtras {
+    applications?: object;
+    utils?: object;
+}
+
 interface FoundryStub {
     abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
     data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
+    utils: object;
+    applications?: object;
 }
 
 interface GlobalShim {
     foundry?: FoundryStub | undefined;
 }
 
-/** Install the stub on `globalThis.foundry`; returns the function that restores what was there. */
-export function installFoundryDataStub(): () => void {
+/**
+ * Install the stub on `globalThis.foundry`, with any `extras` a suite needs beside
+ * the data layer; returns the function that restores what was there.
+ */
+export function installFoundryDataStub(extras: FoundryStubExtras = {}): () => void {
     const g = globalThis as GlobalShim;
     const original = g.foundry;
     g.foundry = {
-        abstract: { DataModel: class {}, TypeDataModel: class {} },
-        data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: (_target, name: string): AnyCtor => STUB_FIELDS[name] ?? LeafField }) },
-        utils: { mergeObject: <T extends object>(base: T, other: object): T => ({ ...base, ...other }) },
+        abstract: { DataModel: StubDataModel, TypeDataModel: StubTypeDataModel },
+        data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: (_target, name: string): AnyCtor => stubFieldClass(name) }) },
+        utils: { mergeObject: <T extends object>(base: T, other: object): T => ({ ...base, ...other }), getProperty: readProperty, ...extras.utils },
+        ...(extras.applications === undefined ? {} : { applications: extras.applications }),
     };
     return (): void => {
         g.foundry = original;

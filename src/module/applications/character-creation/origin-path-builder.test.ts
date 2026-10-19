@@ -1,5 +1,6 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
+import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime
@@ -46,7 +47,6 @@ interface FoundryStub {
             DialogV2?: { prompt: (...args: never[]) => Promise<CommitResetChoices | null> };
         };
     };
-    abstract: { DataModel: new () => object };
     utils: { deepClone: <T>(value: T) => T };
 }
 interface UiStub {
@@ -67,7 +67,6 @@ interface GlobalStubs {
 const stubHost = globalThis as typeof globalThis & Partial<GlobalStubs>;
 
 const ORIGINAL_GAME = stubHost.game;
-const ORIGINAL_FOUNDRY = stubHost.foundry;
 const ORIGINAL_UI = stubHost.ui;
 const ORIGINAL_ROLL = stubHost.Roll;
 
@@ -184,9 +183,6 @@ const STUBS: GlobalStubs = {
         applications: {
             api: buildApplicationV2Api(),
         },
-        abstract: {
-            DataModel: class {},
-        },
         utils: {
             deepClone: <T>(value: T): T => structuredClone(value),
         },
@@ -201,13 +197,16 @@ const STUBS: GlobalStubs = {
     Roll: FakeRoll,
 };
 // `Object.assign` widens the assignment target so the stub shapes can be
-// installed onto the strongly-typed globals without per-member casts.
-Object.assign(globalThis, STUBS);
+// installed onto the strongly-typed globals without per-member casts. `foundry`
+// is the shared data stub, carrying this suite's application API and deepClone.
+const { foundry: foundryExtras, ...otherStubs } = STUBS;
+Object.assign(globalThis, otherStubs);
+const restoreFoundry = installFoundryDataStub(foundryExtras);
 
 afterAll(() => {
+    restoreFoundry();
     Object.assign(globalThis, {
         game: ORIGINAL_GAME,
-        foundry: ORIGINAL_FOUNDRY,
         ui: ORIGINAL_UI,
         Roll: ORIGINAL_ROLL,
     });

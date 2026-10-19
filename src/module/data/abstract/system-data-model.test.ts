@@ -1,35 +1,17 @@
 import { afterAll, describe, expect, it } from 'vitest';
+import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 
 /**
  * Tests for SystemDataModel's static utilities.
  *
  * The class extends `foundry.abstract.TypeDataModel` at module-eval, which happy-dom
- * does not provide, so the module is imported AFTER a minimal `foundry` stub (a
+ * does not provide, so the module is imported AFTER the shared Foundry data stub (a
  * static import would hoist above it). The stub's `shimData` stands in for
  * Foundry's: it returns the source it was given, as the real one does once its
  * own shims have run. Previously each test skipped itself when the import failed,
  * so none of them ever ran.
  */
-
-type AnyCtor = abstract new (...args: never[]) => object;
-interface GlobalShim {
-    foundry?: { abstract: { TypeDataModel: AnyCtor } } | undefined;
-}
-
-class TypeDataModelStub {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: stands in for Foundry's DataModel.shimData, whose source is untyped
-    static shimData(data: Record<string, unknown>): Record<string, unknown> {
-        return data;
-    }
-}
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: installing a test stub for the Foundry runtime global
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-G.foundry = { abstract: { TypeDataModel: TypeDataModelStub } };
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+afterAll(installFoundryDataStub());
 
 const { default: SystemDataModel } = await import('./system-data-model.ts');
 

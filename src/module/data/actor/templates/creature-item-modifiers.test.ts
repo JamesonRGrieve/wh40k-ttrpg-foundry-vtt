@@ -1,4 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { installFoundryDataStub } from '../../../testing/foundry-data-stub.ts';
 
 /**
  * Path A end to end: an owned item's static `modifiers` block (ModifiersTemplate)
@@ -16,29 +17,9 @@ import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
  * guarded here is a modifier silently dropped on its way to the target number.
  */
 
-type AnyCtor = abstract new (...args: never[]) => object;
-interface FoundryStub {
-    abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };
-    data: { fields: Record<string, AnyCtor> };
-    utils: { mergeObject: <T extends object>(original: T, other: object) => T };
-}
-interface GlobalShim {
-    foundry?: FoundryStub | undefined;
-}
-const G = globalThis as GlobalShim;
-const ORIGINAL_FOUNDRY = G.foundry;
-class StubField {}
-G.foundry = {
-    abstract: { DataModel: class {}, TypeDataModel: class {} },
-    // The schema factories are never invoked here; every field ctor is the same inert class.
-    data: { fields: new Proxy<Record<string, AnyCtor>>({}, { get: () => StubField }) },
-    // ActorDataModel merges its metadata at class-definition time.
-    utils: { mergeObject: <T extends object>(original: T, other: object): T => ({ ...original, ...other }) },
-};
-
-afterAll(() => {
-    G.foundry = ORIGINAL_FOUNDRY;
-});
+// The shared Foundry data stub; ActorDataModel merges its metadata through its
+// `utils.mergeObject` at class-definition time.
+afterAll(installFoundryDataStub());
 
 const { default: CreatureTemplate } = await import('./creature.ts');
 
