@@ -200,6 +200,15 @@ export const CategoryTabsFitDefaultWidth: Story = {
         const tabs = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-action="selectCategory"]'));
         await expect(tabs.length).toBe(5 * GAME_LINES.length);
         await expect(overflowingLabels(tabs)).toEqual([]);
+        // Each label on one line: its box is no taller than one line ("CHARACTER-ISTICS" broke in two).
+        const wrapped = tabs
+            .map((tab) => tab.querySelector('span'))
+            .filter(
+                (label): label is HTMLSpanElement =>
+                    label !== null && label.getBoundingClientRect().height > parseFloat(getComputedStyle(label).lineHeight) * 1.5,
+            )
+            .map((label) => label.textContent.trim());
+        await expect(wrapped).toEqual([]);
     },
 };
 

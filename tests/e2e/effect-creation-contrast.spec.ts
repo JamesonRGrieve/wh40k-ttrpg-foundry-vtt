@@ -5,11 +5,11 @@ import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B for #651: the Create Active Effect dialog drew its labels, values, hints
- * and tab captions in fixed white, which is unreadable on the light theme's
- * parchment. Its colours are theme tokens now. Under each colour scheme the
- * dialog is opened from a character sheet, and each category's form is scanned
- * for WCAG AA text contrast and snapped.
+ * Tier B for #651: the Create Active Effect dialog's colours are tokens, and it
+ * stays dark on both themes like every system dialog (#667), declaring the dark
+ * surface. Under each colour scheme the dialog is opened from a character sheet,
+ * and each category's form is scanned for WCAG AA text contrast, checked for a
+ * dark window body and one-line tab labels, and snapped.
  */
 
 type Scheme = 'dark' | 'light';
@@ -75,8 +75,18 @@ async function checkCategory(page: Page, dialogId: string, scheme: Scheme, categ
     // Off the dialog, so no hover tooltip sits in the capture.
     await page.mouse.move(0, 0);
     const failures = await scanContrast(page, `#${dialogId} .window-content`, 40, { controls: true });
+    // Each tab label renders on one line ("CHARACTER-ISTICS" used to break).
+    const wrapped = await page
+        .locator(`#${dialogId} [data-action="selectCategory"] span`)
+        .evaluateAll((labels) => labels.filter((label) => globalThis.wh40kE2E.textLines(label) > 1).map((label) => label.textContent.trim()));
+    // The dialog stays dark on both themes (#667): its content's ground is the dark window body.
+    const ground = await page.locator(`#${dialogId} .window-content`).evaluate((el) => getComputedStyle(el).backgroundColor);
     await snap(page, `effect-creation-${scheme}-${category}`, { selector: `#${dialogId}` });
-    return failures.map((f) => `${scheme}/${category}: "${f.text}" ${f.color} on ${f.background} ${f.ratio.toFixed(2)}:1`);
+    return [
+        ...failures.map((f) => `${scheme}/${category}: "${f.text}" ${f.color} on ${f.background} ${f.ratio.toFixed(2)}:1`),
+        ...wrapped.map((label) => `${scheme}/${category}: tab label "${label}" wraps`),
+        ...(ground === 'rgb(26, 26, 26)' ? [] : [`${scheme}/${category}: window body is ${ground}, not the dark #1a1a1a`]),
+    ];
 }
 
 /** Under `scheme`, open the dialog and check every category; returns the unreadable text. */
