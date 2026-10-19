@@ -12,7 +12,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { SKILL_DEFINITIONS } from '../src/module/data/shared/skill-definitions.ts';
+import { SKILL_DEFINITIONS, skillLabel } from '../src/module/data/shared/skill-definitions.ts';
 import { readRepoFile } from './lib/repo-file.ts';
 
 const NPC_SHEET = readRepoFile('src/module/applications/actor/npc-sheet.ts');
@@ -28,7 +28,9 @@ describe('Reinforcement caller skill label (#77)', () => {
     });
 
     it('the NPC data model labels a skill from the catalog, specialist skills included', () => {
-        expect(NPC_DATA).toContain('return SKILL_LABELS.get(skillKey) ?? skillKey;');
+        expect(NPC_DATA).toContain('return skillLabel(skillKey);');
         expect(SKILL_DEFINITIONS['forbiddenLore'].label).toBe('Forbidden Lore');
+        expect(skillLabel('forbiddenLore')).toBe('Forbidden Lore');
+        expect(skillLabel('notASkill')).toBe('notASkill');
     });
 });
