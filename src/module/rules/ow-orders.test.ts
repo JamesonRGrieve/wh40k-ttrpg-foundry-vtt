@@ -1,195 +1,119 @@
 import { describe, expect, it } from 'vitest';
+import { comradeOrdersFor } from '../config/game-systems/index.ts';
+import type { ComradeRecord } from './ow-comrade.ts';
 import {
-    GENERIC_ORDERS,
-    GENERIC_ORDER_CLOSE_QUARTERS,
-    GENERIC_ORDER_RANGED_VOLLEY,
-    GENERIC_ORDER_TAKE_COVER,
-    applyOrderEffect,
-    canIssueOrder,
-    getSweepingOrders,
-    type OrderDef,
-    type SquadMemberMods,
+    COMRADE_ACTION_HALVES,
+    type ComradeOrderContext,
+    type ComradeOrderDef,
+    comradeOrderTestComponents,
+    ordersInForce,
+    readActiveComradeOrders,
+    resolveComradeOrder,
+    sumComradeOrderComponents,
 } from './ow-orders.ts';
 
-describe('ow-orders · generic Order constants', () => {
-    it('exposes the three RAW generic Orders with the expected ids and kind', () => {
-        expect(GENERIC_ORDER_RANGED_VOLLEY.id).toBe('ranged-volley');
-        expect(GENERIC_ORDER_RANGED_VOLLEY.kind).toBe('generic');
-        expect(GENERIC_ORDER_CLOSE_QUARTERS.id).toBe('close-quarters');
-        expect(GENERIC_ORDER_CLOSE_QUARTERS.kind).toBe('generic');
-        expect(GENERIC_ORDER_TAKE_COVER.id).toBe('take-cover');
-        expect(GENERIC_ORDER_TAKE_COVER.kind).toBe('generic');
-        expect(GENERIC_ORDERS).toHaveLength(3);
-        expect(GENERIC_ORDERS.map((o) => o.id)).toEqual(['ranged-volley', 'close-quarters', 'take-cover']);
+/** Only War's printed Orders (OW Core pp. 269–271), from the line config. */
+const ORDERS = comradeOrdersFor('ow');
+
+function order(id: string): ComradeOrderDef {
+    const found = ORDERS.find((candidate) => candidate.id === id);
+    if (found === undefined) throw new Error(`Only War prints no ${id} Order`);
+    return found;
+}
+
+const FIT: Pick<ComradeRecord, 'state' | 'fleeing' | 'pinned'> = { state: 'unharmed', fleeing: false, pinned: false };
+
+function resolve(id: string, over: Partial<ComradeOrderContext> = {}): ReturnType<typeof resolveComradeOrder> {
+    return resolveComradeOrder({ order: order(id), comrade: FIT, inCohesion: true, actionsLeft: 2, inCombat: true, ...over });
+}
+
+describe('ow-orders — the printed Orders (OW Core pp. 269–271)', () => {
+    it('Only War prints Maintain Cohesion, the five move Actions, Ranged Volley, Close Quarters and Take Cover!', () => {
+        expect(ORDERS.map((candidate) => [candidate.id, candidate.actionCost])).toEqual([
+            ['follow', 'half'],
+            ['disengage', 'full'],
+            ['move-half', 'half'],
+            ['move-full', 'full'],
+            ['run', 'full'],
+            ['stand-mount', 'half'],
+            ['tactical-advance', 'full'],
+            ['ranged-volley', 'half'],
+            ['close-quarters', 'half'],
+            ['take-cover', 'full'],
+        ]);
     });
 
-    it('Ranged Volley grants +5 Ballistic Skill', () => {
-        expect(GENERIC_ORDER_RANGED_VOLLEY.effect.characteristic).toBe('ballisticSkill');
-        expect(GENERIC_ORDER_RANGED_VOLLEY.effect.modifier).toBe(5);
+    it('Ranged Volley gives +5 to Ballistic Skill tests, only in Cohesion', () => {
+        expect(order('ranged-volley')).toMatchObject({
+            cohesion: 'for-benefit',
+            benefit: { kind: 'characteristic', characteristic: 'ballisticSkill', modifier: 5 },
+        });
     });
 
-    it('Close Quarters and Take Cover tag traits rather than numeric mods', () => {
-        expect(GENERIC_ORDER_CLOSE_QUARTERS.effect.trait).toBe('ganging-up');
-        expect(GENERIC_ORDER_TAKE_COVER.effect.trait).toBe('cover-bonus');
+    it.each(['dh1', 'dh2', 'rt', 'bc', 'dw', 'im'])('%s prints no Comrade Orders', (line) => {
+        expect(comradeOrdersFor(line)).toEqual([]);
     });
 
-    it('marks no generic Order as Cohesion-gated', () => {
-        for (const order of GENERIC_ORDERS) {
-            expect(order.cohesionRequired ?? false).toBe(false);
-        }
+    it('a Full Action is the whole Turn: two Half Actions', () => {
+        expect(COMRADE_ACTION_HALVES).toEqual({ half: 1, full: 2 });
     });
 });
 
-describe('ow-orders · canIssueOrder', () => {
-    it('blocks when the required action cost is unavailable', () => {
-        const result = canIssueOrder({
-            order: GENERIC_ORDER_RANGED_VOLLEY,
-            hasFullAction: false,
-            hasHalfAction: false,
-            cohesionAvailable: true,
-        });
-        expect(result.allowed).toBe(false);
-        expect(result.reason).toBe('insufficient-action');
+describe('ow-orders — resolveComradeOrder', () => {
+    it('an Order in Cohesion with the action left is carried out and grants its benefit', () => {
+        expect(resolve('ranged-volley')).toEqual({ enacted: true, block: null, halves: 1, grantsBenefit: true });
+        expect(resolve('take-cover')).toEqual({ enacted: true, block: null, halves: 2, grantsBenefit: false });
     });
 
-    it('blocks a full-action Order when only a half-action is available', () => {
-        const fullOrder: OrderDef = {
-            id: 'speciality-x',
-            kind: 'speciality',
-            actionCost: 'full',
-            effect: { description: 'opaque' },
-        };
-        const result = canIssueOrder({
-            order: fullOrder,
-            hasFullAction: false,
-            hasHalfAction: true,
-            cohesionAvailable: true,
-        });
-        expect(result.allowed).toBe(false);
-        expect(result.reason).toBe('insufficient-action');
+    it('out of Cohesion a for-benefit Order is carried out but grants nothing', () => {
+        expect(resolve('ranged-volley', { inCohesion: false })).toEqual({ enacted: true, block: null, halves: 1, grantsBenefit: false });
     });
 
-    it('allows a half-action Order when only a half-action is available and no Cohesion is required', () => {
-        const result = canIssueOrder({
-            order: GENERIC_ORDER_RANGED_VOLLEY,
-            hasFullAction: false,
-            hasHalfAction: true,
-            cohesionAvailable: false,
-        });
-        expect(result.allowed).toBe(true);
-        expect(result.reason).toBeUndefined();
+    it('out of Cohesion the Comrade cannot follow, but can still be moved by the move Orders', () => {
+        expect(resolve('follow', { inCohesion: false }).block).toBe('needs-cohesion');
+        const moves = ['disengage', 'move-half', 'move-full', 'run', 'stand-mount', 'tactical-advance'];
+        expect(moves.filter((id) => !resolve(id, { inCohesion: false }).enacted)).toEqual([]);
     });
 
-    it('allows the Order when Cohesion is not required regardless of cohesionAvailable', () => {
-        const result = canIssueOrder({
-            order: GENERIC_ORDER_TAKE_COVER,
-            hasFullAction: true,
-            hasHalfAction: true,
-            cohesionAvailable: false,
-        });
-        expect(result.allowed).toBe(true);
+    it('an Order given after the Comrade has used its Actions has no effect', () => {
+        expect(resolve('ranged-volley', { actionsLeft: 0 }).block).toBe('no-actions');
+        expect(resolve('take-cover', { actionsLeft: 1 }).block).toBe('no-actions');
+        expect(resolve('move-half', { actionsLeft: 1 }).enacted).toBe(true);
     });
 
-    it('blocks when Cohesion is required and unavailable', () => {
-        const cohesionOrder: OrderDef = {
-            id: 'speciality-cohesion',
-            kind: 'speciality',
-            actionCost: 'half',
-            cohesionRequired: true,
-            effect: { description: 'opaque' },
-        };
-        const result = canIssueOrder({
-            order: cohesionOrder,
-            hasFullAction: true,
-            hasHalfAction: true,
-            cohesionAvailable: false,
-        });
-        expect(result.allowed).toBe(false);
-        expect(result.reason).toBe('insufficient-cohesion');
+    it('a wounded Comrade cannot Run, but can still Move', () => {
+        expect(resolve('run', { comrade: { ...FIT, state: 'wounded' } }).block).toBe('wounded');
+        expect(resolve('move-full', { comrade: { ...FIT, state: 'wounded' } }).enacted).toBe(true);
     });
 
-    it('always allows free-cost Orders ignoring action state', () => {
-        const sweep: OrderDef = {
-            id: 'sweep-x',
-            kind: 'sweeping',
-            actionCost: 'free',
-            sweeping: true,
-            effect: { trait: 'morale-up' },
-        };
-        const result = canIssueOrder({
-            order: sweep,
-            hasFullAction: false,
-            hasHalfAction: false,
-            cohesionAvailable: false,
-        });
-        expect(result.allowed).toBe(true);
+    it('a dead, pinned or fleeing Comrade carries out nothing; nor is there a Turn out of combat', () => {
+        expect(resolve('move-half', { comrade: { ...FIT, state: 'dead' } }).block).toBe('dead');
+        expect(resolve('move-half', { comrade: { ...FIT, pinned: true } }).block).toBe('pinned');
+        expect(resolve('move-half', { comrade: { ...FIT, fleeing: true } }).block).toBe('fleeing');
+        expect(resolve('move-half', { inCombat: false }).block).toBe('not-in-combat');
     });
 });
 
-describe('ow-orders · applyOrderEffect', () => {
-    it('appends the order effect to every squad member', () => {
-        const squad: SquadMemberMods[] = [
-            { id: 'a', mods: [] },
-            { id: 'b', mods: [{ trait: 'pre-existing' }] },
-            { id: 'c', mods: [] },
-        ];
+describe('ow-orders — benefits in force (Path B)', () => {
+    const NOW = { combatId: 'c1', round: 3 };
+    const volley = { orderId: 'ranged-volley', combatId: 'c1', round: 3 };
+    const describeOrder = (def: ComradeOrderDef): { label: string; source: string } => ({ label: def.id, source: `${def.id} (Vask)` });
 
-        const next = applyOrderEffect(GENERIC_ORDER_RANGED_VOLLEY, squad);
-
-        expect(next).toHaveLength(3);
-        for (const m of next) {
-            const last = m.mods[m.mods.length - 1];
-            expect(last).toEqual({ characteristic: 'ballisticSkill', modifier: 5 });
-        }
-        // Member b's prior mod is preserved.
-        expect(next[1]?.mods[0]).toEqual({ trait: 'pre-existing' });
-        // Pure function — original squad unchanged.
-        expect(squad[0]?.mods).toEqual([]);
-        expect(squad[1]?.mods).toHaveLength(1);
+    it('a benefit lasts the Turn it was given in', () => {
+        expect(ordersInForce([volley, { ...volley, round: 2 }], NOW)).toEqual([volley]);
+        expect(ordersInForce([volley], null)).toEqual([]);
     });
 
-    it('handles an empty squad without throwing', () => {
-        const next = applyOrderEffect(GENERIC_ORDER_TAKE_COVER, []);
-        expect(next).toEqual([]);
-    });
-});
-
-describe('ow-orders · getSweepingOrders', () => {
-    it('picks only sweeping orders out of a mixed list', () => {
-        const sweep: OrderDef = {
-            id: 'sweep-x',
-            kind: 'sweeping',
-            actionCost: 'free',
-            sweeping: true,
-            effect: { trait: 'morale-up' },
-        };
-        const speciality: OrderDef = {
-            id: 'spec-y',
-            kind: 'speciality',
-            actionCost: 'half',
-            effect: { description: 'opaque' },
-        };
-
-        const result = getSweepingOrders([GENERIC_ORDER_RANGED_VOLLEY, sweep, speciality]);
-
-        expect(result).toHaveLength(1);
-        expect(result[0]?.id).toBe('sweep-x');
+    it('Ranged Volley adds a sourced +5 row to Ballistic Skill tests this Turn, and nothing to others', () => {
+        const rows = comradeOrderTestComponents([volley], ORDERS, NOW, 'ballisticSkill', describeOrder);
+        expect(rows).toEqual([{ key: 'comrade-order-ranged-volley', label: 'ranged-volley', value: 5, source: 'ranged-volley (Vask)' }]);
+        expect(sumComradeOrderComponents(rows)).toBe(5);
+        expect(comradeOrderTestComponents([volley], ORDERS, NOW, 'weaponSkill', describeOrder)).toEqual([]);
+        expect(comradeOrderTestComponents([volley], ORDERS, { combatId: 'c1', round: 4 }, 'ballisticSkill', describeOrder)).toEqual([]);
     });
 
-    it('returns an empty array when nothing is sweeping', () => {
-        expect(getSweepingOrders(GENERIC_ORDERS)).toEqual([]);
-    });
-
-    it('accepts the convenience flag without a sweeping kind', () => {
-        const hybrid: OrderDef = {
-            id: 'hybrid',
-            kind: 'speciality',
-            actionCost: 'half',
-            sweeping: true,
-            effect: { description: 'opaque' },
-        };
-        const result = getSweepingOrders([hybrid]);
-        expect(result).toHaveLength(1);
-        expect(result[0]?.id).toBe('hybrid');
+    it('reads the stored benefits, skipping malformed entries and actor types without the slot', () => {
+        expect(readActiveComradeOrders({ activeOrders: [volley, { orderId: 3 }, null] })).toEqual([volley]);
+        expect(readActiveComradeOrders({})).toEqual([]);
     });
 });

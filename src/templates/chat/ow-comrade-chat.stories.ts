@@ -8,10 +8,15 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { randomId, seedRandom, type SystemId } from '../../../stories/mocks/extended';
+import { localizeKey } from '../../../stories/mocks/lang-localize';
+import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import { applyComradeHit, type ComradeState, healComrade, replaceComrade, transfersToComrade } from '../../module/rules/ow-comrade';
 import chatSrc from './ow-comrade-chat.hbs?raw';
+
+initializeStoryHandlebars();
 
 const rng = seedRandom(0xc03ade5);
 
@@ -134,6 +139,53 @@ export const StateHealWoundedToUnharmed: Story = {
 export const StateReplaceDeadToUnharmed: Story = {
     name: 'State change — dead → unharmed (replacement enters play)',
     render: () => renderSheet(chatSrc, { ...stateChangeContext('dead', 'replace') }),
+};
+
+/** A hit on doubles struck the Comrade instead (#152, p. 271): the card states the reason and the step it took. */
+export const HitTransferWounds: Story = {
+    name: 'Hit transfer — doubles wound the Comrade',
+    render: () => {
+        const change = stateChangeContext('unharmed', 'hit').event;
+        return renderSheet(chatSrc, { ...BASE, event: { ...change, kind: 'hit-transfer', reason: 'doubles' } });
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-reason="doubles"]')?.textContent).toContain(localizeKey('WH40K.OW.Comrade.Hit.Transferred.Doubles'));
+        await expect(canvasElement.querySelector('[data-new-state]')?.getAttribute('data-new-state')).toBe('wounded');
+    },
+};
+
+/** A recovery Order (p. 271) clears Fear and Pinning. */
+export const Recovered: Story = {
+    name: 'Recovery Order — no longer fleeing or pinned',
+    render: () => renderSheet(chatSrc, { ...BASE, event: { kind: 'recover', wasFleeing: true, wasPinned: false } }),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-comrade-recovered]')?.textContent).toContain(localizeKey('WH40K.OW.Comrade.Chat.Recovered'));
+    },
+};
+
+/** Insanity or Corruption (p. 271): the Round's total against the threshold, and death at it. */
+function mentalContext(amount: number, total: number): object {
+    return {
+        ...BASE,
+        event: { kind: 'mental', mentalKind: 'corruption', mentalKey: 'WH40K.OW.Comrade.Mental.Corruption', amount, total, threshold: 10, dies: total >= 10 },
+    };
+}
+
+export const MentalSurvives: Story = {
+    name: 'Corruption — 6 of 10 this Round, survives',
+    render: () => renderSheet(chatSrc, mentalContext(6, 6)),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-comrade-mental-total]')?.getAttribute('data-comrade-mental-total')).toBe('6');
+        await expect(canvasElement.querySelector('[data-comrade-mental-death]')).toBeNull();
+    },
+};
+
+export const MentalDeath: Story = {
+    name: 'Corruption — 10 in one Round kills the Comrade',
+    render: () => renderSheet(chatSrc, mentalContext(4, 10)),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-comrade-mental-death]')?.textContent).toContain(localizeKey('WH40K.OW.Comrade.Mental.Corruption'));
+    },
 };
 
 // ── Per-system homologation ──────────────────────────────────────────────────

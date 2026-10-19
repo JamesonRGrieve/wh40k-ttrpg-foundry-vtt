@@ -9,6 +9,15 @@
                 <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0] tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto">{{{psychicEffect}}}</div>
             {{/if}}
 
+            {{!-- A hit that struck the target's Comrade instead (Only War, #152; OW Core p. 271):
+                  doubles on the hit roll while the Comrade is in Cohesion. --}}
+            {{#if comradeHit}}
+                <div class="tw-flex tw-items-center tw-gap-2 tw-my-2 tw-px-3 tw-py-2 tw-rounded tw-border-l-[3px] tw-border-crimson tw-bg-[var(--wh40k-panel-bg-translucent)] tw-text-[0.85rem]" data-damage-comrade-hit>
+                    <i class="fas fa-user-shield tw-text-crimson" aria-hidden="true"></i>
+                    <span>{{localize "WH40K.OW.Comrade.Hit.StrikesComrade" comrade=comradeHit.comradeName}}</span>
+                </div>
+            {{/if}}
+
             {{#each hits as |hit|}}
                 <div class="tw-my-3 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">

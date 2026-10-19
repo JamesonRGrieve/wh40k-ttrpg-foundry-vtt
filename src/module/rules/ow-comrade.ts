@@ -1,57 +1,43 @@
 /**
- * Only War "Comrade in Combat" RAW resolver (#152 — core.md
- * §"COMRADES IN COMBAT" p.12137).
+ * Only War "Comrades in Combat" (#152; OW Core pp. 269–271, "Losing and
+ * Replacing Comrades" p. 110).
  *
- * Pure functions over a single PC ↔ Comrade pair. The caller (character
- * DataModel, sheet action handler, damage-pipeline hook, chat card)
- * owns I/O, actor lookups, and persistent state mutation; this module
- * owns the cohesion check, the state-track transitions, the hit-transfer
- * decision, and the auto-mirror gates for Fear / Pinning / mental death.
+ * Pure functions over one PC ↔ Comrade pair. The caller (the character sheet,
+ * the roll pipeline, the damage path, a chat card) owns I/O, actor lookups and
+ * persistence; this module owns the rules:
  *
- * Canonical rules referenced here:
- *   - Each PC has exactly ONE Comrade. Comrades take no Tests and no
- *     Reactions of their own; they act on the PC's turn.
- *   - Cohesion (OW Core p.269): the Comrade is "in Cohesion" while within
- *     5 metres of their PC AND "they are not separated by a solid barrier"
- *     (the `hasVisualLine` flag records that). The "Maintain / Break
- *     Cohesion" action is a Half Action handled by the caller — this
- *     module only resolves the boolean check.
- *   - State track: unharmed → wounded → dead. A Comrade hit advances
- *     one step; a fully healed Comrade reverts wounded → unharmed.
- *     Death is terminal until a replacement is granted.
- *   - Replacement: a dead Comrade can be replaced (e.g. between missions,
- *     by Regiment Resource spend) provided a replacement is actually
- *     available; the replacement enters play unharmed.
- *   - Doubles-on-PC-hit: when a hit roll against the PC comes up
- *     doubles (11, 22, …, 99) and the Comrade is in Cohesion, one of
- *     those hits is transferred to the Comrade.
- *   - Blast / Spray weapons that catch the PC also catch the Comrade
- *     automatically when the Comrade is within the template / spray
- *     footprint (regardless of doubles).
- *   - Fear & Pinning: a Comrade in Cohesion auto-mirrors the PC's
- *     result — if the PC fails a Fear test, so does the Comrade; if
- *     the PC is Pinned, so is the Comrade. Out of Cohesion the Comrade
- *     is unaffected (the GM resolves them separately or hand-waves).
- *   - Mental damage death: 10 or more points of Insanity OR Corruption
- *     suffered by the PC in a single round kills the Comrade outright
- *     (the strain of witnessing it severs the bond).
+ *   - Cohesion (p. 269): "within 5 metres of his controlling Player Character,
+ *     and they are not separated by a solid barrier". The printed values live on
+ *     the line's game-system config (`comradeRules`).
+ *   - The state track (p. 271, "Comrades Taking Damage"): unharmed → wounded →
+ *     dead; "If a Comrade is wounded he cannot Run".
+ *   - The hit transfer (p. 271, "Comrades Being Attacked"): a successful hit roll
+ *     against the PC that comes up doubles strikes a Comrade in Cohesion instead
+ *     (one hit of a multi-hit attack); Blast and Spray catch any Comrade in their
+ *     area.
+ *   - Fear and Pinning (p. 271): the Comrade passes or fails with its PC, unless it
+ *     is immune. A failed Fear test counts as 81–100 on Table 9–5 (it flees) until
+ *     the end of combat or a recovery Order; a failed Pinning test sends it to
+ *     cover with no Actions until a recovery Order.
+ *   - Insanity and Corruption (p. 271): a Comrade "would suffer 10 Insanity or 10
+ *     Corruption in a single Round" dies.
+ *   - Replacement (p. 110, p. 271): a dead Comrade is replaced at downtime (the
+ *     squad back in camp for refitting).
  *
- * Out of scope this round (DataModel slot, sheet panel, damage-pipeline
- * hook, chat card): the actual `system.ow.comrade` storage, the
- * Maintain/Break Cohesion action button, the AssignDamageData branch
- * that consults `transfersToComrade`, and the Storybook story for the
- * Comrade panel. Those land in follow-ups so this engine stays a pure
- * rules module with no Foundry coupling.
+ * The Comrade's Orders and its action budget are `rules/ow-orders.ts`.
  */
 
-/** Visual-line cohesion radius for a Comrade, in metres (RAW §"COMRADES IN COMBAT" p.12137). */
-export const COMRADE_COHESION_RANGE_M = 5;
+import type { CombatRoundStamp } from './counter-attack.ts';
 
-/** Insanity-in-one-round threshold that kills the Comrade outright (RAW p.12137). */
-export const COMRADE_INSANITY_DEATH_THRESHOLD = 10;
-
-/** Corruption-in-one-round threshold that kills the Comrade outright (RAW p.12137). */
-export const COMRADE_CORRUPTION_DEATH_THRESHOLD = 10;
+/** A line's printed Comrade rules (OW Core pp. 269–271), on its game-system config. */
+export interface ComradeRules {
+    /** Cohesion radius in metres ("within 5 metres", p. 269). */
+    readonly cohesionRangeM: number;
+    /** Half Actions a Comrade has per Turn ("two Half Actions or one Full Action", p. 269). */
+    readonly actionBudget: number;
+    /** Insanity or Corruption in one Round that kills the Comrade ("10 Insanity or 10 Corruption", p. 271). */
+    readonly mentalDeathThreshold: number;
+}
 
 /** Health-track state for a Comrade in Combat. */
 export type ComradeState = 'unharmed' | 'wounded' | 'dead';
@@ -72,22 +58,13 @@ export interface InCohesionArgs {
 }
 
 /**
- * Resolve whether a Comrade is currently "in Cohesion" with their PC.
- *
- * RAW (OW Core p.269): Cohesion holds while the Comrade is within 5 metres
- * of their PC and "they are not separated by a solid barrier, such as if
- * the Player Character is inside a sealed bunker while the Comrade is
- * trapped in the open outside". `hasVisualLine` records that no such barrier
- * stands between them. Both conditions must hold; either failing breaks it.
- *
- * The 5 m threshold is inclusive — a Comrade exactly 5 m away is still
- * in support; 5.0001 m is not. Negative or non-finite distances are
- * coerced to 0 (same point).
+ * Whether a Comrade is "in Cohesion" with its PC (p. 269): within the line's
+ * Cohesion radius (inclusive) and not separated by a solid barrier. Either
+ * failing breaks it. Negative or non-finite distances read as 0 (same point).
  */
-export function inCohesion(args: InCohesionArgs): boolean {
+export function inCohesion(args: InCohesionArgs, rules: ComradeRules): boolean {
     if (!args.hasVisualLine) return false;
-    const distance = sanitiseNonNegativeDistance(args.distanceM);
-    return distance <= COMRADE_COHESION_RANGE_M;
+    return sanitiseNonNegativeDistance(args.distanceM) <= rules.cohesionRangeM;
 }
 
 /* -------------------------------------------- */
@@ -109,11 +86,9 @@ export interface ComradeReplaceResult extends ComradeStateTransition {
 }
 
 /**
- * Apply one hit's worth of damage to the Comrade's state track.
- *
- * RAW: unharmed → wounded, wounded → dead, dead → dead. The track has
- * no granular wound count — the Comrade is an NPC abstraction, not a
- * full creature, so one transfer = one step.
+ * One hit on the Comrade's state track (p. 271): "If an unharmed Comrade suffers a
+ * hit from a weapon, he becomes wounded … If a wounded Comrade suffers another hit
+ * from a weapon, he dies." No wound count: one hit is one step.
  */
 export function applyComradeHit(state: ComradeState): ComradeStateTransition {
     if (state === 'unharmed') return { newState: 'wounded', transitioned: true };
@@ -122,11 +97,8 @@ export function applyComradeHit(state: ComradeState): ComradeStateTransition {
 }
 
 /**
- * Heal the Comrade by one step.
- *
- * RAW: a wounded Comrade can be patched up between scenes / by Medicae
- * to return to unharmed. Dead is terminal until a replacement is granted
- * (see {@link replaceComrade}); unharmed cannot be healed further.
+ * Heal the Comrade by one step: a wounded Comrade returns to unharmed. Dead is
+ * terminal until a replacement (see {@link replaceComrade}).
  */
 export function healComrade(state: ComradeState): ComradeStateTransition {
     if (state === 'wounded') return { newState: 'unharmed', transitioned: true };
@@ -134,13 +106,9 @@ export function healComrade(state: ComradeState): ComradeStateTransition {
 }
 
 /**
- * Replace a dead Comrade with a fresh one.
- *
- * RAW: only valid when the existing Comrade is dead AND a replacement
- * is actually available (Regiment ruling, downtime, GM fiat). The new
- * Comrade enters play unharmed. Calling on a living Comrade is a no-op
- * even if a replacement is available — you don't get to swap a wounded
- * Comrade out for a fresh one mid-scene.
+ * Replace a dead Comrade with a fresh one: only a dead Comrade, and only when a
+ * replacement is available (p. 110: "the Squad will have to wait until they have
+ * downtime at an Imperial Guard base"). The new Comrade enters play unharmed.
  */
 export function replaceComrade(state: ComradeState, replacementAvailable: boolean): ComradeReplaceResult {
     if (state === 'dead' && replacementAvailable) {
@@ -153,13 +121,58 @@ export function replaceComrade(state: ComradeState, replacementAvailable: boolea
 /*  Panel view                                  */
 /* -------------------------------------------- */
 
-/** The stored Comrade the panel reads (`system.comrade`). */
+/** The Comrade's actions spent in one combat Round (its Turn). */
+export interface ComradeTurnRecord {
+    combatId: string;
+    round: number;
+    /** Half Actions spent (a Full Action is two). */
+    halvesSpent: number;
+}
+
+/** The Insanity and Corruption a Comrade has suffered in one combat Round. */
+interface ComradeMentalTally {
+    combatId: string;
+    round: number;
+    insanity: number;
+    corruption: number;
+}
+
+/** The stored Comrade (`system.comrade`). */
 export interface ComradeRecord {
     name: string;
     state: ComradeState;
     distanceM: number;
     /** Whether PC and Comrade are free of a solid barrier between them (RAW Cohesion, p.269). */
     hasVisualLine: boolean;
+    /** Failed a Fear test with its PC: flees (Table 9–5, 81–100) until the end of combat or a recovery Order. */
+    fleeing: boolean;
+    /** Failed a Pinning test with its PC: in cover, no Actions until a recovery Order. */
+    pinned: boolean;
+    /** Benefits from an ability that makes it immune to Fear. */
+    fearImmune: boolean;
+    /** Benefits from an ability that makes it immune to Pinning. */
+    pinningImmune: boolean;
+    turn: ComradeTurnRecord;
+    mental: ComradeMentalTally;
+}
+
+const COMRADE_STATES: ReadonlySet<string> = new Set<ComradeState>(['unharmed', 'wounded', 'dead']);
+
+/**
+ * The Comrade stored on an actor's system data (`system.comrade`), or null when the
+ * actor type has none. Every character DataModel carries the slot; this reads it
+ * off the actor-type union without a cast.
+ */
+export function readComradeRecord(system: object): ComradeRecord | null {
+    if (!('comrade' in system)) return null;
+    const { comrade } = system;
+    return isComradeRecord(comrade) ? comrade : null;
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: the slot is read off an actor-type union; narrowed by this guard
+function isComradeRecord(value: unknown): value is ComradeRecord {
+    if (typeof value !== 'object' || value === null) return false;
+    return 'state' in value && typeof value.state === 'string' && COMRADE_STATES.has(value.state) && 'name' in value && typeof value.name === 'string';
 }
 
 /** Langpack label of each Comrade state. */
@@ -188,35 +201,79 @@ export interface ComradePanelView {
     /** Replace is available only for a dead Comrade while the squad is in camp. */
     canReplace: boolean;
     inCamp: boolean;
+    fleeing: boolean;
+    pinned: boolean;
+    fearImmune: boolean;
+    pinningImmune: boolean;
+    /** A recovery Order has something to clear: the Comrade is fleeing or pinned. */
+    canRecover: boolean;
+    /** Half Actions left this Turn (the full budget out of combat). */
+    actionsLeft: number;
+    actionBudget: number;
+    /** Whether the Comrade can still suffer Insanity or Corruption (it is alive). */
+    canSufferMental: boolean;
 }
 
 /**
- * The panel's view of a Comrade (#152): its cohesion against the RAW 5 m radius and
- * the state-track gates, each from the same rule the action applies, so a button
- * is enabled exactly when its action changes something.
+ * The panel's view of a Comrade (#152): its Cohesion, the state-track gates (each
+ * from the same rule its action applies, so a button is enabled exactly when its
+ * action changes something), its Fear / Pinning state and its actions left.
  *
- * `inCamp` is the squad's return to camp for refitting (RAW p.110 / p.271: a dead
- * Comrade is replaced "at the next available opportunity (such as when the Squad
- * returns to camp for refitting and rearming)") — the actor's `refitAvailable` flag.
+ * `inCamp` is the squad back in camp for refitting (p. 110 / p. 271), the actor's
+ * `refitAvailable` flag; `now` is the current combat Round, or null out of combat.
  */
-export function buildComradePanel(comrade: ComradeRecord, inCamp: boolean): ComradePanelView {
+export function buildComradePanel(comrade: ComradeRecord, inCamp: boolean, rules: ComradeRules, now: CombatRoundStamp | null): ComradePanelView {
     const { state } = comrade;
+    const alive = state !== 'dead';
     return {
         name: comrade.name,
         state,
         stateLabelKey: COMRADE_STATE_LABEL_KEYS[state],
         distanceM: sanitiseNonNegativeDistance(comrade.distanceM),
         hasVisualLine: comrade.hasVisualLine,
-        cohesionRangeM: COMRADE_COHESION_RANGE_M,
-        inCohesion: inCohesion({ distanceM: comrade.distanceM, hasVisualLine: comrade.hasVisualLine }),
+        cohesionRangeM: rules.cohesionRangeM,
+        inCohesion: inCohesion(comrade, rules),
         isUnharmed: state === 'unharmed',
         isWounded: state === 'wounded',
-        isDead: state === 'dead',
+        isDead: !alive,
         canWound: applyComradeHit(state).transitioned,
         canHeal: healComrade(state).transitioned,
         canReplace: replaceComrade(state, inCamp).replaced,
         inCamp,
+        fleeing: alive && comrade.fleeing,
+        pinned: alive && comrade.pinned,
+        fearImmune: comrade.fearImmune,
+        pinningImmune: comrade.pinningImmune,
+        canRecover: alive && (comrade.fleeing || comrade.pinned),
+        actionsLeft: alive ? comradeActionsLeft(comrade.turn, now, rules) : 0,
+        actionBudget: rules.actionBudget,
+        canSufferMental: alive,
     };
+}
+
+/* -------------------------------------------- */
+/*  Action budget                               */
+/* -------------------------------------------- */
+
+/** Whether a stored per-Round record belongs to the Round `now`. */
+function sameRound(record: { combatId: string; round: number }, now: CombatRoundStamp): boolean {
+    return record.combatId === now.combatId && record.round === now.round;
+}
+
+/**
+ * The Comrade's Half Actions left this Turn (p. 269: "limited to two Half Actions
+ * or one Full Action per Turn"). A record from an earlier Round is spent no more.
+ * Out of combat there is no Turn to spend, so the whole budget is there.
+ */
+export function comradeActionsLeft(turn: ComradeTurnRecord, now: CombatRoundStamp | null, rules: ComradeRules): number {
+    if (now === null || !sameRound(turn, now)) return rules.actionBudget;
+    return Math.max(0, rules.actionBudget - turn.halvesSpent);
+}
+
+/** The Turn record after the Comrade spends `halves` Half Actions in the Round `now`. */
+export function spendComradeActions(turn: ComradeTurnRecord, now: CombatRoundStamp, halves: number): ComradeTurnRecord {
+    const spent = sameRound(turn, now) ? turn.halvesSpent : 0;
+    return { combatId: now.combatId, round: now.round, halvesSpent: spent + halves };
 }
 
 /* -------------------------------------------- */
@@ -225,7 +282,7 @@ export function buildComradePanel(comrade: ComradeRecord, inCamp: boolean): Comr
 
 /** Input shape for {@link transfersToComrade}. */
 export interface HitTransferContext {
-    /** Whether the attacker's hit roll against the PC came up doubles (11, 22, …, 99). */
+    /** Whether the attacker's successful hit roll against the PC came up doubles (11, 22, …, 99). */
     pcRollDoubles: boolean;
     /** Whether the Comrade is currently in Cohesion with the PC. */
     comradeInCohesion: boolean;
@@ -237,29 +294,22 @@ export interface HitTransferContext {
 
 /** Result shape for {@link transfersToComrade}. */
 export interface HitTransferResult {
-    /** Whether one of the incoming hits transfers to the Comrade. */
+    /** Whether one of the incoming hits strikes the Comrade. */
     transfers: boolean;
-    /** Which RAW path triggered the transfer (or `'none'` when no transfer). */
+    /** Which printed path triggered it (or `'none'`). */
     reason: ComradeHitTransferReason;
 }
 
 /**
- * Resolve whether a hit on the PC also lands on the Comrade.
- *
- * RAW gates (p.12137):
- *   - Doubles: when the hit roll against the PC is doubles AND the
- *     Comrade is in Cohesion, one hit transfers. Doubles outside
- *     Cohesion does NOT transfer (the Comrade is too far / out of
- *     line to be caught by the spread).
- *   - Blast / Spray: when the incoming weapon is Blast or Spray AND
- *     the Comrade is inside the template / spray footprint, the
- *     Comrade is hit automatically (regardless of doubles and
- *     regardless of the 5 m Cohesion gate — what matters for these
- *     is the area template, not the social bond).
- *
- * The doubles path is checked first because it's the simpler / more
- * common RAW trigger; blast-spray is the catch-all when the area
- * footprint covers the Comrade even when no doubles came up.
+ * Whether a hit aimed at the PC strikes its Comrade (p. 271, "Comrades Being
+ * Attacked"):
+ *   - Doubles: "as long as his Comrade is in Cohesion … If a successful to hit roll
+ *     against a Player Character also result in doubles … the hit strikes the
+ *     Comrade instead." Only one hit of a multi-hit attack.
+ *   - Blast and Spray "automatically hit any targets in their area of affect. This
+ *     includes Comrades."
+ * Whether a hit really can transfer "relies a bit on common sense" (the Comrade
+ * behind a metre-thick wall), which stays the GM's call.
  */
 export function transfersToComrade(ctx: HitTransferContext): HitTransferResult {
     if (ctx.pcRollDoubles && ctx.comradeInCohesion) {
@@ -271,70 +321,157 @@ export function transfersToComrade(ctx: HitTransferContext): HitTransferResult {
     return { transfers: false, reason: 'none' };
 }
 
+/** Whether a d100 result is a double: both dice the same (11, 22, …, 99, and 100 as 00). */
+export function isDoublesRoll(total: number): boolean {
+    if (!Number.isInteger(total) || total < 1 || total > 100) return false;
+    return total === 100 || (total >= 11 && total % 11 === 0);
+}
+
+/** The defender of a targeted attack, as far as the Comrade hit transfer reads it. */
+export interface ComradeHitDefender {
+    readonly uuid: string | null;
+    readonly system: object;
+}
+
+/** A hit that strikes the defender's Comrade instead (p. 271). */
+export interface ComradeHitStrike {
+    readonly actorUuid: string;
+    readonly comradeName: string;
+}
+
+/**
+ * Whether one of the hits of a targeted attack strikes the defender's Comrade
+ * instead (p. 271): the defender's line prints Comrades, its Comrade is alive and in
+ * Cohesion, at least one hit lands on the defender, and the successful attack roll
+ * came up doubles. A targeted attack is never a Blast or Spray here: those resolve
+ * their area through its template, where a Comrade (which has no token) being
+ * inside it is the GM's call.
+ */
+export function comradeHitStrike(
+    defender: ComradeHitDefender | null,
+    rules: ComradeRules | null,
+    attack: { roll: number; hit: boolean; hitsOnDefender: number },
+): ComradeHitStrike | null {
+    const comrade = defender === null ? null : readComradeRecord(defender.system);
+    if (defender?.uuid == null || rules === null || comrade === null || comrade.state === 'dead') return null;
+    if (!attack.hit || attack.hitsOnDefender === 0) return null;
+    const { transfers } = transfersToComrade({
+        pcRollDoubles: isDoublesRoll(attack.roll),
+        comradeInCohesion: inCohesion(comrade, rules),
+        weaponBlastOrSpray: false,
+        comradeInBlastSprayRange: false,
+    });
+    return transfers ? { actorUuid: defender.uuid, comradeName: comrade.name } : null;
+}
+
+/** The hits less the last one on `defenderId` (the hit that strikes the Comrade instead). */
+export function withoutOneHitOn<T extends { readonly target: { readonly id: string } }>(hits: readonly T[], defenderId: string): T[] {
+    let index = -1;
+    hits.forEach((hit, i) => {
+        if (hit.target.id === defenderId) index = i;
+    });
+    return hits.filter((_hit, i) => i !== index);
+}
+
 /* -------------------------------------------- */
-/*  Fear / Pinning auto-mirror                  */
+/*  Fear / Pinning mirror                       */
 /* -------------------------------------------- */
+
+/** The two tests a Comrade mirrors. */
+export type ComradeMirrorTest = 'fear' | 'pinning';
 
 /** Input shape for {@link comradeMirrorsFearPinning}. */
 export interface FearPinningMirrorArgs {
-    /** Whether the PC failed their Fear test this beat. */
-    pcFailedFear: boolean;
-    /** Whether the PC is currently Pinned. */
-    pcPinned: boolean;
-    /** Whether the Comrade is in Cohesion with the PC. */
-    comradeInCohesion: boolean;
+    test: ComradeMirrorTest;
+    /** Whether the PC passed the test. */
+    pcPassed: boolean;
+    /** Whether the Comrade benefits from an ability that makes it immune to this test. */
+    comradeImmune: boolean;
+    comradeState: ComradeState;
 }
 
 /** Result shape for {@link comradeMirrorsFearPinning}. */
 export interface FearPinningMirrorResult {
-    /** Whether the Comrade fails the Fear test in lockstep with the PC. */
-    failsFear: boolean;
-    /** Whether the Comrade is Pinned in lockstep with the PC. */
-    pinned: boolean;
+    /** Whether a Comrade is there to mirror the test (it is alive). */
+    applies: boolean;
+    /** Whether the Comrade fails with its PC. */
+    fails: boolean;
+    /** Whether immunity kept it from failing with a PC who failed. */
+    immune: boolean;
 }
 
 /**
- * Resolve the Comrade's Fear / Pinning state by mirroring the PC.
- *
- * RAW: a Comrade in Cohesion takes no Fear / Pinning Tests of their
- * own — they simply share the PC's outcome. Out of Cohesion the
- * Comrade is treated as unaffected by this rule (the GM may still
- * narrate them separately, but the auto-mirror does not fire).
+ * The Comrade's result on its PC's Fear or Pinning test (p. 271): "Comrades do not
+ * take Fear Tests. If their controlling Player Character passes his Fear Test, they
+ * pass as well. If their controlling Player Character fails his Fear Test, they fail
+ * as well" (Pinning alike). "If the Comrade is benefiting from ability that makes
+ * him immune … he does not fail". Cohesion plays no part. A dead Comrade has nothing
+ * to mirror.
  */
 export function comradeMirrorsFearPinning(args: FearPinningMirrorArgs): FearPinningMirrorResult {
-    if (!args.comradeInCohesion) {
-        return { failsFear: false, pinned: false };
-    }
-    return { failsFear: args.pcFailedFear, pinned: args.pcPinned };
+    if (args.comradeState === 'dead') return { applies: false, fails: false, immune: false };
+    const immune = args.comradeImmune && !args.pcPassed;
+    return { applies: true, fails: !args.pcPassed && !args.comradeImmune, immune };
 }
 
-/* -------------------------------------------- */
-/*  Mental-damage death                         */
-/* -------------------------------------------- */
-
-/** Input shape for {@link comradeDiesFromMentalDamage}. */
-export interface ComradeMentalDamageArgs {
-    /** Insanity points the PC accrued in the current round. */
-    insanityThisRound: number;
-    /** Corruption points the PC accrued in the current round. */
-    corruptionThisRound: number;
+/** The `system.comrade` writes a failed mirrored test makes: Fear flees, Pinning pins. */
+export function comradeMirrorWrites(test: ComradeMirrorTest): { 'system.comrade.fleeing': true } | { 'system.comrade.pinned': true } {
+    return test === 'fear' ? { 'system.comrade.fleeing': true } : { 'system.comrade.pinned': true };
 }
 
 /**
- * Resolve whether the Comrade dies outright from the PC's mental damage.
- *
- * RAW (p.12137): a Comrade dies the round their PC takes 10 or more
- * Insanity OR 10 or more Corruption. The thresholds are independent —
- * either crossing it is enough. Per-round; the caller resets the
- * counters at round boundaries.
- *
- * Negative or non-finite inputs are coerced to 0 (the bookkeeping
- * never goes below zero); fractional inputs are floored.
+ * The `system.comrade` writes of a recovery Order (p. 271): the Comrade recovers
+ * from Fear and from Pinning.
  */
-export function comradeDiesFromMentalDamage(args: ComradeMentalDamageArgs): boolean {
-    const insanity = sanitiseNonNegativeInt(args.insanityThisRound);
-    const corruption = sanitiseNonNegativeInt(args.corruptionThisRound);
-    return insanity >= COMRADE_INSANITY_DEATH_THRESHOLD || corruption >= COMRADE_CORRUPTION_DEATH_THRESHOLD;
+export function recoverComrade(): { 'system.comrade.fleeing': false; 'system.comrade.pinned': false } {
+    return { 'system.comrade.fleeing': false, 'system.comrade.pinned': false };
+}
+
+/** Whether the end of combat changes the Comrade: Fear lasts "until the end of combat"; Pinning does not end with it. */
+export function comradeFearEndsWithCombat(comrade: Pick<ComradeRecord, 'fleeing'>): boolean {
+    return comrade.fleeing;
+}
+
+/* -------------------------------------------- */
+/*  Insanity and Corruption                     */
+/* -------------------------------------------- */
+
+/** Which mental damage a Comrade suffers. */
+type ComradeMentalKind = 'insanity' | 'corruption';
+
+/** Input shape for {@link applyComradeMentalDamage}. */
+export interface ComradeMentalDamageArgs {
+    tally: ComradeMentalTally;
+    /** The current combat Round; null out of combat. */
+    now: CombatRoundStamp | null;
+    kind: ComradeMentalKind;
+    amount: number;
+    rules: ComradeRules;
+}
+
+/** Result shape for {@link applyComradeMentalDamage}. */
+export interface ComradeMentalDamageResult {
+    tally: ComradeMentalTally;
+    /** The total of this kind the Comrade has suffered this Round. */
+    total: number;
+    dies: boolean;
+}
+
+/**
+ * Insanity or Corruption a Comrade suffers (p. 271): "Comrades do not track
+ * Insanity or Corruption … unless they would suffer 10 Insanity or 10 Corruption in
+ * a single Round. If this occurs, the Comrade dies." The two kinds count separately,
+ * and only within one Round; out of combat each amount stands alone. Negative or
+ * non-finite amounts count as 0, fractions round down.
+ */
+export function applyComradeMentalDamage(args: ComradeMentalDamageArgs): ComradeMentalDamageResult {
+    const amount = sanitiseNonNegativeInt(args.amount);
+    const { now, kind } = args;
+    const current: ComradeMentalTally =
+        now !== null && sameRound(args.tally, now) ? args.tally : { combatId: now?.combatId ?? '', round: now?.round ?? 0, insanity: 0, corruption: 0 };
+    const tally: ComradeMentalTally = { ...current, [kind]: current[kind] + amount };
+    const total = tally[kind];
+    return { tally, total, dies: total >= args.rules.mentalDeathThreshold };
 }
 
 /* -------------------------------------------- */

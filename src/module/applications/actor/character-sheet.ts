@@ -22,19 +22,19 @@ import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisiti
 import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
 import { promptGrappleItem } from '../../actions/grapple-controls.ts';
 import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
-import { owComradeHeal, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
+import { owComradeHeal, owComradeMental, owComradeRecover, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
 import { owComradeMedicae, owComradeReplace2, owComradeTickDay, owComradeToggleRefit } from '../../actions/ow-comrade-healing-actions.ts';
 import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/ow-drawback-actions.ts';
 import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owMountedAction } from '../../actions/ow-mount-actions.ts';
-import { orderLabelKeys, owIssueOrder } from '../../actions/ow-orders-actions.ts';
+import { type OrderPanelRow, orderPanelRows, owIssueOrder } from '../../actions/ow-orders-actions.ts';
 import { owRegimentEdit, resolveRegimentCatalog } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
-import { grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { comradeOrdersFor, comradeRulesFor, grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
@@ -57,6 +57,7 @@ import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../he
 import { pluralKey } from '../../i18n/plural.ts';
 import type { SimpleSkillData } from '../../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
+import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { dealGrappleDamage } from '../../rolls/grapple-damage.ts';
 import { performGrappleOption } from '../../rolls/grapple-flow.ts';
@@ -115,10 +116,9 @@ import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationSh
 import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
 import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
 import { buildComradeHealingPanel, type ComradeHealingPanelView } from '../../rules/ow-comrade-healing.ts';
-import { buildComradePanel, type ComradePanelView } from '../../rules/ow-comrade.ts';
+import { buildComradePanel, type ComradePanelView, type ComradeRules } from '../../rules/ow-comrade.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
-import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';
 import { buildDrawbackPanel, type MultiComradeRoster, type RegimentDrawback } from '../../rules/ow-regiment-drawback.ts';
 import { buildBattlefieldPanel } from '../../rules/ow-regimental-award.ts';
@@ -432,15 +432,7 @@ type OwLogisticsPanelContext = {
 
 /** OW Orders panel (#153). */
 type OwOrdersPanelContext = {
-    available: Array<{
-        orderId: string;
-        nameKey: string;
-        effectKey: string | null;
-        actionCostKey: string;
-        actionCost: string;
-        canIssue: boolean;
-        blockReasonKey: string | null;
-    }>;
+    available: OrderPanelRow[];
     sweepingActive: Array<{ orderId: string; appliedCount: number }>;
 };
 
@@ -904,6 +896,8 @@ export default class CharacterSheet extends BaseActorSheet {
             'owComradeWound': owComradeWound,
             'owComradeHeal': owComradeHeal,
             'owComradeReplace': owComradeReplace,
+            'owComradeRecover': owComradeRecover,
+            'owComradeMental': owComradeMental,
             'owIssueOrder': owIssueOrder,
             'owLogisticsTest': owLogisticsTest,
             'owToggleMunitorum': owToggleMunitorum,
@@ -1927,31 +1921,31 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareOwComradePanel(): OwComradePanelContext {
         const sys = this.actor.system;
-        return buildComradePanel(sys.comrade, sys.refitAvailable);
+        return buildComradePanel(sys.comrade, sys.refitAvailable, this.#comradeRules(), currentCombatRound(game.combat));
+    }
+
+    /** The line's Comrade rules; the Comrade panels are built only for a line that prints them. */
+    #comradeRules(): ComradeRules {
+        const rules = comradeRulesFor(this._resolveGameSystemId() ?? undefined);
+        if (rules === null) throw new Error('The Comrade panels are built only for a line with Comrades.');
+        return rules;
     }
 
     /* -------------------------------------------- */
 
     /**
-     * OW Orders panel (#153). Two arrays: the three GENERIC_ORDERS with
-     * resolved issue-availability + i18n keys, and any currently-active
-     * sweeping Orders with their applied-member counts.
+     * OW Orders panel (#152, #153): the line's Orders, each resolved against the
+     * Comrade now (alive, pinned or fleeing, Cohesion, actions left this Turn), and
+     * any currently-active sweeping Orders with their applied-member counts.
      */
     _prepareOwOrdersPanel(): OwOrdersPanelContext {
         const sys = this.actor.system;
-        // Conservative defaults — the actor sheet has no live action-economy
-        // state yet, so assume full action + half action remain and let
-        // the issue dialog refine. Cohesion gate uses the live pool.
-        const cohesionAvailable = sys.cohesionCurrent > 0;
-        const available = GENERIC_ORDERS.map((order) => {
-            const check = canIssueOrder({ order, hasFullAction: true, hasHalfAction: true, cohesionAvailable });
-            return {
-                orderId: order.id,
-                ...orderLabelKeys(order, check.reason),
-                actionCost: order.actionCost,
-                canIssue: check.allowed,
-            };
-        });
+        const available = orderPanelRows(
+            comradeOrdersFor(this._resolveGameSystemId() ?? undefined),
+            sys.comrade,
+            this.#comradeRules(),
+            currentCombatRound(game.combat),
+        );
         const sweepingActive = sys.activeOrders
             .filter((o) => o.sweeping)
             .map((o) => ({

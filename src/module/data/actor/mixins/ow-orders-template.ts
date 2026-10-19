@@ -29,7 +29,7 @@
  * off `system`; no class-level mixin is needed for this round.
  */
 
-const { SchemaField, StringField, BooleanField, ArrayField } = foundry.data.fields;
+const { SchemaField, StringField, BooleanField, ArrayField, NumberField } = foundry.data.fields;
 
 /**
  * One persisted Order entry. Display labels (Order name, effect text,
@@ -41,6 +41,9 @@ export interface ActiveOrderEntry {
     orderId: string;
     sweeping: boolean;
     appliedToMemberIds: string[];
+    /** The combat and Round the Order was given in: its benefit lasts the Turn (#152). */
+    combatId: string;
+    round: number;
 }
 
 /**
@@ -76,6 +79,8 @@ export function owOrdersSchemaFields(): Record<string, foundry.data.fields.DataF
                     required: true,
                     initial: [],
                 }),
+                combatId: new StringField({ required: true, initial: '', blank: true }),
+                round: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
             }),
             { required: true, initial: [] },
         ),

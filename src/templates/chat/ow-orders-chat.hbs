@@ -1,57 +1,54 @@
-{{!-- Only War Orders issuance chat card (#153). --}}
-{{!-- data-wh40k-system anchors per-system Tailwind variants on the card; --}}
-{{!-- the wh40k-rpg class lets utility cascade work outside the sheet root. --}}
-<div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
+{{!--
+    Only War: an Order given to a Comrade (#152, #153; OW Core pp. 269–271).
+
+    Giving the Order is a Free Action; the Comrade spends the Order's Half or Full
+    Action. The card states the Order, its action, whether the Comrade carried it
+    out (and if not, why: pinned, fleeing, no actions left this Turn, out of
+    Cohesion for a follow, wounded for a Run, not in combat), what it does, whether
+    the PC gains nothing because the Comrade is out of Cohesion, and the Comrade's
+    Half Actions left this Turn.
+
+    Context (`owIssueOrder`, actions/ow-orders-actions.ts): gameSystem, orderId,
+    orderNameKey, actionCostKey, effectKey, comradeName, enacted, blockKey (or null),
+    noBenefit, inCombat, actionsLeft.
+--}}
+<div class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-border-solid tw-border-brass tw-bg-[rgba(28,22,8,0.88)]"
      data-wh40k-system="{{gameSystem}}"
-     data-order-id="{{orderId}}" data-wh40k-surface="dark">
+     data-wh40k-surface="dark"
+     data-order-id="{{orderId}}"
+     data-order-outcome="{{#if enacted}}enacted{{else}}no-effect{{/if}}">
 
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-        <i class="fas fa-bullhorn tw-text-[1.1rem] tw-text-brass"></i>
+        <i class="fas fa-bullhorn tw-text-[1.1rem] tw-text-brass" aria-hidden="true"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-brass">
             {{localize "WH40K.OW.Orders.Chat.Title" order=(localize orderNameKey)}}
         </div>
     </div>
 
-    {{!-- Action cost + kind --}}
-    <div class="tw-flex tw-gap-2 tw-text-[0.78rem] tw-mb-3 tw-text-amber-200">
-        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">
-            {{localize actionCostKey}}
+    {{!-- Who carries it out, and with which action --}}
+    <div class="tw-flex tw-flex-wrap tw-gap-2 tw-text-[0.78rem] tw-mb-2 tw-text-amber-200">
+        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">
+            {{localize "WH40K.OW.Orders.Chat.ComradeAction" action=(localize actionCostKey)}}
         </span>
-        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">
-            {{localize kindKey}}
-        </span>
-        {{#if sweeping}}
-            <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-brass tw-bg-brass/20 tw-text-brass tw-font-semibold">
-                {{localize "WH40K.OW.Orders.Kind.Sweeping"}}
-            </span>
+        {{#if comradeName}}
+        <span class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid tw-border-brass/60 tw-bg-[rgba(60,40,8,0.4)]">{{comradeName}}</span>
         {{/if}}
     </div>
 
-    {{!-- Effect summary --}}
-    {{#if effectKey}}
-        <div class="tw-text-[0.85rem] tw-mb-3 tw-text-amber-50 tw-italic">
-            {{localize effectKey}}
+    {{#if enacted}}
+        <div class="tw-text-[0.85rem] tw-mb-2 tw-text-amber-50" data-order-effect>{{localize effectKey}}</div>
+        {{#if noBenefit}}
+        <div class="tw-text-[0.8rem] tw-mb-2 tw-text-amber-300" data-order-no-benefit>{{localize "WH40K.OW.Orders.NoBenefit"}}</div>
+        {{/if}}
+    {{else}}
+        <div class="tw-text-[0.85rem] tw-mb-2 tw-text-amber-300" data-order-block>
+            {{localize "WH40K.OW.Orders.Chat.NoEffect"}}{{#if blockKey}} {{localize blockKey}}{{/if}}
         </div>
     {{/if}}
 
-    {{!-- Affected squad members --}}
-    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-brass/60 tw-bg-[rgba(60,40,8,0.22)]">
-        <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass tw-mb-1">
-            {{localize "WH40K.OW.Orders.Chat.AffectedHeader"}}
-        </div>
-        {{#if affectedMembers.length}}
-            <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-wrap tw-gap-1.5">
-                {{#each affectedMembers}}
-                    <li class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-bg-brass/30 tw-text-amber-50 tw-text-xs tw-tracking-[0.04em]"
-                        data-member-id="{{this.id}}">
-                        {{this.name}}
-                    </li>
-                {{/each}}
-            </ul>
-        {{else}}
-            <div class="tw-text-xs tw-italic tw-text-amber-300/80">
-                {{localize "WH40K.OW.Orders.Chat.NoMembers"}}
-            </div>
-        {{/if}}
+    {{#if inCombat}}
+    <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-brass" data-order-actions-left="{{actionsLeft}}">
+        {{localize "WH40K.OW.Orders.Chat.ActionsLeft" left=actionsLeft}}
     </div>
+    {{/if}}
 </div>

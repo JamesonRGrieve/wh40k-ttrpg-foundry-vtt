@@ -22,7 +22,10 @@
       actor          — { name, uuid } of the PC who owns the Comrade.
       comradeName    — display name of the Comrade (or '—' fallback).
       event:
-        kind         — 'hit-transfer' | 'state-change'
+        kind         — 'hit-transfer' | 'state-change' | 'recover' | 'mental'
+                       (a hit-transfer also carries the state change it made;
+                        a mental event: mentalKind, mentalKey, amount, total,
+                        threshold, dies)
         reason       — 'doubles' | 'blast-spray' | 'none'  (only meaningful for hit-transfer)
         previousState — 'unharmed' | 'wounded' | 'dead'
         newState      — 'unharmed' | 'wounded' | 'dead'
@@ -53,7 +56,25 @@
             </div>
         {{/if}}
 
-        {{#if (eq event.kind "state-change")}}
+        {{#if (eq event.kind "recover")}}
+            <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-border-l-2 tw-border-success tw-bg-[var(--wh40k-panel-bg-translucent)]" data-comrade-recovered>
+                <i class="fas fa-bullhorn tw-text-success" aria-hidden="true"></i>
+                <span class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">{{localize "WH40K.OW.Comrade.Chat.Recovered"}}</span>
+            </div>
+        {{/if}}
+
+        {{#if (eq event.kind "mental")}}
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"
+                 data-comrade-mental="{{event.mentalKind}}" data-comrade-mental-total="{{event.total}}">
+                <span class="tw-text-[0.85rem]">{{localize "WH40K.OW.Comrade.Chat.MentalSuffered" amount=event.amount kind=(localize event.mentalKey)}}</span>
+                <span class="tw-text-[0.85rem] tw-font-semibold tw-tabular-nums">{{localize "WH40K.OW.Comrade.Chat.MentalTotal" total=event.total threshold=event.threshold}}</span>
+            </div>
+            {{#if event.dies}}
+            <div class="tw-px-3 tw-text-[0.85rem] tw-font-semibold tw-text-crimson" data-comrade-mental-death>{{localize "WH40K.OW.Comrade.Chat.MentalDeath" kind=(localize event.mentalKey)}}</div>
+            {{/if}}
+        {{/if}}
+
+        {{#if (or (eq event.kind "state-change") (eq event.kind "hit-transfer"))}}
             {{#if event.transitioned}}
                 <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-2 tw-rounded
  tw-border tw-border-solid tw-border-[var(--wh40k-border-color)]"

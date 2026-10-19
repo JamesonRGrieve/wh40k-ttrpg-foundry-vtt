@@ -8,7 +8,8 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import type D100Roll from '../dice/d100-roll.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
+import { comradeMirrorTestFor, SimpleSkillData } from '../rolls/action-data.ts';
+import { comradeOrderModifiersFor } from '../rolls/comrade-order-modifiers.ts';
 import type { ExtendedTestState } from '../rolls/extended-test-data.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
@@ -18,6 +19,7 @@ import { ARMED_TEST_HOOKS_FLAG, endBearerTurnForArmedHooks, readArmedTestHooks }
 import { ENCOUNTER_GRANT_FLAG } from '../rules/fanatic.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
+import { COMRADE_ORDER_BUCKET } from '../rules/ow-orders.ts';
 import { resolveEscapePinningTest, resolvePinningTest } from '../rules/pinning.ts';
 import { type PortraitActorLike, rerollSpawnPortrait, togglePinnedIndex } from '../rules/portrait-spawn.ts';
 import { type RerollOption, type RerollRollContext, type RerollSpec, rerollApplies, rerollLedgerKey, rerollUseAvailable } from '../rules/reroll.ts';
@@ -1020,6 +1022,8 @@ export class WH40KBaseActor extends Actor {
             label: characteristic.label,
             target: characteristic.total,
             ...(override !== undefined ? { typeOverride: override } : {}),
+            // A Comrade Order in force this Turn (Ranged Volley's +5 BS, OW Core p. 270, #152).
+            sourcedModifiers: { bucket: COMRADE_ORDER_BUCKET, components: comradeOrderModifiersFor(this, characteristicName) },
         });
         openRollPrompt(simpleSkillData);
     }
@@ -1046,6 +1050,8 @@ export class WH40KBaseActor extends Actor {
             target: willpower.total,
             situationalKey: 'willpower',
             extraModifiers: { fear: -getFearTestPenalty(rating) },
+            // An Only War PC's Comrade passes or fails with it (OW Core p. 271, #152).
+            instance: comradeMirrorTestFor(this, 'fear'),
         });
         openRollPrompt(simpleSkillData);
     }
@@ -1105,6 +1111,8 @@ export class WH40KBaseActor extends Actor {
             label: t('WH40K.Pinning.TestLabel'),
             target,
             situationalKey: 'willpower',
+            // An Only War PC's Comrade passes or fails with it (OW Core p. 271, #152).
+            instance: comradeMirrorTestFor(this, 'pinning'),
         });
         openRollPrompt(simpleSkillData);
     }

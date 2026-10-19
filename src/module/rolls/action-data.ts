@@ -1,6 +1,7 @@
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { activeTokenOf, placeAreaTemplate } from '../canvas/area-template-canvas.ts';
+import { comradeRulesFor } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type D100Roll from '../dice/d100-roll.ts';
@@ -23,6 +24,16 @@ import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { type ItemRepairRules, repairDestroysItem } from '../rules/item-repair.ts';
 import { getMaleficCorruptionCost } from '../rules/malefic-corruption.ts';
 import { type OpposedSide, opposedDegrees, resolveOpposed } from '../rules/opposed.ts';
+import {
+    type ComradeHitStrike,
+    comradeHitStrike,
+    type ComradeMirrorTest,
+    comradeMirrorsFearPinning,
+    comradeMirrorWrites,
+    type ComradeRecord,
+    readComradeRecord,
+    withoutOneHitOn,
+} from '../rules/ow-comrade.ts';
 import { resolvePhenomenaTrigger } from '../rules/phenomena-modifier.ts';
 import { type CastRecipient, castEffectsFor, type PowerEffectSource } from '../rules/psychic-cast-effects.ts';
 import type { RerollOption } from '../rules/reroll.ts';
@@ -65,6 +76,7 @@ import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
 import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
@@ -166,6 +178,14 @@ export class ActionData {
      * hits the evasion negated. Null when the attack offers no evasion.
      */
     evasion: AttackEvasion | null = null;
+    /**
+     * The hit that struck the target's Comrade instead (#152; OW Core p. 271: a
+     * successful hit roll on doubles against a PC whose Comrade is in Cohesion). Set
+     * when the hits are calculated; null when none did.
+     */
+    comradeHit: ComradeHitStrike | null = null;
+    /** Whether a damage card has already carried {@link comradeHit} to the GM (it is applied once). */
+    comradeHitRelayed = false;
 
     constructor() {
         this.rollData = new RollData();
@@ -743,7 +763,18 @@ export class ActionData {
             });
 
             // The declared target's evasion (#414) took its hits off the end of its share.
-            const landing = withoutNegatedHits(allocation, this.#declaredTarget().id, this.evasion?.outcome?.negated ?? 0);
+            const declaredId = this.#declaredTarget().id;
+            const afterEvasion = withoutNegatedHits(allocation, declaredId, this.evasion?.outcome?.negated ?? 0);
+
+            // A hit on doubles against a PC whose Comrade is in Cohesion strikes the
+            // Comrade instead: one hit, after the PC's own Dodge or Parry (OW Core p. 271).
+            const defender = this.rollData.targetActor;
+            this.comradeHit = comradeHitStrike(defender, comradeRulesFor(firstSystemId(defender)), {
+                roll: this.rollData.roll?.total ?? 0,
+                hit: this.rollData.success,
+                hitsOnDefender: afterEvasion.filter((allocated) => allocated.target.id === declaredId).length,
+            });
+            const landing = this.comradeHit === null ? afterEvasion : withoutOneHitOn(afterEvasion, declaredId);
 
             for (const allocated of landing) {
                 // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
@@ -1483,6 +1514,65 @@ function blockedByTimeGate(action: ActionData, cardLabel: string, use: SkillUseD
  * what it did on the chat card. Talent/effect modifiers (e.g. Superior Chirurgeon)
  * are already folded into the roll's target via the shared modifier pipeline.
  */
+/** The langpack text of a Comrade's result on its PC's Fear or Pinning test, per test and outcome. */
+const COMRADE_MIRROR_EFFECT_KEYS = {
+    fear: { passes: 'WH40K.OW.Comrade.Mirror.FearPasses', fails: 'WH40K.OW.Comrade.Mirror.FearFails', immune: 'WH40K.OW.Comrade.Mirror.FearImmune' },
+    pinning: {
+        passes: 'WH40K.OW.Comrade.Mirror.PinningPasses',
+        fails: 'WH40K.OW.Comrade.Mirror.PinningFails',
+        immune: 'WH40K.OW.Comrade.Mirror.PinningImmune',
+    },
+} as const;
+
+/**
+ * A PC's Fear or Pinning test that carries its Comrade (#152; OW Core p. 271:
+ * "Comrades do not take Fear Tests. If their controlling Player Character passes his
+ * Fear Test, they pass as well. If their controlling Player Character fails his Fear
+ * Test, they fail as well", Pinning alike). A Comrade that fails Fear flees (it counts
+ * as 81–100 on Table 9–5); one that fails Pinning goes to cover with no Actions;
+ * either lasts until a recovery Order (Fear also until the end of combat). An immune
+ * Comrade does not fail. The PC's own test runs as before; this adds the Comrade's
+ * result to the card as an effect, and on a failure marks the Comrade fleeing or
+ * pinned on the PC's actor (the roller owns it).
+ */
+export class ComradeMirrorTestData extends SimpleSkillData {
+    readonly test: ComradeMirrorTest;
+    readonly comrade: ComradeRecord;
+
+    constructor(test: ComradeMirrorTest, comrade: ComradeRecord) {
+        super();
+        this.test = test;
+        this.comrade = comrade;
+    }
+
+    /** State the Comrade's result, and mark it fleeing or pinned when it fails with its PC. */
+    override async descriptionText(): Promise<void> {
+        await super.descriptionText();
+        const { comrade, test } = this;
+        const result = comradeMirrorsFearPinning({
+            test,
+            pcPassed: this.rollData.success,
+            comradeImmune: test === 'fear' ? comrade.fearImmune : comrade.pinningImmune,
+            comradeState: comrade.state,
+        });
+        if (!result.applies) return;
+        const keys = COMRADE_MIRROR_EFFECT_KEYS[test];
+        const key = result.fails ? keys.fails : result.immune ? keys.immune : keys.passes;
+        this.addEffect(comrade.name === '' ? t('WH40K.OW.Comrade.Label') : comrade.name, t(key));
+        if (result.fails) await this.rollData.sourceActor?.update(comradeMirrorWrites(test));
+    }
+}
+
+/**
+ * The action data for a PC's Fear or Pinning test (#152): a {@link ComradeMirrorTestData}
+ * when the actor's line prints Comrades and it has one, else undefined (a plain test).
+ */
+export function comradeMirrorTestFor(actor: { readonly system: object }, test: ComradeMirrorTest): ComradeMirrorTestData | undefined {
+    const comrade = readComradeRecord(actor.system);
+    if (comrade === null || comradeRulesFor(firstSystemId(actor)) === null) return undefined;
+    return new ComradeMirrorTestData(test, comrade);
+}
+
 export class MedicaeActionData extends SimpleSkillData {
     readonly useKind: SkillUseKind;
 

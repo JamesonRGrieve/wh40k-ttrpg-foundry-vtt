@@ -53,6 +53,7 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { grapplePushFromCard } from './grapple-controls.ts';
 import { applyGrappleWritesFromMessage, postGrappleStart } from './grapple-relay.ts';
 import { type RiderSource, type RiderToken, resolveRiderAgainst, riderSourceOf } from './grenade-rider-actions.ts';
+import { applyComradeHitFromMessage, COMRADE_HIT_FLAG } from './ow-comrade-actions.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 type CanvasToken = foundry.canvas.placeables.Token;
@@ -217,6 +218,8 @@ export class BasicActionManager {
     #onCreateChatMessage(message: ChatMessage): void {
         // A grapple started or ended (#450): the active GM writes both participants' flags.
         applyGrappleWritesFromMessage(message);
+        // A hit struck a PC's Comrade instead (#152): the active GM moves its state track.
+        applyComradeHitFromMessage(message);
         const prompt = readEvasionPrompt(message.getFlag(SYSTEM_ID, EVASION_PROMPT_FLAG));
         if (prompt !== null && !message.isAuthor && message.whisper.includes(game.user.id)) {
             ui.notifications.info(t('WH40K.Evasion.PromptNotice', { defender: prompt.defenderName, attacker: prompt.attackerName }));
@@ -544,8 +547,19 @@ export class BasicActionManager {
             _gameSystemId: firstSystemId(actionData.rollData.sourceActor),
         };
 
+        // A hit that struck the target's Comrade instead (#152) is stated on the card; the
+        // first card that states it also carries it for the active GM to apply, so a
+        // re-posted card (a die swapped for DoS) does not wound the Comrade twice.
+        const comradeHit = actionData.comradeHit;
+        const relayComradeHit = comradeHit !== null && !actionData.comradeHitRelayed;
+        actionData.comradeHitRelayed ||= relayComradeHit;
+
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        await emitChatFromTemplate(template, templateData, { rolls: damageRolls, applyWhispers: true });
+        await emitChatFromTemplate(
+            template,
+            { ...templateData, comradeHit },
+            { rolls: damageRolls, applyWhispers: true, ...(relayComradeHit ? { flags: { [COMRADE_HIT_FLAG]: comradeHit } } : {}) },
+        );
     }
 
     /**

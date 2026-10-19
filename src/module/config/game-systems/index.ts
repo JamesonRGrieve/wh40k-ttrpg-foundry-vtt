@@ -9,6 +9,8 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { ComradeRules } from '../../rules/ow-comrade.ts';
+import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
@@ -164,6 +166,26 @@ export function evasionRulesFor(line: string | undefined): EvasionRules | null {
 export function grappleRulesFor(line: string | undefined): GrappleRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.grappleRules ?? null;
+}
+
+/**
+ * A line's printed Comrades in Combat rules (#152), or `null` for an unknown line
+ * or one without Comrades.
+ * @param line  `system.gameSystem` id.
+ */
+export function comradeRulesFor(line: string | undefined): ComradeRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.comradeRules ?? null;
+}
+
+/**
+ * The Orders a line's PCs can give their Comrade (#152); empty for an unknown line
+ * or one without Comrades.
+ * @param line  `system.gameSystem` id.
+ */
+export function comradeOrdersFor(line: string | undefined): readonly ComradeOrderDef[] {
+    if (line === undefined) return [];
+    return SystemConfigRegistry.getOrNull(line)?.comradeOrders ?? [];
 }
 
 /**

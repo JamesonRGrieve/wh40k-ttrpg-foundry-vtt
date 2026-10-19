@@ -557,6 +557,9 @@ recordDimension('without-talents.flow', covered['without-talents.flow'], WITHOUT
 // tests/e2e/grapple-controller-panel.spec.ts — GRAPPLE_FLOWS; tests/e2e/grapple-damage-push.spec.ts — GRAPPLE_RESOLUTION_FLOWS.
 const GRAPPLE_FLOWS = ['controller-options', 'target-options', 'take-control', 'slip-free', 'damage-opponent', 'push-opponent', 'use-item'];
 recordDimension('grapple.flow', covered['grapple.flow'], GRAPPLE_FLOWS);
+// tests/e2e/ow-comrade-combat.spec.ts — OW_COMRADE_FLOWS (#152).
+const OW_COMRADE_FLOWS = ['cohesion-broken', 'pinning-mirrored', 'recovery-order', 'ranged-volley-bs-card'];
+recordDimension('ow-comrade.flow', covered['ow-comrade.flow'], OW_COMRADE_FLOWS);
 // tests/e2e/passive-modifiers.spec.ts — PASSIVE_MODIFIER_FLOWS.
 const PASSIVE_MODIFIER_FLOWS = ['skill-test', 'weapon-attack'];
 recordDimension('passive-modifiers.flow', covered['passive-modifiers.flow'], PASSIVE_MODIFIER_FLOWS);

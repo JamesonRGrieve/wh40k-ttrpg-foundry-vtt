@@ -21,6 +21,7 @@ import {
 } from '../rules/dynamic-modifiers.ts';
 import { canAttemptGrapple } from '../rules/grapple.ts';
 import type { AllocationStrategy, AllocationTarget } from '../rules/hit-allocation.ts';
+import { COMRADE_ORDER_BUCKET, sumComradeOrderComponents } from '../rules/ow-orders.ts';
 import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
 import { actorEnvironmentContext, collectEnvironmentAttackModifiers, ENVIRONMENT_BUCKET, sumEnvironmentComponents } from '../rules/scene-environment.ts';
 import { AIM_STATE, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
@@ -48,6 +49,7 @@ import {
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
+import { comradeOrderModifiersFor } from './comrade-order-modifiers.ts';
 import type { HitCeilingCard } from './hit-ceiling.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
 import { actorGameSystemId, type DegreesMethod, printedDegreesFromCount } from './roll-helpers.ts';
@@ -919,6 +921,7 @@ export class WeaponRollData extends RollData {
         this.applyTargetConditionModifiers();
         this.updateBaseTarget();
         this.applyEnvironmentModifiers();
+        this.applyComradeOrderModifiers();
 
         // Refresh the displayed aggregate target so the top number reflects
         // every active modifier on every render / form change (#382). Uses the
@@ -1010,6 +1013,19 @@ export class WeaponRollData extends RollData {
         const components = collectEnvironmentAttackModifiers(env, line, { isWeaponAttack }, (key) => i18n?.localize?.(key) ?? key);
         this.modifiers[ENVIRONMENT_BUCKET] = sumEnvironmentComponents(components);
         this.expandedBuckets[ENVIRONMENT_BUCKET] = components;
+    }
+
+    /**
+     * Path B: the attacker's Comrade Orders in force this Turn on the test's
+     * characteristic (#152; Ranged Volley's "+5 to all Ballistics Skill Tests this
+     * Turn", OW Core p. 270), folded as ONE `comrade-orders` bucket whose sourced
+     * rows the card expands. Reads the base characteristic, so it runs after
+     * {@link updateBaseTarget}.
+     */
+    applyComradeOrderModifiers(): void {
+        const components = comradeOrderModifiersFor(this.sourceActor, this.baseCharacteristicKey);
+        this.modifiers[COMRADE_ORDER_BUCKET] = sumComradeOrderComponents(components);
+        this.expandedBuckets[COMRADE_ORDER_BUCKET] = components;
     }
 
     selectWeapon(weaponName: string): void {

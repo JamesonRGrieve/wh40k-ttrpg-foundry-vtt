@@ -8,6 +8,7 @@
 
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
+import { clearComradeFearAtCombatEnd } from './actions/ow-comrade-actions.ts';
 import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import {
     // Player sheets (default for {system}-character)
@@ -382,6 +383,11 @@ export class HooksManager {
 
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();
+
+        // A Comrade's Fear lasts until the end of combat (OW Core p. 271, #152).
+        Hooks.on('deleteCombat', (combat: Combat) => {
+            void clearComradeFearAtCombatEnd(Array.from(combat.combatants, (combatant) => combatant.actor));
+        });
 
         // Surface each combatant's action budget on the combat-tracker sidebar
         // and keep open combat tabs live (#264).

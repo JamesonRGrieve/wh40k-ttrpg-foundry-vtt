@@ -105,7 +105,10 @@ async function step(page: Page, actorId: string, opts: { click?: string; refit?:
                     actorState: actor.system?.comrade?.state ?? null,
                     badge: el.querySelector<HTMLElement>('[data-state-badge]')?.dataset['stateBadge'] ?? null,
                     cohesion: el.querySelector<HTMLElement>('[data-cohesion]')?.dataset['cohesion'] ?? null,
-                    rangeText: (el.querySelector('[data-field="distance-m"]')?.textContent ?? '').replace(/\s+/g, ' ').trim(),
+                    // The label's text, then the distance input's value (#152: the distance is editable).
+                    rangeText: `${(el.querySelector('[data-field="distance-m"]')?.textContent ?? '').replace(/\s+/g, ' ').trim()} (${
+                        el.querySelector<HTMLInputElement>('input[name="system.comrade.distanceM"]')?.value ?? ''
+                    } m)`,
                     hasUndefined: el.textContent.includes('undefined'),
                     enabled: ['owComradeWound', 'owComradeHeal', 'owComradeReplace'].map(
                         (action) => el.querySelector<HTMLButtonElement>(`button[data-action="${action}"]`)?.disabled === false,

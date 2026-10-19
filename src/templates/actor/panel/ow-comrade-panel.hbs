@@ -35,6 +35,11 @@
         canHeal:         boolean  // isWounded
         canReplace:      boolean  // isDead && inCamp
         inCamp:          boolean  // sys.refitAvailable: back in camp for refitting (RAW p.110 / p.271)
+        fleeing, pinned: boolean  // failed Fear / Pinning with its PC (RAW p.271)
+        fearImmune, pinningImmune: boolean
+        canRecover:      boolean  // fleeing or pinned: a recovery Order has something to clear
+        actionsLeft, actionBudget: number  // Half Actions left this Turn (RAW p.269)
+        canSufferMental: boolean  // alive: Insanity / Corruption can be applied
       }
 
     Rendered only for OW actors; the include in the appropriate
@@ -63,15 +68,23 @@
         </span>
     </header>
 
-    {{!-- Distance + cohesion indicator --}}
-    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
+    {{!-- Distance + cohesion indicator. The distance and the barrier are what break
+          Cohesion (OW Core p. 269: "within 5 metres … not separated by a solid barrier"). --}}
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
                 tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
                 tw-text-[0.78rem]">
-        <span class="tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums"
-              data-field="distance-m">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)] tw-tabular-nums"
+               data-field="distance-m">
             {{localize "WH40K.OW.Comrade.Cohesion.Range" meters=comradePanel.cohesionRangeM}}
-            <span class="tw-ml-1 tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold">({{comradePanel.distanceM}} m)</span>
-        </span>
+            <input type="number" name="system.comrade.distanceM" value="{{comradePanel.distanceM}}" min="0" step="1"
+                   class="tw-w-14 tw-text-center tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold"
+                   aria-label="{{localize 'WH40K.OW.Comrade.Cohesion.Distance'}}" />
+            <span>m</span>
+        </label>
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)]" data-field="clear-line">
+            <input type="checkbox" name="system.comrade.hasVisualLine" {{#if comradePanel.hasVisualLine}}checked{{/if}} />
+            {{localize "WH40K.OW.Comrade.Cohesion.NoBarrier"}}
+        </label>
         <span class="tw-inline-flex tw-items-center tw-gap-1 tw-font-semibold
                      {{#if comradePanel.inCohesion}}tw-text-success-l20{{else}}tw-text-crimson-l40{{/if}}"
               data-cohesion="{{#if comradePanel.inCohesion}}in{{else}}out{{/if}}">
@@ -84,8 +97,68 @@
         </span>
     </div>
 
+    {{!-- Actions left this Turn (p. 269: "two Half Actions or one Full Action per Turn"). --}}
+    {{#unless comradePanel.isDead}}
+    <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]" data-field="actions-left">
+        <span>{{localize "WH40K.OW.Comrade.Actions.Label"}}</span>
+        <span class="tw-tabular-nums tw-font-semibold tw-text-[color:var(--wh40k-text-bright)]" data-comrade-actions-left="{{comradePanel.actionsLeft}}">
+            {{localize "WH40K.OW.Comrade.Actions.Left" left=comradePanel.actionsLeft budget=comradePanel.actionBudget}}
+        </span>
+    </div>
+    {{/unless}}
+
+    {{!-- Fear and Pinning (p. 271): the Comrade fails with its PC; a recovery Order clears it. --}}
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-px-2 tw-text-[0.75rem]" data-field="fear-pinning">
+        {{#if comradePanel.fleeing}}
+        <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-border-crimson tw-px-1.5 tw-py-0.5 tw-font-semibold tw-text-crimson-l40" data-comrade-status="fleeing">
+            <i class="fas fa-person-running" aria-hidden="true"></i>{{localize "WH40K.OW.Comrade.Status.Fleeing"}}
+        </span>
+        {{/if}}
+        {{#if comradePanel.pinned}}
+        <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-border-gold tw-px-1.5 tw-py-0.5 tw-font-semibold tw-text-gold" data-comrade-status="pinned">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>{{localize "WH40K.OW.Comrade.Status.Pinned"}}
+        </span>
+        {{/if}}
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)]">
+            <input type="checkbox" name="system.comrade.fearImmune" {{#if comradePanel.fearImmune}}checked{{/if}} />
+            {{localize "WH40K.OW.Comrade.Status.FearImmune"}}
+        </label>
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)]">
+            <input type="checkbox" name="system.comrade.pinningImmune" {{#if comradePanel.pinningImmune}}checked{{/if}} />
+            {{localize "WH40K.OW.Comrade.Status.PinningImmune"}}
+        </label>
+    </div>
+
+    {{!-- Insanity and Corruption (p. 271): 10 of either in a single Round kills the Comrade. --}}
+    {{#if comradePanel.canSufferMental}}
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-px-2 tw-text-[0.75rem]" data-field="mental">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)]">
+            {{localize "WH40K.OW.Comrade.Mental.Amount"}}
+            <input type="number" data-comrade-mental-amount value="1" min="0" step="1" class="tw-w-12 tw-text-center" />
+        </label>
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)]"
+                data-action="owComradeMental" data-mental-kind="insanity">
+            {{localize "WH40K.OW.Comrade.Mental.Insanity"}}
+        </button>
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)]"
+                data-action="owComradeMental" data-mental-kind="corruption">
+            {{localize "WH40K.OW.Comrade.Mental.Corruption"}}
+        </button>
+    </div>
+    {{/if}}
+
     {{!-- Action affordances --}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+        <button type="button"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
+                data-action="owComradeRecover"
+                title="{{localize 'WH40K.OW.Comrade.Action.RecoverHint'}}"
+                {{#unless comradePanel.canRecover}}disabled aria-disabled="true"{{/unless}}>
+            <i class="fas fa-bullhorn tw-mr-1"></i>
+            {{localize "WH40K.OW.Comrade.Action.Recover"}}
+        </button>
         <button type="button"
                 class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] tw-text-[color:var(--wh40k-text-bright)] ow:tw-text-brass hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white disabled:tw-cursor-not-allowed disabled:tw-opacity-50"
                 data-action="owComradeWound"

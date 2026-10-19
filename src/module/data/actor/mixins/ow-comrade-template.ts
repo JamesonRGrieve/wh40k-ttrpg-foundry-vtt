@@ -27,7 +27,7 @@
  * on `isOW`.
  */
 
-import type { ComradeState } from '../../../rules/ow-comrade.ts';
+import type { ComradeRecord, ComradeState } from '../../../rules/ow-comrade.ts';
 
 const { SchemaField, StringField, NumberField, BooleanField } = foundry.data.fields;
 
@@ -35,20 +35,10 @@ const { SchemaField, StringField, NumberField, BooleanField } = foundry.data.fie
 const COMRADE_STATE_CHOICES = ['unharmed', 'wounded', 'dead'] as const satisfies readonly ComradeState[];
 
 /**
- * Shape of the `system.comrade` sub-document the panel + actions read.
- * Mirrors the SchemaField below so the compiler narrows access without
- * casts.
+ * Shape of the `system.comrade` sub-document the panel + actions read: the rules
+ * layer's {@link ComradeRecord}, which the SchemaField below mirrors.
  */
-interface OwComradeData {
-    /** Display name; blank until the player names their Comrade. */
-    name: string;
-    /** Current state on the unharmed → wounded → dead track. */
-    state: ComradeState;
-    /** Distance from the PC, in metres (used by `inCohesion`). */
-    distanceM: number;
-    /** Whether the PC currently has visual line on the Comrade. */
-    hasVisualLine: boolean;
-}
+type OwComradeData = ComradeRecord;
 
 /**
  * Class-level `declare` shape contributed by the Comrade schema slot.
@@ -84,6 +74,24 @@ export function owComradeSchemaFields(): Record<string, foundry.data.fields.Data
             }),
             distanceM: new NumberField({ required: true, initial: 0, min: 0 }),
             hasVisualLine: new BooleanField({ required: true, initial: true }),
+            // Fear and Pinning (OW Core p. 271): the Comrade fails with its PC.
+            fleeing: new BooleanField({ required: true, initial: false }),
+            pinned: new BooleanField({ required: true, initial: false }),
+            fearImmune: new BooleanField({ required: true, initial: false }),
+            pinningImmune: new BooleanField({ required: true, initial: false }),
+            // Half Actions spent in the combat Round they were spent in (p. 269).
+            turn: new SchemaField({
+                combatId: new StringField({ required: true, initial: '', blank: true }),
+                round: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                halvesSpent: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+            }),
+            // Insanity and Corruption suffered in one combat Round (p. 271).
+            mental: new SchemaField({
+                combatId: new StringField({ required: true, initial: '', blank: true }),
+                round: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                insanity: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+                corruption: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+            }),
         }),
     };
 }

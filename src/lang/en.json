@@ -8353,43 +8353,61 @@
                     "Title": "Issue Order",
                     "Button": "Issue"
                 },
-                "Kind": {
-                    "Generic": "Generic Order",
-                    "Speciality": "Speciality Order",
-                    "Sweeping": "Sweeping Order"
-                },
                 "Generic": {
                     "RangedVolley": "Ranged Volley",
                     "CloseQuarters": "Close Quarters",
                     "TakeCover": "Take Cover!"
                 },
+                "Move": {
+                    "Follow": "Maintain Cohesion",
+                    "Disengage": "Disengage",
+                    "MoveHalf": "Move (Half)",
+                    "MoveFull": "Move (Full)",
+                    "Run": "Run",
+                    "StandMount": "Stand/Mount",
+                    "TacticalAdvance": "Tactical Advance"
+                },
                 "ActionCost": {
-                    "Free": "Free Action",
                     "Half": "Half Action",
                     "Full": "Full Action"
                 },
-                "Validation": {
-                    "InsufficientAction": "Not enough action available to issue this Order.",
-                    "InsufficientCohesion": "Not enough Cohesion to issue this Order."
+                "Block": {
+                    "NotInCombat": "Orders are given in combat, on your Turn.",
+                    "Dead": "Your Comrade is dead.",
+                    "Pinned": "Your Comrade is pinned and takes no Actions until a recovery Order.",
+                    "Fleeing": "Your Comrade is fleeing until a recovery Order or the end of combat.",
+                    "NeedsCohesion": "Your Comrade can only follow you while in Cohesion.",
+                    "Wounded": "A wounded Comrade cannot Run.",
+                    "NoActions": "Your Comrade has used all of its Actions this Turn."
                 },
+                "NoBenefit": "Out of Cohesion: your Comrade carries it out, but you gain nothing.",
+                "Source": "{order} ({comrade})",
                 "Sweeping": {
                     "AppliedTo": "Applied to {target}",
                     "Header": "Active Sweeping Orders",
                     "Empty": "No Sweeping Orders currently active."
                 },
                 "Effect": {
-                    "RangedVolley": "+5 BS to squad ranged attacks this round.",
-                    "CloseQuarters": "Squad gains Ganging Up bonuses against the designated foe.",
-                    "TakeCover": "Squad-wide cover bonus until end of round."
+                    "RangedVolley": "+5 to all your Ballistic Skill tests this Turn.",
+                    "CloseQuarters": "Your Comrade flanks one of your opponents: you gain the benefit of Ganging Up.",
+                    "TakeCover": "Your Comrade hunkers down in cover: for the next Round, a hit on it must deal more than 3 + the cover's AP to wound it.",
+                    "Follow": "Your Comrade follows your move, ending within 5 m of you.",
+                    "Disengage": "Your Comrade disengages from melee.",
+                    "MoveHalf": "Your Comrade moves up to its Half Move.",
+                    "MoveFull": "Your Comrade moves up to its Full Move.",
+                    "Run": "Your Comrade runs.",
+                    "StandMount": "Your Comrade stands up or mounts.",
+                    "TacticalAdvance": "Your Comrade advances from cover to cover."
                 },
                 "Panel": {
                     "Header": "Orders",
-                    "AvailableHeader": "Generic Orders"
+                    "AvailableHeader": "Orders to your Comrade"
                 },
                 "Chat": {
-                    "Title": "Order Issued: {order}",
-                    "AffectedHeader": "Affected Squad Members",
-                    "NoMembers": "No squad members affected."
+                    "Title": "Order: {order}",
+                    "ComradeAction": "Comrade's {action}",
+                    "NoEffect": "No effect.",
+                    "ActionsLeft": "Comrade's Half Actions left this Turn: {left}"
                 }
             },
             "Comrade": {
@@ -8402,30 +8420,57 @@
                 "Cohesion": {
                     "Maintained": "In Cohesion",
                     "Broken": "Out of Cohesion",
-                    "Range": "Cohesion range: {meters} m"
+                    "Range": "Cohesion range: {meters} m",
+                    "Distance": "Distance from you, in metres",
+                    "NoBarrier": "No solid barrier between you"
                 },
                 "Action": {
-                    "MaintainBreak": "Maintain / Break Cohesion",
                     "Wound": "Wound",
                     "Heal": "Heal",
-                    "Replace": "Replace"
+                    "Replace": "Replace",
+                    "Recover": "Recovery Order",
+                    "RecoverHint": "Your Comrade receives an Order that lets it recover from Fear and Pinning (such as the Sergeant's)."
+                },
+                "Actions": {
+                    "Label": "Actions this Turn",
+                    "Left": "{left} of {budget} Half Actions left"
+                },
+                "Status": {
+                    "Fleeing": "Fleeing",
+                    "Pinned": "Pinned",
+                    "FearImmune": "Immune to Fear",
+                    "PinningImmune": "Immune to Pinning"
+                },
+                "Mental": {
+                    "Amount": "Amount",
+                    "Insanity": "Insanity",
+                    "Corruption": "Corruption"
+                },
+                "Mirror": {
+                    "FearPasses": "Passes with you.",
+                    "FearFails": "Fails with you: it flees (81–100 on Table 9–5) until a recovery Order or the end of combat.",
+                    "FearImmune": "Immune to Fear: it does not fail, and may act.",
+                    "PinningPasses": "Passes with you.",
+                    "PinningFails": "Fails with you: it moves to cover and takes no Actions until a recovery Order.",
+                    "PinningImmune": "Immune to Pinning: it does not fail, and may act."
                 },
                 "Chat": {
-                    "NoOp": "No change to the Comrade's state."
+                    "NoOp": "No change to the Comrade's state.",
+                    "Recovered": "Receives a recovery Order: no longer fleeing or pinned.",
+                    "MentalSuffered": "Suffers {amount} {kind}",
+                    "MentalTotal": "{total} of {threshold} this Round",
+                    "MentalDeath": "{kind} kills the Comrade."
                 },
                 "Hit": {
                     "Transferred": {
-                        "Doubles": "Hit transferred to Comrade on doubles roll",
+                        "Doubles": "A hit on doubles strikes the Comrade instead",
                         "BlastSpray": "Blast/Spray catches the Comrade"
-                    }
+                    },
+                    "StrikesComrade": "Doubles: one hit strikes {comrade} instead."
                 },
                 "Replacement": {
                     "Available": "Replacement available",
                     "None": "No replacement available"
-                },
-                "Death": {
-                    "Insanity": "Comrade dies from PC's Insanity ({amount} this round)",
-                    "Corruption": "Comrade dies from PC's Corruption ({amount} this round)"
                 }
             },
             "ComradeHealing": {

@@ -8,6 +8,8 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
+import type { ComradeRules } from '../../rules/ow-comrade.ts';
+import type { ComradeActionCost, ComradeOrderCohesion, ComradeOrderDef } from '../../rules/ow-orders.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
@@ -38,6 +40,31 @@ export const OW_ACQUISITION_LADDER = {
     // p. 162: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
     failureLoss: null,
 } as const satisfies AcquisitionLadder;
+
+/** The langpack key segment of each Comrade move Order. */
+const COMRADE_MOVE_KEYS = {
+    'follow': 'Follow',
+    'disengage': 'Disengage',
+    'move-half': 'MoveHalf',
+    'move-full': 'MoveFull',
+    'run': 'Run',
+    'stand-mount': 'StandMount',
+    'tactical-advance': 'TacticalAdvance',
+} as const;
+
+/** A Comrade move Order (OW Core pp. 269–270): it moves the Comrade and grants the PC nothing. */
+function comradeMoveOrder(id: keyof typeof COMRADE_MOVE_KEYS, actionCost: ComradeActionCost, cohesion: ComradeOrderCohesion = 'none'): ComradeOrderDef {
+    const segment = COMRADE_MOVE_KEYS[id];
+    return {
+        id,
+        labelKey: `WH40K.OW.Orders.Move.${segment}`,
+        effectKey: `WH40K.OW.Orders.Effect.${segment}`,
+        actionCost,
+        cohesion,
+        notWhenWounded: false,
+        benefit: null,
+    };
+}
 
 /** One availability column of Table 6-2 (a printed cell per rating). */
 type AvailabilityColumn = AcquisitionLadder['availability'];
@@ -144,6 +171,68 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Tests made during this Grapple".
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
+
+    /**
+     * OW Core pp. 269–271, Comrades in Combat: Cohesion is "within 5 metres of his
+     * controlling Player Character"; a Comrade "is limited to two Half Actions or one
+     * Full Action per Turn"; it dies when it "would suffer 10 Insanity or 10
+     * Corruption in a single Round".
+     */
+    override readonly comradeRules: ComradeRules = { cohesionRangeM: 5, actionBudget: 2, mentalDeathThreshold: 10 };
+
+    /**
+     * OW Core pp. 269–271, the Orders any Player Character can give his Comrade:
+     * - Maintain Cohesion (p. 269): "his Comrade may spend a single Half Action to
+     *   maintain Cohesion", only "Whenever the Player Character has his Comrade in
+     *   Cohesion and uses an Action to move".
+     * - The move Actions (pp. 269–270): Disengage (Full), Move (Half or Full), Run
+     *   (Full; "If a Comrade is wounded he cannot Run", p. 271), Stand/Mount (Half),
+     *   Tactical Advance (Full). Out of Cohesion these are how the Comrade moves.
+     * - Ranged Volley (Half, p. 270): "The Player Character gains an additional +5 to
+     *   all Ballistics Skill Tests this Turn."
+     * - Close Quarters (Half, p. 271): the Player Character gains "the benefit of
+     *   Ganging Up".
+     * - Take Cover! (Full, p. 271): the Comrade hunkers down in cover for the next
+     *   Round; the benefit is the Comrade's own.
+     * "Unless otherwise stated by an Order, the Comrade must be in Cohesion for the
+     * Player Character to gain benefits from an Order" (p. 270).
+     */
+    override readonly comradeOrders: readonly ComradeOrderDef[] = [
+        comradeMoveOrder('follow', 'half', 'to-act'),
+        comradeMoveOrder('disengage', 'full'),
+        comradeMoveOrder('move-half', 'half'),
+        comradeMoveOrder('move-full', 'full'),
+        { ...comradeMoveOrder('run', 'full'), notWhenWounded: true },
+        comradeMoveOrder('stand-mount', 'half'),
+        comradeMoveOrder('tactical-advance', 'full'),
+        {
+            id: 'ranged-volley',
+            labelKey: 'WH40K.OW.Orders.Generic.RangedVolley',
+            effectKey: 'WH40K.OW.Orders.Effect.RangedVolley',
+            actionCost: 'half',
+            cohesion: 'for-benefit',
+            notWhenWounded: false,
+            benefit: { kind: 'characteristic', characteristic: 'ballisticSkill', modifier: 5 },
+        },
+        {
+            id: 'close-quarters',
+            labelKey: 'WH40K.OW.Orders.Generic.CloseQuarters',
+            effectKey: 'WH40K.OW.Orders.Effect.CloseQuarters',
+            actionCost: 'half',
+            cohesion: 'for-benefit',
+            notWhenWounded: false,
+            benefit: { kind: 'effect' },
+        },
+        {
+            id: 'take-cover',
+            labelKey: 'WH40K.OW.Orders.Generic.TakeCover',
+            effectKey: 'WH40K.OW.Orders.Effect.TakeCover',
+            actionCost: 'full',
+            cohesion: 'none',
+            notWhenWounded: false,
+            benefit: null,
+        },
+    ];
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],

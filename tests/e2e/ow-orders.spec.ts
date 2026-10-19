@@ -8,10 +8,10 @@ import { expect, test } from './lib/test';
  * Tier B coverage of the Only War Orders panel + actions (#153).
  *
  * Creates an `ow-character` actor in the seed world, opens its sheet,
- * asserts the Orders panel renders with the three generic Order rows
- * (Ranged Volley / Close Quarters / Take Cover!), drives one Issue
- * click for the Ranged Volley row, asserts `system.activeOrders`
- * appended the entry, and snapshots the rendered sheet.
+ * asserts the Orders panel renders the generic Order rows (Ranged Volley /
+ * Close Quarters / Take Cover!), that out of combat none can be issued (an
+ * Order is given on the PC's Turn, #152), and snapshots the panel. Issuing in
+ * combat is `ow-comrade-combat.spec.ts`.
  *
  * Panel visibility depends on the orchestrator wiring the include
  * into `tab-status.hbs` gated on `isOW` and the schema fields onto
@@ -183,12 +183,12 @@ test.describe.serial('OW Orders panel (Tier B, #153)', () => {
             expect(result.hasRangedVolleyRow, 'Ranged Volley row should render').toBe(true);
             expect(result.hasCloseQuartersRow, 'Close Quarters row should render').toBe(true);
             expect(result.hasTakeCoverRow, 'Take Cover! row should render').toBe(true);
-            expect(result.hasIssueButton, 'Issue button for Ranged Volley should render').toBe(true);
+            // Out of combat there is no Turn to give an Order in (#152): no Issue button, and
+            // nothing persists. Issuing in combat is the Tier B comrade-combat spec.
+            expect(result.hasIssueButton, 'no Issue button out of combat').toBe(false);
             expect(result.ordersBefore, 'activeOrders should start empty').toBe(0);
-            if (result.issueDispatched === true) {
-                expect(result.ordersAfter, 'activeOrders should append one entry after Issue').toBe(1);
-                expect(result.firstOrderId, 'persisted entry should match the clicked orderId').toBe('ranged-volley');
-            }
+            expect(result.issueDispatched).toBe(false);
+            expect(result.ordersAfter).toBe(0);
 
             recordCoverage('panel.render', 'OwOrdersPanel');
         } finally {

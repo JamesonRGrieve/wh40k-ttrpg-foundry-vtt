@@ -10,6 +10,8 @@ import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleDamageRule, GrappleOptionRule, GrapplePushRule, GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { ComradeRules } from '../../rules/ow-comrade.ts';
+import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type {
     GameSystemId,
@@ -180,6 +182,16 @@ export abstract class BaseSystemConfig {
      * for a line whose grapple this panel does not model.
      */
     abstract readonly grappleRules: GrappleRules | null;
+
+    /**
+     * The line's printed Comrades in Combat rules (#152): Cohesion radius, the
+     * Comrade's action budget, and the mental damage that kills it. `null` for a
+     * line without Comrades (only Only War prints them).
+     */
+    readonly comradeRules: ComradeRules | null = null;
+
+    /** The Orders any PC can give its Comrade (#152); empty for a line without Comrades. */
+    readonly comradeOrders: readonly ComradeOrderDef[] = [];
 
     // ── Starting Resources ────────────────────────────────────────
 

@@ -1,10 +1,11 @@
 {{!--
     Only War Orders panel (#153).
 
-    Lists the three generic Orders every PC may issue (Ranged Volley /
-    Close Quarters / Take Cover!), an "Issue" button on each, the
-    structured action cost, and a section for any currently-active
-    Sweeping Orders the actor (typically a Sergeant) is broadcasting.
+    Lists the Orders every PC may give its Comrade (OW Core pp. 269–271: Maintain
+    Cohesion, the move Actions, Ranged Volley, Close Quarters, Take Cover!), an
+    "Issue" button on each that the Comrade can carry out now, the Comrade's action
+    cost, why an Order would do nothing (or grant nothing out of Cohesion), and a
+    section for any currently-active Sweeping Orders.
 
     Context (set up by the OW character-sheet branch of
     `_prepareContext` — the orchestrator wires this once the panel is
@@ -12,13 +13,14 @@
 
       ordersPanel: {
         available: Array<{                          // 3 generic Orders
-          orderId:          'ranged-volley' | 'close-quarters' | 'take-cover'
+          orderId:          string                  // a ComradeOrderDef id (OW config comradeOrders)
           nameKey:          string                  // 'WH40K.OW.Orders.Generic.RangedVolley' …
-          effectKey:        string | null           // 'WH40K.OW.Orders.Effect.RangedVolley' …
+          effectKey:        string                  // 'WH40K.OW.Orders.Effect.RangedVolley' …
           actionCostKey:    string                  // 'WH40K.OW.Orders.ActionCost.Half' …
-          actionCost:       'free' | 'half' | 'full'
-          canIssue:         boolean                 // canIssueOrder result
-          blockReasonKey:   string | null           // 'WH40K.OW.Orders.Validation.…' when canIssue=false
+          actionCost:       'half' | 'full'         // the Comrade's action
+          canIssue:         boolean                 // resolveComradeOrder: the Comrade carries it out
+          blockReasonKey:   string | null           // 'WH40K.OW.Orders.Block.…' when it would do nothing
+          noBenefit:        boolean                 // carried out, but grants nothing out of Cohesion
         }>
         sweepingActive: Array<{                     // current active sweeping orders
           orderId:          string
@@ -50,6 +52,12 @@
                         </span>
                         {{/if}}
                         {{> systems/wh40k-rpg/templates/actor/partial/card-section-label.hbs sizeClass="tw-text-[0.7rem]" sectionLabelClass="wh40k-ow-orders-cost ow:tw-text-brass" labelKey=this.actionCostKey}}
+                        {{#if this.noBenefit}}
+                        <span class="tw-text-[0.7rem] tw-text-[var(--wh40k-warning-secondary)]" data-order-no-benefit>{{localize "WH40K.OW.Orders.NoBenefit"}}</span>
+                        {{/if}}
+                        {{#if this.blockReasonKey}}
+                        <span class="tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)]" data-order-block>{{localize this.blockReasonKey}}</span>
+                        {{/if}}
                     </div>
                     {{#if this.canIssue}}
                         <button type="button"
