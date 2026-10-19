@@ -11,13 +11,14 @@ import { expect, test } from './lib/test';
  * a grid with subgrid rows, so each header and the cells beneath it share a
  * column.
  *
- * The four voidcraft tables are checked on the live voidcraft sheet. The other
- * four callers (weapon, armour, vehicle weapons, vehicle upgrades) are
- * preloaded partials that no live sheet mounts today, so they are rendered
- * through Foundry's own `renderTemplate` with real owned items and the
- * system's built stylesheet. For each table the spec asserts that the header
- * cells sit on one line in distinct columns, and that every row has one cell
- * per header starting at that header's x. It then snaps the table.
+ * The four voidcraft tables are checked on the live voidcraft sheet. For each
+ * table the spec asserts that the header cells sit on one line in distinct
+ * columns, and that every row has one cell per header starting at that header's
+ * x. It then snaps the table.
+ *
+ * The other four callers (weapon, armour, vehicle weapons, vehicle upgrades)
+ * were panels no live sheet mounted, so they were deleted. The second test
+ * checks that the live character and craft sheets list the same items by name.
  */
 
 /** What one rendered table's layout looks like. */
@@ -79,60 +80,14 @@ async function checkTable(page: Page, selector: string, label: string, expected:
     expect(layout.misalignedRows, `${label}: every row lines up under the header`).toBe(0);
 }
 
-/**
- * Render a panel partial through Foundry's `renderTemplate` into a sheet-like
- * host (the `.wh40k-rpg` ancestor scopes the Tailwind utilities). The context
- * is built in-page from the actor's real owned items.
- */
-async function renderPanel(
-    page: Page,
-    args: { actorId: string; template: string; kind: 'character' | 'vehicle-weapons' | 'vehicle-upgrades'; hostId: string },
-): Promise<void> {
-    await page.evaluate(async ({ actorId, template, kind, hostId }) => {
-        interface OwnedItem {
-            type: string;
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (game, foundry.applications.handlebars) have no browser-side types
-        const g = globalThis as unknown as {
-            game: { actors: { get: (id: string) => { items: { contents: OwnedItem[] } } | undefined } };
-            foundry: { applications: { handlebars: { renderTemplate: (path: string, data: object) => Promise<string> } } };
-        };
-        const actor = g.game.actors.get(actorId);
-        if (actor === undefined) throw new Error('actor not found');
-        const items = actor.items.contents;
-        const context =
-            kind === 'character'
-                ? { actor: { items }, gameSystem: 'dh2', isGM: true }
-                : kind === 'vehicle-weapons'
-                ? { weapons: items.filter((item) => item.type === 'weapon'), system: { weapons: '' }, editable: false, gameSystem: 'dh2' }
-                : { upgrades: items.filter((item) => item.type === 'vehicleUpgrade'), gameSystem: 'dh2' };
-        const html = await g.foundry.applications.handlebars.renderTemplate(template, context);
-        document.getElementById(hostId)?.remove();
-        const host = document.createElement('div');
-        host.id = hostId;
-        host.className = 'wh40k-rpg sheet';
-        host.dataset['wh40kSystem'] = 'dh2';
-        host.dataset['e2eCapture'] = '';
-        Object.assign(host.style, {
-            position: 'fixed',
-            top: '80px',
-            left: '120px',
-            width: '560px',
-            zIndex: '100',
-            // An opaque backdrop: the panel's own background is translucent over the sheet window.
-            background: '#1b1a17',
-        });
-        host.innerHTML = html;
-        document.body.appendChild(host);
-        await globalThis.wh40kE2E.settle(100);
-    }, args);
+/** Open the actor's sheet on `tab`, and assert that tab shows `name`; then snap the sheet. */
+async function expectListed(page: Page, args: { actorId: string; tab: string; name: string; shot: string }): Promise<void> {
+    const sheetId = await openActorSheet(page, args.actorId, args.tab);
+    const entry = page.locator(`#${sheetId} .tab.active`).getByText(args.name, { exact: true }).first();
+    await entry.scrollIntoViewIfNeeded();
+    await expect(entry, `${args.name} on the ${args.tab} tab`).toBeVisible();
+    await snap(page, args.shot, { selector: `#${sheetId}` });
 }
-
-async function removeHost(page: Page, hostId: string): Promise<void> {
-    await page.evaluate((id) => document.getElementById(id)?.remove(), hostId);
-}
-
-const PANELS = 'systems/wh40k-rpg/templates/actor/panel';
 
 test.describe.serial('Item table grid (Tier B, #662)', () => {
     test('the voidcraft weapon, component, upgrade and crew tables line up as grids', async ({ page }) => {
@@ -167,13 +122,15 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
         }
     });
 
-    test('the weapon, armour, vehicle weapon and vehicle upgrade tables line up as grids', async ({ page }) => {
+    // The weapon, armour, vehicle weapon and vehicle upgrade panels were item-table
+    // callers no live sheet mounted; they were deleted. What they listed is on these
+    // live tabs, each by name.
+    test('the live sheets list the weapons, armour and vehicle upgrades the deleted panels did', async ({ page }) => {
         await joinOrSkip(page);
         const character = await createActor(page, {
             data: { name: 'e2e-662 Acolyte', type: 'dh2-character', system: { gameSystem: 'dh2' } },
             items: [
                 { name: 'M36 Kantrael Lasgun', type: 'weapon', system: { class: 'basic', type: 'las' } },
-                { name: 'Stub Automatic', type: 'weapon', system: { class: 'pistol', type: 'solid-projectile' } },
                 { name: 'Flak Vest', type: 'armour', system: { type: 'flak' } },
             ],
         });
@@ -184,22 +141,12 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
                 { name: 'Reinforced Plating', type: 'vehicleUpgrade' },
             ],
         });
-        const host = 'e2e-662-host';
         try {
-            await renderPanel(page, { actorId: character.id, template: `${PANELS}/weapon-panel.hbs`, kind: 'character', hostId: host });
-            // Two weapons plus the Unarmed attack every new character is given.
-            await checkTable(page, `#${host} [data-table]`, 'weapon', { headers: 5, rows: 3 });
-
-            await renderPanel(page, { actorId: character.id, template: `${PANELS}/armour-panel.hbs`, kind: 'character', hostId: host });
-            await checkTable(page, `#${host} [data-table]`, 'armour', { headers: 5, rows: 1 });
-
-            await renderPanel(page, { actorId: vehicle.id, template: `${PANELS}/vehicle-weapons-panel.hbs`, kind: 'vehicle-weapons', hostId: host });
-            await checkTable(page, `#${host} [data-table]`, 'vehicle-weapons', { headers: 5, rows: 1 });
-
-            await renderPanel(page, { actorId: vehicle.id, template: `${PANELS}/vehicle-upgrades-panel.hbs`, kind: 'vehicle-upgrades', hostId: host });
-            await checkTable(page, `#${host} [data-table]`, 'vehicle-upgrades', { headers: 5, rows: 1 });
+            await expectListed(page, { actorId: character.id, tab: 'combat', name: 'M36 Kantrael Lasgun', shot: 'live-character-combat-weapons' });
+            await expectListed(page, { actorId: character.id, tab: 'equipment', name: 'Flak Vest', shot: 'live-character-equipment-armour' });
+            await expectListed(page, { actorId: vehicle.id, tab: 'combat', name: 'Hull Heavy Bolter', shot: 'live-vehicle-combat-weapons' });
+            await expectListed(page, { actorId: vehicle.id, tab: 'components', name: 'Reinforced Plating', shot: 'live-vehicle-components-upgrades' });
         } finally {
-            await removeHost(page, host);
             await deleteDocuments(page, { actors: [character.id, vehicle.id] });
         }
     });

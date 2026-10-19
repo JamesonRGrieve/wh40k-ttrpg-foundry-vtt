@@ -20,7 +20,7 @@
  * the @storybook/csf storyId derivation algorithm: sanitize(meta.title) + '--'
  * + sanitize(storyNameFromExport(key)), with lodash startCase + sanitize, and
  * notes the verified-against-source cases such as
- *   `Inventory/Item Table` + `WeaponPanelDH2` → `dev-inventory-item-table--weapon-panel-dh-2`
+ *   `Inventory/Item Table` + `ShipWeaponsPanelDH2` → `dev-inventory-item-table--ship-weapons-panel-dh-2`
  *   `WeaponSheet` → `weaponsheet` (no boundary inside an all-Upper-then-lower run).
  * The curated set here is a subset of those already-verified ids — never a
  * fresh derivation.
@@ -94,12 +94,7 @@ const STORY_IDS: readonly string[] = [
     'dev-actor-voidcraftactorsheet--black-cruisade-variant',
 
     // ── Inventory item-table panels per-system ───────────────────────────────
-    'dev-inventory-item-table--weapon-panel-dh-2',
-    'dev-inventory-item-table--weapon-panel-im',
-    'dev-inventory-item-table--weapon-panel-rt',
-    'dev-inventory-item-table--armour-panel-dh-2',
     'dev-inventory-item-table--ship-weapons-panel-dh-2',
-    'dev-inventory-item-table--vehicle-weapons-panel-dh-2',
 
     // ── Actor partials — composed-layout surfaces ────────────────────────────
     'dev-actor-partials-sectioncard--add-button-dispatch',

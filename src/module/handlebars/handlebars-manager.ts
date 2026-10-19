@@ -138,7 +138,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/overview-active-effects-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-station-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-psychic-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/weapon-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-controls-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/combat-action-group.hbs',
@@ -175,7 +174,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-movement-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/vehicle-upgrades-panel.hbs',
 
             // Voidcraft sheet templates
             'systems/wh40k-rpg/templates/actor/voidcraft/header.hbs',
@@ -421,7 +419,6 @@ export class HandlebarManager {
             // Vehicle panels
             'systems/wh40k-rpg/templates/actor/panel/vehicle-crew-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-special-rules-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/vehicle-weapons-panel.hbs',
         ];
 
         // Foundry V13's loadTemplates registers partials under the exact key

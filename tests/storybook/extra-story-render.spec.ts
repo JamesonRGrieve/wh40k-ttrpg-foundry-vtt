@@ -13,8 +13,8 @@ import { expect, test } from '@playwright/test';
  * the exact `@storybook/csf` algorithm (lodash startCase + sanitize). The
  * ids below were computed with a faithful reimplementation validated
  * against the documented ground-truth examples (e.g.
- * `Inventory/Item Table` + `WeaponPanelDH2` →
- * `dev-inventory-item-table--weapon-panel-dh-2`; note `WeaponSheet` →
+ * `Inventory/Item Table` + `ShipWeaponsPanelDH2` →
+ * `dev-inventory-item-table--ship-weapons-panel-dh-2`; note `WeaponSheet` →
  * `weaponsheet`, `NPCSheet` → `npcsheet` — startCase only splits at a
  * lower→Upper or Upper-run→Upper+lower boundary).
  *
@@ -306,27 +306,6 @@ test.describe('Storybook extra story render', () => {
     });
 
     // ── Inventory — Item Table panels, per-system homologation ───────────────
-    test('weapon panel DH2e renders lasgun and roll actions', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--weapon-panel-dh-2');
-        await expect(page.locator('text=/Lasgun/').first()).toBeAttached();
-        await expect(page.locator('[data-action="itemRoll"]').first()).toBeAttached();
-    });
-
-    test('weapon panel IM variant renders', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--weapon-panel-im');
-        await expect(page.locator('text=/Lasgun/').first()).toBeAttached();
-    });
-
-    test('weapon panel RT variant renders', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--weapon-panel-rt');
-        await expect(page.locator('text=/Lasgun/').first()).toBeAttached();
-    });
-
-    test('armour panel DH2e renders carapace chest', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--armour-panel-dh-2');
-        await expect(page.locator('text=/Carapace Chest/').first()).toBeAttached();
-    });
-
     test('ship weapons panel DH2e renders fire/delete actions', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-inventory-item-table--ship-weapons-panel-dh-2');
         await expect(page.locator('[data-action="fireShipWeapon"]').first()).toBeAttached();
@@ -336,11 +315,6 @@ test.describe('Storybook extra story render', () => {
     test('ship components panel DH2e renders itemEdit actions', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-inventory-item-table--ship-components-panel-dh-2');
         await expect(page.locator('[data-action="itemEdit"]').first()).toBeAttached();
-    });
-
-    test('vehicle weapons panel DH2e renders weapon create button', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--vehicle-weapons-panel-dh-2');
-        await expect(page.locator('[data-action="itemCreate"][data-type="weapon"]').first()).toBeAttached();
     });
 
     test('item table chrome-only renders add action', async ({ page }) => {

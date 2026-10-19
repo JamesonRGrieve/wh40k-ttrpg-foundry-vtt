@@ -19,7 +19,6 @@ import { readRepoFile } from './lib/repo-file.ts';
 
 const EQUIPPABLE = readRepoFile('src/module/data/shared/equippable-template.ts');
 const HYDRATE = readRepoFile('src/module/compendium-hydrate.ts');
-const WEAPON_PANEL = readRepoFile('src/templates/actor/panel/weapon-panel.hbs');
 const COMBAT_PANEL = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
 const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
 const WEAPON_SHEET = readRepoFile('src/templates/item/item-weapon-sheet.hbs');
@@ -45,13 +44,6 @@ describe('weapon identification schema (#262)', () => {
 });
 
 describe('weapon stat concealment gating (#262)', () => {
-    it('gates the weapon-panel damage/pen/range on identified-or-GM', () => {
-        const gates = WEAPON_PANEL.match(/\(or item\.system\.state\.identified @root\.isGM\)/g) ?? [];
-        // damage, penetration, range = three gated stats.
-        expect(gates.length).toBeGreaterThanOrEqual(3);
-        expect(WEAPON_PANEL).toContain('WH40K.Weapon.ConcealedStat');
-    });
-
     it('gates the combat-panel weapon-row Dmg/Range on identified-or-GM', () => {
         const gates = COMBAT_PANEL.match(/\(or item\.system\.state\.identified @root\.isGM\)/g) ?? [];
         expect(gates.length).toBeGreaterThanOrEqual(2);
@@ -59,7 +51,8 @@ describe('weapon stat concealment gating (#262)', () => {
 
     it('no longer renders equipped-weapon stats on the Overview (#318) — nothing to gate there', () => {
         // #318 removed the Equipped Weapons panel from the Overview tab; the weapon
-        // stat-concealment gating now lives on the weapon-panel and combat-panel only.
+        // stat-concealment gating now lives on the combat panel only (#662 deleted the
+        // unmounted weapon panel).
         expect(OVERVIEW).not.toMatch(/\(or weapon\.system\.state\.identified @root\.isGM\)/);
     });
 

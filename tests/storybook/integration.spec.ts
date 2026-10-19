@@ -66,17 +66,9 @@ test.describe('Storybook integration', () => {
         await expect(page.getByText(/Imperial Creed/)).toBeVisible();
     });
 
-    test('renders the composed DH2 weapon inventory panel', async ({ page }) => {
-        await page.goto('/iframe.html?id=dev-inventory-item-table--weapon-panel-dh-2');
-
-        // The weapon-panel template invokes the production-only
-        // `specialDisplay` Handlebars helper (registered at Foundry
-        // runtime in `handlebars-helpers.ts` but not by the Storybook
-        // `template-support.ts` setup), so the panel render throws
-        // inside the iframe. We can still verify the story route loaded
-        // and the Storybook iframe surfaced *something* — either the
-        // panel chrome or an error frame.
-        await expect(page.locator('body')).not.toBeEmpty();
+    test('renders the composed DH2 ship weapons panel', async ({ page }) => {
+        await page.goto('/iframe.html?id=dev-inventory-item-table--ship-weapons-panel-dh-2');
+        await expect(page.locator('[data-action="fireShipWeapon"]').first()).toBeAttached();
     });
 
     test('renders the weapon quick-actions shared component', async ({ page }) => {
