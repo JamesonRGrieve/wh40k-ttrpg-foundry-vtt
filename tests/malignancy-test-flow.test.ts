@@ -122,7 +122,8 @@ describe('MalignancyTestActionData', () => {
 describe('MalignancyTestActionData — Twisted Flesh (#91)', () => {
     let rollMalignancy: MockInstance<typeof RollTableUtils.rollMalignancy>;
     let rollMutation: MockInstance<typeof RollTableUtils.rollMutation>;
-    const wait = vi.fn<(config: { buttons: { action: string }[] }) => Promise<string | null>>();
+    // The picker offers each choice as a content button whose action is the choice's id (#668).
+    const wait = vi.fn<(config: { actions: Record<string, () => Promise<void>> }) => Promise<string | null>>();
 
     beforeEach(() => {
         vi.restoreAllMocks();
@@ -137,7 +138,7 @@ describe('MalignancyTestActionData — Twisted Flesh (#91)', () => {
         const action = new MalignancyTestActionData(makeLedger(), 'dh2', true);
         action.rollData.success = false;
         await action.descriptionText();
-        expect(wait.mock.calls[0]?.[0].buttons.map((b) => b.action)).toEqual(['malignancy', 'mutation']);
+        expect(Object.keys(wait.mock.calls[0]?.[0].actions ?? {})).toEqual(['malignancy', 'mutation']);
         expect(rollMutation).toHaveBeenCalledWith('dh2');
         expect(rollMalignancy).not.toHaveBeenCalled();
         expect(JSON.stringify(action.effectOutput)).toContain('WH40K.Malignancy.TwistedFlesh.MutationInstead');
