@@ -4,6 +4,7 @@ import type { SkillRollOptions } from '../rolls/action-data.ts';
 import { EvasionActionData } from '../rolls/evasion-action-data.ts';
 import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
+import { DISPOSITION_ROLL_KEY, type DispositionState } from '../rules/disposition.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
@@ -169,9 +170,35 @@ export class WH40KNPC extends WH40KBaseActor {
         );
     }
 
+    /** This NPC's Disposition on its line's scale, its rule set and (DH2) its Personality — #73. */
+    override get dispositionState(): DispositionState {
+        const model = this.system.dispositionModel;
+        return { value: this.system.disposition.value, model, personality: model.model === 'characteristic' ? this.system.disposition.personality : null };
+    }
+
     /* -------------------------------------------- */
     /*  Roll Methods                                */
     /* -------------------------------------------- */
+
+    /**
+     * Test this NPC's Disposition (DH2 core p. 277): a d100 against the value,
+     * "just as with other characteristics", through the standard roll dialog.
+     * Success means the NPC decides in the Acolytes' favour. Only a line whose
+     * Disposition is a characteristic tests it.
+     */
+    rollDisposition(): void {
+        const { value, model } = this.dispositionState;
+        if (!model.testable) return;
+        const label = game.i18n.localize('WH40K.Disposition.Label');
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: DISPOSITION_ROLL_KEY,
+            type: 'characteristic',
+            label: game.i18n.format('WH40K.Roll.TestLabel', { name: label }),
+            target: value,
+        });
+        simpleSkillData.rollData.baseLabel = label;
+        openRollPrompt(simpleSkillData);
+    }
 
     /**
      * Roll a characteristic test for this NPC.

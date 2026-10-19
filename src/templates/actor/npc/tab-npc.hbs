@@ -200,6 +200,11 @@
     </div>
     {{/if}}
 
+    {{!-- ═══ DISPOSITION (#73) — the line's model; hidden where a line has none ═══ --}}
+    {{#if isGM}}
+    {{> 'systems/wh40k-rpg/templates/actor/panel/npc-disposition-panel.hbs'}}
+    {{/if}}
+
     {{!-- ═══ INTERACTION COUNTS (DH2 errata p.125, #145) ═══ --}}
     {{#if isGM}}
     {{> 'systems/wh40k-rpg/templates/actor/panel/npc-interactions-panel.hbs'}}

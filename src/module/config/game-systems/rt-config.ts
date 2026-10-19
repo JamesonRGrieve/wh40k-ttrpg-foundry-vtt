@@ -6,6 +6,7 @@
 // The RT career registry is read from the compendium-backed boot cache.
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -14,7 +15,7 @@ import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/
 import { getCareerKeyFromName } from '../advancements/index.ts';
 import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Profit Factor Acquisition Test — core Table 9-35: Acquisition Modifiers
@@ -90,6 +91,11 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     /** RT uses the flat fatigue model; full recovery takes 8 hours of rest — #114. */
     override getFatigueModel(): FatigueModelDef {
         return { ...FATIGUE_MODES.flat, fullRecoveryHours: 8 };
+    }
+
+    /** RT Dispositions are the seven-step ladder; a success gains one step plus one per degree (p. 294, Table 10–2) — #73. */
+    override getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }
 
     getOriginStepConfig(): OriginStepConfig {

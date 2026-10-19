@@ -5,13 +5,14 @@
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
@@ -105,6 +106,11 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     /** DH1 uses the halving fatigue model (errata: TB+WPB threshold, 2× death) — #114. */
     override getFatigueModel(): FatigueModelDef {
         return FATIGUE_MODES.halving;
+    }
+
+    /** DH1 Dispositions are the seven-step ladder; a success gains one step plus one per degree (p. 230, Table 8–2) — #73. */
+    override getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }
 
     /**

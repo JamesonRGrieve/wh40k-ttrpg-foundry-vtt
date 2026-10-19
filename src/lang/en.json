@@ -1283,11 +1283,7 @@
                 "Wrangle": "Wrangle Beast",
                 "Perform": "Charming Performance",
                 "Won": "{use} succeeds against {target}.",
-                "Lost": "{target} resists your {use}.",
-                "Shift": {
-                    "One": "{use} shifts {target} {bands} band — now {band}.",
-                    "Other": "{use} shifts {target} {bands} bands — now {band}."
-                }
+                "Lost": "{target} resists your {use}."
             },
             "Buff": {
                 "Inspire": "Inspire",
@@ -1346,13 +1342,34 @@
             "Malefic": "Malefic"
         },
         "Disposition": {
-            "Hostile": "Hostile",
-            "Antagonistic": "Antagonistic",
-            "Wary": "Wary",
-            "Neutral": "Neutral",
-            "Cooperative": "Cooperative",
-            "Friendly": "Friendly",
-            "Helpful": "Helpful"
+            "Label": "Disposition",
+            "Header": "Disposition",
+            "Test": "Test Disposition",
+            "CharacteristicHint": "Disposition is a characteristic from 0 to 100. Most NPCs start between 40 and 60. A successful Disposition test means the NPC decides in the player characters' favour.",
+            "LadderHint": "The step sets the base difficulty of Interaction tests against this NPC.",
+            "Indifferent": "Indifferent",
+            "StepOption": "{step}: {difficulty} ({modifier})",
+            "Zero": "Disposition 0: the NPC acts on its Personality's zero-Disposition response.",
+            "Personality": "Personality",
+            "PersonalityName": "Personality",
+            "PersonalityHint": "The NPC's Personality, from a rulebook example or your own. Each Interaction skill has a test modifier and a Disposition effect per degree of success or failure.",
+            "ZeroResponse": "At zero Disposition",
+            "Skill": "Skill",
+            "Modifier": "Modifier",
+            "Effect": "Effect per degree",
+            "EffectPlaceholder": "e.g. 5, -10, 1d5",
+            "Basis": "Degrees",
+            "BasisNone": "N/A",
+            "BasisDos": "DoS",
+            "BasisDof": "DoF",
+            "GmAdjudicates": "No rule sets how this moves {target}'s Disposition; the GM adjudicates.",
+            "Steps": {
+                "One": "{steps} step",
+                "Other": "{steps} steps"
+            },
+            "PersonalityPerDoS": "Personality {effect} × {degrees} DoS, rolled {rolled}: {change}",
+            "PersonalityPerDoF": "Personality {effect} × {degrees} DoF, rolled {rolled}: {change}",
+            "Shifted": "{target}'s Disposition {before} → {after} ({how})."
         },
         "Skills": {
             "Header": "Skills",

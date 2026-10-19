@@ -68,7 +68,7 @@ const SITES: readonly PluralSite[] = [
     { base: 'WH40K.SkillUse.HealedWounds', count: 'wounds', file: 'src/module/rolls/action-data.ts' },
     { base: 'WH40K.SkillUse.ResolvedCritical', count: 'tiers', file: 'src/module/rolls/action-data.ts' },
     { base: 'WH40K.SkillUse.Interrogation.Lockout', count: 'days', file: 'src/module/rolls/action-data.ts' },
-    { base: 'WH40K.SkillUse.Social.Shift', count: 'bands', file: 'src/module/rolls/action-data.ts' },
+    { base: 'WH40K.Disposition.Steps', count: 'steps', file: 'src/module/rolls/action-data.ts' },
     { base: 'WH40K.SkillUse.Buff.BlatherHeld', count: 'rounds', file: 'src/module/rolls/action-data.ts' },
     { base: 'WH40K.Opposed.Margin', count: 'margin', file: 'src/module/rolls/action-data.ts' },
     { base: 'WH40K.Psychic.OpposedOvercome', count: 'margin', file: 'src/module/rolls/action-data.ts' },

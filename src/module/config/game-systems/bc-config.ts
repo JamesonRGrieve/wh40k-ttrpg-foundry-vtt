@@ -26,6 +26,7 @@ import {
     tallyAdvancesByAlignment,
     type AlignmentTally,
 } from '../../rules/bc-alignment-derivation.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import { capitalize } from '../../utils/format.ts';
@@ -42,7 +43,15 @@ import {
     skillAdvanceCost,
     talentAdvanceCost,
 } from './bc-advancement-config.ts';
-import type { AdvanceCostResult, CharacteristicTierDef, ChaosAlignment, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type {
+    AdvanceCostResult,
+    CharacteristicTierDef,
+    ChaosAlignment,
+    DispositionModelDef,
+    OriginStepConfig,
+    SidebarHeaderField,
+    SystemConfigActor,
+} from './types.ts';
 
 /** Subset of system.* that BC config reads off the actor. Avoids `any` casts. */
 interface BcCharacterSystem {
@@ -143,6 +152,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /** BC starting xp: Disciples of Chaos 1,000; Chaos Space Marines 500. Default to the larger pool. */
     override get startingXP(): number {
         return 1000;
+    }
+
+    /** BC Dispositions are the seven-step ladder; a success gains one step per degree (p. 276, Table 8–2) — #73. */
+    override getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.ladderDegrees;
     }
 
     getOriginStepConfig(): OriginStepConfig {

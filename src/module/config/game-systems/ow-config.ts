@@ -6,6 +6,7 @@
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
@@ -13,7 +14,7 @@ import type { ComradeActionCost, ComradeOrderCohesion, ComradeOrderDef } from '.
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
-import type { OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Logistics test — core Table 6-2: Availability by Front Conditions, its
@@ -290,6 +291,11 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      */
     override isPsyker(actor: SystemConfigActor): boolean {
         return this.ownsOriginPathItem(actor, 'speciality', 'sanctioned psyker');
+    }
+
+    /** OW Dispositions are the seven-step ladder; a success gains one step per degree (p. 304, Table 9–4) — #73. */
+    override getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.ladderDegrees;
     }
 
     // Characteristic + skill aptitude tables are inherited from AptitudeBasedSystemConfig (#298) — OW shares the DH2e values.

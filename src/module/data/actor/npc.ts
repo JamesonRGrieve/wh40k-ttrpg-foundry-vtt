@@ -1,4 +1,6 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { DispositionModelDef } from '../../config/game-systems/types.ts';
+import { DISPOSITION_MODELS, migrateDispositionSource, type NpcPersonality, PERSONALITY_SKILLS } from '../../rules/disposition.ts';
 import {
     CHARACTERISTIC_STEP,
     type AdvancementCostTables,
@@ -285,13 +287,13 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare tactics: string;
     declare source: string;
     /**
-     * Disposition toward the warband (core.md §"Disposition", p. 277).
-     * Range -3..+3 maps to: Hostile, Antagonistic, Wary, Neutral,
-     * Cooperative, Friendly, Helpful. The vault campaign instructions
-     * also carry a `dispositions[]` array on the file side; the live
-     * NPC actor only stores the current single value.
+     * Disposition toward the player characters (#73), on the line's scale
+     * (`dispositionModel`): DH2's 0–100 characteristic, the other FFG lines'
+     * −3..+3 ladder. `scale` records which model the value was stored under.
+     * `personality` is the DH2 Personality (core pp. 277–280): per Interaction
+     * skill, the test modifier and the Disposition effect per degree.
      */
-    declare disposition: { value: number };
+    declare disposition: { value: number; scale: string; personality: NpcPersonality };
     /**
      * Flag marking this NPC as available as a Reinforcement Character
      * (core.md §"Reinforcement Characters", p. 294). Shows the GM's
@@ -584,10 +586,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             tactics: new HTMLField({ required: false, initial: '', blank: true }),
             source: new StringField({ required: false, initial: '', blank: true }), // Book reference
 
-            // === SOCIAL / DISPOSITION (core.md §"Disposition", p. 277) ===
-            disposition: new SchemaField({
-                value: new NumberField({ required: true, initial: 0, min: -3, max: 3, integer: true }),
-            }),
+            // === SOCIAL / DISPOSITION (#73) — the line's model sets the scale ===
+            disposition: NPCData.#dispositionSchema(NPCData.dispositionModelFor((this as { gameSystem?: string }).gameSystem)),
 
             // === REINFORCEMENT (core.md §"Reinforcement Characters", p. 294) ===
             // True when this NPC may be called in via Influence as a Reinforcement.
@@ -852,6 +852,40 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /** A skill key's display label from the skill catalog (specialist skills included), or the key itself when unknown. */
     skillLabel(skillKey: string): string {
         return skillLabel(skillKey);
+    }
+
+    /** The Disposition rule set of a model class's line (#73), DH2 for a class registered without one. */
+    static dispositionModelFor(gameSystem: string | undefined): DispositionModelDef {
+        return SystemConfigRegistry.getOrNull(gameSystem ?? DEFAULT_SKILL_CATALOG_SYSTEM)?.getDispositionModel() ?? DISPOSITION_MODELS.none;
+    }
+
+    /** This NPC's line's Disposition rule set (#73). */
+    get dispositionModel(): DispositionModelDef {
+        return NPCData.dispositionModelFor((this.constructor as { gameSystem?: string }).gameSystem);
+    }
+
+    /**
+     * The Disposition field for a line's model: the value on its scale, the model
+     * it was stored under, and the DH2 Personality (one row per Interaction skill
+     * a Personality table lists, core pp. 278–280). Every row starts empty: the
+     * GM enters the NPC's Personality, from the book's examples or their own.
+     */
+    static #dispositionSchema(model: DispositionModelDef): foundry.data.fields.SchemaField<Record<string, foundry.data.fields.DataField.Any>> {
+        const row = (): foundry.data.fields.SchemaField<Record<string, foundry.data.fields.DataField.Any>> =>
+            new SchemaField({
+                modifier: new NumberField({ required: true, initial: 0, integer: true }),
+                effect: new StringField({ required: true, blank: true, initial: '' }),
+                basis: new StringField({ required: true, blank: true, initial: '', choices: ['', 'dos', 'dof'] }),
+            });
+        return new SchemaField({
+            value: new NumberField({ required: true, initial: model.initial, min: model.min, max: model.max, integer: true }),
+            scale: new StringField({ required: true, initial: model.model, choices: ['characteristic', 'ladder', 'none'] }),
+            personality: new SchemaField({
+                name: new StringField({ required: true, blank: true, initial: '' }),
+                zeroDisposition: new StringField({ required: true, blank: true, initial: '' }),
+                skills: new SchemaField(Object.fromEntries(PERSONALITY_SKILLS.map((skill) => [skill, row()]))),
+            }),
+        });
     }
 
     /** The non-specialist skill catalog of a model class's line, DH2 for a class registered without one. */
@@ -1506,6 +1540,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         NPCData.#migrateCharacteristics(source);
         NPCData.#migrateWeapons(source);
         NPCData.#migrateSkills(source);
+        // Before #73 every line stored Disposition on −3..+3; a DH2 record is moved to 0–100.
+        migrateDispositionSource(source['disposition'], NPCData.dispositionModelFor((this as { gameSystem?: string }).gameSystem));
     }
 
     /**

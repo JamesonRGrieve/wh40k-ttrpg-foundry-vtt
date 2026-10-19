@@ -14,7 +14,7 @@ import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { isChargeAction } from '../rules/combat-actions.ts';
 import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
 import { activeConditionMechanics } from '../rules/condition-registry.ts';
-import { clampDisposition, labelForDisposition } from '../rules/disposition.ts';
+import { DISPOSITION_MODIFIER_BUCKET, dispositionModifierComponents, socialDispositionShift } from '../rules/disposition.ts';
 import { ARMED_TEST_HOOKS_FLAG, consumeArmedTestHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
 import { evasionBlockReason, hitsOnTarget, parryBlockReason, withoutNegatedHits } from '../rules/evasion.ts';
 import { type EffectRecipientLike, gmProxyActorUpdate, gmProxyCreateActorEffects } from '../rules/gm-proxy.ts';
@@ -77,6 +77,7 @@ import { DAY_SECONDS } from '../rules/world-time.ts';
 import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
 import type { WH40KBaseActorDocument, WH40KCorruptionInsanity } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
+import { formatSigned } from '../utils/format.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
@@ -1853,31 +1854,42 @@ export class SocialInfluenceActionData extends SimpleSkillData {
         const useLabel = game.i18n.localize(this.def.labelKey);
         const targetName = target?.name ?? '';
 
-        if (!this.rollData.success) {
-            this.addEffect(t(EFFECT_TITLE.social), game.i18n.format('WH40K.SkillUse.Social.Lost', { use: useLabel, target: targetName }));
+        const success = this.rollData.success;
+        const title = t(EFFECT_TITLE.social);
+        this.addEffect(title, game.i18n.format(success ? 'WH40K.SkillUse.Social.Won' : 'WH40K.SkillUse.Social.Lost', { use: useLabel, target: targetName }));
+
+        const state = target?.dispositionState ?? null;
+        if (target === null || state === null || state.model.model === 'none') return;
+        // The test moves the target's Disposition by its line's rule (#73); a won or lost
+        // contest counts at least one degree.
+        const outcome = { success, dos: success ? Math.max(1, this.rollData.dos) : 0, dof: success ? 0 : Math.max(1, this.rollData.dof) };
+        const perUseSteps = this.def.dispositionDir === undefined ? null : resolveSocialInfluence(this.def, outcome.dos, success).dispositionDelta;
+        const shift = socialDispositionShift(state, this.rollData.rollKey, outcome, perUseSteps);
+        if (shift.kind === 'none') {
+            this.addEffect(title, game.i18n.format('WH40K.Disposition.GmAdjudicates', { target: targetName }));
             return;
         }
 
-        const degrees = Math.max(1, this.rollData.dos);
-        const outcome = resolveSocialInfluence(this.def, degrees, true);
-        if (target === null || outcome.dispositionDelta === 0) {
-            this.addEffect(t(EFFECT_TITLE.social), game.i18n.format('WH40K.SkillUse.Social.Won', { use: useLabel, target: targetName }));
-            return;
+        let delta = 0;
+        let how = '';
+        if (shift.kind === 'steps') {
+            delta = shift.steps;
+            how = game.i18n.format(pluralKey('WH40K.Disposition.Steps', Math.abs(delta), game.i18n.lang), { steps: formatSigned(delta) });
+        } else {
+            const effectRoll = await new Roll(shift.formula).evaluate();
+            delta = effectRoll.total * shift.degrees;
+            how = game.i18n.format(success ? 'WH40K.Disposition.PersonalityPerDoS' : 'WH40K.Disposition.PersonalityPerDoF', {
+                effect: shift.formula,
+                rolled: String(effectRoll.total),
+                degrees: String(shift.degrees),
+                change: formatSigned(delta),
+            });
         }
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: disposition lives on npc.ts only; loosely typed here
-        const disposition = (target.system as { disposition?: { value: number } }).disposition;
-        const before = disposition?.value ?? 0;
-        await target.adjustDisposition(outcome.dispositionDelta);
-        const band = game.i18n.localize(`WH40K.Disposition.${labelForDisposition(clampDisposition(before + outcome.dispositionDelta))}`);
+        const result = await target.adjustDisposition(delta);
+        if (result === null) return;
         this.addEffect(
-            t(EFFECT_TITLE.social),
-            game.i18n.format(pluralKey('WH40K.SkillUse.Social.Shift', Math.abs(outcome.dispositionDelta), game.i18n.lang), {
-                use: useLabel,
-                target: targetName,
-                bands: String(Math.abs(outcome.dispositionDelta)),
-                band,
-            }),
+            title,
+            game.i18n.format('WH40K.Disposition.Shifted', { target: targetName, before: String(result.before), after: String(result.after), how }),
         );
     }
 }
@@ -2397,6 +2409,30 @@ export class SkillUseActionData extends SimpleSkillData {
         if (use === null) return;
         applySkillUseToRollData(this.rollData, use, this.skillLabel);
         this.#syncItemChoice(use);
+        this.#syncDispositionModifier(use);
+    }
+
+    /**
+     * Put the target's Disposition on a social test (#73) as one sourced bucket:
+     * the ladder step's difficulty, or the DH2 Personality row's modifier for this
+     * skill. Recomputed on every sync, so a retarget or another use replaces it.
+     */
+    #syncDispositionModifier(use: SkillUseDef): void {
+        const modifiers = this.rollData.modifiers;
+        delete modifiers[DISPOSITION_MODIFIER_BUCKET];
+        Reflect.deleteProperty(this.rollData.expandedBuckets, DISPOSITION_MODIFIER_BUCKET);
+        const target = this.rollData.targetActor;
+        const state = use.kind === 'social' ? target?.dispositionState ?? null : null;
+        if (target === null || state === null) return;
+        const parts = dispositionModifierComponents(state, this.skillKey);
+        if (parts.length === 0) return;
+        modifiers[DISPOSITION_MODIFIER_BUCKET] = parts.reduce((total, part) => total + part.value, 0);
+        this.rollData.expandedBuckets[DISPOSITION_MODIFIER_BUCKET] = parts.map((part) => ({
+            key: part.key,
+            label: game.i18n.localize(part.labelKey),
+            value: part.value,
+            source: target.name,
+        }));
     }
 
     /**

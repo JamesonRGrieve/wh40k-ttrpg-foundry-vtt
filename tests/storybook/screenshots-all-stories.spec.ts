@@ -566,6 +566,21 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         exports: ['Empty', 'MixedRoster', 'AllAtCap', 'ReadOnly'],
     },
     {
+        title: 'Actor/Panels/NpcDispositionPanel',
+        exports: [
+            'Dh2Indifferent',
+            'Dh2ZeroDisposition',
+            'Dh2ReadOnly',
+            'HomologationDH2',
+            'HomologationDH1',
+            'HomologationRT',
+            'HomologationBC',
+            'HomologationOW',
+            'HomologationDW',
+            'ImHasNone',
+        ],
+    },
+    {
         title: 'Actor/Panels/PossessionPanel',
         exports: ['Latent', 'LatentPartialSpend', 'Possessed'],
     },

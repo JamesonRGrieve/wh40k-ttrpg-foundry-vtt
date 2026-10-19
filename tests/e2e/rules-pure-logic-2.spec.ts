@@ -27,8 +27,8 @@ const RULE_AFFLICTION_FLOWS = [
     'addiction-resolveCheck',
     'addiction-treatmentDays',
     'assistance-bonus',
-    'disposition-label',
-    'disposition-modifier',
+    'disposition-ladder',
+    'disposition-personality',
     'phenomena-modifier-compose',
     'reinforcement-callPlan',
     'requisition-test-target',
@@ -63,9 +63,15 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 DEFAULT_ASSISTANT_CAP: number;
             };
             'disposition': {
-                labelForDisposition: (value: number) => string;
-                DISPOSITION_LABELS: readonly string[];
-                getDispositionModifier: (value: number, kind: string) => number;
+                DISPOSITION_MODELS: Record<'characteristic' | 'ladderStepPlusDegrees', object>;
+                ladderModifier: (step: number, model: object) => number;
+                ladderShift: (model: object, success: boolean, dos: number, dof: number) => number;
+                personalityEffect: (
+                    row: { modifier: number; effect: string; basis: string },
+                    success: boolean,
+                    dos: number,
+                    dof: number,
+                ) => { formula: string; degrees: number } | null;
             };
             'phenomena-modifier': {
                 composePhenomenaModifier: (input: { warpWeakness: boolean; taintedPsykerPushCP: number }) => {
@@ -173,24 +179,27 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- disposition ----------
         const disposition = await loadModule('disposition');
         if (isImportError(disposition)) {
-            fail(['disposition-label', 'disposition-modifier'], disposition.__importError);
+            fail(['disposition-ladder', 'disposition-personality'], disposition.__importError);
         } else {
-            guarded('disposition-label', () => {
+            // The seven-step ladder (DH1 p. 230 and siblings, #73): ±10 per step; 1 + DoS up, DoF down.
+            guarded('disposition-ladder', () => {
+                const ladder = disposition.DISPOSITION_MODELS.ladderStepPlusDegrees;
                 return (
-                    disposition.labelForDisposition(-3) === 'Hostile' &&
-                    disposition.labelForDisposition(0) === 'Neutral' &&
-                    disposition.labelForDisposition(99) === 'Helpful' &&
-                    Array.isArray(disposition.DISPOSITION_LABELS) &&
-                    disposition.DISPOSITION_LABELS.length === 7
+                    disposition.ladderModifier(-3, ladder) === -30 &&
+                    disposition.ladderModifier(9, ladder) === 30 &&
+                    disposition.ladderShift(ladder, true, 2, 0) === 3 &&
+                    disposition.ladderShift(ladder, false, 0, 2) === -2
                 );
             });
-            guarded(
-                'disposition-modifier',
-                () =>
-                    disposition.getDispositionModifier(2, 'charm') === 20 &&
-                    disposition.getDispositionModifier(2, 'intimidate') === -20 &&
-                    disposition.getDispositionModifier(99, 'charm') === 30,
-            );
+            // A DH2 Personality row (core pp. 277–280): its effect per degree on the outcome its basis counts.
+            guarded('disposition-personality', () => {
+                const effect = disposition.personalityEffect({ modifier: -20, effect: '5', basis: 'dos' }, true, 3, 0);
+                return (
+                    effect?.formula === '5' &&
+                    effect.degrees === 3 &&
+                    disposition.personalityEffect({ modifier: 0, effect: '5', basis: 'dos' }, false, 0, 2) === null
+                );
+            });
         }
 
         // ---------- phenomena-modifier ----------

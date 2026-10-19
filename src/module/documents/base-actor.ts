@@ -14,7 +14,7 @@ import type { ExtendedTestState } from '../rolls/extended-test-data.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { type AddictionTier, resolveAddictionCheck } from '../rules/addiction.ts';
 import { bearerLine, conditionEffectData } from '../rules/condition-registry.ts';
-import { clampDisposition } from '../rules/disposition.ts';
+import { clampDisposition, type DispositionState } from '../rules/disposition.ts';
 import { ARMED_TEST_HOOKS_FLAG, endBearerTurnForArmedHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG } from '../rules/fanatic.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
@@ -709,17 +709,26 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Adjust an NPC's disposition toward the warband (core.md §"Disposition").
-     * Clamps at the −3..+3 range. The reason is informational only; an
-     * audit log would be a separate sheet feature.
+     * This actor's Disposition toward the player characters and its line's rule
+     * set (#73), or `null` for an actor that has none (only NPCs do).
      */
-    async adjustDisposition(delta: number, _reason?: string): Promise<void> {
-        if (!Number.isFinite(delta) || delta === 0) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: disposition lives on npc.ts only
-        const disposition = (this.system as { disposition?: { value: number } }).disposition;
-        if (!disposition) return;
-        const next = clampDisposition(disposition.value + Math.trunc(delta));
-        await this.update({ 'system.disposition.value': next });
+    get dispositionState(): DispositionState | null {
+        return null;
+    }
+
+    /**
+     * Shift an NPC's Disposition by `delta` on its line's scale (#73), clamped to
+     * the scale. Returns the value before and after, or `null` when the actor has
+     * no Disposition. The scale is written with the value so the write is never
+     * mistaken for a pre-#73 record by the migration.
+     */
+    async adjustDisposition(delta: number): Promise<{ before: number; after: number } | null> {
+        const state = this.dispositionState;
+        if (state === null || state.model.model === 'none') return null;
+        const before = state.value;
+        const after = clampDisposition(before + (Number.isFinite(delta) ? Math.trunc(delta) : 0), state.model);
+        if (after !== before) await this.update({ 'system.disposition.value': after, 'system.disposition.scale': state.model.model });
+        return { before, after };
     }
 
     /* -------------------------------------------- */

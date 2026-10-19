@@ -1,0 +1,91 @@
+{{!--
+  NPC Disposition panel (#73). Follows the NPC's line's Disposition model:
+    - characteristic (DH2, core p. 277): the 0–100 value, a Disposition test, and the NPC's
+      Personality — per Interaction skill, a test modifier and a Disposition effect per degree.
+    - ladder (DH1, RT, BC, DW, OW): the seven steps from Very Hard (−30) to Easy (+30).
+  Hidden on a line without a Disposition rule.
+
+  Context: npcDisposition (NpcDispositionView, applications/actor/npc-disposition-view.ts), editable.
+--}}
+{{#if npcDisposition.visible}}
+<div data-wh40k-hook="npc-disposition-panel" class="wh40k-panel" data-disposition-model="{{npcDisposition.model}}">
+    <div class="wh40k-panel-header">
+        <i class="fa-solid fa-face-meh" aria-hidden="true"></i>
+        <span class="tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.Disposition.Header"}}</span>
+    </div>
+    <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-3">
+        <input type="hidden" name="system.disposition.scale" value="{{npcDisposition.model}}" />
+
+        {{#if (eq npcDisposition.model "characteristic")}}
+        {{!-- DH2: the 0–100 characteristic --}}
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-3">
+            <label class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold" for="npc-disposition-value-{{@root.actor.id}}">{{localize "WH40K.Disposition.Label"}}</label>
+            <input id="npc-disposition-value-{{@root.actor.id}}" type="number" name="system.disposition.value" value="{{npcDisposition.value}}" min="{{npcDisposition.min}}" max="{{npcDisposition.max}}" step="1"
+                   class="tw-w-20 tw-text-center tw-font-mono tw-text-lg" data-disposition-value {{#unless editable}}disabled{{/unless}} />
+            {{#if npcDisposition.testable}}
+            <button type="button" data-action="rollDisposition" class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-sm tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-solid {{themeClassFor 'border'}} tw-bg-transparent">
+                <i class="fa-solid fa-dice-d20" aria-hidden="true"></i> {{localize "WH40K.Disposition.Test"}}
+            </button>
+            {{/if}}
+        </div>
+        <p class="tw-m-0 tw-text-xs tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Disposition.CharacteristicHint"}}</p>
+        {{#if npcDisposition.zero}}
+        <p class="tw-m-0 tw-text-sm tw-font-semibold" data-disposition-zero>{{localize "WH40K.Disposition.Zero"}}</p>
+        {{/if}}
+
+        {{#if npcDisposition.personality}}
+        <div class="tw-flex tw-flex-col tw-gap-2" data-disposition-personality>
+            <div class="tw-grid tw-grid-cols-[auto_1fr] tw-items-center tw-gap-x-3 tw-gap-y-2">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase" for="npc-personality-name-{{@root.actor.id}}">{{localize "WH40K.Disposition.PersonalityName"}}</label>
+                <input id="npc-personality-name-{{@root.actor.id}}" type="text" name="system.disposition.personality.name" value="{{npcDisposition.personality.name}}" {{#unless editable}}disabled{{/unless}} />
+                <label class="tw-text-xs tw-font-semibold tw-uppercase" for="npc-personality-zero-{{@root.actor.id}}">{{localize "WH40K.Disposition.ZeroResponse"}}</label>
+                <input id="npc-personality-zero-{{@root.actor.id}}" type="text" name="system.disposition.personality.zeroDisposition" value="{{npcDisposition.personality.zeroDisposition}}" {{#unless editable}}disabled{{/unless}} />
+            </div>
+            <p class="tw-m-0 tw-text-xs tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Disposition.PersonalityHint"}}</p>
+            <table class="tw-w-full tw-text-sm tw-border-collapse">
+                <thead>
+                    <tr class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-[color:var(--wh40k-text-muted)]">
+                        <th class="tw-text-left tw-py-1 tw-pr-2 tw-font-semibold" scope="col">{{localize "WH40K.Disposition.Skill"}}</th>
+                        <th class="tw-text-left tw-py-1 tw-px-2 tw-font-semibold" scope="col">{{localize "WH40K.Disposition.Modifier"}}</th>
+                        <th class="tw-text-left tw-py-1 tw-px-2 tw-font-semibold" scope="col">{{localize "WH40K.Disposition.Effect"}}</th>
+                        <th class="tw-text-left tw-py-1 tw-pl-2 tw-font-semibold" scope="col">{{localize "WH40K.Disposition.Basis"}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each npcDisposition.personality.rows as |row|}}
+                    <tr class="tw-border-t tw-border-[color:var(--wh40k-border-color-light)]" data-personality-row="{{row.skill}}">
+                        <th class="tw-text-left tw-py-1 tw-pr-2 tw-font-semibold" scope="row">{{row.label}}</th>
+                        <td class="tw-py-1 tw-px-2">
+                            <input type="number" name="{{row.path}}.modifier" value="{{row.modifier}}" step="1" class="tw-w-16 tw-text-center" aria-label="{{row.label}} {{localize 'WH40K.Disposition.Modifier'}}" {{#unless ../editable}}disabled{{/unless}} />
+                        </td>
+                        <td class="tw-py-1 tw-px-2">
+                            <input type="text" name="{{row.path}}.effect" value="{{row.effect}}" placeholder="{{localize 'WH40K.Disposition.EffectPlaceholder'}}" class="tw-w-24" aria-label="{{row.label}} {{localize 'WH40K.Disposition.Effect'}}" {{#unless ../editable}}disabled{{/unless}} />
+                        </td>
+                        <td class="tw-py-1 tw-pl-2">
+                            <select name="{{row.path}}.basis" aria-label="{{row.label}} {{localize 'WH40K.Disposition.Basis'}}" {{#unless ../editable}}disabled{{/unless}}>
+                                <option value="" {{#unless row.basis}}selected{{/unless}}>{{localize "WH40K.Disposition.BasisNone"}}</option>
+                                <option value="dos" {{#if (eq row.basis "dos")}}selected{{/if}}>{{localize "WH40K.Disposition.BasisDos"}}</option>
+                                <option value="dof" {{#if (eq row.basis "dof")}}selected{{/if}}>{{localize "WH40K.Disposition.BasisDof"}}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+        {{else}}
+        {{!-- Ladder lines: the seven steps --}}
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-3">
+            <label class="tw-text-sm tw-font-semibold" for="npc-disposition-step-{{@root.actor.id}}">{{localize "WH40K.Disposition.Label"}}</label>
+            <select id="npc-disposition-step-{{@root.actor.id}}" name="system.disposition.value" data-dtype="Number" data-disposition-value {{#unless editable}}disabled{{/unless}}>
+                {{#each npcDisposition.steps as |option|}}
+                <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{localize "WH40K.Disposition.StepOption" step=option.step difficulty=(localize option.difficultyKey) modifier=option.modifier}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <p class="tw-m-0 tw-text-xs tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Disposition.LadderHint"}}</p>
+        {{/if}}
+    </div>
+</div>
+{{/if}}

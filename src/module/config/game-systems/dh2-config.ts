@@ -5,6 +5,7 @@
 
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -14,7 +15,7 @@ import type { WeaponModificationRules } from '../../rules/weapon-modification.ts
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { printedGrappleRules } from './base-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Core Table 5-2: Craftsmanship, Requisition, and Repair (p. 141) — one column
@@ -154,6 +155,11 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     /** DH2 uses the halving fatigue model (TB+WPB threshold, 2× death) — #114. */
     override getFatigueModel(): FatigueModelDef {
         return FATIGUE_MODES.halving;
+    }
+
+    /** DH2 Disposition is an NPC characteristic on the 0–100 scale (core p. 277) — #73. */
+    override getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.characteristic;
     }
 
     override get startingXP(): number {

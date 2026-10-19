@@ -449,24 +449,14 @@ describe('social influence (#433)', () => {
         expect(getSkillUse('deceive', 'social')?.opposedChar).toBeUndefined();
     });
 
-    it('directs the disposition shift warmer for Charm and colder for Intimidate', () => {
-        expect(getSkillUse('charm', 'social')?.dispositionDir).toBe(1);
-        expect(getSkillUse('intimidate', 'social')?.dispositionDir).toBe(-1);
-        expect(getSkillUse('command', 'social')?.dispositionDir).toBe(0);
-        expect(getSkillUse('deceive', 'social')?.dispositionDir).toBe(0);
-    });
-
-    it('scales the disposition delta by degrees of success in the use direction', () => {
-        const charm = getSkillUse('charm', 'social') as SkillUseDef;
-        const intimidate = getSkillUse('intimidate', 'social') as SkillUseDef;
-        const command = getSkillUse('command', 'social') as SkillUseDef;
-
-        expect(resolveSocialInfluence(charm, 1, true)).toEqual({ success: true, dispositionDelta: 1 });
-        expect(resolveSocialInfluence(charm, 3, true)).toEqual({ success: true, dispositionDelta: 2 });
-        expect(resolveSocialInfluence(intimidate, 3, true)).toEqual({ success: true, dispositionDelta: -2 });
-        // A failed contest never shifts disposition, and a directionless use never does.
-        expect(resolveSocialInfluence(charm, 0, false)).toEqual({ success: false, dispositionDelta: 0 });
-        expect(resolveSocialInfluence(command, 3, true)).toEqual({ success: true, dispositionDelta: 0 });
+    it('leaves the Interaction skills to their line’s Disposition rule (#73)', () => {
+        for (const key of ['charm', 'command', 'intimidate', 'deceive']) {
+            const use = getSkillUse(key, 'social') as SkillUseDef;
+            expect(use.dispositionDir).toBeUndefined();
+            expect(use.dispositionCap).toBeUndefined();
+            // No rule of its own: the line's rule (rules/disposition.ts) moves the Disposition.
+            expect(resolveSocialInfluence(use, 3, true)).toEqual({ success: true, dispositionDelta: 0 });
+        }
     });
 
     it('offers Wrangling/Performer as unopposed warming disposition uses capped at 3 bands (#446)', () => {

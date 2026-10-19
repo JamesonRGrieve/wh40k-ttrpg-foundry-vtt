@@ -5,6 +5,7 @@
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleDamageRule, GrappleOptionRule, GrapplePushRule, GrappleRules } from '../../rules/grapple.ts';
@@ -17,6 +18,7 @@ import type {
     GameSystemId,
     SkillRankDef,
     CharacteristicTierDef,
+    DispositionModelDef,
     FatePointUseDef,
     FatigueModelDef,
     OriginStepConfig,
@@ -433,6 +435,15 @@ export abstract class BaseSystemConfig {
      */
     getFatigueModel(): FatigueModelDef {
         return FATIGUE_MODES.flat;
+    }
+
+    /**
+     * The line's RAW Disposition rule set (#73). The default is `none` (IM has
+     * no Disposition rule); DH2 overrides to the 0–100 characteristic, the other
+     * FFG lines to their seven-step ladder.
+     */
+    getDispositionModel(): DispositionModelDef {
+        return DISPOSITION_MODELS.none;
     }
 
     // ── Skill Level Mapping ──────────────────────────────────────

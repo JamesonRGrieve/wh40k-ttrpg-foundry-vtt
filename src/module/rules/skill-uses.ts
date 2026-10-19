@@ -73,13 +73,14 @@ export interface SkillUseDef {
      */
     readonly opposedSkill?: string;
     /**
-     * Direction this social use pushes the target's disposition on success:
-     * `+1` warmer (Charm), `-1` colder (Intimidate), `0`/absent for uses that
-     * resolve a contest without a lasting disposition shift (Command, Deceive).
+     * A use with its own Disposition rule (#446): the direction it shifts a
+     * ladder-line Disposition on success. Absent for the Interaction skills
+     * (Charm, Command, Deceive, Intimidate), which follow the line's
+     * Disposition rule (`rules/disposition.ts`, #73).
      */
     readonly dispositionDir?: -1 | 0 | 1;
     /**
-     * Maximum disposition bands this use may shift in one resolution (RAW cap —
+     * Maximum disposition steps this use may shift in one resolution (RAW cap —
      * e.g. Wrangling shifts at most 3 levels, #446). Absent = uncapped.
      */
     readonly dispositionCap?: number;
@@ -182,20 +183,23 @@ function contestUse(skillKey: string): SkillUseDef {
 }
 
 /**
- * A target-directed social-influence use (#433) — an opposed test that, on
- * success, may shift the target NPC's disposition (`dispositionDir`). Opposition
- * is by the target's Willpower (`opposedChar`) unless `opposedSkill` is given
- * (Deceive is opposed by the target's Scrutiny). `dispositionDir` of 0 resolves
- * the contest without a lasting disposition shift.
+ * A target-directed social-influence use (#433) — an opposed test against the
+ * target NPC. Opposition is by the target's Willpower (`opposedChar`) unless
+ * `opposedSkill` is given (Deceive is opposed by the target's Scrutiny). How the
+ * result moves the NPC's Disposition is the line's rule (#73), unless the use
+ * declares its own (`dispositionDir` / `dispositionCap`, #446).
  */
-function socialUse(labelLeaf: string, opts: { opposedChar?: string; opposedSkill?: string; dispositionDir: -1 | 0 | 1; dispositionCap?: number }): SkillUseDef {
+function socialUse(
+    labelLeaf: string,
+    opts: { opposedChar?: string; opposedSkill?: string; dispositionDir?: -1 | 0 | 1; dispositionCap?: number },
+): SkillUseDef {
     return {
         id: 'social',
         labelKey: `WH40K.SkillUse.Social.${labelLeaf}`,
         needsTarget: true,
         difficultyMod: 0,
         kind: 'social',
-        dispositionDir: opts.dispositionDir,
+        ...(opts.dispositionDir !== undefined ? { dispositionDir: opts.dispositionDir } : {}),
         ...(opts.opposedChar !== undefined ? { opposedChar: opts.opposedChar } : {}),
         ...(opts.opposedSkill !== undefined ? { opposedSkill: opts.opposedSkill } : {}),
         ...(opts.dispositionCap !== undefined ? { dispositionCap: opts.dispositionCap } : {}),
@@ -295,10 +299,10 @@ const SKILL_USE_BUILDERS: Record<string, () => SkillUseDef[]> = {
     // Intimidate) or Scrutiny (Deceive); Charm warms and Intimidate cools disposition.
     // Social buff/debuff sub-uses (#447): Inspire/Terrify buff allies, War Cry debuffs
     // an enemy's defence, Blather (opposed vs WP) holds a target in inaction.
-    charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP', dispositionDir: 1 }), buffUse('inspire')],
-    command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP', dispositionDir: 0 }), buffUse('inspire'), buffUse('terrify')],
-    intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP', dispositionDir: -1 }), buffUse('warCry')],
-    deceive: () => [GENERAL_SKILL_USE, socialUse('Deceive', { opposedSkill: 'scrutiny', dispositionDir: 0 })],
+    charm: () => [GENERAL_SKILL_USE, socialUse('Charm', { opposedChar: 'WP' }), buffUse('inspire')],
+    command: () => [GENERAL_SKILL_USE, socialUse('Command', { opposedChar: 'WP' }), buffUse('inspire'), buffUse('terrify')],
+    intimidate: () => [GENERAL_SKILL_USE, socialUse('Intimidate', { opposedChar: 'WP' }), buffUse('warCry')],
+    deceive: () => [GENERAL_SKILL_USE, socialUse('Deceive', { opposedSkill: 'scrutiny' })],
     blather: () => [GENERAL_SKILL_USE, buffUse('blather', { opposedChar: 'WP' })],
     // Animal/audience disposition (#446): Wrangling calms/trains a beast and Performer
     // sways a crowd — the #433 disposition engine, unopposed (a plain test vs the GM's
@@ -657,25 +661,21 @@ export function resolveInterrogation(degrees: number): InterrogationOutcome {
     return { success: true, infoTier: Math.max(1, Math.floor(degrees)), fatigue: 1 };
 }
 
-/** Outcome of a resolved social-influence use (#433), ready to apply to the target NPC. */
+/** Outcome of a social-influence use with its own Disposition rule (#446). */
 export interface SocialInfluenceOutcome {
     readonly success: boolean;
     /**
-     * Signed disposition band shift to apply to the target on success (0 when the
-     * use has no lasting disposition effect or the test failed). One band at 1
-     * degree of success, +1 further band per two additional degrees.
+     * Signed ladder-step shift to apply to the target on success (0 when the use
+     * declares no rule of its own or the test failed). One step at 1 degree of
+     * success, +1 further step per two additional degrees, up to the use's cap.
      */
     readonly dispositionDelta: number;
 }
 
 /**
- * Resolve a social-influence use against the opposed result. `degrees` is the
- * actor's degrees of success after the opposed test; `success` is whether the
- * actor won the contest. Pure: the caller writes the disposition shift.
- *
- * A win with a directional use (Charm/Intimidate) shifts disposition one band in
- * that direction, gaining a further band per two extra degrees. A directionless
- * use (Command/Deceive) resolves the contest with no disposition change.
+ * Resolve a use's own Disposition rule (Wrangling / Performer, #446). The
+ * Interaction skills declare none and follow their line's rule instead
+ * (`socialDispositionShift`, #73). Pure: the caller writes the shift.
  */
 export function resolveSocialInfluence(def: SkillUseDef, degrees: number, success: boolean): SocialInfluenceOutcome {
     const dir = def.dispositionDir ?? 0;

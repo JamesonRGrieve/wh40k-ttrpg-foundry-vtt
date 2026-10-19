@@ -4,7 +4,6 @@ import {
     DARK_PACT_FLAG,
     type DarkPactEntry,
     type DarkPactTerms,
-    DISPOSITION_SCALE,
     holdsPact,
     isFromPact,
     newPactRecord,
@@ -16,6 +15,10 @@ import {
     startingDaemonDisposition,
     togglePactEntry,
 } from './dark-pact';
+import { DISPOSITION_MODELS } from './disposition';
+
+/** A Daemon's Disposition is the DH2 characteristic one (#73). */
+const DISPOSITION_SCALE = DISPOSITION_MODELS.characteristic;
 
 /**
  * Dark Pacts (#84, Enemies Beyond pp. 72–76). Every pact-specific number is the

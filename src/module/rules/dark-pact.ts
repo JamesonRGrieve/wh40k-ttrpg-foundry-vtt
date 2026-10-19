@@ -24,6 +24,7 @@
 
 import { SYSTEM_ID } from '../constants.ts';
 import { type EffectChange, modifiersToEffectChanges } from './condition-registry.ts';
+import { clampDisposition, DISPOSITION_MODELS } from './disposition.ts';
 
 /** An item a Boon or Bane grants: a compendium talent / trait, with its specialization and level. */
 export interface DarkPactGrant {
@@ -68,21 +69,17 @@ export interface PactRecord {
     banes: string[];
 }
 
-/** The 0–100 scale every characteristic, Disposition included, is measured on (core p. 277). */
-export const DISPOSITION_SCALE = { min: 0, max: 100 } as const;
-
-function clampDisposition(value: number): number {
-    return Math.max(DISPOSITION_SCALE.min, Math.min(DISPOSITION_SCALE.max, Math.trunc(value)));
-}
+/** A Daemon's Disposition is the DH2 characteristic Disposition, on its 0–100 scale (core p. 277, #73). */
+const DAEMON_DISPOSITION = DISPOSITION_MODELS.characteristic;
 
 /** The Daemon's starting Disposition: the pact's base, plus the character's Corruption when the terms add it. */
 export function startingDaemonDisposition(terms: DarkPactTerms, corruption: number): number {
-    return clampDisposition(terms.dispositionBase + (terms.addsCorruption ? Math.max(0, Math.trunc(corruption)) : 0));
+    return clampDisposition(terms.dispositionBase + (terms.addsCorruption ? Math.max(0, Math.trunc(corruption)) : 0), DAEMON_DISPOSITION);
 }
 
 /** Shift a Daemon's Disposition, kept on the 0–100 scale. */
 export function adjustPactDisposition(current: number, delta: number): number {
-    return clampDisposition(current + Math.trunc(delta));
+    return clampDisposition(current + Math.trunc(delta), DAEMON_DISPOSITION);
 }
 
 /** A newly struck pact: no Boons or Banes chosen yet, payment current, undiscovered. */

@@ -25,6 +25,7 @@ import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import type { SkillLike } from './base-actor-sheet.ts';
 import CharacterSheet, { DW_VEHICLE_PANEL, type SystemPanels } from './character-sheet.ts';
 import { npcArmourAtLocation } from './npc-armour-display.ts';
+import { npcDispositionView } from './npc-disposition-view.ts';
 
 /** Local trained-skill shape used by skill mutation handlers (loose superset of the schema). */
 interface NPCV2TrainedSkillData {
@@ -311,6 +312,8 @@ export default class NPCSheet extends CharacterSheet {
             callReinforcement: NPCSheet.#callReinforcement,
             // Interaction tally (DH2 errata p.125, #145)
             adjustInteractionCount: NPCSheet.#adjustInteractionCount,
+            // Disposition test (DH2 core p. 277, #73)
+            rollDisposition: NPCSheet.#rollDisposition,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -425,6 +428,7 @@ export default class NPCSheet extends CharacterSheet {
         this._prepareHordeContext(context);
         this._prepareItems(context);
         this._prepareInteractionsContext(context);
+        context['npcDisposition'] = npcDispositionView(this.npcActor.dispositionState, (skill) => this.npcActor.system.skillLabel(skill));
 
         // Reinforcement Character call (DH2 core p. 294, #77): GM-only, for a DH2
         // NPC flagged as an RC. Other lines print no RC rules.
@@ -1513,6 +1517,12 @@ export default class NPCSheet extends CharacterSheet {
     }
 
     /* -------------------------------------------- */
+
+    /** Test the NPC's Disposition: a d100 against it through the roll dialog (DH2 core p. 277, #73). */
+    static #rollDisposition(this: NPCSheet, event: Event): void {
+        event.preventDefault();
+        this.npcActor.rollDisposition();
+    }
 
     /**
      * Adjust the per-PC interaction tally for this NPC by `data-delta`

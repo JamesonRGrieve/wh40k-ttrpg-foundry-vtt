@@ -154,6 +154,37 @@ export interface FatigueModelDef {
 }
 
 /**
+ * How a game line models an NPC's Disposition toward the player characters (#73).
+ * The lines split three ways at RAW:
+ *   - `characteristic` — DH2 (core p. 277): an NPC characteristic on the 0–100
+ *                        scale, tested with a d100 like any characteristic; how
+ *                        Interaction skills move it comes from the NPC's Personality.
+ *   - `ladder`         — DH1 (p. 230), RT (p. 294), BC (p. 276), DW (p. 276),
+ *                        OW (p. 304): seven steps from Very Hard (−30) through
+ *                        Indifferent to Easy (+30); the step sets the base
+ *                        difficulty of Interaction tests and moves with their degrees.
+ *   - `none`           — IM: no Disposition rule.
+ */
+type DispositionModel = 'characteristic' | 'ladder' | 'none';
+
+/** The per-line Disposition rule set (#73), returned by a game-system config's `getDispositionModel()`. */
+export interface DispositionModelDef {
+    model: DispositionModel;
+    /** Lowest value the scale holds. */
+    min: number;
+    /** Highest value the scale holds. */
+    max: number;
+    /** The value an NPC starts with when the GM has set none. */
+    initial: number;
+    /** Ladder only: the Interaction-test modifier each step from Indifferent is worth. */
+    stepModifier: number;
+    /** Ladder only: steps a successful Interaction test gains before its degrees of success. */
+    successBaseSteps: number;
+    /** Whether Disposition itself is tested (a d100 against the value). */
+    testable: boolean;
+}
+
+/**
  * A canonical Fate Point spend option as surfaced by the Fate Uses reference
  * dialog. Each entry's `label` and `description` are localization keys under
  * the `WH40K.*` namespace, resolved by the dialog at render time.
