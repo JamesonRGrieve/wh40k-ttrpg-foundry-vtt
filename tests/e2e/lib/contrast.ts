@@ -29,10 +29,16 @@ export interface ContrastViolation {
 /** Window surface assumed under fully transparent ancestors (`--color-bg-primary`). */
 const FALLBACK_SURFACE = '#1a1a1a';
 
+/** What a scan reads besides elements' own text. */
+interface ScanOptions {
+    /** Also read each select's chosen option and each text/number input's value, drawn in the control's colour. */
+    controls?: boolean;
+}
+
 /** Scan `rootSelector` for failing text contrast. Returns at most `limit` violations, worst first. */
-export async function scanContrast(page: Page, rootSelector: string, limit = 40): Promise<ContrastViolation[]> {
+export async function scanContrast(page: Page, rootSelector: string, limit = 40, options: ScanOptions = {}): Promise<ContrastViolation[]> {
     return page.evaluate(
-        ({ selector, fallback, max }) => {
+        ({ selector, fallback, max, controls }) => {
             type Rgba = [number, number, number, number];
             const parse = (value: string): Rgba | null => {
                 const m = /rgba?\(([^)]+)\)/.exec(value);
@@ -85,12 +91,21 @@ export async function scanContrast(page: Page, rootSelector: string, limit = 40)
             const root = document.querySelector(selector);
             if (root === null) return [];
             const out: Array<{ text: string; color: string; background: string; ratio: number; required: number; fontSizePx: number }> = [];
+            /** The text a form control draws: a select's chosen option, a text input's value. */
+            const controlText = (el: Element): string => {
+                if (el instanceof HTMLSelectElement) return el.selectedOptions.item(0)?.text ?? '';
+                if (el instanceof HTMLInputElement && ['text', 'number', 'search'].includes(el.type)) return el.value;
+                return '';
+            };
             for (const el of Array.from(root.querySelectorAll('*'))) {
-                const ownText = Array.from(el.childNodes)
-                    .filter((n) => n.nodeType === Node.TEXT_NODE)
-                    .map((n) => n.textContent ?? '')
-                    .join('')
-                    .trim();
+                const ownText = (
+                    controls && el.matches('select, input')
+                        ? controlText(el)
+                        : Array.from(el.childNodes)
+                              .filter((n) => n.nodeType === Node.TEXT_NODE)
+                              .map((n) => n.textContent ?? '')
+                              .join('')
+                ).trim();
                 if (ownText === '') continue;
                 // WCAG exempts inactive controls; a disabled button is dimmed on purpose.
                 if (el.closest(':disabled, [aria-disabled="true"]') !== null) continue;
@@ -118,7 +133,7 @@ export async function scanContrast(page: Page, rootSelector: string, limit = 40)
             }
             return out.sort((a, b) => a.ratio - b.ratio).slice(0, max);
         },
-        { selector: rootSelector, fallback: FALLBACK_SURFACE, max: limit },
+        { selector: rootSelector, fallback: FALLBACK_SURFACE, max: limit, controls: options.controls === true },
     );
 }
 

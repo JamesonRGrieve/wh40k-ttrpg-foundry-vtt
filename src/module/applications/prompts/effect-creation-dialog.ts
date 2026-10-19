@@ -89,6 +89,9 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
+            // The template paints the themed surface edge to edge (#651): the system's
+            // window body stays dark on the light theme, under the light theme's dark text.
+            contentClasses: ['tw-p-0'],
         },
         position: {
             width: 520,

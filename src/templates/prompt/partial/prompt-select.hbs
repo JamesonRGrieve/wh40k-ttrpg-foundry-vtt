@@ -19,7 +19,7 @@
        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="climbSurface" action="…"}}
            <option …>…</option>
        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}} --}}
-<select class="tw-h-10 tw-py-0 tw-px-[14px] tw-leading-normal tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-text-[#e8e4d9] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[rgba(255,255,255,0.15)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[rgba(0,0,0,0.4)]"
+<select class="tw-h-10 tw-py-0 tw-px-[14px] tw-leading-normal tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-font-medium tw-w-full tw-transition-all hover:tw-border-[var(--wh40k-border-color-strong)] focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_0_3px_rgba(201,162,39,0.2)] focus:tw-bg-[var(--wh40k-input-bg-focus)]"
         name="{{name}}"{{#if id}}
         id="{{id}}"{{/if}}{{#if action}}
         data-action="{{action}}"{{/if}}>

@@ -21,6 +21,10 @@ const palette = {
     '--wh40k-green': '#2d5a2d',
     '--wh40k-green-bright': '#4ade80',
     '--wh40k-accent-gold': '#d4a520',
+    // Text on an --wh40k-accent-gold fill, which is the same in both themes (#651).
+    '--wh40k-text-on-gold': '#0a0a0f',
+    // The tile behind white-on-transparent icon art, which needs a dark ground on both themes (#651).
+    '--wh40k-icon-tile': '#1a1510',
     '--wh40k-accent-combat': '#a82020',
     '--wh40k-accent-red': '#e74c3c',
     '--wh40k-accent-skills': '#2a7a9a',

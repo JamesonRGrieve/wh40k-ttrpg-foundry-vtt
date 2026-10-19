@@ -202,3 +202,36 @@ export const CategoryTabsFitDefaultWidth: Story = {
         await expect(overflowingLabels(tabs)).toEqual([]);
     },
 };
+
+/** The colour a theme token resolves to inside `scope`. */
+function tokenColour(scope: Element, token: string): string {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    scope.append(probe);
+    const { color } = getComputedStyle(probe);
+    probe.remove();
+    return color;
+}
+
+/**
+ * #651: the dialog's text was fixed white, unreadable on the light theme. Its
+ * labels, values, hints, headings and the select now draw in the theme's tokens,
+ * so they follow whichever theme the page is on.
+ */
+export const TextFollowsTheme: Story = {
+    args: { selectedCategory: 'characteristic' },
+    play: async ({ canvasElement }) => {
+        const form = canvasElement.querySelector('form');
+        if (form === null) throw new Error('the dialog form did not render');
+        const colourOf = (selector: string): string | undefined => {
+            const el = form.querySelector(selector);
+            return el === null ? undefined : getComputedStyle(el).color;
+        };
+        await expect(colourOf('label[for="characteristic"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
+        await expect(colourOf('select[name="characteristic"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
+        await expect(colourOf('input[name="modifierValue"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
+        await expect(colourOf('span.tw-italic')).toBe(tokenColour(form, '--wh40k-text-muted'));
+        await expect(colourOf('[data-category="skill"]')).toBe(tokenColour(form, '--wh40k-text-muted'));
+        await expect(colourOf('[data-category="characteristic"]')).toBe(tokenColour(form, '--wh40k-accent-gold-text'));
+    },
+};

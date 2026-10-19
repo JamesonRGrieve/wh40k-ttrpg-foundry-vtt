@@ -1,13 +1,15 @@
 {{!-- Effect Creation Dialog Template --}}
-{{!-- The window root is the form (EffectCreationDialog `tag: 'form'`), so this is its content, not a nested form. --}}
-<div class="tw-flex tw-flex-col tw-gap-4 tw-p-3">
+{{!-- The window root is the form (EffectCreationDialog `tag: 'form'`), so this is its content, not a nested form.
+     It carries the theme's sheet surface, filling the unpadded window body, so the
+     themed text below sits on the theme it was chosen for (#651). --}}
+<div class="tw-flex tw-flex-col tw-flex-1 tw-gap-4 tw-p-3 tw-bg-[var(--wh40k-sheet-bg)]">
 
     {{!-- Category Selection Tabs. Five to a row at the 520px default width, so a long
          label wraps inside its own button (the langpack soft-hyphenates
          "Characteristics") and the button grows to hold it (#651). --}}
-    <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-black/30 tw-rounded-lg tw-border tw-border-solid {{themeClassFor 'border'}}">
+    <div class="tw-grid tw-grid-cols-5 tw-gap-1 tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-rounded-lg tw-border tw-border-solid {{themeClassFor 'border'}}">
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[color:var(--wh40k-accent-gold-text)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[color:var(--wh40k-accent-gold-text)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'condition')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="condition">
@@ -15,7 +17,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Condition"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[color:var(--wh40k-accent-gold-text)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[color:var(--wh40k-accent-gold-text)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'characteristic')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="characteristic">
@@ -23,7 +25,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Characteristic"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[color:var(--wh40k-accent-gold-text)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[color:var(--wh40k-accent-gold-text)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'skill')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="skill">
@@ -31,7 +33,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Skill"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[color:var(--wh40k-accent-gold-text)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[color:var(--wh40k-accent-gold-text)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'combat')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="combat">
@@ -39,7 +41,7 @@
             <span>{{localize "WH40K.ActiveEffect.Categories.Combat"}}</span>
         </button>
         <button type="button"
-                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-white/70 tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[var(--wh40k-accent-gold)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[var(--wh40k-accent-gold)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
+                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-h-auto tw-px-1 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-md tw-text-[color:var(--wh40k-text-muted)] tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-normal tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-accent-gold)]/50 hover:tw-text-[color:var(--wh40k-accent-gold-text)] hover:-tw-translate-y-0.5 data-[active=true]:tw-bg-gradient-to-br data-[active=true]:tw-from-[var(--wh40k-accent-gold)]/30 data-[active=true]:tw-to-[var(--wh40k-accent-gold)]/20 data-[active=true]:tw-border-[var(--wh40k-accent-gold)] data-[active=true]:tw-text-[color:var(--wh40k-accent-gold-text)] data-[active=true]:tw-shadow-[0_0_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-xl [&>span]:tw-leading-tight [&>span]:tw-max-w-full [&>span]:tw-text-center [&>span]:tw-break-words"
                 data-active="{{#if (eq selectedCategory 'custom')}}true{{else}}false{{/if}}"
                 data-action="selectCategory"
                 data-category="custom">
@@ -53,48 +55,49 @@
 
     {{!-- Condition Selection Grid --}}
     {{#if (eq selectedCategory 'condition')}}
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-black/20 tw-border tw-border-solid tw-border-white/10 tw-rounded-lg">
-            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-accent-gold)] [&>i]:tw-text-[1.1rem]">
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-accent-gold-text)] [&>i]:tw-text-[1.1rem]">
                 <i class="fas fa-bolt"></i>
                 <span>{{localize "WH40K.Dialog.EffectCreation.QuickApplyCondition"}}</span>
             </div>
             <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mt-2">
                 {{#each conditions as |condition|}}
-                    <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-p-3 tw-bg-black/30 tw-border-2 tw-border-solid tw-rounded-lg tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] {{#if (eq condition.nature 'harmful')}}tw-border-red-500/30 hover:tw-bg-red-500/15 hover:tw-border-[var(--wh40k-accent-red)] hover:tw-shadow-[0_4px_16px_rgba(231,76,60,0.3)]{{else if (eq condition.nature 'beneficial')}}tw-border-green-500/30 hover:tw-bg-green-500/15 hover:tw-border-[var(--wh40k-accent-green-bright)] hover:tw-shadow-[0_4px_16px_rgba(46,204,113,0.3)]{{else}}tw-border-transparent{{/if}}"
+                    <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-p-3 tw-bg-[var(--wh40k-btn-bg)] tw-border-2 tw-border-solid tw-rounded-lg tw-cursor-pointer tw-transition-all hover:tw-translate-y-[-2px] {{#if (eq condition.nature 'harmful')}}tw-border-red-500/30 hover:tw-bg-red-500/15 hover:tw-border-[var(--wh40k-accent-red)] hover:tw-shadow-[0_4px_16px_rgba(231,76,60,0.3)]{{else if (eq condition.nature 'beneficial')}}tw-border-green-500/30 hover:tw-bg-green-500/15 hover:tw-border-[var(--wh40k-accent-green-bright)] hover:tw-shadow-[0_4px_16px_rgba(46,204,113,0.3)]{{else}}tw-border-transparent{{/if}}"
                          data-action="selectCondition"
                          data-condition-id="{{condition.id}}">
-                        <img src="{{condition.img}}" alt="" class="tw-w-8 tw-h-8 tw-object-contain tw-border-0" />
+                        {{!-- Condition art is white on transparent: a dark tile keeps it visible on the light theme (#651). --}}
+                        <img src="{{condition.img}}" alt="" class="tw-w-8 tw-h-8 tw-object-contain tw-border-0 tw-rounded-sm tw-bg-[var(--wh40k-icon-tile)]" data-field="condition-icon" />
 
-                        <span class="tw-text-white/90 tw-text-[0.85rem] tw-font-semibold tw-text-center">{{condition.name}}</span>
+                        <span class="tw-text-[color:var(--wh40k-text-dark)] tw-text-[0.85rem] tw-font-semibold tw-text-center">{{condition.name}}</span>
                     </div>
                 {{/each}}
             </div>
             <input type="hidden" name="conditionId" />
 
             {{!-- Optional duration for conditions --}}
-            <div class="tw-mt-3 tw-pt-3 tw-border-t tw-border-solid tw-border-white/10 tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-flex tw-items-center tw-gap-1 tw-text-white/80 tw-text-[0.85rem] tw-font-semibold [&>i]:tw-text-[var(--wh40k-accent-gold)]">
+            <div class="tw-mt-3 tw-pt-3 tw-border-t tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-dark)] tw-text-[0.85rem] tw-font-semibold [&>i]:tw-text-[color:var(--wh40k-accent-gold-text)]">
                     <i class="far fa-clock"></i> {{localize "WH40K.Dialog.EffectCreation.DurationRounds"}}
                 </label>
                 <input type="number"
                        name="duration.rounds"
                        min="0"
                        placeholder="{{localize 'WH40K.Dialog.EffectCreation.PermanentPlaceholder'}}"
-                       class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40" />
-                <span class="tw-text-white/50 tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.PermanentHint"}}</span>
+                       class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]" />
+                <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.PermanentHint"}}</span>
             </div>
         </div>
     {{/if}}
 
     {{!-- Characteristic Modifier --}}
     {{#if (eq selectedCategory 'characteristic')}}
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-black/20 tw-border tw-border-solid tw-border-white/10 tw-rounded-lg">
-            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-accent-gold)] [&>i]:tw-text-[1.1rem]">
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-accent-gold-text)] [&>i]:tw-text-[1.1rem]">
                 <i class="fas fa-chart-line"></i>
                 <span>{{localize "WH40K.Dialog.EffectCreation.ModifyCharacteristic"}}</span>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="characteristic">{{localize "WH40K.Characteristic.SelectLabel"}}</label>
                 {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="characteristic" id="characteristic"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCharacteristic"}}</option>
@@ -104,43 +107,43 @@
                 {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="modifierValue">{{localize "WH40K.Roll.Modifier"}}</label>
                 <div class="tw-flex tw-items-stretch [&>input]:tw-flex-1 [&>input]:tw-rounded-r-none [&>input]:tw-border-r-0">
                     <input type="number"
                            name="modifierValue"
                            id="modifierValue"
-                           class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40"
+                           class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]"
                            placeholder="{{localize 'WH40K.Dialog.EffectCreation.ModifierPlaceholder'}}"
                            step="5" />
-                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-black/30 tw-border tw-border-solid tw-border-white/20 tw-border-l-0 tw-rounded-r-md tw-text-[var(--wh40k-accent-gold)]">
+                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-border-l-0 tw-rounded-r-md tw-text-[color:var(--wh40k-accent-gold-text)]">
                         <i class="fas fa-plus-minus"></i>
                     </span>
                 </div>
-                <span class="tw-text-white/50 tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.ModifierHint"}}</span>
+                <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.ModifierHint"}}</span>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="charDuration">{{localize "WH40K.Dialog.EffectCreation.DurationRounds"}}</label>
                 <input type="number"
                        name="duration.rounds"
                        id="charDuration"
                        min="0"
                        placeholder="{{localize 'WH40K.Dialog.EffectCreation.PermanentPlaceholder'}}"
-                       class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40" />
+                       class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]" />
             </div>
         </div>
     {{/if}}
 
     {{!-- Skill Modifier --}}
     {{#if (eq selectedCategory 'skill')}}
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-black/20 tw-border tw-border-solid tw-border-white/10 tw-rounded-lg">
-            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-accent-gold)] [&>i]:tw-text-[1.1rem]">
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-accent-gold-text)] [&>i]:tw-text-[1.1rem]">
                 <i class="fas fa-user-graduate"></i>
                 <span>{{localize "WH40K.Dialog.EffectCreation.ModifySkill"}}</span>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="skill">{{localize "WH40K.Skills.Skill"}}</label>
                 {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="skill" id="skill"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectSkill"}}</option>
@@ -150,42 +153,42 @@
                 {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="skillModifier">{{localize "WH40K.Roll.Modifier"}}</label>
                 <div class="tw-flex tw-items-stretch [&>input]:tw-flex-1 [&>input]:tw-rounded-r-none [&>input]:tw-border-r-0">
                     <input type="number"
                            name="modifierValue"
                            id="skillModifier"
-                           class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40"
+                           class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]"
                            placeholder="{{localize 'WH40K.Dialog.EffectCreation.ModifierPlaceholder'}}"
                            step="5" />
-                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-black/30 tw-border tw-border-solid tw-border-white/20 tw-border-l-0 tw-rounded-r-md tw-text-[var(--wh40k-accent-gold)]">
+                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-border-l-0 tw-rounded-r-md tw-text-[color:var(--wh40k-accent-gold-text)]">
                         <i class="fas fa-plus-minus"></i>
                     </span>
                 </div>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="skillDuration">{{localize "WH40K.Dialog.EffectCreation.DurationRounds"}}</label>
                 <input type="number"
                        name="duration.rounds"
                        id="skillDuration"
                        min="0"
                        placeholder="{{localize 'WH40K.Dialog.EffectCreation.PermanentPlaceholder'}}"
-                       class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40" />
+                       class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]" />
             </div>
         </div>
     {{/if}}
 
     {{!-- Combat Modifier --}}
     {{#if (eq selectedCategory 'combat')}}
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-black/20 tw-border tw-border-solid tw-border-white/10 tw-rounded-lg">
-            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-accent-gold)] [&>i]:tw-text-[1.1rem]">
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-accent-gold-text)] [&>i]:tw-text-[1.1rem]">
                 <i class="fas fa-crosshairs"></i>
                 <span>{{localize "WH40K.Dialog.EffectCreation.ModifyCombat"}}</span>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="combatType">{{localize "WH40K.Dialog.EffectCreation.CombatStat"}}</label>
                 {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="combatType" id="combatType"}}
                     <option value="">{{localize "WH40K.Dialog.EffectCreation.SelectCombatStat"}}</option>
@@ -195,53 +198,53 @@
                 {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="combatModifier">{{localize "WH40K.Roll.Modifier"}}</label>
                 <div class="tw-flex tw-items-stretch [&>input]:tw-flex-1 [&>input]:tw-rounded-r-none [&>input]:tw-border-r-0">
                     <input type="number"
                            name="modifierValue"
                            id="combatModifier"
-                           class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40"
+                           class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]"
                            placeholder="{{localize 'WH40K.Dialog.EffectCreation.CombatModifierPlaceholder'}}"
                            step="5" />
-                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-black/30 tw-border tw-border-solid tw-border-white/20 tw-border-l-0 tw-rounded-r-md tw-text-[var(--wh40k-accent-gold)]">
+                    <span class="tw-flex tw-items-center tw-justify-center tw-px-3 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-border-l-0 tw-rounded-r-md tw-text-[color:var(--wh40k-accent-gold-text)]">
                         <i class="fas fa-plus-minus"></i>
                     </span>
                 </div>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="combatDuration">{{localize "WH40K.Dialog.EffectCreation.DurationRounds"}}</label>
                 <input type="number"
                        name="duration.rounds"
                        id="combatDuration"
                        min="0"
                        placeholder="{{localize 'WH40K.Dialog.EffectCreation.PermanentPlaceholder'}}"
-                       class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40" />
+                       class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]" />
             </div>
         </div>
     {{/if}}
 
     {{!-- Custom Effect --}}
     {{#if (eq selectedCategory 'custom')}}
-        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-black/20 tw-border tw-border-solid tw-border-white/10 tw-rounded-lg">
-            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[var(--wh40k-accent-gold)] [&>i]:tw-text-[1.1rem]">
+        <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-text-md tw-font-bold tw-uppercase tw-tracking-[0.1em] tw-text-[color:var(--wh40k-accent-gold-text)] [&>i]:tw-text-[1.1rem]">
                 <i class="fas fa-pen-fancy"></i>
                 <span>{{localize "WH40K.Dialog.EffectCreation.CreateCustom"}}</span>
             </div>
 
-            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-white/90 [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
+            <div class="tw-flex tw-flex-col tw-gap-1 [&>label]:tw-text-[color:var(--wh40k-text-dark)] [&>label]:tw-text-[0.85rem] [&>label]:tw-font-semibold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em]">
                 <label for="customName">{{localize "WH40K.Dialog.EffectCreation.EffectName"}}</label>
                 <input type="text"
                        name="customName"
                        id="customName"
-                       class="tw-p-2 tw-bg-black/50 tw-border tw-border-solid tw-border-white/20 tw-rounded-md tw-text-white/90 tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-white/40"
+                       class="tw-p-2 tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-text-dark)] tw-text-base tw-transition-all focus:tw-outline-none focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-shadow-[0_0_8px_var(--wh40k-accent-gold)] placeholder:tw-text-[color:var(--wh40k-text-muted)]"
                        placeholder="{{localize 'WH40K.Dialog.EffectCreation.EffectNamePlaceholder'}}"
                        required />
-                <span class="tw-text-white/50 tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.CustomHint"}}</span>
+                <span class="tw-text-[color:var(--wh40k-text-muted)] tw-text-xs tw-italic tw-mt-0.5">{{localize "WH40K.Dialog.EffectCreation.CustomHint"}}</span>
             </div>
 
-            <div class="tw-flex tw-gap-2 tw-p-3 tw-bg-blue-500/10 tw-border tw-border-solid tw-border-blue-500/30 tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-info)] tw-rounded-md [&>i]:tw-shrink-0 [&>i]:tw-text-[var(--wh40k-accent-info)] [&>i]:tw-text-[1.1rem] [&>i]:tw-mt-0.5 [&>p]:tw-m-0 [&>p]:tw-text-white/80 [&>p]:tw-text-[0.85rem] [&>p]:tw-leading-[1.5]">
+            <div class="tw-flex tw-gap-2 tw-p-3 tw-bg-blue-500/10 tw-border tw-border-solid tw-border-blue-500/30 tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-info)] tw-rounded-md [&>i]:tw-shrink-0 [&>i]:tw-text-[var(--wh40k-accent-info)] [&>i]:tw-text-[1.1rem] [&>i]:tw-mt-0.5 [&>p]:tw-m-0 [&>p]:tw-text-[color:var(--wh40k-text-dark)] [&>p]:tw-text-[0.85rem] [&>p]:tw-leading-[1.5]">
                 <i class="fas fa-info-circle"></i>
                 <p>{{localize "WH40K.Dialog.EffectCreation.CustomDescription"}}</p>
             </div>
@@ -249,14 +252,14 @@
     {{/if}}
 
     {{!-- Dialog Buttons --}}
-    <footer class="tw-flex tw-justify-end tw-gap-2 tw-p-3 tw-mt-4 tw-bg-black/30 tw-border-t tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-rounded-b-lg">
+    <footer class="tw-flex tw-justify-end tw-gap-2 tw-p-3 tw-mt-4 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-solid tw-border-[var(--wh40k-accent-gold)]/30 tw-rounded-b-lg">
         <button type="submit"
-                class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:-tw-translate-y-px tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-gold)] tw-to-[var(--wh40k-accent-gold)]/80 tw-text-[#0a0a0f] tw-border tw-border-solid tw-border-[var(--wh40k-accent-gold)] hover:tw-shadow-[0_4px_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-[0.9rem]">
+                class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:-tw-translate-y-px tw-bg-gradient-to-br tw-from-[var(--wh40k-accent-gold)] tw-to-[var(--wh40k-accent-gold)]/80 tw-text-[color:var(--wh40k-text-on-gold)] tw-border tw-border-solid tw-border-[var(--wh40k-accent-gold)] hover:tw-shadow-[0_4px_12px_var(--wh40k-accent-gold)] [&>i]:tw-text-[0.9rem]">
             <i class="fas fa-check"></i>
             {{localize "WH40K.Dialog.EffectCreation.CreateEffect"}}
         </button>
         <button type="button"
-                class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:-tw-translate-y-px tw-bg-gradient-to-br tw-from-white/10 tw-to-white/5 tw-border tw-border-solid tw-border-white/30 tw-text-white/90 hover:tw-from-white/20 hover:tw-to-white/10 hover:tw-border-white/50 hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] [&>i]:tw-text-[0.9rem]"
+                class="tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-rounded-md tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:-tw-translate-y-px tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-text-[color:var(--wh40k-text-dark)] hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-[var(--wh40k-border-color-strong)] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.3)] [&>i]:tw-text-[0.9rem]"
                 data-action="close">
             <i class="fas fa-times"></i>
             {{localize "WH40K.Cancel"}}
