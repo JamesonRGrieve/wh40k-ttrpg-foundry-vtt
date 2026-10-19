@@ -31,6 +31,12 @@ const DARK_CARDS = [
     'src/templates/chat/daemonology-ritual-chat.hbs',
     'src/templates/chat/sanctic-purity-negated-chat.hbs',
     'src/templates/chat/sanctic-daemonology-chat.hbs',
+    // The RT ship cards' near-black void panel (#186): the breakdown's base values were dark on it.
+    'src/templates/chat/ship-action-roll-chat.hbs',
+    'src/templates/chat/ship-boarding-chat.hbs',
+    'src/templates/chat/ship-hit-and-run-chat.hbs',
+    'src/templates/chat/ship-ramming-chat.hbs',
+    'src/templates/chat/ship-weapon-chat.hbs',
 ];
 
 describe('dark chat cards', () => {

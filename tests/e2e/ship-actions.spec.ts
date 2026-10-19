@@ -304,6 +304,21 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
                 faces: [34],
             });
             expect(evasive.card.text).toContain("-20 to every Ballistic Skill Test to fire the ship's weapons, until the start of the ship's next turn.");
+            // #186: the negative step is signed once ("+-10 per 1" before), and at chat width no
+            // breakdown value wraps under its label ("4 / 0" before).
+            expect(evasive.card.text).toContain('Extra degrees of success: 1 (-10 per 1)');
+            expect(evasive.card.text).not.toContain('+-');
+            const wrappedValues = await page.evaluate((id) => {
+                const values = document.querySelectorAll<HTMLElement>(`#sidebar .chat-log .message[data-message-id="${id}"] [data-breakdown-value]`);
+                return [...values]
+                    .filter((value) => value.getBoundingClientRect().height > parseFloat(getComputedStyle(value).lineHeight) * 1.5)
+                    .map((value) => value.textContent.trim());
+            }, evasive.card.id);
+            expect(wrappedValues).toEqual([]);
+            // The base values were dark text on the void panel until the card declared its dark surface.
+            expect(await scanContrast(page, `#sidebar .chat-log .message[data-message-id="${evasive.card.id}"] [data-wh40k-hook="ship-action-roll"]`)).toEqual(
+                [],
+            );
 
             // BS 60 − 20 − 20 = 20, roll 5 → 1 degree, 2 hits; the two 1s do not pass Armour. Both penalties are named rows.
             const fired = await fireWeaponFromSheet(page, ship.id, { weaponId: ship.weaponIds[1] ?? '', defender: TARGET.name, faces: [5, 1, 1] });

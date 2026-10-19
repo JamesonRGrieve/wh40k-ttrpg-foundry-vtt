@@ -21,7 +21,7 @@
 }}
     {{!-- The same dark void-panel as the ship assault cards: the shared test and
          breakdown partials use the card palette, which washes out on the light shell. --}}
-    <div data-wh40k-hook="ship-action-roll" class="tw-p-3 tw-flex tw-flex-col tw-gap-2 tw-text-sm tw-rounded-md tw-bg-[rgba(8,16,28,0.9)] tw-text-[#e8e4d9]">
+    <div data-wh40k-hook="ship-action-roll" data-wh40k-surface="dark" class="tw-p-3 tw-flex tw-flex-col tw-gap-2 tw-text-sm tw-rounded-md tw-bg-[rgba(8,16,28,0.9)] tw-text-[#e8e4d9]">
         {{> systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs test=test}}
         {{#if magnitude}}
             <section class="tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.18)]">

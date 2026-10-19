@@ -4810,7 +4810,7 @@
                 },
                 "Magnitude": {
                     "Base": "Success",
-                    "Degrees": "{degrees} extra degree(s), +{step} per {per}"
+                    "Degrees": "Extra degrees of success: {degrees} ({step} per {per})"
                 },
                 "Target": {
                     "morale": "Morale",

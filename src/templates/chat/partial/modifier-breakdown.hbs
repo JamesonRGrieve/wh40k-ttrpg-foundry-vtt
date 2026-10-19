@@ -26,15 +26,15 @@
         targetLabel       — optional, default "Target"
 --}}
 <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]{{#if baseTooltipData}} tw-cursor-help{{/if}}"{{#if baseTooltipData}} data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{baseTooltipData}}"{{/if}}>
-    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{#if baseLabel}}{{baseLabel}}{{else}}{{localize "WH40K.CharacteristicSetup.Base"}}{{/if}}</span>
-    <span class="tw-font-semibold tw-text-[var(--wh40k-card-text)]">{{baseTarget}}</span>
+    <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-medium" data-breakdown-label>{{#if baseLabel}}{{baseLabel}}{{else}}{{localize "WH40K.CharacteristicSetup.Base"}}{{/if}}</span>
+    <span class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-font-semibold tw-text-[var(--wh40k-card-text)]" data-breakdown-value>{{baseTarget}}</span>
 </div>
 
 {{#if modifierSources.length}}
     {{#each modifierSources as |component|}}
         <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1 tw-cursor-help" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{component.tooltipData}}">
-            <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{component.label}}</span>
-            <span class="tw-font-semibold tw-whitespace-nowrap tw-tabular-nums {{#if (gt component.value 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt component.value 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
+            <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-medium" data-breakdown-label>{{component.label}}</span>
+            <span data-breakdown-value class="tw-ml-2 tw-shrink-0 tw-font-semibold tw-whitespace-nowrap tw-tabular-nums {{#if (gt component.value 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt component.value 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
                 {{#if (gt component.value 0)}}+{{/if}}{{component.value}}
             </span>
         </div>
@@ -42,8 +42,8 @@
 {{else}}
     {{#each activeModifiers}}
         <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-border-color)] tw-ml-1">
-            <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{@key}}</span>
-            <span class="tw-font-semibold {{#if (gt this 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt this 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
+            <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-medium" data-breakdown-label>{{@key}}</span>
+            <span data-breakdown-value class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-font-semibold {{#if (gt this 0)}}tw-text-[var(--wh40k-success-secondary)]{{else if (lt this 0)}}wh40k-roll-card__value--negative tw-text-[var(--wh40k-danger-secondary)]{{else}}tw-text-[var(--wh40k-card-text)]{{/if}}">
                 {{#if (gt this 0)}}+{{/if}}{{this}}
             </span>
         </div>
@@ -58,6 +58,6 @@
 {{/if}}
 
 <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
-    <span class="tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">{{#if targetLabel}}{{targetLabel}}{{else}}{{localize "WH40K.Roll.TargetLabel"}}{{/if}}</span>
-    <span class="tw-text-[1.2rem] tw-font-bold {{themeClassFor 'accent'}}">{{modifiedTarget}}</span>
+    <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-breakdown-label>{{#if targetLabel}}{{targetLabel}}{{else}}{{localize "WH40K.Roll.TargetLabel"}}{{/if}}</span>
+    <span class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-text-[1.2rem] tw-font-bold {{themeClassFor 'accent'}}" data-breakdown-value>{{modifiedTarget}}</span>
 </div>

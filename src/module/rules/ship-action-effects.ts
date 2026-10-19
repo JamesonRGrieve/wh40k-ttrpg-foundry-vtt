@@ -19,6 +19,7 @@
  * Pure module: no Foundry, no RNG. Callers roll the dice and read the actor.
  */
 
+import { formatSigned } from '../utils/format.ts';
 import { situationalComponents, deriveTarget, type ShipTestComponent, type ShipTestDerivation, type SituationalModifier } from './ship-assault.ts';
 import type { PriorTurnPool } from './ship-crew-morale.ts';
 
@@ -135,7 +136,9 @@ export function shipEffectMagnitudeComponents(effect: ShipEffectData, extraDegre
     const steps = Math.floor(Math.max(0, extraDegrees) / per);
     const components: ShipTestComponent[] = [{ labelKey: MAGNITUDE_BASE_KEY, value: effect.base }];
     if (steps > 0 && effect.step !== 0) {
-        components.push({ labelKey: MAGNITUDE_DEGREES_KEY, value: effect.step * steps, data: { degrees: extraDegrees, per, step: effect.step } });
+        // The step is signed here: the langpack used to prefix a literal "+", so a
+        // negative step read "+-10 per 1" (#186).
+        components.push({ labelKey: MAGNITUDE_DEGREES_KEY, value: effect.step * steps, data: { degrees: extraDegrees, per, step: formatSigned(effect.step) } });
     }
     return components;
 }

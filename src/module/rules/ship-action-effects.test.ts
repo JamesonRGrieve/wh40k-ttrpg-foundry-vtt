@@ -64,7 +64,12 @@ describe('shipEffectMagnitude', () => {
 
     it('omits the degree term when it adds nothing, so the card shows only real terms', () => {
         expect(shipEffectMagnitudeComponents(effect({ base: 5, step: 5, per: 2 }), 1)).toHaveLength(1);
-        expect(shipEffectMagnitudeComponents(effect({ base: 5, step: 5, per: 2 }), 2)[1]).toMatchObject({ value: 5, data: { degrees: 2, per: 2, step: 5 } });
+        expect(shipEffectMagnitudeComponents(effect({ base: 5, step: 5, per: 2 }), 2)[1]).toMatchObject({ value: 5, data: { degrees: 2, per: 2, step: '+5' } });
+    });
+
+    it('signs a negative step once: Evasive Manoeuvres read "+-10 per 1" (#186)', () => {
+        const [, degrees] = shipEffectMagnitudeComponents(effect({ base: -10, step: -10, per: 1 }), 1);
+        expect(degrees).toMatchObject({ value: -10, data: { degrees: 1, per: 1, step: '-10' } });
     });
 });
 

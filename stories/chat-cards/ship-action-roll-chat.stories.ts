@@ -51,7 +51,7 @@ export const HoldFastSucceeds: Story = {
         await expect(view.getByText('Hold Fast!')).toBeTruthy();
         await expect(view.getByText("Acting character's Willpower")).toBeTruthy();
         // 40 − 15 = 25 → 2 RT degrees → 1 + 2 = 3, capped by the 3 Morale lost last turn.
-        await expect(view.getByText(/2 extra degree/)).toBeTruthy();
+        await expect(view.getByText(/Extra degrees of success: 2 \(\+1 per 1\)/)).toBeTruthy();
         await expect(canvasElement.querySelector('[data-outcome="success"]')?.textContent).toContain('3 Morale restored');
     },
 };
@@ -104,6 +104,41 @@ export const HoldFastFails: Story = {
     render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-outcome="failure"]')).toBeTruthy();
-        await expect(within(canvasElement).queryByText(/extra degree/)).toBeNull();
+        await expect(within(canvasElement).queryByText(/Extra degrees of success/)).toBeNull();
+    },
+};
+
+/** Foundry's chat log card width. */
+const CHAT_WIDTH_PX = 280;
+
+/** An action whose effect falls with each degree, as Evasive Manoeuvres' does. */
+const NEGATIVE_STEP_ORDER: ShipActionOrder = {
+    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.storyEvasive0001',
+    name: 'Evasive Manoeuvres',
+    img: '',
+    test: { skill: 'Pilot (Spacecraft)', characteristic: '', modifier: 0, shipStat: 'manoeuvrability' },
+    shipEffect: { kind: 'shipModifier', targets: ['manoeuvrability'], base: -10, step: -10, per: 1, rounds: 0, expiry: 'turnEnd' },
+};
+
+/**
+ * #186: at chat width a long label ("Acting character's Pilot (Spacecraft)") pushed its
+ * value onto two lines ("4 / 0"), and a negative per-degree step read "+-10 per 1".
+ * Every breakdown value now stays on one line beside its label, which wraps instead,
+ * and the step is signed once.
+ */
+export const NegativeStepAtChatWidth: Story = {
+    loaders: [async () => ({ el: await card(NEGATIVE_STEP_ORDER, 15, '<input name="skill" value="40" />') })],
+    render: (_args, { loaded }) => {
+        const el = (loaded as { el: HTMLElement }).el;
+        el.style.width = `${CHAT_WIDTH_PX}px`;
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.textContent).not.toContain('+-');
+        await expect(within(canvasElement).getByText(/\(-10 per 1\)/)).toBeTruthy();
+        const wrapped = [...canvasElement.querySelectorAll<HTMLElement>('[data-breakdown-value]')]
+            .filter((value) => value.getBoundingClientRect().height > parseFloat(getComputedStyle(value).lineHeight) * 1.5)
+            .map((value) => value.textContent.trim());
+        await expect(wrapped).toEqual([]);
     },
 };

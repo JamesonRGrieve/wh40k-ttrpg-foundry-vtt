@@ -22,7 +22,7 @@
       hits, damage  — AssaultDamageView | null (a salvo's hits are the pooled ones)
       missed, allShielded, critical, salvoCriticalLimit, crippledCriticals [string], vitalsTitle, vitals [{label, before, after}], applied, unapplied
 --}}
-<div data-wh40k-hook="ship-weapon-card" class="wh40k-rpg wh40k-ship-weapon-card tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.92)] tw-text-[#ece8de] tw-font-ui"
+<div data-wh40k-hook="ship-weapon-card" data-wh40k-surface="dark" class="wh40k-rpg wh40k-ship-weapon-card tw-p-4 tw-rounded-md tw-border-2 {{themeClassFor 'border'}} tw-bg-[rgba(8,16,28,0.92)] tw-text-[#ece8de] tw-font-ui"
      data-wh40k-system="{{gameSystem}}">
     <header class="tw-flex tw-items-center tw-gap-3 tw-mb-2">
         {{#if weapon.img}}<img class="tw-w-10 tw-h-10 tw-flex-none tw-rounded-sm tw-border-0" src="{{weapon.img}}" alt="{{weapon.name}}" />{{/if}}
