@@ -30,6 +30,8 @@ interface SpecialAbilityArgs {
     contentScalars: CategoryScalar[];
     canEdit: boolean;
     inEditMode: boolean;
+    /** The sheet's open tab per group; `modifiers` is the modifiers editor's (#669). */
+    tabGroups: Record<string, string>;
     editable: boolean;
     dh: { characteristics: Record<string, { label: string; short: string }> };
     /** Present only for a Renown category, as SpecialAbilitySheet's prepareContext supplies it. */
@@ -52,6 +54,7 @@ const baseArgs = (canEdit: boolean, inEditMode: boolean): SpecialAbilityArgs => 
     contentScalars: [buildCategoryScalar('speciality')],
     canEdit,
     inEditMode,
+    tabGroups: { primary: 'description', modifiers: 'basic' },
     editable: canEdit,
     dh: { characteristics: { weaponSkill: { label: 'Weapon Skill', short: 'WS' } } },
 });
@@ -88,6 +91,54 @@ export const EditMode: Story = {
         assertField(canvasElement, 'system.category', 'speciality');
         await expect(canvasElement.querySelector('[data-distinction-panel]')).toBeNull();
         await expect(canvasElement.querySelector('[name="system.renownRequired"]')).toBeNull();
+    },
+};
+
+const MODIFIER_TABS = ['basic', 'situational', 'advanced'] as const;
+
+/**
+ * Foundry's ApplicationV2 tab click, which the story has no application to run: the
+ * click reaches the nearest `[data-action]`, `_onClickTab` reads the tab off the
+ * click's own target, and `changeTab` toggles `.active` on the group's `.tabs` buttons
+ * and `.tab` panels.
+ */
+function handleTabClicks(root: HTMLElement): void {
+    root.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement) || target.closest<HTMLElement>('[data-action]')?.dataset['action'] !== 'tab') return;
+        const { tab, group } = target.dataset;
+        if (tab === undefined || group === undefined) return;
+        for (const el of root.querySelectorAll<HTMLElement>(`.tabs [data-group="${group}"], .tab[data-group="${group}"]`)) {
+            el.classList.toggle('active', el.dataset['tab'] === tab);
+        }
+    });
+}
+
+/** The modifiers editor's Basic / Situational / Advanced tabs each show only their own panel (#669). */
+export const ModifierTabsSwitch: Story = {
+    args: baseArgs(true, true),
+    play: async ({ canvasElement }) => {
+        handleTabClicks(canvasElement);
+        const nav = canvasElement.querySelector<HTMLElement>('nav.tabs[data-group="modifiers"]');
+        await expect(nav).not.toBeNull();
+        const shown = (): string[] =>
+            MODIFIER_TABS.filter((other) => {
+                const panel = canvasElement.querySelector<HTMLElement>(`div.tab[data-group="modifiers"][data-tab="${other}"]`);
+                return panel !== null && getComputedStyle(panel).display !== 'none';
+            });
+        await expect(shown()).toEqual(['basic']);
+        for (const tab of [...MODIFIER_TABS].reverse()) {
+            const button = nav?.querySelector<HTMLElement>(`[data-action="tab"][data-tab="${tab}"]`) ?? null;
+            void expect(button, `the ${tab} tab button`).not.toBeNull();
+            if (button === null) return;
+            button.scrollIntoView({ block: 'center' });
+            // The icon and label let the click through, so the tab handler's target is the button itself.
+            const box = button.getBoundingClientRect();
+            void expect(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2), `the ${tab} button takes the click`).toBe(button);
+            button.click();
+            void expect(button.classList.contains('active'), `the ${tab} tab is active`).toBe(true);
+            void expect(shown(), `clicking ${tab} shows only its panel`).toEqual([tab]);
+        }
     },
 };
 

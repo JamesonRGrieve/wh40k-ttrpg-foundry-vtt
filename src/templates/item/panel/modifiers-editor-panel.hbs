@@ -4,24 +4,26 @@
 --}}
 <div class="tw-flex tw-flex-col">
 
-  {{!-- Modifier Type Tabs --}}
-  <nav class="tw-flex tw-gap-1 tw-border-b tw-border-solid tw-border-black/10 tw-mb-2" data-group="modifiers">
-    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent active" data-tab="basic" data-group="modifiers">
+  {{!-- Modifier Type Tabs: Foundry's tab mechanism (data-action="tab", .tabs nav, .tab panels)
+       switches them, and the sheet's tabGroups.modifiers keeps the open tab across re-renders.
+       Foundry reads the tab off the click's own target, so the icon and label pass clicks through. --}}
+  <nav class="tabs tw-flex tw-gap-1 tw-border-b tw-border-solid tw-border-black/10 tw-mb-2" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent [&.active]:tw-border-gold [&>*]:tw-pointer-events-none {{#if (eq tabGroups.modifiers 'basic')}}active{{/if}}" data-action="tab" data-tab="basic" data-group="modifiers">
       <i class="fas fa-plus-circle"></i>
       <span>{{localize "WH40K.ItemSheet.ModifiersEditor.Basic"}}</span>
     </button>
-    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="situational" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent [&.active]:tw-border-gold [&>*]:tw-pointer-events-none {{#if (eq tabGroups.modifiers 'situational')}}active{{/if}}" data-action="tab" data-tab="situational" data-group="modifiers">
       <i class="fas fa-exclamation-triangle"></i>
       <span>{{localize "WH40K.Roll.ModifierSource.Situational"}}</span>
     </button>
-    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="advanced" data-group="modifiers">
+    <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent [&.active]:tw-border-gold [&>*]:tw-pointer-events-none {{#if (eq tabGroups.modifiers 'advanced')}}active{{/if}}" data-action="tab" data-tab="advanced" data-group="modifiers">
       <i class="fas fa-cog"></i>
       <span>{{localize "WH40K.ItemSheet.ModifiersEditor.Advanced"}}</span>
     </button>
   </nav>
 
   {{!-- Basic Modifiers Tab --}}
-  <div class="tw-flex tw-flex-col tw-gap-3 active" data-tab="basic" data-group="modifiers">
+  <div class="tab tw-hidden tw-flex-col tw-gap-3 [&.active]:tw-flex {{#if (eq tabGroups.modifiers 'basic')}}active{{/if}}" data-tab="basic" data-group="modifiers">
 
     {{!-- Characteristic Modifiers --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5">
@@ -177,7 +179,7 @@
   </div>
 
   {{!-- Situational Modifiers Tab --}}
-  <div class="tw-flex tw-flex-col tw-gap-3" data-tab="situational" data-group="modifiers">
+  <div class="tab tw-hidden tw-flex-col tw-gap-3 [&.active]:tw-flex {{#if (eq tabGroups.modifiers 'situational')}}active{{/if}}" data-tab="situational" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
       <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.ModifiersEditor.SituationalHint"}}</p>
@@ -230,7 +232,7 @@
   </div>
 
   {{!-- Advanced Tab (Other modifiers) --}}
-  <div class="tw-flex tw-flex-col tw-gap-3" data-tab="advanced" data-group="modifiers">
+  <div class="tab tw-hidden tw-flex-col tw-gap-3 [&.active]:tw-flex {{#if (eq tabGroups.modifiers 'advanced')}}active{{/if}}" data-tab="advanced" data-group="modifiers">
     <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
       <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
       <p class="tw-m-0 tw-text-sm">{{localize "WH40K.ItemSheet.ModifiersEditor.AdvancedHint"}}</p>

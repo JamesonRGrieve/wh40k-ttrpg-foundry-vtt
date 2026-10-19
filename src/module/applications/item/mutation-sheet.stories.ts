@@ -35,6 +35,7 @@ interface MutationArgs {
     contentScalars: ContentScalar[];
     canEdit: boolean;
     inEditMode: boolean;
+    tabGroups: Record<string, string>;
     editable: boolean;
     dh: { characteristics: Record<string, { label: string; short: string }> };
     /** Present only for a Gift of the Gods (category `gift`), as MutationSheet's prepareContext supplies it. */
@@ -77,6 +78,7 @@ const baseArgs = (canEdit: boolean, inEditMode: boolean): MutationArgs => ({
     contentScalars: scalars(),
     canEdit,
     inEditMode,
+    tabGroups: { primary: 'description', modifiers: 'basic' },
     editable: canEdit,
     dh: { characteristics: { strength: { label: 'Strength', short: 'S' } } },
 });

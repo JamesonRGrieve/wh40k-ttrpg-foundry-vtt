@@ -31,6 +31,7 @@ interface MentalDisorderArgs {
     contentScalars: ContentScalar[];
     canEdit: boolean;
     inEditMode: boolean;
+    tabGroups: Record<string, string>;
     editable: boolean;
     dh: { characteristics: Record<string, { label: string; short: string }> };
 }
@@ -70,6 +71,7 @@ const baseArgs = (canEdit: boolean, inEditMode: boolean): MentalDisorderArgs => 
     contentScalars: scalars(),
     canEdit,
     inEditMode,
+    tabGroups: { primary: 'description', modifiers: 'basic' },
     editable: canEdit,
     dh: { characteristics: { willpower: { label: 'Willpower', short: 'WP' } } },
 });

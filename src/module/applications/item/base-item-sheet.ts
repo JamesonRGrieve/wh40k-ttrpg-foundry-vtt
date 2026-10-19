@@ -22,6 +22,10 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
 const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
 
+/** The modifiers editor's Basic / Situational / Advanced tab group, and the tab it opens on (#669). */
+const MODIFIERS_TAB_GROUP = 'modifiers';
+const MODIFIERS_INITIAL_TAB = 'basic';
+
 /**
  * Base item sheet built on ApplicationV2.
  * All item sheets should extend this class.
@@ -221,8 +225,10 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
             inEditMode: this.inEditMode,
             isCompendiumItem: this.isCompendiumItem,
             isOwnedByActor: this.isOwnedByActor,
-            // Tab state
+            // Tab state. `tabGroups` lets in-sheet tab groups render their open tab; sheets declare
+            // their own tabGroups, so the modifiers editor's opening tab is supplied here.
             tabs: this._getTabs(),
+            tabGroups: { [MODIFIERS_TAB_GROUP]: MODIFIERS_INITIAL_TAB, ...this.tabGroups },
         };
 
         // Ensure dh has required config properties for selectOptions (safety measure)
