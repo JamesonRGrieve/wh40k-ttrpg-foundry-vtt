@@ -14,6 +14,7 @@ import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
+import { type FormObject, isFormObject, isFormValue, mergeIndexedArrays } from './reference-list-edits.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -277,6 +278,27 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
 
     /* -------------------------------------------- */
     /*  Event Listeners and Handlers                */
+    /* -------------------------------------------- */
+
+    /**
+     * Fold index-keyed array fields back onto the stored elements before
+     * DocumentSheetV2 validates the submit. A form names an array element's inputs
+     * by index (`system.trainedSkills.0.bonus`) and carries only the ones it
+     * renders; an `ArrayField` is written whole, so without this every field the
+     * row doesn't render (a skill's key and name) fell back to its default (#656).
+     */
+    _processFormData(event: SubmitEvent | null, form: HTMLFormElement, formData: FormDataExtended): FormObject {
+        // The mixin chain erases DocumentSheetV2's `_processFormData` (expandObject of the form data) from the static type.
+        const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as {
+            _processFormData: (this: BaseItemSheet, e: SubmitEvent | null, f: HTMLFormElement, fd: FormDataExtended) => FormObject;
+        };
+        const data = proto._processFormData.call(this, event, form, formData);
+        const { system } = data;
+        const source = getMaterializedItemSource(this.item);
+        if (!isFormObject(system) || !isFormValue(source) || !isFormObject(source)) return data;
+        return { ...data, system: mergeIndexedArrays(system, source) };
+    }
+
     /* -------------------------------------------- */
 
     /**

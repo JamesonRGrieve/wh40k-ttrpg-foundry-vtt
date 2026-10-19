@@ -30,6 +30,9 @@ export class LeafField {
     }
 }
 
+/** An ObjectField: a leaf whose value is a free-form object, so any key beneath it is a valid path. */
+class ObjectLeaf extends LeafField {}
+
 /** A collection field (ArrayField, SetField): records its element field and options. */
 export class ElementField {
     readonly element: object;
@@ -48,7 +51,47 @@ export class SchemaRecord {
     }
 }
 
-const STUB_FIELDS: Record<string, AnyCtor> = { ArrayField: ElementField, SetField: ElementField, SchemaField: SchemaRecord };
+const STUB_FIELDS: Record<string, AnyCtor> = { ArrayField: ElementField, SetField: ElementField, SchemaField: SchemaRecord, ObjectField: ObjectLeaf };
+
+/** A SchemaField's sub-field by key, or undefined when it declares none. */
+function subField(record: SchemaRecord, key: string): object | undefined {
+    return Object.entries(record.fields).find(([name]) => name === key)?.[1];
+}
+
+/** Stands in for a Handlebars expression in a path. */
+const TEMPLATED = '\u0000';
+
+/**
+ * Whether a form input `name` (a dotted path below `system.`) names a field of the
+ * schema. A `{{…}}` segment is a Handlebars index: under a collection it stands for
+ * any element; under a SchemaField it must stand for one of `keys`, all of which the
+ * SchemaField must declare. Any path continues below an ObjectField.
+ */
+export function schemaHasPath(fields: Record<string, object>, path: string, keys: readonly string[]): boolean {
+    let field: object = new SchemaRecord(fields);
+    // A `{{char.key}}` segment holds a dot of its own, so split around the Handlebars expressions.
+    for (const segment of path.replace(/\{\{[^}]*\}\}/g, TEMPLATED).split('.')) {
+        if (field instanceof ObjectLeaf) return true;
+        const templated = segment === TEMPLATED;
+        if (field instanceof ElementField && (templated || /^\d+$/.test(segment))) {
+            field = field.element;
+        } else if (field instanceof SchemaRecord && templated) {
+            const record = field;
+            const children = keys.map((key) => subField(record, key));
+            const [first] = children;
+            if (first === undefined || children.includes(undefined)) return false;
+            // The keyed children share one shape, so the rest of the path is checked on the first.
+            field = first;
+        } else if (field instanceof SchemaRecord) {
+            const child = subField(field, segment);
+            if (child === undefined) return false;
+            field = child;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
 
 interface FoundryStub {
     abstract: { DataModel: AnyCtor; TypeDataModel: AnyCtor };

@@ -12,6 +12,84 @@ import { CHARACTERISTICS } from '../shared/characteristics.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
+/** Legacy source paths the sheet wrote, mapped to the schema paths that replaced them (#656). */
+const LEGACY_PATHS = { scalingRules: 'scaling', weapons: 'customWeapons' } as const;
+
+/**
+ * Move each legacy key onto its schema key, unless the schema key is already stored.
+ * The legacy key is dropped either way.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: raw Foundry source payload from _migrateData
+export function migrateNpcTemplateLegacyPaths(source: Record<string, unknown>): void {
+    for (const [legacy, current] of Object.entries(LEGACY_PATHS)) {
+        if (!(legacy in source)) continue;
+        if (source[current] === undefined) source[current] = source[legacy];
+        delete source[legacy];
+    }
+}
+
+/** One characteristic of a generated NPC. */
+type GeneratedCharacteristic = { label: string; short: string; base: number; modifier: number; unnatural: number; total: number; bonus: number };
+
+/** One trained skill of a generated NPC. */
+type GeneratedSkill = { name: string; characteristic: string; trained: boolean; plus10: boolean; plus20: boolean; bonus: number };
+
+type WeaponsPayload = { mode: string; simple: object[] };
+
+type ArmourLocations = { head: number; body: number; leftArm: number; rightArm: number; leftLeg: number; rightLeg: number };
+
+/** The NPC system data `generateAtThreat` builds for `Actor.create()`. */
+type GeneratedNpcSystem = {
+    faction: string;
+    subfaction: string;
+    allegiance: string;
+    role: string;
+    type: string;
+    threatLevel: number;
+    characteristics: Record<string, GeneratedCharacteristic>;
+    wounds: { max: number; value: number; critical: number };
+    movement: { half: number; full: number; charge: number; run: number };
+    size: number;
+    initiative: { characteristic: string; base: string; bonus: number };
+    trainedSkills: Record<string, GeneratedSkill>;
+    weapons: WeaponsPayload;
+    armour: { mode: string; total: number; locations: ArmourLocations };
+    specialAbilities: string;
+    customStats: {
+        enabled: boolean;
+        characteristics: Record<string, number>;
+        skills: Record<string, number>;
+        combat: { initiative: number | null; dodge: number | null; parry: number | null };
+        wounds: number | null;
+        movement: number | null;
+    };
+    pinnedAbilities: string[];
+    template: string;
+    quickNotes: string;
+    tags: string[];
+    description: string;
+    tactics: string;
+    source: string;
+    horde: {
+        enabled: boolean;
+        magnitude: { max: number; current: number };
+        magnitudeDamage: never[];
+        traits: never[];
+        damageMultiplier: number;
+        sizeModifier: number;
+    };
+};
+
+/** The stat summary the template sheet's Preview tab shows. */
+type NpcTemplatePreview = {
+    threatLevel: number;
+    characteristics: Array<{ key: string; label: string; value: number }>;
+    wounds: number;
+    armour: number;
+    weaponCount: number;
+    skillCount: number;
+};
+
 /**
  * Data model for NPC template items.
  * Templates store base NPC configurations that can be instantiated at various threat levels.
@@ -60,6 +138,7 @@ export default class NPCTemplateData extends ItemDataModel {
         name: string;
         characteristic: string;
         level: string;
+        bonus: number;
     }>;
 
     // Equipment
@@ -75,6 +154,10 @@ export default class NPCTemplateData extends ItemDataModel {
         special: string;
         class: string;
     }>;
+
+    declare equipment: Array<{ name: string; quantity: number }>;
+    declare tags: string[];
+    declare armourNotes: string;
 
     // Scaling
     declare scaling: {
@@ -194,6 +277,8 @@ export default class NPCTemplateData extends ItemDataModel {
                         initial: 'trained',
                         choices: ['trained', 'plus10', 'plus20'],
                     }),
+                    // A flat bonus to the skill, carried to the generated NPC's skill entry.
+                    bonus: new NumberField({ required: true, initial: 0, integer: true }),
                 }),
             ),
 
@@ -225,6 +310,19 @@ export default class NPCTemplateData extends ItemDataModel {
 
             // === BASE ARMOUR ===
             baseArmour: new NumberField({ required: true, initial: 3, min: 0, integer: true }),
+            // The GM's note on what the armour is ("Flak coat, mesh cowl").
+            armourNotes: new StringField({ required: false, initial: '', blank: true }),
+
+            // === TAGS (copied onto each NPC made from the template) ===
+            tags: new ArrayField(new StringField({ required: true, blank: false })),
+
+            // === CARRIED EQUIPMENT ===
+            equipment: new ArrayField(
+                new SchemaField({
+                    name: new StringField({ required: true, initial: '', blank: true }),
+                    quantity: new NumberField({ required: true, initial: 1, min: 1, integer: true }),
+                }),
+            ),
 
             // === SCALING RULES ===
             scaling: new SchemaField({
@@ -284,6 +382,16 @@ export default class NPCTemplateData extends ItemDataModel {
                 }),
             ),
         };
+    }
+
+    /**
+     * The sheet once wrote `scalingRules.*` and `weapons.*`, paths the schema names
+     * `scaling` and `customWeapons` (#656). Carry any stored copy across.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData receives untyped Foundry source data
+    static override _migrateData(source: Record<string, unknown>): void {
+        super._migrateData(source);
+        migrateNpcTemplateLegacyPaths(source);
     }
 
     /* -------------------------------------------- */
@@ -355,8 +463,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {string} [options.variant] - Variant name to apply.
      * @returns {Object} NPC system data ready for Actor.create().
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.create() payload
-    generateAtThreat(targetThreat: number, options: { isHorde?: boolean; variant?: string | null } = {}): Record<string, unknown> {
+    generateAtThreat(targetThreat: number, options: { isHorde?: boolean; variant?: string | null } = {}): GeneratedNpcSystem {
         const { isHorde = false, variant = null } = options;
 
         // Calculate scaling factor
@@ -371,8 +478,7 @@ export default class NPCTemplateData extends ItemDataModel {
         }
 
         // Generate characteristics
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-key dynamic stat block
-        const characteristics: Record<string, unknown> = {};
+        const characteristics: Record<string, GeneratedCharacteristic> = {};
         // Label/short lookup mapped from the canonical CHARACTERISTICS table (#464).
         const charLabels: Record<string, { label: string; short: string }> = {};
         for (const c of CHARACTERISTICS) charLabels[c.key] = { label: c.label, short: c.short };
@@ -420,8 +526,7 @@ export default class NPCTemplateData extends ItemDataModel {
         const armour = Math.max(0, Math.min(15, Math.round(this.baseArmour * clampedArmourScale)));
 
         // Generate skills
-        // eslint-disable-next-line no-restricted-syntax -- boundary: per-skill dynamic block
-        const trainedSkills: Record<string, unknown> = {};
+        const trainedSkills: Record<string, GeneratedSkill> = {};
         for (const skill of this.trainedSkills) {
             trainedSkills[skill.key] = {
                 name: skill.name,
@@ -429,12 +534,11 @@ export default class NPCTemplateData extends ItemDataModel {
                 trained: true,
                 plus10: skill.level === 'plus10' || skill.level === 'plus20',
                 plus20: skill.level === 'plus20',
-                bonus: 0,
+                bonus: skill.bonus,
             };
         }
 
         // Generate weapons
-        type WeaponsPayload = { mode: string; simple: object[] };
         let weapons: WeaponsPayload;
         if (this.equipmentPreset === 'custom' && this.customWeapons.length > 0) {
             weapons = {
@@ -517,7 +621,7 @@ export default class NPCTemplateData extends ItemDataModel {
             pinnedAbilities: [],
             template: (this.parent as { uuid?: string } | undefined)?.uuid ?? '',
             quickNotes: '',
-            tags: [],
+            tags: [...this.tags],
             description: this.description,
             tactics: this.tactics,
             source: this.source,
@@ -530,28 +634,19 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {number} targetThreat - The target threat level.
      * @returns {Object} Preview data.
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: preview payload mirrors generateAtThreat
-    previewAtThreat(targetThreat: number): Record<string, unknown> {
+    previewAtThreat(targetThreat: number): NpcTemplatePreview {
         const data = this.generateAtThreat(targetThreat);
-        /* eslint-disable no-restricted-syntax -- boundary: generateAtThreat returns dynamic shape, narrowed per-field here */
-        const chars = data['characteristics'] as Record<string, { short: string; base: number }>;
-        const wounds = data['wounds'] as { max: number };
-        const armour = data['armour'] as { total: number };
-        const weapons = data['weapons'] as { simple?: unknown[] };
-        const skills = data['trainedSkills'] as Record<string, unknown>;
-        /* eslint-enable no-restricted-syntax */
-
         return {
             threatLevel: targetThreat,
-            characteristics: Object.entries(chars).map(([key, char]) => ({
+            characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
                 key,
                 label: char.short,
                 value: char.base,
             })),
-            wounds: wounds.max,
-            armour: armour.total,
-            weaponCount: weapons.simple?.length ?? 0,
-            skillCount: Object.keys(skills).length,
+            wounds: data.wounds.max,
+            armour: data.armour.total,
+            weaponCount: data.weapons.simple.length,
+            skillCount: Object.keys(data.trainedSkills).length,
         };
     }
 }

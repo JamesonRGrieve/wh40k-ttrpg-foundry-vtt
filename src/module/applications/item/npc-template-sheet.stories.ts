@@ -11,6 +11,7 @@ import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
 import basicsSrc from '../../../templates/item/npc-template/tab-basics.hbs?raw';
 import characteristicsSrc from '../../../templates/item/npc-template/tab-characteristics.hbs?raw';
+import equipmentSrc from '../../../templates/item/npc-template/tab-equipment.hbs?raw';
 import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
 
 initializeStoryHandlebars();
@@ -183,6 +184,34 @@ export const HomologationBC: Story = systemStory('bc');
 export const HomologationOW: Story = systemStory('ow');
 export const HomologationDW: Story = systemStory('dw');
 export const HomologationIM: Story = systemStory('im');
+
+/** A template's saved equipment, as the Equipment tab reads it. */
+const EQUIPPED = {
+    baseArmour: 3,
+    armourNotes: 'Flak coat',
+    customWeapons: [{ name: 'Autogun', damage: '1d10+3', pen: 0, range: '90m', rof: 'S/3/10', special: '' }],
+    equipment: [{ name: 'Stummer', quantity: 2 }],
+};
+
+/**
+ * #656: the Equipment tab's rows wrote `system.weapons.*` and `system.equipment.*`,
+ * which the schema lacked, so they never saved. They now render from, and name,
+ * `customWeapons` and `equipment`, and every add/remove control is a sheet action.
+ */
+export const EquipmentTabNamesSchemaPaths: Story = {
+    render: () => renderTpl(Hbs.compile(equipmentSrc), makeCtx({ tab: { cssClass: 'active' }, system: EQUIPPED, source: EQUIPPED })),
+    play: async ({ canvasElement }) => {
+        const value = (name: string): string | undefined => canvasElement.querySelector<HTMLInputElement>(`[name="${name}"]`)?.value;
+        await expect(value('system.customWeapons.0.name')).toBe('Autogun');
+        await expect(value('system.customWeapons.0.rof')).toBe('S/3/10');
+        await expect(value('system.equipment.0.name')).toBe('Stummer');
+        await expect(value('system.equipment.0.quantity')).toBe('2');
+        await expect(value('system.armourNotes')).toBe('Flak coat');
+        const actions = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-action]'), (el) => el.dataset['action']);
+        await expect(actions).toEqual(['addWeapon', 'removeWeapon', 'addEquipment', 'removeEquipment']);
+        await expect(canvasElement.querySelector('[name^="system.weapons."]')).toBeNull();
+    },
+};
 
 /** The sheet's default width (NPCTemplateSheet `position.width`). */
 const DEFAULT_WIDTH_PX = 700;

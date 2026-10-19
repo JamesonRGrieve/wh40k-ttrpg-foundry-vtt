@@ -13,8 +13,8 @@
  *     `data-reference-accept` tokens. Any other drop takes the normal
  *     ItemSheetV2 path.
  *   - **Index-keyed form fields.** The form only carries the element fields it
- *     renders, so {@link mergeIndexedArrays} folds them back onto the stored
- *     elements before the submit is validated.
+ *     renders; BaseItemSheet folds them back onto the stored elements before the
+ *     submit is validated, as it does for every item sheet.
  *   - **Add / remove.** Rows are removed through the shared `removeEntry`
  *     action; sheets add their own `add…` actions on top and write through
  *     {@link updateSystemPath}, which rewrites a whole array because an
@@ -39,7 +39,6 @@ import {
     isFormValue,
     isReferenceMode,
     itemUuidFromDropData,
-    mergeIndexedArrays,
     removeIndex,
 } from './reference-list-edits.ts';
 
@@ -84,24 +83,6 @@ export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
-
-    /* -------------------------------------------- */
-
-    /**
-     * Fold index-keyed array fields back onto the stored elements before
-     * DocumentSheetV2 validates the submit (validation would otherwise fill the
-     * fields the form does not render with their defaults).
-     */
-    _processFormData(event: SubmitEvent | null, form: HTMLFormElement, formData: FormDataExtended): FormObject {
-        // The mixin chain erases DocumentSheetV2's `_processFormData` (expandObject of the form data) from the static type.
-        const proto = Object.getPrototypeOf(ReferenceListItemSheet.prototype) as {
-            _processFormData: (this: ReferenceListItemSheet, e: SubmitEvent | null, f: HTMLFormElement, fd: FormDataExtended) => FormObject;
-        };
-        const data = proto._processFormData.call(this, event, form, formData);
-        const { system } = data;
-        if (!isFormObject(system)) return data;
-        return { ...data, system: mergeIndexedArrays(system, systemSource(this)) };
-    }
 
     /* -------------------------------------------- */
 

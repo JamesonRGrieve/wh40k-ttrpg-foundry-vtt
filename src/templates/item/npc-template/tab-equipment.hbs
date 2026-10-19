@@ -9,7 +9,7 @@
             </button>
         </header>
         <div>
-            {{#if (gt system.weapons.length 0)}}
+            {{#if (gt system.customWeapons.length 0)}}
                 <div>
                     <div class="tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-font-semibold tw-text-xs tw-uppercase" style="background: var(--wh40k-bg-tertiary)">
                         <span>{{localize "WH40K.Name"}}</span>
@@ -20,23 +20,23 @@
                         <span>{{localize "WH40K.Weapon.Special"}}</span>
                         <span></span>
                     </div>
-                    {{#each system.weapons as |weapon idx|}}
+                    {{#each system.customWeapons as |weapon idx|}}
                         <div class="tw-grid tw-grid-cols-[2fr_1fr_0.5fr_1fr_1fr_1.5fr_0.5fr] tw-gap-2 tw-items-center tw-p-2 tw-border-b tw-border-[var(--wh40k-border-color)]" data-index="{{idx}}">
                             <input
                                 class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
                                 type="text"
-                                name="system.weapons.{{idx}}.name"
+                                name="system.customWeapons.{{idx}}.name"
                                 value="{{weapon.name}}"
                                 placeholder="{{localize 'WH40K.Weapon.Name'}}"
                             />
-                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.damage" value="{{weapon.damage}}" placeholder="1d10+3" />
-                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="number" name="system.weapons.{{idx}}.pen" value="{{weapon.pen}}" min="0" />
-                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.range" value="{{weapon.range}}" placeholder="30m" />
-                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.weapons.{{idx}}.rof" value="{{weapon.rof}}" placeholder="S/-/-" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.customWeapons.{{idx}}.damage" value="{{weapon.damage}}" placeholder="1d10+3" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="number" name="system.customWeapons.{{idx}}.pen" value="{{weapon.pen}}" min="0" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.customWeapons.{{idx}}.range" value="{{weapon.range}}" placeholder="30m" />
+                            <input class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full" type="text" name="system.customWeapons.{{idx}}.rof" value="{{weapon.rof}}" placeholder="S/-/-" />
                             <input
                                 class="tw-p-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-w-full"
                                 type="text"
-                                name="system.weapons.{{idx}}.special"
+                                name="system.customWeapons.{{idx}}.special"
                                 value="{{weapon.special}}"
                                 placeholder="{{localize 'WH40K.Weapon.SpecialPlaceholder'}}"
                             />
@@ -82,7 +82,7 @@
     <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
         <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
             <h3><i class="fas fa-backpack"></i> {{localize "WH40K.NPC.Template.Equipment"}}</h3>
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="addEquipment">
+            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="addEquipment" aria-label="{{localize 'WH40K.NPC.Template.AddEquipment'}}">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
@@ -91,9 +91,9 @@
                 <div class="tw-flex tw-flex-col tw-gap-2">
                     {{#each system.equipment as |item idx|}}
                         <div class="tw-flex tw-gap-2 tw-items-center" data-index="{{idx}}">
-                            <input class="tw-flex-1 tw-px-2 tw-py-1" type="text" name="system.equipment.{{idx}}.name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" />
-                            <input class="tw-w-[50px] tw-text-center" type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" />
-                            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.2)]" data-action="removeEquipment" data-index="{{idx}}">
+                            <input class="tw-flex-1 tw-px-2 tw-py-1" type="text" name="system.equipment.{{idx}}.name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" aria-label="{{localize 'WH40K.Item.Name'}}" />
+                            <input class="tw-w-[50px] tw-text-center" type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" aria-label="{{localize 'WH40K.NPC.Template.EquipmentQuantity'}}" />
+                            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.2)]" data-action="removeEquipment" data-index="{{idx}}" aria-label="{{localize 'WH40K.NPC.Template.RemoveEquipment'}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

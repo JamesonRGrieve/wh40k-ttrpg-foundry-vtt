@@ -6,6 +6,7 @@
 import type NPCTemplateData from '../../data/item/npc-template.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { appendTag, withoutIndex } from '../../utils/list-edit.ts';
 import { newNpcActorType } from '../npc/npc-actor-type.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -64,6 +65,11 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
             // Weapon actions
             addWeapon: NPCTemplateSheet.#addWeapon,
             removeWeapon: NPCTemplateSheet.#removeWeapon,
+            // Equipment and tag actions
+            addEquipment: NPCTemplateSheet.#addEquipment,
+            removeEquipment: NPCTemplateSheet.#removeEquipment,
+            addTag: NPCTemplateSheet.#addTag,
+            removeTag: NPCTemplateSheet.#removeTag,
             // Trait/Talent actions
             addTrait: NPCTemplateSheet.#addTrait,
             removeTrait: NPCTemplateSheet.#removeTrait,
@@ -247,7 +253,12 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
             characteristics,
 
             // Skills
-            skills: sys.trainedSkills,
+            // Each row names its characteristic by abbreviation, never the raw key.
+            skills: sys.trainedSkills.map((skill) => ({
+                ...skill,
+                characteristicShort: characteristicAbbrev(skill.characteristic),
+                characteristicLabel: characteristicLabel(skill.characteristic),
+            })),
             hasSkills: sys.trainedSkills.length > 0,
 
             // Weapons
@@ -278,6 +289,14 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is free-form template context passed by Foundry ApplicationV2
     override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
+
+        // Enter in the tag input adds the tag, rather than submitting the form.
+        const tagInput = this.element.querySelector<HTMLInputElement>('[data-wh40k-hook="npc-template-tag-input"]');
+        tagInput?.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            void this.#commitTagInput();
+        });
 
         // Preview threat slider
         const threatSlider = this.element.querySelector<HTMLInputElement>('[name="previewThreat"]');
@@ -318,6 +337,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
             name: 'Awareness',
             characteristic: 'perception',
             level: 'trained',
+            bonus: 0,
         });
 
         await this.item.update({ 'system.trainedSkills': skills });
@@ -371,6 +391,53 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
         weapons.splice(index, 1);
 
         await this.item.update({ 'system.customWeapons': weapons });
+    }
+
+    /**
+     * Add an equipment row.
+     */
+    static async #addEquipment(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const equipment = [...this.item.system.equipment, { name: game.i18n.localize('WH40K.NPC.Template.NewEquipment'), quantity: 1 }];
+        await this.item.update({ 'system.equipment': equipment });
+    }
+
+    /**
+     * Remove an equipment row.
+     */
+    static async #removeEquipment(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const index = parseInt(target.dataset['index'] ?? '', 10);
+        if (Number.isNaN(index)) return;
+        await this.item.update({ 'system.equipment': withoutIndex(this.item.system.equipment, index) });
+    }
+
+    /**
+     * Add the text in the tag input as a tag.
+     */
+    static async #addTag(this: NPCTemplateSheet, event: Event, _target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await this.#commitTagInput();
+    }
+
+    /**
+     * Remove a tag.
+     */
+    static async #removeTag(this: NPCTemplateSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const index = parseInt(target.dataset['index'] ?? '', 10);
+        if (Number.isNaN(index)) return;
+        await this.item.update({ 'system.tags': withoutIndex(this.item.system.tags, index) });
+    }
+
+    /** Append the tag input's text to the tags, if it names a new tag. */
+    async #commitTagInput(): Promise<void> {
+        const input = this.element.querySelector<HTMLInputElement>('[data-wh40k-hook="npc-template-tag-input"]');
+        if (input === null) return;
+        const current = this.item.system.tags;
+        const tags = appendTag(current, input.value);
+        input.value = '';
+        if (tags.length !== current.length) await this.item.update({ 'system.tags': tags });
     }
 
     /**

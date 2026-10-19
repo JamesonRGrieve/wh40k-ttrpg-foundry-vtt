@@ -20,6 +20,7 @@
  */
 
 import type { DropData } from '../../managers/actor-journal-link.ts';
+import { withoutIndex } from '../../utils/list-edit.ts';
 
 /** A value of item source data or expanded form data: JSON-shaped. */
 export type FormValue = string | number | boolean | null | undefined | FormValue[] | FormObject;
@@ -165,8 +166,7 @@ export function appendUniqueUuid(list: FormValue, uuid: string): string[] {
 
 /** `list` without the element at `index`. An out-of-range index returns the list unchanged. */
 export function removeIndex(list: FormValue, index: number): FormValue[] {
-    if (!Array.isArray(list)) return [];
-    return list.filter((_entry, i) => i !== index);
+    return Array.isArray(list) ? withoutIndex(list, index) : [];
 }
 
 /** The UUID an Item drag payload carries, or `null` for any other drop. */

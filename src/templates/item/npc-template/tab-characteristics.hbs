@@ -54,11 +54,8 @@
                     <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseWounds" value="{{source.baseWounds}}" min="1" />
                 </div>
 
-                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                    <label class="tw-font-semibold">{{localize "WH40K.Movement"}}</label>
-                    <input class="tw-w-[60px] tw-text-center tw-p-2 tw-text-xl tw-border-2 tw-border-[var(--wh40k-border-color)] tw-rounded-md" type="number" name="system.baseMovement" value="{{source.baseMovement}}" min="0" />
-                </div>
-
+                {{!-- No movement input: a generated NPC derives its movement from its Agility
+                      Bonus and size, so a template value would never reach it (#656). --}}
                 {{!-- Shown here, edited on the Equipment tab beside its notes. A second
                       `system.baseArmour` input made the form submit an array for it, which
                       failed validation and dropped every edit on the sheet (#656). --}}
@@ -80,12 +77,12 @@
             </button>
         </header>
         <div>
-            {{#if (gt system.trainedSkills.length 0)}}
+            {{#if (gt skills.length 0)}}
             <div class="tw-flex tw-flex-col tw-gap-2">
-                {{#each system.trainedSkills as |skill idx|}}
+                {{#each skills as |skill idx|}}
                 <div class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-md" style="background: var(--wh40k-bg-secondary)" data-index="{{idx}}">
                     <span class="tw-flex-[2] tw-font-medium">{{skill.name}}</span>
-                    <span class="tw-w-10 tw-text-center tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{skill.characteristic}}</span>
+                    <span class="tw-w-10 tw-text-center tw-text-xs tw-text-[var(--wh40k-text-muted)]" title="{{skill.characteristicLabel}}" data-field="skill-characteristic">{{skill.characteristicShort}}</span>
                     <div>
                         <select class="tw-p-1" name="system.trainedSkills.{{idx}}.level">
                             <option value="trained" {{#if (eq skill.level "trained")}}selected{{/if}}>{{localize "WH40K.Skills.Trained"}}</option>
@@ -94,7 +91,7 @@
                         </select>
                     </div>
                     <input class="tw-w-[50px] tw-text-center" type="number" name="system.trainedSkills.{{idx}}.bonus"
-                           value="{{skill.bonus}}" placeholder="+0" />
+                           value="{{skill.bonus}}" placeholder="+0" aria-label="{{localize 'WH40K.NPC.Template.SkillBonus'}}" />
                     <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--wh40k-accent-combat)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.2)]"
                             data-action="removeSkill" data-index="{{idx}}">
                         <i class="fas fa-trash"></i>
