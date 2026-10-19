@@ -18,7 +18,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import { REGIMENT_BUDGET } from '../../../module/rules/ow-regiment-creation';
 import { buildDrawbackPanel, type DrawbackPanelData, type MultiComradeRoster, type RegimentDrawback } from '../../../module/rules/ow-regiment-drawback';
 import panelSrc from './ow-drawback-panel.hbs?raw';
@@ -27,6 +27,8 @@ initializeStoryHandlebars();
 
 interface DrawbackPanelCtx {
     drawbackPanel: DrawbackPanelData;
+    /** The sheet's own `editable`, which the add control reads from the root. */
+    editable?: boolean;
 }
 
 const DOOMED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
@@ -122,5 +124,45 @@ export const DrawbackPlusMultiComradeRoster: Story = {
             'Trooper Arkos',
             'Trooper Jadek',
         ]);
+    },
+};
+
+/**
+ * #160: on an editable sheet the panel offers a drop zone and an Add Drawback
+ * button, which dispatches `owAddDrawback` (the compendium picker). The refunds
+ * come from each drawback's Regiment Creation Points.
+ */
+export const AddDrawbackControl: Story = {
+    name: 'Editable — the drop zone and Add Drawback, with refunds from the drawbacks’ points',
+    args: {
+        ...buildContext(
+            [DOOMED, THE_FEW],
+            [
+                { id: DOOMED, description: '', refund: 4, penalty: {} },
+                { id: THE_FEW, description: '', refund: 2, penalty: {} },
+            ],
+            null,
+        ),
+        editable: true,
+    },
+    play: async ({ canvasElement }) => {
+        await expect(rows(canvasElement)).toEqual([
+            { name: 'Doomed', refund: '+4' },
+            { name: 'The Few', refund: '+2' },
+        ]);
+        await expect(canvasElement.querySelector('[data-adjusted-budget]')?.textContent.trim()).toBe(`= ${REGIMENT_BUDGET + 6}`);
+        await expect(canvasElement.querySelector('[data-ow-drawback-drop]')).not.toBeNull();
+        const clicks = captureActionClicks(canvasElement);
+        canvasElement.querySelector<HTMLElement>('[data-action="owAddDrawback"]')?.click();
+        await expect(clicks.map((click) => click.action)).toEqual(['owAddDrawback']);
+    },
+};
+
+/** A read-only sheet has no add control. */
+export const ReadOnlyHasNoAddControl: Story = {
+    name: 'Read-only — no add control',
+    args: { ...buildContext([DOOMED], [], null), editable: false },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-action="owAddDrawback"]')).toBeNull();
     },
 };

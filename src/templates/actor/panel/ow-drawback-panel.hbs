@@ -93,6 +93,18 @@
         {{/each}}
     </ul>
 
+    {{!-- Add a drawback: drop a Regimental Drawback on the sheet, or pick one from the compendiums (#160). --}}
+    {{#if @root.editable}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-rounded-[6px] tw-border tw-border-dashed tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-px-2 tw-py-1.5" data-ow-drawback-drop>
+            <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.RegimentDrawback.DropHint"}}</span>
+            <button type="button"
+                    class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-dark)] ow:tw-text-brass"
+                    data-action="owAddDrawback">
+                <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.OW.RegimentDrawback.Add"}}
+            </button>
+        </div>
+    {{/if}}
+
     {{!-- Merged penalty readout --}}
     {{#if drawbackPanel.hasPenaltyRow}}
         <div class="tw-flex tw-flex-col tw-gap-1 tw-px-2 tw-py-1 tw-rounded

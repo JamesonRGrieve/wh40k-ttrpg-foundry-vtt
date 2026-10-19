@@ -111,4 +111,80 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             await deleteDocuments(page, { actors: [actor.id] });
         }
     });
+
+    test('adds a drawback by a drop and from the compendiums, refunding its Regiment Creation Points', async ({ page }) => {
+        await joinOrSkip(page);
+        const actor = await createActor(page, {
+            data: { name: 'e2e-160 Recruit', type: 'ow-character', system: { gameSystem: 'ow', regimentDrawbacks: [] } },
+        });
+        const itemId = await page.evaluate(async () => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `Item` global has no browser-side types
+            const g = globalThis as unknown as { Item: { create: (data: object) => Promise<{ id: string } | null> } };
+            const item = await g.Item.create({
+                name: 'e2e-160 Short Rations',
+                type: 'originPath',
+                system: { step: 'regimentalDrawback', gameSystem: 'ow', regimentPoints: 3 },
+            });
+            return item?.id ?? '';
+        });
+        expect(itemId).not.toBe('');
+        try {
+            const sheetId = await openActorSheet(page, actor.id, 'overview');
+            const panel = page.locator(`#${sheetId} ${PANEL}`);
+            await panel.scrollIntoViewIfNeeded();
+            await expect(panel.locator('[data-ow-drawback-drop]')).toBeVisible();
+
+            // A drawback dropped on the sheet is recorded, not owned, and refunds its points.
+            const dropped = await page.evaluate(
+                async ({ actorId, id }) => {
+                    interface Sheet {
+                        _onDropItem: (event: DragEvent, item: object) => Promise<boolean>;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+                    const g = globalThis as unknown as {
+                        game: {
+                            actors: { get: (i: string) => { sheet: Sheet; items: { size: number } } | undefined };
+                            items: { get: (i: string) => { uuid: string } | undefined };
+                        };
+                    };
+                    const target = g.game.actors.get(actorId);
+                    const item = g.game.items.get(id);
+                    if (target === undefined || item === undefined) throw new Error('actor or item not found');
+                    const before = target.items.size;
+                    await target.sheet._onDropItem(new DragEvent('drop'), item);
+                    return { uuid: item.uuid, ownedAdded: target.items.size - before };
+                },
+                { actorId: actor.id, id: itemId },
+            );
+            expect(dropped.ownedAdded).toBe(0);
+            await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([dropped.uuid]);
+            await expect.poll(async () => shownRows(panel)).toEqual([{ name: 'e2e-160 Short Rations', refund: '+3' }]);
+            await expect(panel.locator('[data-refund-total]')).toContainText('+3');
+            await expect(panel.locator('[data-adjusted-budget]')).toHaveText('= 15');
+
+            // Add Drawback offers the compendium drawbacks by name.
+            await panel.locator('button[data-action="owAddDrawback"]').click();
+            const dialog = page.locator(DIALOG).last();
+            await expect(dialog).toBeVisible();
+            await snap(page, 'ow-drawback-picker', { selector: 'dialog.application[open]' });
+            await dialog.locator('button', { hasText: /^Doomed$/ }).click();
+            await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([dropped.uuid, DOOMED]);
+            // Doomed's points are not recorded yet (content#32), so its refund and the totals read "—".
+            await expect
+                .poll(async () => shownRows(panel))
+                .toEqual([
+                    { name: 'e2e-160 Short Rations', refund: '+3' },
+                    { name: 'Doomed', refund: '—' },
+                ]);
+            await snap(page, 'ow-drawback-panel-added', { selector: `#${sheetId} ${PANEL}` });
+            recordCoverage('action', 'owAddDrawback');
+        } finally {
+            await deleteDocuments(page, { actors: [actor.id] });
+            await page.evaluate(async (id) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+                const g = globalThis as unknown as { game: { items: { get: (i: string) => { delete: () => Promise<object> } | undefined } } };
+                await g.game.items.get(id)?.delete();
+            }, itemId);
+        }
+    });
 });

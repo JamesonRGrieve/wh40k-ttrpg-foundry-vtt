@@ -8285,6 +8285,12 @@
                 "Label": "Regimental Drawback",
                 "Refund": "Refund",
                 "Penalty": "Penalty",
+                "Add": "Add Drawback",
+                "DropHint": "Drop a Regimental Drawback here, or add one from the compendiums.",
+                "PickTitle": "Add a Regimental Drawback",
+                "PickHint": "Choose the drawback your regiment took.",
+                "NoneAvailable": "No Regimental Drawbacks were found in the compendiums.",
+                "AlreadyTaken": "Your regiment already has {name}.",
                 "Mixed": {
                     "Title": "Mixed Regiment",
                     "Override": "Per-Member Override"

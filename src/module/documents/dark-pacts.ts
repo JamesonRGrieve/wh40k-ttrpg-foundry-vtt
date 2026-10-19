@@ -10,7 +10,6 @@
 
 import { SYSTEM_ID } from '../constants.ts';
 import type DarkPactData from '../data/item/dark-pact.ts';
-import { promptItemChoice } from '../rolls/skill-use-picker.ts';
 import {
     DARK_PACT_FLAG,
     type DarkPactEntry,
@@ -24,8 +23,8 @@ import {
     type PactRecord,
     togglePactEntry,
 } from '../rules/dark-pact.ts';
-import { queryItemIndex } from '../utils/compendium-query.ts';
 import type { WH40KAcolyte } from './acolyte.ts';
+import { pickCompendiumItemUuid } from './compendium-pick.ts';
 import type { WH40KItem } from './item.ts';
 
 /** A resolved pact item. */
@@ -155,15 +154,13 @@ export async function removeDarkPact(actor: WH40KAcolyte, index: number): Promis
  * by name. Returns `null` when none exists or the choice is dismissed.
  */
 export async function chooseCompendiumDarkPact(): Promise<DarkPactItem | null> {
-    const candidates = await queryItemIndex(
+    const uuid = await pickCompendiumItemUuid(
         ['type'],
-        (entry, pack) => (entry.type === 'darkPact' ? { id: entry.uuid ?? `Compendium.${pack.metadata.id}.Item.${entry._id}`, name: entry.name } : undefined),
-        true,
+        (entry) => entry.type === 'darkPact',
+        game.i18n.localize('WH40K.DarkPact.PickTitle'),
+        game.i18n.localize('WH40K.DarkPact.PickHint'),
     );
-    if (candidates.length === 0) return null;
-    candidates.sort((a, b) => a.name.localeCompare(b.name));
-    const chosen = await promptItemChoice(candidates, game.i18n.localize('WH40K.DarkPact.PickTitle'), game.i18n.localize('WH40K.DarkPact.PickHint'));
-    return chosen === null ? null : resolveDarkPact(chosen.id);
+    return uuid === null ? null : resolveDarkPact(uuid);
 }
 
 /** One pact's Boons and Banes, for the panel; `null` when the pact no longer resolves. */

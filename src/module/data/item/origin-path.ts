@@ -66,6 +66,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare subtletyAdjuster?: { kind: SubtletyAdjusterKind; delta: number; minAbsoluteDelta: number; requiresEquipped: boolean };
     declare step: string;
     declare stepIndex: number;
+    declare regimentPoints: number | null;
     declare positions: number[];
     declare gameSystem: string;
     declare xpCost: number;
@@ -166,6 +167,14 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'regiment',
                     'speciality',
                     'chapter',
+                    // Only War Regiment Creation (Core Rulebook p.57; Hammer of the Emperor)
+                    'regimentType',
+                    'commandingOfficer',
+                    'trainingDoctrine',
+                    'specialEquipmentDoctrine',
+                    'regimentalDrawback',
+                    // Dark Heresy 1e
+                    'careerPath',
                 ],
             }),
 
@@ -187,6 +196,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
             // XP cost (for Into The Storm advanced origins)
             xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
+            // Only War Regiment Creation Points this option carries (Core Rulebook p.57):
+            // what a regiment choice costs from the 12-point budget, or what a Regimental
+            // Drawback returns to it. The book prints both as positive numbers. Null when
+            // the content has not recorded it, which the drawback panel shows as unknown.
+            regimentPoints: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
 
             /**
              * Structured gates a character must meet to take this step, in the shape

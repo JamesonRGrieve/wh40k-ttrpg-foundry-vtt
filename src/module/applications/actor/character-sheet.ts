@@ -50,6 +50,7 @@ import {
     toggleDarkPactEntry,
 } from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { addRegimentalDrawback, chooseCompendiumDrawback, isRegimentalDrawback, resolveDrawbackDescriptors } from '../../documents/ow-drawbacks.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
 import { pluralKey } from '../../i18n/plural.ts';
 import type { SimpleSkillData } from '../../rolls/action-data.ts';
@@ -116,7 +117,7 @@ import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { canIssueOrder, GENERIC_ORDERS } from '../../rules/ow-orders.ts';
 import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';
-import { buildDrawbackPanel, type MultiComradeRoster } from '../../rules/ow-regiment-drawback.ts';
+import { buildDrawbackPanel, type MultiComradeRoster, type RegimentDrawback } from '../../rules/ow-regiment-drawback.ts';
 import { buildBattlefieldPanel } from '../../rules/ow-regimental-award.ts';
 import {
     applyMismanifest,
@@ -703,10 +704,10 @@ const PANEL_BUILDERS: SystemPanels = {
                 const record = owSystemRecord(s);
                 const ids = Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
                 const roster = (record['multiComradeRoster'] ?? null) as MultiComradeRoster | null;
-                // Each id is a drawback document UUID, shown by its name (#160). The
-                // drawback documents do not yet carry their Regiment Creation Points,
-                // so no descriptor resolves and the refund reads as unknown.
-                return buildDrawbackPanel(ids, roster, () => undefined, cachedRefName, REGIMENT_BUDGET);
+                // Each id is a drawback document UUID, shown by its name (#160). Its refund
+                // is the item's Regiment Creation Points, resolved before the panels build;
+                // a drawback that has not recorded them reads as unknown.
+                return buildDrawbackPanel(ids, roster, (id) => s._owDrawbackDescriptor(id), cachedRefName, REGIMENT_BUDGET);
             },
         },
         {
@@ -750,6 +751,8 @@ export default class CharacterSheet extends BaseActorSheet {
     #combatDataCache: Record<string, unknown> | null = null;
     /** The ship-orders panel's active category filter (`''` = all). */
     _orderCategoryFilter = '';
+    /** This render's Regimental Drawback descriptors, by drawback UUID (#160). */
+    #drawbackDescriptors = new Map<string, RegimentDrawback>();
     /**
      * Ephemeral BC Psychic Strength selections (#178). Mode and push
      * level are render-only UI state — they are not persisted on the
@@ -929,6 +932,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Batch-4 actions (#159, #160, #161)
             'owMountedAction': owMountedAction,
             'owToggleDrawback': owToggleDrawback,
+            'owAddDrawback': CharacterSheet.#owAddDrawback,
             'owAddComrade': owAddComrade,
             'owRemoveComrade': owRemoveComrade,
             'owRequestSupport': owRequestSupport,
@@ -1240,6 +1244,9 @@ export default class CharacterSheet extends BaseActorSheet {
         // entries for the active system are written into the context under their
         // exact partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no
         // panels, and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
+        // The drawback panel's refunds come from each drawback item's Regiment Creation Points (#160).
+        if (isOW) this.#drawbackDescriptors = await resolveDrawbackDescriptors(this.#regimentDrawbackIds());
+
         if (activeGameSystem !== null) {
             for (const { key, build } of (this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem] ?? []) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic panel-context key written into the free-form CharacterSheetContext
@@ -1868,6 +1875,36 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+
+    /** A recorded Regimental Drawback's descriptor, when its item records its Regiment Creation Points (#160). */
+    _owDrawbackDescriptor(id: string): RegimentDrawback | undefined {
+        return this.#drawbackDescriptors.get(id);
+    }
+
+    /** The Regimental Drawbacks the character's regiment took, as UUIDs; none off the OW line. */
+    #regimentDrawbackIds(): string[] {
+        const record = owSystemRecord(this);
+        return Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
+    }
+
+    /** Record a drawback the regiment took (a drop on the sheet, or the panel's Add Drawback). */
+    async #addRegimentalDrawback(uuid: string, name: string): Promise<void> {
+        const added = await addRegimentalDrawback(
+            { system: { regimentDrawbacks: this.#regimentDrawbackIds() }, update: async (data) => this.actor.update(data) },
+            uuid,
+        );
+        if (!added) this._notify('warning', game.i18n.format('WH40K.OW.RegimentDrawback.AlreadyTaken', { name }));
+    }
+
+    /** Add a drawback chosen from the compendiums (the panel's Add Drawback). */
+    static async #owAddDrawback(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const uuid = await chooseCompendiumDrawback();
+        if (uuid === null) {
+            this._notify('warning', game.i18n.localize('WH40K.OW.RegimentDrawback.NoneAvailable'));
+            return;
+        }
+        await this.#addRegimentalDrawback(uuid, cachedRefName(uuid));
+    }
 
     /**
      * OW Regiment Creation panel (#151). Surfaces the persisted regiment
@@ -6596,6 +6633,11 @@ export default class CharacterSheet extends BaseActorSheet {
         // A Dark Pact is struck, not owned: it becomes a `system.pacts` record (#84).
         if (isDarkPactItem(item)) {
             await this.#strikeDarkPact(item);
+            return false;
+        }
+        // A Regimental Drawback is recorded on an Only War character, not owned (#160).
+        if (isRegimentalDrawback(item) && 'regimentDrawbacks' in this.actor.system) {
+            await this.#addRegimentalDrawback(item.uuid ?? '', item.name);
             return false;
         }
 
