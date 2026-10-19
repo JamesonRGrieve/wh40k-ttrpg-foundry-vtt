@@ -80,10 +80,11 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt';
     readonly cssClass = 'rogue-trader';
     readonly theme = {
-        primary: 'accent-dynasty',
+        // Void-blue frames with gold lettering, set apart from the Dark Heresy bronze/gold lines.
+        primary: 'void-l20',
         accent: 'gold',
-        chatAccent: 'gold-dark-d20',
-        border: 'gold-dark',
+        chatAccent: 'void-d20',
+        border: 'void-l20',
     } as const;
 
     /** RT uses the flat fatigue model; full recovery takes 8 hours of rest — #114. */

@@ -23,7 +23,10 @@ import { scaledMs } from './lib/timing';
  * PER_LINE_SHEET_THEME_FLOWS in scripts/e2e-coverage.mjs.
  */
 
-const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently'] as const;
+const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently', 'rt-frames-in-void'] as const;
+
+/** RT's frame colour, `void-l20` (#5b8fc4) in tailwind.config.js, as computed style reports it. */
+const RT_VOID_FRAME = 'rgb(91, 143, 196)';
 type FlowName = (typeof PER_LINE_SHEET_THEME_FLOWS)[number];
 
 const LINES = ['dh2', 'rt'] as const;
@@ -34,6 +37,8 @@ interface LineRead {
     classLine: string | null;
     stamped: string | null;
     colours: string[];
+    /** The sidebar's right edge colour (`--wh40k-sidebar-accent`). */
+    sidebarEdge: string | null;
 }
 
 /** The sheet's line as the class carries it, as its root stamps it, and its themed elements' colours. */
@@ -57,11 +62,13 @@ async function readLine(page: Page, actorId: string): Promise<LineRead | null> {
             const style = getComputedStyle(el);
             return `${style.color}|${style.backgroundColor}|${style.borderBottomColor}|${style.borderTopColor}`;
         });
+        const sidebar = sheet.element.querySelector<HTMLElement>('.wh40k-sidebar');
         return {
             ownProperty: Object.hasOwn(sheet, '_gameSystemId'),
             classLine: sheet._gameSystemId ?? null,
             stamped: sheet.element.dataset['wh40kSystem'] ?? null,
             colours,
+            sidebarEdge: sidebar === null ? null : getComputedStyle(sidebar).borderRightColor,
         };
     }, actorId);
 }
@@ -136,6 +143,14 @@ test.describe.serial('a character sheet reads its own line (Tier B, #596)', () =
                 'lines-theme-differently',
                 dh2.length > 0 && dh2.length === rt.length && dh2.some((colour, index) => colour !== rt[index]),
                 `dh2 themed elements ${dh2.length}, rt ${rt.length}; dh2 ${JSON.stringify(dh2.slice(0, 3))} rt ${JSON.stringify(rt.slice(0, 3))}`,
+            );
+            // RT frames its sheet in void blue (set apart from DH2's bronze/gold); DH2 never does.
+            const framedInVoid = (colours: string[]): boolean => colours.some((colour) => colour.split('|').slice(1).includes(RT_VOID_FRAME));
+            const [rtEdge, dh2Edge] = [reads.get('rt')?.sidebarEdge, reads.get('dh2')?.sidebarEdge];
+            record(
+                'rt-frames-in-void',
+                framedInVoid(rt) && !framedInVoid(dh2) && rtEdge === RT_VOID_FRAME && dh2Edge !== RT_VOID_FRAME,
+                `sidebar edge rt ${rtEdge} dh2 ${dh2Edge}; rt ${JSON.stringify(rt)} dh2 ${JSON.stringify(dh2)}`,
             );
         } finally {
             await deleteProbeActors(page, actors);

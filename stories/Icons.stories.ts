@@ -11,10 +11,10 @@ const sampleSrc = `
 <div class="wh40k-rpg" data-wh40k-system="{{system}}" style="padding:1rem; background:#1a1a1a; color:#d8c690; font-family:sans-serif;">
     <h3 style="margin:0 0 0.5rem 0;">{{system}} — icon helper</h3>
     <div style="display:flex; gap:1rem; align-items:center; font-size:24px;">
-        <span class="dh2:tw-text-bronze rt:tw-text-amber-500 im:tw-text-emerald-400">
+        <span class="dh2:tw-text-bronze rt:tw-text-gold im:tw-text-emerald-400">
             {{iconSvg "fa:dice-d20" class="tw-w-8 tw-h-8" label="Roll d20"}}
         </span>
-        <span class="dh2:tw-text-gold rt:tw-text-amber-200 im:tw-text-emerald-200">
+        <span class="dh2:tw-text-gold rt:tw-text-gold-light im:tw-text-emerald-200">
             {{iconSvg "fa:cog" class="tw-w-6 tw-h-6"}}
         </span>
         <span style="color:#9ad;">

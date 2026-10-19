@@ -48,9 +48,9 @@
     Per-system theming: the table border + header background lift via inline
     `<system>:tw-*` variants so each game system gets a distinct visual tone.
 --}}
-<div class="tw-grid tw-grid-cols-[var(--wh40k-item-table-cols)] tw-rounded-md tw-overflow-hidden tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-crimson{{#if tableClass}} {{tableClass}}{{/if}}"
+<div class="tw-grid tw-grid-cols-[var(--wh40k-item-table-cols)] tw-rounded-md tw-overflow-hidden tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze rt:tw-border-void-l20 im:tw-border-crimson{{#if tableClass}} {{tableClass}}{{/if}}"
      style="--wh40k-item-table-cols: {{itemTableColumns headers addAction}}" data-table>
-    <div class="tw-grid tw-grid-cols-subgrid tw-col-span-full tw-items-center tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] dh2:tw-bg-bronze/10 rt:tw-bg-amber-700/10 im:tw-bg-crimson/10" data-table-header>
+    <div class="tw-grid tw-grid-cols-subgrid tw-col-span-full tw-items-center tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-text-muted)] dh2:tw-bg-bronze/10 rt:tw-bg-void-l20/10 im:tw-bg-crimson/10" data-table-header>
         {{#each headers as |header|}}
             <div class="tw-min-w-0 tw-px-1.5 tw-py-1{{#if header.cellClass}} {{header.cellClass}}{{/if}}">
                 {{#if header.labelKey}}{{localize header.labelKey}}{{else}}{{header.label}}{{/if}}

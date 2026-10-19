@@ -673,7 +673,7 @@ recordDimension('origin-prompt.flow', covered['origin-prompt.flow'], ORIGIN_PROM
 
 // A character sheet reads its own line from its class (#596), tests/e2e/per-line-sheet-theme.spec.ts.
 // Keep in sync with PER_LINE_SHEET_THEME_FLOWS there.
-const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently'];
+const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently', 'rt-frames-in-void'];
 recordDimension('per-line-sheet-theme.flow', covered['per-line-sheet-theme.flow'], PER_LINE_SHEET_THEME_FLOWS);
 
 // The weapon sheet's Penetration tile (#614), tests/e2e/weapon-sheet-penetration.spec.ts.

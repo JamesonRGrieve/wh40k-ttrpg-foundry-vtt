@@ -291,6 +291,29 @@ export const WeaponPanelRT: Story = {
     play: async ({ canvasElement }) => expectTablesOnGrid(canvasElement),
 };
 
+/** DH2 and RT side by side: DH2 frames in old gold, RT in void blue with gold lettering. */
+export const ArmourPanelDH2VersusRT: Story = {
+    name: 'Composed / Armour panel (DH2e vs RT palette)',
+    render: () => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-3';
+        for (const line of ['dh2', 'rt']) {
+            const wrapper = renderSheetParts([{ template: armourPanelSrc, context: { actor: { items: makeArmour() } } }], {});
+            wrapper.dataset.wh40kSystem = line;
+            host.appendChild(wrapper);
+        }
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        const roots = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-system]'));
+        await expect(roots.map((root) => root.dataset['wh40kSystem'])).toEqual(['dh2', 'rt']);
+        // The panel header carries both lines' frame variants; each line's own resolves on its root.
+        const header = canvasElement.querySelector('[data-wh40k-system="rt"] [class*="rt:tw-border-b-"]');
+        await expect(header?.className).toContain('rt:tw-border-b-void-l20');
+        await expect(header?.className).toContain('dh2:tw-border-b-gold-raw');
+    },
+};
+
 export const ArmourPanelDH2: Story = {
     name: 'Composed / Armour panel (DH2e)',
     render: () => {

@@ -58,9 +58,9 @@ module.exports = {
     'tw-text-accent-combat-l30', 'tw-border-accent-combat-d10',
     'tw-bg-crimson-light', 'tw-text-failure-l40', 'tw-border-failure-l10',
     'tw-bg-brass', 'tw-text-brass-l20', 'tw-border-brass-d15',
-    'tw-bg-accent-dynasty', 'tw-text-gold', 'tw-border-gold-dark',
+    'tw-bg-void-l20', 'tw-text-gold', 'tw-border-void-l20',
     // `chatAccent` role: the darker per-line accent chat cards draw on the parchment message.
-    'tw-text-gold-raw-d30', 'tw-text-gold-raw-d25', 'tw-text-gold-dark-d20', 'tw-text-brass-d30',
+    'tw-text-gold-raw-d30', 'tw-text-gold-raw-d25', 'tw-text-void-d20', 'tw-text-brass-d30',
     'tw-text-crimson', 'tw-text-accent-combat-d10', 'tw-text-failure',
     // Pill-style classes emitted by `get pill()` getters on item DataModels
     // (e.g. ritual.ts, navigator-power.ts, order.ts). These strings come from
@@ -167,7 +167,6 @@ module.exports = {
           // chat message under every card wash (tests/chat-accent-contrast.test.ts).
           'raw-d30': '#6e500c',
           'raw-d25': '#72560f',
-          'dark-d20': '#6a560e',
         },
         bronze: { DEFAULT: '#cd7f32' },
         brass: {
@@ -246,7 +245,15 @@ module.exports = {
         'accent-powers': {
           DEFAULT: '#6a2090',
         },
-        'accent-dynasty': '#d4a520',
+        // Rogue Trader's void blue: RT frames its sheets in void and keeps gold lettering,
+        // so it reads apart from the Dark Heresy bronze/gold lines.
+        void: {
+          DEFAULT: '#2b5a8c',
+          // Frames, and the primary fill behind #1a1a1a pill text (≥4.5:1).
+          'l20': '#5b8fc4',
+          // Chat accent text (theme role `chatAccent`), see gold.raw-d30.
+          'd20': '#1c3c5e',
+        },
       },
       boxShadow: {
         sm: '0 1px 3px rgba(0, 0, 0, 0.3)',

@@ -187,7 +187,7 @@ const ROLE_PREFIX: Record<SystemThemeRole, string> = {
  *
  * @example
  *   themeClassFor('dh2', 'border')  // → 'tw-border-gold-raw-d10'
- *   themeClassFor('rt', 'primary')   // → 'tw-bg-accent-dynasty'
+ *   themeClassFor('rt', 'primary')   // → 'tw-bg-void-l20'
  */
 export function themeClassFor(systemId: GameSystemId, role: SystemThemeRole): string {
     const config = SystemConfigRegistry.get(systemId);

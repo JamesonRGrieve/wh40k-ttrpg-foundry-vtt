@@ -96,7 +96,7 @@ describe('item-table.hbs', () => {
         // Tailwind's template scan picks them up at build time.
         const cls = (tbl as Element).className;
         expect(cls).toMatch(/dh2:tw-border-bronze/);
-        expect(cls).toMatch(/rt:tw-border-amber-700/);
+        expect(cls).toMatch(/rt:tw-border-void-l20/);
         expect(cls).toMatch(/im:tw-border-crimson/);
     });
 

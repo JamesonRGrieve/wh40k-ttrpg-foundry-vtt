@@ -54,7 +54,7 @@
     Theming: the row hover background uses inline per-system variants so each
     game system tints its hover highlight distinctly without a helper.
 --}}
-<div class="tw-grid tw-grid-cols-subgrid tw-col-span-full tw-items-center tw-text-[0.8rem] tw-border-0 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze/20 rt:tw-border-amber-700/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
+<div class="tw-grid tw-grid-cols-subgrid tw-col-span-full tw-items-center tw-text-[0.8rem] tw-border-0 tw-border-b tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] dh2:tw-border-bronze/20 rt:tw-border-void-l20/20 im:tw-border-crimson/20 {{#if dragType}}item-drag {{/if}}dh2:hover:tw-bg-bronze/5 rt:hover:tw-bg-amber-700/5 im:hover:tw-bg-crimson/5{{#if rowClass}} {{rowClass}}{{/if}}" data-item-id="{{item.id}}"{{#if dragType}} data-item-type="{{dragType}}"{{/if}}>
     <div class="tw-flex tw-items-center tw-gap-1 tw-min-w-0 tw-px-1.5 tw-py-1 tw-break-words" data-item-table-cell="name">
         {{#unless (eq editAction false)}}
             <label class="item-edit tw-shrink-0 tw-cursor-pointer hover:tw-opacity-100" data-action="{{#if editAction}}{{editAction}}{{else}}itemEdit{{/if}}" data-item-id="{{item.id}}"{{#if editTitleKey}} title="{{localize editTitleKey}}" aria-label="{{localize editTitleKey}}"{{/if}}>

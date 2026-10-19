@@ -255,6 +255,18 @@ const darkSurface = {
     '--wh40k-border-color-light': 'rgba(180, 140, 100, 0.25)',
 };
 
+// Rogue Trader frames its sheets and cards in void blue (tailwind.config.js
+// `void-l20`, #5b8fc4) and keeps gold lettering, so it reads apart from the Dark
+// Heresy bronze/gold lines. Only frame tokens move: panel outlines, dividers and
+// the sidebar edge (`--wh40k-sidebar-accent`, read by sidebar-container.ts).
+const rtFrame = {
+    '--wh40k-sidebar-accent': '#5b8fc4',
+    '--wh40k-border-color': 'rgba(91, 143, 196, 0.4)',
+    '--wh40k-border-color-light': 'rgba(91, 143, 196, 0.25)',
+    '--wh40k-border-color-strong': 'rgba(91, 143, 196, 0.6)',
+    '--wh40k-border-accent': 'rgba(91, 143, 196, 0.35)',
+};
+
 // Wrapped in `@layer wh40k-tokens` to bypass Tailwind v3's addBase rule-merging:
 // without the layer wrapper, addBase silently DROPS the `body.theme-dark` rule
 // because it shares property names with the earlier `:root, body.theme-light`
@@ -277,5 +289,6 @@ module.exports = {
         ':root, body.theme-light, body.theme-dark': semantic,
         '.chat-message': chatSurface,
         '[data-wh40k-surface="dark"]': darkSurface,
+        '[data-wh40k-system="rt"]': rtFrame,
     },
 };
