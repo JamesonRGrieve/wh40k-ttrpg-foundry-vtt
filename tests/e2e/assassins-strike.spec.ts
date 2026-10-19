@@ -83,7 +83,8 @@ test.describe.serial("assassin's strike chat card (#149)", () => {
         await page.evaluate((html: string) => {
             const host = document.createElement('div');
             host.id = '__assassinsStrike';
-            host.className = 'wh40k-rpg';
+            // A chat card renders inside a `.chat-message` (parchment, and the chat-surface tokens).
+            host.className = 'wh40k-rpg chat-message';
             host.dataset['e2eCapture'] = '';
             host.style.position = 'fixed';
             host.style.top = '40px';

@@ -489,7 +489,8 @@ test.describe.serial('critical side effects + consumption (Tier B)', () => {
             // (CLAUDE.md Gotcha 3a). Left mounted for the snap outside evaluate.
             const host = document.createElement('div');
             host.id = '__c9critsfx';
-            host.className = 'wh40k-rpg';
+            // A chat card renders inside a `.chat-message` (parchment, and the chat-surface tokens).
+            host.className = 'wh40k-rpg chat-message';
             host.dataset['e2eCapture'] = '';
             host.style.position = 'fixed';
             host.style.top = '40px';
