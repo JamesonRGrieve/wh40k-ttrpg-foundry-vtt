@@ -1,0 +1,42 @@
+{{!--
+  A pact's Boons or Banes (#84), shared by the pact item sheet and the actor's
+  Dark Pacts panel.
+    entries : PactEntryView[] — { identifier, name, description, mechanics[], narrative }
+    kind    : "boons" | "banes"
+    pactIndex + removable (panel only) : each entry gets a remove control.
+--}}
+{{#if entries.length}}
+<ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-2" data-dark-pact-entries="{{kind}}">
+  {{#each entries as |entry|}}
+  <li class="tw-flex tw-flex-col tw-gap-0.5" data-dark-pact-entry="{{entry.identifier}}">
+    <div class="tw-flex tw-items-center tw-gap-2">
+      <span class="tw-font-semibold tw-text-sm">{{entry.name}}</span>
+      {{#if entry.narrative}}
+      <span class="tw-text-[0.7rem] tw-uppercase tw-tracking-[0.06em] tw-opacity-70" data-dark-pact-narrative>{{localize "WH40K.DarkPact.GmAdjudicates"}}</span>
+      {{/if}}
+      {{#if ../removable}}
+      <button type="button" class="tw-ml-auto tw-inline-flex tw-items-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 hover:tw-opacity-100"
+              data-action="togglePactEntry" data-pact-index="{{../pactIndex}}" data-kind="{{../kind}}" data-entry="{{entry.identifier}}"
+              title="{{localize 'WH40K.DarkPact.RemoveEntry'}}" aria-label="{{localize 'WH40K.DarkPact.RemoveEntry'}}">
+        <i class="fas fa-xmark" aria-hidden="true"></i>
+      </button>
+      {{/if}}
+    </div>
+    {{#if entry.mechanics.length}}
+    <div class="tw-flex tw-flex-wrap tw-gap-1" data-dark-pact-mechanics>
+      {{#each entry.mechanics as |line|}}
+      <span class="tw-text-[0.75rem] tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-solid {{themeClassFor 'border'}}">
+        {{#if line.grantUuid}}{{uuid-name line.grantUuid}}{{#if line.grantDetail}} — {{line.grantDetail}}{{/if}}{{else}}{{localize line.labelKey}} {{line.value}}{{/if}}
+      </span>
+      {{/each}}
+    </div>
+    {{/if}}
+    {{#if entry.description}}
+    <div class="tw-text-[0.85rem] tw-leading-[1.4] [&_p]:tw-m-0">{{{entry.description}}}</div>
+    {{/if}}
+  </li>
+  {{/each}}
+</ul>
+{{else}}
+<div class="tw-text-sm tw-opacity-60" data-dark-pact-empty="{{kind}}">{{localize "WH40K.DarkPact.NoEntries"}}</div>
+{{/if}}

@@ -46,6 +46,7 @@ export { default as AttackSpecialData } from './attack-special.ts';
 // Misc
 export { default as SpecialAbilityData } from './special-ability.ts';
 export { default as CriticalInjuryData } from './critical-injury.ts';
+export { default as DarkPactData } from './dark-pact.ts';
 export { default as MutationData } from './mutation.ts';
 export { default as MalignancyData } from './malignancy.ts';
 export { default as MentalDisorderData } from './mental-disorder.ts';

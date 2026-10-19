@@ -1222,7 +1222,7 @@ recordDimension('rule-affliction.flow', covered['rule-affliction.flow'], RULE_AF
 const RULE_OCCULT_FLOWS = [
     'daemonic-mastery-buildTest',
     'dark-pact-adjustDisposition',
-    'dark-pact-discoverySubtletyHit',
+    'dark-pact-startingDisposition',
     'exorcism-threshold',
     'exorcism-prepareAttempt',
     'exorcism-hostSurvival',

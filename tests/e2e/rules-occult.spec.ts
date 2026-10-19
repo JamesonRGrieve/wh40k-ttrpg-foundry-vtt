@@ -23,7 +23,7 @@ import { test } from './lib/test';
 const RULE_OCCULT_FLOWS = [
     'daemonic-mastery-buildTest',
     'dark-pact-adjustDisposition',
-    'dark-pact-discoverySubtletyHit',
+    'dark-pact-startingDisposition',
     'exorcism-threshold',
     'exorcism-prepareAttempt',
     'exorcism-hostSurvival',
@@ -110,17 +110,18 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         // ---------- dark-pact ----------
         const darkPact = await loadModule('dark-pact');
         if (darkPact.__importError != null) {
-            fail(['dark-pact-adjustDisposition', 'dark-pact-discoverySubtletyHit'], darkPact.__importError);
+            fail(['dark-pact-adjustDisposition', 'dark-pact-startingDisposition'], darkPact.__importError);
         } else {
             guarded('dark-pact-adjustDisposition', () => {
+                // Disposition is a 0–100 characteristic (core p. 277).
                 const adjust = fn<number>(darkPact, 'adjustPactDisposition');
-                return adjust(0, 5) === 3 && adjust(0, -5) === -3 && adjust(2, -1) === 1;
+                return adjust(38, 1) === 39 && adjust(99, 5) === 100 && adjust(1, -5) === 0;
             });
-            guarded('dark-pact-discoverySubtletyHit', () => {
-                const hit = fn<number>(darkPact, 'getDiscoverySubtletyHit');
-                const pact = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: 5 };
-                const negative = { id: 'p', boon: 'b', bane: 'x', initialDisposition: 0, discoverySubtletyPenalty: -3 };
-                return hit(pact) === 5 && hit(negative) === 0;
+            guarded('dark-pact-startingDisposition', () => {
+                // "A Daemon's Disposition begins at 15+ the character's Corruption total" (Enemies Beyond p. 73).
+                const start = fn<number>(darkPact, 'startingDaemonDisposition');
+                const terms = { dispositionBase: 15, addsCorruption: true, testModifier: -20 };
+                return start(terms, 23) === 38 && start({ ...terms, addsCorruption: false }, 23) === 15;
             });
         }
 

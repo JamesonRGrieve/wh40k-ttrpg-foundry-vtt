@@ -1,4 +1,5 @@
 import type { WH40KItem } from '../../documents/item.ts';
+import { adjustPactDisposition, type PactRecord } from '../../rules/dark-pact.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
 import { psyRatingTotalCost, psychicPowerCharge } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -321,20 +322,12 @@ export default class CharacterData extends CreatureTemplate {
     declare alignmentCheckpoint: number;
     declare infamy: number;
     /**
-     * Active Dark Pacts (beyond.md p. 72). Each entry tracks a single pact
-     * the actor has struck with a daemon: the `pactUuid` resolves to the
-     * compendium `PactDefinition` (Boons / Banes / initial disposition /
-     * discovery-Subtlety penalty), `discovered` flips when the pact is
-     * exposed in play, `disposition` floats in [-3..+3] (see
-     * `adjustPactDisposition` in `src/module/rules/dark-pact.ts`), and
-     * `paymentCurrent` tracks whether the most recent payment was made.
+     * Dark Pacts struck with Daemons (Enemies Beyond pp. 72–76). `pactUuid`
+     * resolves to the compendium `darkPact` item; `boons` / `banes` name the
+     * entries this bargain carries; `disposition` is the Daemon's Disposition
+     * (0–100); `discovered` and `paymentCurrent` are the GM's bookkeeping.
      */
-    declare pacts: Array<{
-        pactUuid: string;
-        discovered: boolean;
-        disposition: number;
-        paymentCurrent: boolean;
-    }>;
+    declare pacts: PactRecord[];
     declare backgroundEffects: {
         abilities: BackgroundAbility[];
         // eslint-disable-next-line no-restricted-syntax -- boundary: originPath is a dynamic map keyed by step names (homeWorld, career, etc.) storing WH40KItem references; no fixed schema
@@ -613,17 +606,19 @@ export default class CharacterData extends CreatureTemplate {
             // the canonical persistence so `BCSystemConfig.getInfamyAdvanceCost` works.
             infamy: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
 
-            // ===== DARK PACTS (Enemies Beyond, p. 72) =====
-            // Active pacts struck with daemons. Per-pact disposition is
-            // clamped to [-3..+3] by `adjustPactDisposition` in
-            // src/module/rules/dark-pact.ts; the on-discovery Subtlety hit
-            // goes through `WH40KBaseActor.applySubtletyFromSource`.
+            // ===== DARK PACTS (Enemies Beyond, pp. 72–76) =====
+            // Pacts struck with Daemons. `pactUuid` is the compendium `darkPact`
+            // item; `boons` / `banes` are the identifiers of the entries this
+            // bargain carries; `disposition` is the Daemon's Disposition on the
+            // core 0–100 scale (core p. 277). See src/module/rules/dark-pact.ts.
             pacts: new fields.ArrayField(
                 new fields.SchemaField({
                     pactUuid: new fields.StringField({ required: true, blank: false }),
                     discovered: new fields.BooleanField({ required: true, initial: false }),
-                    disposition: new fields.NumberField({ required: true, initial: 0, min: -3, max: 3, integer: true }),
+                    disposition: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
                     paymentCurrent: new fields.BooleanField({ required: true, initial: true }),
+                    boons: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
+                    banes: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -692,7 +687,22 @@ export default class CharacterData extends CreatureTemplate {
     // eslint-disable-next-line no-restricted-syntax -- boundary: _migrateData is a Foundry framework override; parameter type is dictated by SystemDataModel base class
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
-        // Handle old characteristic field names or other character-specific migrations
+        CharacterData.#migratePacts(source);
+    }
+
+    /**
+     * A pact's Daemon Disposition was once a −3..+3 step; it is now the core
+     * 0–100 characteristic (#84), so a stored value is clamped onto that scale
+     * instead of failing validation.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source is raw Foundry DataModel source data at the migration boundary
+    static #migratePacts(source: Record<string, unknown>): void {
+        const pacts = source['pacts'];
+        if (!Array.isArray(pacts)) return;
+        for (const pact of pacts) {
+            if (typeof pact !== 'object' || pact === null || !('disposition' in pact) || typeof pact.disposition !== 'number') continue;
+            pact.disposition = adjustPactDisposition(pact.disposition, 0);
+        }
     }
 
     /** @inheritDoc */

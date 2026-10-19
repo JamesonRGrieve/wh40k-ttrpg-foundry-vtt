@@ -57,6 +57,7 @@ import type {
     ConditionData,
     CriticalInjuryData,
     CyberneticData,
+    DarkPactData,
     EndeavourData,
     ForceFieldData,
     GearData,
@@ -247,6 +248,7 @@ declare module 'fvtt-types/configuration' {
             attackSpecial: typeof AttackSpecialData;
             specialAbility: typeof SpecialAbilityData;
             criticalInjury: typeof CriticalInjuryData;
+            darkPact: typeof DarkPactData;
             mutation: typeof MutationData;
             malignancy: typeof MalignancyData;
             mentalDisorder: typeof MentalDisorderData;

@@ -340,6 +340,11 @@
                     "description.value"
                 ]
             },
+            "darkPact": {
+                "htmlFields": [
+                    "description.value"
+                ]
+            },
             "cybernetic": {
                 "htmlFields": [
                     "description.value"

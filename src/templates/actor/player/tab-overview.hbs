@@ -317,8 +317,8 @@
     </div>
 
     {{!-- Status-tab action panels relocated full-width (#263). --}}
-    {{!-- Dark Pacts (Enemies Beyond p.72, #84) — renders only when a pact is active. --}}
-    {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs}}
+    {{!-- Dark Pacts (Enemies Beyond pp.72–76, #84) — the GM always, anyone once a pact is struck. --}}
+    {{> systems/wh40k-rpg/templates/actor/panel/dark-pact-panel.hbs darkPactPanel=darkPactPanel}}
 
     {{!-- Fanatic: Death to All Who Oppose Me (#93). Hidden unless hasFanatic. --}}
     {{> systems/wh40k-rpg/templates/actor/panel/fanatic-button.hbs hasFanatic=hasFanatic}}

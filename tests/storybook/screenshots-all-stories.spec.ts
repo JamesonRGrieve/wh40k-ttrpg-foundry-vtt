@@ -538,7 +538,20 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     },
     {
         title: 'Actor/Panels/DarkPactPanel',
-        exports: ['SinglePact', 'MultiPactMixed', 'PaymentLapsedEnemy'],
+        exports: [
+            'SinglePact',
+            'MultiPactMixed',
+            'PaymentLapsedEnemy',
+            'AddPact',
+            'HiddenFromPlayer',
+            'UnresolvedPact',
+            'HomologationDH2',
+            'HomologationDH1',
+            'HomologationRT',
+            'HomologationBC',
+            'HomologationOW',
+            'HomologationDW',
+        ],
     },
     {
         title: 'Actor/Panels/FanaticButton',

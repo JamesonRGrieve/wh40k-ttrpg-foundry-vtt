@@ -40,6 +40,15 @@ import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/acto
 import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
+import {
+    chooseCompendiumDarkPact,
+    type DarkPactItem,
+    darkPactDefinitions,
+    isDarkPactItem,
+    removeDarkPact,
+    strikeDarkPact,
+    toggleDarkPactEntry,
+} from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
@@ -62,7 +71,7 @@ import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-p
 import { daemonEngineRageBonus } from '../../rules/bc-supplement-mechanics.ts';
 import { configuredActionType } from '../../rules/combat-actions.ts';
 import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
-import { adjustPactDisposition, type PactDisposition } from '../../rules/dark-pact.ts';
+import { adjustPactDisposition, PACT_ENTRY_KINDS, type PactEntryKind, type PactRecord } from '../../rules/dark-pact.ts';
 import {
     ASTARTES_IMPLANTS,
     astartesStrengthBonus,
@@ -148,6 +157,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
 import InquestTrackerDialog from '../dialogs/inquest-tracker-dialog.ts';
 import { inquestPanelRows } from '../dialogs/inquest-view.ts';
+import { darkPactPanelView } from '../item/dark-pact-view.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
 import { openDaemonologyRitualDialog } from '../prompts/daemonology-ritual-dialog.ts';
@@ -977,6 +987,9 @@ export default class CharacterSheet extends BaseActorSheet {
             'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
             'togglePactDiscovered': CharacterSheet.#togglePactDiscovered,
             'togglePactPayment': CharacterSheet.#togglePactPayment,
+            'togglePactEntry': CharacterSheet.#togglePactEntry,
+            'addDarkPact': CharacterSheet.#addDarkPact,
+            'removeDarkPact': CharacterSheet.#removeDarkPact,
 
             // Endeavour actions (Rogue Trader)
             'completeObjective': CharacterSheet.#completeObjective,
@@ -3164,6 +3177,11 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
     async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        // Dark Pacts (#84): each struck pact's Boons and Banes, read from its pact item.
+        const pacts = this.actor.system.pacts;
+        const pactDefinitions = await darkPactDefinitions(pacts);
+        context['darkPactPanel'] = darkPactPanelView(pacts, pactDefinitions, game.user.isGM);
+
         const ctx = context as CharacterSheetContext;
         // First prepare standard tab context
         await this._prepareTabPartContext('overview', context, options);
@@ -4573,80 +4591,87 @@ export default class CharacterSheet extends BaseActorSheet {
     /*  Event Handlers - Dark Pacts (#84)           */
     /* -------------------------------------------- */
 
+    /** The `system.pacts` index a Dark Pacts control carries in `data-pact-index`, or `null`. */
+    #pactIndex(target: HTMLElement): number | null {
+        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        return Number.isNaN(index) || index < 0 || index >= this.actor.system.pacts.length ? null : index;
+    }
+
+    /** Rewrite one pact record (the Daemon's Disposition and the GM's bookkeeping). */
+    async #updatePact(index: number, change: (record: PactRecord) => PactRecord): Promise<void> {
+        const pacts = this.actor.system.pacts.map((record, i) => (i === index ? change(record) : record));
+        await this.actor.update({ 'system.pacts': pacts });
+    }
+
     /**
-     * Shift the per-pact disposition by ±n, clamped to [-3..+3] via the
-     * canonical helper in `src/module/rules/dark-pact.ts`. The target button
-     * carries `data-pact-index` (numeric index into `system.pacts`) and
-     * `data-delta` (signed integer).
+     * Shift the Daemon's Disposition (core p. 277, 0–100) by the button's
+     * `data-delta`. The GM applies Interaction-test outcomes here.
      */
     static async #adjustPactDisposition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
+        const index = this.#pactIndex(target);
         const delta = parseInt(target.dataset['delta'] ?? '0', 10);
-        if (Number.isNaN(index) || index < 0 || Number.isNaN(delta) || delta === 0) return;
-
-        const pacts = this.actor.system.pacts;
-        if (!Array.isArray(pacts) || index >= pacts.length) return;
-
-        const updated = structuredClone(pacts);
-        const entry = updated[index];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
-        if (entry === undefined) return;
-        const current = entry.disposition as PactDisposition;
-        entry.disposition = adjustPactDisposition(current, delta);
-        await this.actor.update({ 'system.pacts': updated });
+        if (index === null || Number.isNaN(delta) || delta === 0) return;
+        await this.#updatePact(index, (record) => ({ ...record, disposition: adjustPactDisposition(record.disposition, delta) }));
     }
 
     /* -------------------------------------------- */
 
     /**
-     * Toggle the `discovered` flag for a pact. When flipping from
-     * `false → true`, fire the canonical Subtlety hit through the actor's
-     * `applySubtletyFromSource(pactUuid)` — this is the same path used by
-     * compendium-driven Subtlety adjusters and ensures the
-     * `lastSubtletySource` flag and discovery audit trail are populated
-     * consistently.
+     * Mark a pact discovered (or hidden again). Enemies Beyond p. 76 leaves the
+     * Subtlety change "tailored to the individual bargain", so discovery applies
+     * no number of its own; the GM adjusts Subtlety on its panel.
      */
     static async #togglePactDiscovered(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
-        if (Number.isNaN(index) || index < 0) return;
-
-        const pacts = this.actor.system.pacts;
-        if (!Array.isArray(pacts) || index >= pacts.length) return;
-
-        const updated = structuredClone(pacts);
-        const entry = updated[index];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
-        if (entry === undefined) return;
-        const wasDiscovered = entry.discovered;
-        entry.discovered = !wasDiscovered;
-        await this.actor.update({ 'system.pacts': updated });
-
-        // Apply the canonical Subtlety hit only on the false → true edge.
-        if (!wasDiscovered && entry.pactUuid) {
-            await this.actor.applySubtletyFromSource(entry.pactUuid);
-        }
+        const index = this.#pactIndex(target);
+        if (index === null) return;
+        await this.#updatePact(index, (record) => ({ ...record, discovered: !record.discovered }));
     }
 
     /* -------------------------------------------- */
 
-    /**
-     * Toggle the `paymentCurrent` flag for a pact. Disposition consequences
-     * of missed payments are GM-driven via the disposition stepper; this
-     * handler only flips the bookkeeping flag.
-     */
+    /** Mark the pact's most recent payment made (or lapsed). */
     static async #togglePactPayment(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
-        if (Number.isNaN(index) || index < 0) return;
+        const index = this.#pactIndex(target);
+        if (index === null) return;
+        await this.#updatePact(index, (record) => ({ ...record, paymentCurrent: !record.paymentCurrent }));
+    }
 
-        const pacts = this.actor.system.pacts;
-        if (!Array.isArray(pacts) || index >= pacts.length) return;
+    /* -------------------------------------------- */
 
-        const updated = structuredClone(pacts);
-        const entry = updated[index];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
-        if (entry === undefined) return;
-        entry.paymentCurrent = !entry.paymentCurrent;
-        await this.actor.update({ 'system.pacts': updated });
+    /** Add a Boon or Bane to a pact's bargain, or take it away (`data-kind`, `data-entry`). */
+    static async #togglePactEntry(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = this.#pactIndex(target);
+        const kind = PACT_ENTRY_KINDS.find((candidate) => candidate === target.dataset['kind']);
+        const entry = target.dataset['entry'] ?? '';
+        if (index === null || kind === undefined || entry === '') return;
+        await toggleDarkPactEntry(this.actor, index, kind satisfies PactEntryKind, entry);
+    }
+
+    /* -------------------------------------------- */
+
+    /** Strike a pact chosen from the compendiums (the panel's Add Pact). */
+    static async #addDarkPact(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const pact = await chooseCompendiumDarkPact();
+        if (pact === null) {
+            this._notify('warning', game.i18n.localize('WH40K.DarkPact.NoneAvailable'));
+            return;
+        }
+        await this.#strikeDarkPact(pact);
+    }
+
+    /** Strike a pact, or say the character already holds it. */
+    async #strikeDarkPact(pact: DarkPactItem): Promise<void> {
+        const struck = await strikeDarkPact(this.actor, pact);
+        if (!struck) this._notify('warning', game.i18n.format('WH40K.DarkPact.AlreadyHeld', { pact: pact.name }));
+    }
+
+    /* -------------------------------------------- */
+
+    /** End a pact and remove everything its Boons and Banes gave the character. */
+    static async #removeDarkPact(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
+        const index = this.#pactIndex(target);
+        if (index === null) return;
+        await removeDarkPact(this.actor, index);
     }
 
     /* -------------------------------------------- */
@@ -6601,6 +6626,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // them on drop bypasses the advancement economy. Already-owned talents fall through
         // to the normal sort path. See issue #17. Actors that don't buy talents with XP
         // (NPCs) opt out, so the talent lands on them like any other item.
+        // A Dark Pact is struck, not owned: it becomes a `system.pacts` record (#84).
+        if (isDarkPactItem(item)) {
+            await this.#strikeDarkPact(item);
+            return false;
+        }
+
         const isUnknownTalent = item.type === 'talent' && this.actor.items.get(item.id ?? '') === undefined && this._buysTalentsWithXp();
         if (isUnknownTalent) {
             const careerKey = (this.actor.system as { originPath?: { career?: string } }).originPath?.career ?? 'rogueTrader';

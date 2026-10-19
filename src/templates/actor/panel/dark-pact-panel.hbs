@@ -1,67 +1,99 @@
 {{!--
-    Dark Pact tracker panel (Enemies Beyond p. 72, issue #84).
+    Dark Pacts panel (Enemies Beyond pp. 72–76, #84).
 
-    Lists the actor's active pacts with per-pact disposition (clamped to
-    [-3..+3] via `adjustPactDisposition` in `src/module/rules/dark-pact.ts`),
-    a Discovered toggle that — on flip-to-true — fires the canonical
-    Subtlety hit via `WH40KBaseActor.applySubtletyFromSource(pactUuid)`, and
-    a Payment-Current toggle for tracking whether the most recent payment
-    was honoured.
+    Context: darkPactPanel (DarkPactPanelView, applications/item/dark-pact-view.ts)
+      - visible : the GM always sees it (to add a pact); anyone once a pact is struck
+      - canEdit : the GM's controls
+      - rows[]  : { index, pactUuid, disposition, discovered, paymentCurrent, resolved,
+                   columns: [{ kind, labelKey, taken[], available[] }] — Boons, then Banes }
 
-    Rendered only when at least one pact is active; the empty-state row is
-    deliberately omitted from the visible table when `system.pacts.length`
-    is zero (the panel itself does not render in that case — see the
-    consuming sheet template).
-
-    Row columns: Pact | Disposition (- value +) | Discovered | Payment | Boon | Bane.
+    A pact is added by dropping a Dark Pact item on the sheet or with Add Pact
+    (a compendium picker). Its name renders through uuidNameCache (`uuid-name`).
+    The GM chooses which Boons and Banes the bargain carries; one with mechanics
+    gives the character its ActiveEffect / granted items while taken.
 --}}
-{{#if system.pacts.length}}
+{{#if darkPactPanel.visible}}
 {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
     label=(localize "WH40K.DarkPact.Header")
     icon="fa-handshake"
     rootClass="tw-col-span-6 wh40k-dark-pact-panel"}}
-    <div class="tw-rounded-[6px] tw-overflow-hidden tw-border tw-border-solid {{themeClassFor 'border'}}">
-        {{!-- Header row: Pact | Disposition | Discovered | Payment | Boon | Bane --}}
-        <div class="tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em] tw-px-[4px] tw-py-[6px] tw-border-b tw-border-solid {{themeClassFor 'border'}}">
-            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Header"}}</div>
-            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.Disposition"}}</div>
-            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.Discovered"}}</div>
-            <div class="tw-px-[4px] tw-text-center">{{localize "WH40K.DarkPact.PaymentCurrent"}}</div>
-            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Boon"}}</div>
-            <div class="tw-px-[4px]">{{localize "WH40K.DarkPact.Bane"}}</div>
-        </div>
-        {{#each system.pacts as |pact index|}}
-            <div data-wh40k-hook="dark-pact-row" class="tw-grid tw-grid-cols-[2fr_2fr_1fr_1fr_2fr_2fr] tw-items-center tw-px-[4px] tw-py-[6px]" data-pact-index="{{index}}" data-pact-uuid="{{pact.pactUuid}}">
-                <div class="tw-px-[4px] tw-truncate">
-                    {{uuid-name pact.pactUuid}}
-                </div>
-                <div class="tw-px-[4px] tw-flex tw-items-center tw-justify-center tw-gap-2">
-                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="-1" title="-1">
-                        <span class="material-icons">remove_circle</span>
+    <div class="tw-flex tw-flex-col tw-gap-2">
+        {{#each darkPactPanel.rows as |row|}}
+        <div data-wh40k-hook="dark-pact-row" data-pact-index="{{row.index}}" data-pact-uuid="{{row.pactUuid}}"
+             class="tw-rounded-[6px] tw-border tw-border-solid {{themeClassFor 'border'}} tw-p-2 tw-flex tw-flex-col tw-gap-2">
+            <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-3">
+                <span class="tw-font-semibold tw-text-[1.05em] tw-flex-1 tw-min-w-[10ch]" data-dark-pact-name>{{uuid-name row.pactUuid}}</span>
+
+                <span class="tw-inline-flex tw-items-center tw-gap-1" title="{{localize 'WH40K.DarkPact.DispositionHint'}}">
+                    <span class="tw-text-[0.8em] tw-uppercase tw-tracking-[0.05em] tw-opacity-75">{{localize "WH40K.DarkPact.Disposition"}}</span>
+                    {{#if ../darkPactPanel.canEdit}}
+                    <button type="button" class="tw-inline-flex tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 hover:tw-opacity-100"
+                            data-action="adjustPactDisposition" data-pact-index="{{row.index}}" data-delta="-1" aria-label="{{localize 'WH40K.DarkPact.DispositionDown'}}">
+                        <i class="fas fa-minus" aria-hidden="true"></i>
                     </button>
-                    <span class="tw-min-w-[2ch] tw-text-center tw-font-semibold">{{pact.disposition}}</span>
-                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="adjustPactDisposition" data-pact-index="{{index}}" data-delta="1" title="+1">
-                        <span class="material-icons">add_circle</span>
+                    {{/if}}
+                    <span class="tw-min-w-[3ch] tw-text-center tw-font-semibold tw-tabular-nums" data-dark-pact-disposition>{{row.disposition}}</span>
+                    {{#if ../darkPactPanel.canEdit}}
+                    <button type="button" class="tw-inline-flex tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 hover:tw-opacity-100"
+                            data-action="adjustPactDisposition" data-pact-index="{{row.index}}" data-delta="1" aria-label="{{localize 'WH40K.DarkPact.DispositionUp'}}">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
                     </button>
-                </div>
-                <div class="tw-px-[4px] tw-text-center">
-                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactDiscovered" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.Discovered'}}">
-                        <span class="material-icons">{{#if pact.discovered}}visibility{{else}}visibility_off{{/if}}</span>
-                    </button>
-                </div>
-                <div class="tw-px-[4px] tw-text-center">
-                    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-80 hover:tw-opacity-100" data-action="togglePactPayment" data-pact-index="{{index}}" title="{{localize 'WH40K.DarkPact.PaymentCurrent'}}">
-                        <span class="material-icons">{{#if pact.paymentCurrent}}check_circle{{else}}cancel{{/if}}</span>
-                    </button>
-                </div>
-                <div class="tw-px-[4px] tw-text-[0.9em]">
-                    {{#if pact.boon}}{{pact.boon}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
-                </div>
-                <div class="tw-px-[4px] tw-text-[0.9em]">
-                    {{#if pact.bane}}{{pact.bane}}{{else}}<span class="tw-opacity-60">—</span>{{/if}}
-                </div>
+                    {{/if}}
+                </span>
+
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-text-[0.85em] {{#unless ../darkPactPanel.canEdit}}tw-pointer-events-none{{/unless}}"
+                        data-action="togglePactDiscovered" data-pact-index="{{row.index}}" aria-pressed="{{#if row.discovered}}true{{else}}false{{/if}}">
+                    <i class="fas {{#if row.discovered}}fa-eye{{else}}fa-eye-slash{{/if}}" aria-hidden="true"></i>
+                    {{#if row.discovered}}{{localize "WH40K.DarkPact.Discovered"}}{{else}}{{localize "WH40K.DarkPact.Hidden"}}{{/if}}
+                </button>
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-text-[0.85em] {{#unless ../darkPactPanel.canEdit}}tw-pointer-events-none{{/unless}}"
+                        data-action="togglePactPayment" data-pact-index="{{row.index}}" aria-pressed="{{#if row.paymentCurrent}}true{{else}}false{{/if}}">
+                    <i class="fas {{#if row.paymentCurrent}}fa-circle-check{{else}}fa-circle-xmark{{/if}}" aria-hidden="true"></i>
+                    {{#if row.paymentCurrent}}{{localize "WH40K.DarkPact.PaymentCurrent"}}{{else}}{{localize "WH40K.DarkPact.PaymentLapsed"}}{{/if}}
+                </button>
+                {{#if ../darkPactPanel.canEdit}}
+                <button type="button" class="tw-inline-flex tw-cursor-pointer tw-bg-transparent tw-border-none tw-p-0 tw-opacity-70 hover:tw-opacity-100"
+                        data-action="removeDarkPact" data-pact-index="{{row.index}}" aria-label="{{localize 'WH40K.DarkPact.Remove'}}" title="{{localize 'WH40K.DarkPact.Remove'}}">
+                    <i class="fas fa-trash" aria-hidden="true"></i>
+                </button>
+                {{/if}}
             </div>
+
+            {{#unless row.resolved}}
+            <div class="tw-text-[0.85em] tw-opacity-80" data-dark-pact-unresolved>{{localize "WH40K.DarkPact.Unresolved"}}</div>
+            {{/unless}}
+
+            <div class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-3">
+                {{#each row.columns as |column|}}
+                <div class="tw-flex tw-flex-col tw-gap-1" data-dark-pact-column="{{column.kind}}">
+                    <span class="tw-text-[0.8em] tw-uppercase tw-tracking-[0.05em] tw-opacity-75">{{localize column.labelKey}}</span>
+                    {{> systems/wh40k-rpg/templates/item/partial/dark-pact-entries.hbs entries=column.taken kind=column.kind pactIndex=row.index removable=../../darkPactPanel.canEdit}}
+                    {{#if ../../darkPactPanel.canEdit}}
+                    {{#if column.available.length}}
+                    <div class="tw-flex tw-flex-wrap tw-gap-1" data-dark-pact-available="{{column.kind}}">
+                        {{#each column.available as |option|}}
+                        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[0.75rem] tw-px-1.5 tw-py-0.5 tw-rounded-sm tw-border tw-border-dashed {{themeClassFor 'border'}} tw-bg-transparent"
+                                data-action="togglePactEntry" data-pact-index="{{row.index}}" data-kind="{{column.kind}}" data-entry="{{option.identifier}}">
+                            <i class="fas fa-plus" aria-hidden="true"></i> {{option.name}}
+                        </button>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    {{/if}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
         {{/each}}
+
+        {{#if darkPactPanel.canEdit}}
+        <div data-dark-pact-drop class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-rounded-[6px] tw-border tw-border-dashed {{themeClassFor 'border'}} tw-px-3 tw-py-2">
+            <span class="tw-text-[0.85em] tw-opacity-80">{{localize "WH40K.DarkPact.DropHint"}}</span>
+            <button type="button" data-action="addDarkPact" class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[0.85em] tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-solid {{themeClassFor 'border'}} tw-bg-transparent">
+                <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.DarkPact.Add"}}
+            </button>
+        </div>
+        {{/if}}
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 {{/if}}
