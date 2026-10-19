@@ -230,7 +230,7 @@ export interface ComradeHealingRecord {
 }
 
 /** The healing panel's status badge. */
-export type ComradeHealingStatus = 'recovering' | 'ready' | 'dead';
+type ComradeHealingStatus = 'recovering' | 'ready' | 'dead';
 
 const HEALING_STATUS_LABEL_KEYS: Record<ComradeHealingStatus, string> = {
     recovering: 'WH40K.OW.ComradeHealing.Status.Recovering',

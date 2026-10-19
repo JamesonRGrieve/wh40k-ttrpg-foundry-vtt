@@ -54,7 +54,7 @@ export function pactEntryView(entry: DarkPactEntry): PactEntryView {
 }
 
 /** The terms of striking a pact, as displayed. */
-export interface PactTermsView {
+interface PactTermsView {
     corruptionFormula: string;
     dispositionBase: number;
     addsCorruption: boolean;
@@ -94,7 +94,7 @@ export interface PactDefinitionView {
 }
 
 /** One struck pact's row on the panel. */
-export interface DarkPactRowView {
+interface DarkPactRowView {
     index: number;
     pactUuid: string;
     disposition: number;
@@ -107,7 +107,7 @@ export interface DarkPactRowView {
 }
 
 /** One column of a row: the Boons or Banes this bargain carries, and those still on offer. */
-export interface DarkPactColumnView {
+interface DarkPactColumnView {
     kind: PactEntryKind;
     labelKey: string;
     taken: PactEntryView[];

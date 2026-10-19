@@ -2171,7 +2171,7 @@ export interface SkillUseItemSource {
 }
 
 /** An eligible item as a picker lists it. */
-export interface PickedItem {
+interface PickedItem {
     readonly id: string;
     readonly name: string;
 }
