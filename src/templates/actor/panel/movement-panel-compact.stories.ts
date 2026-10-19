@@ -159,3 +159,26 @@ export const RunSelectedCheckFitsNarrowWidths: Story = {
         await expect(pressedModes(canvasElement)).toEqual(['run', 'run', 'run']);
     },
 };
+
+/** DH2 and RT side by side: DH2 frames the panel header in old gold, RT in void blue. */
+export const PaletteDH2VersusRT: Story = {
+    name: 'DH2 vs RT palette — the header frame is gold on DH2, void on RT',
+    args: { system: { movement: RATES, lifting: LIFTING } },
+    render: (args) => {
+        const host = document.createElement('div');
+        host.className = 'tw-flex tw-flex-col tw-gap-3';
+        host.append(renderPanel({ ...args, _system: 'dh2' }), renderPanel({ ...args, _system: 'rt' }));
+        return host;
+    },
+    play: async ({ canvasElement }) => {
+        // The two line roots (the panel itself also stamps its line on inner elements).
+        const roots = Array.from(canvasElement.querySelectorAll<HTMLElement>('.wh40k-rpg[data-wh40k-system]')).filter(
+            (root) => root.parentElement?.closest('[data-wh40k-system]') == null,
+        );
+        await expect(roots.map((root) => root.dataset['wh40kSystem'])).toEqual(['dh2', 'rt']);
+        // The panel header carries both lines' frame variants; each line's own resolves on its root.
+        const header = canvasElement.querySelector('[data-wh40k-system="rt"] [class*="rt:tw-border-b-"]');
+        await expect(header?.className).toContain('rt:tw-border-b-void-l20');
+        await expect(header?.className).toContain('dh2:tw-border-b-gold-raw');
+    },
+};

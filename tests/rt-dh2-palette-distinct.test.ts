@@ -54,12 +54,17 @@ interface RunnableStory {
 interface ViteGlobMeta {
     glob: (patterns: string[], opts: { eager: true }) => Partial<Record<string, Partial<Record<string, RunnableStory>>>>;
 }
-const STORIES = (import.meta as ImportMeta & ViteGlobMeta).glob(['../stories/ItemTable.stories.ts'], { eager: true });
+const STORY_FILE = '../src/templates/actor/panel/movement-panel-compact.stories.ts';
+// Vite needs the glob pattern as a literal.
+const STORIES = (import.meta as ImportMeta & ViteGlobMeta).glob(['../src/templates/actor/panel/movement-panel-compact.stories.ts'], { eager: true });
 
-/** The DH2-vs-RT armour panel story, with both its render and its play. */
+/**
+ * The DH2-vs-RT palette story on the Combat tab's movement panel, with both its render
+ * and its play. (It was on the armour panel, which #662 deleted as unmounted.)
+ */
 function paletteStory(): Required<RunnableStory> {
-    const story = STORIES['../stories/ItemTable.stories.ts']?.['ArmourPanelDH2VersusRT'];
-    if (story?.render === undefined || story.play === undefined) throw new Error('ArmourPanelDH2VersusRT story not loaded');
+    const story = STORIES[STORY_FILE]?.['PaletteDH2VersusRT'];
+    if (story?.render === undefined || story.play === undefined) throw new Error('PaletteDH2VersusRT story not loaded');
     return { render: story.render, play: story.play };
 }
 
