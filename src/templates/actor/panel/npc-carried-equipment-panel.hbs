@@ -1,0 +1,22 @@
+{{!-- NPC carried equipment (#670): the pieces an NPC Template gave this NPC that
+     matched no compendium item, by name and quantity. Matched pieces are owned
+     items and show in the backpack instead. Shown only when the list has entries. --}}
+{{#if (gt system.equipment.length 0)}}
+<div class="wh40k-panel tw-shrink-0" data-npc-carried-equipment>
+  <div class="wh40k-panel-header">
+    <i class="fa-solid fa-box-open"></i>
+    <span>{{localize "WH40K.NPC.CarriedEquipment"}}</span>
+  </div>
+  <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-1">
+    <p class="tw-m-0 tw-text-xs tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.NPC.CarriedEquipmentHint"}}</p>
+    <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-col tw-gap-0.5">
+      {{#each system.equipment as |entry|}}
+      <li class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-sm" data-equipment-name="{{entry.name}}">
+        <span>{{entry.name}}</span>
+        <span class="tw-tabular-nums tw-text-[color:var(--wh40k-text-secondary)]">×{{entry.quantity}}</span>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+{{/if}}

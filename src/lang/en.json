@@ -5555,6 +5555,8 @@
             "PresetImported": "Imported preset \"{name}\"",
             "PresetImportFailed": "Failed to import preset: {error}",
             "NoTags": "No tags",
+            "CarriedEquipment": "Carried Equipment",
+            "CarriedEquipmentHint": "From its NPC Template, with no matching compendium item. Matched items are in the backpack below.",
             "FactionAndAllegiance": "Faction & Allegiance",
             "AllegiancePlaceholder": "e.g. Imperium, Chaos, Xenos",
             "SourceReference": "Source Reference",

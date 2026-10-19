@@ -67,6 +67,8 @@ type GeneratedNpcSystem = {
     template: string;
     quickNotes: string;
     tags: string[];
+    /** The template's carried equipment; NPC creation turns compendium matches into owned items (#670). */
+    equipment: Array<{ name: string; quantity: number }>;
     description: string;
     tactics: string;
     source: string;
@@ -622,6 +624,7 @@ export default class NPCTemplateData extends ItemDataModel {
             template: (this.parent as { uuid?: string } | undefined)?.uuid ?? '',
             quickNotes: '',
             tags: [...this.tags],
+            equipment: this.equipment.filter((entry) => entry.name.trim() !== '').map((entry) => ({ name: entry.name.trim(), quantity: entry.quantity })),
             description: this.description,
             tactics: this.tactics,
             source: this.source,

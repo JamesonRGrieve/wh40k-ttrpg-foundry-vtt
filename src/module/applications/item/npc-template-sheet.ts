@@ -7,28 +7,13 @@ import type NPCTemplateData from '../../data/item/npc-template.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { appendTag, withoutIndex } from '../../utils/list-edit.ts';
-import { newNpcActorType } from '../npc/npc-actor-type.ts';
+import { createNpcFromTemplate } from '../npc/npc-from-template.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
 /** NPCTemplate items expose NPCTemplateData on `system`. */
 type NPCTemplateItem = WH40KItemDocument & {
     system: NPCTemplateData;
 };
-
-/* eslint-disable no-restricted-syntax -- boundary: external Foundry document shapes resolved from UUID / Actor.create */
-interface ResolvedItem {
-    name: string;
-    type: string;
-    img: string;
-    system: Record<string, unknown>;
-}
-
-interface CreatedActor {
-    name: string | null;
-    sheet: { render: (force: boolean) => unknown } | null;
-    createEmbeddedDocuments: (type: string, items: Array<Record<string, unknown>>) => Promise<unknown>;
-}
-/* eslint-enable no-restricted-syntax */
 
 /** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
 const TAB_LABEL_BASICS = 'WH40K.NPC.Template.Tabs.Basics';
@@ -547,46 +532,6 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     static async #createFromTemplate(this: NPCTemplateSheet, event: PointerEvent, _target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const threatLevel = this.#previewThreat;
-        const sys = this.item.system;
-        const systemData = sys.generateAtThreat(threatLevel);
-
-        const actorData = {
-            name: this.item.name,
-            type: newNpcActorType(),
-            img: this.item.img ?? 'icons/svg/mystery-man.svg',
-            system: systemData,
-        };
-
-        try {
-            // boundary: Foundry's `Actor.create` lacks a typed payload for arbitrary system schemas.
-            // eslint-disable-next-line no-restricted-syntax -- boundary: typed signature for static Actor.create
-            const actor = (await (Actor.create as (data: Record<string, unknown>) => Promise<unknown>)(actorData)) as CreatedActor | null;
-
-            if (actor !== null) {
-                // Resolve all trait/talent UUIDs in parallel
-                const uuids = [...sys.traits, ...sys.talents].map((ref) => ref.uuid).filter((uuid): uuid is string => uuid !== undefined && uuid !== '');
-                const resolved = await Promise.all(uuids.map(async (uuid) => (await fromUuid(uuid)) as ResolvedItem | null));
-                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments accepts free-form item data records
-                const itemsToCreate: Array<Record<string, unknown>> = resolved
-                    .filter((item): item is ResolvedItem => item !== null)
-                    .map((item) => ({
-                        name: item.name,
-                        type: item.type,
-                        img: item.img,
-                        system: foundry.utils.deepClone(item.system),
-                    }));
-
-                if (itemsToCreate.length > 0) {
-                    await actor.createEmbeddedDocuments('Item', itemsToCreate);
-                }
-
-                ui.notifications.info(game.i18n.format('WH40K.NPC.Created', { name: actor.name ?? game.i18n.localize('WH40K.Common.Unknown') }));
-                actor.sheet?.render(true);
-            }
-        } catch (err) {
-            console.error('Failed to create NPC from template:', err);
-            ui.notifications.error(game.i18n.localize('WH40K.NPC.Template.CreateError'));
-        }
+        await createNpcFromTemplate({ name: this.item.name, img: this.item.img, system: this.item.system }, this.#previewThreat);
     }
 }

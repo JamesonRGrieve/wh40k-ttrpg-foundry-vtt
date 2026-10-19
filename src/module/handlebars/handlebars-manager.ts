@@ -147,6 +147,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/npc-carried-equipment-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/backpack-split-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs',

@@ -1,8 +1,8 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
-import { newNpcActorType } from './npc-actor-type.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
+import { createNpcFromTemplate, type NpcTemplateSource } from './npc-from-template.ts';
 
 interface FilterState {
     category: string;
@@ -18,12 +18,11 @@ interface NpcTemplateSys {
     type: string;
     role: string;
     summary: string;
-    traits?: Array<{ uuid?: string }>;
-    talents?: Array<{ uuid?: string }>;
-    /* eslint-disable no-restricted-syntax -- boundary: NpcTemplateSys is a structural adapter for untyped item.system; Record<string,unknown> is the Foundry data-prep return shape */
+    traits: NpcTemplateSource['system']['traits'];
+    talents: NpcTemplateSource['system']['talents'];
+    generateAtThreat: NpcTemplateSource['system']['generateAtThreat'];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: NpcTemplateSys is a structural adapter for untyped item.system; Record<string,unknown> is the Foundry data-prep return shape
     previewAtThreat: (threatLevel: number) => Record<string, unknown>;
-    generateAtThreat: (threatLevel: number, options: { isHorde: boolean }) => Record<string, unknown>;
-    /* eslint-enable no-restricted-syntax */
 }
 
 interface TemplateRow {
@@ -389,68 +388,14 @@ export default class TemplateSelector extends makeNpcFormDialog({
         const template = this.#templates.find((t) => t.uuid === this.#selectedUuid);
         if (!template) return;
 
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to NpcTemplateSys for method access
-            const templateSys = template.system as unknown as NpcTemplateSys;
-            const systemData = templateSys.generateAtThreat(this.#threatLevel, {
-                isHorde: this.#isHorde,
-            });
-
-            const actorData = {
-                name: template.name,
-                type: newNpcActorType(),
-                img: template.img ?? 'icons/svg/mystery-man.svg',
-                system: systemData,
-            };
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Actor.create params are untyped in Foundry V14; cast required to pass structured actorData
-            const actor = (await Actor.create(actorData as unknown as Parameters<typeof Actor.create>[0])) as WH40KNPC | undefined;
-
-            if (actor) {
-                // Create embedded traits and talents
-                // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments payload is an untyped Foundry API shape
-                const itemsToCreate: Record<string, unknown>[] = [];
-
-                /** Shape of Foundry documents returned by fromUuid for item embedding. */
-                interface EmbeddableItem {
-                    name: string;
-                    type: string;
-                    img: string;
-                    system: object;
-                }
-
-                const traitUuids = (templateSys.traits ?? []).map((t) => t.uuid).filter((u): u is string => u !== undefined && u !== '');
-                const talentUuids = (templateSys.talents ?? []).map((t) => t.uuid).filter((u): u is string => u !== undefined && u !== '');
-                const allUuids = [...traitUuids, ...talentUuids];
-                const resolvedItems = await Promise.all(allUuids.map(async (uuid) => (await fromUuid(uuid)) as EmbeddableItem | null));
-                for (const item of resolvedItems) {
-                    if (item) {
-                        itemsToCreate.push({
-                            name: item.name,
-                            type: item.type,
-                            img: item.img,
-                            system: foundry.utils.deepClone(item.system),
-                        });
-                    }
-                }
-
-                if (itemsToCreate.length > 0) {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments params are untyped in Foundry V14
-                    await actor.createEmbeddedDocuments('Item', itemsToCreate as unknown as Parameters<typeof actor.createEmbeddedDocuments<'Item'>>[1]);
-                }
-
-                ui.notifications.info(game.i18n.format('WH40K.NPC.Created', { name: actor.name }));
-                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry V14 marks Document.sheet.render legacy in typedefs; minimal local interface mirrors the V2 runtime contract
-                const actorSheet = (actor as unknown as { sheet?: { render: (force: boolean) => void } }).sheet;
-                actorSheet?.render(true);
-
-                this.#resolution.resolve(actor);
-                await this.close();
-            }
-        } catch (err) {
-            console.error('Failed to create NPC from template:', err);
-            ui.notifications.error(game.i18n.localize('WH40K.NPC.Template.CreateError'));
-        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped at runtime; cast to NpcTemplateSys for method access
+        const templateSys = template.system as unknown as NpcTemplateSys;
+        const actor = await createNpcFromTemplate({ name: template.name, img: template.img, system: templateSys }, this.#threatLevel, {
+            isHorde: this.#isHorde,
+        });
+        if (actor === null) return;
+        this.#resolution.resolve(actor);
+        await this.close();
     }
 
     /**

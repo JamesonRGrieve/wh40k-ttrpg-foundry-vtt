@@ -11,6 +11,7 @@ import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
+import equipmentTabSrc from '../../../templates/actor/player/tab-equipment.hbs?raw';
 import { callerRequirementView } from '../dialogs/reinforcement-call-view.ts';
 
 initializeStoryHandlebars();
@@ -230,6 +231,46 @@ export const ReinforcementPanelAbsentOffDh2: Story = {
         await expect(view.getByText('GM Tools')).toBeVisible();
         await expect(canvasElement.querySelector('[data-wh40k-hook="rc-panel"]')).toBeNull();
         await expect(canvasElement.querySelector('[data-action="callReinforcement"]')).toBeNull();
+    },
+};
+
+/** An NPC from a template whose equipment matched no compendium item, in the order the template listed it. */
+const CARRIED_EQUIPMENT = [
+    { name: 'Ration Pack', quantity: 3 },
+    { name: 'Cult Icon', quantity: 1 },
+];
+
+function npcWithCarriedEquipment(equipment: Array<{ name: string; quantity: number }>): SheetContextLike {
+    const ctx = mockNpcSheetContext({ systemId: 'dh2', activeTab: 'equipment' });
+    const system = { ...ctx.system, equipment };
+    return { ...ctx, system, actor: { ...ctx.actor, system } };
+}
+
+function renderNpcEquipmentTab(ctx: SheetContextLike): HTMLElement {
+    return renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-sheet-body tw-p-2' }], ctx, { systemId: systemIdOf(ctx) });
+}
+
+export const CarriedEquipment: Story = {
+    name: 'Carried equipment from its template (#670)',
+    args: npcWithCarriedEquipment(CARRIED_EQUIPMENT),
+    render: (args) => renderNpcEquipmentTab(args),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector<HTMLElement>('[data-npc-carried-equipment]');
+        await expect(panel).not.toBeNull();
+        if (panel === null) return;
+        await expect(panel).toBeVisible();
+        await expect(within(panel).getByText('Carried Equipment')).toBeVisible();
+        const rows = Array.from(panel.querySelectorAll('li'), (li) => li.textContent.replace(/\s+/g, ' ').trim());
+        await expect(rows).toEqual(['Ration Pack ×3', 'Cult Icon ×1']);
+    },
+};
+
+export const NoCarriedEquipment: Story = {
+    name: 'No carried-equipment panel when the list is empty (#670)',
+    args: npcWithCarriedEquipment([]),
+    render: (args) => renderNpcEquipmentTab(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-npc-carried-equipment]')).toBeNull();
     },
 };
 

@@ -3464,6 +3464,8 @@ export type I18nKey =
     | 'WH40K.NPC.BatchCreate.RandomizeStats'
     | 'WH40K.NPC.BatchCreate.Success'
     | 'WH40K.NPC.BatchCreate.Title'
+    | 'WH40K.NPC.CarriedEquipment'
+    | 'WH40K.NPC.CarriedEquipmentHint'
     | 'WH40K.NPC.Category'
     | 'WH40K.NPC.CombatPresets'
     | 'WH40K.NPC.CombatStats'

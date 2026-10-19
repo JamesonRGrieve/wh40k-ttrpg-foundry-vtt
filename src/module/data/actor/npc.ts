@@ -274,6 +274,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare template: string;
     declare quickNotes: string;
     declare tags: string[];
+    declare equipment: Array<{ name: string; quantity: number }>;
     declare personality: {
         demeanor: string;
         goals: string;
@@ -560,6 +561,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             template: new StringField({ required: false, initial: '', blank: true }), // UUID of source template
             quickNotes: new HTMLField({ required: false, initial: '', blank: true }), // GM-only tactical notes
             tags: new ArrayField(new StringField({ required: true }), { required: true, initial: [] }),
+            // Carried equipment from an NPC Template that matched no compendium item (#670);
+            // matched entries become owned items instead.
+            equipment: new ArrayField(
+                new SchemaField({
+                    name: new StringField({ required: true, initial: '', blank: true }),
+                    quantity: new NumberField({ required: true, initial: 1, min: 1, integer: true }),
+                }),
+                { required: true, initial: [] },
+            ),
 
             // === ROLEPLAY FIELDS ===
             personality: new SchemaField({

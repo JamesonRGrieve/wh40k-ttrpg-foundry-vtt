@@ -65,6 +65,11 @@ describe('generateAtThreat', () => {
         equipmentPreset: 'custom',
         customWeapons: [{ name: 'Autogun', damage: '1d10+3', pen: 0, range: '90m', rof: 'S/3/10', clip: 30, reload: 'Full', special: '', class: 'basic' }],
         tags: ['cultist'],
+        equipment: [
+            { name: 'Flak Armour', quantity: 1 },
+            { name: '  Ration Pack ', quantity: 3 },
+            { name: '', quantity: 1 },
+        ],
         defaultMagnitude: 100,
         type: 'troop',
         faction: '',
@@ -85,6 +90,13 @@ describe('generateAtThreat', () => {
     it("copies the template's tags, and its custom weapons", () => {
         expect(generated.tags).toEqual(['cultist']);
         expect(generated.weapons.simple).toEqual(template.customWeapons);
+    });
+
+    it('carries its named equipment with quantities, trimmed, and skips blank rows (#670)', () => {
+        expect(generated.equipment).toEqual([
+            { name: 'Flak Armour', quantity: 1 },
+            { name: 'Ration Pack', quantity: 3 },
+        ]);
     });
 });
 

@@ -11,5 +11,8 @@
         <span class="tw-text-[0.65rem] tw-font-semibold tw-tabular-nums tw-text-[color:var(--wh40k-text-secondary)] tw-shrink-0">{{system.encumbrance.value}} / {{system.encumbrance.max}} {{localize "WH40K.Common.Kilograms"}}</span>
     </div>
     {{/if}}
+    {{#if isNPC}}
+    {{> systems/wh40k-rpg/templates/actor/panel/npc-carried-equipment-panel.hbs}}
+    {{/if}}
     {{> systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs}}
 </section>
