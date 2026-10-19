@@ -13,6 +13,11 @@ module.exports = {
         "font-family": "var(--wh40k-font-body)",
         "font-size": "0.875rem",
         "overflow": "hidden",
+        // The narrowest the weapon sheet resizes to (Foundry clamps a window's width to
+        // its computed min-width). At Foundry's 200px floor the DAMAGE tile cut its
+        // value off and the name field showed "Conversi" (#614); at 400px the name
+        // fits and a range-band damage list wraps one band per line inside its tile.
+        "min-width": "400px",
         ".window-content": {
             "container-type": "inline-size",
         },

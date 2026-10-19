@@ -93,8 +93,10 @@
           <div class="tw-relative tw-z-[2] tw-text-[2rem] tw-mb-2 tw-transition-transform">
             <i class="fa-solid fa-skull"></i>
           </div>
-          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1.4rem] tw-font-bold tw-text-[color:var(--wh40k-red-bright)] tw-leading-[1.1]">{{fullDamageFormula}}</span>
+          {{!-- The value wraps inside the tile (a range-band list breaks at its " / "
+                separators) rather than running past the tile's edge (#614). --}}
+          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px] tw-max-w-full tw-min-w-0 tw-text-center">
+            <span class="tw-font-display tw-text-[1.4rem] tw-font-bold tw-text-[color:var(--wh40k-red-bright)] tw-leading-[1.1] tw-break-words" data-weapon-damage>{{fullDamageFormula}}</span>
             <span class="tw-text-[0.7rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">{{localize "WH40K.Weapon.Damage"}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>

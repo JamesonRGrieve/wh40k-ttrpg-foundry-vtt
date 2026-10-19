@@ -107,6 +107,33 @@ export const RangeBandPenetration: Story = {
     },
 };
 
+/** The weapon sheet's minimum width (tailwind/weapon.js `min-width`). */
+const MIN_SHEET_WIDTH_PX = 400;
+
+/**
+ * #614: at the sheet's minimum width a range-band DAMAGE value ran past its tile
+ * ("1D10+9 E /"). It wraps one band per line inside the tile instead.
+ */
+export const RangeBandDamageAtMinWidth: Story = {
+    args: {
+        overrides: { fullDamageFormula: '1d10+9 E / 3d10+9 E / 6d10+12 E', penetrationLabel: '2/8/14' },
+    },
+    render: (args: Args) => {
+        const el = renderSheet(templateSrc, mockWeaponSheetContext(args.overrides));
+        el.style.width = `${MIN_SHEET_WIDTH_PX}px`;
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const value = canvasElement.querySelector<HTMLElement>('[data-weapon-damage]');
+        const tile = value?.closest<HTMLElement>('[data-tooltip]');
+        await expect(value?.textContent.trim()).toBe('1d10+9 E / 3d10+9 E / 6d10+12 E');
+        const v = value?.getBoundingClientRect();
+        const t = tile?.getBoundingClientRect();
+        const inside = v !== undefined && t !== undefined && v.left >= t.left - 1 && v.right <= t.right + 1 && v.top >= t.top - 1 && v.bottom <= t.bottom + 1;
+        await expect(inside).toBe(true);
+    },
+};
+
 export const RendersWeaponName: Story = {
     play: async ({ canvasElement }) => {
         const withinCanvas = within(canvasElement);

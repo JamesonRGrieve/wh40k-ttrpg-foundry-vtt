@@ -32,6 +32,8 @@ type FlowName = (typeof WEAPON_PENETRATION_FLOWS)[number];
 const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
 const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
 const VALUE = '[data-weapon-penetration]';
+/** The weapon sheet's minimum width (tailwind/weapon.js `min-width`, #614). */
+const MIN_SHEET_WIDTH_PX = 400;
 
 interface TileRead {
     value: string;
@@ -93,6 +95,18 @@ test.describe.serial('weapon sheet Penetration tile (Tier B, #614)', () => {
                     // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
                     const inside = await allWithinContainer(page, sheet.appId, `${VALUE} + span, ${VALUE}`, '[data-tooltip]');
                     if (!inside.ok || tile.label !== 'Pen') fits.push(`${itemName} at ${sheet.width}px: label "${tile.label}"; ${inside.detail}`);
+                    // The DAMAGE value shows in full inside its tile, and the name field shows
+                    // the whole name: at Foundry's 200px floor they read "1D10+9 E /" and "Conversi".
+                    // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
+                    const damage = await allWithinContainer(page, sheet.appId, '[data-weapon-damage]', '[data-tooltip]');
+                    if (!damage.ok) fits.push(`${itemName} at ${sheet.width}px damage: ${damage.detail}`);
+                    // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
+                    const nameFits = await page.evaluate((appId) => {
+                        const input = document.querySelector<HTMLInputElement>(`#${appId} input[name="name"]`);
+                        return input !== null && input.scrollWidth <= input.clientWidth + 1;
+                    }, sheet.appId);
+                    if (!nameFits) fits.push(`${itemName} at ${sheet.width}px: the name field truncates`);
+                    if (width === 'min' && sheet.width < MIN_SHEET_WIDTH_PX) fits.push(`${itemName}: min width ${sheet.width}px < ${MIN_SHEET_WIDTH_PX}px`);
                     if (width === 'default') {
                         if (itemName === 'Hand Flamer') record('own-penetration-unchanged', tile.value === '2', `Hand Flamer shows "${tile.value}"`);
                         else record('banded-weapon-shows-band-penetration', tile.value === '2/8/14', `Conversion Beamer shows "${tile.value}"`);
