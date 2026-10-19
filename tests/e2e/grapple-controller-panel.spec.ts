@@ -1,44 +1,52 @@
 import type { Page } from '@playwright/test';
 import { actorFlag, createActor, deleteDocuments, openActorSheet, prepareStage, snapWindow } from './combat-resolution-flow';
+import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B — the Grapple Controller Panel on both sides of a grapple (#120 —
- * core.md L10155-10180).
+ * Tier B — the grapple panel on both sides of a DH2 grapple (#120; DH2 core
+ * pp. 221–222).
  *
- * Two DH2 characters are in one grapple: the controller (`grappling`) and the one
- * held (`controlled`), each read from `flags['wh40k-rpg'].grapple.state` (the
- * single reader, `readGrappleState`). Each sheet's Overview tab shows the panel
- * with its own state badge and the five opposed-Strength actions. The held
- * character clicks Break Free; the opposed Strength test is rolled with fixed dice
- * (a 05 against the opponent's 99), the grapple ends, and the panel leaves the
- * sheet. That a held character cannot Dodge or Parry is covered on the attack card
- * by evasion-counter-attack.spec.ts.
+ * The controller (`grappling`) and the target (`controlled`) each see their own
+ * role's options as DH2 prints them. The controller has Damage Opponent, Throw Down
+ * Opponent, Push Opponent, Ready, Stand and Use Item; the target has Break Free,
+ * Slip Free and Take Control. The GM (this session's user) also sees the other
+ * role's group, marked as acting for the opponent. The target wins Take Control with
+ * fixed dice (05 against 99), and the roles swap on both actors. The new target then
+ * takes Slip Free, a plain Acrobatics test through the roll dialog; a 05 passes, and
+ * the grapple ends for both.
  *
- * Each state records a `grapple.flow` coverage key; keep GRAPPLE_FLOWS in sync with
+ * Each step records a `grapple.flow` coverage key; keep GRAPPLE_FLOWS in sync with
  * the denominator in scripts/e2e-coverage.mjs.
  */
 
-const GRAPPLE_FLOWS = ['controller-panel', 'controlled-panel', 'break-free'] as const;
+const GRAPPLE_FLOWS = ['controller-options', 'target-options', 'take-control', 'slip-free'] as const;
 
 const PANEL = '[data-wh40k-hook="grapple-panel"]';
+const OWN = `${PANEL} [data-wh40k-hook="grapple-section"][data-grapple-own="true"]`;
+const OTHER = `${PANEL} [data-wh40k-hook="grapple-section"][data-grapple-own="false"]`;
 
-/** The panel's state attribute, badge and action count on a sheet, or null when it is absent. */
-async function readPanel(page: Page, sheetId: string): Promise<{ state: string; badge: string; actions: number } | null> {
+const CONTROLLER_OPTIONS = ['damage-opponent', 'throw-down-opponent', 'push-opponent', 'ready', 'stand', 'use-item'];
+const TARGET_OPTIONS = ['break-free', 'slip-free', 'take-control'];
+
+/** A section's role and the options it offers, or null when it is absent. */
+async function readSection(page: Page, sheetId: string, selector: string): Promise<{ role: string; options: string[] } | null> {
     return page.evaluate(
-        ({ id, selector }) => {
-            const panel = document.getElementById(id)?.querySelector<HTMLElement>(selector);
-            if (panel === null || panel === undefined) return null;
+        ({ id, sel }) => {
+            const section = document.getElementById(id)?.querySelector<HTMLElement>(sel);
+            if (section === null || section === undefined) return null;
             return {
-                state: panel.dataset['grappleState'] ?? '',
-                badge: panel.querySelector('header > span')?.textContent.trim() ?? '',
-                actions: panel.querySelectorAll('button[data-action^="grapple"]').length,
+                role: section.dataset['grappleRole'] ?? '',
+                options: Array.from(
+                    section.querySelectorAll<HTMLButtonElement>('button[data-action="grappleOption"]'),
+                    (b) => b.dataset['grappleOption'] ?? '',
+                ),
             };
         },
-        { id: sheetId, selector: PANEL },
+        { id: sheetId, sel: selector },
     );
 }
 
@@ -58,52 +66,113 @@ async function fixD100(page: Page, faces: number[]): Promise<void> {
     }, faces);
 }
 
-test.describe.serial('Grapple controller panel (Tier B, #120)', () => {
-    test('both sides show the panel; Break Free ends the grapple and the panel leaves', async ({ page }) => {
+async function setGrappleFlag(page: Page, actorId: string, value: object): Promise<void> {
+    await page.evaluate(
+        async ({ id, flag }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+            const g = globalThis as unknown as {
+                game: { actors: { get: (i: string) => { setFlag: (s: string, k: string, v: object) => Promise<object> } | undefined } };
+            };
+            await g.game.actors.get(id)?.setFlag('wh40k-rpg', 'grapple', flag);
+        },
+        { id: actorId, flag: value },
+    );
+}
+
+async function messageIds(page: Page): Promise<string[]> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+    return page.evaluate(() => (globalThis as unknown as { game: { messages: { contents: Array<{ id: string }> } } }).game.messages.contents.map((m) => m.id));
+}
+
+/** The first chat message posted after `before`. */
+async function newMessage(page: Page, before: readonly string[]): Promise<string> {
+    let id = '';
+    await expect
+        .poll(async () => {
+            id = (await messageIds(page)).find((m) => !before.includes(m)) ?? '';
+            return id;
+        })
+        .not.toBe('');
+    return id;
+}
+
+test.describe.serial('Grapple panel (Tier B, #120)', () => {
+    test('each side sees its own options; Take Control swaps the roles; Slip Free rolls Acrobatics', async ({ page }) => {
         await joinOrSkip(page);
         await prepareStage(page);
-        const character = (name: string, state: string, opponentUuid: string | null): object => ({
+        const character = (name: string): object => ({
             name,
             type: 'dh2-character',
             img: 'icons/svg/mystery-man.svg',
-            system: { gameSystem: 'dh2', characteristics: { strength: { base: 40, advance: 0, modifier: 0 } } },
-            flags: { 'wh40k-rpg': { grapple: { state, opponentUuid } } },
+            system: { gameSystem: 'dh2', characteristics: { strength: { base: 40, advance: 0, modifier: 0 }, agility: { base: 40, advance: 0, modifier: 0 } } },
         });
-        // The held side records its controller, as a started grapple does (grapple-start.spec.ts).
-        const controller = await createActor(page, { data: character('Grappling Enforcer', 'grappling', null) });
-        const held = await createActor(page, { data: character('Held Heretic', 'controlled', `Actor.${controller.id}`) });
+        const controller = await createActor(page, { data: character('Grappling Enforcer') });
+        const held = await createActor(page, { data: character('Held Heretic') });
         try {
-            // The controller's side.
+            // A grapple the enforcer controls, each side naming the other (as a started grapple does).
+            await setGrappleFlag(page, controller.id, { state: 'grappling', opponentUuid: `Actor.${held.id}`, thrownDown: false });
+            await setGrappleFlag(page, held.id, { state: 'controlled', opponentUuid: `Actor.${controller.id}`, thrownDown: false });
+
+            // The controller's options.
             const controllerSheet = await openActorSheet(page, controller.id, 'overview');
             await expect(page.locator(`#${controllerSheet} ${PANEL}`)).toBeVisible();
-            expect(await readPanel(page, controllerSheet)).toEqual({ state: 'grappling', badge: 'Grappling', actions: 5 });
+            expect(await readSection(page, controllerSheet, OWN)).toEqual({ role: 'controller', options: CONTROLLER_OPTIONS });
+            // The GM also sees the target's group, for the opponent.
+            expect(await readSection(page, controllerSheet, OTHER)).toEqual({ role: 'target', options: TARGET_OPTIONS });
             await page.locator(`#${controllerSheet} ${PANEL}`).scrollIntoViewIfNeeded();
-            expect(await snapWindow(page, 'grapple-controller-sheet', controllerSheet)).not.toBeNull();
-            expect(await snap(page, 'grapple-controller-panel', { selector: `#${controllerSheet} ${PANEL}` })).not.toBeNull();
-            recordCoverage('grapple.flow', 'controller-panel');
+            expect(await snap(page, 'grapple-controller-options', { selector: `#${controllerSheet} ${OWN}` })).not.toBeNull();
+            expect(await snap(page, 'grapple-controller-panel-gm', { selector: `#${controllerSheet} ${PANEL}` })).not.toBeNull();
+            recordCoverage('grapple.flow', 'controller-options');
 
-            // The held side.
+            // The target's options.
             const heldSheet = await openActorSheet(page, held.id, 'overview');
-            await expect(page.locator(`#${heldSheet} ${PANEL}`)).toBeVisible();
-            expect(await readPanel(page, heldSheet)).toEqual({ state: 'controlled', badge: 'Controlled', actions: 5 });
+            expect(await readSection(page, heldSheet, OWN)).toEqual({ role: 'target', options: TARGET_OPTIONS });
             await page.locator(`#${heldSheet} ${PANEL}`).scrollIntoViewIfNeeded();
-            expect(await snapWindow(page, 'grapple-controlled-sheet', heldSheet)).not.toBeNull();
-            expect(await snap(page, 'grapple-controlled-panel', { selector: `#${heldSheet} ${PANEL}` })).not.toBeNull();
-            recordCoverage('grapple.flow', 'controlled-panel');
+            expect(await snap(page, 'grapple-target-options', { selector: `#${heldSheet} ${OWN}` })).not.toBeNull();
+            await expect(page.locator(`#${heldSheet} ${OWN} [data-grapple-option="slip-free"]`)).toContainText('Acrobatics');
+            recordCoverage('grapple.flow', 'target-options');
 
-            // Break Free: 05 against the opponent's 99 wins the opposed Strength test.
+            // Take Control: 05 against the controller's 99 wins the Opposed Strength test.
+            let before = await messageIds(page);
             await fixD100(page, [5, 99]);
-            await page.locator(`#${heldSheet} [data-wh40k-hook="grapple-break-btn"]`).click();
+            await page.locator(`#${heldSheet} ${OWN} [data-grapple-option="take-control"]`).click();
             await expect
-                .poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'Break Free ends the grapple' })
-                .toEqual({ state: 'none', opponentUuid: null });
+                .poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'the target now controls the grapple' })
+                .toEqual({ state: 'grappling', opponentUuid: `Actor.${controller.id}`, thrownDown: false });
             await expect
-                .poll(async () => actorFlag(page, controller.id, 'grapple'), { message: 'it ends for the controller too' })
-                .toEqual({ state: 'none', opponentUuid: null });
-            await expect(page.locator(`#${heldSheet} ${PANEL}`)).toHaveCount(0);
-            expect(await snapWindow(page, 'grapple-broken-free-sheet', heldSheet)).not.toBeNull();
-            recordCoverage('grapple.flow', 'break-free');
-            expect(GRAPPLE_FLOWS).toHaveLength(3);
+                .poll(async () => actorFlag(page, controller.id, 'grapple'), { message: 'the old controller is now held' })
+                .toEqual({ state: 'controlled', opponentUuid: `Actor.${held.id}`, thrownDown: false });
+            const takeControlCard = await newMessage(page, before);
+            await expect.poll(async () => readSection(page, heldSheet, OWN)).toEqual({ role: 'controller', options: CONTROLLER_OPTIONS });
+            expect(await snapWindow(page, 'grapple-take-control-swap', heldSheet)).not.toBeNull();
+            const takePopout = await popOutChatMessage(page, takeControlCard);
+            await expect(page.locator(`${takePopout} [data-wh40k-hook="grapple-effect"]`)).toContainText('Takes control of the grapple');
+            expect(await snap(page, 'grapple-take-control-card', { selector: takePopout })).not.toBeNull();
+            recordCoverage('grapple.flow', 'take-control');
+
+            // Slip Free: the new target rolls Acrobatics through the roll dialog.
+            const enforcerSheet = await openActorSheet(page, controller.id, 'overview');
+            expect(await readSection(page, enforcerSheet, OWN)).toEqual({ role: 'target', options: TARGET_OPTIONS });
+            before = await messageIds(page);
+            await page.locator(`#${enforcerSheet} ${OWN} [data-grapple-option="slip-free"]`).click();
+            const dialog = page.locator('form.unified-roll-dialog').last();
+            await expect(dialog).toBeVisible();
+            await expect(dialog).toContainText('Acrobatics');
+            expect(await snap(page, 'grapple-slip-free-acrobatics', { selector: 'form.unified-roll-dialog' })).not.toBeNull();
+            await fixD100(page, [5]);
+            await dialog.locator('[data-action="systemRoll"]').click();
+            await expect
+                .poll(async () => actorFlag(page, controller.id, 'grapple'), { message: 'Slip Free ends the grapple' })
+                .toEqual({ state: 'none', opponentUuid: null, thrownDown: false });
+            await expect
+                .poll(async () => actorFlag(page, held.id, 'grapple'), { message: 'for both' })
+                .toEqual({ state: 'none', opponentUuid: null, thrownDown: false });
+            const slipCard = await newMessage(page, before);
+            const slipPopout = await popOutChatMessage(page, slipCard);
+            await expect(page.locator(slipPopout)).toContainText('Slips free');
+            expect(await snap(page, 'grapple-slip-free-card', { selector: slipPopout })).not.toBeNull();
+            recordCoverage('grapple.flow', 'slip-free');
+            expect(GRAPPLE_FLOWS).toHaveLength(4);
         } finally {
             await deleteDocuments(page, { actors: [controller.id, held.id] });
         }

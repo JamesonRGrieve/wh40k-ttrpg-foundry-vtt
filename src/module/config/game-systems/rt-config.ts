@@ -8,10 +8,11 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
-import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
+import { printedGrappleOptions, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
@@ -64,6 +65,12 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         full: { attackModifier: 20, actionCost: 'full' },
     };
     /** RT core: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
+    /**
+     * RT core, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
+     * Throw Down only makes the opponent Prone: RT prints no further bonus.
+     */
+    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('contortionist'), thrownDownBonus: 0 };
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
         twinLinked: false,

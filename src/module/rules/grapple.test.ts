@@ -1,28 +1,54 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { grappleRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { MELEE_SPECIAL_OPTIONS } from './attack-options';
 import { allCombatActions, combatActionAttackModifier } from './combat-actions.ts';
 import {
     asGrappleParticipant,
+    buildGrappleCard,
     degreesOfSuccess,
     GRAPPLE_ACTION_LABEL_KEYS,
+    GRAPPLE_EFFECT_KEYS,
     canAttemptGrapple,
     GRAPPLE_START_ACTIONS,
     GRAPPLE_FLAG,
     grappleEndWrites,
     grappleFlagValue,
+    type GrappleOptionId,
+    grappleOptionsFor,
+    grappleOptionWrites,
+    grapplePanelSections,
+    grappleRoleOf,
+    type GrappleRole,
+    type GrappleRules,
+    grappleSideModifiers,
+    grappleSideTarget,
+    grappleSkill,
     grappleStartWrites,
+    type OpposedStrengthInput,
     readGrappleOpponentUuid,
     readGrappleState,
+    readGrappleThrownDown,
     readGrappleWrites,
-    resolveBreakGrapple,
-    resolveDamageOpponent,
-    resolveMoveWhileGrappling,
-    resolveStandUpInGrapple,
-    resolveThrowDownOpponent,
+    resolveGrappleOpposed,
 } from './grapple';
+
+const resolveDamageOpponent = (input: OpposedStrengthInput): ReturnType<typeof resolveGrappleOpposed> => resolveGrappleOpposed(input, 'damage-opponent');
+const resolveThrowDownOpponent = (input: OpposedStrengthInput): ReturnType<typeof resolveGrappleOpposed> => resolveGrappleOpposed(input, 'throw-down-opponent');
+const resolveBreakGrapple = (input: OpposedStrengthInput): ReturnType<typeof resolveGrappleOpposed> => resolveGrappleOpposed(input, 'break-free');
+const resolveStand = (input: OpposedStrengthInput): ReturnType<typeof resolveGrappleOpposed> => resolveGrappleOpposed(input, 'stand');
+const resolvePush = (input: OpposedStrengthInput): ReturnType<typeof resolveGrappleOpposed> => resolveGrappleOpposed(input, 'push-opponent');
+
+/** A line's rules, which every line in these tests prints. */
+function rulesOf(line: string): GrappleRules {
+    const rules = grappleRulesFor(line);
+    if (rules === null) throw new Error(`no grapple rules for ${line}`);
+    return rules;
+}
+
+const ids = (rules: GrappleRules, role: GrappleRole): GrappleOptionId[] => grappleOptionsFor(rules, role).map((option) => option.id);
 
 /**
  * Grapple state-machine resolver pins (#120 — core.md L10155-10180).
@@ -92,42 +118,230 @@ describe('grapple — resolveBreakGrapple', () => {
     });
 });
 
-describe('grapple — resolveStandUpInGrapple', () => {
-    it('a dead heat (same DoS, Strength bonus and roll) is a stalemate: the actor does not stand (DH2 p. 24)', () => {
-        const r = resolveStandUpInGrapple({ actorRoll: 40, actorStrength: 40, opponentRoll: 40, opponentStrength: 40 });
+describe('grapple — Stand (controller, opposed Strength)', () => {
+    it('a dead heat (same DoS, Strength bonus and roll) is a stalemate: nobody stands (DH2 p. 24)', () => {
+        const r = resolveStand({ actorRoll: 40, actorStrength: 40, opponentRoll: 40, opponentStrength: 40 });
         expect(r.actorDoS).toBe(1);
         expect(r.opponentDoS).toBe(1);
         expect(r.netDoS).toBe(0);
         expect(r.outcome).toBe('stalemate');
         expect(r.success).toBe(false);
-        expect(r.action).toBe('stand-up');
+        expect(r.action).toBe('stand');
     });
 
     it('a degree tie goes to the higher Strength bonus, then the lower roll (DH2 p. 24)', () => {
         // Both 1 DoS; the actor's SB 5 beats the opponent's SB 4.
-        expect(resolveStandUpInGrapple({ actorRoll: 50, actorStrength: 50, opponentRoll: 45, opponentStrength: 45 }).outcome).toBe('won');
+        expect(resolveStand({ actorRoll: 50, actorStrength: 50, opponentRoll: 45, opponentStrength: 45 }).outcome).toBe('won');
         // Both 1 DoS and SB 4; the opponent's lower roll wins.
-        expect(resolveStandUpInGrapple({ actorRoll: 44, actorStrength: 45, opponentRoll: 41, opponentStrength: 45 }).outcome).toBe('lost');
+        expect(resolveStand({ actorRoll: 44, actorStrength: 45, opponentRoll: 41, opponentStrength: 45 }).outcome).toBe('lost');
     });
 
-    it('returns failure when actor fails and opponent passes', () => {
-        const r = resolveStandUpInGrapple({ actorRoll: 80, actorStrength: 30, opponentRoll: 25, opponentStrength: 40 });
-        expect(r.success).toBe(false);
-        expect(r.actorDoS).toBe(0);
-        expect(r.opponentDoS).toBe(2);
+    it('the tie-break reads the characteristic bonus given, not a modified target', () => {
+        // Both 1 DoS against 50 / 45; the actor's +10 thrown-down bonus is in its target, but its Strength is 40 (SB 4).
+        expect(resolveStand({ actorRoll: 44, actorStrength: 50, opponentRoll: 41, opponentStrength: 45, actorBonus: 4, opponentBonus: 4 }).outcome).toBe(
+            'lost',
+        );
     });
 });
 
-describe('grapple — resolveMoveWhileGrappling', () => {
+describe('grapple — Push Opponent', () => {
     it('both fail → stalemate, nothing happens (DH2 p. 24)', () => {
-        const r = resolveMoveWhileGrappling({ actorRoll: 95, actorStrength: 35, opponentRoll: 88, opponentStrength: 35 });
+        const r = resolvePush({ actorRoll: 95, actorStrength: 35, opponentRoll: 88, opponentStrength: 35 });
         expect(r.actorDoS).toBe(0);
         expect(r.opponentDoS).toBe(0);
         expect(r.actorDoF).toBe(7);
         expect(r.opponentDoF).toBe(6);
         expect(r.outcome).toBe('stalemate');
         expect(r.success).toBe(false);
-        expect(r.action).toBe('move-while-grappling');
+        expect(r.action).toBe('push-opponent');
+    });
+});
+
+describe('per-line grapple options (#120)', () => {
+    const FULL_CONTROLLER: GrappleOptionId[] = ['damage-opponent', 'throw-down-opponent', 'push-opponent', 'ready', 'stand', 'use-item'];
+    const FULL_TARGET: GrappleOptionId[] = ['break-free', 'slip-free', 'take-control'];
+
+    it.each(['dh2', 'rt', 'bc', 'dw', 'ow'])('%s prints the controller and target options of the Grapple action', (line) => {
+        const rules = rulesOf(line);
+        expect(ids(rules, 'controller')).toEqual(FULL_CONTROLLER);
+        expect(ids(rules, 'target')).toEqual(FULL_TARGET);
+    });
+
+    it('DH1 prints one controller option (injure) and three ways out for the target', () => {
+        const rules = rulesOf('dh1');
+        expect(ids(rules, 'controller')).toEqual(['damage-opponent']);
+        expect(ids(rules, 'target')).toEqual(['break-free', 'slip-free', 'take-control']);
+        // Escape Grapple: "a Contortionist Test opposed by the grappler's Strength Test".
+        expect(rules.options.find((option) => option.id === 'slip-free')?.test).toEqual({ kind: 'opposed-skill', skill: 'contortionist' });
+    });
+
+    it.each([
+        ['dh2', 'acrobatics'],
+        ['ow', 'acrobatics'],
+        ['bc', 'acrobatics'],
+        ['rt', 'contortionist'],
+        ['dw', 'contortionist'],
+    ])('%s Slip Free is a Challenging (+0) %s test', (line, skill) => {
+        expect(rulesOf(line).options.find((option) => option.id === 'slip-free')?.test).toEqual({ kind: 'skill', skill, modifier: 0 });
+    });
+
+    it.each(['dh2', 'rt', 'bc', 'dw', 'ow'])('%s: Ready and Use Item need no test; the rest are Opposed Strength', (line) => {
+        for (const option of rulesOf(line).options) {
+            const expected = option.id === 'ready' || option.id === 'use-item' ? 'declare' : option.id === 'slip-free' ? 'skill' : 'opposed-strength';
+            expect(option.test.kind).toBe(expected);
+        }
+    });
+
+    it.each([
+        ['dh2', 10],
+        ['ow', 10],
+        ['rt', 0],
+        ['bc', 0],
+        ['dw', 0],
+        ['dh1', 0],
+    ])('%s thrown-down bonus is %i', (line, bonus) => {
+        expect(rulesOf(line).thrownDownBonus).toBe(bonus);
+    });
+
+    it('IM is not modelled by the option panel', () => {
+        expect(grappleRulesFor('im')).toBeNull();
+    });
+
+    it('labels and effect text exist for every option', () => {
+        // The generated key union lists every langpack string (i18n:gen).
+        const keys = readFileSync(resolve(__dirname, '../types/i18n-keys.d.ts'), 'utf8');
+        const missing = [...Object.values(GRAPPLE_ACTION_LABEL_KEYS), ...Object.values(GRAPPLE_EFFECT_KEYS)].filter((key) => !keys.includes(`'${key}'`));
+        expect(missing).toEqual([]);
+    });
+});
+
+describe('role gating (#120)', () => {
+    const dh2 = rulesOf('dh2');
+
+    it('the grapple state gives the role', () => {
+        expect(grappleRoleOf('grappling')).toBe('controller');
+        expect(grappleRoleOf('controlled')).toBe('target');
+        expect(grappleRoleOf('none')).toBeNull();
+    });
+
+    it('a controller sees only the controller options', () => {
+        const sections = grapplePanelSections(dh2, 'grappling', false);
+        expect(sections.map((section) => section.role)).toEqual(['controller']);
+        expect(sections.at(0)?.options.map((option) => option.id)).toEqual(ids(dh2, 'controller'));
+    });
+
+    it('a grappled target sees only the target options', () => {
+        const sections = grapplePanelSections(dh2, 'controlled', false);
+        expect(sections.map((section) => section.role)).toEqual(['target']);
+        expect(sections.at(0)?.options.map((option) => option.id)).toEqual(['break-free', 'slip-free', 'take-control']);
+    });
+
+    it('the GM sees both roles, its own first, the other marked as not its own', () => {
+        const sections = grapplePanelSections(dh2, 'controlled', true);
+        expect(sections.map((section) => [section.role, section.own])).toEqual([
+            ['target', true],
+            ['controller', false],
+        ]);
+    });
+
+    it('outside a grapple, or with no line rules, nothing is offered', () => {
+        expect(grapplePanelSections(dh2, 'none', true)).toEqual([]);
+        expect(grapplePanelSections(null, 'grappling', true)).toEqual([]);
+    });
+
+    it('each button names its test, with the skill a Slip Free rolls', () => {
+        const target = grapplePanelSections(dh2, 'controlled', false, (skill) => (skill === 'acrobatics' ? 'Acrobatics' : skill)).at(0);
+        const slip = target?.options.find((option) => option.id === 'slip-free');
+        expect(slip).toMatchObject({ testKind: 'skill', skill: 'acrobatics', skillLabel: 'Acrobatics', testHintKey: 'WH40K.Grapple.Test.Skill' });
+        expect(target?.options.find((option) => option.id === 'break-free')?.testHintKey).toBe('WH40K.Grapple.Test.OpposedStrength');
+    });
+});
+
+describe('what a won option does to the grapple (#120)', () => {
+    const dh2 = rulesOf('dh2');
+    const rt = rulesOf('rt');
+    const controller = { uuid: 'Actor.c', role: 'controller' as const };
+    const target = { uuid: 'Actor.t', role: 'target' as const };
+
+    it('Break Free and Slip Free end the grapple for both', () => {
+        for (const id of ['break-free', 'slip-free'] as const)
+            expect(grappleOptionWrites(id, true, target, 'Actor.c', false, dh2)).toEqual(grappleEndWrites('Actor.t', 'Actor.c'));
+    });
+
+    it('Take Control swaps the roles: the taker controls, the old controller is held', () => {
+        expect(grappleOptionWrites('take-control', true, target, 'Actor.c', true, dh2)).toEqual([
+            { uuid: 'Actor.t', state: 'grappling', opponentUuid: 'Actor.c', thrownDown: false },
+            { uuid: 'Actor.c', state: 'controlled', opponentUuid: 'Actor.t', thrownDown: false },
+        ]);
+    });
+
+    it('Throw Down marks the opponent thrown down where the line prints a bonus, and not where it does not', () => {
+        expect(grappleOptionWrites('throw-down-opponent', true, controller, 'Actor.t', false, dh2)).toEqual(grappleStartWrites('Actor.c', 'Actor.t', true));
+        expect(grappleOptionWrites('throw-down-opponent', true, controller, 'Actor.t', false, rt)).toBeNull();
+    });
+
+    it('Stand puts both back up, which ends the thrown-down bonus', () => {
+        expect(grappleOptionWrites('stand', true, controller, 'Actor.t', true, dh2)).toEqual(grappleStartWrites('Actor.c', 'Actor.t', false));
+        expect(grappleOptionWrites('stand', true, controller, 'Actor.t', false, dh2)).toBeNull();
+    });
+
+    it('Damage, Push, Ready and Use Item change no grapple state, and a lost option changes nothing', () => {
+        for (const id of ['damage-opponent', 'push-opponent', 'ready', 'use-item'] as const)
+            expect(grappleOptionWrites(id, true, controller, 'Actor.t', false, dh2)).toBeNull();
+        for (const id of ['break-free', 'take-control', 'throw-down-opponent'] as const)
+            expect(grappleOptionWrites(id, false, target, 'Actor.c', false, dh2)).toBeNull();
+    });
+});
+
+describe('the thrown-down bonus on the card (#120; DH2 core p. 221)', () => {
+    const dh2 = rulesOf('dh2');
+
+    it('the controller gains +10 on every further Opposed test, whichever side acts', () => {
+        expect(grappleSideModifiers('controller', true, dh2)).toEqual([
+            { key: 'grapple-thrown-down', labelKey: 'WH40K.Grapple.Modifier.ThrownDown', value: 10, sourceKey: 'WH40K.Grapple.ThrowDownOpponent' },
+        ]);
+        expect(grappleSideModifiers('target', true, dh2)).toEqual([]);
+        expect(grappleSideModifiers('controller', false, dh2)).toEqual([]);
+        expect(grappleSideModifiers('controller', true, rulesOf('rt'))).toEqual([]);
+    });
+
+    it('the card folds each side’s modifiers into its target and states a won option’s effect', () => {
+        const actor = {
+            name: 'C',
+            base: 40,
+            baseLabel: 'Strength',
+            modifiers: [{ label: 'Opponent thrown down', value: 10, source: 'Throw Down Opponent' }],
+            roll: 45,
+        };
+        const opponent = { name: 'T', base: 35, baseLabel: 'Strength', modifiers: [], roll: 70 };
+        expect(grappleSideTarget(actor)).toBe(50);
+        const resolution = resolveGrappleOpposed({ actorRoll: 45, actorStrength: 50, opponentRoll: 70, opponentStrength: 35 }, 'push-opponent');
+        const card = buildGrappleCard(resolution, actor, opponent);
+        expect(card.actor.target).toBe(50);
+        expect(card.actor.modifiers).toHaveLength(1);
+        expect(card.outcome).toBe('won');
+        expect(card.effectKey).toBe('WH40K.Grapple.Effect.PushOpponent');
+        expect(
+            buildGrappleCard(
+                resolveGrappleOpposed({ actorRoll: 90, actorStrength: 40, opponentRoll: 10, opponentStrength: 40 }, 'push-opponent'),
+                actor,
+                opponent,
+            ).effectKey,
+        ).toBe('');
+    });
+
+    it('reads the thrown-down mark off the grapple flag', () => {
+        expect(readGrappleThrownDown({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'grappling', thrownDown: true } } }, SYSTEM_ID)).toBe(true);
+        expect(readGrappleThrownDown({ [SYSTEM_ID]: { [GRAPPLE_FLAG]: { state: 'grappling' } } }, SYSTEM_ID)).toBe(false);
+        expect(readGrappleThrownDown(undefined, SYSTEM_ID)).toBe(false);
+    });
+});
+
+describe('opposed-skill sides (DH1 Escape Grapple)', () => {
+    it('reads the skill total off the participant', () => {
+        const participant = asGrappleParticipant({ name: 'A', uuid: 'Actor.a', system: { skills: { contortionist: { current: 42 } } } });
+        expect(grappleSkill(participant, 'contortionist')).toBe(42);
+        expect(grappleSkill(participant, 'acrobatics')).toBe(0);
     });
 });
 
@@ -162,10 +376,13 @@ describe('readGrappleOpponentUuid', () => {
     });
 });
 
-describe('GRAPPLE_ACTION_LABEL_KEYS', () => {
-    it('labels every action with a langpack key the panel buttons use', () => {
+describe('the grapple panel renders its options from the context (#120)', () => {
+    it('one button per option, sending the option and its role', () => {
         const panel = readFileSync(resolve(__dirname, '../../templates/actor/panel/grapple-controller-panel.hbs'), 'utf8');
-        for (const key of Object.values(GRAPPLE_ACTION_LABEL_KEYS)) expect(panel).toContain(`"${key}"`);
+        expect(panel).toContain('{{#each grappleSections as |section|}}');
+        expect(panel).toContain('data-action="grappleOption"');
+        expect(panel).toContain('data-grapple-option="{{option.id}}"');
+        expect(panel).toContain('data-grapple-role="{{option.role}}"');
     });
 });
 
@@ -198,17 +415,19 @@ describe('character sheet reads the grapple state through readGrappleState (#120
         expect(source).not.toMatch(/flags[^;\n]*\bwh40k\?\.grapple/);
     });
 
-    it('a won Break Free ends the grapple for both participants through the relay', () => {
-        expect(source).toContain('this._rollGrappleOpposed(resolveBreakGrapple, true)');
-        expect(source).toContain('grappleEndWrites(grappler.uuid, opponent.uuid)');
+    it('offers the line’s options for the actor’s role, and only the GM takes the other role’s', () => {
+        expect(source).toContain('grapplePanelSections(');
+        expect(source).toContain('grappleRulesFor(this._resolveGameSystemId() ?? undefined)');
+        expect(source).toContain('if (actsForOpponent && !game.user.isGM) return;');
+        expect(source).toContain('await performGrappleOption({');
     });
 });
 
 describe('starting a grapple (#450; DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243, DW p. 246, OW p. 251)', () => {
     it('a successful attempt makes the attacker the controller and the target held, each naming the other', () => {
         expect(grappleStartWrites('Actor.a', 'Actor.b')).toEqual([
-            { uuid: 'Actor.a', state: 'grappling', opponentUuid: 'Actor.b' },
-            { uuid: 'Actor.b', state: 'controlled', opponentUuid: 'Actor.a' },
+            { uuid: 'Actor.a', state: 'grappling', opponentUuid: 'Actor.b', thrownDown: false },
+            { uuid: 'Actor.b', state: 'controlled', opponentUuid: 'Actor.a', thrownDown: false },
         ]);
     });
 

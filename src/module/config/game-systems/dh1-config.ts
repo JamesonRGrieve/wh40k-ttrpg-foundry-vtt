@@ -7,6 +7,7 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
@@ -46,6 +47,23 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         full: { attackModifier: 20, actionCost: 'full' },
     };
     /** DH1 core: "When Dodging Full or Semi-Automatic fire, each degree of success negates an additional hit." — #414. */
+    /**
+     * DH1 core, Grapple (Full Action): the grappler's one option is an Opposed
+     * Strength test to injure; the grappled may break free or take control with an
+     * Opposed Strength test, or escape with "a Contortionist Test opposed by the
+     * grappler's Strength Test" (Contortionist, Escape Grapple). DH1 prints no Throw
+     * Down, Push, Ready, Stand or Use Item.
+     */
+    readonly grappleRules: GrappleRules = {
+        options: [
+            { id: 'damage-opponent', role: 'controller', test: { kind: 'opposed-strength' } },
+            { id: 'break-free', role: 'target', test: { kind: 'opposed-strength' } },
+            { id: 'slip-free', role: 'target', test: { kind: 'opposed-skill', skill: 'contortionist' } },
+            { id: 'take-control', role: 'target', test: { kind: 'opposed-strength' } },
+        ],
+        thrownDownBonus: 0,
+    };
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
         twinLinked: false,

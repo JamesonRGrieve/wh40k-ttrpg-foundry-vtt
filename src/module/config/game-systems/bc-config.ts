@@ -27,8 +27,10 @@ import {
     type AlignmentTally,
 } from '../../rules/bc-alignment-derivation.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import { capitalize } from '../../utils/format.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
+import { printedGrappleOptions } from './base-system-config.ts';
 import {
     BC_CHARACTERISTIC_TIERS,
     BC_INFAMY_ADVANCE_CAP,
@@ -95,6 +97,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * Attacks, each Degree of Success on the Dodge or Parry Test negates one
      * additional hit." No Storm or Twin-Linked rule — #414.
      */
+    /**
+     * BC core, Grapple: Slip Free prints "a Challenging (+0) Contortionist Skill
+     * Test", and BC's Contortionist is a special use of Acrobatics ("Characters may
+     * also use Acrobatics to escape from a grapple", BC core, Special Uses for
+     * Acrobatics), so it rolls Acrobatics. Throw Down only makes the opponent Prone.
+     */
+    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('acrobatics'), thrownDownBonus: 0 };
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
         twinLinked: false,

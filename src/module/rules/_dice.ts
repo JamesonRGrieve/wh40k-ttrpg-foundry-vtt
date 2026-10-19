@@ -5,7 +5,7 @@
  * its own `type Rng`, and a near-verbatim opposed-test resolver. Centralising
  * them here makes the d100 engine identical across all seven game systems
  * instead of accidentally per-file. Domain modules keep their named wrappers
- * (`resolveRammingToHit`, `resolveDamageOpponent`, …) and map their fields onto
+ * (`resolveRammingToHit`, `resolveGrappleOpposed`, …) and map their fields onto
  * these cores — the public API of each rule is unchanged.
  *
  * Everything here is pure: callers pre-roll their dice (or inject an `Rng`),

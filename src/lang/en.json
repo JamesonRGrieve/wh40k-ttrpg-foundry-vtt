@@ -2817,9 +2817,36 @@
             "StateControlled": "Controlled",
             "DamageOpponent": "Damage Opponent",
             "ThrowDownOpponent": "Throw Down Opponent",
+            "PushOpponent": "Push Opponent",
+            "Ready": "Ready",
+            "Stand": "Stand",
+            "UseItem": "Use Item",
             "BreakFree": "Break Free",
-            "StandUp": "Stand Up",
-            "Move": "Move While Grappling",
+            "SlipFree": "Slip Free",
+            "TakeControl": "Take Control",
+            "ControllerOptions": "Controller options",
+            "TargetOptions": "Grappled target options",
+            "ForOpponent": "for the opponent",
+            "Test": {
+                "OpposedStrength": "Opposed Strength",
+                "Skill": "{skill} test",
+                "OpposedSkill": "{skill} vs Strength",
+                "Declare": "No test"
+            },
+            "Effect": {
+                "DamageOpponent": "Unarmed damage (1d5−3+SB) to the opponent's Body, and one level of Fatigue.",
+                "ThrowDownOpponent": "The opponent is knocked Prone.",
+                "PushOpponent": "Push the opponent 1 m plus 1 m per degree of success, up to your Half Move; move with them to keep the grapple.",
+                "Ready": "Ready one of your own items (or, if the GM allows, one of your opponent's).",
+                "Stand": "Both participants stand.",
+                "UseItem": "Use a readied item.",
+                "BreakFree": "Breaks free, and may take any Half Action.",
+                "SlipFree": "Slips free, and may take any Half Action.",
+                "TakeControl": "Takes control of the grapple, and the opponent becomes the grappled target. May take one controller option at once, but no other Half Action."
+            },
+            "Modifier": {
+                "ThrownDown": "Opponent thrown down"
+            },
             "NoOpponent": "Target the combatant in the grapple with you: every grapple action is an Opposed Strength test against them.",
             "Start": {
                 "Button": "Begin Grapple",
@@ -2840,8 +2867,9 @@
             },
             "Ended": "The grapple is over.",
             "Chat": {
-                "Opposed": "Opposed Strength test: {actor} against {opponent}",
-                "RollAgainst": "Rolled {roll} against Strength {strength}",
+                "Opposed": "Opposed test: {actor} against {opponent}",
+                "Declared": "{actor} takes this option; it needs no test.",
+                "RollAgainst": "Rolled {roll} against {target}",
                 "DoS": "{value} DoS",
                 "DoF": "{value} DoF",
                 "SizeEdge": "+{value} DoS for Size",

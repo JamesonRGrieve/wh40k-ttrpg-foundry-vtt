@@ -555,7 +555,7 @@ recordDimension('roll-dialog.flow', covered['roll-dialog.flow'], ROLL_DIALOG_FLO
 const WITHOUT_TALENT_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
 recordDimension('without-talents.flow', covered['without-talents.flow'], WITHOUT_TALENT_FLOWS);
 // tests/e2e/grapple-controller-panel.spec.ts — GRAPPLE_FLOWS.
-const GRAPPLE_FLOWS = ['controller-panel', 'controlled-panel', 'break-free'];
+const GRAPPLE_FLOWS = ['controller-options', 'target-options', 'take-control', 'slip-free'];
 recordDimension('grapple.flow', covered['grapple.flow'], GRAPPLE_FLOWS);
 // tests/e2e/passive-modifiers.spec.ts — PASSIVE_MODIFIER_FLOWS.
 const PASSIVE_MODIFIER_FLOWS = ['skill-test', 'weapon-attack'];

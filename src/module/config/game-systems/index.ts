@@ -6,6 +6,7 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionCost, BurstActionRule, BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -153,6 +154,16 @@ function burstActionRuleFor(line: string | undefined, mode: BurstMode): BurstAct
 export function evasionRulesFor(line: string | undefined): EvasionRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.evasionRules ?? null;
+}
+
+/**
+ * A line's printed Grapple action (#120), or `null` for an unknown line or one
+ * whose grapple the panel does not model.
+ * @param line  `system.gameSystem` id.
+ */
+export function grappleRulesFor(line: string | undefined): GrappleRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.grappleRules ?? null;
 }
 
 /**

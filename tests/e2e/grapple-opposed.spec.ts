@@ -75,7 +75,7 @@ test.describe.serial('grapple Opposed Strength tests (Tier B, #450)', () => {
         await snap(page, 'grapple-panel-grappling', { selector: `#${sheetId} [data-wh40k-hook="grapple-panel"]` });
 
         const before = await messageIds(page);
-        await panel.locator('[data-action="grappleDamageOpponent"]').click();
+        await panel.locator('[data-action="grappleOption"][data-grapple-option="damage-opponent"]').click();
         let cardId = '';
         await expect
             .poll(async () => {
@@ -90,20 +90,21 @@ test.describe.serial('grapple Opposed Strength tests (Tier B, #450)', () => {
             cardId,
         );
         expect(html).toContain('data-wh40k-hook="grapple-card"');
-        expect(html).toMatch(/against Strength 45/);
-        expect(html).toMatch(/against Strength 25/);
+        expect(html).toMatch(/against 45/);
+        expect(html).toMatch(/against 25/);
         expect(html).toContain(`${PREFIX} Cultist`);
         const popout = await popOutChatMessage(page, cardId);
-        await expect(page.locator(`${popout} [data-grapple-side="opponent"]`)).toContainText('Strength 25');
+        await expect(page.locator(`${popout} [data-grapple-side="opponent"] [data-grapple-base]`)).toContainText('25');
+        await expect(page.locator(`${popout} [data-grapple-side="actor"] [data-grapple-base]`)).toContainText('45');
         await snap(page, 'grapple-damage-opponent-card', { selector: popout });
-        recordCoverage('action', 'grappleDamageOpponent');
+        recordCoverage('action', 'grappleOption.damage-opponent');
     });
 
     test('with no opponent recorded or targeted it warns and rolls nothing', async ({ page }) => {
         await joinOrSkip(page);
         const sheetId = await setUp(page, false);
         const before = await messageIds(page);
-        await page.locator(`#${sheetId} [data-action="grappleBreakFree"]`).click();
+        await page.locator(`#${sheetId} [data-action="grappleOption"][data-grapple-option="damage-opponent"]`).click();
         // The sheet's toast (or Foundry's notification) names what is missing.
         await expect(page.getByText('Target the combatant in the grapple with you').first()).toBeVisible();
         expect(await messageIds(page)).toEqual(before);

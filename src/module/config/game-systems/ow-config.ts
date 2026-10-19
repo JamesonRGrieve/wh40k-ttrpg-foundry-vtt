@@ -7,9 +7,10 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
+import { printedGrappleOptions, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import type { OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -137,6 +138,13 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Success … negates one additional hit. When Evading weapons with the Storm
      * Quality, each Degree of Success … negates two hits." — #414.
      */
+    /**
+     * OW core, Grapple: Slip Free is "a Challenging (+0) Acrobatics Test", and a
+     * controller who has thrown its opponent down gains "+10 to all further Opposed
+     * Tests made during this Grapple".
+     */
+    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('acrobatics'), thrownDownBonus: 10 };
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
         twinLinked: true,

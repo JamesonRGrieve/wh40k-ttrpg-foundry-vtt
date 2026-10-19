@@ -23,6 +23,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly burstActions = null;
     /** IM's evasion is not modelled beyond the single negated hit. */
     readonly evasionRules = null;
+    /** IM's grapple Restrains the target, which escapes by repeating the opposed test (IM core p. 208); this panel does not model it. */
+    readonly grappleRules = null;
     readonly label = 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im';
     readonly cssClass = 'imperium-maledictum';
     readonly theme = {

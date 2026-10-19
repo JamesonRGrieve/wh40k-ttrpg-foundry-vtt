@@ -7,11 +7,13 @@ import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisitio
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
+import { printedGrappleOptions } from './base-system-config.ts';
 import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -127,6 +129,13 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * success … negates one additional hit. When Evading attacks from weapons with
      * the Storm quality, each degree of success on the test negates two hits." — #414.
      */
+    /**
+     * DH2 core pp. 221–222: Slip Free is "a Challenging (+0) Acrobatics test", and a
+     * controller who has thrown its opponent down gains "+10 to all further Opposed
+     * tests made during this Grapple until the Prone opponent manages to stand".
+     */
+    readonly grappleRules: GrappleRules = { options: printedGrappleOptions('acrobatics'), thrownDownBonus: 10 };
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],
         twinLinked: true,

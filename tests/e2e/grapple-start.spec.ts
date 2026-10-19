@@ -132,8 +132,12 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
             expect(await snapCard(page, 'grapple-start-card', start.id)).not.toBeNull();
 
             const uuids = { attacker: `Actor.${attacker.id}`, defender: `Actor.${defender.id}` };
-            await expect.poll(async () => actorFlag(page, attacker.id, 'grapple')).toEqual({ state: 'grappling', opponentUuid: uuids.defender });
-            await expect.poll(async () => actorFlag(page, defender.id, 'grapple')).toEqual({ state: 'controlled', opponentUuid: uuids.attacker });
+            await expect
+                .poll(async () => actorFlag(page, attacker.id, 'grapple'))
+                .toEqual({ state: 'grappling', opponentUuid: uuids.defender, thrownDown: false });
+            await expect
+                .poll(async () => actorFlag(page, defender.id, 'grapple'))
+                .toEqual({ state: 'controlled', opponentUuid: uuids.attacker, thrownDown: false });
 
             // The held defender's sheet shows the grapple; Break Free tests against the controller from the flag.
             const sheetId = await openActorSheet(page, defender.id, 'overview');
@@ -144,15 +148,15 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
 
             await forceDice(page, LOWEST_FACE);
             const beforeBreak = await messageIds(page);
-            await panel.locator('[data-action="grappleBreakFree"]').click();
+            await panel.locator('[data-grapple-own="true"] [data-grapple-option="break-free"]').click();
             const broke = await awaitCard(page, beforeBreak, 'data-wh40k-hook="grapple-card"');
             await restoreDice(page);
             expect(broke.html).toContain('Held Acolyte wins the test');
             expect(broke.html).toContain('Grappling Heretic');
             expect(broke.html).toContain('data-wh40k-hook="grapple-ended"');
             expect(await snapCard(page, 'grapple-break-free-card', broke.id)).not.toBeNull();
-            await expect.poll(async () => actorFlag(page, attacker.id, 'grapple')).toEqual({ state: 'none', opponentUuid: null });
-            await expect.poll(async () => actorFlag(page, defender.id, 'grapple')).toEqual({ state: 'none', opponentUuid: null });
+            await expect.poll(async () => actorFlag(page, attacker.id, 'grapple')).toEqual({ state: 'none', opponentUuid: null, thrownDown: false });
+            await expect.poll(async () => actorFlag(page, defender.id, 'grapple')).toEqual({ state: 'none', opponentUuid: null, thrownDown: false });
             recordCoverage('action', 'beginGrapple');
             recordCoverage('action', 'grappleBreakFree.ends');
         } finally {

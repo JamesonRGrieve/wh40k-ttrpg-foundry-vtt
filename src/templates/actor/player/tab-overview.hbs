@@ -326,8 +326,8 @@
     {{!-- Crusader: Smite the Unholy (#141). Hidden unless hasCrusader. --}}
     {{> systems/wh40k-rpg/templates/actor/panel/crusader-button.hbs hasCrusader=hasCrusader}}
 
-    {{!-- Grapple Controller (#120) — rendered only mid-grapple. --}}
+    {{!-- Grapple panel (#120) — rendered only mid-grapple, with the line's options for this actor's role. --}}
     {{#if (and grappleState (neq grappleState 'none'))}}
-        {{> systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs grappleState=grappleState}}
+        {{> systems/wh40k-rpg/templates/actor/panel/grapple-controller-panel.hbs grappleState=grappleState grappleSections=grappleSections}}
     {{/if}}
 </section>

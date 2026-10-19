@@ -7,6 +7,7 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { GrappleOptionRule, GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -23,6 +24,30 @@ import type {
     SystemConfigActor,
     SystemTheme,
 } from './types.ts';
+
+/**
+ * The Grapple action's option lists as DH2, RT, BC, DW and OW print them, word for
+ * word but for the Slip Free skill (#120; DH2 core pp. 221–222, RT core / BC core /
+ * DW core / OW core "Grapple"). The controller has Damage Opponent, Throw Down
+ * Opponent, Push Opponent, Stand (each an Opposed Strength test), Ready and Use Item
+ * (no test). The grappled target has Break Free and Take Control (Opposed Strength)
+ * and Slip Free ("a Challenging (+0) <skill> test").
+ * @param slipFreeSkill  The skill the line's Slip Free tests.
+ */
+export function printedGrappleOptions(slipFreeSkill: string): GrappleOptionRule[] {
+    const opposed = { kind: 'opposed-strength' } as const;
+    return [
+        { id: 'damage-opponent', role: 'controller', test: opposed },
+        { id: 'throw-down-opponent', role: 'controller', test: opposed },
+        { id: 'push-opponent', role: 'controller', test: opposed },
+        { id: 'ready', role: 'controller', test: { kind: 'declare' } },
+        { id: 'stand', role: 'controller', test: opposed },
+        { id: 'use-item', role: 'controller', test: { kind: 'declare' } },
+        { id: 'break-free', role: 'target', test: opposed },
+        { id: 'slip-free', role: 'target', test: { kind: 'skill', skill: slipFreeSkill, modifier: 0 } },
+        { id: 'take-control', role: 'target', test: opposed },
+    ];
+}
 
 /**
  * The fitting rule DH1, RT and OW print word for word: "A character with the
@@ -130,6 +155,13 @@ export abstract class BaseSystemConfig {
      * the single negated hit.
      */
     abstract readonly evasionRules: EvasionRules | null;
+
+    /**
+     * The line's printed Grapple action (#120): each side's options and how each
+     * is tested, and the bonus a thrown-down opponent gives the controller. `null`
+     * for a line whose grapple this panel does not model.
+     */
+    abstract readonly grappleRules: GrappleRules | null;
 
     // ── Starting Resources ────────────────────────────────────────
 

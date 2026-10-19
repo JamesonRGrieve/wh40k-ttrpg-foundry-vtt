@@ -33,7 +33,7 @@ import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
-import { inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
@@ -51,9 +51,10 @@ import {
 } from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
+import type { SimpleSkillData } from '../../rolls/action-data.ts';
 import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
-import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
+import { type GrappleActorDoc, performGrappleOption } from '../../rolls/grapple-flow.ts';
 import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
 import type { ActionKind } from '../../rules/action-budget.ts';
 import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
@@ -95,23 +96,13 @@ import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
 import {
-    asGrappleParticipant,
-    buildGrappleCard,
-    GRAPPLE_UPDATE_FLAG,
-    grappleEndWrites,
-    type GrappleParticipant,
-    grappleSize,
-    grappleStrength,
+    type GrapplePanelSection,
+    grapplePanelSections,
+    grappleRoleOf,
+    type GrappleRole,
+    type GrappleState,
     readGrappleOpponentUuid,
     readGrappleState,
-    resolveBreakGrapple,
-    resolveDamageOpponent,
-    resolveMoveWhileGrappling,
-    resolveStandUpInGrapple,
-    resolveThrowDownOpponent,
-    type GrappleResolution,
-    type GrappleState,
-    type OpposedStrengthInput,
 } from '../../rules/grapple.ts';
 import { isGrenadeWeapon } from '../../rules/grenade-weapon.ts';
 import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
@@ -179,6 +170,16 @@ const toast = (foundry.applications as unknown as { api?: { Toast?: Record<strin
  * e.g. `squad-mode` → `SquadMode`. Single source for the (formerly six)
  * identical inline definitions across the engine-panel context builders (#284).
  */
+/** An actor that opens its own skill tests (characters and NPCs). */
+interface SkillRoller {
+    rollSkill: (skill: string, speciality: undefined, options: { instance: SimpleSkillData }) => Promise<void> | void;
+}
+
+/** Whether an actor document opens its own skill tests. */
+function isSkillRoller(actor: object): actor is SkillRoller {
+    return 'rollSkill' in actor && typeof actor.rollSkill === 'function';
+}
+
 function titleCase(s: string): string {
     return s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
 }
@@ -323,6 +324,7 @@ type CharacterSheetContextDeclaredFields = {
     hasFanatic?: boolean;
     hasCrusader?: boolean;
     grappleState?: GrappleState;
+    grappleSections?: GrapplePanelSection[];
 };
 
 /**
@@ -857,12 +859,8 @@ export default class CharacterSheet extends BaseActorSheet {
             // Ace role: Right Stuff Fate-spend (#100 — without.md p.39)
             'openRightStuff': CharacterSheet.#openRightStuff,
 
-            // Grapple controller actions (#120 — core.md L10155-10180)
-            'grappleDamageOpponent': CharacterSheet.#grappleDamageOpponent,
-            'grappleThrowDownOpponent': CharacterSheet.#grappleThrowDownOpponent,
-            'grappleBreakFree': CharacterSheet.#grappleBreakFree,
-            'grappleStandUp': CharacterSheet.#grappleStandUp,
-            'grappleMove': CharacterSheet.#grappleMove,
+            // Grapple options (#120): each line's printed options, by role
+            'grappleOption': CharacterSheet.#grappleOption,
 
             // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
             'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
@@ -1338,9 +1336,16 @@ export default class CharacterSheet extends BaseActorSheet {
         // or "Smite the Unholy".
         context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
 
-        // Grapple state (#120 — core.md L10155-10180), read from the system-scoped
-        // flag the grapple controller writes, to surface the controller-actions panel.
+        // Grapple state (#120), read from the system-scoped flag, and the options the
+        // line prints for this actor's role (the GM sees both roles' options).
         context.grappleState = readGrappleState(this.actor.flags, SYSTEM_ID);
+        const skills: Readonly<Partial<Record<string, { label?: string }>>> = this.actor.system.skills;
+        context.grappleSections = grapplePanelSections(
+            grappleRulesFor(this._resolveGameSystemId() ?? undefined),
+            context.grappleState,
+            game.user.isGM,
+            (skill) => skills[skill]?.label ?? skill,
+        );
 
         return context;
     }
@@ -5192,98 +5197,54 @@ export default class CharacterSheet extends BaseActorSheet {
      * grapple flag, else the user's single targeted token's actor. Null when
      * neither names someone other than this actor.
      */
-    async #grappleOpponent(): Promise<GrappleParticipant | null> {
+    async #grappleOpponent(): Promise<GrappleActorDoc | null> {
         const recorded = readGrappleOpponentUuid(this.actor.flags, SYSTEM_ID);
         const fromFlag = recorded === null ? null : await fromUuid(recorded);
-        if (fromFlag instanceof Actor && fromFlag.id !== this.actor.id) return asGrappleParticipant(fromFlag);
+        if (fromFlag instanceof Actor && fromFlag.id !== this.actor.id) return fromFlag;
         const targeted = Array.from(game.user.targets).flatMap((token) => (token.actor !== null && token.actor.id !== this.actor.id ? [token.actor] : []));
-        const only = targeted.length === 1 ? targeted.at(0) : undefined;
-        return only === undefined ? null : asGrappleParticipant(only);
+        return targeted.length === 1 ? targeted.at(0) ?? null : null;
     }
 
     /**
-     * Shared roller for the five grapple actions (#120, #450; DH2 core p. 221–222).
-     *
-     * Every grapple action is an Opposed Strength test against the other
-     * participant: this actor and that opponent each roll 1d100 against their
-     * own Strength total (with the grapple's Size edge), the requested resolver
-     * decides it by the RAW Opposed-test ladder, and the result card posts both
-     * full tests and the verdict. Returns the resolution so the caller can apply
-     * follow-up (state flag flip); null when there is no opponent to test against.
+     * Take one of the line's grapple options (#120; DH2 core pp. 221–222). The button
+     * names the option and the role it belongs to. A combatant takes its own role's
+     * options; the GM also sees the other role's, and takes those for the opponent.
+     * The option is tested as its line prints it (`rolls/grapple-flow.ts`).
      */
-    private async _rollGrappleOpposed(resolver: (input: OpposedStrengthInput) => GrappleResolution, endsOnWin = false): Promise<GrappleResolution | null> {
+    static async #grappleOption(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
         try {
+            const optionId = target.dataset['grappleOption'];
+            const buttonRole = target.dataset['grappleRole'];
+            const ownRole = grappleRoleOf(readGrappleState(this.actor.flags, SYSTEM_ID));
+            const rules = grappleRulesFor(this._resolveGameSystemId() ?? undefined);
+            const option = rules?.options.find((entry) => entry.id === optionId && entry.role === buttonRole);
+            if (rules === null || option === undefined || ownRole === null) return;
             const opponent = await this.#grappleOpponent();
             if (opponent === null) {
                 this._notify('warning', game.i18n.localize('WH40K.Grapple.NoOpponent'), { duration: 4000 });
-                return null;
+                return;
             }
-            const grappler = asGrappleParticipant(this.actor);
-            const actorStrength = grappleStrength(grappler);
-            const opponentStrength = grappleStrength(opponent);
-            const actorRollObj = await new Roll('1d100').evaluate();
-            const opponentRollObj = await new Roll('1d100').evaluate();
-            const actorRoll = Math.trunc(actorRollObj.total);
-            const opponentRoll = Math.trunc(opponentRollObj.total);
-            const resolution = resolver({
-                actorRoll,
-                actorStrength,
-                opponentRoll,
-                opponentStrength,
-                actorSize: grappleSize(grappler),
-                opponentSize: grappleSize(opponent),
+            // The other role's options are the GM's, taken for the opponent.
+            const actsForOpponent = option.role !== ownRole;
+            if (actsForOpponent && !game.user.isGM) return;
+            const actor: GrappleActorDoc = actsForOpponent ? opponent : this.actor;
+            const other: GrappleActorDoc = actsForOpponent ? this.actor : opponent;
+            const actorRole: GrappleRole = option.role;
+            await performGrappleOption({
+                option,
+                actor,
+                opponent: other,
+                actorRole,
+                rules,
+                gameSystem: this._resolveGameSystemId() ?? '',
+                rollSkill: async (skill, instance) => {
+                    if (isSkillRoller(actor)) await actor.rollSkill(skill, undefined, { instance });
+                },
             });
-            // Breaking free ends the grapple for both: the card carries both flag writes for the active GM.
-            const ended = endsOnWin && resolution.success;
-            await emitChatFromTemplate(
-                'systems/wh40k-rpg/templates/chat/grapple-opposed-chat.hbs',
-                {
-                    gameSystem: this._resolveGameSystemId() ?? '',
-                    ended,
-                    ...buildGrappleCard(
-                        resolution,
-                        { name: this.actor.name, strength: actorStrength, roll: actorRoll },
-                        { name: opponent.name, strength: opponentStrength, roll: opponentRoll },
-                    ),
-                },
-                {
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                    rolls: [actorRollObj, opponentRollObj],
-                    ...(ended ? { flags: { [GRAPPLE_UPDATE_FLAG]: grappleEndWrites(grappler.uuid, opponent.uuid) } } : {}),
-                },
-            );
-            return resolution;
         } catch (error) {
             this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.GrappleFailed', { error: errorMessage(error) }), { duration: 5000 });
             console.error('Grapple action error:', error);
-            return null;
         }
-    }
-
-    /** Grapple controller — Damage Opponent (#120, opposed Strength). */
-    static async #grappleDamageOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await this._rollGrappleOpposed(resolveDamageOpponent);
-    }
-
-    /** Grapple controller — Throw Down Opponent (#120, opposed Strength). */
-    static async #grappleThrowDownOpponent(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await this._rollGrappleOpposed(resolveThrowDownOpponent);
-    }
-
-    /** Grapple controlled — Break Free (#120, opposed Strength). */
-    static async #grappleBreakFree(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        // A win ends the grapple for BOTH participants; the result card carries the writes (grapple-relay.ts).
-        await this._rollGrappleOpposed(resolveBreakGrapple, true);
-    }
-
-    /** Grapple controlled — Stand Up while gripped (#120, opposed Strength). */
-    static async #grappleStandUp(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await this._rollGrappleOpposed(resolveStandUpInGrapple);
-    }
-
-    /** Grapple controlled — Move while grappling (#120, opposed Strength). */
-    static async #grappleMove(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await this._rollGrappleOpposed(resolveMoveWhileGrappling);
     }
 
     /**

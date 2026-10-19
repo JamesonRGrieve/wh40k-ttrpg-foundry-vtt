@@ -1,23 +1,19 @@
 /**
  * Grapple state machine (#120 — core.md L10155-10180).
  *
- * Grappling is a multi-step engagement initiated by a successful WS test on
- * a Charge or Standard Attack and then resolved round-by-round through
- * opposed Strength tests. Each combatant in a grapple is in one of three
- * states — `none` (not in a grapple), `grappling` (the controller of the
- * grapple), and `controlled` (the grappled victim). The controller may
- * spend their round on a Damage / Throw Down / etc. action; the controlled
- * side may attempt a Break Free / Stand Up / Move.
+ * Grappling is a multi-step engagement started by a successful unarmed Charge or
+ * Standard Attack and then fought round by round with the Grapple action. Each
+ * combatant is in one of three states: `none` (not in a grapple), `grappling`
+ * (the controller) or `controlled` (the grappled target). Each side has its own
+ * options. In DH2 (core pp. 221–222) the controller has Damage, Throw Down, Push,
+ * Ready, Stand and Use Item, and the target has Break Free, Slip Free and Take
+ * Control. Each line prints its own lists; they live on the line's game-system
+ * config (`grappleRules`).
  *
- * Every action below resolves through an opposed Strength test against the
- * other participant (DH2 core p. 221–222): the actor rolls 1d100 against
- * `actorStrength` and the opponent rolls 1d100 against `opponentStrength`,
- * decided by the RAW Opposed-test ladder (p. 24) with the grapple's Size edge.
- *
- * The helpers here are pure: they take pre-rolled `1d100` values + the
- * relevant Strength totals and return a `GrappleResolution` describing the
- * outcome. The UI layer (character sheet → grapple controller panel) is
- * responsible for prompting the rolls and emitting chat cards.
+ * The opposed options resolve through the RAW Opposed-test ladder (p. 24) with the
+ * grapple's Size edge (p. 222). The helpers here are pure: they take pre-rolled
+ * `1d100` values and the targets and return a `GrappleResolution`. The character
+ * sheet's grapple panel prompts the rolls and posts the chat cards.
  */
 
 import { degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
@@ -101,27 +97,40 @@ export interface GrappleFlagWrite {
     state: GrappleState;
     /** The other participant's actor UUID; null when the grapple is over. */
     opponentUuid: string | null;
+    /** Whether the controller has thrown the target down (Throw Down Opponent) and it has not stood since. */
+    thrownDown: boolean;
 }
 
-/** A successful grapple attempt: the attacker controls the grapple, the target is held. Each records the other. */
-export function grappleStartWrites(controllerUuid: string, targetUuid: string): GrappleFlagWrite[] {
+/**
+ * A grapple with `controllerUuid` in control and `targetUuid` held, each recording
+ * the other: a successful grapple attempt, a Take Control (roles swapped), or a
+ * change of the thrown-down mark.
+ */
+export function grappleStartWrites(controllerUuid: string, targetUuid: string, thrownDown = false): GrappleFlagWrite[] {
     return [
-        { uuid: controllerUuid, state: 'grappling', opponentUuid: targetUuid },
-        { uuid: targetUuid, state: 'controlled', opponentUuid: controllerUuid },
+        { uuid: controllerUuid, state: 'grappling', opponentUuid: targetUuid, thrownDown },
+        { uuid: targetUuid, state: 'controlled', opponentUuid: controllerUuid, thrownDown },
     ];
 }
 
-/** The grapple is over for both participants (a successful Break Free). */
+/** The grapple is over for both participants (a successful Break Free or Slip Free). */
 export function grappleEndWrites(oneUuid: string, otherUuid: string): GrappleFlagWrite[] {
     return [
-        { uuid: oneUuid, state: 'none', opponentUuid: null },
-        { uuid: otherUuid, state: 'none', opponentUuid: null },
+        { uuid: oneUuid, state: 'none', opponentUuid: null, thrownDown: false },
+        { uuid: otherUuid, state: 'none', opponentUuid: null, thrownDown: false },
     ];
 }
 
 /** The flag value a write stores at `flags[SYSTEM_ID][GRAPPLE_FLAG]`. */
-export function grappleFlagValue(write: GrappleFlagWrite): { state: GrappleState; opponentUuid: string | null } {
-    return { state: write.state, opponentUuid: write.opponentUuid };
+export function grappleFlagValue(write: GrappleFlagWrite): { state: GrappleState; opponentUuid: string | null; thrownDown: boolean } {
+    return { state: write.state, opponentUuid: write.opponentUuid, thrownDown: write.thrownDown };
+}
+
+/** Whether a combatant's grapple has its target thrown down (`flags[SYSTEM_ID][GRAPPLE_FLAG].thrownDown`). */
+export function readGrappleThrownDown(flags: object | undefined, scope: string): boolean {
+    const scoped = isRecord(flags) ? flags[scope] : undefined;
+    const grapple = isRecord(scoped) ? scoped[GRAPPLE_FLAG] : undefined;
+    return isRecord(grapple) && grapple['thrownDown'] === true;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: a chat-message flag is an untyped JSON bag; validated entry by entry below
@@ -129,43 +138,265 @@ export function readGrappleWrites(value: unknown): GrappleFlagWrite[] {
     if (!Array.isArray(value)) return [];
     return value.flatMap((entry): GrappleFlagWrite[] => {
         if (!isRecord(entry)) return [];
-        const { uuid, state, opponentUuid } = entry;
+        const { uuid, state, opponentUuid, thrownDown } = entry;
         if (typeof uuid !== 'string' || uuid === '' || typeof state !== 'string' || !GRAPPLE_STATES.has(state)) return [];
         if (opponentUuid !== null && typeof opponentUuid !== 'string') return [];
-        return [{ uuid, state: state as GrappleState, opponentUuid }];
+        return [{ uuid, state: state as GrappleState, opponentUuid, thrownDown: thrownDown === true }];
     });
 }
 
-/** Enumerated controller / controlled actions, all opposed-Strength resolved. */
-export type GrappleAction = 'damage-opponent' | 'throw-down-opponent' | 'break-free' | 'stand-up' | 'move-while-grappling';
+/** The two sides of a grapple: the one controlling it, and the one held in it. */
+export type GrappleRole = 'controller' | 'target';
 
-/** The langpack label of each grapple action (the panel buttons and the result card share them). */
-export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleAction, string>> = {
+/**
+ * Every grapple option a line prints. What an option does when it succeeds is a
+ * mechanic, and lives here. Which options a line offers, and how each is tested,
+ * is that line's printed rule (`grappleRules` on its game-system config).
+ */
+export type GrappleOptionId =
+    | 'damage-opponent'
+    | 'throw-down-opponent'
+    | 'push-opponent'
+    | 'ready'
+    | 'stand'
+    | 'use-item'
+    | 'break-free'
+    | 'slip-free'
+    | 'take-control';
+
+/** The option a grapple test resolved (echoed on the result card). */
+export type GrappleAction = GrappleOptionId;
+
+/**
+ * How a grapple option is tested.
+ * - `opposed-strength`: an Opposed Strength test against the other participant.
+ * - `skill`: a plain skill test (DH2 Slip Free: "a Challenging (+0) Acrobatics test").
+ * - `opposed-skill`: the actor's skill opposed by the other's Strength (DH1 Escape Grapple: "a Contortionist Test opposed by the grappler's Strength Test").
+ * - `declare`: no test (Ready, Use Item).
+ */
+type GrappleTest =
+    | { readonly kind: 'opposed-strength' }
+    | { readonly kind: 'skill'; readonly skill: string; readonly modifier: number }
+    | { readonly kind: 'opposed-skill'; readonly skill: string }
+    | { readonly kind: 'declare' };
+
+/** One option a line prints, for the role that may take it. */
+export interface GrappleOptionRule {
+    readonly id: GrappleOptionId;
+    readonly role: GrappleRole;
+    readonly test: GrappleTest;
+}
+
+/** A line's printed grapple rules (the Grapple action's option lists). */
+export interface GrappleRules {
+    /** Every option, controller's and target's, in the order the book prints them. */
+    readonly options: readonly GrappleOptionRule[];
+    /**
+     * The bonus the controller gains on every further Opposed test of the grapple
+     * once Throw Down Opponent has put the opponent Prone (DH2 core p. 221: "+10";
+     * OW core: "+10"); 0 for a line that prints none.
+     */
+    readonly thrownDownBonus: number;
+}
+
+/** The langpack label of each grapple option (the panel buttons and the result card share them). */
+export const GRAPPLE_ACTION_LABEL_KEYS: Readonly<Record<GrappleOptionId, string>> = {
     'damage-opponent': 'WH40K.Grapple.DamageOpponent',
     'throw-down-opponent': 'WH40K.Grapple.ThrowDownOpponent',
+    'push-opponent': 'WH40K.Grapple.PushOpponent',
+    'ready': 'WH40K.Grapple.Ready',
+    'stand': 'WH40K.Grapple.Stand',
+    'use-item': 'WH40K.Grapple.UseItem',
     'break-free': 'WH40K.Grapple.BreakFree',
-    'stand-up': 'WH40K.Grapple.StandUp',
-    'move-while-grappling': 'WH40K.Grapple.Move',
+    'slip-free': 'WH40K.Grapple.SlipFree',
+    'take-control': 'WH40K.Grapple.TakeControl',
 };
 
-/** Input shape for every opposed-Strength resolver below. */
+/** The langpack text stating what each option does when it succeeds (the result card's effect line). */
+export const GRAPPLE_EFFECT_KEYS: Readonly<Record<GrappleOptionId, string>> = {
+    'damage-opponent': 'WH40K.Grapple.Effect.DamageOpponent',
+    'throw-down-opponent': 'WH40K.Grapple.Effect.ThrowDownOpponent',
+    'push-opponent': 'WH40K.Grapple.Effect.PushOpponent',
+    'ready': 'WH40K.Grapple.Effect.Ready',
+    'stand': 'WH40K.Grapple.Effect.Stand',
+    'use-item': 'WH40K.Grapple.Effect.UseItem',
+    'break-free': 'WH40K.Grapple.Effect.BreakFree',
+    'slip-free': 'WH40K.Grapple.Effect.SlipFree',
+    'take-control': 'WH40K.Grapple.Effect.TakeControl',
+};
+
+/** The Font Awesome icon each option's panel button shows. */
+const GRAPPLE_OPTION_ICONS: Readonly<Record<GrappleOptionId, string>> = {
+    'damage-opponent': 'fa-fist-raised',
+    'throw-down-opponent': 'fa-person-falling',
+    'push-opponent': 'fa-people-pulling',
+    'ready': 'fa-hand-holding',
+    'stand': 'fa-person-arrow-up-from-line',
+    'use-item': 'fa-hand-sparkles',
+    'break-free': 'fa-handcuffs',
+    'slip-free': 'fa-person-running',
+    'take-control': 'fa-arrows-rotate',
+};
+
+/** The role a combatant's grapple state gives it, or null outside a grapple. */
+export function grappleRoleOf(state: GrappleState): GrappleRole | null {
+    if (state === 'grappling') return 'controller';
+    if (state === 'controlled') return 'target';
+    return null;
+}
+
+/** The options a line offers one role, in the book's order. */
+export function grappleOptionsFor(rules: GrappleRules, role: GrappleRole): GrappleOptionRule[] {
+    return rules.options.filter((option) => option.role === role);
+}
+
+/** One option button on the grapple panel. */
+interface GrapplePanelOption {
+    id: GrappleOptionId;
+    role: GrappleRole;
+    labelKey: string;
+    icon: string;
+    /** How the option is tested (`opposed-strength`, `skill`, `opposed-skill`, `declare`). */
+    testKind: GrappleTest['kind'];
+    /** The skill key a skill-tested option rolls ('' otherwise). */
+    skill: string;
+    /** That skill's display name ('' otherwise). */
+    skillLabel: string;
+    /** The langpack text naming the test ("Opposed Strength", "{skill} test", …). */
+    testHintKey: string;
+}
+
+const TEST_HINT_KEYS: Readonly<Record<GrappleTest['kind'], string>> = {
+    'opposed-strength': 'WH40K.Grapple.Test.OpposedStrength',
+    'skill': 'WH40K.Grapple.Test.Skill',
+    'opposed-skill': 'WH40K.Grapple.Test.OpposedSkill',
+    'declare': 'WH40K.Grapple.Test.Declare',
+};
+
+/** One role's group of options on the grapple panel. */
+export interface GrapplePanelSection {
+    role: GrappleRole;
+    /** Whether this is the sheet actor's own role (the GM also sees the other one, and acts for the opponent there). */
+    own: boolean;
+    titleKey: string;
+    options: GrapplePanelOption[];
+}
+
+const SECTION_TITLE_KEYS: Readonly<Record<GrappleRole, string>> = {
+    controller: 'WH40K.Grapple.ControllerOptions',
+    target: 'WH40K.Grapple.TargetOptions',
+};
+
+/**
+ * The option groups the grapple panel shows (#120): a combatant sees only its own
+ * role's options; the GM sees both, its own role first. No line rules, or no
+ * grapple, shows nothing.
+ */
+export function grapplePanelSections(
+    rules: GrappleRules | null,
+    state: GrappleState,
+    isGM: boolean,
+    skillLabel: (skill: string) => string = (skill) => skill,
+): GrapplePanelSection[] {
+    const own = grappleRoleOf(state);
+    if (rules === null || own === null) return [];
+    const roles: GrappleRole[] = isGM ? [own, own === 'controller' ? 'target' : 'controller'] : [own];
+    return roles.map((role) => ({
+        role,
+        own: role === own,
+        titleKey: SECTION_TITLE_KEYS[role],
+        options: grappleOptionsFor(rules, role).map((option) => {
+            const skill = option.test.kind === 'skill' || option.test.kind === 'opposed-skill' ? option.test.skill : '';
+            return {
+                id: option.id,
+                role,
+                labelKey: GRAPPLE_ACTION_LABEL_KEYS[option.id],
+                icon: GRAPPLE_OPTION_ICONS[option.id],
+                testKind: option.test.kind,
+                skill,
+                skillLabel: skill === '' ? '' : skillLabel(skill),
+                testHintKey: TEST_HINT_KEYS[option.test.kind],
+            };
+        }),
+    }));
+}
+
+/** A modifier on one side of a grapple test, with its source (#120: shown as a row on the card). */
+export interface GrappleModifier {
+    readonly key: string;
+    readonly labelKey: string;
+    readonly value: number;
+    /** The option it comes from, as a langpack key. */
+    readonly sourceKey: string;
+}
+
+/**
+ * The modifiers on one side of a grapple test. The controller of a grapple whose
+ * opponent it has thrown down gains the line's bonus "to all further Opposed tests
+ * made during this Grapple" (DH2 core p. 221), whichever side acts.
+ */
+export function grappleSideModifiers(role: GrappleRole, thrownDown: boolean, rules: GrappleRules): GrappleModifier[] {
+    if (role !== 'controller' || !thrownDown || rules.thrownDownBonus === 0) return [];
+    return [
+        {
+            key: 'grapple-thrown-down',
+            labelKey: 'WH40K.Grapple.Modifier.ThrownDown',
+            value: rules.thrownDownBonus,
+            sourceKey: GRAPPLE_ACTION_LABEL_KEYS['throw-down-opponent'],
+        },
+    ];
+}
+
+/**
+ * The grapple flag writes a won option makes, or null when it changes no state:
+ * - Break Free and Slip Free end the grapple for both.
+ * - Take Control swaps the roles: "he becomes the controller of the Grapple and his
+ *   opponent becomes the Grappled target".
+ * - Throw Down, in a line with a thrown-down bonus, marks the opponent thrown down.
+ * - Stand puts both back on their feet, which ends that bonus.
+ * Damage, Push, Ready and Use Item change no grapple state; their effect is stated
+ * on the card.
+ */
+export function grappleOptionWrites(
+    id: GrappleOptionId,
+    won: boolean,
+    actor: { uuid: string; role: GrappleRole },
+    opponentUuid: string,
+    thrownDown: boolean,
+    rules: GrappleRules,
+): GrappleFlagWrite[] | null {
+    if (!won) return null;
+    if (id === 'break-free' || id === 'slip-free') return grappleEndWrites(actor.uuid, opponentUuid);
+    if (id === 'take-control') return grappleStartWrites(actor.uuid, opponentUuid);
+    const controllerUuid = actor.role === 'controller' ? actor.uuid : opponentUuid;
+    const targetUuid = actor.role === 'controller' ? opponentUuid : actor.uuid;
+    if (id === 'throw-down-opponent' && rules.thrownDownBonus > 0) return grappleStartWrites(controllerUuid, targetUuid, true);
+    if (id === 'stand' && thrownDown) return grappleStartWrites(controllerUuid, targetUuid, false);
+    return null;
+}
+
+/** Input shape of an opposed grapple test. */
 export interface OpposedStrengthInput {
     /** Acting combatant's d100 roll (1-100). */
     actorRoll: number;
-    /** Acting combatant's Strength characteristic total. */
+    /** Acting combatant's target: its Strength total (or skill, for an opposed-skill option), modifiers included. */
     actorStrength: number;
     /** Opponent's d100 roll (1-100). */
     opponentRoll: number;
-    /** Opponent's Strength characteristic total. */
+    /** Opponent's target: its Strength total, modifiers included. */
     opponentStrength: number;
     /** Acting combatant's Size (the Size trait value, 4 = Average). Optional: equal sizes add nothing. */
     actorSize?: number;
     /** Opponent's Size. */
     opponentSize?: number;
+    /** Acting combatant's characteristic bonus for the tie-break (default: its target's tens). */
+    actorBonus?: number;
+    /** Opponent's characteristic bonus for the tie-break (default: its target's tens). */
+    opponentBonus?: number;
 }
 
 /** How the opposed test came out for the acting combatant. */
-export type GrappleOutcome = 'won' | 'lost' | 'stalemate';
+type GrappleOutcome = 'won' | 'lost' | 'stalemate';
 
 /** Resolution payload returned by every grapple action helper. */
 export interface GrappleResolution {
@@ -190,7 +421,7 @@ export interface GrappleResolution {
 }
 
 /**
- * Generic opposed Strength resolver, by the RAW Opposed-test ladder (DH2 core
+ * An opposed grapple test (every opposed option), by the RAW Opposed-test ladder (DH2 core
  * p. 24, `rules/opposed.ts`): a success beats a failure; both succeeding, more
  * degrees of success wins; then the higher Strength bonus; then the lower roll.
  * Both failing is a stalemate — "nothing happens" — so the acting side does
@@ -200,20 +431,20 @@ export interface GrappleResolution {
  * extra degree of success on a successful test for each point its Size exceeds
  * the other's.
  */
-function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleAction): GrappleResolution {
+export function resolveGrappleOpposed(input: OpposedStrengthInput, action: GrappleAction): GrappleResolution {
     const sizeEdge = (input.actorSize ?? 0) - (input.opponentSize ?? 0);
-    const side = (roll: number, strength: number, edge: number): OpposedSide & { dos: number; dof: number } => {
-        const success = isD100Success(roll, strength);
+    const side = (roll: number, target: number, edge: number, bonus: number | undefined): OpposedSide & { dos: number; dof: number } => {
+        const success = isD100Success(roll, target);
         return {
             success,
-            dos: success ? Math.max(1, degreesOfSuccess(roll, strength)) + Math.max(0, edge) : 0,
-            dof: success ? 0 : Math.max(1, degreesOfFailure(roll, strength)),
-            charBonus: Math.floor(strength / 10),
+            dos: success ? Math.max(1, degreesOfSuccess(roll, target)) + Math.max(0, edge) : 0,
+            dof: success ? 0 : Math.max(1, degreesOfFailure(roll, target)),
+            charBonus: bonus ?? Math.floor(target / 10),
             roll,
         };
     };
-    const actor = side(input.actorRoll, input.actorStrength, sizeEdge);
-    const opponent = side(input.opponentRoll, input.opponentStrength, -sizeEdge);
+    const actor = side(input.actorRoll, input.actorStrength, sizeEdge, input.actorBonus);
+    const opponent = side(input.opponentRoll, input.opponentStrength, -sizeEdge, input.opponentBonus);
     const { winner } = resolveOpposed(actor, opponent);
     const outcome: GrappleOutcome = winner === 'initiator' ? 'won' : winner === 'target' ? 'lost' : 'stalemate';
     return {
@@ -229,61 +460,17 @@ function resolveOpposedStrength(input: OpposedStrengthInput, action: GrappleActi
     };
 }
 
-/**
- * Controller's "Damage" action — opposed Strength test; on win, the
- * controller inflicts SB Impact damage on the controlled side. The
- * resolver returns the contest outcome; the damage roll is computed by
- * the UI layer from `netDoS` and the controller's Strength Bonus.
- */
-export function resolveDamageOpponent(input: OpposedStrengthInput): GrappleResolution {
-    return resolveOpposedStrength(input, 'damage-opponent');
-}
-
-/**
- * Controller's "Throw Down" action — opposed Strength test; on win, the
- * controlled side is thrown to the ground (Prone condition) and the
- * grapple state on both combatants resets to `none`.
- */
-export function resolveThrowDownOpponent(input: OpposedStrengthInput): GrappleResolution {
-    return resolveOpposedStrength(input, 'throw-down-opponent');
-}
-
-/**
- * Controlled side's "Break Free" action — opposed Strength test; on win,
- * the grapple ends and both combatants transition to `none`. On failure
- * the grapple persists into the next round.
- */
-export function resolveBreakGrapple(input: OpposedStrengthInput): GrappleResolution {
-    return resolveOpposedStrength(input, 'break-free');
-}
-
-/**
- * Controlled side's "Stand Up" action — opposed Strength test taken when
- * the controlled side has been knocked prone but is still gripped.
- * Standing inside an active grapple is contested by the controller's
- * Strength; success rises to a standing grapple, failure leaves the
- * controlled side prone.
- */
-export function resolveStandUpInGrapple(input: OpposedStrengthInput): GrappleResolution {
-    return resolveOpposedStrength(input, 'stand-up');
-}
-
-/**
- * Controlled side's "Move" action — opposed Strength test to drag the
- * grapple a short distance. On success the pair shifts up to the
- * controlled side's Agility Bonus in metres in the chosen direction; the
- * controller is dragged along.
- */
-export function resolveMoveWhileGrappling(input: OpposedStrengthInput): GrappleResolution {
-    return resolveOpposedStrength(input, 'move-while-grappling');
-}
-
 /** What a grapple test reads off a participant actor. */
 export interface GrappleParticipant {
     name: string;
     /** The actor's UUID — what the other participant's grapple flag records. */
     uuid: string;
-    system: { characteristics?: { strength?: { total?: number } }; size?: number };
+    system: {
+        characteristics?: { strength?: { total?: number } };
+        size?: number;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the actor's skill map is keyed by skill slug
+        skills?: Record<string, { current?: number } | undefined>;
+    };
 }
 
 /**
@@ -307,12 +494,33 @@ export function grappleSize(participant: GrappleParticipant): number {
     return size ?? 0;
 }
 
-/** One combatant's half of the grapple result card. */
-export interface GrappleCardSide {
+/** A participant's skill total (its `current`); 0 when the actor has no such skill. */
+export function grappleSkill(participant: GrappleParticipant, skill: string): number {
+    return participant.system.skills?.[skill]?.current ?? 0;
+}
+
+/** A modifier row on the card: label and source already localised. */
+export interface GrappleCardModifier {
+    label: string;
+    value: number;
+    source: string;
+}
+
+/** One side's test, as the caller rolled it. */
+export interface GrappleCardSideInput {
     name: string;
-    /** The Strength total the test was rolled against. */
-    strength: number;
+    /** The characteristic or skill total, before modifiers. */
+    base: number;
+    /** What the base is ("Strength", "Contortionist"), localised. */
+    baseLabel: string;
+    modifiers: readonly GrappleCardModifier[];
     roll: number;
+}
+
+/** One combatant's half of the grapple result card. */
+interface GrappleCardSide extends GrappleCardSideInput {
+    /** The target the roll was made against: the base plus every modifier. */
+    target: number;
     success: boolean;
     dos: number;
     dof: number;
@@ -328,19 +536,23 @@ export interface GrappleCardContext {
     opponent: GrappleCardSide;
     /** The winner's name; empty on a stalemate. */
     winnerName: string;
+    /** What the option does, stated when the acting side won ('' otherwise). */
+    effectKey: string;
 }
 
-/** Shape the result card from a resolved grapple action: both sides' full test, and who won. */
-export function buildGrappleCard(
-    resolution: GrappleResolution,
-    actor: { name: string; strength: number; roll: number },
-    opponent: { name: string; strength: number; roll: number },
-): GrappleCardContext {
+/** A side's target: its base plus every modifier. */
+export function grappleSideTarget(side: Pick<GrappleCardSideInput, 'base' | 'modifiers'>): number {
+    return side.base + side.modifiers.reduce((total, modifier) => total + modifier.value, 0);
+}
+
+/** Shape the result card from a resolved grapple action: both sides' full test with its modifiers, and who won. */
+export function buildGrappleCard(resolution: GrappleResolution, actor: GrappleCardSideInput, opponent: GrappleCardSideInput): GrappleCardContext {
     return {
         actionLabelKey: GRAPPLE_ACTION_LABEL_KEYS[resolution.action],
         outcome: resolution.outcome,
         actor: {
             ...actor,
+            target: grappleSideTarget(actor),
             success: resolution.actorDoS > 0,
             dos: resolution.actorDoS,
             dof: resolution.actorDoF,
@@ -348,11 +560,13 @@ export function buildGrappleCard(
         },
         opponent: {
             ...opponent,
+            target: grappleSideTarget(opponent),
             success: resolution.opponentDoS > 0,
             dos: resolution.opponentDoS,
             dof: resolution.opponentDoF,
             sizeEdge: resolution.opponentDoS > 0 ? Math.max(0, -resolution.sizeEdge) : 0,
         },
         winnerName: resolution.outcome === 'won' ? actor.name : resolution.outcome === 'lost' ? opponent.name : '',
+        effectKey: resolution.outcome === 'won' ? GRAPPLE_EFFECT_KEYS[resolution.action] : '',
     };
 }

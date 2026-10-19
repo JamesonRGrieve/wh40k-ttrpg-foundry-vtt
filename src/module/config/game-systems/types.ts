@@ -175,7 +175,7 @@ export interface FatePointUseDef {
 }
 
 /** An owned item, as far as the line configs read it. */
-export interface SystemConfigActorItem {
+interface SystemConfigActorItem {
     readonly name: string;
     readonly isOriginPath: boolean;
     readonly system: object;

@@ -1,22 +1,30 @@
 {{!--
-    Grapple action result card (#450 / DH2 core p. 221–222): the Opposed
-    Strength test between the acting combatant and the other participant.
-    Each side prints its whole test — Strength target, roll, degrees (and the
-    Size edge a larger combatant scores) — then the RAW Opposed-test verdict
-    (DH2 p. 24): the winner, or a stalemate when both fail.
+    Grapple option card (#120, #450; DH2 core pp. 221–222).
 
-    Context: buildGrappleCard (rules/grapple.ts) + gameSystem + ended (a won
-    Break Free: the grapple is over for both).
+    An opposed option prints each side's whole test: the base it rolled against
+    (Strength, or the skill an opposed-skill option uses), every modifier as a row
+    with its source, the target, the roll, and the degrees (with the Size edge a
+    larger combatant scores). Then comes the RAW Opposed-test verdict (DH2 p. 24),
+    and what the option does when the acting side won. An option with no test
+    (Ready, Use Item) states the option and its effect.
+
+    Context: buildGrappleCard (rules/grapple.ts) + gameSystem + ended (the grapple
+    is over for both); or declared + actionLabelKey + effectKey + actorName.
 --}}
 <div class="tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-slate-500 tw-bg-[rgba(22,24,30,0.92)]"
      data-wh40k-system="{{gameSystem}}"
      data-wh40k-surface="dark"
      data-wh40k-hook="grapple-card"
-     data-grapple-outcome="{{outcome}}">
+     data-grapple-outcome="{{#if declared}}declared{{else}}{{outcome}}{{/if}}">
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas fa-hands-bound tw-text-[1.1rem] tw-text-slate-300" aria-hidden="true"></i>
         <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.95rem] tw-text-[color:var(--wh40k-text-bright)]">{{localize actionLabelKey}}</div>
     </div>
+
+    {{#if declared}}
+    <p class="tw-m-0 tw-mb-2 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Chat.Declared" actor=actorName}}</p>
+    <div class="tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-border-slate-400/60 tw-bg-slate-800/40 tw-text-[0.85rem]" data-wh40k-hook="grapple-effect">{{localize effectKey}}</div>
+    {{else}}
     <p class="tw-m-0 tw-mb-2 tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Grapple.Chat.Opposed" actor=actor.name opponent=opponent.name}}</p>
 
     {{#each (array actor opponent) as |side|}}
@@ -27,8 +35,18 @@
                 {{#if side.success}}{{localize "WH40K.Grapple.Chat.DoS" value=side.dos}}{{else}}{{localize "WH40K.Grapple.Chat.DoF" value=side.dof}}{{/if}}
             </span>
         </div>
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]" data-grapple-base>
+            <span>{{side.baseLabel}}</span>
+            <span class="tw-tabular-nums">{{side.base}}</span>
+        </div>
+        {{#each side.modifiers as |modifier|}}
+        <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]" data-grapple-modifier title="{{modifier.source}}">
+            <span>{{modifier.label}} <span class="tw-opacity-75">({{modifier.source}})</span></span>
+            <span class="tw-tabular-nums">{{signedNumber modifier.value}}</span>
+        </div>
+        {{/each}}
         <div class="tw-flex tw-justify-between tw-gap-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]">
-            <span>{{localize "WH40K.Grapple.Chat.RollAgainst" roll=side.roll strength=side.strength}}</span>
+            <span>{{localize "WH40K.Grapple.Chat.RollAgainst" roll=side.roll target=side.target}}</span>
             {{#if side.sizeEdge}}<span data-grapple-size-edge>{{localize "WH40K.Grapple.Chat.SizeEdge" value=side.sizeEdge}}</span>{{/if}}
         </div>
     </div>
@@ -36,6 +54,8 @@
 
     <div class="tw-mt-2 tw-p-2 tw-rounded-sm tw-border tw-border-solid tw-text-[0.85rem] tw-font-bold {{#if (eq outcome 'stalemate')}}tw-border-amber-600/60 tw-bg-amber-950/40{{else}}tw-border-slate-400/60 tw-bg-slate-800/40{{/if}}" data-wh40k-hook="grapple-verdict">
         {{#if (eq outcome 'stalemate')}}{{localize "WH40K.Grapple.Chat.Stalemate"}}{{else}}{{localize "WH40K.Grapple.Chat.Wins" name=winnerName}}{{/if}}
+        {{#if effectKey}}<div class="tw-mt-1 tw-font-normal" data-wh40k-hook="grapple-effect">{{localize effectKey}}</div>{{/if}}
         {{#if ended}}<div class="tw-mt-1 tw-font-normal" data-wh40k-hook="grapple-ended">{{localize "WH40K.Grapple.Ended"}}</div>{{/if}}
     </div>
+    {{/if}}
 </div>
