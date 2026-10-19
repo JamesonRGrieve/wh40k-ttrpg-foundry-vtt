@@ -43,3 +43,25 @@ export function normalisePsychicDiscipline(raw: string): PsychicDisciplineChoice
     const leading = /^[a-z]+/.exec(value)?.[0] ?? '';
     return isDisciplineChoice(leading) ? leading : 'minor';
 }
+
+/**
+ * The langpack key of a discipline's label (#659): the sheet showed the raw
+ * key ("pyromancy"). A stored value that is not a choice is normalised first.
+ */
+export function psychicDisciplineLabelKey(discipline: string): string {
+    const choice = normalisePsychicDiscipline(discipline);
+    return `WH40K.PsychicDiscipline.${choice.charAt(0).toUpperCase()}${choice.slice(1)}`;
+}
+
+/** One option of the psychic power sheet's discipline select. */
+export interface PsychicDisciplineOption {
+    readonly value: PsychicDisciplineChoice;
+    readonly labelKey: string;
+    readonly selected: boolean;
+}
+
+/** The discipline select's options: every choice, the stored one selected. */
+export function psychicDisciplineOptions(current: string): PsychicDisciplineOption[] {
+    const selected = normalisePsychicDiscipline(current);
+    return PSYCHIC_DISCIPLINE_CHOICES.map((value) => ({ value, labelKey: psychicDisciplineLabelKey(value), selected: value === selected }));
+}

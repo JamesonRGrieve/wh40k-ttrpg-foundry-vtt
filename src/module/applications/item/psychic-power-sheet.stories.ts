@@ -8,6 +8,7 @@ import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/e
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
+import { PSYCHIC_DISCIPLINE_CHOICES, psychicDisciplineOptions } from '../../data/item/psychic-discipline';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x5a1e71);
@@ -30,7 +31,10 @@ function makeCtx(overrides: Partial<PsychicPowerCtx> = {}): PsychicPowerCtx {
         type: 'psychicPower',
         img: 'icons/magic/lightning/bolt-blue.webp',
         system: {
-            discipline: 'Biomancy',
+            discipline: 'biomancy',
+            // The DataModel getters the template reads (#659), as they resolve for 'biomancy'.
+            disciplineLabel: 'Biomancy',
+            disciplineOptions: psychicDisciplineOptions('biomancy'),
             subtype: 'Attack',
             action: 'Half',
             focus: 'Willpower',
@@ -161,10 +165,40 @@ export const XpCostNotAuthored: Story = {
         return renderSheet(templateSrc, ctx);
     },
     play: ({ canvasElement }) => {
-        // Null means "not authored": an empty input and no header badge.
+        // Null means "not authored" (per-power costs await content#30): the input
+        // says "Not set" and the header badge reads "—" rather than vanishing (#659).
         const input = canvasElement.querySelector<HTMLInputElement>('input[name="system.cost"]');
         void expect(input?.value).toBe('');
-        void expect(canvasElement.querySelector('.fa-gem')).toBeNull();
+        void expect(input?.placeholder).toBe('Not set');
+        void expect(canvasElement.querySelector('[data-field="xp-cost"]')?.textContent.trim()).toBe('—');
+    },
+};
+
+/** The sheet's default width (PsychicPowerSheet `width`). */
+const SHEET_WIDTH_PX = 550;
+
+/**
+ * #659: the discipline showed its raw key ("pyromancy") as a free-text input, and the
+ * header's stat block fell into the 80px image column, so "PYROMANCY POWER", the
+ * source and the range wrapped word by word. The discipline is now a select over the
+ * disciplines with langpack labels, and the block spans the header.
+ */
+export const DisciplineSelectAndHeaderWidth: Story = {
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true });
+        ctx.item.system['range'] = '15 metres x Psy Rating';
+        const sheet = renderSheet(templateSrc, ctx);
+        sheet.style.width = `${SHEET_WIDTH_PX}px`;
+        return sheet;
+    },
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.discipline"]');
+        await expect(Array.from(select?.options ?? [], (option) => option.value)).toEqual([...PSYCHIC_DISCIPLINE_CHOICES]);
+        await expect(select?.value).toBe('biomancy');
+        await expect(select?.selectedOptions[0]?.textContent.trim()).toBe('Biomancy');
+        await expect(canvasElement.querySelector('[data-field="discipline-label"]')?.textContent.trim()).toBe('Biomancy Power');
+        const slot = canvasElement.querySelector('[data-field="item-header-slot"]');
+        await expect(slot?.getBoundingClientRect().width ?? 0).toBeGreaterThan(SHEET_WIDTH_PX / 2);
     },
 };
 

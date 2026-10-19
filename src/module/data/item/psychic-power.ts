@@ -6,7 +6,13 @@ import ActivationTemplate from '../shared/activation-template.ts';
 import { type AttackCueData, attackCueField } from '../shared/attack-cue-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import { normalisePsychicDiscipline, PSYCHIC_DISCIPLINE_CHOICES } from './psychic-discipline.ts';
+import {
+    normalisePsychicDiscipline,
+    PSYCHIC_DISCIPLINE_CHOICES,
+    type PsychicDisciplineOption,
+    psychicDisciplineLabelKey,
+    psychicDisciplineOptions,
+} from './psychic-discipline.ts';
 
 /**
  * Data model for Psychic Power items.
@@ -156,7 +162,12 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * @type {string}
      */
     get disciplineLabel(): string {
-        return game.i18n.localize(`WH40K.PsychicDiscipline.${this.discipline.capitalize()}`);
+        return game.i18n.localize(psychicDisciplineLabelKey(this.discipline));
+    }
+
+    /** The sheet's discipline select options, labelled through the langpack (#659). */
+    get disciplineOptions(): PsychicDisciplineOption[] {
+        return psychicDisciplineOptions(this.discipline);
     }
 
     /**

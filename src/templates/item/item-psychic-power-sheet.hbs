@@ -5,7 +5,7 @@
             <div class="tw-flex tw-flex-col tw-gap-2">
                 <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-opacity-70 tw-uppercase tw-tracking-wide">
                     <i class="fas fa-brain tw-text-gold {{themeClassFor 'accent'}}"></i>
-                    <span>{{localize "WH40K.ItemSheet.PsychicPower.PowerLabel" discipline=item.system.discipline}}</span>
+                    <span data-field="discipline-label">{{localize "WH40K.ItemSheet.PsychicPower.PowerLabel" discipline=item.system.disciplineLabel}}</span>
                 </div>
                 <div class="tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
                     {{#if item.system.subtype}}
@@ -54,13 +54,13 @@
                     </div>
                     {{/if}}
 
-                    {{#if item.system.cost}}
+                    {{!-- Always shown: an unset cost reads "—" rather than vanishing. Per-power
+                          XP costs are still missing from the content (content#30). --}}
                     <div class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm tw-border tw-border-[color:var(--wh40k-border-color-light)] tw-bg-[color:var(--wh40k-panel-bg)]">
                         <span class="tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold {{themeClassFor 'accent'}}"><i class="fas fa-gem"></i></span>
                         <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Common.XP"}}</span>
-                        <span class="tw-font-semibold">{{item.system.cost}}</span>
+                        <span class="tw-font-semibold" data-field="xp-cost">{{#if item.system.cost}}{{item.system.cost}}{{else}}&mdash;{{/if}}</span>
                     </div>
-                    {{/if}}
                 </div>
             </div>
         {{/systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
@@ -84,11 +84,15 @@
                         <div class="tw-grid tw-grid-cols-3 tw-gap-3">
                             <div class="tw-flex tw-flex-col tw-gap-1">
                                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.PsychicPower.Discipline"}}</label>
-                                <input type="text" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.discipline" value="{{item.system.discipline}}" placeholder="{{localize 'WH40K.ItemSheet.PsychicPower.DisciplinePlaceholder'}}" />
+                                {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="system.discipline"}}
+                                    {{#each item.system.disciplineOptions as |option|}}
+                                        <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{localize option.labelKey}}</option>
+                                    {{/each}}
+                                {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
                                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.PsychicPower.XpCost"}}</label>
-                                <input type="number" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.cost" value="{{item.system.cost}}" min="0" step="1" />
+                                <input type="number" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.cost" value="{{item.system.cost}}" min="0" step="1" placeholder="{{localize 'WH40K.ItemSheet.PsychicPower.XpCostUnset'}}" />
                             </div>
                             <div class="tw-flex tw-flex-col tw-gap-1">
                                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Common.Source"}}</label>

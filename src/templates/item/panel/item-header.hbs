@@ -147,7 +147,10 @@
          rows, inline control clusters). Absent for non-block callers, so
          output stays byte-identical for the original consumers. --}}
     {{#if @partial-block}}
-        <div class="tw-[grid-column:1/-1]">
+        {{!-- Spans every column. The arbitrary `[grid-column:1/-1]` it carried did not
+              take, so the region fell into the 80px image column and its text wrapped
+              word by word (#659). --}}
+        <div class="tw-col-span-full tw-min-w-0" data-field="item-header-slot">
             {{> @partial-block}}
         </div>
     {{/if}}
