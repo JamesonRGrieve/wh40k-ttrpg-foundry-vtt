@@ -4,7 +4,7 @@
         {{! Header }}
         <div class="tw-relative tw-px-4 tw-py-3 tw-bg-gradient-to-r tw-from-[var(--wh40k-accent-overlay)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color)]">
             <div class="tw-text-xs tw-text-[var(--wh40k-card-muted)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.actor.name}}</div>
-            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Hit" location=(hitLocationLabel this.hit.location)}}</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Applied"}}</h2>{{/if}}
+            {{#if hasDamage}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'chatAccent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Hit" location=(hitLocationLabel this.hit.location)}}</h2>{{else}}<h2 class="tw-font-display tw-text-lg tw-font-semibold {{themeClassFor 'chatAccent'}} tw-uppercase tw-tracking-wide tw-m-0 tw-shadow-[0_2px_4px_var(--wh40k-shadow-medium)]">{{localize "WH40K.Chat.AssignDamage.Applied"}}</h2>{{/if}}
         </div>
 
         {{! Body }}
@@ -72,16 +72,16 @@
             {{/if}}
 
             {{#if this.hasCriticalDamage}}
-                <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-md tw-text-center">
-                    <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-widest tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚠ {{localize "WH40K.Chat.AssignDamage.CriticalDamage" value=this.criticalDamageTaken}} ⚠</div>
+                <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-md tw-text-center">
+                    <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-widest tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚠ {{localize "WH40K.Chat.AssignDamage.CriticalDamage" value=this.criticalDamageTaken}} ⚠</div>
                     <div class="tw-text-sm tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-snug">{{this.criticalEffect}}</div>
                 </div>
             {{/if}}
 
             {{#if this.hasCriticalSideEffects}}
                 {{#with this.criticalSideEffects as |se|}}
-                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-r-md">
-                        <div class="tw-font-display tw-text-xs tw-font-bold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-widest tw-mb-1.5">{{localize "WH40K.CriticalDamage.SideEffects.Title"}}</div>
+                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-r-md">
+                        <div class="tw-font-display tw-text-xs tw-font-bold {{themeClassFor 'chatAccent'}} tw-uppercase tw-tracking-widest tw-mb-1.5">{{localize "WH40K.CriticalDamage.SideEffects.Title"}}</div>
                         <ul class="tw-m-0 tw-pl-4 tw-text-sm tw-text-[var(--wh40k-card-text)] tw-leading-snug tw-list-disc">
                             {{#if se.armourNegated}}<li>{{localize "WH40K.CriticalDamage.SideEffects.ArmourNegated"}}</li>{{/if}}
                             {{#if se.unarmouredWorsens}}<li>{{localize "WH40K.CriticalDamage.SideEffects.UnarmouredWorsens"}}</li>{{/if}}

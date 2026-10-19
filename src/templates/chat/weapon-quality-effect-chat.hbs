@@ -35,7 +35,7 @@
 --}}
 <div data-wh40k-hook="quality-card" class="wh40k-rpg tw-p-4 tw-rounded-md tw-border tw-bg-[rgba(15,12,8,0.85)] tw-border-[rgba(201,162,39,0.35)] dh2:tw-border-bronze rt:tw-border-amber-700 im:tw-border-failure"
      data-wh40k-system="{{gameSystem}}"
-     data-quality-key="{{qualityKey}}">
+     data-quality-key="{{qualityKey}}" data-wh40k-surface="dark">
 
     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
         <i class="fas {{#if iconClass}}{{iconClass}}{{else}}fa-bullseye{{/if}} tw-text-[1.1rem] {{accentClass}}"></i>
@@ -84,7 +84,7 @@
                 <span class="tw-font-bold tw-tabular-nums">
                     {{localize (concat "WH40K.Quality.Save." payload.saveCharacteristic)}}
                     {{#if payload.saveTarget}}
-                        <span class="tw-text-gold dh2:tw-text-bronze">{{payload.saveTarget}}</span>
+                        <span class="tw-text-[color:var(--wh40k-card-gold)] dh2:tw-text-bronze">{{payload.saveTarget}}</span>
                     {{/if}}
                     {{#if payload.savePenalty}}
                         <span class="tw-text-red-400">({{payload.savePenalty}})</span>

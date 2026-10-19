@@ -29,6 +29,7 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
         primary: 'crimson-light',
         // Accent is text on the dark sheet: failure measured 1.3:1 (near-invisible).
         accent: 'failure-l40',
+        chatAccent: 'failure',
         border: 'failure-l10',
     } as const;
 

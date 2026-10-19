@@ -75,6 +75,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly theme = {
         primary: 'accent-dynasty',
         accent: 'gold',
+        chatAccent: 'gold-dark-d20',
         border: 'gold-dark',
     } as const;
 

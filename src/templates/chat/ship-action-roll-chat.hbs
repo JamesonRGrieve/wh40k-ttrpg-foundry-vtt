@@ -26,7 +26,7 @@
         {{#if magnitude}}
             <section class="tw-p-2 tw-rounded-sm tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.18)]">
                 <div class="tw-text-xs tw-uppercase tw-tracking-[0.08em] tw-text-[var(--wh40k-card-muted)] tw-mb-1">{{magnitude.title}}</div>
-                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+                {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs accentRole="accent"
                     baseTarget=magnitude.base
                     baseLabel=magnitude.baseLabel
                     modifierSources=magnitude.rows

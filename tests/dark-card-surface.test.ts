@@ -12,10 +12,10 @@
  * (tailwind/design-tokens.js) re-point the text tokens to light values.
  */
 
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { contrast, hexRgb, objectLiteral, over, type Rgb } from './lib/contrast.ts';
+import { contrast, hexRgb, objectLiteral, over, parseColour, type Rgb } from './lib/contrast.ts';
 
 const ROOT = resolve(__dirname, '..');
 
@@ -127,5 +127,38 @@ describe('chat message surface tokens (design-tokens.js)', () => {
     it('a dark card re-points every colour the chat surface sets, so none leaks dark-on-dark', () => {
         const missing = [...surface.keys()].filter((key) => surface.get(key)?.startsWith('#') === true && !dark.has(key));
         expect(missing).toEqual([]);
+    });
+});
+
+/** A panel colour is dark below this contrast against black (luminance < 0.05) when at least this opaque. */
+const DARK_AGAINST_BLACK = 2;
+const DARK_MIN_ALPHA = 0.6;
+
+/** The first element a chat template renders: its card root. */
+function rootElement(source: string): string | null {
+    const body = source.replace(/\{\{!--[\s\S]*?--\}\}/gu, '').replace(/\{\{![^}]*\}\}/gu, '');
+    return /<(?:div|section|article)\b[^>]*>/u.exec(body)?.[0] ?? null;
+}
+
+/** Does this element paint a dark background (an arbitrary `tw-bg-[…]` colour or gradient `tw-from-[…]` stop, no variant)? */
+function paintsDark(element: string): boolean {
+    return [...element.matchAll(/(?<![\w:])tw-(?:bg|from)-\[(#[0-9a-f]{6}|rgba?\([^)]*\))\]/giu)].some(([, value]) => {
+        const { rgb, alpha } = parseColour(value.replace(/_/gu, ' '));
+        return alpha >= DARK_MIN_ALPHA && contrast(rgb, { r: 0, g: 0, b: 0 }) < DARK_AGAINST_BLACK;
+    });
+}
+
+describe('dark chat card roots', () => {
+    it('every chat card whose root paints a dark panel declares the dark surface', () => {
+        // Chat cards read the chat-surface tokens (dark text for the parchment message);
+        // a dark card that does not declare data-wh40k-surface="dark" draws them dark on dark.
+        const dir = 'src/templates/chat';
+        const undeclared = readdirSync(join(ROOT, dir), { recursive: true, encoding: 'utf8' })
+            .filter((name) => name.endsWith('.hbs'))
+            .filter((name) => {
+                const root = rootElement(read(`${dir}/${name}`));
+                return root !== null && paintsDark(root) && !root.includes('data-wh40k-surface="dark"');
+            });
+        expect(undeclared).toEqual([]);
     });
 });

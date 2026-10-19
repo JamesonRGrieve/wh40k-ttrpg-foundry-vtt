@@ -22,6 +22,8 @@
         rawModifierTotal  — optional, the un-capped modifier sum (for the cap row)
         modifierTotal     — optional, the capped modifier sum (for the cap row)
         baseLabel         — optional, default "Base"
+        accentRole        — optional theme role for the Target value: default `chatAccent` (the
+                            parchment message); a dark card passes `accent`
         baseTooltipData   — optional, a "modifier" tooltip payload making the base row hoverable to its source
         targetLabel       — optional, default "Target"
 --}}
@@ -59,5 +61,5 @@
 
 <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
     <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-breakdown-label>{{#if targetLabel}}{{targetLabel}}{{else}}{{localize "WH40K.Roll.TargetLabel"}}{{/if}}</span>
-    <span class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-text-[1.2rem] tw-font-bold {{themeClassFor 'accent'}}" data-breakdown-value>{{modifiedTarget}}</span>
+    <span class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-text-[1.2rem] tw-font-bold {{themeClassFor (defaultVal accentRole 'chatAccent')}}" data-breakdown-value>{{modifiedTarget}}</span>
 </div>

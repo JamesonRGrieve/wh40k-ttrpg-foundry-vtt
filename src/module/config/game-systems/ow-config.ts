@@ -148,6 +148,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly theme = {
         primary: 'brass',
         accent: 'brass-l20',
+        chatAccent: 'brass-d30',
         border: 'brass-d15',
     } as const;
 

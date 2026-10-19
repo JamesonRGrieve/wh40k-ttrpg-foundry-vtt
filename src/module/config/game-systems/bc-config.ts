@@ -126,6 +126,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         primary: 'crimson',
         // Accent is text on the dark sheet: crimson-light measured 2.3:1, below WCAG AA.
         accent: 'crimson-l40',
+        chatAccent: 'crimson',
         border: 'crimson-dark',
     } as const;
 

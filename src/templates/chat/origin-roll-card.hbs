@@ -7,7 +7,7 @@
             <img src="{{actorImg}}" alt="{{actor}}" class="tw-w-10 tw-h-10 tw-rounded-full tw-border-2 tw-border-gold-raw" />
             <div class="tw-flex tw-flex-col">
                 <h3 class="tw-m-0 tw-text-base" style="color: #e0e0e0;">{{actor}}</h3>
-                <p class="tw-m-0 tw-text-sm tw-flex tw-items-center tw-gap-1 tw-text-gold-raw">
+                <p class="tw-m-0 tw-text-sm tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-card-gold)]">
                     <i class="fa-solid fa-scroll"></i>
                     {{origin}}
                 </p>
@@ -27,7 +27,7 @@
 
     {{!-- Formula --}}
     <div class="tw-p-3" style="background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(201, 160, 99, 0.3); border-bottom: 1px solid rgba(201, 160, 99, 0.3);">
-        <label class="tw-inline-block tw-mr-2 tw-font-bold tw-text-gold-raw">{{localize "WH40K.Chat.Label.Formula"}}</label>
+        <label class="tw-inline-block tw-mr-2 tw-font-bold tw-text-[color:var(--wh40k-card-gold)]">{{localize "WH40K.Chat.Label.Formula"}}</label>
         <code class="tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-md" style="font-family: 'Courier New', monospace; color: #ffd700; background: rgba(0, 0, 0, 0.4);">{{formula}}</code>
     </div>
 
@@ -35,10 +35,10 @@
     <div class="tw-p-6 tw-text-center tw-relative tw-overflow-hidden"
          style="{{#if (eq rollType 'wounds')}}background: linear-gradient(135deg, rgba(139, 0, 0, 0.2) 0%, transparent 100%);{{/if}}{{#if (eq rollType 'fate')}}background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);{{/if}}">
         <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-relative">
-            <span class="tw-font-bold tw-text-gold-raw" style="font-size: 3.5rem; text-shadow: 0 0 20px rgba(201, 160, 99, 0.5); animation: numberPulse 2s ease-in-out infinite;">{{result}}</span>
+            <span class="tw-font-bold tw-text-[color:var(--wh40k-card-gold)]" style="font-size: 3.5rem; text-shadow: 0 0 20px rgba(201, 160, 99, 0.5); animation: numberPulse 2s ease-in-out infinite;">{{result}}</span>
             <span class="tw-text-md tw-uppercase" style="color: #e0e0e0; letter-spacing: 2px;">{{rollTypeLabel}}</span>
         </div>
-        <div class="tw-mt-4 tw-pt-4 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-relative tw-text-gold-raw" style="border-top: 1px solid rgba(201, 160, 99, 0.3); font-family: 'Courier New', monospace;">
+        <div class="tw-mt-4 tw-pt-4 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-relative tw-text-[color:var(--wh40k-card-gold)]" style="border-top: 1px solid rgba(201, 160, 99, 0.3); font-family: 'Courier New', monospace;">
             <i class="fa-solid fa-calculator"></i>
             <span>{{breakdown}}</span>
         </div>
@@ -46,7 +46,7 @@
 
     {{!-- Footer --}}
     <div class="tw-p-3 tw-text-center tw-border-t tw-border-gold-raw" style="background: rgba(201, 160, 99, 0.1);">
-        <p class="tw-m-0 tw-italic tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gold-raw">
+        <p class="tw-m-0 tw-italic tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-[color:var(--wh40k-card-gold)]">
             {{#if (eq rollType 'wounds')}}
                 <i class="fa-solid fa-shield-heart" style="color: #ffd700;"></i>
                 {{localize "WH40K.Chat.OriginRoll.AddedToWounds"}}

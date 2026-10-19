@@ -91,8 +91,8 @@
                     {{! Righteous Fury }}
                     {{! Each trigger rolls its critical level (fury.roll) and looks up its effect. }}
                     {{#each hit.righteousFury as |fury|}}
-                        <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-gold-bright)] tw-rounded-md tw-text-center tw-animate-[fury-glow_1.5s_ease-in-out_infinite_alternate]" data-righteous-fury>
-                            <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-[0.15em] tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚡ {{localize "WH40K.RighteousFury.Triggered"}} ⚡</div>
+                        <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-md tw-text-center tw-animate-[fury-glow_1.5s_ease-in-out_infinite_alternate]" data-righteous-fury>
+                            <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-[0.15em] tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚡ {{localize "WH40K.RighteousFury.Triggered"}} ⚡</div>
                             <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-[1.4]">{{localize "WH40K.RighteousFury.CriticalLevel"}} {{fury.roll.total}}{{#if fury.effect}}: {{fury.effect}}{{/if}}</div>
                         </div>
                     {{/each}}
@@ -150,10 +150,10 @@
                   rolls its damage like any weapon, and its rider then applies to everyone
                   the blast struck — listed here after the damage it follows. --}}
             {{#if damageRider}}
-                <div class="tw-my-3 tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] tw-bg-[rgba(15,12,8,0.6)]" data-damage-rider>
+                <div class="tw-my-3 tw-p-3 tw-rounded-md tw-border tw-border-[rgba(201,162,39,0.35)] tw-bg-[rgba(15,12,8,0.9)]" data-damage-rider data-wh40k-surface="dark">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
-                        <i class="fas fa-bomb tw-text-gold" aria-hidden="true"></i>
-                        <span class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.85rem] tw-text-gold">{{localize "WH40K.GrenadeRider.FollowsDamage"}}</span>
+                        <i class="fas fa-bomb tw-text-[color:var(--wh40k-card-gold)]" aria-hidden="true"></i>
+                        <span class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.85rem] tw-text-[color:var(--wh40k-card-gold)]">{{localize "WH40K.GrenadeRider.FollowsDamage"}}</span>
                     </div>
                     {{#if damageRider.struck.length}}
                         <div class="tw-text-[0.8rem] tw-text-[#9a9a8a] tw-mb-2" data-damage-rider-struck>

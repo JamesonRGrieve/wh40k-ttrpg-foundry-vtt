@@ -17,10 +17,11 @@ import { ALL_SYSTEM_IDS, type SystemThemeRole } from './types.ts';
  *     and the element renders unstyled.
  */
 describe('themeClassFor (#422 SSOT)', () => {
-    const ROLES: readonly SystemThemeRole[] = ['primary', 'accent', 'border'];
+    const ROLES: readonly SystemThemeRole[] = ['primary', 'accent', 'chatAccent', 'border'];
     const PREFIX: Record<SystemThemeRole, string> = {
         primary: 'tw-bg-',
         accent: 'tw-text-',
+        chatAccent: 'tw-text-',
         border: 'tw-border-',
     };
 

@@ -31,7 +31,7 @@
                 {{#if chosenQualities.length}}
                     <div class="tw-mb-2">
                         <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-1 tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[var(--wh40k-card-text)]">
-                            <i class="fas fa-sliders-h tw-text-gold tw-text-[0.8rem]"></i>
+                            <i class="fas fa-sliders-h tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.8rem]"></i>
                             <span>{{localize "WH40K.Roll.FiringOptions"}}</span>
                         </div>
                         {{#each (specialQualities chosenQualities) as |quality|}}
@@ -89,7 +89,7 @@
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}
                     <div class="tw-flex tw-items-start tw-gap-[var(--wh40k-space-sm)] tw-py-1.5 tw-text-[0.85rem]">
-                        <span class="tw-font-semibold tw-text-gold tw-shrink-0">{{effect.name}}</span>
+                        <span class="tw-font-semibold tw-text-[color:var(--wh40k-card-gold)] tw-shrink-0">{{effect.name}}</span>
                         <span class="tw-text-[var(--wh40k-card-text)] tw-opacity-90">{{effect.effect}}</span>
                     </div>
                 {{/each}}
@@ -136,7 +136,7 @@
                             label="Success"
                             value=roll.total}}
                         {{#if hitLocation}}
-                            <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-gold tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
+                            <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
                                 <i class="fas fa-crosshairs tw-text-[0.75rem] tw-opacity-70"></i>
                                 <span>{{hitLocationLabel hitLocation}}</span>
                             </div>
@@ -156,7 +156,7 @@
                 {{#if @root.evasion}}
                     <div class="tw-mt-2 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-border-color)] tw-rounded-[0_4px_4px_0]" data-evasion-status="{{@root.evasion.status}}">
                         <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-card-text)]">
-                            <i class="fas fa-wind tw-text-[0.75rem] tw-text-gold" aria-hidden="true"></i>
+                            <i class="fas fa-wind tw-text-[0.75rem] tw-text-[color:var(--wh40k-card-gold)]" aria-hidden="true"></i>
                             <span>{{@root.evasion.summary}}</span>
                         </div>
                         {{#each @root.evasion.rows as |row|}}
@@ -185,7 +185,7 @@
                         {{else if noDamage}}
                             {{> systems/wh40k-rpg/templates/chat/partial/no-damage-note.hbs}}
                         {{else if @root.evasion.fullyEvaded}}
-                            <p class="tw-m-0 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-fully-evaded>
+                            <p class="tw-m-0 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-fully-evaded>
                                 <i class="fas fa-wind tw-text-[0.8rem]" aria-hidden="true"></i>
                                 <span>{{localize "WH40K.Evasion.Evaded"}}</span>
                             </p>
@@ -208,13 +208,13 @@
                                 <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
                             </button>
                         {{else}}
-                            <button class="tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
+                            <button class="tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.Damage"}}</span>
                             </button>
                         {{/if}}
                         <div class="tw-flex tw-gap-1.5">
-                            <button class="roll-control__refund tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-gold tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                            <button class="roll-control__refund tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[14px]">deblur</span>
                                 <span>{{localize "WH40K.FateRefund"}}</span>
                             </button>

@@ -62,7 +62,7 @@
                     <i class="fas fa-arrow-right tw-text-[color:var(--wh40k-text-muted)]"></i>
                     <span class="tw-text-[0.85rem] tw-font-semibold
  {{#if (eq event.newState 'unharmed')}}tw-text-success{{/if}}
- {{#if (eq event.newState 'wounded')}}tw-text-gold{{/if}}
+ {{#if (eq event.newState 'wounded')}}tw-text-[color:var(--wh40k-card-gold)]{{/if}}
  {{#if (eq event.newState 'dead')}}tw-text-crimson{{/if}}">
                         {{localize event.newStateKey}}
                     </span>

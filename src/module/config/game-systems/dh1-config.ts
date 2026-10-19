@@ -76,6 +76,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly theme = {
         primary: 'gold-raw',
         accent: 'gold-raw-l5',
+        chatAccent: 'gold-raw-d25',
         border: 'gold-raw-d15',
     } as const;
 

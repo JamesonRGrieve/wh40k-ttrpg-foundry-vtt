@@ -48,6 +48,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         primary: 'bronze',
         // Accent is text on the dark sheet: accent-combat measured 2.1:1, below WCAG AA.
         accent: 'accent-combat-l30',
+        chatAccent: 'accent-combat-d10',
         border: 'accent-combat-d10',
     } as const;
 

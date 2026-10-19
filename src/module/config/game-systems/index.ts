@@ -162,6 +162,7 @@ export function evasionRulesFor(line: string | undefined): EvasionRules | null {
 const ROLE_PREFIX: Record<SystemThemeRole, string> = {
     primary: 'tw-bg-',
     accent: 'tw-text-',
+    chatAccent: 'tw-text-',
     border: 'tw-border-',
 };
 

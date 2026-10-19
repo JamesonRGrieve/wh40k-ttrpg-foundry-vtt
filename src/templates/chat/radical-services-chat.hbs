@@ -3,12 +3,12 @@
 
     <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-[rgba(201,162,39,0.25)]">
         <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.ChatTitle"}}</div>
-        <div class="tw-text-[1.05rem] tw-font-bold tw-text-gold dh2:tw-text-gold-raw">{{service.label}}</div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--wh40k-card-gold)]">{{service.label}}</div>
     </header>
 
     <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-text-[0.8rem] tw-text-[#cfcab8]">
         <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.AvailabilityLabel"}}:</span> {{service.availabilityLabel}}</div>
-        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.TargetLabel"}}:</span> <span class="tw-tabular-nums tw-text-gold">{{requisition.target}}</span></div>
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.TargetLabel"}}:</span> <span class="tw-tabular-nums tw-text-[color:var(--wh40k-card-gold)]">{{requisition.target}}</span></div>
         <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.RollLabel"}}:</span> <span class="tw-tabular-nums">{{requisition.roll}}</span></div>
         <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.RadicalServices.ThreatLabel"}}:</span> <span class="tw-tabular-nums">{{service.threatLevel}}</span></div>
     </div>

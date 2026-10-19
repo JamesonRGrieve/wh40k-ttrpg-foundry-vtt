@@ -138,6 +138,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly theme = {
         primary: 'bronze',
         accent: 'gold-raw',
+        chatAccent: 'gold-raw-d30',
         border: 'gold-raw-d10',
     } as const;
 

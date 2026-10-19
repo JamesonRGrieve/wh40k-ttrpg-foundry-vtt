@@ -5,15 +5,15 @@
     Daemonhost's 1d5, Enemies Beyond p. 38). `gameSystem` is set on the root because chat cards
     render outside a sheet.
 --}}
-<div class="tw-p-3 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2:tw-border-bronze"
-     data-wh40k-hook="rc-call-chat" {{#if gameSystem}}data-wh40k-system="{{gameSystem}}"{{/if}}>
+<div class="tw-p-3 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(16,12,8,0.94)] tw-to-[rgba(16,12,8,0.86)] dh2:tw-border-bronze"
+     data-wh40k-hook="rc-call-chat" data-wh40k-surface="dark" {{#if gameSystem}}data-wh40k-system="{{gameSystem}}"{{/if}}>
     <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
         <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Reinforcement.ChatTitle"}}</div>
-        <div class="tw-text-[1.05rem] tw-font-bold tw-text-gold dh2:tw-text-gold-raw">{{rcName}}</div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--wh40k-card-gold)]">{{rcName}}</div>
         <div class="tw-text-[0.8rem] tw-text-[#cfcab8]">{{localize "WH40K.Reinforcement.CalledBy" name=callerName}}</div>
     </header>
 
-    <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem] tw-text-[#cfcab8]">
+    <dl class="tw-m-0 tw-grid tw-grid-cols-[1fr_auto] tw-gap-x-3 tw-gap-y-0.5 tw-text-[0.8rem] tw-text-[#cfcab8] [&_dt]:tw-text-inherit [&_dd]:tw-text-inherit">
         <dt>{{localize "WH40K.Reinforcement.InfluenceCost"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{baseCost}}</dd>
         {{#if peerDiscount}}<dt>{{localize "WH40K.Reinforcement.PeerShort" peer=peer}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">−{{peerDiscount}}</dd>{{/if}}
         {{#if gmAdjustment}}<dt>{{localize "WH40K.Reinforcement.GmAdjustment"}}</dt><dd class="tw-m-0 tw-text-right tw-tabular-nums">{{gmAdjustment}}</dd>{{/if}}

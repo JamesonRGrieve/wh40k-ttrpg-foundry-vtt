@@ -105,6 +105,10 @@ export interface SystemTheme {
     primary: string;
     /** Secondary accent — hover states, active indicators, callouts. */
     accent: string;
+    /** The accent drawn on a light chat card: chat messages are parchment whatever
+     *  the sheet theme, so a darker shade of {@link accent} (>=4.5:1 on parchment).
+     *  Dark chat cards (`data-wh40k-surface="dark"`) keep {@link accent}. */
+    chatAccent: string;
     /** Border / divider tint for shells, headers, tab strips. */
     border: string;
 }
