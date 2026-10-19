@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { scanContrast } from './lib/contrast';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -169,7 +170,13 @@ test.describe.serial('profane object gear sheet', () => {
         test.skip(!probe.created, `could not create gear item: ${probe.createError ?? 'unknown'}`);
 
         await snap(page, 'profane-object-gear-sheet');
+        // #660: the strip's red-on-maroon text and the red-on-red chip meet WCAG AA.
+        const stripContrast = await scanContrast(page, '[data-wh40k-hook="gear-profane-panel"]');
+        const chipContrast = await scanContrast(page, ':has(> [data-wh40k-hook="gear-profane-badge"])');
+        await snap(page, 'profane-object-gear-strip', { selector: '[data-wh40k-hook="gear-profane-panel"]' });
         await cleanupProfaneObjectProbe(page);
+        expect(stripContrast, 'Profane Object strip text').toEqual([]);
+        expect(chipContrast, 'Profane Object header chip').toEqual([]);
 
         const failures: string[] = [];
         if (!probe.rendered) failures.push(`sheet did not render: ${probe.createError ?? 'unknown'}`);

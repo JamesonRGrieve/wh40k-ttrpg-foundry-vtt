@@ -111,6 +111,8 @@ const lightTheme = {
     '--wh40k-dynasty-primary': '#74560c',
     // Gold label text on panel washes (#260): ≥ 4.5:1 on the theme's panel.
     '--wh40k-accent-gold-text': '#6e500c',
+    // Danger label text (#660, the Profane Object strip): ≥ 4.5:1 on a crimson wash.
+    '--wh40k-danger-text': '#9e1c1c',
 };
 
 const darkTheme = {
@@ -144,6 +146,8 @@ const darkTheme = {
     '--wh40k-dynasty-primary': '#d4a520',
     // Gold label text on panel washes (#260): ≥ 4.5:1 on the theme's panel.
     '--wh40k-accent-gold-text': '#e0b84a',
+    // Danger label text (#660, the Profane Object strip): ≥ 4.5:1 on a crimson wash.
+    '--wh40k-danger-text': '#f87171',
 };
 
 // Theme-invariant semantic tokens — same value in light and dark, applied to
