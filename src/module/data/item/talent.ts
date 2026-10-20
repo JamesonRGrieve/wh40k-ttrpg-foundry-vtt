@@ -1,12 +1,13 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { REACTION_HOOK_GRANTS, REACTION_HOOK_LIMITS, REACTION_HOOK_TRIGGERS, type ReactionHook } from '../../rules/counter-attack.ts';
+import { type StructuredPrerequisites, toStructuredPrerequisites } from '../../rules/prerequisites.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import { prerequisitesField, type StructuredPrerequisites, toStructuredPrerequisites } from '../shared/prerequisites-field.ts';
+import { prerequisitesField } from '../shared/prerequisites-field.ts';
 import RerollTemplate from '../shared/reroll-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';

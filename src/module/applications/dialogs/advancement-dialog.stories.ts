@@ -12,7 +12,7 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
-import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../data/shared/prerequisites-field.ts';
+import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
 import { psychicPowerCharge, psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { type SupportedLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type PrerequisiteActorView, type StructuredPrerequisites, toStructuredPrerequisites, unmetPrerequisites } from './prerequisites-field.ts';
+import { type PrerequisiteActorView, type StructuredPrerequisites, toStructuredPrerequisites, unmetPrerequisites } from './prerequisites.ts';
 
 const NONE: StructuredPrerequisites = { text: '', characteristics: {}, skills: [], talents: [], talentsAny: [], alignment: '', thresholds: {} };
 

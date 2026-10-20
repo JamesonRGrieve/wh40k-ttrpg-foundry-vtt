@@ -1,3 +1,4 @@
+import { type StructuredPrerequisites, toStructuredPrerequisites } from '../../rules/prerequisites.ts';
 import { psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
@@ -6,7 +7,7 @@ import ActivationTemplate from '../shared/activation-template.ts';
 import { type AttackCueData, attackCueField } from '../shared/attack-cue-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import { prerequisitesField, type StructuredPrerequisites, toStructuredPrerequisites } from '../shared/prerequisites-field.ts';
+import { prerequisitesField } from '../shared/prerequisites-field.ts';
 import {
     normalisePsychicDiscipline,
     PSYCHIC_DISCIPLINE_CHOICES,

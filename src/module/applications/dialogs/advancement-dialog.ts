@@ -10,10 +10,10 @@ import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-ba
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { Prerequisite } from '../../config/game-systems/types.ts';
-import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../data/shared/prerequisites-field.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';

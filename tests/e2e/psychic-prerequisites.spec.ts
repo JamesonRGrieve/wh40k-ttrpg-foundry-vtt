@@ -12,7 +12,7 @@ import { scaledMs } from './lib/timing';
  * Psychic powers had no `prerequisites` field: the sheet's input was dropped on save,
  * the pack text never loaded, and the Advancement Dialog gated only on Psy Rating. The
  * field is now the shared structured shape talents use
- * (src/module/data/shared/prerequisites-field.ts), authored from each book's printed
+ * (src/module/rules/prerequisites.ts), authored from each book's printed
  * Prerequisite line, and the dialog checks it. DH2 core prints Smite's prerequisite as
  * "Willpower 40" (p. 202).
  *
