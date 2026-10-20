@@ -489,7 +489,7 @@ describe('AssignDamageData — defender-side crit-reduction hooks (Direction #7)
     function critActor(items?: DynamicModifierItemLike[]): ActorLike {
         const actor: ActorLike = {
             system: {
-                armour: { BODY: { value: 0, toughnessBonus: 3 }, HEAD: { value: 0, toughnessBonus: 3 } },
+                armour: { body: { value: 0, toughnessBonus: 3 }, head: { value: 0, toughnessBonus: 3 } },
                 wounds: { value: 2, critical: 0 },
                 fatigue: { value: 0 },
             },

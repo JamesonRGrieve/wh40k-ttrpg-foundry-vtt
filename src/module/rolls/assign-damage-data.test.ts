@@ -37,8 +37,8 @@ function buildActor(overrides: Partial<ActorLike['system']> = {}): ActorLike {
     return {
         system: {
             armour: {
-                BODY: { value: 4, toughnessBonus: 3 },
-                HEAD: { value: 2, toughnessBonus: 3 },
+                body: { value: 4, toughnessBonus: 3 },
+                head: { value: 2, toughnessBonus: 3 },
             },
             wounds: { value: 10, critical: 0 },
             fatigue: { value: 0 },
@@ -425,7 +425,7 @@ describe('defender-side crit reduction via dynamicModifiers (True Grit, data-dri
     }
     function actorWith(items?: DynamicModifierItemLike[]): ActorLike {
         const actor = buildActor({
-            armour: { BODY: { value: 0, toughnessBonus: 3 }, HEAD: { value: 0, toughnessBonus: 3 } },
+            armour: { body: { value: 0, toughnessBonus: 3 }, head: { value: 0, toughnessBonus: 3 } },
             wounds: { value: 2, critical: 0 },
         });
         if (items !== undefined) actor.items = items;

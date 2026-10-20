@@ -16,6 +16,7 @@ import {
     type DynamicModifierSituation,
 } from '../rules/dynamic-modifiers.ts';
 import { type ActorStateSource, collectActorStates } from '../rules/situation-tags.ts';
+import { locationSoak, type SoakSource, type TargetArmour } from '../rules/target-soak.ts';
 import { isVehicleLocationId, resolveVehicleDamage, type VehicleArmourFacing, type VehicleLocationId } from '../rules/vehicle-damage.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
@@ -42,7 +43,10 @@ const ASSIGN_DAMAGE_TEMPLATE = 'systems/wh40k-rpg/templates/chat/assign-damage-c
 /** Minimal actor shape needed for damage assignment. Exported for tests. */
 export interface ActorLike extends ActorStateSource {
     system: {
-        armour: Record<string, { value: number; toughnessBonus: number }>;
+        /** A PC's per-location armour or an NPC's armour block, read through {@link locationSoak}. */
+        armour: TargetArmour;
+        /** An NPC's Toughness Bonus (Unnatural Toughness folded in) is read from here. */
+        characteristics?: SoakSource['characteristics'];
         // `max` is on the DataModel schema for both tracks; this local view
         // simply hadn't declared it. Needed for the "/ 12" context in the
         // applied-damage hover (#504) — optional because a track without a
@@ -191,14 +195,11 @@ export class AssignDamageData {
             this._updateVehicleArmour(vehicle);
             return;
         }
-        const location = this.hit.location;
-        if (location) {
-            for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
-                if (location.replace(/\s/g, '').toUpperCase() === name.toUpperCase()) {
-                    this.armour = locationArmour.value;
-                    this.tb = locationArmour.toughnessBonus;
-                }
-            }
+        // One accessor for a PC's per-location armour and an NPC's armour block (#248).
+        if (this.hit.location !== '') {
+            const soak = locationSoak(this.actor.system, this.hit.location);
+            this.armour = soak.armour;
+            this.tb = soak.toughnessBonus;
         }
         // A Warp Weapon passes through armour and cover alike (#414) — decided where the
         // hit met its weapon and its target's worn armour (`weaponIgnoresArmor`).

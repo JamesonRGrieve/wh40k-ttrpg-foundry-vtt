@@ -10,9 +10,10 @@
  */
 
 import type { NpcArmour } from '../../data/actor/npc-armour-edit.ts';
+import { npcArmourAP } from '../../rules/target-soak.ts';
 import type { WH40KArmourLocation } from '../../types/global.d.ts';
 
 export function npcArmourAtLocation(armour: Pick<NpcArmour, 'mode' | 'total' | 'locations'>, locationKey: string, toughnessBonus: number): WH40KArmourLocation {
-    const ap = armour.mode === 'simple' ? armour.total : armour.locations[locationKey] ?? 0;
+    const ap = npcArmourAP(armour, locationKey);
     return { value: ap, total: ap + toughnessBonus, toughnessBonus, traitBonus: 0 };
 }
