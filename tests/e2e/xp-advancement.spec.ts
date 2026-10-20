@@ -437,6 +437,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     for (const { line, expected } of [
         { line: 'dh2', expected: 'Take the Psyker elite advance from the Elite Advances tab' },
         { line: 'ow', expected: 'Only a character with the Sanctioned Psyker Speciality can buy psychic powers' },
+        // content#36: BC names every flagged archetype, its own Psyker among them.
+        { line: 'bc', expected: 'Archetype can buy psychic powers' },
     ]) {
         test(`${line}: the locked Psychic Powers banner names the line's psyker unlock (#680)`, async ({ page }) => {
             await joinOrSkip(page);
@@ -450,6 +452,10 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 if (line === 'dh2') {
                     // The tab the banner names is one the dialog shows.
                     await expect(dialog.locator('[data-action="switchTab"][data-tab="traits"]')).toHaveText('Elite Advances');
+                }
+                if (line === 'bc') {
+                    await expect(banner).toContainText('Psyker');
+                    await expect(banner).toContainText('Sorcerer');
                 }
                 await snap(page, `advancement-psychic-locked-${line}`, { selector: `#${opened.appId} :has(> div > [data-psyker-unlock-hint])` });
             } finally {
@@ -520,6 +526,42 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             }
         });
     }
+
+    // content#36: BC's Psyker archetype is BC's own document (BC Core pp. 68-69), not a stub of DH2's
+    // Psyker elite advance: its sheet shows the archetype's Chaos Psyker ability and 8+1d5 Wounds.
+    test('bc: the Psyker archetype is authored as BC prints it (content#36)', async ({ page }) => {
+        await joinOrSkip(page);
+        const sheetId = await page.evaluate(async () => {
+            interface SheetLike {
+                id: string;
+                render: (force: boolean) => Promise<object>;
+            }
+            interface PackLike {
+                getIndex: () => Promise<Array<{ _id: string; name: string }>>;
+                getDocument: (id: string) => Promise<{ sheet: SheetLike | null; system: { step: string; gameSystem: string } } | null>;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as { game: { packs: { get: (id: string) => PackLike | undefined } } };
+            const pack = g.game.packs.get('wh40k-rpg.bc-core-origins-archetypes');
+            const entry = (await pack?.getIndex())?.find((e) => e.name === 'Psyker');
+            const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
+            if (!doc?.sheet) throw new Error('BC Psyker archetype not found');
+            if (doc.system.step !== 'archetype' || doc.system.gameSystem !== 'bc') throw new Error(`BC Psyker is ${doc.system.gameSystem} ${doc.system.step}`);
+            await doc.sheet.render(true);
+            await globalThis.wh40kE2E.waitFor(() => document.getElementById(doc.sheet?.id ?? '') !== null, 'the BC Psyker sheet');
+            return doc.sheet.id;
+        });
+        const sheet = page.locator(`#${sheetId}`);
+        await expect(sheet).toContainText('Chaos Psyker');
+        await expect(sheet).toContainText('8+1d5');
+        await snap(page, 'bc-psyker-archetype-sheet', { selector: `#${sheetId}` });
+        await page.evaluate(async (id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+            const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
+                .applications.instances;
+            await apps.get(id)?.close();
+        }, sheetId);
+    });
 });
 
 /** Close the dialog and delete its probe character. */
