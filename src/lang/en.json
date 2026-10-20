@@ -733,7 +733,6 @@
             "CostThrones": "Cost (Thrones)",
             "Effect": "Effect",
             "Description": "Description",
-            "Notes": "Notes",
             "NotesPlaceholder": "Additional notes...",
             "Source": "Source",
             "SourcePlaceholder": "Rogue Trader Core Rulebook, pg. 123"
@@ -2398,7 +2397,6 @@
                 "Label": "Description"
             },
             "Notes": {
-                "Label": "GM Notes",
                 "Placeholder": "Follow-up tracking, planned scenes..."
             },
             "Section": {
@@ -7199,8 +7197,7 @@
             "RemovedProperties": "Removed Properties",
             "AddProperty": "Add Property",
             "RemoveProperty": "Remove Property",
-            "Effect": "Special Effect",
-            "Notes": "Notes"
+            "Effect": "Special Effect"
         },
         "GearCategory": {
             "General": "General Equipment",

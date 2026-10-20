@@ -26,14 +26,17 @@ interface Case {
     sections: readonly string[];
 }
 
+/** `system.notes` carries one title on every item sheet. */
+const NOTES_KEY = 'WH40K.ItemSheet.Common.GmNotes';
+
 const CASES: readonly Case[] = [
     {
         type: 'gear',
         tab: 'description',
-        sections: ['WH40K.ItemSheet.Gear.MechanicalEffect', 'WH40K.Tabs.Description', 'WH40K.ItemSheet.Common.GmNotes', 'WH40K.Common.Source'],
+        sections: ['WH40K.ItemSheet.Gear.MechanicalEffect', 'WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'],
     },
-    { type: 'armour', tab: 'description', sections: ['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', 'WH40K.Tabs.Notes', 'WH40K.Common.Source'] },
-    { type: 'weapon', tab: null, sections: ['WH40K.Tabs.Description', 'WH40K.Tabs.Notes'] },
+    { type: 'armour', tab: 'description', sections: ['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'] },
+    { type: 'weapon', tab: null, sections: ['WH40K.Tabs.Description', NOTES_KEY] },
 ];
 
 interface ProbeApp {

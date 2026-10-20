@@ -276,7 +276,7 @@
                 {{/if}}
             {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Ammunition.Notes"}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.ItemSheet.Common.GmNotes"}}
                 <textarea name="system.notes" rows="3" placeholder="{{localize "WH40K.Ammunition.NotesPlaceholder"}}"
                           class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y {{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}readonly{{/unless}}>{{item.system.notes}}</textarea>
             {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}

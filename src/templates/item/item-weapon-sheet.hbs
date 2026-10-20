@@ -644,7 +644,7 @@
           {{/if}}
       {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes" sectionId="notes"}}
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.ItemSheet.Common.GmNotes" sectionId="notes"}}
             <textarea name="system.notes" rows="2" placeholder="{{localize 'WH40K.ItemSheet.Weapon.PersonalNotes'}}"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-1.5 tw-text-sm tw-font-body tw-resize-y"
                       {{#unless inEditMode}}readonly{{/unless}}>{{system.notes}}</textarea>

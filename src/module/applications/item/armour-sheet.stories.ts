@@ -88,7 +88,12 @@ export const DescriptionTab: Story = {
     render: (args: Args) => activateTab(renderSheet(templateSrc, mockArmourSheetContext(args.overrides)), 'description'),
     play: async ({ canvasElement }) => {
         const sections = detailSectionTitles(canvasElement, 'description');
-        await expect(sections.map((s) => s.key)).toEqual(['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', 'WH40K.Tabs.Notes', 'WH40K.Common.Source']);
+        await expect(sections.map((s) => s.key)).toEqual([
+            'WH40K.Tabs.Effect',
+            'WH40K.Tabs.Description',
+            'WH40K.ItemSheet.Common.GmNotes',
+            'WH40K.Common.Source',
+        ]);
         // Each title renders, localized.
         await expect(sections.every((s) => s.title !== '' && !s.title.startsWith('WH40K.'))).toBe(true);
     },
