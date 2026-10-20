@@ -5,7 +5,7 @@ import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
 import { fateTotalWithLegacyThreshold } from '../../../rules/fate.ts';
-import { FATIGUE_MODES, getFatigueHalvedCharacteristic, getFatigueTestModifier, getFatigueThreshold, resolveFatigueModel } from '../../../rules/fatigue.ts';
+import { deriveFatigueTrack, getFatigueHalvedCharacteristic } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import {
     actorEnvironmentContext,
@@ -17,17 +17,17 @@ import {
 } from '../../../rules/scene-environment.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
-import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
 import { coerceInt } from '../../fields/coerce.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../../shared/characteristic-math.ts';
 import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL, normalizeCharacteristicKey } from '../../shared/characteristics.ts';
+import { fatigueModelForLine } from '../../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { COMBAT_MODIFIER_KEYS, type CombatModifierKey } from '../../shared/modifiers-template.ts';
 import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { computeSkillTarget } from '../../shared/skill-math.ts';
-import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
+import { characteristicField, fatigueField, initiativeField, movementField, sizeField, woundsField } from '../../shared/stat-fields.ts';
 import CommonTemplate from './common.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = foundry.data.fields;
@@ -534,12 +534,7 @@ export default class CreatureTemplate extends CommonTemplate {
 
             wounds: woundsField({ max: 0, value: 0, critical: 0, nullable: false }),
 
-            fatigue: new SchemaField({
-                max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                // Derived each prep (#114); non-negative min omitted as it is a penalty.
-                testModifier: new NumberField({ required: true, initial: 0, integer: true }),
-            }),
+            fatigue: fatigueField(),
 
             fate: new SchemaField({
                 max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -1061,9 +1056,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _resolveFatigueModel(): FatigueModelDef {
-        const gameSystem = (this as { gameSystem?: string }).gameSystem;
-        const config = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
-        return resolveFatigueModel(config?.getFatigueModel() ?? FATIGUE_MODES.flat, WH40KSettings.getFatigueMode());
+        return fatigueModelForLine((this as { gameSystem?: string }).gameSystem);
     }
 
     /**
@@ -1075,19 +1068,11 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareFatigue(): void {
-        const def = this._resolveFatigueModel();
-        if (this.fatigue.max <= 0) {
-            this.fatigue.max = getFatigueThreshold(
-                {
-                    toughnessBonus: this.characteristics.toughness.effectiveBonus,
-                    willpowerBonus: this.characteristics.willpower.effectiveBonus,
-                },
-                def,
-            );
-        }
-        // Derived flat/condition test modifier the roll dialog reads (#114); 0 for
-        // the halving model (its effect lives in the effective characteristic values).
-        this.fatigue.testModifier = getFatigueTestModifier(this.fatigue.value, def);
+        deriveFatigueTrack(
+            this.fatigue,
+            { toughnessBonus: this.characteristics.toughness.effectiveBonus, willpowerBonus: this.characteristics.willpower.effectiveBonus },
+            this._resolveFatigueModel(),
+        );
     }
 
     /**

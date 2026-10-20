@@ -244,6 +244,11 @@ export default class NPCSheet extends CharacterSheet {
         return this.actor as unknown as WH40KNPC;
     }
 
+    /** An NPC's skills are `trainedSkills`, so the grapple panel labels a skill from the line's catalog (#420). */
+    protected override _grappleSkillLabel(skill: string): string {
+        return this.npcActor.system.skillLabel(skill);
+    }
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

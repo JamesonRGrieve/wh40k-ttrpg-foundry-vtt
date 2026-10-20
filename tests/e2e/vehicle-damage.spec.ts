@@ -228,8 +228,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             const crewman = (name: string, x: number, y: number): HarnessTokenSpec => ({
                 key: name,
                 name,
-                // A character: auto-applied damage writes Fatigue, which the NPC model lacks.
-                type: 'dh2-character',
+                type: 'dh2-npc',
                 x,
                 y,
                 system: { gameSystem: 'dh2', wounds: { max: 12, value: 12 }, characteristics: { agility: { base: 30 } } },

@@ -1,6 +1,7 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { DispositionModelDef } from '../../config/game-systems/types.ts';
 import { DISPOSITION_MODELS, migrateDispositionSource, type NpcPersonality, PERSONALITY_SKILLS } from '../../rules/disposition.ts';
+import { deriveFatigueTrack, type FatigueTrack } from '../../rules/fatigue.ts';
 import {
     CHARACTERISTIC_STEP,
     type AdvancementCostTables,
@@ -23,10 +24,11 @@ import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
+import { fatigueModelForLine } from '../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { skillCharacteristicMap, skillLabel, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
-import { characteristicField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
+import { characteristicField, fatigueField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';
@@ -225,6 +227,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         value: number;
         critical: number;
     };
+    /** Fatigue (#420): NPCs suffer it as PCs do in every line; threshold and test modifier derived each prep. */
+    declare fatigue: FatigueTrack;
     declare movement: {
         half: number;
         full: number;
@@ -436,6 +440,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
             // === WOUNDS ===
             wounds: woundsField({ max: 10, value: 10, critical: 0, nullable: true }),
+
+            // === FATIGUE === (#420) Every line's Fatigue sources — unarmed hits, Critical
+            // Effects, Shocking, a grapple's Damage Opponent — strike NPCs as they do PCs.
+            fatigue: fatigueField(),
 
             // === MOVEMENT ===
             movement: movementField({ half: 3, full: 6, charge: 9, run: 18, withLeap: false }),
@@ -1162,6 +1170,19 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /**
+     * Derive the NPC's fatigue threshold and test modifier (#420), exactly as a
+     * PC's: the line's model from its Toughness (and, halving, Willpower) bonus.
+     * @protected
+     */
+    _prepareFatigue(): void {
+        deriveFatigueTrack(
+            this.fatigue,
+            { toughnessBonus: this.characteristics.toughness.effectiveBonus, willpowerBonus: this.characteristics.willpower.effectiveBonus },
+            fatigueModelForLine((this.constructor as { gameSystem?: string }).gameSystem),
+        );
+    }
+
+    /**
      * Set the NPC's armour from what it wears (#611): equipped armour derives
      * AP through the PC computation and sets an authored stat block aside; with
      * nothing equipped an authored stat block stands, else the armour its
@@ -1323,6 +1344,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareCharacteristics();
+        this._prepareFatigue();
         this._prepareArmour();
         this._prepareMovement();
         this._prepareInitiative();

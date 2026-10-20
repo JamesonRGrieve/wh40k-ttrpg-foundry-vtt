@@ -179,6 +179,24 @@ export function getFatigueTestModifier(fatigueLevel: number, def: FatigueModelDe
     return 0;
 }
 
+/** An actor's fatigue track as its DataModel holds it. */
+export interface FatigueTrack {
+    max: number;
+    value: number;
+    testModifier: number;
+}
+
+/**
+ * Derive an actor's fatigue track in place (#114, #420): the threshold per the
+ * active model when `max` is unset (0) — a non-zero stored value is a deliberate
+ * override and is kept — and the flat / condition test modifier for the current
+ * level. Shared by PCs and NPCs, which suffer Fatigue alike in every line.
+ */
+export function deriveFatigueTrack(track: FatigueTrack, bonuses: FatigueThresholdInput, def: FatigueModelDef): void {
+    if (track.max <= 0) track.max = getFatigueThreshold(bonuses, def);
+    track.testModifier = getFatigueTestModifier(track.value, def);
+}
+
 /**
  * Fatigue level remaining after a rest (#114): 1 level removed per hour, and a
  * full `def.fullRecoveryHours` of continuous rest removes ALL remaining fatigue.

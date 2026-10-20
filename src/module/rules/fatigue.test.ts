@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
 import {
+    deriveFatigueTrack,
     FATIGUE_MODES,
     getFatigueAfterRest,
     getFatigueAfterWaking,
@@ -20,6 +21,20 @@ import {
 const HALVING = FATIGUE_MODES.halving;
 const FLAT = FATIGUE_MODES.flat;
 const CONDITION = FATIGUE_MODES.condition;
+
+describe('deriveFatigueTrack (#114, #420) — the PC and NPC fatigue prep', () => {
+    it('derives an unset threshold and the test modifier for the level', () => {
+        const track = { max: 0, value: 2, testModifier: 0 };
+        deriveFatigueTrack(track, { toughnessBonus: 3, willpowerBonus: 4 }, FLAT);
+        expect(track).toEqual({ max: 3, value: 2, testModifier: -10 });
+    });
+
+    it('keeps an authored threshold', () => {
+        const track = { max: 9, value: 0, testModifier: -10 };
+        deriveFatigueTrack(track, { toughnessBonus: 3, willpowerBonus: 4 }, HALVING);
+        expect(track).toEqual({ max: 9, value: 0, testModifier: 0 });
+    });
+});
 
 describe('FATIGUE_MODES (#114) — canonical per-model rule sets', () => {
     it('halving = TB+WPB threshold, death at 2×, revert-to-tb, 6h', () => {

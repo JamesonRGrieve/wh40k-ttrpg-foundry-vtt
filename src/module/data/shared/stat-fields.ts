@@ -106,6 +106,21 @@ export function woundsField(opts: { max: number; value: number; critical?: numbe
     });
 }
 
+/**
+ * `fatigue` sub-schema (#114, #420): the level, its threshold (0 = derive it from
+ * the line's model each prep) and the derived test modifier. PCs and NPCs both
+ * carry it — every line's Fatigue sources (unarmed hits, Critical Effects, Shocking,
+ * grapples) strike any target.
+ */
+export function fatigueField(): DataField {
+    return new SchemaField({
+        max: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        value: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        // Derived each prep (#114); non-negative min omitted as it is a penalty.
+        testModifier: new NumberField({ required: true, initial: 0, integer: true }),
+    });
+}
+
 /** `size` field (1–10, default 4). */
 export function sizeField(opts: { nullable: boolean }): DataField {
     return new NumberField({ required: true, initial: 4, min: 1, max: 10, integer: true, nullable: opts.nullable });

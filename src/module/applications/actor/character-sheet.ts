@@ -1350,15 +1350,25 @@ export default class CharacterSheet extends BaseActorSheet {
         // Grapple state (#120), read from the system-scoped flag, and the options the
         // line prints for this actor's role (the GM sees both roles' options).
         context.grappleState = readGrappleState(this.actor.flags, SYSTEM_ID);
-        const skills: Readonly<Partial<Record<string, { label?: string }>>> = this.actor.system.skills;
         context.grappleSections = grapplePanelSections(
             grappleRulesFor(this._resolveGameSystemId() ?? undefined),
             context.grappleState,
             game.user.isGM,
-            (skill) => skills[skill]?.label ?? skill,
+            (skill) => this._grappleSkillLabel(skill),
         );
 
         return context;
+    }
+
+    /**
+     * A skill's label on the grapple panel: the actor's own skill entry. An NPC
+     * carries no `system.skills` (its skills are `trainedSkills`), so its sheet
+     * overrides this with the line's catalog label (#420: a grappled NPC's sheet
+     * threw here).
+     */
+    protected _grappleSkillLabel(skill: string): string {
+        const skills: Readonly<Partial<Record<string, { label?: string }>>> = this.actor.system.skills;
+        return skills[skill]?.label ?? skill;
     }
 
     /* -------------------------------------------- */
