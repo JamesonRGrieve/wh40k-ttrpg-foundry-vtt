@@ -21,8 +21,9 @@ import { scaledMs } from './lib/timing';
  * aligned to Nurgle at Corruption 30, neither is.
  *
  * Captures: psychic-prerequisites-smite-blocked (a Willpower 25 character's dialog, Smite's
- * row outlined), psychic-prerequisites-bc-unaligned (Field of Pestilence outlined) and
- * psychic-prerequisites-sheet (a power's sheet after a reload).
+ * row outlined), psychic-prerequisites-bc-unaligned (Field of Pestilence outlined),
+ * psychic-prerequisites-many-gates (Aegis of Euphedros, five unmet gates wrapped below its
+ * untruncated name, #676) and psychic-prerequisites-sheet (a power's sheet after a reload).
  *
  * Each flow records under `psychic-prerequisites.flow`. Keys MUST match
  * PSYCHIC_PREREQUISITE_FLOWS in scripts/e2e-coverage.mjs.
@@ -34,6 +35,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'willpower-gate-clears',
     'sheet-keeps-prerequisites',
     'bc-alignment-and-corruption-gate',
+    'gated-names-not-truncated',
 ] as const;
 type FlowName = (typeof PSYCHIC_PREREQUISITE_FLOWS)[number];
 
@@ -106,6 +108,34 @@ async function powerUnmet(page: Page, actorId: string, update: object, power: st
             return { appId: dialog.id, unmet: found.prereqDisplay };
         },
         { actorId, update, power, outline },
+    );
+}
+
+/** The psychic power names in the dialog whose text overflows its box (#676). */
+async function truncatedNames(page: Page, appId: string): Promise<string[] | string> {
+    return page.evaluate((id: string) => {
+        const dialog = document.getElementById(id);
+        if (dialog === null) return 'dialog not open';
+        const names = Array.from(dialog.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]'), (link) => link.previousElementSibling);
+        return names
+            .filter((name): name is HTMLElement => name instanceof HTMLElement && name.scrollWidth > name.clientWidth)
+            .map((name) => name.textContent.trim());
+    }, appId);
+}
+
+/** Scroll the row of `power` into view and outline it; false when it is not listed. */
+async function scrollToRow(page: Page, appId: string, power: string): Promise<boolean> {
+    return page.evaluate(
+        (args: { id: string; power: string }) => {
+            const link = Array.from(document.getElementById(args.id)?.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]') ?? []).find(
+                (l) => l.dataset['name'] === args.power,
+            );
+            const row = link?.closest<HTMLElement>('.tw-rounded-md');
+            row?.style.setProperty('outline', '2px dashed #ff00ff');
+            row?.scrollIntoView({ block: 'center' });
+            return row !== undefined && row !== null;
+        },
+        { id: appId, power },
     );
 }
 
@@ -204,6 +234,14 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                 const field = await powerUnmet(page, bcId, unaligned, 'Field of Pestilence', true);
                 if (typeof field !== 'string') {
                     await snap(page, 'psychic-prerequisites-bc-unaligned', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
+                    // #676: many unmet gates wrap below a row's name instead of squeezing it.
+                    const clipped = await truncatedNames(page, field.appId);
+                    record('gated-names-not-truncated', Array.isArray(clipped) && clipped.length === 0, JSON.stringify(clipped));
+                    const aegis = await scrollToRow(page, field.appId, 'Aegis of Euphedros');
+                    if (aegis)
+                        await snap(page, 'psychic-prerequisites-many-gates', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
+                } else {
+                    record('gated-names-not-truncated', false, field);
                 }
                 const wind = await powerUnmet(page, bcId, unaligned, 'Wind of Chaos', false);
                 const nurgle = { 'system.chaosAlignment': 'nurgle', 'system.corruption': 30 };

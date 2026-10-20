@@ -358,6 +358,33 @@ export const PrerequisiteMetAligned = gatedStory('Field of Pestilence, aligned t
     unmet: [],
 });
 
+// #676: a row with many unmet gates wraps them below its name rather than squeezing it.
+export const PrerequisiteManyGates: Story = {
+    ...gatedStory('Aegis of Euphedros, five unmet gates', {
+        power: 'Aegis of Euphedros',
+        discipline: 'Tzeentch Powers',
+        line: 'bc',
+        prerequisites: {
+            text: 'Psy Rating 7, Infamy 70+, Forbidden Lore (The Warp) +30, Scholastic Lore (Occult) +30, Child of the Warp',
+            skills: ['Forbidden Lore (The Warp) +30', 'Scholastic Lore (Occult) +30'],
+            talents: ['Child of the Warp'],
+            thresholds: { infamy: 70 },
+        },
+        actor: psyker({}),
+        unmet: ['Forbidden Lore (The Warp) +30', 'Scholastic Lore (Occult) +30', 'Child of the Warp', 'infamy 70+'],
+    }),
+    play: async ({ canvasElement }) => {
+        const lock = canvasElement.querySelector<HTMLElement>('.fa-lock')?.parentElement ?? null;
+        const row = lock?.parentElement ?? null;
+        const name = row?.firstElementChild ?? null;
+        // The row wraps, and the name keeps a basis wide enough to read rather than shrinking to nothing.
+        await expect({ wraps: row?.classList.contains('tw-flex-wrap'), nameBasis: name?.classList.contains('tw-flex-[1_1_14rem]') }).toEqual({
+            wraps: true,
+            nameBasis: true,
+        });
+    },
+};
+
 export const PrerequisiteBlocksCorruption = gatedStory('Wind of Chaos at Corruption 10', {
     power: 'Wind of Chaos',
     discipline: 'Chaos Powers',

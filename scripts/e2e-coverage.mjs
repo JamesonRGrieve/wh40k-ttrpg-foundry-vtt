@@ -698,6 +698,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'willpower-gate-clears',
     'sheet-keeps-prerequisites',
     'bc-alignment-and-corruption-gate',
+    'gated-names-not-truncated',
 ];
 recordDimension('psychic-prerequisites.flow', covered['psychic-prerequisites.flow'], PSYCHIC_PREREQUISITE_FLOWS);
 
