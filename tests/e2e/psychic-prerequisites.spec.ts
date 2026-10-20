@@ -16,14 +16,25 @@ import { scaledMs } from './lib/timing';
  * Prerequisite line, and the dialog checks it. DH2 core prints Smite's prerequisite as
  * "Willpower 40" (p. 202).
  *
+ * Black Crusade's alignment and Corruption gates (#675): an unaligned, Corruption 0 sorcerer
+ * sees Field of Pestilence ("Aligned Nurgle") and Wind of Chaos ("Corruption 30+") blocked;
+ * aligned to Nurgle at Corruption 30, neither is.
+ *
  * Captures: psychic-prerequisites-smite-blocked (a Willpower 25 character's dialog, Smite's
- * row outlined) and psychic-prerequisites-sheet (a power's sheet after a reload).
+ * row outlined), psychic-prerequisites-bc-unaligned (Field of Pestilence outlined) and
+ * psychic-prerequisites-sheet (a power's sheet after a reload).
  *
  * Each flow records under `psychic-prerequisites.flow`. Keys MUST match
  * PSYCHIC_PREREQUISITE_FLOWS in scripts/e2e-coverage.mjs.
  */
 
-const PSYCHIC_PREREQUISITE_FLOWS = ['smite-loads-printed-prerequisite', 'willpower-gate-blocks', 'willpower-gate-clears', 'sheet-keeps-prerequisites'] as const;
+const PSYCHIC_PREREQUISITE_FLOWS = [
+    'smite-loads-printed-prerequisite',
+    'willpower-gate-blocks',
+    'willpower-gate-clears',
+    'sheet-keeps-prerequisites',
+    'bc-alignment-and-corruption-gate',
+] as const;
 type FlowName = (typeof PSYCHIC_PREREQUISITE_FLOWS)[number];
 
 const SMITE_GATE = 'willpower 40+';
@@ -51,9 +62,10 @@ async function smitePrerequisites(page: Page): Promise<{ text: string; willpower
 }
 
 /** The unmet prerequisites the Advancement Dialog lists for Smite, after setting the actor's Willpower. */
-async function smiteUnmet(page: Page, actorId: string, willpower: number, outline: boolean): Promise<{ appId: string; unmet: string[] } | string> {
+/** The unmet prerequisites the Advancement Dialog lists for `power`, after applying `update` to the actor. */
+async function powerUnmet(page: Page, actorId: string, update: object, power: string, outline: boolean): Promise<{ appId: string; unmet: string[] } | string> {
     return page.evaluate(
-        async (args: { actorId: string; willpower: number; outline: boolean }) => {
+        async (args: { actorId: string; update: object; power: string; outline: boolean }) => {
             interface PreparedPower {
                 name: string;
                 prereqDisplay: string[];
@@ -71,7 +83,7 @@ async function smiteUnmet(page: Page, actorId: string, willpower: number, outlin
             const g = globalThis as unknown as { game: { actors: { get: (id: string) => ProbeActor | undefined } } };
             const actor = g.game.actors.get(args.actorId);
             if (actor === undefined) return 'actor not found';
-            await actor.update({ 'system.characteristics.willpower.base': args.willpower, 'system.characteristics.willpower.advance': 0 });
+            await actor.update(args.update);
             await globalThis.wh40kE2E.settle(300);
             const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
             const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
@@ -81,20 +93,25 @@ async function smiteUnmet(page: Page, actorId: string, willpower: number, outlin
             dialog.element?.querySelector<HTMLElement>('[data-action="switchTab"][data-tab="psychic"]')?.click();
             await globalThis.wh40kE2E.settle(800);
             const context = await dialog._prepareContext({});
-            const smite = (context.psychic?.disciplines ?? []).flatMap((d) => d.items).find((p) => p.name === 'Smite');
-            if (smite === undefined) return 'Smite not listed';
+            const found = (context.psychic?.disciplines ?? []).flatMap((d) => d.items).find((p) => p.name === args.power);
+            if (found === undefined) return `${args.power} not listed`;
             if (args.outline) {
                 const link = Array.from(dialog.element?.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]') ?? []).find(
-                    (l) => l.dataset['name'] === 'Smite',
+                    (l) => l.dataset['name'] === args.power,
                 );
                 const row = link?.closest<HTMLElement>('.tw-rounded-md');
                 row?.style.setProperty('outline', '2px dashed #ff00ff');
                 row?.scrollIntoView({ block: 'center' });
             }
-            return { appId: dialog.id, unmet: smite.prereqDisplay };
+            return { appId: dialog.id, unmet: found.prereqDisplay };
         },
-        { actorId, willpower, outline },
+        { actorId, update, power, outline },
     );
+}
+
+/** A DH2 actor's Willpower set to `value`. */
+function willpower(value: number): object {
+    return { 'system.characteristics.willpower.base': value, 'system.characteristics.willpower.advance': 0 };
 }
 
 /** Type prerequisites on a world psychic power's sheet, reload, and read them back from the server. */
@@ -168,13 +185,39 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                 record('willpower-gate-clears', false, 'actor did not create');
             } else {
                 actors.push(actorId);
-                const weak = await smiteUnmet(page, actorId, 25, true);
+                const weak = await powerUnmet(page, actorId, willpower(25), 'Smite', true);
                 record('willpower-gate-blocks', typeof weak !== 'string' && weak.unmet.includes(SMITE_GATE), JSON.stringify(weak));
                 if (typeof weak !== 'string') {
                     await snap(page, 'psychic-prerequisites-smite-blocked', { selector: `#${weak.appId}`, closeWindows: true, keepWindow: weak.appId });
                 }
-                const strong = await smiteUnmet(page, actorId, 40, false);
+                const strong = await powerUnmet(page, actorId, willpower(40), 'Smite', false);
                 record('willpower-gate-clears', typeof strong !== 'string' && !strong.unmet.includes(SMITE_GATE), JSON.stringify(strong));
+            }
+
+            // #675: Black Crusade's alignment and Corruption gates.
+            const bcId = await createProbeActor(page, { name: 'Prerequisite probe (bc)', type: 'bc-character' });
+            if (bcId === null) {
+                record('bc-alignment-and-corruption-gate', false, 'bc actor did not create');
+            } else {
+                actors.push(bcId);
+                const unaligned = { 'system.chaosAlignment': 'unaligned', 'system.corruption': 0 };
+                const field = await powerUnmet(page, bcId, unaligned, 'Field of Pestilence', true);
+                if (typeof field !== 'string') {
+                    await snap(page, 'psychic-prerequisites-bc-unaligned', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
+                }
+                const wind = await powerUnmet(page, bcId, unaligned, 'Wind of Chaos', false);
+                const nurgle = { 'system.chaosAlignment': 'nurgle', 'system.corruption': 30 };
+                const fieldMet = await powerUnmet(page, bcId, nurgle, 'Field of Pestilence', false);
+                const windMet = await powerUnmet(page, bcId, nurgle, 'Wind of Chaos', false);
+                const reads = [field, wind, fieldMet, windMet].map((read) => (typeof read === 'string' ? null : read.unmet));
+                record(
+                    'bc-alignment-and-corruption-gate',
+                    reads[0]?.includes('aligned nurgle') === true &&
+                        reads[1]?.includes('corruption 30+') === true &&
+                        reads[2]?.includes('aligned nurgle') === false &&
+                        reads[3]?.includes('corruption 30+') === false,
+                    JSON.stringify({ field, wind, fieldMet, windMet }),
+                );
             }
 
             const sheet = await sheetRoundTrip(page);

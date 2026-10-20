@@ -20,6 +20,7 @@ import { capitalize } from '../../utils/format.ts';
 import { normalizeGameLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
 import { isLineBookPack, uniqueByName } from '../../utils/line-packs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
+import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ConfirmationDialog from './confirmation-dialog.ts';
@@ -73,6 +74,24 @@ interface AdvancementActorSystem {
     psy?: { rating?: number };
     characteristics?: Record<string, AdvancementActorCharacteristic>;
     skills?: Record<string, AdvancementActorSkill>;
+}
+
+/**
+ * An actor stat a prerequisite threshold reads (#675): the character DataModel stores
+ * Corruption / Insanity / Infamy / rank as numbers, older actor shapes as `{ value }`.
+ */
+/** An owned talent's specialisation, '' when it has none. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the Item system union; only talents carry `specialization`
+function specializationOf(system: unknown): string {
+    if (system === null || typeof system !== 'object' || !('specialization' in system)) return '';
+    return typeof system.specialization === 'string' ? system.specialization : '';
+}
+
+// eslint-disable-next-line no-restricted-syntax -- boundary: the stat comes off the actor's system union, whose members type it differently; narrowed here
+function numericStat(value: unknown): number {
+    if (typeof value === 'number') return value;
+    if (value !== null && typeof value === 'object' && 'value' in value && typeof value.value === 'number') return value.value;
+    return 0;
 }
 
 interface AdvancementMatchInfo {
@@ -913,10 +932,25 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const sys = this.#getActorSystem();
         /* eslint-disable @typescript-eslint/no-unnecessary-condition -- characteristics/skills may be absent on a partial actor system at runtime */
         const characteristics = Object.fromEntries(Object.entries(sys.characteristics ?? {}).map(([key, char]) => [key, char?.total ?? 0]));
-        const skillRanks = Object.fromEntries(Object.values(sys.skills ?? {}).map((skill) => [skill?.label ?? '', skill?.rank ?? 0]));
+        // A specialist skill's entries read as "Label (Specialisation)" (#675).
+        const skillRanks = Object.fromEntries(
+            Object.values(sys.skills ?? {}).flatMap((skill) => [
+                [skill?.label ?? '', skill?.rank ?? 0] as const,
+                ...(skill?.entries ?? []).map((entry) => [`${skill?.label ?? ''} (${entry.specialization ?? ''})`, entry.rank ?? 0] as const),
+            ]),
+        );
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
-        const talents = this.actor.items.filter((i) => i.type === 'talent').map((i) => i.name);
-        return { characteristics, skillRanks, talents };
+        // A specialised talent reads as "Name (Specialisation)", so "any" gates can match its base name.
+        const talents = this.actor.items.filter((i) => i.type === 'talent').map((i) => composeSpecializationName(i.name, specializationOf(i.system)));
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the actor system union types these stats differently per actor type; each is narrowed by numericStat
+        const stats = this.actor.system as Partial<Record<'corruption' | 'infamy' | 'insanity' | 'rank' | 'chaosAlignment', unknown>>;
+        const thresholds = {
+            corruption: numericStat(stats.corruption),
+            infamy: numericStat(stats.infamy),
+            insanity: numericStat(stats.insanity),
+            rank: numericStat(stats.rank),
+        };
+        return { characteristics, skillRanks, talents, alignment: typeof stats.chaosAlignment === 'string' ? stats.chaosAlignment : '', thresholds };
     }
 
     /**

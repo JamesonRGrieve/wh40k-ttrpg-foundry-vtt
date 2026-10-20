@@ -41,8 +41,11 @@ describe('Advancement Dialog psychic powers at printed XP (content#30)', () => {
     });
 });
 
-describe('Advancement Dialog psychic powers gated by printed prerequisites (#673)', () => {
-    it.each(['PrerequisiteBlocksSmite', 'PrerequisiteMetSmite'])('%s', async (name) => {
-        await expect(playStory(name)).resolves.toBeUndefined();
-    });
+describe('Advancement Dialog psychic powers gated by printed prerequisites (#673, #675)', () => {
+    it.each(['PrerequisiteBlocksSmite', 'PrerequisiteMetSmite', 'PrerequisiteBlocksUnaligned', 'PrerequisiteMetAligned', 'PrerequisiteBlocksCorruption'])(
+        '%s',
+        async (name) => {
+            await expect(playStory(name)).resolves.toBeUndefined();
+        },
+    );
 });
