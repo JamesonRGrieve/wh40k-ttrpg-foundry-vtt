@@ -1,7 +1,7 @@
 /**
  * The Advancement Dialog charges a shared psychic power the XP its owner's line
  * prints (content#30). Plays the two AdvancementDialog stories that price
- * Precognition and Cauterise through `costForLine` for a BC and a DH2 psyker.
+ * Precognition and Cauterise through `systemForLine` for a BC and a DH2 psyker.
  */
 import { describe, expect, it } from 'vitest';
 
@@ -37,6 +37,12 @@ async function playStory(name: string): Promise<void> {
 
 describe('Advancement Dialog psychic powers at printed XP (content#30)', () => {
     it.each(['PsychicPrintedXpBC', 'PsychicPrintedXpDH2'])('%s charges each power its line prints', async (name) => {
+        await expect(playStory(name)).resolves.toBeUndefined();
+    });
+});
+
+describe('Advancement Dialog psychic powers gated by printed prerequisites (#673)', () => {
+    it.each(['PrerequisiteBlocksSmite', 'PrerequisiteMetSmite'])('%s', async (name) => {
         await expect(playStory(name)).resolves.toBeUndefined();
     });
 });

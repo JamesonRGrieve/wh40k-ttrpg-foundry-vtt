@@ -551,17 +551,18 @@ export function getMaterializedItemSource(item: VariantItemLike): Record<string,
 }
 
 /**
- * A raw (unmigrated) document's `cost` resolved to `lineKey`, exactly as its DataModel
- * would see it: a per-line XP map collapses (an explicit null stays null), a currency
- * record is left as is. For callers that read compendium index entries, which never
- * pass through `_migrateData` (the Advancement Dialog's power list, content#30).
- * @param cost      The raw `system.cost`.
- * @param source    The raw `system.source` map, which names the raw-provenance fallback lines.
- * @param lineKey   The line to resolve for.
+ * A copy of a raw (unmigrated) `system` payload resolved to `lineKey`, exactly as its
+ * DataModel would see it: every line container collapses, a per-line XP cost included
+ * (an explicit null stays null), and a currency record is left as is. For callers that
+ * read compendium index entries, which never pass through `_migrateData` (the
+ * Advancement Dialog's power list: cost, content#30; prCost and prerequisites, #673).
+ * Include `source` in the payload: it names the raw-provenance fallback lines.
+ * @param system   The raw `system` subset.
+ * @param lineKey  The line to resolve for.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: raw compendium index values are untyped until the caller narrows them
-export function costForLine(cost: unknown, source: unknown, lineKey: SupportedLineKey): unknown {
-    return materializeItemVariants(deepClone({ cost, source }), lineKey)['cost'];
+export function systemForLine<T extends object>(system: T, lineKey: SupportedLineKey): T {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the resolver walks the payload as an untyped record and returns the same keys
+    return materializeItemVariants(deepClone(system) as Record<string, unknown>, lineKey) as T;
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: submitData is untyped form submission data

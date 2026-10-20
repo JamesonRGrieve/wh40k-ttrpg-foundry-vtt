@@ -6,6 +6,7 @@ import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
+import { prerequisitesField, type StructuredPrerequisites, toStructuredPrerequisites } from '../shared/prerequisites-field.ts';
 import RerollTemplate from '../shared/reroll-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
@@ -35,8 +36,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     };
     declare category: string;
     declare tier: number;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites.characteristics is a free-form record from migration source
-    declare prerequisites: { text: string; characteristics: Record<string, unknown>; skills: string[]; talents: string[] };
+    declare prerequisites: StructuredPrerequisites;
     declare aptitudes: string[];
     declare cost: number;
     declare benefit: string;
@@ -74,13 +74,8 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
             // Tier (1-3 typically, 0 for unset)
             tier: new fields.NumberField({ required: true, initial: 0, min: 0, max: 3, integer: true }),
 
-            // Prerequisites (text description or structured)
-            prerequisites: new fields.SchemaField({
-                text: new fields.StringField({ required: true, blank: true, initial: '' }),
-                characteristics: new fields.ObjectField({ required: true, initial: {} }),
-                skills: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
-                talents: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
-            }),
+            // Prerequisites: the printed text and the structured gates (#673).
+            prerequisites: prerequisitesField(),
 
             // Associated aptitudes for advancement costs
             aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
@@ -201,14 +196,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry migration source is untyped legacy data
     static #migratePrerequisites(source: Record<string, unknown>): void {
-        if (typeof source['prerequisites'] === 'string') {
-            source['prerequisites'] = {
-                text: source['prerequisites'],
-                characteristics: {},
-                skills: [],
-                talents: [],
-            };
-        }
+        if (typeof source['prerequisites'] === 'string') source['prerequisites'] = toStructuredPrerequisites(source['prerequisites']);
     }
 
     /**
@@ -329,7 +317,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         // Characteristics
         for (const [char, value] of Object.entries(this.prerequisites.characteristics)) {
-            parts.push(`${char} ${value as number}+`);
+            parts.push(`${char} ${value}+`);
         }
 
         // Skills

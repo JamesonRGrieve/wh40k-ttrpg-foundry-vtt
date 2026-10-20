@@ -690,6 +690,11 @@ const PSYCHIC_PRINTED_XP_FLOWS = [
 ];
 recordDimension('psychic-printed-xp.flow', covered['psychic-printed-xp.flow'], PSYCHIC_PRINTED_XP_FLOWS);
 
+// Psychic power prerequisites are stored and enforced (#673), tests/e2e/psychic-prerequisites.spec.ts.
+// Keep in sync with PSYCHIC_PREREQUISITE_FLOWS there.
+const PSYCHIC_PREREQUISITE_FLOWS = ['smite-loads-printed-prerequisite', 'willpower-gate-blocks', 'willpower-gate-clears', 'sheet-keeps-prerequisites'];
+recordDimension('psychic-prerequisites.flow', covered['psychic-prerequisites.flow'], PSYCHIC_PREREQUISITE_FLOWS);
+
 // The weapon sheet's Penetration tile (#614), tests/e2e/weapon-sheet-penetration.spec.ts.
 // Keep in sync with WEAPON_PENETRATION_FLOWS there.
 const WEAPON_PENETRATION_FLOWS = ['label-fits-default-width', 'label-fits-min-width', 'banded-weapon-shows-band-penetration', 'own-penetration-unchanged'];

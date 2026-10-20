@@ -12,8 +12,9 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
+import { toStructuredPrerequisites, unmetPrerequisites } from '../../data/shared/prerequisites-field.ts';
 import { psychicPowerCharge, psychicPowerXpCost } from '../../rules/xp-costs.ts';
-import { costForLine, type SupportedLineKey } from '../../utils/item-variant-utils.ts';
+import { type SupportedLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
 
 interface Tab {
     id: string;
@@ -57,6 +58,8 @@ interface PsychicRow {
     cost: number;
     index: number;
     canPurchase: boolean;
+    blocked?: boolean;
+    prereqDisplay?: string[];
 }
 
 interface PsychicPanel {
@@ -229,7 +232,7 @@ function pricedPsychicPanel(line: SupportedLineKey): PsychicPanel {
         name: power.name,
         displayName: power.name,
         prCost: 1,
-        cost: psychicPowerCharge(psychicPowerXpCost(costForLine(power.cost, power.source, line)), 1),
+        cost: psychicPowerCharge(psychicPowerXpCost(systemForLine({ cost: power.cost, source: power.source }, line).cost), 1),
         index,
         canPurchase: true,
     }));
@@ -265,3 +268,57 @@ function printedXpStory(line: 'dh2' | 'bc', expected: Record<string, number>): S
 // Cauterise is DH2-only, so a BC psyker sees it at the same printed 300.
 export const PsychicPrintedXpBC = printedXpStory('bc', { Precognition: 100, Cauterise: 300 });
 export const PsychicPrintedXpDH2 = printedXpStory('dh2', { Precognition: 400, Cauterise: 300 });
+
+// ── Printed prerequisites (#673) ──────────────────────────────────────────────
+//
+// DH2 core prints Smite's prerequisite as "Willpower 40". A psyker with Willpower 25
+// sees Smite blocked, its row naming the unmet gate the shared check reports.
+
+/** Smite's psychic tab for a psyker with `willpower`, gated through the real prerequisite check. */
+function smitePanel(willpower: number): PsychicPanel {
+    const unmet = unmetPrerequisites(toStructuredPrerequisites({ text: 'Willpower 40', characteristics: { willpower: 40 } }), {
+        characteristics: { willpower },
+        skillRanks: {},
+        talents: [],
+    });
+    const smite: PsychicRow = {
+        name: 'Smite',
+        displayName: 'Smite',
+        prCost: 1,
+        cost: 200,
+        index: 0,
+        canPurchase: unmet.length === 0,
+        blocked: unmet.length > 0,
+        prereqDisplay: unmet,
+    };
+    return {
+        psyAdvance: { currentRating: 2, nextRating: 3, cost: 600, canPurchase: true, cantAfford: false, maxed: false, offered: true },
+        disciplines: [{ label: 'Biomancy', items: [smite], tiers: [{ prCost: 1, label: 'PR 1', accessible: true, items: [smite] }] }],
+        chips: [],
+        availableOnly: false,
+        hasBlocked: unmet.length > 0,
+    };
+}
+
+function smiteStory(willpower: number, expectBlocked: boolean): Story {
+    return {
+        name: `Smite at Willpower ${willpower}`,
+        args: {
+            activeTab: 'psychic',
+            isPsyker: true,
+            tabs: [...CAREER_TABS, { id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: true }],
+            psychic: smitePanel(willpower),
+        },
+        play: async ({ canvasElement }) => {
+            const blocked = canvasElement.querySelector<HTMLElement>('.fa-lock')?.parentElement ?? null;
+            const purchase = canvasElement.querySelector('[data-action="purchaseAdvance"][data-type="psychic-power"]');
+            await expect({ blocked: blocked?.textContent.includes('willpower 40+') ?? false, purchasable: purchase !== null }).toEqual({
+                blocked: expectBlocked,
+                purchasable: !expectBlocked,
+            });
+        },
+    };
+}
+
+export const PrerequisiteBlocksSmite = smiteStory(25, true);
+export const PrerequisiteMetSmite = smiteStory(40, false);

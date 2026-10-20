@@ -6,6 +6,7 @@ import ActivationTemplate from '../shared/activation-template.ts';
 import { type AttackCueData, attackCueField } from '../shared/attack-cue-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
+import { prerequisitesField, type StructuredPrerequisites, toStructuredPrerequisites } from '../shared/prerequisites-field.ts';
 import {
     normalisePsychicDiscipline,
     PSYCHIC_DISCIPLINE_CHOICES,
@@ -28,6 +29,8 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     declare prCost: number;
     /** The printed XP cost, or null when not authored (#642). */
     declare cost: number | null;
+    /** The printed prerequisite and its structured gates (#673). */
+    declare prerequisites: StructuredPrerequisites;
     declare focusPower: { characteristic: string; modifier: number; threshold: number; opposed: boolean; opposedCharacteristic: string; skill: string };
     declare effect: string;
     declare overbleed: string;
@@ -69,6 +72,9 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // Null when not authored: the advancement charge and the XP-spend
             // calculation then fall back to the PR heuristic (`psychicPowerCost`).
             cost: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
+
+            // The printed Prerequisite line and the gates the Advancement Dialog checks (#673).
+            prerequisites: prerequisitesField(),
 
             // Focus Power Test
             focusPower: new fields.SchemaField({
@@ -146,6 +152,8 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         // currency record (`{throneGelt, …}`, carried by some pack documents) is not
         // an XP cost and loads as "not authored" (#642).
         if ('cost' in source) source['cost'] = psychicPowerXpCost(source['cost']);
+        // Pack documents carried a flat prerequisites string before the field existed (#673).
+        if ('prerequisites' in source) source['prerequisites'] = toStructuredPrerequisites(source['prerequisites']);
     }
 
     /* -------------------------------------------- */

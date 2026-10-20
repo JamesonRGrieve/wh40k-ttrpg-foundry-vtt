@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
     canonicalSystemForLine,
-    costForLine,
     inferActiveGameLine,
     isLineVariantContainer,
     isXpLineMap,
@@ -17,6 +16,7 @@ import {
     resolveLineVariant,
     resolveOwnedLineContent,
     sameSourceValue,
+    systemForLine,
 } from './item-variant-utils.ts';
 
 describe('resolveLineVariant', () => {
@@ -169,18 +169,20 @@ describe('isXpLineMap', () => {
     });
 });
 
-describe('costForLine (content#30)', () => {
+describe('systemForLine (content#30, #673)', () => {
     const source = { dh2: { provenance: 'raw' }, ow: { provenance: 'raw' } };
 
-    it('resolves a raw index cost to the requested line without touching the input', () => {
-        const cost = { dh2: 200, ow: 300 };
-        expect(costForLine(cost, source, 'ow')).toBe(300);
-        expect(cost).toEqual({ dh2: 200, ow: 300 });
+    it('resolves a raw index entry to the requested line without touching the input', () => {
+        const system = { source, cost: { dh2: 200, ow: 300 }, prerequisites: { dh2: 'Willpower 40', ow: 'Willpower 35' } };
+        const resolved = systemForLine(system, 'ow');
+        expect(resolved.cost).toBe(300);
+        expect(resolved.prerequisites).toBe('Willpower 35');
+        expect(system.cost).toEqual({ dh2: 200, ow: 300 });
     });
 
     it('passes a plain number and a currency record through', () => {
-        expect(costForLine(300, source, 'dh2')).toBe(300);
-        expect(costForLine({ dh2: { influence: null } }, source, 'dh2')).toEqual({ dh2: { influence: null } });
+        expect(systemForLine({ source, cost: 300 }, 'dh2').cost).toBe(300);
+        expect(systemForLine({ source, cost: { dh2: { influence: null } } }, 'dh2').cost).toEqual({ dh2: { influence: null } });
     });
 });
 

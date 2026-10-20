@@ -10,13 +10,14 @@ import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-ba
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { Prerequisite } from '../../config/game-systems/types.ts';
+import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../data/shared/prerequisites-field.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
-import { costForLine, normalizeGameLineKey } from '../../utils/item-variant-utils.ts';
+import { normalizeGameLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
 import { isLineBookPack, uniqueByName } from '../../utils/line-packs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
@@ -789,8 +790,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     aptitudes?: string[];
                     stackable?: boolean;
                     hasSpecialization?: boolean;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites payload from compendium has loose skills/talents shape
-                    prerequisites?: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown };
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites payload from compendium has loose skills/talents shape, narrowed by toStructuredPrerequisites
+                    prerequisites?: unknown;
                 };
                 const tier = system.tier ?? 1;
                 const aptitudes = Array.isArray(system.aptitudes) ? system.aptitudes : [];
@@ -802,8 +803,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const cost = systemConfig.getTalentAdvanceCost(this.actor, { system });
                 if (cost === null) continue;
 
-                const prereqs = system.prerequisites ?? { characteristics: {}, skills: [], talents: [] };
-                const prereqResult = this.#checkTalentPrereqs(prereqs);
+                const prereqResult = this.#checkPrerequisites(system.prerequisites);
                 const blocked = !prereqResult.valid;
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- getAdvanceMatchInfo may be absent on some system configs despite its type
                 const match = systemConfig.getAdvanceMatchInfo ? systemConfig.getAdvanceMatchInfo(this.actor, aptitudes) : null;
@@ -908,46 +908,24 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return result;
     }
 
-    /** Check talent prereqs (characteristics / skills / talents) against this actor. */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites payload originates from compendium and may be Record or Array
-    #checkTalentPrereqs(prereqs: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown }): { valid: boolean; unmet: string[] } {
-        const unmet: string[] = [];
+    /** The actor's characteristics, skill ranks and talents, as the prerequisite check reads them. */
+    #prerequisiteView(): PrerequisiteActorView {
         const sys = this.#getActorSystem();
-        /* eslint-disable @typescript-eslint/no-unnecessary-condition -- sys/prereqs may be absent at runtime; optional chains + ?? are defensive throughout this method */
-        const chars = sys?.characteristics ?? {};
-
-        // Some compendium entries store these as {} (Record) rather than [] (Array) — coerce defensively.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: value is the parameter to this type guard
-        const coerceList = (value: unknown): string[] => {
-            if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
-            if (typeof value === 'object' && value !== null) return Object.values(value).filter((v): v is string => typeof v === 'string');
-            return [];
-        };
-
-        const charReqs = prereqs?.characteristics;
-        if (charReqs && typeof charReqs === 'object') {
-            for (const [charKey, min] of Object.entries(charReqs)) {
-                const actual = chars[charKey]?.total ?? 0;
-                if (actual < min) unmet.push(`${charKey} ${min}+`);
-            }
-        }
-
-        const skills = sys?.skills ?? {};
-        for (const skillReq of coerceList(prereqs?.skills)) {
-            const m = skillReq.match(/^(.+?)\s*\+?(\d+)?$/);
-            const name = (m ? m[1] ?? '' : skillReq).toLowerCase().trim();
-            const bonus = m?.[2] !== undefined ? parseInt(m[2], 10) : 0;
-            const skillKey = Object.keys(skills).find((k) => (skills[k]?.label ?? '').toLowerCase() === name);
-            const rank = skillKey !== undefined ? skills[skillKey]?.rank ?? 0 : 0;
-            const rankThreshold = bonus === 0 ? 1 : bonus === 10 ? 2 : bonus === 20 ? 3 : bonus === 30 ? 4 : 1;
-            if (rank < rankThreshold) unmet.push(skillReq);
-        }
-
-        const ownedTalents = new Set(this.actor.items.filter((i) => i.type === 'talent').map((i) => i.name.toLowerCase()));
-        for (const talentReq of coerceList(prereqs?.talents)) {
-            if (!ownedTalents.has(talentReq.toLowerCase())) unmet.push(talentReq);
-        }
+        /* eslint-disable @typescript-eslint/no-unnecessary-condition -- characteristics/skills may be absent on a partial actor system at runtime */
+        const characteristics = Object.fromEntries(Object.entries(sys.characteristics ?? {}).map(([key, char]) => [key, char?.total ?? 0]));
+        const skillRanks = Object.fromEntries(Object.values(sys.skills ?? {}).map((skill) => [skill?.label ?? '', skill?.rank ?? 0]));
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
+        const talents = this.actor.items.filter((i) => i.type === 'talent').map((i) => i.name);
+        return { characteristics, skillRanks, talents };
+    }
+
+    /**
+     * Check stored prerequisites (characteristics / skills / talents) against this actor:
+     * a talent's or psychic power's, in any stored shape (#673).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites come raw from a compendium index, narrowed by toStructuredPrerequisites
+    #checkPrerequisites(raw: unknown): { valid: boolean; unmet: string[] } {
+        const unmet = unmetPrerequisites(toStructuredPrerequisites(raw), this.#prerequisiteView());
         return { valid: unmet.length === 0, unmet };
     }
 
@@ -1012,19 +990,20 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Two-pass build so tree-path prerequisites (UUIDs) can be resolved
         // to display names. First pass: index every entry across all packs
         // into a uuid→name map. Second pass: build the prepared power list.
-        // `cost` is the raw, unmigrated index value: an XP number, a per-line map or a
-        // stray currency record. It is resolved to the actor's line (content#30), then
-        // narrowed by `psychicPowerXpCost` (#642).
+        // The index is raw and unmigrated: `cost` may be an XP number, a per-line map or a
+        // stray currency record, and `prerequisites` a legacy string or per-line map. Each
+        // entry is resolved to the actor's line below (content#30, #673), then narrowed by
+        // `psychicPowerXpCost` (#642) and `toStructuredPrerequisites`.
         type RawEntry = CompendiumIndexEntry & {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex returns the raw source values of `system.cost` and `system.source`, resolved by costForLine and narrowed by the psychicPowerXpCost guard below
-            system?: { prCost?: number; cost?: unknown; source?: unknown; discipline?: string; requires?: string[] };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex returns the raw source values of `system.cost`, `system.source` and `system.prerequisites`, resolved by systemForLine and narrowed by the guards below
+            system?: { prCost?: number; cost?: unknown; source?: unknown; prerequisites?: unknown; discipline?: string; requires?: string[] };
             uuid?: string;
         };
         const rawEntries: RawEntry[] = [];
         for (const pack of packs) {
             // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
             const index = await pack.getIndex({
-                fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.cost', 'system.source', 'system.requires'],
+                fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.cost', 'system.source', 'system.prerequisites', 'system.requires'],
             });
             for (const rawEntry of index) {
                 const entry = rawEntry as RawEntry;
@@ -1039,15 +1018,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         const line = normalizeGameLineKey(gameSystem);
-        // The printed XP cost, or null. The raw index is unmigrated, so a per-line XP map
-        // is resolved to the actor's line here; a stray currency record reads as null.
-        const printedXp = (entry: RawEntry): number | null =>
-            psychicPowerXpCost(line === null ? entry.system?.cost : costForLine(entry.system?.cost, entry.system?.source, line));
+        // Each entry's system resolved to the actor's line, as its DataModel would see it.
+        const resolvedEntries = rawEntries.map((entry) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a CompendiumCollection.getIndex entry omits `system` when the document has none of the requested fields
+            const indexed = entry.system ?? {};
+            return { ...entry, system: line === null ? indexed : systemForLine(indexed, line) };
+        });
+        const printedXp = (entry: RawEntry): number | null => psychicPowerXpCost(entry.system?.cost);
+        const prerequisiteView = this.#prerequisiteView();
         const powers: PreparedPsychicPower[] = [];
         // A power two of the line's books print is listed once, as its printed copy (#674).
-        for (const entry of uniqueByName(rawEntries, (e) => printedXp(e) !== null)) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
-            const entrySys = entry.system ?? {};
+        for (const entry of uniqueByName(resolvedEntries, (e) => printedXp(e) !== null)) {
+            const entrySys = entry.system;
             const prCost = entrySys.prCost ?? 1;
             // The printed XP cost when the power carries one, else the PR heuristic —
             // the same charge the DataModel's derived-spend calc counts (rules/xp-costs.ts,
@@ -1068,12 +1050,15 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 if (reqName === undefined) continue;
                 if (!ownedPowers.has(reqName.toLowerCase())) missingPrereqNames.push(reqName);
             }
-            const prereqMissing = missingPrereqNames.length > 0;
+            // The printed characteristic / skill / talent gates (#673).
+            const unmetPrinted = unmetPrerequisites(toStructuredPrerequisites(entrySys.prerequisites), prerequisiteView);
+            const prereqMissing = missingPrereqNames.length > 0 || unmetPrinted.length > 0;
             const blocked = prGate || prereqMissing;
 
             const prereqDisplay: string[] = [];
             if (prGate) prereqDisplay.push(`Psy Rating ${prCost}`);
             for (const n of missingPrereqNames) prereqDisplay.push(n);
+            prereqDisplay.push(...unmetPrinted);
 
             powers.push({
                 id: `psy:${entry.name}`,

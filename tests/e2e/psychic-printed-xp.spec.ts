@@ -8,7 +8,7 @@ import { scaledMs } from './lib/timing';
 
 /**
  * Tier B coverage of printed psychic power XP (content#30, src/module/utils/item-variant-utils.ts
- * `costForLine`). Every psychic power now carries the XP its book prints in `system.cost`: a
+ * `systemForLine`). Every psychic power now carries the XP its book prints in `system.cost`: a
  * plain number, or a per-line map where the power is shared and the books differ.
  * Precognition is one canonical DH2 document, stubbed into the BC pack, printing 400 xp in DH2
  * core and 100 xp in BC core. The Advancement Dialog reads the raw compendium index, resolves the
