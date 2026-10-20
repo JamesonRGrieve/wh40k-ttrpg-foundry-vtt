@@ -7,8 +7,9 @@ import { expect, test } from './lib/test';
  * (`fa-shuffle`) icon in the DH2 origin-path builder.
  *
  * Homeworlds that are official (`raw`) in OW/RT/DH1 but carry a `provenance:
- * "homebrew"` `dh2` variant (e.g. Fortress World, Imperial World) are reachable
- * in the DH2 builder via reference stubs in dh2-core-origins-homeworlds. For
+ * "homebrew"` `dh2` variant (e.g. Fortress World, Imperial World) have no stub in
+ * DH2's packs; the DH2 builder discovers them from their own line's origin packs
+ * (content#38). For
  * those, `originProvenanceFlags(origin, 'dh2')` → `isAdaptedHomebrew`, and the
  * card template (origin-path-builder.hbs) renders an `<i class="fa-shuffle">`
  * badge with a "Homebrew conversion" tooltip. This spec drives the real builder

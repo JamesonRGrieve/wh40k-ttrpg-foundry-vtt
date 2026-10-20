@@ -45,6 +45,14 @@ import { openMutantBackgroundDialog } from '../prompts/mutant-background-dialog.
 import { cloneGrantedItemData } from './grant-materialize.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
+import {
+    DISCOVERY_INDEX_FIELDS,
+    type DiscoveryIndexEntry,
+    discoverableEntries,
+    discoveredOriginDocument,
+    isDiscoveryIndexEntry,
+    otherLineOriginPacks,
+} from './origin-discovery.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 import type {
@@ -977,6 +985,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const packNames = this.systemConfig.packs;
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: NormalizedOrigin[] = [];
+        // Canonical ids already listed, so a document reached through two packs lists once.
+        const seen = new Set<string>();
 
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
@@ -988,13 +998,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-await-in-loop -- sequential: walks packs in priority order
             const documents = await pack.getDocuments();
             // Filter and normalize
-            allOriginPaths.push(
-                ...documents
-                    .filter((d): d is typeof d & { type: string } => (d as { type?: string }).type === 'originPath')
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally
-                    .map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)),
-            );
+            const origins = documents.filter((d): d is typeof d & { type: string } => (d as { type?: string }).type === 'originPath');
+            for (const d of origins) if (typeof d.id === 'string') seen.add(d.id);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally
+            allOriginPaths.push(...origins.map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)));
         }
+
+        // Homebrew conversions into this line live in their own line's packs, with no stub here (content#38).
+        allOriginPaths.push(...(await this._discoverCrossLineOrigins(seen)));
 
         // Also surface world-created origin path Items. These are not backed by
         // a compendium source, so they are marked `fromWorld` and rendered with
@@ -1025,6 +1036,33 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Separate optional step origins from core origins
         this.allOrigins = allOriginPaths.filter((o) => o.stepIndex !== optionalStepIndex);
         this.lineageOrigins = allOriginPaths.filter((o) => o.stepIndex === optionalStepIndex);
+    }
+
+    /**
+     * The other lines' origins that carry a branch for this builder's line: the
+     * homebrew conversions into it (content#38). They are read from each other
+     * line's origin packs' index, which still holds the per-line containers, and
+     * resolved for this line. `seen` dedupes by canonical id and grows as they are found.
+     * @param seen  Canonical ids already listed.
+     */
+    async _discoverCrossLineOrigins(seen: Set<string>): Promise<NormalizedOrigin[]> {
+        const packNames = otherLineOriginPacks(
+            game.packs.map((p) => p.metadata.name),
+            this.gameSystem,
+        );
+        const indexes = await Promise.all(
+            packNames.map(async (name) => {
+                const pack = resolvePack(name);
+                if (!pack) return [];
+                const index = await pack.getIndex({ fields: [...DISCOVERY_INDEX_FIELDS] });
+                const entries: DiscoveryIndexEntry[] = [];
+                for (const entry of index) if (isDiscoveryIndexEntry(entry)) entries.push(entry);
+                return entries;
+            }),
+        );
+        return indexes
+            .flatMap((entries) => discoverableEntries(entries, this.gameSystem, seen))
+            .map((entry) => normalizeOrigin(discoveredOriginDocument(entry, this.gameSystem)));
     }
 
     /**

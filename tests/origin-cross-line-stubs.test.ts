@@ -64,6 +64,8 @@ interface CrossLineStub {
     line: string;
     /** Whether the resolved document carries the stub line's own branch. */
     hasLineBranch: boolean;
+    /** The provenance of that branch, when there is one. */
+    provenance: string | undefined;
 }
 
 /** An origin-path stub, with its canonical's step and the step its pack's documents share. */
@@ -125,7 +127,7 @@ function crossLineOriginStubs(): CrossLineStub[] {
             const { doc, targetPath, isStub } = resolveFile(stubPath);
             if (!isStub || relative(ROOT, targetPath).split('/')[0] === group) continue;
             const branch = doc.system?.source?.[line];
-            found.push({ stub: relative(ROOT, stubPath), line, hasLineBranch: typeof branch?.provenance === 'string' });
+            found.push({ stub: relative(ROOT, stubPath), line, hasLineBranch: typeof branch?.provenance === 'string', provenance: branch?.provenance });
         }
     }
     return found;
@@ -155,6 +157,10 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path stubs never hand a line anoth
     it('every cross-line origin stub resolves to a document that carries its line’s branch', () => {
         const offenders = stubs.filter((s) => !s.hasLineBranch && !KNOWN_DEBT.includes(s.stub)).map((s) => s.stub);
         expect(offenders).toEqual([]);
+    });
+
+    it('no stub hands a line a homebrew conversion: the builder discovers those, a stub never lists them (content#38)', () => {
+        expect(stubs.filter((s) => s.provenance === 'homebrew').map((s) => s.stub)).toEqual([]);
     });
 
     it('every origin stub resolves to a document on its pack’s step (content#38)', () => {
