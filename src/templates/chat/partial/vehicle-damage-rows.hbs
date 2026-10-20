@@ -13,7 +13,7 @@
             {{#if row.html}}<div class="tw-text-[0.78rem] tw-leading-snug tw-text-[var(--wh40k-card-text)] [&_p]:tw-m-0" data-vehicle-row-chart>{{{row.html}}}</div>{{/if}}
             {{!-- Damage Control (#678): the commander may re-roll this Righteous Fury roll once. --}}
             {{#if row.control}}
-                <button type="button" class="roll-control__damage-control tw-mt-1 tw-self-start tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-px-2 tw-py-1 tw-text-[0.75rem] tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-cursor-pointer hover:tw-border-[var(--wh40k-card-gold)] disabled:tw-cursor-not-allowed disabled:tw-opacity-50" data-damage-control="{{row.control}}">
+                <button type="button" class="roll-control__damage-control tw-mt-1 tw-self-start tw-max-w-full tw-min-w-0 tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-px-2 tw-py-1 tw-text-[0.75rem] tw-font-semibold tw-text-[var(--wh40k-card-text)] tw-cursor-pointer hover:tw-border-[var(--wh40k-card-gold)] disabled:tw-cursor-not-allowed disabled:tw-opacity-50" data-damage-control="{{row.control}}">
                     <span class="material-icons tw-text-[0.9rem]" aria-hidden="true">replay</span>
                     <span>{{localize "WH40K.Vehicle.Damage.DamageControlReroll"}}</span>
                 </button>

@@ -29,9 +29,13 @@ describe('weapon card action buttons (#248)', () => {
         expect(button('attack')).toContain('tw-flex-1');
     });
 
-    it('keeps Damage and Reload as compact secondary buttons (not flex-1)', () => {
-        expect(button('rollDamage')).not.toContain('tw-flex-1');
-        expect(button('rollDamage')).toContain('tw-flex-none');
+    it('keeps Damage and Reload as compact secondary buttons (not flex-1), which may still shrink to fit the card', () => {
+        for (const action of ['rollDamage', 'reload']) {
+            expect(button(action)).not.toContain('tw-flex-1');
+            // Never grows, but may shrink and wrap its label rather than overflow the chat card.
+            expect(button(action)).toContain('tw-flex-initial');
+            expect(button(action)).toContain('tw-min-w-0');
+        }
     });
 
     it('hides the manual Damage button behind {{#unless autoApplyDamage}}', () => {

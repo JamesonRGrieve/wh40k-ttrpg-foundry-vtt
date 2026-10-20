@@ -9,6 +9,7 @@ import { capitalize, formatSigned } from '../utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { chatActionButtonClass } from './chat-action-button.ts';
 import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper } from './content-presence.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
@@ -194,6 +195,12 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
 
     /** Font-size class that fits an actor name into the sidebar name input (#630). */
     hbs.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));
+
+    // `{{chatActionButton "wounds"}}` / `{{chatActionButton "powers" "sm"}}`: a chat-card action
+    // button's shared classes. The size is optional, so it may be Handlebars' options object.
+    hbs.registerHelper('chatActionButton', (tone: TplValue, size: TplValue): string =>
+        chatActionButtonClass(typeof tone === 'string' ? tone : '', typeof size === 'string' ? size : undefined),
+    );
 
     hbs.registerHelper('themeClassFor', function themeClassForHelper(this: TplValue, role: SystemThemeRole, ...rest: TplValue[]): string {
         // Last arg is Handlebars options object; preceding args are user-supplied.

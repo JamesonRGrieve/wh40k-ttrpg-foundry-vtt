@@ -175,7 +175,7 @@
                               that card carries the Roll Damage for whoever it hits. --}}
                         {{#if areaTemplate}}
                             <button
-                                class="roll-control__resolve-area tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                                class="roll-control__resolve-area tw-flex-none tw-w-full {{chatActionButton 'wounds'}}"
                                 data-roll-id="{{@root.id}}"
                                 title="{{localize 'WH40K.AreaAttack.ResolveTooltip'}}"
                             >
@@ -197,29 +197,29 @@
                                 <span>{{localize "WH40K.Grapple.Attempt.CardNote"}}</span>
                             </p>
                             {{#if success}}
-                                <button class="roll-control__begin-grapple tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-slate-700/40 tw-border tw-border-slate-500 tw-rounded-md tw-text-slate-100 tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-slate-600/60 hover:-tw-translate-y-px active:tw-translate-y-0 disabled:tw-opacity-40 disabled:tw-cursor-not-allowed" data-roll-id="{{@root.id}}" data-wh40k-hook="begin-grapple-btn">
+                                <button class="roll-control__begin-grapple tw-flex-none tw-w-full {{chatActionButton 'slate'}}" data-roll-id="{{@root.id}}" data-wh40k-hook="begin-grapple-btn">
                                     <i class="fas fa-hands-bound tw-text-[0.8rem]" aria-hidden="true"></i>
                                     <span>{{localize "WH40K.Grapple.Start.Button"}}</span>
                                 </button>
                             {{/if}}
                         {{else if showDamage}}
-                            <button class="roll-control__roll-damage tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(139,0,0,0.2)] hover:tw-border-[var(--wh40k-wounds-primary)] hover:tw-shadow-[0_0_12px_rgba(139,0,0,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                            <button class="roll-control__roll-damage tw-flex-none tw-w-full {{chatActionButton 'wounds'}}" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
                             </button>
                         {{else}}
-                            <button class="tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-not-allowed tw-whitespace-nowrap tw-opacity-40">
+                            <button class="tw-flex-none tw-w-full {{chatActionButton 'inert'}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.Damage"}}</span>
                             </button>
                         {{/if}}
                         <div class="tw-flex tw-gap-1.5">
-                            <button class="roll-control__refund tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_var(--wh40k-gold-glow)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                            <button class="roll-control__refund tw-flex-1 {{chatActionButton 'gold' 'sm'}}" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[14px]">deblur</span>
                                 <span>{{localize "WH40K.FateRefund"}}</span>
                             </button>
                             {{#if success}}{{#unless noAttackRoll}}
-                                <button class="roll-control__fate-add-dos tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-powers-bg)] tw-border tw-border-[var(--wh40k-powers-border)] tw-rounded-md tw-text-[var(--wh40k-powers-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[rgba(106,32,144,0.2)] hover:tw-border-[var(--wh40k-powers-primary)] hover:tw-shadow-[0_0_12px_rgba(106,32,144,0.4)] hover:-tw-translate-y-px active:tw-translate-y-0" data-roll-id="{{@root.id}}">
+                                <button class="roll-control__fate-add-dos tw-flex-1 {{chatActionButton 'powers' 'sm'}}" data-roll-id="{{@root.id}}">
                                     <span class="material-icons tw-text-[14px]">add_circle</span>
                                     <span>{{localize "WH40K.FateAddDoS"}}</span>
                                 </button>
@@ -230,7 +230,7 @@
                         {{#if @root.hasAssassinsStrike}}
                             {{#if success}}
                                 <button
-                                    class="roll-control__assassins-strike tw-flex-none tw-w-full tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-gray-800/60 tw-border tw-border-gray-700 tw-rounded-md tw-text-gray-100 tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap tw-transition-all hover:tw-bg-gray-800/80 hover:tw-border-gray-500 hover:tw-shadow-[0_0_12px_rgba(0,0,0,0.6)] hover:-tw-translate-y-px active:tw-translate-y-0"
+                                    class="roll-control__assassins-strike tw-flex-none tw-w-full {{chatActionButton 'shadow'}}"
                                     data-action="assassinsStrike"
                                     data-roll-id="{{@root.id}}"
                                     title="{{localize 'WH40K.AssassinsStrike.ButtonTooltip'}}"

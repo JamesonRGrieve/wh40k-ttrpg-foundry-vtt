@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { anyNewCard, awaitCard, cardHtml, messageIds, restoreSettings, setActorFlag, setWorldSettings, snapCard } from './combat-resolution-flow';
 import { type HarnessScene, type HarnessTokenSpec, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { canvasClip } from './lib/canvas-capture';
-import { popOutChatMessage } from './lib/chat-capture';
+import { popOutChatMessage, showChatMessage } from './lib/chat-capture';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -150,6 +150,44 @@ async function tokenWounds(page: Page, tokenId: string): Promise<number> {
 }
 
 /** The first of an attack's posted cards carrying `control` (the attack card, not its evasion prompt). */
+/** The damage card's action buttons, which once ran past both card edges in the sidebar. */
+const DAMAGE_CARD_BUTTONS = '.roll-control__replace-damage-die, .roll-control__assign-damage';
+
+/**
+ * In the chat sidebar at its default width, the damage card's Replace Die and Assign
+ * Damage buttons sit inside the card and their labels fit their buttons. Snaps the
+ * button rows as `label`.
+ */
+async function expectActionButtonsFit(page: Page, messageId: string, label: string): Promise<void> {
+    const message = await showChatMessage(page, messageId);
+    const escaped = await page.locator(message).evaluate((el, selector) => {
+        const box = el.getBoundingClientRect();
+        return Array.from(el.querySelectorAll<HTMLElement>(selector)).map((button) => {
+            const rect = button.getBoundingClientRect();
+            return { inside: rect.left >= box.left - 0.5 && rect.right <= box.right + 0.5, fits: button.scrollWidth <= button.clientWidth + 1 };
+        });
+    }, DAMAGE_CARD_BUTTONS);
+    expect(escaped, 'the Replace Die and Assign Damage buttons render').toHaveLength(2);
+    expect(escaped, 'each button inside the card, its label inside the button').toEqual([
+        { inside: true, fits: true },
+        { inside: true, fits: true },
+    ]);
+    // Capture both button rows with the card's edges either side: the union of the rows' boxes, card-wide.
+    // Centred in the log, clear of the chat input that overlays its foot.
+    await page.locator(`${message} .roll-control__assign-damage`).evaluate((el) => {
+        el.scrollIntoView({ block: 'center' });
+    });
+    await page.evaluate(async () => globalThis.wh40kE2E.settle(200));
+    const clip = await page.locator(message).evaluate((el, selector) => {
+        const box = el.getBoundingClientRect();
+        const rows = Array.from(el.querySelectorAll<HTMLElement>(selector), (button) => (button.parentElement ?? button).getBoundingClientRect());
+        const top = Math.min(...rows.map((r) => r.top));
+        const bottom = Math.max(...rows.map((r) => r.bottom));
+        return { x: box.left - 4, y: top - 4, width: box.width + 8, height: bottom - top + 8 };
+    }, DAMAGE_CARD_BUTTONS);
+    expect(await snap(page, label, { clip })).not.toBeNull();
+}
+
 async function cardWith(page: Page, ids: readonly string[], control: string): Promise<string> {
     for (const id of ids) {
         // eslint-disable-next-line no-await-in-loop -- a handful of cards, read in posting order
@@ -475,6 +513,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect(rows['vehicle-armour'], 'Rear 16 less Pen 6').toBe('10');
             expect(fromBelow.html).toContain('Attacked from above or below');
             expect(await snapCard(page, 'vehicle-damage-from-below-rear-armour', fromBelow.id)).not.toBeNull();
+            await expectActionButtonsFit(page, fromBelow.id, 'vehicle-damage-from-below-buttons-in-sidebar');
 
             // --- Landed: no Flyer penalty, and the gunner's bearing reads Front ----
             const landed = await autocannonAttackCard(page, scene.tokens['Gunner Ahead'] ?? '', landedToken);
@@ -609,6 +648,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect((await vehicleRows(page, overload.html))['vehicle-force-field']).toBe('Nullified');
             expect(overload.html, 'the field overloads on its Common chance').toContain('Overloaded (01–10, Common)');
             expect(await snapCard(page, 'vehicle-damage-shield-generator-overloads', overload.id)).not.toBeNull();
+            await expectActionButtonsFit(page, overload.id, 'vehicle-damage-shield-overload-buttons-in-sidebar');
 
             // --- A Force weapon passes the Daemon Engine's field unrolled ---
             const forced = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {

@@ -24,7 +24,7 @@
         <div class="tw-flex tw-gap-1.5">
             <button
                 type="button"
-                class="roll-control__evade tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                class="roll-control__evade tw-flex-1 {{chatActionButton 'gold' 'sm'}}"
                 data-skill="dodge"
                 title="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
             >
@@ -33,7 +33,7 @@
             </button>
             <button
                 type="button"
-                class="roll-control__evade tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-btn-bg)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap hover:tw-bg-[var(--wh40k-btn-bg-hover)] hover:tw-border-gold disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                class="roll-control__evade tw-flex-1 {{chatActionButton 'gold' 'sm'}}"
                 data-skill="parry"
                 {{#if parryBlocked}}disabled title="{{parryBlocked}}"{{else}}title="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"{{/if}}
             >
@@ -42,7 +42,7 @@
             </button>
             <button
                 type="button"
-                class="roll-control__take-hit tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-2 tw-py-[5px] tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-text-[var(--wh40k-wounds-secondary)] tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-whitespace-nowrap disabled:tw-opacity-40 disabled:tw-cursor-not-allowed"
+                class="roll-control__take-hit tw-flex-1 {{chatActionButton 'wounds' 'sm'}}"
                 title="{{localize 'WH40K.Evasion.TakeHitTooltip'}}"
             >
                 <span>{{localize "WH40K.Evasion.TakeHit"}}</span>
