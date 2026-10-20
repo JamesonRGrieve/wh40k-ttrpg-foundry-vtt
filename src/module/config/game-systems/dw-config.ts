@@ -8,7 +8,8 @@ import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
-import { printedGrappleRules } from './base-system-config.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
+import { printedGrappleRules, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
@@ -22,6 +23,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly itemRepair = null;
     /** DW core p. 156: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
     readonly weaponModification = null;
+    readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
      * DW core: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … Rate of Fire" (both bursts); Suppressing Fire: "The number of

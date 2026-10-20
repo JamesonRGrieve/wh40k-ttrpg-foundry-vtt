@@ -283,7 +283,7 @@ export class WH40KNPC extends WH40KBaseActor {
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: skillName,
             type: 'skill',
-            label: game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
+            label: options.label ?? game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
             target,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
             instance: options.instance,

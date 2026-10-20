@@ -9,10 +9,34 @@ import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+
+/**
+ * Drive and Pilot as DH1 prints them: Drive's skill groups are Ground Vehicle,
+ * Hover Vehicle and Walker ("autos, trucks, landspeeders and other land-based or
+ * hover vehicles", core p. 102); Pilot's are Civilian Craft, Military Craft and
+ * Spacecraft (core p. 105). Which Pilot group an aircraft takes depends on the
+ * craft, not its locomotion, so a flyer has no single printed test here; neither
+ * skill covers boats.
+ */
+const DH1_VEHICLE_DRIVING: VehicleDrivingRules = {
+    immobile: null,
+    wheeled: { skill: 'drive', specialisation: 'Ground Vehicle' },
+    tracked: { skill: 'drive', specialisation: 'Ground Vehicle' },
+    walker: { skill: 'drive', specialisation: 'Walker' },
+    hover: { skill: 'drive', specialisation: 'Hover Vehicle' },
+    skimmer: { skill: 'drive', specialisation: 'Hover Vehicle' },
+    flyer: null,
+    vtol: null,
+    hull: null,
+    submersible: null,
+    hydrofoil: null,
+    voidship: { skill: 'pilot', specialisation: 'Spacecraft' },
+};
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
@@ -30,6 +54,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly itemRepair = null;
     /** DH1 core Weapon Upgrades: a successful Trade (Armourer) test (#136). */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
+    readonly vehicleDriving: VehicleDrivingRules = DH1_VEHICLE_DRIVING;
     /**
      * DH1 core: "The number of extra hits you can score in this manner may not
      * exceed the … rate of fire" (both bursts); Suppressing Fire: "The number of

@@ -11,9 +11,10 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeActionCost, ComradeOrderCohesion, ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
+import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
 import type { DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -144,6 +145,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Routine (+20)) have no pack items yet, so they are not distinguished here.
      */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
+    readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
      * OW core: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of

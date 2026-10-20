@@ -53,6 +53,7 @@ import {
     type SkillUseItemChoice,
     skillUseItemCandidates,
 } from '../rules/skill-uses.ts';
+import { printedSpecialisationTest } from '../rules/specialist-skill-test.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
     type ModifiableWeaponSystem,
@@ -583,19 +584,28 @@ export class WH40KAcolyte extends WH40KBaseActor {
         let targetValue = skill.current;
         let skillRank: number | undefined;
 
-        // Handle specialist skills
-        if (specialityName !== undefined && Array.isArray(skill.entries)) {
-            const speciality = this._findSpecialistSkill(skill, specialityName);
-            if (speciality) {
-                const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
-                label = `${label}: ${specialityLabel}`;
-                targetValue = speciality.current ?? skill.current;
-                // Pass the specialisation entry's own effective rank so the roll dialog
-                // treats a trained specialisation as trained. Specialist skills carry
-                // their training per-entry; the parent skill's advance is ~0, which the
-                // dialog would otherwise read as "untrained" and halve/block (#225).
-                skillRank = speciality.rank ?? (speciality.trained === true ? 1 : 0);
-            }
+        // Handle specialist skills. A rule-named specialisation (a vehicle's driving
+        // skill) is that one or untrained; a sheet's speciality is the clicked entry.
+        const speciality = specialityName === undefined ? undefined : this._findSpecialistSkill(skill, specialityName);
+        if (options.specialisation !== undefined) {
+            const printed = printedSpecialisationTest(
+                label ?? resolvedSkillName,
+                skill.current,
+                this._findSpecialistSkill(skill, options.specialisation),
+                options.specialisation,
+            );
+            label = printed.label;
+            targetValue = printed.target;
+            skillRank = printed.skillRank;
+        } else if (speciality !== undefined) {
+            const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
+            label = `${label}: ${specialityLabel}`;
+            targetValue = speciality.current ?? skill.current;
+            // Pass the specialisation entry's own effective rank so the roll dialog
+            // treats a trained specialisation as trained. Specialist skills carry
+            // their training per-entry; the parent skill's advance is ~0, which the
+            // dialog would otherwise read as "untrained" and halve/block (#225).
+            skillRank = speciality.rank ?? (speciality.trained === true ? 1 : 0);
         }
 
         // Skill-use flow (#432): when a skill offers RAW Special Uses (e.g. Medicae),
@@ -621,7 +631,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: resolvedSkillName,
             type: 'skill',
-            label: game.i18n.format('WH40K.Roll.TestLabel', { name: label ?? resolvedSkillName }),
+            label: options.label ?? game.i18n.format('WH40K.Roll.TestLabel', { name: label ?? resolvedSkillName }),
             target: targetValue,
             situationalKey: resolvedSkillName,
             ...(instance !== undefined ? { instance } : {}),
@@ -798,14 +808,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (skill === undefined) return null;
         const skillLabel = skill.label ?? key;
         if (ref.specialisation === null) return { key, label: skillLabel, target: skill.current };
-        const entry = this._findSpecialistSkill(skill, ref.specialisation);
-        if (entry === undefined) return { key, label: `${skillLabel}: ${ref.specialisation}`, target: skill.current, skillRank: 0 };
-        return {
-            key,
-            label: `${skillLabel}: ${entry.name ?? entry.label ?? ref.specialisation}`,
-            target: entry.current ?? skill.current,
-            skillRank: entry.rank ?? (entry.trained === true ? 1 : 0),
-        };
+        return { key, ...printedSpecialisationTest(skillLabel, skill.current, this._findSpecialistSkill(skill, ref.specialisation), ref.specialisation) };
     }
 
     /**

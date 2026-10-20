@@ -11,10 +11,11 @@ import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { printedGrappleRules } from './base-system-config.ts';
+import { printedGrappleRules, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -108,6 +109,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly inquestRules: InquestRules = DH2_INQUEST_RULES;
     readonly itemRepair: ItemRepairRules = DH2_ITEM_REPAIR_RULES;
     readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
+    readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
      * DH2 core ch. VII: "The number of total hits scored in this manner cannot
      * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);

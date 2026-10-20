@@ -1,4 +1,5 @@
-import { SystemConfigRegistry } from '../config/game-systems/index.ts';
+import { vehicleDrivingRulesFor } from '../config/game-systems/index.ts';
+import type { Locomotion } from '../data/actor/vehicle.ts';
 import type { AggregatedVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 import type { SkillRollOptions } from '../rolls/action-data.ts';
 import { occupantCandidateActors } from '../rules/vehicle-embark.ts';
@@ -36,42 +37,20 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
         notes: string;
     };
     size: number;
+    /** The means of locomotion, which picks the driving specialisation a line prints. */
+    locomotion: Locomotion;
     /** The traits' structured effects, aggregated by the craft DataModel on every prepare. */
     traitEffects: AggregatedVehicleTraitEffects;
 };
 
-/** One specialisation entry of a specialist skill, as the tester's sheet carries it. */
-interface TesterSkillEntry {
-    current?: number | undefined;
-}
-
-/**
- * The slice of a character the vehicle asks to make a test: PCs and NPCs both
- * roll a skill with a caller's sourced modifiers; a PC's specialist skill carries
- * its specialisations as entries.
- */
+/** The slice of a character the vehicle asks to make a test: PCs and NPCs both roll a skill with a caller's options. */
 interface VehicleTesterActor {
-    readonly skills?: Readonly<Record<string, { entries?: readonly TesterSkillEntry[] | undefined }>> | undefined;
-    rollSkill: (skillName: string, speciality?: number, options?: SkillRollOptions) => Promise<void> | void;
+    rollSkill: (skillName: string, speciality?: string, options?: SkillRollOptions) => Promise<void> | void;
 }
 
 /** Whether a document exposes the tester surface (both PC and NPC documents do). */
 function isVehicleTester(actor: WH40KBaseActor): actor is WH40KBaseActor & VehicleTesterActor {
     return typeof (actor as Partial<VehicleTesterActor>).rollSkill === 'function';
-}
-
-/**
- * The tester's specialisation to roll for a specialist skill: the one with the
- * highest target, so a driver trained in one form of Operate tests with it.
- * `undefined` for a plain skill.
- */
-function bestSpecialisation(entries: readonly TesterSkillEntry[] | undefined): number | undefined {
-    if (entries === undefined || entries.length === 0) return undefined;
-    let best = 0;
-    entries.forEach((entry, index) => {
-        if ((entry.current ?? 0) > (entries[best]?.current ?? 0)) best = index;
-    });
-    return best;
 }
 
 export class WH40KVehicle extends WH40KBaseActor {
@@ -210,12 +189,20 @@ export class WH40KVehicle extends WH40KBaseActor {
             ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.TraitTests.NoTester'));
             return;
         }
-        const visible = SystemConfigRegistry.getOrNull(firstSystemId(tester) ?? '')?.getVisibleSkills();
-        const skill = vehicleTestSkill(category, (key) => visible?.has(key) ?? tester.skills?.[key] !== undefined);
+        // The tester's line names the skill: an Operate / Drive / Pilot test takes the
+        // specialisation that line prints for this craft's locomotion.
+        const skill = vehicleTestSkill(category, this.system.locomotion, vehicleDrivingRulesFor(firstSystemId(tester)));
+        if (skill === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.TraitTests.NoDrivingSkill'));
+            return;
+        }
         const components = vehicleTraitTestComponents(this.system.traitEffects.testModifiers, category, (trait) =>
             game.i18n.format('WH40K.Vehicle.TraitTests.Source', { trait }),
         );
-        await tester.rollSkill(skill, bestSpecialisation(tester.skills?.[skill]?.entries), {
+        const test = game.i18n.localize(`WH40K.Vehicle.TraitTests.Category.${category}`);
+        await tester.rollSkill(skill.skill, undefined, {
+            ...(skill.specialisation !== null ? { specialisation: skill.specialisation } : {}),
+            label: game.i18n.format('WH40K.Vehicle.TraitTests.TestLabel', { test, vehicle: this.name }),
             sourcedModifiers: { bucket: VEHICLE_TRAIT_TEST_BUCKET, components },
         });
     }

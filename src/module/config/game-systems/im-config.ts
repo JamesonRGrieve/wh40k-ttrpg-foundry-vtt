@@ -17,6 +17,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly itemRepair = null;
     /** IM's attachment rule (an hour and a Tech (Engineering) test) is not modelled (#136). */
     readonly weaponModification = null;
+    /** IM's Operate / Pilot specialisations are not modelled for vehicle tests (content#28 covers the six FFG lines). */
+    readonly vehicleDriving = null;
     /** IM prints no rate-of-fire bursts. */
     readonly burstRules = null;
     /** IM prints no rate-of-fire bursts, so no burst modifier or cost. */

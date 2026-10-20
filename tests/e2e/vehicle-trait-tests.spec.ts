@@ -14,8 +14,12 @@ import { chatMessageIds, firstNewCard, snapChatCard, snapWindow } from './scene-
  *   1. The Overview tab's Vehicle Tests panel lists Rugged +20 on Repair and
  *      Tracked Vehicle +10 on Difficult Terrain; the Trait Rules panel lists the
  *      Enclosed crew and Amphibious. The printed Manoeuvrability stays 0.
- *   2. With a crewman aboard, Repair opens the crewman's Tech-Use test with a
- *      Rugged row; the posted card names the trait as the row's source.
+ *   2. With a crewman aboard, Repair opens the crewman's Tech-Use test, titled
+ *      "Repair Test: Chimera Armoured Transport", with a Rugged row; the posted
+ *      card names the trait as the row's source.
+ *   3. Difficult Terrain is the crewman's Operate (Surface) test (DH2 core
+ *      p. 111: treaded vehicles). He lacks that specialisation, so it is rolled
+ *      untrained (rank 0), with Tracked Vehicle's +10 row.
  */
 
 const ROLL_DIALOG = '.unified-roll-dialog';
@@ -87,6 +91,23 @@ async function createChimeraWithCrew(page: Page): Promise<ProbeIds> {
     );
 }
 
+/** What the open roll dialog will roll: its skill key, rank and title. */
+async function dialogRoll(page: Page, dialogId: string): Promise<{ rollKey: string; skillRank: number | null; title: string } | null> {
+    return page.evaluate((id: string) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.instances holds untyped app instances in the browser context
+        const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { rollData?: Record<string, unknown> }> } } }).foundry
+            .applications.instances;
+        const rollData = apps.get(id)?.rollData;
+        if (rollData === undefined) return null;
+        const rank = rollData['skillRank'];
+        return {
+            rollKey: typeof rollData['rollKey'] === 'string' ? rollData['rollKey'] : '',
+            skillRank: typeof rank === 'number' ? rank : null,
+            title: typeof rollData['nameOverride'] === 'string' ? rollData['nameOverride'] : '',
+        };
+    }, dialogId);
+}
+
 /** Delete the probe actors (closing their sheets). */
 async function deleteProbeActors(page: Page, ids: readonly string[]): Promise<void> {
     await page.evaluate(async (actorIds: readonly string[]) => {
@@ -145,8 +166,9 @@ test.describe.serial('Vehicle traits as mechanics (Tier B, content#28)', () => {
             await testsPanel.locator('[data-action="rollVehicleTest"][data-test="repair"]').click();
             const rollDialog = page.locator(ROLL_DIALOG).first();
             await expect(rollDialog).toBeVisible();
-            await expect(rollDialog).toContainText('Tech-Use');
+            await expect(rollDialog).toContainText('Repair Test: Chimera Armoured Transport');
             await expect(rollDialog).toContainText('Rugged');
+            expect(await dialogRoll(page, (await rollDialog.getAttribute('id')) ?? '')).toMatchObject({ rollKey: 'techUse' });
             expect(await snapWindow(page, 'vehicle-traits-rugged-repair-dialog', rollDialog)).not.toBeNull();
 
             const before = await chatMessageIds(page);
@@ -154,7 +176,31 @@ test.describe.serial('Vehicle traits as mechanics (Tier B, content#28)', () => {
             const card = await firstNewCard(page, before);
             expect(card.content).toContain('Rugged');
             expect(card.content).toContain('Vehicle trait: Rugged');
+            expect(card.content).toContain('Repair Test: Chimera Armoured Transport');
             expect(await snapChatCard(page, 'vehicle-traits-rugged-repair-card', card.id)).not.toBeNull();
+
+            // Difficult Terrain: Operate (Surface), which the crewman lacks — untrained.
+            const sheetAgain = page.locator(`#${probe.sheetId}`);
+            if ((await sheetAgain.count()) === 0) {
+                await page.evaluate(async (id: string) => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals, no repo types available in page.evaluate
+                    const g = globalThis as unknown as {
+                        game: { actors: { get: (i: string) => { sheet: { render: (o: object) => Promise<object> } | null } | undefined } };
+                    };
+                    await g.game.actors.get(id)?.sheet?.render({ force: true });
+                }, probe.vehicleId);
+            }
+            await page
+                .locator(
+                    `#${probe.sheetId} .wh40k-panel:has([data-wh40k-hook="vehicle-trait-tests"]) [data-action="rollVehicleTest"][data-test="difficultTerrain"]`,
+                )
+                .click();
+            const terrainDialog = page.locator(ROLL_DIALOG).first();
+            await expect(terrainDialog).toBeVisible();
+            await expect(terrainDialog).toContainText('Difficult Terrain Test: Chimera Armoured Transport');
+            await expect(terrainDialog).toContainText('Tracked Vehicle');
+            expect(await dialogRoll(page, (await terrainDialog.getAttribute('id')) ?? '')).toMatchObject({ rollKey: 'operate', skillRank: 0 });
+            expect(await snapWindow(page, 'vehicle-traits-untrained-operate-surface-dialog', terrainDialog)).not.toBeNull();
         } finally {
             await deleteProbeActors(
                 page,

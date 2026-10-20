@@ -10,10 +10,11 @@ import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
-import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
+import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
@@ -49,6 +50,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly itemRepair = null;
     /** RT core p. 133 Weapon Upgrades: a successful Trade (Armourer) test (#136). */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
+    readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
      * RT core with the 1.4 errata (pp. 239/242): "The total number of hits scored
      * by a weapon cannot exceed the weapon's … Rate of Fire"; Suppressing Fire:

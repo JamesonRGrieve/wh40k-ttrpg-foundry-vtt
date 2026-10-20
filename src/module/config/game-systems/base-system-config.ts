@@ -13,6 +13,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type {
     GameSystemId,
@@ -88,6 +89,56 @@ export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
     partsRequisitionBonus: null,
 };
 
+/** One specialist skill a line's driver tests, as its skill chapter names it. */
+function driving(skill: string, specialisation: string): VehicleTestSkill {
+    return { skill, specialisation };
+}
+
+/**
+ * Operate as DH2 (core p. 111), OW (core p. 128) and BC (core pp. 105–106) print
+ * it, word for word: Operate (Surface) covers "any vehicle that primarily
+ * operates on the surface of a planet. Groundcars, walkers, treaded vehicles,
+ * boats, and skimmers"; Operate (Aeronautica) "any vehicle that operates in three
+ * dimensions", atmospheric fliers and small voidcraft; Operate (Voidship) "large
+ * void-faring vessels" (DH2 core p. 112). An emplacement is never driven, and the
+ * books print nothing for a submersible.
+ */
+export const OPERATE_VEHICLE_DRIVING: VehicleDrivingRules = {
+    immobile: null,
+    wheeled: driving('operate', 'Surface'),
+    tracked: driving('operate', 'Surface'),
+    walker: driving('operate', 'Surface'),
+    hover: driving('operate', 'Surface'),
+    skimmer: driving('operate', 'Surface'),
+    flyer: driving('operate', 'Aeronautica'),
+    vtol: driving('operate', 'Aeronautica'),
+    hull: driving('operate', 'Surface'),
+    submersible: null,
+    hydrofoil: driving('operate', 'Surface'),
+    voidship: driving('operate', 'Voidship'),
+};
+
+/**
+ * Drive and Pilot as RT (core pp. 81, 84) and DW (core pp. 98, 103) print them:
+ * Drive's skill groups are Ground Vehicle, Skimmer/Hover and Walker ("land-based,
+ * hover, or skimmer-type vehicles"); Pilot's are Personal, Flyers and Space Craft.
+ * Neither skill covers boats, so a watercraft has no printed driving test.
+ */
+export const DRIVE_PILOT_VEHICLE_DRIVING: VehicleDrivingRules = {
+    immobile: null,
+    wheeled: driving('drive', 'Ground Vehicle'),
+    tracked: driving('drive', 'Ground Vehicle'),
+    walker: driving('drive', 'Walker'),
+    hover: driving('drive', 'Skimmer/Hover'),
+    skimmer: driving('drive', 'Skimmer/Hover'),
+    flyer: driving('pilot', 'Flyers'),
+    vtol: driving('pilot', 'Flyers'),
+    hull: null,
+    submersible: null,
+    hydrofoil: null,
+    voidship: driving('pilot', 'Space Craft'),
+};
+
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
     abstract readonly id: GameSystemId;
@@ -154,6 +205,13 @@ export abstract class BaseSystemConfig {
      * none).
      */
     abstract readonly weaponModification: WeaponModificationRules | null;
+
+    /**
+     * The skill a driver tests for each means of locomotion, as the line's skill
+     * chapter prints it (content#28): an Operate, Drive or Pilot specialisation.
+     * `null` for a line whose driving skills are not modelled.
+     */
+    abstract readonly vehicleDriving: VehicleDrivingRules | null;
 
     /**
      * The line's printed burst ceiling (#607): whether a Semi-Auto / Full Auto

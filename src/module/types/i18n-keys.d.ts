@@ -6207,6 +6207,7 @@ export type I18nKey =
     | 'WH40K.Vehicle.TraitTests.Category.floorIt'
     | 'WH40K.Vehicle.TraitTests.Category.repair'
     | 'WH40K.Vehicle.TraitTests.Hint'
+    | 'WH40K.Vehicle.TraitTests.NoDrivingSkill'
     | 'WH40K.Vehicle.TraitTests.NoModifiers'
     | 'WH40K.Vehicle.TraitTests.NoTester'
     | 'WH40K.Vehicle.TraitTests.Roll'

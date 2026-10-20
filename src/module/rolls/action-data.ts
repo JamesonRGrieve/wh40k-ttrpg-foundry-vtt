@@ -1441,6 +1441,14 @@ export interface SkillRollOptions {
      * specific use of the skill, so the skill's Special Uses are not offered.
      */
     sourcedModifiers?: { bucket: string; components: readonly RollModifierComponent[] } | undefined;
+    /**
+     * The specialisation to test, by the name the line's skill chapter prints
+     * (`Surface`). A tester without it makes the test untrained, under the
+     * line's untrained rule; it never falls back to another specialisation.
+     */
+    specialisation?: string | undefined;
+    /** The card title, in place of the skill's own "<Skill> Test" (a vehicle test names its test and vehicle). */
+    label?: string | undefined;
 }
 
 /** A chem/drug item as the Chem-Use flow reads it (#441) — its dose payload + uses. */

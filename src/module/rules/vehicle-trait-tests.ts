@@ -11,11 +11,14 @@
  *
  * It also picks the skill each category tests and the crew member who makes the
  * test. Vehicles have no skills of their own: every vehicle test is a skill test
- * of a character aboard.
+ * of a character aboard, and a driving test uses the specialisation the line
+ * prints for the craft's locomotion (its config's `vehicleDriving`).
  */
 
+import type { Locomotion } from '../data/actor/vehicle.ts';
 import type { SourcedVehicleTestModifier } from '../data/shared/vehicle-trait-effects-template.ts';
 import type { VehicleRole } from './vehicle-occupancy.ts';
+import type { ModificationSkill } from './weapon-modification.ts';
 
 /** The roll-modifier bucket vehicle-trait test modifiers are summed under. */
 export const VEHICLE_TRAIT_TEST_BUCKET = 'vehicle-traits';
@@ -30,26 +33,33 @@ export function isVehicleTestCategory(value: string): value is VehicleTestCatego
 }
 
 /**
- * The skill each category tests, in preference order. Repairs are Tech-Use and
- * Command is Command in every line. Driving is Operate in the aptitude lines (DH2,
- * OW) and Drive or Pilot in the career lines (DH1, RT, DW, BC); the tester's first
- * one present is used.
+ * A skill a line prints for a vehicle test, narrowed to the specialisation the
+ * book names (`Operate (Surface)`), or null for a standard skill. The same shape
+ * as a weapon-modification skill.
  */
-const CATEGORY_SKILLS: Readonly<Record<VehicleTestCategory, readonly [string, ...string[]]>> = {
-    repair: ['techUse'],
-    difficultTerrain: ['operate', 'drive', 'pilot'],
-    floorIt: ['operate', 'drive', 'pilot'],
-    command: ['command'],
-};
+export type VehicleTestSkill = ModificationSkill;
 
 /**
- * The skill key the category tests for a tester who has the skills `has` reports:
- * the first candidate present, else the first candidate (so the test still rolls,
- * untrained, against the line's printed skill).
+ * The skill a line's driver tests for each means of locomotion, as its skill
+ * chapter prints it: Operate (Surface / Aeronautica / Voidship) in the aptitude
+ * lines, Drive or Pilot and their skill groups in the career lines. `null` where
+ * the line prints no skill for that kind of craft.
  */
-export function vehicleTestSkill(category: VehicleTestCategory, has: (skillKey: string) => boolean): string {
-    const candidates = CATEGORY_SKILLS[category];
-    return candidates.find(has) ?? candidates[0];
+export type VehicleDrivingRules = Readonly<Record<Locomotion, VehicleTestSkill | null>>;
+
+/** Repairs are Tech-Use and Command is Command in every line. */
+const REPAIR_SKILL: VehicleTestSkill = { skill: 'techUse', specialisation: null };
+const COMMAND_SKILL: VehicleTestSkill = { skill: 'command', specialisation: null };
+
+/**
+ * The skill (and specialisation) a test of `category` takes on a craft with the
+ * given locomotion, under the line's printed driving rules. A driving test with
+ * no printed skill for that craft (or for a line without driving rules) is null.
+ */
+export function vehicleTestSkill(category: VehicleTestCategory, locomotion: Locomotion, driving: VehicleDrivingRules | null): VehicleTestSkill | null {
+    if (category === 'repair') return REPAIR_SKILL;
+    if (category === 'command') return COMMAND_SKILL;
+    return driving?.[locomotion] ?? null;
 }
 
 /**

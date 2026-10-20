@@ -5977,6 +5977,7 @@
                 "TestLabel": "{test} Test: {vehicle}",
                 "Source": "Vehicle trait: {trait}",
                 "NoTester": "Nobody aboard can make this test. Embark a crew member or driver first.",
+                "NoDrivingSkill": "This line prints no driving skill for this kind of vehicle; the GM decides which test applies.",
                 "NoModifiers": "No trait modifiers",
                 "Category": {
                     "repair": "Repair",

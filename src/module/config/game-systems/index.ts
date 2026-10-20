@@ -11,6 +11,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
 import { BCSystemConfig } from './bc-config.ts';
@@ -96,6 +97,16 @@ export function inquestRulesFor(line: string | undefined): InquestRules | null {
 export function itemRepairRulesFor(line: string | undefined): ItemRepairRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.itemRepair ?? null;
+}
+
+/**
+ * The skill a line's driver tests for each means of locomotion (content#28), or
+ * `null` for an unknown line or one whose driving skills are not modelled.
+ * @param line  `system.gameSystem` id.
+ */
+export function vehicleDrivingRulesFor(line: string | undefined): VehicleDrivingRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.vehicleDriving ?? null;
 }
 
 /**

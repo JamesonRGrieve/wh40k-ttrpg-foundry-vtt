@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { OPERATE_VEHICLE_DRIVING } from '../config/game-systems/base-system-config.ts';
 import type { SourcedVehicleTestModifier } from '../data/shared/vehicle-trait-effects-template.ts';
 import {
     isVehicleTestCategory,
@@ -70,23 +71,19 @@ describe('vehicleTraitTestComponents (Path B rows, content#28)', () => {
 });
 
 describe('vehicleTestSkill', () => {
-    const aptitudeLine = new Set(['techUse', 'operate', 'command']);
-    const careerLine = new Set(['techUse', 'drive', 'pilot', 'command']);
-
-    it('repairs are Tech-Use and command is Command in every line', () => {
-        for (const line of [aptitudeLine, careerLine]) {
-            expect(vehicleTestSkill('repair', (key) => line.has(key))).toBe('techUse');
-            expect(vehicleTestSkill('command', (key) => line.has(key))).toBe('command');
-        }
+    it('repairs are Tech-Use and command is Command, whatever the craft or line', () => {
+        expect(vehicleTestSkill('repair', 'flyer', null)).toEqual({ skill: 'techUse', specialisation: null });
+        expect(vehicleTestSkill('command', 'tracked', OPERATE_VEHICLE_DRIVING)).toEqual({ skill: 'command', specialisation: null });
     });
 
-    it('driving is Operate in the aptitude lines and Drive in the career lines', () => {
-        expect(vehicleTestSkill('difficultTerrain', (key) => aptitudeLine.has(key))).toBe('operate');
-        expect(vehicleTestSkill('floorIt', (key) => careerLine.has(key))).toBe('drive');
+    it('a driving test takes the specialisation the line prints for the locomotion', () => {
+        expect(vehicleTestSkill('difficultTerrain', 'tracked', OPERATE_VEHICLE_DRIVING)).toEqual({ skill: 'operate', specialisation: 'Surface' });
+        expect(vehicleTestSkill('floorIt', 'flyer', OPERATE_VEHICLE_DRIVING)).toEqual({ skill: 'operate', specialisation: 'Aeronautica' });
     });
 
-    it('falls back to the first candidate when the tester has none of them', () => {
-        expect(vehicleTestSkill('floorIt', () => false)).toBe('operate');
+    it('has no driving test for a craft the line prints no skill for, or a line without driving rules', () => {
+        expect(vehicleTestSkill('floorIt', 'immobile', OPERATE_VEHICLE_DRIVING)).toBeNull();
+        expect(vehicleTestSkill('floorIt', 'tracked', null)).toBeNull();
     });
 });
 
