@@ -2,29 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
     aggregateVehicleTraitEffects,
     emptyAggregatedVehicleTraitEffects,
+    type NamedVehicleTraitEffects,
     type VehicleTraitEffects,
     vehicleTraitEffectsSchema,
 } from './vehicle-trait-effects-template.ts';
 
-/** Build a full trait-effects object with the given overrides. */
-function eff(over: Partial<VehicleTraitEffects> = {}): VehicleTraitEffects {
-    return {
-        testModifiers: [],
-        critDamageMultiplier: null,
-        critExcludesRighteousFury: false,
-        mitigatesMotiveCrit: false,
-        crewExposure: '',
-        ignoresDifficultTerrain: false,
-        amphibious: false,
-        cannotRam: false,
-        freeTurn: false,
-        canParryWithMelee: false,
-        enhancedMovement: false,
-        orbitalDeployment: false,
-        deploymentIncomingToHitModifier: 0,
-        postLandingDelayRounds: 0,
-        ...over,
-    };
+/** Build a named trait whose effects are the neutral defaults plus the given overrides. */
+function trait(name: string, over: Partial<VehicleTraitEffects> = {}): NamedVehicleTraitEffects {
+    return { name, effects: { ...emptyAggregatedVehicleTraitEffects(), ...over } };
 }
 
 describe('aggregateVehicleTraitEffects', () => {
@@ -33,39 +18,43 @@ describe('aggregateVehicleTraitEffects', () => {
     });
 
     it('sets crew exposure from Open-Topped', () => {
-        expect(aggregateVehicleTraitEffects([eff({ crewExposure: 'open' })]).crewExposure).toBe('open');
+        expect(aggregateVehicleTraitEffects([trait('Open-Topped', { crewExposure: 'open' })]).crewExposure).toBe('open');
     });
 
     it('lets Enclosed win over Open-Topped regardless of order (sealed hull beats open compartment)', () => {
-        expect(aggregateVehicleTraitEffects([eff({ crewExposure: 'open' }), eff({ crewExposure: 'enclosed' })]).crewExposure).toBe('enclosed');
-        expect(aggregateVehicleTraitEffects([eff({ crewExposure: 'enclosed' }), eff({ crewExposure: 'open' })]).crewExposure).toBe('enclosed');
+        const open = trait('Open-Topped', { crewExposure: 'open' });
+        const enclosed = trait('Enclosed', { crewExposure: 'enclosed' });
+        expect(aggregateVehicleTraitEffects([open, enclosed]).crewExposure).toBe('enclosed');
+        expect(aggregateVehicleTraitEffects([enclosed, open]).crewExposure).toBe('enclosed');
     });
 
     it('models Reinforced Armour (halve crit, excluding Righteous Fury)', () => {
-        const agg = aggregateVehicleTraitEffects([eff({ critDamageMultiplier: 0.5, critExcludesRighteousFury: true })]);
+        const agg = aggregateVehicleTraitEffects([trait('Reinforced Armour', { critDamageMultiplier: 0.5, critExcludesRighteousFury: true })]);
         expect(agg.critDamageMultiplier).toBe(0.5);
         expect(agg.critExcludesRighteousFury).toBe(true);
     });
 
     it('composes two crit-damage multipliers multiplicatively', () => {
-        const agg = aggregateVehicleTraitEffects([eff({ critDamageMultiplier: 0.5 }), eff({ critDamageMultiplier: 0.5 })]);
+        const agg = aggregateVehicleTraitEffects([trait('A', { critDamageMultiplier: 0.5 }), trait('B', { critDamageMultiplier: 0.5 })]);
         expect(agg.critDamageMultiplier).toBe(0.25);
     });
 
-    it('concatenates per-test modifiers (Rugged + Tracked)', () => {
+    it('concatenates per-test modifiers, each naming the trait it came from (Rugged + Tracked)', () => {
         const agg = aggregateVehicleTraitEffects([
-            eff({ testModifiers: [{ test: 'repair', value: 20 }] }),
-            eff({ testModifiers: [{ test: 'difficultTerrain', value: 10 }], mitigatesMotiveCrit: true }),
+            trait('Rugged', { testModifiers: [{ test: 'repair', value: 20 }] }),
+            trait('Tracked Vehicle', { testModifiers: [{ test: 'difficultTerrain', value: 10 }], mitigatesMotiveCrit: true }),
         ]);
         expect(agg.testModifiers).toStrictEqual([
-            { test: 'repair', value: 20 },
-            { test: 'difficultTerrain', value: 10 },
+            { test: 'repair', value: 20, source: 'Rugged' },
+            { test: 'difficultTerrain', value: 10, source: 'Tracked Vehicle' },
         ]);
         expect(agg.mitigatesMotiveCrit).toBe(true);
     });
 
     it('ORs the Walker movement/terrain flags', () => {
-        const agg = aggregateVehicleTraitEffects([eff({ ignoresDifficultTerrain: true, cannotRam: true, freeTurn: true, canParryWithMelee: true })]);
+        const agg = aggregateVehicleTraitEffects([
+            trait('Walker', { ignoresDifficultTerrain: true, cannotRam: true, freeTurn: true, canParryWithMelee: true }),
+        ]);
         expect(agg.ignoresDifficultTerrain).toBe(true);
         expect(agg.cannotRam).toBe(true);
         expect(agg.freeTurn).toBe(true);
@@ -74,8 +63,8 @@ describe('aggregateVehicleTraitEffects', () => {
 
     it('takes the strongest deployment penalty and longest post-landing delay', () => {
         const agg = aggregateVehicleTraitEffects([
-            eff({ orbitalDeployment: true, deploymentIncomingToHitModifier: -30, postLandingDelayRounds: 1 }),
-            eff({ deploymentIncomingToHitModifier: -10, postLandingDelayRounds: 2 }),
+            trait('Orbital Deployment', { orbitalDeployment: true, deploymentIncomingToHitModifier: -30, postLandingDelayRounds: 1 }),
+            trait('B', { deploymentIncomingToHitModifier: -10, postLandingDelayRounds: 2 }),
         ]);
         expect(agg.orbitalDeployment).toBe(true);
         expect(agg.deploymentIncomingToHitModifier).toBe(-30);
@@ -83,9 +72,73 @@ describe('aggregateVehicleTraitEffects', () => {
     });
 
     it('models Enhanced Motive Systems (enhanced movement + Floor It! test bonus)', () => {
-        const agg = aggregateVehicleTraitEffects([eff({ enhancedMovement: true, testModifiers: [{ test: 'floorIt', value: 20 }] })]);
+        const agg = aggregateVehicleTraitEffects([
+            trait('Enhanced Motive Systems', { enhancedMovement: true, testModifiers: [{ test: 'floorIt', value: 20 }] }),
+        ]);
         expect(agg.enhancedMovement).toBe(true);
-        expect(agg.testModifiers).toStrictEqual([{ test: 'floorIt', value: 20 }]);
+        expect(agg.testModifiers).toStrictEqual([{ test: 'floorIt', value: 20, source: 'Enhanced Motive Systems' }]);
+    });
+
+    it('cancels Ponderous against Enhanced Motive Systems, in either order (OW core p. 213–214)', () => {
+        const ems = trait('Enhanced Motive Systems', { enhancedMovement: true });
+        const ponderous = trait('Ponderous', { ponderous: true });
+        for (const order of [
+            [ems, ponderous],
+            [ponderous, ems],
+        ]) {
+            const agg = aggregateVehicleTraitEffects(order);
+            expect(agg.enhancedMovement).toBe(false);
+            expect(agg.ponderous).toBe(false);
+        }
+        expect(aggregateVehicleTraitEffects([ponderous]).ponderous).toBe(true);
+    });
+
+    it('lets advanced anti-air win over rudimentary regardless of order', () => {
+        const rud = trait('Anti-Air (Rudimentary)', { antiAir: 'rudimentary' });
+        const adv = trait('Anti-Air (Advanced)', { antiAir: 'advanced' });
+        expect(aggregateVehicleTraitEffects([rud]).antiAir).toBe('rudimentary');
+        expect(aggregateVehicleTraitEffects([rud, adv]).antiAir).toBe('advanced');
+        expect(aggregateVehicleTraitEffects([adv, rud]).antiAir).toBe('advanced');
+    });
+
+    it('takes the strongest incoming ranged / melee and explosion-ignition penalties', () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Feral Machine Spirit', { incomingRangedToHitModifier: -10 }),
+            trait('Holofield', { incomingRangedToHitModifier: -20 }),
+            trait('Skimmer', { incomingMeleeToHitModifier: -10 }),
+            trait('Extremely Volatile', { explosionChanceMultiplier: 2, explosionIgnitionTestModifier: -10 }),
+        ]);
+        expect(agg.incomingRangedToHitModifier).toBe(-20);
+        expect(agg.incomingMeleeToHitModifier).toBe(-10);
+        expect(agg.explosionChanceMultiplier).toBe(2);
+        expect(agg.explosionIgnitionTestModifier).toBe(-10);
+    });
+
+    it('takes the highest force-field rating and ORs never-overloads', () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Daemon Engine', { forceFieldRating: 30, forceFieldNeverOverloads: true, structuralRegeneration: '1d5' }),
+            trait('Shield Generator', { forceFieldRating: 40 }),
+        ]);
+        expect(agg.forceFieldRating).toBe(40);
+        expect(agg.forceFieldNeverOverloads).toBe(true);
+        expect(agg.structuralRegeneration).toBe('1d5');
+    });
+
+    it('composes repair-time multipliers (Ramshackle halves repairs; Tracked doubles motive repairs, Wheeled halves them)', () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Ramshackle', { repairTimeMultiplier: 0.5, ramSelfDamageMultiplier: 2, righteousFuryCritDie: '1d10', alwaysLightlyDamaged: true }),
+            trait('Tracked Vehicle', { motiveRepairTimeMultiplier: 2 }),
+            trait('Wheeled Vehicle', { motiveRepairTimeMultiplier: 0.5 }),
+        ]);
+        expect(agg.repairTimeMultiplier).toBe(0.5);
+        expect(agg.motiveRepairTimeMultiplier).toBe(1);
+        expect(agg.ramSelfDamageMultiplier).toBe(2);
+        expect(agg.righteousFuryCritDie).toBe('1d10');
+        expect(agg.alwaysLightlyDamaged).toBe(true);
+    });
+
+    it('leaves an unset multiplier null', () => {
+        expect(aggregateVehicleTraitEffects([trait('Rugged')]).repairTimeMultiplier).toBeNull();
     });
 });
 

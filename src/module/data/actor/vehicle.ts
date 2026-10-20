@@ -2,12 +2,13 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
 import { applyCharacteristicRollData, computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { descriptionField, migrateDescriptionAndSource, provenanceField } from '../shared/description-template.ts';
-import { characteristicField, type CharacteristicSource } from '../shared/stat-fields.ts';
+import { type CharacteristicSource, characteristicField } from '../shared/stat-fields.ts';
 import type { VehicleHardpoint } from '../shared/vehicle-mounting.ts';
 import {
+    type AggregatedVehicleTraitEffects,
     aggregateVehicleTraitEffects,
     emptyAggregatedVehicleTraitEffects,
-    type AggregatedVehicleTraitEffects,
+    type NamedVehicleTraitEffects,
     type VehicleTraitEffects,
 } from '../shared/vehicle-trait-effects-template.ts';
 import { migrateCharacteristics } from './npc-import-migration.ts';
@@ -525,20 +526,20 @@ export class ConventionalCraftData extends VehicleData {
      */
     _aggregateTraitEffects(): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: parent.items is an EmbeddedCollection; iteration is typed loose
-        const parent = (this as unknown as { parent?: { items?: Iterable<{ type: string; system: unknown }> } }).parent;
+        const parent = (this as unknown as { parent?: { items?: Iterable<{ type: string; name: string; system: unknown }> } }).parent;
         const items = parent?.items;
         if (!items) {
             this.traitEffects = emptyAggregatedVehicleTraitEffects();
             return;
         }
-        const effects: VehicleTraitEffects[] = [];
+        const traits: NamedVehicleTraitEffects[] = [];
         for (const item of items) {
             if (item.type !== 'vehicleTrait') continue;
             // eslint-disable-next-line no-restricted-syntax -- boundary: per-item system shape narrowed by the type guard above
             const traitEffects = (item.system as { effects?: VehicleTraitEffects }).effects;
-            if (traitEffects) effects.push(traitEffects);
+            if (traitEffects) traits.push({ name: item.name, effects: traitEffects });
         }
-        this.traitEffects = aggregateVehicleTraitEffects(effects);
+        this.traitEffects = aggregateVehicleTraitEffects(traits);
     }
 
     /**
