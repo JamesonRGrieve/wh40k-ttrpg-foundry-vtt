@@ -11,12 +11,12 @@
                     {{#if weapon.system.effectiveSpecial.size}}
                         <div class="tw-mb-4 tw-p-3 tw-bg-[linear-gradient(135deg,rgba(75,192,115,0.08)_0%,rgba(75,192,115,0.03)_100%)] tw-border-l-[3px] tw-border-l-[rgba(75,192,115,0.5)] tw-rounded-md">
                             <div class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2">
-                                <i class="fas fa-star" style="color: #4bc073; font-size: 0.85rem;"></i>
+                                <i class="fas fa-star tw-text-[var(--wh40k-success-secondary)] tw-text-[0.85rem]"></i>
                                 <span class="tw-font-semibold tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-uppercase tw-tracking-[0.5px]">{{localize "WH40K.Chat.Roll.ActiveQualities"}}</span>
                             </div>
                             <div class="tw-flex tw-flex-wrap tw-gap-1.5">
                                 {{#each (specialQualities weapon.system.effectiveSpecial) as |quality|}}
-                                    <span class="tw-inline-block tw-px-2.5 tw-py-1 tw-bg-[rgba(75,192,115,0.15)] tw-border tw-border-[rgba(75,192,115,0.3)] tw-rounded-md tw-text-[#4bc073] tw-text-[0.8rem] tw-font-semibold tw-cursor-help hover:tw-bg-[rgba(75,192,115,0.25)] hover:tw-border-[rgba(75,192,115,0.5)] hover:-tw-translate-y-px hover:tw-transition-all" data-tooltip="{{quality.description}}" title="{{quality.description}}">
+                                    <span class="tw-inline-block tw-px-2.5 tw-py-1 tw-bg-[rgba(75,192,115,0.15)] tw-border tw-border-[rgba(75,192,115,0.3)] tw-rounded-md tw-text-[var(--wh40k-success-secondary)] tw-text-[0.8rem] tw-font-semibold tw-cursor-help hover:tw-bg-[rgba(75,192,115,0.25)] hover:tw-border-[rgba(75,192,115,0.5)] hover:-tw-translate-y-px hover:tw-transition-all" data-tooltip="{{quality.description}}" title="{{quality.description}}">
                                         {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
                                     </span>
                                 {{/each}}

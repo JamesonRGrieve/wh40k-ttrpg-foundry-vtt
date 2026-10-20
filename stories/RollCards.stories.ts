@@ -4,6 +4,7 @@ import { overflowingLabels } from '../src/module/testing/label-fit';
 import actionRollChatSrc from '../src/templates/chat/action-roll-chat.hbs?raw';
 import damageRollChatSrc from '../src/templates/chat/damage-roll-chat.hbs?raw';
 import simpleRollChatSrc from '../src/templates/chat/simple-roll-chat.hbs?raw';
+import { contrast, over, parseColour, type Rgb } from '../tests/lib/contrast';
 import { mockActionRollData, mockDamageRollData, mockRollData } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 import { renderSheet } from './test-helpers';
@@ -19,6 +20,20 @@ export default meta;
 
 type Story = StoryObj;
 
+/** WCAG AA for body text. */
+const MIN_TEXT_CONTRAST = 4.5;
+
+/** The opaque colour under `el`: its own and its ancestors' backgrounds composited down to the first opaque one. */
+function surfaceUnder(el: Element): Rgb {
+    const layers: Array<{ rgb: Rgb; alpha: number }> = [];
+    for (let node: Element | null = el; node !== null; node = node.parentElement) {
+        const layer = parseColour(getComputedStyle(node).backgroundColor);
+        if (layer.alpha > 0) layers.push(layer);
+        if (layer.alpha >= 1) break;
+    }
+    return layers.reduceRight<Rgb>((under, layer) => over(layer.rgb, layer.alpha, under), { r: 0, g: 0, b: 0 });
+}
+
 /** The global Spend-Fate re-roll variant, as ActionData.rerollOptions emits it. */
 const fateRerollOption = { id: 'fate', kind: 'fate', label: 'Re-roll', modifier: 0, source: 'Fate', disabled: false, frequency: 'at-will' };
 
@@ -29,6 +44,15 @@ export const SimpleSuccess: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('.roll-control__variant-reroll')).toBeNull();
         await expect(canvasElement.querySelector('.roll-control__fate-add-dos')).toBeNull();
+        // The card sits on the chat message's parchment, as Foundry posts it, and its
+        // title reads there. Drawn straight onto the dark story backdrop, the
+        // parchment-tuned accent title was dark on dark.
+        await expect(canvasElement.querySelector('.chat-message')).not.toBeNull();
+        const title = canvasElement.querySelector('h2');
+        await expect(title).not.toBeNull();
+        if (title === null) return;
+        const ink = parseColour(getComputedStyle(title).color);
+        await expect(contrast(ink.rgb, surfaceUnder(title))).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
     },
 };
 
@@ -433,6 +457,16 @@ export const DamageWarpWeaponIgnoresArmour: Story = {
 export const ActionSuccessWithControls: Story = {
     name: 'Action Roll / Success',
     render: () => renderSheet(actionRollChatSrc, mockActionRollData()),
+    play: async ({ canvasElement }) => {
+        // The weapon's quality chips read on the parchment message. They drew a fixed
+        // light green (about 2:1 there) after the chat cards moved onto it.
+        const chips = [...canvasElement.querySelectorAll<HTMLElement>('span[data-tooltip]')].filter((chip) =>
+            ['Reliable', 'Accurate'].includes(chip.textContent.trim()),
+        );
+        await expect(chips).toHaveLength(2);
+        const ratios = chips.map((chip) => contrast(parseColour(getComputedStyle(chip).color).rgb, surfaceUnder(chip)));
+        await expect(Math.min(...ratios)).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+    },
 };
 
 export const ActionFailureWithoutDamage: Story = {

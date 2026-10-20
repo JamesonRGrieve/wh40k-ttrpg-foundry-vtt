@@ -145,4 +145,13 @@
     .editor-content:focus-within {
         @apply border-chrome-border-strong;
     }
+
+    /* Chat message — the light parchment surface every chat card is posted on
+       (the preview's chatMessageSurface decorator wraps chat stories in it). The
+       cards' own tokens are tuned for this surface, not the dark backdrop. */
+    .chat-message {
+        @apply border border-chrome-border rounded-chrome-sm p-2;
+        background-color: rgb(235, 225, 205);
+        color: #191813;
+    }
 }
