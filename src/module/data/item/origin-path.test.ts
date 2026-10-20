@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { installFoundryDataStub, LeafField } from '../../testing/foundry-data-stub.ts';
+import { installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
 
 /**
  * OriginPathData schema (#160): the Only War Regiment Creation Points field, and
@@ -20,6 +20,12 @@ function leaf(name: string): LeafField {
     return field;
 }
 
+function record(name: string): SchemaRecord {
+    const field = Object.entries(schema).find(([key]) => key === name)?.[1];
+    if (!(field instanceof SchemaRecord)) throw new Error(`no schema field ${name}`);
+    return field;
+}
+
 describe('OriginPathData.regimentPoints (#160)', () => {
     it('is an optional, nullable whole number of points, unset by default', () => {
         expect(leaf('regimentPoints').options).toEqual({ required: false, nullable: true, initial: null, min: 0, integer: true });
@@ -29,6 +35,20 @@ describe('OriginPathData.regimentPoints (#160)', () => {
 describe('OriginPathData.grantsPsychicPowers (#681)', () => {
     it('is a required flag, off by default, so only an authored origin unlocks psychic powers', () => {
         expect(leaf('grantsPsychicPowers').options).toEqual({ required: true, initial: false });
+    });
+});
+
+describe('OriginPathData.stepIndex (#688)', () => {
+    it('has no upper bound, so a DH1 career-path origin’s index of 9 validates', () => {
+        // The field is a whole number from 0 with no `max`: 9 (and any later line's step) is in range.
+        expect(leaf('stepIndex').options).toEqual({ required: true, initial: 0, min: 0, integer: true });
+    });
+});
+
+describe('OriginPathData.grants (#688)', () => {
+    it('has no flat wounds grant: an origin’s wound bonus lives only in modifiers.resources.wounds', () => {
+        const grants = record('grants');
+        expect({ wounds: 'wounds' in grants.fields, woundsFormula: 'woundsFormula' in grants.fields }).toEqual({ wounds: false, woundsFormula: true });
     });
 });
 

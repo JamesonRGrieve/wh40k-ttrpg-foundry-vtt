@@ -18,7 +18,12 @@ const DRAWBACK_STEP = 'regimentalDrawback';
 export interface DrawbackSource {
     readonly type: string;
     readonly uuid: string | null;
-    readonly system: { readonly step: string; readonly regimentPoints: number | null };
+    readonly system: {
+        readonly step: string;
+        readonly regimentPoints: number | null;
+        /** The flat wound change, at its one home on the origin (#688). */
+        readonly modifiers: { readonly resources: { readonly wounds: number } };
+    };
 }
 
 /** Whether a document is a Regimental Drawback. */
@@ -29,12 +34,14 @@ export function isRegimentalDrawback(document: { type: string; system: object } 
 /**
  * The drawback descriptor the panel totals, or `undefined` while the item has
  * not recorded its Regiment Creation Points (the panel then shows them as unknown).
- * A drawback's penalties are applied by the origin path, so none are carried here.
+ * The penalty carries the drawback's wound change from `modifiers.resources.wounds`
+ * (#688), so the panel's penalty row shows it; a zero change is left out.
  */
 export function drawbackDescriptor(drawback: DrawbackSource, id: string): RegimentDrawback | undefined {
     const points = drawback.system.regimentPoints;
     if (points === null) return undefined;
-    return { id, description: '', refund: points, penalty: {} };
+    const wounds = drawback.system.modifiers.resources.wounds;
+    return { id, description: '', refund: points, penalty: wounds === 0 ? {} : { wounds } };
 }
 
 /** Resolve each recorded drawback UUID to its descriptor; an id that no longer resolves, or has no points, is left out. */

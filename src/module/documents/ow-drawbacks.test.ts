@@ -16,11 +16,11 @@ const { addRegimentalDrawback, drawbackDescriptor, isDrawbackIndexEntry, isRegim
 class StubItem {
     readonly type: string;
     readonly uuid: string;
-    readonly system: { step: string; regimentPoints: number | null };
-    constructor(uuid: string, step: string, regimentPoints: number | null) {
+    readonly system: { step: string; regimentPoints: number | null; modifiers: { resources: { wounds: number } } };
+    constructor(uuid: string, step: string, regimentPoints: number | null, wounds = 0) {
         this.type = 'originPath';
         this.uuid = uuid;
-        this.system = { step, regimentPoints };
+        this.system = { step, regimentPoints, modifiers: { resources: { wounds } } };
     }
 }
 
@@ -57,6 +57,19 @@ describe('isRegimentalDrawback', () => {
 describe('drawbackDescriptor', () => {
     it('returns the item’s Regiment Creation Points as its refund', () => {
         expect(drawbackDescriptor(new StubItem(DOOMED, 'regimentalDrawback', 4), DOOMED)).toEqual({ id: DOOMED, description: '', refund: 4, penalty: {} });
+    });
+
+    it('carries the drawback’s wound change from modifiers.resources.wounds onto the panel’s penalty row (#688)', () => {
+        const descriptor = drawbackDescriptor(new StubItem(DOOMED, 'regimentalDrawback', 4, -2), DOOMED);
+        expect(descriptor).toEqual({ id: DOOMED, description: '', refund: 4, penalty: { wounds: -2 } });
+        const panel = buildDrawbackPanel(
+            [DOOMED],
+            null,
+            () => descriptor,
+            (id) => id,
+            REGIMENT_BUDGET,
+        );
+        expect({ hasPenaltyRow: panel.hasPenaltyRow, wounds: panel.penalty.wounds }).toEqual({ hasPenaltyRow: true, wounds: -2 });
     });
 
     it('is undefined while the item has not recorded its points', () => {

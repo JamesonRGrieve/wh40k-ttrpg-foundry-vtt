@@ -79,7 +79,6 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare requirements: { text: string; previousSteps: string[]; excludedSteps: string[] };
     declare grants: {
         woundsFormula: string;
-        wounds: number;
         fateFormula: string;
         fateThreshold: number;
         blessedByEmperor: boolean;
@@ -180,8 +179,9 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 ],
             }),
 
-            // Step order (for display)
-            stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
+            // Step order (for display). Uncapped: each line has its own step count
+            // (a DH1 career-path origin sits at 9, #688).
+            stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // Position(s) in the step's row (0-8)
             // Array of positions this origin occupies in the flowchart

@@ -39,9 +39,7 @@ function auditOrigin(origin) {
 
         // Formula migration tracking
         hasWoundsFormula: !!grants.woundsFormula,
-        hasWoundsLegacy: grants.wounds !== 0,
         woundsFormula: grants.woundsFormula || null,
-        woundsLegacy: grants.wounds || 0,
 
         hasFateFormula: !!grants.fateFormula,
         hasFateLegacy: grants.fateThreshold !== 0,
@@ -96,8 +94,6 @@ function main() {
 
         // Formula migration
         withWoundsFormula: audits.filter((a) => a.hasWoundsFormula).length,
-        withWoundsLegacy: audits.filter((a) => a.hasWoundsLegacy).length,
-        woundsNeedsMigration: audits.filter((a) => a.hasWoundsLegacy && !a.hasWoundsFormula).length,
 
         withFateFormula: audits.filter((a) => a.hasFateFormula).length,
         withFateLegacy: audits.filter((a) => a.hasFateLegacy).length,
@@ -125,9 +121,7 @@ function main() {
     console.log(`Total Origins: ${stats.total}\n`);
 
     console.log(`${colors.cyan}Formula Migration Status:${colors.reset}`);
-    console.log(`  Wounds Formula: ${colors.green}${stats.withWoundsFormula}${colors.reset} / ${stats.total}`);
-    console.log(`  Wounds Legacy:  ${stats.withWoundsLegacy}`);
-    console.log(`  Needs Migration: ${stats.woundsNeedsMigration > 0 ? colors.yellow : colors.green}${stats.woundsNeedsMigration}${colors.reset}\n`);
+    console.log(`  Wounds Formula: ${colors.green}${stats.withWoundsFormula}${colors.reset} / ${stats.total}\n`);
 
     console.log(`  Fate Formula: ${colors.green}${stats.withFateFormula}${colors.reset} / ${stats.total}`);
     console.log(`  Fate Legacy:  ${stats.withFateLegacy}`);
@@ -176,8 +170,6 @@ function generateReport(filePath, audits, stats) {
     lines.push('| Metric | Count |');
     lines.push('|--------|-------|');
     lines.push(`| **Wounds Formula** | ${stats.withWoundsFormula} / ${stats.total} |`);
-    lines.push(`| Wounds Legacy Only | ${stats.withWoundsLegacy} |`);
-    lines.push(`| **Needs Migration** | **${stats.woundsNeedsMigration}** |`);
     lines.push(`| **Fate Formula** | ${stats.withFateFormula} / ${stats.total} |`);
     lines.push(`| Fate Legacy Only | ${stats.withFateLegacy} |`);
     lines.push(`| **Needs Migration** | **${stats.fateNeedsMigration}** |\n`);
@@ -204,17 +196,7 @@ function generateReport(filePath, audits, stats) {
     lines.push(`| Equipment | ${stats.totalEquipment} |\n`);
 
     // Origins needing migration
-    const woundsNeedMigration = audits.filter((a) => a.hasWoundsLegacy && !a.hasWoundsFormula);
     const fateNeedMigration = audits.filter((a) => a.hasFateLegacy && !a.hasFateFormula);
-
-    if (woundsNeedMigration.length > 0) {
-        lines.push('## Origins Needing Wounds Formula Migration\n');
-        for (const audit of woundsNeedMigration) {
-            lines.push(`- **${audit.name}** (${audit.step})`);
-            lines.push(`  - Legacy wounds: ${audit.woundsLegacy}`);
-        }
-        lines.push('');
-    }
 
     if (fateNeedMigration.length > 0) {
         lines.push('## Origins Needing Fate Formula Migration\n');
@@ -252,7 +234,7 @@ function generateReport(filePath, audits, stats) {
         lines.push('|------|--------|------|---------|--------|');
 
         for (const audit of origins) {
-            const wounds = audit.hasWoundsFormula ? `✓ ${audit.woundsFormula}` : audit.hasWoundsLegacy ? `⚠ ${audit.woundsLegacy}` : '—';
+            const wounds = audit.hasWoundsFormula ? `✓ ${audit.woundsFormula}` : '—';
             const fate = audit.hasFateFormula ? `✓ ${audit.fateFormula}` : audit.hasFateLegacy ? `⚠ ${audit.fateLegacy}` : '—';
             const choices = audit.hasChoices ? `${audit.choicesCount} choices` : '—';
             const grants = `T:${audit.talentsCount} Tr:${audit.traitsCount} S:${audit.skillsCount}`;

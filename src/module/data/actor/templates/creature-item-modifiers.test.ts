@@ -31,6 +31,7 @@ interface ModifiersBlock {
     characteristics?: Record<string, number>;
     skills?: Record<string, number>;
     combat?: Record<string, number>;
+    resources?: { wounds?: number };
 }
 
 /** The structural slice of a `WH40KItem` the aggregator reads. */
@@ -239,6 +240,18 @@ describe.each(SYSTEMS)('Path A — static item modifiers reach the computed targ
         expect(characteristics.fellowship.total).toBe(35);
         expect(characteristics.fellowship.itemModifier).toBe(0);
         expect(modifierSources.characteristics['fellowship']).toEqual([expect.objectContaining({ name: 'Imperial World', type: 'originPath', value: 5 })]);
+    });
+
+    // #688: an origin's flat wound bonus has one home, `modifiers.resources.wounds`.
+    // The origin getter read a `modifiers.wounds` path the schema never had, so the
+    // bonus was lost whenever a rolled wounds formula rebuilt the maximum.
+    it('an origin’s modifiers.resources.wounds reaches the wounds total exactly once', () => {
+        const origin = makeItem('Feral World', 'originPath', { resources: { wounds: 2 } });
+        const talent = makeItem('Hardy Stock', 'talent', { resources: { wounds: 3 } });
+        const creature = prepare(gameSystem, [origin, talent]);
+
+        expect(creature.modifierSources.wounds).toEqual([expect.objectContaining({ name: 'Hardy Stock', type: 'talent', value: 3 })]);
+        expect(creature._getOriginPathWoundsModifier()).toBe(2);
     });
 
     it('an origin-path bonus does not mask a real item bonus on the same characteristic', () => {

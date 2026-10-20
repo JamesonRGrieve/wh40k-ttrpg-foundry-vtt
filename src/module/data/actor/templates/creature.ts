@@ -1440,7 +1440,9 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
-     * Get total wounds modifier from origin path items.
+     * Get total wounds modifier from origin path items: each origin's flat
+     * `modifiers.resources.wounds`, its one home (#688). Origins are left out of
+     * {@link _computeItemModifiers}, so this is the only place the bonus is summed.
      * @returns {number}
      */
     _getOriginPathWoundsModifier(): number {
@@ -1449,7 +1451,7 @@ export default class CreatureTemplate extends CommonTemplate {
         let total = 0;
         const originItems = this._originPathItems();
         for (const item of originItems) {
-            const wounds = (item.system.modifiers as { wounds?: number } | null | undefined)?.wounds;
+            const wounds = (item.system.modifiers as ItemModifiersBlock | null | undefined)?.resources?.wounds;
             if (typeof wounds === 'number') {
                 total += wounds;
             }
