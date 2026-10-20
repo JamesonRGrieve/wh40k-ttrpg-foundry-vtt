@@ -235,11 +235,8 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         };
     }
 
-    /**
-     * DH2e: psyker unlock is the "Psyker" elite advance (step='elite').
-     * Compendium item: dh2-core-origins-elite-advances/psyker.
-     */
-    override readonly psykerUnlock = { step: 'elite', name: 'Psyker' };
+    /** DH2 psykers are an elite advance; the compendium document flagged `grantsPsychicPowers` names which (#681). */
+    override readonly psykerUnlock = { step: 'elite' };
 
     getHeaderFields(_actor: SystemConfigActor): SidebarHeaderField[] {
         // Home World / Background / Role are shown as origin-path bubbles, and

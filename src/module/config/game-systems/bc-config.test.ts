@@ -23,17 +23,19 @@ interface BcActorStub {
     corruption?: number;
     infamy?: number;
     archetypeName?: string;
+    /** The archetype's compendium document is flagged `grantsPsychicPowers` (#681). */
+    archetypeGrantsPsychicPowers?: boolean;
 }
 
 function makeActor(stub: BcActorStub = {}): WH40KBaseActor {
     const archetypeName = stub.archetypeName ?? '';
     return asBaseActor({
         items: {
-            some: (predicate: (item: { isOriginPath: boolean; system: { step?: string }; name: string }) => boolean) =>
+            some: (predicate: (item: { isOriginPath: boolean; system: { step?: string; grantsPsychicPowers?: boolean }; name: string }) => boolean) =>
                 archetypeName !== '' &&
                 predicate({
                     isOriginPath: true,
-                    system: { step: 'archetype' },
+                    system: { step: 'archetype', grantsPsychicPowers: stub.archetypeGrantsPsychicPowers ?? false },
                     name: archetypeName,
                 }),
         },
@@ -182,25 +184,30 @@ describe('BCSystemConfig: alignment derivation from advance log', () => {
 });
 
 describe('BCSystemConfig: Khorne / psyker lock (core.md :2750)', () => {
-    it('returns true for a Psyker-archetype actor while Unaligned', () => {
-        const actor = makeActor({ chaosAlignment: 'unaligned', archetypeName: 'Psyker' });
+    it('returns true for a psyker-archetype actor while Unaligned', () => {
+        const actor = makeActor({ chaosAlignment: 'unaligned', archetypeName: 'Psyker', archetypeGrantsPsychicPowers: true });
         expect(cfg.isPsyker(actor)).toBe(true);
     });
 
-    it('returns false for a Psyker-archetype actor Aligned to Khorne', () => {
-        const actor = makeActor({ chaosAlignment: 'khorne', archetypeName: 'Psyker' });
+    it('returns false for a psyker-archetype actor Aligned to Khorne', () => {
+        const actor = makeActor({ chaosAlignment: 'khorne', archetypeName: 'Psyker', archetypeGrantsPsychicPowers: true });
         expect(cfg.isPsyker(actor)).toBe(false);
         expect(cfg.isAlignmentBlockingPsyker(actor)).toBe(true);
     });
 
-    it('returns true for a Psyker-archetype actor Aligned to Tzeentch', () => {
-        const actor = makeActor({ chaosAlignment: 'tzeentch', archetypeName: 'Psyker' });
+    it('returns true for a psyker-archetype actor Aligned to Tzeentch', () => {
+        const actor = makeActor({ chaosAlignment: 'tzeentch', archetypeName: 'Psyker', archetypeGrantsPsychicPowers: true });
         expect(cfg.isPsyker(actor)).toBe(true);
         expect(cfg.isAlignmentBlockingPsyker(actor)).toBe(false);
     });
 
-    it('returns false for any non-Psyker archetype regardless of alignment', () => {
+    it('unlocks any flagged archetype, by data not name: the Sorcerer starts with the Psyker Trait (BC core p. 60)', () => {
+        expect(cfg.isPsyker(makeActor({ chaosAlignment: 'unaligned', archetypeName: 'Sorcerer', archetypeGrantsPsychicPowers: true }))).toBe(true);
+    });
+
+    it('returns false for an unflagged archetype regardless of alignment or name', () => {
         expect(cfg.isPsyker(makeActor({ chaosAlignment: 'tzeentch', archetypeName: 'Chosen' }))).toBe(false);
+        expect(cfg.isPsyker(makeActor({ chaosAlignment: 'tzeentch', archetypeName: 'Psyker' }))).toBe(false);
     });
 });
 

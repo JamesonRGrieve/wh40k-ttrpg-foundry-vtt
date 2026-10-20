@@ -433,6 +433,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     // #680: the locked Psychic Powers banner names the line's real psyker unlock. DH2's Psyker
     // elite advance is sold on the dialog's own tab, named by that tab's label; OW's Sanctioned
     // Psyker speciality is an origin-path choice. Neither may send the player to a "Traits" tab.
+    // #681: the name comes from the compendium document flagged `grantsPsychicPowers`.
     for (const { line, expected } of [
         { line: 'dh2', expected: 'Take the Psyker elite advance from the Elite Advances tab' },
         { line: 'ow', expected: 'Only a character with the Sanctioned Psyker Speciality can buy psychic powers' },
@@ -462,24 +463,79 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             }
         });
     }
+
+    // #681: owning the origin flagged `grantsPsychicPowers` unlocks the Psychic Powers tab, by data
+    // and not by name: each origin is renamed before it is given to the character.
+    for (const { line, origin } of [
+        { line: 'dh2', origin: { pack: 'wh40k-rpg.dh2-core-origins-elite-advances', name: 'Psyker', rename: 'Renamed Psyker Advance (#681)' } },
+        { line: 'ow', origin: { pack: 'wh40k-rpg.ow-core-origins-specialities', name: 'Sanctioned Psyker', rename: 'Renamed Psyker Speciality (#681)' } },
+    ]) {
+        test(`${line}: a character owning the flagged psyker origin, renamed, has psychic powers unlocked (#681)`, async ({ page }) => {
+            await joinOrSkip(page);
+            const opened = await openAdvancementDialog(page, line, origin);
+            try {
+                const dialog = page.locator(`#${opened.appId}`);
+                await dialog.locator('[data-action="switchTab"][data-tab="psychic"]').click();
+                await expect(dialog.locator('.fa-brain').first()).toBeVisible();
+                await expect(dialog.locator('[data-psyker-unlock-hint]')).toHaveCount(0);
+                await snap(page, `advancement-psychic-unlocked-${line}`, { selector: `#${opened.appId}` });
+            } finally {
+                await page.evaluate(async (appId) => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+                    const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
+                        .applications.instances;
+                    await apps.get(appId)?.close();
+                }, opened.appId);
+                await deleteActor(page, opened.actorId);
+            }
+        });
+    }
 });
 
-/** A non-psyker character of `line`, with the advancement dialog open on it. */
-async function openAdvancementDialog(page: Page, line: string): Promise<{ actorId: string; appId: string }> {
-    return page.evaluate(async (gameSystem) => {
-        interface DialogInst {
-            id: string;
-            render: (force?: boolean) => Promise<object>;
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
-        const g = globalThis as unknown as { Actor: { create: (data: object) => Promise<{ id: string } | null> } };
-        const actor = await g.Actor.create({ name: `e2e-680 ${gameSystem} Acolyte`, type: `${gameSystem}-character`, system: { gameSystem } });
-        if (actor === null) throw new Error('actor not created');
-        const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
-        const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
-        const dialog = new mod.default(actor);
-        await dialog.render(true);
-        await globalThis.wh40kE2E.waitFor(() => document.getElementById(dialog.id) !== null, 'the advancement dialog');
-        return { actorId: actor.id, appId: dialog.id };
-    }, line);
+/** An origin-path compendium document to give the character before the dialog opens, under a new name. */
+interface OwnedOrigin {
+    pack: string;
+    name: string;
+    rename: string;
+}
+
+/**
+ * A character of `line` with the advancement dialog open on it: a non-psyker, or, with `origin`,
+ * one owning that origin-path compendium document (renamed, so only its data can unlock it).
+ */
+async function openAdvancementDialog(page: Page, line: string, origin: OwnedOrigin | null = null): Promise<{ actorId: string; appId: string }> {
+    return page.evaluate(
+        async ({ gameSystem, owned }) => {
+            interface DialogInst {
+                id: string;
+                render: (force?: boolean) => Promise<object>;
+            }
+            interface PackLike {
+                getIndex: () => Promise<Array<{ _id: string; name: string }>>;
+                getDocument: (id: string) => Promise<{ toObject: () => { name: string } } | null>;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+            const g = globalThis as unknown as {
+                Actor: { create: (data: object) => Promise<{ id: string } | null> };
+                game: { packs: { get: (id: string) => PackLike | undefined } };
+            };
+            const items: object[] = [];
+            if (owned !== null) {
+                const pack = g.game.packs.get(owned.pack);
+                const entry = (await pack?.getIndex())?.find((e) => e.name === owned.name);
+                const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
+                if (doc === null || doc === undefined) throw new Error(`${owned.name} not in ${owned.pack}`);
+                items.push({ ...doc.toObject(), name: owned.rename });
+            }
+            const actor = await g.Actor.create({ name: `e2e-681 ${gameSystem} Acolyte`, type: `${gameSystem}-character`, system: { gameSystem }, items });
+            if (actor === null) throw new Error('actor not created');
+            const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
+            const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
+            const dialog = new mod.default(actor);
+            await dialog.render(true);
+            await globalThis.wh40kE2E.waitFor(() => document.getElementById(dialog.id) !== null, 'the advancement dialog');
+            return { actorId: actor.id, appId: dialog.id };
+        },
+        { gameSystem: line, owned: origin },
+    );
 }

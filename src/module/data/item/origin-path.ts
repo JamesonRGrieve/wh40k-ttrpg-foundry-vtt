@@ -70,6 +70,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare positions: number[];
     declare gameSystem: string;
     declare xpCost: number;
+    /** Owning this origin unlocks psychic-power purchases (#681). */
+    declare grantsPsychicPowers: boolean;
     declare prerequisites: Array<{ type: string; key: string; value?: number }>;
     declare source: { book: string; page: string; custom: string };
     declare isAdvancedOrigin: boolean;
@@ -196,6 +198,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
             // XP cost (for Into The Storm advanced origins)
             xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
+            // This origin is the one that makes its owner a psyker who may buy psychic
+            // powers (#681): DH2's Psyker elite advance, OW's Sanctioned Psyker
+            // speciality, BC's Psyker archetype. Authored on the compendium document,
+            // so the unlock is discovered from data rather than by name.
+            grantsPsychicPowers: new fields.BooleanField({ required: true, initial: false }),
 
             // Only War Regiment Creation Points this option carries (Core Rulebook p.57):
             // what a regiment choice costs from the 12-point budget, or what a Regimental

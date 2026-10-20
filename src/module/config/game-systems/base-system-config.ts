@@ -14,7 +14,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
-import type { PsykerUnlock } from '../../rules/psyker-unlock.ts';
+import { grantsPsychicPowers, type PsykerUnlock } from '../../rules/psyker-unlock.ts';
 import type { VehicleCombatRules, VehicleHitLocationBand } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -385,35 +385,22 @@ export abstract class BaseSystemConfig {
     // ── Psyker Gating ────────────────────────────────────────────
 
     /**
-     * The origin-path item that makes a character a psyker in this line, or
-     * null where the line has none (DH2: the 'Psyker' elite advance; BC: the
-     * 'Psyker' archetype; OW: the 'Sanctioned Psyker' speciality). `isPsyker`
-     * tests it, and the advancement dialog names it on its locked Psychic
-     * Powers banner, so the banner always points at the real unlock (#680).
+     * The origin-path step at which this line's characters become psykers, or
+     * null where the line has none (DH2: an elite advance; BC: an archetype;
+     * OW: a speciality). Which origin it is lives on the compendium document as
+     * `system.grantsPsychicPowers` (#681); the step only tells the advancement
+     * dialog's locked banner where to send the player (#680).
      */
     readonly psykerUnlock: PsykerUnlock | null = null;
 
     /**
-     * Whether this character is a psyker in the current system: it owns the
-     * line's {@link psykerUnlock} origin-path item. Drives the purchases on the
-     * advancement dialog's Psychic Powers tab.
+     * Whether this character is a psyker in the current system: it owns an
+     * origin-path item flagged `grantsPsychicPowers` (#681). Drives the
+     * purchases on the advancement dialog's Psychic Powers tab. A line with no
+     * {@link psykerUnlock} has no psykers by origin.
      */
     isPsyker(actor: SystemConfigActor): boolean {
-        const unlock = this.psykerUnlock;
-        return unlock !== null && this.ownsOriginPathItem(actor, unlock.step, unlock.name);
-    }
-
-    /**
-     * Whether the actor owns an origin-path item at `step` whose name matches
-     * `name` case-insensitively. Centralizes the psyker-unlock predicate the
-     * aptitude systems share (DH2 'Psyker' elite, OW 'Sanctioned Psyker'
-     * speciality, BC 'Psyker' archetype) — each supplies its own step + name.
-     * The single `system.step` narrowing lives here rather than at every
-     * `isPsyker` call site.
-     */
-    protected ownsOriginPathItem(actor: SystemConfigActor, step: string, name: string): boolean {
-        const target = name.toLowerCase();
-        return actor.items.some((i) => i.isOriginPath && (i.system as { step?: string }).step === step && i.name.toLowerCase() === target);
+        return this.psykerUnlock !== null && actor.items.some((i) => i.isOriginPath && grantsPsychicPowers(i.system));
     }
 
     // ── Skill Visibility ─────────────────────────────────────────

@@ -18,6 +18,11 @@ export function isLineBookPack(packName: string, line: string, category: string)
     return lineBookPackPattern(line, category).test(packName);
 }
 
+/** Is `packName` one of `line`'s book packs of origin-path items (`dh2-core-origins-elite-advances`)? */
+export function isLineOriginPack(packName: string, line: string): boolean {
+    return new RegExp(`^${line}-[a-z0-9]+-origins-[a-z0-9-]+$`).test(packName);
+}
+
 /**
  * One entry per name, case-insensitively. Across a line's books the same power can be
  * printed twice: an adventure restates a core power for its pregenerated characters

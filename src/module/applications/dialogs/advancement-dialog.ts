@@ -14,14 +14,15 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
-import { psykerUnlockHint } from '../../rules/psyker-unlock.ts';
+import { grantsPsychicPowers, psykerUnlockHint } from '../../rules/psyker-unlock.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { normalizeGameLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
-import { isLineBookPack, uniqueByName } from '../../utils/line-packs.ts';
+import { isLineBookPack, isLineOriginPack, uniqueByName } from '../../utils/line-packs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
+import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 import ConfirmationDialog from './confirmation-dialog.ts';
@@ -372,6 +373,29 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return id !== undefined && id.length > 0 ? id : 'dh2';
     }
 
+    /**
+     * The name of the origin that unlocks psychic powers in this line (#681): every
+     * origin-path compendium document of the line flagged `grantsPsychicPowers`,
+     * each named through `uuidNameCache`, listed as alternatives in the user's
+     * language ("Psyker or Sorcerer"). Null when no such document is in the packs.
+     */
+    async #psykerUnlockName(): Promise<string | null> {
+        const gameSystem = this.#getGameSystemId();
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineOriginPack(p.metadata.name, gameSystem));
+        const indexes = await Promise.all(packs.map(async (pack) => ({ pack, index: await pack.getIndex({ fields: ['system.grantsPsychicPowers'] }) })));
+        const names = new Set<string>();
+        for (const { pack, index } of indexes) {
+            for (const rawEntry of index) {
+                const entry = rawEntry as CompendiumIndexEntry;
+                const system = entry['system'];
+                if (typeof system !== 'object' || system === null || !grantsPsychicPowers(system)) continue;
+                names.add(uuidNameCache.getName(entry.uuid ?? `Compendium.${pack.metadata.id}.Item.${entry._id}`));
+            }
+        }
+        if (names.size === 0) return null;
+        return new Intl.ListFormat(game.i18n.lang, { type: 'disjunction' }).format([...names]);
+    }
+
     /* -------------------------------------------- */
 
     /** @override */
@@ -513,6 +537,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             context['isPsyker'] = isPsyker;
             context['psykerUnlockHint'] = psykerUnlockHint(
                 systemConfig.psykerUnlock,
+                await this.#psykerUnlockName(),
                 tabs,
                 (key) => game.i18n.localize(key),
                 (key, data) => game.i18n.format(key, data),

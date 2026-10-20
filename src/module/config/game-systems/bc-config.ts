@@ -206,11 +206,12 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * match DH2 byte-for-byte, so `getSkillRanks` is inherited unchanged from
      * `AptitudeBasedSystemConfig`.
      *
-     * BC psyker unlock is the "Psyker" archetype. Aligned-to-Khorne
-     * characters lose Psyker Trait counts even while owning the archetype
+     * BC psykers are an archetype; the compendium document flagged
+     * `grantsPsychicPowers` names which (#681). Aligned-to-Khorne characters
+     * lose Psyker Trait counts even while owning the archetype
      * (`core.md` :2750-2754).
      */
-    override readonly psykerUnlock = { step: 'archetype', name: 'Psyker' };
+    override readonly psykerUnlock = { step: 'archetype' };
 
     override isPsyker(actor: SystemConfigActor): boolean {
         return super.isPsyker(actor) && !psykerLockedByAlignment(this.getCharacterAlignment(actor));

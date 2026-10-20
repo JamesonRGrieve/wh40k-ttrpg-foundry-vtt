@@ -26,6 +26,12 @@ describe('OriginPathData.regimentPoints (#160)', () => {
     });
 });
 
+describe('OriginPathData.grantsPsychicPowers (#681)', () => {
+    it('is a required flag, off by default, so only an authored origin unlocks psychic powers', () => {
+        expect(leaf('grantsPsychicPowers').options).toEqual({ required: true, initial: false });
+    });
+});
+
 describe('OriginPathData.step', () => {
     it('accepts every step the Only War Regiment Creation content is authored on', () => {
         expect(leaf('step').options.choices).toEqual(

@@ -1,19 +1,26 @@
 /**
- * @file psyker-unlock — the origin-path item that makes a character a psyker in
- * a line, and where the advancement dialog tells a non-psyker to find it (#680).
+ * @file psyker-unlock — the origin that makes a character a psyker in a line, and
+ * where the advancement dialog tells a non-psyker to find it (#680, #681).
  *
- * The unlock differs by line: DH2's is the 'Psyker' elite advance, which the
- * advancement dialog itself offers on its elite-advances tab; BC's 'Psyker'
- * archetype and OW's 'Sanctioned Psyker' speciality are origin-path choices,
- * which the dialog does not sell. The Psychic Powers tab's locked banner and its
- * empty state name whichever applies: the dialog tab that carries the unlock, by
- * that tab's own label, or else the origin-path step.
+ * Which origin it is is DATA: the compendium origin-path document carries
+ * `system.grantsPsychicPowers` (DH2's Psyker elite advance, OW's Sanctioned Psyker
+ * speciality, BC's Psyker archetype). A character is a psyker when it owns a
+ * flagged origin, whatever that origin is called. The line config keeps only the
+ * origin-path step, which the locked banner needs: DH2's unlock is an elite advance
+ * the dialog itself sells on its elite-advances tab; BC's archetype and OW's
+ * speciality are origin-path choices the dialog does not sell. The banner names the
+ * flagged document (its name read from the compendium) and the tab or step to find
+ * it on.
  */
 
-/** The origin-path item a line's psykers own: its step (`elite`, `archetype`, `speciality`) and name. */
+/** The origin-path step at which a line's characters become psykers (`elite`, `archetype`, `speciality`). */
 export interface PsykerUnlock {
     readonly step: string;
-    readonly name: string;
+}
+
+/** Whether an origin-path item's `system` marks it as the psyker unlock (#681). */
+export function grantsPsychicPowers(system: object): boolean {
+    return 'grantsPsychicPowers' in system && system.grantsPsychicPowers === true;
 }
 
 /** The origin-path step whose items the advancement dialog sells, on its elite-advances tab. */
@@ -40,21 +47,28 @@ type Format = (key: string, data: Record<string, string>) => string;
 /**
  * The text that tells a non-psyker how to unlock psychic powers. An unlock the
  * dialog sells names the tab it is on, by that tab's label; any other unlock names
- * its origin-path step. A line with no unlock says only that the character cannot
- * buy them. Pure.
- * @param unlock  The line's unlock, or null.
+ * its origin-path step. A line with no unlock, or whose flagged origin is not in
+ * any compendium, says only that the character cannot buy them. Pure.
+ * @param unlock  The line's unlock step, or null.
+ * @param unlockName  The flagged origin's name, read from its compendium document, or null.
  * @param tabs  The tabs the dialog built, so the named tab is one that exists.
  */
-export function psykerUnlockHint(unlock: PsykerUnlock | null, tabs: readonly DialogTab[], localize: Localize, format: Format): PsykerUnlockHint {
-    if (unlock === null) {
+export function psykerUnlockHint(
+    unlock: PsykerUnlock | null,
+    unlockName: string | null,
+    tabs: readonly DialogTab[],
+    localize: Localize,
+    format: Format,
+): PsykerUnlockHint {
+    if (unlock === null || unlockName === null) {
         return { locked: localize('WH40K.Dialog.Advancement.PsychicLockedNone'), empty: localize('WH40K.Dialog.Advancement.NoPowersNone') };
     }
     const tab = unlock.step === DIALOG_SOLD_STEP ? tabs.find((candidate) => candidate.id === ELITE_TAB_ID) : undefined;
     if (tab !== undefined) {
-        const onTab = { advance: unlock.name, tab: localize(tab.label) };
+        const onTab = { advance: unlockName, tab: localize(tab.label) };
         return { locked: format('WH40K.Dialog.Advancement.PsychicLockedTab', onTab), empty: format('WH40K.Dialog.Advancement.NoPowersTab', onTab) };
     }
     const step = localize(`WH40K.OriginPath.${unlock.step.charAt(0).toUpperCase()}${unlock.step.slice(1)}`);
-    const onOrigin = { advance: unlock.name, step };
+    const onOrigin = { advance: unlockName, step };
     return { locked: format('WH40K.Dialog.Advancement.PsychicLockedOrigin', onOrigin), empty: format('WH40K.Dialog.Advancement.NoPowersOrigin', onOrigin) };
 }

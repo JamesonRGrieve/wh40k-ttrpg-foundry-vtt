@@ -105,31 +105,33 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
     // it — otherwise advances that list General (most basic skills/talents) are
     // mispriced as 0-match. Lives on the shared AptitudeBasedSystemConfig, so the
     // DH2 config exercises the behaviour BC/DW/OW/IM inherit.
-    // isPsyker delegates to the shared BaseSystemConfig.ownsOriginPathItem helper
-    // (#424): DH2's unlock is the 'Psyker' elite advance. Exercises the DH2 branch
-    // of the de-duplicated predicate — step match + case-insensitive name match.
-    describe('isPsyker() — shared origin-path predicate', () => {
-        const actorWithItem = (step: string, name: string): ReturnType<typeof asBaseActor> =>
-            asBaseActor({ items: [{ isOriginPath: true, system: { step }, name }] });
+    // isPsyker reads the origin-path item's `grantsPsychicPowers` flag (#681), never
+    // its name: DH2's unlock is the Psyker elite advance (DH2 core p. 90), flagged
+    // on the compendium document.
+    describe('isPsyker() — origin flagged grantsPsychicPowers', () => {
+        const actorWithItem = (name: string, grantsPsychicPowers: boolean): ReturnType<typeof asBaseActor> =>
+            asBaseActor({ items: [{ isOriginPath: true, system: { step: 'elite', grantsPsychicPowers }, name }] });
 
-        it('detects the Psyker elite advance', () => {
-            expect(cfg.isPsyker(actorWithItem('elite', 'Psyker'))).toBe(true);
+        it('unlocks for the flagged Psyker elite advance', () => {
+            expect(cfg.isPsyker(actorWithItem('Psyker', true))).toBe(true);
         });
 
-        it('is case-insensitive on the item name', () => {
-            expect(cfg.isPsyker(actorWithItem('elite', 'psyker'))).toBe(true);
+        it('still unlocks when the flagged elite advance is renamed', () => {
+            expect(cfg.isPsyker(actorWithItem('Sanctioned Psyker of the Ordo', true))).toBe(true);
         });
 
-        it('rejects a Psyker-named item on the wrong step', () => {
-            expect(cfg.isPsyker(actorWithItem('role', 'Psyker'))).toBe(false);
+        it('does not unlock for a Psyker namesake without the flag', () => {
+            expect(cfg.isPsyker(actorWithItem('Psyker', false))).toBe(false);
         });
 
-        it('rejects a non-Psyker elite advance', () => {
-            expect(cfg.isPsyker(actorWithItem('elite', 'Chirurgeon'))).toBe(false);
+        it('does not unlock for an item with no flag field at all', () => {
+            expect(cfg.isPsyker(asBaseActor({ items: [{ isOriginPath: true, system: { step: 'elite' }, name: 'Psyker' }] }))).toBe(false);
         });
 
-        it('ignores non-origin-path items with a matching name', () => {
-            expect(cfg.isPsyker(asBaseActor({ items: [{ isOriginPath: false, system: { step: 'elite' }, name: 'Psyker' }] }))).toBe(false);
+        it('ignores a flagged item that is not an origin-path item', () => {
+            expect(cfg.isPsyker(asBaseActor({ items: [{ isOriginPath: false, system: { step: 'elite', grantsPsychicPowers: true }, name: 'Psyker' }] }))).toBe(
+                false,
+            );
         });
 
         it('returns false with no items', () => {

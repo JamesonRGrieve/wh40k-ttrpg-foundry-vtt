@@ -298,11 +298,8 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
         ];
     }
 
-    /**
-     * OW: psyker unlock is the "Sanctioned Psyker" speciality (step='speciality').
-     * Compendium item: ow-core-specialities/sanctioned-psyker.
-     */
-    override readonly psykerUnlock = { step: 'speciality', name: 'Sanctioned Psyker' };
+    /** OW psykers are a speciality; the compendium document flagged `grantsPsychicPowers` names which (#681). */
+    override readonly psykerUnlock = { step: 'speciality' };
 
     /** OW Dispositions are the seven-step ladder; a success gains one step per degree (p. 304, Table 9–4) — #73. */
     override getDispositionModel(): DispositionModelDef {
