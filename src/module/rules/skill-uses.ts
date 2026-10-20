@@ -318,6 +318,18 @@ export function getSkillUses(skillKey: string): SkillUseDef[] {
     return builder !== undefined ? builder() : [GENERAL_SKILL_USE];
 }
 
+/**
+ * The card title of a skill-use roll (#671): the general test is "<Skill> Test"; any
+ * other use is "<Skill>: <Use>", except that a use whose label says nothing more
+ * than the skill's (Charm's social use is labelled "Charm") shows the skill once.
+ * The two labels are compared as resolved, ignoring case and surrounding space.
+ */
+export function skillUseTitle(kind: SkillUseKind, skillLabel: string, useLabel: string): string {
+    if (kind === 'general') return `${skillLabel} Test`;
+    if (useLabel.trim().toLocaleLowerCase() === skillLabel.trim().toLocaleLowerCase()) return skillLabel;
+    return `${skillLabel}: ${useLabel}`;
+}
+
 /** Whether a skill offers more than the plain test (i.e. the picker is worth showing). */
 export function hasSkillUses(skillKey: string): boolean {
     return getSkillUses(skillKey).length > 1;

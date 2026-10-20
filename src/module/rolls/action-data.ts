@@ -65,6 +65,7 @@ import {
     type SkillUseItemSlotKey,
     skillUseItemSlots,
     type SkillUseKind,
+    skillUseTitle,
     useNeedsItemChoice,
 } from '../rules/skill-uses.ts';
 import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.ts';
@@ -2256,7 +2257,7 @@ function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | n
  * use's own action override, so it must not ALSO raise the characteristic flag.
  */
 export function applySkillUseToRollData(rollData: RollData, use: SkillUseDef, skillLabel: string): void {
-    rollData.nameOverride = use.kind === 'general' ? `${skillLabel} Test` : `${skillLabel}: ${game.i18n.localize(use.labelKey)}`;
+    rollData.nameOverride = skillUseTitle(use.kind, skillLabel, game.i18n.localize(use.labelKey));
 
     const opposedChar = use.opposedSkill === undefined ? use.opposedChar : undefined;
     rollData.isOpposed = opposedChar !== undefined;

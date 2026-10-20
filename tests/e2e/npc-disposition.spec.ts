@@ -209,6 +209,8 @@ test.describe.serial('NPC Disposition on DH2 (Tier B, #73)', () => {
             expect((after.value - 70) % 5).toBe(0);
             await expect(page.locator(charmCard)).toContainText('Personality');
             await expect(page.locator(charmCard)).toContainText(`Disposition 70 → ${after.value}`);
+            // #671: the social use is labelled as the skill, so the title names Charm once.
+            expect(charmText).not.toMatch(/charm:\s*charm/i);
             await snap(page, 'npc-disposition-charm-card', { selector: charmCard });
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
