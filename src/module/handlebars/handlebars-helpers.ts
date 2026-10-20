@@ -208,8 +208,12 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
         const opts = rest[rest.length - 1] as { data?: { root?: { _gameSystemId?: string; gameSystemId?: string } } };
         const explicit = typeof userArgs[0] === 'string' ? userArgs[0] : undefined;
         const fromRoot = opts.data?.root?._gameSystemId ?? opts.data?.root?.gameSystemId;
-        const candidate = explicit ?? fromRoot ?? 'rt';
-        const systemId: GameSystemId = SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : 'rt';
+        // A render that names no line (a system-agnostic dialog, a story) takes the world's
+        // primary line, not a fixed one: the old 'rt' fallback drew every such render in RT's
+        // void blue once RT got its own palette, even in a DH2 world.
+        const candidate = explicit ?? fromRoot;
+        const systemId: GameSystemId =
+            candidate !== undefined && SystemConfigRegistry.has(candidate) ? (candidate as GameSystemId) : WH40KSettings.getPrimaryGameSystem();
         return themeClassFor(systemId, role);
     });
 

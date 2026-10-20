@@ -5,6 +5,7 @@ import { mockActor } from '../../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { themeClassFor } from '../../../module/config/game-systems/index.ts';
 
 initializeStoryHandlebars();
 
@@ -66,6 +67,8 @@ const wrapperTemplateSrc = `{{> systems/wh40k-rpg/templates/actor/partial/degree
         degreeInfo=degreeInfo}}`;
 
 interface CorruptionLikeContext {
+    /** The line the sheet renders for, which every sheet's context carries; `themeClassFor` reads it. */
+    _gameSystemId: SystemId;
     key: string;
     label: string;
     icon: string;
@@ -101,6 +104,7 @@ function corruptionContext(value: number, systemId: SystemId): CorruptionLikeCon
     const baseActor = mockActor({ system: { corruption: value } });
     const actor = withSystem(baseActor, systemId);
     return {
+        _gameSystemId: systemId,
         key: 'corruption',
         label: 'Corruption',
         icon: 'fa-skull',
@@ -218,4 +222,11 @@ export const CorruptionIM: Story = {
 export const CorruptionRT: Story = {
     name: 'Corruption · RT · Profane (95)',
     render: () => renderSheet(wrapperTemplateSrc, corruptionContext(95, 'rt')),
+    play: async ({ canvasElement }) => {
+        // The threshold ticks take the sheet's line, here Rogue Trader's, not the
+        // world's primary line a context-less render falls back to.
+        const ticks = [...canvasElement.querySelectorAll('.wh40k-threshold-marker > span:first-child')];
+        await expect(ticks.length).toBeGreaterThan(0);
+        await expect(ticks.every((tick) => tick.classList.contains(themeClassFor('rt', 'primary')))).toBe(true);
+    },
 };

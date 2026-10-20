@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/confirmation.hbs?raw';
 import { clickAction, renderSheet } from '../../../../stories/test-helpers';
+import { themeClassFor } from '../../config/game-systems/index.ts';
 
 interface Args {
     content: string;
@@ -48,5 +49,10 @@ export const ConfirmFlow: Story = {
         // Drive the same data-action handle the runtime sheet uses.
         clickAction(canvasElement, 'confirm');
         clickAction(canvasElement, 'cancel');
+        // A dialog that names no line frames in the world's primary line (DH2 when no
+        // world is loaded, as here), never a fixed Rogue Trader void blue.
+        const frame = canvasElement.querySelector('div.tw-border-solid');
+        await expect(frame?.classList.contains(themeClassFor('dh2', 'border'))).toBe(true);
+        await expect(frame?.classList.contains(themeClassFor('rt', 'border'))).toBe(false);
     },
 };
