@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
 import { invalidateCriticalDamageCache } from '../rules/critical-damage';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
-import { AssignDamageData, type ActorLike } from './assign-damage-data';
+import { AssignDamageData, type ActorLike, criticalChartOf } from './assign-damage-data';
+import type { CriticalChartLookupFn } from './vehicle-critical-tables.ts';
 
 /** A defender-side crit-reduction hook (scales by Toughness Bonus) — the True Grit shape. */
 function critReductionHook(): DynamicModifierEntry {
@@ -398,6 +399,59 @@ describe('Critical Damage record capture (#108)', () => {
         expect(data.criticalRecord).not.toBeNull();
         expect(data.criticalRecord?.effect).toBe('');
         expect(data.criticalRecord?.riders.stunned).toBe(false);
+    });
+
+    it("reads a Daemon Engine's Critical damage on the chart its trait names, from its own book (#678; BC Tome of Decay p. 96)", async () => {
+        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        invalidateCriticalDamageCache();
+        const daemonEngine = { name: 'Daemon Engine (5)', system: { specialization: '5', criticalChart: 'daemon-engine' } };
+        // An NPC's DataModel carries its line on its class (`BCNPCData.gameSystem`), not as a field.
+        class BcNpcSystem {
+            static readonly gameSystem = 'bc';
+            readonly armour = { body: { value: 4, toughnessBonus: 3 } };
+            readonly wounds = { value: 2, critical: 0 };
+            readonly fatigue = { value: 0 };
+        }
+        const actor: ActorLike = {
+            ...buildActor(),
+            system: new BcNpcSystem(),
+            items: [daemonEngine],
+            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-decay-actors-bestiary.Actor.c4c977022e7a87b8' },
+        };
+        const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 13, totalPenetration: 10, totalFatigue: 0 });
+        const lookup = vi.fn<CriticalChartLookupFn>(async (_chart, _line, _book, value) =>
+            Promise.resolve({
+                chartName: 'Daemonic Engine Critical Hit Chart',
+                chartUuid: 'RollTable.x',
+                value,
+                text: '<p>Daemon Unbound! The engine is vaporised.</p>',
+            }),
+        );
+        data.criticalChartLookup = lookup;
+        data.update();
+        await data.finalize();
+        // 13 − (armour 4 − pen 10 → 0) − TB 3 = 10: 2 wounds, 8 critical.
+        expect(lookup).toHaveBeenCalledWith('daemon-engine', 'bc', 'bc-decay', 8);
+        expect(data.criticalEffect).toBe('Daemon Unbound! The engine is vaporised.');
+    });
+
+    it("keeps the Critical Effects tables when the creature's traits name no chart, or the line's packs carry none", async () => {
+        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        invalidateCriticalDamageCache();
+        const plain = new AssignDamageData(buildActor({ wounds: { value: 2, critical: 0 } }), {
+            location: 'Body',
+            damageType: 'Impact',
+            totalDamage: 20,
+            totalPenetration: 10,
+            totalFatigue: 0,
+        });
+        const lookup = vi.fn<CriticalChartLookupFn>(async () => Promise.resolve(null));
+        plain.criticalChartLookup = lookup;
+        plain.update();
+        await plain.finalize();
+        expect(lookup).not.toHaveBeenCalled();
+        expect(plain.criticalRecord).not.toBeNull();
+        expect(criticalChartOf([{ system: { criticalChart: '' } }, { system: {} }])).toBe('');
     });
 
     it('leaves criticalRecord null when the hit deals no critical damage', async () => {

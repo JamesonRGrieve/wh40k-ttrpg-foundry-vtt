@@ -45,6 +45,13 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * traits already use `level` for unrelated tiers.
      */
     declare fearRating: number;
+    /**
+     * The critical chart its bearer reads Critical damage on, in place of the
+     * Critical Effects tables (#678) — a BC Daemon Engine reads the Daemon Engine
+     * Critical Hit Chart (`daemon-engine`). Matches the `criticalChart` flag on
+     * the line's roll tables. '' = the Critical Effects tables.
+     */
+    declare criticalChart: string;
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -87,6 +94,10 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
             // SPEC philosophy carrier (e.g. "Strength" for Unnatural Characteristic (X))
             specialization: new fields.StringField({ required: false, blank: true, initial: '' }),
+
+            // The critical chart its bearer reads Critical damage on instead of the
+            // Critical Effects tables (BC Daemon Engine: `daemon-engine`); '' = none.
+            criticalChart: new fields.StringField({ required: false, blank: true, initial: '' }),
         };
     }
 

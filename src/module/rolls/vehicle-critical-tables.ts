@@ -101,6 +101,66 @@ async function chartFor(line: string, location: VehicleLocationId): Promise<Vehi
     return found;
 }
 
+/* -------------------------------------------- */
+/*  Critical charts a creature's trait names    */
+/* -------------------------------------------- */
+
+/**
+ * The flag a creature critical chart carries: the chart a trait's
+ * `criticalChart` names (a BC Daemon Engine reads the Daemon Engine Critical Hit
+ * Chart, `daemon-engine`, in place of the Critical Effects tables).
+ */
+const CRITICAL_CHART_FLAG = 'criticalChart';
+
+/** The `<line>-<book>` a pack collection's name starts with (`wh40k-rpg.bc-decay-rolltables` → `bc-decay`). */
+export function packBook(collection: string): string {
+    const name = collection.slice(collection.indexOf('.') + 1);
+    return name.split('-').slice(0, 2).join('-');
+}
+
+/** A creature critical chart in a line's packs: the one from `preferBook` first, else the first found. */
+async function findCriticalChart(chart: string, line: string, preferBook: string | null): Promise<VehicleCritChart | null> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs is Foundry's CompendiumCollection (untyped element shape); narrowed to the RollTablePackLike surface
+    const packs = [...(game.packs as unknown as Iterable<RollTablePackLike>)]
+        .filter((pack) => pack.metadata.type === 'RollTable' && pack.metadata.packageName === SYSTEM_ID && packLine(pack.collection) === line)
+        .sort((a, b) => Number(packBook(b.collection) === preferBook) - Number(packBook(a.collection) === preferBook));
+    for (const pack of packs) {
+        // eslint-disable-next-line no-await-in-loop -- sequential by design: the preferred pack carrying the chart wins
+        const index = await pack.getIndex({ fields: [`flags.${SYSTEM_ID}.${CRITICAL_CHART_FLAG}`] });
+        const entry = [...index].find((row) => row.flags?.[SYSTEM_ID]?.[CRITICAL_CHART_FLAG] === chart);
+        if (entry === undefined) continue;
+        // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
+        const table = await pack.getDocument(entry._id);
+        if (table === null || table === undefined) continue;
+        return { name: table.name, uuid: table.uuid, rows: chartRows(table.results) };
+    }
+    return null;
+}
+
+const criticalChartCache = new Map<string, Promise<VehicleCritChart | null>>();
+
+/** Look up a row of a creature's critical chart: the chart it names, its line, the book it came from, the value. Injected so tests run without packs. */
+export type CriticalChartLookupFn = (chart: string, line: string, preferBook: string | null, value: number) => Promise<VehicleCritLookup | null>;
+
+/**
+ * The row a creature's cumulative Critical damage lands on in the chart its trait
+ * names, or null when the line's packs carry no chart with that flag. A chart
+ * printed in several books (each BC Tome prints its own Daemon Engine chart) is
+ * read from the creature's own book where it has one.
+ */
+export async function lookupCriticalChart(chart: string, line: string, preferBook: string | null, value: number): Promise<VehicleCritLookup | null> {
+    const key = `${chart}:${line}:${preferBook ?? ''}`;
+    let found = criticalChartCache.get(key);
+    if (found === undefined) {
+        found = findCriticalChart(chart, line, preferBook);
+        criticalChartCache.set(key, found);
+    }
+    const resolved = await found;
+    if (resolved === null) return null;
+    const row = vehicleCritRowFor(resolved.rows, value);
+    return row === null ? null : { chartName: resolved.name, chartUuid: resolved.uuid, value, text: row.text };
+}
+
 /**
  * The row a value lands on in the vehicle's chart for the struck location, or
  * null when the line's packs carry no such chart (BC, DH1, IM).

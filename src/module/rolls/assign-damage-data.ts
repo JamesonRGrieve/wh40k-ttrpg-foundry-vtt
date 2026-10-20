@@ -2,7 +2,7 @@ import { vehicleCombatRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '../rules/active-effects.ts';
-import { type CriticalDamageRecord, getCriticalDamageRecord } from '../rules/critical-damage.ts';
+import { classifyCriticalEffect, type CriticalDamageRecord, getCriticalDamageRecord, stripOuterParagraph } from '../rules/critical-damage.ts';
 import { damageTypeDropdown, normalizeBodyPart } from '../rules/damage-type.ts';
 import { type BreakCheck, magnitudeLossForHit, resolveBreakCheck } from '../rules/dw-horde-magnitude.ts';
 import {
@@ -19,9 +19,9 @@ import { type ActorStateSource, collectActorStates } from '../rules/situation-ta
 import { locationSoak, type SoakPart, type SoakSource, type TargetArmour } from '../rules/target-soak.ts';
 import { isVehicleLocationId, resolveVehicleDamage, type VehicleArmourFacing, type VehicleLocationId } from '../rules/vehicle-damage.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
-import { postFlattenedInstanceToChat } from './roll-helpers.ts';
+import { actorGameSystemId, postFlattenedInstanceToChat } from './roll-helpers.ts';
 import { cardLocaliser, type VehicleCardRow, type VehicleDamageApplied, vehicleAssignCardRows } from './vehicle-card-rows.ts';
-import { lookupVehicleCritical, type VehicleCritLookupFn } from './vehicle-critical-tables.ts';
+import { type CriticalChartLookupFn, lookupCriticalChart, lookupVehicleCritical, packBook, type VehicleCritLookupFn } from './vehicle-critical-tables.ts';
 import { readVehicleDurability, type VehicleDurability, type VehicleStrike, vehicleFuryResults } from './vehicle-strike.ts';
 import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundTransition } from './wound-transition.ts';
 
@@ -70,6 +70,8 @@ export interface ActorLike extends ActorStateSource {
     hasTalent: (name: string) => boolean;
     /** The Foundry document id — matched against the combat's current combatant for turn-bound hooks. */
     id?: string | null;
+    /** Where the actor was imported from (its compendium UUID), which picks its book's printing of a critical chart. */
+    _stats?: { compendiumSource?: string | null } | undefined;
     /** Owned items, walked for defender-side dynamic modifier hooks (e.g. crit reduction). */
     items?: Iterable<DynamicModifierItemLike>;
     /** Foundry `Actor#getFlag`, read for the hooks already armed by an earlier `onDamaged` trigger. */
@@ -79,6 +81,21 @@ export interface ActorLike extends ActorStateSource {
     update: (data: Record<string, unknown>) => Promise<unknown>;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.createEmbeddedDocuments return type is unknown
     createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<unknown>;
+}
+
+/** The critical chart the first of `items` to name one names (a trait's `criticalChart`), or ''. */
+export function criticalChartOf(items: Iterable<{ readonly system: object }>): string {
+    for (const item of items) {
+        const { system } = item;
+        if ('criticalChart' in system && typeof system.criticalChart === 'string' && system.criticalChart !== '') return system.criticalChart;
+    }
+    return '';
+}
+
+/** The compendium a `Compendium.<pack id>.<Document>.<id>` UUID lives in (`wh40k-rpg.bc-decay-actors-bestiary`), or '' for any other UUID. */
+function packOfUuid(uuid: string): string {
+    const parts = uuid.split('.');
+    return parts[0] === 'Compendium' && parts.length >= 5 ? `${parts[1]}.${parts[2]}` : '';
 }
 
 /** Minimal hit shape needed for damage assignment. */
@@ -191,6 +208,8 @@ export class AssignDamageData {
     vehicleRows: VehicleCardRow[] = [];
     /** Looks up the vehicle's crit chart row; tests replace it to run without packs. */
     vehicleCritLookup: VehicleCritLookupFn = lookupVehicleCritical;
+    /** Looks up the row of a critical chart a creature's trait names; tests replace it to run without packs. */
+    criticalChartLookup: CriticalChartLookupFn = lookupCriticalChart;
 
     constructor(actor: ActorLike, hit: HitLike) {
         this.actor = actor;
@@ -404,7 +423,8 @@ export class AssignDamageData {
             // classified riders) so the applied conditions (#108) come from the
             // same lookup as the chat-card effect text.
             const criticalValue = this.actor.system.wounds.critical + this.criticalDamageTaken;
-            this.criticalRecord = await getCriticalDamageRecord(this.hit.damageType, this.hit.location, criticalValue, this.actor.system.gameSystem);
+            const standard = await getCriticalDamageRecord(this.hit.damageType, this.hit.location, criticalValue, this.actor.system.gameSystem);
+            this.criticalRecord = await this._onCriticalChart(standard, criticalValue);
             this.criticalEffect = this.criticalRecord?.effect ?? '';
         }
 
@@ -416,6 +436,28 @@ export class AssignDamageData {
         if (this.damageTaken > 0) {
             this.hasDamage = true;
         }
+    }
+
+    /**
+     * A creature whose trait names a critical chart reads its Critical damage there
+     * instead of on the Critical Effects tables (#678): a BC Daemon Engine "has its
+     * own special rules for Critical Damage" — "consult Table 3–9: Daemonic Engine
+     * Critical Hit Chart" (BC Tome of Decay p. 96; Tome of Fate p. 82, Tome of
+     * Excess p. 86, Tome of Blood p. 115). The row is read at the cumulative
+     * Critical damage, like the creature tables, and its effect classified the same
+     * way. Without such a trait, or a chart in the line's packs, the standard
+     * record stands.
+     */
+    private async _onCriticalChart(standard: CriticalDamageRecord | null, criticalValue: number): Promise<CriticalDamageRecord | null> {
+        const chart = criticalChartOf(this.actor.items ?? []);
+        // An NPC's DataModel carries its line on its class, not a `gameSystem` field.
+        const line = actorGameSystemId(this.actor);
+        if (standard === null || chart === '' || line === undefined) return standard;
+        const source = this.actor._stats?.compendiumSource ?? null;
+        const row = await this.criticalChartLookup(chart, line, source === null ? null : packBook(packOfUuid(source)), criticalValue);
+        if (row === null) return standard;
+        const effect = stripOuterParagraph(row.text);
+        return { ...standard, effect, riders: classifyCriticalEffect(effect) };
     }
 
     /**

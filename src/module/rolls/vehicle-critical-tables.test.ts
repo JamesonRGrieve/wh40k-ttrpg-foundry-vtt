@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { chartRows, lookupVehicleCritical } from './vehicle-critical-tables.ts';
+import { chartRows, lookupCriticalChart, lookupVehicleCritical, packBook } from './vehicle-critical-tables.ts';
 
 interface StubTable {
     _id: string;
@@ -76,6 +76,62 @@ describe('lookupVehicleCritical (charts found by their vehicleCritical flag)', (
     it("is null when the line's packs carry no such chart", async () => {
         expect(await lookupVehicleCritical('ow', 'motive', 3)).toBeNull();
         expect(await lookupVehicleCritical('bc', 'hull', 3)).toBeNull();
+    });
+});
+
+/** A RollTable pack carrying a creature critical chart flagged `criticalChart`. */
+function criticalChartPack(collection: string, text: string): object {
+    return {
+        collection,
+        metadata: { type: 'RollTable', packageName: 'wh40k-rpg' },
+        getIndex: vi.fn(async () =>
+            Promise.resolve([{ _id: 'de', name: 'Daemon Engine Critical Hit Chart', flags: { 'wh40k-rpg': { criticalChart: 'daemon-engine' } } }]),
+        ),
+        getDocument: async () =>
+            Promise.resolve({
+                name: 'Daemon Engine Critical Hit Chart',
+                uuid: `Compendium.${collection}.RollTable.de`,
+                results: [
+                    { range: [1, 3], description: '<p>Distracting Blow.</p>' },
+                    { range: [10, 10], description: `<p>${text}</p>` },
+                ],
+            }),
+    };
+}
+
+describe('lookupCriticalChart (a creature trait names its critical chart, #678)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', {
+            packs: [
+                criticalChartPack('wh40k-rpg.bc-fate-rolltables', 'Daemon Unbound (Fate).'),
+                criticalChartPack('wh40k-rpg.bc-decay-rolltables', 'Daemon Unbound (Decay).'),
+                pack('wh40k-rpg.dh2-core-rolltables', [HULL]),
+            ],
+        });
+    });
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it("reads the chart from the creature's own book, a total past the last row landing on it", async () => {
+        expect(await lookupCriticalChart('daemon-engine', 'bc', 'bc-decay', 12)).toEqual({
+            chartName: 'Daemon Engine Critical Hit Chart',
+            chartUuid: 'Compendium.wh40k-rpg.bc-decay-rolltables.RollTable.de',
+            value: 12,
+            text: '<p>Daemon Unbound (Decay).</p>',
+        });
+    });
+
+    it("falls back to the line's first printing for a creature from another book", async () => {
+        expect((await lookupCriticalChart('daemon-engine', 'bc', 'bc-core', 2))?.text).toBe('<p>Distracting Blow.</p>');
+    });
+
+    it("is null when the line's packs carry no chart with that flag", async () => {
+        expect(await lookupCriticalChart('daemon-engine', 'dh2', null, 3)).toBeNull();
+    });
+
+    it('names the book a pack belongs to', () => {
+        expect(packBook('wh40k-rpg.bc-decay-rolltables')).toBe('bc-decay');
     });
 });
 

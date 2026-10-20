@@ -337,7 +337,8 @@ function normalizeKey(value: string | undefined): string | null {
     return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
-function stripOuterParagraph(html: string): string {
+/** A one-paragraph effect's text without its `<p>` wrapper (the card prints it as text). */
+export function stripOuterParagraph(html: string): string {
     const trimmed = html.trim();
     const match = /^<p>([\s\S]*?)<\/p>$/.exec(trimmed);
     return match?.[1] ?? trimmed;
