@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-trait-sheet.hbs?raw';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 
 interface TraitSystem {
     categoryLabel: string;
@@ -94,5 +94,15 @@ export const ActiveTabAndLevelReadable: Story = {
         await expect(label === null ? '' : getComputedStyle(label).color).toBe(accent);
         await expect(level === null ? '' : getComputedStyle(level).color).toBe(accent);
         if (document.body.classList.contains('theme-dark')) await expect(accent).not.toBe(OLD_TRAIT_PURPLE);
+    },
+};
+
+/** Each tab of the accent strip opens its own panel, through the live sheet's tab machinery (#690). */
+export const TabsSwitch: Story = {
+    play: async ({ canvasElement }) => {
+        const results = clickEachTab(canvasElement);
+        await expect(results.map((r) => r.tab)).toEqual(['properties', 'effects', 'description']);
+        await expect(results.map((r) => r.active)).toEqual(results.map((r) => [r.tab]));
+        await expect(results.flatMap((r) => r.forcedHidden)).toEqual([]);
     },
 };

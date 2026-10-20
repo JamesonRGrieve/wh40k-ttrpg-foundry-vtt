@@ -12,6 +12,7 @@ import * as EffectActions from '../api/effect-actions.ts';
 import type { EffectsOwner } from '../api/effect-actions.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
+import { ITEM_SHEET_TABS } from '../api/sheet-tabs.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { type FormObject, isFormObject, isFormValue, mergeIndexedArrays } from './reference-list-edits.ts';
@@ -87,13 +88,7 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
             effectToggle: EffectActions.effectToggle,
             toggleSection: BaseItemSheet.#toggleSection,
         },
-        tabs: [
-            {
-                navSelector: '.wh40k-tabs',
-                contentSelector: '.wh40k-tab-content',
-                initial: 'description',
-            },
-        ],
+        tabs: ITEM_SHEET_TABS.map((config) => ({ ...config })),
         classes: ['wh40k-rpg', 'sheet', 'item', 'wh40k-item-sheet'],
         form: {
             submitOnChange: true,

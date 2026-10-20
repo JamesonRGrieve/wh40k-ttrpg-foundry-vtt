@@ -17,7 +17,7 @@ import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { originStepLabelKey } from '../../data/shared/origin-steps.ts';
@@ -120,6 +120,22 @@ type Story = StoryObj;
 export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
+
+/**
+ * Each tab of the accent strip opens its own panel, through the live sheet's tab
+ * machinery (#690). The panels hard-coded `tw-hidden`, and the content held no
+ * `.wh40k-tab-content` for the machinery to bind, so the Description tab (with the
+ * text, GM notes and Source) could not be opened.
+ */
+export const TabsSwitch: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    play: async ({ canvasElement }) => {
+        const results = clickEachTab(canvasElement);
+        await expect(results.map((r) => r.tab)).toEqual(['grants', 'requirements', 'choices', 'description']);
+        await expect(results.map((r) => r.active)).toEqual(results.map((r) => [r.tab]));
+        await expect(results.flatMap((r) => r.forcedHidden)).toEqual([]);
+    },
+};
 
 export const RendersOriginName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),

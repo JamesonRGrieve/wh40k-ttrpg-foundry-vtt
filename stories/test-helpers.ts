@@ -18,6 +18,7 @@
  *     };
  */
 import HbsStory from 'handlebars';
+import { bindSheetTabs, ITEM_SHEET_TABS, sheetTabPanels } from '../src/module/applications/api/sheet-tabs.ts';
 import { renderTemplate as renderStoryTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
@@ -230,6 +231,35 @@ export function activateTab<T extends HTMLElement>(root: T, name: string): T {
         el.classList.toggle('active', el.dataset['tab'] === name);
     }
     return root;
+}
+
+/** After clicking one tab button: the tab clicked, and the primary panels then shown. */
+export interface TabClickResult {
+    tab: string;
+    /** `data-tab` of every primary panel carrying `.active`. */
+    active: string[];
+    /** `data-tab` of every primary panel that also carries a hard `tw-hidden`, which no tab switch clears. */
+    forcedHidden: string[];
+}
+
+/**
+ * Bind a rendered item sheet's tabs with the machinery a live sheet runs
+ * (PrimarySheetMixin → sheet-tabs.ts), click each tab button in turn, and report
+ * which panels each click left shown.
+ */
+export function clickEachTab(root: HTMLElement): TabClickResult[] {
+    bindSheetTabs(root, ITEM_SHEET_TABS, {});
+    const content = root.querySelector<HTMLElement>('.wh40k-tab-content');
+    const buttons = [...root.querySelectorAll<HTMLElement>('.wh40k-tabs [data-tab]')];
+    return buttons.map((button) => {
+        button.click();
+        const panels = content === null ? [] : sheetTabPanels(root, 'primary', content);
+        return {
+            tab: button.dataset['tab'] ?? '',
+            active: panels.filter((panel) => panel.classList.contains('active')).map((panel) => panel.dataset['tab'] ?? ''),
+            forcedHidden: panels.filter((panel) => panel.classList.contains('tw-hidden')).map((panel) => panel.dataset['tab'] ?? ''),
+        };
+    });
 }
 
 /** One item-detail-section.hbs panel: its title key and its rendered title. */

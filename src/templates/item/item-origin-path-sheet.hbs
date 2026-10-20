@@ -68,10 +68,12 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+    {{!-- `wh40k-tab-content` is the container the sheet's tab machinery binds; the panels
+          are `.tab`s it shows one at a time (#690). --}}
+    <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
 
       {{!-- GRANTS TAB --}}
-      <div class="active tw-block" data-tab="grants" data-group="primary">
+      <div class="tab active" data-tab="grants" data-group="primary">
 
         {{!-- Characteristic Modifiers --}}
         <div class="tw-mb-3">
@@ -356,7 +358,7 @@
       </div>
 
       {{!-- REQUIREMENTS TAB --}}
-      <div class="tw-hidden" data-tab="requirements" data-group="primary">
+      <div class="tab" data-tab="requirements" data-group="primary">
         {{#if item.system.hasRequirements}}
           {{!-- Text Requirements --}}
           {{#if item.system.requirements.text}}
@@ -423,7 +425,7 @@
       </div>
 
       {{!-- CHOICES TAB --}}
-      <div class="tw-hidden" data-tab="choices" data-group="primary">
+      <div class="tab" data-tab="choices" data-group="primary">
         {{#if item.system.grants.choices.length}}
           {{#each item.system.grants.choices as |choice index|}}
           <div class="tw-mb-3">
@@ -459,7 +461,7 @@
       </div>
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="tw-hidden" data-tab="description" data-group="primary">
+      <div class="tab" data-tab="description" data-group="primary">
         {{!-- Effect Text --}}
         <div class="tw-mb-3">
           <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">

@@ -16,6 +16,7 @@ import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from './application-types.ts';
 import DragDropMixin from './drag-drop-api-mixin.ts';
 import type { PrimarySheetMixinAPI } from './sheet-mixin-types.js';
+import { activateSheetTab, bindSheetTabs, type SheetTabsConfig } from './sheet-tabs.ts';
 
 interface SheetTab {
     tab: string;
@@ -313,43 +314,8 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          * @protected
          */
         _activateTabs(): void {
-            interface TabsConfigEntry {
-                navSelector: string;
-                contentSelector: string;
-                initial?: string;
-            }
-            const optionsWithTabs = this.options as unknown as ApplicationV2Config.DefaultOptions & { tabs?: TabsConfigEntry[] };
-            const tabsConfig: TabsConfigEntry[] = optionsWithTabs.tabs ?? [];
-            for (const config of tabsConfig) {
-                const { navSelector, contentSelector, initial } = config;
-                const nav = this.element.querySelector<HTMLElement>(navSelector);
-                const content = this.element.querySelector<HTMLElement>(contentSelector);
-                if (!nav || !content) continue;
-
-                const group = nav.dataset['group'] ?? 'primary';
-                // The remembered/default tab, if this template has a panel for it; else the panel the
-                // template itself marks active (a sheet's default can name a tab its template lacks, which
-                // would hide every panel).
-                const remembered = this.tabGroups[group] ?? initial;
-                const panels = this._tabPanels(group, content);
-                const activeTab = panels.some((p) => p.dataset['tab'] === remembered)
-                    ? remembered
-                    : (panels.find((p) => p.classList.contains('active')) ?? panels.at(0))?.dataset['tab'];
-
-                for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
-                    tabLink.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        const tab = tabLink.dataset['tab'];
-                        if (tab !== undefined && tab !== '') this._activateTab(tab, group, nav, content);
-                    });
-                }
-
-                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- defensive guard: tabGroups index returns string but may be empty at runtime before initialization */
-                if (activeTab !== undefined && activeTab !== '') {
-                    this._activateTab(activeTab, group, nav, content);
-                }
-                /* eslint-enable @typescript-eslint/no-unnecessary-condition */
-            }
+            const optionsWithTabs = this.options as unknown as ApplicationV2Config.DefaultOptions & { tabs?: SheetTabsConfig[] };
+            bindSheetTabs(this.element, optionsWithTabs.tabs ?? [], this.tabGroups);
         }
 
         /**
@@ -361,34 +327,7 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
          * @protected
          */
         _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void {
-            this.tabGroups[group] = tab;
-
-            for (const link of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
-                const isActive = link.dataset['tab'] === tab;
-                link.classList.toggle('active', isActive);
-                link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
-            }
-
-            for (const tabContent of this._tabPanels(group, content)) {
-                const isActive = tabContent.dataset['tab'] === tab;
-                tabContent.classList.toggle('active', isActive);
-            }
-
-            this.element.className = this.element.className.replace(/\btab-\w+/g, '');
-            this.element.classList.add(`tab-${tab}`);
-        }
-
-        /**
-         * A tab group's panels: the content container's `[data-tab]` children, plus
-         * any `.tab` panel of the group elsewhere in the sheet (a template whose
-         * panels are themselves `.wh40k-tab-content` sections, like the storage
-         * location's, has no wrapping container).
-         * @protected
-         */
-        _tabPanels(group: string, content: HTMLElement): HTMLElement[] {
-            const panels = new Set<HTMLElement>(content.querySelectorAll<HTMLElement>(':scope > [data-tab]'));
-            for (const panel of this.element.querySelectorAll<HTMLElement>(`.tab[data-group="${group}"][data-tab]`)) panels.add(panel);
-            return [...panels];
+            activateSheetTab(this.element, tab, group, nav, content, this.tabGroups);
         }
 
         /* -------------------------------------------- */

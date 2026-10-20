@@ -7,7 +7,7 @@ import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
 
 initializeStoryHandlebars();
@@ -205,6 +205,17 @@ type Story = StoryObj;
 export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()) };
 
 export const EditMode: Story = { render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })) };
+
+/** Each tab of the accent strip opens its own panel, through the live sheet's tab machinery (#690). */
+export const TabsSwitch: Story = {
+    render: () => renderSheet(templateSrc, makeCtx()),
+    play: async ({ canvasElement }) => {
+        const results = clickEachTab(canvasElement);
+        await expect(results.length).toBeGreaterThan(1);
+        await expect(results.map((r) => r.active)).toEqual(results.map((r) => [r.tab]));
+        await expect(results.flatMap((r) => r.forcedHidden)).toEqual([]);
+    },
+};
 
 export const RendersTalentName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
