@@ -140,6 +140,40 @@ describe('aggregateVehicleTraitEffects', () => {
     it('leaves an unset multiplier null', () => {
         expect(aggregateVehicleTraitEffects([trait('Rugged')]).repairTimeMultiplier).toBeNull();
     });
+
+    it('names the traits behind each damage-facing effect, for the cards', () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Feral Machine Spirit', { incomingRangedToHitModifier: -10 }),
+            trait('Holofield', { incomingRangedToHitModifier: -20 }),
+            trait('Skimmer', { incomingMeleeToHitModifier: -10 }),
+            trait('Reinforced Armour', { critDamageMultiplier: 0.5, critExcludesRighteousFury: true }),
+            trait('Daemon Engine', { forceFieldRating: 30 }),
+            trait('Shield Generator', { forceFieldRating: 40 }),
+            trait('Ramshackle', { righteousFuryCritDie: '1d10' }),
+            trait('Open-Topped', { crewExposure: 'open' }),
+        ]);
+        expect(agg.sources).toEqual({
+            critDamageMultiplier: ['Reinforced Armour'],
+            incomingRangedToHitModifier: 'Holofield',
+            incomingMeleeToHitModifier: 'Skimmer',
+            forceFieldRating: 'Shield Generator',
+            righteousFuryCritDie: 'Ramshackle',
+            crewExposure: 'Open-Topped',
+        });
+    });
+
+    it('attributes crew exposure to the sealing trait when Enclosed beats Open-Topped', () => {
+        const agg = aggregateVehicleTraitEffects([trait('Enclosed', { crewExposure: 'enclosed' }), trait('Open-Topped', { crewExposure: 'open' })]);
+        expect(agg.sources.crewExposure).toBe('Enclosed');
+    });
+
+    it('keeps the stronger penalty source when a weaker one follows', () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Holofield', { incomingRangedToHitModifier: -20 }),
+            trait('Feral Machine Spirit', { incomingRangedToHitModifier: -10 }),
+        ]);
+        expect(agg.sources.incomingRangedToHitModifier).toBe('Holofield');
+    });
 });
 
 describe('vehicleTraitEffectsSchema', () => {

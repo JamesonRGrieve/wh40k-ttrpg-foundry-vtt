@@ -1,6 +1,7 @@
 import { BODY_LOCATIONS, type BodyLocationId } from '../data/shared/body-locations.ts';
 import type { I18nKey } from '../types/i18n-keys';
 import { findBandBy } from './_dice.ts';
+import { isVehicleLocationId, VEHICLE_LOCATION_IDS, vehicleLocationLabelKey } from './vehicle-damage.ts';
 
 /** Stable hit-location identifier (`rightArm`, …): what a hit and a called shot store; labels resolve via {@link hitLocationLabel}. */
 export type HitLocationId = BodyLocationId;
@@ -74,15 +75,23 @@ export function resolveHitLocationId(value: string | null | undefined): HitLocat
 }
 
 /** Langpack key of the full name of the location a stored or authored value names, or undefined when it names none. */
-export function hitLocationLabelKey(value: string): I18nKey | undefined {
+function hitLocationLabelKey(value: string): I18nKey | undefined {
     const id = resolveHitLocationId(value);
     return id === undefined ? undefined : HIT_LOCATION_DEFS[id].labelKey;
 }
 
-/** Localized full name of a hit location; an unresolvable value is returned unchanged. */
+/**
+ * Localized full name of a hit location — a creature's, or a vehicle's (`hull`,
+ * `turret`, …, content#28); an unresolvable value is returned unchanged.
+ */
 export function hitLocationLabel(value: string): string {
-    const key = hitLocationLabelKey(value);
+    const key = anyLocationLabelKey(value);
     return key === undefined ? value : game.i18n.localize(key);
+}
+
+/** The langpack key of a creature's or a vehicle's hit location (content#28), or undefined. */
+export function anyLocationLabelKey(value: string): I18nKey | undefined {
+    return hitLocationLabelKey(value) ?? (isVehicleLocationId(value) ? vehicleLocationLabelKey(value) : undefined);
 }
 
 /** Localized compact name of a hit location ("R.Arm"). */
@@ -139,6 +148,13 @@ export function hitDropdown(): Record<string, string> {
     for (const id of HIT_LOCATION_IDS) {
         dropdown[id] = game.i18n.localize(HIT_LOCATION_DEFS[id].labelKey);
     }
+    return dropdown;
+}
+
+/** Assign-damage location dropdown for a vehicle (content#28): vehicle location id → localized label. */
+export function vehicleHitDropdown(): Record<string, string> {
+    const dropdown: Record<string, string> = {};
+    for (const id of VEHICLE_LOCATION_IDS) dropdown[id] = game.i18n.localize(vehicleLocationLabelKey(id));
     return dropdown;
 }
 

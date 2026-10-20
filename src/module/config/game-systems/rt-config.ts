@@ -10,11 +10,12 @@ import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
+import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { type CareerTable, getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { getCareerKeyFromName } from '../advancements/index.ts';
-import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
+import { printedGrappleRules, singleChartVehicleCombat, TRADE_ARMOURER_FITTING_RULES, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
@@ -73,6 +74,9 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
      * Throw Down only makes the opponent Prone: RT prints no further bonus.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('contortionist', 0);
+
+    /** RT Into the Storm p. 178: one Vehicle Critical Hit Chart and no hit-location table. */
+    override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

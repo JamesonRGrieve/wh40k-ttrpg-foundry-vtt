@@ -193,6 +193,11 @@ export function collectInArea<T extends { id: string; center: AreaPoint }>(area:
 /** Foundry tokens face down the screen at rotation 0; template bearings put 0° along +x. */
 const TOKEN_FACING_OFFSET_DEGREES = 90;
 
+/** The bearing a token faces at `rotation` (straight down the screen at rotation 0). */
+export function tokenFacingBearing(rotation: number): number {
+    return normaliseDegrees(rotation + TOKEN_FACING_OFFSET_DEGREES);
+}
+
 /** Where an attack's template goes, in scene units. */
 export interface AreaPlacementInput {
     anchor: AreaAnchor;
@@ -213,7 +218,7 @@ export interface AreaPlacementInput {
  * the user to drag into place.
  */
 export function areaPlacement(input: AreaPlacementInput): { origin: AreaPoint; direction: number } {
-    const direction = input.target === null ? normaliseDegrees(input.firerRotation + TOKEN_FACING_OFFSET_DEGREES) : bearingDegrees(input.firer, input.target);
+    const direction = input.target === null ? tokenFacingBearing(input.firerRotation) : bearingDegrees(input.firer, input.target);
     if (input.anchor === 'firer') return { origin: input.firer, direction };
     const impact = input.target ?? input.firer;
     const shift = input.scatter === null ? { x: 0, y: 0 } : scatterOffset(input.scatter.direction, input.scatter.metres, direction);

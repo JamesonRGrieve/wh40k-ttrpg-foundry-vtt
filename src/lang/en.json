@@ -6076,6 +6076,62 @@
             "InnateWeapons": "Innate Weapons",
             "OtherWeapons": "Other Weapons",
             "UnmountWeapon": "Remove from hardpoint",
+            "Location": {
+                "Motive": "Motive Systems",
+                "Hull": "Hull",
+                "Weapon": "Weapon",
+                "Turret": "Turret"
+            },
+            "Facing": {
+                "Front": "Front",
+                "Left": "Left Side",
+                "Right": "Right Side",
+                "Rear": "Rear"
+            },
+            "Damage": {
+                "Facing": "Facing struck",
+                "FacingFromPosition": "From the attacker's position against the vehicle's heading.",
+                "FacingAssumed": "No token positions to read: Front assumed.",
+                "Location": "Hit location",
+                "LocationReversed": "Table roll {roll}: the attack roll reversed.",
+                "LocationFresh": "Table roll {roll}: a fresh d100 for an extra hit.",
+                "LocationSingleChart": "One chart for the whole vehicle: the hit strikes the Hull.",
+                "LocationRedirected": "Table roll {roll} named the {rolled}, which this vehicle does not carry: the Hull instead.",
+                "ArmourOf": "{facing} armour",
+                "Cover": "Cover",
+                "TurretFront": "A Turret hit meets Front armour.",
+                "ArmourIgnored": "The weapon ignores this armour.",
+                "ForceFieldRoll": "Rolled {roll} against Protection {rating}.",
+                "ForceFieldNullified": "Nullified",
+                "ForceFieldFailed": "No protection",
+                "ForceFieldOverload": "Its overload follows its craftsmanship, which the trait does not record: the GM decides.",
+                "IntegrityDamage": "Structural Integrity damage",
+                "Integrity": "Structural Integrity",
+                "IntegrityValue": "{before} → {after} / {max}",
+                "IntegrityBefore": "Before the hit",
+                "Excess": "Damage past Structural Integrity",
+                "MultiplierValue": "×{factor} → {taken}",
+                "MultiplierNote": "Critical damage is multiplied, rounding up.",
+                "Critical": "Critical damage",
+                "CriticalValue": "{before} + {taken} = {after}",
+                "CriticalBefore": "Already taken",
+                "CriticalTaken": "This hit",
+                "ChartRow": "{chart}: result {value}.",
+                "ChartMissing": "This line's packs carry no Vehicle Critical chart for it: the GM applies the effect.",
+                "Fury": "Righteous Fury ({die})",
+                "FuryDieSource": "{trait}: Righteous Fury rolls {die}.",
+                "FuryUnaffected": "{traits} does not reduce Righteous Fury.",
+                "FuryReadAt": "Read at {value}.",
+                "FuryNotCritical": "Not Critical damage, and not cumulative with it.",
+                "FuryLost": "This line's Righteous Fury needs a hit that damages the vehicle, and this one dealt none."
+            },
+            "Attack": {
+                "TraitSource": "Target vehicle's trait: {trait}"
+            },
+            "CrewTargeting": {
+                "Sheltered": "{name} is inside the {vehicle}, which shelters its crew: no attack from outside can reach them.",
+                "ShelteredFromArea": "{name}: sheltered inside the {vehicle}"
+            },
             "Source": "Source",
             "SourcePlaceholder": "e.g. Core Rulebook p. 100",
             "SpeedCruising": "Cruising Speed",
@@ -6836,7 +6892,12 @@
             },
             "AssignDamage": {
                 "Critical": "Critical",
-                "IncomingDamage": "Incoming Damage"
+                "IncomingDamage": "Incoming Damage",
+                "HitLocation": "Hit Location",
+                "TotalDamage": "Total Damage",
+                "LocationArmour": "Location Armour",
+                "ToughnessBonus": "Toughness Bonus",
+                "FacingArmour": "Facing Armour"
             },
             "BaseRoll": {
                 "Target": "Target:",

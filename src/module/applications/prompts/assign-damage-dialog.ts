@@ -2,7 +2,8 @@
  * @file AssignDamageDialog - V2 dialog for damage assignment
  */
 
-import { hitDropdown } from '../../rules/hit-locations.ts';
+import { readVehicleDurability } from '../../rolls/vehicle-strike.ts';
+import { hitDropdown, vehicleHitDropdown } from '../../rules/hit-locations.ts';
 import BaseRollDialog from './base-roll-dialog.ts';
 
 /**
@@ -46,7 +47,11 @@ export default class AssignDamageDialog extends BaseRollDialog {
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // The location dropdown labels are localized at render time, not baked into the damage data.
-        return { ...(await super._prepareContext(options)), locations: hitDropdown() };
+        // A vehicle (content#28) takes its own locations, and shows Structural Integrity in place of wounds.
+        const context = await super._prepareContext(options);
+        const actor = this.rollData['actor'];
+        const vehicle = typeof actor === 'object' && actor !== null && 'system' in actor ? readVehicleDurability(actor.system) : null;
+        return { ...context, locations: vehicle === null ? hitDropdown() : vehicleHitDropdown(), vehicle };
     }
 
     /* -------------------------------------------- */

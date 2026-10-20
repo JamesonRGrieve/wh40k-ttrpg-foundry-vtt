@@ -4,6 +4,7 @@ import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import type { RollModifierComponent } from '../rolls/roll-data.ts';
+import { crewTargetOf, resolveAboardVehicle, vehicleTargetProfileFromTokens } from '../rolls/vehicle-strike.ts';
 import { findSpreadTargets } from '../rules/burst-spread-canvas.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
@@ -24,6 +25,8 @@ export interface SourceAndTargetData {
      * radius around the target's location, which the actor alone cannot give.
      */
     targetToken: CanvasToken | undefined;
+    /** The acting token — the facing a vehicle target is struck on is read from it (content#28). */
+    sourceToken: CanvasToken | undefined;
 }
 
 /**
@@ -126,6 +129,7 @@ export class TargetedActionManager {
             target: targetActorData,
             distance: targetDistance,
             targetToken,
+            sourceToken,
         };
     }
 
@@ -159,12 +163,26 @@ export class TargetedActionManager {
             return;
         }
 
+        // Someone aboard a vehicle that shelters its crew cannot be targeted from outside it (content#28).
+        const crew = crewTargetOf(rollData.target, rollData.actor, resolveAboardVehicle);
+        if (crew?.targeting === 'sheltered') {
+            ui.notifications.warn(t('WH40K.Vehicle.CrewTargeting.Sheltered', { name: rollData.target?.name ?? '', vehicle: crew.vehicleName }));
+            return;
+        }
+
         const weaponAttack = new WeaponActionData();
         const weaponRollData = weaponAttack.rollData;
         weaponRollData.weapons = weapons;
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
+        if (crew !== null && crew.targeting !== 'free') {
+            weaponRollData.crewTarget = { vehicleName: crew.vehicleName, riderTargetableInMelee: crew.riderTargetableInMelee };
+        }
+        // A craft target (content#28) is struck on the facing the attacker's token sees.
+        const vehicle = rollData.target === null ? null : vehicleTargetProfileFromTokens(rollData.target, rollData.targetToken, rollData.sourceToken);
+        const targetUuid = rollData.target?.uuid ?? null;
+        if (vehicle !== null && targetUuid !== null) weaponRollData.vehicleTargets[targetUuid] = vehicle;
         // Eligible targets for a burst's extra hits (#513). Computed once here,
         // where the declared target's token is in hand, rather than at allocation
         // time — the allocator is pure and has no scene access. Empty for a lone

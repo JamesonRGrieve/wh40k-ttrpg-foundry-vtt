@@ -6,7 +6,7 @@ import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/a
 import { type AreaTargetResult, type AreaTemplateSpec, type AvoidanceWielder, attackHasNoAttackRoll, resolveAreaTemplate } from '../rules/area-template.ts';
 import { bridgeWeaponQualities, calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import type { BurstCapComponent } from '../rules/auto-fire.ts';
-import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
+import { CALLED_SHOT_ACTION, calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { activeConditionMechanics, type ConditionBearer } from '../rules/condition-registry.ts';
 import { WH40K } from '../rules/config.ts';
 import type { DamageProfileContext, ResolvedDamageProfile } from '../rules/damage-profile.ts';
@@ -34,6 +34,7 @@ import {
     type TargetedAttackContext,
     type TargetedConditionComponent,
 } from '../rules/targeted-conditions.ts';
+import { incomingVehicleModifiers, VEHICLE_TRAIT_BUCKET } from '../rules/vehicle-damage.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { checkWeaponTraining, getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import {
@@ -54,6 +55,7 @@ import type { HitCeilingCard } from './hit-ceiling.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
 import { actorGameSystemId, type DegreesMethod, printedDegreesFromCount } from './roll-helpers.ts';
 import type { RollKeepMode } from './roll-keep.ts';
+import { readVehicleDurability, type VehicleTargetProfile } from './vehicle-strike.ts';
 
 // Re-exported for existing consumers (chat-card cap surfacing, tests) that
 // import the cap primitives from this module. The canonical definitions now
@@ -718,6 +720,18 @@ export class WeaponRollData extends RollData {
      * radius and not-harder-to-hit constraint by whoever populates it.
      */
     spreadTargets: AllocationTarget[] = [];
+    /**
+     * The vehicles this attack can strike (content#28), keyed by actor UUID: the
+     * declared target when it is a craft, and each craft under an area template.
+     * Built where the tokens are in hand, so the hit pipeline stays position-free.
+     */
+    vehicleTargets: Record<string, VehicleTargetProfile> = {};
+    /**
+     * The declared target rides in the open on a vehicle and can be singled out only
+     * by a Called Shot (Open-Topped, DH2 Core p. 187) — except a Bike's rider in
+     * melee. Null when the target is not aboard one.
+     */
+    crewTarget: { vehicleName: string; riderTargetableInMelee: boolean } | null = null;
     ammoUsed: number = 0;
     weaponModifiers: Record<string, number> = {};
 
@@ -900,6 +914,7 @@ export class WeaponRollData extends RollData {
         updateAttackSpecials(this);
         this.bridgeContextualDamageQualities();
         updateAvailableCombatActions(this);
+        this.requireCrewCalledShot();
         calculateCombatActionModifier(this);
         this.usesAmmo = weaponSystem.usesAmmo === true;
         // Resolved for EVERY weapon: a burst's hit ceiling is a property of its rate
@@ -922,6 +937,7 @@ export class WeaponRollData extends RollData {
         this.updateBaseTarget();
         this.applyEnvironmentModifiers();
         this.applyComradeOrderModifiers();
+        this.applyTargetVehicleModifiers();
 
         // Refresh the displayed aggregate target so the top number reflects
         // every active modifier on every render / form change (#382). Uses the
@@ -1026,6 +1042,39 @@ export class WeaponRollData extends RollData {
         const components = comradeOrderModifiersFor(this.sourceActor, this.baseCharacteristicKey);
         this.modifiers[COMRADE_ORDER_BUCKET] = sumComradeOrderComponents(components);
         this.expandedBuckets[COMRADE_ORDER_BUCKET] = components;
+    }
+
+    /**
+     * Path B: what the target vehicle's traits impose on an attack against it
+     * (content#28) — Holofield / Flyer / Feral Machine Spirit on shooting, Skimmer
+     * on melee — folded as ONE `vehicle-traits` bucket whose rows name each trait.
+     * The trait's own condition (the craft moving, airborne) is the GM's call; the
+     * row says which trait applied so it can be struck.
+     */
+    applyTargetVehicleModifiers(): void {
+        const durability = readVehicleDurability(this.targetActor?.system);
+        const i18n = runtimeI18n();
+        const components: RollModifierComponent[] = (durability === null ? [] : incomingVehicleModifiers(durability.traitEffects, this.weapon.isMelee)).map(
+            (modifier) => ({
+                key: `${VEHICLE_TRAIT_BUCKET}.${modifier.trait}`,
+                label: modifier.trait,
+                value: modifier.value,
+                source: i18n?.format?.('WH40K.Vehicle.Attack.TraitSource', { trait: modifier.trait }) ?? modifier.trait,
+            }),
+        );
+        this.modifiers[VEHICLE_TRAIT_BUCKET] = components.reduce((sum, component) => sum + component.value, 0);
+        this.expandedBuckets[VEHICLE_TRAIT_BUCKET] = components;
+    }
+
+    /**
+     * Someone riding in the open on a vehicle can be singled out only by a Called
+     * Shot (Open-Topped, DH2 Core p. 187; OW Core p. 212), so an attack on them IS
+     * one — unless it is a melee attack on a Bike's rider (DH2 Core p. 187).
+     */
+    requireCrewCalledShot(): void {
+        const crew = this.crewTarget;
+        if (crew === null || (crew.riderTargetableInMelee && this.weapon.isMelee)) return;
+        if (CALLED_SHOT_ACTION in this.actions) this.action = CALLED_SHOT_ACTION;
     }
 
     selectWeapon(weaponName: string): void {

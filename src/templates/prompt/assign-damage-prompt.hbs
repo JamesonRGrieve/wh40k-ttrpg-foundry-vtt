@@ -13,6 +13,19 @@
                 </div>
             </div>
 
+            {{#if vehicle}}
+            {{!-- A vehicle (content#28) takes damage off Structural Integrity and keeps a running Critical total. --}}
+            <div class="tw-grid tw-grid-cols-2 tw-gap-2" data-assign-vehicle>
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+                    <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{vehicle.integrity.value}}/{{vehicle.integrity.max}}</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Vehicle.Integrity"}}</span>
+                </div>
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+                    <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{vehicle.integrity.critical}}</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Prompt.AssignDamage.Critical"}}</span>
+                </div>
+            </div>
+            {{else}}
             <div class="tw-grid tw-grid-cols-3 tw-gap-2">
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
                     <span class="tw-font-display tw-font-bold tw-text-lg {{themeClassFor 'accent'}}">{{this.actor.system.wounds.value}}/{{this.actor.system.wounds.max}}</span>
@@ -27,16 +40,17 @@
                     <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">{{localize "WH40K.Combat.Fatigue"}}</span>
                 </div>
             </div>
+            {{/if}}
         </div>
 
         {{! Damage Details }}
         {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs titleKey="WH40K.Prompt.AssignDamage.IncomingDamage" marginClass=""}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Hit Location"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Prompt.AssignDamage.HitLocation"}}
                 <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.location" id="location">
                     {{selectOptions locations selected=this.hit.location}}
                 </select>
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Damage Type"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.DamageType.Label"}}
                 <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.damageType" id="damageType">
                     {{selectOptions damageType selected=this.hit.damageType}}
                 </select>
@@ -44,24 +58,30 @@
 
             <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Total Damage"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Prompt.AssignDamage.TotalDamage"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Penetration"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Combat.Penetration"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Fatigue"}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Combat.Fatigue"}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
 
             <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Location Armour"}}
+            {{#if vehicle}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Prompt.AssignDamage.FacingArmour" last=true}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
-            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs label="Toughness Bonus" last=true}}
+            {{else}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Prompt.AssignDamage.LocationArmour"}}
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
+            {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs labelKey="WH40K.Prompt.AssignDamage.ToughnessBonus" last=true}}
                 <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
             {{/systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs}}
+            {{/if}}
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
     </div>
 </div>

@@ -74,6 +74,9 @@ function ownedTalents(actor: CombatActionModifierInput['sourceActor']): TwoWeapo
     return talents;
 }
 
+/** The Called Shot action's name, as the combat-action list keys it. */
+export const CALLED_SHOT_ACTION = 'Called Shot';
+
 /**
  * @param rollData {WeaponRollData}
  */
@@ -83,7 +86,7 @@ export function calculateCombatActionModifier(rollData: CombatActionModifierInpu
     const currentAction = actions[rollData.action];
 
     game.wh40k.log('calculateCombatActionModifier', currentAction);
-    if (rollData.action === 'Called Shot') {
+    if (rollData.action === CALLED_SHOT_ACTION) {
         if (!rollData.isCalledShot) {
             rollData.isCalledShot = true;
             rollData.calledShotLocation = hitLocationNames()[0];

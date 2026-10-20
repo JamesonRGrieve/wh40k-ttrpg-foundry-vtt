@@ -96,6 +96,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/extended-test-progress.hbs',
             'systems/wh40k-rpg/templates/chat/partial/reroll-controls.hbs',
             'systems/wh40k-rpg/templates/chat/partial/wounds-callout.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/vehicle-damage-rows.hbs',
             'systems/wh40k-rpg/templates/chat/partial/wounds-action-button.hbs',
             'systems/wh40k-rpg/templates/chat/partial/result-callout.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',

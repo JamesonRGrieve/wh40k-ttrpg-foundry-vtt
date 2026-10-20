@@ -1,3 +1,4 @@
+import { vehicleCombatRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 import { applyCriticalDamageConditions, type CriticalSideEffectReport } from '../rules/active-effects.ts';
@@ -15,8 +16,12 @@ import {
     type DynamicModifierSituation,
 } from '../rules/dynamic-modifiers.ts';
 import { type ActorStateSource, collectActorStates } from '../rules/situation-tags.ts';
+import { isVehicleLocationId, resolveVehicleDamage, type VehicleArmourFacing, type VehicleLocationId } from '../rules/vehicle-damage.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
+import { cardLocaliser, type VehicleCardRow, type VehicleDamageApplied, vehicleAssignCardRows } from './vehicle-card-rows.ts';
+import { lookupVehicleCritical, type VehicleCritLookupFn } from './vehicle-critical-tables.ts';
+import { readVehicleDurability, type VehicleDurability, type VehicleStrike, vehicleFuryResults } from './vehicle-strike.ts';
 import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundTransition } from './wound-transition.ts';
 
 /**
@@ -31,6 +36,8 @@ interface ActorHordeState {
     /** Trait identifiers (Fearless / Disciplined / …) governing break-check behaviour. */
     traits?: readonly string[];
 }
+
+const ASSIGN_DAMAGE_TEMPLATE = 'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs';
 
 /** Minimal actor shape needed for damage assignment. Exported for tests. */
 export interface ActorLike extends ActorStateSource {
@@ -85,6 +92,8 @@ interface HitLike {
     isExplosive?: boolean;
     /** The source weapon ignores this location's armour and cover (Warp Weapon vs unwarded armour, #414). */
     armourIgnored?: boolean;
+    /** Where the hit struck a vehicle (content#28); null / absent for any other target. */
+    vehicleStrike?: VehicleStrike | null;
 }
 
 export class AssignDamageData {
@@ -161,6 +170,13 @@ export class AssignDamageData {
      */
     hordeBreakLabel = '';
 
+    /** What the hit did to a vehicle target (content#28); null for any other target. */
+    vehicleDamage: VehicleDamageApplied | null = null;
+    /** The card's vehicle rows (Structural Integrity, Critical damage and its multiplier, chart rows). */
+    vehicleRows: VehicleCardRow[] = [];
+    /** Looks up the vehicle's crit chart row; tests replace it to run without packs. */
+    vehicleCritLookup: VehicleCritLookupFn = lookupVehicleCritical;
+
     constructor(actor: ActorLike, hit: HitLike) {
         this.actor = actor;
         this.hit = hit;
@@ -170,6 +186,11 @@ export class AssignDamageData {
         this.armour = 0;
         this.tb = 0;
         this.coverAP = this.hit.coverAP ?? 0;
+        const vehicle = readVehicleDurability(this.actor.system);
+        if (vehicle !== null) {
+            this._updateVehicleArmour(vehicle);
+            return;
+        }
         const location = this.hit.location;
         if (location) {
             for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
@@ -189,6 +210,29 @@ export class AssignDamageData {
     }
 
     /**
+     * A vehicle meets the hit with the armour of the facing it struck (a Turret hit
+     * reads Front, DH2 Core p. 254), and has no Toughness Bonus. A hit applied
+     * without a strike (a hand-entered one) reads Front armour.
+     */
+    private _updateVehicleArmour(vehicle: VehicleDurability): void {
+        const location = this.hit.location;
+        const facing: VehicleArmourFacing = location === 'turret' ? 'front' : this.hit.vehicleStrike?.armourFacing ?? 'front';
+        this.armour = vehicle.armour[facing].value;
+        if (this.hit.armourIgnored === true) {
+            this.ignoreArmour = true;
+            this.coverAP = 0;
+        }
+        this.armour += this.coverAP;
+    }
+
+    /** The hit's vehicle location: what the assign dialog picked, else where it struck. */
+    private _vehicleLocation(): VehicleLocationId {
+        const location = this.hit.location;
+        if (isVehicleLocationId(location)) return location;
+        return this.hit.vehicleStrike?.location ?? 'hull';
+    }
+
+    /**
      * Preview the effective damage this hit deals to the target: total damage minus
      * the location armour (reduced by penetration, floored at 0) minus the location's
      * Toughness Bonus, with the RAW 1-point minimum when defences fully absorb the hit
@@ -201,6 +245,13 @@ export class AssignDamageData {
         const totalDamage = Number(this.hit.totalDamage);
         const totalPenetration = Number(this.hit.totalPenetration);
         const usableArmour = this.ignoreArmour ? 0 : Math.max(0, this.armour - totalPenetration);
+        if (readVehicleDurability(this.actor.system) !== null) {
+            // A vehicle has no 1-point minimum (that is a creature's Righteous Fury rule),
+            // and a trait force field that nullified the attack lets nothing through.
+            const nullified = this.hit.vehicleStrike?.forceField?.nullified === true;
+            const effective = nullified ? 0 : Math.max(0, totalDamage - usableArmour);
+            return { effective, armour: usableArmour, toughnessBonus: 0, penetration: totalPenetration, absorbed: effective === 0 };
+        }
         const raw = totalDamage - (usableArmour + this.tb);
         const absorbed = raw <= 0;
         return { effective: absorbed ? 1 : raw, armour: usableArmour, toughnessBonus: this.tb, penetration: totalPenetration, absorbed };
@@ -237,6 +288,12 @@ export class AssignDamageData {
     async finalize(): Promise<void> {
         const totalDamage = Number(this.hit.totalDamage);
         const totalPenetration = Number(this.hit.totalPenetration);
+
+        const vehicle = readVehicleDurability(this.actor.system);
+        if (vehicle !== null) {
+            await this._finalizeVehicle(vehicle, totalDamage, totalPenetration);
+            return;
+        }
 
         // Reduce Armour by Penetration
         let usableArmour = this.armour;
@@ -349,6 +406,56 @@ export class AssignDamageData {
     }
 
     /**
+     * A hit on a vehicle (content#28): damage less the struck facing's armour comes
+     * off Structural Integrity, and what passes it is Critical damage — multiplied
+     * by the vehicle's crit multiplier (Reinforced Armour / Hull halve it, rounding
+     * up) and read cumulatively on the struck location's chart. Righteous Fury's
+     * chart rows ride the strike untouched by that multiplier, and on a line that
+     * needs a damaging hit they are lost when this one dealt none. A trait force
+     * field that nullified the attack leaves the vehicle untouched.
+     */
+    private async _finalizeVehicle(vehicle: VehicleDurability, totalDamage: number, totalPenetration: number): Promise<void> {
+        const strike = this.hit.vehicleStrike ?? null;
+        const location = this._vehicleLocation();
+        const nullifiedBy = strike?.forceField?.nullified === true ? strike.forceField : null;
+        const effects = vehicle.traitEffects;
+        const outcome = resolveVehicleDamage({
+            damage: nullifiedBy === null ? totalDamage : 0,
+            penetration: totalPenetration,
+            armour: this.ignoreArmour ? 0 : this.armour,
+            integrity: vehicle.integrity.value,
+            critical: vehicle.integrity.critical,
+            critMultiplier: effects.critDamageMultiplier,
+        });
+        const rolledFury = nullifiedBy === null ? strike?.righteousFury ?? [] : [];
+        const furyLost = rolledFury.length > 0 && vehicleCombatRulesFor(vehicle.gameSystem)?.righteousFuryNeedsDamage === true && outcome.damage === 0;
+        const critical = outcome.criticalTaken > 0 ? await this.vehicleCritLookup(vehicle.gameSystem, location, outcome.criticalAfter) : null;
+        const fury = furyLost ? [] : await vehicleFuryResults(rolledFury, vehicle.gameSystem, location, this.vehicleCritLookup);
+        this.vehicleDamage = {
+            facing: strike?.facing ?? 'front',
+            facingAssumed: strike === null || strike.facingAssumed,
+            armourFacing: location === 'turret' ? 'front' : strike?.armourFacing ?? 'front',
+            location,
+            outcome,
+            integrityBefore: vehicle.integrity.value,
+            integrityMax: vehicle.integrity.max,
+            criticalBefore: vehicle.integrity.critical,
+            critSources: effects.sources.critDamageMultiplier,
+            critical,
+            criticalChartMissing: outcome.criticalTaken > 0 && critical === null,
+            nullifiedBy,
+            righteousFury: fury,
+            righteousFuryLost: furyLost,
+        };
+        this.vehicleRows = vehicleAssignCardRows(this.vehicleDamage, cardLocaliser());
+        this.damageTaken = outcome.integrityLoss;
+        this.hasDamage = outcome.integrityLoss > 0;
+        this.criticalDamageTaken = outcome.criticalTaken;
+        this.hasCriticalDamage = outcome.criticalTaken > 0;
+        this.criticalEffect = critical?.text ?? '';
+    }
+
+    /**
      * The context a defender-side hook is evaluated against during assignment:
      * only the struck location's Toughness Bonus is known here (`this.tb`).
      */
@@ -413,6 +520,17 @@ export class AssignDamageData {
     }
 
     async performActionAndSendToChat(): Promise<void> {
+        const vehicleDamage = this.vehicleDamage;
+        if (vehicleDamage !== null) {
+            // A vehicle's damage is its Structural Integrity and cumulative Critical
+            // damage; its crit is a chart row on the card, not an injury item.
+            await this.actor.update({
+                'system.integrity.value': vehicleDamage.outcome.integrityAfter,
+                'system.integrity.critical': vehicleDamage.outcome.criticalAfter,
+            });
+            await postFlattenedInstanceToChat(this, ASSIGN_DAMAGE_TEMPLATE, { actor: this.actor });
+            return;
+        }
         if (this.hasHordeDamage) {
             // DW horde branch (#166): write Magnitude, skip wound bookkeeping.
             await this.actor.update({
@@ -463,7 +581,7 @@ export class AssignDamageData {
             this.hasCriticalSideEffects = report.hasSideEffects;
         }
 
-        await postFlattenedInstanceToChat(this, 'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', { actor: this.actor });
+        await postFlattenedInstanceToChat(this, ASSIGN_DAMAGE_TEMPLATE, { actor: this.actor });
     }
 
     /**

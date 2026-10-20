@@ -1,0 +1,16 @@
+{{!-- A hit on a vehicle (content#28): the rows that say how it struck and what it did —
+      facing, location, armour after Penetration, the trait force field, Structural
+      Integrity, Critical damage and the trait that halves it, and the chart rows.
+      Each number hovers to its parts. `html` is chart text from the line's pack. --}}
+<div class="tw-my-2 tw-flex tw-flex-col tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-border-color)] tw-bg-[var(--wh40k-panel-bg-translucent)] tw-px-3 tw-py-2" data-vehicle-rows>
+    {{#each rows as |row|}}
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1 tw-text-[0.85rem] {{#unless @last}}tw-border-b tw-border-[var(--wh40k-border-color)]{{/unless}}" data-vehicle-row="{{row.hook}}">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2{{#if row.tooltip}} tw-cursor-help{{/if}}"{{#if row.tooltip}} data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{row.tooltip}}"{{/if}}>
+                <span class="tw-min-w-0 tw-font-semibold tw-text-[var(--wh40k-card-muted)]" data-vehicle-row-label>{{row.label}}</span>
+                <span class="tw-shrink-0 tw-text-right tw-tabular-nums tw-font-bold tw-text-[var(--wh40k-card-text)]" data-vehicle-row-value>{{row.value}}</span>
+            </div>
+            {{#if row.note}}<div class="tw-text-[0.72rem] tw-leading-snug tw-text-[var(--wh40k-card-muted)] tw-opacity-90" data-vehicle-row-note>{{row.note}}</div>{{/if}}
+            {{#if row.html}}<div class="tw-text-[0.78rem] tw-leading-snug tw-text-[var(--wh40k-card-text)] [&_p]:tw-m-0" data-vehicle-row-chart>{{{row.html}}}</div>{{/if}}
+        </div>
+    {{/each}}
+</div>

@@ -147,6 +147,24 @@ export interface NamedVehicleTraitEffects {
  */
 export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers'> {
     testModifiers: SourcedVehicleTestModifier[];
+    /** Which traits the damage-facing effects came from — their provenance rows on attack and damage cards. */
+    sources: VehicleEffectSources;
+}
+
+/** The traits behind the aggregated effects a roll or damage card attributes ('' / [] = none). */
+interface VehicleEffectSources {
+    /** Every trait whose multiplier composed into `critDamageMultiplier`. */
+    critDamageMultiplier: string[];
+    /** The trait giving the strongest incoming ranged penalty. */
+    incomingRangedToHitModifier: string;
+    /** The trait giving the strongest incoming melee penalty. */
+    incomingMeleeToHitModifier: string;
+    /** The trait giving the highest-rated force field. */
+    forceFieldRating: string;
+    /** The trait that changed the Righteous Fury die. */
+    righteousFuryCritDie: string;
+    /** The trait that set the crew exposure. */
+    crewExposure: string;
 }
 
 /** Build the structured `effects` SchemaField for the vehicle-trait DataModel. */
@@ -265,6 +283,14 @@ export function emptyAggregatedVehicleTraitEffects(): AggregatedVehicleTraitEffe
         forceFieldRating: 0,
         forceFieldNeverOverloads: false,
         structuralRegeneration: '',
+        sources: {
+            critDamageMultiplier: [],
+            incomingRangedToHitModifier: '',
+            incomingMeleeToHitModifier: '',
+            forceFieldRating: '',
+            righteousFuryCritDie: '',
+            crewExposure: '',
+        },
     };
 }
 
@@ -314,8 +340,15 @@ const OR_FLAGS = [
  */
 export function aggregateVehicleTraitEffects(traits: readonly NamedVehicleTraitEffects[]): AggregatedVehicleTraitEffects {
     const out = emptyAggregatedVehicleTraitEffects();
+    const sources = out.sources;
     for (const { name, effects: e } of traits) {
         for (const tm of e.testModifiers) out.testModifiers.push({ test: tm.test, value: tm.value, source: name });
+        if (e.critDamageMultiplier !== null) sources.critDamageMultiplier.push(name);
+        if (e.incomingRangedToHitModifier < out.incomingRangedToHitModifier) sources.incomingRangedToHitModifier = name;
+        if (e.incomingMeleeToHitModifier < out.incomingMeleeToHitModifier) sources.incomingMeleeToHitModifier = name;
+        if (e.forceFieldRating > out.forceFieldRating) sources.forceFieldRating = name;
+        if (out.righteousFuryCritDie === '' && e.righteousFuryCritDie !== '') sources.righteousFuryCritDie = name;
+        if (e.crewExposure === 'enclosed' || (e.crewExposure === 'open' && out.crewExposure !== 'enclosed')) sources.crewExposure = name;
         out.critDamageMultiplier = composeMultiplier(out.critDamageMultiplier, e.critDamageMultiplier);
         out.explosionChanceMultiplier = composeMultiplier(out.explosionChanceMultiplier, e.explosionChanceMultiplier);
         out.ramSelfDamageMultiplier = composeMultiplier(out.ramSelfDamageMultiplier, e.ramSelfDamageMultiplier);

@@ -13,10 +13,11 @@ import {
     type InertTrigger,
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
-import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId } from '../rules/hit-locations.ts';
+import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId, reverseAttackRollDigits } from '../rules/hit-locations.ts';
 import { type PsychicFormulaValues, resolvePsychicFormulaTerms } from '../rules/psychic-range.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
+import { righteousFuryChartValue, vehicleHitLocation } from '../rules/vehicle-damage.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
     applyKeepHighestToDie,
@@ -32,6 +33,11 @@ import {
 } from '../rules/weapon-quality-effects.ts';
 import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
 import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
+import type { VehicleCardRow } from './vehicle-card-rows.ts';
+import { strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
+
+/** The die an extra hit on a vehicle rolls on its hit-location table (DH2 Core p. 254). */
+const FRESH_LOCATION_DIE = '1d100';
 
 /**
  * Minimal interface for the attackData parameter passed to Hit calculation methods.
@@ -375,6 +381,13 @@ export class Hit {
     effectiveTb = 0;
     effectiveAbsorbed = false;
 
+    /** Where this hit struck a vehicle (content#28): facing, location, armour facing, force field, Righteous Fury rows. Null off a vehicle. */
+    vehicleStrike: VehicleStrike | null = null;
+    /** The strike serialised for the card's `data-vehicle-strike` (fields, not getters, survive the chat render). */
+    vehicleStrikeData = '';
+    /** The vehicle rows the damage card prints (facing, location, armour, force field, Righteous Fury), with provenance. */
+    vehicleRows: VehicleCardRow[] = [];
+
     /** Number of Righteous Fury triggers from this hit's damage roll. */
     get righteousFuryCount(): number {
         return this.righteousFury.length;
@@ -387,7 +400,12 @@ export class Hit {
      * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData: AttackDataLike, hitNumber: number, forcedLocation: string | null = null): Promise<Hit> {
+    static async createHit(
+        attackData: AttackDataLike,
+        hitNumber: number,
+        forcedLocation: string | null = null,
+        vehicle: VehicleTargetProfile | null = null,
+    ): Promise<Hit> {
         const hit = new Hit();
         await hit.resolveProfile(attackData);
         // A resolved profile with no dice (beyond every band, a table result that only
@@ -408,6 +426,11 @@ export class Hit {
         }
 
         hit.coverAP = attackData.rollData.coverAP ?? 0;
+
+        if (vehicle !== null) {
+            await hit.strikeVehicle(attackData.rollData.roll?.total ?? null, hitNumber, vehicle);
+            return hit;
+        }
 
         if (forcedLocation !== null) {
             // An area quality that fixes where its hits land (Spray: the Body, #599).
@@ -565,6 +588,54 @@ export class Hit {
 
     _totalPenetration(): void {
         this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
+    }
+
+    /**
+     * Land this hit on a vehicle (content#28). The first hit reads the line's
+     * Vehicle Hit Locations table on the reversed attack roll; each extra hit on the
+     * same vehicle rolls a fresh d100 (DH2 Core p. 254). A line with one chart
+     * strikes the Hull. Righteous Fury rolls the vehicle's die (1d5, or a trait's,
+     * e.g. Ramshackle's 1d10) on the struck location's chart instead of a creature's
+     * Critical Effects table, and is not Critical damage.
+     * @param attackRoll  The attack's d100 total, or null with no attack roll.
+     * @param hitNumber   This hit's index on its target.
+     * @param vehicle     The vehicle as the attack path saw it.
+     */
+    async strikeVehicle(attackRoll: number | null, hitNumber: number, vehicle: VehicleTargetProfile): Promise<void> {
+        const bands = vehicle.rules.hitLocations;
+        let tableRoll = 0;
+        let kind: VehicleTableRollKind = 'none';
+        if (bands !== null && hitNumber === 0 && attackRoll !== null && attackRoll > 0) {
+            tableRoll = reverseAttackRollDigits(attackRoll);
+            kind = 'reversed';
+        } else if (bands !== null) {
+            const fresh = new Roll(FRESH_LOCATION_DIE, {});
+            await fresh.evaluate();
+            tableRoll = fresh.total ?? 0;
+            kind = 'fresh';
+        }
+        const strike = strikeFor(vehicle, vehicleHitLocation(tableRoll, bands, vehicle.mounts, vehicle.facing), kind);
+        this.location = strike.location;
+        const unaffectedBy = vehicle.critMultiplier !== null && vehicle.critExcludesRighteousFury ? vehicle.critMultiplierSources.join(', ') : '';
+        for (const fury of this.righteousFury) {
+            if (vehicle.righteousFuryDie !== vehicle.rules.righteousFuryDie) {
+                const traitDie = new Roll(vehicle.righteousFuryDie, {});
+                // eslint-disable-next-line no-await-in-loop -- sequential by design: each trigger rolls its own die on the chart
+                await traitDie.evaluate();
+                fury.roll = traitDie;
+            }
+            const rolled = fury.roll.total ?? 0;
+            // A vehicle's Righteous Fury is a chart row, stated in the card's vehicle rows.
+            fury.effect = '';
+            strike.righteousFury.push({
+                die: vehicle.righteousFuryDie,
+                dieSource: vehicle.righteousFuryDieSource,
+                rolled,
+                value: righteousFuryChartValue(rolled, vehicle.critMultiplier, vehicle.critExcludesRighteousFury),
+                unaffectedBy,
+            });
+        }
+        this.vehicleStrike = strike;
     }
 
     /**

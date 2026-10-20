@@ -15,6 +15,7 @@ import {
     hitLocationShortLabel,
     resolveHitLocationId,
     reverseAttackRollDigits,
+    vehicleHitDropdown,
 } from './hit-locations';
 
 /**
@@ -139,6 +140,15 @@ describe('hit-location display labels', () => {
         expect(hitLocationLabel('rightArm')).toBe('Right Arm');
         expect(hitLocationLabel('Left Leg')).toBe('Left Leg');
         expect(hitLocationLabel('Turret')).toBe('Turret');
+    });
+
+    it('hitLocationLabel localizes a vehicle location id (content#28)', () => {
+        expect(hitLocationLabel('motive')).toBe('Motive Systems');
+        expect(hitLocationLabel('hull')).toBe('Hull');
+    });
+
+    it('vehicleHitDropdown offers the four vehicle locations', () => {
+        expect(vehicleHitDropdown()).toEqual({ motive: 'Motive Systems', hull: 'Hull', weapon: 'Weapon', turret: 'Turret' });
     });
 
     it('resolves short labels, abbreviations and printed roll ranges from the same registry', () => {

@@ -34,6 +34,9 @@ import {
 import { GRENADE_RIDER_FLAG, readRiderThrowFlag } from '../rolls/grenade-rider-flag.ts';
 import { WeaponRollData } from '../rolls/roll-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
+import { stampVehicleRows } from '../rolls/vehicle-card-rows.ts';
+import { lookupVehicleCritical } from '../rolls/vehicle-critical-tables.ts';
+import { crewTargetOf, parseVehicleStrike, resolveAboardVehicle, vehicleFuryResults, vehicleTargetProfileFromTokens } from '../rolls/vehicle-strike.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { isSameRound, readCombatRoundStamp } from '../rules/counter-attack.ts';
@@ -494,7 +497,15 @@ export class BasicActionManager {
         // auto-apply writes the target's wounds, so they must run one at a time to
         // avoid racing actor.update. An area hit (#599) lands on its own creature;
         // every other hit lands on the card's target.
-        await hits.reduce<Promise<void>>(async (previous, hit) => {
+        // A vehicle hit's Righteous Fury rows read their chart text up front (content#28).
+        const vehicleFuries = await Promise.all(
+            hits.map(async (hit) =>
+                hit.vehicleStrike === null
+                    ? []
+                    : vehicleFuryResults(hit.vehicleStrike.righteousFury, hit.vehicleStrike.line, hit.vehicleStrike.location, lookupVehicleCritical),
+            ),
+        );
+        await hits.reduce<Promise<void>>(async (previous, hit, index) => {
             await previous;
             const hitTarget = hit.targetUuid === '' ? damageTarget : await this.#actorFromUuid(hit.targetUuid);
             if (hitTarget == null) return;
@@ -509,6 +520,7 @@ export class BasicActionManager {
             // eslint-disable-next-line no-restricted-syntax -- boundary: the target is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape
             const assign = new AssignDamageData(hitTarget as unknown as ActorLike, hit);
             assign.update();
+            stampVehicleRows(hit, hitTarget.system, vehicleFuries[index] ?? []);
             const preview = assign.previewReducedDamage();
             hit.hasEffective = true;
             hit.effectiveDamage = preview.effective;
@@ -747,12 +759,23 @@ export class BasicActionManager {
         const wielder = rollData.areaAvoidanceWielder();
         const rolls: Roll[] = [];
         const results: AreaTargetResult[] = [];
+        // Crew aboard a vehicle that shelters them is out of the blast (content#28); a craft
+        // under the template is struck on the facing the firer's token sees.
+        const sheltered: string[] = [];
+        const firerToken = activeTokenOf(rollData.sourceActor) ?? undefined;
         for (const token of caught) {
             const defender = token.actor;
             // An actor's UUID is null only before it is persisted; such a token cannot take a hit.
             const actorUuid = defender?.uuid ?? null;
             if (defender === null || actorUuid === null) continue;
             const name = token.name;
+            const crew = crewTargetOf(defender, rollData.sourceActor, resolveAboardVehicle);
+            if (crew !== null && crew.targeting === 'sheltered') {
+                sheltered.push(t('WH40K.Vehicle.CrewTargeting.ShelteredFromArea', { name, vehicle: crew.vehicleName }));
+                continue;
+            }
+            const vehicle = vehicleTargetProfileFromTokens(defender, token, firerToken);
+            if (vehicle !== null) rollData.vehicleTargets[actorUuid] = vehicle;
             if (spec.avoid === null) {
                 results.push(areaHitResult(token.id, actorUuid, name));
                 continue;
@@ -788,6 +811,7 @@ export class BasicActionManager {
                 weaponName: rollData.name,
                 summary: rollData.areaStatement,
                 results: areaResultRows(results),
+                sheltered,
                 anyHit: results.some((result) => result.hit),
                 // A no-damage area weapon (smoke, stun, #601) catches creatures for its
                 // qualities only: the card lists who is caught and offers no Roll Damage.
@@ -1057,6 +1081,9 @@ export class BasicActionManager {
         // boolean for `magnitudeLossForHit(damage, isExplosive)`.
         hitData.isExplosive = isExplosive === 'true';
         hitData.armourIgnored = div.dataset['armourIgnored'] === 'true';
+        // A hit on a vehicle (content#28) carries where it struck; its location is a vehicle location.
+        hitData.vehicleStrike = parseVehicleStrike(div.dataset['vehicleStrike']);
+        if (hitData.vehicleStrike !== null) hitData.location = hitData.vehicleStrike.location;
 
         const targetUuid = div.dataset['targetUuid'];
 

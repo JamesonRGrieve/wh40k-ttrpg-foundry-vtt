@@ -22,7 +22,7 @@
                 <div class="tw-my-3 tw-p-2.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
                     <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
                         <span class="tw-w-6 tw-h-6 tw-flex tw-items-center tw-justify-center tw-bg-[var(--wh40k-card-gold)] tw-text-[var(--color-bg-primary)] tw-font-bold tw-text-[0.8rem] tw-rounded-full tw-border {{themeClassFor 'border'}}">{{inc @index}}</span>
-                        <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-text)]">{{hitLocationLabel hit.location}}</span>
+                        <span class="tw-shrink-0 tw-whitespace-nowrap tw-text-[0.85rem] tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-text)]">{{hitLocationLabel hit.location}}</span>
                         {{!-- A burst's extra hits can land on different enemies (#513), so
                               each hit names its own target. Hidden for a single-target
                               attack, where repeating one name on every row is just noise. --}}
@@ -80,8 +80,11 @@
                     </div>
                     {{/if}}
 
+                    {{! A hit on a vehicle (content#28) states its facing, location, armour and charts instead. }}
+                    {{#if hit.vehicleRows.length}}
+                    {{> systems/wh40k-rpg/templates/chat/partial/vehicle-damage-rows.hbs rows=hit.vehicleRows}}
+                    {{else if hit.hasEffective}}
                     {{! Effective damage vs target — auto-calculated from the target's armour + TB (#247) }}
-                    {{#if hit.hasEffective}}
                     {{!-- The label column shrinks and wraps; the value never does, so a
                           two- or three-digit Effective value stays on one line (#615). --}}
                     <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0]" data-damage-effective>
@@ -111,10 +114,12 @@
                     {{! Righteous Fury }}
                     {{! Each trigger rolls its critical level (fury.roll) and looks up its effect. }}
                     {{#each hit.righteousFury as |fury|}}
+                        {{#unless hit.vehicleRows.length}}
                         <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-md tw-text-center tw-animate-[fury-glow_1.5s_ease-in-out_infinite_alternate]" data-righteous-fury>
                             <div class="tw-font-display tw-text-base tw-font-bold tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-[0.15em] tw-shadow-[0_0_10px_rgba(255,215,0,0.5)]">⚡ {{localize "WH40K.RighteousFury.Triggered"}} ⚡</div>
                             <div class="tw-text-[0.85rem] tw-text-[var(--wh40k-card-text)] tw-mt-2 tw-leading-[1.4]">{{localize "WH40K.RighteousFury.CriticalLevel"}} {{fury.roll.total}}{{#if fury.effect}}: {{fury.effect}}{{/if}}</div>
                         </div>
+                        {{/unless}}
                     {{/each}}
 
                     {{! Replace Damage Die With DoS (#129 — DH2 core L10398-10414) }}
@@ -156,6 +161,7 @@
                                 data-damage-type="{{hit.damageType}}"
                                 data-is-explosive="{{hit.isExplosive}}"
                                 data-armour-ignored="{{hit.armourIgnored}}"
+                                data-vehicle-strike="{{hit.vehicleStrikeData}}"
                             >
                                 <span class="material-icons">api</span>
                                 <span>{{localize "WH40K.Combat.AssignDamage"}}</span>

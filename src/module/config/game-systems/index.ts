@@ -11,6 +11,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type { BaseSystemConfig } from './base-system-config.ts';
@@ -107,6 +108,16 @@ export function itemRepairRulesFor(line: string | undefined): ItemRepairRules | 
 export function vehicleDrivingRulesFor(line: string | undefined): VehicleDrivingRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.vehicleDriving ?? null;
+}
+
+/**
+ * A line's printed rules for attacking vehicles (content#28), or `null` for an
+ * unknown line.
+ * @param line  The vehicle's `system.gameSystem` id.
+ */
+export function vehicleCombatRulesFor(line: string | undefined): VehicleCombatRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.vehicleCombat ?? null;
 }
 
 /**

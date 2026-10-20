@@ -3,7 +3,7 @@ import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeCla
 import { WH40K } from '../config.ts';
 import { pluralKey } from '../i18n/plural.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
-import { HIT_LOCATION_IDS, hitLocationAbbreviationKey, hitLocationLabelKey } from '../rules/hit-locations.ts';
+import { anyLocationLabelKey, HIT_LOCATION_IDS, hitLocationAbbreviationKey } from '../rules/hit-locations.ts';
 import { corruptionTrackModifier, DAMNED_CORRUPTION } from '../rules/malignancy-test.ts';
 import { capitalize, formatSigned } from '../utils/format.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
@@ -714,9 +714,10 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
             .join(', ');
     });
 
+    // One label resolver for creature and vehicle locations (content#28) alike.
     hbs.registerHelper('hitLocationLabel', (location: TplValue): string => {
         const value = typeof location === 'string' ? location : '';
-        const key = hitLocationLabelKey(value);
+        const key = anyLocationLabelKey(value);
         return key === undefined ? value : localize(key);
     });
 

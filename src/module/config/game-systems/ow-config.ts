@@ -11,10 +11,11 @@ import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeActionCost, ComradeOrderCohesion, ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import { printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
+import { locatedVehicleCombat, printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
 import type { DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
@@ -174,6 +175,12 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      * Tests made during this Grapple".
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
+
+    /**
+     * OW Core p. 276 onward: Table 8-24, a Vehicle Critical Hit chart per location,
+     * and Righteous Fury only when "this attack must actually Damage the vehicle".
+     */
+    override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(true);
 
     /**
      * OW Core pp. 269–271, Comrades in Combat: Cohesion is "within 5 metres of his

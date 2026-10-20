@@ -9,6 +9,10 @@
 
         {{! Body }}
         <div class="tw-px-4 tw-py-3">
+            {{#if this.vehicleDamage}}
+            {{! A vehicle (content#28): Structural Integrity, Critical damage and the chart rows it lands on. }}
+            {{> systems/wh40k-rpg/templates/chat/partial/vehicle-damage-rows.hbs rows=this.vehicleRows}}
+            {{else}}
             {{! Current Status }}
             <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-sm">
                 <span class="tw-text-[var(--wh40k-card-muted)] tw-font-medium">{{localize "WH40K.Wounds"}}</span>
@@ -105,6 +109,7 @@
                         </ul>
                     </div>
                 {{/with}}
+            {{/if}}
             {{/if}}
         </div>
     </div>

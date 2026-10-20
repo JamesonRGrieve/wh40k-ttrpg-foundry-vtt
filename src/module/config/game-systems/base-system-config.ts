@@ -13,6 +13,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { VehicleCombatRules, VehicleHitLocationBand } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type {
@@ -139,6 +140,35 @@ export const DRIVE_PILOT_VEHICLE_DRIVING: VehicleDrivingRules = {
     voidship: driving('pilot', 'Space Craft'),
 };
 
+/**
+ * The Vehicle Hit Locations table DH2 (core p. 254, Table 7-29) and OW (core
+ * p. 276, Table 8-24) print with the same bands, read on the reversed attack roll.
+ */
+const PRINTED_VEHICLE_HIT_LOCATIONS: readonly VehicleHitLocationBand[] = [
+    { max: 20, location: 'motive' },
+    { max: 60, location: 'hull' },
+    { max: 80, location: 'weapon' },
+    { max: 100, location: 'turret' },
+];
+
+/**
+ * Attacking vehicles on a line printing a hit-location table and one chart per
+ * location (DH2, OW). OW also prints that Righteous Fury needs the hit to damage
+ * the vehicle (core p. 276); DH2 does not.
+ */
+export function locatedVehicleCombat(righteousFuryNeedsDamage: boolean): VehicleCombatRules {
+    return { hitLocations: PRINTED_VEHICLE_HIT_LOCATIONS, righteousFuryDie: '1d5', righteousFuryNeedsDamage };
+}
+
+/**
+ * Attacking vehicles on a line printing one Vehicle Critical Hit Chart and no
+ * hit-location table (RT Into the Storm p. 178; DW Rites of Battle p. 169, which
+ * adds that Righteous Fury needs the hit to damage the vehicle).
+ */
+export function singleChartVehicleCombat(righteousFuryNeedsDamage: boolean): VehicleCombatRules {
+    return { hitLocations: null, righteousFuryDie: '1d5', righteousFuryNeedsDamage };
+}
+
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
     abstract readonly id: GameSystemId;
@@ -252,6 +282,14 @@ export abstract class BaseSystemConfig {
 
     /** The Orders any PC can give its Comrade (#152); empty for a line without Comrades. */
     readonly comradeOrders: readonly ComradeOrderDef[] = [];
+
+    /**
+     * The line's printed rules for attacking vehicles (content#28): its hit-location
+     * table, if any, and its Righteous Fury rule. A line printing no vehicle combat
+     * of its own still takes facing armour and Structural Integrity loss; every hit
+     * strikes the Hull and no chart is read unless its packs carry one.
+     */
+    readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
     // ── Starting Resources ────────────────────────────────────────
 

@@ -110,6 +110,7 @@ import {
     uuid,
 } from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
+import { rollVehicleForceField, stampForceField, type VehicleTargetProfile } from './vehicle-strike.ts';
 
 /** The "Phenomena Negated" card Sanctic Purity posts when the psyker spends Fate. */
 const SANCTIC_PURITY_NEGATED_TEMPLATE = 'systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs';
@@ -778,13 +779,26 @@ export class ActionData {
             });
             const landing = this.comradeHit === null ? afterEvasion : withoutOneHitOn(afterEvasion, declaredId);
 
+            // A declared vehicle target (content#28) takes its hits on its own locations and
+            // armour facings; its trait force field rolls once against the whole attack.
+            const vehicle = this.#vehicleProfile(this.rollData.targetActor?.uuid ?? null);
+            const vehicleHits: Hit[] = [];
             for (const allocated of landing) {
+                const onVehicle = vehicle !== null && allocated.target.id === declaredId;
                 // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
-                const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget);
+                const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget, null, onVehicle ? vehicle : null);
                 hit.targetName = allocated.target.name;
+                if (onVehicle) vehicleHits.push(hit);
                 this.damageData.hits.push(hit);
             }
+            if (vehicle !== null) stampForceField(vehicleHits, await rollVehicleForceField(vehicle));
         }
+    }
+
+    /** The profile the attack path built for a vehicle it can strike (content#28), or null. */
+    #vehicleProfile(actorUuid: string | null): VehicleTargetProfile | null {
+        if (actorUuid === null || !(this.rollData instanceof WeaponRollData)) return null;
+        return this.rollData.vehicleTargets[actorUuid] ?? null;
     }
 
     /**
@@ -800,10 +814,14 @@ export class ActionData {
         const location = area.hitLocation === '' ? null : area.hitLocation;
         for (const caught of this.#areaResults()) {
             if (!caught.hit) continue;
+            // A vehicle under the template (content#28) takes the hit on its own locations.
+            const vehicle = this.#vehicleProfile(caught.actorUuid);
             // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
-            const hit = await Hit.createHit(attackData, 0, location);
+            const hit = await Hit.createHit(attackData, 0, location, vehicle);
             hit.targetName = caught.name;
             hit.targetUuid = caught.actorUuid;
+            // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
+            if (vehicle !== null) stampForceField([hit], await rollVehicleForceField(vehicle));
             damageData.hits.push(hit);
         }
     }
