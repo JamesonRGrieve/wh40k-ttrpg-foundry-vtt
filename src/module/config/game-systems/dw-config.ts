@@ -99,6 +99,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
                 { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
             ],
             optionalStep: null,
+            grantFields: ['fateThreshold'],
             packs: [
                 'dw-core-origins-chapters',
                 'dw-core-origins-specialities',

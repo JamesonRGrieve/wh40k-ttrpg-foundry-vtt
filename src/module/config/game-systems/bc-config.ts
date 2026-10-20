@@ -172,6 +172,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
                 { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
             ],
             optionalStep: null,
+            // Black Crusade has Infamy, not Fate, and no Emperor's Blessing.
+            grantFields: [],
             packs: [
                 'bc-core-origins-races',
                 'bc-core-origins-archetypes',

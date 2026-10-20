@@ -184,6 +184,8 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
                 { key: 'role', step: 'role', icon: 'fa-user-shield', descKey: 'RoleDesc', stepIndex: 3 },
             ],
             optionalStep: { key: 'elite', step: 'elite', icon: 'fa-star', descKey: 'EliteDesc', stepIndex: 4 },
+            additionalSteps: ['divination'],
+            grantFields: ['fateThreshold', 'blessedByEmperor'],
             equipmentStep: { key: 'equipment', step: 'equipment', icon: 'fa-box', descKey: 'EquipmentDesc', stepIndex: 6 },
             packs: [
                 'dh2-core-origins-homeworlds',

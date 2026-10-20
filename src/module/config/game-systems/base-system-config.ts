@@ -484,6 +484,17 @@ export abstract class BaseSystemConfig {
     // ── UI Labels ─────────────────────────────────────────────────
 
     /**
+     * Every `system.step` value this line's origin documents carry, in builder order:
+     * the core steps, the optional step, then the line's additional steps. The origin
+     * sheet's step select offers exactly these.
+     */
+    getOriginPathStepKeys(): string[] {
+        const config = this.getOriginStepConfig();
+        const steps = [...config.coreSteps, ...(config.optionalStep ? [config.optionalStep] : [])].map((def) => def.step);
+        return [...new Set([...steps, ...(config.additionalSteps ?? [])])];
+    }
+
+    /**
      * Short labels for step navigation buttons.
      * Default implementation uses i18n keys: WH40K.OriginPath.Short.{StepKey}
      * Override in subclasses only if the i18n keys are insufficient.

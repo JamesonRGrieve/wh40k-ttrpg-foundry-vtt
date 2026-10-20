@@ -50,10 +50,21 @@ export interface OriginStepDef {
     stepIndex: number;
 }
 
+/** An origin-path grant field that only some lines print (shown on the origin sheet only where declared). */
+export type OriginGrantField = 'fateThreshold' | 'blessedByEmperor';
+
 /** Full origin step configuration for a game system */
 export interface OriginStepConfig {
     coreSteps: OriginStepDef[];
     optionalStep: OriginStepDef | null;
+    /**
+     * Other `system.step` values this line's origin documents carry outside the
+     * builder's core flow (DH2 divinations, OW regiment-creation steps, …), so the
+     * origin sheet's step select offers every step the line's packs use.
+     */
+    additionalSteps?: string[];
+    /** The line-specific grant fields this line's origins carry (Fate threshold, the Emperor's Blessing). */
+    grantFields?: OriginGrantField[];
     packs: string[];
     /** Optional "Equip Acolyte" step (DH2e Stage 4) for selecting starting gear. */
     equipmentStep?: OriginStepDef | null;

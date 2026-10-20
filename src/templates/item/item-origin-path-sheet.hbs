@@ -20,7 +20,7 @@
           {{!-- Step Index Badge --}}
           <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{localize 'WH40K.ItemSheet.OriginPath.OrderTooltip'}}">
             <i class="fas fa-sort-numeric-up"></i>
-            {{localize "WH40K.ItemSheet.OriginPath.StepNumber" number=(add item.system.stepIndex 1)}}
+            {{localize "WH40K.ItemSheet.OriginPath.StepNumber" number=item.system.stepIndex}}
           </span>
         </div>
 
@@ -28,15 +28,11 @@
         <div class="tw-flex tw-gap-2 tw-mt-1">
           <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1">
             <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.StepType"}}</label>
+            {{!-- The item's own line's steps (#687); a stored step outside them stays selected. --}}
             <select name="system.step" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
-              <option value="homeWorld" {{#if (eq item.system.step "homeWorld")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepHomeWorld"}}</option>
-              <option value="birthright" {{#if (eq item.system.step "birthright")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepBirthright"}}</option>
-              <option value="lureOfTheVoid" {{#if (eq item.system.step "lureOfTheVoid")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepLureOfTheVoid"}}</option>
-              <option value="trialsAndTravails" {{#if (eq item.system.step "trialsAndTravails")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepTrialsAndTravails"}}</option>
-              <option value="motivation" {{#if (eq item.system.step "motivation")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepMotivation"}}</option>
-              <option value="career" {{#if (eq item.system.step "career")}}selected{{/if}}>{{localize "WH40K.OriginPath.StepCareer"}}</option>
-              <option value="lineage" {{#if (eq item.system.step "lineage")}}selected{{/if}}>{{localize "WH40K.OriginPath.Lineage"}}</option>
-              <option value="eliteAdvance" {{#if (eq item.system.step "eliteAdvance")}}selected{{/if}}>{{localize "WH40K.OriginPath.Elite"}}</option>
+              {{#each stepOptions as |option|}}
+              <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+              {{/each}}
             </select>
           </div>
 
@@ -135,17 +131,22 @@
               <input type="number" name="system.grants.wounds" value="{{item.system.grants.wounds}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
 
+            {{!-- Line-specific grant fields, shown where the line's config declares them (#687). --}}
+            {{#if grantFields.fateThreshold}}
             <div class="tw-flex tw-flex-col tw-gap-1">
               <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.FateThreshold"}}</label>
               <input type="number" name="system.grants.fateThreshold" value="{{item.system.grants.fateThreshold}}" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-w-20" placeholder="0" />
             </div>
+            {{/if}}
 
+            {{#if grantFields.blessedByEmperor}}
             <div class="tw-flex tw-flex-col tw-justify-end">
               <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.grants.blessedByEmperor" {{checked item.system.grants.blessedByEmperor}} />
                 <span>{{localize "WH40K.ItemSheet.OriginPath.BlessedByEmperor"}}</span>
               </label>
             </div>
+            {{/if}}
           </div>
         </div>
 

@@ -183,7 +183,7 @@ describe('#229 source stories pass their play assertions', () => {
 
     it('origin path sheet, every game line', async () => {
         const mod = await import('../src/module/applications/item/origin-path-sheet.stories.ts');
-        const markups = await runPlays([mod.Dh2HomeWorld, mod.Dh1HomeWorld, mod.RtHomeWorld, mod.BcPride, mod.OwHomeWorld, mod.DwChapter, mod.ImOrigin]);
+        const markups = await runPlays([mod.Dh2Elite, mod.Dh1HomeWorld, mod.RtHomeWorld, mod.BcArchetype, mod.OwSpeciality, mod.DwChapter, mod.ImOrigin]);
         expect(markups).toHaveLength(7);
         expect(markups.join('')).not.toContain('[object Object]');
     });

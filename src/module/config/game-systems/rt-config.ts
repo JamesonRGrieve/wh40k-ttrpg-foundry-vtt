@@ -119,6 +119,8 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
                 { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 6 },
             ],
             optionalStep: { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 },
+            additionalSteps: ['eliteAdvance'],
+            grantFields: ['fateThreshold'],
             packs: [
                 'rt-core-origins-homeworlds',
                 'rt-core-origins-birthrights',

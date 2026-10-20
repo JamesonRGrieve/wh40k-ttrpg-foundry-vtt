@@ -3,7 +3,9 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import { capitalize } from '../../utils/format.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { originStepLabel } from '../../data/shared/origin-steps.ts';
+import { originGrantFieldFlags, originStepOptions } from '../../rules/origin-step-options.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
@@ -195,14 +197,21 @@ export default class OriginPathSheet extends BaseItemSheet {
         const woundsFormula = grants.woundsFormula ?? null;
         const fateFormula = grants.fateFormula ?? null;
 
+        // The item's own line declares its steps and its line-specific grant fields (#687).
+        const line = SystemConfigRegistry.getOrNull(typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : '');
+        const stepOptions = originStepOptions(line?.getOriginPathStepKeys() ?? [], step ?? '', originStepLabel);
+        const grantFields = originGrantFieldFlags(line?.getOriginStepConfig().grantFields ?? []);
+
         Object.assign(context, {
+            stepOptions,
+            grantFields,
             origin: this.document,
             allowSelection: false,
             isSelected: false,
             name: this.document.name,
             img: this.document.img,
             step,
-            stepLabel: this._getStepLabel(step),
+            stepLabel: originStepLabel(step ?? ''),
             xpCost: system.xpCost ?? 0,
             isAdvanced: system.isAdvancedOrigin ?? false,
             description: descriptionObj?.value ?? '',
@@ -234,27 +243,6 @@ export default class OriginPathSheet extends BaseItemSheet {
         });
 
         return context;
-    }
-
-    /* -------------------------------------------- */
-    /*  Helper Methods                              */
-    /* -------------------------------------------- */
-
-    _getStepLabel(step: string | undefined): string {
-        if (step === undefined || step.length === 0) return '';
-        const labels: Record<string, string> = {
-            homeWorld: 'Home World',
-            birthright: 'Birthright',
-            lureOfTheVoid: 'Lure of the Void',
-            trialsAndTravails: 'Trials and Travails',
-            motivation: 'Motivation',
-            career: 'Career',
-            lineage: 'Lineage',
-            eliteAdvance: 'Elite Advance',
-        };
-        const key = capitalize(step);
-        const localizationKey = `WH40K.OriginPath.${key}`;
-        return game.i18n.has(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] ?? step;
     }
 
     /* -------------------------------------------- */

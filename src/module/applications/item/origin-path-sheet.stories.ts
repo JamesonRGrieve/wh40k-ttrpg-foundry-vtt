@@ -15,9 +15,13 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { originStepLabelKey } from '../../data/shared/origin-steps.ts';
+import { type OriginGrantFieldFlags, type OriginStepOption, originGrantFieldFlags, originStepOptions } from '../../rules/origin-step-options.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x0a1b2c);
@@ -40,7 +44,20 @@ interface OriginPathCtx {
     inEditMode: boolean;
     editable: boolean;
     tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+    /** What the sheet derives from the item's line (#687): the step select and the line's grant fields. */
+    stepOptions: OriginStepOption[];
+    grantFields: OriginGrantFieldFlags;
 }
+
+/** The step select and grant fields the sheet builds for `step` on `systemId`, from the line's own config (#687). */
+function lineContext(systemId: SystemId, step: string): Pick<OriginPathCtx, 'stepOptions' | 'grantFields'> {
+    const line = SystemConfigRegistry.get(systemId);
+    return {
+        stepOptions: originStepOptions(line.getOriginPathStepKeys(), step, (key) => localizeKey(originStepLabelKey(key))),
+        grantFields: originGrantFieldFlags(line.getOriginStepConfig().grantFields ?? []),
+    };
+}
+
 function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
     const id = randomId('origin', rng);
     const item = mockItem({
@@ -52,7 +69,7 @@ function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
         system: {
             step: 'homeWorld',
             stepLabel: 'Home World',
-            stepIndex: 0,
+            stepIndex: 1,
             xpCost: 0,
             isAdvancedOrigin: false,
             description: { value: '<p>Born in the press of the underhive.</p>' },
@@ -90,6 +107,7 @@ function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
             grants: { id: 'grants', tab: 'grants', group: 'primary', active: false, cssClass: '' },
             description: { id: 'description', tab: 'description', group: 'primary', active: false, cssClass: '' },
         },
+        ...lineContext('dh2', 'homeWorld'),
         ...overrides,
     };
 }
@@ -135,6 +153,8 @@ interface SystemOriginFixture {
     step: string;
     /** Localized step label rendered in the header badge. */
     stepLabel: string;
+    /** The step's 1-based builder order, as the line config and the packs store it. */
+    stepIndex: number;
     /** Source book + page, stored as the structured `system.source` reference (#229). */
     source: { book: string; page: string };
     /** Skills this step grants, shown on the grants tab. */
@@ -150,17 +170,19 @@ interface SystemOriginFixture {
  */
 const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
     dh2: {
-        name: 'Hive World',
-        step: 'homeWorld',
-        stepLabel: 'Home World',
-        source: { book: 'Dark Heresy 2e Core', page: '15' },
-        skillGrants: [{ name: 'Dodge', specialization: '', level: 'trained' }],
-        charModifier: { key: 'agility', label: 'Agility', short: 'Ag', value: 5 },
+        name: 'Psyker',
+        step: 'elite',
+        stepLabel: 'Elite Advance',
+        stepIndex: 4,
+        source: { book: 'Dark Heresy 2e Core', page: '90' },
+        skillGrants: [{ name: 'Psyniscience', specialization: '', level: 'trained' }],
+        charModifier: { key: 'willpower', label: 'Willpower', short: 'WP', value: 5 },
     },
     dh1: {
         name: 'Imperial World',
         step: 'homeWorld',
         stepLabel: 'Home World',
+        stepIndex: 1,
         source: { book: 'Dark Heresy Core', page: '18' },
         skillGrants: [{ name: 'Common Lore', specialization: 'Imperium', level: 'trained' }],
         charModifier: { key: 'willpower', label: 'Willpower', short: 'WP', value: 3 },
@@ -169,30 +191,34 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Void Born',
         step: 'homeWorld',
         stepLabel: 'Home World',
+        stepIndex: 1,
         source: { book: 'Rogue Trader Core', page: '22' },
         skillGrants: [{ name: 'Navigation', specialization: 'Stellar', level: 'known' }],
         charModifier: { key: 'willpower', label: 'Willpower', short: 'WP', value: 5 },
     },
     bc: {
-        name: 'Renegade',
-        step: 'homeWorld',
-        stepLabel: 'Pride',
+        name: 'Psyker',
+        step: 'archetype',
+        stepLabel: 'Archetype',
+        stepIndex: 2,
         source: { book: 'Black Crusade Core', page: '30' },
         skillGrants: [{ name: 'Deceive', specialization: '', level: 'trained' }],
         charModifier: { key: 'fellowship', label: 'Fellowship', short: 'Fel', value: 5 },
     },
     ow: {
-        name: 'Death World',
-        step: 'homeWorld',
-        stepLabel: 'Home World',
+        name: 'Weapon Specialist',
+        step: 'speciality',
+        stepLabel: 'Speciality',
+        stepIndex: 7,
         source: { book: 'Only War Core', page: '28' },
         skillGrants: [{ name: 'Survival', specialization: '', level: 'trained' }],
         charModifier: { key: 'toughness', label: 'Toughness', short: 'T', value: 5 },
     },
     dw: {
         name: 'Chapter — Ultramarines',
-        step: 'career',
+        step: 'chapter',
         stepLabel: 'Chapter',
+        stepIndex: 1,
         source: { book: 'Deathwatch Core', page: '24' },
         skillGrants: [{ name: 'Common Lore', specialization: 'War', level: 'trained' }],
         charModifier: { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS', value: 5 },
@@ -201,6 +227,7 @@ const PER_SYSTEM_ORIGINS: Record<SystemId, SystemOriginFixture> = {
         name: 'Hive World Origin',
         step: 'homeWorld',
         stepLabel: 'Origin',
+        stepIndex: 1,
         source: { book: 'Imperium Maledictum Core', page: '26' },
         skillGrants: [{ name: 'Awareness', specialization: '', level: 'trained' }],
         charModifier: { key: 'perception', label: 'Perception', short: 'Per', value: 5 },
@@ -224,7 +251,7 @@ function renderPerSystem(systemId: SystemId): HTMLElement {
         system: {
             step: fixture.step,
             stepLabel: fixture.stepLabel,
-            stepIndex: 0,
+            stepIndex: fixture.stepIndex,
             xpCost: 0,
             isAdvancedOrigin: false,
             description: { value: `<p>${fixture.name} origin for the ${systemId} line.</p>` },
@@ -248,6 +275,8 @@ function renderPerSystem(systemId: SystemId): HTMLElement {
         step: item.system.step,
         charModifiers: [fixture.charModifier],
         skillGrants: fixture.skillGrants.map((s) => ({ name: s.name, level: s.level })),
+        inEditMode: true,
+        ...lineContext(systemId, fixture.step),
     });
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
@@ -268,13 +297,39 @@ function makePerSystemPlay(systemId: SystemId) {
         await expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe(fixture.source.book);
         await expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]')?.value).toBe(fixture.source.page);
         await expect(canvasElement.innerHTML).not.toContain('[object Object]');
+
+        // #687: the step select offers the line's own steps, with the item's step selected, so a
+        // save keeps it; the header's "Step N" is the stored 1-based order; the Fate threshold and
+        // the Emperor's Blessing show only where the line declares them.
+        const line = SystemConfigRegistry.get(systemId);
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.step"]');
+        await expect(select?.value).toBe(fixture.step);
+        await expect([...(select?.options ?? [])].map((option) => option.value)).toEqual(line.getOriginPathStepKeys());
+        await expect(view.getByText(localizeKey('WH40K.ItemSheet.OriginPath.StepNumber').replace('{number}', String(fixture.stepIndex)))).toBeTruthy();
+        const declared = line.getOriginStepConfig().grantFields ?? [];
+        await expect(canvasElement.querySelector('input[name="system.grants.fateThreshold"]') !== null).toBe(declared.includes('fateThreshold'));
+        await expect(canvasElement.querySelector('input[name="system.grants.blessedByEmperor"]') !== null).toBe(declared.includes('blessedByEmperor'));
     };
 }
 
-export const Dh2HomeWorld: Story = {
-    name: 'Per-system — DH2e Home World (Hive World)',
+export const Dh2Elite: Story = {
+    name: 'Per-system — DH2e Elite Advance (Psyker)',
     render: () => renderPerSystem('dh2'),
     play: makePerSystemPlay('dh2'),
+};
+
+/** A stored step the line does not declare stays the selected option, so a save never rewrites it (#687). */
+export const UndeclaredStepKept: Story = {
+    name: 'Step outside the line stays selected',
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true, ...lineContext('dh2', 'lureOfTheVoid') })),
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.step"]');
+        await expect(select?.value).toBe('lureOfTheVoid');
+        await expect([...(select?.options ?? [])].map((option) => option.value)).toEqual([
+            ...SystemConfigRegistry.get('dh2').getOriginPathStepKeys(),
+            'lureOfTheVoid',
+        ]);
+    },
 };
 
 export const Dh1HomeWorld: Story = {
@@ -289,14 +344,14 @@ export const RtHomeWorld: Story = {
     play: makePerSystemPlay('rt'),
 };
 
-export const BcPride: Story = {
-    name: 'Per-system — Black Crusade Pride (Renegade)',
+export const BcArchetype: Story = {
+    name: 'Per-system — Black Crusade Archetype (Psyker)',
     render: () => renderPerSystem('bc'),
     play: makePerSystemPlay('bc'),
 };
 
-export const OwHomeWorld: Story = {
-    name: 'Per-system — Only War Home World (Death World)',
+export const OwSpeciality: Story = {
+    name: 'Per-system — Only War Speciality (Weapon Specialist)',
     render: () => renderPerSystem('ow'),
     play: makePerSystemPlay('ow'),
 };

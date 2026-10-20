@@ -270,6 +270,9 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
                 { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
             ],
             optionalStep: null,
+            // Home worlds, and the Regiment Creation steps (Core Rulebook p. 57).
+            additionalSteps: ['homeWorld', 'regimentType', 'commandingOfficer', 'trainingDoctrine', 'specialEquipmentDoctrine', 'regimentalDrawback'],
+            grantFields: ['fateThreshold'],
             packs: [
                 'ow-core-origins-homeworlds',
                 'ow-core-origins-regiment-types',

@@ -50,6 +50,7 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
                 { key: 'role', step: 'role', icon: 'fa-user-shield', descKey: 'RoleDesc', stepIndex: 3 },
             ],
             optionalStep: null,
+            grantFields: ['fateThreshold'],
             // Imperium Maledictum core creation: Origin (world) → Faction → Role.
             // The Inquisition Player's Guide packs (im-inquisition-origins-*) are
             // intentionally excluded until their place in chargen is settled.

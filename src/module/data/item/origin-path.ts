@@ -742,7 +742,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             step: this.stepLabel,
-            stepIndex: this.stepIndex + 1,
+            // `stepIndex` is already the 1-based builder order the line config uses (#687).
+            stepIndex: this.stepIndex,
         };
     }
 }
