@@ -464,7 +464,7 @@
         </p>
         <div class="tw-flex tw-flex-col tw-gap-1">
           {{#each traits.elites}}
-          <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1.5 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}}">
+          <div data-elite-uuid="{{this.uuid}}" data-owned="{{#if this.owned}}true{{else}}false{{/if}}" class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1.5 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}}">
             <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-[1_1_14rem]">
               <i class="fas fa-star tw-text-[color:var(--wh40k-color-gold)] tw-text-[0.7rem]"></i>
               <span class="tw-font-semibold tw-truncate">{{this.name}}</span>

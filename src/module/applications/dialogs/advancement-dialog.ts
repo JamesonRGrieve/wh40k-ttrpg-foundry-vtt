@@ -13,6 +13,7 @@ import type { Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from '../../rules/elite-advances.ts';
 import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
 import { grantsPsychicPowers, psykerUnlockHint } from '../../rules/psyker-unlock.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
@@ -82,6 +83,17 @@ interface AdvancementActorSystem {
  * An actor stat a prerequisite threshold reads (#675): the character DataModel stores
  * Corruption / Insanity / Infamy / rank as numbers, older actor shapes as `{ value }`.
  */
+/** The index fields the dialog reads off the line's origin-path documents (#684). */
+const LINE_ORIGIN_FIELDS = [
+    'system.step',
+    'system.gameSystem',
+    'system.gameSystems',
+    'system.grantsPsychicPowers',
+    'system.xpCost',
+    'system.prerequisites',
+    'system.description.value',
+] as const;
+
 /** An owned talent's specialisation, '' when it has none. */
 // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the Item system union; only talents carry `specialization`
 function specializationOf(system: unknown): string {
@@ -333,6 +345,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     actor: WH40KBaseActor;
     careerKey: string;
     #activeTab = 'characteristics';
+    /** This render's origin-path documents of the actor's line (#684); empty off the aptitude lines. */
+    #lineOrigins: LineOriginEntry[] = [];
     #activeDiscipline = 'all';
     #psyAvailableOnly = false;
     readonly #recentPurchases = new Set<string>();
@@ -379,21 +393,33 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * each named through `uuidNameCache`, listed as alternatives in the user's
      * language ("Psyker or Sorcerer"). Null when no such document is in the packs.
      */
-    async #psykerUnlockName(): Promise<string | null> {
-        const gameSystem = this.#getGameSystemId();
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineOriginPack(p.metadata.name, gameSystem));
-        const indexes = await Promise.all(packs.map(async (pack) => ({ pack, index: await pack.getIndex({ fields: ['system.grantsPsychicPowers'] }) })));
-        const names = new Set<string>();
-        for (const { pack, index } of indexes) {
-            for (const rawEntry of index) {
-                const entry = rawEntry as CompendiumIndexEntry;
-                const system = entry['system'];
-                if (typeof system !== 'object' || system === null || !grantsPsychicPowers(system)) continue;
-                names.add(uuidNameCache.getName(entry.uuid ?? `Compendium.${pack.metadata.id}.Item.${entry._id}`));
-            }
-        }
+    #psykerUnlockName(): string | null {
+        const names = new Set(this.#lineOrigins.filter((entry) => grantsPsychicPowers(entry.system)).map((entry) => uuidNameCache.getName(entry.uuid)));
         if (names.size === 0) return null;
         return new Intl.ListFormat(game.i18n.lang, { type: 'disjunction' }).format([...names]);
+    }
+
+    /**
+     * Every origin-path document in the line's origin packs, from every book, with the
+     * fields the dialog reads off them: the step (Elite Advances), the psychic unlock,
+     * and an elite's cost, prerequisites and description. The packs' indexes load in
+     * parallel.
+     */
+    async #loadLineOrigins(): Promise<LineOriginEntry[]> {
+        const gameSystem = this.#getGameSystemId();
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineOriginPack(p.metadata.name, gameSystem));
+        const indexes = await Promise.all(packs.map(async (pack) => ({ pack, index: await pack.getIndex({ fields: [...LINE_ORIGIN_FIELDS] }) })));
+        return indexes.flatMap(({ pack, index }) =>
+            Array.from(index, (rawEntry) => {
+                const entry = rawEntry as CompendiumIndexEntry;
+                const system = entry['system'];
+                return {
+                    uuid: entry.uuid ?? `Compendium.${pack.metadata.id}.Item.${entry._id}`,
+                    name: entry.name,
+                    system: typeof system === 'object' && system !== null ? system : {},
+                };
+            }),
+        );
     }
 
     /* -------------------------------------------- */
@@ -476,6 +502,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         context.activeTab = this.#activeTab;
 
+        // The line's origin-path documents, read once: the Elite Advances tab, its list and
+        // the psyker banner all come from them (#684).
+        this.#lineOrigins = systemConfig?.usesAptitudes === true ? await this.#loadLineOrigins() : [];
+
         const tabs = [
             { id: 'characteristics', label: 'WH40K.Advancement.Tab.Characteristics', icon: 'fa-chart-bar', active: this.#activeTab === 'characteristics' },
             { id: 'skills', label: 'WH40K.Advancement.Tab.Skills', icon: 'fa-book', active: this.#activeTab === 'skills' },
@@ -488,7 +518,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             // BC: 'Psyker' archetype; OW: 'Sanctioned Psyker' speciality) —
             // non-psykers see a locked-state message naming that unlock.
             tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
-            tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-medal', active: this.#activeTab === 'traits' });
+            // Elite Advances only for a line whose books print some (#684): DH2 does; OW and BC do not.
+            if (lineHasEliteAdvances(this.#lineOrigins, this.#getGameSystemId())) {
+                tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-medal', active: this.#activeTab === 'traits' });
+            }
         }
         context.tabs = tabs;
 
@@ -537,7 +570,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             context['isPsyker'] = isPsyker;
             context['psykerUnlockHint'] = psykerUnlockHint(
                 systemConfig.psykerUnlock,
-                await this.#psykerUnlockName(),
+                this.#psykerUnlockName(),
                 tabs,
                 (key) => game.i18n.localize(key),
                 (key, data) => game.i18n.format(key, data),
@@ -552,7 +585,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 }
                 context['psychic'] = psychic;
             }
-            context['traits'] = await this.#prepareTraitPanel();
+            context['traits'] = this.#prepareTraitPanel();
         }
 
         context.recentPurchases = [...this.#recentPurchases];
@@ -1208,7 +1241,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         };
     }
 
-    async #prepareTraitPanel(): Promise<PreparedTraitPanel> {
+    #prepareTraitPanel(): PreparedTraitPanel {
         const actor = this.actor;
         const ownedTraits = actor.items.filter((i) => i.type === 'trait');
 
@@ -1242,35 +1275,17 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         list.sort((a, b) => a.name.localeCompare(b.name));
 
         // Elite Advance tiles
+        // Every Elite Advance the line's books print (#684), each owned one matched by the
+        // compendium document it came from, so a renamed owned elite stays owned. One tile per
+        // name where a book reprints one, keeping the copy the character owns.
         const available = getAvailableXP(this.actor);
-        const gameSystem = this.#getGameSystemId();
-        const elitePacks: Record<string, string[]> = {
-            dh2: ['dh2-core-origins-elite-advances'],
-        };
-        const wanted = elitePacks[gameSystem] ?? [];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
-
-        const ownedElites = new Set(
-            actor.items.filter((i) => i.isOriginPath && (i.system as { step?: string }).step === 'elite').map((i) => i.name.toLowerCase()),
-        );
-
-        const elitesByName = new Map<string, PreparedEliteAdvance>();
-        for (const pack of packs) {
-            // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
-            const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
-            for (const rawEntry of index) {
-                const entry = rawEntry as CompendiumIndexEntry;
-                const eliteSys = entry['system'] as
-                    | { step?: string; xpCost?: number; prerequisites?: Prerequisite[]; description?: { value?: string } }
-                    | null
-                    | undefined;
-                if (eliteSys?.step !== 'elite') continue;
-                const key = entry.name.toLowerCase();
-                if (elitesByName.has(key)) continue;
-                const owned = ownedElites.has(key);
-                /* eslint-disable @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; xpCost/description/value may be absent at runtime */
-                const descHtml = eliteSys?.description?.value ?? '';
+        const ownedSources = ownedEliteSources(actor.items);
+        const elites = uniqueByName(eliteEntries(this.#lineOrigins, this.#getGameSystemId()), (candidate) => ownedSources.has(candidate.uuid)).map(
+            (entry): PreparedEliteAdvance => {
+                // Index fields not every elite carries yet, so each is optional.
+                const eliteSys = entry.system as { xpCost?: number; prerequisites?: Prerequisite[]; description?: { value?: string } };
+                const owned = ownedSources.has(entry.uuid);
+                const descHtml = eliteSys.description?.value ?? '';
                 // The authored `system.xpCost` is authoritative. It previously was not
                 // read at all: the cost was SCRAPED out of the description HTML, and
                 // since no elite item carried a matching string, every one of them fell
@@ -1279,11 +1294,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 // (750). Rewording a description could also silently change a price.
                 // The scrape is kept only as a fallback for content that has not been
                 // authored yet, and it must stay below the authored value.
-                const authored = eliteSys?.xpCost;
+                const authored = eliteSys.xpCost;
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsc types the capture group `string | undefined`
                 const scraped = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
                 const cost = typeof authored === 'number' && authored > 0 ? authored : scraped;
-                /* eslint-enable @typescript-eslint/no-unnecessary-condition */
                 // Short blurb: first <p> after <h2>
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
                 /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regex capture groups may be undefined */
@@ -1295,12 +1310,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 // affordability alone — a 35-Willpower acolyte could buy Astropath.
                 // The gates are now authored on the item and checked by the live
                 // validator (#514).
-                /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: eliteSys is a cast Record; prerequisites may be absent on content not yet authored */
-                const prereqs = eliteSys?.prerequisites ?? [];
+                const prereqs = eliteSys.prerequisites ?? [];
                 const unmet = prereqs.length > 0 ? checkPrerequisites(this.actor, prereqs).unmet : [];
-                elitesByName.set(key, {
+                return {
                     id: `elite:${entry.name}`,
-                    uuid: entry.uuid ?? '',
+                    uuid: entry.uuid,
                     name: entry.name,
                     summary,
                     cost,
@@ -1308,10 +1322,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     canPurchase: !owned && available >= cost && unmet.length === 0,
                     cantAfford: !owned && available < cost,
                     unmet,
-                });
-            }
-        }
-        const elites = [...elitesByName.values()];
+                };
+            },
+        );
         elites.sort((a, b) => a.name.localeCompare(b.name));
         elites.forEach((e, i) => {
             e.index = i;
@@ -1963,7 +1976,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     async #purchaseEliteAt(advanceIndex: number): Promise<void> {
-        const panel = await this.#prepareTraitPanel();
+        const panel = this.#prepareTraitPanel();
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: elites may be absent when actor has no trait panel data
         const entry = panel.elites?.find((e) => e.index === advanceIndex);
         if (!entry || entry.owned) return;
@@ -1990,6 +2003,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
                 itemData['_id'] = foundry.utils.randomID();
                 itemData['type'] = 'originPath';
+                // Linked to its compendium document, which is how the dialog knows it is owned (#684).
+                itemData['_stats'] = { ...(itemData['_stats'] as object | undefined), compendiumSource: entry.uuid };
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry createEmbeddedDocuments returns plain Document refs
                 const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData] as never[])) as unknown as Item[];
 

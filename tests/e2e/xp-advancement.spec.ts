@@ -453,13 +453,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 }
                 await snap(page, `advancement-psychic-locked-${line}`, { selector: `#${opened.appId} :has(> div > [data-psyker-unlock-hint])` });
             } finally {
-                await page.evaluate(async (appId) => {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
-                    const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
-                        .applications.instances;
-                    await apps.get(appId)?.close();
-                }, opened.appId);
-                await deleteActor(page, opened.actorId);
+                await closeAdvancementDialog(page, opened);
             }
         });
     }
@@ -480,17 +474,64 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
                 await expect(dialog.locator('[data-psyker-unlock-hint]')).toHaveCount(0);
                 await snap(page, `advancement-psychic-unlocked-${line}`, { selector: `#${opened.appId}` });
             } finally {
-                await page.evaluate(async (appId) => {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
-                    const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
-                        .applications.instances;
-                    await apps.get(appId)?.close();
-                }, opened.appId);
-                await deleteActor(page, opened.actorId);
+                await closeAdvancementDialog(page, opened);
+            }
+        });
+    }
+
+    // #684: the Elite Advances tab lists every elite the line's books print, found in its origin
+    // packs, and marks a renamed owned elite Taken by its compendium source. A line whose books
+    // print none (OW, BC) has no tab.
+    test('dh2: the Elite Advances tab lists elites from every book, a renamed owned one Taken (#684)', async ({ page }) => {
+        await joinOrSkip(page);
+        const opened = await openAdvancementDialog(page, 'dh2', {
+            pack: 'wh40k-rpg.dh2-core-origins-elite-advances',
+            name: 'Psyker',
+            rename: 'Renamed Psyker Advance (#684)',
+        });
+        try {
+            const dialog = page.locator(`#${opened.appId}`);
+            await dialog.locator('[data-action="switchTab"][data-tab="traits"]').click();
+            const tiles = dialog.locator('[data-elite-uuid]');
+            await expect(tiles.first()).toBeVisible();
+            const books = await tiles.evaluateAll((els) => [
+                ...new Set(els.map((el) => /Compendium\.wh40k-rpg\.dh2-([a-z0-9]+)-origins-/.exec(el.getAttribute('data-elite-uuid') ?? '')?.[1] ?? '')),
+            ]);
+            expect(books.sort(), 'elites from every DH2 book that prints them').toEqual(['beyond', 'core', 'within']);
+            await expect(dialog.locator('[data-elite-uuid*="dh2-core-origins-elite-advances"][data-owned="true"]')).toContainText('Psyker');
+            await expect(dialog.locator('[data-owned="true"]')).toHaveCount(1);
+            await snap(page, 'advancement-elite-advances-dh2', { selector: `#${opened.appId}` });
+        } finally {
+            await closeAdvancementDialog(page, opened);
+        }
+    });
+
+    for (const line of ['ow', 'bc']) {
+        test(`${line}: no Elite Advances tab, the line's books print none (#684)`, async ({ page }) => {
+            await joinOrSkip(page);
+            const opened = await openAdvancementDialog(page, line);
+            try {
+                const dialog = page.locator(`#${opened.appId}`);
+                await expect(dialog.locator('[data-action="switchTab"][data-tab="psychic"]')).toBeVisible();
+                await expect(dialog.locator('[data-action="switchTab"][data-tab="traits"]')).toHaveCount(0);
+                await snap(page, `advancement-tabs-no-elites-${line}`, { selector: `#${opened.appId} nav:has([data-action="switchTab"])` });
+            } finally {
+                await closeAdvancementDialog(page, opened);
             }
         });
     }
 });
+
+/** Close the dialog and delete its probe character. */
+async function closeAdvancementDialog(page: Page, opened: { actorId: string; appId: string }): Promise<void> {
+    await page.evaluate(async (appId) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+        const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry.applications
+            .instances;
+        await apps.get(appId)?.close();
+    }, opened.appId);
+    await deleteActor(page, opened.actorId);
+}
 
 /** An origin-path compendium document to give the character before the dialog opens, under a new name. */
 interface OwnedOrigin {
@@ -512,7 +553,7 @@ async function openAdvancementDialog(page: Page, line: string, origin: OwnedOrig
             }
             interface PackLike {
                 getIndex: () => Promise<Array<{ _id: string; name: string }>>;
-                getDocument: (id: string) => Promise<{ toObject: () => { name: string } } | null>;
+                getDocument: (id: string) => Promise<{ uuid: string; toObject: () => { name: string } } | null>;
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const g = globalThis as unknown as {
@@ -525,7 +566,8 @@ async function openAdvancementDialog(page: Page, line: string, origin: OwnedOrig
                 const entry = (await pack?.getIndex())?.find((e) => e.name === owned.name);
                 const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
                 if (doc === null || doc === undefined) throw new Error(`${owned.name} not in ${owned.pack}`);
-                items.push({ ...doc.toObject(), name: owned.rename });
+                // Linked to its compendium document, as a purchase or a drop links it (#684).
+                items.push({ ...doc.toObject(), name: owned.rename, _stats: { compendiumSource: doc.uuid } });
             }
             const actor = await g.Actor.create({ name: `e2e-681 ${gameSystem} Acolyte`, type: `${gameSystem}-character`, system: { gameSystem }, items });
             if (actor === null) throw new Error('actor not created');
