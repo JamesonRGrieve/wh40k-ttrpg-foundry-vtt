@@ -29,6 +29,12 @@ const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
 };
 
 const LINE_KEYS = new Set<SupportedLineKey>(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow', 'im']);
+/**
+ * Keys whose acquisition-currency record holds one object per line
+ * (`cost: { dh2: { influence, … }, rt: { profitFactor, … } }`). Such a record is walked,
+ * never collapsed to one line. An XP cost under the same key is a plain line container
+ * (see {@link isXpLineMap}).
+ */
 const SHARED_LINE_OBJECT_KEYS = new Set(['cost']);
 
 /**
@@ -36,7 +42,8 @@ const SHARED_LINE_OBJECT_KEYS = new Set(['cost']);
  * null branch falls back to another line's value like a missing one; a grenade's rider
  * cannot, because a line that prints no rider for a shared grenade document (Black
  * Crusade's Rad Grenade, whose radiation is its Irradiated quality) must not inherit
- * another line's.
+ * another line's. A per-line XP map's null is the same (content#30): a line whose book
+ * prints no XP value is priced by its own rule, not another line's printing.
  */
 const LINE_NULL_MEANS_NONE_KEYS = new Set(['rider']);
 
@@ -104,6 +111,31 @@ export function isLineVariantContainer(value: unknown): value is Partial<Record<
     if (!isPlainObject(value)) return false;
     const keys = Object.keys(value);
     return keys.length > 0 && keys.every((key) => LINE_KEYS.has(key as SupportedLineKey));
+}
+
+/**
+ * A per-line XP map: a line container whose branches are XP numbers or null, with at
+ * least one number (`cost: { ow: 300, dh2: 0 }` on a talent, `{ dh2: 200, ow: 200 }` on
+ * a psychic power). It resolves to the active line like any container; it is not an
+ * acquisition-currency record, whose branches are objects.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: type guard accepts unknown input from untyped item system data
+export function isXpLineMap(value: unknown): value is Partial<Record<SupportedLineKey, number | null>> {
+    if (!isLineVariantContainer(value)) return false;
+    const branches = Object.values(value);
+    return branches.some((branch) => typeof branch === 'number') && branches.every((branch) => branch === null || typeof branch === 'number');
+}
+
+/** Is `value` under `key` a per-line currency record, walked rather than collapsed? */
+// eslint-disable-next-line no-restricted-syntax -- boundary: value is untyped item system data
+function isSharedLineObject(key: string, value: unknown): boolean {
+    return SHARED_LINE_OBJECT_KEYS.has(key) && !isXpLineMap(value);
+}
+
+/** Does an explicit null branch under `key` mean "this line prints none"? */
+// eslint-disable-next-line no-restricted-syntax -- boundary: value is untyped item system data
+function lineNullMeansNone(key: string, value: unknown): boolean {
+    return LINE_NULL_MEANS_NONE_KEYS.has(key) || (SHARED_LINE_OBJECT_KEYS.has(key) && isXpLineMap(value));
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: returns unknown variant data from untyped item system
@@ -243,12 +275,12 @@ export function materializeItemVariants(
 
     for (const [key, rawValue] of Object.entries(source)) {
         const nextPath = [...path, key];
-        if (SHARED_LINE_OBJECT_KEYS.has(key)) {
+        if (isSharedLineObject(key, rawValue)) {
             if (isPlainObject(rawValue)) materializeItemVariants(rawValue, lineKey, nextPath, fallbackLines);
             continue;
         }
 
-        if (LINE_NULL_MEANS_NONE_KEYS.has(key) && isLineVariantContainer(rawValue) && rawValue[lineKey] === null) {
+        if (lineNullMeansNone(key, rawValue) && isLineVariantContainer(rawValue) && rawValue[lineKey] === null) {
             source[key] = null;
             continue;
         }
@@ -325,7 +357,7 @@ export function lineVariantPaths(system: unknown, path: readonly string[] = []):
     const paths: string[][] = [];
     for (const [key, value] of Object.entries(system)) {
         const nextPath = [...path, key];
-        if (!SHARED_LINE_OBJECT_KEYS.has(key) && isLineVariantContainer(value)) paths.push(nextPath);
+        if (!isSharedLineObject(key, value) && isLineVariantContainer(value)) paths.push(nextPath);
         else paths.push(...lineVariantPaths(value, nextPath));
     }
     return paths;
@@ -518,6 +550,20 @@ export function getMaterializedItemSource(item: VariantItemLike): Record<string,
     return materializeItemVariants(source, lineKey);
 }
 
+/**
+ * A raw (unmigrated) document's `cost` resolved to `lineKey`, exactly as its DataModel
+ * would see it: a per-line XP map collapses (an explicit null stays null), a currency
+ * record is left as is. For callers that read compendium index entries, which never
+ * pass through `_migrateData` (the Advancement Dialog's power list, content#30).
+ * @param cost      The raw `system.cost`.
+ * @param source    The raw `system.source` map, which names the raw-provenance fallback lines.
+ * @param lineKey   The line to resolve for.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: raw compendium index values are untyped until the caller narrows them
+export function costForLine(cost: unknown, source: unknown, lineKey: SupportedLineKey): unknown {
+    return materializeItemVariants(deepClone({ cost, source }), lineKey)['cost'];
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: submitData is untyped form submission data
 export function remapSubmitDataToVariantPaths(item: VariantItemLike, submitData: Record<string, unknown>): Record<string, unknown> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is untyped Foundry data
@@ -551,7 +597,7 @@ function remapRelativePath(root: Record<string, unknown>, relativePath: string, 
     let currentField = '';
 
     for (const segment of segments) {
-        if (isLineVariantContainer(cursor) && !SHARED_LINE_OBJECT_KEYS.has(currentField)) {
+        if (isLineVariantContainer(cursor) && !isSharedLineObject(currentField, cursor)) {
             mapped.push(lineKey);
             cursor = cursor[lineKey] ?? firstDefinedVariant(cursor);
         }

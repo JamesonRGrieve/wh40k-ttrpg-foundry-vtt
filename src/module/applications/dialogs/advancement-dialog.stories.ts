@@ -12,6 +12,8 @@ import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { renderSheet, clickAction } from '../../../../stories/test-helpers';
+import { psychicPowerCharge, psychicPowerXpCost } from '../../rules/xp-costs.ts';
+import { costForLine, type SupportedLineKey } from '../../utils/item-variant-utils.ts';
 
 interface Tab {
     id: string;
@@ -44,6 +46,25 @@ interface Args {
     skills: never[];
     talents: never[];
     recentPurchases: string[];
+    isPsyker?: boolean;
+    psychic?: PsychicPanel;
+}
+
+interface PsychicRow {
+    name: string;
+    displayName: string;
+    prCost: number;
+    cost: number;
+    index: number;
+    canPurchase: boolean;
+}
+
+interface PsychicPanel {
+    psyAdvance: { currentRating: number; nextRating: number; cost: number; canPurchase: boolean; cantAfford: boolean; maxed: boolean; offered: boolean };
+    disciplines: Array<{ label: string; items: PsychicRow[]; tiers: Array<{ prCost: number; label: string; accessible: boolean; items: PsychicRow[] }> }>;
+    chips: never[];
+    availableOnly: boolean;
+    hasBlocked: boolean;
 }
 
 const CAREER_TABS: Tab[] = [
@@ -180,3 +201,67 @@ export const SystemBC = perSystemStory('bc');
 export const SystemOW = perSystemStory('ow');
 export const SystemDW = perSystemStory('dw');
 export const SystemIM = perSystemStory('im');
+
+// ── Printed XP per line (content#30) ──────────────────────────────────────────
+//
+// A power shared across lines prints a different XP value in each book:
+// Precognition is 400 xp in DH2 core and 100 xp in BC core, and DH1 prints none
+// (its powers are bought from career tables). The compendium index carries the
+// per-line map raw; the dialog resolves it to the actor's line before charging.
+
+/** Raw index entries as the packs author them: the per-line cost map and its source lines. */
+const SHARED_POWERS = [
+    {
+        name: 'Precognition',
+        cost: { dh2: 400, bc: 100, dh1: null },
+        source: { dh2: { provenance: 'raw' }, bc: { provenance: 'raw' }, dh1: { provenance: 'raw' } },
+    },
+    {
+        name: 'Cauterise',
+        cost: 300,
+        source: { dh2: { provenance: 'raw' } },
+    },
+] as const;
+
+/** The psychic tab as the dialog prepares it for `line`, each power charged through the real resolver. */
+function pricedPsychicPanel(line: SupportedLineKey): PsychicPanel {
+    const items = SHARED_POWERS.map((power, index) => ({
+        name: power.name,
+        displayName: power.name,
+        prCost: 1,
+        cost: psychicPowerCharge(psychicPowerXpCost(costForLine(power.cost, power.source, line)), 1),
+        index,
+        canPurchase: true,
+    }));
+    return {
+        psyAdvance: { currentRating: 2, nextRating: 3, cost: 600, canPurchase: true, cantAfford: false, maxed: false, offered: true },
+        disciplines: [{ label: 'Telepathy', items, tiers: [{ prCost: 1, label: 'PR 1', accessible: true, items }] }],
+        chips: [],
+        availableOnly: false,
+        hasBlocked: false,
+    };
+}
+
+function printedXpStory(line: 'dh2' | 'bc', expected: Record<string, number>): Story {
+    return {
+        name: `Psychic powers at printed XP — ${line.toUpperCase()}`,
+        args: {
+            _gameSystemId: line,
+            activeTab: 'psychic',
+            isPsyker: true,
+            tabs: [...CAREER_TABS, { id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: true }],
+            psychic: pricedPsychicPanel(line),
+        },
+        play: async ({ canvasElement }) => {
+            const buttons = Array.from(canvasElement.querySelectorAll<HTMLButtonElement>('[data-action="purchaseAdvance"][data-type="psychic-power"]'));
+            const charged = Object.fromEntries(buttons.map((button) => [SHARED_POWERS[Number(button.dataset['index'])]?.name, button.textContent.trim()]));
+            await expect(charged).toEqual(
+                Object.fromEntries(Object.entries(expected).map(([name, xp]) => [name, expect.stringMatching(new RegExp(`^${xp}\\b`))])),
+            );
+        },
+    };
+}
+
+// Cauterise is DH2-only, so a BC psyker sees it at the same printed 300.
+export const PsychicPrintedXpBC = printedXpStory('bc', { Precognition: 100, Cauterise: 300 });
+export const PsychicPrintedXpDH2 = printedXpStory('dh2', { Precognition: 400, Cauterise: 300 });

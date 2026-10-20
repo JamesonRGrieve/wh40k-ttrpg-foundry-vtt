@@ -13,7 +13,7 @@ import { expect, test } from './lib/test';
  * stray acquisition-currency record (which some pack documents carry under
  * `cost`) loads as "not authored" rather than failing validation.
  *
- * Captures: game__psychic-xp-cost-before.png (empty input, no badge) and
+ * Captures: game__psychic-xp-cost-before.png (empty input, badge reads "—") and
  * game__psychic-xp-cost-after-reload.png (300 in the input and the XP badge).
  */
 
@@ -94,7 +94,8 @@ test('a psychic power XP cost typed on its sheet persists across a reload (#642)
 
     const sheetId = await openSheet(page);
     await expect(page.locator(`#${sheetId} [name="system.cost"]`)).toHaveValue('');
-    await expect(page.locator(`#${sheetId} .fa-gem`)).toHaveCount(0);
+    // The XP badge is always shown (#659); an unset cost reads "—".
+    await expect(page.locator(`#${sheetId} [data-field="xp-cost"]`)).toHaveText('—');
     await snapSheet(page, sheetId, 'psychic-xp-cost-before');
 
     await page.evaluate(
@@ -116,8 +117,8 @@ test('a psychic power XP cost typed on its sheet persists across a reload (#642)
 
     const reopened = await openSheet(page);
     await expect(page.locator(`#${reopened} [name="system.cost"]`)).toHaveValue(VALUE);
-    // The header shows the printed cost as an XP badge.
-    await expect(page.locator(`#${reopened} .fa-gem`)).toHaveCount(1);
+    // The header's XP badge shows the printed cost.
+    await expect(page.locator(`#${reopened} [data-field="xp-cost"]`)).toHaveText(VALUE);
     await snapSheet(page, reopened, 'psychic-xp-cost-after-reload');
     await closeSheet(page);
 

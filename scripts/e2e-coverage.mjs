@@ -679,6 +679,11 @@ recordDimension('origin-prompt.flow', covered['origin-prompt.flow'], ORIGIN_PROM
 const PER_LINE_SHEET_THEME_FLOWS = ['dh2-sheet-reads-its-line', 'rt-sheet-reads-its-line', 'lines-theme-differently', 'rt-frames-in-void'];
 recordDimension('per-line-sheet-theme.flow', covered['per-line-sheet-theme.flow'], PER_LINE_SHEET_THEME_FLOWS);
 
+// Psychic powers charge the XP their own line prints (content#30), tests/e2e/psychic-printed-xp.spec.ts.
+// Keep in sync with PSYCHIC_PRINTED_XP_FLOWS there.
+const PSYCHIC_PRINTED_XP_FLOWS = ['dh2-charges-dh2-printing', 'bc-charges-bc-printing', 'cauterise-carries-300'];
+recordDimension('psychic-printed-xp.flow', covered['psychic-printed-xp.flow'], PSYCHIC_PRINTED_XP_FLOWS);
+
 // The weapon sheet's Penetration tile (#614), tests/e2e/weapon-sheet-penetration.spec.ts.
 // Keep in sync with WEAPON_PENETRATION_FLOWS there.
 const WEAPON_PENETRATION_FLOWS = ['label-fits-default-width', 'label-fits-min-width', 'banded-weapon-shows-band-penetration', 'own-penetration-unchanged'];

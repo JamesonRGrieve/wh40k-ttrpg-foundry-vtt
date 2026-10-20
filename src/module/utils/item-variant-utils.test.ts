@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
     canonicalSystemForLine,
+    costForLine,
     inferActiveGameLine,
     isLineVariantContainer,
+    isXpLineMap,
     lineVariantPaths,
     lineVariantSourceOf,
     materializeItemVariants,
@@ -122,6 +124,66 @@ describe('materializeItemVariants', () => {
     });
 });
 
+describe('materializeItemVariants — XP cost (content#30)', () => {
+    const SOURCE = { dh2: { provenance: 'raw' }, ow: { provenance: 'raw' }, rt: { provenance: 'raw' } };
+    /** An authored cost: XP per line, or a currency record per line. */
+    type AuthoredCost = Partial<Record<string, number | null | Record<string, number | null | Record<string, null>>>>;
+    const power = (cost: AuthoredCost): SystemSource => ({ source: structuredClone(SOURCE), cost });
+
+    it("collapses a per-line XP map to the active line's printed value", () => {
+        expect(materializeItemVariants(power({ dh2: 200, ow: 300 }), 'ow')['cost']).toBe(300);
+        expect(materializeItemVariants(power({ dh2: 200, ow: 300 }), 'dh2')['cost']).toBe(200);
+        // A talent's 0 is a printed value, not an absence.
+        expect(materializeItemVariants(power({ ow: 300, dh2: 0 }), 'dh2')['cost']).toBe(0);
+    });
+
+    it("reads an explicit null as 'this line prints none', never another line's price", () => {
+        expect(materializeItemVariants(power({ dh2: 200, rt: null }), 'rt')['cost']).toBeNull();
+    });
+
+    it('lets a line with no branch at all inherit the raw printing', () => {
+        expect(materializeItemVariants(power({ dh2: 200, rt: null }), 'bc')['cost']).toBe(200);
+    });
+
+    it('walks an acquisition-currency record without collapsing it', () => {
+        const currency = { dh2: { influence: 5, homebrew: { throneGelt: null } }, rt: { profitFactor: 2 } };
+        expect(materializeItemVariants(power(structuredClone(currency)), 'rt')['cost']).toEqual(currency);
+    });
+
+    it('leaves a non-cost numeric per-line field on the ordinary fallback', () => {
+        const source = { source: structuredClone(SOURCE), testModifier: { dh2: 20, rt: null } };
+        expect(materializeItemVariants(source, 'rt')['testModifier']).toBe(20);
+    });
+});
+
+describe('isXpLineMap', () => {
+    it('accepts a line container of XP numbers and nulls with at least one number', () => {
+        expect(isXpLineMap({ dh2: 200, ow: null })).toBe(true);
+    });
+
+    it('rejects currency records, all-null maps and non-line objects', () => {
+        expect(isXpLineMap({ dh2: { influence: null } })).toBe(false);
+        expect(isXpLineMap({ dh2: null, rt: null })).toBe(false);
+        expect(isXpLineMap({ throneGelt: 50 })).toBe(false);
+        expect(isXpLineMap(300)).toBe(false);
+    });
+});
+
+describe('costForLine (content#30)', () => {
+    const source = { dh2: { provenance: 'raw' }, ow: { provenance: 'raw' } };
+
+    it('resolves a raw index cost to the requested line without touching the input', () => {
+        const cost = { dh2: 200, ow: 300 };
+        expect(costForLine(cost, source, 'ow')).toBe(300);
+        expect(cost).toEqual({ dh2: 200, ow: 300 });
+    });
+
+    it('passes a plain number and a currency record through', () => {
+        expect(costForLine(300, source, 'dh2')).toBe(300);
+        expect(costForLine({ dh2: { influence: null } }, source, 'dh2')).toEqual({ dh2: { influence: null } });
+    });
+});
+
 describe('inferActiveGameLine', () => {
     afterEach(() => {
         vi.unstubAllGlobals();
@@ -186,7 +248,8 @@ describe('materializeOwnedItemSources', () => {
         expect(actorSource.items[0]?.system).toEqual({
             range: '15 metres x Psy Rating',
             focusPower: { characteristic: 'willpower', modifier: 10 },
-            cost: { bc: 200, dh1: 300 },
+            // The BC owner pays BC's printed XP (content#30).
+            cost: 200,
             sustained: false,
         });
         vi.unstubAllGlobals();
@@ -207,6 +270,10 @@ describe('lineVariantPaths', () => {
             ['cost', 'dh2'],
             ['nested', 'inner'],
         ]);
+    });
+
+    it('lists a per-line XP cost as one container (content#30)', () => {
+        expect(lineVariantPaths(fireBoltPristine())).toEqual([['range'], ['focusPower'], ['cost']]);
     });
 });
 

@@ -16,6 +16,7 @@ import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
+import { costForLine, normalizeGameLineKey } from '../../utils/item-variant-utils.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
@@ -1034,16 +1035,19 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // to display names. First pass: index every entry across all packs
         // into a uuid→name map. Second pass: build the prepared power list.
         // `cost` is the raw, unmigrated index value: an XP number, a per-line map or a
-        // stray currency record, narrowed by `psychicPowerXpCost` (#642).
+        // stray currency record. It is resolved to the actor's line (content#30), then
+        // narrowed by `psychicPowerXpCost` (#642).
         type RawEntry = CompendiumIndexEntry & {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex returns the raw source value of `system.cost`, narrowed by the psychicPowerXpCost guard below
-            system?: { prCost?: number; cost?: unknown; discipline?: string; requires?: string[] };
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex returns the raw source values of `system.cost` and `system.source`, resolved by costForLine and narrowed by the psychicPowerXpCost guard below
+            system?: { prCost?: number; cost?: unknown; source?: unknown; discipline?: string; requires?: string[] };
             uuid?: string;
         };
         const rawEntries: RawEntry[] = [];
         for (const pack of packs) {
             // eslint-disable-next-line no-await-in-loop -- Foundry compendium pack indexes must be loaded sequentially; cannot be parallelised safely
-            const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.cost', 'system.requires'] });
+            const index = await pack.getIndex({
+                fields: ['name', 'type', 'system.discipline', 'system.prCost', 'system.cost', 'system.source', 'system.requires'],
+            });
             for (const rawEntry of index) {
                 const entry = rawEntry as RawEntry;
                 if (entry.type !== 'psychicPower') continue;
@@ -1056,6 +1060,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (typeof e.uuid === 'string' && e.uuid.length > 0) uuidToName.set(e.uuid, e.name);
         }
 
+        const line = normalizeGameLineKey(gameSystem);
         const powers: PreparedPsychicPower[] = [];
         for (const entry of rawEntries) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
@@ -1063,9 +1068,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const prCost = entrySys.prCost ?? 1;
             // The printed XP cost when the power carries one, else the PR heuristic —
             // the same charge the DataModel's derived-spend calc counts (rules/xp-costs.ts,
-            // #240, #642). The raw index is unmigrated, so a per-line map or a stray
-            // currency record reads as "not authored" here.
-            const cost = psychicPowerCharge(psychicPowerXpCost(entrySys.cost), prCost);
+            // #240, #642). The raw index is unmigrated, so a per-line XP map is resolved
+            // to the actor's line here; a stray currency record reads as "not authored".
+            const cost = psychicPowerCharge(psychicPowerXpCost(line === null ? entrySys.cost : costForLine(entrySys.cost, entrySys.source, line)), prCost);
             const owned = ownedPowers.has(entry.name.toLowerCase());
             const prGate = prCost > currentRating;
             const discipline = normalizeDiscipline(entrySys.discipline);
