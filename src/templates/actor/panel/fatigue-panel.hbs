@@ -35,7 +35,8 @@
     {{else if (gt system.fatigue.value 0)}}
     <div class="tw-text-warning tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-mt-1">
         <i class="{{concat 'fas fa-exclamation-triangle'}}"></i>
-        <span>{{localize "WH40K.Status.Fatigue.Fatigued"}}</span>
+        {{!-- What Fatigue does under the line's model (#114): halving (DH1 / DH2), a flat −10, or IM's condition. --}}
+        <span data-fatigue-warning="{{or system.fatigue.model 'flat'}}">{{localize (concat "WH40K.Status.Fatigue.Fatigued." (or system.fatigue.model "flat"))}}</span>
     </div>
     {{/if}}
 
@@ -76,7 +77,7 @@
               title=(localize "WH40K.VitalInfoCard.FatigueRulesTitle")
               accent="warn"
               wrapperClass="tw-mt-4"}}
-            <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueAnyTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueAnyDesc"}}</p>
+            <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueAnyTitle"}}</strong> {{localize (concat "WH40K.VitalInfoCard.FatigueAnyDesc." (or system.fatigue.model "flat"))}}</p>
             <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueExceedsTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueExceedsDesc"}}</p>
             <p class="tw-text-xs tw-m-0"><strong>{{localize "WH40K.VitalInfoCard.FatigueRecoveryTitle"}}</strong> {{localize "WH40K.VitalInfoCard.FatigueRecoveryDesc"}}</p>
         {{/systems/wh40k-rpg/templates/actor/partial/vital-info-card.hbs}}

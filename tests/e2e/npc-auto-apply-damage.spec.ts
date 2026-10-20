@@ -29,6 +29,20 @@ import { expect, test } from './lib/test';
 const UNARMED_UUID = 'Compendium.wh40k-rpg.im-core-items-weapons.Item.jfGqgHO39b7wpwoK';
 const OWN = '[data-wh40k-hook="grapple-panel"] [data-wh40k-hook="grapple-section"][data-grapple-own="true"]';
 
+/** The held NPC's armour (simple mode) and Toughness Bonus, and the controller's Strength Bonus. */
+const NPC_AP = 3;
+const NPC_TB = 3;
+const CONTROLLER_SB = 9;
+
+/** The total of a damage card's damage roll (the dice and the formula's own terms, before any added modifier row). */
+async function damageRollTotal(page: Page, messageId: string): Promise<number> {
+    return page.evaluate((id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
+        const g = globalThis as unknown as { game: { messages: { get: (i: string) => { rolls: Array<{ total: number }> } | undefined } } };
+        return g.game.messages.get(id)?.rolls.at(0)?.total ?? Number.NaN;
+    }, messageId);
+}
+
 /** Feed Foundry's dice these d100 faces in order (then restore the RNG once they are drawn). */
 async function fixD100(page: Page, faces: number[]): Promise<void> {
     await page.evaluate((queue) => {
@@ -83,7 +97,8 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
                 prototypeToken: { actorLink: true },
                 system: {
                     gameSystem: 'dh2',
-                    characteristics: { strength: { base: 40, advance: 0, modifier: 0 }, agility: { base: 40, advance: 0, modifier: 0 } },
+                    // Strength 90 (SB 9): the unarmed 1d5 − 3 + SB deals 7–11, so it always gets past the NPC's soak of 6.
+                    characteristics: { strength: { base: 90, advance: 0, modifier: 0 }, agility: { base: 40, advance: 0, modifier: 0 } },
                 },
             },
             compendiumItems: [{ uuid: UNARMED_UUID }],
@@ -94,9 +109,11 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
                 type: 'dh2-npc',
                 img: 'icons/svg/mystery-man.svg',
                 prototypeToken: { actorLink: true },
+                // Toughness 35 (TB 3) and 3 AP worn all over (simple mode): it soaks 3 + 3.
                 system: {
                     wounds: { max: 12, value: 12, critical: 0 },
-                    characteristics: { toughness: { base: 10 }, strength: { base: 30 }, willpower: { base: 30 } },
+                    armour: { mode: 'simple', total: NPC_AP, authored: true },
+                    characteristics: { toughness: { base: 35 }, strength: { base: 30 }, willpower: { base: 30 } },
                 },
             },
         });
@@ -107,7 +124,7 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
         try {
             const before = await npcVitals(page, held.id);
             expect(before.fatigue, 'the NPC model carries a fatigue track').toBe(0);
-            expect(before.fatigueMax, 'its threshold is derived as a PC’s is (DH2: TB + WPB)').toBe(4);
+            expect(before.fatigueMax, 'its threshold is derived as a PC’s is (DH2: TB + WPB)').toBe(NPC_TB + 3);
 
             await setGrapple(page, controller.id, held.id);
             const sheet = await openActorSheet(page, controller.id, 'overview');
@@ -118,11 +135,16 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
             const damageCard = await awaitCard(page, posted, 'data-damage-fatigue');
             await expect.poll(async () => (await npcVitals(page, held.id)).fatigue, { message: 'the hit’s Fatigue reaches the NPC' }).toBe(1);
             const after = await npcVitals(page, held.id);
-            expect(after.wounds, 'the unarmed hit took wounds').toBeLessThan(before.wounds);
+            // The unarmed hit (Pen 0): damage = the rolled 1d5 − 3, plus SB 9. Wounds lost = damage − (AP − Pen) − TB (#248).
+            const damage = (await damageRollTotal(page, damageCard.id)) + CONTROLLER_SB;
+            expect(before.wounds - after.wounds, `damage ${damage} less AP ${NPC_AP} and TB ${NPC_TB}`).toBe(damage - NPC_AP - NPC_TB);
+            expect(damageCard.html, 'the card’s Effective line reads the NPC’s armour and TB').toContain(`after armour ${NPC_AP} (post-pen) + TB ${NPC_TB}`);
             expect(await snapCard(page, 'npc-auto-apply-grapple-damage-card', damageCard.id)).not.toBeNull();
 
             const npcSheet = await openActorSheet(page, held.id, 'npc');
             await expect(page.locator(`#${npcSheet} [data-toggle="fatigue_details"]`)).toBeVisible();
+            // A DH2 NPC halves characteristics while fatigued; it does not take a flat −10.
+            await expect(page.locator(`#${npcSheet} [data-fatigue-warning]`)).toHaveAttribute('data-fatigue-warning', 'halving');
             expect(await snap(page, 'npc-auto-apply-wounds-fatigue-sheet', { selector: `#${npcSheet}` })).not.toBeNull();
         } finally {
             await restoreSettings(page, settings);

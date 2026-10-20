@@ -8102,7 +8102,11 @@
                 "CollapseThreshold": "Collapse Threshold",
                 "ToughnessBonusAbbr": "TB",
                 "Unconscious": "Unconscious — Collapsed for {minutes} minutes!",
-                "Fatigued": "Fatigued — Suffer –10 penalty to all Tests",
+                "Fatigued": {
+                    "halving": "Fatigued — any characteristic whose bonus is below the Fatigue level counts as half",
+                    "flat": "Fatigued — Suffer –10 penalty to all Tests",
+                    "condition": "Fatigued — Minor: Disadvantage; Major: all Tests Very Hard (–30)"
+                },
                 "RestLabel": "Rest (-1)",
                 "RestTitle": "Rest to recover 1 fatigue",
                 "ClearLabel": "Clear All",
@@ -8112,7 +8116,11 @@
         "VitalInfoCard": {
             "FatigueRulesTitle": "Fatigue Rules (Core)",
             "FatigueAnyTitle": "Any Fatigue:",
-            "FatigueAnyDesc": "–10 penalty to all Tests.",
+            "FatigueAnyDesc": {
+                "halving": "A characteristic whose bonus is below the Fatigue level counts as half its value (rounding up).",
+                "flat": "–10 penalty to all Tests.",
+                "condition": "Minor Fatigue gives Disadvantage; Major Fatigue makes all Tests Very Hard (–30)."
+            },
             "FatigueExceedsTitle": "Exceeds TB:",
             "FatigueExceedsDesc": "Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.",
             "FatigueRecoveryTitle": "Recovery:",

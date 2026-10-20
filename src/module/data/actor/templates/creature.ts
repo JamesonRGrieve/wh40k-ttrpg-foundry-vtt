@@ -5,7 +5,7 @@ import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
 import { fateTotalWithLegacyThreshold } from '../../../rules/fate.ts';
-import { deriveFatigueTrack, getFatigueHalvedCharacteristic } from '../../../rules/fatigue.ts';
+import { deriveFatigueTrack, type FatigueTrack, getFatigueHalvedCharacteristic } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import {
     actorEnvironmentContext,
@@ -300,15 +300,13 @@ export default class CreatureTemplate extends CommonTemplate {
         value: number;
         critical: number;
     };
-    declare fatigue: {
-        max: number;
-        value: number;
-        /** Derived (#114): the flat/condition-model test modifier for the current
-         *  fatigue level, computed each prep so the roll dialog reads it without
-         *  resolving the game-system config itself. 0 for the halving model (its
-         *  effect is in the effective characteristic values) and when unfatigued. */
-        testModifier: number;
-    };
+    /**
+     * Fatigue (#114). `testModifier` and `model` are derived each prep, so the roll
+     * dialog and the panel read them without resolving the game-system config: the
+     * flat / condition test modifier (0 under halving, whose effect is in the
+     * effective characteristic values) and the active model.
+     */
+    declare fatigue: FatigueTrack;
     declare fate: {
         /** The Fate total — DH2's "Fate threshold" (rules/fate.ts). */
         max: number;

@@ -184,6 +184,8 @@ export interface FatigueTrack {
     max: number;
     value: number;
     testModifier: number;
+    /** Derived each prep (not stored): the active model, so the fatigue panel states what Fatigue does under it. */
+    model?: FatigueModel;
 }
 
 /**
@@ -195,6 +197,7 @@ export interface FatigueTrack {
 export function deriveFatigueTrack(track: FatigueTrack, bonuses: FatigueThresholdInput, def: FatigueModelDef): void {
     if (track.max <= 0) track.max = getFatigueThreshold(bonuses, def);
     track.testModifier = getFatigueTestModifier(track.value, def);
+    track.model = def.model;
 }
 
 /**
