@@ -418,6 +418,11 @@ document or flag:
   converted line, the active line resolves to that actor's line and the resolver
   collapses the document to that line's variant container. The resolver never
   consults a `reference` stub or the `gameSystems` list to do this.
+- a conversion reaches another line two ways: drag/grant onto a character of that
+  line (above), and the origin-path builder's cross-line discovery
+  (`origin-discovery.ts`). The builder reads the other lines' origin packs and
+  lists each document whose per-line `system.source` carries a branch for the
+  active line. Neither path uses a stub or that line's `gameSystems`.
 
 For origin-path items the builder classifies each option: official (`raw`) in the
 active line → no marker; homebrew in the active line but `raw` in another →
