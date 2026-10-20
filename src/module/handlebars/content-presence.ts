@@ -85,7 +85,7 @@ export function hasNonZeroHelper(value: TemplateValue): boolean {
     return hasNonZeroModifier(asModifierGroup(value));
 }
 
-/** `{{#if (hasDisplayedModifiers item.system.modifiers)}}`: any modifier the modifiers panel shows. */
+/** `{{#if (hasDisplayedModifiers item.system.modifiers)}}` is true when some modifier the modifiers panel shows. */
 export function hasDisplayedModifiersHelper(value: TemplateValue): boolean {
     const object = asTemplateObject(value);
     if (object === undefined) return false;

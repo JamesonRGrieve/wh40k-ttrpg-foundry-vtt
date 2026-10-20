@@ -211,7 +211,7 @@ export interface GrappleRules {
  * one level of Fatigue" and names no location.
  */
 export interface GrappleDamageRule {
-    /** The hit-location id the hit lands on; null when the line names none, so it lands where the controller's test roll puts it, as any attack. */
+    /** The hit-location id the hit lands on; null when the line names none, so it lands where the controller's test roll puts it, like every attack. */
     readonly location: string | null;
     /** Levels of Fatigue the hit adds. */
     readonly fatigue: number;

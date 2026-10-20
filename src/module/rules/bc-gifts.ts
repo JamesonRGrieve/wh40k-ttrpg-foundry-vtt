@@ -233,7 +233,7 @@ export function mergeGiftDeltas(deltas: ReadonlyArray<Readonly<Record<string, nu
  * in `rolled` (the owned item's `modifiers.characteristics`) yet.
  */
 export function pendingGiftRolls(gift: GiftData, rolled: Readonly<Record<string, number>>): GiftCharacteristicRoll[] {
-    return gift.characteristicRolls.filter((roll) => !Object.prototype.hasOwnProperty.call(rolled, roll.characteristic));
+    return gift.characteristicRolls.filter((roll) => !Object.hasOwn(rolled, roll.characteristic));
 }
 
 /** The signed value a rolled magnitude contributes, per its direction. */

@@ -39,7 +39,7 @@ export function findUnarmedStrike<T extends StrikeCandidate>(items: Iterable<T>)
 
 /**
  * Where the grapple's hit lands: the location the line prints, else (DH1) where
- * the controller's test roll puts it, reversed as any attack roll is. The Body
+ * the controller's test roll puts it, reversed the same way every attack roll is. The Body
  * when the roll maps to no location.
  */
 export function grappleDamageLocation(rule: GrappleDamageRule, testRoll: number): string {
