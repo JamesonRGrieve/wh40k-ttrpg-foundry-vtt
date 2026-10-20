@@ -8,10 +8,25 @@
  */
 
 import type { NpcArmour } from '../data/actor/npc-armour-edit.ts';
+import type { I18nKey } from '../types/i18n-keys.d.ts';
 import { resolveHitLocationId } from './hit-locations.ts';
 
+/**
+ * One location of a PC's armour as the creature model prepares it: worn AP
+ * (`value`), the cumulative armour-bearing cybernetics, the Machine / Natural
+ * Armour trait and Good armour's first-attack AP, beside the Toughness Bonus.
+ * The three extra parts are absent on armour prepared before they were split out.
+ */
+interface CreatureArmourLocation {
+    readonly value: number;
+    readonly toughnessBonus: number;
+    readonly cyberneticAP?: number;
+    readonly traitBonus?: number;
+    readonly goodArmourBonus?: number;
+}
+
 /** A PC's armour as the creature model prepares it, by location id. */
-type CreatureArmour = Readonly<Partial<Record<string, { readonly value: number; readonly toughnessBonus: number }>>>;
+type CreatureArmour = Readonly<Partial<Record<string, CreatureArmourLocation>>>;
 
 /** A target's armour, either shape. */
 export type TargetArmour = CreatureArmour | NpcArmour;
@@ -23,10 +38,70 @@ export interface SoakSource {
     readonly characteristics?: { readonly toughness?: { readonly bonus: number } | undefined } | undefined;
 }
 
-/** What the location soaks. */
+/** Where a part of a location's armour comes from. */
+export type SoakPartKey = 'worn' | 'cybernetic' | 'trait' | 'good' | 'statBlock';
+
+/** One part of a location's armour, for its provenance row on the card. */
+export interface SoakPart {
+    readonly key: SoakPartKey;
+    readonly value: number;
+}
+
+/**
+ * What the location soaks: its armour (every part together — Penetration reduces
+ * the whole of it, worn and Machine / Natural Armour alike) and, after that, the
+ * Toughness Bonus.
+ */
 export interface LocationSoak {
     readonly armour: number;
+    readonly parts: readonly SoakPart[];
     readonly toughnessBonus: number;
+}
+
+const SOAK_PART_LABEL_KEYS: Readonly<Record<SoakPartKey, I18nKey>> = {
+    worn: 'WH40K.Chat.Damage.Soak.Worn',
+    cybernetic: 'WH40K.Chat.Damage.Soak.Cybernetic',
+    trait: 'WH40K.Chat.Damage.Soak.Trait',
+    good: 'WH40K.Chat.Damage.Soak.Good',
+    statBlock: 'WH40K.Chat.Damage.Soak.Armour',
+};
+
+/** One row of a hit's soak, as the card's Effective tooltip prints it. */
+export interface SoakRow {
+    readonly labelKey: I18nKey;
+    readonly value: number;
+}
+
+/**
+ * How a hit's damage was reduced, row by row (#248): the damage, each armour part,
+ * cover, Penetration taking back what it can of that armour, and the Toughness
+ * Bonus — the sum of the rows is the damage that gets through (before RAW's
+ * 1-point minimum on Righteous Fury).
+ */
+export function soakRows(
+    damage: number,
+    parts: readonly SoakPart[],
+    coverAP: number,
+    penetration: number,
+    toughnessBonus: number,
+    armourIgnored: boolean,
+): SoakRow[] {
+    const rows: SoakRow[] = [{ labelKey: 'WH40K.Chat.Damage.Soak.Damage', value: damage }];
+    if (!armourIgnored) {
+        for (const part of parts) rows.push({ labelKey: SOAK_PART_LABEL_KEYS[part.key], value: -part.value });
+        if (coverAP !== 0) rows.push({ labelKey: 'WH40K.Chat.Damage.Soak.Cover', value: -coverAP });
+        const armour = parts.reduce((sum, part) => sum + part.value, 0) + coverAP;
+        const pierced = Math.min(armour, Math.max(0, penetration));
+        if (pierced !== 0) rows.push({ labelKey: 'WH40K.Chat.Damage.Soak.Penetration', value: pierced });
+    }
+    if (toughnessBonus !== 0) rows.push({ labelKey: 'WH40K.Chat.Damage.Soak.Toughness', value: -toughnessBonus });
+    return rows;
+}
+
+/** The non-zero parts, and their sum. */
+function soakOf(parts: readonly SoakPart[], toughnessBonus: number): LocationSoak {
+    const present = parts.filter((part) => part.value !== 0);
+    return { armour: present.reduce((sum, part) => sum + part.value, 0), parts: present, toughnessBonus };
 }
 
 /** Whether a target's armour is an NPC's `{mode, total, locations}` block. */
@@ -49,7 +124,18 @@ export function npcArmourAP(armour: Pick<NpcArmour, 'mode' | 'total' | 'location
 export function locationSoak(source: SoakSource, location: string): LocationSoak {
     const id = resolveHitLocationId(location) ?? location;
     const armour = source.armour;
-    if (isNpcArmour(armour)) return { armour: npcArmourAP(armour, id), toughnessBonus: source.characteristics?.toughness?.bonus ?? 0 };
+    // An NPC's AP is one number: its stat block's, or the AP derived from what it
+    // wears (which already folds in its cybernetics, Machine / Natural Armour and
+    // Good armour through the same computeArmour a PC uses).
+    if (isNpcArmour(armour)) return soakOf([{ key: 'statBlock', value: npcArmourAP(armour, id) }], source.characteristics?.toughness?.bonus ?? 0);
     const entry = armour[id];
-    return { armour: entry?.value ?? 0, toughnessBonus: entry?.toughnessBonus ?? 0 };
+    return soakOf(
+        [
+            { key: 'worn', value: entry?.value ?? 0 },
+            { key: 'cybernetic', value: entry?.cyberneticAP ?? 0 },
+            { key: 'trait', value: entry?.traitBonus ?? 0 },
+            { key: 'good', value: entry?.goodArmourBonus ?? 0 },
+        ],
+        entry?.toughnessBonus ?? 0,
+    );
 }

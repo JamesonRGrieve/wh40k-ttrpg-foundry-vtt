@@ -111,6 +111,16 @@ export function vehicleDrivingRulesFor(line: string | undefined): VehicleDriving
 }
 
 /**
+ * The AP a line's Good-craftsmanship armour adds against the first attack each
+ * round; 0 for an unknown line or one whose Good armour does something else.
+ * @param line  The wearer's `system.gameSystem` id.
+ */
+export function goodArmourFirstAttackAPFor(line: string | undefined): number {
+    if (line === undefined) return 0;
+    return SystemConfigRegistry.getOrNull(line)?.goodArmourFirstAttackAP ?? 0;
+}
+
+/**
  * A line's printed rules for attacking vehicles (content#28), or `null` for an
  * unknown line.
  * @param line  The vehicle's `system.gameSystem` id.

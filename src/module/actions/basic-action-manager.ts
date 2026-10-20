@@ -42,6 +42,7 @@ import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { isSameRound, readCombatRoundStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rules/evasion.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
+import { soakRows } from '../rules/target-soak.ts';
 import {
     armourCoveringLocation,
     warpWardingProperties,
@@ -52,6 +53,8 @@ import {
 import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
+import { formatSigned } from '../utils/format.ts';
+import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { grapplePushFromCard } from './grapple-controls.ts';
 import { applyGrappleWritesFromMessage, postGrappleStart } from './grapple-relay.ts';
@@ -527,6 +530,15 @@ export class BasicActionManager {
             hit.effectiveArmour = preview.armour;
             hit.effectiveTb = preview.toughnessBonus;
             hit.effectiveAbsorbed = preview.absorbed;
+            const soakTitle = t('WH40K.Chat.Damage.Soak.Title');
+            const soak = soakRows(hit.totalDamage, assign.soakParts, assign.coverAP, preview.penetration, preview.toughnessBonus, assign.ignoreArmour).map(
+                (row) => ({
+                    name: t(row.labelKey),
+                    value: row.value,
+                }),
+            );
+            hit.effectiveRows = soak.map((row) => ({ label: row.name, value: formatSigned(row.value) }));
+            hit.effectiveTooltip = prepareModifierTooltipData(soakTitle, soak);
             if (autoApply) {
                 // finalize() applies wounds + rolls critical damage; performAction…()
                 // writes the wound/critical update and posts the assign-damage card

@@ -87,7 +87,7 @@
                     {{! Effective damage vs target — auto-calculated from the target's armour + TB (#247) }}
                     {{!-- The label column shrinks and wraps; the value never does, so a
                           two- or three-digit Effective value stays on one line (#615). --}}
-                    <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0]" data-damage-effective>
+                    <div class="tw-flex tw-justify-between tw-items-center tw-gap-2 tw-px-3.5 tw-py-2.5 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-[3px] tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0]{{#if hit.effectiveTooltip}} tw-cursor-help{{/if}}" data-damage-effective{{#if hit.effectiveTooltip}} data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{hit.effectiveTooltip}}"{{/if}}>
                         <span class="tw-min-w-0 tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[var(--wh40k-card-muted)]">
                             {{#if @root.targetName}}{{localize "WH40K.Chat.Damage.EffectiveVs" target=@root.targetName}}{{else}}{{localize "WH40K.Chat.Damage.Effective"}}{{/if}}
                             <span class="tw-block tw-text-[0.7rem] tw-normal-case tw-opacity-80">{{localize "WH40K.Chat.Damage.AfterArmour" armour=hit.effectiveArmour toughness=hit.effectiveTb}}</span>
@@ -101,6 +101,15 @@
                         <span class="tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-text-[1.3rem] tw-font-bold tw-text-[var(--wh40k-card-gold)]" data-damage-effective-value>{{hit.effectiveDamage}}</span>
                         {{/if}}
                     </div>
+                    {{!-- The soak, part by part (#248): damage, worn armour, cybernetic armour,
+                          Machine / Natural Armour, Good armour, cover, Penetration, TB. --}}
+                    {{#if hit.effectiveRows.length}}
+                    <ul class="tw-m-0 tw-mb-2 tw-list-none tw-pl-4 tw-pr-3.5 tw-text-[0.75rem] tw-text-[var(--wh40k-card-muted)]" data-damage-soak>
+                        {{#each hit.effectiveRows as |row|}}
+                        <li class="tw-flex tw-justify-between tw-gap-2" data-damage-soak-row><span class="tw-min-w-0">{{row.label}}</span><span class="tw-shrink-0 tw-tabular-nums tw-font-semibold">{{row.value}}</span></li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
                     {{/if}}
 
                     {{! Effects }}

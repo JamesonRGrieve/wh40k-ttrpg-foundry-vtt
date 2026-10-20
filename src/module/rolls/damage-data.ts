@@ -380,6 +380,10 @@ export class Hit {
     effectiveArmour = 0;
     effectiveTb = 0;
     effectiveAbsorbed = false;
+    /** The Effective line's provenance: damage, each armour part, cover, Penetration and TB (#248). '' with no preview. */
+    effectiveTooltip = '';
+    /** The same provenance as printed rows under the Effective line: each soak part with its signed value. */
+    effectiveRows: { label: string; value: string }[] = [];
 
     /** Where this hit struck a vehicle (content#28): facing, location, armour facing, force field, Righteous Fury rows. Null off a vehicle. */
     vehicleStrike: VehicleStrike | null = null;

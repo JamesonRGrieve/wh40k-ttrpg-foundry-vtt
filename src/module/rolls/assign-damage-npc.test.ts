@@ -133,4 +133,40 @@ describe('auto-applying damage to an NPC (#420)', () => {
         // Body: 12 − 4 − 3 = 5 lost.
         expect(await woundsAfter(pc(14), 12, 0)).toBe(9);
     });
+
+    // #248: a PC soaked worn AP alone; Machine / Natural Armour, cybernetics and Good
+    // armour's first-attack AP sat only in the display total. Penetration reduces all of it.
+    it('a PC with Machine 4 over worn 3 soaks 7 AP: 15 − (7 − 2) − 3 = 7 lost', async () => {
+        expect(await woundsAfter(pcWith({ value: 3, traitBonus: 4 }), 15, 2)).toBe(14 - 7);
+    });
+
+    it('a PC with Natural Armour 2 and no armour soaks 2 AP: 10 − 2 − 3 = 5 lost', async () => {
+        expect(await woundsAfter(pcWith({ value: 0, traitBonus: 2 }), 10, 0)).toBe(14 - 5);
+    });
+
+    it("a PC's Good armour soaks 1 more on the first attack of a round, and not on the second", async () => {
+        // First: 12 − (4 + 1) − 3 = 4 lost. Second (the flag set, the bonus gone): 12 − 4 − 3 = 5 lost.
+        expect(await woundsAfter(pcWith({ value: 4, goodArmourBonus: 1 }), 12, 0)).toBe(14 - 4);
+        expect(await woundsAfter(pcWith({ value: 4, goodArmourBonus: 0 }), 12, 0)).toBe(14 - 5);
+    });
+
+    it('marks the wearer as attacked this round while a combat runs, so its Good armour bonus is spent', async () => {
+        vi.stubGlobal('game', {
+            i18n: { localize: (key: string) => key, format: (key: string) => key, has: () => false },
+            wh40k: { log: () => undefined },
+            user: { id: 'gm' },
+            settings: { get: () => 'publicroll' },
+            combat: { started: true },
+        });
+        const target = pcWith({ value: 4, goodArmourBonus: 1 });
+        await woundsAfter(target, 12, 0);
+        expect(target.update.mock.calls.at(0)?.[0]).toMatchObject({ 'flags.wh40k-rpg.hitThisRound': true });
+    });
 });
+
+/** A PC whose Body armour has these parts (TB 3), at 14 wounds. */
+function pcWith(body: { value: number; traitBonus?: number; cyberneticAP?: number; goodArmourBonus?: number }): Target {
+    const target = pc(14);
+    target.system.armour = { body: { toughnessBonus: 3, ...body } };
+    return target;
+}

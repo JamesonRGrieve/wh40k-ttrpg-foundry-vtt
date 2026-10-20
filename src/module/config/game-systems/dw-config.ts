@@ -54,6 +54,9 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(true);
 
+    /** DW core, Armour Craftsmanship: Exceptional (DW's Good) armour adds 1 AP against the first attack in any round. */
+    override readonly goodArmourFirstAttackAP = 1;
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
         twinLinked: false,

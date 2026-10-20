@@ -182,6 +182,9 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(true);
 
+    /** OW core, Armour Craftsmanship: Good armour adds 1 AP against the first attack in any Round. */
+    override readonly goodArmourFirstAttackAP = 1;
+
     /**
      * OW Core pp. 269–271, Comrades in Combat: Cohesion is "within 5 metres of his
      * controlling Player Character"; a Comrade "is limited to two Half Actions or one

@@ -78,6 +78,9 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     /** RT Into the Storm p. 178: one Vehicle Critical Hit Chart and no hit-location table. */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
+    /** RT core p. 137: Good armour "against the first attack in any round … increases its AP by 1". */
+    override readonly goodArmourFirstAttackAP = 1;
+
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],
         twinLinked: false,

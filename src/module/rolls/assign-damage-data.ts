@@ -16,7 +16,7 @@ import {
     type DynamicModifierSituation,
 } from '../rules/dynamic-modifiers.ts';
 import { type ActorStateSource, collectActorStates } from '../rules/situation-tags.ts';
-import { locationSoak, type SoakSource, type TargetArmour } from '../rules/target-soak.ts';
+import { locationSoak, type SoakPart, type SoakSource, type TargetArmour } from '../rules/target-soak.ts';
 import { isVehicleLocationId, resolveVehicleDamage, type VehicleArmourFacing, type VehicleLocationId } from '../rules/vehicle-damage.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { postFlattenedInstanceToChat } from './roll-helpers.ts';
@@ -39,6 +39,15 @@ interface ActorHordeState {
 }
 
 const ASSIGN_DAMAGE_TEMPLATE = 'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs';
+
+/** The actor flag marking that it has been attacked this round (Good armour's first-attack AP). */
+const HIT_THIS_ROUND_FLAG = 'hitThisRound';
+
+/** Whether a combat is running, so a round reset will clear the hit-this-round flag. */
+function combatStarted(): boolean {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `game` is the Foundry runtime global; the assign step also runs under unit tests where it is absent
+    return (globalThis as { game?: { combat?: { started?: boolean } | null } }).game?.combat?.started === true;
+}
 
 /** Minimal actor shape needed for damage assignment. Exported for tests. */
 export interface ActorLike extends ActorStateSource {
@@ -110,6 +119,8 @@ export class AssignDamageData {
     /** Cover AP applied on top of the location armour. Surfaced separately for chat-card display. */
     coverAP = 0;
     tb = 0;
+    /** The parts of the location's armour (worn, cybernetic, Machine / Natural Armour, Good), for the card's provenance rows (#248). */
+    soakParts: readonly SoakPart[] = [];
 
     hasFatigueDamage = false;
     fatigueTaken = 0;
@@ -199,6 +210,7 @@ export class AssignDamageData {
         if (this.hit.location !== '') {
             const soak = locationSoak(this.actor.system, this.hit.location);
             this.armour = soak.armour;
+            this.soakParts = soak.parts;
             this.tb = soak.toughnessBonus;
         }
         // A Warp Weapon passes through armour and cover alike (#414) — decided where the
@@ -561,6 +573,9 @@ export class AssignDamageData {
                 'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
                 'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
                 'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
+                // Good armour's AP holds only against the first attack each round (#248);
+                // the round's reset clears this (combat-action-manager).
+                ...(combatStarted() ? { [`flags.${SYSTEM_ID}.${HIT_THIS_ROUND_FLAG}`]: true } : {}),
             });
             await this._armOnDamagedHooks();
         }

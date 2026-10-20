@@ -291,6 +291,15 @@ export abstract class BaseSystemConfig {
      */
     readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
+    /**
+     * The AP Good-craftsmanship armour adds against the first attack each round
+     * (DH1 core p. 144, RT core p. 137, DW core "Exceptional", OW core: "Against
+     * the first attack in any round, the armour increases its AP by 1"). 0 for a
+     * line whose Good armour does something else: DH2 raises Maximum Agility by 10
+     * (core p. 141), BC grants +5 to a social test.
+     */
+    readonly goodArmourFirstAttackAP: number = 0;
+
     // ── Starting Resources ────────────────────────────────────────
 
     /** Starting XP for a new character in this system */

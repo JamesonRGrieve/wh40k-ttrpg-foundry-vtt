@@ -34,6 +34,12 @@ const NPC_AP = 3;
 const NPC_TB = 3;
 const CONTROLLER_SB = 9;
 
+/** The PC target's Machine rating and its Flak Vest's Body AP (#248). */
+const PC_MACHINE = 2;
+const PC_WORN_AP = 3;
+const MACHINE_UUID = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.Ad9cR4FSt6HtEz8Q';
+const FLAK_VEST_UUID = 'Compendium.wh40k-rpg.dh2-core-items-armour.Item.Ht6xNdQ2rBw9Km3P';
+
 /** The total of a damage card's damage roll (the dice and the formula's own terms, before any added modifier row). */
 async function damageRollTotal(page: Page, messageId: string): Promise<number> {
     return page.evaluate((id) => {
@@ -146,6 +152,71 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
             // A DH2 NPC halves characteristics while fatigued; it does not take a flat −10.
             await expect(page.locator(`#${npcSheet} [data-fatigue-warning]`)).toHaveAttribute('data-fatigue-warning', 'halving');
             expect(await snap(page, 'npc-auto-apply-wounds-fatigue-sheet', { selector: `#${npcSheet}` })).not.toBeNull();
+        } finally {
+            await restoreSettings(page, settings);
+            await viewScene(page, scene.previousSceneId);
+            await deleteDocuments(page, { actors: [controller.id, held.id], scenes: [scene.sceneId] });
+        }
+    });
+
+    test('a PC soaks with its Machine trait and its worn armour together (#248)', async ({ page }) => {
+        await joinOrSkip(page);
+        await prepareStage(page);
+        const settings = await setWorldSettings(page, { 'auto-apply-damage': true });
+        const controller = await createActor(page, {
+            data: {
+                name: 'Grappling Enforcer',
+                type: 'dh2-character',
+                img: 'icons/svg/mystery-man.svg',
+                prototypeToken: { actorLink: true },
+                system: {
+                    gameSystem: 'dh2',
+                    characteristics: { strength: { base: 100, advance: 0, modifier: 0 }, agility: { base: 40, advance: 0, modifier: 0 } },
+                },
+            },
+            compendiumItems: [{ uuid: UNARMED_UUID }],
+        });
+        // A cyborg acolyte: Machine (2) over an equipped Flak Vest (Body AP 3), Toughness 30 (TB 3).
+        const held = await createActor(page, {
+            data: {
+                name: 'Held Tech-Thrall',
+                type: 'dh2-character',
+                img: 'icons/svg/mystery-man.svg',
+                prototypeToken: { actorLink: true },
+                system: {
+                    gameSystem: 'dh2',
+                    wounds: { max: 14, value: 14, critical: 0 },
+                    characteristics: { toughness: { base: 30, advance: 0, modifier: 0 } },
+                },
+            },
+            compendiumItems: [
+                { uuid: MACHINE_UUID, system: { specialization: String(PC_MACHINE) } },
+                { uuid: FLAK_VEST_UUID, equip: true },
+            ],
+        });
+        const scene = await stageScene(page, 'PC soak (#248)', [
+            { actorId: controller.id, x: 300, y: 300 },
+            { actorId: held.id, x: 400, y: 300 },
+        ]);
+        try {
+            const before = await npcVitals(page, held.id);
+            await setGrapple(page, controller.id, held.id);
+            const sheet = await openActorSheet(page, controller.id, 'overview');
+            const posted = await messageIds(page);
+            await fixD100(page, [5, 99]);
+            await page.locator(`#${sheet} ${OWN} [data-grapple-option="damage-opponent"]`).click();
+            const damageCard = await awaitCard(page, posted, 'data-damage-fatigue');
+            await expect.poll(async () => (await npcVitals(page, held.id)).fatigue, { message: 'the hit is applied' }).toBe(1);
+            const after = await npcVitals(page, held.id);
+            // Damage (1d5 − 3 + SB 10) less Machine 2 + worn 3 (Pen 0) and TB 3; never below 0.
+            const damage = (await damageRollTotal(page, damageCard.id)) + 10;
+            const soaked = PC_MACHINE + PC_WORN_AP;
+            expect(before.wounds - after.wounds, `damage ${damage} less armour ${soaked} and TB 3`).toBe(Math.max(0, damage - soaked - 3));
+            expect(damageCard.html, 'the Effective line counts the Machine trait into the armour').toContain(`after armour ${soaked} (post-pen) + TB 3`);
+            expect(damageCard.html, 'the Effective line prints its parts').toContain('data-damage-soak-row');
+            expect(damageCard.html).toContain(`Machine / Natural Armour</span><span class="tw-shrink-0 tw-tabular-nums tw-font-semibold">-${PC_MACHINE}`);
+            expect(damageCard.html).toContain(`Worn armour</span><span class="tw-shrink-0 tw-tabular-nums tw-font-semibold">-${PC_WORN_AP}`);
+            expect(await snapCard(page, 'pc-machine-worn-armour-soak-damage-card', damageCard.id)).not.toBeNull();
         } finally {
             await restoreSettings(page, settings);
             await viewScene(page, scene.previousSceneId);

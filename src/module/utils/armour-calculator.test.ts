@@ -21,6 +21,7 @@ interface ItemSystemLike {
     state?: { equipped?: boolean };
     craftsmanship?: string;
     armourPoints?: Record<string, number>;
+    hasArmourPoints?: boolean;
 }
 interface ItemLike {
     type: string;
@@ -31,6 +32,10 @@ interface ItemLike {
 interface MockActorOpts {
     toughnessBonus?: number;
     items?: ItemLike[];
+    /** The actor's line (Good armour's first-attack AP is per line). */
+    gameSystem?: string;
+    /** Whether it has already been attacked this round. */
+    hitThisRound?: boolean;
 }
 
 /** The armour traits' document identifiers, keyed by the display name the tests use. */
@@ -90,7 +95,8 @@ function mockActor(opts: MockActorOpts): WH40KBaseActor {
         items: Object.assign([...items], {
             filter: (predicate: (i: ItemLike) => boolean) => items.filter(predicate),
         }),
-        getFlag: (_scope: string, _key: string) => false,
+        getFlag: (_scope: string, key: string) => key === 'hitThisRound' && opts.hitThisRound === true,
+        system: { gameSystem: opts.gameSystem ?? 'dh2' },
     };
     return asBaseActor(actor);
 }
@@ -252,6 +258,52 @@ describe('computeArmour — equippedOnly option', () => {
         const body = bodyOf(computeArmour(actor, { equippedOnly: false }));
         expect(body.value).toBe(4);
         expect(body.total).toBe(7);
+    });
+});
+
+/**
+ * The armour parts a hit soaks (#248): computeArmour keeps worn AP, cybernetic AP,
+ * the Machine / Natural Armour trait and Good armour's first-attack AP as separate
+ * parts, so the damage path soaks with all of them (it read worn AP alone).
+ */
+describe('computeArmour — the soak parts', () => {
+    function goodFlak(ap: number): ItemLike {
+        const flak = makeWornArmourItem('Good Flak', ap);
+        return { ...flak, system: { ...flak.system, craftsmanship: 'good' } };
+    }
+
+    it('keeps Machine 4 and worn AP 3 as their own parts', () => {
+        const body = bodyOf(computeArmour(mockActor({ toughnessBonus: 3, items: [makeTraitItem('Machine', 4), makeWornArmourItem('Flak', 3)] })));
+        expect({ value: body.value, traitBonus: body.traitBonus, cyberneticAP: body.cyberneticAP, goodArmourBonus: body.goodArmourBonus }).toEqual({
+            value: 3,
+            traitBonus: 4,
+            cyberneticAP: 0,
+            goodArmourBonus: 0,
+        });
+    });
+
+    it('keeps cybernetic AP as its own part', () => {
+        const plate: ItemLike = {
+            type: 'cybernetic',
+            name: 'Subskin Armour',
+            system: { state: { equipped: true }, hasArmourPoints: true, armourPoints: { body: 2 } },
+        };
+        expect(bodyOf(computeArmour(mockActor({ items: [plate] }))).cyberneticAP).toBe(2);
+    });
+
+    it('adds 1 for Good armour against the first attack in a round, where the line prints it (RT, DH1, DW, OW)', () => {
+        for (const line of ['rt', 'dh1', 'dw', 'ow']) {
+            expect(bodyOf(computeArmour(mockActor({ gameSystem: line, items: [goodFlak(4)] }))).goodArmourBonus).toBe(1);
+        }
+    });
+
+    it('adds nothing for Good armour once the wearer has been attacked this round', () => {
+        expect(bodyOf(computeArmour(mockActor({ gameSystem: 'rt', hitThisRound: true, items: [goodFlak(4)] }))).goodArmourBonus).toBe(0);
+    });
+
+    it('adds nothing for Good armour in DH2 (it raises Maximum Agility) or BC (a social bonus)', () => {
+        expect(bodyOf(computeArmour(mockActor({ gameSystem: 'dh2', items: [goodFlak(4)] }))).goodArmourBonus).toBe(0);
+        expect(bodyOf(computeArmour(mockActor({ gameSystem: 'bc', items: [goodFlak(4)] }))).goodArmourBonus).toBe(0);
     });
 });
 

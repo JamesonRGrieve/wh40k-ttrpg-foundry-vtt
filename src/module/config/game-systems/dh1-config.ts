@@ -82,6 +82,9 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      * (1d5–3 plus SB, with Armour Points counting double) and one level of
      * Fatigue"; DH1 names no location, so the hit lands where the test roll puts it.
      */
+    // Good armour: DH1 core p. 144, "against the first attack in any round, the armour increases its AP by 1".
+    override readonly goodArmourFirstAttackAP = 1;
+
     readonly grappleRules: GrappleRules = {
         damage: { location: null, fatigue: 1 },
         push: null,

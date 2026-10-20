@@ -6214,6 +6214,18 @@
                 "EffectiveVs": "Effective vs {target}",
                 "Effective": "Effective",
                 "AfterArmour": "after armour {armour} (post-pen) + TB {toughness}",
+                "Soak": {
+                    "Title": "How the hit was soaked",
+                    "Damage": "Damage",
+                    "Worn": "Worn armour",
+                    "Cybernetic": "Cybernetic armour",
+                    "Trait": "Machine / Natural Armour",
+                    "Good": "Good armour (first attack this round)",
+                    "Armour": "Armour",
+                    "Cover": "Cover",
+                    "Penetration": "Penetration",
+                    "Toughness": "Toughness Bonus"
+                },
                 "ArmourIgnoredWarpWeapon": "Warp Weapon: armour and cover ignored",
                 "ArmourIgnoredWarpWeaponTooltip": "A Warp Weapon ignores armour and cover unless a warded or holy piece covers the struck location.",
                 "Absorbed": "Absorbed (1)",

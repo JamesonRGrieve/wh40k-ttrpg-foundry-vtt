@@ -11,7 +11,14 @@ import { deriveNpcArmour, npcArmourSource } from './npc-armour-derive.ts';
 interface ItemLike {
     type: string;
     name: string;
-    system: { identifier?: string; level?: number; state?: { equipped?: boolean }; hasArmourPoints?: boolean; armourPoints?: Record<string, number> };
+    system: {
+        identifier?: string;
+        level?: number;
+        state?: { equipped?: boolean };
+        hasArmourPoints?: boolean;
+        armourPoints?: Record<string, number>;
+        craftsmanship?: string;
+    };
 }
 
 const ALL = (ap: number): Record<string, number> => ({ head: ap, body: ap, leftArm: ap, rightArm: ap, leftLeg: ap, rightLeg: ap });
@@ -30,11 +37,12 @@ function flakVest(equipped: boolean): ItemLike {
     };
 }
 
-function npc(items: ItemLike[], toughnessBonus = 3): ReturnType<typeof asBaseActor> {
+function npc(items: ItemLike[], toughnessBonus = 3, line = 'dh2', hitThisRound = false): ReturnType<typeof asBaseActor> {
     return asBaseActor({
         characteristics: { toughness: { bonus: toughnessBonus } },
         items: Object.assign([...items], { filter: (predicate: (i: ItemLike) => boolean) => items.filter(predicate) }),
-        getFlag: () => false,
+        getFlag: (_scope: string, key: string) => key === 'hitThisRound' && hitThisRound,
+        system: { gameSystem: line },
     });
 }
 
@@ -89,6 +97,14 @@ describe('deriveNpcArmour', () => {
         // The cybernetic alone is worn armour, so it sets the authored stat block aside.
         expect(deriveNpcArmour(npc([naturalArmour, plating]), true)).toEqual({ mode: 'locations', total: 4, locations: ALL(4) });
         expect(deriveNpcArmour(npc([naturalArmour, plating, carapace(true)]), true)?.locations).toEqual(ALL(9));
+    });
+
+    it('NPC Machine and worn armour stack, and Good armour adds 1 against the first attack in a round where the line prints it (#248)', () => {
+        const machine: ItemLike = { type: 'trait', name: 'Machine (4)', system: { identifier: 'machine', level: 4 } };
+        const goodFlak: ItemLike = { type: 'armour', name: 'Good Flak', system: { state: { equipped: true }, craftsmanship: 'good', armourPoints: ALL(3) } };
+        expect(deriveNpcArmour(npc([machine, goodFlak], 3, 'rt'), false)?.locations.body).toBe(8);
+        expect(deriveNpcArmour(npc([machine, goodFlak], 3, 'rt', true), false)?.locations.body).toBe(7);
+        expect(deriveNpcArmour(npc([machine, goodFlak], 3, 'dh2'), false)?.locations.body).toBe(7);
     });
 
     it('an unequipped cybernetic is not worn armour', () => {

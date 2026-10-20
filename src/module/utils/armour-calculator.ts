@@ -3,17 +3,26 @@
  * Extracts complex armour computation logic from the main actor document.
  */
 
+import { goodArmourFirstAttackAPFor } from '../config/game-systems/index.ts';
 import { BODY_LOCATIONS } from '../data/shared/body-locations.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
+import { firstSystemId } from './chat-system-id.ts';
 import { itemIdentifier } from './item-identifier.ts';
 
+/**
+ * One location's armour, kept as its parts so the damage path can soak with each
+ * and print it (#248): `value` is the worn armour (the highest piece), then the
+ * cumulative armour-bearing cybernetics, the Machine / Natural Armour trait and
+ * Good armour's first-attack AP. `total` adds the Toughness Bonus for display.
+ */
 interface ArmourLocationData {
     total: number;
     toughnessBonus: number;
     traitBonus: number;
     value: number;
-    goodArmourBonus?: number;
+    cyberneticAP: number;
+    goodArmourBonus: number;
 }
 
 interface ArmourPointsLike {
@@ -172,6 +181,8 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
                     toughnessBonus,
                     traitBonus,
                     value: 0,
+                    cyberneticAP: 0,
+                    goodArmourBonus: 0,
                 },
             }),
         {},
@@ -185,9 +196,11 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
         .forEach((cybernetic: WH40KItem) => {
             const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
             BODY_LOCATIONS.forEach((location: string) => {
-                const armourVal = armourPoints?.[location] ?? 0;
+                const armourVal = Number(armourPoints?.[location] ?? 0);
                 const loc = armour[location] as ArmourLocationData | undefined;
-                if (loc !== undefined) loc.total += Number(armourVal);
+                if (loc === undefined) return;
+                loc.total += armourVal;
+                loc.cyberneticAP += armourVal;
             });
         });
 
@@ -216,9 +229,10 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
         }
     }
 
-    // Apply Good armour bonus (+1 AP on first attack per round)
+    // Good armour's AP against the first attack each round, where the line prints it
+    // (DH1 / RT / DW / OW; DH2 and BC give Good armour other benefits).
     const isFirstAttack = actor.getFlag('wh40k-rpg', 'hitThisRound') !== true;
-    const goodArmourBonus = hasGoodArmour && isFirstAttack ? 1 : 0;
+    const goodArmourBonus = hasGoodArmour && isFirstAttack ? goodArmourFirstAttackAPFor(firstSystemId(actor)) : 0;
 
     // Apply max armour values and update totals
     BODY_LOCATIONS.forEach((location: string) => {
@@ -226,10 +240,8 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
         const locMax = (maxArmour[location] as number | undefined) ?? 0;
         if (loc === undefined) return;
         loc.value = locMax;
+        loc.goodArmourBonus = goodArmourBonus;
         loc.total += locMax + goodArmourBonus;
-        if (goodArmourBonus > 0) {
-            loc.goodArmourBonus = goodArmourBonus;
-        }
     });
 
     return armour;
