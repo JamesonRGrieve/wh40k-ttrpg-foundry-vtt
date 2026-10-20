@@ -1087,8 +1087,8 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             /* ============================================================
              * Flow 20: order-test-label
              * category + shipActionEffect schema fields round-trip;
-             * testLabel composes the command skill with a signed modifier
-             * ("command +10"); categoryLabel / actionTypeLabel derive
+             * testLabel composes the command skill's catalog label (#648) with a signed modifier
+             * ("Command +10"); categoryLabel / actionTypeLabel derive
              * non-empty; isRollable is always true.
              * ============================================================ */
             try {
@@ -1115,7 +1115,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     if (
                         category === 'command' &&
                         shipEffect === 'replenishMorale' &&
-                        testLabel === 'command +10' &&
+                        testLabel === 'Command +10' &&
                         typeof catLabel === 'string' &&
                         catLabel.length > 0 &&
                         typeof actionLabel === 'string' &&
@@ -1125,11 +1125,11 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                         fired['order-test-label'] = true;
                         notes[
                             'order-test-label'
-                        ] = `category=command shipActionEffect=replenishMorale testLabel="command +10" categoryLabel="${catLabel}" actionTypeLabel="${actionLabel}" isRollable=true`;
+                        ] = `category=command shipActionEffect=replenishMorale testLabel="Command +10" categoryLabel="${catLabel}" actionTypeLabel="${actionLabel}" isRollable=true`;
                     } else {
                         notes[
                             'order-test-label'
-                        ] = `expected category=command shipEffect=replenishMorale testLabel="command +10" labels!="" rollable=true, got category=${JSON.stringify(
+                        ] = `expected category=command shipEffect=replenishMorale testLabel="Command +10" labels!="" rollable=true, got category=${JSON.stringify(
                             category,
                         )} shipEffect=${JSON.stringify(shipEffect)} testLabel=${JSON.stringify(testLabel)} catLabel=${JSON.stringify(
                             catLabel,
