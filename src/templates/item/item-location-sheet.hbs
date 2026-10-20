@@ -191,24 +191,8 @@
             {{/if}}
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Location.Source"}}
-            <div class="tw-grid tw-grid-cols-3 tw-gap-3">
-              <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourceBook'}}</label>
-                <input type="text" name="system.source.book" value="{{source.source.book}}"
-                       placeholder="{{localize 'WH40K.Location.SourceBookPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
-              </div>
-              <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourcePage'}}</label>
-                <input type="text" name="system.source.page" value="{{source.source.page}}"
-                       placeholder="{{localize 'WH40K.Location.SourcePagePlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
-              </div>
-              <div class="tw-flex tw-flex-col tw-gap-1">
-                <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourceUrl'}}</label>
-                <input type="text" name="system.source.url" value="{{source.source.url}}"
-                       placeholder="{{localize 'WH40K.Location.SourceUrlPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
-              </div>
-            </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Common.Source"}}
+            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>

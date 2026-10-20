@@ -37,7 +37,13 @@ const CASES: readonly Case[] = [
     },
     { type: 'armour', tab: 'description', sections: ['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'] },
     { type: 'weapon', tab: null, sections: ['WH40K.Tabs.Description', NOTES_KEY] },
+    // Their Source panels were hand-built inputs until they moved onto the shared control (#229).
+    { type: 'condition', tab: 'description', sections: ['WH40K.Tabs.Description', 'WH40K.Common.Source'] },
+    { type: 'cybernetic', tab: 'description', sections: ['WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'] },
 ];
+
+/** The Source book the probe items carry, which the shared Source control shows. */
+const SOURCE_BOOK = 'Dark Heresy 2e Core';
 
 interface ProbeApp {
     id: string;
@@ -51,7 +57,7 @@ interface ProbeWindow {
 
 async function openSheet(page: Page, type: string): Promise<string> {
     return page.evaluate(
-        async ({ itemType, name }) => {
+        async ({ itemType, name, book }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
             const w = globalThis as unknown as ProbeWindow;
             const item = await w.Item.create({
@@ -60,14 +66,14 @@ async function openSheet(page: Page, type: string): Promise<string> {
                 system: {
                     description: { value: '<p>Issued to the Ordo cell.</p>' },
                     notes: 'Kept by the Ordo clerk.',
-                    source: { book: 'Dark Heresy 2e Core', page: '178' },
+                    source: { book, page: '178' },
                 },
             });
             if (item === null) throw new Error('Item.create returned null');
             await item.sheet.render({ force: true });
             return item.sheet.id;
         },
-        { itemType: type, name: `${PREFIX} ${type}` },
+        { itemType: type, name: `${PREFIX} ${type}`, book: SOURCE_BOOK },
     );
 }
 
@@ -111,6 +117,13 @@ test.describe.serial('item detail sections share one titled panel (Tier B, #686)
                 insets.every((inset) => inset >= MIN_BODY_INSET_PX),
                 `body insets ${insets.join(', ')}`,
             ).toBe(true);
+            // A Source panel holds the shared control: book and page, read from system.source.
+            if (c.sections.includes('WH40K.Common.Source')) {
+                const sourcePanel = scope.locator('[data-item-section="WH40K.Common.Source"]');
+                await expect(sourcePanel.locator('input[name="system.source.book"]')).toHaveValue(SOURCE_BOOK);
+                await expect(sourcePanel.locator('input[name="system.source.page"]')).toHaveValue('178');
+                await expect(sourcePanel.locator('input[name="system.source.url"]')).toHaveCount(0);
+            }
             await panels.first().scrollIntoViewIfNeeded();
             await snap(page, `item-detail-sections-${c.type}`, { selector: `#${appId}` });
             recordCoverage('sheet.section', `${c.type}.detail-sections`);

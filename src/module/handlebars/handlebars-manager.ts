@@ -414,7 +414,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/panel/item-header.hbs',
             'systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs',
             'systems/wh40k-rpg/templates/item/panel/modifiers-summary.hbs',
-            'systems/wh40k-rpg/templates/item/panel/source-panel.hbs',
 
             // Vehicle panels
             'systems/wh40k-rpg/templates/actor/panel/vehicle-crew-panel.hbs',

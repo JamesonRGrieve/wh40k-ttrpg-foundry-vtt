@@ -12,7 +12,6 @@
 import type TalentData from '../../data/item/talent.ts';
 import type DescriptionTemplate from '../../data/shared/description-template.ts';
 import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
-import { formatSourceLabel } from '../../handlebars/source-label.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
@@ -48,9 +47,6 @@ interface TalentDisplayData {
     hasSpecialization: boolean;
     specialization: string;
     notes: string;
-    source: string;
-    sourceBook: string;
-    sourcePage: string;
     aptitudes: string[];
     hasAptitudes: boolean;
     benefit: string;
@@ -293,8 +289,6 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
      * @protected
      */
     _prepareTalentData(system: TalentSystem): TalentDisplayData {
-        const sourceBook = system.source.book;
-        const sourcePage = system.source.page;
         const aptitudes = system.aptitudes;
 
         return {
@@ -311,10 +305,6 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
             hasSpecialization: system.hasSpecialization,
             specialization: system.specialization,
             notes: system.notes,
-            // Source fields
-            source: formatSourceLabel(system.source),
-            sourceBook: sourceBook,
-            sourcePage: sourcePage,
             // Benefit field
             aptitudes,
             hasAptitudes: aptitudes.length > 0,

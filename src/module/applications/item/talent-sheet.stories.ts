@@ -61,9 +61,6 @@ interface TalentSummary {
     hasSpecialization: boolean;
     specialization: string;
     notes: string;
-    source: string;
-    sourceBook: string;
-    sourcePage: string;
     aptitudes: ReadonlyArray<string>;
     hasAptitudes: boolean;
     benefit: string;
@@ -123,9 +120,7 @@ function makeCtx(overrides: Partial<TalentCtx> = {}): TalentCtx {
             rank: 1,
             cost: 200,
             aptitudes: ['Ballistic Skill', 'Offence'],
-            source: '',
-            sourceBook: 'Dark Heresy 2e Core',
-            sourcePage: '123',
+            source: { book: 'Dark Heresy 2e Core', page: '123' },
             notes: '',
             benefit: 'Add half BS bonus to ranged damage.',
             description: { value: '<p>Your mastery of ranged combat allows for more powerful shots.</p>' },
@@ -149,9 +144,6 @@ function makeCtx(overrides: Partial<TalentCtx> = {}): TalentCtx {
             hasSpecialization: false,
             specialization: '',
             notes: '',
-            source: '',
-            sourceBook: 'Dark Heresy 2e Core',
-            sourcePage: '123',
             aptitudes: ['Ballistic Skill', 'Offence'],
             hasAptitudes: true,
             benefit: 'Add half BS bonus to ranged damage.',

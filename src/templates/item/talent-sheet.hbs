@@ -974,36 +974,9 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          FOOTER: Source Reference
     ═══════════════════════════════════════════════════════════════════ --}}
-    <footer class="tw-flex-shrink-0">
-      {{#if inEditMode}}
-      <div class="tw-flex tw-gap-2">
-        <div class="tw-flex tw-flex-col tw-gap-1">
-          <label class="tw-flex tw-items-center tw-gap-1">
-            <i class="fa-solid fa-book"></i>
-            {{localize "WH40K.Source.Book"}}
-          </label>
-          <input type="text" name="system.source.book" value="{{talentData.sourceBook}}"
-                  placeholder="{{localize 'WH40K.ItemSheet.Talent.BookPlaceholder'}}" />
-        </div>
-        <div class="tw-flex tw-flex-col tw-gap-1">
-          <label class="tw-flex tw-items-center tw-gap-1">
-            <i class="fa-solid fa-bookmark"></i>
-            {{localize "WH40K.Source.Page"}}
-          </label>
-          <input type="text" name="system.source.page" value="{{talentData.sourcePage}}"
-                  placeholder="123" />
-        </div>
-      </div>
-      {{else}}
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <i class="fa-solid fa-book-open"></i>
-        {{#if talentData.source}}
-        <span >{{talentData.source}}</span>
-        {{else}}
-        <span >{{localize "WH40K.ItemSheet.Talent.NoSource"}}</span>
-        {{/if}}
-      </div>
-      {{/if}}
+    <footer class="tw-flex-shrink-0 tw-flex tw-items-center tw-gap-1">
+      <i class="fa-solid fa-book-open" title="{{localize 'WH40K.Common.Source'}}"></i>
+      {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=inEditMode}}
     </footer>
 
 </div>{{!-- .wh40k-talent-sheet-v2 --}}

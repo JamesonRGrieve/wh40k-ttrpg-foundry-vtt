@@ -15,6 +15,7 @@
 import type { Args, HtmlRenderer, Meta, StoryContext, StoryObj } from '@storybook/html-vite';
 import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
+import { walkFiles } from '../scripts/lib/walk.mjs';
 import { formatSourceLabel } from '../src/module/handlebars/source-label.ts';
 import { readRepoFile } from '../src/module/testing/repo-file.ts';
 import partialSrc from '../src/templates/item/partial/source-reference-field.hbs?raw';
@@ -77,12 +78,26 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
         'src/templates/item/item-weapon-mod-sheet.hbs',
         'src/templates/item/item-weapon-sheet.hbs',
         'src/templates/item/armour-mod-restrictions.hbs',
+        // These kept hand-built Book / Page / Custom Reference inputs until #229 was reopened.
+        'src/templates/item/item-condition-sheet.hbs',
+        'src/templates/item/item-critical-injury-sheet.hbs',
+        'src/templates/item/item-cybernetic-sheet.hbs',
+        'src/templates/item/item-weapon-quality-sheet.hbs',
+        'src/templates/item/item-location-sheet.hbs',
+        'src/templates/item/talent-sheet.hbs',
     ];
 
     it.each(ITEM_TEMPLATES)('%s edits its source through the shared partial', (path) => {
         const src = readRepoFile(path);
-        expect(src).not.toContain('name="system.source"');
+        expect(src).not.toContain('name="system.source');
         expect(src).toContain('item/partial/source-reference-field.hbs');
+    });
+
+    it('no item template binds system.source.* outside the shared partial', () => {
+        const offenders = [...walkFiles('src/templates/item', { ext: '.hbs' })].filter(
+            (file) => file !== 'src/templates/item/partial/source-reference-field.hbs' && readRepoFile(file).includes('name="system.source.'),
+        );
+        expect(offenders).toEqual([]);
     });
 
     it.each(STRING_SOURCE_TEMPLATES)('%s formats its string source through sourceLabel', (path) => {
@@ -102,7 +117,6 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
     it.each([
         'src/module/data/shared/description-template.ts',
         'src/module/data/abstract/item-data-model.ts',
-        'src/module/applications/item/talent-sheet.ts',
         'src/module/applications/character-creation/origin-detail-dialog.ts',
     ])('%s formats its source reference through formatSourceLabel', (path) => {
         const src = readRepoFile(path);

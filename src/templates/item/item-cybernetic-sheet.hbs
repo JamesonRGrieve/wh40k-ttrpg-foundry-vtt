@@ -594,23 +594,7 @@
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-bookmark" labelKey="WH40K.Common.Source"}}
-            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
-              <div class="tw-flex tw-flex-col tw-gap-1.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Source.Book"}}</label>
-                <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.BookPlaceholder'}}" />
-              </div>
-              <div class="tw-flex tw-flex-col tw-gap-1.5">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Source.Page"}}</label>
-                <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="142" />
-              </div>
-              <div class="tw-flex tw-flex-col tw-gap-1.5 tw-col-span-2">
-                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
-                <input type="text" name="system.source.url" value="{{source.source.url}}"
-                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.CustomReferencePlaceholder'}}" />
-              </div>
-            </div>
+            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         
       </div>

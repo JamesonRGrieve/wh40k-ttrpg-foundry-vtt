@@ -6428,8 +6428,6 @@
                 "NoNotes": "No notes",
                 "Technical": "Technical",
                 "IdentifierHint": "(for macros/scripts)",
-                "BookPlaceholder": "Core Rulebook",
-                "NoSource": "No source specified",
                 "SpecialisationPlaceholder": "e.g., Las, Mechanicum, Nobility",
                 "CharacteristicPlaceholder": "e.g., willpower",
                 "SkillPlaceholder": "e.g., psyniscience",
@@ -6541,9 +6539,7 @@
                 "RecoveryPlaceholder": "e.g., 1d5 days, 2 weeks",
                 "InstallationNote": "Installation typically requires a successful Medicae test. Failed installations may cause complications or injury.",
                 "DescriptionHint": "Flavour text, appearance, and background information.",
-                "NotesPlaceholder": "GM notes, house rules, special considerations...",
-                "BookPlaceholder": "RT: Core Rulebook",
-                "CustomReferencePlaceholder": "Optional: Custom source text overrides book/page"
+                "NotesPlaceholder": "GM notes, house rules, special considerations..."
             },
             "Armour": {
                 "TypeLabel": "Armour Type",
@@ -6678,10 +6674,7 @@
                 "SourcePlaceholder": "Core Rulebook, pg. XX"
             },
             "Common": {
-                "GmNotes": "GM Notes",
-                "CustomReference": "Custom Reference",
-                "SourceBookPlaceholder": "Rogue Trader Core",
-                "CustomReferencePlaceholder": "Homebrew"
+                "GmNotes": "GM Notes"
             },
             "Condition": {
                 "NamePlaceholder": "Condition Name",
@@ -6741,8 +6734,7 @@
                 "DefaultLevel": "Default Level",
                 "DefaultLevelHint": "Default level value for this quality",
                 "NotesPlaceholder": "Additional notes, legacy data, GM notes...",
-                "FullDescription": "Full Description",
-                "UrlPlaceholder": "https://… (homebrew/errata source)"
+                "FullDescription": "Full Description"
             },
             "Skill": {
                 "Specialist": "Specialist",
@@ -7257,16 +7249,9 @@
         },
         "Description": "Description",
         "Source": {
-            "Label": "Source",
-            "BookPlaceholder": "Book title",
-            "PagePlaceholder": "Page",
-            "CustomPlaceholder": "Custom source URL",
             "Book": "Book",
             "Page": "Page",
-            "Custom": "Custom",
-            "Errata": "Errata Applied",
-            "Acquired": "Acquired (in play)",
-            "AcquiredPlaceholder": "Where the party got this — e.g. recovered from The Cache, Session 4"
+            "Custom": "Custom"
         },
         "Craftsmanship": {
             "Label": "Craftsmanship",
@@ -8932,13 +8917,6 @@
             "SampleCharacters": "Sample Characters",
             "Sector": "Sector",
             "SectorPlaceholder": "e.g. Calixis",
-            "Source": "Source",
-            "SourceBook": "Book",
-            "SourceBookPlaceholder": "e.g. Core Rulebook",
-            "SourcePage": "Page",
-            "SourcePagePlaceholder": "e.g. 100",
-            "SourceUrl": "URL",
-            "SourceUrlPlaceholder": "https://…",
             "SpecialRules": "Special Rules",
             "SpecialRulesPlaceholder": "Narrative special rules…",
             "Tags": "Tags",

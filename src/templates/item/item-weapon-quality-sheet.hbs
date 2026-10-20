@@ -171,20 +171,7 @@
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Common.Source"}}
-                        <div class="tw-grid tw-grid-cols-[2fr_1fr] tw-gap-2 tw-mb-3">
-                            <div class="tw-flex tw-flex-col tw-gap-0.5">
-                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.NPC.SourceBook"}}</label>
-                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.book" value="{{source.source.book}}" placeholder="{{localize 'WH40K.ItemSheet.Common.SourceBookPlaceholder'}}" />
-                            </div>
-                            <div class="tw-flex tw-flex-col tw-gap-0.5">
-                                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.Source.Page"}}</label>
-                                <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.page" value="{{source.source.page}}" placeholder="127" />
-                            </div>
-                        </div>
-                        <div class="tw-flex tw-flex-col tw-gap-0.5">
-                            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.Common.CustomReference"}}</label>
-                            <input type="text" class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm" name="system.source.url" value="{{source.source.url}}" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.UrlPlaceholder'}}" />
-                        </div>
+                        {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
             </div>
