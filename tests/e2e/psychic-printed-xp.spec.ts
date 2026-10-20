@@ -23,22 +23,34 @@ import { scaledMs } from './lib/timing';
  * scripts/e2e-coverage.mjs.
  */
 
-const PSYCHIC_PRINTED_XP_FLOWS = ['dh2-charges-dh2-printing', 'bc-charges-bc-printing', 'cauterise-carries-300', 'dh2-tiers-by-printed-psy-rating'] as const;
+const PSYCHIC_PRINTED_XP_FLOWS = [
+    'dh2-charges-dh2-printing',
+    'bc-charges-bc-printing',
+    'cauterise-carries-300',
+    'dh2-tiers-by-printed-psy-rating',
+    'bc-lists-every-book-once',
+] as const;
 
 /** The Psy Rating DH2 core prints for these powers (content#34): Molten Beam p. 209, Flame Breath p. 207. */
 const PRINTED_PSY_RATING: Record<string, number> = { 'Molten Beam': 4, 'Flame Breath': 3 };
 type FlowName = (typeof PSYCHIC_PRINTED_XP_FLOWS)[number];
 
-/** What each line's printing charges (DH2 core p. 204 and BC core p. 226 for Precognition). */
+/**
+ * What each line's printing charges: Precognition DH2 core p. 204 and BC core p. 226; Fate Loom
+ * is a Tome of Fate power (corpus p. 54), and Doombolt a BC core power that Broken Chains restates
+ * for a pregenerated sorcerer.
+ */
 const EXPECTED: Record<'dh2' | 'bc', { flow: FlowName; charges: Record<string, number> }> = {
     dh2: { flow: 'dh2-charges-dh2-printing', charges: { Precognition: 400, Cauterise: 300 } },
-    bc: { flow: 'bc-charges-bc-printing', charges: { Precognition: 100 } },
+    bc: { flow: 'bc-charges-bc-printing', charges: { 'Precognition': 100, 'Fate Loom': 500, 'Doombolt': 200 } },
 };
 
 interface DialogRead {
     appId: string | null;
     charges: Record<string, number>;
     tiers: Record<string, number>;
+    /** How many rows each power name takes in the list. */
+    listed: Record<string, number>;
     error: string | null;
 }
 
@@ -60,7 +72,7 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as { game: { actors: { get: (id: string) => object | undefined } } };
             const actor = g.game.actors.get(args.actorId);
-            if (actor === undefined) return { appId: null, charges: {}, tiers: {}, error: 'actor not found' };
+            if (actor === undefined) return { appId: null, charges: {}, tiers: {}, listed: {}, error: 'actor not found' };
             const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
             const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
             const dialog = new mod.default(actor);
@@ -72,9 +84,11 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             const powers = (context.psychic?.disciplines ?? []).flatMap((discipline) => discipline.items);
             const charges: Record<string, number> = {};
             const tiers: Record<string, number> = {};
+            const listed: Record<string, number> = {};
             for (const power of powers) {
                 if (args.names.includes(power.name)) charges[power.name] = power.cost;
                 tiers[power.name] = power.prCost;
+                listed[power.name] = (listed[power.name] ?? 0) + 1;
             }
             // Outline Precognition's row for the capture.
             const row = Array.from(dialog.element?.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]') ?? []).find(
@@ -83,7 +97,7 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             const rowBox = row?.closest<HTMLElement>('.tw-rounded-md');
             rowBox?.style.setProperty('outline', '2px dashed #ff00ff');
             rowBox?.scrollIntoView({ block: 'center' });
-            return { appId: dialog.id, charges, tiers, error: null };
+            return { appId: dialog.id, charges, tiers, listed, error: null };
         },
         { actorId, names },
     );
@@ -140,6 +154,11 @@ test.describe.serial('psychic powers charge their printed XP (Tier B, content#30
                 if (line === 'dh2') {
                     const tiers = Object.fromEntries(Object.keys(PRINTED_PSY_RATING).map((name) => [name, read.tiers[name]]));
                     record('dh2-tiers-by-printed-psy-rating', sameEntries(tiers, PRINTED_PSY_RATING), `dh2 tiers ${JSON.stringify(tiers)}`);
+                }
+                if (line === 'bc') {
+                    // Tome of Fate is listed (#674), and a power two books print takes one row.
+                    const rows = { 'Fate Loom': read.listed['Fate Loom'], 'Doombolt': read.listed['Doombolt'] };
+                    record('bc-lists-every-book-once', sameEntries(rows, { 'Fate Loom': 1, 'Doombolt': 1 }), `bc rows ${JSON.stringify(rows)}`);
                 }
                 if (read.appId !== null) {
                     // eslint-disable-next-line no-await-in-loop -- captures the dialog just opened

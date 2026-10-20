@@ -17,6 +17,7 @@ import { getSpecializationsForSkill } from '../../rules/skill-specialization-ind
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { costForLine, normalizeGameLineKey } from '../../utils/item-variant-utils.ts';
+import { isLineBookPack, uniqueByName } from '../../utils/line-packs.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { assertWithinBudget, authorizeXPSpend, canAfford, getAvailableXP } from '../../utils/xp-transaction.ts';
 import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
@@ -741,24 +742,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const gameSystem = this.#getGameSystemId();
         const result: PreparedTalentAdvance[] = [];
 
-        // Whitelist talent packs by game system
-        const prefixMap: Record<string, string[]> = {
-            dh2: [
-                'dh2-core-items-talents',
-                'dh2-core-items-talents-specializations',
-                'dh2-beyond-items-talents',
-                'dh2-within-items-talents',
-                'dh2-without-items-talents',
-            ],
-            bc: ['bc-core-items-talents'],
-            ow: ['ow-core-items-talents'],
-            dh1: [],
-            rt: [],
-            dw: [],
-        };
-        const wanted = prefixMap[gameSystem] ?? [];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
+        // Every book's talent pack of the line, not a hand-kept list (#674).
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata.name, gameSystem, 'talents'));
 
         // Cache owned talents by (base name, specialization)
         const ownedByKey = new Map<string, Item>();
@@ -1019,15 +1004,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             offered: currentRating >= 1,
         };
 
-        // Whitelist psychic power packs
-        const packMap: Record<string, string[]> = {
-            dh2: ['dh2-core-items-psychic-powers', 'dh2-beyond-items-psychic-powers', 'dh2-within-items-psychic-powers', 'dh2-without-items-psychic-powers'],
-            bc: ['bc-core-items-psychic-powers'],
-            ow: ['ow-core-items-psychic-powers'],
-        };
-        const wanted = packMap[gameSystem] ?? [];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- p.metadata.id may be absent on some pack formats; optional chain is defensive
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && wanted.some((w) => p.metadata.id?.endsWith(w) || p.metadata.name === w));
+        // Every book's psychic power pack of the line, not a hand-kept list (#674).
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata.name, gameSystem, 'psychic-powers'));
 
         const ownedPowers = new Set(this.actor.items.filter((i) => i.type === 'psychicPower').map((i) => i.name.toLowerCase()));
 
@@ -1061,16 +1039,20 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         const line = normalizeGameLineKey(gameSystem);
+        // The printed XP cost, or null. The raw index is unmigrated, so a per-line XP map
+        // is resolved to the actor's line here; a stray currency record reads as null.
+        const printedXp = (entry: RawEntry): number | null =>
+            psychicPowerXpCost(line === null ? entry.system?.cost : costForLine(entry.system?.cost, entry.system?.source, line));
         const powers: PreparedPsychicPower[] = [];
-        for (const entry of rawEntries) {
+        // A power two of the line's books print is listed once, as its printed copy (#674).
+        for (const entry of uniqueByName(rawEntries, (e) => printedXp(e) !== null)) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: entries here are raw index/document objects with loose Foundry typing; `?? {}` covers the case where the index entry omits the system block
             const entrySys = entry.system ?? {};
             const prCost = entrySys.prCost ?? 1;
             // The printed XP cost when the power carries one, else the PR heuristic —
             // the same charge the DataModel's derived-spend calc counts (rules/xp-costs.ts,
-            // #240, #642). The raw index is unmigrated, so a per-line XP map is resolved
-            // to the actor's line here; a stray currency record reads as "not authored".
-            const cost = psychicPowerCharge(psychicPowerXpCost(line === null ? entrySys.cost : costForLine(entrySys.cost, entrySys.source, line)), prCost);
+            // #240, #642).
+            const cost = psychicPowerCharge(printedXp(entry), prCost);
             const owned = ownedPowers.has(entry.name.toLowerCase());
             const prGate = prCost > currentRating;
             const discipline = normalizeDiscipline(entrySys.discipline);
