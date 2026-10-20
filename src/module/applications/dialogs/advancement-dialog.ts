@@ -270,21 +270,15 @@ interface AdvancementContext extends Record<string, unknown> {
 }
 
 /**
- * Coerce a psychic-power `system.discipline` to its display string. The field is
- * normally a plain string, but some compendium entries (notably IM) store it as an
- * object ({ value, label }); a raw `.toString()` on those rendered the group title,
- * filter chip, and grouping key as literal "[object Object]" (#326). Read the
- * object's value/label when present, else fall back to "unknown".
+ * A psychic power's discipline as the dialog groups it: the printed name (content#35),
+ * tidied. The index entry is already resolved to the actor's line (`systemForLine`), so
+ * a per-line map has collapsed to its string; an empty or missing discipline groups
+ * under the langpack's "No discipline" rather than a raw "unknown" (#326).
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: compendium `system.discipline` is an untyped payload (string | object); narrowed by the type guards below
+// eslint-disable-next-line no-restricted-syntax -- boundary: a CompendiumCollection.getIndex `system.discipline` value, narrowed here
 function normalizeDiscipline(raw: unknown): string {
-    if (typeof raw === 'string' && raw.length > 0) return raw;
-    if (raw !== null && typeof raw === 'object') {
-        const obj = raw as { value?: string; label?: string };
-        if (typeof obj.value === 'string' && obj.value.length > 0) return obj.value;
-        if (typeof obj.label === 'string' && obj.label.length > 0) return obj.label;
-    }
-    return 'unknown';
+    const printed = typeof raw === 'string' ? raw.replace(/\s+/g, ' ').trim() : '';
+    return printed === '' ? game.i18n.localize('WH40K.Advancement.NoDiscipline') : printed;
 }
 
 export default class AdvancementDialog extends HandlebarsApplicationMixin(ApplicationV2) {

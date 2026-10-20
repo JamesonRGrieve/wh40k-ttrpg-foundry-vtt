@@ -202,6 +202,28 @@ export const DisciplineSelectAndHeaderWidth: Story = {
     },
 };
 
+/**
+ * content#35: a power keeps the discipline its book prints ("Nurgle", BC core p. 212). The
+ * select lists it first and selected, so saving the sheet never overwrites it with a
+ * tree name, and the header shows it as printed.
+ */
+export const PrintedDisciplineKept: Story = {
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true });
+        ctx.item.system['discipline'] = 'Nurgle';
+        ctx.item.system['disciplineLabel'] = 'Nurgle';
+        ctx.item.system['disciplineOptions'] = psychicDisciplineOptions('Nurgle');
+        return renderSheet(templateSrc, ctx);
+    },
+    play: async ({ canvasElement }) => {
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.discipline"]');
+        await expect(select?.value).toBe('Nurgle');
+        await expect(select?.options[0]?.textContent.trim()).toBe('Nurgle');
+        await expect(Array.from(select?.options ?? [], (option) => option.value).slice(1)).toEqual([...PSYCHIC_DISCIPLINE_CHOICES]);
+        await expect(canvasElement.querySelector('[data-field="discipline-label"]')?.textContent.trim()).toBe('Nurgle Power');
+    },
+};
+
 export const SourceReferenceEmpty: Story = {
     render: () => {
         const ctx = makeCtx();

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { normalisePsychicDiscipline } from './psychic-discipline.ts';
+import { normalisePsychicDiscipline, tidyPsychicDiscipline } from './psychic-discipline.ts';
+
+describe('tidyPsychicDiscipline (content#35)', () => {
+    it('keeps the printed name, collapsing only whitespace and newlines', () => {
+        expect(tidyPsychicDiscipline('Sorcery')).toBe('Sorcery');
+        expect(tidyPsychicDiscipline('  Astropath   Psychic Powers ')).toBe('Astropath Psychic Powers');
+        expect(tidyPsychicDiscipline("Divination\n(Emperor's Tarot)")).toBe("Divination (Emperor's Tarot)");
+    });
+});
 
 describe('normalisePsychicDiscipline', () => {
     it('keeps an exact choice, case- and whitespace-insensitively', () => {

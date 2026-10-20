@@ -315,6 +315,7 @@ export type I18nKey =
     | 'WH40K.Advancement.NoCareerHint'
     | 'WH40K.Advancement.NoCareerMessage'
     | 'WH40K.Advancement.NoCareerTitle'
+    | 'WH40K.Advancement.NoDiscipline'
     | 'WH40K.Advancement.NoSkillsAvailable'
     | 'WH40K.Advancement.NoTalentsAvailable'
     | 'WH40K.Advancement.Owned'

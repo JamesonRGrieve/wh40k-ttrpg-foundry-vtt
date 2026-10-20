@@ -687,6 +687,7 @@ const PSYCHIC_PRINTED_XP_FLOWS = [
     'cauterise-carries-300',
     'dh2-tiers-by-printed-psy-rating',
     'bc-lists-every-book-once',
+    'disciplines-as-printed',
 ];
 recordDimension('psychic-printed-xp.flow', covered['psychic-printed-xp.flow'], PSYCHIC_PRINTED_XP_FLOWS);
 

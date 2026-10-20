@@ -29,6 +29,7 @@ const PSYCHIC_PRINTED_XP_FLOWS = [
     'cauterise-carries-300',
     'dh2-tiers-by-printed-psy-rating',
     'bc-lists-every-book-once',
+    'disciplines-as-printed',
 ] as const;
 
 /** The Psy Rating DH2 core prints for these powers (content#34): Molten Beam p. 209, Flame Breath p. 207. */
@@ -51,6 +52,8 @@ interface DialogRead {
     tiers: Record<string, number>;
     /** How many rows each power name takes in the list. */
     listed: Record<string, number>;
+    /** The discipline group each power is listed under (content#35). */
+    groupOf: Record<string, string>;
     error: string | null;
 }
 
@@ -67,12 +70,12 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
                 id: string;
                 element: HTMLElement | null;
                 render: (force?: boolean) => Promise<void>;
-                _prepareContext: (options: object) => Promise<{ psychic?: { disciplines: Array<{ items: PreparedPower[] }> } }>;
+                _prepareContext: (options: object) => Promise<{ psychic?: { disciplines: Array<{ label: string; items: PreparedPower[] }> } }>;
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as { game: { actors: { get: (id: string) => object | undefined } } };
             const actor = g.game.actors.get(args.actorId);
-            if (actor === undefined) return { appId: null, charges: {}, tiers: {}, listed: {}, error: 'actor not found' };
+            if (actor === undefined) return { appId: null, charges: {}, tiers: {}, listed: {}, groupOf: {}, error: 'actor not found' };
             const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
             const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
             const dialog = new mod.default(actor);
@@ -90,6 +93,10 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
                 tiers[power.name] = power.prCost;
                 listed[power.name] = (listed[power.name] ?? 0) + 1;
             }
+            const groupOf: Record<string, string> = {};
+            for (const discipline of context.psychic?.disciplines ?? []) {
+                for (const power of discipline.items) groupOf[power.name] = discipline.label;
+            }
             // Outline Precognition's row for the capture.
             const row = Array.from(dialog.element?.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]') ?? []).find(
                 (link) => link.dataset['name'] === 'Precognition',
@@ -97,7 +104,7 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             const rowBox = row?.closest<HTMLElement>('.tw-rounded-md');
             rowBox?.style.setProperty('outline', '2px dashed #ff00ff');
             rowBox?.scrollIntoView({ block: 'center' });
-            return { appId: dialog.id, charges, tiers, listed, error: null };
+            return { appId: dialog.id, charges, tiers, listed, groupOf, error: null };
         },
         { actorId, names },
     );
@@ -138,6 +145,7 @@ test.describe.serial('psychic powers charge their printed XP (Tier B, content#30
             results.push({ name, ok, detail: ok ? null : detail });
         };
         const actors: string[] = [];
+        const printedGroups: Partial<Record<'dh2' | 'bc', { precognition: string; nurgle: boolean; ungrouped: string[] }>> = {};
         try {
             for (const line of ['dh2', 'bc'] as const) {
                 const { flow, charges: expected } = EXPECTED[line];
@@ -159,6 +167,22 @@ test.describe.serial('psychic powers charge their printed XP (Tier B, content#30
                     // Tome of Fate is listed (#674), and a power two books print takes one row.
                     const rows = { 'Fate Loom': read.listed['Fate Loom'], 'Doombolt': read.listed['Doombolt'] };
                     record('bc-lists-every-book-once', sameEntries(rows, { 'Fate Loom': 1, 'Doombolt': 1 }), `bc rows ${JSON.stringify(rows)}`);
+                }
+                // content#35: every power groups under the discipline its book prints, none under "No discipline".
+                const groups = new Set(Object.values(read.groupOf));
+                printedGroups[line] = {
+                    precognition: read.groupOf['Precognition'] ?? '',
+                    nurgle: groups.has('Nurgle'),
+                    ungrouped: [...groups].filter((g) => /^(no discipline|unknown)$/i.test(g)),
+                };
+                if (line === 'bc') {
+                    const dh2 = printedGroups.dh2;
+                    const bc = printedGroups.bc;
+                    record(
+                        'disciplines-as-printed',
+                        dh2?.precognition === 'Divination' && dh2.ungrouped.length === 0 && bc?.nurgle === true && bc.ungrouped.length === 0,
+                        JSON.stringify(printedGroups),
+                    );
                 }
                 if (read.appId !== null) {
                     // eslint-disable-next-line no-await-in-loop -- captures the dialog just opened

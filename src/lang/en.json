@@ -2104,6 +2104,7 @@
                 "TalentMissing": "Requires {talent} talent"
             },
             "PrereqsNotMetLabel": "Prerequisites not met:",
+            "NoDiscipline": "No discipline",
             "Error": {
                 "MaxedOut": "This characteristic is already at maximum",
                 "CannotAfford": "Not enough XP to purchase this advancement",

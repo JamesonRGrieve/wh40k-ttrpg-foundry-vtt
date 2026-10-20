@@ -4,6 +4,7 @@ import { activeTokenOf, placeAreaTemplate } from '../canvas/area-template-canvas
 import { comradeRulesFor } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { normalisePsychicDiscipline } from '../data/item/psychic-discipline.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { pluralKey } from '../i18n/plural.ts';
@@ -313,10 +314,10 @@ export class ActionData {
         });
     }
 
-    /** The rolled power's discipline choice (`malefic`, `sanctic`, …; normalised by the psychic-power DataModel), or '' with no power. */
+    /** The rolled power's discipline tree (`malefic`, `sanctic`, …, from its printed discipline, content#35), or '' with no power. */
     protected get powerDiscipline(): string {
         const discipline = this.rollData.power?.system['discipline'];
-        return typeof discipline === 'string' ? discipline : '';
+        return typeof discipline === 'string' ? normalisePsychicDiscipline(discipline) : '';
     }
 
     /**

@@ -10,10 +10,10 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import { prerequisitesField } from '../shared/prerequisites-field.ts';
 import {
     normalisePsychicDiscipline,
-    PSYCHIC_DISCIPLINE_CHOICES,
+    psychicDisciplineDisplay,
     type PsychicDisciplineOption,
-    psychicDisciplineLabelKey,
     psychicDisciplineOptions,
+    tidyPsychicDiscipline,
 } from './psychic-discipline.ts';
 
 /**
@@ -58,13 +58,9 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
             identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
 
-            // Psychic discipline. 'minor' covers powers from within.md
-            // p. 59-61 that don't belong to a discipline tree.
-            discipline: new fields.StringField({
-                required: true,
-                initial: 'telepathy',
-                choices: [...PSYCHIC_DISCIPLINE_CHOICES],
-            }),
+            // The discipline as the book prints it (content#35): content, so no fixed
+            // choices. `disciplineTree` derives the tree the rules key on.
+            discipline: new fields.StringField({ required: true, blank: true, initial: 'telepathy' }),
 
             // Psy Rating cost
             prCost: new fields.NumberField({ required: true, initial: 1, min: 0, integer: true }),
@@ -140,13 +136,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel override; source mirrors parent _migrateData signature
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
-        // `discipline` is a strict choice field, but legacy/compendium data is
-        // messy: title-case spellings ("Telepathy"), qualified headings ("Malefic
-        // Daemonology"), surrounding whitespace, etc. An out-of-choice value fails
-        // V14 validation and drops the whole power from its owning actor (breaking
-        // token/ActorDelta creation on drop). Normalise the recoverable forms.
+        // The printed discipline is kept as printed (content#35), only tidied: an import
+        // could carry a heading split over lines ("Divination\n(Emperor's Tarot)").
         if (typeof source['discipline'] === 'string') {
-            source['discipline'] = normalisePsychicDiscipline(source['discipline']);
+            source['discipline'] = tidyPsychicDiscipline(source['discipline']);
         }
         // Runs after the line containers are flattened (super), so a per-line XP map
         // has already collapsed to the active line's number. A stray acquisition-
@@ -171,7 +164,13 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * @type {string}
      */
     get disciplineLabel(): string {
-        return game.i18n.localize(psychicDisciplineLabelKey(this.discipline));
+        const display = psychicDisciplineDisplay(this.discipline);
+        return 'labelKey' in display ? game.i18n.localize(display.labelKey) : display.label;
+    }
+
+    /** The rules tree of the printed discipline: `malefic`, `sanctic`, …, or `minor` when it names none. */
+    get disciplineTree(): string {
+        return normalisePsychicDiscipline(this.discipline);
     }
 
     /** The sheet's discipline select options, labelled through the langpack (#659). */
@@ -195,7 +194,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             sanctic: { bgClass: 'tw-bg-[rgba(234,179,8,0.2)]', textClass: 'tw-text-[#eab308]' },
         };
         const fallback = { bgClass: 'tw-bg-[rgba(0,0,0,0.1)]', textClass: 'tw-text-[color:var(--wh40k-text-muted)]' };
-        return { ...(map[this.discipline] ?? fallback), icon: 'fa-brain', label: this.disciplineLabel };
+        return { ...(map[this.disciplineTree] ?? fallback), icon: 'fa-brain', label: this.disciplineLabel };
     }
 
     /**

@@ -86,7 +86,7 @@
                                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.PsychicPower.Discipline"}}</label>
                                 {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="system.discipline"}}
                                     {{#each item.system.disciplineOptions as |option|}}
-                                        <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{localize option.labelKey}}</option>
+                                        <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{#if option.display.labelKey}}{{localize option.display.labelKey}}{{else}}{{option.display.label}}{{/if}}</option>
                                     {{/each}}
                                 {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
                             </div>
