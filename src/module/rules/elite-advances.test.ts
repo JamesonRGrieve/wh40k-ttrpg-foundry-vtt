@@ -108,9 +108,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('elite advances in each line’s real orig
         expect(lineHasEliteAdvances(privateLineOrigins(line), line)).toBe(false);
     });
 
-    it("BC's archetype pack does reference DH2's Psyker elite advance, which is not a BC elite", () => {
-        const referenced = privateLineOrigins('bc').filter((entry) => 'step' in entry.system && entry.system.step === 'elite');
-        expect(referenced.map((entry) => entry.name)).toEqual(['Psyker']);
-        expect(eliteEntries(referenced, 'bc')).toEqual([]);
+    it('BC lists no elite advance of its own', () => {
+        expect(eliteEntries(privateLineOrigins('bc'), 'bc')).toEqual([]);
     });
 });
