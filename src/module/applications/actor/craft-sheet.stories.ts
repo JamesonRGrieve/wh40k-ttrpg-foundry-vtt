@@ -10,16 +10,19 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
-import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
+import { randomId, type SystemId, seedRandom, withSystem } from '../../../../stories/mocks/extended';
+import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize';
 import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { assertField, submitForm, renderSheetParts } from '../../../../stories/test-helpers';
+import { assertField, renderSheetParts, submitForm } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/actor/craft/header.hbs?raw';
 import combatTabSrc from '../../../templates/actor/craft/tab-combat.hbs?raw';
 import componentsTabSrc from '../../../templates/actor/craft/tab-components.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
 import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
+import { emptyAggregatedVehicleTraitEffects } from '../../data/shared/vehicle-trait-effects-template.ts';
 import { nameFitClass } from '../../handlebars/name-fit.ts';
+import { buildVehicleTraitPanel } from './vehicle-trait-panel-context.ts';
 
 initializeStoryHandlebars();
 
@@ -116,6 +119,18 @@ const defaultCraftCtx: SheetContextLike = {
     isWatercraft: false,
     craftStats,
     crew: { required: 3, notes: '' },
+    // The Chimera's Rugged + Tracked Vehicle + Enclosed traits (content#28), built as the sheet builds them.
+    vehicleTraitPanel: buildVehicleTraitPanel(
+        {
+            ...emptyAggregatedVehicleTraitEffects(),
+            testModifiers: [
+                { test: 'repair', value: 20, source: 'Rugged' },
+                { test: 'difficultTerrain', value: 10, source: 'Tracked Vehicle' },
+            ],
+            crewExposure: 'enclosed',
+        },
+        { localize: localizeKey, format: formatKey },
+    ),
     source: {
         ...mockVehicleSheetContext({ systemId: 'dh2' }).source,
         ...craftSource,
@@ -137,6 +152,9 @@ export const Default: Story = {
         // speed input; manoeuverability is a label out of edit mode (#572/#27).
         await expect(view.getByText('5')).toBeVisible();
         assertField(canvasElement, 'system.speed.cruising', 18);
+        // The overview composes the Vehicle Tests + Trait Rules panels (content#28).
+        await expect(canvasElement.querySelector('li[data-test="repair"] [data-modifier-source="Rugged"]')?.textContent).toBe('Rugged +20');
+        await expect(canvasElement.querySelector('[data-rule="crewExposure"]')?.textContent).toBe('Crew: Enclosed');
     },
 };
 

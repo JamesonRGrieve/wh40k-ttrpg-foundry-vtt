@@ -12,11 +12,14 @@
 
 import type { VehicleCharacteristics } from '../../data/actor/vehicle.ts';
 import type { VehicleHardpoint } from '../../data/shared/vehicle-mounting.ts';
+import type { AggregatedVehicleTraitEffects } from '../../data/shared/vehicle-trait-effects-template.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { occupantCandidateActors, type TokenSortDoc } from '../../rules/vehicle-embark.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
+import { isVehicleTestCategory, type VehicleTestCategory } from '../../rules/vehicle-trait-tests.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
+import { buildVehicleTraitPanel, type VehicleTraitPanelContext } from './vehicle-trait-panel-context.ts';
 
 /** A single armour facing on a craft (front / side / rear). */
 interface CraftArmourFacing {
@@ -82,6 +85,8 @@ interface CraftSystemData {
     source: { provenance: string; book: string; page: string; url: string; derivedFrom: string; errata: boolean };
     /** DW-only acquisition gate; blank on the other six lines. */
     renown?: string;
+    /** The traits' structured effects, aggregated by the DataModel on every prepare (content#28). */
+    traitEffects: AggregatedVehicleTraitEffects;
 }
 
 /** Craft actor — an Actor whose `system` is one of the craft DataModels. */
@@ -91,6 +96,7 @@ type CraftActor = Actor.Implementation & {
     rollSkill: (skill: string, specialization?: string) => void;
     rollInitiative: (options: { createCombatants?: boolean }) => Promise<void>;
     rollItem: (itemId: string) => Promise<void>;
+    rollVehicleTest: (category: VehicleTestCategory) => Promise<void>;
 };
 
 /** Prepared armour-by-facing rollup for the overview/combat panels. */
@@ -187,6 +193,8 @@ interface CraftSheetContext extends Record<string, unknown> {
     components?: WH40KItem[];
     otherItems?: WH40KItem[];
     tabs?: PreparedTab[];
+    /** The Vehicle Tests + Trait Rules panels (content#28). */
+    vehicleTraitPanel?: VehicleTraitPanelContext;
 }
 
 /**
@@ -227,6 +235,7 @@ export default class CraftActorSheet extends BaseActorSheet {
             damageComponent: CraftActorSheet.#damageComponent,
             openOccupant: CraftActorSheet.#openOccupant,
             embarkSelected: CraftActorSheet.#embarkSelected,
+            rollVehicleTest: CraftActorSheet.#rollVehicleTest,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
     };
@@ -305,6 +314,7 @@ export default class CraftActorSheet extends BaseActorSheet {
 
         context.craftStats = this._prepareCraftStats();
         context.crew = this._prepareCrew();
+        context.vehicleTraitPanel = buildVehicleTraitPanel(this.actor.system.traitEffects, game.i18n);
         // The altitude tier moved from a hand-written <select> in the template
         // to the shared field-row partial (#502), which takes its choices as a
         // value → label map.
@@ -771,6 +781,18 @@ export default class CraftActorSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: `fromUuid` is a Foundry global resolving to an untyped Document union
         const occupant = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
         occupant?.sheet?.render(true);
+    }
+
+    /**
+     * Have the crew make a vehicle test (content#28); the trait modifiers ride on the roll.
+     * @this {CraftActorSheet}
+     * @param {PointerEvent} _event  Triggering click.
+     * @param {HTMLElement} target  The test button, carrying its category.
+     */
+    static async #rollVehicleTest(this: CraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const category = target.dataset['test'];
+        if (category === undefined || !isVehicleTestCategory(category)) return;
+        await this.actor.rollVehicleTest(category);
     }
 
     static async #embarkSelected(this: CraftActorSheet): Promise<void> {

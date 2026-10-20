@@ -607,6 +607,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // skill's Special Uses and readout are not offered.
         if (
             options.instance === undefined &&
+            options.sourcedModifiers === undefined &&
             hasSkillUses(resolvedSkillName) &&
             this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank)
         ) {
@@ -625,6 +626,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             situationalKey: resolvedSkillName,
             ...(instance !== undefined ? { instance } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
+            sourcedModifiers: options.sourcedModifiers,
         });
         openRollPrompt(simpleSkillData);
         return Promise.resolve();

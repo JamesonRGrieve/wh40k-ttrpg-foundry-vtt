@@ -168,6 +168,7 @@ interface RollDataShape {
         situational?: number;
         [key: string]: number | undefined;
     };
+    expandedBuckets: Record<string, Array<{ key: string; label: string; value: number; source: string }>>;
 }
 
 type WH40KBaseActorInstance = InstanceType<typeof WH40KBaseActor>;
@@ -398,6 +399,27 @@ describe('_buildSimpleSkillRoll — PC (acolyte) paths honour situational modifi
         });
 
         expect(rollDataOf(result).skillRank).toBeUndefined();
+    });
+
+    it('a vehicle test: the trait rows sum into the vehicle-traits bucket and expand one row per trait (content#28)', () => {
+        const actor = makeActor({ name: 'Acolyte Vex', situationalSkills: { techUse: [] } });
+        const components = [
+            { key: 'vehicle-trait-repair-0', label: 'Rugged', value: 20, source: 'Vehicle trait: Rugged' },
+            { key: 'vehicle-trait-repair-1', label: 'Ramshackle', value: 20, source: 'Vehicle trait: Ramshackle' },
+        ];
+
+        const result = buildRoll(actor, {
+            key: 'techUse',
+            type: 'skill',
+            label: 'Tech-Use Test',
+            target: 45,
+            situationalKey: 'techUse',
+            sourcedModifiers: { bucket: 'vehicle-traits', components },
+        });
+
+        const rollData = rollDataOf(result);
+        expect(rollData.modifiers['vehicle-traits']).toBe(40);
+        expect(rollData.expandedBuckets['vehicle-traits']).toEqual(components);
     });
 
     it('zero situational total leaves modifiers.situational unset (does not write 0)', () => {

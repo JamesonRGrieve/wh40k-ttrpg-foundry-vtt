@@ -1,0 +1,52 @@
+{{!--
+    Vehicle traits panels (content#28) on the craft sheet's Overview tab.
+
+    1. Vehicle Tests: one button per test the crew can make with the vehicle
+       (Repair, Difficult Terrain, Floor It!, Command), listing the trait
+       modifiers that test takes. The roll card names each trait again.
+    2. Trait Rules: read-only movement, terrain and deployment rules the
+       vehicle's traits give it.
+
+    Context (CraftActorSheet._prepareTraitPanel):
+      vehicleTraitPanel: {
+        tests: Array<{ category: string, label: string, rollLabel: string, modifiers: Array<{ label: string, value: string }> }>
+        rules: Array<{ key: string, text: string }>
+      }
+--}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-dice-d20" label=(localize "WH40K.Vehicle.TraitTests.Title") bodyClass="tw-p-4"}}
+    <p class="tw-m-0 tw-mb-3 tw-text-sm tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.TraitTests.Hint"}}</p>
+    <ul class="tw-list-none tw-p-0 tw-m-0 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-2" data-wh40k-hook="vehicle-trait-tests">
+        {{#each vehicleTraitPanel.tests}}
+            <li class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5 tw-rounded tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)]" data-test="{{this.category}}">
+                <button type="button"
+                        class="tw-inline-flex tw-items-center tw-gap-1 tw-shrink-0 tw-bg-transparent tw-border tw-border-solid tw-rounded tw-px-2 tw-py-1 tw-cursor-pointer tw-text-[0.8rem] tw-font-semibold {{themeClassFor 'border'}} {{themeClassFor 'accent'}}"
+                        data-action="rollVehicleTest"
+                        data-test="{{this.category}}"
+                        aria-label="{{this.rollLabel}}">
+                    <i class="fa-solid fa-dice-d20" aria-hidden="true"></i>
+                    <span>{{this.label}}</span>
+                </button>
+                <span class="tw-flex tw-flex-wrap tw-gap-1 tw-min-w-0 tw-text-[0.75rem] tw-text-[color:var(--color-text-primary)]">
+                    {{#each this.modifiers}}
+                        <span class="tw-px-1.5 tw-rounded tw-bg-[rgba(0,0,0,0.18)]" data-modifier-source="{{this.label}}">{{this.label}} {{this.value}}</span>
+                    {{else}}
+                        <span class="tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.TraitTests.NoModifiers"}}</span>
+                    {{/each}}
+                </span>
+            </li>
+        {{/each}}
+    </ul>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
+
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs icon="fa-route" label=(localize "WH40K.Vehicle.TraitRules.Title") bodyClass="tw-p-4"}}
+    <p class="tw-m-0 tw-mb-3 tw-text-sm tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.TraitRules.Hint"}}</p>
+    {{#if vehicleTraitPanel.rules.length}}
+        <ul class="tw-list-disc tw-pl-5 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]" data-wh40k-hook="vehicle-trait-rules">
+            {{#each vehicleTraitPanel.rules}}
+                <li data-rule="{{this.key}}">{{this.text}}</li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p class="tw-m-0 tw-text-sm tw-italic tw-text-[color:var(--wh40k-text-muted)]" data-wh40k-hook="vehicle-trait-rules-empty">{{localize "WH40K.Vehicle.TraitRules.None"}}</p>
+    {{/if}}
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

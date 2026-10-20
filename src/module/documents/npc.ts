@@ -287,6 +287,7 @@ export class WH40KNPC extends WH40KBaseActor {
             target,
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
             instance: options.instance,
+            sourcedModifiers: options.sourcedModifiers,
         });
         openRollPrompt(simpleSkillData);
     }

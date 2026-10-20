@@ -58,6 +58,9 @@
             {{/if}}
         {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
+        {{!-- Vehicle tests with their trait modifiers, and the traits' movement / terrain / deployment rules (content#28). --}}
+        {{> systems/wh40k-rpg/templates/actor/panel/vehicle-traits-panel.hbs}}
+
         {{!-- Description — through the standard ProseMirror path. A bare
               `<div class="editor-content">` never mounts an editor, so the
               description was not editable at all (CLAUDE.md gotcha #5).

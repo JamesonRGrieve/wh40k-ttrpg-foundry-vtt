@@ -97,7 +97,7 @@ import {
 import type { ExtendedTestChatContext } from './extended-test-data.ts';
 import { localizeHitCeiling } from './hit-ceiling.ts';
 import { resolveGainedMalignancy } from './malignancy-outcome.ts';
-import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
+import { PsychicRollData, RollData, type RollModifierComponent, WeaponRollData } from './roll-data.ts';
 import {
     type ChatCardFlags,
     degreesResultFormula,
@@ -1435,6 +1435,12 @@ export class SimpleSkillData extends ActionData {
 export interface SkillRollOptions {
     /** Route the test through this action subclass instead of a plain skill test (an evasion, #414). */
     instance?: SimpleSkillData | undefined;
+    /**
+     * A Path B bucket of sourced rows the caller adds to the test (a vehicle's
+     * trait modifiers on a test made with it, content#28). The test is that
+     * specific use of the skill, so the skill's Special Uses are not offered.
+     */
+    sourcedModifiers?: { bucket: string; components: readonly RollModifierComponent[] } | undefined;
 }
 
 /** A chem/drug item as the Chem-Use flow reads it (#441) — its dose payload + uses. */

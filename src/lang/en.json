@@ -5970,6 +5970,59 @@
                 "NoOperator": "This vehicle's weapon is fired by its operator's skill — embark a crew member (gunner/driver) or assign your character first.",
                 "NoActionForItemType": "No actions implemented for item type: {type}"
             },
+            "TraitTests": {
+                "Title": "Vehicle Tests",
+                "Hint": "Tests made by the crew aboard, with the modifiers this vehicle's traits give them.",
+                "Roll": "Roll a {test} test",
+                "TestLabel": "{test} Test: {vehicle}",
+                "Source": "Vehicle trait: {trait}",
+                "NoTester": "Nobody aboard can make this test. Embark a crew member or driver first.",
+                "NoModifiers": "No trait modifiers",
+                "Category": {
+                    "repair": "Repair",
+                    "difficultTerrain": "Difficult Terrain",
+                    "floorIt": "Floor It!",
+                    "command": "Command"
+                }
+            },
+            "TraitRules": {
+                "Title": "Trait Rules",
+                "Hint": "Movement, terrain and deployment rules this vehicle's traits give it.",
+                "None": "This vehicle's traits give it no movement, terrain or deployment rules.",
+                "Flag": {
+                    "hoverer": "Hovers above the ground and may move to Low Altitude",
+                    "flyer": "Follows the Flyer rules",
+                    "spacecraft": "May leave the atmosphere",
+                    "ignoresDifficultTerrain": "Ignores difficult terrain",
+                    "amphibious": "Amphibious",
+                    "cannotRam": "Cannot Ram",
+                    "freeTurn": "Turns without spending movement",
+                    "canParryWithMelee": "May parry with its melee weapons",
+                    "enhancedMovement": "Enhanced motive systems",
+                    "ponderous": "Ponderous: no Floor It!, and Tactical Speed takes a Full Action",
+                    "immobile": "Immobile: cannot move under its own power or Jink",
+                    "crashesOnFailedRam": "A failed Operate test to Ram means it crashes into the target",
+                    "hitAndRun": "May make the Hit & Run action",
+                    "orbitalDeployment": "Deploys from orbit",
+                    "environmentallySealed": "Environmentally sealed"
+                },
+                "Value": {
+                    "crewExposure": "Crew: {value}",
+                    "deploymentIncomingToHitModifier": "Attacks against it while deploying: {value}",
+                    "postLandingDelayRounds": "Rounds before it may act after landing: {value}",
+                    "incomingRangedToHitModifier": "Shooting attacks against it: {value}",
+                    "incomingMeleeToHitModifier": "Melee attacks against it: {value}",
+                    "antiAir": "Anti-air: {value}"
+                },
+                "CrewExposure": {
+                    "open": "Open-topped",
+                    "enclosed": "Enclosed"
+                },
+                "AntiAir": {
+                    "rudimentary": "Rudimentary (halve the penalties)",
+                    "advanced": "Advanced (ignore the penalties)"
+                }
+            },
             "Altitude": "Altitude",
             "Ceiling": "Ceiling",
             "Draught": "Draught",

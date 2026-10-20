@@ -1,5 +1,16 @@
+import { SystemConfigRegistry } from '../config/game-systems/index.ts';
+import type { AggregatedVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
+import type { SkillRollOptions } from '../rolls/action-data.ts';
 import { occupantCandidateActors } from '../rules/vehicle-embark.ts';
 import { occupantsOf } from '../rules/vehicle-occupancy.ts';
+import {
+    VEHICLE_TRAIT_TEST_BUCKET,
+    type VehicleTestCategory,
+    vehicleTester,
+    vehicleTestSkill,
+    vehicleTraitTestComponents,
+} from '../rules/vehicle-trait-tests.ts';
+import { firstSystemId } from '../utils/chat-system-id.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import { documentActions } from './document-actions.ts';
@@ -25,7 +36,43 @@ type VehicleSystemData = WH40KBaseActor['system'] & {
         notes: string;
     };
     size: number;
+    /** The traits' structured effects, aggregated by the craft DataModel on every prepare. */
+    traitEffects: AggregatedVehicleTraitEffects;
 };
+
+/** One specialisation entry of a specialist skill, as the tester's sheet carries it. */
+interface TesterSkillEntry {
+    current?: number | undefined;
+}
+
+/**
+ * The slice of a character the vehicle asks to make a test: PCs and NPCs both
+ * roll a skill with a caller's sourced modifiers; a PC's specialist skill carries
+ * its specialisations as entries.
+ */
+interface VehicleTesterActor {
+    readonly skills?: Readonly<Record<string, { entries?: readonly TesterSkillEntry[] | undefined }>> | undefined;
+    rollSkill: (skillName: string, speciality?: number, options?: SkillRollOptions) => Promise<void> | void;
+}
+
+/** Whether a document exposes the tester surface (both PC and NPC documents do). */
+function isVehicleTester(actor: WH40KBaseActor): actor is WH40KBaseActor & VehicleTesterActor {
+    return typeof (actor as Partial<VehicleTesterActor>).rollSkill === 'function';
+}
+
+/**
+ * The tester's specialisation to roll for a specialist skill: the one with the
+ * highest target, so a driver trained in one form of Operate tests with it.
+ * `undefined` for a plain skill.
+ */
+function bestSpecialisation(entries: readonly TesterSkillEntry[] | undefined): number | undefined {
+    if (entries === undefined || entries.length === 0) return undefined;
+    let best = 0;
+    entries.forEach((entry, index) => {
+        if ((entry.current ?? 0) > (entries[best]?.current ?? 0)) best = index;
+    });
+    return best;
+}
 
 export class WH40KVehicle extends WH40KBaseActor {
     declare system: VehicleSystemData;
@@ -149,6 +196,44 @@ export class WH40KVehicle extends WH40KBaseActor {
      * it and no character is assigned — the attack cannot resolve a skill to roll.
      * @returns {WH40KBaseActor | null}  The operating character, or null.
      */
+    /**
+     * Have the crew make a vehicle test (content#28): a repair, an Operate test in
+     * difficult terrain or to Floor It!, or a Command test. The character in the
+     * seat the test belongs to rolls the category's skill, and each of this
+     * vehicle's traits that modifies that test adds a named row to the roll, so the
+     * card shows which trait gave what. Warns when nobody aboard can make it.
+     * @param category  The test category.
+     */
+    async rollVehicleTest(category: VehicleTestCategory): Promise<void> {
+        const tester = this.resolveVehicleTester(category);
+        if (tester === null || !isVehicleTester(tester)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Vehicle.TraitTests.NoTester'));
+            return;
+        }
+        const visible = SystemConfigRegistry.getOrNull(firstSystemId(tester) ?? '')?.getVisibleSkills();
+        const skill = vehicleTestSkill(category, (key) => visible?.has(key) ?? tester.skills?.[key] !== undefined);
+        const components = vehicleTraitTestComponents(this.system.traitEffects.testModifiers, category, (trait) =>
+            game.i18n.format('WH40K.Vehicle.TraitTests.Source', { trait }),
+        );
+        await tester.rollSkill(skill, bestSpecialisation(tester.skills?.[skill]?.entries), {
+            sourcedModifiers: { bucket: VEHICLE_TRAIT_TEST_BUCKET, components },
+        });
+    }
+
+    /**
+     * The character who makes a vehicle test of `category`: the occupant in the
+     * category's seat (the driver drives and commands, crew repair), falling back to
+     * the controlling player's character. `null` when nobody can.
+     * @param category  The test category.
+     */
+    resolveVehicleTester(category: VehicleTestCategory): WH40KBaseActor | null {
+        if (this.uuid !== null) {
+            const aboard = vehicleTester(category, occupantsOf(this.uuid, occupantCandidateActors()));
+            if (aboard !== undefined) return aboard;
+        }
+        return game.user.character;
+    }
+
     resolveWeaponOperator(): WH40KBaseActor | null {
         if (this.uuid !== null) {
             const crew = occupantsOf(this.uuid, occupantCandidateActors());
