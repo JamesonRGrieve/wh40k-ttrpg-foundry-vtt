@@ -111,7 +111,7 @@ import {
     uuid,
 } from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
-import { rollVehicleForceField, stampForceField, type VehicleForceFieldRoll, type VehicleTargetProfile } from './vehicle-strike.ts';
+import { attackCardVehicleLocation, rollVehicleForceField, stampForceField, type VehicleForceFieldRoll, type VehicleTargetProfile } from './vehicle-strike.ts';
 
 /** The "Phenomena Negated" card Sanctic Purity posts when the psyker spends Fate. */
 const SANCTIC_PURITY_NEGATED_TEMPLATE = 'systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs';
@@ -809,6 +809,17 @@ export class ActionData {
         return this.rollData.vehicleTargets[actorUuid] ?? null;
     }
 
+    /**
+     * A vehicle target's location for the attack card (#682): what its damage card
+     * will resolve for the first hit, off the same resolver — never the creature
+     * location the roll would read on a person.
+     */
+    #nameVehicleHitLocation(): void {
+        if (!(this.rollData instanceof WeaponRollData)) return;
+        const vehicle = this.#vehicleProfile(this.rollData.targetActor?.uuid ?? null);
+        this.rollData.vehicleHitLocation = vehicle === null ? '' : attackCardVehicleLocation(vehicle, this.rollData.roll?.total ?? null);
+    }
+
     /** Roll a vehicle's trait force field against this attack, which a quality the field does not stop passes unrolled (#678). */
     async #rollForceField(vehicle: VehicleTargetProfile): Promise<VehicleForceFieldRoll | null> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a typed WH40KItemDocument; the quality helpers accept a duck-typed QualityItem
@@ -1092,6 +1103,7 @@ export class ActionData {
 
             if (this.rollData.success && !this.#noAttackRoll()) {
                 (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0) ?? '';
+                this.#nameVehicleHitLocation();
             }
 
             this.createEffectData();

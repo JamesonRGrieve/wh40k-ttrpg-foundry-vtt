@@ -13,6 +13,7 @@ import { vehicleCombatRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type { AggregatedVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 import { bearingDegrees, tokenFacingBearing } from '../rules/area-template.ts';
+import { reverseAttackRollDigits } from '../rules/hit-locations.ts';
 import {
     type CrewTargeting,
     crewTargeting,
@@ -28,8 +29,11 @@ import {
     type VehicleMotionState,
     type VehicleMountProfile,
     vehicleFacingFromBearings,
+    vehicleHitLocation,
+    vehicleLocationLabelKey,
 } from '../rules/vehicle-damage.ts';
 import { type OccupantLike, readAboard } from '../rules/vehicle-occupancy.ts';
+import type { I18nKey } from '../types/i18n-keys.d.ts';
 import type { VehicleCritLookup, VehicleCritLookupFn } from './vehicle-critical-tables.ts';
 
 /** A conventional craft's durability, as the damage pipeline reads it off `actor.system`. */
@@ -437,6 +441,32 @@ export interface VehicleStrike {
     readonly armourFacing: VehicleArmourFacing;
     forceField: VehicleForceFieldRoll | null;
     righteousFury: VehicleFuryRow[];
+}
+
+/**
+ * The hit-location table value a hit reads off the attack roll — the roll
+ * reversed — or null when it reads none: on a line with one chart (every hit
+ * strikes the Hull), for a hit after the first on its vehicle, for any hit on a
+ * craft a burst spread onto (each rolls a fresh d100, DH2 Core p. 254), and with
+ * no attack roll.
+ */
+export function reversedTableRoll(profile: VehicleTargetProfile, hitNumber: number, attackRoll: number | null): number | null {
+    if (profile.rules.hitLocations === null || hitNumber !== 0 || profile.spreadTarget || attackRoll === null || attackRoll <= 0) return null;
+    return reverseAttackRollDigits(attackRoll);
+}
+
+/**
+ * The location the attack card names for a hit on a vehicle (#682): the same
+ * location its damage card resolves for the first hit — the reversed attack roll
+ * on the line's table, the Hull on a line with one chart — or, when it is read
+ * from a d100 rolled with the damage, a note saying so. Never a creature's.
+ */
+export function attackCardVehicleLocation(profile: VehicleTargetProfile, attackRoll: number | null): I18nKey {
+    const bands = profile.rules.hitLocations;
+    if (bands === null || bands.length === 0) return vehicleLocationLabelKey('hull');
+    const tableRoll = reversedTableRoll(profile, 0, attackRoll);
+    if (tableRoll === null) return 'WH40K.Vehicle.Damage.LocationWithDamage';
+    return vehicleLocationLabelKey(vehicleHitLocation(tableRoll, bands, profile.mounts, profile.facing).location);
 }
 
 /** The strike for a hit landing at `located` on a vehicle struck as `profile` describes. */

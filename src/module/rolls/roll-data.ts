@@ -48,6 +48,7 @@ import {
     type WithoutTalentItemLike,
 } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
+import type { I18nKey } from '../types/i18n-keys.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { aggregateModifierTotal, aggregateRollTarget } from './aggregate-target.ts';
 import { comradeOrderModifiersFor } from './comrade-order-modifiers.ts';
@@ -733,6 +734,12 @@ export class WeaponRollData extends RollData {
      * Built where the tokens are in hand, so the hit pipeline stays position-free.
      */
     vehicleTargets: Record<string, VehicleTargetProfile> = {};
+    /**
+     * The location the attack card names when the declared target is a vehicle
+     * (#682), a langpack key from the vehicle resolver; '' for any other target,
+     * whose card names its creature hit location.
+     */
+    vehicleHitLocation: I18nKey | '' = '';
     /**
      * The declared target rides in the open on a vehicle and can be singled out only
      * by a Called Shot (Open-Topped, DH2 Core p. 187) — except a Bike's rider in

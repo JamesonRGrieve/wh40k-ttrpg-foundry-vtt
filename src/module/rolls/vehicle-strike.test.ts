@@ -6,12 +6,14 @@ import {
     type VehicleTraitEffects,
 } from '../data/shared/vehicle-trait-effects-template.ts';
 import {
+    attackCardVehicleLocation,
     attackedFromAboveOrBelow,
     crewTargetOf,
     forceFieldBypassedBy,
     forceFieldRollFor,
     parseVehicleStrike,
     readVehicleDurability,
+    reversedTableRoll,
     rollVehicleForceField,
     stampForceField,
     strikeFor,
@@ -106,6 +108,42 @@ describe('vehicleTargetProfile', () => {
 
     it('is null for anything but a craft', () => {
         expect(vehicleTargetProfile({ system: { wounds: { value: 3 } }, items: [] }, 'front', false)).toBeNull();
+    });
+});
+
+describe('attackCardVehicleLocation (#682: the attack card names the location the damage card resolves)', () => {
+    /** A craft of `line` struck from the front, with a turret or without. */
+    function profileFor(line: string, items: Array<typeof TURRET_WEAPON> = []): VehicleTargetProfile {
+        const profile = vehicleTargetProfile({ system: craftSystem([], line), items }, 'front', false);
+        if (profile === null) throw new Error(`no ${line} craft profile`);
+        return profile;
+    }
+
+    it('reads the reversed attack roll on a line with a hit-location table (DH2, OW): 12 → 21, the Hull', () => {
+        for (const line of ['dh2', 'ow']) expect(attackCardVehicleLocation(profileFor(line), 12)).toBe('WH40K.Vehicle.Location.Hull');
+    });
+
+    it('names the Turret a turreted craft takes, and the Hull for a turret it lacks (DH2 Core p. 254)', () => {
+        // 19 → 91: Turret.
+        expect(attackCardVehicleLocation(profileFor('dh2', [TURRET_WEAPON]), 19)).toBe('WH40K.Vehicle.Location.Turret');
+        expect(attackCardVehicleLocation(profileFor('dh2'), 19)).toBe('WH40K.Vehicle.Location.Hull');
+    });
+
+    it('names the Hull on a line with one chart for the whole vehicle (RT, DW, and BC / DH1, which print no table)', () => {
+        for (const line of ['rt', 'dw', 'bc', 'dh1']) expect(attackCardVehicleLocation(profileFor(line), 12)).toBe('WH40K.Vehicle.Location.Hull');
+    });
+
+    it('says the location is rolled with the damage for a craft a burst spread onto, or with no attack roll', () => {
+        expect(attackCardVehicleLocation({ ...profileFor('dh2'), spreadTarget: true }, 12)).toBe('WH40K.Vehicle.Damage.LocationWithDamage');
+        expect(attackCardVehicleLocation(profileFor('dh2'), null)).toBe('WH40K.Vehicle.Damage.LocationWithDamage');
+    });
+
+    it("agrees with the damage card's reading of the first hit", () => {
+        const profile = profileFor('dh2');
+        expect(reversedTableRoll(profile, 0, 12)).toBe(21);
+        expect(reversedTableRoll(profile, 1, 12)).toBeNull();
+        expect(reversedTableRoll({ ...profile, spreadTarget: true }, 0, 12)).toBeNull();
+        expect(reversedTableRoll(profileFor('rt'), 0, 12)).toBeNull();
     });
 });
 

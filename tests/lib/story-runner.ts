@@ -43,3 +43,19 @@ export function storyPlayTests<A extends Args>(module: StoryModule<A>, expected:
         await expect(runStory(module.default, story)).resolves.toBeUndefined();
     });
 }
+
+/**
+ * The tests for some of a stories module's stories only: each named story exists
+ * and its play passes. For a module whose other stories need the browser canvas.
+ */
+export function namedStoryPlayTests<A extends Args>(module: StoryModule<A>, names: readonly string[]): void {
+    const stories = storiesOf(module).filter(([key]) => names.includes(key));
+
+    it('exports every named story', () => {
+        expect(stories.map(([key]) => key)).toEqual(expect.arrayContaining([...names]));
+    });
+
+    it.each(stories)('%s passes its play assertions', async (_key, story) => {
+        await expect(runStory(module.default, story)).resolves.toBeUndefined();
+    });
+}

@@ -13,7 +13,7 @@ import {
     type InertTrigger,
     modeDelta,
 } from '../rules/dynamic-modifiers.ts';
-import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId, reverseAttackRollDigits } from '../rules/hit-locations.ts';
+import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { type PsychicFormulaValues, resolvePsychicFormulaTerms } from '../rules/psychic-range.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
@@ -34,7 +34,7 @@ import {
 import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
 import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
 import type { VehicleCardRow } from './vehicle-card-rows.ts';
-import { strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
+import { reversedTableRoll, strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
 
 /** The die an extra hit on a vehicle rolls on its hit-location table (DH2 Core p. 254). */
 const FRESH_LOCATION_DIE = '1d100';
@@ -608,10 +608,12 @@ export class Hit {
      */
     async strikeVehicle(attackRoll: number | null, hitNumber: number, vehicle: VehicleTargetProfile): Promise<void> {
         const bands = vehicle.rules.hitLocations;
+        // The attack card names the same location (#682), off the same reading.
+        const reversed = reversedTableRoll(vehicle, hitNumber, attackRoll);
         let tableRoll = 0;
         let kind: VehicleTableRollKind = 'none';
-        if (bands !== null && hitNumber === 0 && !vehicle.spreadTarget && attackRoll !== null && attackRoll > 0) {
-            tableRoll = reverseAttackRollDigits(attackRoll);
+        if (reversed !== null) {
+            tableRoll = reversed;
             kind = 'reversed';
         } else if (bands !== null) {
             const fresh = new Roll(FRESH_LOCATION_DIE, {});

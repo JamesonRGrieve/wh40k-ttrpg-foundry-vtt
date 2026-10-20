@@ -238,6 +238,14 @@ async function autocannonAttackCard(page: Page, firer: string, target: string): 
     return { id, html: await cardHtml(page, id) };
 }
 
+/** The hit location an attack card names, and whether it is a vehicle's or a creature's (#682). */
+async function attackLocation(page: Page, html: string): Promise<{ kind: string; text: string }> {
+    return page.evaluate((source) => {
+        const row = new DOMParser().parseFromString(source, 'text/html').querySelector<HTMLElement>('[data-attack-hit-location]');
+        return { kind: row?.dataset['attackHitLocation'] ?? '', text: row?.textContent.trim() ?? '' };
+    }, html);
+}
+
 /** The values a card's vehicle rows print, by row hook (parsed in the page, which has a DOM). */
 async function vehicleRows(page: Page, html: string): Promise<Record<string, string>> {
     return page.evaluate((source) => {
@@ -510,6 +518,12 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             const fromBelow = await awaitCard(page, before, 'data-vehicle-row="vehicle-armour"');
             const rows = await vehicleRows(page, fromBelow.html);
             expect(rows['vehicle-facing'], 'an attack from below reads Rear').toBe('Rear');
+            // #682: the attack card names the location its damage card resolves (roll 12 → 21: the Hull).
+            expect(await attackLocation(page, airborne.html), 'the attack card names a vehicle location, not "Left Arm"').toEqual({
+                kind: 'vehicle',
+                text: 'Hull',
+            });
+            expect(rows['vehicle-location']).toBe('Hull');
             expect(rows['vehicle-armour'], 'Rear 16 less Pen 6').toBe('10');
             expect(fromBelow.html).toContain('Attacked from above or below');
             expect(await snapCard(page, 'vehicle-damage-from-below-rear-armour', fromBelow.id)).not.toBeNull();
@@ -563,6 +577,10 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
                 choices: { action: 'Semi-Auto Burst', hitAllocation: 'spread' as const },
             });
             const attackCard = await cardWith(page, attack.messageIds, 'roll-control__roll-damage');
+            // #682: the burst's first hit is on the declared craft; the card names its vehicle location.
+            const burstLocation = await attackLocation(page, await cardHtml(page, attackCard));
+            expect(burstLocation, "the burst card names the lead craft's vehicle location").toEqual({ kind: 'vehicle', text: 'Hull' });
+            expect(await snapCard(page, 'vehicle-damage-burst-attack-card-location', attackCard)).not.toBeNull();
             const before = await messageIds(page);
             await page.evaluate(
                 async (id) =>

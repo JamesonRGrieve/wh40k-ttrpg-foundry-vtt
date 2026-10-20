@@ -25,6 +25,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../stories/mocks';
 import { withSystem, type SystemId } from '../../../stories/mocks/extended';
+import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../stories/test-helpers';
 import cardSrc from './action-roll-chat.hbs?raw';
 
@@ -62,6 +63,8 @@ interface ActionRollData {
     printedDegrees?: { dos: number; dof: number };
     resultFormula?: string;
     hitLocation?: string;
+    /** A vehicle target's location (#682), a langpack key; '' for a creature. */
+    vehicleHitLocation?: string;
     // Keep the focus on transparency: suppress the action-control button row.
     ignoreControls: boolean;
     usesAmmo?: boolean;
@@ -762,5 +765,32 @@ export const DegreesWithoutPrintedCount: Story = {
     render: (args) => renderCard(args),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-wh40k-hook="degrees-count"]')?.textContent).toBe('3');
+    },
+};
+
+/** #682: a hit on a vehicle names its vehicle location, never the creature location its roll would read. */
+export const VehicleTargetLocation: Story = {
+    name: 'Vehicle target — the card names the Hull, not a creature location',
+    args: {
+        id: 'roll-vehicle',
+        label: 'Ballistic Skill Test',
+        rollData: successRollData({ hitLocation: 'leftArm', vehicleHitLocation: 'WH40K.Vehicle.Location.Hull' }),
+        effectOutput: [],
+    },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-attack-hit-location="vehicle"]')?.textContent.trim()).toBe(localizeKey('WH40K.Vehicle.Location.Hull'));
+        await expect(canvasElement.querySelector('[data-attack-hit-location="creature"]')).toBeNull();
+    },
+};
+
+/** A creature target still names its hit location. */
+export const CreatureTargetLocation: Story = {
+    name: 'Creature target — the card names its hit location',
+    args: { id: 'roll-creature', label: 'Ballistic Skill Test', rollData: successRollData({ hitLocation: 'leftArm' }), effectOutput: [] },
+    render: (args) => renderCard(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-attack-hit-location="creature"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-attack-hit-location="vehicle"]')).toBeNull();
     },
 };

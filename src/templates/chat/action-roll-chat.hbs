@@ -135,8 +135,14 @@
                             variant="success"
                             label="Success"
                             value=roll.total}}
-                        {{#if hitLocation}}
-                            <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]">
+                        {{!-- A vehicle target names its vehicle location (#682), never a creature's. --}}
+                        {{#if vehicleHitLocation}}
+                            <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]" data-attack-hit-location="vehicle">
+                                <i class="fas fa-crosshairs tw-text-[0.75rem] tw-opacity-70"></i>
+                                <span>{{localize vehicleHitLocation}}</span>
+                            </div>
+                        {{else if hitLocation}}
+                            <div class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-4 tw-py-1.5 tw-text-[color:var(--wh40k-card-gold)] tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.06em]" data-attack-hit-location="creature">
                                 <i class="fas fa-crosshairs tw-text-[0.75rem] tw-opacity-70"></i>
                                 <span>{{hitLocationLabel hitLocation}}</span>
                             </div>

@@ -6145,6 +6145,7 @@ export type I18nKey =
     | 'WH40K.Vehicle.Damage.LocationRedirected'
     | 'WH40K.Vehicle.Damage.LocationReversed'
     | 'WH40K.Vehicle.Damage.LocationSingleChart'
+    | 'WH40K.Vehicle.Damage.LocationWithDamage'
     | 'WH40K.Vehicle.Damage.MultiplierNote'
     | 'WH40K.Vehicle.Damage.MultiplierValue'
     | 'WH40K.Vehicle.Damage.TurretFront'
