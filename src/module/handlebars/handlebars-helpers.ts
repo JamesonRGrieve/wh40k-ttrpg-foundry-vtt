@@ -68,9 +68,9 @@ interface WH40KConfig {
     getSkillIcon?: (key: string) => string;
 }
 
-function getRtConfig(): WH40KConfig | undefined {
-    const rt = (CONFIG as { rt?: WH40KConfig }).rt;
-    return rt;
+/** The system config hooks-manager.ts installs as `CONFIG.wh40k`; undefined before init. */
+function getSystemConfig(): WH40KConfig | undefined {
+    return CONFIG.wh40k;
 }
 
 function isTplObject(v: TplValue): v is TplRecord {
@@ -737,9 +737,8 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
     });
 
     hbs.registerHelper('skillIcon', (skillKey: string): string => {
-        const rtConfig = getRtConfig();
-        const wh40kConfig = CONFIG.wh40k as WH40KConfig;
-        const config: WH40KConfig | typeof WH40K = rtConfig?.getSkillIcon !== undefined ? wh40kConfig : WH40K;
+        const systemConfig = getSystemConfig();
+        const config: WH40KConfig | typeof WH40K = systemConfig?.getSkillIcon !== undefined ? systemConfig : WH40K;
         // Foundry core icon: it ships with Foundry so it always resolves. The
         // previous `modules/game-icons-net-font/...` fallback pointed at an
         // optional module whose manifest is a dead 404, so the fallback for a
@@ -918,12 +917,12 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
         }
         if (qualityIds.length === 0) return [];
 
-        const rtConfig = getRtConfig();
-        if (rtConfig?.getQualityDefinition === undefined) {
+        const systemConfig = getSystemConfig();
+        if (systemConfig?.getQualityDefinition === undefined) {
             console.warn('WH40K | CONFIG.wh40k.getQualityDefinition not available');
             return [];
         }
-        const getDef = rtConfig.getQualityDefinition;
+        const getDef = systemConfig.getQualityDefinition;
 
         const qualities: WeaponQuality[] = [];
 
@@ -968,12 +967,12 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
      * @returns {object[]}             Array of quality objects
      */
     hbs.registerHelper('craftsmanshipQualities', (weaponSystem: WeaponSystemForCraft): WeaponQuality[] => {
-        const rtConfig = getRtConfig();
-        if (rtConfig?.getQualityDefinition === undefined) {
+        const systemConfig = getSystemConfig();
+        if (systemConfig?.getQualityDefinition === undefined) {
             console.warn('WH40K | CONFIG.wh40k.getQualityDefinition not available');
             return [];
         }
-        const getDef = rtConfig.getQualityDefinition;
+        const getDef = systemConfig.getQualityDefinition;
 
         const qualities: WeaponQuality[] = [];
         const craft = weaponSystem.craftsmanship;
@@ -1051,9 +1050,9 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
      * @returns {object}
      */
     hbs.registerHelper('qualityLookup', (identifier: string): WeaponQuality => {
-        const rtConfig = getRtConfig();
+        const systemConfig = getSystemConfig();
         const { baseId, level, formula } = parseQualityLevel(identifier);
-        const def = rtConfig?.getQualityDefinition?.(baseId) ?? null;
+        const def = systemConfig?.getQualityDefinition?.(baseId) ?? null;
         if (def === null) {
             return {
                 identifier,
