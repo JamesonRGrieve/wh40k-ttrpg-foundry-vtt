@@ -741,6 +741,11 @@
         "Roll": {
             "RollResult": "Roll: {total}",
             "TestLabel": "{name} Test",
+            "TestedSkill": {
+                "Specialised": "{skill} ({specialisation})",
+                "Untrained": "{skill}, untrained",
+                "Base": "Base ({characteristic}: {skill})"
+            },
             "AttackLabel": "{name} Attack",
             "ClickToView": "Click to view source",
             "PermanentModifiers": "Permanent Modifiers",

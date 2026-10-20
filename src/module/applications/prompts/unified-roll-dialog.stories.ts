@@ -9,6 +9,7 @@ import targetSrc from '../../../../src/templates/prompt/unified/target-display.h
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import { type AttackOptionWeapon, getAvailableAttackModes } from '../../rules/attack-options.ts';
 import { canAttemptGrapple } from '../../rules/grapple.ts';
+import { overflowingLabels } from '../../testing/label-fit.ts';
 
 /**
  * UnifiedRollDialog is the single dialog for every roll type (skill, weapon,
@@ -554,6 +555,44 @@ export const EnvironmentBreakdown: Story = {
     play: async ({ canvasElement }) => {
         await expect(breakdownRows(canvasElement)).toEqual(['Zero gravity -20', 'Harsh conditions -20']);
         await expectHoverableRows(canvasElement);
+    },
+};
+
+/** The roll dialog's width (UnifiedRollDialog.DEFAULT_OPTIONS.position.width). */
+const DIALOG_WIDTH_PX = 460;
+
+/**
+ * A vehicle's trait test (#677): titled after the test and the craft, so the
+ * subtitle names the skill rolled ("Operate (Surface), untrained") and the base
+ * row names the characteristic and skill. The long title wraps inside the dialog
+ * rather than being cut off.
+ */
+export const VehicleTraitTestNamesSkill: Story = {
+    args: baseContext({
+        actorName: 'Trooper Vellis',
+        rollName: 'Difficult Terrain Test: Chimera Armoured Transport',
+        rollSubtitle: 'Operate (Surface), untrained',
+        rollData: { baseLabel: 'Base (Agility: Operate (Surface), untrained)' },
+        baseTarget: 20,
+        finalTarget: 30,
+        targetComponents: [component('vehicle-trait-difficultTerrain-0', 'Tracked Vehicle', 10, 'Vehicle trait (Tracked Vehicle)')],
+    }),
+    render: (args: Ctx) => {
+        const root = renderSheetParts(PARTS, args, { systemId: 'ow' });
+        root.style.width = `${DIALOG_WIDTH_PX}px`;
+        return root;
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-wh40k-hook="roll-subtitle"]')?.textContent.trim()).toBe('Operate (Surface), untrained');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="target-base"]')?.textContent.trim()).toBe(
+            'Base (Agility: Operate (Surface), untrained) 20',
+        );
+        // The whole title shows: it sits inside its heading, wrapping, never cut off with an ellipsis.
+        const title = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="roll-title"]');
+        await expect(title).not.toBeNull();
+        if (title === null) return;
+        await expect(overflowingLabels([title])).toEqual([]);
+        await expect(getComputedStyle(title).textOverflow).not.toBe('ellipsis');
     },
 };
 

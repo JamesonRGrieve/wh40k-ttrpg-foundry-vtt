@@ -6,6 +6,7 @@ import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import type { SituationalModifierRow } from '../data/shared/modifiers-template.ts';
 import type D100Roll from '../dice/d100-roll.ts';
+import { characteristicFromAbbrev, characteristicLabel } from '../helpers/characteristic-labels.ts';
 import { t } from '../i18n/t.ts';
 import {
     type ChemLike,
@@ -54,6 +55,7 @@ import {
     skillUseItemCandidates,
 } from '../rules/skill-uses.ts';
 import { printedSpecialisationTest } from '../rules/specialist-skill-test.ts';
+import { testedSkillBaseLabel, testedSkillLabel } from '../rules/tested-skill-label.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
     type ModifiableWeaponSystem,
@@ -587,6 +589,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         // Handle specialist skills. A rule-named specialisation (a vehicle's driving
         // skill) is that one or untrained; a sheet's speciality is the clicked entry.
         const speciality = specialityName === undefined ? undefined : this._findSpecialistSkill(skill, specialityName);
+        let specialityLabel: string | undefined;
         if (options.specialisation !== undefined) {
             const printed = printedSpecialisationTest(
                 label ?? resolvedSkillName,
@@ -598,7 +601,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             targetValue = printed.target;
             skillRank = printed.skillRank;
         } else if (speciality !== undefined) {
-            const specialityLabel = speciality.name ?? speciality.label ?? specialityName;
+            specialityLabel = String(speciality.name ?? speciality.label ?? specialityName);
             label = `${label}: ${specialityLabel}`;
             targetValue = speciality.current ?? skill.current;
             // Pass the specialisation entry's own effective rank so the roll dialog
@@ -637,6 +640,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
             ...(instance !== undefined ? { instance } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
             sourcedModifiers: options.sourcedModifiers,
+            // A test titled after something else (a vehicle's trait test) names the skill it rolled (#677).
+            tested:
+                options.label === undefined
+                    ? undefined
+                    : this.#testedSkill(skill, resolvedSkillName, options.specialisation ?? specialityLabel ?? null, skillRank),
         });
         openRollPrompt(simpleSkillData);
         return Promise.resolve();
@@ -1169,6 +1177,22 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (!Number.isNaN(index) && (entries[index] as SkillEntry | undefined) !== undefined) return entries[index];
 
         return entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
+    }
+
+    /**
+     * What a test titled after something else rolled (#677): the skill, its
+     * specialisation and whether it is untrained, and the base row's provenance.
+     * @param skill  The skill rolled.
+     * @param key  Its key, the label when it has none.
+     * @param specialisation  The specialisation rolled, or null.
+     * @param skillRank  The rolled entry's rank, when the test set one.
+     */
+    #testedSkill(skill: WH40KSkill, key: string, specialisation: string | null, skillRank: number | undefined): { skill: string; baseLabel: string } {
+        const format = (k: string, data: Record<string, string>): string => game.i18n.format(k, data);
+        const untrained = (skillRank ?? (skill.trained ? 1 : 0)) === 0;
+        const tested = testedSkillLabel({ skill: game.i18n.localize(skill.label ?? key), specialisation, untrained }, format);
+        const characteristic = characteristicLabel(characteristicFromAbbrev(skill.characteristic) ?? skill.characteristic);
+        return { skill: tested, baseLabel: testedSkillBaseLabel(characteristic, tested, format) };
     }
 
     _resolveSkillName(skillName: string): string {

@@ -5,7 +5,8 @@
     {{/if}}
     <div class="tw-flex-1 tw-min-w-0">
         {{#if actorName}}<div class="tw-text-xs tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.1em]">{{actorName}}</div>{{/if}}
-        <h2 class="tw-font-display tw-text-[1.15rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-[text-shadow:0_2px_4px_rgba(0,0,0,0.5)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">{{rollName}}</h2>
+        {{!-- The title wraps rather than cut off a long test name (#677). --}}
+        <h2 class="tw-font-display tw-text-[1.1rem] tw-font-semibold {{themeClassFor 'accent'}} tw-uppercase tw-tracking-[0.05em] tw-leading-tight tw-m-0 tw-[text-shadow:0_2px_4px_rgba(0,0,0,0.5)] tw-break-words" data-wh40k-hook="roll-title"><span class="tw-block">{{rollName}}</span></h2>
         {{#if rollSubtitle}}<div class="tw-text-sm tw-text-[#b8b8a8] tw-mt-0.5" data-wh40k-hook="roll-subtitle">{{rollSubtitle}}</div>{{/if}}
     </div>
 </div>

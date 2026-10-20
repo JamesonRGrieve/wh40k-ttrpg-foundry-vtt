@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { overflowingLabels } from '../../src/module/testing/label-fit';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -26,6 +27,8 @@ const ROLL_DIALOG = '.unified-roll-dialog';
 const CHIMERA_PACK = 'wh40k-rpg.dh2-core-vehicles-terracraft';
 const CHIMERA_NAME = 'Chimera Armoured Transport';
 const CREWMAN_NAME = 'Vehicle Trait Probe Crewman';
+/** The skill the crewman's Difficult Terrain test rolls, as the dialog and card name it (#677). */
+const OPERATE_SURFACE_UNTRAINED = 'Operate (Surface), untrained';
 
 interface ProbeIds {
     error: string | null;
@@ -200,7 +203,24 @@ test.describe.serial('Vehicle traits as mechanics (Tier B, content#28)', () => {
             await expect(terrainDialog).toContainText('Difficult Terrain Test: Chimera Armoured Transport');
             await expect(terrainDialog).toContainText('Tracked Vehicle');
             expect(await dialogRoll(page, (await terrainDialog.getAttribute('id')) ?? '')).toMatchObject({ rollKey: 'operate', skillRank: 0 });
+            // #677: the dialog names the skill rolled, untrained, and where the base comes from.
+            await expect(terrainDialog.locator('[data-wh40k-hook="roll-subtitle"]')).toHaveText(OPERATE_SURFACE_UNTRAINED);
+            await expect(terrainDialog.locator('[data-wh40k-hook="target-base"]')).toContainText(`Base (Agility: ${OPERATE_SURFACE_UNTRAINED})`);
+            // The long title wraps inside the header instead of being cut off.
+            // The long title wraps onto a second line inside its heading, never cut off or broken mid-word.
+            const title = terrainDialog.locator('[data-wh40k-hook="roll-title"]');
+            expect(await title.evaluateAll(overflowingLabels)).toEqual([]);
+            expect(await title.locator('span').evaluate((el) => globalThis.wh40kE2E.textLines(el))).toBe(2);
+            expect(await title.evaluate((el) => globalThis.wh40kE2E.splitWords(el))).toEqual([]);
             expect(await snapWindow(page, 'vehicle-traits-untrained-operate-surface-dialog', terrainDialog)).not.toBeNull();
+
+            const beforeTerrain = await chatMessageIds(page);
+            await terrainDialog.locator('[data-action="systemRoll"]').click();
+            const terrainCard = await firstNewCard(page, beforeTerrain);
+            expect(terrainCard.content).toContain('Difficult Terrain Test: Chimera Armoured Transport');
+            expect(terrainCard.content).toContain(OPERATE_SURFACE_UNTRAINED);
+            expect(terrainCard.content).toContain(`Base (Agility: ${OPERATE_SURFACE_UNTRAINED})`);
+            expect(await snapChatCard(page, 'vehicle-traits-untrained-operate-surface-card', terrainCard.id)).not.toBeNull();
         } finally {
             await deleteProbeActors(
                 page,

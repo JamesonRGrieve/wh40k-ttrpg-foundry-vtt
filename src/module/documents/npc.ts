@@ -1,11 +1,13 @@
 import { isAuthoredOnCreate, type NpcArmourPatch, resolveArmourEdit } from '../data/actor/npc-armour-edit.ts';
 import type NPCData from '../data/actor/npc.ts';
+import { characteristicFromAbbrev, characteristicLabel } from '../helpers/characteristic-labels.ts';
 import type { SkillRollOptions } from '../rolls/action-data.ts';
 import { EvasionActionData } from '../rolls/evasion-action-data.ts';
 import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { DISPOSITION_ROLL_KEY, type DispositionState } from '../rules/disposition.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
+import { testedSkillBaseLabel, testedSkillLabel } from '../rules/tested-skill-label.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -288,8 +290,29 @@ export class WH40KNPC extends WH40KBaseActor {
             nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
             instance: options.instance,
             sourcedModifiers: options.sourcedModifiers,
+            // A test titled after something else (a vehicle's trait test) names the skill it rolled (#677).
+            tested: options.label === undefined ? undefined : this.#testedSkill(skillName, skillLabel, options.specialisation ?? null),
         });
         openRollPrompt(simpleSkillData);
+    }
+
+    /**
+     * What a test titled after something else rolled (#677): the skill, the
+     * specialisation the rule names, whether the NPC lacks it, and the base row's provenance.
+     * @param key  The skill key.
+     * @param skillLabel  Its display name.
+     * @param specialisation  The specialisation the rule names, or null.
+     */
+    #testedSkill(key: string, skillLabel: string, specialisation: string | null): { skill: string; baseLabel: string } {
+        const format = (k: string, data: Record<string, string>): string => game.i18n.format(k, data);
+        // Partial: an NPC lists only the skills it has, so a rule's skill may be missing (untrained).
+        const skills: Partial<Record<string, { trained: boolean; characteristic: string }>> = this.system.trainedSkills;
+        const skill = skills[key];
+        const untrained = skill?.trained !== true;
+        const tested = testedSkillLabel({ skill: skillLabel, specialisation, untrained }, format);
+        const characteristicKey = skill?.characteristic ?? '';
+        const characteristic = characteristicLabel(characteristicFromAbbrev(characteristicKey) ?? characteristicKey);
+        return { skill: tested, baseLabel: testedSkillBaseLabel(characteristic, tested, format) };
     }
 
     /**

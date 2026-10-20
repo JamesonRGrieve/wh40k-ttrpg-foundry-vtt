@@ -802,8 +802,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             : (rollData.name ?? '') || (rollData.nameOverride ?? '') || 'Test';
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
         /* eslint-disable @typescript-eslint/no-unnecessary-condition -- rollData.action may be absent at runtime on uninitialised roll data despite its type */
+        // A test titled after something else names the skill it rolls (#677); `type` stays as the dialog logic reads it.
         const rollSubtitle = isForceField
             ? game.i18n.localize('WH40K.Chat.ForceField.Activation')
+            : rollData.testedSkill !== ''
+            ? rollData.testedSkill
             : (typeof rollData.type === 'string' && rollData.type.length > 0 ? rollData.type : null) ?? rollData.action ?? '';
         /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 

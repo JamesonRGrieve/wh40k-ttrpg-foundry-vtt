@@ -75,6 +75,8 @@ type RollDataLike = Record<string, unknown> & {
      * advance (which is ~0 for specialist skills). See #225.
      */
     skillRank?: number;
+    baseLabel?: string;
+    testedSkill?: string;
     modifiers: { modifier: number; situational?: number; [key: string]: number | undefined };
     /** Sourced parts of a lumped modifier bucket, which the chat card expands into provenance rows. */
     expandedBuckets: Record<string, SourcedModifierComponent[]>;
@@ -1308,6 +1310,12 @@ export class WH40KBaseActor extends Actor {
          * (e.g. `MedicaeActionData`) while reusing this shared setup (#432).
          */
         instance?: SimpleSkillData | undefined;
+        /**
+         * For a test titled after something other than its skill (#677): the skill
+         * rolled ("Operate (Surface), untrained"), shown as the subtitle, and the
+         * base row's provenance (the characteristic and that skill).
+         */
+        tested?: { skill: string; baseLabel: string } | undefined;
     }): SimpleSkillData {
         const TYPE_LITERAL: Record<typeof opts.type, string> = {
             characteristic: 'Characteristic',
@@ -1325,6 +1333,10 @@ export class WH40KBaseActor extends Actor {
         rollData.rollKey = opts.key;
         rollData.baseTarget = opts.target;
         if (opts.skillRank !== undefined) rollData.skillRank = opts.skillRank;
+        if (opts.tested !== undefined) {
+            rollData.testedSkill = opts.tested.skill;
+            rollData.baseLabel = opts.tested.baseLabel;
+        }
         rollData.modifiers.modifier = 0;
 
         if (opts.situationalKey !== undefined) {

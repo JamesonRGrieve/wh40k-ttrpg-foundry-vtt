@@ -37,7 +37,8 @@
           the target — the rows the chat card will print, from the same builder. --}}
     {{#unless isForceField}}
     <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-x-1.5 tw-gap-y-0.5 tw-mt-2.5 tw-max-w-full tw-text-xs tw-text-[#8a8a7a]" data-wh40k-hook="target-breakdown">
-        <span data-wh40k-hook="target-base">{{localize "WH40K.CharacteristicSetup.Base"}} {{baseTarget}}</span>
+        {{!-- The base names where it comes from when the roll says (the characteristic and skill of a vehicle test, #677). --}}
+        <span data-wh40k-hook="target-base">{{#if rollData.baseLabel}}{{rollData.baseLabel}}{{else}}{{localize "WH40K.CharacteristicSetup.Base"}}{{/if}} {{baseTarget}}</span>
         {{#each targetComponents as |component|}}
             <span class="tw-text-[rgba(201,162,39,0.3)]" aria-hidden="true">|</span>
             <span class="tw-cursor-help tw-whitespace-nowrap {{#if (gt component.value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}"

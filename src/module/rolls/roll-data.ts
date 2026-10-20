@@ -250,6 +250,13 @@ export class RollData {
      */
     baseLabel: string = '';
     /**
+     * The skill a test rolled, for a test titled after something else (a vehicle's
+     * trait test, #677): "Operate (Surface), untrained". Shown as the dialog's and
+     * card's subtitle in place of `type`, which stays the field the dialog logic
+     * reads. Empty → the subtitle is `type`.
+     */
+    testedSkill: string = '';
+    /**
      * The characteristic key (`'ballisticSkill'`, `'weaponSkill'`, …) the base
      * target was read from, when a roll has no `rollKey` of its own (a weapon
      * attack). Lets the dialog show the passive modifiers baked into that base.
