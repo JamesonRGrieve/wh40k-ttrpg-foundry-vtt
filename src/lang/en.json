@@ -6129,7 +6129,6 @@
                 "ShelteredFromArea": "{name}: sheltered inside the {vehicle}"
             },
             "Source": "Source",
-            "SourcePlaceholder": "e.g. Core Rulebook p. 100",
             "SpeedCruising": "Cruising Speed",
             "SpeedTactical": "Tactical Speed",
             "Statistics": "Statistics",

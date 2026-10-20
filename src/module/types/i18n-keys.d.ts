@@ -6186,7 +6186,6 @@ export type I18nKey =
     | 'WH40K.Vehicle.Size'
     | 'WH40K.Vehicle.SizeDescriptor'
     | 'WH40K.Vehicle.Source'
-    | 'WH40K.Vehicle.SourcePlaceholder'
     | 'WH40K.Vehicle.SpecialRules'
     | 'WH40K.Vehicle.SpecialRulesHint'
     | 'WH40K.Vehicle.SpeedBand'

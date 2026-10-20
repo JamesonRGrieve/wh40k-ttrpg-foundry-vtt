@@ -85,6 +85,9 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
         'src/templates/item/item-weapon-quality-sheet.hbs',
         'src/templates/item/item-location-sheet.hbs',
         'src/templates/item/talent-sheet.hbs',
+        // Actor templates whose `system.source` is the structured reference: the craft
+        // Notes tab bound Book / Page field rows of its own.
+        'src/templates/actor/craft/tab-notes.hbs',
     ];
 
     it.each(ITEM_TEMPLATES)('%s edits its source through the shared partial', (path) => {
@@ -93,8 +96,8 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
         expect(src).toContain('item/partial/source-reference-field.hbs');
     });
 
-    it('no item template binds system.source.* outside the shared partial', () => {
-        const offenders = [...walkFiles('src/templates/item', { ext: '.hbs' })].filter(
+    it.each(['src/templates/item', 'src/templates/actor'])('no template under %s binds system.source.* outside the shared partial', (dir) => {
+        const offenders = [...walkFiles(dir, { ext: '.hbs' })].filter(
             (file) => file !== 'src/templates/item/partial/source-reference-field.hbs' && readRepoFile(file).includes('name="system.source.'),
         );
         expect(offenders).toEqual([]);

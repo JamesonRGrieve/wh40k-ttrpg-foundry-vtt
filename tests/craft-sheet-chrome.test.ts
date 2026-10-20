@@ -65,7 +65,9 @@ describe('craft sheet chrome (#502)', () => {
     });
 
     it('craft fields use the shared field-row partial', () => {
-        for (const name of ['tab-overview.hbs', 'tab-crew.hbs', 'tab-combat.hbs', 'tab-notes.hbs']) {
+        // The Notes tab's only fields are the Source book and page, which go through the
+        // shared Source control (#229) instead; tests/source-reference-field.test.ts covers it.
+        for (const name of ['tab-overview.hbs', 'tab-crew.hbs', 'tab-combat.hbs']) {
             const tpl = craftTemplates.find((t) => t.name === name);
             expect(`${name}:${tpl?.text.includes('shared/field-row.hbs') ?? false}`).toBe(`${name}:true`);
         }
