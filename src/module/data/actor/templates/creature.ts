@@ -1460,7 +1460,8 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
-     * Get total fate modifier from origin path items.
+     * Get total fate modifier from origin path items: each origin's
+     * `modifiers.resources.fate`, the path the origins author (#688).
      * @returns {number}
      */
     _getOriginPathFateModifier(): number {
@@ -1469,7 +1470,7 @@ export default class CreatureTemplate extends CommonTemplate {
         let total = 0;
         const originItems = this._originPathItems();
         for (const item of originItems) {
-            const fate = (item.system.modifiers as { fate?: number } | null | undefined)?.fate;
+            const fate = (item.system.modifiers as ItemModifiersBlock | null | undefined)?.resources?.fate;
             if (typeof fate === 'number') {
                 total += fate;
             }

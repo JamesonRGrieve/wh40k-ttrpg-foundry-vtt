@@ -31,7 +31,7 @@ interface ModifiersBlock {
     characteristics?: Record<string, number>;
     skills?: Record<string, number>;
     combat?: Record<string, number>;
-    resources?: { wounds?: number };
+    resources?: { wounds?: number; fate?: number };
 }
 
 /** The structural slice of a `WH40KItem` the aggregator reads. */
@@ -252,6 +252,17 @@ describe.each(SYSTEMS)('Path A — static item modifiers reach the computed targ
 
         expect(creature.modifierSources.wounds).toEqual([expect.objectContaining({ name: 'Hardy Stock', type: 'talent', value: 3 })]);
         expect(creature._getOriginPathWoundsModifier()).toBe(2);
+    });
+
+    // #688: the fate getter read a `modifiers.fate` path no origin has, so an
+    // origin's Fate (RT Fortune's +1) never reached the fate total.
+    it('an origin’s modifiers.resources.fate reaches the fate total exactly once', () => {
+        const origin = makeItem('Fortune', 'originPath', { resources: { fate: 1 } });
+        const talent = makeItem('Blessed', 'talent', { resources: { fate: 2 } });
+        const creature = prepare(gameSystem, [origin, talent]);
+
+        expect(creature.modifierSources.fate).toEqual([expect.objectContaining({ name: 'Blessed', type: 'talent', value: 2 })]);
+        expect(creature._getOriginPathFateModifier()).toBe(1);
     });
 
     it('an origin-path bonus does not mask a real item bonus on the same characteristic', () => {
