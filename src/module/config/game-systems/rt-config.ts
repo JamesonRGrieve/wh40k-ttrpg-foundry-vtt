@@ -5,6 +5,7 @@
 
 // The RT career registry is read from the compendium-backed boot cache.
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -78,8 +79,8 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     /** RT Into the Storm p. 178: one Vehicle Critical Hit Chart and no hit-location table. */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
-    /** RT core p. 137: Good armour "against the first attack in any round … increases its AP by 1". */
-    override readonly goodArmourFirstAttackAP = 1;
+    /** RT core p. 137: Poor −10 Agility; Good +1 AP "against the first attack in any round"; Best half weight and +1 AP. */
+    override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

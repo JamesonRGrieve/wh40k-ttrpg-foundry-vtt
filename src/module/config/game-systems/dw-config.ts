@@ -3,6 +3,7 @@
  * Career/specialty-based advancement with 3 skill ranks.
  */
 
+import { DW_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -54,8 +55,12 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(true);
 
-    /** DW core, Armour Craftsmanship: Exceptional (DW's Good) armour adds 1 AP against the first attack in any round. */
-    override readonly goodArmourFirstAttackAP = 1;
+    /**
+     * DW core, Armour Craftsmanship: Exceptional (read as Good) adds 1 AP against
+     * the first attack in any round; Master-Crafted (read as Best) weighs half and
+     * adds 1 AP. DW prints no Poor armour.
+     */
+    override readonly armourCraftsmanship = DW_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst'],

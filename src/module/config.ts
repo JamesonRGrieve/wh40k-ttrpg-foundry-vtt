@@ -123,7 +123,6 @@ interface CraftsmanshipRules {
         melee: Record<string, CraftsmanshipRuleEffect>;
         ranged: Record<string, CraftsmanshipRuleEffect>;
     };
-    armour: Record<string, CraftsmanshipRuleEffect>;
     gear: Record<string, CraftsmanshipRuleEffect>;
     forceField: Record<string, CraftsmanshipRuleEffect>;
 }
@@ -406,14 +405,7 @@ WH40K.craftsmanshipRules = {
             master: { qualities: ['reliable'], removeQualities: ['unreliable', 'overheats'] }, // Master Astartes
         },
     },
-    armour: {
-        poor: { agility: -10 },
-        common: {},
-        good: { firstAttackBonus: 1 }, // +1 AP on first attack per round
-        best: { armourBonus: 1, weight: 0.5 }, // +1 AP permanent, half weight
-        exceptional: {}, // No special Astartes armour rules
-        master: {}, // No special Astartes armour rules
-    },
+    // Armour craftsmanship is per line: `armourCraftsmanship` on the line config (#679).
     gear: {
         poor: { weight: 1.1 }, // +10% weight
         common: {},

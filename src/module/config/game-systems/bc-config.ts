@@ -16,6 +16,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import { BC_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import {
     type ChaosAdvanceEntry,
@@ -234,6 +235,9 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * "General" pill on every BC sheet's Aptitudes panel.
      */
     override readonly universalAptitudes: readonly string[] = [];
+
+    /** BC core, Craftsmanship: Poor −10 Agility; Good a social bonus (no AP); Best that, half weight and +1 AP. */
+    override readonly armourCraftsmanship = BC_ARMOUR_CRAFTSMANSHIP;
 
     // Characteristic + skill aptitude pairs are inherited from AptitudeBasedSystemConfig (#298).
     // BC uses them only for the shared skill-bonus display formula (gated on `usesAptitudes`);

@@ -3,7 +3,7 @@
  * Extracts complex armour computation logic from the main actor document.
  */
 
-import { goodArmourFirstAttackAPFor } from '../config/game-systems/index.ts';
+import { armourCraftsmanshipFor } from '../config/game-systems/index.ts';
 import { BODY_LOCATIONS } from '../data/shared/body-locations.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
@@ -12,15 +12,18 @@ import { itemIdentifier } from './item-identifier.ts';
 
 /**
  * One location's armour, kept as its parts so the damage path can soak with each
- * and print it (#248): `value` is the worn armour (the highest piece), then the
- * cumulative armour-bearing cybernetics, the Machine / Natural Armour trait and
- * Good armour's first-attack AP. `total` adds the Toughness Bonus for display.
+ * and print it (#248, #679): `value` is the worn armour's own AP (the piece that
+ * protects best there), `craftsmanshipAP` that piece's Best-craftsmanship AP and
+ * `goodArmourBonus` its Good-craftsmanship first-attack AP, then the cumulative
+ * armour-bearing cybernetics and the Machine / Natural Armour trait. `total` adds
+ * the Toughness Bonus for display.
  */
 interface ArmourLocationData {
     total: number;
     toughnessBonus: number;
     traitBonus: number;
     value: number;
+    craftsmanshipAP: number;
     cyberneticAP: number;
     goodArmourBonus: number;
 }
@@ -31,6 +34,7 @@ interface ArmourPointsLike {
 
 export interface ArmourSystemLike {
     armourPoints?: ArmourPointsLike;
+    craftsmanship?: string;
     getEffectiveAPForLocation?: (location: string) => number;
     getAPForLocation?: (location: string) => number;
 }
@@ -119,6 +123,14 @@ function getArmourAPForLocation(armourSystem: ArmourSystemLike, location: string
     if (typeof armourSystem.getEffectiveAPForLocation === 'function') {
         return armourSystem.getEffectiveAPForLocation(location);
     }
+    return baseArmourAP(armourSystem, location);
+}
+
+/**
+ * A piece's own AP at a location, before craftsmanship: its coverage-aware
+ * `getAPForLocation`, else its `armourPoints` map. Called bound to the model.
+ */
+function baseArmourAP(armourSystem: ArmourSystemLike, location: string): number {
     if (typeof armourSystem.getAPForLocation === 'function') {
         return armourSystem.getAPForLocation(location);
     }
@@ -181,6 +193,7 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
                     toughnessBonus,
                     traitBonus,
                     value: 0,
+                    craftsmanshipAP: 0,
                     cyberneticAP: 0,
                     goodArmourBonus: 0,
                 },
@@ -194,7 +207,7 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
         .filter(isWorn)
         .filter((item: WH40KItem) => (item.system as { hasArmourPoints?: boolean }).hasArmourPoints === true)
         .forEach((cybernetic: WH40KItem) => {
-            const armourPoints = getArmourPointsObject(cybernetic.system as ArmourSystemLike);
+            const armourPoints = getArmourPointsObject(cybernetic.system);
             BODY_LOCATIONS.forEach((location: string) => {
                 const armourVal = Number(armourPoints?.[location] ?? 0);
                 const loc = armour[location] as ArmourLocationData | undefined;
@@ -204,47 +217,53 @@ export function computeArmour(actor: WH40KBaseActor, options: ComputeArmourOptio
             });
         });
 
-    // Find maximum armour value per location from equipped armour items
-    const maxArmour: Record<string, number> = BODY_LOCATIONS.reduce(
-        (acc: Record<string, number>, location: string) => Object.assign(acc, { [location]: 0 }),
-        {},
-    );
-    let hasGoodArmour = false;
-
-    const equippedArmour = actor.items.filter((item: WH40KItem) => item.type === 'armour').filter(isWorn);
-
-    for (const armourItem of equippedArmour) {
-        // Check for Good craftsmanship armour
-        const system = armourItem.system as { craftsmanship?: string };
-        if (system.craftsmanship === 'good') {
-            hasGoodArmour = true;
-        }
-
-        for (const location of BODY_LOCATIONS) {
-            const armourVal = getArmourAPForLocation(armourItem.system as ArmourSystemLike, location);
-            const currentMax = maxArmour[location] ?? 0;
-            if (armourVal > currentMax) {
-                maxArmour[location] = armourVal;
-            }
-        }
-    }
-
-    // Good armour's AP against the first attack each round, where the line prints it
-    // (DH1 / RT / DW / OW; DH2 and BC give Good armour other benefits).
+    // Worn armour does not stack: at each location the piece that protects best
+    // there counts, with its own craftsmanship — Best's AP and Good's first-attack
+    // AP as the wearer's line prints them, and only where that piece covers.
+    const line = firstSystemId(actor);
     const isFirstAttack = actor.getFlag('wh40k-rpg', 'hitThisRound') !== true;
-    const goodArmourBonus = hasGoodArmour && isFirstAttack ? goodArmourFirstAttackAPFor(firstSystemId(actor)) : 0;
+    const wornPieces = actor.items
+        .filter((item: WH40KItem) => item.type === 'armour')
+        .filter(isWorn)
+        .map((item: WH40KItem) => {
+            const system = item.system as ArmourSystemLike;
+            return { system, craftsmanship: armourCraftsmanshipFor(line, system.craftsmanship) };
+        });
 
-    // Apply max armour values and update totals
     BODY_LOCATIONS.forEach((location: string) => {
         const loc = armour[location] as ArmourLocationData | undefined;
-        const locMax = (maxArmour[location] as number | undefined) ?? 0;
         if (loc === undefined) return;
-        loc.value = locMax;
-        loc.goodArmourBonus = goodArmourBonus;
-        loc.total += locMax + goodArmourBonus;
+        let best: WornPieceAP | null = null;
+        for (const piece of wornPieces) {
+            const base = baseArmourAP(piece.system, location);
+            if (base <= 0) continue;
+            const candidate: WornPieceAP = {
+                base,
+                craftsmanship: piece.craftsmanship.flatApBonus,
+                firstAttack: isFirstAttack ? piece.craftsmanship.apFirstHit : 0,
+            };
+            if (best === null || protects(candidate) > protects(best)) best = candidate;
+        }
+        if (best === null) return;
+        loc.value = best.base;
+        loc.craftsmanshipAP = best.craftsmanship;
+        loc.goodArmourBonus = best.firstAttack;
+        loc.total += protects(best);
     });
 
     return armour;
+}
+
+/** One worn piece's AP at one location, split into its parts. */
+interface WornPieceAP {
+    readonly base: number;
+    readonly craftsmanship: number;
+    readonly firstAttack: number;
+}
+
+/** All the AP a worn piece gives at a location against this attack. */
+function protects(piece: WornPieceAP): number {
+    return piece.base + piece.craftsmanship + piece.firstAttack;
 }
 
 export { getArmourAPForLocation };

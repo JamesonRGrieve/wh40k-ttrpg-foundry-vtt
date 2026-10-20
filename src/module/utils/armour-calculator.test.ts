@@ -308,6 +308,49 @@ describe('computeArmour — the soak parts', () => {
 });
 
 /**
+ * Best craftsmanship's AP (#679): every line prints +1 AP for Best armour (DW's
+ * Master-Crafted). It is its own part beside the worn AP, at each location the
+ * piece covers and nowhere else.
+ */
+describe('computeArmour — Best craftsmanship', () => {
+    function crafted(craftsmanship: string, points: Record<string, number>): ItemLike {
+        return { type: 'armour', name: `${craftsmanship} armour`, system: { state: { equipped: true }, craftsmanship, armourPoints: points } };
+    }
+    const vest = (craftsmanship: string): ItemLike => crafted(craftsmanship, { body: 4 });
+
+    it.each(['dh1', 'dh2', 'rt', 'dw', 'bc', 'ow'])('%s: Best armour adds 1 AP beside its worn AP 4', (line) => {
+        const body = bodyOf(computeArmour(mockActor({ gameSystem: line, toughnessBonus: 3, items: [vest('best')] })));
+        expect({ value: body.value, craftsmanshipAP: body.craftsmanshipAP, total: body.total }).toEqual({ value: 4, craftsmanshipAP: 1, total: 8 });
+    });
+
+    it('adds nothing at a location the Best piece does not cover', () => {
+        expect(computeArmour(mockActor({ gameSystem: 'dh2', items: [vest('best')] }))['head']).toMatchObject({ value: 0, craftsmanshipAP: 0 });
+    });
+
+    it('reads DW Master-Crafted (stored `master`, or the authored `master-crafted`) as Best', () => {
+        for (const stored of ['master', 'master-crafted']) {
+            expect(bodyOf(computeArmour(mockActor({ gameSystem: 'dw', items: [vest(stored)] }))).craftsmanshipAP).toBe(1);
+        }
+    });
+
+    it('reads DW Exceptional (stored `exceptional`) as Good: +1 AP against the first attack only', () => {
+        const body = bodyOf(computeArmour(mockActor({ gameSystem: 'dw', items: [vest('exceptional')] })));
+        expect({ craftsmanshipAP: body.craftsmanshipAP, goodArmourBonus: body.goodArmourBonus }).toEqual({ craftsmanshipAP: 0, goodArmourBonus: 1 });
+        expect(bodyOf(computeArmour(mockActor({ gameSystem: 'dw', hitThisRound: true, items: [vest('exceptional')] }))).goodArmourBonus).toBe(0);
+    });
+
+    it("takes the craftsmanship of the piece that protects best at each location, not every worn piece's", () => {
+        const armour = computeArmour(mockActor({ gameSystem: 'rt', items: [crafted('best', { body: 3 }), crafted('good', { body: 4, head: 2 })] }));
+        // Body: Good AP 4 + 1 (first attack) = 5 beats Best AP 3 + 1 = 4.
+        expect(armour['body']).toMatchObject({ value: 4, craftsmanshipAP: 0, goodArmourBonus: 1 });
+        // Head: only the Good piece covers it.
+        expect(armour['head']).toMatchObject({ value: 2, craftsmanshipAP: 0, goodArmourBonus: 1 });
+        // Legs: nothing covers them, so no Good bonus there either.
+        expect(armour['leftLeg']).toMatchObject({ value: 0, craftsmanshipAP: 0, goodArmourBonus: 0 });
+    });
+});
+
+/**
  * Regression tests for #486 — the AP helpers are DataModel *methods* and must be
  * invoked with their receiver. Reading one off the model and calling it detached
  * (`const f = sys.getEffectiveAPForLocation; f(loc)`) leaves `this` undefined, so

@@ -223,4 +223,67 @@ test.describe.serial('Damage auto-applied to an NPC (Tier B, #420)', () => {
             await deleteDocuments(page, { actors: [controller.id, held.id], scenes: [scene.sceneId] });
         }
     });
+
+    test('a PC in Best armour soaks with its +1 AP as its own row (#679)', async ({ page }) => {
+        await joinOrSkip(page);
+        await prepareStage(page);
+        const settings = await setWorldSettings(page, { 'auto-apply-damage': true });
+        const controller = await createActor(page, {
+            data: {
+                name: 'Grappling Enforcer',
+                type: 'dh2-character',
+                img: 'icons/svg/mystery-man.svg',
+                prototypeToken: { actorLink: true },
+                system: {
+                    gameSystem: 'dh2',
+                    characteristics: { strength: { base: 100, advance: 0, modifier: 0 }, agility: { base: 40, advance: 0, modifier: 0 } },
+                },
+            },
+            compendiumItems: [{ uuid: UNARMED_UUID }],
+        });
+        // An acolyte in a Best-craftsmanship Flak Vest (Body AP 3, +1 for Best in DH2), Toughness 30 (TB 3).
+        const held = await createActor(page, {
+            data: {
+                name: 'Held Noble Scion',
+                type: 'dh2-character',
+                img: 'icons/svg/mystery-man.svg',
+                prototypeToken: { actorLink: true },
+                system: {
+                    gameSystem: 'dh2',
+                    wounds: { max: 14, value: 14, critical: 0 },
+                    characteristics: { toughness: { base: 30, advance: 0, modifier: 0 } },
+                },
+            },
+            compendiumItems: [{ uuid: FLAK_VEST_UUID, equip: true, system: { craftsmanship: 'best' } }],
+        });
+        const scene = await stageScene(page, 'Best armour soak (#679)', [
+            { actorId: controller.id, x: 300, y: 300 },
+            { actorId: held.id, x: 400, y: 300 },
+        ]);
+        try {
+            const before = await npcVitals(page, held.id);
+            await setGrapple(page, controller.id, held.id);
+            const sheet = await openActorSheet(page, controller.id, 'overview');
+            const posted = await messageIds(page);
+            await fixD100(page, [5, 99]);
+            await page.locator(`#${sheet} ${OWN} [data-grapple-option="damage-opponent"]`).click();
+            const damageCard = await awaitCard(page, posted, 'data-damage-fatigue');
+            await expect.poll(async () => (await npcVitals(page, held.id)).fatigue, { message: 'the hit is applied' }).toBe(1);
+            const after = await npcVitals(page, held.id);
+            // Damage (1d5 − 3 + SB 10) less worn 3 + Best 1 (Pen 0) and TB 3.
+            const damage = (await damageRollTotal(page, damageCard.id)) + 10;
+            const soaked = PC_WORN_AP + 1;
+            expect(before.wounds - after.wounds, `damage ${damage} less armour ${soaked} and TB 3`).toBe(Math.max(0, damage - soaked - 3));
+            expect(damageCard.html, 'the Effective line counts Best craftsmanship into the armour').toContain(`after armour ${soaked} (post-pen) + TB 3`);
+            expect(damageCard.html).toContain(`Worn armour</span><span class="tw-shrink-0 tw-tabular-nums tw-font-semibold">-${PC_WORN_AP}`);
+            expect(damageCard.html, 'Best craftsmanship has its own row').toContain(
+                'Best craftsmanship</span><span class="tw-shrink-0 tw-tabular-nums tw-font-semibold">-1',
+            );
+            expect(await snapCard(page, 'pc-best-armour-craftsmanship-soak-damage-card', damageCard.id)).not.toBeNull();
+        } finally {
+            await restoreSettings(page, settings);
+            await viewScene(page, scene.previousSceneId);
+            await deleteDocuments(page, { actors: [controller.id, held.id], scenes: [scene.sceneId] });
+        }
+    });
 });

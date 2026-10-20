@@ -17,8 +17,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import type { ArmourCraftsmanshipEffect } from '../../../module/rules/armour-craftsmanship.ts';
 import {
-    type ArmourCraftsmanshipEffect,
     type Craftsmanship,
     getArmourCraftsmanshipEffect,
     getMeleeCraftsmanshipEffect,

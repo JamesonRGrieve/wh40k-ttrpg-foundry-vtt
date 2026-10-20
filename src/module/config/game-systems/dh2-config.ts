@@ -4,6 +4,7 @@
  */
 
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
+import { DH2_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -142,6 +143,9 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
 
     /** DH2 core pp. 253–255: Table 7-29 and a Vehicle Critical Effects chart per location. */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(false);
+
+    /** DH2 core p. 141: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */
+    override readonly armourCraftsmanship = DH2_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {
         multiHitActions: ['Semi-Auto Burst', 'Full Auto Burst', 'Swift Attack', 'Lightning Attack'],

@@ -25,8 +25,8 @@
  * reads them.
  */
 
+import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier } from '../../../rules/armour-craftsmanship.ts';
 import {
-    type ArmourCraftsmanshipEffect,
     CRAFTSMANSHIP_TIERS,
     type Craftsmanship,
     getArmourCraftsmanshipEffect,
@@ -220,7 +220,7 @@ export function buildOwCraftsmanshipPanel(
 
         if (raw.type === 'armour' && isArmourLike(raw)) {
             if (raw.system.state?.equipped !== true) continue;
-            const tier = coerceCraftsmanship(raw.system.craftsmanship);
+            const tier = armourCraftsmanshipTier(raw.system.craftsmanship);
             armours.push({
                 itemId,
                 name: itemName,

@@ -4,6 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import { type ArmourCraftsmanshipTable, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -292,13 +293,13 @@ export abstract class BaseSystemConfig {
     readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
     /**
-     * The AP Good-craftsmanship armour adds against the first attack each round
-     * (DH1 core p. 144, RT core p. 137, DW core "Exceptional", OW core: "Against
-     * the first attack in any round, the armour increases its AP by 1"). 0 for a
-     * line whose Good armour does something else: DH2 raises Maximum Agility by 10
-     * (core p. 141), BC grants +5 to a social test.
+     * What each armour craftsmanship tier does in this line (#679): Good's AP
+     * against the first attack each round, Best's AP at every covered location,
+     * half weight and Poor's Agility penalty. The armour soak, the armour item and
+     * Only War's craftsmanship panel all read this one table. A line printing no
+     * armour craftsmanship gets none.
      */
-    readonly goodArmourFirstAttackAP: number = 0;
+    readonly armourCraftsmanship: ArmourCraftsmanshipTable = NO_ARMOUR_CRAFTSMANSHIP;
 
     // ── Starting Resources ────────────────────────────────────────
 

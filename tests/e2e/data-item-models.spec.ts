@@ -312,10 +312,10 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
 
             /* ============================================================
              * Flow 2: armour-craftsmanship-ap
-             * Best craftsmanship → +1 AP on every location
-             * (getEffectiveAPForLocation) and weight × 0.5
-             * (effectiveWeight). Base body AP 5, weight 10 →
-             * effective body AP 6, effectiveWeight 5.
+             * Best craftsmanship on the dh2 PC → +1 AP on every covered
+             * location (getEffectiveAPForLocation). DH2 (core p. 141)
+             * prints no half weight for Best armour (#679), so
+             * effectiveWeight stays 10. Base body AP 5 → effective 6.
              * ============================================================ */
             try {
                 const armour = await embed('armour-craftsmanship-ap', {
@@ -337,13 +337,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     const effBody = armour.system?.getEffectiveAPForLocation?.('body');
                     const effWeight = armour.system?.effectiveWeight;
                     const hasCraft = armour.system?.hasCraftsmanshipEffects;
-                    if (baseBody === 5 && effBody === 6 && effWeight === 5 && hasCraft === true) {
+                    if (baseBody === 5 && effBody === 6 && effWeight === 10 && hasCraft === true) {
                         fired['armour-craftsmanship-ap'] = true;
-                        notes['armour-craftsmanship-ap'] = `base body AP=5, best craft → effective body AP=6, weight 10→5, hasCraftsmanshipEffects=true`;
+                        notes[
+                            'armour-craftsmanship-ap'
+                        ] = `base body AP=5, best craft → effective body AP=6, DH2 weight stays 10, hasCraftsmanshipEffects=true`;
                     } else {
                         notes[
                             'armour-craftsmanship-ap'
-                        ] = `expected base=5 eff=6 effWeight=5 hasCraft=true, got base=${baseBody} eff=${effBody} effWeight=${effWeight} hasCraft=${String(
+                        ] = `expected base=5 eff=6 effWeight=10 hasCraft=true, got base=${baseBody} eff=${effBody} effWeight=${effWeight} hasCraft=${String(
                             hasCraft,
                         )}`;
                     }

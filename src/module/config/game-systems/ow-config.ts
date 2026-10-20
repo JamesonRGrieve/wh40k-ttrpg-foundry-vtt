@@ -5,6 +5,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
@@ -182,8 +183,8 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(true);
 
-    /** OW core, Armour Craftsmanship: Good armour adds 1 AP against the first attack in any Round. */
-    override readonly goodArmourFirstAttackAP = 1;
+    /** OW core, Armour Craftsmanship: Poor −10 Agility; Good +1 AP against the first attack in any Round; Best half weight and +1 AP. */
+    override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     /**
      * OW Core pp. 269–271, Comrades in Combat: Cohesion is "within 5 metres of his

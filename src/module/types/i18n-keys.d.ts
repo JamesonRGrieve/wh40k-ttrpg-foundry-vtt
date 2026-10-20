@@ -878,6 +878,7 @@ export type I18nKey =
     | 'WH40K.Chat.Damage.ProfileWielderMelee'
     | 'WH40K.Chat.Damage.Soak.Armour'
     | 'WH40K.Chat.Damage.Soak.Cover'
+    | 'WH40K.Chat.Damage.Soak.Craftsmanship'
     | 'WH40K.Chat.Damage.Soak.Cybernetic'
     | 'WH40K.Chat.Damage.Soak.Damage'
     | 'WH40K.Chat.Damage.Soak.Good'

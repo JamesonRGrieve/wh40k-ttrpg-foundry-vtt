@@ -134,7 +134,7 @@ import {
 } from '../../rules/possession.ts';
 import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
-import { getArmourAPForLocation, type ArmourSystemLike } from '../../utils/armour-calculator.ts';
+import { getArmourAPForLocation } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
 import { contentRefName } from '../../utils/content-ref-name.ts';
@@ -3069,8 +3069,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     // the model and calling them detached leaves `this` undefined, which
                     // threw inside `armour.ts` getEffectiveAPForLocation and took the whole
                     // sheet render down (#486).
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; the AP helpers are DataModel methods absent from that union
-                    const ap = getArmourAPForLocation(item.system as ArmourSystemLike, locationKey);
+                    const ap = getArmourAPForLocation(item.system, locationKey);
                     if (ap <= 0) return null;
 
                     return {

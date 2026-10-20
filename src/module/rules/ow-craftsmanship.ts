@@ -24,6 +24,8 @@
  *     and +1 AP.
  */
 
+import { type ArmourCraftsmanshipEffect, type ArmourCraftsmanshipTable, PRINTED_ARMOUR_CRAFTSMANSHIP } from './armour-craftsmanship.ts';
+
 /* -------------------------------------------------------------------- */
 /*  Tier identifier                                                     */
 /* -------------------------------------------------------------------- */
@@ -74,24 +76,6 @@ export interface MeleeCraftsmanshipEffect {
     readonly damageBonus: number;
 }
 
-/**
- * Mechanical effect of Craftsmanship on an armour piece.
- *
- *   - `agilityModifier`: flat Agility-test modifier while the armour is
- *     worn. Only Poor imposes a penalty (-10); all other tiers are 0.
- *   - `apFirstHit`: bonus AP applied only to the first hit suffered each
- *     round. Good grants +1; all other tiers are 0.
- *   - `halfWeight`: when true, the armour's encumbrance is halved. Only
- *     Best sets this flag.
- *   - `flatApBonus`: bonus AP applied to every hit. Only Best grants +1.
- */
-export interface ArmourCraftsmanshipEffect {
-    readonly agilityModifier: number;
-    readonly apFirstHit: number;
-    readonly halfWeight: boolean;
-    readonly flatApBonus: number;
-}
-
 /* -------------------------------------------------------------------- */
 /*  Static effect tables                                                */
 /* -------------------------------------------------------------------- */
@@ -120,14 +104,11 @@ export const OW_MELEE_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, MeleeCraftsm
 
 /**
  * Armour Craftsmanship table (OW core.md §"Weapon and Armour
- * Craftsmanship", armour column).
+ * Craftsmanship", armour column). It is the same table OW's line config
+ * hands the armour soak (#679), so the panel and the damage roll cannot
+ * disagree.
  */
-export const OW_ARMOUR_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, ArmourCraftsmanshipEffect>> = Object.freeze({
-    poor: Object.freeze({ agilityModifier: -10, apFirstHit: 0, halfWeight: false, flatApBonus: 0 }),
-    common: Object.freeze({ agilityModifier: 0, apFirstHit: 0, halfWeight: false, flatApBonus: 0 }),
-    good: Object.freeze({ agilityModifier: 0, apFirstHit: 1, halfWeight: false, flatApBonus: 0 }),
-    best: Object.freeze({ agilityModifier: 0, apFirstHit: 0, halfWeight: true, flatApBonus: 1 }),
-});
+export const OW_ARMOUR_CRAFTSMANSHIP: ArmourCraftsmanshipTable = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
 /* -------------------------------------------------------------------- */
 /*  Lookup helpers                                                      */

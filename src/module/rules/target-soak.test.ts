@@ -40,6 +40,39 @@ describe('locationSoak', () => {
         expect(locationSoak(pc, 'body').armour).toBe(8);
     });
 
+    it("keeps a PC's Best craftsmanship AP as its own part, after the worn AP (#679)", () => {
+        const pc = { armour: { body: { value: 4, toughnessBonus: 3, craftsmanshipAP: 1 } } };
+        expect(locationSoak(pc, 'body')).toEqual({
+            armour: 5,
+            parts: [
+                { key: 'worn', value: 4 },
+                { key: 'craftsmanship', value: 1 },
+            ],
+            toughnessBonus: 3,
+        });
+    });
+
+    it('lets Penetration take back the Best craftsmanship AP with the rest of the armour (#679)', () => {
+        const rows = soakRows(
+            10,
+            [
+                { key: 'worn', value: 4 },
+                { key: 'craftsmanship', value: 1 },
+            ],
+            0,
+            5,
+            3,
+            false,
+        );
+        expect(rows.map((row) => [row.labelKey, row.value])).toEqual([
+            ['WH40K.Chat.Damage.Soak.Damage', 10],
+            ['WH40K.Chat.Damage.Soak.Worn', -4],
+            ['WH40K.Chat.Damage.Soak.Craftsmanship', -1],
+            ['WH40K.Chat.Damage.Soak.Penetration', 5],
+            ['WH40K.Chat.Damage.Soak.Toughness', -3],
+        ]);
+    });
+
     it('soaks nothing at a location the target does not armour', () => {
         expect(locationSoak({ armour: {} }, 'body')).toEqual({ armour: 0, parts: [], toughnessBonus: 0 });
     });

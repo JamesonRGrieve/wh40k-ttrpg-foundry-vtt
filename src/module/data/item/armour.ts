@@ -1,3 +1,4 @@
+import { armourCraftsmanshipFor } from '../../config/game-systems/index.ts';
 import { hitLocationAbbreviation, hitLocationLabel } from '../../rules/hit-locations.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
@@ -641,47 +642,31 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Get craftsmanship-derived modifiers for armour.
-     * Applies WH40K RPG armour craftsmanship rules:
-     *
-     * ARMOUR:
-     * - Poor: -10 to Agility tests
-     * - Good: +1 AP on first attack each round
-     * - Best: Half weight, +1 AP (permanent)
-     *
-     * @type {object}
+     * What this armour's craftsmanship does in its owner's line (#679), from the
+     * line's printed table: Poor's Agility penalty, Good's first-attack AP, Best's
+     * AP at each covered location and half weight. The armour soak reads the same
+     * table.
      */
     get craftsmanshipModifiers(): { agility: number; armourBonus: number; weight: number; firstAttackBonus: number } {
-        const mods = {
-            agility: 0, // Agility test modifier
-            armourBonus: 0, // Permanent AP bonus (Best only)
-            weight: 1.0, // Weight multiplier
-            firstAttackBonus: 0, // AP bonus on first attack (Good only)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument -- boundary: this.parent is any-typed Foundry document
+        const effect = armourCraftsmanshipFor(inferActiveGameLine(this.parent), this.craftsmanship);
+        return {
+            agility: effect.agilityModifier,
+            armourBonus: effect.flatApBonus,
+            weight: effect.halfWeight ? 0.5 : 1,
+            firstAttackBonus: effect.apFirstHit,
         };
-
-        if (this.craftsmanship === 'poor') {
-            mods.agility = -10; // -10 to Agility tests
-        } else if (this.craftsmanship === 'good') {
-            mods.firstAttackBonus = 1; // +1 AP on first attack per round
-        } else if (this.craftsmanship === 'best') {
-            mods.armourBonus = 1; // +1 AP permanent
-            mods.weight = 0.5; // Half weight
-        }
-
-        return mods;
     }
 
     /**
-     * Get effective armour points for a location, including craftsmanship bonus.
+     * Effective AP at a location: the armour's own AP, plus Best craftsmanship's AP
+     * where the line prints it — at a location the armour covers, never one it does not.
      * @param {string} location - The body location
      * @returns {number} - Effective AP value
      */
     getEffectiveAPForLocation(location: string): number {
         const baseAP = this.getAPForLocation(location);
-        const craftMods = this.craftsmanshipModifiers;
-
-        // Best craftsmanship adds +1 AP permanently
-        return baseAP + craftMods.armourBonus;
+        return baseAP > 0 ? baseAP + this.craftsmanshipModifiers.armourBonus : baseAP;
     }
 
     /**

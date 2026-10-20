@@ -4,6 +4,7 @@
  */
 
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
+import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionCost, BurstActionRule, BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -111,13 +112,15 @@ export function vehicleDrivingRulesFor(line: string | undefined): VehicleDriving
 }
 
 /**
- * The AP a line's Good-craftsmanship armour adds against the first attack each
- * round; 0 for an unknown line or one whose Good armour does something else.
- * @param line  The wearer's `system.gameSystem` id.
+ * What a piece of armour's stored craftsmanship does in a line (#679): the line's
+ * printed effect for the tier the value reads as (DW's `exceptional` / `master`
+ * read as Good / Best). An unknown line gets no effect.
+ * @param line         The wearer's `system.gameSystem` id.
+ * @param craftsmanship The armour's stored `system.craftsmanship`.
  */
-export function goodArmourFirstAttackAPFor(line: string | undefined): number {
-    if (line === undefined) return 0;
-    return SystemConfigRegistry.getOrNull(line)?.goodArmourFirstAttackAP ?? 0;
+export function armourCraftsmanshipFor(line: string | undefined, craftsmanship: string | undefined): ArmourCraftsmanshipEffect {
+    const table = (line === undefined ? null : SystemConfigRegistry.getOrNull(line)?.armourCraftsmanship) ?? NO_ARMOUR_CRAFTSMANSHIP;
+    return table[armourCraftsmanshipTier(craftsmanship)];
 }
 
 /**

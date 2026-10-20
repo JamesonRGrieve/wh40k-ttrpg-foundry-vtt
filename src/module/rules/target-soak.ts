@@ -13,13 +13,15 @@ import { resolveHitLocationId } from './hit-locations.ts';
 
 /**
  * One location of a PC's armour as the creature model prepares it: worn AP
- * (`value`), the cumulative armour-bearing cybernetics, the Machine / Natural
- * Armour trait and Good armour's first-attack AP, beside the Toughness Bonus.
- * The three extra parts are absent on armour prepared before they were split out.
+ * (`value`), Best craftsmanship's AP, the cumulative armour-bearing cybernetics,
+ * the Machine / Natural Armour trait and Good armour's first-attack AP, beside
+ * the Toughness Bonus. The extra parts are absent on armour prepared before they
+ * were split out.
  */
 interface CreatureArmourLocation {
     readonly value: number;
     readonly toughnessBonus: number;
+    readonly craftsmanshipAP?: number;
     readonly cyberneticAP?: number;
     readonly traitBonus?: number;
     readonly goodArmourBonus?: number;
@@ -39,7 +41,7 @@ export interface SoakSource {
 }
 
 /** Where a part of a location's armour comes from. */
-export type SoakPartKey = 'worn' | 'cybernetic' | 'trait' | 'good' | 'statBlock';
+export type SoakPartKey = 'worn' | 'craftsmanship' | 'cybernetic' | 'trait' | 'good' | 'statBlock';
 
 /** One part of a location's armour, for its provenance row on the card. */
 export interface SoakPart {
@@ -60,6 +62,7 @@ export interface LocationSoak {
 
 const SOAK_PART_LABEL_KEYS: Readonly<Record<SoakPartKey, I18nKey>> = {
     worn: 'WH40K.Chat.Damage.Soak.Worn',
+    craftsmanship: 'WH40K.Chat.Damage.Soak.Craftsmanship',
     cybernetic: 'WH40K.Chat.Damage.Soak.Cybernetic',
     trait: 'WH40K.Chat.Damage.Soak.Trait',
     good: 'WH40K.Chat.Damage.Soak.Good',
@@ -132,6 +135,7 @@ export function locationSoak(source: SoakSource, location: string): LocationSoak
     return soakOf(
         [
             { key: 'worn', value: entry?.value ?? 0 },
+            { key: 'craftsmanship', value: entry?.craftsmanshipAP ?? 0 },
             { key: 'cybernetic', value: entry?.cyberneticAP ?? 0 },
             { key: 'trait', value: entry?.traitBonus ?? 0 },
             { key: 'good', value: entry?.goodArmourBonus ?? 0 },
