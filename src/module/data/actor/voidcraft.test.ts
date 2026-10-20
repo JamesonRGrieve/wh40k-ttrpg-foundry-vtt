@@ -331,9 +331,12 @@ describe('StarshipData', () => {
         const ship = Object.create(mod.default.prototype) as { hullType: string; hullTypeLabel: string };
         ship.hullType = 'light-cruiser';
         expect(ship.hullTypeLabel).toBe('loc:WH40K.HullType.LightCruiser');
-        // A pack's off-enum value (the Wayfarer Station's "space-station") is not a missing langpack key.
+        // A hull type the book prints for a unique vessel has a label (content#31).
         ship.hullType = 'space-station';
-        expect(ship.hullTypeLabel).toBe('space-station');
+        expect(ship.hullTypeLabel).toBe('loc:WH40K.HullType.SpaceStation');
+        // A stored value outside the enum is not a missing langpack key.
+        ship.hullType = 'escort';
+        expect(ship.hullTypeLabel).toBe('escort');
         ship.hullType = '';
         expect(ship.hullTypeLabel).toBe('');
         vi.unstubAllGlobals();

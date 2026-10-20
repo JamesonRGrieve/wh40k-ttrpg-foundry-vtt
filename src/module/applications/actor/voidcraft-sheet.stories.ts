@@ -620,6 +620,9 @@ export const HullTypeEditMode: Story = {
             'cruiser',
             'battlecruiser',
             'grand-cruiser',
+            'battleship',
+            'space-station',
+            'repurposed-asteroid',
         ]);
         await expect(select.selectedOptions.item(0)?.textContent.trim()).toBe('Light Cruiser');
         // Its label is associated, for assistive tech.
@@ -628,20 +631,20 @@ export const HullTypeEditMode: Story = {
 };
 
 /**
- * A stored value outside the hull types (a pack's "space-station") reads as stored,
+ * A stored value outside the hull types (an old "escort") reads as stored,
  * and in edit mode keeps its own selected option, so a save never rewrites it.
  */
 export const HullTypeOutsideTheEnum: Story = {
-    args: hullTypeCtx('space-station', 'space-station', true),
+    args: hullTypeCtx('escort', 'escort', true),
     render: (args) => {
         const column = document.createElement('div');
-        column.append(renderVoidcraftSheet(args), renderVoidcraftSheet(hullTypeCtx('space-station', 'space-station', false)));
+        column.append(renderVoidcraftSheet(args), renderVoidcraftSheet(hullTypeCtx('escort', 'escort', false)));
         return column;
     },
     play: async ({ canvasElement }) => {
         const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.hullType"]');
-        await expect(select?.value).toBe('space-station');
-        await expect(select?.selectedOptions.item(0)?.textContent.trim()).toBe('space-station');
-        await expect(canvasElement.querySelector('[data-wh40k-hook="voidcraft-hull-type-label"]')?.textContent.trim()).toBe('space-station');
+        await expect(select?.value).toBe('escort');
+        await expect(select?.selectedOptions.item(0)?.textContent.trim()).toBe('escort');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="voidcraft-hull-type-label"]')?.textContent.trim()).toBe('escort');
     },
 };

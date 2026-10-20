@@ -40,7 +40,19 @@ describe('voidcraft hull type (#647)', () => {
     it('names the label key of each WH40K.hullTypes id, and null for anything else', () => {
         expect(hullTypeLabelKey('light-cruiser')).toBe('WH40K.HullType.LightCruiser');
         expect(hullTypeLabelKey('transport')).toBe('WH40K.HullType.Transport');
-        for (const offEnum of ['space-station', 'escort', 'battleship', 'repurposed-asteroid', '', 'toString']) expect(hullTypeLabelKey(offEnum)).toBeNull();
+        for (const offEnum of ['escort', 'heavy-cruiser', '', 'toString']) expect(hullTypeLabelKey(offEnum)).toBeNull();
+    });
+
+    it('knows the hull types the RT books print for unique vessels (content#31)', () => {
+        // Kroot Warsphere (Battlefleet Koronus p. 101), Wayfarer Station (RT Core p. 210) and
+        // the Bulwark (The Frozen Reaches p. 67), Ork Rok (Battlefleet Koronus p. 82).
+        expect(hullTypeLabelKey('battleship')).toBe('WH40K.HullType.Battleship');
+        expect(hullTypeLabelKey('space-station')).toBe('WH40K.HullType.SpaceStation');
+        expect(hullTypeLabelKey('repurposed-asteroid')).toBe('WH40K.HullType.RepurposedAsteroid');
+        // No generic Space or Speed is printed for these types, so none is set.
+        expect(WH40K.hullTypes['battleship']).toEqual({ label: 'WH40K.HullType.Battleship' });
+        expect(WH40K.hullTypes['space-station']).toEqual({ label: 'WH40K.HullType.SpaceStation' });
+        expect(WH40K.hullTypes['repurposed-asteroid']).toEqual({ label: 'WH40K.HullType.RepurposedAsteroid' });
     });
 
     it('offers "not set" then every hull type, with the stored one selected', () => {
@@ -59,8 +71,8 @@ describe('voidcraft hull type (#647)', () => {
     });
 
     it('keeps a stored value outside the hull types as its own selected option, so a save never rewrites it', () => {
-        const options = voidcraftHullTypeOptions('space-station');
-        expect(options.filter((o) => o.selected)).toEqual([{ value: 'space-station', labelKey: null, selected: true }]);
+        const options = voidcraftHullTypeOptions('escort');
+        expect(options.filter((o) => o.selected)).toEqual([{ value: 'escort', labelKey: null, selected: true }]);
         expect(options).toHaveLength(Object.keys(WH40K.hullTypes).length + 2);
     });
 

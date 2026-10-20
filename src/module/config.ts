@@ -55,8 +55,10 @@ interface BodyLocationConfig {
 }
 interface HullTypeConfig {
     label: string;
-    space: number;
-    speed: number;
+    /** The hull type's typical Space, where a generic value is printed. */
+    space?: number;
+    /** The hull type's typical Speed, where a generic value is printed. */
+    speed?: number;
 }
 interface OriginPathStepConfig {
     label: string;
@@ -659,6 +661,13 @@ WH40K.hullTypes = {
     'cruiser': { label: 'WH40K.HullType.Cruiser', space: 75, speed: 5 },
     'battlecruiser': { label: 'WH40K.HullType.Battlecruiser', space: 80, speed: 5 },
     'grand-cruiser': { label: 'WH40K.HullType.GrandCruiser', space: 90, speed: 4 },
+    // Hull types the RT books print for unique vessels (content#31), with no generic
+    // Space or Speed printed for the type: Battleship (Kroot Warsphere, Battlefleet
+    // Koronus p. 101), Space Station (Wayfarer Station, RT Core p. 210; the Bulwark,
+    // The Frozen Reaches p. 67) and Repurposed Asteroid (Ork Rok, Battlefleet Koronus p. 82).
+    'battleship': { label: 'WH40K.HullType.Battleship' },
+    'space-station': { label: 'WH40K.HullType.SpaceStation' },
+    'repurposed-asteroid': { label: 'WH40K.HullType.RepurposedAsteroid' },
 };
 
 /* -------------------------------------------- */

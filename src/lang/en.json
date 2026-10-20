@@ -5450,7 +5450,10 @@
             "LightCruiser": "Light Cruiser",
             "Cruiser": "Cruiser",
             "Battlecruiser": "Battlecruiser",
-            "GrandCruiser": "Grand Cruiser"
+            "GrandCruiser": "Grand Cruiser",
+            "Battleship": "Battleship",
+            "SpaceStation": "Space Station",
+            "RepurposedAsteroid": "Repurposed Asteroid"
         },
         "Availability": {
             "None": "None",

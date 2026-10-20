@@ -8,7 +8,7 @@ import { expect, test } from './lib/test';
  * Tier B for #647: a voidcraft's hull type is a `WH40K.hullTypes` id that ship
  * components match against, but the sheet offered a free-text input. It now shows
  * the hull type's label, and in edit mode (the header's pencil) a select over the
- * hull types. A stored value outside them (a pack ship's "space-station") reads as
+ * hull types. A stored value outside them (an old "escort") reads as
  * stored and keeps its own option, so an edit-mode save never rewrites it.
  */
 
@@ -51,13 +51,13 @@ test.describe.serial('Voidcraft hull type (Tier B, #647)', () => {
 
     test('a hull type outside the enum reads as stored, and an edit-mode save leaves it alone', async ({ page }) => {
         await joinOrSkip(page);
-        const actor = await createActor(page, { data: ship('e2e-647 Station', 'space-station') });
+        const actor = await createActor(page, { data: ship('e2e-647 Escort', 'escort') });
         try {
             const sheetId = await openActorSheet(page, actor.id, 'stats');
             const hull = page.locator(`#${sheetId} ${HULL}`);
-            await expect(hull.locator('[data-wh40k-hook="voidcraft-hull-type-label"]')).toHaveText('space-station');
+            await expect(hull.locator('[data-wh40k-hook="voidcraft-hull-type-label"]')).toHaveText('escort');
             await hull.locator('[data-action="toggleEditMode"]').click();
-            await expect(page.locator(`#${sheetId} ${HULL} select[name="system.hullType"]`)).toHaveValue('space-station');
+            await expect(page.locator(`#${sheetId} ${HULL} select[name="system.hullType"]`)).toHaveValue('escort');
             // An unrelated edit submits the whole form, the hull-type select with it.
             await page.locator(`#${sheetId} input[name="system.hullClass"]`).fill('Orbital');
             await page.locator(`#${sheetId} input[name="system.hullClass"]`).press('Tab');
@@ -70,7 +70,7 @@ test.describe.serial('Voidcraft hull type (Tier B, #647)', () => {
                     }, actor.id),
                 )
                 .toBe('Orbital');
-            expect(await storedHullType(page, actor.id)).toBe('space-station');
+            expect(await storedHullType(page, actor.id)).toBe('escort');
             await snap(page, 'voidcraft-hull-type-off-enum-edit', { selector: `#${sheetId}` });
         } finally {
             await deleteDocuments(page, { actors: [actor.id] });
