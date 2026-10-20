@@ -60,6 +60,44 @@ export interface RegimentalAward {
 }
 
 /* -------------------------------------------------------------------- */
+/*  Medal items                                                         */
+/* -------------------------------------------------------------------- */
+
+/**
+ * The broad types of medal OW core p. 294 names: Imperial Honours, Campaign
+ * Honours and Regimental Awards.
+ */
+export const MEDAL_HONOUR_TYPES = ['imperial', 'campaign', 'regimental'] as const;
+
+/** One of {@link MEDAL_HONOUR_TYPES}. */
+export type MedalHonourType = (typeof MEDAL_HONOUR_TYPES)[number];
+
+/** The part of a `medal` item the Battlefield panel reads. */
+export interface MedalSource {
+    readonly name: string;
+    readonly system: { readonly squadBonus: string };
+}
+
+/** Rules HTML as one line of plain text, for a row's tooltip. */
+function plainText(html: string): string {
+    return html
+        .replace(/<\/?(?:p|br|div|li)\b[^>]*>/gi, ' ')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * The award descriptor a medal item projects to: its name, and its Squad Bonus
+ * as the row's description. A medal's Squad Bonus is printed as rules text
+ * (situational test modifiers), never as a characteristic, trait or Fate Point,
+ * so its `bonus` is empty and it adds nothing to the merged readout.
+ */
+export function medalAwardDescriptor(medal: MedalSource, id: string): RegimentalAward {
+    return { id, name: medal.name, description: plainText(medal.system.squadBonus), bonus: {} };
+}
+
+/* -------------------------------------------------------------------- */
 /*  Merge                                                               */
 /* -------------------------------------------------------------------- */
 

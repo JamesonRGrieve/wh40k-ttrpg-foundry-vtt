@@ -20,9 +20,10 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
-import { mergeRegimentalAwards, type RegimentalAward } from '../../../module/rules/ow-regimental-award';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
+import { medalAwardDescriptor, mergeRegimentalAwards, type RegimentalAward } from '../../../module/rules/ow-regimental-award';
 import panelSrc from './ow-battlefield-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -43,6 +44,8 @@ interface MergedView {
 }
 
 interface BattlefieldPanelCtx {
+    /** Whether the sheet is editable (the Add Award control shows only then). */
+    editable?: boolean;
     battlefieldPanel: {
         supportCooldown: number;
         canRequestSupport: boolean;
@@ -146,4 +149,49 @@ export const ReadyMultiAwards: Story = {
         awards: [AWARD_VALOUR, AWARD_PURGE, AWARD_SHOCK],
     }),
     render: (args) => renderPanel(args),
+};
+
+/** Two medal items as the sheet resolves them (OW core p. 294, content#32). */
+const MEDALS: RegimentalAward[] = [
+    medalAwardDescriptor(
+        { name: 'Winged Skull', system: { squadBonus: '<p>+10 to all Command Tests.</p>' } },
+        'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01',
+    ),
+    medalAwardDescriptor(
+        { name: 'Triple Skull', system: { squadBonus: '<p>+5 to all Dodge and Parry Tests.</p>' } },
+        'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalTripSk01',
+    ),
+];
+
+/**
+ * Conferred medals, editable: each named, its Squad Bonus as the row's
+ * description, no merged bonus (a Squad Bonus is rules text), and the
+ * Add Award control that opens the compendium picker.
+ */
+export const ConferredMedals: Story = {
+    name: 'Conferred medals — Squad Bonus rows and Add Award',
+    args: { ...buildContext({ supportCooldown: 0, awards: MEDALS }), editable: true },
+    render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('li[data-award-id]'));
+        await expect(rows.map((row) => row.querySelector('span[title]')?.textContent.trim())).toEqual(['Winged Skull', 'Triple Skull']);
+        await expect(rows.map((row) => row.querySelector('span[title]')?.getAttribute('title'))).toEqual([
+            '+10 to all Command Tests.',
+            '+5 to all Dodge and Parry Tests.',
+        ]);
+        await expect(canvasElement.querySelector('[data-field="award-merged"]')).toBeNull();
+        const clicks = captureActionClicks(canvasElement);
+        canvasElement.querySelector<HTMLElement>('[data-action="owAddAward"]')?.click();
+        await expect(clicks.map((click) => click.action)).toEqual(['owAddAward']);
+    },
+};
+
+/** Not editable: the medals still show, the Add Award control does not. */
+export const ConferredMedalsReadOnly: Story = {
+    args: { ...buildContext({ supportCooldown: 0, awards: MEDALS }), editable: false },
+    render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('li[data-award-id]').length).toBe(2);
+        await expect(canvasElement.querySelector('[data-action="owAddAward"]')).toBeNull();
+    },
 };

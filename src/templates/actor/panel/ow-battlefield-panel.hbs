@@ -110,6 +110,18 @@
             </p>
         {{/if}}
 
+        {{!-- Confer a medal: drop a Medal on the sheet, or pick one from the compendiums (content#32). --}}
+        {{#if @root.editable}}
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-rounded-[6px] tw-border tw-border-dashed tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-px-2 tw-py-1.5" data-ow-award-drop>
+                <span class="tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.OW.RegimentalAward.DropHint"}}</span>
+                <button type="button"
+                        class="tw-inline-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-dark)] ow:tw-text-brass"
+                        data-action="owAddAward">
+                    <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.OW.RegimentalAward.Add"}}
+                </button>
+            </div>
+        {{/if}}
+
         {{#if battlefieldPanel.merged.hasAny}}
             <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-px-2 tw-py-1 tw-rounded
                         tw-border-l-2 tw-border-gold tw-bg-[color:var(--wh40k-panel-bg-translucent,rgba(0,0,0,0.12))]

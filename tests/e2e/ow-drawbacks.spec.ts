@@ -13,9 +13,9 @@ import { expect, test } from './lib/test';
  * stored as compendium UUIDs, and a Multiple Comrades roster of Comrade
  * names. The old fixture used invented ids ("short-rations"), which the panel
  * could only print raw. The panel must show each drawback by its document's
- * name, never a UUID, a raw id or "[broken link]". The drawback documents do
- * not carry their Regiment Creation Points yet, so the refund reads "—" rather
- * than a false "+0". The spec then removes a drawback, adds a Comrade through
+ * name, never a UUID, a raw id or "[broken link]". Each drawback refunds the
+ * Regiment Creation Points its book prints (content#32): Doomed 7 and The Few 5
+ * (Hammer of the Emperor Table 1-5). The spec then removes a drawback, adds a Comrade through
  * the prompt, and removes one, all through the panel's own buttons.
  */
 
@@ -80,9 +80,10 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             await expect
                 .poll(async () => shownRows(panel))
                 .toEqual([
-                    { name: 'Doomed', refund: '—' },
-                    { name: 'The Few', refund: '—' },
+                    { name: 'Doomed', refund: '+7' },
+                    { name: 'The Few', refund: '+5' },
                 ]);
+            await expect(panel.locator('[data-refund-total]')).toContainText('+12');
             await snap(page, 'ow-drawback-panel', { selector: `#${sheetId} ${PANEL}` });
             const text = (await panel.textContent()) ?? '';
             for (const bad of ['Compendium.', '[broken link]', '+0', 'undefined']) expect(text, `the panel must not show "${bad}"`).not.toContain(bad);
@@ -93,7 +94,8 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             // Remove Doomed.
             await panel.locator(`li[data-drawback-id="${DOOMED}"] button[data-action="owToggleDrawback"]`).click();
             await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([THE_FEW]);
-            await expect.poll(async () => shownRows(panel)).toEqual([{ name: 'The Few', refund: '—' }]);
+            await expect.poll(async () => shownRows(panel)).toEqual([{ name: 'The Few', refund: '+5' }]);
+            await expect(panel.locator('[data-refund-total]')).toContainText('+5');
 
             // Add a Comrade by name through the prompt, then remove one.
             await roster.locator('button[data-action="owAddComrade"]').click();
@@ -174,13 +176,15 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             await snap(page, 'ow-drawback-picker', { selector: 'dialog.application[open]' });
             await dialog.locator('button', { hasText: /^Doomed$/ }).click();
             await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([dropped.uuid, DOOMED]);
-            // Doomed's points are not recorded yet (content#32), so its refund and the totals read "—".
+            // Doomed refunds the 7 points Hammer of the Emperor prints (content#32).
             await expect
                 .poll(async () => shownRows(panel))
                 .toEqual([
                     { name: 'e2e-160 Short Rations', refund: '+3' },
-                    { name: 'Doomed', refund: '—' },
+                    { name: 'Doomed', refund: '+7' },
                 ]);
+            await expect(panel.locator('[data-refund-total]')).toContainText('+10');
+            await expect(panel.locator('[data-adjusted-budget]')).toHaveText('= 22');
             await snap(page, 'ow-drawback-panel-added', { selector: `#${sheetId} ${PANEL}` });
             recordCoverage('action', 'owAddDrawback');
         } finally {

@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { mergeRegimentalAwards, awardableForMission, buildBattlefieldPanel, type RegimentalAward } from './ow-regimental-award';
+import {
+    mergeRegimentalAwards,
+    awardableForMission,
+    buildBattlefieldPanel,
+    MEDAL_HONOUR_TYPES,
+    medalAwardDescriptor,
+    type RegimentalAward,
+} from './ow-regimental-award';
 
 const VALOUR: RegimentalAward = {
     id: 'award-valour',
@@ -183,5 +190,35 @@ describe('buildBattlefieldPanel', () => {
         expect(panel.availableAwards).toEqual([]);
         expect(panel.merged.hasAny).toBe(false);
         expect(panel.merged.entryCount).toBe(0);
+    });
+});
+
+describe('medalAwardDescriptor (content#32)', () => {
+    const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
+
+    it('names the medal and shows its Squad Bonus as plain text', () => {
+        expect(
+            medalAwardDescriptor({ name: 'Winged Skull', system: { squadBonus: '<p>+10 to all\n Command <b>Tests</b>.</p><p>Second.</p>' } }, WINGED_SKULL),
+        ).toEqual({
+            id: WINGED_SKULL,
+            name: 'Winged Skull',
+            description: '+10 to all Command Tests. Second.',
+            bonus: {},
+        });
+    });
+
+    it('adds no merged bonus: a Squad Bonus is rules text, not a characteristic, trait or Fate Point', () => {
+        const panel = buildBattlefieldPanel(
+            [WINGED_SKULL],
+            0,
+            (id) => medalAwardDescriptor({ name: 'Winged Skull', system: { squadBonus: '<p>+10 to all Command Tests.</p>' } }, id),
+            (id) => id,
+        );
+        expect(panel.availableAwards).toEqual([{ id: WINGED_SKULL, name: 'Winged Skull', description: '+10 to all Command Tests.', conferred: true }]);
+        expect(panel.merged).toMatchObject({ entryCount: 1, hasAny: false });
+    });
+
+    it('names the book’s three broad types', () => {
+        expect([...MEDAL_HONOUR_TYPES]).toEqual(['imperial', 'campaign', 'regimental']);
     });
 });

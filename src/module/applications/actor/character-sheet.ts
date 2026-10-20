@@ -52,6 +52,7 @@ import {
     toggleDarkPactEntry,
 } from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { addRegimentalAward, chooseCompendiumAward, isMedal, resolveAwardDescriptors } from '../../documents/ow-awards.ts';
 import { addRegimentalDrawback, chooseCompendiumDrawback, isRegimentalDrawback, resolveDrawbackDescriptors } from '../../documents/ow-drawbacks.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
 import { pluralKey } from '../../i18n/plural.ts';
@@ -121,7 +122,7 @@ import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';
 import { buildDrawbackPanel, type MultiComradeRoster, type RegimentDrawback } from '../../rules/ow-regiment-drawback.ts';
-import { buildBattlefieldPanel } from '../../rules/ow-regimental-award.ts';
+import { buildBattlefieldPanel, type RegimentalAward } from '../../rules/ow-regimental-award.ts';
 import {
     applyMismanifest,
     canUnleashDaemon,
@@ -721,11 +722,10 @@ const PANEL_BUILDERS: SystemPanels = {
                 const record = owSystemRecord(s);
                 const ids = Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
                 const cooldown = typeof record['supportCooldown'] === 'number' ? record['supportCooldown'] : 0;
-                // Award descriptors live on compendium documents (Direction #7). No award
-                // content pack exists yet, so nothing resolves; a stored award UUID is
-                // still shown by its document's name (#161), and a row keeps its id so
-                // it toggles off correctly.
-                return buildBattlefieldPanel(ids, cooldown, () => undefined, cachedRefName);
+                // Award descriptors come from the conferred medal items (Direction #7),
+                // resolved before the panels build; an id that no longer resolves is
+                // still shown by its document's name, and keeps its id so it toggles off.
+                return buildBattlefieldPanel(ids, cooldown, (id) => s._owAwardDescriptor(id), cachedRefName);
             },
         },
     ],
@@ -749,6 +749,8 @@ export default class CharacterSheet extends BaseActorSheet {
     _orderCategoryFilter = '';
     /** This render's Regimental Drawback descriptors, by drawback UUID (#160). */
     #drawbackDescriptors = new Map<string, RegimentDrawback>();
+    /** This render's conferred medal descriptors, by medal UUID (content#32). */
+    #awardDescriptors = new Map<string, RegimentalAward>();
     /**
      * Ephemeral BC Psychic Strength selections (#178). Mode and push
      * level are render-only UI state — they are not persisted on the
@@ -931,6 +933,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'owMountedAction': owMountedAction,
             'owToggleDrawback': owToggleDrawback,
             'owAddDrawback': CharacterSheet.#owAddDrawback,
+            'owAddAward': CharacterSheet.#owAddAward,
             'owAddComrade': owAddComrade,
             'owRemoveComrade': owRemoveComrade,
             'owRequestSupport': owRequestSupport,
@@ -1244,6 +1247,8 @@ export default class CharacterSheet extends BaseActorSheet {
         // panels, and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
         // The drawback panel's refunds come from each drawback item's Regiment Creation Points (#160).
         if (isOW) this.#drawbackDescriptors = await resolveDrawbackDescriptors(this.#regimentDrawbackIds());
+        // The Battlefield panel's awards come from each conferred medal item (#161, content#32).
+        if (isOW) this.#awardDescriptors = await resolveAwardDescriptors(this.#regimentalAwardIds());
 
         if (activeGameSystem !== null) {
             for (const { key, build } of (this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem] ?? []) {
@@ -1892,6 +1897,36 @@ export default class CharacterSheet extends BaseActorSheet {
             uuid,
         );
         if (!added) this._notify('warning', game.i18n.format('WH40K.OW.RegimentDrawback.AlreadyTaken', { name }));
+    }
+
+    /** A conferred medal's descriptor (content#32). */
+    _owAwardDescriptor(id: string): RegimentalAward | undefined {
+        return this.#awardDescriptors.get(id);
+    }
+
+    /** The medals conferred on the character, as UUIDs; none off the OW line. */
+    #regimentalAwardIds(): string[] {
+        const record = owSystemRecord(this);
+        return Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
+    }
+
+    /** Confer a medal (a drop on the sheet, or the panel's Add Award). */
+    async #addRegimentalAward(uuid: string, name: string): Promise<void> {
+        const added = await addRegimentalAward(
+            { system: { regimentalAwards: this.#regimentalAwardIds() }, update: async (data) => this.actor.update(data) },
+            uuid,
+        );
+        if (!added) this._notify('warning', game.i18n.format('WH40K.OW.RegimentalAward.AlreadyConferred', { name }));
+    }
+
+    /** Confer a medal chosen from the compendiums (the Battlefield panel's Add Award). */
+    static async #owAddAward(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const uuid = await chooseCompendiumAward();
+        if (uuid === null) {
+            this._notify('warning', game.i18n.localize('WH40K.OW.RegimentalAward.NoneAvailable'));
+            return;
+        }
+        await this.#addRegimentalAward(uuid, cachedRefName(uuid));
     }
 
     /** Add a drawback chosen from the compendiums (the panel's Add Drawback). */
@@ -6628,6 +6663,11 @@ export default class CharacterSheet extends BaseActorSheet {
         // A Regimental Drawback is recorded on an Only War character, not owned (#160).
         if (isRegimentalDrawback(item) && 'regimentDrawbacks' in this.actor.system) {
             await this.#addRegimentalDrawback(item.uuid ?? '', item.name);
+            return false;
+        }
+        // So is a medal conferred on it (content#32).
+        if (isMedal(item) && 'regimentalAwards' in this.actor.system) {
+            await this.#addRegimentalAward(item.uuid ?? '', item.name);
             return false;
         }
 

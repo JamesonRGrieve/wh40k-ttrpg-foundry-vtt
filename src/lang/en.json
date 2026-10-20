@@ -67,6 +67,7 @@
             "criticalInjury": "Critical Injury",
             "cybernetic": "Cybernetic",
             "darkPact": "Dark Pact",
+            "medal": "Medal",
             "drug": "Drug",
             "endeavour": "Endeavour",
             "enemy": "Enemy",
@@ -2424,6 +2425,7 @@
             "ForceField": "Force Field Sheet",
             "CriticalInjury": "Critical Injury Sheet",
             "DarkPact": "Dark Pact Sheet",
+            "Medal": "Medal Sheet",
             "Condition": "Condition Sheet",
             "SpecialAbility": "Special Ability Sheet",
             "Malignancy": "Malignancy Sheet",
@@ -5515,6 +5517,16 @@
                 "Advanced": "Advanced Special Ability",
                 "Distinction": "Distinction",
                 "Mark": "Mark of Distinction"
+            }
+        },
+        "Medal": {
+            "AwardedFor": "Awarded For",
+            "SquadBonus": "Squad Bonus",
+            "HonourType": "Type",
+            "Honour": {
+                "Imperial": "Imperial Honour",
+                "Campaign": "Campaign Honour",
+                "Regimental": "Regimental Award"
             }
         },
         "Malignancy": {
@@ -8774,7 +8786,13 @@
                 },
                 "Awardable": {
                     "Title": "Eligible Awards"
-                }
+                },
+                "Add": "Add Award",
+                "DropHint": "Drop a medal here, or add one from the compendiums.",
+                "PickTitle": "Confer a Medal",
+                "PickHint": "Choose the medal or honour to confer.",
+                "NoneAvailable": "No medals were found in the compendiums.",
+                "AlreadyConferred": "This character already bears {name}."
             }
         },
         "Location": {

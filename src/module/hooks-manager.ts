@@ -63,6 +63,7 @@ import {
     CriticalInjurySheet,
     ConditionSheet,
     DarkPactSheet,
+    MedalSheet,
     SpecialAbilitySheet,
     MalignancySheet,
     MutationSheet,
@@ -1255,6 +1256,7 @@ export class HooksManager {
             specialAbility: dataModels.SpecialAbilityData,
             criticalInjury: dataModels.CriticalInjuryData,
             darkPact: dataModels.DarkPactData,
+            medal: dataModels.MedalData,
             mutation: dataModels.MutationData,
             malignancy: dataModels.MalignancyData,
             mentalDisorder: dataModels.MentalDisorderData,
@@ -1344,6 +1346,7 @@ export class HooksManager {
             { sheet: ForceFieldSheet, types: ['forceField'], label: 'WH40K.Sheet.ForceField' },
             { sheet: CriticalInjurySheet, types: ['criticalInjury'], label: 'WH40K.Sheet.CriticalInjury' },
             { sheet: DarkPactSheet, types: ['darkPact'], label: 'WH40K.Sheet.DarkPact' },
+            { sheet: MedalSheet, types: ['medal'], label: 'WH40K.Sheet.Medal' },
             { sheet: ConditionSheet, types: ['condition'], label: 'WH40K.Sheet.Condition' },
             // Content-block sheets (freeform-gated)
             { sheet: SpecialAbilitySheet, types: ['specialAbility'], label: 'WH40K.Sheet.SpecialAbility' },

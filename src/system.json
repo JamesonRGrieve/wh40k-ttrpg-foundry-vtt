@@ -345,6 +345,13 @@
                     "description.value"
                 ]
             },
+            "medal": {
+                "htmlFields": [
+                    "description.value",
+                    "awardedFor",
+                    "squadBonus"
+                ]
+            },
             "cybernetic": {
                 "htmlFields": [
                     "description.value"
