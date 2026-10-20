@@ -73,7 +73,6 @@ describe('Status panels relocated to Overview (#263 — no silent data loss)', (
         'dw-requisition-panel.hbs',
         'dw-oath-panel.hbs',
         'dw-mission-panel.hbs',
-        'dw-vehicle-panel.hbs',
         'ow-comrade-panel.hbs',
         'ow-logistics-panel.hbs',
         'ow-orders-panel.hbs',

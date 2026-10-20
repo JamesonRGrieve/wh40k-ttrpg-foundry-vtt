@@ -374,7 +374,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/dw-distinction-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/dw-mission-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/dw-oath-panel.hbs',
-            'systems/wh40k-rpg/templates/actor/panel/dw-vehicle-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ow-mission-gear-panel.hbs',
             // Batch-3 engine panels (OW #156, #157, #158)
             'systems/wh40k-rpg/templates/actor/panel/ow-vehicle-movement-panel.hbs',
@@ -388,7 +387,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/bc-ritual-chat.hbs',
             'systems/wh40k-rpg/templates/chat/dw-mission-reward-chat.hbs',
             'systems/wh40k-rpg/templates/chat/dw-oath-chat.hbs',
-            'systems/wh40k-rpg/templates/chat/dw-vehicle-crit-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-mission-gear-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-vehicle-action-chat.hbs',
             'systems/wh40k-rpg/templates/chat/ow-comrade-healing-chat.hbs',

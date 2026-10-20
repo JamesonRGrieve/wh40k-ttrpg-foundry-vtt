@@ -19,7 +19,6 @@ import { dwEnterSquadMode, dwLeaveSquadMode } from '../../actions/dw-mode-action
 import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
 import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
 import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
-import { dwVehicleRepair, dwVehicleRollCrit } from '../../actions/dw-vehicle-actions.ts';
 import { promptGrappleItem } from '../../actions/grapple-controls.ts';
 import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { owComradeHeal, owComradeMental, owComradeRecover, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
@@ -264,7 +263,6 @@ type CharacterSheetContextDeclaredFields = {
     ammoPanel?: DwAmmoPanelContext;
     oathPanel?: DwOathPanelContext;
     missionPanel?: DwMissionPanelContext;
-    vehiclePanel?: DwVehiclePanelContext;
     missionGearPanel?: OwMissionGearPanelContext;
     vehicleMovementPanel?: OwVehicleMovementPanelContext;
     comradeHealingPanel?: OwComradeHealingPanelContext;
@@ -539,14 +537,6 @@ type DwMissionPanelContext = {
     } | null;
 };
 
-/** DW Vehicle Critical Hit / Repair panel (#170). */
-type DwVehiclePanelContext = {
-    integrity: number;
-    overIntegrity: number;
-    canRollCrit: boolean;
-    canRepair: boolean;
-};
-
 /** OW Mission Assignment Gear panel (#155). */
 type OwMissionGearPanelContext = {
     hasOutcome: boolean;
@@ -643,16 +633,13 @@ type UtilityMenuOption = {
  * under its `key`. Adding a system's panel is now a one-row edit. The exact
  * context-key names the `.hbs` partials read are preserved verbatim.
  */
-export interface PanelBuilder {
+interface PanelBuilder {
     key: string;
     build: (sheet: CharacterSheet) => object;
 }
 
 /** The per-system panels a sheet class builds into its render context. */
 export type SystemPanels = Partial<Record<GameSystemId, readonly PanelBuilder[]>>;
-
-/** DW vehicle Integrity panel — built for characters and, on their NPC tab, for DW NPCs. */
-export const DW_VEHICLE_PANEL: PanelBuilder = { key: 'vehiclePanel', build: (s) => s._prepareDwVehiclePanel() };
 
 /** OW pass-through panels read `system.*` by string key (no dedicated _prepare method yet). */
 function owSystemRecord(sheet: CharacterSheet): Record<string, unknown> {
@@ -676,7 +663,6 @@ const PANEL_BUILDERS: SystemPanels = {
         { key: 'astartesPanel', build: (s) => s._prepareDwAstartesPanel() },
         { key: 'oathPanel', build: (s) => s._prepareDwOathPanel() },
         { key: 'missionPanel', build: (s) => s._prepareDwMissionPanel() },
-        DW_VEHICLE_PANEL,
         { key: 'distinctionPanel', build: (s) => s._prepareDwDistinctionPanel() },
         { key: 'ammoPanel', build: (s) => s._prepareDwAmmoPanel() },
     ],
@@ -920,8 +906,6 @@ export default class CharacterSheet extends BaseActorSheet {
             'dwToggleObjective': dwToggleObjective,
             'dwToggleComplication': dwToggleComplication,
             'dwCompleteMission': dwCompleteMission,
-            'dwVehicleRollCrit': dwVehicleRollCrit,
-            'dwVehicleRepair': dwVehicleRepair,
             'owRequestGear': owRequestGear,
             // Batch-3 actions
             'owVehicleAction': owVehicleAction,
@@ -2237,26 +2221,6 @@ export default class CharacterSheet extends BaseActorSheet {
                     triggered: c.triggered,
                 })),
             },
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * DW Vehicle Critical Hit / Repair panel (#170). The crit-roll
-     * button unlocks when over-Integrity has accumulated OR the vehicle
-     * has just been pushed to zero Integrity (its first crit roll); the
-     * repair button requires accumulated over-Integrity to act on.
-     */
-    _prepareDwVehiclePanel(): DwVehiclePanelContext {
-        const sys = this.actor.system;
-        const integrity = sys.vehicleIntegrity;
-        const overIntegrity = sys.overIntegrity;
-        return {
-            integrity,
-            overIntegrity,
-            canRollCrit: overIntegrity > 0 || integrity <= 0,
-            canRepair: overIntegrity > 0,
         };
     }
 

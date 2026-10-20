@@ -3940,46 +3940,6 @@
                     "FireDamage": "Fire Damage",
                     "UnarmoredOnly": "Applies only against unarmoured targets"
                 }
-            },
-            "Vehicle": {
-                "Label": "Vehicle",
-                "Integrity": "Structural Integrity",
-                "OverIntegrity": "Over-Integrity Damage",
-                "RollCrit": "Roll Critical Hit",
-                "RollCritTooltip": "Roll 1d10 + over-Integrity on the Vehicle Critical Hit Chart (Table 4-2).",
-                "RepairTest": "Repair Test",
-                "RepairTestTooltip": "Tech-Use Test; difficulty scales with the last suffered critical result.",
-                "RolledLabel": "Rolled {rolled} + {over} = {final}",
-                "RepairLabel": "Repair difficulty",
-                "Crit": {
-                    "Roll": "Critical Hit Roll",
-                    "Header": "Vehicle Critical Hit",
-                    "Result": {
-                        "Minor": "Jarring Blow",
-                        "Mobility": "Staggered",
-                        "Weapons": "Weapon Destroyed",
-                        "Crew": "Crew Casualty",
-                        "Engine": "Drive Damaged",
-                        "Fire": "Fire",
-                        "CatastrophicFire": "Catastrophic Fire",
-                        "Hull": "Penetrating Hit",
-                        "Cargo": "Cargo Destroyed",
-                        "Wrecked": "Explodes"
-                    }
-                },
-                "Repair": {
-                    "Header": "Vehicle Repair",
-                    "Difficulty": {
-                        "Routine": "Routine (+20)",
-                        "Challenging": "Challenging (+0)",
-                        "Hard": "Hard (-20)"
-                    }
-                },
-                "Acquisition": {
-                    "Title": "Kill-Team Vehicle Requisition",
-                    "InsufficientRp": "Kill-team Requisition Points insufficient to acquire this vehicle.",
-                    "RankTooLow": "Renown rank too low to requisition this vehicle."
-                }
             }
         },
         "RT": {

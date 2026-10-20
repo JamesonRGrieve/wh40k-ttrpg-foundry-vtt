@@ -19,7 +19,6 @@ import { dwModeSchemaFields, type DwModeDeclarations } from './mixins/dw-mode-te
 import { dwOathSchemaFields, type DwOathDeclarations } from './mixins/dw-oath-template.ts';
 import { dwRenownSchemaFields, type DwRenownDeclarations } from './mixins/dw-renown-template.ts';
 import { dwRequisitionSchemaFields, type DwRequisitionDeclarations } from './mixins/dw-requisition-template.ts';
-import { dwVehicleSchemaFields, type DwVehicleDeclarations } from './mixins/dw-vehicle-template.ts';
 import { owBattlefieldSchemaFields, type OwBattlefieldDeclarations } from './mixins/ow-battlefield-template.ts';
 import { owComradeHealingSchemaFields, type OwComradeHealingDeclarations } from './mixins/ow-comrade-healing-template.ts';
 import { owComradeSchemaFields, type OwComradeDeclarations } from './mixins/ow-comrade-template.ts';
@@ -376,7 +375,6 @@ export default class CharacterData extends CreatureTemplate {
             ...dwAmmoSchemaFields(),
             ...dwMissionSchemaFields(),
             ...dwOathSchemaFields(),
-            ...dwVehicleSchemaFields(),
             ...owMissionGearSchemaFields(),
 
             // Batch-3 engine slots (OW #156, #157).
@@ -1359,7 +1357,6 @@ export default interface CharacterData
         DwAmmoDeclarations,
         DwMissionDeclarations,
         DwOathDeclarations,
-        DwVehicleDeclarations,
         OwMissionGearDeclarations,
         OwVehicleMovementDeclarations,
         OwComradeHealingDeclarations,

@@ -65,7 +65,6 @@ const { dwModeSchemaFields } = await import('./dw-mode-template.ts');
 const { dwOathSchemaFields } = await import('./dw-oath-template.ts');
 const { dwRenownSchemaFields } = await import('./dw-renown-template.ts');
 const { dwRequisitionSchemaFields } = await import('./dw-requisition-template.ts');
-const { dwVehicleSchemaFields } = await import('./dw-vehicle-template.ts');
 const { owBattlefieldSchemaFields } = await import('./ow-battlefield-template.ts');
 const { owComradeHealingSchemaFields } = await import('./ow-comrade-healing-template.ts');
 const { owComradeSchemaFields } = await import('./ow-comrade-template.ts');
@@ -93,7 +92,6 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['dwOathSchemaFields', dwOathSchemaFields, ['activeOathId', 'isLeader']],
     ['dwRenownSchemaFields', dwRenownSchemaFields, ['renown']],
     ['dwRequisitionSchemaFields', dwRequisitionSchemaFields, ['requisitionPoints', 'missionRating']],
-    ['dwVehicleSchemaFields', dwVehicleSchemaFields, ['vehicleIntegrity', 'overIntegrity']],
     ['owBattlefieldSchemaFields', owBattlefieldSchemaFields, ['supportCooldown', 'regimentalAwards']],
     ['owComradeHealingSchemaFields', owComradeHealingSchemaFields, ['comradeRecoveryDays', 'refitAvailable', 'comradeMedicaeUsed']],
     ['owComradeSchemaFields', owComradeSchemaFields, ['comrade']],

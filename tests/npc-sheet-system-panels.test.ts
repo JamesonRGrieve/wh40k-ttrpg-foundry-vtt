@@ -31,9 +31,9 @@ describe('per-sheet system panels (#628)', () => {
         expect(CHARACTER_SHEET).not.toMatch(/of PANEL_BUILDERS\[/);
     });
 
-    it('gives the NPC sheet only the DW vehicle panel its NPC tab renders', () => {
-        expect(NPC_SHEET).toContain('static override SYSTEM_PANELS: SystemPanels = { dw: [DW_VEHICLE_PANEL] };');
-        expect(NPC_TAB).toContain('vehiclePanel=vehiclePanel');
+    it('gives the NPC sheet no system panel: its NPC tab renders none (#678 removed the legacy DW vehicle panel)', () => {
+        expect(NPC_SHEET).toContain('static override SYSTEM_PANELS: SystemPanels = {};');
+        expect(NPC_TAB).not.toContain('Panel=');
     });
 
     it('builds no BC panel for an NPC, whose DataModel has no advancement ledger', () => {
