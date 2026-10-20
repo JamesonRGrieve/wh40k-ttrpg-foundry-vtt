@@ -23,7 +23,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
-import { medalAwardDescriptor, mergeRegimentalAwards, type RegimentalAward } from '../../../module/rules/ow-regimental-award';
+import { awardTooltipData, medalAwardDescriptor, mergeRegimentalAwards, type RegimentalAward } from '../../../module/rules/ow-regimental-award';
 import panelSrc from './ow-battlefield-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -32,6 +32,7 @@ interface AvailableAward {
     id: string;
     name: string;
     description: string;
+    tooltipData: string;
     conferred: boolean;
 }
 
@@ -69,16 +70,17 @@ function mergedView(awards: ReadonlyArray<RegimentalAward>): MergedView {
 function buildContext(opts: {
     supportCooldown: number;
     awards: ReadonlyArray<RegimentalAward>;
-    extraAvailable?: ReadonlyArray<Omit<AvailableAward, 'conferred'>>;
+    extraAvailable?: ReadonlyArray<Pick<AvailableAward, 'id' | 'name' | 'description'>>;
 }): BattlefieldPanelCtx {
     const cooldownActive = opts.supportCooldown > 0;
     const conferredEntries: AvailableAward[] = opts.awards.map((a) => ({
         id: a.id,
         name: a.name,
         description: a.description,
+        tooltipData: awardTooltipData(a.name, a.description),
         conferred: true,
     }));
-    const extras: AvailableAward[] = (opts.extraAvailable ?? []).map((a) => ({ ...a, conferred: false }));
+    const extras: AvailableAward[] = (opts.extraAvailable ?? []).map((a) => ({ ...a, tooltipData: awardTooltipData(a.name, a.description), conferred: false }));
     return {
         battlefieldPanel: {
             supportCooldown: opts.supportCooldown,
@@ -131,6 +133,12 @@ export const ReadyNoAwards: Story = {
         extraAvailable: [{ id: AWARD_VALOUR.id, name: AWARD_VALOUR.name, description: AWARD_VALOUR.description }],
     }),
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        // An unconferred row's button names the Confer action (#672).
+        const button = canvasElement.querySelector<HTMLElement>('li[data-conferred="false"] [data-action="owToggleAward"]');
+        await expect(button?.getAttribute('aria-label')).toBe(`Confer award: ${AWARD_VALOUR.name}`);
+        await expect(button?.dataset['tooltip']).toBe('Confer award');
+    },
 };
 
 export const CooldownWithAwards: Story = {
@@ -174,11 +182,18 @@ export const ConferredMedals: Story = {
     render: (args) => renderPanel(args),
     play: async ({ canvasElement }) => {
         const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('li[data-award-id]'));
-        await expect(rows.map((row) => row.querySelector('span[title]')?.textContent.trim())).toEqual(['Winged Skull', 'Triple Skull']);
-        await expect(rows.map((row) => row.querySelector('span[title]')?.getAttribute('title'))).toEqual([
-            '+10 to all Command Tests.',
-            '+5 to all Dodge and Parry Tests.',
-        ]);
+        const text = (row: HTMLElement, field: string): string | undefined => row.querySelector(`[data-field="${field}"]`)?.textContent.trim();
+        await expect(rows.map((row) => text(row, 'award-name'))).toEqual(['Winged Skull', 'Triple Skull']);
+        // #672: the Squad Bonus shows on the row, not only in a hover title.
+        await expect(rows.map((row) => text(row, 'award-bonus'))).toEqual(['+10 to all Command Tests.', '+5 to all Dodge and Parry Tests.']);
+        await expect(canvasElement.querySelectorAll('li[data-award-id] [title]')).toHaveLength(0);
+        // The full Squad Bonus is in the shared tooltip, titled by the medal.
+        const tooltips = rows.map((row) => row.querySelector<HTMLElement>('[data-wh40k-tooltip="generic"]')?.dataset['wh40kTooltipData'] ?? '');
+        await expect(tooltips.map((data) => (JSON.parse(data) as { title: string }).title)).toEqual(['Winged Skull', 'Triple Skull']);
+        // The button names its action.
+        const buttons = rows.map((row) => row.querySelector<HTMLElement>('[data-action="owToggleAward"]'));
+        await expect(buttons.map((button) => button?.getAttribute('aria-label'))).toEqual(['Remove award: Winged Skull', 'Remove award: Triple Skull']);
+        await expect(buttons.map((button) => button?.dataset['tooltip'])).toEqual(['Remove award', 'Remove award']);
         await expect(canvasElement.querySelector('[data-field="award-merged"]')).toBeNull();
         const clicks = captureActionClicks(canvasElement);
         canvasElement.querySelector<HTMLElement>('[data-action="owAddAward"]')?.click();

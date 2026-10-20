@@ -23,6 +23,8 @@
  * RNG-free and actor-decoupled.
  */
 
+import { escapeHtml } from '../utils/escape-html.ts';
+
 /* -------------------------------------------------------------------- */
 /*  Award definition                                                    */
 /* -------------------------------------------------------------------- */
@@ -196,8 +198,17 @@ export type RegimentalAwardResolver = (id: string) => RegimentalAward | undefine
 interface BattlefieldAwardRow {
     id: string;
     name: string;
+    /** The award's Squad Bonus as plain text, shown under its name (#672); `''` when unknown. */
     description: string;
+    /** The shared `wh40k-tooltip` generic payload: the name over the full Squad Bonus; `''` when there is none. */
+    tooltipData: string;
     conferred: boolean;
+}
+
+/** The generic `wh40k-tooltip` payload for an award row, or `''` when it has no description. Pure. */
+export function awardTooltipData(name: string, description: string): string {
+    // The generic tooltip inserts both as markup, so both are escaped.
+    return description === '' ? '' : JSON.stringify({ title: escapeHtml(name), content: `<p>${escapeHtml(description)}</p>` });
 }
 
 /** The full context `ow-battlefield-panel.hbs` declares in its header comment. */
@@ -267,12 +278,9 @@ export function buildBattlefieldPanel(
         if (id === '') continue;
         const descriptor = resolve(id);
         if (descriptor !== undefined) descriptors.push(descriptor);
-        availableAwards.push({
-            id,
-            name: descriptor?.name ?? nameOf(id),
-            description: descriptor?.description ?? '',
-            conferred: true,
-        });
+        const name = descriptor?.name ?? nameOf(id);
+        const description = descriptor?.description ?? '';
+        availableAwards.push({ id, name, description, tooltipData: awardTooltipData(name, description), conferred: true });
     }
 
     const merged = mergeRegimentalAwards(descriptors);

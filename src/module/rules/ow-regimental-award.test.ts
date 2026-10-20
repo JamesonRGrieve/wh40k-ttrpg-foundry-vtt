@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     mergeRegimentalAwards,
     awardableForMission,
+    awardTooltipData,
     buildBattlefieldPanel,
     MEDAL_HONOUR_TYPES,
     medalAwardDescriptor,
@@ -165,6 +166,20 @@ describe('buildBattlefieldPanel', () => {
         expect(panel.merged.hasAny).toBe(true);
     });
 
+    it("gives each row its description and the shared tooltip's payload: the name over the escaped description (#672)", () => {
+        const panel = buildBattlefieldPanel([VALOUR.id], 0, resolve, ownId);
+        expect(panel.availableAwards.map((row) => [row.description, JSON.parse(row.tooltipData)])).toEqual([
+            [VALOUR.description, { title: VALOUR.name, content: `<p>${VALOUR.description}</p>` }],
+        ]);
+        expect(JSON.parse(awardTooltipData('Skull & <b>Bones</b>', 'A "<b>" & more'))).toEqual({
+            title: 'Skull &amp; &lt;b&gt;Bones&lt;/b&gt;',
+            content: '<p>A &quot;&lt;b&gt;&quot; &amp; more</p>',
+        });
+        // No description, no tooltip: the row shows its name alone.
+        expect(awardTooltipData('Bare', '')).toBe('');
+        expect(buildBattlefieldPanel(['award-missing'], 0, resolve, ownId).availableAwards[0]?.tooltipData).toBe('');
+    });
+
     it('keeps an unresolved id togglable, labelled by its own id', () => {
         // A row whose content pack is absent must still carry a non-empty
         // `data-award-id`, or `owToggleAward` no-ops and the award can never be
@@ -214,7 +229,15 @@ describe('medalAwardDescriptor (content#32)', () => {
             (id) => medalAwardDescriptor({ name: 'Winged Skull', system: { squadBonus: '<p>+10 to all Command Tests.</p>' } }, id),
             (id) => id,
         );
-        expect(panel.availableAwards).toEqual([{ id: WINGED_SKULL, name: 'Winged Skull', description: '+10 to all Command Tests.', conferred: true }]);
+        expect(panel.availableAwards).toEqual([
+            {
+                id: WINGED_SKULL,
+                name: 'Winged Skull',
+                description: '+10 to all Command Tests.',
+                tooltipData: awardTooltipData('Winged Skull', '+10 to all Command Tests.'),
+                conferred: true,
+            },
+        ]);
         expect(panel.merged).toMatchObject({ entryCount: 1, hasAny: false });
     });
 

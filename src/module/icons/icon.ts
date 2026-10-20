@@ -1,4 +1,5 @@
 import type { IconKey } from '../types/icon-keys.d.ts';
+import { escapeHtml } from '../utils/escape-html.ts';
 import { ICON_REGISTRY } from './registry.generated.ts';
 
 export type { IconKey };
@@ -39,13 +40,9 @@ export function icon(key: IconKey, opts: IconOptions = {}): string {
     const classes = ['wh40k-icon', `wh40k-icon--${key.replace(':', '-')}`];
     if (opts.class !== undefined && opts.class !== '') classes.push(opts.class);
     const labelAttrs =
-        opts.label !== undefined && opts.label !== '' ? `role="img" aria-label="${escapeAttr(opts.label)}"` : `aria-hidden="true" focusable="false"`;
+        opts.label !== undefined && opts.label !== '' ? `role="img" aria-label="${escapeHtml(opts.label)}"` : `aria-hidden="true" focusable="false"`;
     const sizeAttr = opts.size !== undefined ? ` style="width:${formatSize(opts.size)};height:${formatSize(opts.size)};"` : '';
     return svg.replace(/^<svg([^>]*)>/, `<svg$1 class="${classes.join(' ')}" ${labelAttrs}${sizeAttr}>`);
-}
-
-function escapeAttr(value: string): string {
-    return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function formatSize(size: string | number): string {

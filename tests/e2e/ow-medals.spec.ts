@@ -19,6 +19,12 @@ import { expect, test } from './lib/test';
 const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
 const HUNTERS = 'Compendium.wh40k-rpg.ow-enemies-items-medals.Item.OWeMedalHunter01';
 const PANEL = '.wh40k-ow-battlefield-panel';
+/** Each medal's Squad Bonus, as its compendium document prints it. */
+const SQUAD_BONUS = {
+    wingedSkull: '+10 to all Command Tests.',
+    hunters:
+        'The Squad is well versed in discerning the troop movements for their given enemy. The each member of the Squad gains a +10 bonus to Perception Tests to spot or track the particular enemy on the battlefield (such as Survival Tests to track them and Tests to avoid Surprise in combat).',
+};
 const DIALOG = 'dialog.application[open]';
 
 async function conferred(page: Page, actorId: string): Promise<string[]> {
@@ -29,12 +35,14 @@ async function conferred(page: Page, actorId: string): Promise<string[]> {
     }, actorId);
 }
 
-async function shownAwards(panel: Locator): Promise<Array<{ name: string; bonus: string }>> {
+/** Each conferred row as shown: its name, the Squad Bonus line under it, and its toggle's accessible name (#672). */
+async function shownAwards(panel: Locator): Promise<Array<{ name: string; bonus: string; button: string }>> {
     return panel.locator('li[data-award-id]').evaluateAll((rows) =>
-        rows.map((row) => {
-            const label = row.querySelector('span[title]');
-            return { name: label?.textContent.trim() ?? '', bonus: label?.getAttribute('title') ?? '' };
-        }),
+        rows.map((row) => ({
+            name: row.querySelector('[data-field="award-name"]')?.textContent.trim() ?? '',
+            bonus: row.querySelector('[data-field="award-bonus"]')?.textContent.trim() ?? '',
+            button: row.querySelector('[data-action="owToggleAward"]')?.getAttribute('aria-label') ?? '',
+        })),
     );
 }
 
@@ -89,14 +97,20 @@ test.describe.serial('OW Medals and Honours (Tier B, content#32)', () => {
             await expect
                 .poll(async () => shownAwards(panel))
                 .toEqual([
-                    { name: 'Winged Skull', bonus: '+10 to all Command Tests.' },
-                    {
-                        name: 'Hunters',
-                        bonus: 'The Squad is well versed in discerning the troop movements for their given enemy. The each member of the Squad gains a +10 bonus to Perception Tests to spot or track the particular enemy on the battlefield (such as Survival Tests to track them and Tests to avoid Surprise in combat).',
-                    },
+                    { name: 'Winged Skull', bonus: SQUAD_BONUS.wingedSkull, button: 'Remove award: Winged Skull' },
+                    { name: 'Hunters', bonus: SQUAD_BONUS.hunters, button: 'Remove award: Hunters' },
                 ]);
             const text = (await panel.textContent()) ?? '';
             for (const bad of ['Compendium.', '[broken link]', 'undefined']) expect(text, `the panel must not show "${bad}"`).not.toContain(bad);
+            // #672: the bonus is on the row itself, the full text in the shared tooltip, and no bare title.
+            const rows = panel.locator('li[data-award-id]');
+            await expect(rows.locator('[data-field="award-bonus"]').first()).toBeVisible();
+            await expect(rows.locator('[title]')).toHaveCount(0);
+            const tooltipTitles = await rows
+                .locator('[data-wh40k-tooltip="generic"]')
+                .evaluateAll((els) => els.map((el) => (JSON.parse(el.getAttribute('data-wh40k-tooltip-data') ?? '{}') as { title?: string }).title ?? ''));
+            expect(tooltipTitles).toEqual(['Winged Skull', 'Hunters']);
+            await expect(rows.locator('[data-action="owToggleAward"]').first()).toHaveAttribute('data-tooltip', 'Remove award');
             await snap(page, 'ow-battlefield-panel-medals', { selector: `#${sheetId} ${PANEL}` });
 
             // Taking a medal away again.

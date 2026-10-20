@@ -86,20 +86,32 @@
         {{#if battlefieldPanel.availableAwards.length}}
             <ul data-wh40k-hook="ow-battlefield-panel__award-list" class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-1">
                 {{#each battlefieldPanel.availableAwards}}
-                    <li class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-[0.78rem]"
+                    {{!-- Each row shows its Squad Bonus under the name (#672); the shared tooltip holds the full text. --}}
+                    <li class="tw-flex tw-items-start tw-justify-between tw-gap-2 tw-text-[0.78rem]"
                         data-award-id="{{this.id}}"
                         data-conferred="{{#if this.conferred}}true{{else}}false{{/if}}">
-                        <span class="tw-flex tw-items-center tw-gap-1.5 tw-truncate">
-                            <i class="fas {{#if this.conferred}}fa-medal tw-text-gold{{else}}fa-ribbon tw-text-[color:var(--wh40k-text-muted)]{{/if}}"></i>
-                            <span class="tw-truncate {{#if this.conferred}}tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
-                                  title="{{this.description}}">{{this.name}}</span>
+                        <span class="tw-flex tw-items-start tw-gap-1.5 tw-min-w-0"
+                              {{#if this.tooltipData}}data-tooltip="{{this.description}}" data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{this.tooltipData}}"{{/if}}>
+                            <i class="fas tw-mt-0.5 {{#if this.conferred}}fa-medal tw-text-gold{{else}}fa-ribbon tw-text-[color:var(--wh40k-text-muted)]{{/if}}" aria-hidden="true"></i>
+                            <span class="tw-flex tw-flex-col tw-min-w-0">
+                                <span class="tw-truncate {{#if this.conferred}}tw-text-[color:var(--wh40k-text-bright)] tw-font-semibold{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}" data-field="award-name">{{this.name}}</span>
+                                {{#if this.description}}
+                                <span class="tw-text-[0.7rem] tw-leading-snug tw-text-[color:var(--wh40k-text-muted)] tw-line-clamp-2" data-field="award-bonus">{{this.description}}</span>
+                                {{/if}}
+                            </span>
                         </span>
                         <button type="button"
-                                class="tw-inline-flex tw-items-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1.5 tw-py-0.5 tw-cursor-pointer tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
+                                class="tw-inline-flex tw-shrink-0 tw-items-center tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] tw-rounded tw-px-1.5 tw-py-0.5 tw-cursor-pointer tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-bright)] hover:tw-bg-[color:var(--wh40k-border-color-light)] hover:tw-text-white"
                                 data-action="owToggleAward"
                                 data-award-id="{{this.id}}"
-                                title="{{localize 'WH40K.OW.RegimentalAward.Label'}}">
-                            <i class="fas {{#if this.conferred}}fa-times{{else}}fa-plus{{/if}}"></i>
+                                {{#if this.conferred}}
+                                data-tooltip="{{localize 'WH40K.OW.RegimentalAward.Remove'}}"
+                                aria-label="{{localize 'WH40K.OW.RegimentalAward.RemoveNamed' name=this.name}}"
+                                {{else}}
+                                data-tooltip="{{localize 'WH40K.OW.RegimentalAward.Confer'}}"
+                                aria-label="{{localize 'WH40K.OW.RegimentalAward.ConferNamed' name=this.name}}"
+                                {{/if}}>
+                            <i class="fas {{#if this.conferred}}fa-times{{else}}fa-plus{{/if}}" aria-hidden="true"></i>
                         </button>
                     </li>
                 {{/each}}

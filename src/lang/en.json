@@ -8792,7 +8792,11 @@
                 "PickTitle": "Confer a Medal",
                 "PickHint": "Choose the medal or honour to confer.",
                 "NoneAvailable": "No medals were found in the compendiums.",
-                "AlreadyConferred": "This character already bears {name}."
+                "AlreadyConferred": "This character already bears {name}.",
+                "Remove": "Remove award",
+                "RemoveNamed": "Remove award: {name}",
+                "Confer": "Confer award",
+                "ConferNamed": "Confer award: {name}"
             }
         },
         "Location": {
