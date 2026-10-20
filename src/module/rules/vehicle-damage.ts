@@ -100,7 +100,7 @@ function normaliseDegrees(deg: number): number {
  * `vehicleBearing` (both in scene degrees, 0° along +x, clockwise as the screen's y
  * runs down). Within 45° of the nose is Front, within 45° of the tail Rear, and
  * the rest the Side on that flank: clockwise of the nose is the vehicle's right.
- * An attack from above or below has no bearing — callers pass Rear (DH2 Core p. 254).
+ * An attack from above or below reads Rear instead (see {@link isAttackFromAboveOrBelow}).
  * @param vehicleBearing  The direction the vehicle points.
  * @param attackerBearing  The direction from the vehicle's centre to the attacker.
  */
@@ -109,6 +109,18 @@ export function vehicleFacingFromBearings(vehicleBearing: number, attackerBearin
     if (offset <= HALF_ARC_DEGREES || offset >= 360 - HALF_ARC_DEGREES) return 'front';
     if (offset >= 180 - HALF_ARC_DEGREES && offset <= 180 + HALF_ARC_DEGREES) return 'rear';
     return offset < 180 ? 'right' : 'left';
+}
+
+/**
+ * Whether an attack comes from above or below the vehicle: the attacker is
+ * further off vertically than horizontally, steeper than 45° (the same half-arc
+ * the facings use). "If needed for attacks coming from above or below the
+ * vehicle, use the Rear facing to resolve armour and damage" (DH2 Core p. 253).
+ * @param horizontalMetres  Ground distance between the two.
+ * @param verticalMetres  The attacker's elevation less the vehicle's.
+ */
+export function isAttackFromAboveOrBelow(horizontalMetres: number, verticalMetres: number): boolean {
+    return Math.abs(verticalMetres) > Math.max(0, horizontalMetres);
 }
 
 /** The armour value a facing reads. */
@@ -260,11 +272,40 @@ export function chartLocationsFor(location: VehicleLocationId): readonly Vehicle
 /** The bucket an attack's target-vehicle trait modifiers fold into (one sourced row per trait). */
 export const VEHICLE_TRAIT_BUCKET = 'vehicle-traits';
 
-/** What a vehicle's traits impose on attacks against it, and which trait. */
-export interface IncomingVehicleEffects {
-    readonly incomingRangedToHitModifier: number;
-    readonly incomingMeleeToHitModifier: number;
-    readonly sources: { readonly incomingRangedToHitModifier: string; readonly incomingMeleeToHitModifier: string };
+/**
+ * What must be true of the vehicle for a trait's to-hit penalty to apply. `''`
+ * always; `moving` while it moves (Holofield: "a moving Darkstar", RT Battlefleet
+ * Koronus p. 143); `mobile` while it can move under its own power (Feral Machine
+ * Spirit: "as long as it is mobile", p. 144); `airborne` while it flies (Flyer:
+ * "an airborne flyer", DH2 Enemies Without p. 53); `deploying` while it is in
+ * flight on an Orbital Deployment (OW Core p. 213: −30 "whilst it is in flight").
+ */
+export type IncomingCondition = '' | 'moving' | 'mobile' | 'airborne' | 'deploying';
+
+/** One trait's to-hit penalty on attacks against the vehicle, and when it applies. */
+export interface IncomingToHitEntry {
+    readonly value: number;
+    /** Shooting or melee attacks. */
+    readonly attack: 'ranged' | 'melee';
+    readonly condition: IncomingCondition;
+    readonly trait: string;
+}
+
+/** What the attack path knows of the vehicle's motion when it is attacked. */
+export interface VehicleMotionState {
+    /** It moved on its most recent turn. */
+    readonly moving: boolean;
+    /** It is above the ground (its token's elevation is above 0). */
+    readonly airborne: boolean;
+    /** It can move under its own power (no Immobile trait). */
+    readonly mobile: boolean;
+}
+
+/** Whether a penalty's condition holds. Orbital deployment is in flight while the vehicle is above the ground. */
+function conditionHolds(condition: IncomingCondition, state: VehicleMotionState): boolean {
+    if (condition === '') return true;
+    if (condition === 'deploying') return state.airborne;
+    return state[condition];
 }
 
 /** One trait's modifier to an attack on the vehicle. */
@@ -273,15 +314,21 @@ export interface IncomingVehicleModifier {
     readonly trait: string;
 }
 
+/** The strongest penalty among `entries`, as a modifier row; none when there are none. */
+function strongest(entries: readonly IncomingToHitEntry[]): IncomingVehicleModifier[] {
+    const best = entries.reduce<IncomingToHitEntry | null>((found, entry) => (found === null || entry.value < found.value ? entry : found), null);
+    return best === null || best.value === 0 ? [] : [{ value: best.value, trait: best.trait }];
+}
+
 /**
- * The to-hit modifier a vehicle's traits impose on an attack against it: shooting
- * (Holofield, Flyer, Feral Machine Spirit) or melee (Skimmer). The strongest
- * penalty applies, as the aggregate already resolved.
+ * The to-hit modifier a vehicle's traits impose on an attack against it: the
+ * strongest whose condition holds — on shooting, Holofield, Flyer, Feral Machine
+ * Spirit or an Orbital Deployment in flight; on melee, Skimmer. They do not stack:
+ * Feral Machine Spirit "does not stack with the penalty from Dreadclaw Assault"
+ * (RT Battlefleet Koronus p. 144), the one place a book says.
  */
-export function incomingVehicleModifiers(effects: IncomingVehicleEffects, isMelee: boolean): IncomingVehicleModifier[] {
-    const value = isMelee ? effects.incomingMeleeToHitModifier : effects.incomingRangedToHitModifier;
-    const trait = isMelee ? effects.sources.incomingMeleeToHitModifier : effects.sources.incomingRangedToHitModifier;
-    return value === 0 ? [] : [{ value, trait }];
+export function incomingVehicleModifiers(entries: readonly IncomingToHitEntry[], isMelee: boolean, state: VehicleMotionState): IncomingVehicleModifier[] {
+    return strongest(entries.filter((entry) => entry.attack === (isMelee ? 'melee' : 'ranged') && conditionHolds(entry.condition, state)));
 }
 
 /* -------------------------------------------- */

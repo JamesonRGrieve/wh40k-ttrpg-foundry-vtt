@@ -31,6 +31,7 @@ const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
 const AUTOCANNON = `${WEAPONS}.l7M8n9O0p1Q2r3S4`;
 const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
 const REINFORCED_ARMOUR = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.dF8QAP7SfJDMJW1k';
+const FLYER = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.63b3a3c62d2fe2ad';
 const CHIMERA = { pack: 'wh40k-rpg.dh2-core-vehicles-terracraft', name: 'Chimera Armoured Transport' };
 const WILDCAT = { pack: 'wh40k-rpg.dh2-without-vehicles-terracraft', name: 'Wildcat Transport Buggy' };
 
@@ -76,6 +77,9 @@ interface CraftState {
     integrity: { value: number; max: number; critical: number };
     critDamageMultiplier: number | null;
     crewExposure: string;
+    /** Its traits' to-hit penalties, as `<trait>:<value>:<condition>`. */
+    incomingToHit: string[];
+    elevation: number;
 }
 
 /** The craft behind a token — the actor an attack on that token damages, linked or not. */
@@ -87,19 +91,30 @@ async function craftState(page: Page, tokenId: string): Promise<CraftState> {
                 tokens: {
                     get: (i: string) =>
                         | {
+                              document: { elevation: number };
                               actor: {
-                                  system: { integrity: CraftState['integrity']; traitEffects: { critDamageMultiplier: number | null; crewExposure: string } };
+                                  system: {
+                                      integrity: CraftState['integrity'];
+                                      traitEffects: {
+                                          critDamageMultiplier: number | null;
+                                          crewExposure: string;
+                                          incomingToHit?: Array<{ trait: string; value: number; condition: string }>;
+                                      };
+                                  };
                               } | null;
                           }
                         | undefined;
                 };
             };
         };
-        const system = g.canvas.tokens.get(id)?.actor?.system;
+        const token = g.canvas.tokens.get(id);
+        const system = token?.actor?.system;
         return {
             integrity: system?.integrity ?? { value: -1, max: -1, critical: -1 },
             critDamageMultiplier: system?.traitEffects.critDamageMultiplier ?? null,
             crewExposure: system?.traitEffects.crewExposure ?? '',
+            incomingToHit: (system?.traitEffects.incomingToHit ?? []).map((entry) => `${entry.trait}:${entry.value}:${entry.condition}`),
+            elevation: token?.document.elevation ?? -1,
         };
     }, tokenId);
 }
@@ -155,6 +170,31 @@ async function sizeTokens(page: Page, sceneId: string, tokenIds: readonly string
     );
 }
 
+/** A DH2 acolyte with an autocannon and a frag grenade, BS 60. */
+function gunner(name: string, x: number, y: number): HarnessTokenSpec {
+    return {
+        key: name,
+        name,
+        type: 'dh2-character',
+        x,
+        y,
+        items: [leanWeapon('Autocannon', AUTOCANNON, 24), leanWeapon('Frag Grenade', FRAG_GRENADE, 1)],
+        system: { gameSystem: 'dh2', characteristics: { ballisticSkill: { base: 60 }, strength: { base: 40 } } },
+    };
+}
+
+/** The attack card an autocannon attack posts (the card carrying Roll Damage). */
+async function autocannonAttackCard(page: Page, firer: string, target: string): Promise<{ id: string; html: string }> {
+    const attack = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+        firer,
+        target,
+        weaponName: 'Autocannon',
+        faces: [[12, 100]] as Array<[number, number]>,
+    });
+    const id = await cardWith(page, attack.messageIds, 'roll-control__roll-damage');
+    return { id, html: await cardHtml(page, id) };
+}
+
 /** The values a card's vehicle rows print, by row hook (parsed in the page, which has a DOM). */
 async function vehicleRows(page: Page, html: string): Promise<Record<string, string>> {
     return page.evaluate((source) => {
@@ -174,25 +214,9 @@ async function autocannonHit(
     firer: string,
     target: string,
 ): Promise<{ damage: { id: string; html: string }; assign: { id: string; html: string } }> {
-    const attack = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
-        firer,
-        target,
-        weaponName: 'Autocannon',
-        faces: [[12, 100]] as Array<[number, number]>,
-    });
     // The attack posts its card and the target's evasion prompt; Roll Damage is on the attack card
     // (the GM rolls over the open evasion window).
-    const posted = await Promise.all(attack.messageIds.map(async (id) => ({ id, html: await cardHtml(page, id) })));
-    const attackCard = posted.find((card) => card.html.includes('roll-control__roll-damage'))?.id ?? attack.messageIds.at(0);
-    if (attackCard === undefined) throw new Error(`the autocannon posted no card; notices ${attack.notices.join(' | ')}`);
-    const attackHtml = await cardHtml(page, attackCard);
-    expect(
-        attackHtml,
-        `the autocannon hit (card: ${attackHtml
-            .replace(/<[^>]+>/g, ' ')
-            .replace(/\s+/g, ' ')
-            .slice(0, 600)})`,
-    ).toContain('roll-control__roll-damage');
+    const attackCard = (await autocannonAttackCard(page, firer, target)).id;
     const before = await messageIds(page);
     await page.evaluate(
         async (a) =>
@@ -216,15 +240,6 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             const wildcat = await craftFromPack(page, WILDCAT);
             expect(chimera.error, chimera.error ?? '').toBeNull();
             expect(wildcat.error, wildcat.error ?? '').toBeNull();
-            const gunner = (name: string, x: number, y: number): HarnessTokenSpec => ({
-                key: name,
-                name,
-                type: 'dh2-character',
-                x,
-                y,
-                items: [leanWeapon('Autocannon', AUTOCANNON, 24), leanWeapon('Frag Grenade', FRAG_GRENADE, 1)],
-                system: { gameSystem: 'dh2', characteristics: { ballisticSkill: { base: 60 }, strength: { base: 40 } } },
-            });
             const crewman = (name: string, x: number, y: number): HarnessTokenSpec => ({
                 key: name,
                 name,
@@ -390,6 +405,77 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect(sealedHtml).toContain('data-area-sheltered');
             expect(sealedHtml).toContain('Chimera Crewman');
             expect(await snapCard(page, 'vehicle-damage-blast-enclosed-crew-sheltered', sealedResults)).not.toBeNull();
+        } finally {
+            await page.evaluate(async () => globalThis.wh40kAttack.teardown());
+            await restoreSettings(page, settings);
+        }
+    });
+
+    /**
+     * #678: a Flyer's −20 applies only while it is airborne (DH2 Enemies Without
+     * p. 53), and an attack from below it reads Rear armour (DH2 Core p. 253). The
+     * Chimeras here carry the Flyer trait: one 3 m up, with a gunner 1.6 m ahead of
+     * its centre below it, is airborne and attacked from below; one on the ground
+     * with a gunner 6.5 m ahead is neither. (3 m keeps the craft inside the scene's
+     * default ground level, which V14 tops at four grid units.)
+     */
+    test('a Flyer is harder to hit only while airborne, and an attack from below meets its Rear armour (#678)', async ({ page }) => {
+        await joinOrSkip(page);
+        await installAttackHarness(page);
+        const settings = await setWorldSettings(page, { 'auto-apply-damage': false });
+        try {
+            const chimera = await craftFromPack(page, CHIMERA);
+            expect(chimera.error, chimera.error ?? '').toBeNull();
+            const flyingCraft = (key: string, x: number, elevation: number): HarnessTokenSpec => ({
+                key,
+                name: key,
+                type: chimera.type,
+                x,
+                y: 400,
+                elevation,
+                system: chimera.system,
+                items: [...chimera.items, { name: 'Flyer', type: 'vehicleTrait', _stats: { compendiumSource: FLYER } }],
+            });
+            const scene: HarnessScene = await page.evaluate(
+                async (tokens) => globalThis.wh40kAttack.setup({ width: 1400, height: 1300, tokens }),
+                [
+                    flyingCraft('Airborne Chimera', 200, 3),
+                    flyingCraft('Landed Chimera', 900, 0),
+                    gunner('Gunner Below', 300, 600),
+                    gunner('Gunner Ahead', 950, 1100),
+                ],
+            );
+            const airborneToken = scene.tokens['Airborne Chimera'] ?? '';
+            const landedToken = scene.tokens['Landed Chimera'] ?? '';
+            await sizeTokens(page, scene.sceneId, [airborneToken, landedToken], 2);
+            const flying = await craftState(page, airborneToken);
+            expect({ incomingToHit: flying.incomingToHit, elevation: flying.elevation }, 'the Flyer trait joined, and the craft is 3 m up').toEqual({
+                incomingToHit: ['Flyer:-20:airborne'],
+                elevation: 3,
+            });
+
+            // --- Airborne: the Flyer's −20 applies, and from below it reads Rear ----
+            const airborne = await autocannonAttackCard(page, scene.tokens['Gunner Below'] ?? '', airborneToken);
+            expect(airborne.html, 'the airborne Flyer imposes its −20 on the shot').toContain('Flyer');
+            expect(await snapCard(page, 'vehicle-damage-flyer-airborne-attack', airborne.id)).not.toBeNull();
+            const before = await messageIds(page);
+            await page.evaluate(
+                async (a) =>
+                    globalThis.wh40kAttack.clickInMessage({ messageId: a.id, buttonSelector: '.roll-control__roll-damage', faces: a.faces, expectMessages: 1 }),
+                { id: airborne.id, faces: AUTOCANNON_DAMAGE },
+            );
+            const fromBelow = await awaitCard(page, before, 'data-vehicle-row="vehicle-armour"');
+            const rows = await vehicleRows(page, fromBelow.html);
+            expect(rows['vehicle-facing'], 'an attack from below reads Rear').toBe('Rear');
+            expect(rows['vehicle-armour'], 'Rear 16 less Pen 6').toBe('10');
+            expect(fromBelow.html).toContain('Attacked from above or below');
+            expect(await snapCard(page, 'vehicle-damage-from-below-rear-armour', fromBelow.id)).not.toBeNull();
+
+            // --- Landed: no Flyer penalty, and the gunner's bearing reads Front ----
+            const landed = await autocannonAttackCard(page, scene.tokens['Gunner Ahead'] ?? '', landedToken);
+            expect(landed.html).toContain('roll-control__roll-damage');
+            expect(landed.html, 'a landed Flyer imposes no penalty').not.toContain('Flyer');
+            expect(await snapCard(page, 'vehicle-damage-flyer-landed-attack', landed.id)).not.toBeNull();
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
             await restoreSettings(page, settings);

@@ -447,6 +447,7 @@ export class AssignDamageData {
         this.vehicleDamage = {
             facing: strike?.facing ?? 'front',
             facingAssumed: strike === null || strike.facingAssumed,
+            fromAboveOrBelow: strike?.fromAboveOrBelow === true,
             armourFacing: location === 'turret' ? 'front' : strike?.armourFacing ?? 'front',
             location,
             outcome,

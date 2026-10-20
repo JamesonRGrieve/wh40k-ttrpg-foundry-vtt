@@ -121,11 +121,14 @@ function onPreUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | u
     }
 }
 
-/** updateToken: accumulate the moved distance onto the active combatant for the turn. */
+/**
+ * updateToken: accumulate the moved distance onto the active combatant for the
+ * turn. Recorded under every automation level, not only `full`: it is also how a
+ * vehicle is known to be moving when it is attacked (#678).
+ */
 function onUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | undefined; y?: number | null | undefined }): void {
     try {
         if (!('x' in changes) && !('y' in changes)) return;
-        if (WH40KSettings.getMovementAutomation() !== 'full') return;
         const combat = game.combat as LooseCombat | null;
         const combatant = combat?.combatant;
         if (combat?.started !== true || combatant?.tokenId !== tokenDoc.id) return;

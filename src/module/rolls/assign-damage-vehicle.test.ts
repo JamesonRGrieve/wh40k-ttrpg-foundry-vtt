@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { aggregateVehicleTraitEffects, emptyAggregatedVehicleTraitEffects, type VehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
+import { aggregateVehicleTraitEffects, neutralVehicleTraitEffects, type VehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 import type { VehicleLocationId } from '../rules/vehicle-damage.ts';
 import { type ActorLike, AssignDamageData } from './assign-damage-data.ts';
 import type { VehicleCritLookupFn } from './vehicle-critical-tables.ts';
@@ -9,7 +9,7 @@ import type { VehicleStrike } from './vehicle-strike.ts';
 function chimera(integrity: { value: number; critical: number }, traits: Partial<VehicleTraitEffects>[] = [], line = 'dh2'): ActorLike {
     const named = traits.map((over, index) => ({
         name: index === 0 ? 'Reinforced Armour' : `Trait ${index}`,
-        effects: { ...emptyAggregatedVehicleTraitEffects(), ...over },
+        effects: { ...neutralVehicleTraitEffects(), ...over },
     }));
     const system = {
         gameSystem: line,
@@ -32,6 +32,7 @@ function strike(over: Partial<VehicleStrike> = {}): VehicleStrike {
         line: 'dh2',
         facing: 'front',
         facingAssumed: false,
+        fromAboveOrBelow: false,
         location: 'hull',
         tableRoll: 32,
         tableRollKind: 'reversed',

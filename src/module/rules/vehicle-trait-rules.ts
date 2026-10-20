@@ -10,6 +10,7 @@
 
 import type { AggregatedVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import type { IncomingCondition } from './vehicle-damage.ts';
 
 /** The rule flags the panel lists, in display order. */
 const FLAG_ROWS = [
@@ -31,9 +32,15 @@ const FLAG_ROWS = [
 ] as const satisfies ReadonlyArray<keyof AggregatedVehicleTraitEffects>;
 
 /** The signed modifiers the panel lists, shown only when non-zero. */
-const MODIFIER_ROWS = ['incomingRangedToHitModifier', 'incomingMeleeToHitModifier', 'deploymentIncomingToHitModifier'] as const satisfies ReadonlyArray<
-    keyof AggregatedVehicleTraitEffects
->;
+const MODIFIER_ROWS = ['incomingMeleeToHitModifier', 'deploymentIncomingToHitModifier'] as const satisfies ReadonlyArray<keyof AggregatedVehicleTraitEffects>;
+
+/** The label of a shooting penalty, by the condition it applies under (#678). */
+const RANGED_PENALTY_LABEL_KEYS: Readonly<Record<Exclude<IncomingCondition, 'deploying'>, I18nKey>> = {
+    '': 'WH40K.Vehicle.TraitRules.Value.incomingRangedToHitModifier',
+    'moving': 'WH40K.Vehicle.TraitRules.IncomingRanged.moving',
+    'mobile': 'WH40K.Vehicle.TraitRules.IncomingRanged.mobile',
+    'airborne': 'WH40K.Vehicle.TraitRules.IncomingRanged.airborne',
+};
 
 /** One row of the panel: the label key, and for a valued row the value to format into it. */
 interface VehicleTraitRuleRow {
@@ -62,6 +69,10 @@ export function vehicleTraitRuleRows(effects: AggregatedVehicleTraitEffects): Ve
     }
     for (const flag of FLAG_ROWS) {
         if (effects[flag]) rows.push({ key: flag, labelKey: `WH40K.Vehicle.TraitRules.Flag.${flag}` });
+    }
+    for (const entry of effects.incomingToHit) {
+        if (entry.attack !== 'ranged' || entry.condition === 'deploying') continue;
+        rows.push({ key: 'incomingRangedToHitModifier', labelKey: RANGED_PENALTY_LABEL_KEYS[entry.condition], value: signedModifier(entry.value) });
     }
     for (const modifier of MODIFIER_ROWS) {
         const value = effects[modifier];

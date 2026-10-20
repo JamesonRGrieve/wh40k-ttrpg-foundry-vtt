@@ -21,6 +21,7 @@ function strike(over: Partial<VehicleStrike> = {}): VehicleStrike {
         line: 'dh2',
         facing: 'rear',
         facingAssumed: false,
+        fromAboveOrBelow: false,
         location: 'hull',
         tableRoll: 23,
         tableRollKind: 'reversed',
@@ -106,12 +107,18 @@ describe('vehicleDamageCardRows', () => {
             'WH40K.Vehicle.Damage.FacingAssumed',
         );
     });
+
+    it('notes an attack from above or below, which reads Rear (#678)', () => {
+        const facing = byHook(vehicleDamageCardRows({ ...input, strike: strike({ facing: 'rear', fromAboveOrBelow: true }) }, echo), 'vehicle-facing');
+        expect({ value: facing?.value, note: facing?.note }).toEqual({ value: 'WH40K.Vehicle.Facing.Rear', note: 'WH40K.Vehicle.Damage.FacingAboveOrBelow' });
+    });
 });
 
 function applied(over: Partial<VehicleDamageApplied> = {}): VehicleDamageApplied {
     return {
         facing: 'front',
         facingAssumed: false,
+        fromAboveOrBelow: false,
         armourFacing: 'front',
         location: 'hull',
         outcome: resolveVehicleDamage({ damage: 47, penetration: 0, armour: 30, integrity: 10, critical: 0, critMultiplier: 0.5 }),

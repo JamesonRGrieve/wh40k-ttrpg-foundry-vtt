@@ -28,6 +28,8 @@ export interface HarnessTokenSpec {
     /** Token top-left in canvas pixels. */
     x: number;
     y: number;
+    /** Token elevation in metres (0 when omitted). Set at creation: a later elevation change is a Token move. */
+    elevation?: number;
     /** Embedded items created with the actor (lean compendium stubs or full data). */
     items?: object[];
     /** Actor system data overrides. */
@@ -187,7 +189,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
                     spec.tokens.map(async (t) => {
                         const actor = actors.get(t.key);
                         if (actor === undefined) throw new Error(`no actor for ${t.key}`);
-                        return { ...(await actor.getTokenDocument({ x: t.x, y: t.y })).toObject(), name: t.name };
+                        return { ...(await actor.getTokenDocument({ x: t.x, y: t.y, elevation: t.elevation ?? 0 })).toObject(), name: t.name };
                     }),
                 );
                 const placed = await scene.createEmbeddedDocuments('Token', tokenData);

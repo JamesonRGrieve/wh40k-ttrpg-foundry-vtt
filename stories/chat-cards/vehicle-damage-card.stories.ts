@@ -35,6 +35,7 @@ function strike(over: Partial<VehicleStrike> = {}): VehicleStrike {
         line: 'dh2',
         facing: 'front',
         facingAssumed: false,
+        fromAboveOrBelow: false,
         location: 'hull',
         tableRoll: 23,
         tableRollKind: 'reversed',
@@ -158,6 +159,7 @@ function applied(damage: number, integrity: number, critMultiplier: number | nul
     return {
         facing: 'front',
         facingAssumed: false,
+        fromAboveOrBelow: false,
         armourFacing: 'front',
         location: 'hull',
         outcome: resolveVehicleDamage({ damage, penetration: 0, armour: 30, integrity, critical: 0, critMultiplier }),

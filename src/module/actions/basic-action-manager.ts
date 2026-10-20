@@ -36,7 +36,7 @@ import { WeaponRollData } from '../rolls/roll-data.ts';
 import { uuid, postChatCard, emitChatFromTemplate, rerenderActionDataInChat, roll1d100 } from '../rolls/roll-helpers.ts';
 import { stampVehicleRows } from '../rolls/vehicle-card-rows.ts';
 import { lookupVehicleCritical } from '../rolls/vehicle-critical-tables.ts';
-import { crewTargetOf, parseVehicleStrike, resolveAboardVehicle, vehicleFuryResults, vehicleTargetProfileFromTokens } from '../rolls/vehicle-strike.ts';
+import { crewTargetOf, parseVehicleStrike, resolveAboardVehicle, vehicleFuryResults, vehicleTargetProfileOnCanvas } from '../rolls/vehicle-strike.ts';
 import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanceResult } from '../rules/area-template.ts';
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { isSameRound, readCombatRoundStamp } from '../rules/counter-attack.ts';
@@ -786,7 +786,7 @@ export class BasicActionManager {
                 sheltered.push(t('WH40K.Vehicle.CrewTargeting.ShelteredFromArea', { name, vehicle: crew.vehicleName }));
                 continue;
             }
-            const vehicle = vehicleTargetProfileFromTokens(defender, token, firerToken);
+            const vehicle = vehicleTargetProfileOnCanvas(defender, token, firerToken);
             if (vehicle !== null) rollData.vehicleTargets[actorUuid] = vehicle;
             if (spec.avoid === null) {
                 results.push(areaHitResult(token.id, actorUuid, name));

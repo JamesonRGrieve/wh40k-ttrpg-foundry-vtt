@@ -52,6 +52,20 @@ describe('vehicleTraitRuleRows (Trait Rules panel, content#28)', () => {
         ]);
     });
 
+    it('lists each shooting penalty with the condition it applies under (#678)', () => {
+        const rows = vehicleTraitRuleRows({
+            ...emptyAggregatedVehicleTraitEffects(),
+            incomingToHit: [
+                { value: -20, attack: 'ranged', condition: 'moving', trait: 'Holofield' },
+                { value: -10, attack: 'ranged', condition: '', trait: 'Ancient' },
+            ],
+        });
+        expect(rows).toEqual([
+            { key: 'incomingRangedToHitModifier', labelKey: 'WH40K.Vehicle.TraitRules.IncomingRanged.moving', value: '−20' },
+            { key: 'incomingRangedToHitModifier', labelKey: 'WH40K.Vehicle.TraitRules.Value.incomingRangedToHitModifier', value: '−10' },
+        ]);
+    });
+
     it('omits Ponderous and Enhanced Motive Systems once they have cancelled out', () => {
         expect(vehicleTraitRuleRows({ ...emptyAggregatedVehicleTraitEffects(), ponderous: false, enhancedMovement: false })).toEqual([]);
     });

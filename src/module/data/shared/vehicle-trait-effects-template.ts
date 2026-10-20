@@ -24,6 +24,8 @@
  * authored as an effect.
  */
 
+import type { IncomingToHitEntry } from '../../rules/vehicle-damage.ts';
+
 /** How a trait exposes crew/passengers. `''` = the trait says nothing about it. */
 const CREW_EXPOSURE_CHOICES = ['', 'open', 'enclosed'] as const;
 type CrewExposure = (typeof CREW_EXPOSURE_CHOICES)[number];
@@ -31,6 +33,10 @@ type CrewExposure = (typeof CREW_EXPOSURE_CHOICES)[number];
 /** How a trait treats the standard penalties for ground vehicles firing at aircraft. `''` = no change. */
 const ANTI_AIR_CHOICES = ['', 'rudimentary', 'advanced'] as const;
 type AntiAir = (typeof ANTI_AIR_CHOICES)[number];
+
+/** When a trait's shooting penalty applies (see `rules/vehicle-damage.ts` IncomingCondition). `''` = always. */
+const INCOMING_RANGED_CONDITION_CHOICES = ['', 'moving', 'mobile', 'airborne'] as const;
+type IncomingRangedCondition = (typeof INCOMING_RANGED_CONDITION_CHOICES)[number];
 
 /** One per-test modifier a trait grants (e.g. Rugged → `{ test: 'repair', value: 20 }`). */
 interface VehicleTestModifier {
@@ -77,6 +83,8 @@ export interface VehicleTraitEffects {
     crashesOnFailedRam: boolean;
     /** To-hit modifier on shooting at the vehicle under the trait's condition (Holofield −20 while moving). */
     incomingRangedToHitModifier: number;
+    /** When that shooting penalty applies: `''` always, else while the vehicle is `moving`, `mobile` or `airborne`. */
+    incomingRangedCondition: IncomingRangedCondition;
     /** Weapon Skill modifier on melee attacks against the vehicle (Skimmer −10). */
     incomingMeleeToHitModifier: number;
     /** In melee, attackers may choose the rider or the vehicle without a Called Shot (Bike). */
@@ -145,8 +153,10 @@ export interface NamedVehicleTraitEffects {
  * field takes the highest rating. Ponderous and Enhanced Motive Systems cancel
  * each other out (DH2 core p. 188, OW core p. 214).
  */
-export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers'> {
+export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers' | 'incomingRangedCondition'> {
     testModifiers: SourcedVehicleTestModifier[];
+    /** Every trait's to-hit penalty on attacks against the vehicle, with its condition — the attack applies those that hold. */
+    incomingToHit: IncomingToHitEntry[];
     /** Which traits the damage-facing effects came from — their provenance rows on attack and damage cards. */
     sources: VehicleEffectSources;
 }
@@ -206,6 +216,8 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
         spacecraft: flag(),
         crashesOnFailedRam: flag(),
         incomingRangedToHitModifier: modifier(),
+        // `blank: true`: '' (always) is the neutral default and not one of the conditions.
+        incomingRangedCondition: new fields.StringField({ required: true, blank: true, initial: '', choices: [...INCOMING_RANGED_CONDITION_CHOICES] }),
         incomingMeleeToHitModifier: modifier(),
         riderTargetableInMelee: flag(),
         hitAndRun: flag(),
@@ -239,6 +251,7 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
 export function emptyAggregatedVehicleTraitEffects(): AggregatedVehicleTraitEffects {
     return {
         testModifiers: [],
+        incomingToHit: [],
         critDamageMultiplier: null,
         critExcludesRighteousFury: false,
         mitigatesMotiveCrit: false,
@@ -294,6 +307,11 @@ export function emptyAggregatedVehicleTraitEffects(): AggregatedVehicleTraitEffe
     };
 }
 
+/** One trait's effects at their neutral defaults: a trait that does nothing (the base callers override). */
+export function neutralVehicleTraitEffects(): VehicleTraitEffects {
+    return { ...emptyAggregatedVehicleTraitEffects(), testModifiers: [], incomingRangedCondition: '' };
+}
+
 /** Compose two optional multipliers (`null` = no effect). */
 function composeMultiplier(current: number | null, next: number | null): number | null {
     if (next === null) return current;
@@ -333,6 +351,16 @@ const OR_FLAGS = [
     'forceFieldNeverOverloads',
 ] as const satisfies ReadonlyArray<keyof VehicleTraitEffects>;
 
+/** A trait's to-hit penalties on attacks against the vehicle: shooting under its condition, melee, and Orbital Deployment's in flight. */
+function incomingEntriesOf(trait: string, e: VehicleTraitEffects): IncomingToHitEntry[] {
+    const entries: IncomingToHitEntry[] = [];
+    if (e.incomingRangedToHitModifier !== 0)
+        entries.push({ value: e.incomingRangedToHitModifier, attack: 'ranged', condition: e.incomingRangedCondition, trait });
+    if (e.incomingMeleeToHitModifier !== 0) entries.push({ value: e.incomingMeleeToHitModifier, attack: 'melee', condition: '', trait });
+    if (e.deploymentIncomingToHitModifier !== 0) entries.push({ value: e.deploymentIncomingToHitModifier, attack: 'ranged', condition: 'deploying', trait });
+    return entries;
+}
+
 /**
  * Fold every trait's `effects` into one resolved summary. Pure and total so it
  * is unit-tested independently of the actor prepare cycle.
@@ -343,6 +371,7 @@ export function aggregateVehicleTraitEffects(traits: readonly NamedVehicleTraitE
     const sources = out.sources;
     for (const { name, effects: e } of traits) {
         for (const tm of e.testModifiers) out.testModifiers.push({ test: tm.test, value: tm.value, source: name });
+        out.incomingToHit.push(...incomingEntriesOf(name, e));
         if (e.critDamageMultiplier !== null) sources.critDamageMultiplier.push(name);
         if (e.incomingRangedToHitModifier < out.incomingRangedToHitModifier) sources.incomingRangedToHitModifier = name;
         if (e.incomingMeleeToHitModifier < out.incomingMeleeToHitModifier) sources.incomingMeleeToHitModifier = name;

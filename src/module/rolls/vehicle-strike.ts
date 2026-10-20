@@ -10,11 +10,14 @@
  */
 
 import { vehicleCombatRulesFor } from '../config/game-systems/index.ts';
+import { SYSTEM_ID } from '../constants.ts';
 import type { AggregatedVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 import { bearingDegrees, tokenFacingBearing } from '../rules/area-template.ts';
 import {
     type CrewTargeting,
     crewTargeting,
+    type IncomingToHitEntry,
+    isAttackFromAboveOrBelow,
     isVehicleLocationId,
     struckArmourFacing,
     type VehicleArmourFacing,
@@ -22,6 +25,7 @@ import {
     type VehicleFacing,
     type VehicleHitLocation,
     type VehicleLocationId,
+    type VehicleMotionState,
     type VehicleMountProfile,
     vehicleFacingFromBearings,
 } from '../rules/vehicle-damage.ts';
@@ -82,6 +86,19 @@ interface VehicleForceField {
     readonly neverOverloads: boolean;
 }
 
+/** What the attack path reads off the canvas beyond the facing: the attack's angle and the vehicle's motion. */
+export interface VehiclePlacement {
+    /** The attacker is above or below the vehicle, so the hit reads Rear armour. */
+    readonly fromAboveOrBelow: boolean;
+    /** The vehicle moved on its most recent turn. */
+    readonly moving: boolean;
+    /** The vehicle is off the ground. */
+    readonly airborne: boolean;
+}
+
+/** No positions known: level, not moving, on the ground. */
+const UNPLACED: VehiclePlacement = { fromAboveOrBelow: false, moving: false, airborne: false };
+
 /** What the attack path knows of a vehicle it can strike. */
 export interface VehicleTargetProfile {
     readonly line: string;
@@ -89,6 +106,12 @@ export interface VehicleTargetProfile {
     readonly facing: VehicleFacing;
     /** True when no positions were known and Front was assumed. */
     readonly facingAssumed: boolean;
+    /** The attack came from above or below and reads Rear armour. */
+    readonly fromAboveOrBelow: boolean;
+    /** The vehicle's traits' to-hit penalties on attacks against it. */
+    readonly incomingToHit: readonly IncomingToHitEntry[];
+    /** Whether it is moving, airborne and mobile — what those penalties' conditions read. */
+    readonly motion: VehicleMotionState;
     readonly mounts: VehicleMountProfile;
     readonly forceField: VehicleForceField | null;
     /** The die Righteous Fury rolls on the vehicle's chart, and the trait that set it ('' for the line's own). */
@@ -150,9 +173,14 @@ function declaresHardpoints(system: unknown): boolean {
 
 /**
  * The profile of a vehicle the attack can strike from `facing`, or null when the
- * actor is not a conventional craft.
+ * actor is not a conventional craft. Attacked from above or below, it reads Rear.
  */
-export function vehicleTargetProfile(actor: VehicleActorLike, facing: VehicleFacing, facingAssumed: boolean): VehicleTargetProfile | null {
+export function vehicleTargetProfile(
+    actor: VehicleActorLike,
+    facing: VehicleFacing,
+    facingAssumed: boolean,
+    placement: VehiclePlacement = UNPLACED,
+): VehicleTargetProfile | null {
     const durability = readVehicleDurability(actor.system);
     if (durability === null) return null;
     const rules = vehicleCombatRulesFor(durability.gameSystem);
@@ -161,8 +189,11 @@ export function vehicleTargetProfile(actor: VehicleActorLike, facing: VehicleFac
     return {
         line: durability.gameSystem,
         rules,
-        facing,
+        facing: placement.fromAboveOrBelow ? 'rear' : facing,
         facingAssumed,
+        fromAboveOrBelow: placement.fromAboveOrBelow,
+        incomingToHit: effects.incomingToHit,
+        motion: { moving: placement.moving, airborne: placement.airborne, mobile: !effects.immobile },
         mounts: vehicleMountProfile(actor.items, declaresHardpoints(actor.system)),
         forceField:
             effects.forceFieldRating > 0
@@ -176,10 +207,10 @@ export function vehicleTargetProfile(actor: VehicleActorLike, facing: VehicleFac
     };
 }
 
-/** A token's centre and rotation, as the facing reads them. */
+/** A token's centre, rotation and elevation, as the facing and motion read them. */
 interface PlacedTokenLike {
     readonly center: { readonly x: number; readonly y: number };
-    readonly document: { readonly rotation: number };
+    readonly document: { readonly rotation: number; readonly elevation?: number };
 }
 
 /** The facing of `vehicle` an attacker at `attacker` strikes. */
@@ -187,14 +218,80 @@ export function struckFacing(vehicle: PlacedTokenLike, attacker: { readonly x: n
     return vehicleFacingFromBearings(tokenFacingBearing(vehicle.document.rotation), bearingDegrees(vehicle.center, attacker));
 }
 
-/** The profile of the vehicle behind a token, struck from the attacker's token (Front assumed when either is off the canvas). */
+/** The scene's grid scale: pixels per cell and scene units (metres) per cell. */
+export interface GridScale {
+    readonly size: number;
+    readonly distance: number;
+}
+
+/**
+ * Whether the attacker is above or below the vehicle (steeper than 45°): the
+ * difference in elevation against the ground distance between their centres.
+ */
+export function attackedFromAboveOrBelow(vehicle: PlacedTokenLike, attacker: PlacedTokenLike, grid: GridScale): boolean {
+    if (grid.size <= 0) return false;
+    const groundMetres = (Math.hypot(attacker.center.x - vehicle.center.x, attacker.center.y - vehicle.center.y) / grid.size) * grid.distance;
+    return isAttackFromAboveOrBelow(groundMetres, (attacker.document.elevation ?? 0) - (vehicle.document.elevation ?? 0));
+}
+
+/** The vehicle's motion as the canvas shows it: off the ground by its elevation, moving by its combat turn record. */
+export interface VehicleMotionReading {
+    /** Metres it moved on its most recent combat turn (0 out of combat). */
+    readonly movedMetres: number;
+}
+
+/**
+ * The profile of the vehicle behind a token, struck from the attacker's token
+ * (Front assumed when either is off the canvas): the facing it sees, whether it
+ * attacks from above or below, and whether the vehicle is airborne and moving.
+ */
 export function vehicleTargetProfileFromTokens(
     actor: VehicleActorLike,
     vehicleToken: PlacedTokenLike | undefined,
     attackerToken: PlacedTokenLike | undefined,
+    grid: GridScale,
+    motion: VehicleMotionReading,
 ): VehicleTargetProfile | null {
-    if (vehicleToken === undefined || attackerToken === undefined) return vehicleTargetProfile(actor, 'front', true);
-    return vehicleTargetProfile(actor, struckFacing(vehicleToken, attackerToken.center), false);
+    if (vehicleToken === undefined) return vehicleTargetProfile(actor, 'front', true);
+    const placement = {
+        fromAboveOrBelow: attackerToken !== undefined && attackedFromAboveOrBelow(vehicleToken, attackerToken, grid),
+        moving: motion.movedMetres > 0,
+        airborne: (vehicleToken.document.elevation ?? 0) > 0,
+    };
+    if (attackerToken === undefined) return vehicleTargetProfile(actor, 'front', true, placement);
+    return vehicleTargetProfile(actor, struckFacing(vehicleToken, attackerToken.center), false, placement);
+}
+
+/** The flag movement tracking keeps on a combatant: metres moved on its current or most recent turn. */
+const MOVED_FLAG = 'movedThisTurnMetres';
+
+/** A token placeable with the id its combatant is keyed by. */
+interface CanvasTokenLike extends PlacedTokenLike {
+    readonly id: string;
+}
+
+/** Metres the combatant behind `tokenId` moved on its most recent turn in the active combat; 0 out of combat. */
+function movedMetresOnLastTurn(tokenId: string): number {
+    const combat = game.combat;
+    if (combat?.started !== true) return 0;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Combatant#getFlag is typed to the "core" scope only and returns the flag as untyped JSON; Number() validates it
+    const combatant = combat.combatants.find((entry) => entry.tokenId === tokenId) as { getFlag: (scope: string, key: string) => unknown } | undefined;
+    const moved = Number(combatant?.getFlag(SYSTEM_ID, MOVED_FLAG) ?? 0);
+    return Number.isFinite(moved) ? moved : 0;
+}
+
+/** The profile of the vehicle behind `vehicleToken` on the live canvas, struck from `attackerToken`. */
+export function vehicleTargetProfileOnCanvas(
+    actor: VehicleActorLike,
+    vehicleToken: CanvasTokenLike | undefined,
+    attackerToken: PlacedTokenLike | undefined,
+): VehicleTargetProfile | null {
+    // Off a drawn canvas there is no scale: no attack reads as from above or below.
+    const drawn = canvas.grid;
+    const grid = drawn === null ? { size: 0, distance: 0 } : { size: drawn.size, distance: drawn.distance };
+    return vehicleTargetProfileFromTokens(actor, vehicleToken, attackerToken, grid, {
+        movedMetres: vehicleToken === undefined ? 0 : movedMetresOnLastTurn(vehicleToken.id),
+    });
 }
 
 /* -------------------------------------------- */
@@ -303,6 +400,8 @@ export interface VehicleStrike {
     readonly line: string;
     readonly facing: VehicleFacing;
     readonly facingAssumed: boolean;
+    /** The attack came from above or below, so the facing read is Rear. */
+    readonly fromAboveOrBelow: boolean;
     readonly location: VehicleLocationId;
     readonly tableRoll: number;
     readonly tableRollKind: VehicleTableRollKind;
@@ -318,6 +417,7 @@ export function strikeFor(profile: VehicleTargetProfile, located: VehicleHitLoca
         line: profile.line,
         facing: profile.facing,
         facingAssumed: profile.facingAssumed,
+        fromAboveOrBelow: profile.fromAboveOrBelow,
         location: located.location,
         tableRoll: located.tableRoll,
         tableRollKind,
@@ -413,7 +513,8 @@ export function parseVehicleStrike(raw: string | undefined): VehicleStrike | nul
         return null;
     }
     if (!isRecord(parsed)) return null;
-    const { line, facing, location, tableRoll, tableRollKind, redirectedFrom, armourFacing, forceField, righteousFury, facingAssumed } = parsed;
+    const { line, facing, location, tableRoll, tableRollKind, redirectedFrom, armourFacing, forceField, righteousFury, facingAssumed, fromAboveOrBelow } =
+        parsed;
     if (typeof line !== 'string' || typeof facing !== 'string' || !isFacing(facing)) return null;
     if (typeof location !== 'string' || !isVehicleLocationId(location)) return null;
     if (typeof armourFacing !== 'string' || !isArmourFacing(armourFacing)) return null;
@@ -422,6 +523,7 @@ export function parseVehicleStrike(raw: string | undefined): VehicleStrike | nul
         line,
         facing,
         facingAssumed: facingAssumed === true,
+        fromAboveOrBelow: fromAboveOrBelow === true,
         location,
         tableRoll: typeof tableRoll === 'number' ? tableRoll : 0,
         tableRollKind: tableRollKind === 'reversed' || tableRollKind === 'fresh' ? tableRollKind : 'none',

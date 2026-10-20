@@ -3,13 +3,14 @@ import {
     aggregateVehicleTraitEffects,
     emptyAggregatedVehicleTraitEffects,
     type NamedVehicleTraitEffects,
+    neutralVehicleTraitEffects,
     type VehicleTraitEffects,
     vehicleTraitEffectsSchema,
 } from './vehicle-trait-effects-template.ts';
 
 /** Build a named trait whose effects are the neutral defaults plus the given overrides. */
 function trait(name: string, over: Partial<VehicleTraitEffects> = {}): NamedVehicleTraitEffects {
-    return { name, effects: { ...emptyAggregatedVehicleTraitEffects(), ...over } };
+    return { name, effects: { ...neutralVehicleTraitEffects(), ...over } };
 }
 
 describe('aggregateVehicleTraitEffects', () => {
@@ -112,6 +113,19 @@ describe('aggregateVehicleTraitEffects', () => {
         expect(agg.incomingMeleeToHitModifier).toBe(-10);
         expect(agg.explosionChanceMultiplier).toBe(2);
         expect(agg.explosionIgnitionTestModifier).toBe(-10);
+    });
+
+    it("lists every trait's to-hit penalty with the condition it applies under (#678)", () => {
+        const agg = aggregateVehicleTraitEffects([
+            trait('Holofield', { incomingRangedToHitModifier: -20, incomingRangedCondition: 'moving' }),
+            trait('Skimmer', { incomingMeleeToHitModifier: -10 }),
+            trait('Orbital Deployment', { orbitalDeployment: true, deploymentIncomingToHitModifier: -30 }),
+        ]);
+        expect(agg.incomingToHit).toEqual([
+            { value: -20, attack: 'ranged', condition: 'moving', trait: 'Holofield' },
+            { value: -10, attack: 'melee', condition: '', trait: 'Skimmer' },
+            { value: -30, attack: 'ranged', condition: 'deploying', trait: 'Orbital Deployment' },
+        ]);
     });
 
     it('takes the highest force-field rating and ORs never-overloads', () => {

@@ -4,8 +4,11 @@ import {
     chartLocationsFor,
     crewExposedToArea,
     crewTargeting,
+    type IncomingToHitEntry,
     incomingVehicleModifiers,
+    isAttackFromAboveOrBelow,
     isVehicleLocationId,
+    type VehicleMotionState,
     resolveVehicleDamage,
     righteousFuryChartValue,
     struckArmourFacing,
@@ -213,21 +216,59 @@ describe('crew exposure (DH2 Core p. 187 Open-Topped, Bike)', () => {
 });
 
 describe('incomingVehicleModifiers', () => {
-    const effects = {
-        incomingRangedToHitModifier: -20,
-        incomingMeleeToHitModifier: -10,
-        sources: { incomingRangedToHitModifier: 'Holofield', incomingMeleeToHitModifier: 'Skimmer' },
-    };
+    const holofield: IncomingToHitEntry = { value: -20, attack: 'ranged', condition: 'moving', trait: 'Holofield' };
+    const feral: IncomingToHitEntry = { value: -10, attack: 'ranged', condition: 'mobile', trait: 'Feral Machine Spirit' };
+    const flyer: IncomingToHitEntry = { value: -20, attack: 'ranged', condition: 'airborne', trait: 'Flyer' };
+    const skimmer: IncomingToHitEntry = { value: -10, attack: 'melee', condition: '', trait: 'Skimmer' };
+    const orbital: IncomingToHitEntry = { value: -30, attack: 'ranged', condition: 'deploying', trait: 'Orbital Deployment' };
+    const still: VehicleMotionState = { moving: false, airborne: false, mobile: true };
 
-    it('names the trait behind a shooting penalty', () => {
-        expect(incomingVehicleModifiers(effects, false)).toEqual([{ value: -20, trait: 'Holofield' }]);
+    it('applies Holofield only to a vehicle that moved on its last turn (RT Battlefleet Koronus p. 143)', () => {
+        expect(incomingVehicleModifiers([holofield], false, still)).toEqual([]);
+        expect(incomingVehicleModifiers([holofield], false, { ...still, moving: true })).toEqual([{ value: -20, trait: 'Holofield' }]);
     });
 
-    it('names the trait behind a melee penalty', () => {
-        expect(incomingVehicleModifiers(effects, true)).toEqual([{ value: -10, trait: 'Skimmer' }]);
+    it('applies Feral Machine Spirit while the vehicle can move, not once it is Immobile (p. 144)', () => {
+        expect(incomingVehicleModifiers([feral], false, still)).toEqual([{ value: -10, trait: 'Feral Machine Spirit' }]);
+        expect(incomingVehicleModifiers([feral], false, { ...still, mobile: false })).toEqual([]);
     });
 
-    it('adds no row when the traits impose nothing', () => {
-        expect(incomingVehicleModifiers({ ...effects, incomingRangedToHitModifier: 0 }, false)).toEqual([]);
+    it('applies Flyer only to an airborne flyer (DH2 Enemies Without p. 53)', () => {
+        expect(incomingVehicleModifiers([flyer], false, still)).toEqual([]);
+        expect(incomingVehicleModifiers([flyer], false, { ...still, airborne: true })).toEqual([{ value: -20, trait: 'Flyer' }]);
+    });
+
+    it('applies the strongest shooting penalty whose condition holds', () => {
+        expect(incomingVehicleModifiers([feral, holofield], false, { ...still, moving: true })).toEqual([{ value: -20, trait: 'Holofield' }]);
+        expect(incomingVehicleModifiers([feral, holofield], false, still)).toEqual([{ value: -10, trait: 'Feral Machine Spirit' }]);
+    });
+
+    it('applies Orbital Deployment −30 to shooting while the vehicle is in flight (OW Core p. 213)', () => {
+        expect(incomingVehicleModifiers([orbital], false, still)).toEqual([]);
+        expect(incomingVehicleModifiers([orbital], false, { ...still, airborne: true })).toEqual([{ value: -30, trait: 'Orbital Deployment' }]);
+        expect(incomingVehicleModifiers([orbital], true, { ...still, airborne: true })).toEqual([]);
+    });
+
+    it('does not stack Feral Machine Spirit with a Dreadclaw Assault in flight: the stronger applies (RT Battlefleet Koronus p. 144)', () => {
+        const dreadclaw: IncomingToHitEntry = { ...orbital, trait: 'Dreadclaw Assault' };
+        expect(incomingVehicleModifiers([feral, dreadclaw], false, { ...still, airborne: true })).toEqual([{ value: -30, trait: 'Dreadclaw Assault' }]);
+    });
+
+    it('applies Skimmer to melee always, and shooting penalties never to melee', () => {
+        expect(incomingVehicleModifiers([skimmer, holofield], true, { ...still, moving: true })).toEqual([{ value: -10, trait: 'Skimmer' }]);
+        expect(incomingVehicleModifiers([skimmer], false, still)).toEqual([]);
+    });
+});
+
+describe('isAttackFromAboveOrBelow (DH2 Core p. 253)', () => {
+    it('reads an attacker steeper than 45° above or below as from above or below', () => {
+        expect(isAttackFromAboveOrBelow(10, 30)).toBe(true);
+        expect(isAttackFromAboveOrBelow(10, -30)).toBe(true);
+    });
+
+    it('reads a shallower or level attack by its bearing', () => {
+        expect(isAttackFromAboveOrBelow(30, 10)).toBe(false);
+        expect(isAttackFromAboveOrBelow(30, 30)).toBe(false);
+        expect(isAttackFromAboveOrBelow(30, 0)).toBe(false);
     });
 });

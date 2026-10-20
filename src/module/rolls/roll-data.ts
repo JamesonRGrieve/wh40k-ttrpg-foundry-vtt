@@ -55,7 +55,7 @@ import type { HitCeilingCard } from './hit-ceiling.ts';
 import { passiveCombatModifiers } from './passive-modifiers.ts';
 import { actorGameSystemId, type DegreesMethod, printedDegreesFromCount } from './roll-helpers.ts';
 import type { RollKeepMode } from './roll-keep.ts';
-import { readVehicleDurability, type VehicleTargetProfile } from './vehicle-strike.ts';
+import type { VehicleTargetProfile } from './vehicle-strike.ts';
 
 // Re-exported for existing consumers (chat-card cap surfacing, tests) that
 // import the cap primitives from this module. The canonical definitions now
@@ -1054,21 +1054,23 @@ export class WeaponRollData extends RollData {
     /**
      * Path B: what the target vehicle's traits impose on an attack against it
      * (content#28) — Holofield / Flyer / Feral Machine Spirit on shooting, Skimmer
-     * on melee — folded as ONE `vehicle-traits` bucket whose rows name each trait.
-     * The trait's own condition (the craft moving, airborne) is the GM's call; the
-     * row says which trait applied so it can be struck.
+     * on melee, and an Orbital Deployment's −30 while it is in flight — folded as
+     * ONE `vehicle-traits` bucket whose rows name each trait. Each applies only
+     * while its condition holds: the craft moved on its last turn, is airborne,
+     * or can move (#678), as the attack path read them off the canvas.
      */
     applyTargetVehicleModifiers(): void {
-        const durability = readVehicleDurability(this.targetActor?.system);
+        const targetUuid = this.targetActor?.uuid ?? null;
+        const profile = targetUuid === null ? undefined : this.vehicleTargets[targetUuid];
         const i18n = runtimeI18n();
-        const components: RollModifierComponent[] = (durability === null ? [] : incomingVehicleModifiers(durability.traitEffects, this.weapon.isMelee)).map(
-            (modifier) => ({
-                key: `${VEHICLE_TRAIT_BUCKET}.${modifier.trait}`,
-                label: modifier.trait,
-                value: modifier.value,
-                source: i18n?.format?.('WH40K.Vehicle.Attack.TraitSource', { trait: modifier.trait }) ?? modifier.trait,
-            }),
-        );
+        const components: RollModifierComponent[] = (
+            profile === undefined ? [] : incomingVehicleModifiers(profile.incomingToHit, this.weapon.isMelee, profile.motion)
+        ).map((modifier) => ({
+            key: `${VEHICLE_TRAIT_BUCKET}.${modifier.trait}`,
+            label: modifier.trait,
+            value: modifier.value,
+            source: i18n?.format?.('WH40K.Vehicle.Attack.TraitSource', { trait: modifier.trait }) ?? modifier.trait,
+        }));
         this.modifiers[VEHICLE_TRAIT_BUCKET] = components.reduce((sum, component) => sum + component.value, 0);
         this.expandedBuckets[VEHICLE_TRAIT_BUCKET] = components;
     }

@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
     aggregateVehicleTraitEffects,
-    emptyAggregatedVehicleTraitEffects,
     type NamedVehicleTraitEffects,
+    neutralVehicleTraitEffects,
     type VehicleTraitEffects,
 } from '../data/shared/vehicle-trait-effects-template.ts';
 import {
+    attackedFromAboveOrBelow,
     crewTargetOf,
     forceFieldRollFor,
     parseVehicleStrike,
@@ -21,7 +22,7 @@ import {
 
 /** One trait's effects over the neutral defaults. */
 function trait(name: string, over: Partial<VehicleTraitEffects>): NamedVehicleTraitEffects {
-    return { name, effects: { ...emptyAggregatedVehicleTraitEffects(), ...over } };
+    return { name, effects: { ...neutralVehicleTraitEffects(), ...over } };
 }
 
 /** A craft's `system` as its DataModel prepares it: the Chimera's printed line, with its traits folded. */
@@ -111,10 +112,48 @@ describe('struck facing from tokens', () => {
         expect(struckFacing({ ...chimera, document: { rotation: 180 } }, { x: 500, y: 100 })).toBe('front');
     });
 
+    const grid = { size: 100, distance: 1 };
+    const still = { movedMetres: 0 };
+
     it('assumes Front when either token is off the canvas', () => {
-        const profile = vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, undefined);
+        const profile = vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, undefined, grid, still);
         expect(profile?.facing).toBe('front');
         expect(profile?.facingAssumed).toBe(true);
+    });
+
+    it('reads Rear for an attacker above the craft, steeper than 45° (DH2 Core p. 253)', () => {
+        // 1 m in front of the nose, 5 m up.
+        const flyer = { center: { x: 500, y: 600 }, document: { rotation: 0, elevation: 5 } };
+        const profile = vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, flyer, grid, still);
+        expect({ facing: profile?.facing, fromAboveOrBelow: profile?.fromAboveOrBelow }).toEqual({ facing: 'rear', fromAboveOrBelow: true });
+        expect(attackedFromAboveOrBelow(chimera, flyer, grid)).toBe(true);
+    });
+
+    it('keeps the bearing for an attacker above it at a shallow angle', () => {
+        // 4 m in front of the nose, 2 m up.
+        const shooter = { center: { x: 500, y: 900 }, document: { rotation: 0, elevation: 2 } };
+        expect(vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, shooter, grid, still)?.facing).toBe('front');
+    });
+
+    it('reads the craft as moving when it moved on its last turn, and airborne when off the ground', () => {
+        const shooter = { center: { x: 500, y: 900 }, document: { rotation: 0 } };
+        const flying = { ...chimera, document: { rotation: 0, elevation: 30 } };
+        expect(vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, flying, shooter, grid, { movedMetres: 12 })?.motion).toEqual({
+            moving: true,
+            airborne: true,
+            mobile: true,
+        });
+        expect(vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, shooter, grid, still)?.motion).toEqual({
+            moving: false,
+            airborne: false,
+            mobile: true,
+        });
+    });
+
+    it('reads an Immobile craft as not mobile', () => {
+        const shooter = { center: { x: 500, y: 900 }, document: { rotation: 0 } };
+        const system = craftSystem([trait('Immobile', { immobile: true })]);
+        expect(vehicleTargetProfileFromTokens({ system, items: [] }, chimera, shooter, grid, still)?.motion.mobile).toBe(false);
     });
 });
 

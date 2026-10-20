@@ -62,9 +62,21 @@ function row(hook: string, label: string, value: string, extra: Partial<Pick<Veh
     return { hook, label, value, note: extra.note ?? '', html: extra.html ?? '', tooltip: extra.tooltip ?? '' };
 }
 
-function facingRow(facing: VehicleFacing, assumed: boolean, i18n: CardLocaliser): VehicleCardRow {
-    return row('vehicle-facing', i18n.localize('WH40K.Vehicle.Damage.Facing'), i18n.localize(vehicleFacingLabelKey(facing)), {
-        note: i18n.localize(assumed ? 'WH40K.Vehicle.Damage.FacingAssumed' : 'WH40K.Vehicle.Damage.FacingFromPosition'),
+/** How the struck facing was read. */
+interface FacingReading {
+    readonly facing: VehicleFacing;
+    readonly facingAssumed: boolean;
+    readonly fromAboveOrBelow: boolean;
+}
+
+function facingNoteKey(reading: FacingReading): I18nKey {
+    if (reading.fromAboveOrBelow) return 'WH40K.Vehicle.Damage.FacingAboveOrBelow';
+    return reading.facingAssumed ? 'WH40K.Vehicle.Damage.FacingAssumed' : 'WH40K.Vehicle.Damage.FacingFromPosition';
+}
+
+function facingRow(reading: FacingReading, i18n: CardLocaliser): VehicleCardRow {
+    return row('vehicle-facing', i18n.localize('WH40K.Vehicle.Damage.Facing'), i18n.localize(vehicleFacingLabelKey(reading.facing)), {
+        note: i18n.localize(facingNoteKey(reading)),
     });
 }
 
@@ -141,7 +153,7 @@ export function vehicleDamageCardRows(input: VehicleDamageCardInput, i18n: CardL
         { name: i18n.localize('WH40K.Combat.Penetration'), value: -Math.min(input.facingArmour + input.coverAP, Math.max(0, input.penetration)) },
     ];
     const rows = [
-        facingRow(strike.facing, strike.facingAssumed, i18n),
+        facingRow(strike, i18n),
         row('vehicle-location', i18n.localize('WH40K.Vehicle.Damage.Location'), i18n.localize(vehicleLocationLabelKey(strike.location)), {
             note: locationNote(strike, i18n),
         }),
@@ -208,6 +220,7 @@ export function stampVehicleRows(hit: VehicleRowsCarrier, system: unknown, furie
 export interface VehicleDamageApplied {
     readonly facing: VehicleFacing;
     readonly facingAssumed: boolean;
+    readonly fromAboveOrBelow: boolean;
     readonly armourFacing: VehicleArmourFacing;
     readonly location: VehicleLocationId;
     readonly outcome: VehicleDamageOutcome;
@@ -232,7 +245,7 @@ export interface VehicleDamageApplied {
 export function vehicleAssignCardRows(applied: VehicleDamageApplied, i18n: CardLocaliser): VehicleCardRow[] {
     const { outcome } = applied;
     const integrityLabel = i18n.localize('WH40K.Vehicle.Damage.Integrity');
-    const rows: VehicleCardRow[] = [facingRow(applied.facing, applied.facingAssumed, i18n)];
+    const rows: VehicleCardRow[] = [facingRow(applied, i18n)];
     rows.push(row('vehicle-location', i18n.localize('WH40K.Vehicle.Damage.Location'), i18n.localize(vehicleLocationLabelKey(applied.location))));
     if (applied.nullifiedBy !== null) rows.push(forceFieldRow(applied.nullifiedBy, i18n));
     rows.push(

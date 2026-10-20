@@ -5998,6 +5998,11 @@
                     "incomingMeleeToHitModifier": "Melee attacks against it: {value}",
                     "antiAir": "Anti-air: {value}"
                 },
+                "IncomingRanged": {
+                    "moving": "Shooting attacks against it while it is moving: {value}",
+                    "mobile": "Shooting attacks against it while it can move: {value}",
+                    "airborne": "Shooting attacks against it while it is airborne: {value}"
+                },
                 "CrewExposure": {
                     "open": "Open-topped",
                     "enclosed": "Enclosed"
@@ -6075,6 +6080,7 @@
                 "Facing": "Facing struck",
                 "FacingFromPosition": "From the attacker's position against the vehicle's heading.",
                 "FacingAssumed": "No token positions to read: Front assumed.",
+                "FacingAboveOrBelow": "Attacked from above or below: Rear armour (DH2 Core p. 253).",
                 "Location": "Hit location",
                 "LocationReversed": "Table roll {roll}: the attack roll reversed.",
                 "LocationFresh": "Table roll {roll}: a fresh d100 for an extra hit.",

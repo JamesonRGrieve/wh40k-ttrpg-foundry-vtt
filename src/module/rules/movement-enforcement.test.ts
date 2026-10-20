@@ -76,6 +76,12 @@ describe('movement enforcement wiring (#235)', () => {
         expect(turnHooks).toContain("Hooks.on('updateCombat'");
     });
 
+    it('records the distance moved under every automation level: it is how a moving vehicle is known (#678)', () => {
+        const onUpdate = /function onUpdateToken[\s\S]*?\n\}/.exec(src)?.[0] ?? '';
+        expect(onUpdate).toContain('writeMovedMetres');
+        expect(onUpdate).not.toContain('getMovementAutomation');
+    });
+
     it('is conservative: GM bypass and allow-on-error', () => {
         expect(src).toContain('game.user.isGM');
         expect(src).toContain('allowing on error');

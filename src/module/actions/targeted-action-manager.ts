@@ -4,7 +4,7 @@ import type { WH40KItem } from '../documents/item.ts';
 import { t } from '../i18n/t.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import type { RollModifierComponent } from '../rolls/roll-data.ts';
-import { crewTargetOf, resolveAboardVehicle, vehicleTargetProfileFromTokens } from '../rolls/vehicle-strike.ts';
+import { crewTargetOf, resolveAboardVehicle, vehicleTargetProfileOnCanvas } from '../rolls/vehicle-strike.ts';
 import { findSpreadTargets } from '../rules/burst-spread-canvas.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
@@ -180,7 +180,7 @@ export class TargetedActionManager {
             weaponRollData.crewTarget = { vehicleName: crew.vehicleName, riderTargetableInMelee: crew.riderTargetableInMelee };
         }
         // A craft target (content#28) is struck on the facing the attacker's token sees.
-        const vehicle = rollData.target === null ? null : vehicleTargetProfileFromTokens(rollData.target, rollData.targetToken, rollData.sourceToken);
+        const vehicle = rollData.target === null ? null : vehicleTargetProfileOnCanvas(rollData.target, rollData.targetToken, rollData.sourceToken);
         const targetUuid = rollData.target?.uuid ?? null;
         if (vehicle !== null && targetUuid !== null) weaponRollData.vehicleTargets[targetUuid] = vehicle;
         // Eligible targets for a burst's extra hits (#513). Computed once here,
