@@ -23,6 +23,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
+import { materializeItemVariants } from '../src/module/utils/item-variant-utils.ts';
 
 const ROOT = resolve(__dirname, '../src/packs-private');
 
@@ -38,11 +39,10 @@ const LINE_OF_GROUP: ReadonlyMap<string, string> = new Map([
 ]);
 
 /**
- * Cross-line origin stubs whose target has no branch for the stub's line, found
- * while fixing content#36: RT's Void Born is DH2's Voidborn, which carries no
- * `source.rt`.
+ * Cross-line origin stubs whose target has no branch for the stub's line. Empty
+ * since content#37 gave DH2's Voidborn its RT branch, so the guard is strict.
  */
-const KNOWN_DEBT: readonly string[] = ['rogue-trader/rt-core-origins-homeworlds/_source/void-born_YwBPZ0s6JNPnHNI5.json'];
+const KNOWN_DEBT: readonly string[] = [];
 
 interface PackDoc {
     reference?: string;
@@ -126,5 +126,46 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path stubs never hand a line anoth
             { file: 'psyker_c22473691d53c7e1.json', isStub: false, step: 'archetype', gameSystem: 'bc' },
             { file: 'heretek_e8311fe5e803731c.json', isStub: false, step: 'archetype', gameSystem: 'bc' },
         ]);
+    });
+});
+
+/** The resolved fields the Voidborn cases read. */
+interface ResolvedVoidborn {
+    grants: { woundsFormula: string; fateFormula: string; talents: Array<{ name: string }> };
+    modifiers: { characteristics: Record<string, number> };
+    source: { book: string; page: string };
+}
+
+/** DH2's Voidborn resolved for `line`; a fresh parse each call, since the resolver mutates its input. */
+function voidbornFor(line: Parameters<typeof materializeItemVariants>[1]): ResolvedVoidborn {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); compendium document shape, system read structurally
+    const doc = JSON.parse(readFileSync(resolve(ROOT, 'dark-heresy-2/dh2-core-origins-homeworlds/_source/voidborn_DH2VdBrn00000006.json'), 'utf8')) as {
+        system: Parameters<typeof materializeItemVariants>[0];
+    };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the resolver returns the untyped system payload; cast to the fields this test reads
+    return materializeItemVariants(doc.system, line) as unknown as ResolvedVoidborn;
+}
+
+describe.skipIf(!HAS_PRIVATE_CONTENT)('RT’s Void Born is RT Core’s, not DH2’s (content#37)', () => {
+    it('resolves RT Core p.18: −5 Strength, +5 Willpower, 2×TB+1d5 Wounds, the four Void Born talents', () => {
+        const rt = voidbornFor('rt');
+        expect({
+            characteristics: rt.modifiers.characteristics,
+            wounds: rt.grants.woundsFormula,
+            fate: rt.grants.fateFormula,
+            talents: rt.grants.talents.map((t) => t.name),
+            source: [rt.source.book, rt.source.page],
+        }).toEqual({
+            characteristics: { strength: -5, willpower: 5 },
+            wounds: '2xTB+1d5',
+            fate: '(1-5|=3),(6-10|=4)',
+            talents: ['Charmed (Void Born)', 'Ill-Omened (Void Born)', 'Shipwise (Void Born)', 'Void Accustomed (Void Born)'],
+            source: ['RT: Core Rulebook', '18'],
+        });
+    });
+
+    it('leaves DH2, and the lines without their own mechanics, on DH2’s Voidborn', () => {
+        const lines = (['dh2', 'dh1', 'ow'] as const).map((line) => voidbornFor(line).modifiers.characteristics);
+        expect(lines).toEqual([0, 1, 2].map(() => ({ intelligence: 5, willpower: 5, strength: -5 })));
     });
 });
