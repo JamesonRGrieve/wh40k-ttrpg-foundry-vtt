@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { anyNewCard, awaitCard, cardHtml, messageIds, restoreSettings, setActorFlag, setWorldSettings, snapCard } from './combat-resolution-flow';
 import { type HarnessScene, type HarnessTokenSpec, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { canvasClip } from './lib/canvas-capture';
+import { popOutChatMessage } from './lib/chat-capture';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -476,6 +477,63 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect(landed.html).toContain('roll-control__roll-damage');
             expect(landed.html, 'a landed Flyer imposes no penalty').not.toContain('Flyer');
             expect(await snapCard(page, 'vehicle-damage-flyer-landed-attack', landed.id)).not.toBeNull();
+        } finally {
+            await page.evaluate(async () => globalThis.wh40kAttack.teardown());
+            await restoreSettings(page, settings);
+        }
+    });
+
+    /**
+     * #678: a burst's extra hits may move to another target within 2 m that is no
+     * harder to hit (DH2 Core p. 254). Spread onto a second Chimera beside the
+     * first, its hit strikes that craft as a vehicle — its own facing, location
+     * and armour — on a fresh d100 rather than the reversed attack roll.
+     */
+    test("a burst's extra hit spread onto a second vehicle strikes it as a vehicle (#678)", async ({ page }) => {
+        await joinOrSkip(page);
+        await installAttackHarness(page);
+        const settings = await setWorldSettings(page, { 'auto-apply-damage': false });
+        try {
+            const chimera = await craftFromPack(page, CHIMERA);
+            expect(chimera.error, chimera.error ?? '').toBeNull();
+            const craft = (key: string, x: number): HarnessTokenSpec => ({
+                key,
+                name: key,
+                type: chimera.type,
+                x,
+                y: 400,
+                system: chimera.system,
+                items: chimera.items,
+            });
+            // The two craft stand side by side, their centres 2 m apart; the gunner is ahead of both.
+            const scene: HarnessScene = await page.evaluate(
+                async (tokens) => globalThis.wh40kAttack.setup({ width: 1400, height: 1300, tokens }),
+                [craft('Lead Chimera', 600), craft('Wing Chimera', 800), gunner('Burst Gunner', 800, 1100)],
+            );
+            const lead = scene.tokens['Lead Chimera'] ?? '';
+            await sizeTokens(page, scene.sceneId, [lead, scene.tokens['Wing Chimera'] ?? ''], 2);
+            const attack = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+                firer: scene.tokens['Burst Gunner'] ?? '',
+                target: lead,
+                weaponName: 'Autocannon',
+                faces: [[12, 100]] as Array<[number, number]>,
+                choices: { action: 'Semi-Auto Burst', hitAllocation: 'spread' as const },
+            });
+            const attackCard = await cardWith(page, attack.messageIds, 'roll-control__roll-damage');
+            const before = await messageIds(page);
+            await page.evaluate(
+                async (id) =>
+                    globalThis.wh40kAttack.clickInMessage({ messageId: id, buttonSelector: '.roll-control__roll-damage', faces: [], expectMessages: 1 }),
+                attackCard,
+            );
+            const damage = await awaitCard(page, before, 'data-vehicle-row="vehicle-armour"');
+            expect(damage.html, 'a hit landed on the wing craft').toContain('Wing Chimera');
+            expect(damage.html.split('data-vehicle-row="vehicle-armour"').length - 1, 'every hit, on either craft, is a vehicle hit').toBe(3);
+            expect(damage.html, 'the spread hit read a fresh d100').toContain('a fresh d100 for a hit after the attack');
+            expect(await snapCard(page, 'vehicle-damage-burst-spread-second-vehicle', damage.id)).not.toBeNull();
+            // The card runs past the window; capture the wing craft's hit on its own.
+            const popout = await popOutChatMessage(page, damage.id);
+            expect(await snap(page, 'vehicle-damage-burst-spread-wing-hit', { selector: `${popout} div.tw-my-3:has-text("Wing Chimera")` })).not.toBeNull();
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
             await restoreSettings(page, settings);

@@ -597,7 +597,8 @@ export class Hit {
     /**
      * Land this hit on a vehicle (content#28). The first hit reads the line's
      * Vehicle Hit Locations table on the reversed attack roll; each extra hit on the
-     * same vehicle rolls a fresh d100 (DH2 Core p. 254). A line with one chart
+     * same vehicle, and every hit spread onto a second one, rolls a fresh d100
+     * (DH2 Core p. 254). A line with one chart
      * strikes the Hull. Righteous Fury rolls the vehicle's die (1d5, or a trait's,
      * e.g. Ramshackle's 1d10) on the struck location's chart instead of a creature's
      * Critical Effects table, and is not Critical damage.
@@ -609,7 +610,7 @@ export class Hit {
         const bands = vehicle.rules.hitLocations;
         let tableRoll = 0;
         let kind: VehicleTableRollKind = 'none';
-        if (bands !== null && hitNumber === 0 && attackRoll !== null && attackRoll > 0) {
+        if (bands !== null && hitNumber === 0 && !vehicle.spreadTarget && attackRoll !== null && attackRoll > 0) {
             tableRoll = reverseAttackRollDigits(attackRoll);
             kind = 'reversed';
         } else if (bands !== null) {

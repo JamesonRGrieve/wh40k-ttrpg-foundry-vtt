@@ -112,6 +112,12 @@ export interface VehicleTargetProfile {
     readonly incomingToHit: readonly IncomingToHitEntry[];
     /** Whether it is moving, airborne and mobile — what those penalties' conditions read. */
     readonly motion: VehicleMotionState;
+    /**
+     * A burst's extra hits were spread onto it from the declared target (DH2 Core
+     * p. 254), so no hit on it is the attack's first: each reads a fresh d100 on
+     * the hit-location table, never the reversed attack roll.
+     */
+    readonly spreadTarget: boolean;
     readonly mounts: VehicleMountProfile;
     readonly forceField: VehicleForceField | null;
     /** The die Righteous Fury rolls on the vehicle's chart, and the trait that set it ('' for the line's own). */
@@ -194,6 +200,7 @@ export function vehicleTargetProfile(
         fromAboveOrBelow: placement.fromAboveOrBelow,
         incomingToHit: effects.incomingToHit,
         motion: { moving: placement.moving, airborne: placement.airborne, mobile: !effects.immobile },
+        spreadTarget: false,
         mounts: vehicleMountProfile(actor.items, declaresHardpoints(actor.system)),
         forceField:
             effects.forceFieldRating > 0

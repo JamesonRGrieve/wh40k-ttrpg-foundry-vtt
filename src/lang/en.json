@@ -6083,7 +6083,7 @@
                 "FacingAboveOrBelow": "Attacked from above or below: Rear armour (DH2 Core p. 253).",
                 "Location": "Hit location",
                 "LocationReversed": "Table roll {roll}: the attack roll reversed.",
-                "LocationFresh": "Table roll {roll}: a fresh d100 for an extra hit.",
+                "LocationFresh": "Table roll {roll}: a fresh d100 for a hit after the attack's first.",
                 "LocationSingleChart": "One chart for the whole vehicle: the hit strikes the Hull.",
                 "LocationRedirected": "Table roll {roll} named the {rolled}, which this vehicle does not carry: the Hull instead.",
                 "ArmourOf": "{facing} armour",

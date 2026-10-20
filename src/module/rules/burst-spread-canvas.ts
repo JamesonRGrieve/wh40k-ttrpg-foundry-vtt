@@ -27,7 +27,7 @@ import { targetSizeModifier } from './target-size.ts';
 interface TokenLike {
     id?: string | null | undefined;
     name?: string | null | undefined;
-    actor?: { system?: { size?: number | string | null | undefined } | null | undefined } | null | undefined;
+    actor?: { uuid?: string | null | undefined; system?: { size?: number | string | null | undefined } | null | undefined } | null | undefined;
     document?: { disposition?: number | null | undefined } | null | undefined;
 }
 
@@ -68,9 +68,11 @@ export function findSpreadTargets(declaredTarget: TokenLike | null | undefined):
         if (token.document?.disposition === DISPOSITION_FRIENDLY) continue;
         const id = token.id;
         if (typeof id !== 'string') continue;
+        const actorUuid = token.actor.uuid;
         candidates.push({
             id,
             name: typeof token.name === 'string' ? token.name : id,
+            ...(typeof actorUuid === 'string' ? { actorUuid } : {}),
             metresFromOriginal: calculateTokenDistance(
                 declaredTarget as unknown as foundry.canvas.placeables.Token,
                 token as unknown as foundry.canvas.placeables.Token,

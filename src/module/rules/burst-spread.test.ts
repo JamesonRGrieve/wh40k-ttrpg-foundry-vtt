@@ -20,6 +20,11 @@ describe('eligibleSpreadTargets (#513)', () => {
         expect(out).toEqual([{ id: 'cultist', name: 'cultist' }]);
     });
 
+    it('carries the actor a spread hit lands on (#678)', () => {
+        const out = eligibleSpreadTargets({ originalToHitModifier: 0, candidates: [candidate({ id: 'wing', actorUuid: 'Actor.wing' })] });
+        expect(out).toEqual([{ id: 'wing', name: 'wing', actorUuid: 'Actor.wing' }]);
+    });
+
     it('rejects a target beyond the radius', () => {
         const out = eligibleSpreadTargets({ originalToHitModifier: 0, candidates: [candidate({ id: 'far', metresFromOriginal: 2.5 })] });
         expect(out).toEqual([]);

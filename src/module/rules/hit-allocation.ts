@@ -31,6 +31,11 @@
 export interface AllocationTarget {
     readonly id: string;
     readonly name: string;
+    /**
+     * The actor a hit on this target lands on. Set on a spread target, whose
+     * actor is not the attack's declared one; absent on the declared target.
+     */
+    readonly actorUuid?: string;
 }
 
 /** One hit, attributed to a target and carrying its index within that target's own sequence. */

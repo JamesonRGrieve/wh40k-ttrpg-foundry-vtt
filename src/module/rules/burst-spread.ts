@@ -64,6 +64,6 @@ export function eligibleSpreadTargets(input: SpreadInput): AllocationTarget[] {
             // Nearest first so the round-robin fills the closest enemies before the
             // furthest, which is what a player picking by hand would do.
             .sort((a, b) => a.metresFromOriginal - b.metresFromOriginal)
-            .map((c) => ({ id: c.id, name: c.name }))
+            .map((c) => ({ id: c.id, name: c.name, ...(c.actorUuid === undefined ? {} : { actorUuid: c.actorUuid }) }))
     );
 }

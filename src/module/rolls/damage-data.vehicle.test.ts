@@ -20,6 +20,7 @@ function profile(over: Partial<VehicleTargetProfile> = {}): VehicleTargetProfile
         fromAboveOrBelow: false,
         incomingToHit: [],
         motion: { moving: false, airborne: false, mobile: true },
+        spreadTarget: false,
         mounts: { hasTurret: true, weaponFacings: ['all'] },
         forceField: null,
         righteousFuryDie: '1d5',
@@ -71,6 +72,14 @@ describe('Hit.strikeVehicle (content#28)', () => {
         await hit.strikeVehicle(32, 1, profile());
         expect(formulas).toEqual(['1d100']);
         expect(hit.vehicleStrike).toMatchObject({ location: 'turret', tableRoll: 88, tableRollKind: 'fresh', armourFacing: 'front' });
+    });
+
+    it("rolls a fresh d100 for a burst's first hit spread onto a second vehicle, not the reversed attack roll (#678)", async () => {
+        queued = [5];
+        const hit = new Hit();
+        await hit.strikeVehicle(32, 0, profile({ spreadTarget: true }));
+        expect(formulas).toEqual(['1d100']);
+        expect(hit.vehicleStrike).toMatchObject({ location: 'motive', tableRoll: 5, tableRollKind: 'fresh' });
     });
 
     it('strikes the Hull with no table roll on a line with one chart', async () => {

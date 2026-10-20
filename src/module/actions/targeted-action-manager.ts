@@ -188,6 +188,14 @@ export class TargetedActionManager {
         // time — the allocator is pure and has no scene access. Empty for a lone
         // enemy, which leaves allocation in its existing single-target mode.
         weaponRollData.spreadTargets = findSpreadTargets(rollData.targetToken);
+        // A craft the burst may spread onto (#678) is struck on the facing the attacker sees,
+        // and every hit on it reads a fresh location roll.
+        for (const spread of weaponRollData.spreadTargets) {
+            const token = canvas.tokens?.get(spread.id);
+            const profile =
+                spread.actorUuid === undefined || token?.actor == null ? null : vehicleTargetProfileOnCanvas(token.actor, token, rollData.sourceToken);
+            if (profile !== null && spread.actorUuid !== undefined) weaponRollData.vehicleTargets[spread.actorUuid] = { ...profile, spreadTarget: true };
+        }
         // A modifier the attack carries from what granted it (Counter Attack's −20,
         // #603) — a named bucket the card expands into its sourced row.
         if (sourcedModifier !== null) {

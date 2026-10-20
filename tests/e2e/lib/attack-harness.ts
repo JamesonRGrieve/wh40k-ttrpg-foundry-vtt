@@ -65,7 +65,14 @@ interface HarnessApi {
      * rolling the dialog with Foundry's dice fed `faces` in order (each `[face, faces]`;
      * later draws roll the middle face). Returns the posted messages.
      */
-    attack: (args: { firer: string; target: string | null; weaponName: string; faces: Array<[number, number]> }) => Promise<HarnessAttack>;
+    attack: (args: {
+        firer: string;
+        target: string | null;
+        weaponName: string;
+        faces: Array<[number, number]>;
+        /** Roll-data choices the dialog would otherwise make (the action, a burst's hit allocation). */
+        choices?: { action?: string; hitAllocation?: 'original' | 'spread' };
+    }) => Promise<HarnessAttack>;
     /** Click `buttonSelector` inside a rendered chat card, rolling `faces` as above; returns the messages it posted. */
     clickInMessage: (args: { messageId: string; buttonSelector: string; faces: Array<[number, number]>; expectMessages: number }) => Promise<string[]>;
     /** Delete everything {@link setup} and the attacks created, and restore the settings it changed. */
@@ -100,7 +107,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
         }
         interface DialogLike {
             rendered: boolean;
-            actionData?: { rollData?: { weapons?: DocLike[]; weapon?: DocLike | null } };
+            actionData?: { rollData?: { weapons?: DocLike[]; weapon?: DocLike | null; update?: () => Promise<void> } };
             _systemRoll: () => Promise<void>;
             close: () => Promise<void>;
         }
@@ -207,7 +214,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
                 return { sceneId: scene.id, tokens, actors: Object.fromEntries([...actors].map(([k, a]) => [k, a.id])) };
             },
 
-            attack: async ({ firer, target, weaponName, faces }) => {
+            attack: async ({ firer, target, weaponName, faces, choices }) => {
                 const targeted = (await import(/* @vite-ignore */ `${moduleRoot}/actions/targeted-action-manager.js`)) as TargetedModule;
                 const basic = (await import(/* @vite-ignore */ `${moduleRoot}/actions/basic-action-manager.js`)) as BasicModule;
                 const dialogModule = (await import(/* @vite-ignore */ `${moduleRoot}/applications/prompts/unified-roll-dialog.js`)) as DialogModule;
@@ -244,6 +251,12 @@ export async function installAttackHarness(page: Page): Promise<void> {
                     const opened = await helpers.pollUntil(() => findDialog()?.rendered === true, helpers.scaledMs(15_000));
                     const dialog = findDialog();
                     if (!opened || dialog === null) throw new Error(`no roll dialog for ${weaponName}; notices: ${notices.join(' | ') || 'none'}`);
+                    const rollData = dialog.actionData?.rollData;
+                    // As the dialog's own selection does, re-derive the roll (its rate-of-fire ceiling) after a choice.
+                    if (choices !== undefined && rollData !== undefined) {
+                        Object.assign(rollData, choices);
+                        await rollData.update?.();
+                    }
                     try {
                         await withFaces(faces, async () => helpers.withTimeout(dialog._systemRoll(), `roll ${weaponName}`, helpers.scaledMs(30_000)));
                     } finally {

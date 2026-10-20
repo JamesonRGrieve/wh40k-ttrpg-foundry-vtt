@@ -780,19 +780,26 @@ export class ActionData {
             });
             const landing = this.comradeHit === null ? afterEvasion : withoutOneHitOn(afterEvasion, declaredId);
 
-            // A declared vehicle target (content#28) takes its hits on its own locations and
-            // armour facings; its trait force field rolls once against the whole attack.
-            const vehicle = this.#vehicleProfile(this.rollData.targetActor?.uuid ?? null);
-            const vehicleHits: Hit[] = [];
+            // A vehicle (content#28) takes its hits on its own locations and armour facings —
+            // the declared target, or a craft the burst spread onto (#678). Each vehicle's
+            // trait force field rolls once against the attack. A spread hit lands on its
+            // own actor, not the declared one.
+            const declaredUuid = this.rollData.targetActor?.uuid ?? null;
+            const vehicleHits = new Map<VehicleTargetProfile, Hit[]>();
             for (const allocated of landing) {
-                const onVehicle = vehicle !== null && allocated.target.id === declaredId;
+                const spreadUuid = allocated.target.id === declaredId ? null : allocated.target.actorUuid ?? null;
+                const vehicle = this.#vehicleProfile(spreadUuid ?? declaredUuid);
                 // eslint-disable-next-line no-await-in-loop -- sequential roll generation; each createHit advances dice state
-                const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget, null, onVehicle ? vehicle : null);
+                const hit = await Hit.createHit(attackData, allocated.hitIndexForTarget, null, vehicle);
                 hit.targetName = allocated.target.name;
-                if (onVehicle) vehicleHits.push(hit);
+                if (spreadUuid !== null) hit.targetUuid = spreadUuid;
+                if (vehicle !== null) vehicleHits.set(vehicle, [...(vehicleHits.get(vehicle) ?? []), hit]);
                 this.damageData.hits.push(hit);
             }
-            if (vehicle !== null) stampForceField(vehicleHits, await rollVehicleForceField(vehicle));
+            for (const [vehicle, hits] of vehicleHits) {
+                // eslint-disable-next-line no-await-in-loop -- one force-field roll per vehicle, in order
+                stampForceField(hits, await rollVehicleForceField(vehicle));
+            }
         }
     }
 
