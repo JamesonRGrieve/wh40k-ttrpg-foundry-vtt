@@ -13,7 +13,6 @@
 
 import Hbs from 'handlebars';
 import { describe, expect, it } from 'vitest';
-import woundsPanelSrc from '../src/templates/actor/panel/wounds-panel.hbs?raw';
 import degreeMeterSrc from '../src/templates/actor/partial/degree-meter-panel.hbs?raw';
 import editBodySrc from '../src/templates/actor/partial/vital-edit-body.hbs?raw';
 import editInputSrc from '../src/templates/actor/partial/vital-edit-input.hbs?raw';
@@ -421,11 +420,10 @@ describe('vital-edit-body partial', () => {
     });
 });
 
-describe('#259 — corruption/insanity counter aligns to Wounds', () => {
-    it('degree-meter counter controls use the same justify-between row as Wounds', () => {
-        // Wounds lays its quick-controls out with justify-between (label/buttons
-        // left, counter right). Corruption + insanity (degree-meter) must match.
-        expect(woundsPanelSrc).toContain('wrapperClass="tw-flex tw-items-center tw-justify-between"');
+describe('#259 — corruption/insanity counter row', () => {
+    it('degree-meter counter controls use a justify-between row', () => {
+        // Label/buttons left, counter right (the layout #259 matched to the old
+        // Wounds panel, which no live sheet mounted and is gone).
         expect(degreeMeterSrc).toContain('wrapperClass="tw-flex tw-items-center tw-justify-between"');
         // The looser left-packed gap-2 row must be gone.
         expect(degreeMeterSrc).not.toContain('wrapperClass="tw-flex tw-items-center tw-gap-2"');

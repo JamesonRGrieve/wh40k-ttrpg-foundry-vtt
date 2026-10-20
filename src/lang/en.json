@@ -8088,21 +8088,7 @@
                 }
             },
             "Wounds": {
-                "CriticalInjuries": "Critical Injuries",
-                "AddCriticalInjury": "Add Critical Injury",
-                "NoCriticalInjuries": "No critical injuries",
-                "Label": "Wounds",
-                "ReduceTitle": "Reduce Wounds",
-                "IncreaseTitle": "Increase Wounds",
-                "CriticallyWounded": "Critically Wounded — At 0 wounds!",
-                "SeverelyInjured": "Severely Injured — Below 25%",
-                "SeverelyInjuredThreshold": "Severely Injured (25%)",
-                "HalfHealthThreshold": "Half Health (50%)",
-                "GoodHealthThreshold": "Good Health (75%)",
-                "CriticalDamage": "Critical Damage",
-                "ReduceCritical": "Reduce Critical",
-                "IncreaseCritical": "Increase Critical",
-                "CriticalRange": "Critical Damage (0-10)"
+                "Label": "Wounds"
             },
             "Fatigue": {
                 "Label": "Fatigue",
@@ -8197,15 +8183,11 @@
         "VitalEditBody": {
             "EditValuesTitle": "Edit Values",
             "EditFateTitle": "Edit Fate Points",
-            "EditWoundsTitle": "Edit Wounds",
-            "MaxPlaceholder": "Max",
             "CurrentPlaceholder": "Current",
             "FatigueThresholdLabel": "Threshold",
             "FatigueCurrentLabel": "Current Fatigue",
             "FateMaxLabel": "Max Fate Points",
             "FateCurrentLabel": "Current Fate",
-            "WoundsMaxLabel": "Max Wounds",
-            "WoundsCurrentLabel": "Current Wounds",
             "ExperienceTotalLabel": "Total XP Earned",
             "ExperienceSpentLabel": "XP Spent",
             "AddXP": "Add XP",

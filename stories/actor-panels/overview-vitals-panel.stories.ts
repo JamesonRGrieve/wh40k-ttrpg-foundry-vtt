@@ -26,6 +26,8 @@ interface VitalsArgs {
     fate: { value: number; max: number };
     corruption: number;
     queued: number;
+    /** Wounds state; the default leaves the actor's mock wounds alone. */
+    wounds?: { value: number; max: number; critical: number };
 }
 
 /** What the sheet writes into `malignancyTestsDue`: the queue, or 0 on a line without the tests. */
@@ -37,7 +39,7 @@ function renderVitals(args: VitalsArgs): HTMLElement {
     const context = mockPlayerSheetContext({
         systemId: args.systemId,
         activeTab: 'overview',
-        actorOverrides: { system: { fate: args.fate, corruption: args.corruption } },
+        actorOverrides: { system: { fate: args.fate, corruption: args.corruption, ...(args.wounds === undefined ? {} : { wounds: args.wounds }) } },
         contextOverrides: { malignancyTestsDue: malignancyTestsDue(args.systemId, args.queued) },
     });
     const wrapper = document.createElement('div');
@@ -132,3 +134,28 @@ export const MalignancyAcrossLines: Story = {
         await expect(canvasElement.querySelector('[data-line="dh2"] [data-action="rollMalignancyTest"]')).not.toBeNull();
     },
 };
+
+/** `tw-text-crimson-l40` (tailwind.config.js `crimson.l40`, #ff5a5a): danger text on every line (#685). */
+const DANGER_CRIMSON = 'rgb(255, 90, 90)';
+/** Critical damage taken in the critical-wounds stories. */
+const CRITICAL_TAKEN = 3;
+
+/**
+ * At 0 wounds with critical damage the Critical row shows; each pip up to the damage
+ * taken is filled crimson on every line, not the line's accent.
+ */
+function criticallyWounded(systemId: GameSystemId): Story {
+    return {
+        args: { systemId, wounds: { value: 0, max: 12, critical: CRITICAL_TAKEN } },
+        play: async ({ canvasElement }) => {
+            const pips = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="setCriticalPip"]')];
+            await expect(pips.length).toBe(10);
+            const filled = pips.slice(0, CRITICAL_TAKEN).map((pip) => getComputedStyle(pip).color);
+            await expect(filled.every((colour) => colour === DANGER_CRIMSON)).toBe(true);
+            await expect(getComputedStyle(pips[CRITICAL_TAKEN] ?? pips[0]).color).not.toBe(DANGER_CRIMSON);
+        },
+    };
+}
+
+export const CriticallyWoundedDH2: Story = criticallyWounded('dh2');
+export const CriticallyWoundedRT: Story = criticallyWounded('rt');

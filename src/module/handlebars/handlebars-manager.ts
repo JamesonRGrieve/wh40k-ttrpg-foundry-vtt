@@ -73,7 +73,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/skill-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/labeled-rich-text-section.hbs',
             'systems/wh40k-rpg/templates/actor/partial/movement-stat-row.hbs',
-            'systems/wh40k-rpg/templates/actor/partial/wounds-pip-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs',
             'systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs',
             'systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs',
@@ -118,7 +117,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
 
             // Actor panels
-            'systems/wh40k-rpg/templates/actor/panel/wounds-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/fatigue-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/subtlety-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/inquest-panel.hbs',
