@@ -11,8 +11,14 @@ import { describe, expect, it } from 'vitest';
 
 const ROOT = resolve(__dirname, '..');
 
-/** A `tw-` utility glued to the end of a preceding word or utility. */
-const RUN_TOGETHER = /[a-zA-Z0-9\]]tw-[a-z]/;
+/**
+ * A `tw-` utility glued to the end of a preceding word or utility, or glued to a
+ * following Handlebars output expression (`tw-text-crimson-l40{{themeClassFor 'accent'}}`
+ * renders as one unknown class). Block tags (`{{#…}}`, `{{/…}}`, `{{else}}`,
+ * `{{^…}}`), comments and partials after a utility emit no class text, so they
+ * are not glue.
+ */
+const RUN_TOGETHER = /[a-zA-Z0-9\]]tw-[a-z]|tw-[^\s"'{}]*[a-zA-Z0-9\]]\{\{(?![#/^!>]|~?\s*else\b)/;
 
 function filesUnder(dir: string, extensions: readonly string[]): string[] {
     return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -34,7 +40,21 @@ describe('Tailwind class lists', () => {
     it('flags a glued pair and nothing that is not one', () => {
         expect(RUN_TOGETHER.test('tw-text-crimson-l40tw-font-semibold')).toBe(true);
         expect(RUN_TOGETHER.test('tw-w-[2rem]tw-h-4')).toBe(true);
-        for (const fine of ['tw-text-crimson-l40 tw-font-semibold', 'dh2:tw-bg-bronze', 'hover:tw-opacity-100', 'tw-bg-gold/10', '"tw-flex', '{{x}}tw-flex']) {
+        expect(RUN_TOGETHER.test("tw-text-crimson-l40{{themeClassFor 'accent'}}")).toBe(true);
+        expect(RUN_TOGETHER.test('tw-bg-[var(--x)]{{extraClass}}')).toBe(true);
+        for (const fine of [
+            'tw-text-crimson-l40 tw-font-semibold',
+            'dh2:tw-bg-bronze',
+            'hover:tw-opacity-100',
+            'tw-bg-gold/10',
+            '"tw-flex',
+            '{{x}}tw-flex',
+            "tw-text-gold {{themeClassFor 'accent'}}",
+            'hover:tw-scale-110{{#if active}} tw-ring{{/if}}',
+            'tw-text-crimson-l40{{else}}',
+            'tw-text-crimson-l40{{~else}}',
+            'tw-flex{{/if}}',
+        ]) {
             expect(RUN_TOGETHER.test(fine)).toBe(false);
         }
     });
