@@ -586,6 +586,9 @@ describe('Hit._calculateSpecials â€” conditional quality grants (Direction #7, Â
     const hammerBlow = (): DynamicModifierItemLike => grantItem('Hammer Blow', [makeGrant()]);
 
     it('pushes the granted quality onto the attack and resolves its hit effect', () => {
+        vi.stubGlobal('game', {
+            i18n: { localize: (k: string) => k, format: (k: string, params: Record<string, string>) => `${k}|${params['modifier'] ?? ''}` },
+        });
         const data = attackData([hammerBlow()], { isMelee: true, action: 'All Out Attack' });
         const hit = new Hit();
         hit._calculateSpecials(data);
@@ -642,6 +645,21 @@ describe('Hit._calculateSpecials â€” conditional quality grants (Direction #7, Â
         hit._calculateSpecials(data);
 
         expect(hit.effects[0]?.effect).toBe('WH40K.Quality.Snare.ChatEffect|-20');
+    });
+
+    it('localizes the weapon-quality chat text: Blast (3) names its 3 m radius, Haywire (2) its 20 m field (#678)', () => {
+        const format = vi.fn((k: string, params: Record<string, string>) => `${k}|${params['radius'] ?? ''}`);
+        vi.stubGlobal('game', { i18n: { localize: (k: string) => k, format } });
+        const data = attackData([], { isMelee: false, action: 'Standard Attack' });
+        data.rollData.attackSpecials.push({ name: 'Blast', level: 3 }, { name: 'Haywire', level: 2 }, { name: 'Warp', level: 0 });
+        const hit = new Hit();
+        hit._calculateSpecials(data);
+
+        expect(hit.effects.map((effect) => effect.effect)).toEqual([
+            'WH40K.Quality.Blast.ChatEffect|3',
+            'WH40K.Quality.Haywire.ChatEffect|20',
+            'WH40K.Quality.Warp.ChatEffect',
+        ]);
     });
 
     it('does not double-add a quality the weapon already carries', () => {

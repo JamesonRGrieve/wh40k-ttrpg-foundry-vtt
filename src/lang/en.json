@@ -3283,19 +3283,26 @@
             },
             "Blast": {
                 "Name": "Blast (X)",
-                "Description": "Hits all targets within X metres of the impact point."
+                "Description": "Hits all targets within X metres of the impact point.",
+                "ChatEffect": "Everyone within {radius}m of the location is hit!"
             },
             "Concussive": {
                 "Name": "Concussive (X)",
-                "Description": "On a hit, the target tests Toughness at -X×10; each DoF means 1 round Stunned. Damage above the target's Strength Bonus also knocks it Prone."
+                "Description": "On a hit, the target tests Toughness at -X×10; each DoF means 1 round Stunned. Damage above the target's Strength Bonus also knocks it Prone.",
+                "ChatEffect": "Target must pass a Toughness test at {modifier} or be Stunned for 1 round per DoF. If the attack did more damage than the target's Strength Bonus, it is knocked Prone!"
             },
             "Corrosive": {
                 "Name": "Corrosive",
-                "Description": "Rolls 1d10 against the struck location's armour; armour loses that many points and any overflow damage bypasses Toughness."
+                "Description": "Rolls 1d10 against the struck location's armour; armour loses that many points and any overflow damage bypasses Toughness.",
+                "ChatEffect": "The target's armour melts, [[1d10]] points of it destroyed! Additional damage is dealt as wounds and not reduced by Toughness."
             },
             "Crippling": {
                 "Name": "Crippling (X)",
-                "Description": "If wounded, target gains the Crippled condition; taking more than a Half Action inflicts X damage ignoring Armour and Toughness."
+                "Description": "If wounded, target gains the Crippled condition; taking more than a Half Action inflicts X damage ignoring Armour and Toughness.",
+                "ChatEffect": "If the target suffers a wound it is Crippled. If it takes more than a Half Action on a turn, it suffers {damage} damage not reduced by Armour or Toughness!"
+            },
+            "Felling": {
+                "ChatEffect": "The target's Unnatural Toughness is reduced by {reduction} while calculating wounds!"
             },
             "Flame": {
                 "Name": "Flame",
@@ -3307,19 +3314,23 @@
             },
             "Graviton": {
                 "Name": "Graviton",
-                "Description": "On a hit, the target makes a Strength test or falls Prone (vehicles roll Agility instead). The attack deals additional damage equal to the struck location's Armour Points."
+                "Description": "On a hit, the target makes a Strength test or falls Prone (vehicles roll Agility instead). The attack deals additional damage equal to the struck location's Armour Points.",
+                "ChatEffect": "This attack deals additional damage equal to the target's Armour points on the struck location!"
             },
             "Hallucinogenic": {
                 "Name": "Hallucinogenic (X)",
-                "Description": "Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table."
+                "Description": "Target makes a Toughness test (-X×10) or rolls on the Hallucinogenic table.",
+                "ChatEffect": "A creature struck by this must make a Toughness test at {modifier} or suffer a delusion!"
             },
             "Haywire": {
                 "Name": "Haywire (X)",
-                "Description": "On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10."
+                "Description": "On a hit, technological items within X×10 metres roll on the Haywire table at strength 1d10.",
+                "ChatEffect": "Everything within {radius}m suffers the Haywire Field at strength [[1d10]]!"
             },
             "Indirect": {
                 "Name": "Indirect (X)",
-                "Description": "Can be fired without line of sight; the firer suffers a -10×X BS penalty and the shot scatters 1d10-BSB metres on a miss."
+                "Description": "Can be fired without line of sight; the firer suffers a -10×X BS penalty and the shot scatters 1d10-BSB metres on a miss.",
+                "ChatEffect": "The attack deviates [[1d10 - {ballisticSkillBonus}]]m (minimum of 0m) off course to the {direction}!"
             },
             "Lance": {
                 "Name": "Lance",
@@ -3352,7 +3363,11 @@
             },
             "Toxic": {
                 "Name": "Toxic (X)",
-                "Description": "On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon's damage type."
+                "Description": "On a wound, target makes a Toughness test (-X×10) or suffers 1d10 additional damage of the weapon's damage type.",
+                "ChatEffect": "Target must pass a Toughness test at {modifier} or suffer [[1d10]] {damageType} damage."
+            },
+            "Warp": {
+                "ChatEffect": "Ignores mundane armour and cover! Holy armour negates this."
             }
         },
         "RightStuff": {

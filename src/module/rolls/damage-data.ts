@@ -967,35 +967,34 @@ export class Hit {
 
         for (const special of attackData.rollData.attackSpecials) {
             const level = special.level ?? 0;
+            // Each quality's chat text lives in the langpack; the level fills its test modifier, radius or damage.
+            const testModifier = level * -10;
             const effectBuilders: Record<string, () => string> = {
-                blast: () => `Everyone within ${level}m of the location is hit!`,
-                concussive: () =>
-                    `Target must pass Toughness test with ${
-                        level * -10
-                    } or be Stunned for 1 round per DoF. If the attack did more damage than the targets Strength Bonus, it is knocked Prone!`,
-                corrosive: () =>
-                    `The targets armor melts with [[1d10]] of armour being destroyed! Additional damage is dealt as wounds and not reduced by toughness.`,
-                crippling: () =>
-                    `If the target suffers a wound it is considered crippled. If they take more than a half action on a turn, they suffer ${level} damage not reduced by Armour or Toughness!`,
-                felling: () => `The targets unnatural toughness is reduced by ${level} while calculating wounds!`,
+                blast: () => t('WH40K.Quality.Blast.ChatEffect', { radius: level }),
+                concussive: () => t('WH40K.Quality.Concussive.ChatEffect', { modifier: testModifier }),
+                corrosive: () => t('WH40K.Quality.Corrosive.ChatEffect'),
+                crippling: () => t('WH40K.Quality.Crippling.ChatEffect', { damage: level }),
+                felling: () => t('WH40K.Quality.Felling.ChatEffect', { reduction: level }),
                 flame: () => t('WH40K.Quality.Flame.Description'),
-                graviton: () => `This attack deals additional damage equal to the targets Armour points on the struck location!`,
-                hallucinogenic: () => `A creature stuck by this much make a toughness test with ${level * -10} or suffer a delusion!`,
-                haywire: () => `Everything within ${level * -10}m suffers the Haywire Field at strength [[1d10]]!`,
+                graviton: () => t('WH40K.Quality.Graviton.ChatEffect'),
+                hallucinogenic: () => t('WH40K.Quality.Hallucinogenic.ChatEffect', { modifier: testModifier }),
+                haywire: () => t('WH40K.Quality.Haywire.ChatEffect', { radius: level * 10 }),
                 indirect: () => {
                     const bsChar = sourceActor.getCharacteristicFuzzy('ballisticSkill');
-                    const bs = bsChar.effectiveBonus ?? bsChar.bonus;
-                    return `The attack deviates [[ 1d10 - ${bs}]]m (minimum of 0m) off course to the ${scatterDirection()}!`;
+                    return t('WH40K.Quality.Indirect.ChatEffect', {
+                        ballisticSkillBonus: bsChar.effectiveBonus ?? bsChar.bonus,
+                        direction: scatterDirection(),
+                    });
                 },
-                // Shocking / Snare (DH2 Core, Weapon Qualities): text lives in the langpack.
                 shocking: () => t('WH40K.Quality.Shocking.Description'),
-                snare: () => t('WH40K.Quality.Snare.ChatEffect', { modifier: level * -10 }),
-                toxic: () => {
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: system.damageType may be undefined on legacy/minimal items; fallback required
-                    const toxicDamageType = actionItem.system.damageType ?? 'Impact';
-                    return `Target must pass Toughness test with ${level * -10} or suffer [[1d10]] ${toxicDamageType} damage.`;
-                },
-                warp: () => `Ignores mundane armor and cover! Holy armor negates this.`,
+                snare: () => t('WH40K.Quality.Snare.ChatEffect', { modifier: testModifier }),
+                toxic: () =>
+                    t('WH40K.Quality.Toxic.ChatEffect', {
+                        modifier: testModifier,
+                        // eslint-disable-next-line no-restricted-syntax -- boundary: system.damageType may be undefined on legacy/minimal items; fallback required
+                        damageType: actionItem.system.damageType ?? 'Impact',
+                    }),
+                warp: () => t('WH40K.Quality.Warp.ChatEffect'),
             };
             const builder = effectBuilders[special.name.toLowerCase()];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json (strict) types this access as `(() => string) | undefined` and requires the guard; ESLint reads tsconfig.test.json where the flag is off
