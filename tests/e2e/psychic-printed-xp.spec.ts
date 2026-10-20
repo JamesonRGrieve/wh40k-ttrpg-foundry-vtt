@@ -23,7 +23,10 @@ import { scaledMs } from './lib/timing';
  * scripts/e2e-coverage.mjs.
  */
 
-const PSYCHIC_PRINTED_XP_FLOWS = ['dh2-charges-dh2-printing', 'bc-charges-bc-printing', 'cauterise-carries-300'] as const;
+const PSYCHIC_PRINTED_XP_FLOWS = ['dh2-charges-dh2-printing', 'bc-charges-bc-printing', 'cauterise-carries-300', 'dh2-tiers-by-printed-psy-rating'] as const;
+
+/** The Psy Rating DH2 core prints for these powers (content#34): Molten Beam p. 209, Flame Breath p. 207. */
+const PRINTED_PSY_RATING: Record<string, number> = { 'Molten Beam': 4, 'Flame Breath': 3 };
 type FlowName = (typeof PSYCHIC_PRINTED_XP_FLOWS)[number];
 
 /** What each line's printing charges (DH2 core p. 204 and BC core p. 226 for Precognition). */
@@ -35,16 +38,18 @@ const EXPECTED: Record<'dh2' | 'bc', { flow: FlowName; charges: Record<string, n
 interface DialogRead {
     appId: string | null;
     charges: Record<string, number>;
+    tiers: Record<string, number>;
     error: string | null;
 }
 
-/** Open the Advancement Dialog on the Psychic Powers tab and read what each named power costs. */
+/** Open the Advancement Dialog on the Psychic Powers tab and read each named power's cost and PR tier. */
 async function readCharges(page: Page, actorId: string, names: readonly string[]): Promise<DialogRead> {
     return page.evaluate(
         async (args: { actorId: string; names: readonly string[] }) => {
             interface PreparedPower {
                 name: string;
                 cost: number;
+                prCost: number;
             }
             interface DialogInst {
                 id: string;
@@ -55,7 +60,7 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as { game: { actors: { get: (id: string) => object | undefined } } };
             const actor = g.game.actors.get(args.actorId);
-            if (actor === undefined) return { appId: null, charges: {}, error: 'actor not found' };
+            if (actor === undefined) return { appId: null, charges: {}, tiers: {}, error: 'actor not found' };
             const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
             const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
             const dialog = new mod.default(actor);
@@ -66,9 +71,10 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             const context = await dialog._prepareContext({});
             const powers = (context.psychic?.disciplines ?? []).flatMap((discipline) => discipline.items);
             const charges: Record<string, number> = {};
-            for (const name of args.names) {
-                const power = powers.find((p) => p.name === name);
-                if (power !== undefined) charges[name] = power.cost;
+            const tiers: Record<string, number> = {};
+            for (const power of powers) {
+                if (args.names.includes(power.name)) charges[power.name] = power.cost;
+                tiers[power.name] = power.prCost;
             }
             // Outline Precognition's row for the capture.
             const row = Array.from(dialog.element?.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]') ?? []).find(
@@ -77,10 +83,16 @@ async function readCharges(page: Page, actorId: string, names: readonly string[]
             const rowBox = row?.closest<HTMLElement>('.tw-rounded-md');
             rowBox?.style.setProperty('outline', '2px dashed #ff00ff');
             rowBox?.scrollIntoView({ block: 'center' });
-            return { appId: dialog.id, charges, error: null };
+            return { appId: dialog.id, charges, tiers, error: null };
         },
         { actorId, names },
     );
+}
+
+/** Do two name → number records hold the same entries, whatever their key order? */
+function sameEntries(a: Record<string, number | undefined>, b: Record<string, number>): boolean {
+    const keys = Object.keys(b);
+    return Object.keys(a).length === keys.length && keys.every((key) => a[key] === b[key]);
 }
 
 /** The DH2 compendium's Cauterise, loaded through the DataModel. */
@@ -124,7 +136,11 @@ test.describe.serial('psychic powers charge their printed XP (Tier B, content#30
                 actors.push(actorId);
                 // eslint-disable-next-line no-await-in-loop -- reads the dialog just opened
                 const read = await readCharges(page, actorId, Object.keys(expected));
-                record(flow, read.error === null && JSON.stringify(read.charges) === JSON.stringify(expected), `${line}: ${JSON.stringify(read)}`);
+                record(flow, read.error === null && sameEntries(read.charges, expected), `${line}: ${JSON.stringify(read.charges)}`);
+                if (line === 'dh2') {
+                    const tiers = Object.fromEntries(Object.keys(PRINTED_PSY_RATING).map((name) => [name, read.tiers[name]]));
+                    record('dh2-tiers-by-printed-psy-rating', sameEntries(tiers, PRINTED_PSY_RATING), `dh2 tiers ${JSON.stringify(tiers)}`);
+                }
                 if (read.appId !== null) {
                     // eslint-disable-next-line no-await-in-loop -- captures the dialog just opened
                     await snap(page, `psychic-printed-xp-${line}-advancement`, { selector: `#${read.appId}`, closeWindows: true, keepWindow: read.appId });
