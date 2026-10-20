@@ -58,13 +58,12 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversio
         expect(sys.modifiers.characteristics).toEqual({}); // OW char mods live in the choice block, not here
     });
 
-    it('does NOT leak the DH2 homebrew block onto the sibling RAW line (RT)', () => {
-        // RT references the canonical but has no grants/modifiers branch. The
-        // raw-provenance fallback must hand it the OW (raw) stats, never DH2's.
+    it('gives the sibling RAW line (RT) its own Into the Storm p.11 stats, never DH2’s homebrew', () => {
+        // RT carries its own branch since content#38: +5 BS, +5 WP, −5 Int, −5 Fel, and
+        // Secret Tongue (Military) and Common Lore (War).
         const sys = resolveFor('rt');
-        expect(sys.grants.skills).toHaveLength(4);
-        expect(sys.modifiers.characteristics).toEqual({});
-        expect(sys.modifiers.characteristics).not.toHaveProperty('toughness');
+        expect(sys.grants.skills).toHaveLength(2);
+        expect(sys.modifiers.characteristics).toEqual({ ballisticSkill: 5, willpower: 5, intelligence: -5, fellowship: -5 });
     });
 
     it('marks DH2 as a homebrew conversion of RAW source lines (drives the fa-shuffle icon)', () => {
