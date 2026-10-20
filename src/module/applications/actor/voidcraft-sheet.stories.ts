@@ -57,6 +57,9 @@ const defaultStarshipCtx = mockStarshipSheetContext({ systemId: 'rt' });
 // Provide source fields expected by the stats tab
 const defaultCtxWithSource: SheetContextLike = {
     ...defaultStarshipCtx,
+    // The sheet's context carries the hull type's label (voidcraft-sheet.ts); without
+    // it the header reads "Not set" for a ship that has one.
+    hullTypeLabel: 'Frigate',
     source: {
         ...defaultStarshipCtx.source,
         hullType: 'frigate',
@@ -87,6 +90,8 @@ export const Default: Story = {
         await expect(storyCanvas.getByDisplayValue('Sword of Terra')).toBeVisible();
         // Stats tab renders speed field
         assertField(canvasElement, 'system.speed', 8);
+        // The header names the hull type the ship has.
+        await expect(hullTypeBlock(canvasElement)?.textContent).toContain('Frigate');
     },
 };
 

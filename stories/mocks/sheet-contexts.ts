@@ -60,7 +60,8 @@ interface OriginPathStep {
 interface MockJournalEntrySummary {
     id: string;
     name: string;
-    system: { time: string; place: string; description: string };
+    /** `description` is the item's DescriptionTemplate field, as the journal panel reads it. */
+    system: { time: string; place: string; description: { value: string; chat: string; summary: string } };
 }
 
 /** The biography-tab payload. */
@@ -202,7 +203,11 @@ function defaultJournalEntries(): MockJournalEntrySummary[] {
         {
             id: 'journal-1',
             name: 'Interrogation Log',
-            system: { time: 'M41.998', place: 'Scintilla', description: 'Details from the latest investigation.' },
+            system: {
+                time: 'M41.998',
+                place: 'Scintilla',
+                description: { value: '<p>Details from the latest investigation.</p>', chat: '', summary: '' },
+            },
         },
     ];
 }

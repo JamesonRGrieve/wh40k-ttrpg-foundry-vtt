@@ -95,6 +95,9 @@ export const DarkHeresy2Biography: Story = {
         await expect(queries.getByDisplayValue('Acolyte Vex')).toBeVisible();
         await expect(queries.getByText('Biography')).toBeVisible();
         await expect(queries.getByText('Character Journal')).toBeVisible();
+        // A journal entry shows its description's plain text, read from the item's
+        // `description.value` as the live sheet's items carry it.
+        await expect(queries.getByText('Details from the latest investigation.')).toBeVisible();
     },
 };
 
