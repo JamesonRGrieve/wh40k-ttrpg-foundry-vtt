@@ -575,13 +575,7 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
         
-        {{!-- Description --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-book"></i>
-            <h3>{{localize "WH40K.Tabs.Description"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description"}}
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.DescriptionHint"}}
             </p>
@@ -592,30 +586,14 @@
               <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
               {{/if}}
             </div>
-          </div>
-        </div>
-        
-        {{!-- Notes --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-sticky-note"></i>
-            <h3>{{localize "WH40K.Tabs.Notes"}}</h3>
-          </div>
-          <div class="tw-mb-3">
-            <div class="tw-flex tw-flex-col tw-gap-1.5">
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes"}}
               <textarea name="system.notes" rows="4" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm tw-min-h-[80px] tw-resize-y focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]"
                         placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.NotesPlaceholder'}}">{{system.notes}}</textarea>
-            </div>
-          </div>
-        </div>
-        
-        {{!-- Source --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-book-bookmark"></i>
-            <h3>{{localize "WH40K.Common.Source"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-bookmark" labelKey="WH40K.Common.Source"}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1.5">
                 <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Source.Book"}}</label>
@@ -633,8 +611,7 @@
                        class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-sm tw-text-[color:var(--color-text-primary)] tw-text-sm focus:tw-outline-none focus:tw-border-[var(--wh40k-color-gold)]" placeholder="{{localize 'WH40K.ItemSheet.Cybernetic.CustomReferencePlaceholder'}}" />
               </div>
             </div>
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         
       </div>
       

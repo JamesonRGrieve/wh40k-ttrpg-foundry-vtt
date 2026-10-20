@@ -414,57 +414,29 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
 
-        {{!-- Effect --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-bolt tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Effect"}}</h3>
-          </div>
-          <div class="tw-p-2">
-            {{#if inEditMode}}
-            {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
-            {{else}}
-            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.effect}}}</div>
-            {{/if}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.Tabs.Effect" bodyClass="tw-p-2"}}
+          {{#if inEditMode}}
+          {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+          {{else}}
+          <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.effect}}}</div>
+          {{/if}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Description --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-book tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Description"}}</h3>
-          </div>
-          <div class="tw-p-2">
-            {{#if inEditMode}}
-            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-            {{else}}
-            <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
-            {{/if}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-2"}}
+          {{#if inEditMode}}
+          {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+          {{else}}
+          <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
+          {{/if}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Notes --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-sticky-note tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Tabs.Notes"}}</h3>
-          </div>
-          <div class="tw-p-3">
-            <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.Armour.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes"}}
+          <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.Armour.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Source --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-book-open tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Common.Source"}}</h3>
-          </div>
-          <div class="tw-p-3">
-            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Common.Source"}}
+          {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=item.system.source editable=editable}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 

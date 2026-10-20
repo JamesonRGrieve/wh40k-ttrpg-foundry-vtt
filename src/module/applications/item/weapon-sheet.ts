@@ -1033,8 +1033,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             section.classList.toggle('collapsed', this.#collapsedSections.has(sectionName));
         }
 
-        // Update toggle icon
-        const icon = target.querySelector('i');
+        // Update the chevron, not the section's own icon (the first `<i>` in the header).
+        const icon = target.querySelector('.wh40k-section__toggle');
         if (icon !== null) {
             icon.classList.toggle('fa-chevron-down', !this.#collapsedSections.has(sectionName));
             icon.classList.toggle('fa-chevron-right', this.#collapsedSections.has(sectionName));

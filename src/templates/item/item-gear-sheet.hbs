@@ -395,49 +395,21 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
         
-        {{!-- Mechanical Effect --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-            <i class="fas fa-bolt"></i>
-            <h3>{{localize "WH40K.ItemSheet.Gear.MechanicalEffect"}}</h3>
-          </div>
-          <div class="tw-mb-3">
-            {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.ItemSheet.Gear.MechanicalEffect" bodyClass="tw-p-2"}}
+          {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Full Description --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-            <i class="fas fa-book"></i>
-            <h3>{{localize "WH40K.Tabs.Description"}}</h3>
-          </div>
-          <div class="tw-mb-3">
-            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-2"}}
+          {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- GM Notes --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-            <i class="fas fa-sticky-note"></i>
-            <h3>{{localize "WH40K.ItemSheet.Common.GmNotes"}}</h3>
-          </div>
-          <div class="tw-mb-3">
-            <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.Gear.NotesPlaceholder'}}">{{system.notes}}</textarea>
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.ItemSheet.Common.GmNotes"}}
+          <textarea name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.Gear.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{system.notes}}</textarea>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Source --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-            <i class="fas fa-book-open"></i>
-            <h3>{{localize "WH40K.Common.Source"}}</h3>
-          </div>
-          <div class="tw-mb-3">
-            {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
-          </div>
-        </div>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Common.Source"}}
+          {{> systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs source=source.source editable=editable}}
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 

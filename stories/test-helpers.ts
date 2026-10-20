@@ -221,6 +221,32 @@ export function assertActiveTab(container: ParentNode | HTMLElement, name: strin
 }
 
 /**
+ * Show the sheet's `name` tab, as Foundry's `changeTab` does: its panel and its
+ * nav button take `.active`, every other primary-group panel and button drop it.
+ * Returns `root`, so a story's `render` can compose it.
+ */
+export function activateTab<T extends HTMLElement>(root: T, name: string): T {
+    for (const el of root.querySelectorAll<HTMLElement>('[data-group="primary"][data-tab]')) {
+        el.classList.toggle('active', el.dataset['tab'] === name);
+    }
+    return root;
+}
+
+/** One item-detail-section.hbs panel: its title key and its rendered title. */
+export interface DetailSectionTitle {
+    key: string;
+    title: string;
+}
+
+/** The item-detail-section.hbs panels inside `tab`'s panel, in order, with their titles. */
+export function detailSectionTitles(root: ParentNode, tab: string): DetailSectionTitle[] {
+    return [...root.querySelectorAll<HTMLElement>(`.tab[data-tab="${tab}"] [data-item-section]`)].map((section) => ({
+        key: section.dataset['itemSection'] ?? '',
+        title: section.querySelector('header h3')?.textContent.trim() ?? '',
+    }));
+}
+
+/**
  * Assert the value of a named form field.
  */
 export function assertField(container: ParentNode | HTMLElement, name: string, expected: string | number | boolean): void {

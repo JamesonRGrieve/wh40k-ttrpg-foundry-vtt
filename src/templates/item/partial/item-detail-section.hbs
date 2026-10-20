@@ -1,0 +1,33 @@
+{{!--
+  A titled panel for an item sheet's detail sections: Effect, Description, Notes,
+  Source and the like (#686). It is the one layout every item sheet uses for them,
+  so they read the same on every sheet and every line.
+
+  Hash arguments:
+    icon      — Font Awesome icon class of the title (e.g. "fa-book"). Required.
+    labelKey  — i18n key of the title text. Required.
+    label     — the title already localized, for a key that takes arguments. Optional;
+                the title is `labelKey` localized when it is absent.
+    bodyClass — padding/layout classes of the body. Optional; defaults to "tw-p-3".
+    sectionId — makes the panel collapsible through the sheet's `toggleSection`
+                action, keyed by this id (the weapon sheet's sections). Optional.
+
+  The panel carries `data-item-section="<labelKey>"`, so tests find it by its title.
+
+  Usage:
+    {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes"}}
+        … the section's content …
+    {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+--}}
+<section class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-solid tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden" data-item-section="{{labelKey}}">
+  <header class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.2)] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.15)_0%,rgba(201,162,39,0.05)_100%)]{{#if sectionId}} tw-group tw-cursor-pointer tw-select-none{{/if}}"{{#if sectionId}} data-action="toggleSection" data-section="{{sectionId}}"{{/if}}>
+    <i class="fas {{icon}} tw-text-gold {{themeClassFor 'accent'}}"></i>
+    <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{#if label}}{{label}}{{else}}{{localize labelKey}}{{/if}}</h3>
+    {{#if sectionId}}
+    <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-opacity-50 tw-transition-transform group-hover:tw-opacity-100"></i>
+    {{/if}}
+  </header>
+  <div class="{{#if bodyClass}}{{bodyClass}}{{else}}tw-p-3{{/if}}{{#if sectionId}} wh40k-section__body{{/if}}"{{#if sectionId}} data-section-content="{{sectionId}}"{{/if}}>
+    {{> @partial-block}}
+  </div>
+</section>

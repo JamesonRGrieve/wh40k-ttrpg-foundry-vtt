@@ -183,28 +183,15 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
 
-        {{!-- Full Description --}}
-        <div class="tw-mb-3">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
-            <i class="fas fa-book tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Description'}}</h3>
-          </div>
-          <div class="tw-p-2">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Location.Description" bodyClass="tw-p-2"}}
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
             <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{system.description.value}}}</div>
             {{/if}}
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{!-- Source --}}
-        <div class="tw-mb-3">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
-            <i class="fas fa-book-open tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize 'WH40K.Location.Source'}}</h3>
-          </div>
-          <div class="tw-p-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book-open" labelKey="WH40K.Location.Source"}}
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
                 <label class="tw-text-sm tw-font-medium">{{localize 'WH40K.Location.SourceBook'}}</label>
@@ -222,8 +209,7 @@
                        placeholder="{{localize 'WH40K.Location.SourceUrlPlaceholder'}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 

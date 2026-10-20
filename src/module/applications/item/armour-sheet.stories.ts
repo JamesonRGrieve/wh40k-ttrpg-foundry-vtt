@@ -6,7 +6,7 @@ import { expect, within } from 'storybook/test';
 import { mockArmourSheetContext } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { activateTab, detailSectionTitles, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-armour-sheet.hbs?raw';
 
 initializeStoryHandlebars();
@@ -83,6 +83,17 @@ export const RendersEditModeToggle: Story = {
 // same armour context under a different `data-wh40k-system` ancestor.
 
 /** Build a per-system homologation story for one game line. */
+/** The Description tab, composed (#686): its sections are the shared item-detail-section panels. */
+export const DescriptionTab: Story = {
+    render: (args: Args) => activateTab(renderSheet(templateSrc, mockArmourSheetContext(args.overrides)), 'description'),
+    play: async ({ canvasElement }) => {
+        const sections = detailSectionTitles(canvasElement, 'description');
+        await expect(sections.map((s) => s.key)).toEqual(['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', 'WH40K.Tabs.Notes', 'WH40K.Common.Source']);
+        // Each title renders, localized.
+        await expect(sections.every((s) => s.title !== '' && !s.title.startsWith('WH40K.'))).toBe(true);
+    },
+};
+
 function systemStory(systemId: SystemId): Story {
     return {
         render: (args) => renderArmourForSystem(args, systemId),

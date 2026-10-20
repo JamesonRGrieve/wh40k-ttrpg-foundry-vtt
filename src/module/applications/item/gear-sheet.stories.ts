@@ -6,7 +6,7 @@ import activeEffectsPanelSrc from '../../../../src/templates/item/panel/active-e
 import { mockGearSheetContext } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { activateTab, detailSectionTitles, renderSheet } from '../../../../stories/test-helpers';
 
 initializeStoryHandlebars();
 Hbs.registerPartial('systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs', activeEffectsPanelSrc);
@@ -105,6 +105,27 @@ export const ProfaneObjectStripReadable: Story = {
         await expect(chip === null ? '' : getComputedStyle(chip).color).toBe(danger);
         await expect(danger).not.toBe(OLD_STRIP_RED);
         await expect(strip === null ? '' : getComputedStyle(strip).color).toBe(tokenColour(canvasElement, '--wh40k-text-dark'));
+    },
+};
+
+/**
+ * The Description tab, composed (#686): every section is a titled panel from the
+ * shared item-detail-section partial, as on the armour sheet. It used bare `<h3>`s
+ * that Foundry drew as large plain headings, over a raw textarea.
+ */
+export const DescriptionTab: Story = {
+    render: (args) => activateTab(renderSheet(templateSrc, mockGearSheetContext(args.overrides)), 'description'),
+    play: async ({ canvasElement }) => {
+        const sections = detailSectionTitles(canvasElement, 'description');
+        await expect(sections.map((s) => s.key)).toEqual([
+            'WH40K.ItemSheet.Gear.MechanicalEffect',
+            'WH40K.Tabs.Description',
+            'WH40K.ItemSheet.Common.GmNotes',
+            'WH40K.Common.Source',
+        ]);
+        // Each title renders, localized.
+        await expect(sections.every((s) => s.title !== '' && !s.title.startsWith('WH40K.'))).toBe(true);
+        await expect(canvasElement.querySelector('.tab[data-tab="description"] h3:not([data-item-section] h3)')).toBeNull();
     },
 };
 

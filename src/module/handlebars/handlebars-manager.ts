@@ -227,6 +227,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-accent-tab-strip.hbs',
             'systems/wh40k-rpg/templates/item/partial/item-name-input.hbs',
+            'systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs',
             'systems/wh40k-rpg/templates/item/partial/ship-hull-types-field.hbs',
             // Structured `system.source` show/edit control, shared by every item sheet (#229)
             'systems/wh40k-rpg/templates/item/partial/source-reference-field.hbs',

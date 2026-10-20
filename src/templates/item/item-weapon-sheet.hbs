@@ -629,13 +629,7 @@
       </section>
 
       {{!-- DESCRIPTION --}}
-      <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
-        <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="description">
-          <i class="fa-solid fa-scroll"></i>
-          <span>{{localize "WH40K.Tabs.Description"}}</span>
-          <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-text-[rgba(214,221,235,0.5)] tw-transition-transform group-hover:tw-text-[color:var(--wh40k-gold)]"></i>
-        </header>
-        <div class="wh40k-section__body tw-animate-slide-in-up tw-p-0 tw-transition-all" data-section-content="description">
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-scroll" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-0" sectionId="description"}}
           {{#if inEditMode}}
           <div class="tw-p-0">
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
@@ -650,16 +644,13 @@
             {{/if}}
           </div>
           {{/if}}
+      {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-          {{!-- Notes --}}
-          <div class="tw-flex tw-flex-col tw-gap-1 tw-px-3 tw-py-2.5 tw-w-full">
-            <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Tabs.Notes"}}</label>
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes" sectionId="notes"}}
             <textarea name="system.notes" rows="2" placeholder="{{localize 'WH40K.ItemSheet.Weapon.PersonalNotes'}}"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-1.5 tw-text-sm tw-font-body tw-resize-y"
                       {{#unless inEditMode}}readonly{{/unless}}>{{system.notes}}</textarea>
-          </div>
-        </div>
-      </section>
+      {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       {{!-- MODIFICATIONS SECTION (for adding/managing) --}}
       {{#if inEditMode}}
