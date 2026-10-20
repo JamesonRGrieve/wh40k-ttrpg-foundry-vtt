@@ -14,6 +14,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { PsykerUnlock } from '../../rules/psyker-unlock.ts';
 import type { VehicleCombatRules, VehicleHitLocationBand } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -384,16 +385,22 @@ export abstract class BaseSystemConfig {
     // ── Psyker Gating ────────────────────────────────────────────
 
     /**
-     * Whether this character is a psyker in the current system.
-     *
-     * Drives visibility of the Psychic Powers section in the advancement
-     * dialog. Default returns false; aptitude-based systems override to
-     * check ownership of the system-specific psyker-unlock origin path
-     * item (DH2: 'Psyker' elite advance; BC: 'Psyker' archetype; OW:
-     * 'Sanctioned Psyker' speciality).
+     * The origin-path item that makes a character a psyker in this line, or
+     * null where the line has none (DH2: the 'Psyker' elite advance; BC: the
+     * 'Psyker' archetype; OW: the 'Sanctioned Psyker' speciality). `isPsyker`
+     * tests it, and the advancement dialog names it on its locked Psychic
+     * Powers banner, so the banner always points at the real unlock (#680).
      */
-    isPsyker(_actor: SystemConfigActor): boolean {
-        return false;
+    readonly psykerUnlock: PsykerUnlock | null = null;
+
+    /**
+     * Whether this character is a psyker in the current system: it owns the
+     * line's {@link psykerUnlock} origin-path item. Drives the purchases on the
+     * advancement dialog's Psychic Powers tab.
+     */
+    isPsyker(actor: SystemConfigActor): boolean {
+        const unlock = this.psykerUnlock;
+        return unlock !== null && this.ownsOriginPathItem(actor, unlock.step, unlock.name);
     }
 
     /**

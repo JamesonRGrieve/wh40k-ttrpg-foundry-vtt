@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -428,4 +429,57 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         await deleteActor(page, created.id);
         expect(failures, `purchase-skill-advance failures:\n  - ${failures.join('\n  - ')}`).toEqual([]);
     });
+
+    // #680: the locked Psychic Powers banner names the line's real psyker unlock. DH2's Psyker
+    // elite advance is sold on the dialog's own tab, named by that tab's label; OW's Sanctioned
+    // Psyker speciality is an origin-path choice. Neither may send the player to a "Traits" tab.
+    for (const { line, expected } of [
+        { line: 'dh2', expected: 'Take the Psyker elite advance from the Elite Advances tab' },
+        { line: 'ow', expected: 'Only a character with the Sanctioned Psyker Speciality can buy psychic powers' },
+    ]) {
+        test(`${line}: the locked Psychic Powers banner names the line's psyker unlock (#680)`, async ({ page }) => {
+            await joinOrSkip(page);
+            const opened = await openAdvancementDialog(page, line);
+            try {
+                const dialog = page.locator(`#${opened.appId}`);
+                await dialog.locator('[data-action="switchTab"][data-tab="psychic"]').click();
+                const banner = dialog.locator('[data-psyker-unlock-hint]');
+                await expect(banner).toContainText(expected);
+                await expect(banner).not.toContainText('Traits');
+                if (line === 'dh2') {
+                    // The tab the banner names is one the dialog shows.
+                    await expect(dialog.locator('[data-action="switchTab"][data-tab="traits"]')).toHaveText('Elite Advances');
+                }
+                await snap(page, `advancement-psychic-locked-${line}`, { selector: `#${opened.appId} :has(> div > [data-psyker-unlock-hint])` });
+            } finally {
+                await page.evaluate(async (appId) => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry.applications.instances` has no browser-side types
+                    const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry
+                        .applications.instances;
+                    await apps.get(appId)?.close();
+                }, opened.appId);
+                await deleteActor(page, opened.actorId);
+            }
+        });
+    }
 });
+
+/** A non-psyker character of `line`, with the advancement dialog open on it. */
+async function openAdvancementDialog(page: Page, line: string): Promise<{ actorId: string; appId: string }> {
+    return page.evaluate(async (gameSystem) => {
+        interface DialogInst {
+            id: string;
+            render: (force?: boolean) => Promise<object>;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const g = globalThis as unknown as { Actor: { create: (data: object) => Promise<{ id: string } | null> } };
+        const actor = await g.Actor.create({ name: `e2e-680 ${gameSystem} Acolyte`, type: `${gameSystem}-character`, system: { gameSystem } });
+        if (actor === null) throw new Error('actor not created');
+        const url = '/systems/wh40k-rpg/module/applications/dialogs/advancement-dialog.js';
+        const mod = (await import(/* @vite-ignore */ url)) as { default: new (a: object) => DialogInst };
+        const dialog = new mod.default(actor);
+        await dialog.render(true);
+        await globalThis.wh40kE2E.waitFor(() => document.getElementById(dialog.id) !== null, 'the advancement dialog');
+        return { actorId: actor.id, appId: dialog.id };
+    }, line);
+}

@@ -239,9 +239,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
      * DH2e: psyker unlock is the "Psyker" elite advance (step='elite').
      * Compendium item: dh2-core-origins-elite-advances/psyker.
      */
-    override isPsyker(actor: SystemConfigActor): boolean {
-        return this.ownsOriginPathItem(actor, 'elite', 'psyker');
-    }
+    override readonly psykerUnlock = { step: 'elite', name: 'Psyker' };
 
     getHeaderFields(_actor: SystemConfigActor): SidebarHeaderField[] {
         // Home World / Background / Role are shown as origin-path bubbles, and

@@ -301,7 +301,8 @@
         <i class="fas fa-lock tw-text-[color:var(--wh40k-color-warning)] tw-text-[1rem] tw-mt-0.5"></i>
         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1 tw-text-[0.8rem]">
           <span class="tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[color:var(--wh40k-color-warning)]">{{localize "WH40K.Dialog.Advancement.PsychicLocked"}}</span>
-          <span class="tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Dialog.Advancement.PsychicLockedTake"}} <strong class="tw-text-[color:var(--wh40k-color-gold)]">{{localize "WH40K.Dialog.Advancement.Psyker"}}</strong> {{localize "WH40K.Dialog.Advancement.PsychicLockedElite"}} <strong class="tw-text-[color:var(--wh40k-color-gold)]">{{localize "WH40K.Traits"}}</strong> {{localize "WH40K.Dialog.Advancement.PsychicLockedTab"}}</span>
+          {{!-- Names the line's psyker unlock and where it is got: the tab that sells it, or the origin path (#680). --}}
+          <span class="tw-text-[color:var(--color-text-secondary)]" data-psyker-unlock-hint>{{psykerUnlockHint.locked}}</span>
         </div>
       </div>
       {{/unless}}
@@ -430,7 +431,7 @@
       {{else}}
       <div class="tw-flex tw-flex-col tw-items-center tw-gap-2 tw-py-8 tw-px-4 tw-text-center tw-text-[color:var(--color-text-tertiary)]">
         <i class="fas fa-brain tw-text-[2rem] tw-opacity-40"></i>
-        <p class="tw-text-[0.9rem] tw-m-0 tw-max-w-[28rem]">{{localize "WH40K.Dialog.Advancement.NoPowersAvailable"}} <strong class="tw-text-[color:var(--wh40k-color-gold)]">{{localize "WH40K.Traits"}}</strong> {{localize "WH40K.Dialog.Advancement.NoPowersAvailableTab"}}</p>
+        <p class="tw-text-[0.9rem] tw-m-0 tw-max-w-[28rem]" data-psyker-unlock-empty>{{psykerUnlockHint.empty}}</p>
       </div>
       {{/if}}
     </div>

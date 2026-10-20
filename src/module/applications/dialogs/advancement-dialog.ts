@@ -14,6 +14,7 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
+import { psykerUnlockHint } from '../../rules/psyker-unlock.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
@@ -461,8 +462,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             // non-psykers can browse the catalogue. Its content gates on
             // the per-system psyker unlock (DH2: 'Psyker' elite advance;
             // BC: 'Psyker' archetype; OW: 'Sanctioned Psyker' speciality) —
-            // non-psykers see a locked-state message pointing them at the
-            // Traits tab.
+            // non-psykers see a locked-state message naming that unlock.
             tabs.push({ id: 'psychic', label: 'WH40K.Advancement.Tab.Psychic', icon: 'fa-brain', active: this.#activeTab === 'psychic' });
             tabs.push({ id: 'traits', label: 'WH40K.Advancement.Tab.Traits', icon: 'fa-medal', active: this.#activeTab === 'traits' });
         }
@@ -505,12 +505,18 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // are blocked until the per-system psyker unlock is owned (DH2:
         // 'Psyker' elite advance; BC: 'Psyker' archetype; OW: 'Sanctioned
         // Psyker' speciality). The template branches on isPsyker to show a
-        // banner pointing players at the Traits tab when they don't yet
-        // qualify.
+        // banner that names the line's unlock and where to get it: the tab that
+        // sells it, by its own label, or the origin-path step (#680).
         if (systemConfig?.usesAptitudes === true) {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             const isPsyker = systemConfig.isPsyker(this.actor);
             context['isPsyker'] = isPsyker;
+            context['psykerUnlockHint'] = psykerUnlockHint(
+                systemConfig.psykerUnlock,
+                tabs,
+                (key) => game.i18n.localize(key),
+                (key, data) => game.i18n.format(key, data),
+            );
             if (aptitudeConfig !== null) {
                 const psychic = await this.#preparePsychic(aptitudeConfig);
                 // Non-psykers see the catalogue read-only: everything blocked,
@@ -813,7 +819,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const baseName = entry.name;
                 const baseKey = baseName.toLowerCase();
 
-                const cost = systemConfig.getTalentAdvanceCost(this.actor, { system });
+                // The validated tier and aptitudes, not the raw index entry: an index row whose
+                // aptitudes are not an array crashed the dialog for an OW character (#680).
+                const cost = systemConfig.getTalentAdvanceCost(this.actor, { system: { tier, aptitudes } });
                 if (cost === null) continue;
 
                 const prereqResult = this.#checkPrerequisites(system.prerequisites);
@@ -1949,9 +1957,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         await this.#confirmAndSpend({
             cost: entry.cost,
             displayName: entry.name,
-            spendLabel: `Elite: ${entry.name}`,
+            spendLabel: game.i18n.format('WH40K.Advancement.EliteSpendLabel', { name: entry.name }),
             content: `<p>${game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: String(entry.cost), name: entry.name })}</p>
-                <p class="notes"><i class="fas fa-exclamation-triangle"></i> Elite advances represent large, lasting character changes. GM approval is expected per RAW.</p>`,
+                <p class="notes"><i class="fas fa-exclamation-triangle"></i> ${game.i18n.localize('WH40K.Advancement.EliteApprovalNote')}</p>`,
             apply: async () => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload typed as object
                 const itemData = sourceDoc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };

@@ -210,9 +210,10 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * characters lose Psyker Trait counts even while owning the archetype
      * (`core.md` :2750-2754).
      */
+    override readonly psykerUnlock = { step: 'archetype', name: 'Psyker' };
+
     override isPsyker(actor: SystemConfigActor): boolean {
-        if (!this.ownsOriginPathItem(actor, 'archetype', 'psyker')) return false;
-        return !psykerLockedByAlignment(this.getCharacterAlignment(actor));
+        return super.isPsyker(actor) && !psykerLockedByAlignment(this.getCharacterAlignment(actor));
     }
 
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
