@@ -1,11 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { type CardLocaliser, type VehicleDamageApplied, vehicleAssignCardRows, vehicleDamageCardRows } from '../../src/module/rolls/vehicle-card-rows.ts';
-import type { VehicleFuryResult, VehicleStrike } from '../../src/module/rolls/vehicle-strike.ts';
+import {
+    type CardLocaliser,
+    type DamageControlOffer,
+    damageControlCardRows,
+    type VehicleDamageApplied,
+    vehicleAssignCardRows,
+    vehicleDamageCardRows,
+} from '../../src/module/rolls/vehicle-card-rows.ts';
+import type { VehicleForceFieldRoll, VehicleFuryResult, VehicleStrike } from '../../src/module/rolls/vehicle-strike.ts';
 import { resolveVehicleDamage } from '../../src/module/rules/vehicle-damage.ts';
 import areaResolutionSrc from '../../src/templates/chat/area-resolution-chat.hbs?raw';
 import assignDamageChatSrc from '../../src/templates/chat/assign-damage-chat.hbs?raw';
 import damageRollChatSrc from '../../src/templates/chat/damage-roll-chat.hbs?raw';
+import vehicleRowsSrc from '../../src/templates/chat/partial/vehicle-damage-rows.hbs?raw';
 import assignDamagePromptSrc from '../../src/templates/prompt/assign-damage-prompt.hbs?raw';
 import { formatKey, localizeKey } from '../mocks/lang-localize';
 import { initializeStoryHandlebars } from '../template-support';
@@ -54,9 +62,23 @@ function frame(child: HTMLElement): HTMLElement {
     return box;
 }
 
-function damageCard(hitStrike: VehicleStrike, furies: VehicleFuryResult[] = [], gameSystem = 'dh2'): HTMLElement {
+function damageCard(
+    hitStrike: VehicleStrike,
+    furies: VehicleFuryResult[] = [],
+    gameSystem = 'dh2',
+    damageControl: DamageControlOffer | null = null,
+): HTMLElement {
     const rows = vehicleDamageCardRows(
-        { strike: hitStrike, facingArmour: CHIMERA_ARMOUR[hitStrike.armourFacing], coverAP: 0, penetration: 4, damage: 38, armourIgnored: false, furies },
+        {
+            strike: hitStrike,
+            facingArmour: CHIMERA_ARMOUR[hitStrike.armourFacing],
+            coverAP: 0,
+            penetration: 4,
+            damage: 38,
+            armourIgnored: false,
+            furies,
+            damageControl,
+        },
         i18n,
     );
     return renderSheet(damageRollChatSrc, {
@@ -120,9 +142,46 @@ export const TurretRedirectedToHull: Story = {
     },
 };
 
+/** A Shield Generator's roll (Protection 40, Common: overloads on 01–10). */
+function fieldRoll(over: Partial<VehicleForceFieldRoll>): VehicleForceFieldRoll {
+    return {
+        rating: 40,
+        roll: 50,
+        nullified: false,
+        source: 'Shield Generator',
+        overloadUnmodelled: false,
+        overloaded: false,
+        overloadMax: 10,
+        craftsmanship: 'common',
+        bypassedBy: '',
+        ...over,
+    };
+}
+
+export const ForceFieldOverloads: Story = {
+    name: 'A Common Shield Generator stops the hit and overloads on 06 (#678)',
+    render: () => frame(damageCard(strike({ forceField: fieldRoll({ roll: 6, nullified: true, overloaded: true }) }))),
+    play: async ({ canvasElement }) => {
+        const note = canvasElement.querySelector('[data-vehicle-row="vehicle-force-field"] [data-vehicle-row-note]')?.textContent ?? '';
+        await expect(note).toContain('01–10');
+        await expect(note).toContain(localizeKey('WH40K.Craftsmanship.Common'));
+        await expect(rowValue(canvasElement, 'vehicle-integrity-damage')).toBe('0');
+    },
+};
+
+export const ForceFieldBypassed: Story = {
+    name: "A Force weapon passes a Daemon Engine's field unrolled (#678)",
+    render: () =>
+        frame(damageCard(strike({ forceField: fieldRoll({ source: 'Daemon Engine', rating: 30, roll: 0, bypassedBy: 'force', overloadMax: null }) }))),
+    play: async ({ canvasElement }) => {
+        await expect(rowValue(canvasElement, 'vehicle-force-field')).toBe(localizeKey('WH40K.Vehicle.Damage.ForceFieldBypassed'));
+        await expect(canvasElement.querySelector('[data-vehicle-row="vehicle-force-field"] [data-vehicle-row-note]')?.textContent).toContain('Force');
+    },
+};
+
 export const ForceFieldNullifies: Story = {
     name: 'A Shield Generator nullifies the attack',
-    render: () => frame(damageCard(strike({ forceField: { rating: 40, roll: 17, nullified: true, source: 'Shield Generator', overloadUnmodelled: true } }))),
+    render: () => frame(damageCard(strike({ forceField: fieldRoll({ roll: 17, nullified: true }) }))),
     play: async ({ canvasElement }) => {
         const field = canvasElement.querySelector('[data-vehicle-row="vehicle-force-field"]');
         await expect(field?.querySelector('[data-vehicle-row-label]')?.textContent).toBe('Shield Generator');
@@ -151,6 +210,50 @@ export const RighteousFuryOnTheChart: Story = {
         await expect(fury?.querySelector('[data-vehicle-row-chart]')?.textContent).toBe('A fuel line ruptures.');
         await expect(fury?.querySelector('[data-vehicle-row-note]')?.textContent).toContain('Reinforced Armour');
         await expect(canvasElement.querySelector('[data-righteous-fury]')).toBeNull();
+    },
+};
+
+const HULL_FURY: VehicleFuryResult = {
+    die: '1d5',
+    dieSource: '',
+    rolled: 5,
+    value: 5,
+    unaffectedBy: '',
+    critical: { chartName: 'Hull Critical Hit Effects', chartUuid: 'x', value: 5, text: '<p>The hull is breached.</p>' },
+};
+
+export const DamageControlOffered: Story = {
+    name: 'Damage Control offers the Righteous Fury roll a re-roll (#678)',
+    render: () => frame(damageCard(strike(), [HULL_FURY], 'dh2', { trait: 'Damage Control', vehicleUuid: 'Actor.chimera', hitIndex: 0 })),
+    play: async ({ canvasElement }) => {
+        const button = canvasElement.querySelector<HTMLButtonElement>('[data-vehicle-row="vehicle-righteous-fury"] .roll-control__damage-control');
+        await expect(button?.textContent).toContain(localizeKey('WH40K.Vehicle.Damage.DamageControlReroll'));
+        await expect(JSON.parse(button?.dataset['damageControl'] ?? '{}')).toMatchObject({ trait: 'Damage Control', location: 'hull', key: '0.0' });
+    },
+};
+
+export const DamageControlRerolled: Story = {
+    name: "Damage Control's re-roll card: the second result stands (#678)",
+    render: () =>
+        frame(
+            renderSheet(vehicleRowsSrc, {
+                rows: damageControlCardRows(
+                    { vehicleUuid: 'Actor.chimera', trait: 'Damage Control', line: 'dh2', location: 'hull', die: '1d5', key: '0.0' },
+                    {
+                        ...HULL_FURY,
+                        rolled: 2,
+                        value: 2,
+                        critical: { chartName: 'Hull Critical Hit Effects', chartUuid: 'x', value: 2, text: '<p>Rattled.</p>' },
+                    },
+                    i18n,
+                ),
+            }),
+        ),
+    play: async ({ canvasElement }) => {
+        await expect(rowValue(canvasElement, 'vehicle-damage-control')).toBe(localizeKey('WH40K.Vehicle.Damage.DamageControlRerolled'));
+        await expect(rowValue(canvasElement, 'vehicle-righteous-fury')).toBe('2');
+        await expect(canvasElement.querySelector('[data-vehicle-row-chart]')?.textContent).toBe('Rattled.');
+        await expect(canvasElement.querySelector('.roll-control__damage-control')).toBeNull();
     },
 };
 

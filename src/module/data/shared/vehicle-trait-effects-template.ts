@@ -38,6 +38,18 @@ type AntiAir = (typeof ANTI_AIR_CHOICES)[number];
 const INCOMING_RANGED_CONDITION_CHOICES = ['', 'moving', 'mobile', 'airborne'] as const;
 type IncomingRangedCondition = (typeof INCOMING_RANGED_CONDITION_CHOICES)[number];
 
+/** A force field's craftsmanship. `''` = the trait records none. */
+const FIELD_CRAFTSMANSHIP_CHOICES = ['', 'poor', 'common', 'good', 'best'] as const;
+type FieldCraftsmanship = (typeof FIELD_CRAFTSMANSHIP_CHOICES)[number];
+
+/** A field's overload roll by craftsmanship; a null tier is not printed. */
+interface FieldOverloadTable {
+    poor: number | null;
+    common: number | null;
+    good: number | null;
+    best: number | null;
+}
+
 /** One per-test modifier a trait grants (e.g. Rugged → `{ test: 'repair', value: 20 }`). */
 interface VehicleTestModifier {
     /** Test category key: `'repair' | 'difficultTerrain' | 'floorIt' | 'command'`. */
@@ -134,6 +146,12 @@ export interface VehicleTraitEffects {
     forceFieldRating: number;
     /** That force field never Overloads (Daemon Engine). */
     forceFieldNeverOverloads: boolean;
+    /** The field's craftsmanship, which picks its overload chance (Shield Generator); `''` = none recorded. */
+    forceFieldCraftsmanship: FieldCraftsmanship;
+    /** The highest protection roll that overloads the field, by craftsmanship (DH2 Core p. 169 Table 5–13); null = not printed. */
+    forceFieldOverload: FieldOverloadTable;
+    /** Weapon qualities (identifiers) whose attacks the field does not stop (Daemon Engine: Sanctified, Force). */
+    forceFieldBypassQualities: string[];
     /** Structural Integrity regained each Round, or one Critical removed instead (Daemon Engine `1d5`); `''` = none. */
     structuralRegeneration: string;
 }
@@ -153,8 +171,14 @@ export interface NamedVehicleTraitEffects {
  * field takes the highest rating. Ponderous and Enhanced Motive Systems cancel
  * each other out (DH2 core p. 188, OW core p. 214).
  */
-export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers' | 'incomingRangedCondition'> {
+export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers' | 'incomingRangedCondition' | 'forceFieldOverload'> {
     testModifiers: SourcedVehicleTestModifier[];
+    /**
+     * The highest protection roll that overloads the field: its overload table at its
+     * craftsmanship. Null when the field's trait prints no table, or records no
+     * craftsmanship — the GM decides.
+     */
+    forceFieldOverloadMax: number | null;
     /** Every trait's to-hit penalty on attacks against the vehicle, with its condition — the attack applies those that hold. */
     incomingToHit: IncomingToHitEntry[];
     /** Which traits the damage-facing effects came from — their provenance rows on attack and damage cards. */
@@ -175,6 +199,8 @@ interface VehicleEffectSources {
     righteousFuryCritDie: string;
     /** The trait that set the crew exposure. */
     crewExposure: string;
+    /** The trait that lets the commander re-roll a Righteous Fury chart roll (Damage Control). */
+    rerollRighteousFuryCrit: string;
 }
 
 /** Build the structured `effects` SchemaField for the vehicle-trait DataModel. */
@@ -185,6 +211,8 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
         new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 });
     const modifier = (): foundry.data.fields.NumberField<{ required: true; initial: 0; integer: true }> =>
         new fields.NumberField({ required: true, initial: 0, integer: true });
+    const overloadRoll = (): foundry.data.fields.NumberField<{ required: false; nullable: true; initial: null; min: 0; max: 100; integer: true }> =>
+        new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, max: 100, integer: true });
     return new fields.SchemaField({
         testModifiers: new fields.ArrayField(
             new fields.SchemaField({
@@ -243,6 +271,14 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
         ignoresBestialFlee: flag(),
         forceFieldRating: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
         forceFieldNeverOverloads: flag(),
+        forceFieldCraftsmanship: new fields.StringField({ required: true, blank: true, initial: '', choices: [...FIELD_CRAFTSMANSHIP_CHOICES] }),
+        forceFieldOverload: new fields.SchemaField({
+            poor: overloadRoll(),
+            common: overloadRoll(),
+            good: overloadRoll(),
+            best: overloadRoll(),
+        }),
+        forceFieldBypassQualities: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
         structuralRegeneration: new fields.StringField({ required: true, blank: true, initial: '' }),
     });
 }
@@ -295,6 +331,9 @@ export function emptyAggregatedVehicleTraitEffects(): AggregatedVehicleTraitEffe
         ignoresBestialFlee: false,
         forceFieldRating: 0,
         forceFieldNeverOverloads: false,
+        forceFieldCraftsmanship: '',
+        forceFieldOverloadMax: null,
+        forceFieldBypassQualities: [],
         structuralRegeneration: '',
         sources: {
             critDamageMultiplier: [],
@@ -303,13 +342,19 @@ export function emptyAggregatedVehicleTraitEffects(): AggregatedVehicleTraitEffe
             forceFieldRating: '',
             righteousFuryCritDie: '',
             crewExposure: '',
+            rerollRighteousFuryCrit: '',
         },
     };
 }
 
 /** One trait's effects at their neutral defaults: a trait that does nothing (the base callers override). */
 export function neutralVehicleTraitEffects(): VehicleTraitEffects {
-    return { ...emptyAggregatedVehicleTraitEffects(), testModifiers: [], incomingRangedCondition: '' };
+    return {
+        ...emptyAggregatedVehicleTraitEffects(),
+        testModifiers: [],
+        incomingRangedCondition: '',
+        forceFieldOverload: { poor: null, common: null, good: null, best: null },
+    };
 }
 
 /** Compose two optional multipliers (`null` = no effect). */
@@ -348,8 +393,35 @@ const OR_FLAGS = [
     'sentry',
     'living',
     'ignoresBestialFlee',
-    'forceFieldNeverOverloads',
 ] as const satisfies ReadonlyArray<keyof VehicleTraitEffects>;
+
+/**
+ * Name `trait` as the source of each damage-facing effect it now gives, before its
+ * values fold into `out` (the comparisons read the aggregate so far).
+ */
+function attributeSources(out: AggregatedVehicleTraitEffects, trait: string, e: VehicleTraitEffects): void {
+    const sources = out.sources;
+    if (e.critDamageMultiplier !== null) sources.critDamageMultiplier.push(trait);
+    if (e.incomingRangedToHitModifier < out.incomingRangedToHitModifier) sources.incomingRangedToHitModifier = trait;
+    if (e.incomingMeleeToHitModifier < out.incomingMeleeToHitModifier) sources.incomingMeleeToHitModifier = trait;
+    if (e.forceFieldRating > out.forceFieldRating) adoptForceField(out, trait, e);
+    if (out.righteousFuryCritDie === '' && e.righteousFuryCritDie !== '') sources.righteousFuryCritDie = trait;
+    if (e.rerollRighteousFuryCrit && sources.rerollRighteousFuryCrit === '') sources.rerollRighteousFuryCrit = trait;
+    if (e.crewExposure === 'enclosed' || (e.crewExposure === 'open' && out.crewExposure !== 'enclosed')) sources.crewExposure = trait;
+}
+
+/**
+ * The strongest field protects the vehicle, with its own overload and bypass rules:
+ * its overload chance is its table at its craftsmanship. (Its rating is folded in
+ * with the other maxima.)
+ */
+function adoptForceField(out: AggregatedVehicleTraitEffects, trait: string, e: VehicleTraitEffects): void {
+    out.sources.forceFieldRating = trait;
+    out.forceFieldNeverOverloads = e.forceFieldNeverOverloads;
+    out.forceFieldCraftsmanship = e.forceFieldCraftsmanship;
+    out.forceFieldOverloadMax = e.forceFieldCraftsmanship === '' ? null : e.forceFieldOverload[e.forceFieldCraftsmanship];
+    out.forceFieldBypassQualities = [...e.forceFieldBypassQualities];
+}
 
 /** A trait's to-hit penalties on attacks against the vehicle: shooting under its condition, melee, and Orbital Deployment's in flight. */
 function incomingEntriesOf(trait: string, e: VehicleTraitEffects): IncomingToHitEntry[] {
@@ -368,16 +440,10 @@ function incomingEntriesOf(trait: string, e: VehicleTraitEffects): IncomingToHit
  */
 export function aggregateVehicleTraitEffects(traits: readonly NamedVehicleTraitEffects[]): AggregatedVehicleTraitEffects {
     const out = emptyAggregatedVehicleTraitEffects();
-    const sources = out.sources;
     for (const { name, effects: e } of traits) {
         for (const tm of e.testModifiers) out.testModifiers.push({ test: tm.test, value: tm.value, source: name });
         out.incomingToHit.push(...incomingEntriesOf(name, e));
-        if (e.critDamageMultiplier !== null) sources.critDamageMultiplier.push(name);
-        if (e.incomingRangedToHitModifier < out.incomingRangedToHitModifier) sources.incomingRangedToHitModifier = name;
-        if (e.incomingMeleeToHitModifier < out.incomingMeleeToHitModifier) sources.incomingMeleeToHitModifier = name;
-        if (e.forceFieldRating > out.forceFieldRating) sources.forceFieldRating = name;
-        if (out.righteousFuryCritDie === '' && e.righteousFuryCritDie !== '') sources.righteousFuryCritDie = name;
-        if (e.crewExposure === 'enclosed' || (e.crewExposure === 'open' && out.crewExposure !== 'enclosed')) sources.crewExposure = name;
+        attributeSources(out, name, e);
         out.critDamageMultiplier = composeMultiplier(out.critDamageMultiplier, e.critDamageMultiplier);
         out.explosionChanceMultiplier = composeMultiplier(out.explosionChanceMultiplier, e.explosionChanceMultiplier);
         out.ramSelfDamageMultiplier = composeMultiplier(out.ramSelfDamageMultiplier, e.ramSelfDamageMultiplier);

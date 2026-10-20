@@ -56,6 +56,7 @@ import { firstSystemId } from '../utils/chat-system-id.ts';
 import { formatSigned } from '../utils/format.ts';
 import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { damageControlReroll, disableSpentDamageControl } from './damage-control.ts';
 import { grapplePushFromCard } from './grapple-controls.ts';
 import { applyGrappleWritesFromMessage, postGrappleStart } from './grapple-relay.ts';
 import { type RiderSource, type RiderToken, resolveRiderAgainst, riderSourceOf } from './grenade-rider-actions.ts';
@@ -189,6 +190,14 @@ export class BasicActionManager {
             html.querySelectorAll('.roll-control__resolve-rider').forEach((el) => {
                 el.addEventListener('click', (ev: Event) => {
                     void this._resolveRider(ev);
+                });
+            });
+            // Damage Control (#678): re-roll a vehicle's Righteous Fury roll, once.
+            disableSpentDamageControl(html, message);
+            html.querySelectorAll<HTMLButtonElement>('.roll-control__damage-control').forEach((el) => {
+                el.addEventListener('click', (ev: Event) => {
+                    ev.preventDefault();
+                    void damageControlReroll(el, message);
                 });
             });
         });
@@ -523,7 +532,7 @@ export class BasicActionManager {
             // eslint-disable-next-line no-restricted-syntax -- boundary: the target is an opaque Foundry Actor; AssignDamageData consumes the untyped ActorLike system shape
             const assign = new AssignDamageData(hitTarget as unknown as ActorLike, hit);
             assign.update();
-            stampVehicleRows(hit, hitTarget.system, vehicleFuries[index] ?? []);
+            stampVehicleRows(hit, hitTarget, index, vehicleFuries[index] ?? []);
             const preview = assign.previewReducedDamage();
             hit.hasEffective = true;
             hit.effectiveDamage = preview.effective;

@@ -73,7 +73,7 @@ import { shouldSkipSelfTargetDefenderMods } from '../rules/target-situationals.t
 import { isWarpWeak, type WarpWeaknessScene } from '../rules/warp-weakness.ts';
 import { shouldDestroyOnCriticalFail, weaponDestroysOnCriticalFail } from '../rules/weapon-destroy.ts';
 import { getJamFloor, shouldJamRoll } from '../rules/weapon-jam.ts';
-import { attackerWeaponPreventsParry, getAttackerWeaponParryPenalty } from '../rules/weapon-quality-effects.ts';
+import { attackerWeaponPreventsParry, getAttackerWeaponParryPenalty, weaponHasQuality } from '../rules/weapon-quality-effects.ts';
 import { attackTriggersRecharge } from '../rules/weapon-recharge.ts';
 import { DAY_SECONDS } from '../rules/world-time.ts';
 import { XENOS_REPAIR_INSIGHT_FLAG, type XenosRepairInsight } from '../rules/xenos-equipment.ts';
@@ -111,7 +111,7 @@ import {
     uuid,
 } from './roll-helpers.ts';
 import { keepModeCardNote } from './roll-keep.ts';
-import { rollVehicleForceField, stampForceField, type VehicleTargetProfile } from './vehicle-strike.ts';
+import { rollVehicleForceField, stampForceField, type VehicleForceFieldRoll, type VehicleTargetProfile } from './vehicle-strike.ts';
 
 /** The "Phenomena Negated" card Sanctic Purity posts when the psyker spends Fate. */
 const SANCTIC_PURITY_NEGATED_TEMPLATE = 'systems/wh40k-rpg/templates/chat/sanctic-purity-negated-chat.hbs';
@@ -798,7 +798,7 @@ export class ActionData {
             }
             for (const [vehicle, hits] of vehicleHits) {
                 // eslint-disable-next-line no-await-in-loop -- one force-field roll per vehicle, in order
-                stampForceField(hits, await rollVehicleForceField(vehicle));
+                stampForceField(hits, await this.#rollForceField(vehicle));
             }
         }
     }
@@ -807,6 +807,13 @@ export class ActionData {
     #vehicleProfile(actorUuid: string | null): VehicleTargetProfile | null {
         if (actorUuid === null || !(this.rollData instanceof WeaponRollData)) return null;
         return this.rollData.vehicleTargets[actorUuid] ?? null;
+    }
+
+    /** Roll a vehicle's trait force field against this attack, which a quality the field does not stop passes unrolled (#678). */
+    async #rollForceField(vehicle: VehicleTargetProfile): Promise<VehicleForceFieldRoll | null> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a typed WH40KItemDocument; the quality helpers accept a duck-typed QualityItem
+        const weapon = (this.rollData.weapon ?? null) as Parameters<typeof weaponHasQuality>[0];
+        return rollVehicleForceField(vehicle, (quality) => weaponHasQuality(weapon, quality));
     }
 
     /**
@@ -829,7 +836,7 @@ export class ActionData {
             hit.targetName = caught.name;
             hit.targetUuid = caught.actorUuid;
             // eslint-disable-next-line no-await-in-loop -- sequential by design (see above)
-            if (vehicle !== null) stampForceField([hit], await rollVehicleForceField(vehicle));
+            if (vehicle !== null) stampForceField([hit], await this.#rollForceField(vehicle));
             damageData.hits.push(hit);
         }
     }

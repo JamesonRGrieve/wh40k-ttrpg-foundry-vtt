@@ -15,6 +15,7 @@ import {
     type VehicleArmourFacing,
     type VehicleDamageOutcome,
     type VehicleFacing,
+    isVehicleLocationId,
     type VehicleLocationId,
     vehicleFacingLabelKey,
     vehicleLocationLabelKey,
@@ -33,6 +34,8 @@ export interface VehicleCardRow {
     readonly html: string;
     /** `data-wh40k-tooltip-data` for a hoverable row, '' for none. */
     readonly tooltip: string;
+    /** A Righteous Fury row's Damage Control re-roll request (JSON), '' when it offers none. */
+    readonly control: string;
 }
 
 /** The localiser the rows read. */
@@ -58,8 +61,8 @@ const ARMOUR_FACING_KEYS: Readonly<Record<VehicleArmourFacing, I18nKey>> = {
     rear: 'WH40K.Vehicle.ArmourRear',
 };
 
-function row(hook: string, label: string, value: string, extra: Partial<Pick<VehicleCardRow, 'note' | 'html' | 'tooltip'>> = {}): VehicleCardRow {
-    return { hook, label, value, note: extra.note ?? '', html: extra.html ?? '', tooltip: extra.tooltip ?? '' };
+function row(hook: string, label: string, value: string, extra: Partial<Pick<VehicleCardRow, 'note' | 'html' | 'tooltip' | 'control'>> = {}): VehicleCardRow {
+    return { hook, label, value, note: extra.note ?? '', html: extra.html ?? '', tooltip: extra.tooltip ?? '', control: extra.control ?? '' };
 }
 
 /** How the struck facing was read. */
@@ -92,25 +95,98 @@ function locationNote(strike: VehicleStrike, i18n: CardLocaliser): string {
     return i18n.localize('WH40K.Vehicle.Damage.LocationSingleChart');
 }
 
+const FIELD_CRAFTSMANSHIP_KEYS: ReadonlyMap<string, I18nKey> = new Map<string, I18nKey>([
+    ['poor', 'WH40K.Craftsmanship.Poor'],
+    ['common', 'WH40K.Craftsmanship.Common'],
+    ['good', 'WH40K.Craftsmanship.Good'],
+    ['best', 'WH40K.Craftsmanship.Best'],
+]);
+
+/** What the field's roll did beyond stopping the attack or not: overloaded, or an overload the trait leaves to the GM. */
+function overloadNote(field: VehicleForceFieldRoll, i18n: CardLocaliser): string {
+    if (field.overloaded && field.overloadMax !== null) {
+        const craftsmanship = FIELD_CRAFTSMANSHIP_KEYS.get(field.craftsmanship);
+        return i18n.format('WH40K.Vehicle.Damage.ForceFieldOverloaded', {
+            max: String(field.overloadMax).padStart(2, '0'),
+            craftsmanship: craftsmanship === undefined ? '' : i18n.localize(craftsmanship),
+        });
+    }
+    return field.overloadUnmodelled ? i18n.localize('WH40K.Vehicle.Damage.ForceFieldOverload') : '';
+}
+
 function forceFieldRow(field: VehicleForceFieldRoll, i18n: CardLocaliser): VehicleCardRow {
+    if (field.bypassedBy !== '') {
+        const quality = `${field.bypassedBy.charAt(0).toUpperCase()}${field.bypassedBy.slice(1)}`;
+        return row('vehicle-force-field', field.source, i18n.localize('WH40K.Vehicle.Damage.ForceFieldBypassed'), {
+            note: i18n.format('WH40K.Vehicle.Damage.ForceFieldBypassedBy', { quality }),
+        });
+    }
     const data = { roll: String(field.roll), rating: String(field.rating) };
     return row(
         'vehicle-force-field',
         field.source,
         i18n.localize(field.nullified ? 'WH40K.Vehicle.Damage.ForceFieldNullified' : 'WH40K.Vehicle.Damage.ForceFieldFailed'),
         {
-            note: [
-                i18n.format('WH40K.Vehicle.Damage.ForceFieldRoll', data),
-                field.overloadUnmodelled ? i18n.localize('WH40K.Vehicle.Damage.ForceFieldOverload') : '',
-            ]
-                .filter((part) => part !== '')
-                .join(' '),
+            note: [i18n.format('WH40K.Vehicle.Damage.ForceFieldRoll', data), overloadNote(field, i18n)].filter((part) => part !== '').join(' '),
         },
     );
 }
 
-function furyRows(furies: readonly VehicleFuryResult[], i18n: CardLocaliser): VehicleCardRow[] {
-    return furies.map((fury) => {
+/** Damage Control on the struck vehicle: its trait, and where a re-roll request finds the vehicle and the hit. */
+export interface DamageControlOffer {
+    readonly trait: string;
+    readonly vehicleUuid: string;
+    readonly hitIndex: number;
+}
+
+/** What Damage Control's re-roll button asks for: which Righteous Fury roll, on which vehicle's chart. */
+export interface DamageControlRequest {
+    readonly vehicleUuid: string;
+    readonly trait: string;
+    readonly line: string;
+    readonly location: VehicleLocationId;
+    readonly die: string;
+    /** Identifies the roll within its card (`<hit>.<fury>`), so it is re-rolled once. */
+    readonly key: string;
+}
+
+/** The request a fury row's button carries, from the offer and the struck location. */
+function damageControlRequest(offer: DamageControlOffer, strike: VehicleStrike, fury: VehicleFuryResult, furyIndex: number): string {
+    const request: DamageControlRequest = {
+        vehicleUuid: offer.vehicleUuid,
+        trait: offer.trait,
+        line: strike.line,
+        location: strike.location,
+        die: fury.die,
+        key: `${offer.hitIndex}.${furyIndex}`,
+    };
+    return JSON.stringify(request);
+}
+
+/** The Damage Control request a button carried, or null when it is malformed. */
+export function parseDamageControlRequest(raw: string | undefined): DamageControlRequest | null {
+    if (raw === undefined || raw === '') return null;
+    let parsed: ReturnType<typeof JSON.parse>;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        return null;
+    }
+    if (typeof parsed !== 'object' || parsed === null) return null;
+    if (!('vehicleUuid' in parsed && 'trait' in parsed && 'line' in parsed && 'location' in parsed && 'die' in parsed && 'key' in parsed)) return null;
+    const { vehicleUuid, trait, line, location, die, key } = parsed;
+    if (typeof vehicleUuid !== 'string' || typeof trait !== 'string' || typeof line !== 'string' || typeof die !== 'string' || typeof key !== 'string')
+        return null;
+    if (typeof location !== 'string' || !isVehicleLocationId(location)) return null;
+    return { vehicleUuid, trait, line, location, die, key };
+}
+
+function furyRows(
+    furies: readonly VehicleFuryResult[],
+    i18n: CardLocaliser,
+    control: (fury: VehicleFuryResult, index: number) => string = () => '',
+): VehicleCardRow[] {
+    return furies.map((fury, index) => {
         const notes = [
             fury.dieSource === '' ? '' : i18n.format('WH40K.Vehicle.Damage.FuryDieSource', { trait: fury.dieSource, die: fury.die }),
             fury.unaffectedBy === '' ? '' : i18n.format('WH40K.Vehicle.Damage.FuryUnaffected', { traits: fury.unaffectedBy }),
@@ -123,8 +199,23 @@ function furyRows(furies: readonly VehicleFuryResult[], i18n: CardLocaliser): Ve
         return row('vehicle-righteous-fury', i18n.format('WH40K.Vehicle.Damage.Fury', { die: fury.die }), String(fury.rolled), {
             note: notes.filter((note) => note !== '').join(' '),
             html: fury.critical?.text ?? '',
+            control: control(fury, index),
         });
     });
+}
+
+/**
+ * The card a Damage Control re-roll posts: the trait that re-rolled, and the new
+ * roll's chart row. "The second result must be accepted even if it is worse than
+ * the first" (OW Core p. 213; DH2 Core p. 188 prints the same re-roll).
+ */
+export function damageControlCardRows(request: DamageControlRequest, fury: VehicleFuryResult, i18n: CardLocaliser): VehicleCardRow[] {
+    return [
+        row('vehicle-damage-control', request.trait, i18n.localize('WH40K.Vehicle.Damage.DamageControlRerolled'), {
+            note: i18n.localize('WH40K.Vehicle.Damage.DamageControlStands'),
+        }),
+        ...furyRows([fury], i18n),
+    ];
 }
 
 /** What the damage card knows of a vehicle hit. */
@@ -138,6 +229,8 @@ export interface VehicleDamageCardInput {
     readonly armourIgnored: boolean;
     /** Righteous Fury rows, with their chart text. */
     readonly furies: readonly VehicleFuryResult[];
+    /** Damage Control on the vehicle, which offers each Righteous Fury roll a re-roll; null without it. */
+    readonly damageControl: DamageControlOffer | null;
 }
 
 /** The damage card's vehicle rows: facing, location, armour, force field, Integrity damage, Righteous Fury. */
@@ -176,7 +269,8 @@ export function vehicleDamageCardRows(input: VehicleDamageCardInput, i18n: CardL
             ]),
         }),
     );
-    return [...rows, ...furyRows(input.furies, i18n)];
+    const offer = input.damageControl;
+    return [...rows, ...furyRows(input.furies, i18n, (fury, index) => (offer === null ? '' : damageControlRequest(offer, strike, fury, index)))];
 }
 
 /** The slice of a Hit the damage card's vehicle rows are stamped on. */
@@ -192,15 +286,26 @@ interface VehicleRowsCarrier {
 
 /**
  * Stamp a vehicle hit (content#28) with its damage-card rows and the strike its
- * Assign Damage button carries. A hit on anything but a craft is left alone.
- * @param system  The struck actor's `system`.
+ * Assign Damage button carries. A hit on anything but a craft is left alone. A
+ * craft with Damage Control offers each Righteous Fury roll a re-roll (#678).
+ * @param vehicle  The struck actor: its UUID and `system`.
+ * @param hitIndex  The hit's place on the card, which keys its re-rolls.
  * @param furies  The hit's Righteous Fury rows, with their chart text already read.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor `system` is a per-type DataModel; readVehicleDurability narrows it to a conventional craft
-export function stampVehicleRows(hit: VehicleRowsCarrier, system: unknown, furies: readonly VehicleFuryResult[]): void {
+export function stampVehicleRows(
+    hit: VehicleRowsCarrier,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor `system` is a per-type DataModel; readVehicleDurability narrows it to a conventional craft
+    vehicle: { uuid: string | null; system: unknown },
+    hitIndex: number,
+    furies: readonly VehicleFuryResult[],
+): void {
     const strike = hit.vehicleStrike;
-    const durability = readVehicleDurability(system);
+    const durability = readVehicleDurability(vehicle.system);
     if (strike === null || durability === null) return;
+    const damageControl =
+        durability.traitEffects.rerollRighteousFuryCrit && vehicle.uuid !== null
+            ? { trait: durability.traitEffects.sources.rerollRighteousFuryCrit, vehicleUuid: vehicle.uuid, hitIndex }
+            : null;
     hit.vehicleRows = vehicleDamageCardRows(
         {
             strike,
@@ -210,6 +315,7 @@ export function stampVehicleRows(hit: VehicleRowsCarrier, system: unknown, furie
             damage: hit.totalDamage,
             armourIgnored: hit.armourIgnored,
             furies,
+            damageControl,
         },
         cardLocaliser(),
     );

@@ -132,7 +132,17 @@ describe('AssignDamageData on a vehicle (content#28)', () => {
     });
 
     it('lets nothing through a trait force field that nullified the attack', async () => {
-        const forceField = { rating: 40, roll: 12, nullified: true, source: 'Shield Generator', overloadUnmodelled: true };
+        const forceField = {
+            rating: 40,
+            roll: 12,
+            nullified: true,
+            source: 'Shield Generator',
+            overloadUnmodelled: true,
+            overloaded: false,
+            overloadMax: null,
+            craftsmanship: '',
+            bypassedBy: '',
+        };
         const data = await assign(
             chimera({ value: 35, critical: 0 }),
             hit(60, 10, strike({ forceField, righteousFury: [{ die: '1d5', dieSource: '', rolled: 3, value: 3, unaffectedBy: '' }] })),

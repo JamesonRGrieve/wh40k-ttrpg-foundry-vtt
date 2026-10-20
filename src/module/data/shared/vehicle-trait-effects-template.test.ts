@@ -128,14 +128,38 @@ describe('aggregateVehicleTraitEffects', () => {
         ]);
     });
 
-    it('takes the highest force-field rating and ORs never-overloads', () => {
-        const agg = aggregateVehicleTraitEffects([
-            trait('Daemon Engine', { forceFieldRating: 30, forceFieldNeverOverloads: true, structuralRegeneration: '1d5' }),
-            trait('Shield Generator', { forceFieldRating: 40 }),
-        ]);
-        expect(agg.forceFieldRating).toBe(40);
-        expect(agg.forceFieldNeverOverloads).toBe(true);
+    it("takes the highest-rated force field, with that field's own overload and bypass rules (#678)", () => {
+        const daemonEngine = trait('Daemon Engine', {
+            forceFieldRating: 30,
+            forceFieldNeverOverloads: true,
+            forceFieldBypassQualities: ['sanctified', 'force'],
+            structuralRegeneration: '1d5',
+        });
+        const shieldGenerator = trait('Shield Generator', {
+            forceFieldRating: 40,
+            forceFieldCraftsmanship: 'common',
+            forceFieldOverload: { poor: 20, common: 10, good: 5, best: 1 },
+        });
+        const agg = aggregateVehicleTraitEffects([daemonEngine, shieldGenerator]);
+        expect({
+            rating: agg.forceFieldRating,
+            neverOverloads: agg.forceFieldNeverOverloads,
+            overloadMax: agg.forceFieldOverloadMax,
+            bypass: agg.forceFieldBypassQualities,
+        }).toEqual({ rating: 40, neverOverloads: false, overloadMax: 10, bypass: [] });
         expect(agg.structuralRegeneration).toBe('1d5');
+        const daemonic = aggregateVehicleTraitEffects([daemonEngine]);
+        expect({ neverOverloads: daemonic.forceFieldNeverOverloads, bypass: daemonic.forceFieldBypassQualities }).toEqual({
+            neverOverloads: true,
+            bypass: ['sanctified', 'force'],
+        });
+    });
+
+    it('leaves the overload to the GM when the field records no craftsmanship', () => {
+        expect(
+            aggregateVehicleTraitEffects([trait('Shield Generator', { forceFieldRating: 40, forceFieldOverload: { poor: 20, common: 10, good: 5, best: 1 } })])
+                .forceFieldOverloadMax,
+        ).toBeNull();
     });
 
     it('composes repair-time multipliers (Ramshackle halves repairs; Tracked doubles motive repairs, Wheeled halves them)', () => {
@@ -165,6 +189,7 @@ describe('aggregateVehicleTraitEffects', () => {
             trait('Shield Generator', { forceFieldRating: 40 }),
             trait('Ramshackle', { righteousFuryCritDie: '1d10' }),
             trait('Open-Topped', { crewExposure: 'open' }),
+            trait('Damage Control', { rerollRighteousFuryCrit: true }),
         ]);
         expect(agg.sources).toEqual({
             critDamageMultiplier: ['Reinforced Armour'],
@@ -173,6 +198,7 @@ describe('aggregateVehicleTraitEffects', () => {
             forceFieldRating: 'Shield Generator',
             righteousFuryCritDie: 'Ramshackle',
             crewExposure: 'Open-Topped',
+            rerollRighteousFuryCrit: 'Damage Control',
         });
     });
 

@@ -2,13 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { resolveVehicleDamage } from '../rules/vehicle-damage.ts';
 import {
     type CardLocaliser,
+    damageControlCardRows,
+    type DamageControlRequest,
+    parseDamageControlRequest,
     stampVehicleRows,
     type VehicleCardRow,
     type VehicleDamageApplied,
     vehicleAssignCardRows,
     vehicleDamageCardRows,
 } from './vehicle-card-rows.ts';
-import type { VehicleStrike } from './vehicle-strike.ts';
+import type { VehicleFuryResult, VehicleStrike } from './vehicle-strike.ts';
 
 /** Echoes each key, with its data, so a row shows exactly what it would localise. */
 const echo: CardLocaliser = {
@@ -38,7 +41,7 @@ function byHook(rows: readonly VehicleCardRow[], hook: string): VehicleCardRow |
 }
 
 describe('vehicleDamageCardRows', () => {
-    const input = { strike: strike(), facingArmour: 16, coverAP: 0, penetration: 4, damage: 25, armourIgnored: false, furies: [] };
+    const input = { strike: strike(), facingArmour: 16, coverAP: 0, penetration: 4, damage: 25, armourIgnored: false, furies: [], damageControl: null };
 
     it('states the facing, the location and how the table was read', () => {
         const rows = vehicleDamageCardRows(input, echo);
@@ -66,11 +69,47 @@ describe('vehicleDamageCardRows', () => {
         expect(byHook(redirected, 'vehicle-location')?.note).toContain('LocationRedirected');
     });
 
-    it('names the trait force field and its roll, and zeroes a nullified hit', () => {
-        const rows = vehicleDamageCardRows(
-            { ...input, strike: strike({ forceField: { rating: 40, roll: 17, nullified: true, source: 'Shield Generator', overloadUnmodelled: true } }) },
-            echo,
+    const fieldRoll = {
+        rating: 40,
+        roll: 17,
+        nullified: true,
+        source: 'Shield Generator',
+        overloadUnmodelled: true,
+        overloaded: false,
+        overloadMax: null,
+        craftsmanship: '',
+        bypassedBy: '',
+    };
+
+    it('notes an overloaded field with its craftsmanship chance, and a field a quality bypasses (#678)', () => {
+        const overloaded = byHook(
+            vehicleDamageCardRows(
+                {
+                    ...input,
+                    strike: strike({
+                        forceField: { ...fieldRoll, roll: 4, overloadUnmodelled: false, overloaded: true, overloadMax: 5, craftsmanship: 'good' },
+                    }),
+                },
+                echo,
+            ),
+            'vehicle-force-field',
         );
+        expect(overloaded?.note).toContain('WH40K.Vehicle.Damage.ForceFieldOverloaded{"max":"05","craftsmanship":"WH40K.Craftsmanship.Good"}');
+        const bypassed = byHook(
+            vehicleDamageCardRows(
+                { ...input, strike: strike({ forceField: { ...fieldRoll, source: 'Daemon Engine', nullified: false, roll: 0, bypassedBy: 'force' } }) },
+                echo,
+            ),
+            'vehicle-force-field',
+        );
+        expect({ value: bypassed?.value, note: bypassed?.note }).toEqual({
+            value: 'WH40K.Vehicle.Damage.ForceFieldBypassed',
+            note: 'WH40K.Vehicle.Damage.ForceFieldBypassedBy{"quality":"Force"}',
+        });
+    });
+
+    it('names the trait force field and its roll, and zeroes a nullified hit', () => {
+        const rows = vehicleDamageCardRows({ ...input, strike: strike({ forceField: fieldRoll }) }, echo);
         const field = byHook(rows, 'vehicle-force-field');
         expect(field?.label).toBe('Shield Generator');
         expect(field?.value).toBe('WH40K.Vehicle.Damage.ForceFieldNullified');
@@ -181,19 +220,68 @@ describe('stampVehicleRows', () => {
         return { vehicleStrike, coverAP: 0, totalPenetration: 0, totalDamage: 20, armourIgnored: false, vehicleRows: [], vehicleStrikeData: '' };
     }
 
+    const fury: VehicleFuryResult = { die: '1d5', dieSource: '', rolled: 4, value: 4, unaffectedBy: '', critical: null };
+
     it("stamps a vehicle hit's rows against the struck facing's armour, and its strike for the Assign button", () => {
         const hit = carrier(strike());
-        stampVehicleRows(hit, craft, []);
+        stampVehicleRows(hit, { uuid: 'Actor.chimera', system: craft }, 0, []);
         expect(byHook(hit.vehicleRows, 'vehicle-armour')?.value).toBe('16');
         expect(JSON.parse(hit.vehicleStrikeData)).toMatchObject({ facing: 'rear', location: 'hull' });
     });
 
     it('leaves a creature hit, or a hit with no strike, alone', () => {
         const creature = carrier(strike());
-        stampVehicleRows(creature, { wounds: { value: 10 } }, []);
+        stampVehicleRows(creature, { uuid: 'Actor.cultist', system: { wounds: { value: 10 } } }, 0, []);
         expect(creature.vehicleRows).toEqual([]);
         const unstruck = carrier(null);
-        stampVehicleRows(unstruck, craft, []);
+        stampVehicleRows(unstruck, { uuid: 'Actor.chimera', system: craft }, 0, []);
         expect(unstruck.vehicleStrikeData).toBe('');
+    });
+
+    it("offers Damage Control's re-roll on each Righteous Fury row of a craft that has it (#678)", () => {
+        const controlled = { ...craft, traitEffects: { rerollRighteousFuryCrit: true, sources: { rerollRighteousFuryCrit: 'Damage Control' } } };
+        const hit = carrier(strike());
+        stampVehicleRows(hit, { uuid: 'Actor.chimera', system: controlled }, 2, [fury]);
+        expect(parseDamageControlRequest(byHook(hit.vehicleRows, 'vehicle-righteous-fury')?.control)).toEqual({
+            vehicleUuid: 'Actor.chimera',
+            trait: 'Damage Control',
+            line: 'dh2',
+            location: 'hull',
+            die: '1d5',
+            key: '2.0',
+        });
+        const plain = carrier(strike());
+        stampVehicleRows(plain, { uuid: 'Actor.chimera', system: craft }, 2, [fury]);
+        expect(byHook(plain.vehicleRows, 'vehicle-righteous-fury')?.control).toBe('');
+    });
+});
+
+describe('Damage Control (#678; OW Core p. 213)', () => {
+    const request: DamageControlRequest = { vehicleUuid: 'Actor.chimera', trait: 'Damage Control', line: 'dh2', location: 'hull', die: '1d5', key: '0.0' };
+
+    it('rejects a malformed request', () => {
+        expect(parseDamageControlRequest(undefined)).toBeNull();
+        expect(parseDamageControlRequest('{')).toBeNull();
+        expect(parseDamageControlRequest(JSON.stringify({ ...request, location: 'galley' }))).toBeNull();
+        expect(parseDamageControlRequest(JSON.stringify(request))).toEqual(request);
+    });
+
+    it("states the re-roll and that its result stands, then the new roll's chart row", () => {
+        const rerolled: VehicleFuryResult = {
+            die: '1d5',
+            dieSource: '',
+            rolled: 2,
+            value: 2,
+            unaffectedBy: '',
+            critical: { chartName: 'Hull Critical Hit Effects', chartUuid: 'RollTable.x', value: 2, text: '<p>Shaken.</p>' },
+        };
+        const rows = damageControlCardRows(request, rerolled, echo);
+        expect(rows.map((r) => [r.hook, r.label, r.value])).toEqual([
+            ['vehicle-damage-control', 'Damage Control', 'WH40K.Vehicle.Damage.DamageControlRerolled'],
+            ['vehicle-righteous-fury', 'WH40K.Vehicle.Damage.Fury{"die":"1d5"}', '2'],
+        ]);
+        expect(rows[0]?.note).toBe('WH40K.Vehicle.Damage.DamageControlStands');
+        expect(rows[1]?.html).toBe('<p>Shaken.</p>');
+        expect(rows[1]?.control).toBe('');
     });
 });

@@ -33,6 +33,10 @@ const AUTOCANNON = `${WEAPONS}.l7M8n9O0p1Q2r3S4`;
 const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
 const REINFORCED_ARMOUR = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.dF8QAP7SfJDMJW1k';
 const FLYER = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.63b3a3c62d2fe2ad';
+const SHIELD_GENERATOR = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.RnTjRMnjQEdSHJWJ';
+const DAMAGE_CONTROL = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.Hw3TrFVysIbUOXt5';
+const DAEMON_ENGINE = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits-gw-copyright.Item.VbS93F0wE1Q8X4NA';
+const FORCE_SWORD = `${WEAPONS}.v3W4x5Y6z7A8b9C0`;
 const CHIMERA = { pack: 'wh40k-rpg.dh2-core-vehicles-terracraft', name: 'Chimera Armoured Transport' };
 const WILDCAT = { pack: 'wh40k-rpg.dh2-without-vehicles-terracraft', name: 'Wildcat Transport Buggy' };
 
@@ -534,6 +538,144 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             // The card runs past the window; capture the wing craft's hit on its own.
             const popout = await popOutChatMessage(page, damage.id);
             expect(await snap(page, 'vehicle-damage-burst-spread-wing-hit', { selector: `${popout} div.tw-my-3:has-text("Wing Chimera")` })).not.toBeNull();
+        } finally {
+            await page.evaluate(async () => globalThis.wh40kAttack.teardown());
+            await restoreSettings(page, settings);
+        }
+    });
+
+    /**
+     * #678: a Shield Generator (Common: overloads on 01–10) stops a hit on a field
+     * roll of 06 and overloads; a Force weapon passes a Daemon Engine's field
+     * unrolled; and a Damage Control craft's commander re-rolls a Righteous Fury
+     * roll on its chart, once.
+     */
+    test('force-field overload and bypass, and the Damage Control re-roll (#678)', async ({ page }) => {
+        await joinOrSkip(page);
+        await installAttackHarness(page);
+        const settings = await setWorldSettings(page, { 'auto-apply-damage': false });
+        try {
+            const chimera = await craftFromPack(page, CHIMERA);
+            expect(chimera.error, chimera.error ?? '').toBeNull();
+            const craft = (key: string, x: number, trait: { name: string; uuid: string }): HarnessTokenSpec => ({
+                key,
+                name: key,
+                type: chimera.type,
+                x,
+                y: 400,
+                system: chimera.system,
+                items: [...chimera.items, { name: trait.name, type: 'vehicleTrait', _stats: { compendiumSource: trait.uuid } }],
+            });
+            const psyker: HarnessTokenSpec = {
+                key: 'Psyker',
+                name: 'Psyker',
+                type: 'dh2-character',
+                x: 700,
+                y: 600,
+                items: [leanWeapon('Force Sword', FORCE_SWORD, 0)],
+                system: { gameSystem: 'dh2', characteristics: { weaponSkill: { base: 60 }, strength: { base: 40 } } },
+            };
+            // Each craft's centre is 1 m above its gunner's row; the psyker stands at the Daemon Engine's nose.
+            const scene: HarnessScene = await page.evaluate(
+                async (tokens) => globalThis.wh40kAttack.setup({ width: 1600, height: 1300, tokens }),
+                [
+                    craft('Shielded Chimera', 100, { name: 'Shield Generator', uuid: SHIELD_GENERATOR }),
+                    craft('Daemon Chimera', 600, { name: 'Daemon Engine', uuid: DAEMON_ENGINE }),
+                    craft('Controlled Chimera', 1100, { name: 'Damage Control', uuid: DAMAGE_CONTROL }),
+                    gunner('Shield Gunner', 150, 1100),
+                    gunner('Control Gunner', 1150, 1100),
+                    psyker,
+                ],
+            );
+            const token = (key: string): string => scene.tokens[key] ?? '';
+            await sizeTokens(page, scene.sceneId, [token('Shielded Chimera'), token('Daemon Chimera'), token('Controlled Chimera')], 2);
+
+            // --- A Common Shield Generator: a field roll of 06 stops the hit and overloads ---
+            const shielded = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+                firer: token('Shield Gunner'),
+                target: token('Shielded Chimera'),
+                weaponName: 'Autocannon',
+                faces: [[12, 100]] as Array<[number, number]>,
+            });
+            const shieldCard = await cardWith(page, shielded.messageIds, 'roll-control__roll-damage');
+            let before = await messageIds(page);
+            // The hit's damage dice, then the field's protection roll.
+            await page.evaluate(
+                async (a) =>
+                    globalThis.wh40kAttack.clickInMessage({ messageId: a.id, buttonSelector: '.roll-control__roll-damage', faces: a.faces, expectMessages: 1 }),
+                { id: shieldCard, faces: [...AUTOCANNON_DAMAGE, [6, 100]] as Array<[number, number]> },
+            );
+            const overload = await awaitCard(page, before, 'data-vehicle-row="vehicle-force-field"');
+            expect((await vehicleRows(page, overload.html))['vehicle-force-field']).toBe('Nullified');
+            expect(overload.html, 'the field overloads on its Common chance').toContain('Overloaded (01–10, Common)');
+            expect(await snapCard(page, 'vehicle-damage-shield-generator-overloads', overload.id)).not.toBeNull();
+
+            // --- A Force weapon passes the Daemon Engine's field unrolled ---
+            const forced = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+                firer: token('Psyker'),
+                target: token('Daemon Chimera'),
+                weaponName: 'Force Sword',
+                faces: [[12, 100]] as Array<[number, number]>,
+            });
+            const forceCard = await cardWith(page, forced.messageIds, 'roll-control__roll-damage');
+            before = await messageIds(page);
+            await page.evaluate(
+                async (id) =>
+                    globalThis.wh40kAttack.clickInMessage({ messageId: id, buttonSelector: '.roll-control__roll-damage', faces: [], expectMessages: 1 }),
+                forceCard,
+            );
+            const bypass = await awaitCard(page, before, 'data-vehicle-row="vehicle-force-field"');
+            expect((await vehicleRows(page, bypass.html))['vehicle-force-field']).toBe('Bypassed');
+            expect(bypass.html).toContain('the Force quality');
+            expect(await snapCard(page, 'vehicle-damage-daemon-engine-field-bypassed', bypass.id)).not.toBeNull();
+
+            // --- Damage Control: Righteous Fury on a 10, re-rolled on the Hull chart ---
+            const controlled = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
+                firer: token('Control Gunner'),
+                target: token('Controlled Chimera'),
+                weaponName: 'Autocannon',
+                faces: [[12, 100]] as Array<[number, number]>,
+            });
+            const controlCard = await cardWith(page, controlled.messageIds, 'roll-control__roll-damage');
+            before = await messageIds(page);
+            await page.evaluate(
+                async (a) =>
+                    globalThis.wh40kAttack.clickInMessage({ messageId: a.id, buttonSelector: '.roll-control__roll-damage', faces: a.faces, expectMessages: 1 }),
+                {
+                    id: controlCard,
+                    faces: [
+                        [10, 10],
+                        [5, 10],
+                        [5, 10],
+                        [4, 5],
+                    ] as Array<[number, number]>,
+                },
+            );
+            const fury = await awaitCard(page, before, 'data-vehicle-row="vehicle-righteous-fury"');
+            expect(fury.html, 'the Righteous Fury row offers the re-roll').toContain('roll-control__damage-control');
+            expect(await snapCard(page, 'vehicle-damage-damage-control-offered', fury.id)).not.toBeNull();
+            // The card runs past the window; capture the Righteous Fury row and its button on their own.
+            const furyPopout = await popOutChatMessage(page, fury.id);
+            expect(
+                await snap(page, 'vehicle-damage-damage-control-button', { selector: `${furyPopout} [data-vehicle-row="vehicle-righteous-fury"]` }),
+            ).not.toBeNull();
+            const rerolled = await page.evaluate(
+                async (id) =>
+                    globalThis.wh40kAttack.clickInMessage({
+                        messageId: id,
+                        buttonSelector: '.roll-control__damage-control',
+                        faces: [[1, 5]] as Array<[number, number]>,
+                        expectMessages: 1,
+                    }),
+                fury.id,
+            );
+            const rerollCard = rerolled.at(0) ?? '';
+            const rerollHtml = await cardHtml(page, rerollCard);
+            const rerollRows = await vehicleRows(page, rerollHtml);
+            expect(rerollRows['vehicle-damage-control']).toBe('Re-rolled');
+            expect(rerollRows['vehicle-righteous-fury'], 'the second roll stands').toBe('1');
+            expect(rerollHtml).toContain('data-vehicle-row-chart');
+            expect(await snapCard(page, 'vehicle-damage-damage-control-rerolled', rerollCard)).not.toBeNull();
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
             await restoreSettings(page, settings);

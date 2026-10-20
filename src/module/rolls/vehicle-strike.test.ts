@@ -8,9 +8,11 @@ import {
 import {
     attackedFromAboveOrBelow,
     crewTargetOf,
+    forceFieldBypassedBy,
     forceFieldRollFor,
     parseVehicleStrike,
     readVehicleDurability,
+    rollVehicleForceField,
     stampForceField,
     strikeFor,
     struckFacing,
@@ -18,6 +20,7 @@ import {
     vehicleTargetProfile,
     vehicleTargetProfileFromTokens,
     type VehicleStrike,
+    type VehicleTargetProfile,
 } from './vehicle-strike.ts';
 
 /** One trait's effects over the neutral defaults. */
@@ -80,7 +83,14 @@ describe('vehicleTargetProfile', () => {
         expect(profile?.rules.hitLocations?.length).toBe(4);
         expect(profile?.facing).toBe('rear');
         expect(profile?.mounts.hasTurret).toBe(true);
-        expect(profile?.forceField).toEqual({ rating: 40, source: 'Shield Generator', neverOverloads: false });
+        expect(profile?.forceField).toEqual({
+            rating: 40,
+            source: 'Shield Generator',
+            neverOverloads: false,
+            overloadMax: null,
+            craftsmanship: '',
+            bypassQualities: [],
+        });
         expect(profile?.righteousFuryDie).toBe('1d10');
         expect(profile?.righteousFuryDieSource).toBe('Ramshackle');
         expect(profile?.critMultiplier).toBe(0.5);
@@ -163,8 +173,15 @@ function strike(over: Partial<VehicleStrike> = {}): VehicleStrike {
     return { ...strikeFor(profile, { location: 'hull', tableRoll: 32, redirectedFrom: null }, 'reversed'), ...over };
 }
 
+/** The profile of a Chimera with the given traits, struck from the front. */
+function craftProfile(traits: NamedVehicleTraitEffects[]): VehicleTargetProfile {
+    const profile = vehicleTargetProfile({ system: craftSystem(traits), items: [] }, 'front', false);
+    if (profile === null) throw new Error('craft profile expected');
+    return profile;
+}
+
 describe('force fields', () => {
-    const field = { rating: 40, source: 'Shield Generator', neverOverloads: false };
+    const field = { rating: 40, source: 'Shield Generator', neverOverloads: false, overloadMax: null, craftsmanship: '', bypassQualities: [] };
 
     it('nullifies at or under the rating', () => {
         expect(forceFieldRollFor(field, 40).nullified).toBe(true);
@@ -174,6 +191,42 @@ describe('force fields', () => {
     it("flags an overload the trait's data cannot decide", () => {
         expect(forceFieldRollFor(field, 5).overloadUnmodelled).toBe(true);
         expect(forceFieldRollFor({ ...field, neverOverloads: true }, 5).overloadUnmodelled).toBe(false);
+    });
+
+    it('overloads at or under its craftsmanship overload chance, still stopping the attack (DH2 Core p. 169) (#678)', () => {
+        const common = { ...field, overloadMax: 10, craftsmanship: 'common' };
+        expect(forceFieldRollFor(common, 10)).toMatchObject({ nullified: true, overloaded: true, overloadUnmodelled: false, overloadMax: 10 });
+        expect(forceFieldRollFor(common, 11)).toMatchObject({ nullified: true, overloaded: false });
+        expect(forceFieldRollFor({ ...common, neverOverloads: true }, 3)).toMatchObject({ overloaded: false, overloadMax: null });
+    });
+
+    it('is bypassed by a weapon carrying a quality it does not stop (Daemon Engine: Sanctified, Force) (#678)', () => {
+        const daemonic = { ...field, rating: 30, source: 'Daemon Engine', neverOverloads: true, bypassQualities: ['sanctified', 'force'] };
+        expect(forceFieldBypassedBy(daemonic, (quality) => quality === 'force')).toBe('force');
+        expect(forceFieldBypassedBy(daemonic, (quality) => quality === 'tearing')).toBe('');
+    });
+
+    it('lets a bypassing attack through unrolled', async () => {
+        const profile = craftProfile([trait('Daemon Engine', { forceFieldRating: 30, forceFieldNeverOverloads: true, forceFieldBypassQualities: ['force'] })]);
+        expect(await rollVehicleForceField(profile, (quality) => quality === 'force')).toMatchObject({ bypassedBy: 'force', nullified: false, roll: 0 });
+    });
+
+    it("resolves the Shield Generator's overload from its trait's table at its craftsmanship", () => {
+        const profile = vehicleTargetProfile(
+            {
+                system: craftSystem([
+                    trait('Shield Generator', {
+                        forceFieldRating: 40,
+                        forceFieldCraftsmanship: 'good',
+                        forceFieldOverload: { poor: 20, common: 10, good: 5, best: 1 },
+                    }),
+                ]),
+                items: [],
+            },
+            'front',
+            false,
+        );
+        expect(profile?.forceField).toMatchObject({ overloadMax: 5, craftsmanship: 'good' });
     });
 
     it('stamps one roll on every hit of the attack that struck the vehicle', () => {
@@ -187,7 +240,10 @@ describe('force fields', () => {
 describe('parseVehicleStrike', () => {
     it('round-trips a strike through the card attribute', () => {
         const original = strike({
-            forceField: forceFieldRollFor({ rating: 30, source: 'Daemon Engine', neverOverloads: true }, 50),
+            forceField: forceFieldRollFor(
+                { rating: 30, source: 'Daemon Engine', neverOverloads: true, overloadMax: null, craftsmanship: '', bypassQualities: [] },
+                50,
+            ),
             righteousFury: [{ die: '1d5', dieSource: '', rolled: 3, value: 3, unaffectedBy: 'Reinforced Armour' }],
         });
         expect(parseVehicleStrike(JSON.stringify(original))).toEqual(original);

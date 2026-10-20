@@ -84,6 +84,12 @@ interface VehicleForceField {
     readonly rating: number;
     readonly source: string;
     readonly neverOverloads: boolean;
+    /** The highest protection roll that overloads it, at its craftsmanship; null when the trait records neither. */
+    readonly overloadMax: number | null;
+    /** Its craftsmanship ('' when the trait records none). */
+    readonly craftsmanship: string;
+    /** Weapon qualities whose attacks it does not stop. */
+    readonly bypassQualities: readonly string[];
 }
 
 /** What the attack path reads off the canvas beyond the facing: the attack's angle and the vehicle's motion. */
@@ -204,7 +210,14 @@ export function vehicleTargetProfile(
         mounts: vehicleMountProfile(actor.items, declaresHardpoints(actor.system)),
         forceField:
             effects.forceFieldRating > 0
-                ? { rating: effects.forceFieldRating, source: effects.sources.forceFieldRating, neverOverloads: effects.forceFieldNeverOverloads }
+                ? {
+                      rating: effects.forceFieldRating,
+                      source: effects.sources.forceFieldRating,
+                      neverOverloads: effects.forceFieldNeverOverloads,
+                      overloadMax: effects.forceFieldOverloadMax,
+                      craftsmanship: effects.forceFieldCraftsmanship,
+                      bypassQualities: effects.forceFieldBypassQualities,
+                  }
                 : null,
         righteousFuryDie: effects.righteousFuryCritDie === '' ? rules.righteousFuryDie : effects.righteousFuryCritDie,
         righteousFuryDieSource: effects.righteousFuryCritDie === '' ? '' : effects.sources.righteousFuryCritDie,
@@ -365,8 +378,16 @@ export interface VehicleForceFieldRoll {
     readonly roll: number;
     readonly nullified: boolean;
     readonly source: string;
-    /** The field overloads by its craftsmanship, which a vehicle trait does not record: the GM decides. */
+    /** The field can overload, but its trait records no overload chance for it: the GM decides. */
     readonly overloadUnmodelled: boolean;
+    /** The roll was at or under its overload chance: the field overloads (after stopping this attack, if it did). */
+    readonly overloaded: boolean;
+    /** That overload chance (the highest roll that overloads it), or null when not recorded. */
+    readonly overloadMax: number | null;
+    /** The field's craftsmanship, for the overload note ('' when none). */
+    readonly craftsmanship: string;
+    /** The weapon quality that carried the attack through the field unrolled ('' when it rolled). */
+    readonly bypassedBy: string;
 }
 
 /**
@@ -435,9 +456,29 @@ export function strikeFor(profile: VehicleTargetProfile, located: VehicleHitLoca
     };
 }
 
-/** A force field's outcome on a d100 roll: nullified at or under its rating. */
+/**
+ * A force field's outcome on a d100 roll: nullified at or under its rating, and
+ * overloaded at or under its overload chance (DH2 Core p. 169: "If the result is
+ * lower than or equal to the listed number, the field overloads").
+ */
 export function forceFieldRollFor(field: VehicleForceField, roll: number): VehicleForceFieldRoll {
-    return { rating: field.rating, roll, nullified: roll <= field.rating, source: field.source, overloadUnmodelled: !field.neverOverloads };
+    const canOverload = !field.neverOverloads;
+    return {
+        rating: field.rating,
+        roll,
+        nullified: roll <= field.rating,
+        source: field.source,
+        overloadUnmodelled: canOverload && field.overloadMax === null,
+        overloaded: canOverload && field.overloadMax !== null && roll <= field.overloadMax,
+        overloadMax: canOverload ? field.overloadMax : null,
+        craftsmanship: field.craftsmanship,
+        bypassedBy: '',
+    };
+}
+
+/** The quality of the attacking weapon that passes through the field, or '' (Daemon Engine: Sanctified, Force). */
+export function forceFieldBypassedBy(field: VehicleForceField, hasQuality: (quality: string) => boolean): string {
+    return field.bypassQualities.find((quality) => hasQuality(quality)) ?? '';
 }
 
 /** The die a force field's protection roll uses. */
@@ -446,13 +487,30 @@ const FORCE_FIELD_DIE = '1d100';
 /**
  * Roll the vehicle's trait force field against an attack (the field rolls once
  * when the vehicle is attacked; at or under its rating, the attack is nullified).
- * Null when its traits give it none.
+ * An attack with a quality the field does not stop passes it unrolled. Null when
+ * its traits give it none.
+ * @param hasQuality  Whether the attacking weapon carries a quality (by identifier).
  */
-export async function rollVehicleForceField(profile: VehicleTargetProfile): Promise<VehicleForceFieldRoll | null> {
-    if (profile.forceField === null) return null;
+export async function rollVehicleForceField(profile: VehicleTargetProfile, hasQuality: (quality: string) => boolean): Promise<VehicleForceFieldRoll | null> {
+    const field = profile.forceField;
+    if (field === null) return null;
+    const bypassedBy = forceFieldBypassedBy(field, hasQuality);
+    if (bypassedBy !== '') {
+        return {
+            rating: field.rating,
+            roll: 0,
+            nullified: false,
+            source: field.source,
+            overloadUnmodelled: false,
+            overloaded: false,
+            overloadMax: null,
+            craftsmanship: field.craftsmanship,
+            bypassedBy,
+        };
+    }
     const roll = new Roll(FORCE_FIELD_DIE, {});
     await roll.evaluate();
-    return forceFieldRollFor(profile.forceField, roll.total ?? 0);
+    return forceFieldRollFor(field, roll.total ?? 0);
 }
 
 /** The slice of a Hit that carries a vehicle strike. */
@@ -487,9 +545,19 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse output of a chat card's data attribute
 function readForceField(value: unknown): VehicleForceFieldRoll | null {
     if (!isRecord(value)) return null;
-    const { rating, roll, nullified, source, overloadUnmodelled } = value;
+    const { rating, roll, nullified, source, overloadUnmodelled, overloaded, overloadMax, craftsmanship, bypassedBy } = value;
     if (typeof rating !== 'number' || typeof roll !== 'number' || typeof nullified !== 'boolean' || typeof source !== 'string') return null;
-    return { rating, roll, nullified, source, overloadUnmodelled: overloadUnmodelled === true };
+    return {
+        rating,
+        roll,
+        nullified,
+        source,
+        overloadUnmodelled: overloadUnmodelled === true,
+        overloaded: overloaded === true,
+        overloadMax: typeof overloadMax === 'number' ? overloadMax : null,
+        craftsmanship: typeof craftsmanship === 'string' ? craftsmanship : '',
+        bypassedBy: typeof bypassedBy === 'string' ? bypassedBy : '',
+    };
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse output of a chat card's data attribute
