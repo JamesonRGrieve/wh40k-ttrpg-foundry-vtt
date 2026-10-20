@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import chatSrc from '../../../../src/templates/chat/daemon-weapon-attribute-chat.hbs?raw';
 import dialogSrc from '../../../../src/templates/prompt/daemon-weapon-attribute-dialog.hbs?raw';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -13,7 +14,7 @@ import {
     rollDaemonWeaponAttributes,
 } from '../../rules/daemon-weapon-attribute-tables.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
-import { ALIGNMENT_ACCENT_CLASS } from './daemon-weapon-attribute-dialog.ts';
+import { ALIGNMENT_ACCENT_CLASS } from './daemon-weapon-alignment-accent.ts';
 
 initializeStoryHandlebars();
 
@@ -166,4 +167,16 @@ export const ChatCard: Story = {
     name: 'Chat card output',
     args: { alignment: 'tzeentch', bindingStrength: 'major', rolled: true, seed: 7 },
     render: (args) => renderSheet(chatSrc, buildChatContext(args)),
+    play: async ({ canvasElement, args }) => {
+        // The card lists every rolled attribute, each with its table roll and effect.
+        const { result } = buildChatContext(args);
+        const rows = Array.from(canvasElement.querySelectorAll('ol > li'), (li) => li.textContent.replace(/\s+/g, ' ').trim());
+        await expect(rows).toHaveLength(result.picks.length);
+        await expect(result.picks.length).toBeGreaterThan(0);
+        for (const [index, pick] of result.picks.entries()) {
+            void expect(rows[index]).toContain(pick.attribute.label);
+            void expect(rows[index]).toContain(`d10=${pick.roll}`);
+        }
+        await expect(canvasElement.querySelector('h3')?.className).toContain(ALIGNMENT_ACCENT_CLASS.tzeentch);
+    },
 };

@@ -16,6 +16,7 @@ import {
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import { ALIGNMENT_ACCENT_CLASS } from './daemon-weapon-alignment-accent.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -24,15 +25,6 @@ const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-
 
 const ALIGNMENT_CHOICES: readonly ChaosAlignment[] = ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'];
 const BINDING_CHOICES: readonly BindingStrength[] = ['minor', 'lesser', 'normal', 'greater', 'major'];
-
-/** Tailwind accent class per alignment used by the dialog header + chat card. */
-export const ALIGNMENT_ACCENT_CLASS: Record<ChaosAlignment, string> = {
-    unaligned: 'tw-text-gold',
-    khorne: 'tw-text-crimson',
-    nurgle: 'tw-text-green-500',
-    slaanesh: 'tw-text-pink-400',
-    tzeentch: 'tw-text-blue-400',
-};
 
 interface DialogOptions {
     alignment?: ChaosAlignment;
