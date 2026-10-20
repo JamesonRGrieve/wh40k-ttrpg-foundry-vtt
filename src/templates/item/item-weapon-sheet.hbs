@@ -629,13 +629,11 @@
       </section>
 
       {{!-- DESCRIPTION --}}
-      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-scroll" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-0" sectionId="description"}}
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-scroll" labelKey="WH40K.Tabs.Description" sectionId="description"}}
           {{#if inEditMode}}
-          <div class="tw-p-0">
-            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
-          </div>
+          {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           {{else}}
-          <div class="tw-p-[10px_12px] tw-text-[0.85rem] tw-leading-[1.5] tw-text-[color:var(--wh40k-text-medium)] tw-min-h-[60px] tw-transition-all {{#if canEdit}}tw-cursor-pointer tw-border tw-border-transparent tw-rounded-[var(--wh40k-radius-md)] tw-m-2 tw-p-[8px_10px] hover:tw-bg-[rgba(212,175,55,0.08)] hover:tw-border-[rgba(212,175,55,0.25)]{{/if}}"
+          <div class="tw-text-[0.85rem] tw-leading-[1.5] tw-text-[color:var(--wh40k-text-medium)] tw-min-h-[60px] tw-transition-all {{#if canEdit}}tw-cursor-pointer tw-border tw-border-transparent tw-rounded-[var(--wh40k-radius-md)] hover:tw-bg-[rgba(212,175,55,0.08)] hover:tw-border-[rgba(212,175,55,0.25)]{{/if}}"
                {{#if canEdit}}data-action="toggleEditMode" title="{{localize 'WH40K.ItemSheet.Weapon.ClickToEdit'}}"{{/if}}>
             {{#if system.description.value}}
             {{{system.description.value}}}

@@ -15,6 +15,8 @@ import { expect, test } from './lib/test';
  */
 
 const PREFIX = 'e2e-686';
+/** The least gap between a panel's left border and its body content (the body's `tw-p-3` is 12px). */
+const MIN_BODY_INSET_PX = 8;
 
 interface Case {
     type: string;
@@ -94,6 +96,18 @@ test.describe.serial('item detail sections share one titled panel (Tier B, #686)
             expect(await panels.evaluateAll((els) => els.map((el) => (el as HTMLElement).dataset['itemSection'] ?? ''))).toEqual([...c.sections]);
             const titles = await panels.locator('header h3').allTextContents();
             expect(titles.every((title) => title.trim() !== '' && !title.includes('WH40K.'))).toBe(true);
+            // Every body's content sits inset from its panel's left border, on every sheet
+            // alike (the weapon's Description body once sat flush against it).
+            const insets = await panels.evaluateAll((els) =>
+                els.map((el) => {
+                    const content = el.querySelector('[data-item-section-body] > *');
+                    return content === null ? -1 : Math.round(content.getBoundingClientRect().left - el.getBoundingClientRect().left);
+                }),
+            );
+            expect(
+                insets.every((inset) => inset >= MIN_BODY_INSET_PX),
+                `body insets ${insets.join(', ')}`,
+            ).toBe(true);
             await panels.first().scrollIntoViewIfNeeded();
             await snap(page, `item-detail-sections-${c.type}`, { selector: `#${appId}` });
             recordCoverage('sheet.section', `${c.type}.detail-sections`);

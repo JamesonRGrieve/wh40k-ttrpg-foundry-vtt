@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Lead.Description.Label" bodyClass="tw-p-2"}}
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Lead.Description.Label"}}
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           {{else}}

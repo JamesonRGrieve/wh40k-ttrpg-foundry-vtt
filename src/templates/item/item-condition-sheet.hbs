@@ -114,7 +114,7 @@
             </div>
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.ItemSheet.Condition.Effect" bodyClass="tw-p-2"}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.ItemSheet.Condition.Effect"}}
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -122,7 +122,7 @@
             {{/if}}
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-eraser" labelKey="WH40K.ItemSheet.Condition.RemovalConditions" bodyClass="tw-p-2"}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-eraser" labelKey="WH40K.ItemSheet.Condition.RemovalConditions"}}
             {{#if inEditMode}}
             {{editor system.removal target="system.removal" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -139,7 +139,7 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-2"}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description"}}
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}

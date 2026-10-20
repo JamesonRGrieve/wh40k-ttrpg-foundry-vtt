@@ -8,11 +8,11 @@
     labelKey  — i18n key of the title text. Required.
     label     — the title already localized, for a key that takes arguments. Optional;
                 the title is `labelKey` localized when it is absent.
-    bodyClass — padding/layout classes of the body. Optional; defaults to "tw-p-3".
     sectionId — makes the panel collapsible through the sheet's `toggleSection`
                 action, keyed by this id (the weapon sheet's sections). Optional.
 
   The panel carries `data-item-section="<labelKey>"`, so tests find it by its title.
+  Every body has the same inset (`data-item-section-body`); callers add no padding.
 
   Usage:
     {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.Tabs.Notes"}}
@@ -27,7 +27,7 @@
     <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-opacity-50 tw-transition-transform group-hover:tw-opacity-100"></i>
     {{/if}}
   </header>
-  <div class="{{#if bodyClass}}{{bodyClass}}{{else}}tw-p-3{{/if}}{{#if sectionId}} wh40k-section__body{{/if}}"{{#if sectionId}} data-section-content="{{sectionId}}"{{/if}}>
+  <div class="tw-p-3{{#if sectionId}} wh40k-section__body{{/if}}" data-item-section-body{{#if sectionId}} data-section-content="{{sectionId}}"{{/if}}>
     {{> @partial-block}}
   </div>
 </section>

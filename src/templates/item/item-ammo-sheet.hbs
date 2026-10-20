@@ -260,7 +260,7 @@
                 </div>
             </div>
 
-            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.Ammunition.Effect" bodyClass="tw-p-2"}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.Ammunition.Effect"}}
                 {{#if inEditMode}}
                 {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
                 {{else}}
@@ -268,7 +268,7 @@
                 {{/if}}
             {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Ammunition.Description" bodyClass="tw-p-2"}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Ammunition.Description"}}
                 {{#if inEditMode}}
                 {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                 {{else}}

@@ -120,7 +120,7 @@
             </div>
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-file-medical" labelKey="WH40K.ItemSheet.CriticalInjury.InjuryEffect" label=(localize "WH40K.ItemSheet.CriticalInjury.InjuryEffect" severity=item.system.severity) bodyClass="tw-p-2"}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-file-medical" labelKey="WH40K.ItemSheet.CriticalInjury.InjuryEffect" label=(localize "WH40K.ItemSheet.CriticalInjury.InjuryEffect" severity=item.system.severity)}}
             {{#if inEditMode}}
               {{#each item.system.availableSeverities as |sev|}}
                 {{#with (lookup ../item.system.effects sev) as |effect|}}
@@ -151,7 +151,7 @@
       {{!-- DESCRIPTION TAB --}}
       <div class="tab" data-tab="description" data-group="primary">
 
-        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description" bodyClass="tw-p-2"}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Tabs.Description"}}
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
