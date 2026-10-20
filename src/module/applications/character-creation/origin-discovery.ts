@@ -15,7 +15,7 @@
  */
 
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../../config/game-systems/types.ts';
-import { isLineVariantContainer, isPlainObject, materializeItemVariants } from '../../utils/item-variant-utils.ts';
+import { isLineVariantContainer, isPlainObject, systemForLine } from '../../utils/item-variant-utils.ts';
 import { isLineOriginPack } from '../../utils/line-packs.ts';
 
 /** The fields the discovery index loads: the type, the art, and the whole stored `system` with its per-line containers. */
@@ -75,14 +75,13 @@ export function discoverableEntries(entries: readonly DiscoveryIndexEntry[], lin
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: the result is the raw compendium document shape normalizeOrigin accepts
 export function discoveredOriginDocument(entry: DiscoveryIndexEntry, line: GameSystemId): Record<string, unknown> {
-    const stored = structuredClone(entry.system);
     return {
         _id: entry._id,
         uuid: entry.uuid,
         name: entry.name,
         img: entry.img,
         type: entry.type,
-        _source: { system: { source: structuredClone(stored['source']) } },
-        system: materializeItemVariants(stored, line),
+        _source: { system: { source: structuredClone(entry.system['source']) } },
+        system: systemForLine(entry.system, line),
     };
 }
