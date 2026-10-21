@@ -83,7 +83,9 @@ describe('armour-silhouette — fitted armour icons per body location (#486)', (
         const body = root.querySelector('div[data-location="body"] button[data-item-id="a-body"]');
         expect(head, 'head armour icon should render').not.toBeNull();
         expect(body, 'body armour icon should render').not.toBeNull();
-        expect(head?.getAttribute('title')).toBe('Flak Helm');
+        // Named by aria-label, not title: a title stacks the browser's tooltip over the rich one (#693).
+        expect(head?.getAttribute('aria-label')).toBe('Flak Helm');
+        expect(head?.hasAttribute('title')).toBe(false);
         expect(head?.querySelector('img')?.getAttribute('src')).toBe('helm.webp');
     });
 

@@ -16,8 +16,7 @@
             <button type="button" class="tw-bg-transparent tw-border-none tw-p-0 tw-text-[color:var(--color-text-primary)] tw-font-[var(--wh40k-font-body)] tw-text-[0.95rem] tw-leading-none tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-flex-1 tw-min-w-0 hover:tw-text-accent-skills hover:tw-drop-shadow-[0_0_8px_rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.3)]"
                     data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
-                    data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
-                    title="{{localize 'WH40K.Skills.ViewDetails' skill=entry.[1].label}}">
+                    data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}">
                 {{!-- A long name ("Interrogation", "Sleight of Hand") keeps its words whole:
                      the characteristic suffix wraps under the name first, multi-word names
                      wrap at spaces, and only a single word wider than the whole cell is clipped.

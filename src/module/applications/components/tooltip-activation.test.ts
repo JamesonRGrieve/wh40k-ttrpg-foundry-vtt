@@ -172,6 +172,11 @@ describe('every rich-tooltip emitter can activate (#692)', () => {
         expect(emitters.filter((e) => e.tag.includes('tabindex="-1"')).map((e) => e.at)).toEqual([]);
     });
 
+    // #693: a `title` stacks the browser's own tooltip over the rich one; the accessible name is an aria-label.
+    it('none also carries a native title', () => {
+        expect(emitters.filter((e) => /\stitle="/u.test(e.tag)).map((e) => e.at)).toEqual([]);
+    });
+
     it('the tooltip system opens them on hover and focus, and makes rendered ones focusable', () => {
         const tooltips = readRepoFile('src/module/applications/components/wh40k-tooltip.ts');
         expect(tooltips).toContain('activateRichTooltips(document, getTooltipManager)');

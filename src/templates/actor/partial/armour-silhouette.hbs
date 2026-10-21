@@ -51,7 +51,7 @@
          data-roll-max="10"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.head.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.Head') range='01-10'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.Head') range='01-10'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.BodyLocation.Head"}}</span>
         <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.head.total}}</span>
         {{#unless compact}}
@@ -63,7 +63,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
@@ -79,7 +79,7 @@
          data-roll-max="20"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.rightArm.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.RightArm') range='11-20'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.RightArm') range='11-20'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.ArmourSilhouette.ShortRightArm"}}</span>
         <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.rightArm.total}}</span>
         {{#unless compact}}
@@ -91,7 +91,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
@@ -107,7 +107,7 @@
          data-roll-max="30"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.leftArm.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.LeftArm') range='21-30'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.LeftArm') range='21-30'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.ArmourSilhouette.ShortLeftArm"}}</span>
         <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.leftArm.total}}</span>
         {{#unless compact}}
@@ -119,7 +119,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
@@ -135,7 +135,7 @@
          data-roll-max="70"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.body.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.Body') range='31-70'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.Body') range='31-70'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.BodyLocation.Body"}}</span>
         <span class="tw-w-[48px] tw-h-[48px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-[1.8rem] tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.body.total}}</span>
         {{#unless compact}}
@@ -147,7 +147,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
@@ -163,7 +163,7 @@
          data-roll-max="85"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.rightLeg.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.RightLeg') range='71-85'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.RightLeg') range='71-85'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.ArmourSilhouette.ShortRightLeg"}}</span>
         <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.rightLeg.total}}</span>
         {{#unless compact}}
@@ -175,7 +175,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
@@ -191,7 +191,7 @@
          data-roll-max="100"
          data-wh40k-tooltip="armor"
          data-wh40k-tooltip-data="{{armourDisplay.leftLeg.tooltipData}}"
-         title="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.LeftLeg') range='86-00'}}">
+         aria-label="{{localize 'WH40K.ArmourSilhouette.LocationRoll' location=(localize 'WH40K.BodyLocation.LeftLeg') range='86-00'}}">
         <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--wh40k-text-muted,#8a7a6a)] tw-leading-none tw-mb-[var(--wh40k-space-xs,4px)] tw-whitespace-nowrap">{{localize "WH40K.ArmourSilhouette.ShortLeftLeg"}}</span>
         <span class="tw-w-[38px] tw-h-[38px] tw-flex tw-items-center tw-justify-center tw-font-alt tw-text-2xl tw-font-bold tw-text-[color:var(--wh40k-text-dark,#e8dcc8)] tw-leading-none tw-bg-[var(--wh40k-panel-bg-solid,rgba(45,40,35,0.9))] tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-strong,rgba(212,175,55,0.5))] tw-rounded-full tw-shadow-[inset_0_1px_2px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2)),0_2px_4px_var(--wh40k-shadow-soft,rgba(0,0,0,0.2))] tw-transition-all tw-duration-200 group-hover:tw-border-gold group-hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.4)] group-hover:tw-scale-[1.08]">{{armourDisplay.leftLeg.total}}</span>
         {{#unless compact}}
@@ -203,7 +203,7 @@
                     data-wh40k-tooltip-data="{{item.tooltipData}}"
                     data-action="itemEdit"
                     data-item-id="{{item.id}}"
-                    title="{{item.name}}">
+                    aria-label="{{item.name}}">
                 <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
             </button>
             {{/each}}
