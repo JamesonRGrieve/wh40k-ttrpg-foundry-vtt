@@ -516,6 +516,23 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // resolves to an entry this user may view; an owner may clear an explicit one.
         const journalUuid = portraitJournalLink(this.actor);
         context['portraitJournal'] = journalUuid === null ? null : { uuid: journalUuid, canClear: this.actor.isOwner && hasExplicitJournalLink(this.actor) };
+        // The Fate total's breakdown (#689): hovering the Fate label lists each source.
+        context['fateBreakdownTooltip'] = this.#statBreakdownTooltip('fate');
+    }
+
+    /**
+     * A stat's breakdown (`getStatBreakdown`) as a `modifier` tooltip: the base,
+     * then one row per source, under the stat's label and total.
+     * @param {string} statKey  The stat to break down.
+     * @returns {string | null}  The tooltip data, or null when the actor has no such stat.
+     */
+    #statBreakdownTooltip(statKey: string): string | null {
+        const breakdown = this.actor.getStatBreakdown(statKey);
+        if (breakdown === null) return null;
+        return this.prepareModifierTooltip(`${breakdown.label}: ${breakdown.total}`, [
+            { name: game.i18n.localize('WH40K.CharacteristicSetup.Base'), value: breakdown.base },
+            ...breakdown.modifiers.map((modifier) => ({ name: modifier.source, value: modifier.value })),
+        ]);
     }
 
     /* -------------------------------------------- */

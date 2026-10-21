@@ -158,6 +158,8 @@ interface OverlayClearOptions {
     closeWindows: boolean;
     /** With `closeWindows`, keep the windows whose id contains this fragment. */
     keepIdFragment: string | null;
+    /** Leave the hover tooltip up, when the tooltip is the subject of the capture. */
+    keepTooltip?: boolean;
 }
 
 /**
@@ -175,7 +177,7 @@ interface OverlayClearOptions {
  */
 async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<void> {
     try {
-        await page.evaluate(async ({ closeWindows, keepIdFragment: keep }: OverlayClearOptions) => {
+        await page.evaluate(async ({ closeWindows, keepIdFragment: keep, keepTooltip }: OverlayClearOptions) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (`game`, `ui`, `foundry.applications.instances`) have no browser-side types
             const g = globalThis as unknown as {
                 game?: {
@@ -205,7 +207,7 @@ async function clearOverlays(page: Page, options: OverlayClearOptions): Promise<
             });
             g.ui?.notifications?.clear?.();
             // A hover tooltip left up by the last click (a move-mode toggle's covered its panel).
-            g.game?.tooltip?.deactivate?.();
+            if (keepTooltip !== true) g.game?.tooltip?.deactivate?.();
             // Toasts, and the chat popouts shown over the canvas while the sidebar is collapsed.
             document.querySelectorAll('#notifications > *, #chat-notifications .chat-message').forEach((n) => {
                 n.remove();
@@ -307,10 +309,12 @@ export async function snap(
         clip?: { x: number; y: number; width: number; height: number };
         closeWindows?: boolean;
         keepWindow?: string;
+        /** Keep the hover tooltip up: the capture shows what hovering reveals. */
+        keepTooltip?: boolean;
     } = {},
 ): Promise<string | null> {
     ensureDir();
-    await clearOverlays(page, { closeWindows: opts.closeWindows === true, keepIdFragment: opts.keepWindow ?? null });
+    await clearOverlays(page, { closeWindows: opts.closeWindows === true, keepIdFragment: opts.keepWindow ?? null, keepTooltip: opts.keepTooltip === true });
 
     // Best-effort: derive a spec name from the page's current URL or a
     // generic prefix if no test context is available.

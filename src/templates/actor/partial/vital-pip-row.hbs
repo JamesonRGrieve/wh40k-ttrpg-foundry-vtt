@@ -19,9 +19,12 @@
     Optional hash params:
         rowClass    — extra utility classes appended to the row container
                       (e.g. "wh40k-vital-critical-row").
+        breakdown   — `data-wh40k-tooltip-data` of the stat's breakdown (a
+                      `modifier` tooltip); hovering or focusing the label shows
+                      how the total was reached.
 --}}
 <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 tw-border-l-2 tw-border-l-gold bc:tw-border-l-crimson-light dh1:tw-border-l-gold-raw-l5 dh2:tw-border-l-gold-raw dw:tw-border-l-accent-combat ow:tw-border-l-brass-l20 rt:tw-border-l-void-l20 im:tw-border-l-failure tw-pl-1{{#if rowClass}} {{rowClass}}{{/if}}">
     <span class="tw-text-[0.75rem] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))]"><i class="fas {{icon}}"></i></span>
-    <span class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap">{{label}}</span>
+    <span class="tw-flex tw-items-center tw-gap-1.5 tw-text-[0.65rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[color:var(--vital-color,var(--wh40k-text-secondary))] tw-whitespace-nowrap{{#if breakdown}} tw-cursor-help tw-underline tw-decoration-dotted tw-underline-offset-2{{/if}}"{{#if breakdown}} tabindex="0" data-stat-breakdown data-tooltip="{{label}}" data-tooltip-direction="DOWN" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{breakdown}}"{{/if}}>{{label}}</span>
     {{> @partial-block}}
 </div>

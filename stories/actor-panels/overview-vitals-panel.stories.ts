@@ -9,8 +9,11 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
+import { TooltipsWH40K } from '../../src/module/applications/components/wh40k-tooltip';
 import { SystemConfigRegistry } from '../../src/module/config/game-systems';
 import type { GameSystemId } from '../../src/module/config/game-systems/types';
+import { fateBreakdownRows } from '../../src/module/rules/fate';
+import { prepareModifierTooltipData } from '../../src/module/utils/modifier-tooltip';
 import vitalsSrc from '../../src/templates/actor/panel/overview-vitals-panel.hbs?raw';
 import { mockPlayerSheetContext } from '../mocks/sheet-contexts';
 import { captureActionClicks, renderSheet } from '../test-helpers';
@@ -28,6 +31,8 @@ interface VitalsArgs {
     queued: number;
     /** Wounds state; the default leaves the actor's mock wounds alone. */
     wounds?: { value: number; max: number; critical: number };
+    /** The Fate breakdown tooltip data the sheet writes into `fateBreakdownTooltip` (#689). */
+    fateBreakdown?: string;
 }
 
 /** What the sheet writes into `malignancyTestsDue`: the queue, or 0 on a line without the tests. */
@@ -40,7 +45,10 @@ function renderVitals(args: VitalsArgs): HTMLElement {
         systemId: args.systemId,
         activeTab: 'overview',
         actorOverrides: { system: { fate: args.fate, corruption: args.corruption, ...(args.wounds === undefined ? {} : { wounds: args.wounds }) } },
-        contextOverrides: { malignancyTestsDue: malignancyTestsDue(args.systemId, args.queued) },
+        contextOverrides: {
+            malignancyTestsDue: malignancyTestsDue(args.systemId, args.queued),
+            ...(args.fateBreakdown === undefined ? {} : { fateBreakdownTooltip: args.fateBreakdown }),
+        },
     });
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'theme-dark');
@@ -81,6 +89,45 @@ export const FateSpentStillBurnable: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelectorAll('[data-action="setFateStar"]').length).toBe(2);
         await expect(canvasElement.querySelector('[data-fate-action="burn"]')).not.toBeNull();
+    },
+};
+
+/** The breakdown's tooltip data for a Fate total of 3: one point from the Fortune origin, one from a talent. */
+function fateBreakdownData(): string {
+    const { base, rows } = fateBreakdownRows(3, [{ name: 'Fortune', value: 1 }], [{ name: 'Fated for Greatness', value: 1 }], (_uuid, fallback) => fallback);
+    return prepareModifierTooltipData('Fate Points: 3', [{ name: 'Base', value: base }, ...rows.map((row) => ({ name: row.source, value: row.value }))]);
+}
+
+/**
+ * The Fate total's breakdown (#689): the Fate label is hoverable and focusable,
+ * and opening it lists the base and one row per source, each named after it.
+ */
+export const FateBreakdown: Story = {
+    args: { fateBreakdown: fateBreakdownData() },
+    play: async ({ canvasElement }) => {
+        const label = canvasElement.querySelector<HTMLElement>('[data-stat-breakdown]');
+        await expect(label).not.toBeNull();
+        await expect(label?.dataset['wh40kTooltip']).toBe('modifier');
+        await expect(label?.tabIndex).toBe(0);
+
+        // Open it the way the tooltip system does: build the modifier tooltip from the label's data.
+        const builder = TooltipsWH40K.prototype._buildModifierTooltip.bind(Object.create(TooltipsWH40K.prototype) as InstanceType<typeof TooltipsWH40K>);
+        const tooltip = document.createElement('div');
+        tooltip.id = 'tooltip';
+        tooltip.className = 'wh40k-rpg wh40k-tooltip';
+        tooltip.innerHTML = builder(JSON.parse(label?.dataset['wh40kTooltipData'] ?? '{}') as Parameters<typeof builder>[0]);
+        canvasElement.appendChild(tooltip);
+
+        const names = [...tooltip.querySelectorAll('.wh40k-tooltip__source-name')].map((el) => el.textContent);
+        await expect(names).toEqual(['Base', 'Fortune', 'Fated for Greatness']);
+        await expect(within(tooltip).getByText('Fate Points: 3')).toBeTruthy();
+    },
+};
+
+/** Without a breakdown the Fate label is plain text. */
+export const FateWithoutBreakdown: Story = {
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-stat-breakdown]')).toBeNull();
     },
 };
 

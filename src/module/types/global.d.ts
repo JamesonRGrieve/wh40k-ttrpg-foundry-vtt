@@ -19,6 +19,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { EventTracker } from '../managers/event-tracker.ts';
 import type { ModifierSourcesShape } from '../rolls/passive-modifiers.ts';
+import type { FateSource } from '../rules/fate.ts';
 import type { RollTableUtils } from '../utils/roll-table-utils.ts';
 
 // =========================================================================
@@ -264,6 +265,8 @@ export type WH40KActorSystemData = ActorDataModel & {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry DataModel `system.combatActions` (heterogeneous combat-action list)
     combatActions?: unknown[];
     totalFateModifier?: number;
+    /** Each origin path's Fate, with its provenance (`CreatureTemplate.originFateSources`, #689). */
+    originFateSources?: () => FateSource[];
     threatLevel?: number;
     threatTier?: string;
     tags?: string[];

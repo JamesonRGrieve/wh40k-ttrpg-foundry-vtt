@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { burnFateUpdate, fateTotalWithLegacyThreshold, originFateContribution } from './fate.ts';
+import { burnFateUpdate, fateBreakdownRows, fateTotalWithLegacyThreshold, originFateContribution } from './fate.ts';
 
 /**
  * Fate's total is `fate.max` and its current points `fate.value` (#42). Origin
@@ -105,5 +105,54 @@ describe('Fate is written to its schema fields (#42)', () => {
     it('both Burn Fate controls burn through burnFateUpdate', () => {
         expect(readRepoFile('src/module/applications/api/context-menu-mixin.ts')).toContain('burnFateUpdate(fate)');
         expect(readRepoFile('src/module/applications/api/stat-adjustment-actions.ts')).toContain('burnFateUpdate(');
+    });
+});
+
+/**
+ * The Fate breakdown (#689) names each source after itself. Every item's Fate
+ * used to be lumped under one "Talents & Traits" row, which also swallowed an
+ * origin's Fate once origins wrote it to `modifiers.resources.fate`.
+ */
+describe('fateBreakdownRows', () => {
+    const names: Record<string, string> = { 'Compendium.wh40k-rpg.rt-core-origins-homeworlds.Item.fortune': 'Fortune' };
+    const nameOf = (uuid: string | null | undefined, fallback: string): string => (typeof uuid === 'string' ? names[uuid] ?? fallback : fallback);
+
+    it('gives an origin its own row, named after the origin', () => {
+        const { rows } = fateBreakdownRows(
+            3,
+            [{ name: 'fortune', value: 1, uuid: 'Actor.a.Item.o', sourceUuid: 'Compendium.wh40k-rpg.rt-core-origins-homeworlds.Item.fortune' }],
+            [],
+            nameOf,
+        );
+        expect(rows).toEqual([{ source: 'Fortune', value: 1, uuid: 'Actor.a.Item.o', kind: 'origin' }]);
+    });
+
+    it('keeps one row per talent and trait, after the origins', () => {
+        const { base, rows } = fateBreakdownRows(
+            5,
+            [{ name: 'Fortune', value: 1 }],
+            [
+                { name: 'Fated for Greatness', value: 1, uuid: 'Actor.a.Item.t' },
+                { name: 'Blessed', value: 1, uuid: 'Actor.a.Item.u' },
+            ],
+            nameOf,
+        );
+        expect(rows.map((row) => [row.source, row.kind, row.value])).toEqual([
+            ['Fortune', 'origin', 1],
+            ['Fated for Greatness', 'item', 1],
+            ['Blessed', 'item', 1],
+        ]);
+        expect(base).toBe(2);
+    });
+
+    it('falls back to the item’s own name when the compendium source is unknown', () => {
+        const { rows } = fateBreakdownRows(1, [{ name: 'Void Born', value: 1, sourceUuid: 'Compendium.wh40k-rpg.x.Item.missing' }], [], nameOf);
+        expect(rows[0]?.source).toBe('Void Born');
+    });
+
+    it('leaves out sources that add no Fate, and the base is the rest of the total', () => {
+        const { base, rows } = fateBreakdownRows(3, [{ name: 'Hive World', value: 0 }], [{ name: 'Peer', value: 0 }], nameOf);
+        expect(rows).toEqual([]);
+        expect(base).toBe(3);
     });
 });

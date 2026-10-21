@@ -265,6 +265,21 @@ describe.each(SYSTEMS)('Path A — static item modifiers reach the computed targ
         expect(creature._getOriginPathFateModifier()).toBe(1);
     });
 
+    // #689: the Fate breakdown names each origin's Fate after the origin: its
+    // rolled or printed Fate plus its modifiers.resources.fate.
+    it('lists each origin’s Fate with the origin’s provenance', () => {
+        const fortune = makeItem('Fortune', 'originPath', { resources: { fate: 1 } });
+        const homeWorld = makeItem('Agri-World', 'originPath', {});
+        const rolled = { ...homeWorld, system: { ...homeWorld.system, grants: { fateFormula: '2 (+1 on 1d10 >= 7)' }, rollResults: { fate: { rolled: 3 } } } };
+        const plain = makeItem('Hive World', 'originPath', {});
+        const creature = prepare(gameSystem, [fortune, rolled, plain]);
+
+        expect(creature.originFateSources()).toEqual([
+            expect.objectContaining({ name: 'Fortune', type: 'originPath', uuid: 'Actor.a.Item.Fortune-id', value: 1 }),
+            expect.objectContaining({ name: 'Agri-World', type: 'originPath', value: 3 }),
+        ]);
+    });
+
     it('an origin-path bonus does not mask a real item bonus on the same characteristic', () => {
         const origin = makeItem('Imperial World', 'originPath', { characteristics: { fellowship: 5 } });
         const talent = makeItem('Peer', 'talent', { characteristics: { fellowship: 10 } });

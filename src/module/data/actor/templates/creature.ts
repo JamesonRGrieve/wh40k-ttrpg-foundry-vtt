@@ -4,7 +4,7 @@ import type { ChaosAlignment, FatigueModelDef, GameSystemId } from '../../../con
 import type { WH40KItem } from '../../../documents/item.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
-import { fateTotalWithLegacyThreshold } from '../../../rules/fate.ts';
+import { fateTotalWithLegacyThreshold, originFateContribution } from '../../../rules/fate.ts';
 import { deriveFatigueTrack, type FatigueTrack, getFatigueHalvedCharacteristic } from '../../../rules/fatigue.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import {
@@ -186,6 +186,12 @@ interface ItemModifiersBlock {
      * `minCraftsmanship` (Poor < Common < Good < Best). See ModifiersTemplate.
      */
     craftsmanshipGated?: Array<{ target?: string; key?: string; value?: number; minCraftsmanship?: string }>;
+}
+
+/** The Fate fields an origin path declares: its printed or rolled Fate, and the roll. */
+interface OriginFateFields {
+    grants?: { fateFormula?: string | undefined; fateThreshold?: number | undefined } | undefined;
+    rollResults?: { fate?: { rolled?: number | null } | undefined } | undefined;
 }
 
 /** Shape of an active-modifier entry from origin path items. */
@@ -1476,6 +1482,28 @@ export default class CreatureTemplate extends CommonTemplate {
             }
         }
         return total;
+    }
+
+    /**
+     * Each origin path's contribution to the Fate total (#689), with the origin's
+     * provenance: the Fate its home world rolled or prints
+     * (`originFateContribution`) plus its `modifiers.resources.fate`. Origins that
+     * add no Fate are left out.
+     * @returns {ModifierSource[]}
+     */
+    originFateSources(): ModifierSource[] {
+        const sources: ModifierSource[] = [];
+        for (const item of this._originPathItems()) {
+            const grants = item.system.grants as OriginFateFields['grants'];
+            const rollResults = item.system['rollResults'] as OriginFateFields['rollResults'];
+            const rolled = rollResults?.fate?.rolled;
+            const resourceFate = (item.system.modifiers as ItemModifiersBlock | null | undefined)?.resources?.fate;
+            const printedOrRolled = originFateContribution(grants ?? {}, typeof rolled === 'number' ? rolled : undefined);
+            const value = printedOrRolled + (typeof resourceFate === 'number' ? resourceFate : 0);
+            if (value === 0) continue;
+            sources.push({ name: item.name, type: ORIGIN_PATH_SOURCE_TYPE, id: item.id, uuid: item.uuid, sourceUuid: compendiumSourceUuidOf(item), value });
+        }
+        return sources;
     }
 
     /**

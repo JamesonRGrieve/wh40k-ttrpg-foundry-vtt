@@ -23,11 +23,20 @@ interface PassiveModifierEntry {
     value?: number;
 }
 
+/** A Fate entry, which also carries the item's UUIDs for the Fate breakdown (#689). */
+interface FateModifierEntry {
+    name: string;
+    value?: number;
+    uuid?: string | null;
+    sourceUuid?: string | null;
+}
+
 /** `actor.system.modifierSources` — per-bucket passive provenance (#484). */
 export interface ModifierSourcesShape {
     characteristics?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
     skills?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
     combat?: Record<string, PassiveModifierEntry[] | undefined> | undefined;
+    fate?: FateModifierEntry[] | undefined;
 }
 
 /** A read-only passive row rendered in the modifiers panel (#484). */

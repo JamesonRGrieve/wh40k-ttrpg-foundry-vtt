@@ -108,6 +108,12 @@ class UuidNameCache {
         return BROKEN;
     }
 
+    /** The name of `uuid`, or `fallback` when there is no uuid or the cache does not hold it. */
+    nameOr(uuid: string | null | undefined, fallback: string): string {
+        if (typeof uuid !== 'string' || uuid === '') return fallback;
+        return this.#cache.get(uuid) ?? fallback;
+    }
+
     /** True once `build()` has finished at least once. */
     isReady(): boolean {
         return this.#initialized;

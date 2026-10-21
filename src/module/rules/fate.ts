@@ -56,6 +56,49 @@ export function originFateContribution(
     return nonNegInt(grants.fateThreshold ?? 0);
 }
 
+/** A named source of Fate: an origin path, or a talent / trait / other item. */
+export interface FateSource {
+    name: string;
+    value?: number | undefined;
+    /** The owned item's UUID, so the row opens it. */
+    uuid?: string | null | undefined;
+    /** The compendium document the item came from, which names the row. */
+    sourceUuid?: string | null | undefined;
+}
+
+/** One row of the Fate breakdown. */
+export interface FateBreakdownRow {
+    source: string;
+    value: number;
+    uuid?: string;
+    kind: 'origin' | 'item';
+}
+
+/**
+ * Split the Fate total into rows, one per source that adds Fate (#689). Each row
+ * is named after its own source: `nameOf` resolves the compendium document the
+ * item came from, falling back to the item's own name. Origins come first, then
+ * talents, traits and other items. The base is what the sources do not account
+ * for: the starting Fate, less any point burnt since.
+ */
+export function fateBreakdownRows(
+    total: number,
+    origins: readonly FateSource[],
+    items: readonly FateSource[],
+    nameOf: (uuid: string | null | undefined, fallback: string) => string,
+): { base: number; rows: FateBreakdownRow[] } {
+    const toRow = (source: FateSource, kind: FateBreakdownRow['kind']): FateBreakdownRow | null => {
+        const value = source.value ?? 0;
+        if (value === 0) return null;
+        const row: FateBreakdownRow = { source: nameOf(source.sourceUuid, source.name), value, kind };
+        if (typeof source.uuid === 'string' && source.uuid !== '') row.uuid = source.uuid;
+        return row;
+    };
+    const rows = [...origins.map((s) => toRow(s, 'origin')), ...items.map((s) => toRow(s, 'item'))].filter((row): row is FateBreakdownRow => row !== null);
+    const base = nonNegInt(total) - rows.reduce((sum, row) => sum + row.value, 0);
+    return { base, rows };
+}
+
 /**
  * Burn one Fate: the total drops by 1 and the current points are cut to the
  * new total. `null` when there is no Fate left to burn.

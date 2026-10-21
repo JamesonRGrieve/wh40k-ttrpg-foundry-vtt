@@ -82,7 +82,7 @@
                     {{!-- Fate Points (PC-only) --}}
                     {{#if (gt system.fate.max 0)}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
-                        icon="fa-star" label=(localize "WH40K.Status.FateLabel")}}
+                        icon="fa-star" label=(localize "WH40K.Status.FateLabel") breakdown=fateBreakdownTooltip}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.fate.max
                             current=system.fate.value

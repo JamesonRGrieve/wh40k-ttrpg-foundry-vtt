@@ -17,6 +17,7 @@ import { bearerLine, conditionEffectData } from '../rules/condition-registry.ts'
 import { clampDisposition, type DispositionState } from '../rules/disposition.ts';
 import { ARMED_TEST_HOOKS_FLAG, endBearerTurnForArmedHooks, readArmedTestHooks } from '../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG } from '../rules/fanatic.ts';
+import { fateBreakdownRows } from '../rules/fate.ts';
 import { getFatigueAfterRest, isFatigueDeath, isFatigueUnconscious } from '../rules/fatigue.ts';
 import { clampFearRating, getFearTestPenalty } from '../rules/fear.ts';
 import { COMRADE_ORDER_BUCKET } from '../rules/ow-orders.ts';
@@ -1846,34 +1847,22 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #getFateBreakdown(): WH40KStatBreakdown {
-        /* eslint-disable no-restricted-syntax -- boundary: fate and totalFateModifier are system fields accessed via index; cast is necessary for dynamic breakdown */
-        const fate = (this.system as Record<string, unknown>)['fate'] as { rolled?: boolean; max?: number } | undefined | null;
+        const label = game.i18n.localize('WH40K.Resource.FatePoints');
+        const { fate, modifierSources } = this.system;
+        if (fate === undefined) return { label, base: 0, modifiers: [], total: 0 };
 
-        if (fate === undefined || fate === null) {
-            return { label: game.i18n.localize('WH40K.Resource.FatePoints'), base: 0, modifiers: [], total: 0 };
-        }
-
-        const totalFateMod = (this.system as Record<string, unknown>)['totalFateModifier'] as number | undefined;
-        /* eslint-enable no-restricted-syntax */
-        const breakdown: WH40KStatBreakdown = {
-            label: game.i18n.localize('WH40K.Resource.FatePoints'),
-            base: fate.rolled === true ? (fate.max ?? 0) - (totalFateMod ?? 0) : 0,
-            modifiers: [],
-            total: fate.max ?? 0,
-        };
-
-        if (fate.rolled === true) {
-            breakdown.modifiers.push({
-                source: 'Rolled Value',
-                value: breakdown.base,
-                icon: 'fa-solid fa-dice',
-            });
-        }
-
-        // Collect modifiers from items
-        this.#collectFateModifiers(breakdown.modifiers);
-
-        return breakdown;
+        // Each source of Fate is its own row, named after that source (#689): every
+        // origin path, then every talent, trait or other item.
+        const origins = this.system.originFateSources === undefined ? [] : this.system.originFateSources();
+        const items = modifierSources?.fate ?? [];
+        const { base, rows } = fateBreakdownRows(fate.max, origins, items, (uuid, fallback) => uuidNameCache.nameOr(uuid, fallback));
+        const modifiers: WH40KModifierEntry[] = rows.map((row) => ({
+            source: row.source,
+            value: row.value,
+            uuid: row.uuid ?? null,
+            icon: row.kind === 'origin' ? 'fa-solid fa-route' : 'fa-solid fa-sparkles',
+        }));
+        return { label, base, modifiers, total: fate.max };
     }
 
     /**
@@ -1985,23 +1974,6 @@ export class WH40KBaseActor extends Actor {
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
         this.#collectItemModifiers(modifiersArray, (m) => m?.other?.find((x) => x.key === 'initiative')?.value);
-    }
-
-    /**
-     * Collect fate modifiers from items
-     * @param {Array} modifiersArray - Array to push modifiers to
-     * @private
-     */
-    #collectFateModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: totalFateModifier is a system extension that may be undefined; ?? 0 is necessary here, not a DataModel schema gap
-        const totalMod = this.system.totalFateModifier ?? 0;
-        if (totalMod !== 0) {
-            modifiersArray.push({
-                source: 'Talents & Traits',
-                value: totalMod,
-                icon: 'fa-solid fa-sparkles',
-            });
-        }
     }
 
     /**
