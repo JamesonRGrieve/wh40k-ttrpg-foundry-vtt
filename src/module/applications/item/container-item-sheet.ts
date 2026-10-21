@@ -8,6 +8,7 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { capitalize } from '../../utils/format.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { containerAccepts } from './container-types.ts';
 
 /**
  * Item sheet for container-type items (weapons, armour, gear, etc.)
@@ -40,15 +41,9 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
     override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
-        const sys = this.item.system as unknown as { state?: { container?: boolean } };
-
-        // Add nested items if this is a container
-        if (sys.state?.container === true) {
-            context['nestedItems'] = this.item.items.contents;
-            context['isContainer'] = true;
-        }
-
+        // The nested items as an array: `item.items` is a Collection, which has no
+        // `length`, so a template testing `item.items.length` always read it as empty.
+        context['nestedItems'] = this.item.items.contents;
         return context;
     }
 
@@ -211,10 +206,7 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
      * @protected
      */
     _canAddItem(item: WH40KItem): boolean {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel extends with container-specific fields not in the base schema
-        const sys = this.item.system as unknown as { container?: boolean; containerTypes?: string[] };
-        if (!sys.containerTypes) return false;
-        return sys.containerTypes.includes(item.type);
+        return containerAccepts(this.item.system, item.type);
     }
 
     /* -------------------------------------------- */
