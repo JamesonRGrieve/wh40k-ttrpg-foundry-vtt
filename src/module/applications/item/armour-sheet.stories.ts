@@ -2,7 +2,7 @@
  * Stories for ArmourSheet.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { expect, within } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { mockArmourSheetContext } from '../../../../stories/mocks';
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -58,10 +58,18 @@ export const EditMode: Story = {
     },
 };
 
+/**
+ * The header's name input shows the armour's name. Its type select reads
+ * "Carapace Armour" too (the localised type label), so the name input is
+ * asserted directly rather than any element with that display value.
+ */
+function expectArmourName(canvasElement: HTMLElement): void {
+    void expect(canvasElement.querySelector<HTMLInputElement>('input[name="name"]')?.value).toBe('Carapace Armour');
+}
+
 export const RendersArmourName: Story = {
     play: ({ canvasElement }) => {
-        const storyCanvas = within(canvasElement);
-        void expect(storyCanvas.getByDisplayValue('Carapace Armour')).toBeTruthy();
+        expectArmourName(canvasElement);
     },
 };
 
@@ -103,8 +111,7 @@ function systemStory(systemId: SystemId): Story {
     return {
         render: (args) => renderArmourForSystem(args, systemId),
         play: ({ canvasElement }) => {
-            const storyCanvas = within(canvasElement);
-            void expect(storyCanvas.getByDisplayValue('Carapace Armour')).toBeTruthy();
+            expectArmourName(canvasElement);
             // The per-system theme ancestor is stamped, so the variant tints fire.
             const root = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
             void expect(root?.dataset['wh40kSystem']).toBe(systemId);

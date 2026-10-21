@@ -179,7 +179,8 @@ export const SancticPurityNegatedCard: Story = {
         return wrapper;
     },
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('[data-wh40k-system="dh2"]');
+        // The card itself (the story's render shell also carries a dh2 system stamp).
+        const card = canvasElement.querySelector('.wh40k-rpg[data-wh40k-system="dh2"][data-wh40k-surface]');
         await expect(card?.textContent).toContain(localizeKey('WH40K.SancticPurity.NegatedChatTitle'));
         await expect(card?.textContent).toContain('Sister Ophelia');
         await expect(card?.textContent).toContain(`-${SANCTIC_PURITY_FATE_COST}`);

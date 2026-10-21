@@ -374,7 +374,8 @@ export const PreviewPanel: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getAllByText('Hive World').length).toBeGreaterThan(1);
-        await expect(view.getByText('Dodge')).toBeTruthy();
+        // Dodge shows twice: in the selected origin's grants and in the character preview.
+        await expect(view.getAllByText('Dodge')).toHaveLength(2);
         clickAction(canvasElement, 'confirmSelection');
     },
 };
@@ -489,7 +490,10 @@ export const Issue206CharacteristicStepReached: Story = {
         // The Characteristic Roll step surfaces in the journey rail before commit fires.
         await expect(view.getAllByText(/Characteristics/i).length).toBeGreaterThan(0);
         // The Equipment step is queued behind characteristics — it has not fired the final dialog.
-        await expect(view.getAllByText(/Equip Acolyte/i).length).toBeGreaterThan(0);
+        // The rail shows each step's short label ("Equip"); its full name is the step's tooltip.
+        const equipStep = canvasElement.querySelector<HTMLElement>('[data-tooltip="Equip Acolyte"]');
+        await expect(equipStep).not.toBeNull();
+        await expect(within(equipStep ?? canvasElement).getByText('Equip')).toBeTruthy();
     },
 };
 
@@ -614,7 +618,8 @@ export const RogueTraderDirection: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText('Dynasty Path')).toBeTruthy();
-        await expect(view.getByText('Origin')).toBeTruthy();
+        // The current step's heading names RT's first step, "Origin".
+        await expect(view.getByRole('heading', { name: 'Step 1: Origin' })).toBeTruthy();
     },
 };
 
@@ -862,7 +867,7 @@ export const Issue205AptitudeDoubling: Story = {
         // Banner renders with the duplicate-aptitude warning title
         await expect(view.getByText('Duplicate aptitude detected')).toBeTruthy();
         // The conflicting aptitude is named in the banner list
-        await expect(view.getByText('Awareness')).toBeTruthy();
+        await expect(within(view.getByTestId('aptitude-collision-unresolved')).getByText('Awareness')).toBeTruthy();
         // The chooser button is present and clickable
         const pickBtn = canvasElement.querySelector('[data-action="resolveAptitudeDouble"][data-aptitude="Awareness"]');
         await expect(pickBtn).toBeTruthy();

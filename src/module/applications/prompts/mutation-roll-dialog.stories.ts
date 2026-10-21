@@ -64,6 +64,7 @@ export const RenderSmoke: Story = {
         // Roll button is present.
         await expect(canvasElement.querySelector('[data-action="rollMutation"]')).toBeTruthy();
         // Title localizes.
-        await expect(view.getByText(/Roll Mutation/i)).toBeTruthy();
+        // The title (the roll button carries the same words).
+        await expect(view.getByText(/Roll Mutation/i, { selector: 'div' })).toBeTruthy();
     },
 };

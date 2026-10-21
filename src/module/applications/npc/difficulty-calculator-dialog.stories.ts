@@ -79,7 +79,8 @@ export const Deadly: Story = {
     play: async ({ canvasElement }) => {
         const scope = within(canvasElement);
         await expect(scope.getByText('Tyranid Warrior')).toBeTruthy();
-        await expect(scope.getByText('Deadly')).toBeTruthy();
+        // The result badge (the difficulty legend also lists "Deadly", as a span).
+        await expect(scope.getByText('Deadly', { selector: 'div' })).toBeTruthy();
         await expect(scope.getByText('Acolyte Vael')).toBeTruthy();
     },
 };

@@ -120,7 +120,8 @@ export const DrawbackPlusMultiComradeRoster: Story = {
         const roster = canvasElement.querySelector<HTMLElement>('[data-field="multi-comrade-roster"]');
         await expect(roster?.dataset['rosterCount']).toBe('3');
         await expect(roster?.textContent).toContain('Trooper Vellis');
-        await expect(Array.from(roster?.querySelectorAll('[data-comrade-id]') ?? []).map((li) => li.textContent.trim())).toEqual([
+        // One row per additional Comrade (each row's remove button carries the id too).
+        await expect(Array.from(roster?.querySelectorAll('li[data-comrade-id]') ?? []).map((li) => li.textContent.trim())).toEqual([
             'Trooper Arkos',
             'Trooper Jadek',
         ]);

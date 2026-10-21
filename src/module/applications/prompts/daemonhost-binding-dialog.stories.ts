@@ -73,7 +73,7 @@ export const SelectFlow: Story = {
         await expect(cards.length).toBe(5);
 
         // Bind button is present and reachable.
-        await expect(view.getByText(/Bind/i)).toBeTruthy();
+        await expect(view.getByRole('button', { name: 'Bind' })).toBeTruthy();
 
         // Clicking a tier card dispatches the selectTier action.
         clickAction(canvasElement, 'selectTier');

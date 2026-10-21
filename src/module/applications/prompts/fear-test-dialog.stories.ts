@@ -94,6 +94,6 @@ export const RenderSmoke: Story = {
         await expect(canvasElement.querySelector('input[name="willpower"]')).toBeTruthy();
         await expect(canvasElement.querySelector('input[name="fearRating"]')).toBeTruthy();
         // Roll button is present.
-        await expect(storyCanvas.getByText(/Trigger Fear Test/i)).toBeTruthy();
+        await expect(storyCanvas.getByRole('button', { name: /Trigger Fear Test/i })).toBeTruthy();
     },
 };

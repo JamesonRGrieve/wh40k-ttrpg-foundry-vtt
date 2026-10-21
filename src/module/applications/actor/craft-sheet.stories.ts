@@ -388,7 +388,8 @@ export const VehicleTraits: Story = {
         const view = within(canvasElement);
         // Trait names render as items; descriptions render from `.value` (or the
         // plain descriptionText fallback) — never the raw object ("[object Object]").
-        await expect(view.getByText('Walker')).toBeVisible();
+        // The trait's own name (the trait picker's hidden <option> also reads "Walker").
+        await expect(view.getByText('Walker', { selector: 'strong' })).toBeVisible();
         await expect(view.getByText('Ignores difficult terrain.')).toBeVisible();
         await expect(view.getByText('Halve Critical Hit results, rounding up.')).toBeVisible();
         await expect(view.queryByText('[object Object]')).toBeNull();

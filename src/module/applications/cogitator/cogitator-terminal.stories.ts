@@ -56,7 +56,7 @@ export const ViewingRecord: Story = {
         void expect(buttons.length).toBe(2);
         void expect(storyCanvas.getByText('▓ RESTRICTED ▓')).toBeTruthy();
         // The active record body renders (enriched HTML passed through).
-        void expect(storyCanvas.getByText('Medicae Record 04-A')).toBeTruthy();
+        void expect(storyCanvas.getByRole('heading', { name: 'Medicae Record 04-A' })).toBeTruthy();
     },
 };
 

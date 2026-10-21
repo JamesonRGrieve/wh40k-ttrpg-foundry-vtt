@@ -86,8 +86,11 @@ export const EmptyBank: Story = {
  */
 export const RollIndexAttributes: Story = {
     play: async ({ canvasElement }) => {
-        const tiles = canvasElement.querySelectorAll('[data-roll-index]');
+        // The bank's tiles: an assigned characteristic's slot carries its roll's index too,
+        // with the characteristic beside it.
+        const tiles = canvasElement.querySelectorAll('[data-roll-index]:not([data-characteristic])');
         await expect(tiles.length).toBe(9);
+        await expect(canvasElement.querySelectorAll('[data-roll-index][data-characteristic]')).toHaveLength(1);
         // Tile 0 should be a populated, non-assigned roll → draggable.
         const first = tiles[0] as HTMLElement;
         await expect(first.getAttribute('draggable')).toBe('true');
