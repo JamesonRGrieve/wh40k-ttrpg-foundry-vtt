@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Count templates that use per-system theme variants.
 //
-// A template is "per-system aware" if it contains at least one class token
-// using one of the 7 system variants (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`,
-// `rt:`, `im:`) followed by `tw-`. Each variant maps to
-// `[data-wh40k-system="<id>"] &` in tailwind.config.js.
+// A template is "per-system aware" if it carries a per-system variant class
+// (`bc:`, `dh1:`, `dh2:`, `dw:`, `ow:`, `rt:`, `im:` followed by `tw-`; each maps
+// to `[data-wh40k-system="<id>"] &` in tailwind.config.js) or a `themeClassFor`
+// call, or renders a partial that is per-system aware (#696).
 //
 // Direction: this number rises as templates adopt per-system styling.
 // The ratchet asserts it cannot fall.
