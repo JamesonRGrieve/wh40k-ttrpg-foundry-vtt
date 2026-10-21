@@ -2995,7 +2995,6 @@ export type I18nKey =
     | 'WH40K.ItemSheet.OriginPath.TextDescription'
     | 'WH40K.ItemSheet.PsychicPower.Action'
     | 'WH40K.ItemSheet.PsychicPower.ActionLabel'
-    | 'WH40K.ItemSheet.PsychicPower.AddSpecial'
     | 'WH40K.ItemSheet.PsychicPower.AttackSpecials'
     | 'WH40K.ItemSheet.PsychicPower.AttackType'
     | 'WH40K.ItemSheet.PsychicPower.Bonus'

@@ -224,6 +224,27 @@ export const PrintedDisciplineKept: Story = {
     },
 };
 
+/**
+ * #696: the Attack Specials panel had an "Add Special" button with no `data-action`,
+ * so clicking it did nothing. The sheet has no add-special action, so the button is
+ * gone, and every other button the sheet renders, in edit mode too, names an action
+ * or a tab.
+ */
+export const AttackSpecialsNoDeadButton: Story = {
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector('[data-item-section="WH40K.ItemSheet.PsychicPower.AttackSpecials"]');
+        await expect(panel).not.toBeNull();
+        const panelButtons = [...(panel?.querySelectorAll('button') ?? [])];
+        await expect(panelButtons.map((b) => b.textContent.trim())).not.toContain('Add Special');
+        // Tab buttons switch through Foundry's tab handling, keyed by `data-tab`.
+        const dead = [...canvasElement.querySelectorAll<HTMLButtonElement>('button:not([data-tab])')].filter(
+            (b) => b.type !== 'submit' && (b.dataset['action'] ?? '') === '',
+        );
+        await expect(dead.map((b) => b.outerHTML.slice(0, 80))).toEqual([]);
+    },
+};
+
 export const SourceReferenceEmpty: Story = {
     render: () => {
         const ctx = makeCtx();

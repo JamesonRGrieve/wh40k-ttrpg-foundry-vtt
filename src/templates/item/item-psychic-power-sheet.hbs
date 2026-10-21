@@ -213,12 +213,8 @@
                         </div>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-                {{#*inline "psychicPowerAddSpecial"}}
-                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1 tw-rounded-md tw-cursor-pointer tw-text-sm">
-                    <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.ItemSheet.PsychicPower.AddSpecial"}}
-                </button>
-                {{/inline}}
-                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.ItemSheet.PsychicPower.AttackSpecials" actions="psychicPowerAddSpecial"}}
+                {{!-- No add control (#696): the sheet has no add-special action, so the old "Add Special" button did nothing. --}}
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.ItemSheet.PsychicPower.AttackSpecials"}}
                         <div class="tw-flex tw-flex-wrap tw-gap-1">
                             {{#each item.items as |embedded|}}
                             {{#if embedded.isAttackSpecial}}
