@@ -355,8 +355,9 @@
                 class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-2.5 tw-rounded tw-text-[0.72rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all
                        {{#if psychic.availableOnly}}tw-bg-[rgba(201,162,39,0.2)] tw-border tw-border-[var(--wh40k-color-gold-dark)] tw-text-[color:var(--wh40k-color-gold-light)]{{else}}tw-bg-[rgba(0,0,0,0.15)] tw-border tw-border-[var(--wh40k-border-color)] tw-text-[color:var(--color-text-secondary)] hover:tw-border-[var(--wh40k-color-gold-dark)]{{/if}}"
                 data-action="toggleAvailableOnly"
+                aria-pressed="{{#if psychic.availableOnly}}true{{else}}false{{/if}}"
                 title="{{localize 'WH40K.Dialog.Advancement.AvailableOnlyTooltip'}}">
-          <i class="fas {{#if psychic.availableOnly}}fa-check-square{{else}}fa-square{{/if}}"></i>
+          {{> systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs on=psychic.availableOnly}}
           <span>{{localize "WH40K.Dialog.Advancement.Available"}}</span>
         </button>
         {{/if}}

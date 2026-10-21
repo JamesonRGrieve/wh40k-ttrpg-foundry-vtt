@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
-import { renderSheet, clickAction } from '../../../../stories/test-helpers';
+import { renderSheet, clickAction, toggleControls } from '../../../../stories/test-helpers';
 import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
 import { psychicPowerCharge, psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { type SupportedLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
@@ -65,7 +65,7 @@ interface PsychicRow {
 interface PsychicPanel {
     psyAdvance: { currentRating: number; nextRating: number; cost: number; canPurchase: boolean; cantAfford: boolean; maxed: boolean; offered: boolean };
     disciplines: Array<{ label: string; items: PsychicRow[]; tiers: Array<{ prCost: number; label: string; accessible: boolean; items: PsychicRow[] }> }>;
-    chips: never[];
+    chips: Array<{ key: string; label: string; accessible: number; count: number; active: boolean }>;
     availableOnly: boolean;
     hasBlocked: boolean;
 }
@@ -385,11 +385,34 @@ export const PrerequisiteManyGates: Story = {
     },
 };
 
-export const PrerequisiteBlocksCorruption = gatedStory('Wind of Chaos at Corruption 10', {
+const WIND_OF_CHAOS: GatedPower = {
     power: 'Wind of Chaos',
     discipline: 'Chaos Powers',
     line: 'bc',
     prerequisites: { text: 'Corruption 30+', thresholds: { corruption: 30 } },
     actor: psyker({ thresholds: { corruption: 10 } }),
     unmet: ['corruption 30+'],
-});
+};
+export const PrerequisiteBlocksCorruption = gatedStory('Wind of Chaos at Corruption 10', WIND_OF_CHAOS);
+
+// #696: the "Available only" filter is one accessible toggle. The button carries its
+// state as aria-pressed, and its check square is decorative.
+function availableOnlyStory(on: boolean): Story {
+    const gated = gatedStory(`Available only ${on ? 'on' : 'off'}`, WIND_OF_CHAOS);
+    // The toolbar, and the toggle in it, render only beside the discipline chips.
+    const chips = [{ key: 'chaos', label: WIND_OF_CHAOS.discipline, accessible: 0, count: 1, active: true }];
+    const psychic = { ...gatedPanel(WIND_OF_CHAOS), chips, availableOnly: on };
+    return {
+        ...gated,
+        args: { ...gated.args, psychic },
+        play: async ({ canvasElement }) => {
+            const button = canvasElement.querySelector<HTMLElement>('[data-action="toggleAvailableOnly"]');
+            if (button === null) throw new Error('no Available only toggle rendered');
+            const [control] = toggleControls(button.parentElement ?? button).filter((c) => c.name === button.textContent.trim());
+            await expect(control).toEqual({ name: button.textContent.trim(), pressed: String(on), checkboxes: 0, icons: 1, iconsHidden: true });
+            await expect(button.querySelector(on ? '.fa-check-square' : '.fa-square')).not.toBeNull();
+        },
+    };
+}
+export const AvailableOnlyOff = availableOnlyStory(false);
+export const AvailableOnlyOn = availableOnlyStory(true);

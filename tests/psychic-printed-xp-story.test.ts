@@ -53,3 +53,9 @@ describe('Advancement Dialog psychic powers gated by printed prerequisites (#673
         await expect(playStory(name)).resolves.toBeUndefined();
     });
 });
+
+describe('Advancement Dialog "Available only" is one accessible toggle (#696)', () => {
+    it.each(['AvailableOnlyOff', 'AvailableOnlyOn'])('%s', async (name) => {
+        await expect(playStory(name)).resolves.toBeUndefined();
+    });
+});

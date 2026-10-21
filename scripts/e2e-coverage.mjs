@@ -700,6 +700,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'sheet-keeps-prerequisites',
     'bc-alignment-and-corruption-gate',
     'gated-names-not-truncated',
+    'available-only-toggle',
 ];
 recordDimension('psychic-prerequisites.flow', covered['psychic-prerequisites.flow'], PSYCHIC_PREREQUISITE_FLOWS);
 

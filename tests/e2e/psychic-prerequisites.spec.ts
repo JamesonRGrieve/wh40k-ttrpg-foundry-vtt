@@ -23,7 +23,8 @@ import { scaledMs } from './lib/timing';
  * Captures: psychic-prerequisites-smite-blocked (a Willpower 25 character's dialog, Smite's
  * row outlined), psychic-prerequisites-bc-unaligned (Field of Pestilence outlined),
  * psychic-prerequisites-many-gates (Aegis of Euphedros, five unmet gates wrapped below its
- * untruncated name, #676) and psychic-prerequisites-sheet (a power's sheet after a reload).
+ * untruncated name, #676), psychic-prerequisites-available-only (the "Available only" toggle
+ * pressed, #696) and psychic-prerequisites-sheet (a power's sheet after a reload).
  *
  * Each flow records under `psychic-prerequisites.flow`. Keys MUST match
  * PSYCHIC_PREREQUISITE_FLOWS in scripts/e2e-coverage.mjs.
@@ -36,6 +37,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'sheet-keeps-prerequisites',
     'bc-alignment-and-corruption-gate',
     'gated-names-not-truncated',
+    'available-only-toggle',
 ] as const;
 type FlowName = (typeof PSYCHIC_PREREQUISITE_FLOWS)[number];
 
@@ -63,7 +65,6 @@ async function smitePrerequisites(page: Page): Promise<{ text: string; willpower
     });
 }
 
-/** The unmet prerequisites the Advancement Dialog lists for Smite, after setting the actor's Willpower. */
 /** The unmet prerequisites the Advancement Dialog lists for `power`, after applying `update` to the actor. */
 async function powerUnmet(page: Page, actorId: string, update: object, power: string, outline: boolean): Promise<{ appId: string; unmet: string[] } | string> {
     return page.evaluate(
@@ -120,6 +121,34 @@ async function truncatedNames(page: Page, appId: string): Promise<string[] | str
         return names
             .filter((name): name is HTMLElement => name instanceof HTMLElement && name.scrollWidth > name.clientWidth)
             .map((name) => name.textContent.trim());
+    }, appId);
+}
+
+interface ToggleRead {
+    pressed: string | null;
+    iconHidden: boolean;
+    checked: boolean;
+}
+
+/** The "Available only" toggle's state (#696), before and after one click. */
+async function availableOnlyClick(page: Page, appId: string): Promise<{ before: ToggleRead; after: ToggleRead } | string> {
+    return page.evaluate(async (id: string) => {
+        const read = (): ToggleRead | null => {
+            const button = document.getElementById(id)?.querySelector<HTMLElement>('[data-action="toggleAvailableOnly"]') ?? null;
+            const icon = button?.querySelector('[data-toggle-icon]') ?? null;
+            if (button === null || icon === null) return null;
+            return {
+                pressed: button.getAttribute('aria-pressed'),
+                iconHidden: icon.getAttribute('aria-hidden') === 'true',
+                checked: icon.classList.contains('fa-check-square'),
+            };
+        };
+        const before = read();
+        if (before === null) return 'no Available only toggle';
+        document.getElementById(id)?.querySelector<HTMLElement>('[data-action="toggleAvailableOnly"]')?.click();
+        await globalThis.wh40kE2E.settle(600);
+        const after = read();
+        return after === null ? 'toggle gone after the click' : { before, after };
     }, appId);
 }
 
@@ -240,8 +269,23 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                     const aegis = await scrollToRow(page, field.appId, 'Aegis of Euphedros');
                     if (aegis)
                         await snap(page, 'psychic-prerequisites-many-gates', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
+                    // #696: "Available only" is one toggle whose state reads as aria-pressed.
+                    const toggle = await availableOnlyClick(page, field.appId);
+                    record(
+                        'available-only-toggle',
+                        typeof toggle !== 'string' &&
+                            toggle.before.pressed === 'false' &&
+                            !toggle.before.checked &&
+                            toggle.after.pressed === 'true' &&
+                            toggle.after.checked &&
+                            toggle.before.iconHidden &&
+                            toggle.after.iconHidden,
+                        JSON.stringify(toggle),
+                    );
+                    await snap(page, 'psychic-prerequisites-available-only', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
                 } else {
                     record('gated-names-not-truncated', false, field);
+                    record('available-only-toggle', false, field);
                 }
                 const wind = await powerUnmet(page, bcId, unaligned, 'Wind of Chaos', false);
                 const nurgle = { 'system.chaosAlignment': 'nurgle', 'system.corruption': 30 };
