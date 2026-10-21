@@ -1,6 +1,11 @@
 import type { Page } from '@playwright/test';
+import { popOutChatMessage } from './lib/chat-capture';
 import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+
+/** The smallest gap, in px, between a tooltip row's source name and its value (#691). */
+const MIN_SOURCE_GAP = 8;
 
 /**
  * Tier B — roll-transparency chat card.
@@ -37,6 +42,15 @@ import { expect, test } from './lib/test';
  *  zero to prove zero-valued keys are omitted from the breakdown. */
 const EXPECTED_SOURCE_ROWS = 3; // difficulty, aim, range (modifier=0 skipped)
 
+/** A sourced part of the situational bucket: its own row on the card. */
+interface SituationalPart {
+    label: string;
+    value: number;
+}
+
+/** A source name long enough to fill a tooltip row (#691). */
+const LONG_SOURCE: SituationalPart = { label: 'Fated for Greatness (Chosen by Destiny) — Emperor’s Unwavering Hand', value: 10 };
+
 interface BuiltCard {
     messageId: string | null;
     actorId: string | null;
@@ -54,214 +68,229 @@ interface BuiltCard {
  * created message id (+ the numbers the card should show) so the Playwright side
  * can assert on the resolved DOM.
  */
-async function buildTransparencyCard(page: Page, sys: string): Promise<BuiltCard> {
-    return page.evaluate(async (systemId: string): Promise<BuiltCard> => {
-        // ---- Browser-side Foundry + system-module surfaces (no repo types here) ----
-        interface RollDataLike {
-            baseChar: string;
-            baseTarget: number;
-            action: string;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: opaque Foundry Item document assigned page-side, no repo type here
-            weapon?: unknown;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: opaque Foundry Actor document assigned page-side, no repo type here
-            sourceActor?: unknown;
-            modifiers: Record<string, number>;
-            roll: { total: number } | null;
-            success: boolean;
-            dos: number;
-            resultFormula: string;
-            isManualRoll?: boolean;
-            readonly modifiedTarget: number;
-            calculateTotalModifiers: () => Promise<void>;
-        }
-        type RollDataCtor = new () => RollDataLike;
-        interface ActionDataLike {
-            template: string;
-            rollData: RollDataLike;
-        }
-        type ActionDataCtor = new () => ActionDataLike;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: resolveGettersForTemplate returns the untyped flattened template record
-        type ResolveFn = (instance: object) => Record<string, unknown>;
-        type DegreesMethodFn = (id: string | undefined) => 'gen1' | 'gen2';
-        type DegreeForModeFn = (method: 'gen1' | 'gen2', a: number, b: number) => number;
+async function buildTransparencyCard(page: Page, sys: string, situational: readonly SituationalPart[] = []): Promise<BuiltCard> {
+    return page.evaluate(
+        async ({ systemId, parts }: { systemId: string; parts: readonly SituationalPart[] }): Promise<BuiltCard> => {
+            // ---- Browser-side Foundry + system-module surfaces (no repo types here) ----
+            interface RollDataLike {
+                baseChar: string;
+                baseTarget: number;
+                action: string;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: opaque Foundry Item document assigned page-side, no repo type here
+                weapon?: unknown;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: opaque Foundry Actor document assigned page-side, no repo type here
+                sourceActor?: unknown;
+                modifiers: Record<string, number>;
+                expandedBuckets: Record<string, Array<{ key: string; label: string; value: number; source: string }>>;
+                roll: { total: number } | null;
+                success: boolean;
+                dos: number;
+                resultFormula: string;
+                isManualRoll?: boolean;
+                readonly modifiedTarget: number;
+                calculateTotalModifiers: () => Promise<void>;
+            }
+            type RollDataCtor = new () => RollDataLike;
+            interface ActionDataLike {
+                template: string;
+                rollData: RollDataLike;
+            }
+            type ActionDataCtor = new () => ActionDataLike;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: resolveGettersForTemplate returns the untyped flattened template record
+            type ResolveFn = (instance: object) => Record<string, unknown>;
+            type DegreesMethodFn = (id: string | undefined) => 'gen1' | 'gen2';
+            type DegreeForModeFn = (method: 'gen1' | 'gen2', a: number, b: number) => number;
 
-        interface ActorLike {
-            readonly id?: string;
-            readonly system?: { characteristics?: { ballisticSkill?: { total?: number; value?: number } } };
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Collection.get returns an opaque Document, no page-side type
-            readonly items?: { get?: (id: string) => unknown };
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update(data) — untyped framework payload + result
-            update?: (data: Record<string, unknown>) => Promise<unknown>;
-            createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id: string }> | undefined>;
-            delete?: () => Promise<void>;
-        }
-        interface Collection {
-            get?: (id: string) => (ActorLike & { delete?: () => Promise<void> }) | null | undefined;
-        }
-        interface ChatMessageApi {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.create(data) — untyped framework payload
-            create?: (data: Record<string, unknown>) => Promise<{ id?: string } | null>;
-        }
-        interface PageWindow {
-            Actor?: { create?: (data: object) => Promise<ActorLike | null> };
-            ChatMessage?: ChatMessageApi;
-            game?: {
-                actors?: Collection;
-                messages?: Collection;
-                i18n?: { format?: (key: string, data: Record<string, string>) => string };
-            };
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry renderTemplate(path, ctx) — untyped framework template context
-            foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: Record<string, unknown>) => Promise<string> } } };
-        }
+            interface ActorLike {
+                readonly id?: string;
+                readonly system?: { characteristics?: { ballisticSkill?: { total?: number; value?: number } } };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Collection.get returns an opaque Document, no page-side type
+                readonly items?: { get?: (id: string) => unknown };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document.update(data) — untyped framework payload + result
+                update?: (data: Record<string, unknown>) => Promise<unknown>;
+                createEmbeddedDocuments?: (type: string, data: object[]) => Promise<Array<{ id: string }> | undefined>;
+                delete?: () => Promise<void>;
+            }
+            interface Collection {
+                get?: (id: string) => (ActorLike & { delete?: () => Promise<void> }) | null | undefined;
+            }
+            interface ChatMessageApi {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.create(data) — untyped framework payload
+                create?: (data: Record<string, unknown>) => Promise<{ id?: string } | null>;
+            }
+            interface PageWindow {
+                Actor?: { create?: (data: object) => Promise<ActorLike | null> };
+                ChatMessage?: ChatMessageApi;
+                game?: {
+                    actors?: Collection;
+                    messages?: Collection;
+                    i18n?: { format?: (key: string, data: Record<string, string>) => string };
+                };
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry renderTemplate(path, ctx) — untyped framework template context
+                foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: Record<string, unknown>) => Promise<string> } } };
+            }
 
-        const fail = (note: string): BuiltCard => ({
-            messageId: null,
-            actorId: null,
-            weaponName: '',
-            baseTarget: 0,
-            modifiedTarget: 0,
-            error: note,
-            skip: false,
-            note,
-        });
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: a caught error value is `unknown`
-        const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: the page-side globalThis carries the untyped Foundry V14 runtime + this system's served ESM
-        const g = globalThis as unknown as PageWindow;
-        const ActorCtor = g.Actor;
-        const gameObj = g.game;
-        const ChatMessageCtor = g.ChatMessage;
-        const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
-        // Bind `format` to its i18n owner: Foundry's Localization.format reads
-        // `this.translations`, so calling a detached `const fn = i18n.format`
-        // throws "Cannot read properties of undefined (reading 'translations')".
-        const i18nObj = gameObj?.i18n;
-        const i18nFormat = typeof i18nObj?.format === 'function' ? i18nObj.format.bind(i18nObj) : undefined;
-        if (ActorCtor?.create == null || ChatMessageCtor?.create == null || renderTemplateFn == null || i18nFormat == null) {
-            return { ...fail('Foundry runtime surfaces (Actor/ChatMessage/renderTemplate/i18n) unavailable'), skip: true };
-        }
-
-        // Load the system's roll-commit seam. Indirect via variables so knip
-        // treats these `/systems/...` runtime URLs as dynamic (not repo files).
-        const rdUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
-        const adUrl = '/systems/wh40k-rpg/module/rolls/action-data.js';
-        const rhUrl = '/systems/wh40k-rpg/module/rolls/roll-helpers.js';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
-        const rdMod = (await import(/* @vite-ignore */ rdUrl)) as Record<string, unknown>;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
-        const adMod = (await import(/* @vite-ignore */ adUrl)) as Record<string, unknown>;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
-        const rhMod = (await import(/* @vite-ignore */ rhUrl)) as Record<string, unknown>;
-        const RollData = rdMod['RollData'] as RollDataCtor | undefined;
-        const ActionData = adMod['ActionData'] as ActionDataCtor | undefined;
-        const resolveGetters = rhMod['resolveGettersForTemplate'] as ResolveFn | undefined;
-        const resolveDegreesMethod = rhMod['resolveDegreesMethod'] as DegreesMethodFn | undefined;
-        const getDegreeForMode = rhMod['getDegreeForMode'] as DegreeForModeFn | undefined;
-        if (
-            typeof RollData !== 'function' ||
-            typeof ActionData !== 'function' ||
-            typeof resolveGetters !== 'function' ||
-            typeof resolveDegreesMethod !== 'function' ||
-            typeof getDegreeForMode !== 'function'
-        ) {
-            return { ...fail('roll-data / action-data / roll-helpers exports missing'), skip: true };
-        }
-
-        // ---- Create the actor, set a characteristic, give it a weapon ----
-        let actorId: string;
-        try {
-            const created = await ActorCtor.create({ name: `roll-transparency-${systemId}`, type: `${systemId}-character`, system: { gameSystem: systemId } });
-            if (created?.id == null) return fail('Actor.create returned null');
-            actorId = created.id;
-        } catch (err) {
-            return fail(`Actor.create threw: ${errMsg(err)}`);
-        }
-
-        const live = gameObj?.actors?.get?.(actorId);
-        if (live == null) return fail('created actor not resolvable from game.actors');
-
-        try {
-            await live.update?.({ 'system.characteristics.ballisticSkill.value': 45 });
-        } catch (err) {
-            return fail(`set characteristic threw: ${errMsg(err)}`);
-        }
-        const bs = gameObj?.actors?.get?.(actorId)?.system?.characteristics?.ballisticSkill;
-        const baseTarget = bs?.total ?? bs?.value ?? 45;
-
-        const weaponName = `Transparency Probe ${systemId.toUpperCase()}`;
-        let weaponId: string;
-        try {
-            const madeWeapon = await live.createEmbeddedDocuments?.('Item', [
-                {
-                    name: weaponName,
-                    type: 'weapon',
-                    system: { equipped: true, class: 'ranged', damage: { formula: '1d10', type: 'impact', bonus: 0, penetration: 0 } },
-                },
-            ]);
-            const wid = madeWeapon?.[0]?.id;
-            if (wid == null) return fail('failed to create weapon item');
-            weaponId = wid;
-        } catch (err) {
-            return fail(`weapon create threw: ${errMsg(err)}`);
-        }
-        const liveActor = gameObj?.actors?.get?.(actorId);
-        const weapon = liveActor?.items?.get?.(weaponId);
-
-        // ---- Drive the real roll-commit seam ----
-        try {
-            const rollData = new RollData();
-            rollData.baseChar = 'ballisticSkill';
-            rollData.baseTarget = baseTarget;
-            rollData.action = 'Standard Attack';
-            rollData.weapon = weapon;
-            rollData.sourceActor = liveActor;
-            // One sourced component per non-zero key; `modifier: 0` is dropped by
-            // buildModifierSources, proving zero keys are omitted.
-            rollData.modifiers = { difficulty: -10, modifier: 0, aim: 10, range: 10 };
-
-            // REAL provenance build: sums modifiers and populates modifierSources
-            // (each row carrying the {title, sources:[{name,value}]} tooltip payload).
-            await rollData.calculateTotalModifiers();
-            const modifiedTarget = rollData.modifiedTarget;
-
-            // Force a success so the DoS branch + result formula render deterministically.
-            const rollTotal = Math.max(1, Math.min(98, modifiedTarget - 5));
-            rollData.roll = { total: rollTotal };
-            rollData.isManualRoll = true; // no evaluated Roll to attach; keep it content-only
-            rollData.success = true;
-            const method = resolveDegreesMethod(systemId);
-            const dos = 1 + getDegreeForMode(method, rollTotal, modifiedTarget);
-            rollData.dos = dos;
-            // Identical to action-data.ts's success-branch formula construction.
-            rollData.resultFormula = i18nFormat('WH40K.Roll.ResultFormula.Success', {
-                dos: String(dos),
-                degree: String(dos - 1),
-                roll: String(rollTotal),
-                target: String(modifiedTarget),
+            const fail = (note: string): BuiltCard => ({
+                messageId: null,
+                actorId: null,
+                weaponName: '',
+                baseTarget: 0,
+                modifiedTarget: 0,
+                error: note,
+                skip: false,
+                note,
             });
 
-            // Assemble the render context exactly as sendActionDataToChat does:
-            // flatten the ActionData, then nest the separately-flattened RollData.
-            const actionData = new ActionData();
-            actionData.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
-            actionData.rollData = rollData;
-            const context = resolveGetters(actionData);
-            context['rollData'] = resolveGetters(rollData);
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a caught error value is `unknown`
+            const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
-            const html = await renderTemplateFn(actionData.template, context);
-            if (html.trim().length === 0) return fail('action-roll-chat rendered empty');
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the page-side globalThis carries the untyped Foundry V14 runtime + this system's served ESM
+            const g = globalThis as unknown as PageWindow;
+            const ActorCtor = g.Actor;
+            const gameObj = g.game;
+            const ChatMessageCtor = g.ChatMessage;
+            const renderTemplateFn = g.foundry?.applications?.handlebars?.renderTemplate;
+            // Bind `format` to its i18n owner: Foundry's Localization.format reads
+            // `this.translations`, so calling a detached `const fn = i18n.format`
+            // throws "Cannot read properties of undefined (reading 'translations')".
+            const i18nObj = gameObj?.i18n;
+            const i18nFormat = typeof i18nObj?.format === 'function' ? i18nObj.format.bind(i18nObj) : undefined;
+            if (ActorCtor?.create == null || ChatMessageCtor?.create == null || renderTemplateFn == null || i18nFormat == null) {
+                return { ...fail('Foundry runtime surfaces (Actor/ChatMessage/renderTemplate/i18n) unavailable'), skip: true };
+            }
 
-            const msg = await ChatMessageCtor.create({ content: html, speaker: { actor: actorId } });
-            const messageId = msg?.id ?? null;
-            if (messageId == null) return fail('ChatMessage.create returned no id');
+            // Load the system's roll-commit seam. Indirect via variables so knip
+            // treats these `/systems/...` runtime URLs as dynamic (not repo files).
+            const rdUrl = '/systems/wh40k-rpg/module/rolls/roll-data.js';
+            const adUrl = '/systems/wh40k-rpg/module/rolls/action-data.js';
+            const rhUrl = '/systems/wh40k-rpg/module/rolls/roll-helpers.js';
+            // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
+            const rdMod = (await import(/* @vite-ignore */ rdUrl)) as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
+            const adMod = (await import(/* @vite-ignore */ adUrl)) as Record<string, unknown>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: runtime ESM imports of Foundry-served modules have no static type
+            const rhMod = (await import(/* @vite-ignore */ rhUrl)) as Record<string, unknown>;
+            const RollData = rdMod['RollData'] as RollDataCtor | undefined;
+            const ActionData = adMod['ActionData'] as ActionDataCtor | undefined;
+            const resolveGetters = rhMod['resolveGettersForTemplate'] as ResolveFn | undefined;
+            const resolveDegreesMethod = rhMod['resolveDegreesMethod'] as DegreesMethodFn | undefined;
+            const getDegreeForMode = rhMod['getDegreeForMode'] as DegreeForModeFn | undefined;
+            if (
+                typeof RollData !== 'function' ||
+                typeof ActionData !== 'function' ||
+                typeof resolveGetters !== 'function' ||
+                typeof resolveDegreesMethod !== 'function' ||
+                typeof getDegreeForMode !== 'function'
+            ) {
+                return { ...fail('roll-data / action-data / roll-helpers exports missing'), skip: true };
+            }
 
-            return { messageId, actorId, weaponName, baseTarget, modifiedTarget, error: null, skip: false, note: 'ok' };
-        } catch (err) {
-            return fail(`commit/render/post threw: ${errMsg(err)}`);
-        }
-    }, sys);
+            // ---- Create the actor, set a characteristic, give it a weapon ----
+            let actorId: string;
+            try {
+                const created = await ActorCtor.create({
+                    name: `roll-transparency-${systemId}`,
+                    type: `${systemId}-character`,
+                    system: { gameSystem: systemId },
+                });
+                if (created?.id == null) return fail('Actor.create returned null');
+                actorId = created.id;
+            } catch (err) {
+                return fail(`Actor.create threw: ${errMsg(err)}`);
+            }
+
+            const live = gameObj?.actors?.get?.(actorId);
+            if (live == null) return fail('created actor not resolvable from game.actors');
+
+            try {
+                await live.update?.({ 'system.characteristics.ballisticSkill.value': 45 });
+            } catch (err) {
+                return fail(`set characteristic threw: ${errMsg(err)}`);
+            }
+            const bs = gameObj?.actors?.get?.(actorId)?.system?.characteristics?.ballisticSkill;
+            const baseTarget = bs?.total ?? bs?.value ?? 45;
+
+            const weaponName = `Transparency Probe ${systemId.toUpperCase()}`;
+            let weaponId: string;
+            try {
+                const madeWeapon = await live.createEmbeddedDocuments?.('Item', [
+                    {
+                        name: weaponName,
+                        type: 'weapon',
+                        system: { equipped: true, class: 'ranged', damage: { formula: '1d10', type: 'impact', bonus: 0, penetration: 0 } },
+                    },
+                ]);
+                const wid = madeWeapon?.[0]?.id;
+                if (wid == null) return fail('failed to create weapon item');
+                weaponId = wid;
+            } catch (err) {
+                return fail(`weapon create threw: ${errMsg(err)}`);
+            }
+            const liveActor = gameObj?.actors?.get?.(actorId);
+            const weapon = liveActor?.items?.get?.(weaponId);
+
+            // ---- Drive the real roll-commit seam ----
+            try {
+                const rollData = new RollData();
+                rollData.baseChar = 'ballisticSkill';
+                rollData.baseTarget = baseTarget;
+                rollData.action = 'Standard Attack';
+                rollData.weapon = weapon;
+                rollData.sourceActor = liveActor;
+                // One sourced component per non-zero key; `modifier: 0` is dropped by
+                // buildModifierSources, proving zero keys are omitted.
+                rollData.modifiers = { difficulty: -10, modifier: 0, aim: 10, range: 10 };
+                // Optional sourced situational parts, each its own row (a lumped bucket's expansion).
+                if (parts.length > 0) {
+                    rollData.modifiers['situational'] = parts.reduce((sum, part) => sum + part.value, 0);
+                    rollData.expandedBuckets = {
+                        situational: parts.map((part, i) => ({ key: `situational-${i}`, label: part.label, value: part.value, source: part.label })),
+                    };
+                }
+
+                // REAL provenance build: sums modifiers and populates modifierSources
+                // (each row carrying the {title, sources:[{name,value}]} tooltip payload).
+                await rollData.calculateTotalModifiers();
+                const modifiedTarget = rollData.modifiedTarget;
+
+                // Force a success so the DoS branch + result formula render deterministically.
+                const rollTotal = Math.max(1, Math.min(98, modifiedTarget - 5));
+                rollData.roll = { total: rollTotal };
+                rollData.isManualRoll = true; // no evaluated Roll to attach; keep it content-only
+                rollData.success = true;
+                const method = resolveDegreesMethod(systemId);
+                const dos = 1 + getDegreeForMode(method, rollTotal, modifiedTarget);
+                rollData.dos = dos;
+                // Identical to action-data.ts's success-branch formula construction.
+                rollData.resultFormula = i18nFormat('WH40K.Roll.ResultFormula.Success', {
+                    dos: String(dos),
+                    degree: String(dos - 1),
+                    roll: String(rollTotal),
+                    target: String(modifiedTarget),
+                });
+
+                // Assemble the render context exactly as sendActionDataToChat does:
+                // flatten the ActionData, then nest the separately-flattened RollData.
+                const actionData = new ActionData();
+                actionData.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
+                actionData.rollData = rollData;
+                const context = resolveGetters(actionData);
+                context['rollData'] = resolveGetters(rollData);
+
+                const html = await renderTemplateFn(actionData.template, context);
+                if (html.trim().length === 0) return fail('action-roll-chat rendered empty');
+
+                const msg = await ChatMessageCtor.create({ content: html, speaker: { actor: actorId } });
+                const messageId = msg?.id ?? null;
+                if (messageId == null) return fail('ChatMessage.create returned no id');
+
+                return { messageId, actorId, weaponName, baseTarget, modifiedTarget, error: null, skip: false, note: 'ok' };
+            } catch (err) {
+                return fail(`commit/render/post threw: ${errMsg(err)}`);
+            }
+        },
+        { systemId: sys, parts: [...situational] },
+    );
 }
 
 /** Delete the posted message + probe actor (cascades the weapon) so each run
@@ -378,4 +407,56 @@ test.describe.serial('roll transparency chat card (Tier B)', () => {
             }
         });
     }
+
+    // #691: a long source name wraps in its hover tooltip, with a gap before the value.
+    test('a long-named source keeps a gap before its value in the hover tooltip', async ({ page }) => {
+        await joinOrSkip(page, 'no Gamemaster option appeared in the join select');
+        const built = await buildTransparencyCard(page, 'dh2', [LONG_SOURCE]);
+        try {
+            test.skip(built.skip, `harness cannot build the card: ${built.note}`);
+            expect(built.error).toBeNull();
+            // The popout shows the whole card in view; the sidebar log may be collapsed.
+            const popout = await popOutChatMessage(page, built.messageId ?? '');
+            const card = page.locator(popout).first();
+            const row = card.locator('[data-wh40k-tooltip="modifier"]').filter({ hasText: 'Fated for Greatness' });
+            await expect(row).toHaveCount(1);
+
+            await clearScreenOverlays(page, popout.replace('#', ''));
+            // The card's rows carry no `data-tooltip`, which Foundry's hover handler needs, so
+            // the tooltip is opened through Foundry's TooltipManager directly (reported on #691).
+            await row.evaluate((el, title) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry `game.tooltip` (TooltipManager) has no repo type
+                (globalThis as unknown as { game: { tooltip: { activate: (e: Element, o: { text: string }) => void } } }).game.tooltip.activate(el, {
+                    text: title,
+                });
+            }, LONG_SOURCE.label);
+            const tooltip = page.locator('#tooltip.wh40k-tooltip');
+            await expect(tooltip).toBeVisible();
+            await expect(tooltip).toContainText(LONG_SOURCE.label);
+            const layout = await tooltip.evaluate((el) =>
+                [...el.querySelectorAll<HTMLElement>('.wh40k-tooltip__source')].map((source) => {
+                    const name = source.querySelector('.wh40k-tooltip__source-name')?.getBoundingClientRect();
+                    const value = source.querySelector('.wh40k-tooltip__source-value')?.getBoundingClientRect();
+                    return name === undefined || value === undefined ? -1 : value.left - name.right;
+                }),
+            );
+            expect(layout.length).toBeGreaterThan(0);
+            expect(layout.filter((gap) => gap < MIN_SOURCE_GAP)).toEqual([]);
+
+            const boxes = await Promise.all([card.boundingBox(), tooltip.boundingBox()]);
+            const [cardBox, tipBox] = boxes;
+            if (cardBox === null || tipBox === null) throw new Error('card or tooltip has no box');
+            const x = Math.min(cardBox.x, tipBox.x);
+            const y = Math.min(cardBox.y, tipBox.y);
+            const clip = {
+                x,
+                y,
+                width: Math.max(cardBox.x + cardBox.width, tipBox.x + tipBox.width) - x,
+                height: Math.max(cardBox.y + cardBox.height, tipBox.y + tipBox.height) - y,
+            };
+            await snap(page, 'roll-card-long-source-tooltip', { clip, keepTooltip: true });
+        } finally {
+            await cleanupCard(page, built);
+        }
+    });
 });

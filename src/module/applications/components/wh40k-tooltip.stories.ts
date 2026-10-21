@@ -181,6 +181,59 @@ export const TrainedPlus10: Story = {
     },
 };
 
+// ── Modifier rows keep a gap at a long source name (#691) ─────────────────
+
+/** The smallest gap, in px, between a modifier row's name and its value. */
+const MIN_SOURCE_GAP = 8;
+
+/** The tooltip's widest render, in px: its 350px max width plus a 2px border each side. */
+const TOOLTIP_MAX_WIDTH = 354;
+
+/** A `modifier` tooltip from the live builder, mounted the way Foundry mounts it. */
+function renderModifierTooltip(title: string, sources: Array<{ name: string; value: number }>): HTMLElement {
+    const builder = TooltipsWH40K.prototype._buildModifierTooltip.bind(Object.create(TooltipsWH40K.prototype) as InstanceType<typeof TooltipsWH40K>);
+    const host = document.createElement('div');
+    host.id = 'tooltip';
+    host.className = 'wh40k-rpg wh40k-tooltip wh40k-tooltip--modifier';
+    host.setAttribute('data-testid', 'modifier-tooltip-host');
+    host.innerHTML = builder({ title, sources });
+    return host;
+}
+
+/**
+ * A long source name wraps, a gap stays between it and its value, and the value
+ * keeps its full width. "Fated for Greatness (Chosen by Destiny)+1" ran together.
+ */
+export const ModifierLongSourceName: Story = {
+    name: 'Issue #691 — a long modifier source keeps a gap before its value',
+    render: () =>
+        renderModifierTooltip('Fate Points: 4', [
+            { name: 'Base', value: 2 },
+            { name: 'Fortune', value: 1 },
+            { name: 'Fated for Greatness (Chosen by Destiny)', value: 1 },
+            { name: 'Mark of the Emperor’s Unwavering Hand upon the Faithful', value: -10 },
+        ]),
+    play: async ({ canvasElement }) => {
+        const host = await within(canvasElement).findByTestId('modifier-tooltip-host');
+        const rows = [...host.querySelectorAll<HTMLElement>('.wh40k-tooltip__source')];
+        await expect(rows.length).toBe(4);
+        const layout = rows.map((row) => {
+            const name = row.querySelector<HTMLElement>('.wh40k-tooltip__source-name');
+            const value = row.querySelector<HTMLElement>('.wh40k-tooltip__source-value');
+            if (name === null || value === null) throw new Error('modifier row without a name or value');
+            const style = getComputedStyle(value);
+            return {
+                gap: value.getBoundingClientRect().left - name.getBoundingClientRect().right,
+                valueKeepsWidth: style.flexShrink === '0' && style.whiteSpace === 'nowrap' && value.scrollWidth <= value.clientWidth,
+            };
+        });
+        await expect(layout.filter((row) => row.gap < MIN_SOURCE_GAP)).toEqual([]);
+        await expect(layout.filter((row) => !row.valueKeepsWidth)).toEqual([]);
+        // The long names wrap inside the tooltip instead of widening it past its max width.
+        await expect(host.getBoundingClientRect().width).toBeLessThanOrEqual(TOOLTIP_MAX_WIDTH);
+    },
+};
+
 // ── Veteran at +30 — fifth rung; previous UI capped at +20 ─────────────────
 
 export const Veteran: Story = {

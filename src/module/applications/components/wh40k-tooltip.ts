@@ -60,14 +60,18 @@ function tipLine(label: string, value: string | number, extraClass = ''): string
     return `<div class="wh40k-tooltip__line${cls}"><span class="wh40k-tooltip__label">${label}</span><span class="wh40k-tooltip__value">${value}</span></div>`;
 }
 
-/** Source name/value rows for a sources block (values signed). */
+/**
+ * Source name/value rows for a sources block (values signed). A long name wraps
+ * rather than running into its value: the row keeps a gap, and the value never
+ * shrinks (#691).
+ */
 function tipSourceRows(sources: readonly { name: string; value: number }[]): string {
     return sources
         .map(
             (s) =>
-                `<div class="wh40k-tooltip__source"><span class="wh40k-tooltip__source-name">${
+                `<div class="wh40k-tooltip__source tw-gap-3"><span class="wh40k-tooltip__source-name tw-min-w-0 tw-break-words">${
                     s.name
-                }</span><span class="wh40k-tooltip__source-value">${formatSigned(s.value)}</span></div>`,
+                }</span><span class="wh40k-tooltip__source-value tw-shrink-0 tw-whitespace-nowrap">${formatSigned(s.value)}</span></div>`,
         )
         .join('');
 }
@@ -347,7 +351,8 @@ export class TooltipsWH40K {
                 const content = await this._buildTooltipContent(data, tooltipType);
                 if (content !== '' && this.#tooltip !== null) {
                     this.#tooltip.innerHTML = content;
-                    this.#tooltip.classList.add('wh40k-tooltip', `wh40k-tooltip--${tooltipType}`);
+                    // `wh40k-rpg` scopes the content's tw-* utilities: Foundry mounts #tooltip outside every sheet.
+                    this.#tooltip.classList.add('wh40k-rpg', 'wh40k-tooltip', `wh40k-tooltip--${tooltipType}`);
                     requestAnimationFrame(() => this._repositionTooltip());
                 }
             } catch (err) {
