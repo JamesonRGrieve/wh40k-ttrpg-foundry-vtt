@@ -14,7 +14,7 @@ async function runStory<A extends Args>(meta: Meta<A>, story: StoryObj<A>): Prom
     if (render === undefined) throw new Error('the story has no render function');
     // Storybook mounts the rendered element INSIDE its canvas root and hands the play
     // that root, so the play sees the story's element as a child, never as itself.
-    const canvasElement = document.createElement('div');
+    const canvasElement: HTMLElement = document.createElement('div');
     canvasElement.id = 'storybook-root';
     document.body.replaceChildren(canvasElement);
     const context = { args, canvasElement } as StoryContext<A>;
