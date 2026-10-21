@@ -1138,7 +1138,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             return false;
         }
 
-        if (data.type !== 'Item') return false;
+        // Anything but an Item (a dropped Active Effect) goes to the container's drop path, which hands it on.
+        if (data.type !== 'Item') return super._onDrop(event);
 
         const droppedItem = await fromUuid(data.uuid ?? '');
         if (droppedItem === null) return false;

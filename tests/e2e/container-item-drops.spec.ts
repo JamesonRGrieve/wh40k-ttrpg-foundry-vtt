@@ -24,6 +24,7 @@ interface ProbeItem {
     name: string;
     sheet: ProbeApp;
     items: { size: number; contents: Array<{ name: string; type: string }> };
+    effects: { contents: Array<{ name: string; uuid: string }> };
     delete: () => Promise<void>;
 }
 interface ProbeWindow {
@@ -32,7 +33,11 @@ interface ProbeWindow {
 }
 
 /** Create a world item; open its sheet when `open` is set. Returns its uuid and, if opened, the sheet id. */
-async function createItem(page: Page, data: { name: string; type: string; system?: object }, open: boolean): Promise<{ uuid: string; appId: string }> {
+async function createItem(
+    page: Page,
+    data: { name: string; type: string; system?: object; effects?: object[] },
+    open: boolean,
+): Promise<{ uuid: string; appId: string }> {
     return page.evaluate(
         async ({ itemData, openSheet }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
@@ -69,6 +74,29 @@ async function nestedNames(page: Page, name: string): Promise<string[]> {
     }, name);
 }
 
+/** The names of an item's Active Effects. */
+async function effectNames(page: Page, name: string): Promise<string[]> {
+    return page.evaluate((itemName) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        return w.game.items.getName(itemName)?.effects.contents.map((e) => e.name) ?? [];
+    }, name);
+}
+
+/** The uuid of the first Active Effect on a world item. */
+async function firstEffectUuid(page: Page, name: string): Promise<string> {
+    return page.evaluate((itemName) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        const effect = w.game.items.getName(itemName)?.effects.contents[0];
+        if (effect === undefined) throw new Error(`${itemName} has no effect`);
+        return effect.uuid;
+    }, name);
+}
+
+/** An Active Effect a drop copies onto the target sheet's item. */
+const EFFECT_NAME = `${PREFIX} steady aim`;
+
 test.describe.serial('drops onto container item sheets (Tier B, #697)', () => {
     test.afterEach(async ({ page }) => {
         await page.evaluate(async (prefix) => {
@@ -104,4 +132,30 @@ test.describe.serial('drops onto container item sheets (Tier B, #697)', () => {
         await expect(sheet.locator('[data-nested-item-id]')).toHaveCount(0);
         recordCoverage('sheet.drop', 'storageLocation.nested-item');
     });
+
+    // A container sheet passes a drop that is not an Item to ItemSheetV2's own
+    // handler, which copies a dropped Active Effect onto the item. The container's
+    // drop handling used to swallow it.
+    for (const type of ['weapon', 'armour'] as const) {
+        test(`an Active Effect dropped on a ${type} sheet lands on the ${type}`, async ({ page }) => {
+            await joinOrSkip(page);
+            await createItem(page, { name: `${PREFIX} effect source`, type: 'gear', effects: [{ name: EFFECT_NAME }] }, false);
+            const effectUuid = await firstEffectUuid(page, `${PREFIX} effect source`);
+            const target = await createItem(page, { name: `${PREFIX} ${type}`, type }, true);
+            const sheet = page.locator(`#${target.appId}`);
+            await expect(sheet).toBeVisible();
+            await clearScreenOverlays(page, target.appId);
+
+            await dropOnSheet(page, target.appId, { type: 'ActiveEffect', uuid: effectUuid });
+            await expect.poll(async () => effectNames(page, `${PREFIX} ${type}`)).toEqual([EFFECT_NAME]);
+
+            // The armour sheet lists it on its Effects tab.
+            if (type === 'armour') {
+                await sheet.locator('nav [data-tab="effects"]').first().click();
+                await expect(sheet.locator('div[data-tab="effects"], section[data-tab="effects"]').getByText(EFFECT_NAME)).toBeVisible();
+                await snap(page, 'armour-sheet-dropped-active-effect', { selector: `#${target.appId}` });
+            }
+            recordCoverage('sheet.drop', `${type}.active-effect`);
+        });
+    }
 });

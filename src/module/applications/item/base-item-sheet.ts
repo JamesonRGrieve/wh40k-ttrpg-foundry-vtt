@@ -72,6 +72,20 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
 
     /* -------------------------------------------- */
 
+    /**
+     * ItemSheetV2's own drop handling: a dropped Active Effect is copied onto the
+     * item. A sheet that overrides `_onDrop` for its own drops (nested items,
+     * references) passes every other drop here, so it never swallows one (#697).
+     * The mixin chain erases ItemSheetV2's `_onDrop` from the static type, so it is
+     * reached through the prototype.
+     */
+    async _onDropDefault(event: DragEvent): Promise<void> {
+        const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as { _onDrop?: (this: BaseItemSheet, e: DragEvent) => Promise<void> };
+        await proto._onDrop?.call(this, event);
+    }
+
+    /* -------------------------------------------- */
+
     /** Section collapse stays usable on a locked item sheet (#629). */
     static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleSection'];
 

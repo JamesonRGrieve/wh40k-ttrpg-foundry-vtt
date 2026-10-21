@@ -130,10 +130,16 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
 
         try {
             data = JSON.parse(event.dataTransfer?.getData('text/plain') ?? '{}') as DropPayload;
-            if (data.type !== 'Item') {
-                return false;
-            }
+        } catch {
+            return false;
+        }
+        // Anything but an Item (a dropped Active Effect) takes ItemSheetV2's own path.
+        if (data.type !== 'Item') {
+            await this._onDropDefault(event);
+            return false;
+        }
 
+        try {
             const fetchedItem = await fromUuid(data.uuid ?? '');
             if (!fetchedItem) return false;
             // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns generic Document; narrowed to WH40KItem at consumer

@@ -93,11 +93,7 @@ export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH
     async _onDrop(event: DragEvent): Promise<void> {
         const zone = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-drop-zone="reference"]') : null;
         if (zone === null) {
-            // The mixin chain erases ItemSheetV2's `_onDrop` from the static type, so reach it through the prototype.
-            const proto = Object.getPrototypeOf(ReferenceListItemSheet.prototype) as {
-                _onDrop?: (this: ReferenceListItemSheet, e: DragEvent) => Promise<void>;
-            };
-            await proto._onDrop?.call(this, event);
+            await this._onDropDefault(event);
             return;
         }
         event.preventDefault();
