@@ -422,14 +422,8 @@ test.describe.serial('roll transparency chat card (Tier B)', () => {
             await expect(row).toHaveCount(1);
 
             await clearScreenOverlays(page, popout.replace('#', ''));
-            // The card's rows carry no `data-tooltip`, which Foundry's hover handler needs, so
-            // the tooltip is opened through Foundry's TooltipManager directly (reported on #691).
-            await row.evaluate((el, title) => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry `game.tooltip` (TooltipManager) has no repo type
-                (globalThis as unknown as { game: { tooltip: { activate: (e: Element, o: { text: string }) => void } } }).game.tooltip.activate(el, {
-                    text: title,
-                });
-            }, LONG_SOURCE.label);
+            // A real hover: the rich-tooltip rows open on hover (#692).
+            await row.hover();
             const tooltip = page.locator('#tooltip.wh40k-tooltip');
             await expect(tooltip).toBeVisible();
             await expect(tooltip).toContainText(LONG_SOURCE.label);

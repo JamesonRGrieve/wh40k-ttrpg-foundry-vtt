@@ -11,9 +11,10 @@ import { hitLocationLabel } from '../../rules/hit-locations.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { parseQualityLevel } from '../../utils/quality-id.ts';
+import { type ActivatableTooltipManager, activateRichTooltips, makeRichTooltipsFocusable } from './tooltip-activation.ts';
 
 /** Minimal typed interface for the Foundry tooltip manager. */
-interface TooltipManager {
+interface TooltipManager extends ActivatableTooltipManager {
     element: (HTMLElement & { dataset: DOMStringMap }) | null;
     _setAnchor?: (direction: string) => void;
 }
@@ -263,6 +264,15 @@ export class TooltipsWH40K {
             return;
         }
         this.observe();
+        // Rich tooltips open on hover and keyboard focus, and every one is reachable by Tab (#692).
+        activateRichTooltips(document, getTooltipManager);
+        makeRichTooltipsFocusable(document.body);
+        Hooks.on('renderApplicationV2', (_app: foundry.applications.api.ApplicationV2.Any, element: HTMLElement) => {
+            makeRichTooltipsFocusable(element);
+        });
+        Hooks.on('renderChatMessageHTML', (_message: ChatMessage, html: HTMLElement) => {
+            makeRichTooltipsFocusable(html);
+        });
         await this._loadSkillDescriptions();
     }
 
