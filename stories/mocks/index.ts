@@ -727,6 +727,13 @@ export function mockGearSheetContext(overrides?: DeepPartial<MockObjectMap>): Mo
 
 // ── Sheet rendering helpers ──────────────────────────────────────────────────
 
+/**
+ * The runtime options Foundry's `renderTemplate` passes every template. They let a
+ * template read prototype getters such as a Set's `size` (`effectiveSpecial.size`);
+ * without them Handlebars returns undefined and a block a live sheet shows is hidden.
+ */
+export const FOUNDRY_TEMPLATE_OPTIONS: RuntimeOptions = { allowProtoMethodsByDefault: true, allowProtoPropertiesByDefault: true };
+
 // eslint-disable-next-line @typescript-eslint/no-shadow -- intentional shadow: storybook replacement for Foundry's global renderTemplate
 export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context: T): HTMLElement {
     // Mirror Foundry V14's app-window.html shell exactly (.app.window-app + .window-content)
@@ -752,7 +759,7 @@ export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context:
     wrap.setAttribute('data-wh40k-system', 'dh2');
     wrap.innerHTML = `
         <div class="app window-app sheet" data-appid="0">
-            <section class="window-content">${template(context)}</section>
+            <section class="window-content">${template(context, FOUNDRY_TEMPLATE_OPTIONS)}</section>
         </div>
     `;
     return wrap;

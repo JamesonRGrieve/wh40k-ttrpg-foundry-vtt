@@ -248,7 +248,8 @@ function npcWithCarriedEquipment(equipment: Array<{ name: string; quantity: numb
 }
 
 function renderNpcEquipmentTab(ctx: SheetContextLike): HTMLElement {
-    return renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-sheet-body tw-p-2' }], ctx, { systemId: systemIdOf(ctx) });
+    // The live NPC sheet's tab body is `.wh40k-body` under an `actor` root (npc-sheet.ts PARTS).
+    return renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, { systemId: systemIdOf(ctx), document: 'actor' });
 }
 
 export const CarriedEquipment: Story = {

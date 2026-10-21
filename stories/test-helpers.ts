@@ -19,7 +19,7 @@
  */
 import HbsStory from 'handlebars';
 import { bindSheetTabs, ITEM_SHEET_TABS, sheetTabPanels } from '../src/module/applications/api/sheet-tabs.ts';
-import { renderTemplate as renderStoryTemplate } from './mocks';
+import { FOUNDRY_TEMPLATE_OPTIONS, renderTemplate as renderStoryTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
 initializeStoryHandlebars();
@@ -93,6 +93,12 @@ export function syncSelectedOptions<T extends ParentNode>(root: T): T {
 export interface RenderSheetPartsOptions {
     systemId?: string;
     theme?: string | null;
+    /**
+     * The document class the live sheet's root carries (`DEFAULT_OPTIONS.classes`).
+     * The actor sheets' tab show/hide rule is scoped to `.wh40k-rpg.sheet.actor`, so
+     * a composed actor tab only shows its active panel under `'actor'`.
+     */
+    document?: 'actor' | 'item';
 }
 
 /**
@@ -123,6 +129,7 @@ export function renderSheetParts(
 ): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'sheet');
+    if (options.document !== undefined) wrapper.classList.add(options.document);
     if (options.systemId !== undefined) {
         wrapper.dataset['wh40kSystem'] = options.systemId;
         // Default the theme to `dark` when system theming is engaged, mirroring
@@ -134,7 +141,7 @@ export function renderSheetParts(
     }
     for (const part of parts) {
         const tpl = HbsStory.compile(part.template);
-        const html = tpl({ ...baseContext, ...(part.context ?? {}) });
+        const html = tpl({ ...baseContext, ...(part.context ?? {}) }, FOUNDRY_TEMPLATE_OPTIONS);
         const slot = document.createElement('div');
         if (part.partClass !== undefined) slot.className = part.partClass;
         slot.innerHTML = html;

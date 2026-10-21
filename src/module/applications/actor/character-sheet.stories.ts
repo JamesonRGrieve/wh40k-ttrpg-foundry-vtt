@@ -73,7 +73,8 @@ function pcInventoryContext(): SheetContextLike {
 export const InventoryCarryBar: Story = {
     name: 'Inventory — Carry bar for a PC (#545)',
     args: pcInventoryContext(),
-    render: (args) => renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' }], args, { systemId: systemIdOf(args) }),
+    render: (args) =>
+        renderSheetParts([{ template: equipmentTabSrc, partClass: 'wh40k-body tw-min-w-0 tw-p-2' }], args, { systemId: systemIdOf(args), document: 'actor' }),
     play: async ({ canvasElement }) => {
         // Exactly one Carry bar, in the panel header, even with a load on (the tab once drew a second one).
         const bars = canvasElement.querySelectorAll<HTMLElement>('[data-carry-bar]');
@@ -96,8 +97,9 @@ export const ImperiumMaledictum: Story = {
         const storyCanvas = within(canvasElement);
         // IM uses 'Interrogator Hale' as the default actor name
         await expect(storyCanvas.getByDisplayValue('Interrogator Hale')).toBeVisible();
-        // IM origin path step should be House Varonius
-        await expect(storyCanvas.getByText('House Varonius')).toBeVisible();
+        // IM's home world is House Varonius: the biography shows it in its home-world input
+        // (the sidebar's origin bubbles show each step's image, not its name).
+        await expect(storyCanvas.getByDisplayValue('House Varonius')).toBeVisible();
     },
 };
 

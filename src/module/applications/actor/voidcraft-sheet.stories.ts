@@ -291,6 +291,7 @@ const rtShipOrders: ShipActionOrderView[] = [
 function renderActionsPanel(tabSrc: string, ctx: SheetContextLike): HTMLElement {
     const panel = renderSheetParts([{ template: headerSrc }, { template: tabsSrc }, { template: tabSrc, partClass: 'wh40k-body tw-p-2' }], ctx, {
         systemId: systemIdOf(ctx),
+        document: 'actor',
     });
     panel.classList.add('voidcraft', 'tw-flex', 'tw-flex-col');
     return panel;
@@ -443,7 +444,8 @@ export const CrewPanelFullStrength: Story = {
     render: (args) => renderCrewPanel(args),
     play: async ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
-        await expect(storyCanvas.getByText(/Population/i)).toBeVisible();
+        // The crew panel's own Population box (another panel's hidden label also reads "Population").
+        await expect(storyCanvas.getByText(/Population/i, { selector: '.wh40k-pop-box span' })).toBeVisible();
         // Population, Morale current, Morale max all = 100
         const populationInputs = canvasElement.querySelectorAll<HTMLInputElement>('input[name="system.crew.population"]');
         await expect(populationInputs.length).toBeGreaterThanOrEqual(1);
