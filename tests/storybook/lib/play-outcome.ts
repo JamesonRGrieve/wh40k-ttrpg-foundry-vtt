@@ -17,7 +17,7 @@ export interface PlayOutcome {
 
 /** The slice of Storybook's preview channel the watcher listens on. */
 interface StoryChannel {
-    on: (event: string, listener: (payload: { status?: 'success' | 'error'; message?: string }) => void) => void;
+    on: (event: string, listener: (payload: { status?: 'success' | 'error'; message?: string; stack?: string }) => void) => void;
 }
 
 declare global {
@@ -45,7 +45,9 @@ export async function watchPlayOutcome(page: Page): Promise<void> {
             set: (next: StoryChannel) => {
                 channel = next;
                 next.on('playFunctionThrewException', (payload) => {
-                    error = payload.message ?? 'the play threw';
+                    // The message, then the frame in the story file that threw, to find the assertion.
+                    const frame = (payload.stack ?? '').split('\n').find((line) => line.includes('.stories')) ?? '';
+                    error = `${payload.message ?? 'the play threw'}${frame === '' ? '' : `\n${frame.trim()}`}`;
                 });
                 next.on('storyFinished', (payload) => {
                     window.__wh40kPlayOutcome = { status: payload.status ?? 'error', error };
