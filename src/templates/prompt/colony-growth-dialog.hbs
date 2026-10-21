@@ -55,20 +55,8 @@
 
     {{!-- Toggles for Agricultural / Ecclesiastical type-specific protections --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
-        <button type="button"
-                data-action="toggleAgricultural"
-                data-toggle-state="{{#if agriculturalSoftener}}on{{else}}off{{/if}}"
-                class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if agriculturalSoftener}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
-            <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.RT.Colony.AgriculturalSoftenerLabel"}}</span>
-            <i class="fas {{#if agriculturalSoftener}}fa-check-square{{else}}fa-square{{/if}}"></i>
-        </button>
-        <button type="button"
-                data-action="toggleEcclesiastical"
-                data-toggle-state="{{#if ecclesiasticalOrderSwap}}on{{else}}off{{/if}}"
-                class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if ecclesiasticalOrderSwap}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
-            <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.RT.Colony.EcclesiasticalOrderSwapLabel"}}</span>
-            <i class="fas {{#if ecclesiasticalOrderSwap}}fa-check-square{{else}}fa-square{{/if}}"></i>
-        </button>
+        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-toggle.hbs action="toggleAgricultural" on=agriculturalSoftener labelKey="WH40K.RT.Colony.AgriculturalSoftenerLabel"}}
+        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-toggle.hbs action="toggleEcclesiastical" on=ecclesiasticalOrderSwap labelKey="WH40K.RT.Colony.EcclesiasticalOrderSwapLabel"}}
     </div>
 
     {{!-- Action buttons --}}

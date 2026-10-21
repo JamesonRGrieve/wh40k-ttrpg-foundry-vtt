@@ -8,7 +8,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/logistics-test-dialog.hbs?raw';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickAction, renderSheet } from '../../../../stories/test-helpers';
+import { clickAction, renderSheet, toggleControls } from '../../../../stories/test-helpers';
 import { type LogisticsContext, type LogisticsTarget, computeLogisticsTarget } from '../../rules/ow-logistics.ts';
 import { logisticsOptions } from './logistics-test-rows.ts';
 
@@ -62,6 +62,11 @@ export const Default: Story = {
         await expect(canvasElement.querySelectorAll('[data-axis="troopCount"] button')).toHaveLength(3);
         await expect(canvasElement.querySelectorAll('[data-axis="warCondition"] button')).toHaveLength(6);
         await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('0');
+        // #696: Standard Kit is one toggle button, its state on aria-pressed, its square decorative.
+        const kit = canvasElement.querySelector<HTMLElement>('[data-action="owToggleStandardKit"]');
+        await expect(toggleControls(canvasElement)).toEqual([
+            { name: 'Standard Kit (regimental)', pressed: kit?.dataset['toggleState'] === 'on' ? 'true' : 'false', checkboxes: 0, icons: 1, iconsHidden: true },
+        ]);
     },
 };
 

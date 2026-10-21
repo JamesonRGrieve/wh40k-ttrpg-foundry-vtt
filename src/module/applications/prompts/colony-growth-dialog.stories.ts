@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/colony-growth-dialog.hbs?raw';
-import { clickAction, renderSheet } from '../../../../stories/test-helpers';
+import { clickAction, renderSheet, toggleControls } from '../../../../stories/test-helpers';
 
 interface CharacteristicRow {
     id: 'size' | 'complacency' | 'order' | 'productivity' | 'piety';
@@ -65,10 +65,22 @@ export const HiveWithBurn: Story = {
     },
 };
 
-/** Agricultural Colony with the softener engaged. */
+/**
+ * Agricultural Colony with the softener engaged. Each protection is one toggle
+ * button (#696): its text names it, `aria-pressed` carries its state, and the square
+ * beside the text is decorative.
+ */
 export const AgriculturalSoftener: Story = {
     args: {
         agriculturalSoftener: true,
+    },
+    play: async ({ canvasElement }) => {
+        await expect(toggleControls(canvasElement)).toEqual([
+            { name: 'Agricultural Softener (re-roll on decrease)', pressed: 'true', checkboxes: 0, icons: 1, iconsHidden: true },
+            { name: 'Ecclesiastical: take Order loss as Piety', pressed: 'false', checkboxes: 0, icons: 1, iconsHidden: true },
+        ]);
+        await expect(canvasElement.querySelector('[data-action="toggleAgricultural"] .fa-check-square')).not.toBeNull();
+        await expect(canvasElement.querySelector('[data-action="toggleEcclesiastical"] .fa-square')).not.toBeNull();
     },
 };
 

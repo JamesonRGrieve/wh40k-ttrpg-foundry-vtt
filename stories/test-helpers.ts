@@ -294,6 +294,39 @@ export function detailSectionTitles(root: ParentNode, tab: string): DetailSectio
     }));
 }
 
+/** One on/off toggle drawn with the shared toggle-state-icon.hbs square. */
+export interface ToggleControl {
+    /** The control's accessible name: its text, else its `aria-label`. */
+    name: string;
+    /** Its `aria-pressed`, or null when it does not expose its state. */
+    pressed: string | null;
+    /** Native checkboxes inside the control (a second box beside the square). */
+    checkboxes: number;
+    /** State squares inside the control. */
+    icons: number;
+    /** True when every state square is hidden from assistive tech. */
+    iconsHidden: boolean;
+}
+
+/**
+ * Every control under `root` that shows a toggle state square (#696). A toggle is
+ * one button: one decorative square, its state as `aria-pressed`, and a name.
+ */
+export function toggleControls(root: ParentNode): ToggleControl[] {
+    const icons = [...root.querySelectorAll<HTMLElement>('.fa-square, .fa-check-square')];
+    const controls = [...new Set(icons.map((icon) => icon.closest<HTMLElement>('button, label') ?? icon))];
+    return controls.map((control) => {
+        const squares = [...control.querySelectorAll<HTMLElement>('.fa-square, .fa-check-square')];
+        return {
+            name: control.textContent.trim() || (control.getAttribute('aria-label') ?? ''),
+            pressed: control.getAttribute('aria-pressed'),
+            checkboxes: control.querySelectorAll('input[type="checkbox"]').length,
+            icons: squares.length,
+            iconsHidden: squares.every((square) => square.getAttribute('aria-hidden') === 'true'),
+        };
+    });
+}
+
 /**
  * Assert the value of a named form field.
  */

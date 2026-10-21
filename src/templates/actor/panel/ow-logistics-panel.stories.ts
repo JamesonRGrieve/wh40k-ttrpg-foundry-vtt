@@ -10,8 +10,9 @@
  * screenshot-diff stability per CLAUDE.md "Seeded RNG in stories".
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { renderSheet, toggleControls } from '../../../../stories/test-helpers';
 import panelSrc from './ow-logistics-panel.hbs?raw';
 
 initializeStoryHandlebars();
@@ -60,6 +61,10 @@ export const Munitorum: Story = {
         },
     },
     render: (args) => renderPanel(args),
+    // #696: the Munitorum toggle is one icon button, named by aria-label, its state on aria-pressed.
+    play: async ({ canvasElement }) => {
+        await expect(toggleControls(canvasElement)).toEqual([{ name: 'Munitorum Influence', pressed: 'true', checkboxes: 0, icons: 1, iconsHidden: true }]);
+    },
 };
 
 export const SubparSquad: Story = {

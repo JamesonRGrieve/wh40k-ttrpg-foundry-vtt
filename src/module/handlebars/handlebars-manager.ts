@@ -102,6 +102,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/shared/editable-portrait.hbs',
             'systems/wh40k-rpg/templates/shared/sheet-action-button.hbs',
             'systems/wh40k-rpg/templates/shared/accent-heading.hbs',
+            'systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-sidebar.hbs',
@@ -281,6 +282,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs',
+            'systems/wh40k-rpg/templates/prompt/partial/prompt-toggle.hbs',
             'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs',

@@ -36,8 +36,10 @@
                 class="tw-inline-flex tw-items-center tw-justify-center tw-bg-transparent tw-border tw-border-solid tw-border-amber-700 tw-rounded tw-px-2 tw-py-0.5 tw-cursor-pointer tw-text-[0.72rem] {{#if logisticsPanel.munitorum}}tw-text-amber-200 tw-bg-[rgba(217,119,6,0.18)]{{else}}tw-text-[color:var(--wh40k-text-muted)]{{/if}}"
                 data-action="owToggleMunitorum"
                 data-state="{{#if logisticsPanel.munitorum}}on{{else}}off{{/if}}"
+                aria-pressed="{{#if logisticsPanel.munitorum}}true{{else}}false{{/if}}"
+                aria-label="{{localize 'WH40K.OW.Logistics.MunitorumToggle'}}"
                 title="{{localize 'WH40K.OW.Logistics.MunitorumToggle'}}">
-            <i class="fas {{#if logisticsPanel.munitorum}}fa-check-square{{else}}fa-square{{/if}}"></i>
+            {{> systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs on=logisticsPanel.munitorum}}
         </button>
     </div>
 

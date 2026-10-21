@@ -1,0 +1,19 @@
+{{!--
+  A full-width on/off option in a prompt dialog (#696): one button whose text names
+  the option and whose `aria-pressed` carries its state, with the decorative state
+  square at its right. The Logistics test's Standard Kit and the colony-growth
+  protections use it.
+
+  Hash arguments:
+    action   — the button's `data-action`. Required.
+    on       — truthy when the option is on. Required.
+    labelKey — i18n key of the option text. Required.
+--}}
+<button type="button"
+        data-action="{{action}}"
+        data-toggle-state="{{#if on}}on{{else}}off{{/if}}"
+        aria-pressed="{{#if on}}true{{else}}false{{/if}}"
+        class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if on}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
+    <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize labelKey}}</span>
+    {{> systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs on=on}}
+</button>

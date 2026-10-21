@@ -276,7 +276,7 @@
                             data-quality-id="{{quality.id}}"
                             aria-pressed="{{#if quality.isSelected}}true{{else}}false{{/if}}"
                             data-tooltip="{{localize 'WH40K.Roll.FiringOptionHint'}}">
-                        <i class="fas {{#if quality.isSelected}}fa-check-square{{else}}fa-square{{/if}} tw-text-[0.7rem] tw-opacity-70"></i>
+                        {{> systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs on=quality.isSelected iconClass="tw-text-[0.7rem] tw-opacity-70"}}
                         <span class="tw-font-medium">{{quality.label}}</span>
                     </button>
                 {{/each}}

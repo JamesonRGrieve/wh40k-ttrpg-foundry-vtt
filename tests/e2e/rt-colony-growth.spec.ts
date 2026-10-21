@@ -149,4 +149,60 @@ test.describe.serial('ColonyGrowthDialog (Tier B)', () => {
 
         recordCoverage('dialog.render', 'ColonyGrowthDialog');
     });
+
+    // #696: each protection is one toggle button: its state on aria-pressed, its
+    // square decorative, no checkbox beside it. Clicking it flips the state.
+    test('each protection toggle is one button whose aria-pressed follows a click', async ({ page }) => {
+        await joinOrSkip(page);
+        const appId = await page.evaluate(async () => {
+            interface DialogInstance {
+                id: string;
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 render returns Promise<this> with no shipped types
+                render: (opts?: object) => Promise<unknown>;
+            }
+            interface DialogModule {
+                default: new (opts?: object) => DialogInstance;
+            }
+            interface DialogHostGlobal {
+                __c696dialog?: DialogInstance | undefined;
+            }
+            // The served module path, held in a variable so the build and knip do not try to resolve it.
+            const moduleUrl = '/systems/wh40k-rpg/module/applications/prompts/colony-growth-dialog.js';
+            // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
+            const mod = (await import(moduleUrl)) as unknown as DialogModule;
+            const inst = new mod.default({});
+            await inst.render({ force: true });
+            // eslint-disable-next-line no-restricted-syntax -- boundary: stashing browser-realm dialog on globalThis for cross-eval cleanup
+            (globalThis as unknown as DialogHostGlobal).__c696dialog = inst;
+            return inst.id;
+        });
+        const dialog = page.locator(`#${appId}`);
+        const agricultural = dialog.locator('button[data-action="toggleAgricultural"]');
+        const ecclesiastical = dialog.locator('button[data-action="toggleEcclesiastical"]');
+        await expect(agricultural).toHaveAttribute('aria-pressed', 'false');
+        await expect(ecclesiastical).toHaveAttribute('aria-pressed', 'false');
+        for (const toggle of [agricultural, ecclesiastical]) {
+            await expect(toggle.locator('input[type="checkbox"]')).toHaveCount(0);
+            await expect(toggle.locator('[data-toggle-icon][aria-hidden="true"]')).toHaveCount(1);
+        }
+
+        await agricultural.click();
+        await expect(dialog.locator('button[data-action="toggleAgricultural"]')).toHaveAttribute('aria-pressed', 'true');
+        await expect(dialog.locator('button[data-action="toggleAgricultural"] .fa-check-square')).toHaveCount(1);
+        await expect(dialog.locator('button[data-action="toggleEcclesiastical"]')).toHaveAttribute('aria-pressed', 'false');
+
+        await snap(page, 'colony-growth-dialog-toggles', { selector: `#${appId}` });
+
+        await page.evaluate(async () => {
+            interface DialogHostGlobal {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close returns Promise<this> with no shipped types
+                __c696dialog?: { close: () => Promise<unknown> } | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: reading browser-realm dialog stashed on globalThis
+            const fg = globalThis as unknown as DialogHostGlobal;
+            await fg.__c696dialog?.close();
+            fg.__c696dialog = undefined;
+        });
+        recordCoverage('dialog.toggle', 'ColonyGrowthDialog.protections');
+    });
 });

@@ -28,14 +28,7 @@
 
     {{!-- Standard kit toggle --}}
     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-4">
-        <button type="button"
-                data-action="owToggleStandardKit"
-                data-toggle-state="{{#if standardKit}}on{{else}}off{{/if}}"
-                aria-pressed="{{#if standardKit}}true{{else}}false{{/if}}"
-                class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-rounded-md tw-border tw-cursor-pointer {{#if standardKit}}tw-border-amber-400 tw-bg-[rgba(217,119,6,0.18)] tw-text-amber-200{{else}}tw-border-[rgba(217,119,6,0.25)] tw-bg-[rgba(0,0,0,0.25)] tw-text-amber-100{{/if}}">
-            <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em]">{{localize "WH40K.OW.Logistics.StandardKitToggle"}}</span>
-            <i class="fas {{#if standardKit}}fa-check-square{{else}}fa-square{{/if}}"></i>
-        </button>
+        {{> systems/wh40k-rpg/templates/prompt/partial/prompt-toggle.hbs action="owToggleStandardKit" on=standardKit labelKey="WH40K.OW.Logistics.StandardKitToggle"}}
     </div>
 
     {{!-- Live target preview: a number, or the cell Table 6-2 prints instead of one --}}

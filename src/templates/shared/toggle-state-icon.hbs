@@ -1,0 +1,11 @@
+{{!--
+  The checked / unchecked square a toggle button shows (#696). Decorative: the
+  button it sits in carries the state as `aria-pressed` and the name as its text or
+  `aria-label`, so the icon is hidden from assistive tech and is never a second
+  control beside a real checkbox.
+
+  Hash arguments:
+    on        — truthy when the toggle is on. Required.
+    iconClass — extra classes for the icon (size, opacity). Optional.
+--}}
+<i class="fas {{#if on}}fa-check-square{{else}}fa-square{{/if}}{{#if iconClass}} {{iconClass}}{{/if}}" aria-hidden="true" data-toggle-icon></i>
