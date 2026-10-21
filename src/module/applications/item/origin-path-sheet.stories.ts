@@ -21,7 +21,7 @@ import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { originStepLabelKey } from '../../data/shared/origin-steps.ts';
-import { type OriginGrantFieldFlags, type OriginStepOption, originGrantFieldFlags, originStepOptions } from '../../rules/origin-step-options.ts';
+import { type OriginGrantFieldFlags, type OriginStepOption, originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x0a1b2c);
@@ -51,11 +51,7 @@ interface OriginPathCtx {
 
 /** The step select and grant fields the sheet builds for `step` on `systemId`, from the line's own config (#687). */
 function lineContext(systemId: SystemId, step: string): Pick<OriginPathCtx, 'stepOptions' | 'grantFields'> {
-    const line = SystemConfigRegistry.get(systemId);
-    return {
-        stepOptions: originStepOptions(line.getOriginPathStepKeys(), step, (key) => localizeKey(originStepLabelKey(key))),
-        grantFields: originGrantFieldFlags(line.getOriginStepConfig().grantFields ?? []),
-    };
+    return originSheetLineContext(systemId, step, (key) => localizeKey(originStepLabelKey(key)));
 }
 
 function makeCtx(overrides: Partial<OriginPathCtx> = {}): OriginPathCtx {
@@ -333,6 +329,28 @@ export const Dh2Elite: Story = {
     render: () => renderPerSystem('dh2'),
     play: makePerSystemPlay('dh2'),
 };
+
+/**
+ * An RT character's Void Born, whose canonical document is DH2's: the sheet follows
+ * the owning actor's line (#690), so it offers RT's steps and RT's grant fields.
+ * The Fate threshold shows; the DH2-only Emperor's Blessing does not.
+ */
+export const RtOwnedVoidBorn: Story = {
+    name: "RT character's Void Born (DH2 canonical)",
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true, ...lineContext(ownedLine(), 'homeWorld') })),
+    play: async ({ canvasElement }) => {
+        await expect(ownedLine()).toBe('rt');
+        const select = canvasElement.querySelector<HTMLSelectElement>('select[name="system.step"]');
+        await expect([...(select?.options ?? [])].map((option) => option.value)).toEqual(SystemConfigRegistry.get('rt').getOriginPathStepKeys());
+        await expect(canvasElement.querySelector('input[name="system.grants.fateThreshold"]')).not.toBeNull();
+        await expect(canvasElement.querySelector('input[name="system.grants.blessedByEmperor"]')).toBeNull();
+    },
+};
+
+/** The line the sheet resolves for a DH2-canonical origin owned by an RT character. */
+function ownedLine(): SystemId {
+    return originSheetLine({ type: 'rt-character', system: { gameSystem: 'rt' } }, 'dh2') as SystemId;
+}
 
 /** A stored step the line does not declare stays the selected option, so a save never rewrites it (#687). */
 export const UndeclaredStepKept: Story = {

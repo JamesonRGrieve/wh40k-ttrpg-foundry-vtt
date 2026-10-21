@@ -7,7 +7,7 @@ import { SystemConfigRegistry } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { originStepLabelKey } from '../data/shared/origin-steps.ts';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
-import { originGrantFieldFlags, originStepOptions } from './origin-step-options.ts';
+import { originGrantFieldFlags, originSheetLine, originSheetLineContext, originStepOptions } from './origin-step-options.ts';
 
 /**
  * The origin-path sheet's step select and grant fields (#687). The select hard-coded
@@ -89,6 +89,27 @@ describe('originStepOptions', () => {
 
     it('adds nothing for an empty stored step', () => {
         expect(originStepOptions(['chapter'], '', label).map((option) => option.value)).toEqual(['chapter']);
+    });
+});
+
+describe('originSheetLine (#690)', () => {
+    it("an RT character's DH2-canonical Void Born renders for RT: RT's steps, Fate, no Emperor's Blessing", () => {
+        const line = originSheetLine({ type: 'rt-character', system: { gameSystem: 'rt' } }, 'dh2');
+        expect(line).toBe('rt');
+        const { stepOptions, grantFields } = originSheetLineContext(line, 'homeWorld', label);
+        expect(stepOptions.map((option) => option.value)).toEqual(SystemConfigRegistry.get('rt').getOriginPathStepKeys());
+        expect(stepOptions.find((option) => option.selected)?.value).toBe('homeWorld');
+        expect(grantFields).toEqual({ fateThreshold: true, blessedByEmperor: false });
+    });
+
+    it('follows the owner by its actor type, as the variant resolver does', () => {
+        expect(originSheetLine({ type: 'bc-npc' }, 'dh2')).toBe('bc');
+        expect(originSheetLine({ type: 'character', system: { gameSystem: 'ow' } }, 'dh2')).toBe('ow');
+    });
+
+    it('an unowned origin uses its own line', () => {
+        expect(originSheetLine(null, 'dh2')).toBe('dh2');
+        expect(originSheetLineContext('dh2', 'homeWorld', label).grantFields).toEqual({ fateThreshold: true, blessedByEmperor: true });
     });
 });
 

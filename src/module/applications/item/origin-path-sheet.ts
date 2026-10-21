@@ -3,9 +3,8 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { originStepLabel } from '../../data/shared/origin-steps.ts';
-import { originGrantFieldFlags, originStepOptions } from '../../rules/origin-step-options.ts';
+import { originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
@@ -197,10 +196,11 @@ export default class OriginPathSheet extends BaseItemSheet {
         const woundsFormula = grants.woundsFormula ?? null;
         const fateFormula = grants.fateFormula ?? null;
 
-        // The item's own line declares its steps and its line-specific grant fields (#687).
-        const line = SystemConfigRegistry.getOrNull(typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : '');
-        const stepOptions = originStepOptions(line?.getOriginPathStepKeys() ?? [], step ?? '', originStepLabel);
-        const grantFields = originGrantFieldFlags(line?.getOriginStepConfig().grantFields ?? []);
+        // The sheet's line declares its steps and its line-specific grant fields (#687): the
+        // owning actor's line for an owned origin, else the item's own (#690).
+        const itemLine = typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : '';
+        const line = originSheetLine(this.document.actor, itemLine);
+        const { stepOptions, grantFields } = originSheetLineContext(line, step ?? '', originStepLabel);
 
         Object.assign(context, {
             stepOptions,
