@@ -3656,6 +3656,7 @@ export type I18nKey =
     | 'WH40K.NPC.Template.PresetUnarmed'
     | 'WH40K.NPC.Template.PreviewAtThreat'
     | 'WH40K.NPC.Template.PreviewSettings'
+    | 'WH40K.NPC.Template.PreviewStatBlock'
     | 'WH40K.NPC.Template.PsychicPowers'
     | 'WH40K.NPC.Template.RemoveEquipment'
     | 'WH40K.NPC.Template.RemoveTag'

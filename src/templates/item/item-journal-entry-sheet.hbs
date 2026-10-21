@@ -14,12 +14,9 @@
         </div>
     </header>
 
-    {{! Entry Details Panel }}
-    <section class="tw-p-3">
-        <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold {{themeClassFor 'accent'}} tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid">
-            <span class="material-icons tw-text-base">event</span>
-            {{localize "WH40K.ItemSheet.JournalEntry.EntryDetails"}}
-        </h2>
+    <div class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
+        {{! Entry Details Panel }}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-calendar-day" labelKey="WH40K.ItemSheet.JournalEntry.EntryDetails"}}
         <div class="tw-grid tw-grid-cols-2 tw-gap-3">
             <div class="tw-flex tw-flex-col tw-gap-1">
                 <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.ItemSheet.JournalEntry.Date"}}</label>
@@ -30,20 +27,15 @@
                 <input class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.place" type="text" value="{{item.system.place}}" placeholder="{{localize 'WH40K.ItemSheet.JournalEntry.PlacePlaceholder'}}" />
             </div>
         </div>
-    </section>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-    {{! Entry Content Panel }}
-    <section class="tw-flex-1 tw-p-3 tw-flex tw-flex-col tw-min-h-0">
-        <h2 class="tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold {{themeClassFor 'accent'}} tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-shrink-0">
-            <span class="material-icons tw-text-base">edit_note</span>
-            {{localize "WH40K.ItemSheet.JournalEntry.Entry"}}
-        </h2>
-        <div class="tw-flex-1 tw-flex tw-flex-col">
-            <textarea
-                class="tw-flex-1 tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-none"
-                name="system.description.value"
-                placeholder="{{localize 'WH40K.ItemSheet.JournalEntry.EntryPlaceholder'}}"
-            >{{item.system.description.value}}</textarea>
-        </div>
-    </section>
+        {{! Entry Content Panel }}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-pen-to-square" labelKey="WH40K.ItemSheet.JournalEntry.Entry"}}
+        <textarea
+            class="tw-w-full tw-min-h-[240px] tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y"
+            name="system.description.value"
+            placeholder="{{localize 'WH40K.ItemSheet.JournalEntry.EntryPlaceholder'}}"
+        >{{item.system.description.value}}</textarea>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+    </div>
 </div>

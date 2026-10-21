@@ -29,12 +29,7 @@
     <div class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
 
       {{!-- State + Type --}}
-      <div class="tw-mb-3">
-        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
-          <i class="fas fa-magnifying-glass tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.Section.Properties"}}</h3>
-        </div>
-        <div class="tw-p-3">
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-magnifying-glass" labelKey="WH40K.Lead.Section.Properties"}}
           <div class="tw-grid tw-grid-cols-2 tw-gap-3">
             <div class="tw-flex tw-flex-col tw-gap-1">
               <label class="tw-text-sm tw-font-medium">{{localize "WH40K.Lead.State.Label"}}</label>
@@ -54,23 +49,16 @@
               </select>
             </div>
           </div>
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       {{!-- Source clue --}}
-      <div class="tw-mb-3">
-        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
-          <i class="fas fa-fingerprint tw-opacity-70"></i>
-          <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.Lead.SourceClue.Label"}}</h3>
-        </div>
-        <div class="tw-p-3">
+      {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-fingerprint" labelKey="WH40K.Lead.SourceClue.Label"}}
           <input type="text"
                  name="system.sourceClue"
                  value="{{item.system.sourceClue}}"
                  placeholder="{{localize 'WH40K.Lead.SourceClue.Placeholder'}}"
                  class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
-        </div>
-      </div>
+      {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-book" labelKey="WH40K.Lead.Description.Label"}}
           {{#if inEditMode}}

@@ -41,11 +41,11 @@ async function layoutProblems(page: Page, sheetId: string): Promise<string[]> {
             const r = tab.getBoundingClientRect();
             if (box === undefined || r.right > box.right + 0.5 || r.width === 0) problems.push(`tab ${tab.getAttribute('data-tab') ?? ''} cut off`);
         }
-        const heading = root.querySelector('[data-field="base-characteristics-heading"]');
-        const title = heading?.firstElementChild;
-        const subtitle = heading?.lastElementChild;
-        if (title == null || subtitle == null || title === subtitle) problems.push('heading without its subtitle');
-        else if (subtitle.getBoundingClientRect().top < title.getBoundingClientRect().bottom - 0.5) problems.push('subtitle overlaps the heading');
+        // The characteristics note sits on its own line under the section's title bar (#656, #695).
+        const note = root.querySelector('[data-field="base-characteristics-note"]');
+        const titleBar = note?.closest('[data-item-section]')?.querySelector('header');
+        if (note == null || titleBar == null) problems.push('note outside a titled section');
+        else if (note.getBoundingClientRect().top < titleBar.getBoundingClientRect().bottom - 0.5) problems.push('note overlaps the heading');
         const add = root.querySelector('[data-action="addSkill"]');
         const addTitle = add?.parentElement?.querySelector('h3');
         if (add == null || addTitle == null) problems.push('add-skill or its heading missing');
@@ -87,7 +87,7 @@ test.describe.serial('NPC Template sheet layout (Tier B, #656)', () => {
             expect(sheetId).not.toBe('');
             const sheet = page.locator(`#${sheetId}`);
             await sheet.locator('nav.tabs [data-tab="characteristics"]').click();
-            await expect(sheet.locator('[data-field="base-characteristics-heading"]')).toBeVisible();
+            await expect(sheet.locator('[data-field="base-characteristics-note"]')).toBeVisible();
             await snap(page, 'npc-template-characteristics-default-width', { selector: `#${sheetId}` });
             expect(await layoutProblems(page, sheetId)).toEqual([]);
 

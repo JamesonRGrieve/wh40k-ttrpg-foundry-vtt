@@ -1,11 +1,8 @@
 {{! NPC Template - Preview Tab }}
+{{#*inline "npcTemplatePreviewThreat"}}<span class="tw-text-sm tw-px-2 tw-py-0.5 tw-rounded-md" style="background: var(--wh40k-warning)">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span>{{/inline}}
 <section class="tab {{tab.cssClass}}" data-tab="preview" data-group="primary">
     {{! Threat Selector }}
-    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
-        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
-            <h3><i class="fas fa-eye"></i> {{localize "WH40K.NPC.Template.PreviewSettings"}}</h3>
-        </header>
-        <div>
+    {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-eye" labelKey="WH40K.NPC.Template.PreviewSettings"}}
             <div class="tw-flex tw-items-center tw-gap-4">
                 <label>{{localize "WH40K.NPC.Template.PreviewAtThreat"}}</label>
                 <input class="tw-flex-1" type="range" min="1" max="30" value="{{previewThreat}}" data-action="updatePreview" />
@@ -17,15 +14,10 @@
                     {{localize "WH40K.NPC.Template.CreateNPC"}}
                 </button>
             </div>
-        </div>
-    </div>
+    {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-    {{! Preview Stat Block }}
-    <div class="tw-relative tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-md)] tw-shadow-[0_4px_8px_var(--color-shadow-primary),0_0_20px_rgba(212,175,55,0.2),inset_0_1px_0_rgba(212,175,55,0.1)]">
-        <header class="tw-flex tw-items-center tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-bg-[linear-gradient(135deg,var(--color-warm-2)_0%,var(--color-warm-4)_100%)] tw-border-b tw-border-[var(--color-border-highlight)] tw-font-[var(--wh40k-font-header)] tw-text-[0.95rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[1px]">
-            <h3>{{item.name}} <span class="tw-text-sm tw-px-2 tw-py-0.5 tw-rounded-md tw-ml-2" style="background: var(--wh40k-warning)">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
-        </header>
-        <div>
+    {{! Preview Stat Block: titled with the template's name, its threat level at the right }}
+    {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-skull" labelKey="WH40K.NPC.Template.PreviewStatBlock" label=item.name actions="npcTemplatePreviewThreat"}}
             {{! Characteristics Preview }}
             <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)] last:tw-border-b-0">
                 <h4 class="tw-text-sm tw-font-semibold tw-uppercase tw-text-gold {{themeClassFor 'accent'}} tw-mb-2">{{localize "WH40K.Characteristics"}}</h4>
@@ -115,6 +107,5 @@
                     </div>
                 </div>
             {{/if}}
-        </div>
-    </div>
+    {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 </section>

@@ -15,26 +15,17 @@
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Basic Properties -->
-                <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-gold {{themeClassFor 'accent'}} tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-level-up-alt tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.UpgradeProperties"}}</h3>
-                    </div>
-                    <div class="tw-p-[var(--wh40k-space-md)]">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-level-up-alt" labelKey="WH40K.ItemSheet.Ship.UpgradeProperties"}}
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability.Label"}}</label>
                             <select name="system.availability">
                                 {{selectOptions availabilities selected=source.availability}}
                             </select>
                         </div>
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Resource Requirements -->
-                <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-battery-half tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.ResourceRequirements"}}</h3>
-                    </div>
-                    <div class="tw-p-[var(--wh40k-space-md)]">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-battery-half" labelKey="WH40K.ItemSheet.Ship.ResourceRequirements"}}
                         <div class="form-row">
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.Power"}}</label>
@@ -50,15 +41,10 @@
                                 <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
                             </div>
                         </div>
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Stat Modifiers -->
-                <div class="tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-[var(--wh40k-radius-lg)] tw-mb-[var(--wh40k-space-md)] tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-[var(--wh40k-space-md)] tw-py-[var(--wh40k-space-sm)] tw-border-b tw-border-[var(--wh40k-border-color-light)]" style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, transparent 100%)">
-                        <h3 class="tw-font-[var(--wh40k-font-display)] tw-text-[var(--wh40k-font-size-md)] tw-text-[color:var(--wh40k-gold)] tw-m-0 tw-uppercase tw-tracking-[0.05em]"><i class="fas fa-chart-line tw-mr-[var(--wh40k-space-sm)] tw-opacity-80"></i> {{localize "WH40K.ItemSheet.Ship.StatModifiers"}}</h3>
-                    </div>
-                    <div class="tw-p-[var(--wh40k-space-md)]">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-chart-line" labelKey="WH40K.ItemSheet.Ship.StatModifiers"}}
                         <div class="form-row">
                             <div class="form-group">
                                 <label>{{localize "WH40K.Voidcraft.Build.Stat.Speed"}}</label>
@@ -103,8 +89,7 @@
                                 <input type="number" name="system.modifiers.crewRating" value="{{source.modifiers.crewRating}}" />
                             </div>
                         </div>
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-magic" labelKey="WH40K.Tabs.Effect"}}
                         {{#if inEditMode}}

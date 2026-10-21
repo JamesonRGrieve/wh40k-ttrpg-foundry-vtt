@@ -16,11 +16,8 @@
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Weapon Properties -->
-                <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
-                        <h3><i class="fas fa-crosshairs"></i> {{localize "WH40K.ItemSheet.Ship.WeaponProperties"}}</h3>
-                    </div>
-                    <div class="tw-p-3">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-crosshairs" labelKey="WH40K.ItemSheet.Ship.WeaponProperties"}}
+                    <div>
                         <div class="form-group">
                             <label>{{localize "WH40K.ItemSheet.Ship.WeaponType"}}</label>
                             <select name="system.weaponType">
@@ -44,14 +41,11 @@
                             </select>
                         </div>
                     </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Weapon Stats -->
-                <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
-                        <h3><i class="fas fa-dice-d20"></i> {{localize "WH40K.ItemSheet.Ship.WeaponStatistics"}}</h3>
-                    </div>
-                    <div class="tw-p-3">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-dice-d20" labelKey="WH40K.ItemSheet.Ship.WeaponStatistics"}}
+                    <div>
                         <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>{{localize "WH40K.Characteristic.Strength"}}</label>
@@ -74,14 +68,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Resource Requirements -->
-                <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
-                        <h3><i class="fas fa-battery-half"></i> {{localize "WH40K.ItemSheet.Ship.ResourceRequirements"}}</h3>
-                    </div>
-                    <div class="tw-p-3">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-battery-half" labelKey="WH40K.ItemSheet.Ship.ResourceRequirements"}}
+                    <div>
                         <div class="form-row tw-flex tw-gap-2">
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.Power"}}</label>
@@ -97,18 +88,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Special Qualities -->
-                <div class="wh40k-panel tw-mb-3 tw-bg-[var(--wh40k-panel-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-bg-gradient-to-r tw-from-[rgba(212,175,55,0.15)] tw-to-transparent tw-border-b tw-border-[var(--wh40k-border-color-light)]">
-                        <h3><i class="fas fa-star"></i> {{localize "WH40K.ItemSheet.Ship.SpecialQualities"}}</h3>
-                    </div>
-                    <div class="tw-p-3">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.ItemSheet.Ship.SpecialQualities"}}
                         <p class="hint">{{localize "WH40K.ItemSheet.Ship.SpecialQualitiesHint"}}</p>
                         <input type="text" name="system.special" value="{{join system.special ','}}" placeholder="{{localize 'WH40K.ItemSheet.Ship.SpecialPlaceholder'}}" />
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.ItemSheet.Common.GmNotes"}}
                         <textarea name="system.notes" rows="4" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{system.notes}}</textarea>

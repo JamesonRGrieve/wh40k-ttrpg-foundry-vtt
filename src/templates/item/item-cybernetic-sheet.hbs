@@ -103,12 +103,8 @@
       <div class="tab active" data-tab="properties" data-group="primary">
         
         {{!-- Cybernetic Type & Locations --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-microchip"></i>
-            <h3>{{localize "WH40K.ItemSheet.Cybernetic.Configuration"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-microchip" labelKey="WH40K.ItemSheet.Cybernetic.Configuration"}}
+          <div>
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Type --}}
@@ -229,15 +225,11 @@
               </div>
             </div>
           </div>
-        </div>
-        
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
         {{!-- Physical Properties --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-box"></i>
-            <h3>{{localize "WH40K.Ammunition.PhysicalProperties"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-box" labelKey="WH40K.Ammunition.PhysicalProperties"}}
+          <div>
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Weight --}}
@@ -297,20 +289,16 @@
               {{/if}}
             </div>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 
       {{!-- EFFECTS TAB --}}
       <div class="tab" data-tab="effects" data-group="primary">
-        
+
         {{!-- Effect Description --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-bolt"></i>
-            <h3>{{localize "WH40K.Tabs.Effect"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.Tabs.Effect"}}
+          <div>
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.EffectHint"}}
             </p>
@@ -322,15 +310,11 @@
               {{/if}}
             </div>
           </div>
-        </div>
-        
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
         {{!-- Drawbacks --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>{{localize "WH40K.ItemSheet.Cybernetic.Drawbacks"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-exclamation-triangle" labelKey="WH40K.ItemSheet.Cybernetic.Drawbacks"}}
+          <div>
             <p class="tw-text-[0.7rem] tw-text-[color:var(--color-text-tertiary)] tw-italic tw-mb-2">
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.DrawbacksHint"}}
             </p>
@@ -342,16 +326,12 @@
               {{/if}}
             </div>
           </div>
-        </div>
-        
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
         {{!-- Modifiers Display --}}
         {{#if (or system.modifiers.characteristics system.modifiers.skills system.modifiers.combat system.modifiers.wounds system.modifiers.movement)}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-chart-line"></i>
-            <h3>{{localize "WH40K.ItemSheet.Ship.StatModifiers"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-chart-line" labelKey="WH40K.ItemSheet.Ship.StatModifiers"}}
+          <div>
             <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               
               {{#if system.modifiers.characteristics}}
@@ -435,7 +415,7 @@
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Trait.ModifiersReadOnly"}}
             </p>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         {{else}}
         <div class="tw-mb-4">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
@@ -452,12 +432,8 @@
       <div class="tab" data-tab="armour" data-group="primary">
         
         {{!-- Armour Points Toggle --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-shield-halved"></i>
-            <h3>{{localize "WH40K.ItemSheet.Cybernetic.ArmourProtection"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-shield-halved" labelKey="WH40K.ItemSheet.Cybernetic.ArmourProtection"}}
+          <div>
             <div class="tw-flex tw-flex-col tw-gap-1.5 tw-justify-center">
               <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)]">
                 <input type="checkbox" name="system.hasArmourPoints" {{checked system.hasArmourPoints}} />
@@ -465,16 +441,12 @@
               </label>
             </div>
           </div>
-        </div>
-        
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
         {{!-- Armour Points Grid (if enabled) --}}
         {{#if system.hasArmourPoints}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-shield-halved"></i>
-            <h3>{{localize "WH40K.ItemSheet.Armour.ByLocation"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-shield-halved" labelKey="WH40K.ItemSheet.Armour.ByLocation"}}
+          <div>
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
                 <label><i class="fas fa-head-side-brain"></i> {{localize "WH40K.BodyLocation.Head"}}</label>
@@ -511,7 +483,7 @@
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.ArmourStacks"}}
             </p>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         {{else}}
         <div class="tw-mb-4">
           <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-opacity-70">
@@ -528,12 +500,8 @@
       <div class="tab" data-tab="installation" data-group="primary">
         
         {{!-- Installation Requirements --}}
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-            <i class="fas fa-syringe"></i>
-            <h3>{{localize "WH40K.ItemSheet.Cybernetic.InstallationRequirements"}}</h3>
-          </div>
-          <div class="tw-mb-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-syringe" labelKey="WH40K.ItemSheet.Cybernetic.InstallationRequirements"}}
+          <div>
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               
               {{!-- Surgery Required --}}
@@ -568,7 +536,7 @@
               <i class="fas fa-info-circle"></i> {{localize "WH40K.ItemSheet.Cybernetic.InstallationNote"}}
             </p>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         
       </div>
       

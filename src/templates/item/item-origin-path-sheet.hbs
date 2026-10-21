@@ -76,10 +76,7 @@
       <div class="tab active" data-tab="grants" data-group="primary">
 
         {{!-- Characteristic Modifiers --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-dumbbell tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.CharacteristicModifiers"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-dumbbell" labelKey="WH40K.CharacteristicModifiers"}}
 
           <div class="tw-grid tw-grid-cols-[repeat(9,1fr)] tw-gap-1">
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
@@ -119,13 +116,10 @@
               <input type="number" name="system.modifiers.characteristics.fellowship" value="{{item.system.modifiers.characteristics.fellowship}}" class="tw-w-full tw-px-1 tw-py-0.5 tw-rounded-sm tw-text-xs tw-text-center" placeholder="0" />
             </div>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Other Bonuses --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-heart tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.OtherBonuses"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-heart" labelKey="WH40K.OtherBonuses"}}
 
           <div class="tw-flex tw-flex-wrap tw-gap-3">
             <div class="tw-flex tw-flex-col tw-gap-1">
@@ -150,13 +144,10 @@
             </div>
             {{/if}}
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Skills Granted --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-graduation-cap tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.SkillsGranted"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-graduation-cap" labelKey="WH40K.SkillsGranted"}}
 
           {{#if inEditMode}}
           <div class="tw-flex tw-flex-col tw-gap-1">
@@ -202,13 +193,10 @@
             <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoSkills"}}</p>
           </div>
           {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Talents Granted --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-star tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.TalentsGranted"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.TalentsGranted"}}
 
           {{#if inEditMode}}
           <div class="tw-flex tw-flex-col tw-gap-1">
@@ -241,13 +229,10 @@
             <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoTalents"}}</p>
           </div>
           {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Traits Granted --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-shield-alt tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.TraitsGranted"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-shield-alt" labelKey="WH40K.TraitsGranted"}}
 
           {{#if inEditMode}}
           <div class="tw-flex tw-flex-col tw-gap-1">
@@ -280,13 +265,10 @@
             <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoTraits"}}</p>
           </div>
           {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Aptitudes Granted --}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-brain tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.AptitudesGranted"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-brain" labelKey="WH40K.AptitudesGranted"}}
 
           {{#if item.system.grants.aptitudes.length}}
           <div class="tw-flex tw-flex-wrap tw-gap-1">
@@ -300,14 +282,11 @@
             <p class="tw-m-0">{{localize "WH40K.ItemSheet.OriginPath.NoAptitudes"}}</p>
           </div>
           {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Equipment Granted --}}
         {{#if (or inEditMode item.system.grants.equipment.length)}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-toolbox tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.EquipmentGranted"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-toolbox" labelKey="WH40K.EquipmentGranted"}}
 
           {{#if inEditMode}}
           <div class="tw-flex tw-flex-col tw-gap-1">
@@ -335,15 +314,12 @@
             {{/each}}
           </div>
           {{/if}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         {{/if}}
 
         {{!-- Special Abilities --}}
         {{#if item.system.grants.specialAbilities.length}}
-        <div class="tw-mb-3">
-          <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-            <i class="fas fa-bolt tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.SpecialAbilities"}}
-          </h3>
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.SpecialAbilities"}}
 
           {{#each item.system.grants.specialAbilities as |ability index|}}
           <div class="tw-mb-2 tw-p-2 tw-rounded-md">
@@ -353,7 +329,7 @@
             </div>
           </div>
           {{/each}}
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         {{/if}}
       </div>
 
@@ -362,10 +338,7 @@
         {{#if item.system.hasRequirements}}
           {{!-- Text Requirements --}}
           {{#if item.system.requirements.text}}
-          <div class="tw-mb-3">
-            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-file-alt tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.TextDescription"}}
-            </h3>
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-file-alt" labelKey="WH40K.ItemSheet.OriginPath.TextDescription"}}
 
             <div class="tw-flex tw-flex-col tw-gap-1">
               <label class="tw-text-xs tw-opacity-70">{{localize "WH40K.Tabs.Requirements"}}</label>
@@ -375,15 +348,12 @@
             <div class="tw-mt-2 tw-text-sm tw-p-2 tw-rounded-sm">
               <p class="tw-m-0">{{item.system.requirements.text}}</p>
             </div>
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
           {{/if}}
 
           {{!-- Previous Steps Required --}}
           {{#if item.system.requirements.previousSteps.length}}
-          <div class="tw-mb-3">
-            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-check-circle tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.RequiredPreviousSteps"}}
-            </h3>
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-check-circle" labelKey="WH40K.ItemSheet.OriginPath.RequiredPreviousSteps"}}
 
             <div class="tw-flex tw-flex-col tw-gap-1">
               <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.MustHaveOne"}}</p>
@@ -394,15 +364,12 @@
               </div>
               {{/each}}
             </div>
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
           {{/if}}
 
           {{!-- Excluded Steps --}}
           {{#if item.system.requirements.excludedSteps.length}}
-          <div class="tw-mb-3">
-            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-ban tw-text-gold {{themeClassFor 'accent'}}"></i> {{localize "WH40K.ItemSheet.OriginPath.ExcludedSteps"}}
-            </h3>
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-ban" labelKey="WH40K.ItemSheet.OriginPath.ExcludedSteps"}}
 
             <div class="tw-flex tw-flex-col tw-gap-1">
               <p class="tw-m-0 tw-mb-1 tw-text-xs tw-italic tw-opacity-70">{{localize "WH40K.ItemSheet.OriginPath.CannotHaveAny"}}</p>
@@ -413,7 +380,7 @@
               </div>
               {{/each}}
             </div>
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
           {{/if}}
         {{else}}
         <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
@@ -428,10 +395,7 @@
       <div class="tab" data-tab="choices" data-group="primary">
         {{#if item.system.grants.choices.length}}
           {{#each item.system.grants.choices as |choice index|}}
-          <div class="tw-mb-3">
-            <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
-              <i class="fas fa-random tw-text-gold {{themeClassFor 'accent'}}"></i> {{choice.label}}
-            </h3>
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-random" labelKey="WH40K.ItemSheet.OriginPath.Choices" label=choice.label}}
 
             <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
               <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
@@ -449,7 +413,7 @@
               </div>
               {{/each}}
             </div>
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
           {{/each}}
         {{else}}
         <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">

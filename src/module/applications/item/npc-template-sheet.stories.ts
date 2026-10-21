@@ -258,11 +258,11 @@ export const DefaultWidthLayout: Story = {
                 if (r.right > box.right + 0.5 || r.left < box.left - 0.5) problems.push(`tab ${tab.getAttribute('data-tab') ?? ''} outside the strip`);
             }
         }
-        for (const heading of Array.from(canvasElement.querySelectorAll('[data-field="base-characteristics-heading"]'))) {
-            const title = heading.firstElementChild;
-            const subtitle = heading.lastElementChild;
-            if (title === null || subtitle === null || title === subtitle) problems.push('heading without its subtitle');
-            else if (subtitle.getBoundingClientRect().top < title.getBoundingClientRect().bottom - 0.5) problems.push('subtitle overlaps the heading');
+        // The characteristics note sits on its own line under the section's title bar (#656, #695).
+        for (const note of Array.from(canvasElement.querySelectorAll('[data-field="base-characteristics-note"]'))) {
+            const titleBar = note.closest('[data-item-section]')?.querySelector('header');
+            if (titleBar == null) problems.push('note outside a titled section');
+            else if (note.getBoundingClientRect().top < titleBar.getBoundingClientRect().bottom - 0.5) problems.push('note overlaps the heading');
         }
         for (const add of Array.from(canvasElement.querySelectorAll('[data-action="addSkill"]'))) {
             const title = add.parentElement?.querySelector('h3');

@@ -94,30 +94,18 @@
             {{! EFFECT TAB (Primary) }}
             <div class="tab active" data-tab="effect" data-group="primary">
 
-                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-orange-500/30 tw-rounded-md tw-mb-3 tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-bg-gradient-to-r tw-from-orange-500/12 tw-to-transparent tw-border-b tw-border-solid tw-border-orange-500/20">
-                        <i class="fas fa-bolt tw-text-orange-500 tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.MechanicalEffect"}}</h3>
-                    </div>
-                    <div class="tw-p-0">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.ItemSheet.WeaponQuality.MechanicalEffect"}}
                         {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
-                    </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#if system.hasLevel}}
-                    <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
-                        <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
-                            <i class="fas fa-info-circle tw-text-bronze tw-text-sm"></i>
-                            <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanation"}}</h3>
-                        </div>
-                        <div class="tw-p-3">
+                    {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-info-circle" labelKey="WH40K.ItemSheet.WeaponQuality.LevelExplanation"}}
                             <p class="tw-m-0 tw-p-2.5 tw-bg-blue-500/8 tw-border-l-4 tw-border-solid tw-border-blue-500/50 tw-rounded-md tw-text-sm tw-leading-relaxed">
                                 {{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanationBefore"}}
                                 <strong class="tw-font-semibold">{{item.name}} ({{system.level}})</strong>
                                 {{localize "WH40K.ItemSheet.WeaponQuality.LevelExplanationAfter"}}
                             </p>
-                        </div>
-                    </div>
+                    {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
                 {{/if}}
 
             </div>
@@ -125,12 +113,8 @@
             {{! DETAILS TAB }}
             <div class="tab" data-tab="details" data-group="primary">
 
-                <div class="tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/10 tw-rounded-md tw-mb-3 tw-overflow-hidden">
-                    <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-b tw-border-solid tw-border-black/10">
-                        <i class="fas fa-cog tw-text-bronze tw-text-sm"></i>
-                        <h3 class="tw-flex-1 tw-m-0 tw-font-display tw-text-base tw-font-semibold">{{localize "WH40K.ItemSheet.WeaponQuality.QualityProperties"}}</h3>
-                    </div>
-                    <div class="tw-p-3">
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-cog" labelKey="WH40K.ItemSheet.WeaponQuality.QualityProperties"}}
+                    <div>
 
                         <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mb-3">
                             <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-gray-500">{{localize "WH40K.ItemSheet.WeaponQuality.Identifier"}}</label>
@@ -155,7 +139,7 @@
                         {{/if}}
 
                     </div>
-                </div>
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sticky-note" labelKey="WH40K.ItemSheet.Common.GmNotes"}}
                         <textarea class="tw-w-full tw-px-2 tw-py-1.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-text-sm tw-font-body tw-resize-y" name="system.notes" rows="4" placeholder="{{localize 'WH40K.ItemSheet.WeaponQuality.NotesPlaceholder'}}">{{system.notes}}</textarea>

@@ -3,10 +3,26 @@
   Modern tabbed interface with translucent gothic styling
   Font Awesome 6 Pro icons throughout
 --}}
-{{!-- Section-header shell reused across every tab panel (#471). Body content is
-     delivered through the partial-block slot; the gold/accent treatment is
-     applied uniformly (previously only the first "Benefit" header carried it). --}}
-{{#*inline "talentSectionHeader"}}<h3 class="tw-flex tw-items-center tw-gap-1 tw-justify-between tw-mb-2 tw-pb-1 tw-border-b tw-border-b-[var(--wh40k-border-color-light)] tw-text-gold {{themeClassFor 'accent'}}">{{> @partial-block}}</h3>{{/inline}}
+{{!-- Every tab section is the shared item-detail-section panel (#471, #695).
+     These fill its title-bar `actions` slot: the Benefit edit toggle, and the
+     talent-editor button whose section and label come from the panel call's
+     `editorSection` / `editorTitleKey` hash. --}}
+{{#*inline "talentBenefitAction"}}
+{{#if canEdit}}
+{{#unless inEditMode}}
+{{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-pen-to-square" titleKey="WH40K.ItemSheet.Talent.EditBenefit"}}
+{{else}}
+{{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" titleKey="WH40K.ItemSheet.Talent.DoneEditing"}}
+{{/unless}}
+{{/if}}
+{{/inline}}
+{{#*inline "talentEditorAction"}}
+{{#if inEditMode}}
+<button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="{{editorSection}}" title="{{localize editorTitleKey}}" aria-label="{{localize editorTitleKey}}">
+  <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+</button>
+{{/if}}
+{{/inline}}
 <div class="tw-flex tw-flex-col tw-h-full">
 
     {{!-- ═══════════════════════════════════════════════════════════════════
@@ -203,18 +219,7 @@
 
         {{!-- Benefit Section (Editable with hover button) --}}
         <div class="{{#if inEditMode}}tw-ring-1 tw-ring-[color:var(--wh40k-accent-gold)]{{/if}}">
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-star"></i>
-            {{localize "WH40K.SpecialAbility.Benefit"}}
-            {{#if canEdit}}
-            {{#unless inEditMode}}
-            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-pen-to-square" titleKey="WH40K.ItemSheet.Talent.EditBenefit"}}
-            {{else}}
-            {{> systems/wh40k-rpg/templates/shared/sheet-action-button.hbs action="toggleEditMode" icon="fa-check" titleKey="WH40K.ItemSheet.Talent.DoneEditing"}}
-            {{/unless}}
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.SpecialAbility.Benefit" actions="talentBenefitAction"}}
             {{#if inEditMode}}
             <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md tw-p-2 [&_.editor]:tw-min-h-[150px]">
               {{editor system.benefit target="system.benefit" button=true editable=canEdit engine="prosemirror"}}
@@ -231,21 +236,12 @@
               </div>
               {{/if}}
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Special Abilities Section --}}
         <div >
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-bolt-lightning"></i>
-            {{localize "WH40K.Dialog.TalentEditor.SpecialAbilities"}}
-            {{#if inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="{{localize 'WH40K.ItemSheet.Talent.EditGrantsAbilities'}}">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt-lightning" labelKey="WH40K.Dialog.TalentEditor.SpecialAbilities" actions="talentEditorAction" editorSection="grants" editorTitleKey="WH40K.ItemSheet.Talent.EditGrantsAbilities"}}
             {{#if grantsData.hasSpecialAbilities}}
             <div class="tw-flex tw-flex-col tw-gap-2">
               {{#each grantsData.specialAbilities}}
@@ -271,7 +267,7 @@
               {{/if}}
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
       </div>
@@ -283,11 +279,7 @@
 
         {{!-- Basic Properties --}}
         <div >
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-cog"></i>
-            {{localize "WH40K.ItemSheet.Talent.BasicProperties"}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-cog" labelKey="WH40K.ItemSheet.Talent.BasicProperties"}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               {{!-- Category --}}
               <div class="tw-flex tw-flex-col tw-gap-1.5">
@@ -404,16 +396,12 @@
               </div>
               {{/if}}
             </div>
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Specialization (with Has Specialization checkbox) --}}
         <div >
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-bullseye"></i>
-            {{localize "WH40K.ItemSheet.Talent.SpecialisationX"}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bullseye" labelKey="WH40K.ItemSheet.Talent.SpecialisationX"}}
             {{#if inEditMode}}
             <div class="tw-flex tw-flex-col tw-gap-2">
               <label class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer">
@@ -440,21 +428,12 @@
               <p>{{localize "WH40K.ItemSheet.Talent.NotSpecialisation"}}</p>
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Prerequisites --}}
         <div >
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-lock"></i>
-            {{localize "WH40K.Dialog.TalentEditor.Prerequisites"}}
-            {{#if inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="prerequisites" title="{{localize 'WH40K.ItemSheet.Talent.EditPrerequisites'}}">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-lock" labelKey="WH40K.Dialog.TalentEditor.Prerequisites" actions="talentEditorAction" editorSection="prerequisites" editorTitleKey="WH40K.ItemSheet.Talent.EditPrerequisites"}}
             {{#if prerequisitesData.hasAny}}
             <div class="tw-flex tw-flex-col tw-gap-2 tw-p-3 tw-bg-[var(--color-bg-option)] tw-border tw-border-[var(--color-border-secondary)] tw-rounded-md">
               {{#if prerequisitesData.hasText}}
@@ -499,17 +478,13 @@
               {{/if}}
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Roll Configuration (if active talent) --}}
         {{#unless talentData.isPassive}}
         <div >
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-dice-d20"></i>
-            {{localize "WH40K.ItemSheet.Talent.RollConfiguration"}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-dice-d20" labelKey="WH40K.ItemSheet.Talent.RollConfiguration"}}
             {{#if inEditMode}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1.5">
@@ -571,7 +546,7 @@
               <p>{{localize "WH40K.ItemSheet.Talent.NoRollConfiguration"}}</p>
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
         {{/unless}}
 
@@ -584,16 +559,7 @@
 
         {{!-- Permanent Modifiers --}}
         <div  data-section-id="modifiers" data-has-data="{{modifiersData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "modifiers")}}{{@index}}{{/if}}{{/each}}">
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-chart-line"></i>
-            {{localize "WH40K.ItemSheet.Talent.PermanentModifiers"}}
-            {{#if inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="modifiers" title="{{localize 'WH40K.ItemSheet.Talent.EditModifiers'}}">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-chart-line" labelKey="WH40K.ItemSheet.Talent.PermanentModifiers" actions="talentEditorAction" editorSection="modifiers" editorTitleKey="WH40K.ItemSheet.Talent.EditModifiers"}}
             {{#if modifiersData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
@@ -713,21 +679,12 @@
               {{/if}}
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Situational Modifiers --}}
         <div  data-section-id="situational" data-has-data="{{situationalData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "situational")}}{{@index}}{{/if}}{{/each}}">
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            {{localize "WH40K.ItemSheet.Talent.SituationalModifiers"}}
-            {{#if inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="situational" title="{{localize 'WH40K.ItemSheet.Talent.EditSituational'}}">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-clock-rotate-left" labelKey="WH40K.ItemSheet.Talent.SituationalModifiers" actions="talentEditorAction" editorSection="situational" editorTitleKey="WH40K.ItemSheet.Talent.EditSituational"}}
             {{#if situationalData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
@@ -784,21 +741,12 @@
               {{/if}}
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- Grants Section --}}
         <div  data-section-id="grants" data-has-data="{{grantsData.hasAny}}" style="order: {{#each effectsSectionOrder}}{{#if (eq this "grants")}}{{@index}}{{/if}}{{/each}}">
-          {{#> talentSectionHeader}}
-            <i class="fa-solid fa-gift"></i>
-            {{localize "WH40K.Talent.Grants"}}
-            {{#if inEditMode}}
-            <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-cursor-pointer tw-rounded-[var(--wh40k-radius-sm)] tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.2)] tw-border tw-border-solid tw-border-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.4)] tw-text-[color:var(--wh40k-accent-gold)] hover:tw-bg-[rgb(from_var(--wh40k-accent-gold)_r_g_b_/_0.3)] hover:tw-border-[color:var(--wh40k-accent-gold)] hover:tw-scale-110 active:tw-scale-95" data-action="openTalentEditor" data-section="grants" title="{{localize 'WH40K.ItemSheet.Talent.EditGrants'}}">
-              <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-            {{/if}}
-          {{/talentSectionHeader}}
-          <div >
+          {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-gift" labelKey="WH40K.Talent.Grants" actions="talentEditorAction" editorSection="grants" editorTitleKey="WH40K.ItemSheet.Talent.EditGrants"}}
             {{#if grantsData.hasAny}}
             <p class="tw-flex tw-items-center tw-gap-1">
               <i class="fa-solid fa-info-circle"></i>
@@ -884,7 +832,7 @@
               {{/if}}
             </div>
             {{/if}}
-          </div>
+          {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
       </div>

@@ -169,11 +169,7 @@
           <div class="tw-flex tw-flex-col tw-gap-4">
             
             {{!-- Category & Classification --}}
-            <div class="tw-mb-4">
-              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-                <i class="fas fa-tags"></i>
-                <h3 class="tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.ItemSheet.Gear.Classification"}}</h3>
-              </div>
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-tags" labelKey="WH40K.ItemSheet.Gear.Classification"}}
               <div class="tw-flex tw-flex-col tw-gap-2">
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Gear.Category"}}</label>
@@ -221,24 +217,17 @@
                   </select>
                 </div>
               </div>
-            </div>
-            
-            {{!-- Storage --}}
-            <div class="tw-mb-4">
-              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-                <i class="fas fa-box"></i>
-                <h3>{{localize "WH40K.ItemSheet.Gear.Storage"}}</h3>
-              </div>
-              <div class="tw-mb-3">
-                <div class="tw-flex tw-flex-col tw-gap-1">
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
+            {{!-- Storage: one native checkbox per option (a decorative square icon beside each read as a second box, #695) --}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-box" labelKey="WH40K.ItemSheet.Gear.Storage"}}
+                <div class="tw-flex tw-flex-col tw-gap-1" data-gear-storage>
                   <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
                     <input type="checkbox" name="system.state.equipped" {{checked system.state.equipped}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
-                    <i class="fas {{#if system.state.equipped}}fa-check-square{{else}}fa-square{{/if}}"></i>
                     <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.Weapon.Equipped"}}</span>
                   </label>
                   <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
                     <input type="checkbox" name="system.state.inBackpack" {{checked system.state.inBackpack}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
-                    <i class="fas {{#if system.state.inBackpack}}fa-check-square{{else}}fa-square{{/if}}"></i>
                     <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.ItemSheet.Gear.InBackpack"}}</span>
                   </label>
                   {{!-- #390: Bound toggle — GM only, only visible in edit mode --}}
@@ -250,20 +239,15 @@
                   </label>
                   {{/if}}
                 </div>
-              </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
           </div>
-          
+
           {{!-- RIGHT COLUMN --}}
           <div class="tw-flex tw-flex-col tw-gap-4">
-            
+
             {{!-- Physical Properties --}}
-            <div class="tw-mb-4">
-              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-                <i class="fas fa-cubes"></i>
-                <h3>{{localize "WH40K.Ammunition.PhysicalProperties"}}</h3>
-              </div>
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-cubes" labelKey="WH40K.Ammunition.PhysicalProperties"}}
               <div class="tw-flex tw-flex-col tw-gap-2">
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Quantity"}}</label>
@@ -282,35 +266,23 @@
                   <input type="text" value="{{source.effectiveTotalWeight}} {{localize 'WH40K.Common.Kilograms'}}" disabled class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-muted)] tw-opacity-60" />
                 </div>
               </div>
-            </div>
-            
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
             {{!-- Economic --}}
             {{#unless hideThroneGelt}}
-            <div class="tw-mb-4">
-              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-                <i class="fas fa-coins"></i>
-                <h3>{{localize "WH40K.ItemSheet.Gear.Economic"}}</h3>
-              </div>
-              <div class="tw-mb-3">
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-coins" labelKey="WH40K.ItemSheet.Gear.Economic"}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Ammunition.CostThrones"}}</label>
                   <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}"
                          data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
-              </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
             {{/unless}}
-            
+
             {{!-- Consumable Toggle --}}
-            <div class="tw-mb-4">
-              <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-                <i class="fas fa-flask"></i>
-                <h3>{{localize "WH40K.Gear.Consumable"}}</h3>
-              </div>
-              <div class="tw-mb-3">
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-flask" labelKey="WH40K.Gear.Consumable"}}
                 <label class="tw-flex tw-items-center tw-gap-1.5 tw-cursor-pointer">
                   <input type="checkbox" name="system.consumable" {{checked system.consumable}} class="tw-w-3.5 tw-h-3.5 [accent-color:var(--wh40k-gold)]" />
-                  <i class="fas {{#if system.consumable}}fa-check-square{{else}}fa-square{{/if}}"></i>
                   <span class="tw-text-[0.8rem] tw-text-[color:var(--wh40k-text-medium)]">{{localize "WH40K.ItemSheet.Gear.HasLimitedUses"}}</span>
                 </label>
                 
@@ -321,9 +293,8 @@
                          data-dtype="Number" min="0" class="tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-sm tw-px-2 tw-py-1 tw-text-[color:var(--wh40k-text-dark)]" />
                 </div>
                 {{/if}}
-              </div>
-            </div>
-            
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
           </div>
           
         </div>
@@ -334,15 +305,9 @@
       {{#if hasLimitedUses}}
       <div class="tab" data-tab="usage" data-group="primary">
         
-        <div class="tw-mb-4">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-2">
-            <i class="fas fa-hourglass-half"></i>
-            <h3>{{localize "WH40K.ItemSheet.Gear.ConsumableProperties"}}</h3>
-            <span class="tw-ml-auto tw-text-xs {{#if usesExhausted}}tw-text-red-400{{/if}}">
-              {{usesDisplay}}
-            </span>
-          </div>
-          <div class="tw-mb-3">
+        {{#*inline "gearUsesCount"}}<span class="tw-text-xs {{#if usesExhausted}}tw-text-red-400{{/if}}">{{usesDisplay}}</span>{{/inline}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-hourglass-half" labelKey="WH40K.ItemSheet.Gear.ConsumableProperties" actions="gearUsesCount"}}
+          <div>
             
             {{!-- Uses Bar --}}
             <div class="tw-mb-3">
@@ -385,10 +350,10 @@
                 {{localize "WH40K.Gear.ResetUses"}}
               </button>
             </div>
-            
+
           </div>
-        </div>
-        
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+
       </div>
       {{/if}}
 

@@ -10,6 +10,11 @@
                 the title is `labelKey` localized when it is absent.
     sectionId — makes the panel collapsible through the sheet's `toggleSection`
                 action, keyed by this id (the weapon sheet's sections). Optional.
+    actions   — the name of an inline partial the caller defines (`{{#*inline "…"}}`)
+                whose content (a count, a control) sits at the right of the title bar.
+                Optional.
+    addAction — the `data-action` of an add (+) button at the right of the title bar,
+                for a section that lists entries. Optional; `addLabelKey` names it.
 
   The panel carries `data-item-section="<labelKey>"`, so tests find it by its title.
   Every body has the same inset (`data-item-section-body`); callers add no padding.
@@ -23,6 +28,12 @@
   <header class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.2)] tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.15)_0%,rgba(201,162,39,0.05)_100%)]{{#if sectionId}} tw-group tw-cursor-pointer tw-select-none{{/if}}"{{#if sectionId}} data-action="toggleSection" data-section="{{sectionId}}"{{/if}}>
     <i class="fas {{icon}} tw-text-gold {{themeClassFor 'accent'}}"></i>
     <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{#if label}}{{label}}{{else}}{{localize labelKey}}{{/if}}</h3>
+    {{#if actions}}<div class="tw-flex tw-items-center tw-gap-1 tw-ml-auto" data-item-section-actions>{{> (lookup . "actions")}}</div>{{/if}}
+    {{#if addAction}}
+    <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-[22px] tw-h-[22px] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-text-[color:var(--color-text-secondary)] tw-rounded-[var(--wh40k-radius-sm)] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-text-[color:var(--color-text-primary)]" data-action="{{addAction}}" aria-label="{{#if addLabelKey}}{{localize addLabelKey}}{{else}}{{localize 'WH40K.Common.Add'}}{{/if}}">
+      <i class="fas fa-plus" aria-hidden="true"></i>
+    </button>
+    {{/if}}
     {{#if sectionId}}
     <i class="fa-solid fa-chevron-down wh40k-section__toggle tw-text-[0.7rem] tw-opacity-50 tw-transition-transform group-hover:tw-opacity-100"></i>
     {{/if}}

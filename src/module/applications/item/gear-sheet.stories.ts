@@ -129,6 +129,37 @@ export const DescriptionTab: Story = {
     },
 };
 
+/**
+ * The Overview tab, composed (#695): Classification, Storage, Physical Properties and
+ * Economic are titled panels, not Foundry's large bare `<h3>`s, and each Storage
+ * option is one labelled checkbox. A decorative square icon used to sit beside each
+ * real checkbox, so every option showed two boxes.
+ */
+export const OverviewTab: Story = {
+    render: (args) => activateTab(renderSheet(templateSrc, mockGearSheetContext(args.overrides)), 'overview'),
+    play: async ({ canvasElement }) => {
+        const keys = detailSectionTitles(canvasElement, 'overview').map((s) => s.key);
+        await expect(keys).toEqual(
+            expect.arrayContaining([
+                'WH40K.ItemSheet.Gear.Classification',
+                'WH40K.ItemSheet.Gear.Storage',
+                'WH40K.Ammunition.PhysicalProperties',
+                'WH40K.ItemSheet.Gear.Economic',
+            ]),
+        );
+        await expect(canvasElement.querySelector('.tab[data-tab="overview"] h3:not([data-item-section] h3)')).toBeNull();
+
+        const options = [...canvasElement.querySelectorAll<HTMLLabelElement>('[data-gear-storage] label')];
+        await expect(options.length).toBeGreaterThanOrEqual(2);
+        const perOption = options.map((option) => ({
+            checkboxes: option.querySelectorAll('input[type="checkbox"]').length,
+            squares: option.querySelectorAll('.fa-square, .fa-check-square, .fa-square-check').length,
+            labelled: option.textContent.trim() !== '',
+        }));
+        await expect(perOption.every((o) => o.checkboxes === 1 && o.squares === 0 && o.labelled)).toBe(true);
+    },
+};
+
 // ── Per-system homologation ───────────────────────────────────────────────────
 //
 // The header Classification heading and the profane badge carry per-system

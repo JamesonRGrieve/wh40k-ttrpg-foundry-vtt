@@ -66,11 +66,7 @@
 
         {{!-- MODIFIERS TAB --}}
         <div class="tab active" data-tab="modifiers" data-group="primary">
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3 tw-text-gold {{themeClassFor 'accent'}}">
-                    <i class="fas fa-sliders-h"></i>
-                    {{localize "WH40K.Ammunition.WeaponStatModifiers"}}
-                </h3>
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-sliders-h" labelKey="WH40K.Ammunition.WeaponStatModifiers"}}
                 <div class="tw-grid tw-grid-cols-2 tw-gap-3">
                     <div class="tw-flex tw-flex-col tw-gap-1">
                         <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">{{localize "WH40K.Ammunition.DamageModifier"}}</label>
@@ -97,13 +93,9 @@
                         <small class="tw-text-xs tw-opacity-70">{{localize "WH40K.Ammunition.ClipModifierHelp"}}</small>
                     </div>
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-                    <i class="fas fa-gauge-high"></i>
-                    {{localize "WH40K.Ammunition.RateOfFireModifiers"}}
-                </h3>
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-gauge-high" labelKey="WH40K.Ammunition.RateOfFireModifiers"}}
                 <div class="tw-grid tw-grid-cols-3 tw-gap-3">
                     <div class="tw-flex tw-flex-col tw-gap-1">
                         <label class="tw-text-sm tw-font-medium tw-text-[var(--wh40k-text-dark)]">{{localize "WH40K.Ammunition.RofSingle"}}</label>
@@ -121,17 +113,15 @@
                                class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}readonly{{/unless}} />
                     </div>
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- COMPATIBILITY TAB --}}
         <div class="tab" data-tab="compatibility" data-group="primary">
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-                    <i class="fas fa-link"></i>
-                    {{localize "WH40K.Ammunition.CompatibleWeaponTypes"}}
-                    <span class="tw-ml-auto tw-text-xs tw-opacity-70">{{item.system.weaponTypes.size}} {{localize "WH40K.Ammunition.Selected"}}</span>
-                </h3>
+            {{#*inline "ammoWeaponTypeCount"}}
+            <span class="tw-text-xs tw-opacity-70">{{item.system.weaponTypes.size}} {{localize "WH40K.Ammunition.Selected"}}</span>
+            {{/inline}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-link" labelKey="WH40K.Ammunition.CompatibleWeaponTypes" actions="ammoWeaponTypeCount"}}
                 <p class="tw-text-sm tw-opacity-70 tw-mb-3">{{localize "WH40K.Ammunition.CompatibleWeaponTypesHelp"}}</p>
                 <div class="tw-flex tw-flex-wrap tw-gap-2">
                     {{#each CONFIG.WH40K.weaponTypes as |type key|}}
@@ -142,18 +132,16 @@
                     </label>
                     {{/each}}
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         </div>
 
         {{!-- QUALITIES TAB --}}
         <div class="tab" data-tab="qualities" data-group="primary">
 
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-                    <i class="fas fa-plus-circle"></i>
-                    {{localize "WH40K.Ammunition.AddedQualities"}}
-                    {{#if item.system.addedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.addedQualities.size}}</span>{{/if}}
-                </h3>
+            {{#*inline "ammoAddedQualityCount"}}
+            {{#if item.system.addedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.addedQualities.size}}</span>{{/if}}
+            {{/inline}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-plus-circle" labelKey="WH40K.Ammunition.AddedQualities" actions="ammoAddedQualityCount"}}
                 {{#if item.system.addedQualities.size}}
                 <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1 tw-mb-2">
                     {{#each (setToArray item.system.addedQualities) as |quality|}}
@@ -180,14 +168,12 @@
                     </button>
                 </div>
                 {{/if}}
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-                    <i class="fas fa-minus-circle"></i>
-                    {{localize "WH40K.Ammunition.RemovedQualities"}}
-                    {{#if item.system.removedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.removedQualities.size}}</span>{{/if}}
-                </h3>
+            {{#*inline "ammoRemovedQualityCount"}}
+            {{#if item.system.removedQualities.size}}<span class="tw-text-xs tw-opacity-70">{{item.system.removedQualities.size}}</span>{{/if}}
+            {{/inline}}
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-minus-circle" labelKey="WH40K.Ammunition.RemovedQualities" actions="ammoRemovedQualityCount"}}
                 {{#if item.system.removedQualities.size}}
                 <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1 tw-mb-2">
                     {{#each (setToArray item.system.removedQualities) as |quality|}}
@@ -214,18 +200,14 @@
                     </button>
                 </div>
                 {{/if}}
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         </div>
 
         {{!-- DETAILS TAB --}}
         <div class="tab" data-tab="details" data-group="primary">
 
-            <div class="tw-mb-4">
-                <h3 class="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-display tw-mb-3">
-                    <i class="fas fa-box"></i>
-                    {{localize "WH40K.Ammunition.PhysicalProperties"}}
-                </h3>
+            {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-box" labelKey="WH40K.Ammunition.PhysicalProperties"}}
                 <div class="tw-grid tw-grid-cols-2 tw-gap-3">
                     <div class="tw-flex tw-flex-col tw-gap-1">
                         <label class="tw-text-xs tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Ammunition.WeightKg"}}</label>
@@ -258,7 +240,7 @@
                                {{#unless inEditMode}}readonly{{/unless}} />
                     </div>
                 </div>
-            </div>
+            {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
             {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-bolt" labelKey="WH40K.Ammunition.Effect"}}
                 {{#if inEditMode}}

@@ -159,12 +159,7 @@
 
         {{!-- Armour Points Grid (only in edit mode) --}}
         {{#if inEditMode}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-shield-halved tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.ByLocation"}}</h3>
-          </div>
-          <div class="tw-p-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-shield-halved" labelKey="WH40K.ItemSheet.Armour.ByLocation"}}
             <div class="tw-grid tw-grid-cols-3 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
                 <label class="tw-text-sm tw-font-medium"><i class="fas fa-head-side-brain"></i> {{localize "WH40K.Coverage.Head"}}</label>
@@ -197,17 +192,11 @@
                        data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
         {{/if}}
 
         {{!-- Base Properties --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-cog tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.BaseProperties"}}</h3>
-          </div>
-          <div class="tw-p-3">
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-cog" labelKey="WH40K.ItemSheet.Armour.BaseProperties"}}
             <div class="tw-grid tw-grid-cols-2 tw-gap-3">
               <div class="tw-flex tw-flex-col tw-gap-1">
                 <label class="tw-text-sm tw-font-medium">{{localize "WH40K.ItemSheet.Armour.TypeLabel"}}</label>
@@ -285,19 +274,11 @@
               </div>
               {{/if}}
             </div>
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{!-- Special Properties (consolidated from Properties tab) --}}
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-star tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.SpecialProperties"}}</h3>
-            {{#if propertiesArray.length}}
-            <span class="tw-ml-auto tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{propertiesArray.length}}</span>
-            {{/if}}
-          </div>
-          <div class="tw-p-3">
+        {{#*inline "armourPropertyCount"}}{{#if propertiesArray.length}}<span class="tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{propertiesArray.length}}</span>{{/if}}{{/inline}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.ItemSheet.Armour.SpecialProperties" actions="armourPropertyCount"}}
             {{#if propertiesArray.length}}
             <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mb-3">
               {{#each propertiesArray as |prop|}}
@@ -345,23 +326,16 @@
             </div>
             {{/if}}
             {{/if}}
-          </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 
       {{!-- MODIFICATIONS TAB --}}
       <div class="tab" data-tab="mods" data-group="primary">
 
-        <div class="tw-mb-3 tw-bg-[rgba(255,255,255,0.03)] tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-[rgba(201,162,39,0.2)]" style="background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%)">
-            <i class="fas fa-wrench tw-opacity-70"></i>
-            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">{{localize "WH40K.ItemSheet.Armour.ModificationSlots"}}</h3>
-            <span class="tw-ml-auto tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">
-              {{modificationsArray.length}} / {{system.modificationSlots}}
-            </span>
-          </div>
-          <div class="tw-p-3">
+        {{#*inline "armourModSlotCount"}}<span class="tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{modificationsArray.length}} / {{system.modificationSlots}}</span>{{/inline}}
+        {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-wrench" labelKey="WH40K.ItemSheet.Armour.ModificationSlots" actions="armourModSlotCount"}}
+          <div>
             <div class="tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-pb-3 tw-border-b tw-border-[rgba(255,255,255,0.1)]">
               <label class="tw-text-sm">{{localize "WH40K.ItemSheet.Armour.TotalSlots"}}</label>
               <input type="number" name="system.modificationSlots" value="{{source.modificationSlots}}"
@@ -407,7 +381,7 @@
               {{localize "WH40K.ItemSheet.Armour.AddModification"}}
             </button>
           </div>
-        </div>
+        {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
       </div>
 
