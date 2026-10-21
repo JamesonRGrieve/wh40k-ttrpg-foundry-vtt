@@ -75,9 +75,12 @@ export function darkPactSheetView(system: {
     boons: DarkPactEntry[];
     banes: DarkPactEntry[];
 }): DarkPactSheetView {
+    // A pact with no formula grants no Corruption, so it reads 0 like the other terms
+    // (every Enemies Beyond pact prints 2d10+10, p. 76; a hand-made pact may set none).
+    const corruptionFormula = system.corruptionFormula.trim();
     return {
         terms: {
-            corruptionFormula: system.corruptionFormula,
+            corruptionFormula: corruptionFormula === '' ? '0' : corruptionFormula,
             dispositionBase: system.negotiation.dispositionBase,
             addsCorruption: system.negotiation.addsCorruption,
             testModifier: signed(system.negotiation.testModifier),

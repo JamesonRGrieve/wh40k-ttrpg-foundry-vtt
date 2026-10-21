@@ -65,6 +65,16 @@ describe('darkPactSheetView (#84)', () => {
         expect(view.banes.map((b) => b.identifier)).toEqual(['blood-rage']);
     });
 
+    // #694: a pact with no Corruption formula showed a blank "Corruption gained".
+    it('reads an unset Corruption formula as 0, and keeps a set one', () => {
+        const terms = (corruptionFormula: string): string =>
+            darkPactSheetView({ corruptionFormula, negotiation: { dispositionBase: 0, addsCorruption: false, testModifier: 0 }, boons: [], banes: [] }).terms
+                .corruptionFormula;
+        expect(terms('')).toBe('0');
+        expect(terms('   ')).toBe('0');
+        expect(terms('2d10+10')).toBe('2d10+10');
+    });
+
     it('signs a positive or zero test modifier', () => {
         expect(
             darkPactSheetView({ corruptionFormula: '', negotiation: { dispositionBase: 0, addsCorruption: false, testModifier: 10 }, boons: [], banes: [] })
