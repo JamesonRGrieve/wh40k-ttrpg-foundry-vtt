@@ -18,7 +18,7 @@ import { skillLabel } from '../../src/module/data/shared/skill-definitions.ts';
 import type { NpcPersonality, PersonalityRow } from '../../src/module/rules/disposition.ts';
 import panelSrc from '../../src/templates/actor/panel/npc-disposition-panel.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
-import { captureActionClicks, renderSheet } from '../test-helpers';
+import { captureActionClicks, renderSheet, storyRoot } from '../test-helpers';
 
 initializeStoryHandlebars();
 
@@ -135,7 +135,7 @@ function ladderStory(line: GameSystemId): Story {
         args: panel(line, -1),
         render: (story) => renderPanel(story, line),
         play: async ({ canvasElement }) => {
-            await expect(canvasElement.dataset['wh40kSystem']).toBe(line);
+            await expect(storyRoot(canvasElement).dataset['wh40kSystem']).toBe(line);
             await expect(canvasElement.querySelector('[data-wh40k-hook="npc-disposition-panel"]')?.getAttribute('data-disposition-model')).toBe('ladder');
             const select = valueInput(canvasElement);
             await expect(select?.tagName).toBe('SELECT');
@@ -156,7 +156,7 @@ export const HomologationDH2: Story = {
     args: panel('dh2', 72),
     render: (story) => renderPanel(story, 'dh2'),
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.dataset['wh40kSystem']).toBe('dh2');
+        await expect(storyRoot(canvasElement).dataset['wh40kSystem']).toBe('dh2');
         await assertCharacteristic(canvasElement, 72);
     },
 };

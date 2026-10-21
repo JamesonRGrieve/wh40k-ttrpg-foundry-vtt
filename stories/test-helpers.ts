@@ -96,6 +96,17 @@ export interface RenderSheetPartsOptions {
 }
 
 /**
+ * The element a story's render returned. Storybook mounts it inside its canvas
+ * root and hands the play that root, so a play reading the story's own element
+ * (its `data-wh40k-system` stamp, say) reads this, not `canvasElement` itself.
+ */
+export function storyRoot(canvasElement: HTMLElement): HTMLElement {
+    const root = canvasElement.firstElementChild;
+    if (!(root instanceof HTMLElement)) throw new Error('storyRoot: the canvas holds no rendered element');
+    return root;
+}
+
+/**
  * Compose multiple Handlebars partials into a single rendered tree, mimicking
  * what an ApplicationV2 sheet does when it concatenates its `static PARTS`.
  * Each entry contributes one template + (optionally) a per-part context that

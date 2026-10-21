@@ -12,10 +12,14 @@ async function runStory<A extends Args>(meta: Meta<A>, story: StoryObj<A>): Prom
     const args = { ...meta.args, ...story.args } as A;
     const render = story.render ?? meta.render;
     if (render === undefined) throw new Error('the story has no render function');
-    const context = { args, canvasElement: document.body } as StoryContext<A>;
-    const rendered = render(args, context);
-    const canvasElement = rendered instanceof HTMLElement ? rendered : document.createElement('div');
+    // Storybook mounts the rendered element INSIDE its canvas root and hands the play
+    // that root, so the play sees the story's element as a child, never as itself.
+    const canvasElement = document.createElement('div');
+    canvasElement.id = 'storybook-root';
     document.body.replaceChildren(canvasElement);
+    const context = { args, canvasElement } as StoryContext<A>;
+    const rendered = render(args, context);
+    if (rendered instanceof HTMLElement) canvasElement.appendChild(rendered);
     const play = story.play ?? meta.play;
     if (play !== undefined) await play({ ...context, canvasElement });
 }

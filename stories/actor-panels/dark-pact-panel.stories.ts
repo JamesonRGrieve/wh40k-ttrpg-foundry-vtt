@@ -17,7 +17,7 @@ import panelSrc from '../../src/templates/actor/panel/dark-pact-panel.hbs?raw';
 import { PACT_DEFINITIONS, PACT_MISSING, PACT_OF_KNOWLEDGE, PACT_OF_MIGHT, pactRecord, registerPactNames } from '../mocks/dark-pacts';
 import type { SystemId } from '../mocks/extended';
 import { initializeStoryHandlebars } from '../template-support';
-import { captureActionClicks, renderSheet } from '../test-helpers';
+import { captureActionClicks, renderSheet, storyRoot } from '../test-helpers';
 
 initializeStoryHandlebars();
 registerPactNames();
@@ -174,7 +174,7 @@ function homologation(systemId: SystemId): Story {
         args: panel([MIGHT_BARGAIN], true),
         render: (story) => renderPanel(story, systemId),
         play: async ({ canvasElement }) => {
-            await expect(canvasElement.dataset['wh40kSystem']).toBe(systemId);
+            await expect(storyRoot(canvasElement).dataset['wh40kSystem']).toBe(systemId);
             await assertMightRow(canvasElement);
         },
     };

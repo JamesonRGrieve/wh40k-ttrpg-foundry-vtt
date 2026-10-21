@@ -10,7 +10,7 @@ import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-dark-pact-sheet.hbs?raw';
 import { BOOK_TERMS, CORRUPTION_FORMULA, KNOWLEDGE, MIGHT, registerPactNames } from '../../../../stories/mocks/dark-pacts';
 import type { SystemId } from '../../../../stories/mocks/extended';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { renderSheet, storyRoot } from '../../../../stories/test-helpers';
 import { type DarkPactSheetView, darkPactSheetView, type PactDefinitionView } from './dark-pact-view';
 
 registerPactNames();
@@ -127,7 +127,7 @@ function homologation(systemId: SystemId): Story {
         args: args('Pact of Might', MIGHT),
         render: (story) => renderFor(systemId, story),
         play: async ({ canvasElement }) => {
-            await expect(canvasElement.dataset['wh40kSystem']).toBe(systemId);
+            await expect(storyRoot(canvasElement).dataset['wh40kSystem']).toBe(systemId);
             await assertMight(canvasElement);
         },
     };
