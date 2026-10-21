@@ -217,6 +217,25 @@ export const TabsSwitch: Story = {
     },
 };
 
+/**
+ * Every section of the Description tab is a detail-section panel (#686): Benefit,
+ * GM Notes and, in edit mode, Technical. They used the talent's own bare heading.
+ */
+export const DescriptionSectionsArePanels: Story = {
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector<HTMLElement>('.wh40k-talent-panel[data-tab="description"]');
+        await expect(panel).not.toBeNull();
+        const children = panel === null ? [] : [...panel.children];
+        await expect(children.filter((child) => !child.hasAttribute('data-item-section'))).toEqual([]);
+        await expect(children.map((child) => child.getAttribute('data-item-section'))).toEqual([
+            'WH40K.SpecialAbility.Benefit',
+            'WH40K.ItemSheet.Common.GmNotes',
+            'WH40K.ItemSheet.Talent.Technical',
+        ]);
+    },
+};
+
 export const RendersTalentName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {

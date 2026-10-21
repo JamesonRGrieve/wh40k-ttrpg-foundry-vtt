@@ -17,7 +17,7 @@ import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { localizeKey } from '../../../../stories/mocks/lang-localize';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
+import { clickEachTab, detailSectionTitles, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { type OriginGrantFieldFlags, type OriginStepOption, originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
@@ -130,6 +130,27 @@ export const TabsSwitch: Story = {
         await expect(results.map((r) => r.tab)).toEqual(['grants', 'requirements', 'choices', 'description']);
         await expect(results.map((r) => r.active)).toEqual(results.map((r) => [r.tab]));
         await expect(results.flatMap((r) => r.forcedHidden)).toEqual([]);
+    },
+};
+
+/**
+ * Every section of the Description tab is a detail-section panel (#686), in view and
+ * edit mode alike. The Effect Text section kept the old bare header, with a tall empty
+ * gap under it before the panelled Description section.
+ */
+export const DescriptionSectionsArePanels: Story = {
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true })),
+    play: async ({ canvasElement }) => {
+        const panel = canvasElement.querySelector<HTMLElement>('.tab[data-tab="description"]');
+        await expect(panel).not.toBeNull();
+        const children = panel === null ? [] : [...panel.children];
+        await expect(children.filter((child) => !child.hasAttribute('data-item-section'))).toEqual([]);
+        await expect(detailSectionTitles(canvasElement, 'description').map((s) => s.key)).toEqual([
+            'WH40K.ItemSheet.OriginPath.EffectText',
+            'WH40K.Tabs.Description',
+            'WH40K.ItemSheet.Common.GmNotes',
+            'WH40K.Common.Source',
+        ]);
     },
 };
 
