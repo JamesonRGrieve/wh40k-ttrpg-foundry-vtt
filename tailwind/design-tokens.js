@@ -86,6 +86,8 @@ const layout = {
 
 const lightTheme = {
     '--wh40k-sheet-bg': 'rgba(250, 244, 233, 0.95)',
+    // A sheet window's body: opaque, so the window behind never reads through (#694).
+    '--wh40k-window-surface': 'rgb(250, 244, 233)',
     '--wh40k-panel-bg': 'rgba(255, 255, 255, 0.5)',
     '--wh40k-panel-bg-solid': 'rgba(255, 255, 255, 0.85)',
     '--wh40k-panel-bg-translucent': 'rgba(255, 255, 255, 0.35)',
@@ -121,6 +123,8 @@ const lightTheme = {
 
 const darkTheme = {
     '--wh40k-sheet-bg': 'rgba(30, 25, 22, 0.95)',
+    // A sheet window's body: opaque, so the window behind never reads through (#694).
+    '--wh40k-window-surface': 'rgb(30, 25, 22)',
     '--wh40k-panel-bg': 'rgba(40, 35, 30, 0.7)',
     '--wh40k-panel-bg-solid': 'rgba(45, 40, 35, 0.9)',
     '--wh40k-panel-bg-translucent': 'rgba(50, 45, 40, 0.5)',

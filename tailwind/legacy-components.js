@@ -20,9 +20,25 @@ const applicationWindow = {
     },
 };
 
+// Every sheet window (actor and item) paints its body opaque on both themes.
+// Foundry's own dark window background is 90% opaque (`--color-cool-5-90`, opaque
+// only under the OS's prefers-reduced-transparency), and the item sheets cleared
+// their body to transparent, so the sheet behind read through a Dark Pact sheet's
+// text and the canvas through gear and armour (#694). Dialogs keep their dark
+// surface above (operator ruling: dialogs stay dark).
+const sheetWindow = {
+    // The window itself (Foundry paints it `var(--background)`), so nothing reads
+    // through the translucent title bar either.
+    '.wh40k-rpg.sheet': {
+        '--background': 'var(--wh40k-window-surface)',
+    },
+    '.wh40k-rpg.sheet > .window-content': {
+        backgroundColor: 'var(--wh40k-window-surface)',
+    },
+};
+
 const itemSheetWindow = {
     '.wh40k-rpg.sheet.item .window-content': {
-        background: 'transparent',
         padding: '0',
         overflow: 'hidden',
     },
@@ -312,6 +328,8 @@ const actorSheetOverrides = {
 
 module.exports = {
     ...applicationWindow,
+    // After applicationWindow: a sheet is an `.application` too, and the two match at (0,3,0).
+    ...sheetWindow,
     ...itemSheetWindow,
     ...armourChatCard,
     ...actorSheetOverrides,

@@ -139,3 +139,46 @@ export const HomologationRT: Story = homologation('rt');
 export const HomologationBC: Story = homologation('bc');
 export const HomologationOW: Story = homologation('ow');
 export const HomologationDW: Story = homologation('dw');
+
+// ── The window body is opaque (#694) ─────────────────────────────────────────
+
+/** The alpha of an element's computed background colour (1 for an opaque fill). */
+function backgroundAlpha(el: Element): number {
+    const parts = /rgba?\(([^)]+)\)/u.exec(getComputedStyle(el).backgroundColor)?.[1]?.split(',') ?? [];
+    if (parts.length < 3) return 0;
+    return parts.length === 3 ? 1 : Number.parseFloat(parts[3] ?? '0');
+}
+
+/**
+ * The sheet inside the live window frame (`DEFAULT_OPTIONS.classes` on the root,
+ * ApplicationV2's `.window-content` body), whose body must paint opaque on both
+ * themes. It was transparent, so the sheet behind read through (#694).
+ */
+export const OpaqueWindowBody: Story = {
+    render: (story) => {
+        const frame = document.createElement('form');
+        frame.className = 'application sheet wh40k-rpg item dark-pact';
+        const body = document.createElement('section');
+        body.className = 'window-content';
+        body.appendChild(renderSheet(templateSrc, story));
+        frame.appendChild(body);
+        return frame;
+    },
+    play: async ({ canvasElement }) => {
+        const body = canvasElement.querySelector(':scope > form > .window-content');
+        if (body === null) throw new Error('the window body did not render');
+        const themes = document.body.classList;
+        const original = [...themes].filter((name) => name.startsWith('theme-'));
+        try {
+            for (const theme of ['theme-dark', 'theme-light']) {
+                themes.remove('theme-dark', 'theme-light');
+                themes.add(theme);
+                // eslint-disable-next-line no-await-in-loop -- each theme is checked in turn on the one body
+                await expect(backgroundAlpha(body), `${theme} body alpha`).toBe(1);
+            }
+        } finally {
+            themes.remove('theme-dark', 'theme-light');
+            themes.add(...original);
+        }
+    },
+};
