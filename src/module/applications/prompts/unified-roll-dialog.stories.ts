@@ -115,6 +115,8 @@ export const CharacteristicTest: Story = {
 /** A resolved manual roll: success feedback + situational pills + assistance bonus. */
 export const ManualSuccess: Story = {
     args: baseContext({
+        // The manual entry only renders where the world allows it (#524).
+        allowManualRoll: true,
         manualRollTens: 2,
         manualRollUnits: 4,
         manualRollTotal: 24,
@@ -825,6 +827,8 @@ export const PassiveNoteSkillTest: Story = {
 /** DH1 (Gen 1): 01 vs 75 previews 7 DoS — the dialog passes the printed count. */
 export const Dh1ManualDegrees: Story = {
     args: baseContext({
+        // The manual entry only renders where the world allows it (#524).
+        allowManualRoll: true,
         finalTarget: 75,
         manualRollTens: 0,
         manualRollUnits: 1,

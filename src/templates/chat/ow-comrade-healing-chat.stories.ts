@@ -11,6 +11,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import type { SystemId } from '../../../stories/mocks/extended';
+import { localizeKey } from '../../../stories/mocks/lang-localize';
 import { renderSheet } from '../../../stories/test-helpers';
 import { applyMedicaeAttempt, OW_COMRADE_AUTO_RECOVERY_DAYS, processReplacement, tickComradeRecovery } from '../../module/rules/ow-comrade-healing';
 import chatSrc from './ow-comrade-healing-chat.hbs?raw';
@@ -158,7 +159,7 @@ function perSystemFrameStory(systemId: SystemId): Story {
             await expect(root).not.toBeNull();
             // The tick body renders regardless of the framing system.
             const scope = within(canvasElement);
-            await expect(scope.getByText(/WH40K\.OW\.ComradeHealing\.Chat\.TickTitle|Rest/)).toBeTruthy();
+            await expect(scope.getByText(localizeKey('WH40K.OW.ComradeHealing.Chat.TickTitle'))).toBeTruthy();
         },
     };
 }

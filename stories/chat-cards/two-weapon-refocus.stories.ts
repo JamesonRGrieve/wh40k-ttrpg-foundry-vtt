@@ -57,7 +57,8 @@ export const RangedSingleShotWielder: Story = {
         await expect(view.getAllByText(/Standard Attack/).length).toBe(2);
         // Action economy is Half + Free, never a Full-Action lump.
         await expect(view.getByText(/\(Half\)/)).toBeTruthy();
-        await expect(view.getByText(/\(Free\)/)).toBeTruthy();
+        // The off-hand's Free attack carries its -20 off-hand penalty beside the action cost.
+        await expect(view.getByText(/\(Free, -20\)/)).toBeTruthy();
         // Per-system + outside-sheet cascade anchors must be present.
         const root = canvasElement.querySelector('[data-wh40k-hook="twr-card"]');
         await expect(root?.classList.contains('wh40k-rpg')).toBe(true);

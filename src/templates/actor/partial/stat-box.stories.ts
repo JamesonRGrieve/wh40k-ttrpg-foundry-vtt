@@ -119,6 +119,5 @@ export const ValueMaxNamesBind: Story = {
         await expect(maxInput).toBeTruthy();
         await expect((valueInput as HTMLInputElement).value).toBe('35');
         await expect((maxInput as HTMLInputElement).value).toBe('50');
-        void canvas;
     },
 };

@@ -236,11 +236,15 @@ export const TextFollowsTheme: Story = {
             const el = form.querySelector(selector);
             return el === null ? undefined : getComputedStyle(el).color;
         };
-        await expect(colourOf('label[for="characteristic"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
-        await expect(colourOf('select[name="characteristic"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
-        await expect(colourOf('input[name="modifierValue"]')).toBe(tokenColour(form, '--wh40k-text-dark'));
-        await expect(colourOf('span.tw-italic')).toBe(tokenColour(form, '--wh40k-text-muted'));
-        await expect(colourOf('[data-category="skill"]')).toBe(tokenColour(form, '--wh40k-text-muted'));
-        await expect(colourOf('[data-category="characteristic"]')).toBe(tokenColour(form, '--wh40k-accent-gold-text'));
+        // The dialog's body is a dark surface on both themes (955e320f3), which
+        // re-points the text tokens; the text follows the tokens of that surface.
+        const surface = form.querySelector('[data-wh40k-surface="dark"]');
+        if (surface === null) throw new Error('the dialog body is not a dark surface');
+        await expect(colourOf('label[for="characteristic"]')).toBe(tokenColour(surface, '--wh40k-text-dark'));
+        await expect(colourOf('select[name="characteristic"]')).toBe(tokenColour(surface, '--wh40k-text-dark'));
+        await expect(colourOf('input[name="modifierValue"]')).toBe(tokenColour(surface, '--wh40k-text-dark'));
+        await expect(colourOf('span.tw-italic')).toBe(tokenColour(surface, '--wh40k-text-muted'));
+        await expect(colourOf('[data-category="skill"]')).toBe(tokenColour(surface, '--wh40k-text-muted'));
+        await expect(colourOf('[data-category="characteristic"]')).toBe(tokenColour(surface, '--wh40k-accent-gold-text'));
     },
 };

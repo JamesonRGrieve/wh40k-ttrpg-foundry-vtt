@@ -66,9 +66,9 @@ export const DarkHeresy2e: Story = {
     play: async ({ canvasElement }) => {
         const kind = canvasElement.querySelector<HTMLSelectElement>('[name="kind"]');
         await expect(kind).toBeTruthy();
-        // DH2 has no Starship kind.
+        // DH2 has no starship kind (the `voidcraft` actor since 855347cc3).
         const values = [...(kind?.options ?? [])].map((o) => o.value);
-        await expect(values).not.toContain('starship');
+        await expect(values).not.toContain('voidcraft');
         await expect(values).toContain('character');
     },
 };
@@ -79,8 +79,8 @@ export const RogueTrader: Story = {
     play: async ({ canvasElement }) => {
         const kind = canvasElement.querySelector<HTMLSelectElement>('[name="kind"]');
         const values = [...(kind?.options ?? [])].map((o) => o.value);
-        // RT is the only system that can create a Starship actor.
-        await expect(values).toContain('starship');
+        // RT is the only system that can create a starship (the `voidcraft` actor since 855347cc3).
+        await expect(values).toContain('voidcraft');
     },
 };
 
