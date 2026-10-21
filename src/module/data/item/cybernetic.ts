@@ -14,6 +14,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { CYBERNETIC_LOCATIONS, CYBERNETIC_TYPES, cyberneticLocationLabelKey, cyberneticTypeLabelKey } from './cybernetic-labels.ts';
 
 /**
  * Data model for Cybernetic items.
@@ -60,14 +61,14 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
             type: new fields.StringField({
                 required: true,
                 initial: 'replacement',
-                choices: ['replacement', 'implant', 'augmetic', 'bionic', 'mechadendrite', 'integrated-weapon'],
+                choices: [...CYBERNETIC_TYPES],
             }),
 
             // Body location(s) affected
             locations: new fields.SetField(
                 new fields.StringField({
                     required: true,
-                    choices: ['head', 'eyes', 'ears', 'mouth', 'brain', 'leftArm', 'rightArm', 'body', 'organs', 'leftLeg', 'rightLeg', 'spine', 'internal'],
+                    choices: [...CYBERNETIC_LOCATIONS],
                 }),
                 { required: true, initial: [] },
             ),
@@ -146,12 +147,8 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize(
-            `WH40K.CyberneticType.${this.type
-                .split('-')
-                .map((s) => s.capitalize())
-                .join('')}`,
-        );
+        const key = cyberneticTypeLabelKey(this.type);
+        return key === undefined ? this.type : game.i18n.localize(key);
     }
 
     /**
@@ -161,7 +158,10 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     get locationsLabel(): string {
         if (!this.locations.size) return '-';
         return Array.from(this.locations)
-            .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
+            .map((l) => {
+                const key = cyberneticLocationLabelKey(l);
+                return key === undefined ? l : game.i18n.localize(key);
+            })
             .join(', ');
     }
 
