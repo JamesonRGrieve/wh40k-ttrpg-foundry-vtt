@@ -1,5 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
+import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
+
+afterAll(installFoundryDataStub());
+
+// The model builds its schema at load, so the stub goes in before the import.
+const { default: PsychicPowerModel } = await import('./psychic-power.ts');
+
+describe('PsychicPowerData nested entries (#697)', () => {
+    it('accepts Attack Specials, and only them, as nested entries', () => {
+        expect(PsychicPowerModel.containerTypes).toEqual(['attackSpecial']);
+    });
+});
 
 describe('PsychicPowerData', () => {
     it('has a default PsychicPowerData symbol exported', async () => {

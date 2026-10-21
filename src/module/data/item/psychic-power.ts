@@ -49,6 +49,11 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     // Getters from ActivationTemplate
     declare activationLabel: string;
 
+    /** The item types the power's sheet accepts as nested entries: its Attack Specials (#697). */
+    static get containerTypes(): string[] {
+        return ['attackSpecial'];
+    }
+
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
