@@ -28,7 +28,10 @@ interface ProbeItem {
 
 interface ProbeActor {
     system: { fate: { max: number; value: number } };
+    flags: { 'wh40k-rpg'?: { itemResourceDeltas?: object } };
     items: { find: (fn: (item: ProbeItem) => boolean) => ProbeItem | undefined };
+    unsetFlag: (scope: string, key: string) => Promise<object | undefined>;
+    sheet: { id: string };
 }
 
 interface ProbeWindow {
@@ -43,6 +46,42 @@ async function fateOf(page: Page, actorId: string): Promise<{ max: number; value
         if (actor === undefined) throw new Error(`actor ${id} missing`);
         return { max: actor.system.fate.max, value: actor.system.fate.value };
     }, actorId);
+}
+
+/** Whether the actor carries an item resource ledger. */
+async function hasLedger(page: Page, actorId: string): Promise<boolean> {
+    return page.evaluate((id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const actor = (globalThis as unknown as ProbeWindow).game.actors.get(id);
+        if (actor === undefined) throw new Error(`actor ${id} missing`);
+        return actor.flags['wh40k-rpg']?.itemResourceDeltas !== undefined;
+    }, actorId);
+}
+
+/**
+ * The Rogue Trader character the specs share. It starts with 2 Fate, and
+ * nothing sets the total after that (#691): the talent's point is applied by
+ * the item resource ledger when it is added, and the origin's by the origin
+ * applier the world-ready reconcile runs.
+ */
+async function buildFatedExplorer(page: Page): Promise<{ actorId: string; sheetId: string }> {
+    const ids = await openProbeSheet(page, {
+        name: 'Fated Explorer',
+        type: 'rt-character',
+        system: { gameSystem: 'rt', fate: { max: STARTING_FATE, value: STARTING_FATE } },
+    });
+    await addCompendiumItems(page, ids.actorId, [RT_FORTUNE, RT_FATED_FOR_GREATNESS]);
+    await expect.poll(async () => fateOf(page, ids.actorId)).toEqual({ max: STARTING_FATE + 1, value: STARTING_FATE + 1 });
+    await page.evaluate(async (id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const actor = (globalThis as unknown as ProbeWindow).game.actors.get(id);
+        if (actor === undefined) throw new Error(`actor ${id} missing`);
+        const origin = actor.items.find((item) => item.type === 'originPath');
+        if (origin === undefined) throw new Error('Fortune missing');
+        await origin.applyOriginToActor(actor, { silent: true });
+    }, ids.actorId);
+    await expect.poll(async () => fateOf(page, ids.actorId)).toEqual({ max: FATE_TOTAL, value: FATE_TOTAL });
+    return ids;
 }
 
 interface BreakdownTooltip {
@@ -60,25 +99,7 @@ test.describe.serial('Fate breakdown (Tier B, #689)', () => {
     });
 
     test('hovering Fate shows each source by name, the origin included', async ({ page }) => {
-        // The character starts with 2 Fate. Nothing sets the total after that (#691):
-        // the talent's point is applied by the item resource ledger when it is added,
-        // and the origin's by the origin applier the world-ready reconcile runs.
-        const { actorId, sheetId } = await openProbeSheet(page, {
-            name: 'Fated Explorer',
-            type: 'rt-character',
-            system: { gameSystem: 'rt', fate: { max: STARTING_FATE, value: STARTING_FATE } },
-        });
-        await addCompendiumItems(page, actorId, [RT_FORTUNE, RT_FATED_FOR_GREATNESS]);
-        await expect.poll(async () => fateOf(page, actorId)).toEqual({ max: STARTING_FATE + 1, value: STARTING_FATE + 1 });
-        await page.evaluate(async (id) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
-            const actor = (globalThis as unknown as ProbeWindow).game.actors.get(id);
-            if (actor === undefined) throw new Error(`actor ${id} missing`);
-            const origin = actor.items.find((item) => item.type === 'originPath');
-            if (origin === undefined) throw new Error('Fortune missing');
-            await origin.applyOriginToActor(actor, { silent: true });
-        }, actorId);
-        await expect.poll(async () => fateOf(page, actorId)).toEqual({ max: FATE_TOTAL, value: FATE_TOTAL });
+        const { actorId, sheetId } = await buildFatedExplorer(page);
         await showSheetTab(page, actorId, 'overview');
 
         // The vitals panel also sits in the Combat tab's station panel; this is the Overview's.
@@ -101,5 +122,38 @@ test.describe.serial('Fate breakdown (Tier B, #689)', () => {
         await expect(tooltip).toContainText('Fated for Greatness');
         await snap(page, 'fate-breakdown-origin', { selector: `#${sheetId}`, keepTooltip: true });
         recordCoverage('sheet.render', 'actor.fateBreakdown');
+    });
+
+    test('a character with no item ledger keeps its totals when the world reloads (seeded, never applied)', async ({ page }) => {
+        const { actorId } = await buildFatedExplorer(page);
+        // A character from before the ledger: its Fate already counts the talent.
+        await page.evaluate(async (id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const actor = (globalThis as unknown as ProbeWindow).game.actors.get(id);
+            if (actor === undefined) throw new Error(`actor ${id} missing`);
+            await actor.unsetFlag('wh40k-rpg', 'itemResourceDeltas');
+        }, actorId);
+        expect(await hasLedger(page, actorId), 'ledger deleted').toBe(false);
+
+        // Reload: the world-ready pass seeds the ledger and leaves Fate alone.
+        await page.reload();
+        await joinOrSkip(page);
+        await expect.poll(async () => hasLedger(page, actorId), { message: 'ledger seeded on load' }).toBe(true);
+        expect(await fateOf(page, actorId)).toEqual({ max: FATE_TOTAL, value: FATE_TOTAL });
+
+        await showSheetTab(page, actorId, 'overview');
+        const sheetId = await page.evaluate((id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const actor = (globalThis as unknown as ProbeWindow).game.actors.get(id);
+            if (actor === undefined) throw new Error(`actor ${id} missing`);
+            return actor.sheet.id;
+        }, actorId);
+        await expect(page.locator(`#${sheetId} section.tab[data-tab="overview"] [data-stat-breakdown]`)).toHaveAttribute(
+            'data-wh40k-tooltip-data',
+            /"Base","value":2/,
+        );
+        await clearScreenOverlays(page, sheetId);
+        await snap(page, 'fate-ledger-seeded-after-reload', { selector: `#${sheetId}` });
+        recordCoverage('sheet.render', 'actor.itemResourceLedgerSeed');
     });
 });

@@ -386,7 +386,7 @@ export function readItemResourceDeltas(flags: unknown): Record<string, ItemResou
 
 /** Whether the actor has an item resource ledger yet (an empty one counts). */
 // eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
-export function hasItemResourceLedger(flags: unknown): boolean {
+function hasItemResourceLedger(flags: unknown): boolean {
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor flags is an open Record at the Foundry document boundary
     const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.[SYSTEM_ID]?.[ITEM_RESOURCE_DELTAS_FLAG];
     return bag !== undefined && bag !== null && typeof bag === 'object';
@@ -401,11 +401,15 @@ export function hasItemResourceLedger(flags: unknown): boolean {
  * {@link reconcileResourceDeltas} over the summed priors and contributions moves
  * the totals by the difference, so re-running converges and never stacks.
  * Totals never drop below 0, and the current Fate never exceeds the Fate total.
- * Pure: reads the passed snapshots and returns the update bag.
+ * An actor with no ledger yet is seeded instead: every item it owns is recorded
+ * as already applied and its totals stay as they are, whatever the world's
+ * reconcile setting. Pure: reads the passed snapshots and returns the update bag.
  * @param system  The actor's `system` data.
  * @param flags  The actor's flags, holding the ledger.
  * @param items  Every owned item that is not an origin path.
  * @param resourcePaths  Where each resource lands.
+ * @param freshItemIds  Items this change has just added. When seeding, these
+ *   are applied rather than seeded, since the totals cannot already count them.
  */
 export function reconcileItemResourceDeltas(
     system: object,
@@ -413,10 +417,17 @@ export function reconcileItemResourceDeltas(
     flags: unknown,
     items: readonly ItemResourceHolder[],
     resourcePaths: ResourcePathMap,
+    freshItemIds: ReadonlySet<string> = new Set(),
 ): ItemResourceReconcileResult {
-    const recorded = readItemResourceDeltas(flags);
+    // An actor with no ledger yet (first load after the ledger shipped, or a
+    // character created with its items) has totals that already count the items
+    // it owns: they are seeded as applied, never applied again. Only the items
+    // this change just added (`freshItemIds`) move the totals.
+    const seeding = !hasItemResourceLedger(flags);
+    const recorded = seeding ? seedItemResourceDeltas(items.filter((item) => !freshItemIds.has(item.id))) : readItemResourceDeltas(flags);
     // eslint-disable-next-line no-restricted-syntax -- boundary: the bag is an actor.update() payload (open-ended system.* / flags.* paths + values)
     const updates: Record<string, unknown> = {};
+    const changedEntries: Record<string, ItemResourceDelta> = {};
     const contribution: Partial<Record<OriginResource, number>> = {};
     const prior: OriginAppliedDelta = {};
 
@@ -427,7 +438,7 @@ export function reconcileItemResourceDeltas(
             prior[resource] = (prior[resource] ?? 0) + (before === undefined ? 0 : before[resource]);
         }
         const changed = before === undefined ? !isZeroDelta(current) : ORIGIN_RESOURCES.some((resource) => before[resource] !== current[resource]);
-        if (changed) updates[itemResourceDeltaFlagPath(key)] = current;
+        if (changed) changedEntries[key] = current;
     };
 
     const owned = new Set<string>();
@@ -437,6 +448,13 @@ export function reconcileItemResourceDeltas(
     }
     const staleKeys = Object.keys(recorded).filter((key) => !owned.has(key));
     for (const key of staleKeys) account(key, itemResourceDelta(undefined));
+
+    if (seeding) {
+        // The first write creates the whole ledger, empty or not, so the next run reconciles instead of seeding.
+        updates[`flags.${SYSTEM_ID}.${ITEM_RESOURCE_DELTAS_FLAG}`] = { ...recorded, ...changedEntries };
+    } else {
+        for (const [key, delta] of Object.entries(changedEntries)) updates[itemResourceDeltaFlagPath(key)] = delta;
+    }
 
     const { updates: resourceUpdates } = reconcileResourceDeltas(system, { characteristics: {}, resources: contribution }, prior, resourcePaths);
     for (const [path, value] of Object.entries(resourceUpdates)) updates[path] = Math.max(0, Number(value));
@@ -449,19 +467,16 @@ export function reconcileItemResourceDeltas(
 }
 
 /**
- * The flag updates that record items already counted in the actor's totals,
- * without moving the totals. An actor created with its items (a compendium
- * character, an import) has totals authored with them, so the ledger starts
- * out recording them as applied.
+ * The ledger entries that record items as already counted in the actor's
+ * totals, keyed by item id: every item that currently contributes.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: the bag is an actor.update() payload (open-ended flags.* paths + values)
-export function seedItemResourceDeltas(items: readonly ItemResourceHolder[]): Record<string, ItemResourceDelta> {
-    const updates: Record<string, ItemResourceDelta> = {};
+function seedItemResourceDeltas(items: readonly ItemResourceHolder[]): Record<string, ItemResourceDelta> {
+    const seeded: Record<string, ItemResourceDelta> = {};
     for (const item of items) {
         const delta = currentItemDelta(item);
-        if (!isZeroDelta(delta)) updates[itemResourceDeltaFlagPath(item.id)] = delta;
+        if (!isZeroDelta(delta)) seeded[item.id] = delta;
     }
-    return updates;
+    return seeded;
 }
 
 /**

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { SYSTEM_ID } from '../src/module/constants.ts';
 import {
-    hasItemResourceLedger,
     ITEM_RESOURCE_DELTAS_FLAG,
     type ItemResourceHolder,
     itemResourceHolders,
@@ -11,7 +10,6 @@ import {
     reconcileItemResourceDeltas,
     resetItemResourceDeltas,
     type ResourceBearingItem,
-    seedItemResourceDeltas,
 } from '../src/module/origin-grant-ledger.ts';
 import { burnFateUpdate, fateBreakdownRows } from '../src/module/rules/fate.ts';
 import { contributesItemModifiers } from '../src/module/rules/item-modifier-eligibility.ts';
@@ -20,7 +18,8 @@ import { contributesItemModifiers } from '../src/module/rules/item-modifier-elig
  * #691: a talent, trait or equipped item's `modifiers.resources` reaches the
  * stored totals through the same reconcile ledger origins use — applied once,
  * recorded per item, reversed when the item goes or stops applying, and never
- * stacked. The actor here is a plain `{ system, flags }` snapshot, and each
+ * stacked. A character with no ledger yet has its items seeded as already
+ * counted, never applied. The actor here is a plain `{ system, flags }` snapshot, and each
  * returned update bag is written into it the way `actor.update` would.
  */
 
@@ -32,8 +31,14 @@ interface ActorState {
 
 const STARTING_FATE = 2;
 
+/** A character whose (empty) ledger already exists, so every item it gains is applied. */
 function character(): ActorState {
-    return { system: { fate: { max: STARTING_FATE, value: STARTING_FATE }, wounds: { max: 12, value: 12 }, corruption: 0, insanity: 0 }, flags: {} };
+    return { ...legacyCharacter(), flags: { [SYSTEM_ID]: { [ITEM_RESOURCE_DELTAS_FLAG]: {} } } };
+}
+
+/** A character from before the ledger: its totals already count what it owns. */
+function legacyCharacter(fate = STARTING_FATE): ActorState {
+    return { system: { fate: { max: fate, value: fate }, wounds: { max: 12, value: 12 }, corruption: 0, insanity: 0 }, flags: {} };
 }
 
 /** Write a dot-path update bag into the snapshot, as `actor.update` merges it. */
@@ -56,8 +61,8 @@ function applyUpdate(actor: ActorState, updates: Record<string, unknown>): void 
 }
 
 /** One reconcile pass, written back; also unsets the stale keys, as the actor method does. */
-function sync(actor: ActorState, items: readonly ItemResourceHolder[]): void {
-    const { updates, staleKeys } = reconcileItemResourceDeltas(actor.system, actor.flags, items, ORIGIN_RESOURCE_PATHS);
+function sync(actor: ActorState, items: readonly ItemResourceHolder[], fresh: readonly string[] = []): void {
+    const { updates, staleKeys } = reconcileItemResourceDeltas(actor.system, actor.flags, items, ORIGIN_RESOURCE_PATHS, new Set(fresh));
     applyUpdate(actor, updates);
     // eslint-disable-next-line no-restricted-syntax -- boundary: the ledger bag inside the open flags scope
     const bag = actor.flags[SYSTEM_ID]?.[ITEM_RESOURCE_DELTAS_FLAG] as Record<string, unknown> | undefined;
@@ -161,7 +166,7 @@ describe('item resource ledger: other resources (#691)', () => {
         const system = { fate: { max: 1, value: 1 } };
         const { updates } = reconcileItemResourceDeltas(
             system,
-            {},
+            character().flags,
             [{ id: 'x000000000000001', contributes: true, resources: { corruption: 5, fate: 1 } }],
             ORIGIN_RESOURCE_PATHS,
         );
@@ -170,17 +175,46 @@ describe('item resource ledger: other resources (#691)', () => {
     });
 });
 
-describe('item resource ledger: seeding and the builder reset (#691)', () => {
-    it('seeds the items an actor was created with as already counted, without moving the totals', () => {
-        const actor = character();
-        applyUpdate(actor, seedItemResourceDeltas([FATED, { id: 'none000000000001', contributes: true, resources: undefined }]));
-        expect(actor.system.fate.max).toBe(STARTING_FATE);
-        expect(hasItemResourceLedger(actor.flags)).toBe(true);
-        expect(Object.keys(readItemResourceDeltas(actor.flags))).toEqual([FATED.id]);
+describe('item resource ledger: a character with no ledger yet is seeded, never applied (#691)', () => {
+    const FATED_TOTAL = 3; // Its Fate already counts Fated for Greatness.
+    const SECOND: ItemResourceHolder = { id: 'lostdynasty00001', contributes: true, resources: { fate: 1 } };
+
+    it('an existing character with Fated for Greatness keeps its Fate on first load', () => {
+        const actor = legacyCharacter(FATED_TOTAL);
+        sync(actor, [FATED, { id: 'none000000000001', contributes: true, resources: undefined }]);
+        expect(actor.system.fate).toEqual({ max: FATED_TOTAL, value: FATED_TOTAL });
+        expect(readItemResourceDeltas(actor.flags)).toEqual({ [FATED.id]: { wounds: 0, fate: 1, corruption: 0, insanity: 0 } });
+        // Later loads change nothing either.
         sync(actor, [FATED]);
-        expect(actor.system.fate.max).toBe(STARTING_FATE);
+        expect(actor.system.fate.max).toBe(FATED_TOTAL);
     });
 
+    it('a second Fate item added afterwards raises the total by 1, and removing the talent afterwards lowers it by 1', () => {
+        const actor = legacyCharacter(FATED_TOTAL);
+        sync(actor, [FATED]);
+        sync(actor, [FATED, SECOND], [SECOND.id]);
+        expect(actor.system.fate.max).toBe(FATED_TOTAL + 1);
+        sync(actor, [SECOND]);
+        expect(actor.system.fate.max).toBe(FATED_TOTAL);
+    });
+
+    it('an item added to a character with no ledger is applied, and the items it already owned are seeded', () => {
+        const actor = legacyCharacter(FATED_TOTAL);
+        sync(actor, [FATED, SECOND], [SECOND.id]);
+        expect(actor.system.fate.max).toBe(FATED_TOTAL + 1);
+        expect(Object.keys(readItemResourceDeltas(actor.flags)).sort()).toEqual([FATED.id, SECOND.id].sort());
+    });
+
+    it('a character with nothing to seed still gets a ledger, so its next item is applied', () => {
+        const actor = legacyCharacter();
+        sync(actor, []);
+        expect(actor.flags[SYSTEM_ID]?.[ITEM_RESOURCE_DELTAS_FLAG]).toEqual({});
+        sync(actor, [FATED]);
+        expect(actor.system.fate.max).toBe(STARTING_FATE + 1);
+    });
+});
+
+describe('item resource ledger: the builder reset (#691)', () => {
     it("clears the rewritten resources' recorded item contributions, so a rolled total gets the talent added on top", () => {
         const actor = character();
         sync(actor, [FATED]);
@@ -188,11 +222,6 @@ describe('item resource ledger: seeding and the builder reset (#691)', () => {
         applyUpdate(actor, { 'system.fate.max': 3, 'system.fate.value': 3, ...resetItemResourceDeltas(actor.flags, new Set<OriginResource>(['fate'])) });
         sync(actor, [FATED]);
         expect(actor.system.fate).toEqual({ max: 4, value: 4 });
-    });
-
-    it('has no ledger until something is recorded', () => {
-        expect(hasItemResourceLedger({})).toBe(false);
-        expect(hasItemResourceLedger({ [SYSTEM_ID]: { [ITEM_RESOURCE_DELTAS_FLAG]: {} } })).toBe(true);
     });
 });
 

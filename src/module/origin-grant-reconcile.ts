@@ -5,7 +5,7 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 /**
  * Boot-time origin-grant reconciliation.
  *
- * A GM-only, setting-gated pass run on every world `ready` (sibling to the
+ * A GM-only pass run on every world `ready` (sibling to the
  * in-memory inventory hydration in `compendium-hydrate.ts`). For each world actor
  * it re-applies every embedded origin-path item through the now-idempotent
  * {@link WH40KItem.applyOriginToActor}. Because that applier reconciles
@@ -13,8 +13,10 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
  * (no double-counting) and treats skills/talents/self as skip-if-exists, the
  * pass is safe to run on every boot: it converges to the same state and
  * self-heals missing trained-skill grants without re-running character creation.
- * Then every actor's other owned items are reconciled through the item resource
- * ledger (`WH40KBaseActor.syncItemResourceDeltas`, #691).
+ * That origin pass is setting-gated. Then, whatever the setting, every actor's
+ * other owned items are reconciled through the item resource ledger
+ * (`WH40KBaseActor.syncItemResourceDeltas`, #691), whose first run on an actor
+ * only seeds it.
  */
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry actor/item collections carry open-ended shapes at the framework boundary */
@@ -31,16 +33,26 @@ type ReconcileActorLike = {
 /* eslint-enable no-restricted-syntax */
 
 /**
- * Re-apply every embedded origin path on every world actor idempotently.
- * GM-only, gated by the `reconcileOriginGrantsOnReady` setting.
+ * Re-apply every embedded origin path on every world actor idempotently, then
+ * reconcile every actor's item resource ledger. GM-only. The origin pass is
+ * gated by the `reconcileOriginGrantsOnReady` setting; the item ledger pass is
+ * not, because an actor's first pass only seeds its ledger and never moves a
+ * total (#691).
  */
 export async function reconcileWorldOriginGrants(): Promise<void> {
     if (!game.user.isGM) return;
-    const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady) as boolean | undefined;
-    if (enabled === false) return;
-
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is typed loosely; we narrow to the surface we touch
     const actors = game.actors.contents as unknown as ReconcileActorLike[];
+    const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady) as boolean | undefined;
+    if (enabled !== false) await reapplyOrigins(actors);
+
+    // Every other owned item's resources go through the item resource ledger the
+    // same way (#691). Each actor queues its own runs, so actors reconcile side by side.
+    await Promise.all(actors.map(async (actor) => actor.syncItemResourceDeltas()));
+}
+
+/** Re-apply every actor's embedded origin paths, one at a time per actor. */
+async function reapplyOrigins(actors: readonly ReconcileActorLike[]): Promise<void> {
     let actorsTouched = 0;
     let originsReconciled = 0;
 
@@ -62,10 +74,6 @@ export async function reconcileWorldOriginGrants(): Promise<void> {
         }
         if (touchedThisActor) actorsTouched += 1;
     }
-
-    // Every other owned item's resources go through the item resource ledger the
-    // same way (#691). Each actor queues its own runs, so actors reconcile side by side.
-    await Promise.all(actors.map(async (actor) => actor.syncItemResourceDeltas()));
 
     if (originsReconciled > 0) {
         // eslint-disable-next-line no-console

@@ -82,7 +82,7 @@ describe('reconcileWorldOriginGrants', () => {
         expect(pc.syncItemResourceDeltas).not.toHaveBeenCalled();
     });
 
-    it('is a no-op when the setting is explicitly disabled', async () => {
+    it('skips the origins when the setting is explicitly disabled, but still runs the item ledger (its first run only seeds, #691)', async () => {
         const o = origin('Hive World');
         const pc = fakeActor('PC', [o]);
         setGame({ isGM: true, enabled: false, actors: [pc] });
@@ -90,7 +90,7 @@ describe('reconcileWorldOriginGrants', () => {
         await reconcileWorldOriginGrants();
 
         expect(o.applyOriginToActor).not.toHaveBeenCalled();
-        expect(pc.syncItemResourceDeltas).not.toHaveBeenCalled();
+        expect(pc.syncItemResourceDeltas).toHaveBeenCalledTimes(1);
     });
 
     it('runs when the setting is undefined (only an explicit false disables)', async () => {
