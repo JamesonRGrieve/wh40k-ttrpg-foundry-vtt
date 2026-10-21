@@ -55,13 +55,21 @@ test.describe.serial('RT Void Born origin (Tier B, content#37)', () => {
         await expect(sheet.locator('input[name="system.modifiers.characteristics.willpower"]')).toHaveValue('5');
         await expect(sheet).toContainText('Ship Dialect');
         await expect(sheet).toContainText('Charmed (Void Born)');
+        await snapElement(page, 'rt-voidborn-origin-grants', `#${sheetId}`, sheetId);
         // The Description tab's source control and text resolve to RT too. The owner can edit the
-        // origin, so the control renders Book and Page inputs. The tab strip cannot switch tabs
-        // (#690), so these are read from the rendered DOM rather than the visible tab.
-        await expect(sheet.locator('input[name="system.source.book"]')).toHaveValue('RT: Core Rulebook');
-        await expect(sheet.locator('input[name="system.source.page"]')).toHaveValue('18');
-        await expect(sheet.locator('div[data-tab="description"][data-group="primary"]').first()).toContainText('Toughness Bonus');
-        await snapElement(page, 'rt-voidborn-origin-sheet-source', `#${sheetId}`, sheetId);
+        // origin, so the control renders Book and Page inputs.
+        await sheet.locator('nav.wh40k-tabs [data-tab="description"]').click();
+        const description = sheet.locator('.wh40k-tab-content > [data-tab="description"]');
+        await expect(description).toBeVisible();
+        const book = description.locator('input[name="system.source.book"]');
+        const page18 = description.locator('input[name="system.source.page"]');
+        await expect(book).toBeVisible();
+        await expect(book).toHaveValue('RT: Core Rulebook');
+        await expect(page18).toBeVisible();
+        await expect(page18).toHaveValue('18');
+        await expect(description).toContainText('Toughness Bonus');
+        await book.scrollIntoViewIfNeeded();
+        await snapElement(page, 'rt-voidborn-origin-description-source', `#${sheetId}`, sheetId);
         recordCoverage('sheet.render', 'originPath.rt.homeWorld.voidBorn');
     });
 });
