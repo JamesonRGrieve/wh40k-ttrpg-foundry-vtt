@@ -6,9 +6,10 @@ import { expect, within } from 'storybook/test';
 import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
-import { renderSheet } from '../../../../stories/test-helpers';
+import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
 import { PSYCHIC_DISCIPLINE_CHOICES, psychicDisciplineOptions } from '../../data/item/psychic-discipline';
+import { attackSpecialItemFromQuality } from '../../rules/attack-specials';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x5a1e71);
@@ -21,6 +22,16 @@ interface PsychicPowerCtx {
     editable: boolean;
     effects: ReadonlyArray<never>;
     tabs: Record<string, { id: string; tab: string; group: string; active: boolean; cssClass: string }>;
+    /** The container sheet's nested items: the power's attack specials. */
+    nestedItems?: NestedSpecial[];
+}
+
+/** A nested attack special as the template reads it. */
+interface NestedSpecial {
+    id: string;
+    name: string;
+    isAttackSpecial: true;
+    system: { enabled: boolean; hasLevel: boolean; level: number };
 }
 function makeCtx(overrides: Partial<PsychicPowerCtx> = {}): PsychicPowerCtx {
     const id = randomId('psychic', rng);
@@ -242,6 +253,40 @@ export const AttackSpecialsNoDeadButton: Story = {
             (b) => b.type !== 'submit' && (b.dataset['action'] ?? '') === '',
         );
         await expect(dead.map((b) => b.outerHTML.slice(0, 80))).toEqual([]);
+    },
+};
+
+/**
+ * #697: a weapon quality dropped on the power becomes a nested attack special
+ * (Toxic (2) → the Toxic special at level 2), listed with a remove control that
+ * sends the container sheet's nestedItemDelete for its row. With it removed, the
+ * list is empty again.
+ */
+export const AttackSpecialDropAndDelete: Story = {
+    render: () => renderSheet(templateSrc, makeCtx({ inEditMode: true, nestedItems: [] })),
+    play: async ({ canvasElement }) => {
+        const section = (): Element | null => canvasElement.querySelector('[data-item-section="WH40K.ItemSheet.PsychicPower.AttackSpecials"]');
+        await expect(section()?.textContent).toContain('No attack specials');
+
+        // The drop: the quality converts to the special the sheet nests.
+        const special = attackSpecialItemFromQuality({ identifier: 'toxic', level: 2 });
+        await expect(special).not.toBeNull();
+        if (special === null) return;
+        const nested: NestedSpecial = { id: 'toxicSpecial0001', name: special.name, isAttackSpecial: true, system: special.system };
+        canvasElement.replaceChildren(renderSheet(templateSrc, makeCtx({ inEditMode: true, nestedItems: [nested] })));
+
+        const row = section()?.querySelector<HTMLElement>('[data-nested-item-id="toxicSpecial0001"]');
+        await expect(row?.textContent.replace(/\s+/g, ' ').trim()).toBe('Toxic (2)');
+        await expect(section()?.textContent).not.toContain('No attack specials');
+
+        // The delete: its control sends nestedItemDelete from inside the row.
+        const clicks = captureActionClicks(canvasElement);
+        row?.querySelector<HTMLButtonElement>('button[data-action="nestedItemDelete"]')?.click();
+        await expect(clicks.map((c) => c.action)).toEqual(['nestedItemDelete']);
+
+        canvasElement.replaceChildren(renderSheet(templateSrc, makeCtx({ inEditMode: true, nestedItems: [] })));
+        await expect(section()?.querySelector('[data-nested-item-id]')).toBeNull();
+        await expect(section()?.textContent).toContain('No attack specials');
     },
 };
 

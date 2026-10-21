@@ -1,5 +1,4 @@
 import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
-import type { WH40KItemDocument } from '../types/global.d.ts';
 import { parseQualityLevel } from '../utils/quality-id.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
@@ -35,6 +34,27 @@ export function attackSpecialForQualityId(qualityId: string): { name: string; le
     const found = attackSpecialByKey.get(normalizeQualityKey(baseId));
     if (found === undefined) return null;
     return { name: found.name, level: level ?? true };
+}
+
+/** The nested attack-special item a weapon quality becomes on a psychic power. */
+export interface AttackSpecialItemData {
+    name: string;
+    type: 'attackSpecial';
+    system: { enabled: boolean; hasLevel: boolean; level: number };
+}
+
+/**
+ * The nested attack special a weapon quality dropped on a psychic power becomes
+ * (#697), through {@link attackSpecialForQualityId}: Toxic (2) becomes the enabled
+ * Toxic special at level 2. Null when the quality has no attack special, so the
+ * drop is refused.
+ */
+export function attackSpecialItemFromQuality(quality: { identifier: string; level: number | null }): AttackSpecialItemData | null {
+    const qualityId = quality.level === null ? quality.identifier : `${quality.identifier}-${String(quality.level)}`;
+    const special = attackSpecialForQualityId(qualityId);
+    if (special === null) return null;
+    const level = typeof special.level === 'number' ? special.level : 0;
+    return { name: special.name, type: 'attackSpecial', system: { enabled: true, hasLevel: typeof special.level === 'number', level } };
 }
 
 /**
@@ -109,13 +129,20 @@ export function applyChosenQualityEffects(specials: AttackSpecialLike[], chosenQ
     if (existing !== undefined && typeof existing.level === 'number') existing.level += effects.blastBonus;
 }
 
-type AttackSpecialCarrier = WH40KItemDocument & {
+/**
+ * A nested item the roll reads as an attack special. An attackSpecial item has no
+ * `state` (it is not equippable), so `state` is optional: reading `state.equipped`
+ * unguarded threw for every nested special (#697).
+ */
+interface AttackSpecialCarrier {
     isAttackSpecial: boolean;
-    system: WH40KItemDocument['system'] & {
+    name: string;
+    system: {
         enabled?: boolean;
         level?: number | boolean | string;
+        state?: { equipped?: boolean };
     };
-};
+}
 
 type AttackSpecialRollData = RollData & {
     attackSpecials: AttackSpecialLike[];
@@ -128,9 +155,9 @@ export function updateAttackSpecials(rollData: AttackSpecialSourceRollData): voi
     mutableRollData.attackSpecials = [];
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is untyped in WH40KItemDocument; cast to structural type for attack-special access
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actionItem.items is the untyped nested-item Collection on the item document; cast to structural type for attack-special access
     for (const i of actionItem.items as unknown as AttackSpecialCarrier[]) {
-        if (i.isAttackSpecial && (i.system.state.equipped === true || i.system.enabled === true)) {
+        if (i.isAttackSpecial && (i.system.state?.equipped === true || i.system.enabled === true)) {
             const entry: AttackSpecialLike = { name: i.name };
             if (i.system.level !== undefined) entry.level = i.system.level;
             mutableRollData.attackSpecials.push(entry);

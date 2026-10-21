@@ -6782,6 +6782,8 @@
                 "AttackType": "Attack Type",
                 "DamagePlaceholder": "e.g., 1d10+PR",
                 "AttackSpecials": "Attack Specials",
+                "QualityHasNoSpecial": "{name} has no attack special a psychic power can use.",
+                "RemoveSpecial": "Remove attack special",
                 "NoAttackSpecials": "No attack specials. Drag attack specials here to add them."
             },
             "JournalEntry": {

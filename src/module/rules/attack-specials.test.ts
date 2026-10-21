@@ -1,6 +1,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import type { RollData } from '../rolls/roll-data.ts';
-import { attackSpecialForQualityId, attackSpecials, attackSpecialsNames, calculateAttackSpecialAttackBonuses } from './attack-specials.ts';
+import {
+    attackSpecialForQualityId,
+    attackSpecialItemFromQuality,
+    attackSpecials,
+    attackSpecialsNames,
+    calculateAttackSpecialAttackBonuses,
+    updateAttackSpecials,
+} from './attack-specials.ts';
 import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
 
 /**
@@ -153,5 +160,57 @@ describe('attackSpecialForQualityId (ammo quality-id → attack-special bridge, 
     it('returns null for a pseudo-quality with no combat attack-special', () => {
         expect(attackSpecialForQualityId('clip-reduced-to-1')).toBeNull();
         expect(attackSpecialForQualityId('not-a-real-quality')).toBeNull();
+    });
+});
+
+describe('updateAttackSpecials reads a psychic power’s nested specials (#697)', () => {
+    // An attackSpecial item is not equippable: it has no `state`. Reading
+    // `state.equipped` unguarded threw for every nested special on a roll.
+    it('collects an enabled nested special that has no state', () => {
+        const rollData = {
+            power: {
+                items: [{ isAttackSpecial: true, name: 'Defensive', system: { enabled: true, hasLevel: false, level: 0 } }],
+                system: {},
+                isRanged: false,
+            },
+            gameSystemId: 'dh2',
+            attackSpecials: [] as Array<{ name: string }>,
+        };
+        // eslint-disable-next-line no-restricted-syntax -- structural mock satisfies the narrow surface updateAttackSpecials reads; full PsychicRollData carries Foundry-runtime deps unavailable under vitest.
+        updateAttackSpecials(rollData as unknown as Parameters<typeof updateAttackSpecials>[0]);
+        expect(rollData.attackSpecials.map((s) => s.name)).toEqual(['Defensive']);
+    });
+
+    it('skips a disabled nested special', () => {
+        const rollData = {
+            power: { items: [{ isAttackSpecial: true, name: 'Defensive', system: { enabled: false } }], system: {}, isRanged: false },
+            gameSystemId: 'dh2',
+            attackSpecials: [] as Array<{ name: string }>,
+        };
+        // eslint-disable-next-line no-restricted-syntax -- structural mock satisfies the narrow surface updateAttackSpecials reads; full PsychicRollData carries Foundry-runtime deps unavailable under vitest.
+        updateAttackSpecials(rollData as unknown as Parameters<typeof updateAttackSpecials>[0]);
+        expect(rollData.attackSpecials).toEqual([]);
+    });
+});
+
+describe('attackSpecialItemFromQuality (a quality dropped on a psychic power, #697)', () => {
+    it('a levelled quality becomes the enabled special at that level', () => {
+        expect(attackSpecialItemFromQuality({ identifier: 'toxic', level: 2 })).toEqual({
+            name: 'Toxic',
+            type: 'attackSpecial',
+            system: { enabled: true, hasLevel: true, level: 2 },
+        });
+    });
+
+    it('a level-less quality becomes the enabled special with no level', () => {
+        expect(attackSpecialItemFromQuality({ identifier: 'razor-sharp', level: null })).toEqual({
+            name: 'Razor Sharp',
+            type: 'attackSpecial',
+            system: { enabled: true, hasLevel: false, level: 0 },
+        });
+    });
+
+    it('a quality with no attack special has no item, so the drop is refused', () => {
+        expect(attackSpecialItemFromQuality({ identifier: 'abundant', level: null })).toBeNull();
     });
 });

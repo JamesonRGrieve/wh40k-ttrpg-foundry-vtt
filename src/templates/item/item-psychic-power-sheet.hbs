@@ -213,21 +213,26 @@
                         </div>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-                {{!-- No add control (#696): the sheet has no add-special action, so the old "Add Special" button did nothing. --}}
+                {{!-- Attack specials are nested items (#697): drop an attack special or a weapon quality on the
+                      sheet to add one; each entry's cross removes it through the container sheet's nestedItemDelete. --}}
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-star" labelKey="WH40K.ItemSheet.PsychicPower.AttackSpecials"}}
                         <div class="tw-flex tw-flex-wrap tw-gap-1">
-                            {{#each item.items as |embedded|}}
+                            {{#each nestedItems as |embedded|}}
                             {{#if embedded.isAttackSpecial}}
-                            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-border tw-border-[#8b00ff] tw-bg-[rgba(106,13,173,0.2)] tw-text-[#6a0dad] dark:tw-bg-[rgba(106,13,173,0.3)] dark:tw-text-[#d8a8ff]" data-item-id="{{embedded.id}}">
+                            <span class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-border tw-border-[#8b00ff] tw-bg-[rgba(106,13,173,0.2)] tw-text-[color:var(--wh40k-text-dark)]" data-nested-item-id="{{embedded.id}}">
                                 {{embedded.name}}
                                 {{#if embedded.system.level}}({{embedded.system.level}}){{/if}}
-                                <i class="fas fa-times item-delete tw-cursor-pointer tw-ml-1" data-item-id="{{embedded.id}}"></i>
+                                {{#if @root.canEdit}}
+                                <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-p-0 tw-m-0 tw-ml-1 tw-bg-transparent tw-border-0 tw-text-inherit tw-cursor-pointer" data-action="nestedItemDelete" aria-label="{{localize 'WH40K.ItemSheet.PsychicPower.RemoveSpecial'}}">
+                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                </button>
+                                {{/if}}
                             </span>
                             {{/if}}
                             {{/each}}
                         </div>
 
-                        {{#unless item.items.length}}
+                        {{#unless nestedItems.length}}
                         <p class="tw-text-center tw-p-4 tw-italic tw-rounded-md">{{localize "WH40K.ItemSheet.PsychicPower.NoAttackSpecials"}}</p>
                         {{/unless}}
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
