@@ -4,6 +4,8 @@ import {
     bandProvenance,
     type BorrowCandidate,
     type DamageBand,
+    damageProfileComponents,
+    damageProfileTooltipTitle,
     damageTypeAbbreviation,
     describeDamageProvenance,
     drawDamageTable,
@@ -12,6 +14,7 @@ import {
     pickDamageTableRow,
     projectDamageTableRows,
     type RawDamageTableResult,
+    type ResolvedDamageProfile,
     selectDamageBand,
 } from './damage-profile.ts';
 
@@ -302,5 +305,63 @@ describe('describeDamageProvenance (#608)', () => {
         [{ kind: 'no-borrowed', from: 'wielder-melee' } as const, 'WH40K.Chat.Damage.ProfileNoWielderMelee'],
     ])('labels %j', (provenance, key) => {
         expect(describeDamageProvenance(provenance)).toContain(key);
+    });
+});
+
+/**
+ * #693: the range-band tooltip listed only the penetration. It names the weapon and
+ * the band rule, then every component the band sets.
+ */
+describe('damage profile tooltip (#693)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', {
+            i18n: {
+                localize: (key: string) => key,
+                format: (key: string, data: Record<string, string>) => `${key} ${JSON.stringify(data)}`,
+            },
+        });
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    const FAR_BAND: ResolvedDamageProfile = {
+        formula: '6d10+12',
+        type: 'energy',
+        penetration: 14,
+        qualities: ['felling-2', 'blast-2'],
+        addsStrengthBonus: false,
+        provenance: bandProvenance(BEAM_BANDS, 2, 80),
+    };
+    const qualityLabel = (id: string): string => `label:${id}`;
+
+    it('lists the band’s damage, type, penetration and every quality it adds', () => {
+        expect(damageProfileComponents(FAR_BAND, qualityLabel)).toEqual([
+            { name: 'WH40K.Chat.Damage.Formula', value: 0, display: '6d10+12' },
+            { name: 'WH40K.Chat.Damage.ProfileType', value: 0, display: 'energy' },
+            { name: 'WH40K.Chat.Damage.ProfilePenetration', value: 14 },
+            { name: 'WH40K.Chat.Damage.ProfileQuality', value: 0, display: 'label:felling-2' },
+            { name: 'WH40K.Chat.Damage.ProfileQuality', value: 0, display: 'label:blast-2' },
+        ]);
+    });
+
+    it('has no damage row for a profile that deals no damage', () => {
+        const none: ResolvedDamageProfile = { ...FAR_BAND, formula: '', qualities: [], provenance: { kind: 'out-of-band', distance: 900 } };
+        expect(damageProfileComponents(none, qualityLabel).map((row) => row.name)).toEqual([
+            'WH40K.Chat.Damage.ProfileType',
+            'WH40K.Chat.Damage.ProfilePenetration',
+        ]);
+    });
+
+    it('titles the tooltip with the weapon and its band rule', () => {
+        const title = damageProfileTooltipTitle('Conversion Beamer', FAR_BAND.provenance);
+        expect(title).toContain('WH40K.Chat.Damage.ProfileTooltipTitle');
+        expect(title).toContain('Conversion Beamer');
+        expect(title).toContain('WH40K.Chat.Damage.ProfileBandBeyond');
+    });
+
+    it('falls back to the rule alone without a weapon name', () => {
+        expect(damageProfileTooltipTitle('', FAR_BAND.provenance)).toBe(describeDamageProvenance(FAR_BAND.provenance));
     });
 });

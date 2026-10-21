@@ -19,6 +19,9 @@ import { cleanupProbes, openProbeSheet } from './occult-sheet-flow';
  */
 
 const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
+/** The least a tooltip line sits in from the tooltip's edge: its 2px border plus the panel padding. */
+const MIN_TOOLTIP_INSET_PX = 10;
+
 /** How long a hover may wait for its target to become actionable. */
 const HOVER_TIMEOUT_MS = 15_000;
 
@@ -88,7 +91,14 @@ test.describe.serial('rich tooltips open on hover and focus (Tier B, #692)', () 
             await clearScreenOverlays(page, popout.replace('#', ''));
             await row.hover({ timeout: scaledMs(HOVER_TIMEOUT_MS) });
             await expect(richTooltip(page)).toBeVisible();
-            await expect(richTooltip(page).locator('.wh40k-tooltip__source')).not.toHaveCount(0);
+            // #693: the band tooltip names the weapon and its band rule, then every component the band sets
+            // (near band: its dice, Energy damage, penetration 2).
+            await expect(richTooltip(page).locator('.wh40k-tooltip__title')).toContainText('Conversion Beamer');
+            await expect(richTooltip(page).locator('.wh40k-tooltip__title')).toContainText('Range band 1 of 3');
+            const rows = richTooltip(page).locator('.wh40k-tooltip__source');
+            await expect(rows.filter({ hasText: 'Formula' })).toContainText('1d10');
+            await expect(rows.filter({ hasText: 'Damage type' })).toContainText(/energy/i);
+            await expect(rows.filter({ hasText: 'Penetration' })).toContainText('+2');
             await snapWithTooltip(page, 'rich-tooltip-damage-card-hover', card);
 
             // Keyboard: the row is in the Tab order, and focusing it opens the tooltip too.
@@ -108,9 +118,19 @@ test.describe.serial('rich tooltips open on hover and focus (Tier B, #692)', () 
             const { sheetId } = await openProbeSheet(page, { name: 'Tooltip Acolyte', type: 'dh2-character', system: { gameSystem: 'dh2' } }, 'combat');
             const location = page.locator(`#${sheetId} section.tab[data-tab="combat"] [data-location="head"][data-wh40k-tooltip="armor"]`).first();
             await expect(location).toBeVisible();
+            // #693: no native title stacks over the rich tooltip; the location is named by aria-label.
+            await expect(location).not.toHaveAttribute('title');
+            await expect(location).toHaveAttribute('aria-label', /01-10/);
             await clearScreenOverlays(page, sheetId);
             await location.hover();
             await expect(richTooltip(page)).toBeVisible();
+            // #693: the Formula line sits inside the panel's padding, not flush against its border.
+            const inset = await richTooltip(page).evaluate((tip) => {
+                const formula = tip.querySelector('.wh40k-tooltip__formula');
+                if (formula === null) return null;
+                return formula.getBoundingClientRect().left - tip.getBoundingClientRect().left;
+            });
+            expect(inset).toBeGreaterThanOrEqual(MIN_TOOLTIP_INSET_PX);
             await snapWithTooltip(page, 'rich-tooltip-sheet-armour-hover', location);
             recordCoverage('action', 'RichTooltip.hoverSheetRow');
         } finally {

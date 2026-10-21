@@ -314,6 +314,35 @@ function bandLabel(p: Extract<DamageProfileProvenance, { kind: 'band' }>): strin
     return t('WH40K.Chat.Damage.ProfileBandAny', base);
 }
 
+/** One component of a resolved profile, as a hover-tooltip row: a number, or text where it is not one. */
+export interface DamageProfileComponent {
+    name: string;
+    value: number;
+    display?: string;
+}
+
+/**
+ * Everything the resolved profile sets for this hit (#693), one row each: its
+ * damage (the band's or table's dice with the weapon's bonus folded in), its
+ * damage type, its penetration and each quality it adds. A profile that deals no
+ * damage has no damage row. `qualityLabel` names a quality id (`felling-1` →
+ * "Felling (1)").
+ */
+export function damageProfileComponents(profile: ResolvedDamageProfile, qualityLabel: (id: string) => string): DamageProfileComponent[] {
+    const rows: DamageProfileComponent[] = [];
+    if (profile.formula !== '') rows.push({ name: t('WH40K.Chat.Damage.Formula'), value: 0, display: profile.formula });
+    rows.push({ name: t('WH40K.Chat.Damage.ProfileType'), value: 0, display: profile.type });
+    rows.push({ name: t('WH40K.Chat.Damage.ProfilePenetration'), value: profile.penetration });
+    for (const quality of profile.qualities) rows.push({ name: t('WH40K.Chat.Damage.ProfileQuality'), value: 0, display: qualityLabel(quality) });
+    return rows;
+}
+
+/** The profile tooltip's title: the weapon, and the rule (band, table result, borrowed weapon) that chose its damage. */
+export function damageProfileTooltipTitle(weaponName: string, provenance: DamageProfileProvenance): string {
+    const rule = describeDamageProvenance(provenance);
+    return weaponName === '' ? rule : t('WH40K.Chat.Damage.ProfileTooltipTitle', { weapon: weaponName, rule });
+}
+
 /** The damage card's statement of which band / table result / borrowed weapon applied. */
 export function describeDamageProvenance(provenance: DamageProfileProvenance): string {
     if (provenance.kind === 'band') return bandLabel(provenance);

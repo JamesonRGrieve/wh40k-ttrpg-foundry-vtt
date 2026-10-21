@@ -149,6 +149,16 @@ describe('armour tooltip shows the derivation, not just the parts', () => {
         expect(html).toContain(`3 (${TB}) + 4 (WH40K.Tooltip.Armour) = 7`);
     });
 
+    // #693: the formula line sat outside any breakdown section, flush against the border.
+    it('puts the formula line inside a padded breakdown section', () => {
+        const root = document.createElement('div');
+        root.innerHTML = build({ location: 'Head', total: 3, toughnessBonus: 3, traitBonus: 0, armorValue: 0, equipped: [] });
+        const formula = root.querySelector('.wh40k-tooltip__formula');
+        expect(formula?.classList.contains('wh40k-tooltip__line')).toBe(true);
+        expect(formula?.parentElement?.classList.contains('wh40k-tooltip__breakdown')).toBe(true);
+        expect([...root.querySelectorAll('.wh40k-tooltip__line')].filter((line) => line.closest('.wh40k-tooltip__breakdown') === null)).toEqual([]);
+    });
+
     it('omits a zero trait bonus from the formula', () => {
         const html = build({ location: 'Head', total: 3, toughnessBonus: 3, traitBonus: 0, armorValue: 0, equipped: [] });
         expect(html).toContain(`3 (${TB}) = 3`);

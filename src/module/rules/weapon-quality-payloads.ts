@@ -12,7 +12,7 @@
  */
 
 import type { WeaponQualityDieOp, WeaponQualityMechanics, WeaponQualityTemplate } from '../data/item/weapon-quality-mechanics.ts';
-import { parseQualityLevel } from '../utils/quality-id.ts';
+import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 
 /** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
 const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
@@ -337,6 +337,18 @@ function pascalIdentifier(identifier: string): string {
 /** Langpack key for a quality's display label (`accurate` → `WH40K.WeaponQuality.Accurate`). */
 export function weaponQualityLabelKey(identifier: string): string {
     return `WH40K.WeaponQuality.${pascalIdentifier(identifier)}`;
+}
+
+/**
+ * A quality's display label from its identifier (`felling-2` → "Felling (2)",
+ * `blast-10+1d10` → "Blast (10+1d10)"). An identifier the langpack does not name
+ * is returned as written.
+ */
+export function weaponQualityLabel(identifier: string, level: number | null = null): string {
+    const { baseId, formula } = parseQualityLevel(identifier);
+    const labelKey = weaponQualityLabelKey(baseId);
+    if (!game.i18n.has(labelKey)) return identifier;
+    return buildQualityLabel(game.i18n.localize(labelKey), getWeaponQualityHasLevel(baseId), level, formula);
 }
 
 /** Langpack key for a quality's description (`accurate` → `WH40K.WeaponQuality.AccurateDesc`). */

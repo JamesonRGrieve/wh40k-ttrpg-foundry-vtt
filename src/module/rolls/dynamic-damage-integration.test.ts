@@ -89,7 +89,7 @@ function attackData(items: DynamicModifierItemLike[], opts: AttackOpts = {}): At
     const bonus = (key: string): number => (key === 'WeaponSkill' ? 4 : key === 'BallisticSkill' ? 3 : 2);
     return {
         rollData: {
-            weapon: { system: {}, isMelee: opts.isMelee ?? true, isRanged: opts.isRanged ?? false },
+            weapon: { name: 'Test Weapon', system: {}, isMelee: opts.isMelee ?? true, isRanged: opts.isRanged ?? false },
             sourceActor: {
                 getCharacteristicFuzzy: (key: string) => ({ bonus: bonus(key) }),
                 hasTalent: () => false,

@@ -1,7 +1,14 @@
 import { t } from '../i18n/t.ts';
 import { calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
-import { type DamageProfileContext, describeDamageProvenance, drawDamageTable, type ResolvedDamageProfile } from '../rules/damage-profile.ts';
+import {
+    damageProfileComponents,
+    damageProfileTooltipTitle,
+    type DamageProfileContext,
+    describeDamageProvenance,
+    drawDamageTable,
+    type ResolvedDamageProfile,
+} from '../rules/damage-profile.ts';
 import {
     buildCharBonus,
     collectDynamicComponents,
@@ -31,7 +38,9 @@ import {
     resolveDieOpDamageAdjust,
     resolveMaximalEffect,
 } from '../rules/weapon-quality-effects.ts';
+import { weaponQualityLabel } from '../rules/weapon-quality-payloads.ts';
 import { prepareModifierTooltipData } from '../utils/modifier-tooltip.ts';
+import { parseQualityLevel } from '../utils/quality-id.ts';
 import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-modifiers.ts';
 import type { VehicleCardRow } from './vehicle-card-rows.ts';
 import { reversedTableRoll, strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
@@ -65,6 +74,8 @@ interface ActionItemSystem {
 
 /** Minimal action item shape needed for damage calculation. */
 interface ActionItemLike {
+    /** The weapon's (or power's) name, which titles its damage profile's tooltip. */
+    name: string;
     system: ActionItemSystem;
     isMelee: boolean;
     isRanged: boolean;
@@ -501,7 +512,11 @@ export class Hit {
         this.profile = profile;
         this.damageType = profile.type;
         this.profileLabel = describeDamageProvenance(profile.provenance);
-        this.profileTooltip = prepareModifierTooltipData(this.profileLabel, [{ name: t('WH40K.Chat.Damage.ProfilePenetration'), value: profile.penetration }]);
+        // The weapon and the rule that chose its damage, then every component that rule sets (#693).
+        this.profileTooltip = prepareModifierTooltipData(
+            damageProfileTooltipTitle(rollData.weapon?.name ?? '', profile.provenance),
+            damageProfileComponents(profile, (id) => weaponQualityLabel(id, parseQualityLevel(id).level)),
+        );
         rollData.addAttackQualities?.(profile.qualities);
         if (profile.provenance.kind === 'table' && profile.provenance.text !== '') this.addEffect(profile.provenance.tableName, profile.provenance.text);
     }

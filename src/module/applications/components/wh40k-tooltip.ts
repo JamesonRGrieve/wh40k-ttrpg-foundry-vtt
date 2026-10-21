@@ -55,6 +55,11 @@ function tipDivider(): string {
     return `<div class="wh40k-tooltip__divider"></div>`;
 }
 
+/** A padded breakdown section holding label/value lines; a line outside one has no padding. */
+function tipBreakdown(lines: string): string {
+    return `<div class="wh40k-tooltip__breakdown">${lines}</div>`;
+}
+
 /** A single label/value breakdown line; `extraClass` appends a modifier class (e.g. `wh40k-tooltip__line--modifier`). */
 function tipLine(label: string, value: string | number, extraClass = ''): string {
     const cls = extraClass !== '' ? ` ${extraClass}` : '';
@@ -66,19 +71,19 @@ function tipLine(label: string, value: string | number, extraClass = ''): string
  * rather than running into its value: the row keeps a gap, and the value never
  * shrinks (#691).
  */
-function tipSourceRows(sources: readonly { name: string; value: number }[]): string {
+function tipSourceRows(sources: readonly TooltipModifierSource[]): string {
     return sources
         .map(
             (s) =>
                 `<div class="wh40k-tooltip__source tw-gap-3"><span class="wh40k-tooltip__source-name tw-min-w-0 tw-break-words">${
                     s.name
-                }</span><span class="wh40k-tooltip__source-value tw-shrink-0 tw-whitespace-nowrap">${formatSigned(s.value)}</span></div>`,
+                }</span><span class="wh40k-tooltip__source-value tw-shrink-0 tw-whitespace-nowrap">${s.display ?? formatSigned(s.value)}</span></div>`,
         )
         .join('');
 }
 
 /** A sources block (preceded by a divider) with an optional title; empty string when there are no sources. */
-function tipSourceList(sources: readonly { name: string; value: number }[], title?: string): string {
+function tipSourceList(sources: readonly TooltipModifierSource[], title?: string): string {
     if (sources.length === 0) return '';
     const titleHtml = title !== undefined ? `<div class="wh40k-tooltip__sources-title">${title}</div>` : '';
     return `${tipDivider()}<div class="wh40k-tooltip__sources">${titleHtml}${tipSourceRows(sources)}</div>`;
@@ -88,6 +93,8 @@ function tipSourceList(sources: readonly { name: string; value: number }[], titl
 interface TooltipModifierSource {
     name: string;
     value: number;
+    /** Shown instead of the signed value when the component is not a number. */
+    display?: string;
 }
 
 /** Quality definition from config. */
@@ -651,11 +658,10 @@ export class TooltipsWH40K {
 
         let html = tipHeader(location ?? localize('WH40K.Tooltip.Armour'), `${localize('WH40K.Armour.AP')} ${total}`);
         html += tipDivider();
-        html += `<div class="wh40k-tooltip__breakdown">`;
-        html += tipLine(localize('WH40K.Tooltip.ToughnessBonus'), toughnessBonus);
-        if (traitBonus > 0) html += tipLine(localize('WH40K.Tooltip.TraitBonus'), traitBonus);
-        if (armorValue > 0) html += tipLine(localize('WH40K.Tooltip.ArmourLabel'), armorValue);
-        html += `</div>`;
+        let parts = tipLine(localize('WH40K.Tooltip.ToughnessBonus'), toughnessBonus);
+        if (traitBonus > 0) parts += tipLine(localize('WH40K.Tooltip.TraitBonus'), traitBonus);
+        if (armorValue > 0) parts += tipLine(localize('WH40K.Tooltip.ArmourLabel'), armorValue);
+        html += tipBreakdown(parts);
 
         // The derivation, not just the parts: a hovering player should be able to
         // read WHY this limb is at this AP. Each contributor is named — equipped
@@ -670,13 +676,9 @@ export class TooltipsWH40K {
         } else if (armorValue > 0) {
             terms.push(`${armorValue} (${localize('WH40K.Tooltip.Armour')})`);
         }
-        html += `
-            <div class="wh40k-tooltip__divider"></div>
-            <div class="wh40k-tooltip__formula wh40k-tooltip__line">
-                <span class="wh40k-tooltip__label">${localize('WH40K.Tooltip.Formula')}</span>
-                <span class="wh40k-tooltip__value">${terms.join(' + ')} = ${total}</span>
-            </div>
-        `;
+        // A breakdown section of its own, so the line takes the panel's padding (#693).
+        html += tipDivider();
+        html += tipBreakdown(tipLine(localize('WH40K.Tooltip.Formula'), `${terms.join(' + ')} = ${total}`, 'wh40k-tooltip__formula'));
 
         if (equipped.length > 0) {
             html += `

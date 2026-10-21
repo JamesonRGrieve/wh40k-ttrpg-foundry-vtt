@@ -4,9 +4,15 @@
  */
 
 import { isD100Success, printedDegrees, resolveDegreesMethod } from './rolls/roll-helpers.ts';
-import { getWeaponQualityHasLevel, getWeaponQualityMechanics, weaponQualityDescKey, weaponQualityLabelKey } from './rules/weapon-quality-payloads.ts';
+import {
+    getWeaponQualityHasLevel,
+    getWeaponQualityMechanics,
+    weaponQualityDescKey,
+    weaponQualityLabel,
+    weaponQualityLabelKey,
+} from './rules/weapon-quality-payloads.ts';
 import { capitalize } from './utils/format.ts';
-import { buildQualityLabel, parseQualityLevel } from './utils/quality-id.ts';
+import { parseQualityLevel } from './utils/quality-id.ts';
 
 /* -------------------------------------------- */
 /*  Config Type Definitions                     */
@@ -1077,11 +1083,7 @@ WH40K.getQualityDefinition = (identifier) => {
  * @param {number} [level]       Optional level for qualities with (X)
  * @returns {string}             Localized label
  */
-WH40K.getQualityLabel = function (identifier, level = null) {
-    const def = this.getQualityDefinition(identifier);
-    if (!def) return identifier;
-    return buildQualityLabel(game.i18n.localize(def.label), def.hasLevel, level, parseQualityLevel(identifier).formula);
-};
+WH40K.getQualityLabel = (identifier, level = null) => weaponQualityLabel(identifier, level);
 
 /**
  * Get localized quality description.

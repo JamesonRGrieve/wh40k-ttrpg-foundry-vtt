@@ -470,7 +470,11 @@ const BAND_TWO = { kind: 'band', index: 2, count: 3, minRange: 15, maxRange: 50,
 describe.each(SYSTEMS)('a contextual damage profile on the hit (%s)', (gameSystem) => {
     beforeEach(() => {
         vi.stubGlobal('game', {
-            i18n: { localize: (key: string) => key, format: (key: string, data: Record<string, string>) => `${key} ${JSON.stringify(data)}` },
+            i18n: {
+                localize: (key: string) => key,
+                format: (key: string, data: Record<string, string>) => `${key} ${JSON.stringify(data)}`,
+                has: (key: string) => key.startsWith('WH40K.WeaponQuality.'),
+            },
             wh40k: { log: () => undefined },
         });
     });
@@ -490,7 +494,16 @@ describe.each(SYSTEMS)('a contextual damage profile on the hit (%s)', (gameSyste
         expect(hit.totalPenetration).toBe(8);
         expect(hit.damageType).toBe('energy');
         expect(hit.profileLabel).toContain('WH40K.Chat.Damage.ProfileBandUpTo');
-        expect(JSON.parse(hit.profileTooltip)).toEqual({ title: hit.profileLabel, sources: [{ name: 'WH40K.Chat.Damage.ProfilePenetration', value: 8 }] });
+        // #693: the tooltip names the weapon and its band rule, then every component the band sets.
+        expect(JSON.parse(hit.profileTooltip)).toEqual({
+            title: `WH40K.Chat.Damage.ProfileTooltipTitle ${JSON.stringify({ weapon: 'Test Weapon', rule: hit.profileLabel })}`,
+            sources: [
+                { name: 'WH40K.Chat.Damage.Formula', value: 0, display: '3d10+9' },
+                { name: 'WH40K.Chat.Damage.ProfileType', value: 0, display: 'energy' },
+                { name: 'WH40K.Chat.Damage.ProfilePenetration', value: 8 },
+                { name: 'WH40K.Chat.Damage.ProfileQuality', value: 0, display: 'WH40K.WeaponQuality.Felling' },
+            ],
+        });
         expect(hit.effects.map((e) => e.name)).toContain('Felling');
     });
 

@@ -6239,7 +6239,10 @@
                 "ProfileWielderMelee": "Wielder's melee weapon: {weapon}",
                 "ProfileNoMount": "No weapon is mounted: no damage",
                 "ProfileNoWielderMelee": "No melee weapon to borrow: no damage",
-                "ProfilePenetration": "Penetration"
+                "ProfilePenetration": "Penetration",
+                "ProfileType": "Damage type",
+                "ProfileQuality": "Quality",
+                "ProfileTooltipTitle": "{weapon}: {rule}"
             },
             "AssignDamage": {
                 "Hit": "{location} Hit",
