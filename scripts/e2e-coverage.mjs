@@ -701,6 +701,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'bc-alignment-and-corruption-gate',
     'gated-names-not-truncated',
     'available-only-toggle',
+    'gate-chips-full-contrast',
 ];
 recordDimension('psychic-prerequisites.flow', covered['psychic-prerequisites.flow'], PSYCHIC_PREREQUISITE_FLOWS);
 

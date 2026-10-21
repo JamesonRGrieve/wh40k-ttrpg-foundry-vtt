@@ -121,7 +121,7 @@
       {{#if skills.length}}
       <div class="tw-flex tw-flex-col tw-gap-1">
         {{#each skills}}
-        <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+        <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-text-[color:var(--color-text-secondary)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
           <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-[1_1_14rem]">
             {{#if this.currentLabel}}
             <span class="tw-text-[0.6rem] tw-font-mono tw-uppercase tw-tracking-wider tw-py-[0.1rem] tw-px-[0.3rem] tw-rounded tw-bg-[rgba(0,0,0,0.2)] tw-text-[color:var(--color-text-tertiary)]" title="{{localize 'WH40K.Dialog.Advancement.CurrentRank'}}">{{this.currentLabel}}</span>
@@ -184,7 +184,7 @@
       {{#if talentsByTier.length}}
       <div class="tw-flex tw-flex-col tw-gap-3">
         {{#each talentsByTier as |group|}}
-        <section class="tw-pl-3 tw-border-l-2 {{#if group.unlocked}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)] tw-opacity-80{{/if}}">
+        <section class="tw-pl-3 tw-border-l-2 {{#if group.unlocked}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)]{{/if}}">
           <header class="tw-flex tw-items-center tw-gap-2 tw-text-[0.7rem] tw-uppercase tw-font-bold tw-tracking-[0.08em] tw-text-[color:var(--color-text-secondary)] tw-mb-1.5">
             <i class="fas {{#if group.unlocked}}fa-circle-check tw-text-[color:var(--wh40k-color-gold-light)]{{else}}fa-lock tw-text-[color:var(--wh40k-color-warning)]{{/if}}"></i>
             <span>{{localize "WH40K.Dialog.Advancement.Tier" tier=group.tier}}</span>
@@ -195,7 +195,7 @@
           </header>
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each group.items}}
-            <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+            <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-text-[color:var(--color-text-secondary)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
               <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-[1_1_14rem]">
                 <span class="tw-text-[0.6rem] tw-font-mono tw-py-[0.1rem] tw-px-[0.3rem] tw-rounded tw-bg-[rgba(0,0,0,0.2)] tw-text-[color:var(--color-text-tertiary)]" title="{{localize 'WH40K.Dialog.Advancement.Tier' tier=this.tier}}">{{localize "WH40K.Dialog.Advancement.TierAbbr" tier=this.tier}}</span>
                 <span class="tw-font-semibold tw-truncate">{{this.displayName}}</span>
@@ -244,7 +244,7 @@
       {{!-- Career-based systems: flat list (no tier grouping) --}}
       <div class="tw-flex tw-flex-col tw-gap-1">
         {{#each talents}}
-        <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
+        <div class="tw-flex tw-items-center tw-flex-wrap tw-justify-between tw-gap-2 tw-py-1 tw-px-2.5 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-text-[color:var(--color-text-secondary)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}} {{#if this.recentlyPurchased}}tw-animate-purchasePulse{{/if}}">
           <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-[1_1_14rem]">
             <span class="tw-font-semibold tw-truncate">{{this.displayName}}</span>
             <a class="tw-text-[color:var(--color-text-tertiary)] hover:tw-text-[color:var(--wh40k-color-gold)]"
@@ -372,7 +372,7 @@
       <h4 class="tw-mt-3 tw-mb-1 tw-text-[color:var(--wh40k-color-gold)] tw-font-display tw-uppercase tw-tracking-[0.1em] tw-border-b tw-border-[var(--wh40k-border-color)]">{{discipline.label}}</h4>
       <div class="tw-flex tw-flex-col tw-gap-2">
         {{#each discipline.tiers as |tier|}}
-        <section class="tw-pl-3 tw-border-l-2 {{#if tier.accessible}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)] tw-opacity-70{{/if}}">
+        <section class="tw-pl-3 tw-border-l-2 {{#if tier.accessible}}tw-border-[var(--wh40k-color-gold)]{{else}}tw-border-[var(--wh40k-color-warning)]{{/if}}">
           <header class="tw-flex tw-items-center tw-gap-2 tw-text-[0.7rem] tw-uppercase tw-font-bold tw-tracking-[0.08em] tw-text-[color:var(--color-text-secondary)] tw-mb-1">
             <i class="fas {{#if tier.accessible}}fa-circle-check tw-text-[color:var(--wh40k-color-gold-light)]{{else}}fa-lock tw-text-[color:var(--wh40k-color-warning)]{{/if}}"></i>
             <span>{{tier.label}}</span>
@@ -380,7 +380,7 @@
           </header>
           <div class="tw-flex tw-flex-col tw-gap-1">
             {{#each tier.items}}
-            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1 tw-px-2 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-opacity-70{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}}">
+            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-py-1 tw-px-2 tw-rounded-md {{#if this.owned}}tw-bg-[rgba(45,80,22,0.18)] tw-border tw-border-[rgba(124,179,66,0.4)]{{else if this.blocked}}tw-bg-[rgba(0,0,0,0.08)] tw-text-[color:var(--color-text-secondary)]{{else}}tw-bg-[var(--color-bg-option,rgba(0,0,0,0.03))] tw-border tw-border-[var(--wh40k-border-color-light)]{{/if}}">
               <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2">
                 <div class="tw-flex tw-items-center tw-gap-2 tw-min-w-0 tw-flex-[1_1_14rem]">
                   <span class="tw-text-[0.65rem] tw-font-mono tw-text-[color:var(--color-text-tertiary)]" title="{{localize 'WH40K.Dialog.Advancement.PsyRatingTooltip' rating=this.prCost}}">{{localize "WH40K.Dialog.Advancement.PsyRatingAbbr" rating=this.prCost}}</span>

@@ -38,6 +38,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'bc-alignment-and-corruption-gate',
     'gated-names-not-truncated',
     'available-only-toggle',
+    'gate-chips-full-contrast',
 ] as const;
 type FlowName = (typeof PSYCHIC_PREREQUISITE_FLOWS)[number];
 
@@ -121,6 +122,24 @@ async function truncatedNames(page: Page, appId: string): Promise<string[] | str
         return names
             .filter((name): name is HTMLElement => name instanceof HTMLElement && name.scrollWidth > name.clientWidth)
             .map((name) => name.textContent.trim());
+    }, appId);
+}
+
+/** The gate chips in the dialog drawn below full opacity, counting every faded ancestor (audit at the freeze). */
+async function fadedGateChips(page: Page, appId: string): Promise<{ chips: number; faded: string[] } | string> {
+    return page.evaluate((id: string) => {
+        const dialog = document.getElementById(id);
+        if (dialog === null) return 'dialog not open';
+        const chips = Array.from(dialog.querySelectorAll<HTMLElement>('.fa-lock + span, .fa-lock ~ span'));
+        const faded: string[] = [];
+        for (const chip of chips) {
+            let opacity = 1;
+            for (let node: HTMLElement | null = chip; node !== null && node !== dialog; node = node.parentElement) {
+                opacity *= Number(getComputedStyle(node).opacity);
+            }
+            if (opacity < 1) faded.push(`${chip.textContent.trim()} @ ${opacity.toFixed(2)}`);
+        }
+        return { chips: chips.length, faded };
     }, appId);
 }
 
@@ -269,6 +288,13 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                     const aegis = await scrollToRow(page, field.appId, 'Aegis of Euphedros');
                     if (aegis)
                         await snap(page, 'psychic-prerequisites-many-gates', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
+                    // The gate chips stay at full contrast on a blocked row.
+                    const chipRead = await fadedGateChips(page, field.appId);
+                    record(
+                        'gate-chips-full-contrast',
+                        typeof chipRead !== 'string' && chipRead.chips > 0 && chipRead.faded.length === 0,
+                        JSON.stringify(chipRead),
+                    );
                     // #696: "Available only" is one toggle whose state reads as aria-pressed.
                     const toggle = await availableOnlyClick(page, field.appId);
                     record(
@@ -286,6 +312,7 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                 } else {
                     record('gated-names-not-truncated', false, field);
                     record('available-only-toggle', false, field);
+                    record('gate-chips-full-contrast', false, field);
                 }
                 const wind = await powerUnmet(page, bcId, unaligned, 'Wind of Chaos', false);
                 const nurgle = { 'system.chaosAlignment': 'nurgle', 'system.corruption': 30 };

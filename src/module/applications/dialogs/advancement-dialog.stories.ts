@@ -314,6 +314,15 @@ function gatedPanel({ power, discipline, prerequisites, actor }: GatedPower): Ps
     };
 }
 
+/** Opacity classes on `element` and its ancestors up to `root`: each one fades everything inside it. */
+function fadedAncestors(element: Element | null, root: Element): string[] {
+    const faded: string[] = [];
+    for (let node = element; node !== null && node !== root; node = node.parentElement) {
+        faded.push(...Array.from(node.classList).filter((cls) => cls.startsWith('tw-opacity-')));
+    }
+    return faded;
+}
+
 function gatedStory(name: string, gated: GatedPower): Story {
     return {
         name,
@@ -329,6 +338,8 @@ function gatedStory(name: string, gated: GatedPower): Story {
             const chips = Array.from(lock?.querySelectorAll('span.tw-whitespace-nowrap') ?? [], (chip) => chip.textContent.trim());
             const purchase = canvasElement.querySelector('[data-action="purchaseAdvance"][data-type="psychic-power"]');
             await expect({ chips, purchasable: purchase !== null }).toEqual({ chips: [...gated.unmet], purchasable: gated.unmet.length === 0 });
+            // The gate chips are the reason a row is blocked, so nothing above them fades them out.
+            await expect(fadedAncestors(lock, canvasElement)).toEqual([]);
         },
     };
 }
