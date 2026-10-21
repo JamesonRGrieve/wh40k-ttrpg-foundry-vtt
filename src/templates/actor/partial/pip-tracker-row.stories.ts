@@ -93,8 +93,10 @@ export const ClickDispatch: Story = {
         await expect(second).toBeTruthy();
         // Drive the action handle for parity with the live sheet.
         clickAction(canvasElement, 'setFateStar');
-        // Filled count matches `current=1`.
-        const filled = canvasElement.querySelectorAll('.wh40k-fate-pip--filled');
+        // Filled count matches `current=1`: each filled pip is a pressed toggle. The old
+        // `wh40k-fate-pip--filled` class went with the partial's Tailwind port.
+        const filled = canvasElement.querySelectorAll('[data-action="setFateStar"][aria-pressed="true"]');
         await expect(filled.length).toBe(1);
+        await expect(canvasElement.querySelectorAll('[data-action="setFateStar"][aria-pressed="false"]')).toHaveLength(2);
     },
 };
