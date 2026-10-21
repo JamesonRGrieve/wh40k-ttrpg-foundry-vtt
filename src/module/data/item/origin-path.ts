@@ -1,10 +1,10 @@
+import { originStepLabel } from '../../rules/origin-steps.ts';
 import { formatSigned } from '../../utils/format.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import { originStepLabel } from '../shared/origin-steps.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 

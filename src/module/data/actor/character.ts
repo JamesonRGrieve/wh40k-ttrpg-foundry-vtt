@@ -1,12 +1,12 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { adjustPactDisposition, type PactRecord } from '../../rules/dark-pact.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
+import { originStepLabel } from '../../rules/origin-steps.ts';
 import { psyRatingTotalCost, psychicPowerCharge } from '../../rules/xp-costs.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { type AptitudeDerivation, type AptitudeGrantSource, collectGrantedAptitudes, deriveAptitudes, extractLegacyElectives } from '../item/origin-path.ts';
 import { parseCharacteristicBonusTerm } from '../shared/characteristic-formula.ts';
 import { experienceBalance } from '../shared/experience-math.ts';
-import { originStepLabel } from '../shared/origin-steps.ts';
 import { bcDaemonPrinceSchemaFields, type BcDaemonPrinceDeclarations } from './mixins/bc-daemon-prince-template.ts';
 import { bcPsychicSchemaFields, type BcPsychicDeclarations } from './mixins/bc-psychic-template.ts';
 import { bcRitualSchemaFields, type BcRitualDeclarations } from './mixins/bc-ritual-template.ts';

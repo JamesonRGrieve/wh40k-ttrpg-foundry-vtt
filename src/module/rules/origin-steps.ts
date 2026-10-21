@@ -1,11 +1,11 @@
 /**
  * Shared origin-path step labelling.
  *
- * The step-key → display-label lookup was duplicated between
- * `CharacterData._getStepLabel` and `OriginPathData.stepLabel`. Both now
- * resolve through {@link originStepLabel}, which reads the
- * `WH40K.OriginPath.<Step>` langpack entry (the superset of all 7 systems'
- * steps lives there).
+ * `CharacterData._getStepLabel`, `OriginPathData.stepLabel` and the origin-path
+ * sheet's step select all resolve through {@link originStepLabel}, which reads the
+ * `WH40K.OriginPath.<Step>` langpack entry (the superset of all seven lines'
+ * steps lives there). It sits in rules/, which the data models and the sheets may
+ * both import; the sheets may not reach into data/ (#690).
  */
 
 /** The langpack key of an origin-path step's label, `WH40K.OriginPath.<Capitalized>`; '' for no step. */

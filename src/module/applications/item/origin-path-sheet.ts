@@ -3,8 +3,8 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import { originStepLabel } from '../../data/shared/origin-steps.ts';
 import { originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
+import { originStepLabel } from '../../rules/origin-steps.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';

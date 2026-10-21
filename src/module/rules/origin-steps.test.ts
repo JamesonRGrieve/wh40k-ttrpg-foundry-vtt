@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { buildLangStub } from '../../testing/lang-stub.ts';
-import { originStepLabel } from './origin-steps';
+import { buildLangStub } from '../testing/lang-stub.ts';
+import { originStepLabel, originStepLabelKey } from './origin-steps.ts';
 
 /**
  * Pins the shared origin-step labelling (formerly duplicated between
@@ -37,5 +37,12 @@ describe('originStepLabel', () => {
     it('falls back to the raw key for an unknown step and to empty for none', () => {
         expect(originStepLabel('madeUpStep')).toBe('madeUpStep');
         expect(originStepLabel('')).toBe('');
+    });
+});
+
+describe('originStepLabelKey', () => {
+    it('capitalises the step under WH40K.OriginPath, and is empty for no step', () => {
+        expect(originStepLabelKey('regimentType')).toBe('WH40K.OriginPath.RegimentType');
+        expect(originStepLabelKey('')).toBe('');
     });
 });

@@ -5,9 +5,9 @@ import { walkFiles } from '../../../scripts/lib/walk.mjs';
 import enLang from '../../lang/en.json';
 import { SystemConfigRegistry } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { originStepLabelKey } from '../data/shared/origin-steps.ts';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { originGrantFieldFlags, originSheetLine, originSheetLineContext, originStepOptions } from './origin-step-options.ts';
+import { originStepLabelKey } from './origin-steps.ts';
 
 /**
  * The origin-path sheet's step select and grant fields (#687). The select hard-coded

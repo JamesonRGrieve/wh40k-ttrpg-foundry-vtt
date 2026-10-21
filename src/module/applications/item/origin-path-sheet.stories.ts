@@ -20,8 +20,8 @@ import { initializeStoryHandlebars } from '../../../../stories/template-support'
 import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import { originStepLabelKey } from '../../data/shared/origin-steps.ts';
 import { type OriginGrantFieldFlags, type OriginStepOption, originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
+import { originStepLabelKey } from '../../rules/origin-steps.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x0a1b2c);
