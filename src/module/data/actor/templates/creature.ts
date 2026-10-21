@@ -6,6 +6,7 @@ import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { giftDefFromMutation, isGiftItem, resolveGiftForAlignment } from '../../../rules/bc-gifts.ts';
 import { fateTotalWithLegacyThreshold, originFateContribution } from '../../../rules/fate.ts';
 import { deriveFatigueTrack, type FatigueTrack, getFatigueHalvedCharacteristic } from '../../../rules/fatigue.ts';
+import { contributesItemModifiers } from '../../../rules/item-modifier-eligibility.ts';
 import { resolveCraftsmanshipGatedModifiers } from '../../../rules/ow-craftsmanship.ts';
 import {
     actorEnvironmentContext,
@@ -1088,20 +1089,8 @@ export default class CreatureTemplate extends CommonTemplate {
         const actor = this.parent as { items?: { filter: (fn: (item: WH40KItem) => boolean) => WH40KItem[] } } | null | undefined;
         if (actor?.items === undefined) return;
 
-        const modifierItems = actor.items.filter(
-            (item: WH40KItem) =>
-                // Exclude origin paths - they're handled separately via _getOriginPathCharacteristicModifier
-                !item.isOriginPath &&
-                (item.isTalent ||
-                    item.isTrait ||
-                    item.isCondition ||
-                    // A Mark of Distinction's characteristic changes ride its
-                    // modifiers map (#171); other special abilities carry none.
-                    item.isSpecialAbility ||
-                    (item.type === 'armour' && item.system.state.equipped === true) ||
-                    (item.type === 'cybernetic' && item.system.state.equipped === true) ||
-                    (item.type === 'gear' && item.system.state.equipped === true)),
-        );
+        // Origin paths are excluded: they're handled separately via the origin-path passes.
+        const modifierItems = actor.items.filter((item: WH40KItem) => contributesItemModifiers(item));
 
         for (const item of modifierItems) {
             this._applyItemModifiers(item);
@@ -1245,7 +1234,9 @@ export default class CreatureTemplate extends CommonTemplate {
             if (typeof mods.resources.fate === 'number') {
                 this.modifierSources.fate.push({ ...source, value: mods.resources.fate });
             }
-            // Note: insanity and corruption modifiers are defined in schema but not yet implemented
+            // Wounds and Fate are listed here for the breakdowns. The stored totals
+            // (and Insanity / Corruption, which have no bucket) take the item's
+            // resources from the item resource ledger (#691).
         }
 
         // Movement modifier (from other modifiers array)

@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from './constants.ts';
+import { contributesItemModifiers, type ModifierBearingItem } from './rules/item-modifier-eligibility.ts';
 
 /**
  * Shared origin-grant resource ledger.
@@ -286,4 +287,196 @@ export function reconcileResourceDeltas(
     }
 
     return { updates, newDelta };
+}
+
+/* -------------------------------------------- */
+/*  Item resource ledger (#691)                 */
+/* -------------------------------------------- */
+
+/**
+ * Flag path (under the system scope) where each owned item's applied resources
+ * are recorded: `flags.wh40k-rpg.itemResourceDeltas[<item id>]`.
+ *
+ * A talent, trait, condition or equipped item that carries `modifiers.resources`
+ * (Fated for Greatness +1 Fate, Sound Constitution +1 Wounds, Chem Geld +1
+ * Insanity) is applied to the stored totals through
+ * {@link reconcileResourceDeltas}, exactly as an origin is: once, recorded here,
+ * and reversed when the item goes, stops applying (unequipped) or changes its
+ * value. Origins keep their own bag ({@link ORIGIN_GRANT_DELTAS_FLAG}), keyed by
+ * compendium source; items are keyed by their owned id, since an actor can own
+ * two copies of one compendium item.
+ */
+export const ITEM_RESOURCE_DELTAS_FLAG = 'itemResourceDeltas';
+
+/** One owned item's resource contribution, as recorded by the item resource ledger. */
+export type ItemResourceDelta = Record<OriginResource, number>;
+
+/** An owned item as the item resource ledger reads it. */
+export interface ItemResourceHolder {
+    /** The owned item's id: the ledger key. */
+    id: string;
+    /** Whether the item's modifiers currently apply (`contributesItemModifiers`). */
+    contributes: boolean;
+    /** The item's `modifiers.resources`, when it declares any. */
+    resources: Partial<Record<OriginResource, number | undefined>> | undefined;
+}
+
+/** An owned item as the actor holds it: what {@link itemResourceHolders} reads. */
+export interface ResourceBearingItem extends ModifierBearingItem {
+    id: string | null;
+    system: ModifierBearingItem['system'] & { modifiers?: { resources?: ItemResourceHolder['resources'] } | null | undefined };
+}
+
+/** The ledger's view of an actor's owned items: every item but its origin paths, which keep their own bag. */
+export function itemResourceHolders(items: Iterable<ResourceBearingItem>): ItemResourceHolder[] {
+    const holders: ItemResourceHolder[] = [];
+    for (const item of items) {
+        if (item.isOriginPath || item.id === null || item.id === '') continue;
+        holders.push({ id: item.id, contributes: contributesItemModifiers(item), resources: item.system.modifiers?.resources ?? undefined });
+    }
+    return holders;
+}
+
+/** Result of one item-ledger reconcile: the `actor.update()` bag, and the keys to unset once it lands. */
+export interface ItemResourceReconcileResult {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the bag is an actor.update() payload (open-ended system.* / flags.* paths + values)
+    updates: Record<string, unknown>;
+    /** Recorded items the actor no longer owns. Their entries are zeroed in `updates`; unset them after it lands. */
+    staleKeys: string[];
+}
+
+/** The update path recording one owned item's delta. */
+function itemResourceDeltaFlagPath(itemId: string): string {
+    return `flags.${SYSTEM_ID}.${ITEM_RESOURCE_DELTAS_FLAG}.${itemId}`;
+}
+
+/** An item's contribution, every resource present (0 when absent). */
+function itemResourceDelta(resources: ItemResourceHolder['resources']): ItemResourceDelta {
+    const delta: ItemResourceDelta = { wounds: 0, fate: 0, corruption: 0, insanity: 0 };
+    for (const resource of ORIGIN_RESOURCES) delta[resource] = Number(resources?.[resource] ?? 0);
+    return delta;
+}
+
+/** What an item contributes right now: its resources while it applies, nothing otherwise. */
+function currentItemDelta(item: ItemResourceHolder): ItemResourceDelta {
+    return itemResourceDelta(item.contributes ? item.resources : undefined);
+}
+
+/** Whether a delta adds nothing. */
+function isZeroDelta(delta: ItemResourceDelta): boolean {
+    return ORIGIN_RESOURCES.every((resource) => delta[resource] === 0);
+}
+
+/**
+ * Every owned item's recorded delta, read from
+ * `flags.wh40k-rpg.itemResourceDeltas`. Empty when nothing has been recorded.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
+export function readItemResourceDeltas(flags: unknown): Record<string, ItemResourceDelta> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor flags is an open Record at the Foundry document boundary
+    const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.[SYSTEM_ID]?.[ITEM_RESOURCE_DELTAS_FLAG];
+    const recorded: Record<string, ItemResourceDelta> = {};
+    if (bag === undefined || bag === null || typeof bag !== 'object') return recorded;
+    for (const [key, entry] of Object.entries(bag)) {
+        if (entry === null || typeof entry !== 'object') continue;
+        recorded[key] = itemResourceDelta(entry as ItemResourceHolder['resources']);
+    }
+    return recorded;
+}
+
+/** Whether the actor has an item resource ledger yet (an empty one counts). */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
+export function hasItemResourceLedger(flags: unknown): boolean {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: actor flags is an open Record at the Foundry document boundary
+    const bag = (flags as Record<string, Record<string, unknown> | undefined> | undefined)?.[SYSTEM_ID]?.[ITEM_RESOURCE_DELTAS_FLAG];
+    return bag !== undefined && bag !== null && typeof bag === 'object';
+}
+
+/**
+ * Reconcile every owned item's resources against what the ledger recorded.
+ *
+ * The actor's stored totals already carry each item's recorded delta. Each item
+ * now contributes its resources while it applies and nothing otherwise; an item
+ * the actor no longer owns contributes nothing. One
+ * {@link reconcileResourceDeltas} over the summed priors and contributions moves
+ * the totals by the difference, so re-running converges and never stacks.
+ * Totals never drop below 0, and the current Fate never exceeds the Fate total.
+ * Pure: reads the passed snapshots and returns the update bag.
+ * @param system  The actor's `system` data.
+ * @param flags  The actor's flags, holding the ledger.
+ * @param items  Every owned item that is not an origin path.
+ * @param resourcePaths  Where each resource lands.
+ */
+export function reconcileItemResourceDeltas(
+    system: object,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
+    flags: unknown,
+    items: readonly ItemResourceHolder[],
+    resourcePaths: ResourcePathMap,
+): ItemResourceReconcileResult {
+    const recorded = readItemResourceDeltas(flags);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the bag is an actor.update() payload (open-ended system.* / flags.* paths + values)
+    const updates: Record<string, unknown> = {};
+    const contribution: Partial<Record<OriginResource, number>> = {};
+    const prior: OriginAppliedDelta = {};
+
+    const account = (key: string, current: ItemResourceDelta): void => {
+        const before = Object.hasOwn(recorded, key) ? recorded[key] : undefined;
+        for (const resource of ORIGIN_RESOURCES) {
+            contribution[resource] = (contribution[resource] ?? 0) + current[resource];
+            prior[resource] = (prior[resource] ?? 0) + (before === undefined ? 0 : before[resource]);
+        }
+        const changed = before === undefined ? !isZeroDelta(current) : ORIGIN_RESOURCES.some((resource) => before[resource] !== current[resource]);
+        if (changed) updates[itemResourceDeltaFlagPath(key)] = current;
+    };
+
+    const owned = new Set<string>();
+    for (const item of items) {
+        owned.add(item.id);
+        account(item.id, currentItemDelta(item));
+    }
+    const staleKeys = Object.keys(recorded).filter((key) => !owned.has(key));
+    for (const key of staleKeys) account(key, itemResourceDelta(undefined));
+
+    const { updates: resourceUpdates } = reconcileResourceDeltas(system, { characteristics: {}, resources: contribution }, prior, resourcePaths);
+    for (const [path, value] of Object.entries(resourceUpdates)) updates[path] = Math.max(0, Number(value));
+    const fateValue = updates['system.fate.value'];
+    if (typeof fateValue === 'number') {
+        const fateMax = Number(updates['system.fate.max'] ?? valueAtPath(system, 'fate.max') ?? 0);
+        updates['system.fate.value'] = Math.min(fateValue, fateMax);
+    }
+    return { updates, staleKeys };
+}
+
+/**
+ * The flag updates that record items already counted in the actor's totals,
+ * without moving the totals. An actor created with its items (a compendium
+ * character, an import) has totals authored with them, so the ledger starts
+ * out recording them as applied.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the bag is an actor.update() payload (open-ended flags.* paths + values)
+export function seedItemResourceDeltas(items: readonly ItemResourceHolder[]): Record<string, ItemResourceDelta> {
+    const updates: Record<string, ItemResourceDelta> = {};
+    for (const item of items) {
+        const delta = currentItemDelta(item);
+        if (!isZeroDelta(delta)) updates[itemResourceDeltaFlagPath(item.id)] = delta;
+    }
+    return updates;
+}
+
+/**
+ * The flag updates that clear every recorded item contribution to the
+ * resources the origin-path builder has just written absolutely (a rolled
+ * Wounds or Fate total carries no item contribution), sent in the same update
+ * as that write. The next reconcile then adds each item's resource on top.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: `flags` is the Foundry Document flags bag, untyped at the framework boundary
+export function resetItemResourceDeltas(flags: unknown, rewritten: ReadonlySet<OriginResource>): Record<string, number> {
+    const updates: Record<string, number> = {};
+    for (const [key, delta] of Object.entries(readItemResourceDeltas(flags))) {
+        for (const resource of rewritten) {
+            if (delta[resource] !== 0) updates[`${itemResourceDeltaFlagPath(key)}.${resource}`] = 0;
+        }
+    }
+    return updates;
 }

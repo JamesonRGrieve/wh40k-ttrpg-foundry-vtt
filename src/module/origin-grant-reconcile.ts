@@ -13,6 +13,8 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
  * (no double-counting) and treats skills/talents/self as skip-if-exists, the
  * pass is safe to run on every boot: it converges to the same state and
  * self-heals missing trained-skill grants without re-running character creation.
+ * Then every actor's other owned items are reconciled through the item resource
+ * ledger (`WH40KBaseActor.syncItemResourceDeltas`, #691).
  */
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry actor/item collections carry open-ended shapes at the framework boundary */
@@ -24,6 +26,7 @@ type ReconcileItemLike = WH40KItem & {
 type ReconcileActorLike = {
     name: string | null;
     items: { contents: ReconcileItemLike[] };
+    syncItemResourceDeltas: () => Promise<void>;
 };
 /* eslint-enable no-restricted-syntax */
 
@@ -59,6 +62,10 @@ export async function reconcileWorldOriginGrants(): Promise<void> {
         }
         if (touchedThisActor) actorsTouched += 1;
     }
+
+    // Every other owned item's resources go through the item resource ledger the
+    // same way (#691). Each actor queues its own runs, so actors reconcile side by side.
+    await Promise.all(actors.map(async (actor) => actor.syncItemResourceDeltas()));
 
     if (originsReconciled > 0) {
         // eslint-disable-next-line no-console

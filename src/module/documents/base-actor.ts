@@ -8,6 +8,14 @@ import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shar
 import type D100Roll from '../dice/d100-roll.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { t } from '../i18n/t.ts';
+import {
+    hasItemResourceLedger,
+    ITEM_RESOURCE_DELTAS_FLAG,
+    itemResourceHolders,
+    ORIGIN_RESOURCE_PATHS,
+    reconcileItemResourceDeltas,
+    seedItemResourceDeltas,
+} from '../origin-grant-ledger.ts';
 import { comradeMirrorTestFor, SimpleSkillData } from '../rolls/action-data.ts';
 import { comradeOrderModifiersFor } from '../rolls/comrade-order-modifiers.ts';
 import type { ExtendedTestState } from '../rolls/extended-test-data.ts';
@@ -684,6 +692,62 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
+    /** The pending item-resource ledger work, so each run reads what the previous one wrote. */
+    #itemResourceWork: Promise<void> = Promise.resolve();
+
+    /** Queue `work` behind the pending item-resource ledger work; the returned promise settles when it has run. */
+    async #queueItemResourceWork(work: () => Promise<void>): Promise<void> {
+        this.#itemResourceWork = this.#itemResourceWork.then(work).catch((err: Error) => {
+            // A failed write must not wedge every later reconcile behind it.
+            console.warn(`[wh40k-rpg] item resource ledger: reconcile failed on actor "${this.name}".`, err);
+        });
+        return this.#itemResourceWork;
+    }
+
+    /**
+     * Apply every owned item's `modifiers.resources` to the stored Wounds, Fate,
+     * Corruption and Insanity through the item resource ledger (#691): once,
+     * recorded per item, reversed when the item is removed, stops applying or
+     * changes its value, and never stacked on a re-run. Characters only: an NPC's
+     * printed totals already count its talents. Reads the stored (`_source`)
+     * totals, since the prepared Wounds can carry a derived origin formula.
+     * Queued, so concurrent calls run one after another.
+     */
+    async syncItemResourceDeltas(): Promise<void> {
+        return this.#queueItemResourceWork(async () => {
+            if (!isCharacterActorType(this.type) || !isActorWritable(this)) return;
+            const { updates, staleKeys } = reconcileItemResourceDeltas(
+                this._source.system as object,
+                this.flags,
+                itemResourceHolders(this.items),
+                ORIGIN_RESOURCE_PATHS,
+            );
+            if (Object.keys(updates).length > 0) await this.update(updates);
+            if (staleKeys.length === 0 || !isActorWritable(this)) return;
+            await Promise.all(staleKeys.map(async (key) => this.unsetFlag(SYSTEM_ID, `${ITEM_RESOURCE_DELTAS_FLAG}.${key}`)));
+        });
+    }
+
+    /**
+     * Record the items a character was created with as already counted in its
+     * totals: an imported or compendium character's Fate and Wounds were
+     * authored with its talents. Items added afterwards are applied by
+     * {@link syncItemResourceDeltas}.
+     */
+    async #seedItemResourceDeltas(): Promise<void> {
+        return this.#queueItemResourceWork(async () => {
+            if (!isCharacterActorType(this.type) || hasItemResourceLedger(this.flags) || !isActorWritable(this)) return;
+            const seed = seedItemResourceDeltas(itemResourceHolders(this.items));
+            if (Object.keys(seed).length > 0) await this.update(seed);
+        });
+    }
+
+    /** @override */
+    protected override _onCreate(data: never, options: never, userId: string): void {
+        super._onCreate(data, options, userId);
+        if (game.user.id === userId) void this.#seedItemResourceDeltas();
+    }
+
     /** Build the Foundry ActiveEffect create payload for a derived descriptor. */
     static #subtletyEffectCreateData(descriptor: DesiredSubtletyAdjusterEffect): {
         name: string;
@@ -765,6 +829,8 @@ export class WH40KBaseActor extends Actor {
                 // Surface any standing Subtlety adjuster the new item carries
                 // (e.g. the Quarantine World loss clamp) as an ActiveEffect (#391).
                 void this.syncSubtletyAdjusterEffects();
+                // Apply the new item's Wounds / Fate / Corruption / Insanity (#691).
+                void this.syncItemResourceDeltas();
             }
         }
     }
@@ -782,6 +848,9 @@ export class WH40KBaseActor extends Actor {
             // on or off, so re-reconcile its display-only effect (#391).
             if (game.user.id === userId) {
                 void this.syncSubtletyAdjusterEffects();
+                // An equip toggle or an edited resource moves the item's
+                // contribution to the stored totals (#691).
+                void this.syncItemResourceDeltas();
             }
         }
     }
@@ -813,6 +882,8 @@ export class WH40KBaseActor extends Actor {
             // retire its display-only Subtlety effect (#391).
             if (game.user.id === userId) {
                 void this.syncSubtletyAdjusterEffects();
+                // Reverse what the removed item added to the stored totals (#691).
+                void this.syncItemResourceDeltas();
             }
         }
     }

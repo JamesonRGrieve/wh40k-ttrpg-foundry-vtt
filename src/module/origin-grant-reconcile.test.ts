@@ -1,4 +1,4 @@
-import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 
 /**
  * Characterization tests for the boot-time origin-grant reconcile pass (#306
@@ -21,6 +21,7 @@ interface FakeOrigin {
 interface FakeActor {
     name: string;
     items: { contents: FakeOrigin[] };
+    syncItemResourceDeltas: ReturnType<typeof vi.fn>;
 }
 interface GameStub {
     user: { isGM: boolean };
@@ -40,6 +41,10 @@ function origin(name: string, opts: { isOriginPath?: boolean; rejects?: boolean 
         isOriginPath: opts.isOriginPath ?? true,
         applyOriginToActor: opts.rejects === true ? vi.fn().mockRejectedValue(new Error(`boom: ${name}`)) : vi.fn().mockResolvedValue(undefined),
     };
+}
+
+function fakeActor(name: string, contents: FakeOrigin[]): FakeActor {
+    return { name, items: { contents }, syncItemResourceDeltas: vi.fn().mockResolvedValue(undefined) };
 }
 
 function setGame(opts: { isGM?: boolean; enabled?: boolean | undefined; actors?: FakeActor[] }): void {
@@ -68,25 +73,29 @@ afterAll(() => {
 describe('reconcileWorldOriginGrants', () => {
     it('is a no-op for a non-GM user', async () => {
         const o = origin('Hive World');
-        setGame({ isGM: false, enabled: true, actors: [{ name: 'PC', items: { contents: [o] } }] });
+        const pc = fakeActor('PC', [o]);
+        setGame({ isGM: false, enabled: true, actors: [pc] });
 
         await reconcileWorldOriginGrants();
 
         expect(o.applyOriginToActor).not.toHaveBeenCalled();
+        expect(pc.syncItemResourceDeltas).not.toHaveBeenCalled();
     });
 
     it('is a no-op when the setting is explicitly disabled', async () => {
         const o = origin('Hive World');
-        setGame({ isGM: true, enabled: false, actors: [{ name: 'PC', items: { contents: [o] } }] });
+        const pc = fakeActor('PC', [o]);
+        setGame({ isGM: true, enabled: false, actors: [pc] });
 
         await reconcileWorldOriginGrants();
 
         expect(o.applyOriginToActor).not.toHaveBeenCalled();
+        expect(pc.syncItemResourceDeltas).not.toHaveBeenCalled();
     });
 
     it('runs when the setting is undefined (only an explicit false disables)', async () => {
         const o = origin('Hive World');
-        setGame({ isGM: true, enabled: undefined, actors: [{ name: 'PC', items: { contents: [o] } }] });
+        setGame({ isGM: true, enabled: undefined, actors: [fakeActor('PC', [o])] });
 
         await reconcileWorldOriginGrants();
 
@@ -97,7 +106,7 @@ describe('reconcileWorldOriginGrants', () => {
         const homeWorld = origin('Hive World');
         const background = origin('Scavenger');
         const notAnOrigin = origin('Bolt Pistol', { isOriginPath: false });
-        const actor: FakeActor = { name: 'PC', items: { contents: [homeWorld, notAnOrigin, background] } };
+        const actor = fakeActor('PC', [homeWorld, notAnOrigin, background]);
         setGame({ isGM: true, enabled: true, actors: [actor] });
 
         await reconcileWorldOriginGrants();
@@ -110,7 +119,7 @@ describe('reconcileWorldOriginGrants', () => {
     it('continues past an origin whose apply throws (one bad origin does not abort the pass)', async () => {
         const bad = origin('Corrupt Origin', { rejects: true });
         const good = origin('Hive World');
-        const actor: FakeActor = { name: 'PC', items: { contents: [bad, good] } };
+        const actor = fakeActor('PC', [bad, good]);
         setGame({ isGM: true, enabled: true, actors: [actor] });
 
         await expect(reconcileWorldOriginGrants()).resolves.toBeUndefined();
@@ -125,15 +134,31 @@ describe('reconcileWorldOriginGrants', () => {
         setGame({
             isGM: true,
             enabled: true,
-            actors: [
-                { name: 'Gear Only', items: { contents: [lone] } },
-                { name: 'PC', items: { contents: [withOrigin] } },
-            ],
+            actors: [fakeActor('Gear Only', [lone]), fakeActor('PC', [withOrigin])],
         });
 
         await reconcileWorldOriginGrants();
 
         expect(lone.applyOriginToActor).not.toHaveBeenCalled();
         expect(withOrigin.applyOriginToActor).toHaveBeenCalledTimes(1);
+    });
+
+    it("reconciles every actor's item resource ledger, origins or not, after the origins (#691)", async () => {
+        const order: string[] = [];
+        const recordStep = (step: string): Mock<() => Promise<void>> =>
+            vi.fn(async (): Promise<void> => {
+                order.push(step);
+                return Promise.resolve();
+            });
+        const homeWorld: FakeOrigin = { ...origin('Hive World'), applyOriginToActor: recordStep('origin') };
+        const gearOnly = fakeActor('Gear Only', [origin('Bolt Pistol', { isOriginPath: false })]);
+        const pc: FakeActor = { ...fakeActor('PC', [homeWorld]), syncItemResourceDeltas: recordStep('items') };
+        setGame({ isGM: true, enabled: true, actors: [gearOnly, pc] });
+
+        await reconcileWorldOriginGrants();
+
+        expect(gearOnly.syncItemResourceDeltas).toHaveBeenCalledTimes(1);
+        expect(pc.syncItemResourceDeltas).toHaveBeenCalledTimes(1);
+        expect(order).toEqual(['origin', 'items']);
     });
 });

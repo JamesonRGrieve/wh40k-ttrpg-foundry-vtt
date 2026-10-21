@@ -25,6 +25,7 @@ import {
     priorAfterBuilderWrites,
     readOriginDelta,
     reconcileResourceDeltas,
+    resetItemResourceDeltas,
     type OriginModifierBag,
     type OriginResource,
 } from '../../origin-grant-ledger.ts';
@@ -4984,6 +4985,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 resourceUpdate['system.fate.max'] = fateRolled;
                 resourceUpdate['system.fate.value'] = fateRolled;
             }
+            const rewritten = new Set<OriginResource>();
+            if (woundsRolled > 0) rewritten.add('wounds');
+            if (fateRolled > 0) rewritten.add('fate');
+            // A rolled total carries no item's resources (#691): let the item
+            // ledger finish applying the talents this commit granted, then clear
+            // what it recorded for the rewritten resources in the same write.
+            await this.actor.syncItemResourceDeltas();
+            Object.assign(resourceUpdate, resetItemResourceDeltas(this.actor.flags, rewritten));
             if (Object.keys(resourceUpdate).length > 0) {
                 await this.actor.update(resourceUpdate);
             }
@@ -4993,10 +5002,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // so the boot-time reconcile pass treats them as already applied.
             // Must run AFTER the embedded origin items are created (it reads them
             // back) and after the resource writes (which it builds on).
-            const rewritten = new Set<OriginResource>();
-            if (woundsRolled > 0) rewritten.add('wounds');
-            if (fateRolled > 0) rewritten.add('fate');
             await this._reconcileOriginGrantLedger(rewritten);
+            // Then every owned talent, trait or equipped item adds its resources on top.
+            await this.actor.syncItemResourceDeltas();
 
             // A starting-mutation origin (DH2 Mutant, Within p. 32) rolls its
             // starting mutation now, in place of a Malignancy Test.
