@@ -341,7 +341,7 @@ Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vites
 
 ### Parallel Claude-subagent refactor batches (deferred-verification mode)
 
-> **⛔ ONE background agent at a time unless the operator explicitly authorized concurrency this session (user CLAUDE.md TOP RULE 7).** Running several `Agent` subagents at once burns the operator's usage window in minutes and, when the window is hit, strands every task mid-write with unresumable half-work — this has happened more than once. The default is **sequential**: run one subagent, let it finish its disjoint slice, verify/merge it, then run the next. The partitioning + single-owner-file + deferred-verification recipe below applies unchanged one-at-a-time; only run the slices concurrently when the operator says so (a count, "in parallel", "fan out").
+> **⛔ ONE background agent at a time unless the operator explicitly authorized concurrency this session (SOP TOP RULE 7).** Running several `Agent` subagents at once burns the operator's usage window in minutes and, when the window is hit, strands every task mid-write with unresumable half-work — this has happened more than once. The default is **sequential**: run one subagent, let it finish its disjoint slice, verify/merge it, then run the next. The partitioning + single-owner-file + deferred-verification recipe below applies unchanged one-at-a-time; only run the slices concurrently when the operator says so (a count, "in parallel", "fan out").
 
 A mode distinct from the cheap-LLM `ai` grinder above: the Claude Code orchestrator executes a partitioned DRY/refactor workload (typically the actionable findings of a codebase audit) via **`Agent` subagents** — **sequentially by default** (concurrent only with explicit authorization, see the gate above). Use this when a large refactor cleanly partitions into disjoint file-scope chunks, or when several independent abstraction-adoption tasks can run. The recipe:
 
@@ -442,7 +442,7 @@ in practice:
   like a catastrophic code regression and is not one. All-tests-timed-out means look at
   the server first. After aborting, confirm nothing is left listening on the port.
 
-Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
+Hooks run for 30–60s on large commits. Wait for them; do not interrupt them. `--no-verify` only under the batch-work rule (SOP → *Git and Commits*). If a hook fails, investigate and fix; do not silence.
 
 ---
 
