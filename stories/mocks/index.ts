@@ -526,6 +526,7 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 craftsmanshipLabel: 'Good Craftsmanship',
                 isMeleeWeapon: false,
                 isRangedWeapon: true,
+                hasRange: true,
                 rangeLabel: '100m',
                 rateOfFireLabel: 'S/3/-',
                 usesAmmo: true,

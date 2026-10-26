@@ -37,6 +37,7 @@ interface WeaponCardItem {
         damageLabel: string;
         damage: { penetration: number };
         isRangedWeapon: boolean;
+        hasRange: boolean;
         rangeLabel: string;
         rateOfFireLabel: string;
         usesAmmo: boolean;
@@ -72,7 +73,8 @@ function weapon(name: string, damageLabel: string, qualities: QualityRow[], rang
             craftsmanshipLabel: 'Common',
             damageLabel,
             damage: { penetration: damageLabel === '—' ? 0 : 2 },
-            isRangedWeapon: true,
+            isRangedWeapon: ranged !== null,
+            hasRange: true,
             rangeLabel: ranged?.range ?? '10m',
             rateOfFireLabel: ranged?.rof ?? 'S/–/–',
             usesAmmo: ranged !== null,
@@ -130,6 +132,8 @@ export const NoDamage: Story = {
         await expect(button(canvasElement, 'rollDamage')).toBeNull();
         await expect(canvasElement.textContent).toContain('—');
         await expect(canvasElement.textContent).toContain('Snare');
+        // #699: the Bolas is Thrown, a ranged attack: its card shows its range.
+        await expect(canvasElement.textContent).toContain('10m');
     },
 };
 

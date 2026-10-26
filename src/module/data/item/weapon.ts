@@ -65,7 +65,7 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 import { WEAPON_FACING_CHOICES, WEAPON_MOUNTING_CHOICES, type WeaponFacing, type WeaponMounting } from '../shared/vehicle-mounting.ts';
-import { isWeaponClass, WEAPON_CLASS_CHOICES } from '../shared/weapon-class.ts';
+import { classHasRange, isFirearmClass, isWeaponClass, WEAPON_CLASS_CHOICES } from '../shared/weapon-class.ts';
 
 /** Weapons already reported this session, so a re-render doesn't re-nag the GM. */
 const reportedUnresolvedVariants = new Set<string>();
@@ -933,9 +933,22 @@ export default class WeaponData extends ItemDataModel.mixin(
     get isRangedWeapon(): boolean {
         // `launcher` is a weapon *type*, not a class — grenade/missile launchers are
         // class basic/heavy (already covered). The old 'launcher' class-check was dead.
+        return isFirearmClass(this.effectiveWeaponClass);
+    }
+
+    /**
+     * Does this weapon have a range and a rate of fire to show? A firearm does, and so
+     * does a thrown weapon (#699: the Bolas, Thrown 10m, showed none).
+     * @type {boolean}
+     */
+    get hasRange(): boolean {
+        return classHasRange(this.effectiveWeaponClass);
+    }
+
+    /** The class that decides ranged / melee: the active firing mode's override, else the base class. */
+    get effectiveWeaponClass(): string {
         const mode = this.activeFiringModeProfile;
-        if (mode !== null && mode.weaponClass !== '') return ['pistol', 'basic', 'heavy'].includes(mode.weaponClass);
-        return ['pistol', 'basic', 'heavy'].includes(this.class);
+        return mode !== null && mode.weaponClass !== '' ? mode.weaponClass : this.class;
     }
 
     /**

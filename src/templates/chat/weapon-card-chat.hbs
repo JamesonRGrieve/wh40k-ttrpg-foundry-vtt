@@ -25,7 +25,8 @@
         <span class="tw-break-normal tw-font-display tw-text-[0.95rem] tw-font-bold {{themeClassFor 'chatAccent'}}">{{item.system.damage.penetration}}</span>
       </div>
 
-      {{#if item.system.isRangedWeapon}}
+      {{!-- Range and rate of fire, for a firearm or a thrown weapon (#699). --}}
+      {{#if item.system.hasRange}}
       <div class="tw-flex tw-flex-wrap tw-items-baseline tw-gap-x-1.5 tw-px-2.5 tw-py-2 tw-bg-[var(--wh40k-panel-bg)]">
         <span class="tw-shrink-0 tw-whitespace-nowrap tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Weapon.Range"}}</span>
         <span class="tw-break-normal tw-font-display tw-text-[0.95rem] tw-font-bold tw-text-[var(--wh40k-text-dark)]">{{item.system.rangeLabel}}</span>

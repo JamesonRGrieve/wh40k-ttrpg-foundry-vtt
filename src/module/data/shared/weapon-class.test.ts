@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { isWeaponClass, WEAPON_CLASS_CHOICES } from './weapon-class.ts';
+import { classHasRange, isFirearmClass, isWeaponClass, WEAPON_CLASS_CHOICES } from './weapon-class.ts';
+
+describe('which weapon classes fire (#699)', () => {
+    it('the firearm classes are pistol, basic and heavy', () => {
+        expect(WEAPON_CLASS_CHOICES.filter(isFirearmClass)).toEqual(['pistol', 'basic', 'heavy']);
+    });
+
+    it('a thrown weapon has a range too, so the Bolas (Thrown 10m) shows one', () => {
+        expect(WEAPON_CLASS_CHOICES.filter(classHasRange)).toEqual(['pistol', 'basic', 'heavy', 'thrown']);
+        expect(classHasRange('melee')).toBe(false);
+    });
+});
 
 /**
  * The weapon schema's `class` choices and the `_migrateData` guard that maps

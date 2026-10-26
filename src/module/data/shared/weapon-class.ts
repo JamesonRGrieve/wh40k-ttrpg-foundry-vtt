@@ -13,3 +13,23 @@ export type WeaponClass = (typeof WEAPON_CLASS_CHOICES)[number];
 export function isWeaponClass(value: string): value is WeaponClass {
     return (WEAPON_CLASS_CHOICES as readonly string[]).includes(value);
 }
+
+/** Firearm classes: they shoot, reload and carry a clip. */
+const FIREARM_CLASSES: readonly string[] = ['pistol', 'basic', 'heavy'];
+
+/**
+ * Classes that make a ranged attack with a printed range and rate of fire: the
+ * firearms, and thrown weapons (#699: the DH2 Bolas, Thrown 10m, showed no range,
+ * because the sheet showed range only for the three firearm classes).
+ */
+const RANGED_ATTACK_CLASSES: readonly string[] = [...FIREARM_CLASSES, 'thrown'];
+
+/** Whether a weapon class is a firearm (pistol, basic, heavy). */
+export function isFirearmClass(weaponClass: string): boolean {
+    return FIREARM_CLASSES.includes(weaponClass);
+}
+
+/** Whether a weapon class has a range and a rate of fire: a firearm, or a thrown weapon. */
+export function classHasRange(weaponClass: string): boolean {
+    return RANGED_ATTACK_CLASSES.includes(weaponClass);
+}

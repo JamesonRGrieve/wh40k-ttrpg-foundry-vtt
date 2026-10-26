@@ -137,9 +137,9 @@
         </div>
         {{/if}}
 
-        {{!-- Range - Crosshairs/Target (Medium, ranged only) --}}
-        {{#if system.isRangedWeapon}}
-        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.15),rgba(12,16,24,0.7))]"
+        {{!-- Range - Crosshairs/Target (Medium; a firearm or a thrown weapon, #699) --}}
+        {{#if system.hasRange}}
+        <div data-field="weapon-range-tile" class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.15),rgba(12,16,24,0.7))]"
              data-tooltip="{{localize 'WH40K.Weapon.Range'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
             <i class="fa-solid fa-ruler"></i>
@@ -465,8 +465,8 @@
         </div>
       </section>
 
-      {{!-- RANGED ATTACK (if ranged) --}}
-      {{#if system.isRangedWeapon}}
+      {{!-- RANGED ATTACK: range and rate of fire, for a firearm or a thrown weapon (#699) --}}
+      {{#if system.hasRange}}
       <section class="tw-mb-2 tw-bg-[rgba(12,16,24,0.5)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-[var(--wh40k-radius-lg)] tw-overflow-hidden">
         <header class="tw-group tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-py-2 tw-px-3 tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.35),rgba(16,20,28,0.15))] tw-border-b tw-border-[rgba(255,255,255,0.05)] tw-cursor-pointer tw-transition-[background] tw-select-none hover:tw-bg-[linear-gradient(135deg,rgba(62,34,22,0.45),rgba(16,20,28,0.2))]" data-action="toggleSection" data-section="ranged">
           <i class="fa-solid fa-crosshairs"></i>

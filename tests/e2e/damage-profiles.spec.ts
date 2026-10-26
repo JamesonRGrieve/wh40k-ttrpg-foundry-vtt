@@ -261,8 +261,11 @@ test.describe.serial('no-damage and range-band damage profiles (Tier B, #601, #6
                 bolasSheet !== null && /^[-–—]$/u.test(bolasSheet.damage),
                 `bolas sheet damage reads "${bolasSheet?.damage ?? 'no sheet'}"`,
             );
-            if (bolasSheet !== null)
+            if (bolasSheet !== null) {
+                // #699: the Bolas is Thrown 10m (DH2 Core): a thrown weapon shows its range.
+                await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-range-tile"]`)).toContainText('10m');
                 await snap(page, 'damage-no-damage-weapon-sheet', { selector: `#${bolasSheet.appId}`, closeWindows: true, keepWindow: bolasSheet.appId });
+            }
 
             // --- #608: the Conversion Beamer's band follows the range ----------------
             const near = await beamAt(page, scene, 'near', [[6, 10]]);
