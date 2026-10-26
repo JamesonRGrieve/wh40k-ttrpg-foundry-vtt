@@ -80,14 +80,42 @@ async function checkTable(page: Page, selector: string, label: string, expected:
     expect(layout.misalignedRows, `${label}: every row lines up under the header`).toBe(0);
 }
 
-/** Open the actor's sheet on `tab`, and assert that tab shows `name`; then snap the sheet. */
-async function expectListed(page: Page, args: { actorId: string; tab: string; name: string; shot: string }): Promise<void> {
+/**
+ * Open the actor's sheet on `tab`, and assert that tab shows `name` and that its row
+ * carries each of `rowText` (a weapon's damage); then snap the sheet.
+ */
+async function expectListed(page: Page, args: { actorId: string; tab: string; name: string; shot: string; rowText?: readonly string[] }): Promise<void> {
     const sheetId = await openActorSheet(page, args.actorId, args.tab);
     const entry = page.locator(`#${sheetId} .tab.active`).getByText(args.name, { exact: true }).first();
     await entry.scrollIntoViewIfNeeded();
     await expect(entry, `${args.name} on the ${args.tab} tab`).toBeVisible();
+    const row = entry.locator('xpath=ancestor::*[@data-item-id][1]');
+    for (const text of args.rowText ?? []) {
+        // eslint-disable-next-line no-await-in-loop -- each fragment is asserted on the same row in turn
+        await expect(row, `${args.name}'s row`).toContainText(text);
+    }
+    if (args.rowText !== undefined) {
+        // No row button sits over a cell: the Range value is not hidden under Draw/Holster (#698).
+        const covered = await row.evaluate((el) => {
+            const overlaps = (a: DOMRect, b: DOMRect): boolean => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+            const buttons = Array.from(el.querySelectorAll(':scope > button'), (button) => button.getBoundingClientRect()).filter((r) => r.width > 0);
+            return Array.from(el.querySelectorAll(':scope > span'))
+                .filter((cell) => buttons.some((button) => overlaps(cell.getBoundingClientRect(), button)))
+                .map((cell) => cell.textContent.trim());
+        });
+        expect(covered, `${args.name}'s cells under a row button`).toEqual([]);
+    }
     await snap(page, args.shot, { selector: `#${sheetId}` });
 }
+
+const DH2_WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
+/**
+ * The weapons the live sheets list, as an actor holds them: lean compendium items the
+ * runtime joins to their profile. Inline weapons with no damage profile showed "-" in
+ * the DMG column (#698), which was the fixture, not the sheet.
+ */
+const LASGUN = { name: 'Lasgun', type: 'weapon', _stats: { compendiumSource: `${DH2_WEAPONS}.z3A4b5C6d7E8f9G0` } };
+const HEAVY_BOLTER = { name: 'Heavy Bolter', type: 'weapon', _stats: { compendiumSource: `${DH2_WEAPONS}.t5U6v7W8x9Y0z1A2` } };
 
 test.describe.serial('Item table grid (Tier B, #662)', () => {
     test('the voidcraft weapon, component, upgrade and crew tables line up as grids', async ({ page }) => {
@@ -129,22 +157,17 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
         await joinOrSkip(page);
         const character = await createActor(page, {
             data: { name: 'e2e-662 Acolyte', type: 'dh2-character', system: { gameSystem: 'dh2' } },
-            items: [
-                { name: 'M36 Kantrael Lasgun', type: 'weapon', system: { class: 'basic', type: 'las' } },
-                { name: 'Flak Vest', type: 'armour', system: { type: 'flak' } },
-            ],
+            items: [LASGUN, { name: 'Flak Vest', type: 'armour', system: { type: 'flak' } }],
         });
         const vehicle = await createActor(page, {
             data: { name: 'e2e-662 Chimera', type: 'dh2-vehicle', system: { gameSystem: 'dh2' } },
-            items: [
-                { name: 'Hull Heavy Bolter', type: 'weapon', system: { class: 'heavy', type: 'bolt' } },
-                { name: 'Reinforced Plating', type: 'vehicleUpgrade' },
-            ],
+            items: [HEAVY_BOLTER, { name: 'Reinforced Plating', type: 'vehicleUpgrade' }],
         });
         try {
-            await expectListed(page, { actorId: character.id, tab: 'combat', name: 'M36 Kantrael Lasgun', shot: 'live-character-combat-weapons' });
+            // DH2 Core: the Lasgun is 1d10+3 E, the Heavy Bolter 1d10+8 X.
+            await expectListed(page, { actorId: character.id, tab: 'combat', name: 'Lasgun', shot: 'live-character-combat-weapons', rowText: ['1d10+3'] });
             await expectListed(page, { actorId: character.id, tab: 'equipment', name: 'Flak Vest', shot: 'live-character-equipment-armour' });
-            await expectListed(page, { actorId: vehicle.id, tab: 'combat', name: 'Hull Heavy Bolter', shot: 'live-vehicle-combat-weapons' });
+            await expectListed(page, { actorId: vehicle.id, tab: 'combat', name: 'Heavy Bolter', shot: 'live-vehicle-combat-weapons', rowText: ['1d10+8'] });
             await expectListed(page, { actorId: vehicle.id, tab: 'components', name: 'Reinforced Plating', shot: 'live-vehicle-components-upgrades' });
         } finally {
             await deleteDocuments(page, { actors: [character.id, vehicle.id] });

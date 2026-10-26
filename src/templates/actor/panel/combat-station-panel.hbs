@@ -110,15 +110,18 @@
                 </div>
                 <div class="wh40k-panel-body tw-min-h-0 tw-overflow-y-auto tw-overflow-x-hidden">
                     {{#if actor.items}}
+                    {{!-- Header and rows keep tw-pr-14 clear on the right for each row's absolutely
+                          placed Draw/Holster and Delete buttons (right-1 to right-8 + w-5), so they
+                          never sit over the Range column (#698). --}}
                     <div class="tw-flex tw-flex-col">
-                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-px-2 tw-py-1 tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.08)] tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.2)] tw-text-[color:var(--wh40k-text-secondary)]">
+                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-pl-2 tw-pr-14 tw-py-1 tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.08)] tw-border-b-2 tw-border-b-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.2)] tw-text-[color:var(--wh40k-text-secondary)]">
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Items.Weapon"}}</span>
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">{{localize "WH40K.ItemSheet.Weapon.DamageShort"}}</span>
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">{{localize "WH40K.Weapon.Range"}}</span>
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.state.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-group tw-relative tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-pl-2 tw-pr-14 tw-py-1 tw-cursor-pointer tw-border-b tw-border-b-[rgba(0,0,0,0.08)] tw-transition-[background] hover:tw-bg-[rgb(from_var(--wh40k-accent-combat)_r_g_b_/_0.04)] item-drag item-edit {{#if item.system.state.equipped}}tw-bg-[rgb(from_var(--wh40k-color-success)_r_g_b_/_0.08)]{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                                 {{#if item.system.state.equipped}}<i class="fas fa-check-circle tw-text-[color:var(--wh40k-color-success)] tw-mr-[var(--wh40k-space-xs)] tw-text-[0.8em]"></i>{{/if}}
                                 {{item.name}}

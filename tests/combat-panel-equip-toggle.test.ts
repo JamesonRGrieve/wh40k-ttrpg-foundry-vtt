@@ -70,3 +70,23 @@ describe('Combat action gated to equipped weapons (#265, reopened)', () => {
         expect(WEAPON).not.toMatch(/this\.state\.equipped\s*=\s*!this\.state\.inShipStorage/);
     });
 });
+
+describe('the row buttons never cover the Range column (#698)', () => {
+    /** A Tailwind spacing step in rem (tw-pr-14 → 3.5, tw-right-8 → 2, tw-w-5 → 1.25). */
+    const step = (cls: string, prefix: string): number => Number(new RegExp(`\\b${prefix}-(\\d+)\\b`).exec(cls)?.[1] ?? 'NaN') / 4;
+    const classOf = (marker: string): string => {
+        const at = COMBAT.indexOf(marker);
+        const open = COMBAT.lastIndexOf('<', at);
+        return /class="([^"]*)"/.exec(COMBAT.slice(open, COMBAT.indexOf('>', at)))?.[1] ?? '';
+    };
+
+    it('reserves room on the header and every row for the absolutely placed Draw/Holster and Delete buttons', () => {
+        const header = /<div class="([^"]*tw-grid-cols-content-auto-auto[^"]*)">\s*<span[^>]*>\{\{localize "WH40K\.Items\.Weapon"\}\}/.exec(COMBAT)?.[1] ?? '';
+        const row = classOf('data-item-type="weapon"');
+        const toggle = classOf('data-action="toggleEquip"');
+        // The leftmost button edge, measured from the row's right: right offset plus width.
+        const buttonsReach = step(toggle, 'tw-right') + step(toggle, 'tw-w');
+        expect(step(header, 'tw-pr')).toBeGreaterThanOrEqual(buttonsReach);
+        expect(step(row, 'tw-pr')).toBe(step(header, 'tw-pr'));
+    });
+});
