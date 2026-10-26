@@ -57,9 +57,21 @@ interface BuiltCard {
     weaponName: string;
     baseTarget: number;
     modifiedTarget: number;
+    /** The forced d100 and the degrees method the line counts with. */
+    rollTotal: number;
+    degreesMethod: string;
     error: string | null;
     skip: boolean;
     note: string;
+}
+
+/**
+ * The degrees past the base degree a success earns, counted independently of the
+ * system's helper (#698): Gen 1 `⌊(target − roll) / 10⌋`, Gen 2 the tens-digit
+ * difference `⌊target / 10⌋ − ⌊roll / 10⌋`. Never negative on a success.
+ */
+function expectedSuccessDegree(method: string, target: number, roll: number): number {
+    return method === 'gen1' ? Math.floor((target - roll) / 10) : Math.floor(target / 10) - Math.floor(roll / 10);
 }
 
 /**
@@ -136,6 +148,8 @@ async function buildTransparencyCard(page: Page, sys: string, situational: reado
                 weaponName: '',
                 baseTarget: 0,
                 modifiedTarget: 0,
+                rollTotal: 0,
+                degreesMethod: '',
                 error: note,
                 skip: false,
                 note,
@@ -259,7 +273,9 @@ async function buildTransparencyCard(page: Page, sys: string, situational: reado
                 rollData.isManualRoll = true; // no evaluated Roll to attach; keep it content-only
                 rollData.success = true;
                 const method = resolveDegreesMethod(systemId);
-                const dos = 1 + getDegreeForMode(method, rollTotal, modifiedTarget);
+                // A success's degrees count the target over the roll — `(target, roll)`, as
+                // action-data.ts passes them (#698: this read `(roll, target)` and printed −1).
+                const dos = 1 + getDegreeForMode(method, modifiedTarget, rollTotal);
                 rollData.dos = dos;
                 // Identical to action-data.ts's success-branch formula construction.
                 rollData.resultFormula = i18nFormat('WH40K.Roll.ResultFormula.Success', {
@@ -284,7 +300,18 @@ async function buildTransparencyCard(page: Page, sys: string, situational: reado
                 const messageId = msg?.id ?? null;
                 if (messageId == null) return fail('ChatMessage.create returned no id');
 
-                return { messageId, actorId, weaponName, baseTarget, modifiedTarget, error: null, skip: false, note: 'ok' };
+                return {
+                    messageId,
+                    actorId,
+                    weaponName,
+                    baseTarget,
+                    modifiedTarget,
+                    rollTotal,
+                    degreesMethod: method,
+                    error: null,
+                    skip: false,
+                    note: 'ok',
+                };
             } catch (err) {
                 return fail(`commit/render/post threw: ${errMsg(err)}`);
             }
@@ -399,8 +426,12 @@ test.describe.serial('roll transparency chat card (Tier B)', () => {
                 await expect(card.getByText('Target', { exact: true }).first()).toBeVisible();
                 await expect(card).toContainText(String(built.modifiedTarget));
 
-                // (7) The human-readable result formula line: `N DoS = 1 + degree …`.
-                await expect(card).toContainText(/\d+ DoS = 1 \+ /);
+                // (7) The human-readable result formula line, exactly: `N DoS = 1 + degree (roll R vs target T)`,
+                // its degree counted independently and never negative on a success (#698).
+                const degree = expectedSuccessDegree(built.degreesMethod, built.modifiedTarget, built.rollTotal);
+                expect(degree, 'a success earns no negative degrees').toBeGreaterThanOrEqual(0);
+                await expect(card).toContainText(`${degree + 1} DoS = 1 + ${degree} (roll ${built.rollTotal} vs target ${built.modifiedTarget})`);
+                if (sys === 'dh2') await snap(page, 'roll-card-dos-formula-dh2', { selector: await popOutChatMessage(page, built.messageId ?? '') });
             } finally {
                 page.off('pageerror', listener);
                 await cleanupCard(page, built);

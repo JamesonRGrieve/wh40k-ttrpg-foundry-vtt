@@ -83,6 +83,13 @@ describe('getDegreeForMode — additional degrees', () => {
         expect(getDegreeForMode('gen2', 80, 10)).toBe(7); // 8 − 1
     });
 
+    it('a success counts (target, roll); the swapped order goes negative under gen2 (#698)', () => {
+        // Roll 37 against 42: the roll-transparency spec passed (roll, target) and printed "0 DoS = 1 + -1".
+        expect(getDegreeForMode('gen2', 42, 37)).toBe(1);
+        expect(getDegreeForMode('gen2', 37, 42)).toBe(-1);
+        expect(getDegreeForMode('gen2', 47, 32)).toBe(1);
+    });
+
     it('the two methods diverge inside a single 10-band (the live-game case)', () => {
         // Beating a target by 2 points: Gen 1 = 0 extra, Gen 2 = 1 extra.
         expect(getDegreeForMode('gen1', 41, 39)).not.toBe(getDegreeForMode('gen2', 41, 39));
