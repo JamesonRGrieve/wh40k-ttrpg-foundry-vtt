@@ -2522,6 +2522,7 @@ export type I18nKey =
     | 'WH40K.GrenadeRider.AreaDiameter'
     | 'WH40K.GrenadeRider.AreaRadius'
     | 'WH40K.GrenadeRider.Cancel'
+    | 'WH40K.GrenadeRider.CharacteristicDamage'
     | 'WH40K.GrenadeRider.ChatTitle'
     | 'WH40K.GrenadeRider.Component.Grenade'
     | 'WH40K.GrenadeRider.Component.Psyker'

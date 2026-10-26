@@ -35,12 +35,18 @@ function choiceFor(name: string, rider = PHOTON_FLASH): GrenadeChoice {
     return choice;
 }
 
-function result(name: string, roll: number | null, rider = PHOTON_FLASH, extra: { isPsyker?: boolean; rolledRounds?: number } = {}): RiderTargetResult {
+function result(
+    name: string,
+    roll: number | null,
+    rider = PHOTON_FLASH,
+    extra: { isPsyker?: boolean; rolledRounds?: number; rolledDamage?: number } = {},
+): RiderTargetResult {
     return resolveRiderCreature({
         rider,
         creature: { tokenId: name, actorUuid: `Actor.${name}`, name, isPsyker: extra.isPsyker === true, characteristic: 30 },
         roll,
         rolledRounds: extra.rolledRounds ?? null,
+        rolledDamage: extra.rolledDamage ?? null,
     });
 }
 
@@ -108,10 +114,40 @@ describe('buildRiderResultsCard', () => {
             '+3 to the effect roll',
         );
 
-        const rad = riderFixture({ test: { characteristic: 'toughness', modifier: -20 } });
-        expect(buildRiderResultsCard(choiceFor('R', rad), [result('Z', 90, rad)], new Map(), conditionName, LABELS, 'toughness').rows[0]).toMatchObject({
+        const prose = riderFixture({ test: { characteristic: 'toughness', modifier: -20 } });
+        expect(buildRiderResultsCard(choiceFor('S', prose), [result('Z', 90, prose)], new Map(), conditionName, LABELS, 'toughness').rows[0]).toMatchObject({
             effectLabel: 'Suffers the effect',
             applied: null,
         });
+    });
+
+    it('states the Toughness damage a Rad grenade failure dealt, not the bare effect (#698)', () => {
+        const rad = riderFixture({
+            test: { characteristic: 'toughness', modifier: -20 },
+            characteristicDamage: { characteristic: 'toughness', formula: '2d10', perDegree: 0 },
+        });
+        // Toughness 30 − 20 = 10 against 38: three degrees of failure; 2d10 rolled 13.
+        const card = buildRiderResultsCard(
+            choiceFor('Rad Grenade', rad),
+            [result('Z', 38, rad, { rolledDamage: 13 })],
+            new Map([['Z', true]]),
+            conditionName,
+            LABELS,
+            'toughness',
+        );
+        expect(card.rows[0]).toMatchObject({ outcome: 'suffers', effectLabel: '13 Toughness damage', applied: true });
+        expect(card.rows[0]?.test?.degreesLabel).toBe('3 DoF');
+
+        const blindingRad = riderFixture({ ...rad, condition: 'blinded', duration: { kind: 'degreesOfFailure', base: 0, formula: '' } });
+        expect(
+            buildRiderResultsCard(
+                choiceFor('B', blindingRad),
+                [result('Z', 38, blindingRad, { rolledDamage: 5 })],
+                new Map(),
+                conditionName,
+                LABELS,
+                'toughness',
+            ).rows[0]?.effectLabel,
+        ).toBe('Blinded for 3 rounds; 5 Toughness damage');
     });
 });

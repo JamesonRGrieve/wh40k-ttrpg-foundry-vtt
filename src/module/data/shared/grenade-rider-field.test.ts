@@ -55,7 +55,7 @@ describe('grenadeRiderField', () => {
     it('is an optional nullable block that defaults to no rider', async () => {
         const field = await loadField();
         expect(field.options).toMatchObject({ required: false, nullable: true, initial: null });
-        expect(Object.keys(field.fields)).toEqual(['test', 'affects', 'condition', 'area', 'duration', 'effectRollShift', 'effect']);
+        expect(Object.keys(field.fields)).toEqual(['test', 'affects', 'condition', 'area', 'duration', 'effectRollShift', 'characteristicDamage', 'effect']);
     });
 
     it('offers no test or any non-Influence characteristic, with integer modifiers for everyone and for a psyker', async () => {
@@ -90,5 +90,15 @@ describe('grenadeRiderField', () => {
         expect(expectStub(shift.fields['perDegree'], NumberFieldStub).options).toMatchObject({ min: 0, integer: true, initial: 0 });
         expect(expectStub(shift.fields['max'], NumberFieldStub).options).toMatchObject({ min: 0, integer: true, initial: 0 });
         expect(expectStub(field.fields['effect'], StringFieldStub).options).toMatchObject({ required: true, blank: false });
+    });
+
+    it('deals no characteristic damage by default, and a non-negative step per degree when authored (#698)', async () => {
+        const damage = expectStub((await loadField()).fields['characteristicDamage'], SchemaFieldStub);
+        expect(expectStub(damage.fields['characteristic'], StringFieldStub).options).toMatchObject({
+            initial: '',
+            choices: ['', ...RIDER_TEST_CHARACTERISTICS],
+        });
+        expect(expectStub(damage.fields['formula'], StringFieldStub).options).toMatchObject({ blank: true, initial: '' });
+        expect(expectStub(damage.fields['perDegree'], NumberFieldStub).options).toMatchObject({ min: 0, integer: true, initial: 0 });
     });
 });

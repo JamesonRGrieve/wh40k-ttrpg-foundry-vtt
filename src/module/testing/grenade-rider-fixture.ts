@@ -18,6 +18,7 @@ export function riderFixture(overrides: RiderOverrides = {}): GrenadeRiderData {
         area: { size: '', measure: 'radius' },
         duration: { kind: '', base: 0, formula: '' },
         effectRollShift: { perDegree: 0, max: 0 },
+        characteristicDamage: { characteristic: '', formula: '', perDegree: 0 },
         effect: 'The effect.',
         ...rest,
         test: { characteristic: '', modifier: 0, psykerModifier: 0, ...test },

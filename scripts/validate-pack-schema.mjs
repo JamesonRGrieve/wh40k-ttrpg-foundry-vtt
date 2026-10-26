@@ -169,12 +169,24 @@ export const grenadeRiderShape = z
         area: z.object({ size: z.string(), measure: z.enum(RIDER_AREA_MEASURE) }).strict(),
         duration: z.object({ kind: z.enum(RIDER_DURATION_KIND), base: z.number().int().nonnegative(), formula: z.string() }).strict(),
         effectRollShift: z.object({ perDegree: z.number().int().nonnegative(), max: z.number().int().nonnegative() }).strict(),
+        // Optional: the DataModel fills a rider that deals none (#698).
+        characteristicDamage: z
+            .object({ characteristic: z.enum(RIDER_TEST_CHARACTERISTIC), formula: z.string(), perDegree: z.number().int().nonnegative() })
+            .strict()
+            .optional(),
         effect: z.string().min(1),
     })
     .strict()
     .refine((rider) => (rider.duration.kind === 'roll') === (rider.duration.formula !== ''), {
         message: 'duration.formula is set exactly when duration.kind is "roll"',
-    });
+    })
+    .refine(
+        (rider) =>
+            rider.characteristicDamage === undefined || (rider.characteristicDamage.characteristic === '') === (rider.characteristicDamage.formula === ''),
+        {
+            message: 'characteristicDamage.formula is set exactly when characteristicDamage.characteristic is',
+        },
+    );
 
 /** Weapon `system` — strict only on the corruption-prone fields; extras pass. */
 export const weaponSystemSchema = z

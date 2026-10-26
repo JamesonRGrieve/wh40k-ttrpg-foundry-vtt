@@ -2778,6 +2778,7 @@
             "ConditionEncounter": "{condition} until the end of the encounter",
             "EffectShift": "{step} to the effect roll",
             "SuffersEffect": "Suffers the effect",
+            "CharacteristicDamage": "{amount} {characteristic} damage",
             "Applied": "Applied",
             "NotApplied": "The GM applies it",
             "NoTargets": "No creature is in the grenade's area.",

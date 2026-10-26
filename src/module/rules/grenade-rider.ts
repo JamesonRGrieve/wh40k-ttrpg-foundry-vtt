@@ -63,6 +63,12 @@ export interface GrenadeRiderData {
     duration: { kind: RiderDurationKind; base: number; formula: string };
     /** A step added to the effect's table roll per degree of failure, capped at `max`; 0 for none. */
     effectRollShift: { perDegree: number; max: number };
+    /**
+     * The characteristic damage a failed test deals (a Rad grenade's 2d10 Toughness):
+     * `formula` rolled, plus `perDegree` per degree of failure. `characteristic` '' and
+     * `formula` '' when the rider deals none.
+     */
+    characteristicDamage: { characteristic: string; formula: string; perDegree: number };
     /** The effect, as the book states it. */
     effect: string;
 }
@@ -87,6 +93,11 @@ export function hasGrenadeRider<T extends RiderWeaponSystem>(system: T): system 
 /** Whether the rider has its targets test (a Smoke grenade's screen, Tears of the Emperor's strike, have none). */
 export function riderHasTest(rider: GrenadeRiderData): boolean {
     return rider.test.characteristic !== '';
+}
+
+/** Whether a failed test against the rider deals characteristic damage (#698). */
+export function riderDealsCharacteristicDamage(rider: GrenadeRiderData): boolean {
+    return rider.characteristicDamage.characteristic !== '' && rider.characteristicDamage.formula !== '';
 }
 
 /**

@@ -187,6 +187,16 @@ describe('grenade riders (#135)', () => {
         expect(validateDoc(grenade(rider({ duration: { kind: 'roll', base: 0, formula: '' } }))).length).toBeGreaterThan(0);
         expect(validateDoc(grenade(rider({ duration: { kind: 'encounter', base: 0, formula: '1d5' } }))).length).toBeGreaterThan(0);
     });
+
+    it('accepts characteristic damage authored whole, and rejects a half-authored or stray one (#698)', () => {
+        const rad = { characteristic: 'toughness', formula: '2d10', perDegree: 0 };
+        expect(validateDoc(grenade(rider({ characteristicDamage: rad })))).toEqual([]);
+        expect(validateDoc(grenade(rider({ characteristicDamage: { characteristic: '', formula: '', perDegree: 0 } })))).toEqual([]);
+        expect(validateDoc(grenade(rider({ characteristicDamage: { ...rad, formula: '' } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ characteristicDamage: { ...rad, characteristic: 'influence' } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ characteristicDamage: { ...rad, perDegree: -1 } }))).length).toBeGreaterThan(0);
+        expect(validateDoc(grenade(rider({ characteristicDamage: { ...rad, penalty: -5 } }))).length).toBeGreaterThan(0);
+    });
 });
 
 /**

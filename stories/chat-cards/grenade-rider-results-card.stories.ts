@@ -37,6 +37,8 @@ interface Caught {
     isPsyker?: boolean;
     roll: number | null;
     rounds?: number;
+    /** The rolled characteristic-damage formula (#698). */
+    damage?: number;
     /** Whether its condition was applied (false: the GM applies it). */
     applied?: boolean;
 }
@@ -52,7 +54,7 @@ function card(name: string, special: string[], rider: GrenadeRiderData, caught: 
             isPsyker: c.isPsyker === true,
             characteristic: c.characteristic,
         };
-        return resolveRiderCreature({ rider, creature, roll: c.roll, rolledRounds: c.rounds ?? null });
+        return resolveRiderCreature({ rider, creature, roll: c.roll, rolledRounds: c.rounds ?? null, rolledDamage: c.damage ?? null });
     });
     const applied = new Map(caught.flatMap((c, index) => (c.applied === undefined ? [] : [[`t${index}`, c.applied] as const])));
     const ctx = buildRiderResultsCard(choice, results, applied, (id) => CONDITIONS[id] ?? id, LABELS, rider.test.characteristic);
@@ -89,6 +91,12 @@ const PSYCHOTROKE = riderFixture({
     duration: { kind: 'degreesOfFailure', base: 1, formula: '' },
     effectRollShift: { perDegree: 1, max: 10 },
     effect: 'Roll 1d10 on Table 5–3: Hallucinogen Effects.',
+});
+
+const RAD = riderFixture({
+    test: { characteristic: 'toughness', modifier: -20 },
+    characteristicDamage: { characteristic: 'toughness', formula: '2d10', perDegree: 0 },
+    effect: 'All living creatures caught in the blast must pass a Hard (–20) Toughness test or suffer 2d10 Toughness damage.',
 });
 
 const meta: Meta = { title: 'Chat/Grenade Rider Results (#623)' };
@@ -177,5 +185,23 @@ export const PsychotrokeStepsTheEffectRoll: Story = {
         // 40 - 40 = 0 against 15: two degrees of failure.
         await expect(rowOf(canvasElement, 'Cultist').querySelector('[data-rider-effect]')?.textContent).toContain('+2 to the effect roll');
         await expect(canvasElement.querySelector('[data-rider-effect-text]')?.textContent).toContain('Table 5–3');
+    },
+};
+
+/** A Rad grenade failure deals its rolled 2d10 Toughness damage, applied, and names the amount (#698). */
+export const RadDealsToughnessDamage: Story = {
+    render: () =>
+        card('Rad Grenade', ['blast-3'], RAD, [
+            { name: 'Mutant', characteristic: 30, roll: 38, damage: 13, applied: true },
+            { name: 'Enforcer', characteristic: 45, roll: 20 },
+        ]),
+    play: async ({ canvasElement }) => {
+        // 30 − 20 = 10 against 38: three degrees of failure; 2d10 rolled 13.
+        const mutant = rowOf(canvasElement, 'Mutant');
+        await expect(mutant.dataset['riderOutcome']).toBe('suffers');
+        await expect(mutant.querySelector('[data-rider-effect]')?.textContent).toContain('13 Toughness damage');
+        await expect(mutant.querySelector('[data-rider-effect]')?.textContent).not.toContain('Suffers the effect');
+        await expect(mutant.querySelector('[data-rider-applied]')).toBeTruthy();
+        await expect(rowOf(canvasElement, 'Enforcer').querySelector('[data-rider-effect]')).toBeNull();
     },
 };

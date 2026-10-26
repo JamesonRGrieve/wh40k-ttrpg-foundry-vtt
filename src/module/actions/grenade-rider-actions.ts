@@ -26,7 +26,7 @@ import {
     riderAffectsCreature,
     riderRollsDuration,
 } from '../rules/grenade-rider-resolution.ts';
-import { hasGrenadeRider, riderHasTest } from '../rules/grenade-rider.ts';
+import { hasGrenadeRider, riderDealsCharacteristicDamage, riderHasTest } from '../rules/grenade-rider.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 
 /** A token the rider resolves against. */
@@ -90,9 +90,23 @@ async function applyRiderCondition(actor: WH40KBaseActorDocument, result: RiderT
 }
 
 /**
+ * Write what the rider does to a creature that suffers it (#698): its condition, and the
+ * characteristic damage it deals. Only an owner can write either; returns whether every
+ * part was applied.
+ */
+async function applyRiderEffects(actor: WH40KBaseActorDocument, result: RiderTargetResult, origin: string | null): Promise<boolean> {
+    if (!actor.isOwner) return false;
+    const conditionApplied = result.condition === '' ? true : await applyRiderCondition(actor, result, origin);
+    const damage = result.characteristicDamage;
+    if (damage !== null) await actor.applyCharacteristicDamage(damage.characteristic, damage.amount);
+    return conditionApplied;
+}
+
+/**
  * Resolve the grenade's rider against `tokens` and post the results card. Every creature
  * the rider touches rolls its test (when the rider has one); a failure — or being caught
- * by a rider with no test — applies the rider's condition for its duration.
+ * by a rider with no test — applies the rider's condition for its duration and deals its
+ * characteristic damage.
  */
 export async function resolveRiderAgainst(source: RiderSource, tokens: readonly RiderToken[], io: RiderResolveIo): Promise<void> {
     const { item } = source;
@@ -111,16 +125,25 @@ export async function resolveRiderAgainst(source: RiderSource, tokens: readonly 
         const d100 = riderHasTest(rider) && riderAffectsCreature(rider, creature) ? await io.rollD100() : null;
         if (d100 !== null) rolls.push(d100);
         const roll = d100?.total ?? null;
-        let result = resolveRiderCreature({ rider, creature, roll, rolledRounds: null });
-        if (result.suffers && rider.condition !== '' && riderRollsDuration(rider)) {
+        const scored = resolveRiderCreature({ rider, creature, roll, rolledRounds: null, rolledDamage: null });
+        let rolledRounds: number | null = null;
+        let rolledDamage: number | null = null;
+        if (scored.suffers && rider.condition !== '' && riderRollsDuration(rider)) {
             // eslint-disable-next-line no-await-in-loop -- sequential by design: each creature's duration is its own roll on the card
             const rounds = await new Roll(rider.duration.formula).evaluate();
             rolls.push(rounds);
-            result = resolveRiderCreature({ rider, creature, roll, rolledRounds: rounds.total });
+            rolledRounds = rounds.total;
         }
-        if (result.suffers && rider.condition !== '') {
+        if (scored.suffers && riderDealsCharacteristicDamage(rider)) {
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: each creature's damage is its own roll on the card
+            const damage = await new Roll(rider.characteristicDamage.formula).evaluate();
+            rolls.push(damage);
+            rolledDamage = damage.total;
+        }
+        const result = resolveRiderCreature({ rider, creature, roll, rolledRounds, rolledDamage });
+        if (result.suffers && (rider.condition !== '' || result.characteristicDamage !== null)) {
             // eslint-disable-next-line no-await-in-loop -- sequential by design: each creature's effect is written in turn
-            applied.set(result.tokenId, await applyRiderCondition(actor, result, item.uuid));
+            applied.set(result.tokenId, await applyRiderEffects(actor, result, item.uuid));
         }
         results.push(result);
     }

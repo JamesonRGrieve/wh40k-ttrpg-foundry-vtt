@@ -12,7 +12,7 @@
 
 import { aggregateRollTarget } from '../rolls/aggregate-target.ts';
 import { degreesOfFailure, isD100Success } from './_dice.ts';
-import { type GrenadeRiderData, type RiderDurationKind, riderHasTest } from './grenade-rider.ts';
+import { type GrenadeRiderData, type RiderDurationKind, riderDealsCharacteristicDamage, riderHasTest } from './grenade-rider.ts';
 
 /** A creature the rider's area caught, as the resolver reads it. */
 export interface RiderCreature {
@@ -68,6 +68,15 @@ export interface RiderTargetResult {
     untilEncounterEnd: boolean;
     /** The step added to the effect's table roll (a Psychotroke's +1 per degree of failure); 0 for none. */
     effectRollShift: number;
+    /** The characteristic damage the effect deals (a Rad grenade's Toughness damage); null for none. */
+    characteristicDamage: RiderCharacteristicDamage | null;
+}
+
+/** Characteristic damage a rider deals one creature. */
+export interface RiderCharacteristicDamage {
+    /** The characteristic key (`toughness`). */
+    characteristic: string;
+    amount: number;
 }
 
 /** Inputs for one creature's rider result. */
@@ -78,6 +87,8 @@ export interface RiderResolutionInput {
     roll: number | null;
     /** The rider's rolled duration in rounds (a `roll` duration), or null when there is none. */
     rolledRounds: number | null;
+    /** The rider's rolled characteristic-damage formula, or null when it deals none or was not rolled. */
+    rolledDamage: number | null;
 }
 
 /** Whether the rider touches the creature at all. */
@@ -126,6 +137,17 @@ export function riderEffectRollShift(rider: GrenadeRiderData, degrees: number): 
     return Math.min(perDegree * degrees, max);
 }
 
+/**
+ * The characteristic damage a failure by `degrees` deals: the rolled formula plus
+ * `perDegree` per degree of failure; null when the rider deals none or its formula was
+ * not rolled.
+ */
+export function riderCharacteristicDamage(rider: GrenadeRiderData, degrees: number, rolledDamage: number | null): RiderCharacteristicDamage | null {
+    if (!riderDealsCharacteristicDamage(rider) || rolledDamage === null) return null;
+    const { characteristic, perDegree } = rider.characteristicDamage;
+    return { characteristic, amount: rolledDamage + perDegree * degrees };
+}
+
 /** Score one creature's test against the rider: base + the capped modifiers, roll-under, degrees of failure. */
 function scoreTest(rider: GrenadeRiderData, creature: RiderCreature, roll: number): RiderTestResult {
     const components = riderTestComponents(rider, creature);
@@ -144,7 +166,7 @@ export function resolveRiderCreature(input: RiderResolutionInput): RiderTargetRe
     const { rider, creature } = input;
     const base = { tokenId: creature.tokenId, actorUuid: creature.actorUuid, name: creature.name, condition: rider.condition };
     if (!riderAffectsCreature(rider, creature)) {
-        return { ...base, affected: false, test: null, suffers: false, rounds: null, untilEncounterEnd: false, effectRollShift: 0 };
+        return { ...base, affected: false, test: null, suffers: false, rounds: null, untilEncounterEnd: false, effectRollShift: 0, characteristicDamage: null };
     }
     const test = riderHasTest(rider) && input.roll !== null ? scoreTest(rider, creature, input.roll) : null;
     const suffers = test === null ? !riderHasTest(rider) : !test.passed;
@@ -157,5 +179,6 @@ export function resolveRiderCreature(input: RiderResolutionInput): RiderTargetRe
         rounds: suffers ? riderDurationRounds(rider, degrees, input.rolledRounds) : null,
         untilEncounterEnd: suffers && rider.duration.kind === 'encounter',
         effectRollShift: suffers ? riderEffectRollShift(rider, degrees) : 0,
+        characteristicDamage: suffers ? riderCharacteristicDamage(rider, degrees, input.rolledDamage) : null,
     };
 }

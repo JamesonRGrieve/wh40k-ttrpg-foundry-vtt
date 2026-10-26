@@ -59,9 +59,15 @@ export function riderOutcome(result: RiderTargetResult): RiderOutcome {
     return result.suffers ? 'suffers' : 'resisted';
 }
 
-/** What landed on the creature, as the card states it. */
-function effectLabel(result: RiderTargetResult, conditionName: string, labels: GrenadeLabels): string {
-    if (!result.suffers) return '';
+/** The characteristic damage that landed, as the card states it ("13 Toughness damage"); '' for none. */
+function damageLabel(result: RiderTargetResult, labels: GrenadeLabels): string {
+    const damage = result.characteristicDamage;
+    if (damage === null) return '';
+    return labels.localize('WH40K.GrenadeRider.CharacteristicDamage', { amount: damage.amount, characteristic: labels.characteristic(damage.characteristic) });
+}
+
+/** The condition (or effect step) that landed; `fallback` states the bare effect when nothing else does. */
+function conditionLabel(result: RiderTargetResult, conditionName: string, labels: GrenadeLabels, fallback: boolean): string {
     if (result.condition !== '') {
         if (result.rounds !== null)
             return labels.localize(pluralKey('WH40K.GrenadeRider.ConditionRounds', result.rounds, labels.lang), {
@@ -72,7 +78,15 @@ function effectLabel(result: RiderTargetResult, conditionName: string, labels: G
         return conditionName;
     }
     if (result.effectRollShift > 0) return labels.localize('WH40K.GrenadeRider.EffectShift', { step: `+${result.effectRollShift}` });
-    return labels.localize('WH40K.GrenadeRider.SuffersEffect');
+    return fallback ? labels.localize('WH40K.GrenadeRider.SuffersEffect') : '';
+}
+
+/** What landed on the creature, as the card states it: its condition or effect step, then its characteristic damage. */
+function effectLabel(result: RiderTargetResult, conditionName: string, labels: GrenadeLabels): string {
+    if (!result.suffers) return '';
+    const damage = damageLabel(result, labels);
+    const condition = conditionLabel(result, conditionName, labels, damage === '');
+    return [condition, damage].filter((part) => part !== '').join('; ');
 }
 
 /**

@@ -4,6 +4,7 @@ import {
     type RiderCreature,
     resolveRiderCreature,
     riderAffectsCreature,
+    riderCharacteristicDamage,
     riderDurationRounds,
     riderEffectRollShift,
     riderRollsDuration,
@@ -37,6 +38,14 @@ const PSYCHOTROKE = riderFixture({
     effectRollShift: { perDegree: 1, max: 10 },
 });
 const TEARS = riderFixture({ duration: { kind: 'encounter', base: 0, formula: '' } });
+const DH2_RAD = riderFixture({
+    test: { characteristic: 'toughness', modifier: -20 },
+    characteristicDamage: { characteristic: 'toughness', formula: '2d10', perDegree: 0 },
+});
+const RT_RAD = riderFixture({
+    test: { characteristic: 'toughness', modifier: 0 },
+    characteristicDamage: { characteristic: 'toughness', formula: '1d10', perDegree: 2 },
+});
 
 function creature(overrides: Partial<RiderCreature> = {}): RiderCreature {
     return { tokenId: 't1', actorUuid: 'Actor.a1', name: 'Heretic', isPsyker: false, characteristic: 30, ...overrides };
@@ -90,32 +99,38 @@ describe('riderEffectRollShift', () => {
 describe('resolveRiderCreature', () => {
     it('blinds a Photon Flash failure for its degrees of failure (Core p.158)', () => {
         // Agility 30 + 10 = 40 against 68: three degrees of failure.
-        const result = resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 68, rolledRounds: null });
+        const result = resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 68, rolledRounds: null, rolledDamage: null });
         expect(result).toMatchObject({ affected: true, suffers: true, condition: 'blinded', rounds: 3, untilEncounterEnd: false });
         expect(result.test).toMatchObject({ base: 30, target: 40, roll: 68, passed: false, degreesOfFailure: 3 });
     });
 
     it('lets a pass resist: no condition, no rounds', () => {
-        const result = resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 40, rolledRounds: null });
+        const result = resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 40, rolledRounds: null, rolledDamage: null });
         expect(result).toMatchObject({ affected: true, suffers: false, rounds: null });
         expect(result.test?.passed).toBe(true);
     });
 
     it('fails a natural 100 by at least one degree, and passes a natural 01', () => {
         const strong = creature({ characteristic: 95 });
-        expect(resolveRiderCreature({ rider: PHOTON_FLASH, creature: strong, roll: 100, rolledRounds: null })).toMatchObject({ suffers: true, rounds: 1 });
-        expect(resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature({ characteristic: 0 }), roll: 1, rolledRounds: null }).suffers).toBe(false);
+        expect(resolveRiderCreature({ rider: PHOTON_FLASH, creature: strong, roll: 100, rolledRounds: null, rolledDamage: null })).toMatchObject({
+            suffers: true,
+            rounds: 1,
+        });
+        expect(
+            resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature({ characteristic: 0 }), roll: 1, rolledRounds: null, rolledDamage: null }).suffers,
+        ).toBe(false);
     });
 
     it('caps the modifiers at ±60 through the shared aggregator', () => {
         const harsh = riderFixture({ test: { characteristic: 'toughness', modifier: -60, psykerModifier: -20 } });
         expect(
-            resolveRiderCreature({ rider: harsh, creature: creature({ isPsyker: true, characteristic: 70 }), roll: 5, rolledRounds: null }).test?.target,
+            resolveRiderCreature({ rider: harsh, creature: creature({ isPsyker: true, characteristic: 70 }), roll: 5, rolledRounds: null, rolledDamage: null })
+                .test?.target,
         ).toBe(10);
     });
 
     it('leaves a non-psyker in a Psyk-out cloud unaffected, untested', () => {
-        expect(resolveRiderCreature({ rider: RT_PSYK_OUT, creature: creature(), roll: null, rolledRounds: null })).toMatchObject({
+        expect(resolveRiderCreature({ rider: RT_PSYK_OUT, creature: creature(), roll: null, rolledRounds: null, rolledDamage: null })).toMatchObject({
             affected: false,
             test: null,
             suffers: false,
@@ -123,12 +138,18 @@ describe('resolveRiderCreature', () => {
     });
 
     it('stuns a psyker who fails for the rolled rounds (RT Faith and Coin p.85)', () => {
-        const result = resolveRiderCreature({ rider: RT_PSYK_OUT, creature: creature({ isPsyker: true, characteristic: 40 }), roll: 72, rolledRounds: 6 });
+        const result = resolveRiderCreature({
+            rider: RT_PSYK_OUT,
+            creature: creature({ isPsyker: true, characteristic: 40 }),
+            roll: 72,
+            rolledRounds: 6,
+            rolledDamage: null,
+        });
         expect(result).toMatchObject({ suffers: true, condition: 'stunned', rounds: 6 });
     });
 
     it('applies a no-test rider to everyone caught, for the encounter', () => {
-        expect(resolveRiderCreature({ rider: TEARS, creature: creature(), roll: null, rolledRounds: null })).toMatchObject({
+        expect(resolveRiderCreature({ rider: TEARS, creature: creature(), roll: null, rolledRounds: null, rolledDamage: null })).toMatchObject({
             affected: true,
             test: null,
             suffers: true,
@@ -139,10 +160,45 @@ describe('resolveRiderCreature', () => {
 
     it('steps a Psychotroke failure into the effect roll (Enemies Within p.44)', () => {
         // Toughness 40 − 40 = 0 against 15: two degrees of failure.
-        expect(resolveRiderCreature({ rider: PSYCHOTROKE, creature: creature({ characteristic: 40 }), roll: 15, rolledRounds: null })).toMatchObject({
+        expect(
+            resolveRiderCreature({ rider: PSYCHOTROKE, creature: creature({ characteristic: 40 }), roll: 15, rolledRounds: null, rolledDamage: null }),
+        ).toMatchObject({
             suffers: true,
             effectRollShift: 2,
             rounds: 3,
         });
+    });
+
+    it('deals a Rad grenade failure its rolled Toughness damage (Enemies Within p.45, #698)', () => {
+        // Toughness 30 − 20 = 10 against 38: three degrees of failure; 2d10 rolled 13.
+        const result = resolveRiderCreature({ rider: DH2_RAD, creature: creature(), roll: 38, rolledRounds: null, rolledDamage: 13 });
+        expect(result).toMatchObject({ suffers: true, condition: '', characteristicDamage: { characteristic: 'toughness', amount: 13 } });
+        expect(result.test?.degreesOfFailure).toBe(3);
+    });
+
+    it('adds the per-degree step to an RT Rad grenade failure (Faith and Coin, #698)', () => {
+        // Toughness 30 + 0 against 52: three degrees of failure; 1d10 rolled 4, +2 per degree.
+        expect(resolveRiderCreature({ rider: RT_RAD, creature: creature(), roll: 52, rolledRounds: null, rolledDamage: 4 }).characteristicDamage).toEqual({
+            characteristic: 'toughness',
+            amount: 10,
+        });
+    });
+
+    it('deals no characteristic damage on a pass, or for a rider that prints none', () => {
+        expect(
+            resolveRiderCreature({ rider: DH2_RAD, creature: creature({ characteristic: 60 }), roll: 20, rolledRounds: null, rolledDamage: 13 })
+                .characteristicDamage,
+        ).toBeNull();
+        expect(
+            resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 68, rolledRounds: null, rolledDamage: 13 }).characteristicDamage,
+        ).toBeNull();
+    });
+});
+
+describe('riderCharacteristicDamage', () => {
+    it('is the rolled formula plus the per-degree step, or null when unrolled', () => {
+        expect(riderCharacteristicDamage(RT_RAD, 2, 7)).toEqual({ characteristic: 'toughness', amount: 11 });
+        expect(riderCharacteristicDamage(RT_RAD, 2, null)).toBeNull();
+        expect(riderCharacteristicDamage(TEARS, 2, 7)).toBeNull();
     });
 });

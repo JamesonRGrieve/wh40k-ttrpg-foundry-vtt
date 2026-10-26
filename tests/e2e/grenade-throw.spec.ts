@@ -40,7 +40,8 @@ import { scaledMs } from './lib/timing';
  *   fails by three degrees and is Blinded for three rounds (the status on its token),
  *   the Accomplice resists;
  * - the Rad Grenade (Enemies Within p.44) rolls its damage, then its damage card's
- *   Resolve Rider rolls Toughness −20 for both creatures struck;
+ *   Resolve Rider rolls Toughness −20 for both creatures struck, and the one that fails
+ *   takes its rolled 2d10 Toughness damage (#698);
  * - a Rogue Trader thrower's Psyk-out (the shared document's RT branch, Faith and Coin
  *   p.85) tests the psyker only: it is Stunned for its rolled rounds, its Stunned visual
  *   on the token, and the bystander is unaffected.
@@ -84,11 +85,28 @@ const PSYK_OUT = 'Compendium.wh40k-rpg.dh2-beyond-items-weapons.Item.lScsj4tB78f
 const PSYK_OUT_RESULTS_TEXT = ['Willpower -10', 'Psykers only', 'Rogue Psyker', 'Stunned for', 'Applied', 'Bystander', 'Unaffected'];
 /** The face both creatures roll on a rider test (see TOKENS). */
 const PHOTON_RIDER_FACE = 60;
-const RAD_RIDER_FACE = 30;
+/**
+ * The Rad rider's dice (#698), in turn. The canvas order of the two creatures is not
+ * fixed, so the faces give the same outcome either way. Heretic first: it rolls 30
+ * against Toughness −20 (10) and fails; its 2d10 Toughness damage lands 3 + 7; the
+ * Accomplice rolls 30 against 40 and resists. Accomplice first: it rolls 30 and resists;
+ * the Heretic's d100 reads the d10 3 as 25 and fails; its 2d10 lands 7, then the last
+ * d100 30 read as a d10, 3. Either way the Heretic takes 10 Toughness damage.
+ */
+const RAD_RIDER_FACES: Array<[number, number]> = [
+    [30, 100],
+    [3, 10],
+    [7, 10],
+    [30, 100],
+];
+/** The Toughness damage the Rad rider deals the Heretic on those faces. */
+const RAD_TOUGHNESS_DAMAGE = 10;
 /** The Photon Flash results card (Core p.158): Agility +10, the Heretic blinded for its three degrees, the Accomplice resisting. */
 const PHOTON_RESULTS_TEXT = ['Grenade Rider', 'Agility +10', 'Heretic', 'Accomplice', 'Blinded for 3 rounds', 'Applied', 'Resisted', '3 DoF'];
-/** The Rad Grenade results card (Enemies Within p.44): Toughness −20, the Heretic suffering its effect, the Accomplice resisting. */
-const RAD_RESULTS_TEXT = ['Grenade Rider', 'Toughness -20', 'Heretic', 'Accomplice', 'Suffers the effect', 'Resisted', '2d10 Toughness damage'];
+/** The Rad Grenade results card (Enemies Within p.44): Toughness −20, the Heretic taking its rolled Toughness damage, applied, the Accomplice resisting. */
+const RAD_RESULTS_TEXT = ['Grenade Rider', 'Toughness -20', 'Heretic', 'Accomplice', 'Applied', 'Resisted', '2d10 Toughness damage'];
+/** What the Rad rider's one failing row states landed (the effect prose above also says "2d10 Toughness damage", so the row is read alone). */
+const RAD_EFFECT_ROW = `${RAD_TOUGHNESS_DAMAGE} Toughness damage Applied`;
 /** The rider grenades the dialog lists: those that deal no damage. Tears of the Emperor deals 1d10 X, so it takes the weapon roll (#622). */
 const RIDER_GRENADES = ['Photon Flash Grenade', 'Smoke Grenade', 'Psychotroke Grenade'];
 /** Tears of the Emperor's damage card (Enemies Within p.45): its rider, after the damage, on both creatures its Blast (2) caught. */
@@ -123,8 +141,8 @@ const TOKENS = [
     },
     // A rider test rolls the same face for both creatures (their order on the canvas is not
     // fixed), so they differ in the tested characteristic instead: on a 60 the Heretic fails
-    // Agility +10 (40) by three degrees and the Accomplice passes (80); on a 30 the Heretic
-    // fails Toughness −20 (10) by three degrees and the Accomplice passes (40).
+    // Agility +10 (40) by three degrees and the Accomplice passes (80); against Toughness −20
+    // the Heretic (10) fails and the Accomplice (40) passes on a 30 (see RAD_RIDER_FACES).
     { key: 'target', name: 'Heretic', type: 'dh2-npc', x: 700, y: 500, system: { characteristics: { agility: { base: 30 }, toughness: { base: 30 } } } },
     { key: 'near', name: 'Accomplice', type: 'dh2-npc', x: 800, y: 500, system: { characteristics: { agility: { base: 70 }, toughness: { base: 60 } } } },
     // A Rogue Trader group well clear of every DH2 area: the RT Psyk-out (Faith and Coin p.85)
@@ -413,22 +431,29 @@ interface RiderResultsRead {
     id: string;
     text: string;
     rows: number;
+    /** Each row's "what landed" line, in row order. */
+    effects: string[];
 }
 
-/** Click Resolve Rider on a card, every creature rolling `face` on its d100, and read the results card. */
-async function resolveRiderFrom(page: Page, messageId: string, face: number): Promise<RiderResultsRead | null> {
+/** Both creatures rolling `face` on their d100. */
+function bothRoll(face: number): Array<[number, number]> {
+    return [
+        [face, 100],
+        [face, 100],
+    ];
+}
+
+/** Click Resolve Rider on a card, the dice landing on `faces` in turn, and read the results card. */
+async function resolveRiderFrom(page: Page, messageId: string, faces: Array<[number, number]>): Promise<RiderResultsRead | null> {
     const posted = await page.evaluate(
-        async (args: { id: string; face: number }) =>
+        async (args: { id: string; faces: Array<[number, number]> }) =>
             globalThis.wh40kAttack.clickInMessage({
                 messageId: args.id,
                 buttonSelector: '.roll-control__resolve-rider',
-                faces: [
-                    [args.face, 100],
-                    [args.face, 100],
-                ],
+                faces: args.faces,
                 expectMessages: 1,
             }),
-        { id: messageId, face },
+        { id: messageId, faces },
     );
     const resultsCard = posted.at(-1);
     if (resultsCard === undefined) return null;
@@ -436,7 +461,12 @@ async function resolveRiderFrom(page: Page, messageId: string, face: number): Pr
         const sel = `#sidebar .chat-log .message[data-message-id="${id}"]`;
         await globalThis.wh40kE2E.pollUntil(() => document.querySelector(sel) !== null);
         const root = document.querySelector<HTMLElement>(sel);
-        return { id, text: (root?.textContent ?? '').replace(/\s+/g, ' '), rows: root?.querySelectorAll('[data-rider-target]').length ?? 0 };
+        return {
+            id,
+            text: (root?.textContent ?? '').replace(/\s+/g, ' '),
+            rows: root?.querySelectorAll('[data-rider-target]').length ?? 0,
+            effects: Array.from(root?.querySelectorAll('[data-rider-effect]') ?? [], (el) => el.textContent.replace(/\s+/g, ' ').trim()),
+        };
     }, resultsCard);
 }
 
@@ -459,6 +489,17 @@ async function conditionsOn(page: Page, tokenIds: readonly string[]): Promise<To
             const token = g.canvas.tokens.get(id);
             return { statuses: [...(token?.actor?.statuses ?? [])], center: token?.center ?? { x: 0, y: 0 } };
         });
+    }, tokenIds);
+}
+
+/** Each token's Toughness damage (#698), read from its own actor (an unlinked token carries its own). */
+async function toughnessDamageOn(page: Page, tokenIds: readonly string[]): Promise<Array<number | null>> {
+    return page.evaluate((ids: readonly string[]): Array<number | null> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+        const g = globalThis as unknown as {
+            canvas: { tokens: { get: (id: string) => { actor: { system: { characteristics: { toughness?: { damage?: number } } } } | null } | undefined } };
+        };
+        return ids.map((id) => g.canvas.tokens.get(id)?.actor?.system.characteristics.toughness?.damage ?? null);
     }, tokenIds);
 }
 
@@ -628,7 +669,7 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
                 // --- #623: the card's Resolve Rider rolls everyone in the area ---------
                 const area = card === null ? null : await riderAreaOf(page, card.id);
                 record('rider-area-placed-on-throw', area?.onTarget === true, `rider area ${JSON.stringify(area)}`);
-                const photonResults = card === null ? null : await resolveRiderFrom(page, card.id, PHOTON_RIDER_FACE);
+                const photonResults = card === null ? null : await resolveRiderFrom(page, card.id, bothRoll(PHOTON_RIDER_FACE));
                 const resultsMissing = PHOTON_RESULTS_TEXT.filter((fragment) => photonResults?.text.includes(fragment) !== true);
                 record(
                     'rider-resolve-rolls-each-caught',
@@ -698,12 +739,19 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
             // --- Rad Grenade: damage first, then its rider's test for everyone struck (#622, #623)
             const rad = await throwThroughWeaponRoll(page, scene, 'Rad Grenade');
             const radDamage = rad.resolved === null ? null : await rollDamageFrom(page, rad.resolved);
-            const radResults = radDamage === null ? null : await resolveRiderFrom(page, radDamage.id, RAD_RIDER_FACE);
+            const radResults = radDamage === null ? null : await resolveRiderFrom(page, radDamage.id, RAD_RIDER_FACES);
             const radMissing = RAD_RESULTS_TEXT.filter((fragment) => radResults?.text.includes(fragment) !== true);
+            // The failure's 2d10 lands on the Heretic's Toughness (#698): the row names it, and the actor carries it.
+            const radEffects = radResults?.effects ?? [];
+            const radToughness = await toughnessDamageOn(page, [scene.tokens['target'] ?? '', scene.tokens['near'] ?? '']);
+            const radDamageLands =
+                radEffects.length === 1 && radEffects[0] === RAD_EFFECT_ROW && radToughness[0] === RAD_TOUGHNESS_DAMAGE && radToughness[1] === 0;
             record(
                 'damaging-rider-resolves-after-damage',
-                radDamage !== null && radDamage.riderAfterHits && radResults !== null && radResults.rows === 2 && radMissing.length === 0,
-                `${rad.detail}; damage card ${JSON.stringify(radDamage)}; results ${JSON.stringify(radResults)} lack ${JSON.stringify(radMissing)}`,
+                radDamage !== null && radDamage.riderAfterHits && radResults !== null && radResults.rows === 2 && radMissing.length === 0 && radDamageLands,
+                `${rad.detail}; damage card ${JSON.stringify(radDamage)}; results ${JSON.stringify(radResults)} lack ${JSON.stringify(
+                    radMissing,
+                )}; Toughness damage [Heretic, Accomplice] ${JSON.stringify(radToughness)}`,
             );
             if (radDamage !== null) {
                 const popout = await popOutChatMessage(page, radDamage.id);
@@ -715,7 +763,7 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
             const rtThrow = await throwFromSheet(page, scene.actors['rtThrower'] ?? '', 'Psyk-Out Grenade');
             await targetToken(page, scene.tokens['rtPsyker'] ?? '');
             const psykOutCard = rtThrow.grenadeDialogId === null ? null : await throwFromDialog(page, rtThrow.grenadeDialogId);
-            const psykOutResults = psykOutCard === null ? null : await resolveRiderFrom(page, psykOutCard.id, PHOTON_RIDER_FACE);
+            const psykOutResults = psykOutCard === null ? null : await resolveRiderFrom(page, psykOutCard.id, bothRoll(PHOTON_RIDER_FACE));
             const psykOutMissing = PSYK_OUT_RESULTS_TEXT.filter((fragment) => psykOutResults?.text.includes(fragment) !== true);
             const rtConditions = await conditionsOn(page, [scene.tokens['rtPsyker'] ?? '', scene.tokens['rtBystander'] ?? '']);
             record(
