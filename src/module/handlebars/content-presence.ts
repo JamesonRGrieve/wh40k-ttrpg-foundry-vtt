@@ -80,6 +80,16 @@ export function hasTextHelper(value: TemplateValue): boolean {
     return typeof value === 'string' && htmlHasText(value);
 }
 
+/**
+ * `{{#if (hasValue value)}}`: a number to print beside its unit (#699). Zero is a
+ * value; null, undefined, NaN and an empty string are not, so a template prints a
+ * "—" placeholder rather than a unit with no number ("kg", "₮").
+ */
+export function hasValueHelper(value: TemplateValue): boolean {
+    if (typeof value === 'number') return Number.isFinite(value);
+    return typeof value === 'string' && value.trim() !== '';
+}
+
 /** `{{#if (hasNonZero group)}}`: a modifier group with a non-zero entry. */
 export function hasNonZeroHelper(value: TemplateValue): boolean {
     return hasNonZeroModifier(asModifierGroup(value));

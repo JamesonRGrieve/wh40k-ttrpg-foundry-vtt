@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { computeMovement, shiftMovementRates, sumMovementModifiers } from './movement-math.ts';
+import { computeMovement, liftingCapacity, shiftMovementRates, sumMovementModifiers } from './movement-math.ts';
+
+describe('liftingCapacity (#699)', () => {
+    it('carry SB × 4.5 (one decimal), lift SB × 9, push SB × 18', () => {
+        expect(liftingCapacity(3)).toEqual({ carry: 13.5, lift: 27, push: 54 });
+        expect(liftingCapacity(4)).toEqual({ carry: 18, lift: 36, push: 72 });
+    });
+
+    it('a Strength Bonus of 0 carries nothing', () => {
+        expect(liftingCapacity(0)).toEqual({ carry: 0, lift: 0, push: 0 });
+    });
+});
 
 describe('computeMovement (#271)', () => {
     it('PC path (no floors): half/full/charge/run = baseMove × {1,2,3,6}', () => {

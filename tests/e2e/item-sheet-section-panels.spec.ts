@@ -143,6 +143,10 @@ test.describe.serial('item sheet tabs title their sections with the shared panel
                     .locator('span')
                     .click();
                 await expect.poll(async () => gearEquipped(page)).toBe(!before);
+                // #699: an unpriced item shows "—" for cost, never a bare "₮", and Total
+                // Weight reads the prepared total, never a bare "kg".
+                await expect(sheet.locator('[data-field="gear-header-cost"]')).toHaveText('—');
+                await expect(scope.locator('[data-field="gear-total-weight"]')).toHaveValue(/^\d+(\.\d+)? kg$/u);
             }
 
             await snap(page, c.screenshot, { selector: `#${appId}` });

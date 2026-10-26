@@ -12,7 +12,7 @@
         stats         — array of { label, value, unit?, icon?, action?, attrs?, title?, cellClass? }
                         where:
                             label    — cell label (already localised).
-                            value    — cell value text/number.
+                            value    — cell value text/number; without one the cell shows "—".
                             unit     — optional trailing unit suffix (e.g. "m", "kg").
                             icon     — optional FA class for an icon above the label.
                             action   — optional `data-action` value (makes the cell clickable).
@@ -42,7 +42,8 @@
             {{#if icon}}<i class="fas {{icon}} tw-text-[1.1rem] tw-text-[color:var(--wh40k-accent-gold)] {{themeClassFor 'accent'}}"></i>{{/if}}
             <span class="tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-center tw-text-[color:var(--wh40k-text-muted)]">{{label}}</span>
             <span class="tw-font-alt tw-text-[1.1rem] tw-font-bold tw-leading-none tw-text-[color:var(--wh40k-text-dark)]">
-                {{value}}{{#if unit}}<span class="tw-text-[0.7rem] tw-font-normal tw-ml-[2px] tw-text-[color:var(--wh40k-text-muted)]">{{unit}}</span>{{/if}}
+                {{!-- A cell with no value shows "—", never a bare unit (#699). --}}
+                {{#if (hasValue value)}}{{value}}{{#if unit}}<span class="tw-text-[0.7rem] tw-font-normal tw-ml-[2px] tw-text-[color:var(--wh40k-text-muted)]">{{unit}}</span>{{/if}}{{else}}—{{/if}}
             </span>
         </div>
         {{/each}}

@@ -24,7 +24,7 @@ import { buildCharacteristicFields, CHARACTERISTIC_SHORT_TO_FULL, normalizeChara
 import { fatigueModelForLine } from '../../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields, sizeNameToInt } from '../../shared/field-coercion.ts';
 import { COMBAT_MODIFIER_KEYS, type CombatModifierKey } from '../../shared/modifiers-template.ts';
-import { computeMovement, sumMovementModifiers } from '../../shared/movement-math.ts';
+import { computeMovement, liftingCapacity, sumMovementModifiers } from '../../shared/movement-math.ts';
 import { asRawSource, type RawSource } from '../../shared/raw-source.ts';
 import { SKILL_DEFINITIONS } from '../../shared/skill-definitions.ts';
 import { computeSkillTarget } from '../../shared/skill-math.ts';
@@ -1748,13 +1748,8 @@ export default class CreatureTemplate extends CommonTemplate {
         this.movement.leapHorizontal = environmentJumpDistance(sb, env, line);
         this.movement.jump = environmentJumpDistance(sb * 20, env, line); // in centimeters
 
-        // Lifting/Carrying capacity based on Strength Bonus
-        // Carry: SB × 4.5 kg (sustained carrying)
-        // Lift: SB × 9 kg (brief lifting over head)
-        // Push: SB × 18 kg (pushing/dragging)
-        this.lifting.carry = Math.round(sb * 4.5 * 10) / 10;
-        this.lifting.lift = sb * 9;
-        this.lifting.push = sb * 18;
+        // Carrying capacity from the Strength Bonus (the rule NPCs share, #699).
+        Object.assign(this.lifting, liftingCapacity(sb));
     }
 
     /* -------------------------------------------- */

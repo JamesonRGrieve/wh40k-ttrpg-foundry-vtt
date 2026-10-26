@@ -62,6 +62,28 @@ export const OutOfCombat: Story = {
     },
 };
 
+/** The Carrying Capacity cells' values, as read. */
+function carryingValues(root: HTMLElement): string[] {
+    return Array.from(root.querySelectorAll<HTMLElement>('[data-wh40k-hook="stat-grid-cell"]'))
+        .slice(-2)
+        .map((cell) => (cell.querySelector('span:last-child')?.textContent ?? '').replace(/\s+/g, ' ').trim());
+}
+
+/**
+ * #699: Lift and Push show their number with its unit. A cell without a value shows
+ * "—", never a bare "kg" (an NPC, which had no lifting data, printed exactly that).
+ */
+export const CarryingCapacityValues: Story = {
+    name: 'Carrying capacity — values with units, "—" with none',
+    args: { system: { movement: RATES, lifting: LIFTING } },
+    render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        await expect(carryingValues(canvasElement)).toEqual(['90kg', '225kg']);
+        canvasElement.replaceChildren(renderPanel({ system: { movement: RATES, lifting: { lift: Number.NaN, push: Number.NaN } } }));
+        await expect(carryingValues(canvasElement)).toEqual(['—', '—']);
+    },
+};
+
 /** The move-mode toggles shown as selected (`aria-pressed`). */
 function pressedModes(root: HTMLElement): string[] {
     return Array.from(root.querySelectorAll<HTMLElement>('[aria-pressed="true"]')).map((el) => el.dataset['movementType'] ?? '');

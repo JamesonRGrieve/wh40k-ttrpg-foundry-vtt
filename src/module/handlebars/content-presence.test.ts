@@ -1,5 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { hasDisplayedModifiers, hasDisplayedModifiersHelper, hasNonZeroHelper, hasNonZeroModifier, hasTextHelper, htmlHasText } from './content-presence.ts';
+import {
+    hasDisplayedModifiers,
+    hasDisplayedModifiersHelper,
+    hasNonZeroHelper,
+    hasNonZeroModifier,
+    hasTextHelper,
+    hasValueHelper,
+    htmlHasText,
+} from './content-presence.ts';
+
+describe('hasValueHelper (#699)', () => {
+    it('a number, zero included, or a non-empty string is a value', () => {
+        expect([0, 27, -3, 13.5, '4', '1d10'].map(hasValueHelper)).toEqual([true, true, true, true, true, true]);
+    });
+
+    it('null, undefined, NaN, an empty string or an object is not, so the template prints "—"', () => {
+        expect([null, undefined, Number.NaN, '', '  ', {}].map(hasValueHelper)).toEqual([false, false, false, false, false, false]);
+    });
+});
 
 /**
  * #597: a read-only item sheet hides a section with nothing in it. These are the

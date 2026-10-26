@@ -60,3 +60,19 @@ export function shiftMovementRates(rates: Readonly<MovementRates>, baseShift: nu
     }
     return shifted;
 }
+
+/** Carrying capacity in kg: sustained carry, brief lift overhead, push or drag. */
+export interface LiftingCapacity {
+    carry: number;
+    lift: number;
+    push: number;
+}
+
+/**
+ * Carrying capacity from the Strength Bonus: carry SB × 4.5 kg (to one decimal),
+ * lift SB × 9 kg, push SB × 18 kg. One rule for PCs (`CreatureTemplate`) and NPCs,
+ * whose Combat tab once printed Lift and Push as a bare "kg" (#699). Pure.
+ */
+export function liftingCapacity(strengthBonus: number): LiftingCapacity {
+    return { carry: Math.round(strengthBonus * 4.5 * 10) / 10, lift: strengthBonus * 9, push: strengthBonus * 18 };
+}

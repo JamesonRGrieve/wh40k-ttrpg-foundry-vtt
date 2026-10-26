@@ -10,7 +10,7 @@ import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 import { uuidNameCache } from '../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { chatActionButtonClass } from './chat-action-button.ts';
-import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper } from './content-presence.ts';
+import { hasDisplayedModifiersHelper, hasNonZeroHelper, hasTextHelper, hasValueHelper } from './content-presence.ts';
 import { corruptionDegree, corruptionDegreeClass, type DegreeScore, insanityDegree, insanityDegreeClass, thresholdLadder } from './degree-ladders.ts';
 import { TALENT_ICONS, TIER_COLORS, TRAIT_CATEGORY_COLORS, TRAIT_ICONS, lookupOr } from './icon-lookups.ts';
 import { inlineTernary } from './inline-ternary.ts';
@@ -182,6 +182,7 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
 
     /** Section-presence tests: a read-only sheet hides an empty section (#597). */
     hbs.registerHelper('hasText', (value: TplValue): boolean => hasTextHelper(value));
+    hbs.registerHelper('hasValue', (value: TplValue): boolean => hasValueHelper(value));
     hbs.registerHelper('hasNonZero', (value: TplValue): boolean => hasNonZeroHelper(value));
     hbs.registerHelper('hasDisplayedModifiers', (value: TplValue): boolean => hasDisplayedModifiersHelper(value));
 

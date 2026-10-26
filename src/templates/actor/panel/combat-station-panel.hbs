@@ -29,6 +29,8 @@
                                     <i class="fas fa-star"></i>
                                     <span>{{localize "WH40K.Fate"}}</span>
                                 </div>
+                                {{!-- The count, so a row with no stars (max 0) still shows its value (#699). --}}
+                                <span class="tw-font-alt tw-text-[0.85rem] tw-font-bold tw-tabular-nums tw-text-[color:var(--wh40k-text-dark)]" data-field="npc-fate-value">{{#if (hasValue system.fate.max)}}{{system.fate.value}} / {{system.fate.max}}{{else}}—{{/if}}</span>
                                 <i class="fas fa-chevron-down tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-transition-[transform,color] tw-duration-200 tw-ml-auto tw-flex-shrink-0 {{#if (isExpanded 'combat_fate_details' actor)}}tw-rotate-180{{/if}}"></i>
                             </div>
                             <div class="tw-flex tw-gap-[var(--wh40k-space-xs)] tw-shrink-0">

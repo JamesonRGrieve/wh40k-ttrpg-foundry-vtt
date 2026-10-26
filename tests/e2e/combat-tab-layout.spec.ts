@@ -79,6 +79,24 @@ async function countPieces(page: Page, appId: string): Promise<{ locations: numb
     }, appId);
 }
 
+/**
+ * #699: the Carrying Capacity cells (Lift, Push) and, on an NPC, the Fate row's
+ * count. Each shows a number, or "—"; an NPC's Lift and Push once read a bare "kg".
+ */
+async function readDisplayedValues(page: Page, appId: string): Promise<{ carrying: string[]; fate: string | null }> {
+    return page.evaluate((id: string) => {
+        const root = document.getElementById(id);
+        const cells = Array.from(root?.querySelectorAll<HTMLElement>('[data-wh40k-hook="stat-grid-cell"]') ?? []).slice(-2);
+        return {
+            carrying: cells.map((cell) => (cell.querySelector('span:last-child')?.textContent ?? '').replace(/\s+/g, ' ').trim()),
+            fate: root?.querySelector('[data-field="npc-fate-value"]')?.textContent.trim() ?? null,
+        };
+    }, appId);
+}
+
+/** A displayed value: a number with an optional unit, or the "—" placeholder; never a unit alone. */
+const SHOWS_VALUE = /^(?:-?\d+(?:\.\d+)?\s?[a-z]*|\d+ \/ \d+|—)$/iu;
+
 /** Scroll the sheet body so `selector` is in view, for the capture. */
 async function scrollSheetTo(page: Page, appId: string, selector: string, block: 'start' | 'center'): Promise<void> {
     await page.evaluate(
@@ -122,10 +140,22 @@ test.describe.serial('Combat tab Armour and Movement fit the sheet (Tier B, #617
                 const armour = await allWithinContainer(page, sheet.appId, '[data-location]', '.wh40k-panel');
                 // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
                 const check = await allWithinContainer(page, sheet.appId, '[data-move-mode-selected]', '[aria-pressed]');
+                // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
+                const shown = await readDisplayedValues(page, sheet.appId);
+                // A troop NPC hides its Fate row (npcFateHidden); when the row shows, so does its count.
+                const valuesShown =
+                    shown.carrying.length === 2 && shown.carrying.every((v) => SHOWS_VALUE.test(v)) && (shown.fate === null || SHOWS_VALUE.test(shown.fate));
                 record(
                     flow,
-                    pieces.locations === 6 && pieces.checks === 1 && armour.ok && check.ok && (width !== 'min' || sheet.width >= MIN_SHEET_WIDTH_PX),
-                    `${key} at ${sheet.width}px: ${pieces.locations} locations, ${pieces.checks} checks; armour ${armour.detail}; check ${check.detail}`,
+                    pieces.locations === 6 &&
+                        pieces.checks === 1 &&
+                        armour.ok &&
+                        check.ok &&
+                        valuesShown &&
+                        (width !== 'min' || sheet.width >= MIN_SHEET_WIDTH_PX),
+                    `${key} at ${sheet.width}px: ${pieces.locations} locations, ${pieces.checks} checks; armour ${armour.detail}; check ${
+                        check.detail
+                    }; carrying ${JSON.stringify(shown.carrying)}, fate ${String(shown.fate)}`,
                 );
                 // eslint-disable-next-line no-await-in-loop -- captures the sheet just opened
                 const tag = `${key}-${width === 'min' ? 'min' : 'default'}-width`;

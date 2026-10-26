@@ -127,9 +127,15 @@ async function captureSheet(page: Page, actorId: string, label: string): Promise
         await waitFor(() => badge() !== null, 'armour silhouette', scale(10_000));
         badge()?.closest('.wh40k-panel')?.scrollIntoView({ block: 'center' });
         await settle(300);
-        return { sheetId: actor.sheet.id, body: badge()?.textContent.trim() ?? '' };
+        return {
+            sheetId: actor.sheet.id,
+            body: badge()?.textContent.trim() ?? '',
+            fate: document.querySelector(`#${actor.sheet.id} [data-field="npc-fate-value"]`)?.textContent.trim() ?? null,
+        };
     }, actorId);
     if (opened === null) return '';
+    // #699: the Fate row shows its count (or "—"), never only a label and an empty star row.
+    if (opened.fate !== null) expect(opened.fate, `${label}: Fate row count`).toMatch(/^(?:\d+ \/ \d+|—)$/u);
     await clearScreenOverlays(page, opened.sheetId);
     await snap(page, label, { selector: `#${opened.sheetId}` });
     return opened.body;

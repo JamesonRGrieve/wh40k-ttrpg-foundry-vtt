@@ -130,6 +130,27 @@ export const DescriptionTab: Story = {
 };
 
 /**
+ * #699: a gear item with no price shows "—" for its cost, never a bare "₮", and the
+ * Total Weight field reads the prepared total. In the live sheet `source` is the
+ * stored data, which has no `effectiveTotalWeight` getter, so the field printed a
+ * bare "kg"; this story's source leaves the getter out the same way.
+ */
+export const NoPriceAndTotalWeight: Story = {
+    render: () => {
+        const ctx = mockGearSheetContext();
+        const system = ctx['system'];
+        const priced = typeof system === 'object' && system !== null ? system : {};
+        ctx['system'] = { ...priced, cost: { dh2: { homebrew: { throneGelt: null } } } };
+        ctx['source'] = { ...priced, cost: { dh2: { homebrew: { throneGelt: null } } }, effectiveTotalWeight: undefined };
+        return activateTab(renderSheet(templateSrc, ctx), 'overview');
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-field="gear-header-cost"]')?.textContent.trim()).toBe('—');
+        await expect(canvasElement.querySelector<HTMLInputElement>('[data-field="gear-total-weight"]')?.value).toBe('3.5 kg');
+    },
+};
+
+/**
  * The Overview tab, composed (#695): Classification, Storage, Physical Properties and
  * Economic are titled panels, not Foundry's large bare `<h3>`s, and each Storage
  * option is one labelled checkbox. A decorative square icon used to sit beside each

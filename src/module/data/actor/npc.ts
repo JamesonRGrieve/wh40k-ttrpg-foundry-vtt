@@ -26,6 +26,7 @@ import { applyCharacteristicRollData, applyEffectiveCharacteristicFields, comput
 import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { fatigueModelForLine } from '../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
+import { type LiftingCapacity, liftingCapacity } from '../shared/movement-math.ts';
 import { skillCharacteristicMap, skillLabel, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
 import { characteristicField, fatigueField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
@@ -235,6 +236,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         run: number;
     };
     declare movementManual: boolean;
+    /** Carrying capacity, derived each prep from the Strength Bonus (not stored; #699). */
+    declare lifting: LiftingCapacity;
     declare size: number;
     declare initiative: {
         characteristic: string;
@@ -1483,6 +1486,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         this.movement.full = full;
         this.movement.charge = charge;
         this.movement.run = run;
+        // Carrying capacity from the Strength Bonus, the rule PCs use (#699).
+        this.lifting = liftingCapacity(this.characteristics.strength.effectiveBonus);
     }
 
     /**
