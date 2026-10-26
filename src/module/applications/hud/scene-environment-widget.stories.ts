@@ -70,6 +70,11 @@ export const ZeroGravityGm: Story = {
         // Zero gravity offers the Charge / Run test; the GM gets the editor button.
         await expect(canvasElement.querySelector('[data-action="rollZeroGravity"]')).not.toBeNull();
         await expect(canvasElement.querySelector('[data-action="editEnvironment"]')).not.toBeNull();
+        // #701: the label is its own span on one line, its icon centred beside it.
+        const label = canvasElement.querySelector<HTMLElement>('[data-action="rollZeroGravity"] [data-wh40k-hook="env-zero-g-label"]');
+        await expect(label?.textContent).toBe('Roll the zero-gravity Agility test');
+        await expect(label?.parentElement?.classList.contains('tw-whitespace-nowrap')).toBe(true);
+        await expect(label?.parentElement?.classList.contains('tw-items-center')).toBe(true);
     },
 };
 

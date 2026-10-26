@@ -202,6 +202,24 @@ test.describe.serial('Scene environment (Tier B, #604)', () => {
                 return g.game.scenes.get(sceneId)?.getFlag('wh40k-rpg', 'environment') ?? null;
             }, probe.sceneId);
             expect(stored).toEqual({ gravity: 'zero', harshConditions: true, atmosphere: 'vacuum' });
+            // #701: the roll button's label fits on one line, its icon centred beside it (it wrapped beside a top-aligned icon).
+            const rollFit = await widget.locator('[data-action="rollZeroGravity"]').evaluate((button) => {
+                const label = button.querySelector('[data-wh40k-hook="env-zero-g-label"]');
+                const icon = button.querySelector('i');
+                if (label === null || icon === null) throw new Error('no label or icon');
+                const range = document.createRange();
+                range.selectNodeContents(label);
+                const lines = new Set(Array.from(range.getClientRects(), (rect) => Math.round(rect.top))).size;
+                const centre = (rect: DOMRect): number => rect.top + rect.height / 2;
+                return {
+                    lines,
+                    overflow: button.scrollWidth - button.clientWidth,
+                    iconOffset: Math.abs(centre(icon.getBoundingClientRect()) - centre(label.getBoundingClientRect())),
+                };
+            });
+            expect(rollFit.lines, 'the roll label wraps').toBe(1);
+            expect(rollFit.overflow, 'the roll label overflows its button').toBeLessThanOrEqual(0);
+            expect(rollFit.iconOffset, 'the icon is off the label centre').toBeLessThanOrEqual(2);
             await clearScreenOverlays(page, 'wh40k-scene-environment');
             expect(await snap(page, 'scene-env-widget-zero-g-vacuum', { selector: WIDGET })).not.toBeNull();
             recordCoverage('scene-environment.flow', 'gm-window-save');
