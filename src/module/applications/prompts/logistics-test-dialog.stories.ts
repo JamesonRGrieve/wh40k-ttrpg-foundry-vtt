@@ -71,18 +71,29 @@ export const Default: Story = {
         await expect(canvasElement.querySelectorAll('[data-axis="troopCount"] button')).toHaveLength(3);
         await expect(canvasElement.querySelectorAll('[data-axis="warCondition"] button')).toHaveLength(6);
         await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('0');
-        // #701: the 0 shows its derivation — a row per component, the negative raw sum, and the clamp.
+        // #701: the 0 shows its derivation — a row per component and their sum, here exactly 0, so no clamp.
         const breakdown = canvasElement.querySelector('[data-wh40k-hook="logistics-breakdown"]');
         await expect(breakdown?.querySelector('[data-logistics-row="rating"]')).not.toBeNull();
         await expect(breakdown?.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBeGreaterThan(3);
         const sum = Number(breakdown?.querySelector('[data-logistics-row="sum"] span:last-child')?.textContent.trim());
-        await expect(sum).toBeLessThan(0);
-        await expect(breakdown?.querySelector('[data-logistics-row="clamp"]')).not.toBeNull();
+        await expect(sum).toBe(0);
+        await expect(breakdown?.querySelector('[data-logistics-row="clamp"]')).toBeNull();
         // #696: Standard Kit is one toggle button, its state on aria-pressed, its square decorative.
         const kit = canvasElement.querySelector<HTMLElement>('[data-action="owToggleStandardKit"]');
         await expect(toggleControls(canvasElement)).toEqual([
             { name: 'Standard Kit (regimental)', pressed: kit?.dataset['toggleState'] === 'on' ? 'true' : 'false', checkboxes: 0, icons: 1, iconsHidden: true },
         ]);
+    },
+};
+
+/** A Logistics Rating of 0 under the default front: the sum is −10, so the clamp note shows and the target is 0 (#701). */
+export const ClampedBelowZero: Story = {
+    args: dialogArgs({ ...DEFAULT_CONTEXT, rating: 0 }),
+    play: async ({ canvasElement }) => {
+        const breakdown = canvasElement.querySelector('[data-wh40k-hook="logistics-breakdown"]');
+        await expect(Number(breakdown?.querySelector('[data-logistics-row="sum"] span:last-child')?.textContent.trim())).toBe(-10);
+        await expect(breakdown?.querySelector('[data-logistics-row="clamp"]')?.textContent).toContain('-10');
+        await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('0');
     },
 };
 
