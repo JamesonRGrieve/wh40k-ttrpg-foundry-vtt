@@ -389,7 +389,8 @@ function timelineGroups(ctx: Context): EventGroupView[] {
             name: bucket.name,
             graphLabel: ctx.graphLabel(bucket.graphId),
             title: bucket.name === '' || firstEvent === undefined ? null : ctx.link(sourceRefKind(firstEvent), bucket.name, firstEvent.links?.source),
-            untitledKey: 'WH40K.EventTracker.UnknownSource',
+            // Events with no day plan or quest behind them: a category, not an error (#699).
+            untitledKey: 'WH40K.EventTracker.Unscheduled',
             isCurrent: day === campaignDay,
             isFuture: day !== null && day > campaignDay,
             isActiveScene: false,

@@ -1,10 +1,13 @@
 {{!-- One event group (a source on the Timeline tab, a location on the Location tab) and its event rows.
      Context: group = EventGroupView --}}
-<section class="tw-mb-3.5 tw-rounded {{#if group.isCurrent}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,170,255,0.06)]{{/if}}{{#if group.isActiveScene}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,255,170,0.06)]{{/if}}{{#if group.isFuture}} tw-opacity-40{{/if}}"
+<section class="tw-mb-3.5 tw-rounded {{#if group.isCurrent}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,170,255,0.06)]{{/if}}{{#if group.isActiveScene}}tw-px-1.5 tw-py-1 tw-bg-[rgba(100,255,170,0.06)]{{/if}}"
          data-wh40k-hook="evt-group" data-group-key="{{group.key}}">
     <header class="tw-flex tw-items-center tw-gap-2 tw-mb-1 tw-pb-0.5 tw-border-0 tw-border-b tw-border-solid {{#if group.isCurrent}}tw-border-[#6af]{{else if group.isActiveScene}}tw-border-[#2d6]{{else}}tw-border-[#555]{{/if}}">
         <h3 class="tw-flex-1 tw-m-0 tw-text-sm tw-border-0">
-            {{#if group.title}}{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=group.title}}{{else}}{{localize group.untitledKey}}{{/if}}
+            {{!-- An untitled group is a category (Unscheduled / No Location), set apart in italics, not an error (#699). --}}
+            {{#if group.title}}{{> systems/wh40k-rpg/templates/dialogs/event-tracker/journal-link.hbs link=group.title}}{{else}}<span class="tw-italic tw-font-normal tw-text-[#c8c8c8]" data-wh40k-hook="evt-untitled">{{localize group.untitledKey}}</span>{{/if}}
+            {{!-- A later day reads as upcoming, at full contrast: the whole group used to fade to 40%, dark on dark (#699). --}}
+            {{#if group.isFuture}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#aaa]" data-wh40k-hook="evt-upcoming">{{localize "WH40K.EventTracker.Upcoming"}}</span>{{/if}}
             {{#if group.isCurrent}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#6af]" data-wh40k-hook="evt-today">← {{localize "WH40K.EventTracker.Today"}}</span>{{/if}}
             {{#if group.isActiveScene}}<span class="tw-ml-1 tw-text-[11px] tw-font-normal tw-text-[#2d6]">← {{localize "WH40K.EventTracker.ActiveScene"}}</span>{{/if}}
             <span class="tw-text-[11px] tw-font-normal tw-text-[#888]">({{group.resolvedCount}}/{{group.total}})</span>
@@ -25,7 +28,7 @@
 
     {{#each group.rows}}
     <div data-wh40k-hook="evt-row" data-event-id="{{id}}">
-        <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5{{#if resolved}} tw-opacity-50 tw-line-through{{/if}}{{#if available}} tw-font-bold tw-text-[#2d6]{{/if}}{{#if locked}} tw-text-[#999]{{/if}}">
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-py-0.5{{#if resolved}} tw-opacity-50 tw-line-through{{/if}}{{#if available}} tw-font-bold tw-text-[#2d6]{{/if}}{{#if locked}} tw-text-[#b3b3b3]{{/if}}">
             <input type="checkbox" class="tw-m-0 tw-flex-none disabled:tw-opacity-30"
                    data-action="toggleResolved" data-event-id="{{id}}"
                    aria-label="{{localize "WH40K.EventTracker.MarkResolved" name=name}}"

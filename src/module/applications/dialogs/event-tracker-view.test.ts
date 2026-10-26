@@ -153,6 +153,12 @@ describe('buildEventTrackerView — timeline', () => {
         expect(sump?.excuse).toBeNull();
     });
 
+    it('files an event with no day plan or quest under "Unscheduled", not "Unknown" (#699)', () => {
+        const graph: EventGraph = { ...GRAPH, LOOSE: { name: 'Recover the Bolas', requires: null } };
+        const loose = buildEventTrackerView(input({ graph })).groups.find((group) => group.key === '');
+        expect(loose).toMatchObject({ title: null, untitledKey: 'WH40K.EventTracker.Unscheduled', isFuture: false, total: 1 });
+    });
+
     it('shows a whole-event excuse and the opened quest', () => {
         const child = rowsOf(buildEventTrackerView(input()).groups, 2).at(0);
         expect(child).toMatchObject({ excuse: 'Not yet.', quest: { label: 'The Sick Child', uuid: null } });

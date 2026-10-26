@@ -190,6 +190,11 @@ export const Timeline: Story = {
         await expect(requirements.some((row) => row.textContent.includes('The crew are still at table.'))).toBe(true);
         // A resolved location renders as a native content link to its journal.
         await expect(canvasElement.querySelector('a.content-link[data-uuid="JournalEntry.sump"]')).not.toBeNull();
+        // #699: a later day's group is labelled Upcoming and stays at full contrast (it faded to 40%, dark on dark).
+        const future = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="evt-group"][data-group-key="Day 1 — First Full Day"]');
+        await expect(future?.querySelector('[data-wh40k-hook="evt-upcoming"]')?.textContent.trim()).toBe('Upcoming');
+        await expect(future?.classList.contains('tw-opacity-40')).toBe(false);
+        await expect(future === null ? null : getComputedStyle(future).opacity).toBe('1');
     },
 };
 

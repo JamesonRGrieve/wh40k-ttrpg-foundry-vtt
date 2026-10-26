@@ -309,6 +309,18 @@ test.describe.serial('Event Tracker completion hooks, adventure graphs and portr
                 `sources ${JSON.stringify(adventure.sources)}, adventure events ${adventure.adventureEvents}, dashboard rows ${adventure.rows}`,
             );
             await snap(page, 'event-tracker-adventure-graph', { selector: DASHBOARD, closeWindows: true, keepWindow: 'wh40k-event-tracker' });
+            // #699: every group reads at full contrast (a later day's group faded to 40%, dark on dark); a later
+            // day is labelled Upcoming; events with no day plan or quest sit under "Unscheduled", not "Unknown".
+            const groupLook = await page.evaluate(() =>
+                Array.from(document.querySelectorAll<HTMLElement>('#wh40k-event-tracker [data-wh40k-hook="evt-group"]')).map((group) => ({
+                    opacity: getComputedStyle(group).opacity,
+                    upcoming: group.querySelector('[data-wh40k-hook="evt-upcoming"]') !== null,
+                    untitled: group.querySelector('[data-wh40k-hook="evt-untitled"]')?.textContent.trim() ?? null,
+                })),
+            );
+            expect(groupLook.map((group) => group.opacity).filter((opacity) => opacity !== '1')).toEqual([]);
+            expect(groupLook.some((group) => group.upcoming)).toBe(true);
+            expect(groupLook.flatMap((group) => (group.untitled === null ? [] : [group.untitled]))).toEqual(['Unscheduled']);
 
             // --- #590: the PC's portrait opens its journal ----------------------
             const sheetId = await page.evaluate(async (actorId: string) => {
