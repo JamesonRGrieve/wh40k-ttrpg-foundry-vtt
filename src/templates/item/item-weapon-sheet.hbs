@@ -165,9 +165,9 @@
         </div>
         {{/if}}
 
-        {{!-- Clip - Magazine (clickable to decrement if owned) --}}
-        {{#if system.usesAmmo}}
-        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(74,132,72,0.4)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.1),rgba(12,16,24,0.7))] wh40k-iconic-stat--ammo-{{system.ammoStatus}} {{#if (or (eq system.ammoStatus "critical") (eq system.ammoStatus "empty"))}}tw-animate-clip-pulse{{/if}} {{#if isOwnedByActor}}tw-cursor-pointer{{/if}}"
+        {{!-- Clip - Magazine (clickable to decrement if owned). Not for a thrown weapon, the round itself (#701). --}}
+        {{#if system.showsAmmoTiles}}
+        <div data-field="weapon-clip-tile" class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(74,132,72,0.4)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.1),rgba(12,16,24,0.7))] wh40k-iconic-stat--ammo-{{system.ammoStatus}} {{#if (or (eq system.ammoStatus "critical") (eq system.ammoStatus "empty"))}}tw-animate-clip-pulse{{/if}} {{#if isOwnedByActor}}tw-cursor-pointer{{/if}}"
              {{#if isOwnedByActor}}data-action="expendAmmo"{{/if}}
              data-tooltip="{{#if isOwnedByActor}}{{localize 'WH40K.ItemSheet.Weapon.ClickToSpendAmmo'}}{{else}}{{localize 'WH40K.Ammunition.TypeLabel'}}{{/if}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
@@ -183,7 +183,7 @@
 
         {{!-- Reload Action Card (if owned by actor and uses ammo) --}}
         {{#if isOwnedByActor}}
-        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.2),rgba(12,16,24,0.7))] {{#if (eq system.clip.value system.effectiveClipMax)}}tw-opacity-40 tw-pointer-events-none{{/if}}"
+        <div data-field="weapon-reload-tile" class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.2),rgba(12,16,24,0.7))] {{#if (eq system.clip.value system.effectiveClipMax)}}tw-opacity-40 tw-pointer-events-none{{/if}}"
              data-action="reload"
              data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.ReloadTooltip' label=system.reloadLabel}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">

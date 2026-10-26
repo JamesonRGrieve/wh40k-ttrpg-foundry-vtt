@@ -264,6 +264,9 @@ test.describe.serial('no-damage and range-band damage profiles (Tier B, #601, #6
             if (bolasSheet !== null) {
                 // #699: the Bolas is Thrown 10m (DH2 Core): a thrown weapon shows its range.
                 await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-range-tile"]`)).toContainText('10m');
+                // #701: a thrown weapon is the round itself, so the owned Bolas shows no Clip or Reload tile.
+                await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-clip-tile"]`)).toHaveCount(0);
+                await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-reload-tile"]`)).toHaveCount(0);
                 await snap(page, 'damage-no-damage-weapon-sheet', { selector: `#${bolasSheet.appId}`, closeWindows: true, keepWindow: bolasSheet.appId });
             }
 
@@ -287,8 +290,12 @@ test.describe.serial('no-damage and range-band damage profiles (Tier B, #601, #6
             );
             if (far !== null) await snapCard(page, 'damage-band-far-card', far.id);
             const beamerSheet = await openWeaponSheet(page, beamerId, 'Conversion Beamer');
-            if (beamerSheet !== null)
+            if (beamerSheet !== null) {
+                // #701 control: a firearm still shows its Clip and Reload tiles.
+                await expect(page.locator(`#${beamerSheet.appId} [data-field="weapon-clip-tile"]`)).toHaveCount(1);
+                await expect(page.locator(`#${beamerSheet.appId} [data-field="weapon-reload-tile"]`)).toHaveCount(1);
                 await snap(page, 'damage-band-weapon-sheet', { selector: `#${beamerSheet.appId}`, closeWindows: true, keepWindow: beamerSheet.appId });
+            }
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
             await setSetting(page, 'auto-apply-damage', autoApplyWas);

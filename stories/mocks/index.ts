@@ -530,6 +530,8 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 rangeLabel: '100m',
                 rateOfFireLabel: 'S/3/-',
                 usesAmmo: true,
+                // A basic firearm, so the sheet shows its Clip and Reload tiles (WeaponData#showsAmmoTiles).
+                showsAmmoTiles: true,
                 clip: { value: 18 },
                 // The header tile reads the DERIVED pair, not `clip.value` — a
                 // combi-weapon's active single-use mode reports its own remaining

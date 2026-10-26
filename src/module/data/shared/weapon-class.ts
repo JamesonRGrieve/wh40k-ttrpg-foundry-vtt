@@ -29,6 +29,15 @@ export function isFirearmClass(weaponClass: string): boolean {
     return FIREARM_CLASSES.includes(weaponClass);
 }
 
+/**
+ * Whether a weapon class is thrown. A thrown weapon is the round itself: it has no
+ * magazine to show and nothing to reload (#701: the DH2 Bolas, Clip 1 Reload –,
+ * showed Clip and Reload tiles).
+ */
+export function isThrownClass(weaponClass: string): boolean {
+    return weaponClass === 'thrown';
+}
+
 /** Whether a weapon class has a range and a rate of fire: a firearm, or a thrown weapon. */
 export function classHasRange(weaponClass: string): boolean {
     return RANGED_ATTACK_CLASSES.includes(weaponClass);

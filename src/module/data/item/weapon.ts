@@ -65,7 +65,7 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import SubtletyAdjusterTemplate from '../shared/subtlety-adjuster-template.ts';
 import type { SubtletyAdjusterKind } from '../shared/subtlety-adjuster.ts';
 import { WEAPON_FACING_CHOICES, WEAPON_MOUNTING_CHOICES, type WeaponFacing, type WeaponMounting } from '../shared/vehicle-mounting.ts';
-import { classHasRange, isFirearmClass, isWeaponClass, WEAPON_CLASS_CHOICES } from '../shared/weapon-class.ts';
+import { classHasRange, isFirearmClass, isThrownClass, isWeaponClass, WEAPON_CLASS_CHOICES } from '../shared/weapon-class.ts';
 
 /** Weapons already reported this session, so a re-render doesn't re-nag the GM. */
 const reportedUnresolvedVariants = new Set<string>();
@@ -1019,6 +1019,15 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     get usesAmmo(): boolean {
         return this.clip.max > 0 || this.activeModeSingleUse;
+    }
+
+    /**
+     * Does the sheet show Clip and Reload tiles? Only for a weapon that uses ammunition
+     * and is not thrown: a thrown weapon is the round itself (#701: the Bolas showed both).
+     * @type {boolean}
+     */
+    get showsAmmoTiles(): boolean {
+        return this.usesAmmo && !isThrownClass(this.effectiveWeaponClass);
     }
 
     /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { classHasRange, isFirearmClass, isWeaponClass, WEAPON_CLASS_CHOICES } from './weapon-class.ts';
+import { classHasRange, isFirearmClass, isThrownClass, isWeaponClass, WEAPON_CLASS_CHOICES } from './weapon-class.ts';
 
 describe('which weapon classes fire (#699)', () => {
     it('the firearm classes are pistol, basic and heavy', () => {
@@ -9,6 +9,10 @@ describe('which weapon classes fire (#699)', () => {
     it('a thrown weapon has a range too, so the Bolas (Thrown 10m) shows one', () => {
         expect(WEAPON_CLASS_CHOICES.filter(classHasRange)).toEqual(['pistol', 'basic', 'heavy', 'thrown']);
         expect(classHasRange('melee')).toBe(false);
+    });
+
+    it('only the thrown class is the round itself, with no clip or reload to show (#701)', () => {
+        expect(WEAPON_CLASS_CHOICES.filter(isThrownClass)).toEqual(['thrown']);
     });
 });
 

@@ -107,6 +107,29 @@ export const RangeBandPenetration: Story = {
     },
 };
 
+/** A firearm shows its Clip and Reload tiles; a thrown weapon (the Bolas, #701) shows neither. */
+export const ThrownHasNoClipOrReload: Story = {
+    args: {
+        overrides: { isOwnedByActor: true, system: { classLabel: 'Thrown', rangeLabel: '10m', showsAmmoTiles: false } },
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-field="weapon-range-tile"]')?.textContent).toContain('10m');
+        await expect(canvasElement.querySelector('[data-field="weapon-clip-tile"]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-field="weapon-reload-tile"]')).toBeNull();
+    },
+};
+
+/** The firearm counterpart: an owned Boltgun shows both tiles. */
+export const FirearmHasClipAndReload: Story = {
+    args: {
+        overrides: { isOwnedByActor: true },
+    },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-field="weapon-clip-tile"]')?.textContent).toContain('18/24');
+        await expect(canvasElement.querySelector('[data-field="weapon-reload-tile"]')).not.toBeNull();
+    },
+};
+
 /** The weapon sheet's minimum width (tailwind/weapon.js `min-width`). */
 const MIN_SHEET_WIDTH_PX = 400;
 
