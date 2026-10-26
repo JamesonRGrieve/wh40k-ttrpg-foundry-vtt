@@ -182,7 +182,8 @@ export const Timeline: Story = {
     render: () => mountTracker('timeline'),
     play: async ({ canvasElement }) => {
         assertActiveTab(canvasElement, 'timeline');
-        await expect(canvasElement.querySelector('[data-wh40k-hook="evt-day-label"]')?.textContent.trim()).toBe('Day 0');
+        // #701: stored campaign day 0, the first campaign day, reads Day 1.
+        await expect(canvasElement.querySelector('[data-wh40k-hook="evt-day-label"]')?.textContent.trim()).toBe('Day 1');
         await expect(canvasElement.querySelector('[data-wh40k-hook="evt-today"]')).not.toBeNull();
         // The locked event shows its requirement tree, per-leaf excuse and the predicate leaf.
         const requirements = [...canvasElement.querySelectorAll('[data-event-id="VISIT_SUMP"] [data-wh40k-hook="evt-requirement"]')];
@@ -203,11 +204,11 @@ export const Interactions: Story = {
     play: async ({ canvasElement }) => {
         const dayLabel = (): string | undefined => canvasElement.querySelector('[data-wh40k-hook="evt-day-label"]')?.textContent.trim();
 
-        // Day next / prev, clamped at day 0.
+        // Day next / prev, clamped at the first campaign day (stored 0, read Day 1).
         canvasElement.querySelector<HTMLElement>('[data-action="stepDay"][data-delta="1"]')?.click();
-        await expect(dayLabel()).toBe('Day 1');
+        await expect(dayLabel()).toBe('Day 2');
         canvasElement.querySelector<HTMLElement>('[data-action="stepDay"][data-delta="-1"]')?.click();
-        await expect(dayLabel()).toBe('Day 0');
+        await expect(dayLabel()).toBe('Day 1');
         await expect(canvasElement.querySelector<HTMLButtonElement>('[data-action="stepDay"][data-delta="-1"]')?.disabled).toBe(true);
 
         // Toggle an available event resolved: it unlocks the next one.

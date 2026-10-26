@@ -175,16 +175,17 @@ test.describe.serial('Event Tracker dashboard (Tier B, #589 / #590)', () => {
             const dayLabel = dashboard.locator('[data-wh40k-hook="evt-day-label"]');
             const locked = dashboard.locator(`[data-event-id="${SEED.lockedEvent}"]`);
 
-            await expect(dayLabel).toHaveText('Day 3');
+            // #701: stored campaign day 3 reads Day 4, since the first campaign day (stored 0) is Day 1.
+            await expect(dayLabel).toHaveText('Day 4');
             await expect(locked.locator('[data-wh40k-hook="evt-requirement"]')).toBeVisible();
             await expect(dashboard.locator('[data-wh40k-hook="evt-today"]')).toBeVisible();
             await snapDashboard(page, 'event-tracker-dashboard-timeline');
 
             await dashboard.locator('[data-action="stepDay"][data-delta="1"]').click();
-            await expect(dayLabel).toHaveText('Day 4');
+            await expect(dayLabel).toHaveText('Day 5');
             await snapDashboard(page, 'event-tracker-day-stepped-forward');
             await dashboard.locator('[data-action="stepDay"][data-delta="-1"]').click();
-            await expect(dayLabel).toHaveText('Day 3');
+            await expect(dayLabel).toHaveText('Day 4');
 
             await dashboard.locator(`[data-action="toggleResolved"][data-event-id="${SEED.rootEvent}"]`).check();
             await expect(dashboard.locator(`[data-action="toggleResolved"][data-event-id="${SEED.rootEvent}"]`)).toBeChecked();

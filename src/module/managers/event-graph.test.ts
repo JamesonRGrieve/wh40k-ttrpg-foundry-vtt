@@ -185,8 +185,11 @@ describe('event names', () => {
 
 describe('campaign day', () => {
     it('splits M-days out of the offset range', () => {
-        expect(campaignDayParts(4)).toEqual({ midnight: false, number: 4 });
+        expect(campaignDayParts(4)).toEqual({ midnight: false, number: 5 });
         expect(campaignDayParts(101)).toEqual({ midnight: true, number: 1 });
+    });
+    it('reads the first campaign day (stored 0) as Day 1 (#701)', () => {
+        expect(campaignDayParts(0)).toEqual({ midnight: false, number: 1 });
     });
     it('steps without going below zero', () => {
         expect(stepCampaignDay(3, 1)).toBe(4);

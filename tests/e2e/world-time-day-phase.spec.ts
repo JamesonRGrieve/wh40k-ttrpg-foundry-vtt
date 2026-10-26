@@ -39,12 +39,19 @@ const SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR;
 interface PhaseView {
     phase: string | null;
     label: string;
+    /** The widget's day counter text. */
+    day: string;
+    /** Whole days since inception: the stored, 0-based day index. */
+    dayIndex: number;
 }
 
 interface WidgetGlobals {
     game: {
         time: { worldTime: number; advance: (seconds: number) => Promise<number> };
-        settings: { get: (ns: string, key: string) => object | number | string | boolean; set: (ns: string, key: string, v: object) => Promise<object> };
+        settings: {
+            get: (ns: string, key: string) => object | number | string | boolean;
+            set: (ns: string, key: string, v: object | number | string | boolean) => Promise<object | number | string | boolean>;
+        };
     };
 }
 
@@ -98,7 +105,12 @@ async function showHour(page: Page, hour: number): Promise<PhaseView> {
                 scale(10_000),
             );
             const el = phaseEl();
-            return { phase: el?.dataset['dayPhase'] ?? null, label: el?.textContent.trim() ?? '' };
+            return {
+                phase: el?.dataset['dayPhase'] ?? null,
+                label: el?.textContent.trim() ?? '',
+                day: document.querySelector(`#${args.widgetId} [data-wh40k-hook="wt-day"]`)?.textContent.trim() ?? '',
+                dayIndex: Math.floor((g.game.time.worldTime - inception) / args.perDay),
+            };
         },
         { hour, perHour: SECONDS_PER_HOUR, perDay: SECONDS_PER_DAY, widgetId: WIDGET_ID },
     );
@@ -120,6 +132,8 @@ test.describe.serial('world-time widget day phase (Tier B, #593)', () => {
                 seen.push(view);
                 if (view.phase !== phase) failures.push(`at ${hour}:00 the widget shows phase ${String(view.phase)}, expected ${phase}`);
                 if (view.label === '') failures.push(`at ${hour}:00 the phase line is empty`);
+                // #701: the first day is Day 1, so the counter reads one more than the stored day index.
+                if (view.day !== `Day ${view.dayIndex + 1}`) failures.push(`at ${hour}:00 the counter reads "${view.day}" on day index ${view.dayIndex}`);
                 // eslint-disable-next-line no-await-in-loop -- sequential by design: overlays cleared before each capture
                 await clearScreenOverlays(page, WIDGET_ID);
                 // eslint-disable-next-line no-await-in-loop -- sequential by design: one capture per phase
@@ -129,6 +143,30 @@ test.describe.serial('world-time widget day phase (Tier B, #593)', () => {
             if (new Set(seen.map((v) => v.phase)).size === PHASE_HOURS.length && failures.length === 0) passed.add('phase-follows-clock');
         } finally {
             await restoreBodies(page, bodies);
+        }
+
+        // #701: at world start (no time elapsed since inception) the counter reads Day 1, not Day 0.
+        // The inception stamp is moved to now for the check and put back after.
+        const atStart = await page.evaluate(async (widgetId: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as WidgetGlobals;
+            const before = g.game.settings.get('wh40k-rpg', 'world-time-inception');
+            await g.game.settings.set('wh40k-rpg', 'world-time-inception', g.game.time.worldTime);
+            const dayEl = (): string => document.querySelector(`#${widgetId} [data-wh40k-hook="wt-day"]`)?.textContent.trim() ?? '';
+            // A miss is reported by the assertion below, with the counter's text.
+            await globalThis.wh40kE2E.pollUntil(() => dayEl() === 'Day 1').catch(() => undefined);
+            return { day: dayEl(), before };
+        }, WIDGET_ID);
+        try {
+            expect(atStart.day, 'the counter at world start').toBe('Day 1');
+            await clearScreenOverlays(page, WIDGET_ID);
+            await snap(page, 'world-time-day-1-at-start', { selector: `#${WIDGET_ID}` });
+        } finally {
+            await page.evaluate(async (before: object | number | string | boolean) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+                const g = globalThis as unknown as WidgetGlobals;
+                await g.game.settings.set('wh40k-rpg', 'world-time-inception', before);
+            }, atStart.before);
         }
 
         for (const flow of WORLD_TIME_FLOWS) {

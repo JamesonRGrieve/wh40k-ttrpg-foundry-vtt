@@ -4,6 +4,7 @@ import {
     DAY_SECONDS,
     dayNumberSince,
     daysSince,
+    displayDayNumber,
     formatClock,
     formatRemaining,
     gateRemaining,
@@ -108,6 +109,16 @@ describe('dayNumberSince — the Day-since-inception counter (#487)', () => {
         const inception = 5 * DAY_SECONDS;
         expect(dayNumberSince(inception, 0)).toBe(0);
         expect(dayNumberSince(inception, 2 * DAY_SECONDS)).toBe(0);
+    });
+});
+
+describe('displayDayNumber — the first campaign day is Day 1 (#701)', () => {
+    it('reads Day 1 at world start, without shifting the stored index', () => {
+        const inception = 1_000_000;
+        expect(dayNumberSince(inception, inception)).toBe(0);
+        expect(displayDayNumber(dayNumberSince(inception, inception))).toBe(1);
+        expect(displayDayNumber(dayNumberSince(inception, inception + 12 * HOUR_SECONDS))).toBe(1);
+        expect(displayDayNumber(dayNumberSince(inception, inception + DAY_SECONDS))).toBe(2);
     });
 });
 

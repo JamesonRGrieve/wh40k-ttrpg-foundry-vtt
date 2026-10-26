@@ -41,6 +41,16 @@ export function dayNumberSince(inceptionStamp: number, now: number): number {
     return Math.floor(daysSince(inceptionStamp, now));
 }
 
+/**
+ * The day a player reads for a 0-based day index: the first campaign day is
+ * Day 1 (#701). Stored world time and the stored campaign day keep their 0-based
+ * index; this converts only at display, for the world-time widget and the Event
+ * Tracker alike.
+ */
+export function displayDayNumber(dayIndex: number): number {
+    return dayIndex + 1;
+}
+
 /** The unit a GM advance step is expressed in (#487 advance controls). */
 export type TimeAdvanceUnit = 'hour' | 'day';
 

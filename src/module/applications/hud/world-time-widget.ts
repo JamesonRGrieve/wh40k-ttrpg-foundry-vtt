@@ -4,10 +4,11 @@
  * Surfaces the shared world clock (#455, `game.time.worldTime`) to the whole
  * table as a small, always-visible floating panel:
  *   - **Day N since inception** — the integer day counter measured from the
- *     campaign's inception stamp (world setting `world-time-inception`). Day 0 is
- *     the campaign/mission inception and is FIXED — there is deliberately no
- *     "set Day 0 here" control, since re-anchoring silently rewrites every
- *     historical day number.
+ *     campaign's inception stamp (world setting `world-time-inception`). The
+ *     inception day (day index 0) reads Day 1 (#701; converted at display, world
+ *     time is not shifted) and is FIXED — there is deliberately no "set the first
+ *     day here" control, since re-anchoring silently rewrites every historical
+ *     day number.
  *   - **Imperial date** — the canonical `check.fraction.year.millennium` stamp
  *     (`rules/imperial-date.ts`), computed as the campaign's inception date
  *     advanced by elapsed world time. Explicitly NOT a Gregorian timestamp from
@@ -39,7 +40,7 @@ import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
 import { type CelestialBody, localDayNumber, localHourOfDay, localSeason, localTimeOfDay, TERRAN_ROTATION_HOURS } from '../../rules/planetary-calendar.ts';
 import { DAY_PHASE_LABEL_KEYS, dayPhase, sceneBodyKey, type WeatherKind, weatherLabelKey } from '../../rules/scene-lighting.ts';
-import { advanceSeconds, dayNumberSince, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
+import { advanceSeconds, dayNumberSince, displayDayNumber, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
 import { pinToHudLayer } from './hud-layer.ts';
@@ -244,13 +245,14 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         const localTime = localTimeOfDay(elapsed, body);
 
         context['dayNumber'] = day;
-        context['dayCounterLabel'] = t('WH40K.WorldTime.DayCounter', { day });
+        context['dayCounterLabel'] = t('WH40K.WorldTime.DayCounter', { day: displayDayNumber(day) });
         context['fullDate'] = currentImperialDateLabel(clock);
         context['timeOfDay'] = currentClockLabel(clock);
         context['elapsed'] = formatRemaining(elapsed);
         context['isGM'] = game.user.isGM;
         context['localBodyName'] = body.name;
-        context['localDay'] = localDay;
+        // The first day reads Day 1 (#701); world time is not shifted.
+        context['localDay'] = displayDayNumber(localDay);
         context['localTimeOfDay'] = formatClock(localTime.hour, localTime.minute);
         context['localRotationHours'] = body.rotationHours;
         const phase = dayPhase(localHourOfDay(elapsed, body), body.rotationHours);

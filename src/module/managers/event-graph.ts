@@ -11,6 +11,7 @@
  */
 
 import { DEAD_STATUS_ID } from '../constants.ts';
+import { displayDayNumber } from '../rules/world-time.ts';
 
 /** A character-attribute predicate leaf (`{char: {skill: 'scrutiny'}}`), authored in the vault. */
 export interface CharacterPredicate {
@@ -366,9 +367,12 @@ export function eventLocationName(event: EventDef): string {
     return event.location === undefined || event.location === null ? '' : stripWikiLink(event.location);
 }
 
-/** The split of a campaign day into its label parts: `M<n>` days are the offset range. */
+/**
+ * The split of a campaign day into its label parts: `M<n>` days are the offset range.
+ * An ordinary day's number is the one players read, so stored day 0 is Day 1 (#701).
+ */
 export function campaignDayParts(day: number): { midnight: boolean; number: number } {
-    return day >= MIDNIGHT_DAY_OFFSET ? { midnight: true, number: day - MIDNIGHT_DAY_OFFSET } : { midnight: false, number: day };
+    return day >= MIDNIGHT_DAY_OFFSET ? { midnight: true, number: day - MIDNIGHT_DAY_OFFSET } : { midnight: false, number: displayDayNumber(day) };
 }
 
 /** Step the campaign day by `delta`, never below day 0. */
