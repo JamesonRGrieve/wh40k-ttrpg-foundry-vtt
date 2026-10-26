@@ -128,6 +128,8 @@ interface OriginPathSystemData {
     characterGeneration?: CharacterGenerationSlice;
     // Compendium index-entry shape (also read via `entry.system as OriginPathSystemData`)
     cost?: { dh2?: { homebrew?: { requisition?: number; throneGelt?: number } } };
+    /** An ammunition entry's standard-ammunition flag (#699). */
+    standard?: boolean;
 }
 
 /**
@@ -2181,6 +2183,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         'system.weaponTypes',
                         'system.cost.dh2.homebrew.requisition',
                         'system.cost.dh2.homebrew.throneGelt',
+                        'system.standard',
                         'type',
                     ],
                 });
@@ -2197,7 +2200,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     // Ratings outside the ordered scale (`uncommon`) cannot be shown to meet the Scarce floor.
                     const rating = normaliseAvailability(availability);
                     if (rating === null || AVAILABILITY_KEYS.indexOf(rating) > scarceRank) continue;
-                    if (entry.name?.startsWith('! Default') === true) continue;
+                    // A weapon's standard ammunition loads by default; it is not equipment to pick (#699).
+                    if (entrySys?.standard === true) continue;
                     const homebrewCost = entrySys?.cost?.dh2?.homebrew;
                     const equipEntry: EquipmentEntry = {
                         uuid: `Compendium.${pack.metadata.id}.${entry._id}`,

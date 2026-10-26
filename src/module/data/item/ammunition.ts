@@ -21,6 +21,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     declare addedQualities: Set<string>;
     declare removedQualities: Set<string>;
     declare clipModifier: number;
+    declare standard: boolean;
     declare fireRateOverride: number | null;
     declare hitEffect: string;
     declare costMultiplier: number | null;
@@ -65,6 +66,11 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
             // Clip size modifier
             clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+
+            // The standard ammunition a weapon type loads by default (Bullets, Shot, Fuel …),
+            // rather than a special round to buy (#699). It replaces the editorial name
+            // prefix that once marked these entries.
+            standard: new fields.BooleanField({ required: true, initial: false }),
 
             // Rate-of-fire OVERRIDE this ammo forces while loaded (e.g. Hot-shot →
             // single shot), or null to keep the weapon's own rate. Distinct from the
