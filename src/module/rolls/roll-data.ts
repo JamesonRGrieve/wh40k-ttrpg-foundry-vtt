@@ -206,7 +206,7 @@ export function buildModifierComponents(
 }
 
 /** How the attack card's subtitle lists its qualities and mods: "Balanced, Tearing" (#698). */
-export const EFFECT_LIST_SEPARATOR = ', ';
+const EFFECT_LIST_SEPARATOR = ', ';
 
 /**
  * Base class for all roll-related data
