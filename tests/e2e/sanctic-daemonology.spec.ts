@@ -18,6 +18,9 @@ import {
     waitForMessage,
 } from './occult-sheet-flow';
 
+/** A card block whose whole text is a cost line, as the packs' old descriptions were (content#30). */
+const BARE_XP_LINE = />\s*\d+\s*xp\s*</i;
+
 /** Sacrifice — a Malefic Daemonology power (DH2 Enemies Beyond), not an attack. */
 const SACRIFICE_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.fs2LEOnlo15rJYiN';
 /** Psychic Communion — a Sanctic Daemonology power, not an attack. */
@@ -264,6 +267,8 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
         const [, corruption, pr] = charged ?? [];
         expect(corruption).toBe(pr);
         await expect.poll(async () => readActorSystem(page, actorId, 'corruption')).toBe(Number(corruption));
+        // content#30: the card shows the power's printed text, not a leftover "100xp" cost line.
+        expect(card.content).not.toMatch(BARE_XP_LINE);
         await snapMessage(page, 'malefic-cast-card-corruption', card.id);
         // In the 300px chat log the controls wrap instead of clipping the last button.
         const controls = page.locator(`#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-hook="psychic-card-controls"]`);
@@ -307,6 +312,7 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
         // A Sanctic power costs no Corruption.
         expect(cast.content).not.toContain('Malefic Daemonology');
         expect(await readActorSystem(page, actorId, 'corruption')).toBe(0);
+        expect(cast.content).not.toMatch(BARE_XP_LINE);
         await snapMessage(page, 'sanctic-cast-card-negated', cast.id);
         recordCoverage('chat.render', 'sanctic-purity-negated-chat');
     });
