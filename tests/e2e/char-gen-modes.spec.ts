@@ -226,8 +226,8 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
         createError: result.createError,
         divinationApplied: 'divinationApplied' in result && result.divinationApplied === true,
         divinationNote: 'divinationNote' in result && typeof result.divinationNote === 'string' ? result.divinationNote : 'not run',
-        builderId: 'builderId' in result ? (result.builderId ?? null) : null,
-        actorId: 'actorId' in result ? (result.actorId ?? null) : null,
+        builderId: 'builderId' in result ? result.builderId ?? null : null,
+        actorId: 'actorId' in result ? result.actorId ?? null : null,
     };
 }
 

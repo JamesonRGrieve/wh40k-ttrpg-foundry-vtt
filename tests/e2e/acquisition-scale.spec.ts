@@ -178,14 +178,12 @@ test.describe.serial('AcquisitionDialog Scale upgrade (Tier B)', () => {
 
         // Verify the screenshot file is non-empty so we know snap()
         // produced a real PNG rather than silently swallowing an error.
-        if (snapPath !== null) {
-            // Node fs is available in the spec runner (not the browser
-            // page). Use dynamic import to avoid a top-level Node import
-            // in a Playwright spec.
-            const { statSync } = await import('node:fs');
-            const sz = statSync(snapPath).size;
-            expect(sz, `screenshot ${snapPath} should be non-empty`).toBeGreaterThan(0);
-        }
+        // Node fs is available in the spec runner (not the browser
+        // page). Use dynamic import to avoid a top-level Node import
+        // in a Playwright spec.
+        const { statSync } = await import('node:fs');
+        const sz = statSync(snapPath).size;
+        expect(sz, `screenshot ${snapPath} should be non-empty`).toBeGreaterThan(0);
 
         recordCoverage('dialog.render', 'AcquisitionDialog-Scale');
     });
