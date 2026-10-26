@@ -20,6 +20,7 @@ interface ItemSystem {
     type?: string;
     reload?: string;
     discipline?: string;
+    disciplineTree?: string;
 }
 interface ItemDoc {
     id?: string;
@@ -57,6 +58,7 @@ interface ProbeResult {
     weaponReload: string | undefined;
     armourBasicType: string | undefined;
     psychicDiscipline: string | undefined;
+    psychicDisciplineTree: string | undefined;
     backpackRows: number;
 }
 
@@ -106,7 +108,7 @@ async function probe(page: Page): Promise<ProbeResult> {
             { name: 'Ragged Robes', type: 'armour', system: { type: 'basic' } },
             // typographic reload (en-dash) — production token-drop crash, must coerce
             { name: 'EnDash Pistol', type: 'weapon', system: { class: 'ranged', type: 'las', reload: '–' } },
-            // title-case psychic discipline — production token-drop crash, must coerce
+            // title-case psychic discipline — production token-drop crash, must load and keep its printed name
             { name: 'TitleCase Power', type: 'psychicPower', system: { discipline: 'Telepathy' } },
             // control: a plain valid item
             { name: 'Plain Sack', type: 'gear', system: {} },
@@ -141,6 +143,7 @@ async function probe(page: Page): Promise<ProbeResult> {
             weaponReload: byName('EnDash Pistol')?.system?.reload,
             armourBasicType: byName('Ragged Robes')?.system?.type,
             psychicDiscipline: byName('TitleCase Power')?.system?.discipline,
+            psychicDisciplineTree: byName('TitleCase Power')?.system?.disciplineTree,
             backpackRows,
         };
         await actor.delete?.();
@@ -169,8 +172,11 @@ test('corrupt-enum / multi-system-blob items load and render (not dropped)', asy
     expect(r.armourBasicType, 'basic coerced to flak').toBe('flak');
     // Typographic reload (en-dash) normalised to the '-' choice, not dropped.
     expect(r.weaponReload, 'en-dash reload coerced to "-"').toBe('-');
-    // Title-case psychic discipline lower-cased to its valid choice, not dropped.
-    expect(r.psychicDiscipline, 'Telepathy coerced to telepathy').toBe('telepathy');
+    // A title-case psychic discipline is kept as printed, not dropped (content#35,
+    // 5567cd505): `discipline` stores the book's name, and `disciplineTree` carries the
+    // lowercase tree the rules key on.
+    expect(r.psychicDiscipline, 'Telepathy kept as printed').toBe('Telepathy');
+    expect(r.psychicDisciplineTree, 'Telepathy keys the telepathy tree').toBe('telepathy');
 
     // Equipment tab renders rows for the loaded items (3 weapons + armour + gear).
     expect(r.backpackRows, 'inventory renders rows, not empty').toBeGreaterThanOrEqual(5);
