@@ -250,7 +250,8 @@ export default class CraftActorSheet extends BaseActorSheet {
             container: SIDEBAR_CONTAINER,
         },
         tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
+            // The one sidebar tab strip every actor sheet shares (#701).
+            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
             container: SIDEBAR_CONTAINER,
         },
         overview: {

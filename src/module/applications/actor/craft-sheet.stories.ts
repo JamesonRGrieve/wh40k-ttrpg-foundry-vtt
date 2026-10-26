@@ -19,7 +19,7 @@ import headerSrc from '../../../templates/actor/craft/header.hbs?raw';
 import combatTabSrc from '../../../templates/actor/craft/tab-combat.hbs?raw';
 import componentsTabSrc from '../../../templates/actor/craft/tab-components.hbs?raw';
 import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw';
-import tabsSrc from '../../../templates/actor/craft/tabs.hbs?raw';
+import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 import { emptyAggregatedVehicleTraitEffects } from '../../data/shared/vehicle-trait-effects-template.ts';
 import { nameFitClass } from '../../handlebars/name-fit.ts';
 import { buildVehicleTraitPanel } from './vehicle-trait-panel-context.ts';

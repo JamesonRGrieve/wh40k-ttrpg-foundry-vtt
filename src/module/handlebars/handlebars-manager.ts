@@ -165,7 +165,6 @@ export class HandlebarManager {
 
             // Craft sheet templates (terracraft / aircraft / watercraft)
             'systems/wh40k-rpg/templates/actor/craft/header.hbs',
-            'systems/wh40k-rpg/templates/actor/craft/tabs.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-overview.hbs',
             'systems/wh40k-rpg/templates/actor/craft/tab-combat.hbs',
             'systems/wh40k-rpg/templates/actor/craft/weapon-row.hbs',

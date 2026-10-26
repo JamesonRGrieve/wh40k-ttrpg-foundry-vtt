@@ -6,6 +6,12 @@
  * strip is pinned beneath it. When the whole container scrolled, a tall header
  * (origin bubbles + bio fields — tallest on RT) pushed the tab nav below the
  * fold with no visible cue on six of seven lines.
+ *
+ * The header's bottom edge carries a scroll shadow while more of it lies below
+ * (#701): a fixed shadow layer, covered by a `local` layer that scrolls with the
+ * content and sits over the shadow only once the header is scrolled to its end.
+ * Without it the header's lower fields (Hull Integrity, a DW Rank, a horde's
+ * Nature and Faction) looked cut off by the tab strip, not scrollable.
  */
 export const SIDEBAR_CONTAINER = {
     id: 'sidebar',
@@ -25,6 +31,7 @@ export const SIDEBAR_CONTAINER = {
         '[&>[data-application-part=header]]:tw-min-h-0',
         '[&>[data-application-part=header]]:tw-overflow-y-auto',
         '[&>[data-application-part=header]]:tw-overflow-x-hidden',
+        '[&>[data-application-part=header]]:[background:linear-gradient(var(--color-bg-secondary,#252525),var(--color-bg-secondary,#252525))_center_bottom/100%_16px_no-repeat_local,linear-gradient(transparent,rgba(0,0,0,0.6))_center_bottom/100%_16px_no-repeat_scroll]',
         '[&>[data-application-part=tabs]]:tw-shrink-0',
     ],
 };

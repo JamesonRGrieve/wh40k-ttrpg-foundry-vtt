@@ -1,7 +1,13 @@
 {{!-- Sidebar tab navigation — rendered inside the wh40k-sidebar container.
      Single vertical column of full-width buttons (#320): the nav stacks in one
      column on every sheet width rather than reflowing into two columns when wide.
-     Styling applies to PC and NPC sheets.
+     Every actor sheet with a sidebar uses this one strip: PC, NPC, craft, voidcraft.
+
+     `!tw-leading-tight` (#701): Foundry's nav line-height (2.5×) made each 12px label
+     a 44px button, so seven tabs took 335px and left the header part, which scrolls,
+     a short window with its lower fields cut at the strip's edge. Important, because
+     the legacy nav rule (0,4,1) sets the line-height. --}}
+{{!-- Background note:
 
      `tw-bg-transparent` is deliberately NOT important, unlike its neighbours. It
      has one job — beat stories/css/foundry-chrome.css's `.tabs` (0,1,0) in the
@@ -16,4 +22,4 @@
 {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
     tabs=tabs
     navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-w-full !tw-shrink-0 !tw-grow-0 tw-bg-transparent"
-    itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-justify-center tw-text-center tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-rounded-md tw-px-2 tw-py-1.5 tw-text-xs tw-border-b-2 tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-void-l20 im:tw-border-b-failure tw-border-b-transparent"}}
+    itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-justify-center tw-text-center tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-rounded-md tw-px-2 tw-py-1.5 tw-text-xs !tw-leading-tight tw-border-b-2 tw-border-b-gold bc:tw-border-b-crimson-light dh1:tw-border-b-gold-raw-l5 dh2:tw-border-b-gold-raw dw:tw-border-b-accent-combat ow:tw-border-b-brass-l20 rt:tw-border-b-void-l20 im:tw-border-b-failure tw-border-b-transparent"}}

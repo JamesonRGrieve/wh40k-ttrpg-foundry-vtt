@@ -35,9 +35,15 @@
             <span id="{{actor.id}}-hull-type" data-wh40k-hook="voidcraft-hull-type-label" class="tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)]">{{#if hullTypeLabel}}{{hullTypeLabel}}{{else}}{{localize "WH40K.Voidcraft.HullTypeUnset"}}{{/if}}</span>
             {{/if}}
         </div>
+        {{!-- Hull Class follows Hull Type (#701): an input with a placeholder while editing, else its value or
+             "Not set". It was an always-on borderless input, so an empty class read as a label with nothing after it. --}}
         <label class="tw-flex tw-flex-col tw-gap-0.5">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Voidcraft.HullClass"}}</span>
-            <input class="tw-w-full tw-border-0 tw-border-b tw-border-solid tw-border-b-[var(--wh40k-border-color-light)] tw-bg-transparent tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)] focus:tw-border-b-gold focus:tw-outline-none" name="system.hullClass" type="text" value="{{source.hullClass}}" />
+            {{#if inEditMode}}
+            <input class="tw-w-full tw-border-0 tw-border-b tw-border-solid tw-border-b-[var(--wh40k-border-color-light)] tw-bg-transparent tw-px-1 tw-py-0.5 tw-text-[0.85rem] tw-text-[color:var(--color-text-primary)] focus:tw-border-b-gold focus:tw-outline-none" name="system.hullClass" type="text" value="{{source.hullClass}}" placeholder="{{localize "WH40K.Voidcraft.HullClassPlaceholder"}}" />
+            {{else}}
+            <span data-wh40k-hook="voidcraft-hull-class-label" class="tw-px-1 tw-py-0.5 tw-text-[0.85rem] {{#if source.hullClass}}tw-text-[color:var(--color-text-primary)]{{else}}tw-italic tw-text-[color:var(--wh40k-text-muted)]{{/if}}">{{#if source.hullClass}}{{source.hullClass}}{{else}}{{localize "WH40K.Voidcraft.HullClassUnset"}}{{/if}}</span>
+            {{/if}}
         </label>
     </div>
 

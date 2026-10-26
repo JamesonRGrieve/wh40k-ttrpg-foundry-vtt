@@ -60,9 +60,6 @@ module.exports = {
             // (~36px of content shift across all 14), so the never-rendered
             // declarations are deleted rather than left to take over.
         },
-        ".wh40k-npc-sidebar-header": {
-            "background": "var(--color-bg-secondary, #252525)",
-        },
         // Nav-item dressing that survived the css→Tailwind port. The properties
         // an NPC-specific value was authored for but NEVER rendered are gone:
         // tailwind/legacy-components.js's `nav.wh40k-navigation .wh40k-nav-item`
