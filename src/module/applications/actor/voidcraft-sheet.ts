@@ -35,6 +35,7 @@ import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assau
 import { attachShipAssaults, findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
 import { createShipWeaponFireFlow, type ShipWeaponFireCompanion } from '../ship-assault/ship-weapon-fire-flow.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+import { isShipRole, officerCandidates, shipOfficerRows } from './ship-officers.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 
 /**
@@ -164,6 +165,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             removeShipStatus: VoidcraftActorSheet.#removeShipStatus,
             openShipAssault: VoidcraftActorSheet.#openShipAssault,
             rollShipAction: VoidcraftActorSheet.#rollShipAction,
+            assignShipOfficer: VoidcraftActorSheet.#assignShipOfficer,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         // `player` opts into the shared sidebar + body grid (dark window body) the
@@ -276,7 +278,11 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         context['shipComponents'] = items.filter((item: WH40KItem) => item.type === 'shipComponent');
         context['shipWeapons'] = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
         context['shipUpgrades'] = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
-        context['shipRoles'] = items.filter((item: WH40KItem) => item.type === 'shipRole');
+        // Ship Officers (#701): each role the ship holds, with the actor serving in it.
+        context['shipRoles'] = shipOfficerRows(items.filter(isShipRole), (uuid) => {
+            const officer = fromUuidSync(uuid);
+            return officer !== null && typeof officer === 'object' && 'name' in officer && typeof officer.name === 'string' ? officer.name : null;
+        });
 
         // Power and space are computed authoritatively by the DataModel's
         // prepareEmbeddedData (the same component/weapon/upgrade accumulation,
@@ -918,6 +924,50 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         if (entry === undefined) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         openShipAssaultDialog(this.actor as unknown as WH40KVoidcraft, entry);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Assign a ship role to a character, or clear it (#701): a dialog lists the
+     * world's player characters, and the choice is stored on the owned role.
+     */
+    static async #assignShipOfficer(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
+        const role = this.actor.items.get(target.dataset['itemId'] ?? '');
+        if (role === undefined || !isShipRole(role)) return;
+        const select = document.createElement('select');
+        select.name = 'officer';
+        const none = document.createElement('option');
+        none.value = '';
+        none.textContent = game.i18n.localize('WH40K.Voidcraft.Crew.Unassigned');
+        select.append(none);
+        for (const candidate of officerCandidates(game.actors)) {
+            const option = document.createElement('option');
+            option.value = candidate.uuid;
+            option.textContent = candidate.name;
+            if (candidate.uuid === role.system.state.officer) option.setAttribute('selected', '');
+            select.append(option);
+        }
+        const field = document.createElement('div');
+        field.className = 'form-group';
+        const label = document.createElement('label');
+        label.textContent = game.i18n.localize('WH40K.Voidcraft.Crew.Officer');
+        field.append(label, select);
+        // The dialog takes its content as markup; built through the DOM, so actor names arrive escaped.
+        const picked = await foundry.applications.api.DialogV2.prompt({
+            window: { title: game.i18n.format('WH40K.Voidcraft.Crew.AssignTitle', { role: role.name }) },
+            content: field.outerHTML,
+            ok: {
+                label: 'WH40K.Voidcraft.Crew.Assign',
+                callback: (_evt: Event, button: HTMLButtonElement): string | null => {
+                    const chosen = button.form?.elements.namedItem('officer');
+                    return chosen instanceof HTMLSelectElement ? chosen.value : null;
+                },
+            },
+            rejectClose: false,
+        });
+        if (typeof picked !== 'string') return;
+        await role.update({ 'system.state.officer': picked });
     }
 
     /* -------------------------------------------- */

@@ -22,6 +22,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     // eslint-disable-next-line no-restricted-syntax -- boundary: skillBonuses is a dynamic SchemaField with no defined keys; Record<string,unknown> is the narrowest safe type
     declare skillBonuses: Record<string, unknown>;
     declare notes: string;
+    /** Per-ship state of an owned role: the UUID of the actor serving in it, '' when unassigned (#701). */
+    declare state: { officer: string };
 
     /** @inheritdoc */
     static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -92,6 +94,11 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
+
+            // Per-ship state (never variantized): who holds this role aboard the ship that owns it.
+            state: new fields.SchemaField({
+                officer: new fields.StringField({ required: true, blank: true, initial: '' }),
+            }),
         };
     }
 

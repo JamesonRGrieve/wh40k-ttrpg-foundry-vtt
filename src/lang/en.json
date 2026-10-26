@@ -4905,6 +4905,11 @@
                 "Role": "Role",
                 "Officer": "Officer",
                 "Bonus": "Bonus",
+                "Unassigned": "Unassigned",
+                "Assign": "Assign",
+                "AssignTitle": "Assign an officer: {role}",
+                "AssignHint": "Assign this role to a character",
+                "NoRoles": "This ship has no officer roles. Drag a ship role from the compendium onto the ship to add one.",
                 "NotifyReplenished": "Crew morale replenished between combats."
             },
             "Ramming": {

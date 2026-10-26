@@ -17,27 +17,37 @@
             <input type="number" class="tw-text-center tw-font-bold tw-text-lg tw-bg-[var(--wh40k-input-bg)] tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-border-[var(--wh40k-gold)] focus:tw-shadow-[0_0_8px_rgba(192,128,32,0.2)]" name="system.crew.morale.max" value="{{source.crew.morale.max}}" />
         </div>
     </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
-<div class="wh40k-panel tw-col-span-6 tw-row-span-1">
-    <h1 class="wh40k-panel-header">
-        <span class="wh40k-panel-title tw-text-gold {{themeClassFor 'accent'}}">{{localize "WH40K.Voidcraft.Crew.Officers"}}</span>
-    </h1>
-    <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Voidcraft.Crew.OfficersDesc"}}</p>
+{{!-- Ship Officers (#701): one row per ship role the ship holds, naming the character serving in it, with
+     an Assign control. It rendered only its header: it bound a `system.officer` field roles never had,
+     and it had no empty state. --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label=(localize "WH40K.Voidcraft.Crew.Officers") rootClass="tw-col-span-6 tw-row-span-1"}}
+    <div data-wh40k-hook="ship-officers-panel">
+    <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2 tw-m-0">{{localize "WH40K.Voidcraft.Crew.OfficersDesc"}}</p>
+    {{#if shipRoles.length}}
     {{#> systems/wh40k-rpg/templates/actor/partial/item-table.hbs
         headers=(array
             (object labelKey="WH40K.Voidcraft.Crew.Role")
             (object labelKey="WH40K.Voidcraft.Crew.Officer")
-            (object weight=2 labelKey="WH40K.Voidcraft.Crew.Bonus"))}}
+            (object weight=2 labelKey="WH40K.Voidcraft.Crew.Bonus")
+            (object label="" fit=true))}}
         {{#each shipRoles as |role|}}
             {{#> systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs
                 item=role
                 showImg=true
                 editAction=false
                 cells=(array
-                    (object value=role.system.officer)
-                    (object value=role.system.effect))}}
+                    (object value=(defaultVal role.officerName (localize "WH40K.Voidcraft.Crew.Unassigned")) cellClass=(iff role.officerName "" "tw-italic tw-opacity-70"))
+                    (object value=role.effect isHtml=true))
+                actions=(array
+                    (object action="assignShipOfficer" iconKey="fa:user-plus" titleKey="WH40K.Voidcraft.Crew.AssignHint")
+                    (object action="itemDelete" iconKey="fa:trash" titleKey="WH40K.Common.Delete"))}}
             {{/systems/wh40k-rpg/templates/actor/partial/item-table-row.hbs}}
         {{/each}}
     {{/systems/wh40k-rpg/templates/actor/partial/item-table.hbs}}
+    {{else}}
+    {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-user-tie" textKey="WH40K.Voidcraft.Crew.NoRoles" emptyClass="tw-text-sm"}}
+    {{/if}}
+    </div>
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
