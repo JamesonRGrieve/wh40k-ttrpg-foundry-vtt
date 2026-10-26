@@ -18,7 +18,8 @@ import { test } from './lib/test';
  * with a marker field, instantiates it with valid sample data, and asserts
  * the contributed fields round-trip + the derived getters fire correctly
  * without throwing. Pure helper modules (`body-locations.ts`,
- * `origin-steps.ts`, `stat-fields.ts`) and the `_module.ts` barrel are
+ * `stat-fields.ts`, and `rules/origin-steps.ts`, which left data/shared in #690)
+ * and the `_module.ts` barrel are
  * exercised directly with synthetic inputs covering truthy / falsy /
  * boundary branches.
  *
@@ -172,10 +173,11 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             out.push({ name, ok, detail });
         };
 
-        const base = `${'/systems/wh40k-rpg'}/module/data/shared`;
-        const loadModule = async (name: string): Promise<LoadedModule> => {
+        const moduleRoot = `${'/systems/wh40k-rpg'}/module`;
+        /** Import `<dir>/<name>.js` under the served module root; `dir` defaults to data/shared. */
+        const loadModule = async (name: string, dir = 'data/shared'): Promise<LoadedModule> => {
             try {
-                return (await import(`${base}/${name}.js`)) as LoadedModule;
+                return (await import(`${moduleRoot}/${dir}/${name}.js`)) as LoadedModule;
             } catch (err) {
                 return { __importError: err instanceof Error ? err.message : String(err) };
             }
@@ -267,8 +269,8 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             });
         }
 
-        // ---------- origin-steps.ts (pure helpers) ----------
-        const originSteps = await loadModule('origin-steps');
+        // ---------- origin-steps.ts (pure helpers; moved to rules/ in #690) ----------
+        const originSteps = await loadModule('origin-steps', 'rules');
         if (originSteps.__importError != null) {
             record('origin-steps-labels', false, originSteps.__importError);
         } else {
