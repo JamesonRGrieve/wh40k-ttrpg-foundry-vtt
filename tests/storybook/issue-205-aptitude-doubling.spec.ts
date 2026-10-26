@@ -31,7 +31,7 @@ test.describe('Issue #205 — duplicate aptitude doubling', () => {
         // The warning banner must be visible above the aptitudes preview row.
         // Take the screenshot first so visual review has the artefact even
         // if a later assertion drops.
-        await page.screenshot({ path: '.e2e-screenshots/issue-205-aptitude-double.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-205-aptitude-double.png', fullPage: true });
         const banner = page.getByTestId('aptitude-collision-banner');
         await expect(banner).toBeVisible();
 

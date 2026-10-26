@@ -16,14 +16,14 @@
  *
  * This spec opens the two stories that snapshot the post-fix DOM, asserts the
  * single-button / zero-button invariants, and captures a combined screenshot
- * to `.e2e-screenshots/issue-204-throne-gelt.png` so a future regression that
+ * to `.storybook-screenshots/issue-204-throne-gelt.png` so a future regression that
  * re-introduces the Background-step button is visible in the visual diff.
  */
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
+const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '.storybook-screenshots');
 const SCREENSHOT_PATH = resolve(SCREENSHOT_DIR, 'issue-204-throne-gelt.png');
 
 const THRONES_ROLL_BUTTON_SELECTOR = 'button[data-action="rollStat"][data-stat-type="thrones"]';

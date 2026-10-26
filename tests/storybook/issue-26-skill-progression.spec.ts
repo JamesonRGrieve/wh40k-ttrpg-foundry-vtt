@@ -8,7 +8,7 @@
  *
  * The test points at the Storybook-built skill-tooltip story and asserts
  * the rendered DOM contains all five rungs with their correct modifiers,
- * then captures a screenshot to .e2e-screenshots/ for visual review.
+ * then captures a screenshot to .storybook-screenshots/ for visual review.
  */
 
 import { expect, test } from '@playwright/test';
@@ -42,7 +42,7 @@ test.describe('Issue #26 — Skill training progression', () => {
         await expect(track).toContainText('+30');
 
         await page.screenshot({
-            path: '.e2e-screenshots/issue-26-skill-progression.png',
+            path: '.storybook-screenshots/issue-26-skill-progression.png',
             fullPage: true,
         });
     });

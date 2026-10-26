@@ -8,7 +8,7 @@ import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
+const SHOT_DIR = resolve(__dirname, '..', '..', '.storybook-screenshots');
 const SHOT = resolve(SHOT_DIR, 'issue-238-stats-headings.png');
 
 test('issue #238: specialist + talent panels share the panel.hbs header', async ({ page }) => {

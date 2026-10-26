@@ -16,7 +16,7 @@
  *
  * This spec renders the post-roll chat card in Storybook for the
  * Holed entry (story id `dev-chat-ship-critical-hit--holed`), dumps a
- * full-page PNG to `.e2e-screenshots/issue-187-critical-hit.png` for
+ * full-page PNG to `.storybook-screenshots/issue-187-critical-hit.png` for
  * visual inspection, and asserts the rendered body is attached. The
  * assertion is lenient on structured selectors — the goal is a
  * regression guard against the entire post-roll surface vanishing or
@@ -26,13 +26,13 @@ import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SCREENSHOT_PATH = resolve(__dirname, '..', '..', '.e2e-screenshots', 'issue-187-critical-hit.png');
+const SCREENSHOT_PATH = resolve(__dirname, '..', '..', '.storybook-screenshots', 'issue-187-critical-hit.png');
 
 test.beforeAll(() => {
     // Ensure the screenshots directory exists before the page tries to
     // dump into it; mkdirSync with recursive is a no-op if it already
     // exists.
-    mkdirSync(resolve(__dirname, '..', '..', '.e2e-screenshots'), { recursive: true });
+    mkdirSync(resolve(__dirname, '..', '..', '.storybook-screenshots'), { recursive: true });
 });
 
 test('issue #187: ship critical hit chat card renders the Holed result', async ({ page }) => {

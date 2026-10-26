@@ -15,20 +15,20 @@
  * state in Storybook — i.e. the same DOM the player sees once the
  * dice button has been clicked and `#rollDivination` has populated
  * `_divination`. It dumps a full-page PNG to
- * `.e2e-screenshots/issue-199-divination.png` for visual inspection
+ * `.storybook-screenshots/issue-199-divination.png` for visual inspection
  * and asserts the rendered result text is non-empty.
  */
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SCREENSHOT_PATH = resolve(__dirname, '..', '..', '.e2e-screenshots', 'issue-199-divination.png');
+const SCREENSHOT_PATH = resolve(__dirname, '..', '..', '.storybook-screenshots', 'issue-199-divination.png');
 
 test.beforeAll(() => {
     // Ensure the screenshots directory exists before the page tries to
     // dump into it; mkdirSync with recursive is a no-op if it already
     // exists.
-    mkdirSync(resolve(__dirname, '..', '..', '.e2e-screenshots'), { recursive: true });
+    mkdirSync(resolve(__dirname, '..', '..', '.storybook-screenshots'), { recursive: true });
 });
 
 test('issue #199: divination section renders a non-empty roll result', async ({ page }) => {

@@ -10,7 +10,7 @@
  *
  * The test points at the Storybook-built skill-tooltip story and asserts
  * the new labels are present (and the old jargon-y label is gone), then
- * captures a screenshot to .e2e-screenshots/ for visual review.
+ * captures a screenshot to .storybook-screenshots/ for visual review.
  */
 
 import { expect, test } from '@playwright/test';
@@ -43,7 +43,7 @@ test.describe('Issue #27 — Self-explanatory skill tooltip labels', () => {
         expect(breakdownText).not.toMatch(/Per\s+Characteristic Total:/);
 
         await page.screenshot({
-            path: '.e2e-screenshots/issue-27-tooltip-labels.png',
+            path: '.storybook-screenshots/issue-27-tooltip-labels.png',
             fullPage: true,
         });
     });

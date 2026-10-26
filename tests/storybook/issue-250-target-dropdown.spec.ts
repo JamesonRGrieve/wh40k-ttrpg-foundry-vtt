@@ -8,7 +8,7 @@ import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
+const SHOT_DIR = resolve(__dirname, '..', '..', '.storybook-screenshots');
 const SHOT = resolve(SHOT_DIR, 'issue-250-target-dropdown.png');
 
 test('issue #250: weapon panel renders a combatant target dropdown', async ({ page }) => {

@@ -10,7 +10,7 @@
  */
 import { expect, test } from '@playwright/test';
 
-const SCREENSHOT_DIR = '.e2e-screenshots';
+const SCREENSHOT_DIR = '.storybook-screenshots';
 
 test.describe('Issue #206 — Origin Path Builder full step sequence', () => {
     test('surfaces the Characteristic Roll step after homeworld + background + role + elite advance', async ({ page }) => {

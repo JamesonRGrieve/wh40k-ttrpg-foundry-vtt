@@ -1,14 +1,14 @@
 /**
  * Issue #234 — the compact movement panel (movement-panel-compact.hbs) is now
  * wired into the combat-station-panel in place of the old inline mobility block.
- * This renders the panel story and dumps a PNG to .e2e-screenshots for visual
+ * This renders the panel story and dumps a PNG to .storybook-screenshots for visual
  * inspection, and asserts the four movement rows render with their values.
  */
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-const SHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');
+const SHOT_DIR = resolve(__dirname, '..', '..', '.storybook-screenshots');
 const SHOT = resolve(SHOT_DIR, 'issue-234-movement-compact.png');
 
 test('issue #234/#235: compact movement cluster renders Half/Full/Charge/Run', async ({ page }) => {

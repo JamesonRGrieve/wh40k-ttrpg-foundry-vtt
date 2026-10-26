@@ -33,7 +33,7 @@ test.describe('Issue #198 — origin path preview against normalized origin', ()
         // produce the issue #198 error string anywhere in the console.
         await page.locator('[data-action="selectOriginCard"]').first().click();
 
-        await page.screenshot({ path: '.e2e-screenshots/issue-198-origin-preview.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-198-origin-preview.png', fullPage: true });
 
         const toObjectErrors = consoleErrors.filter((m) => m.includes('toObject is not a function'));
         expect(toObjectErrors, `unexpected toObject errors: ${toObjectErrors.join(' | ')}`).toHaveLength(0);

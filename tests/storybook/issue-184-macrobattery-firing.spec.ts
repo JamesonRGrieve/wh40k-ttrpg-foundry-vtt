@@ -24,7 +24,7 @@ test.describe('Issue #184 — RT macrobattery firing flow', () => {
         await page.waitForLoadState('networkidle');
 
         // Snapshot first so visual review always has the artefact.
-        await page.screenshot({ path: '.e2e-screenshots/issue-184-macrobattery.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-184-macrobattery.png', fullPage: true });
 
         await assertStoryRendered(page);
         // The deterministic story payload puts the weapon name in the card title.

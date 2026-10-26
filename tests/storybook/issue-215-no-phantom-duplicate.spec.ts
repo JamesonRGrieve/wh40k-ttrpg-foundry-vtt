@@ -30,7 +30,7 @@ test.describe('Issue #215 — no phantom duplicate-aptitude banner', () => {
 
         // Screenshot first so visual review has the artefact even if a later
         // assertion drops.
-        await page.screenshot({ path: '.e2e-screenshots/issue-215-no-phantom-duplicate.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-215-no-phantom-duplicate.png', fullPage: true });
 
         // The collision banner must NOT be present.
         const banner = page.getByTestId('aptitude-collision-banner');

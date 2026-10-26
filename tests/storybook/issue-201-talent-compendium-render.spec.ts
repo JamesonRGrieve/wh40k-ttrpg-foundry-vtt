@@ -16,9 +16,9 @@ import { expect, test } from '@playwright/test';
  *     present, so a future regression that re-introduces the typo to any one
  *     of the four `(eq activeTab "<tab>")` checks would fail this test.
  *
- * The full-page screenshot at `.e2e-screenshots/issue-201-talent-render.png`
+ * The full-page screenshot at `.storybook-screenshots/issue-201-talent-render.png`
  * is a visual confirmation captured alongside the assertions; the directory
- * is gitignored by `.e2e-screenshots/` (see other tests under tests/storybook
+ * is gitignored by `.storybook-screenshots/` (see other tests under tests/storybook
  * for the convention) and the file is recreated on every run.
  */
 test('issue #201: talent sheet renders cleanly from compendium-mode story', async ({ page }) => {
@@ -47,7 +47,7 @@ test('issue #201: talent sheet renders cleanly from compendium-mode story', asyn
         await expect(page.locator(`div[data-tab="${tab}"]`).first()).toHaveCount(1);
     }
 
-    await page.screenshot({ path: '.e2e-screenshots/issue-201-talent-render.png', fullPage: true });
+    await page.screenshot({ path: '.storybook-screenshots/issue-201-talent-render.png', fullPage: true });
 
     // The talent's display name appears somewhere in the rendered tree —
     // either as an editable input or as a readonly span depending on the

@@ -16,7 +16,7 @@ test.describe('Issue #19 — non-Reaction combat action click', () => {
         await page.waitForLoadState('networkidle');
         // Capture state-of-render screenshot before any assertions, so visual
         // review has it even if a later assertion fails.
-        await page.screenshot({ path: '.e2e-screenshots/issue-19-action-clicked.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-19-action-clicked.png', fullPage: true });
 
         // The combat-actions-panel partial must be rendered.
         await expect(page.locator('[data-action="vocalizeCombatAction"]').first()).toBeVisible();
@@ -49,6 +49,6 @@ test.describe('Issue #19 — non-Reaction combat action click', () => {
         await expect(page.locator('ol#chat-log .chat-message')).toHaveCount(0);
 
         // Capture a screenshot for the verification sweep.
-        await page.screenshot({ path: '.e2e-screenshots/issue-19-action-clicked.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-19-action-clicked.png', fullPage: true });
     });
 });

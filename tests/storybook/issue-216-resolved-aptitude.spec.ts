@@ -31,7 +31,7 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
 
         // Screenshot first so visual review has the artefact even if a later
         // assertion drops.
-        await page.screenshot({ path: '.e2e-screenshots/issue-216-resolved-aptitude.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-216-resolved-aptitude.png', fullPage: true });
 
         // The warning banner MUST NOT render — this is the load-bearing bug
         // assertion.
@@ -52,7 +52,7 @@ test.describe('Issue #216 — resolved aptitude collision no longer renders as r
 
     test('pre-select: warning banner present (sibling story confirms requirement framing for unresolved entries)', async ({ page }) => {
         await page.goto('/iframe.html?id=dev-character-creation-originpathbuilder--issue-216-unresolved-aptitude-is-a-requirement');
-        await page.screenshot({ path: '.e2e-screenshots/issue-216-unresolved-aptitude.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-216-unresolved-aptitude.png', fullPage: true });
 
         await expect(page.getByTestId('aptitude-collision-banner')).toHaveCount(1);
         await expect(page.getByTestId('aptitude-collision-resolved-banner')).toHaveCount(0);

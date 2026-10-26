@@ -42,7 +42,7 @@ test.describe('Issue #202 — Origin-Roll dialog reroll overflow', () => {
 
         // Capture the visual artefact for review attached to issue #202.
         await page.screenshot({
-            path: '.e2e-screenshots/issue-202-reroll-overflow.png',
+            path: '.storybook-screenshots/issue-202-reroll-overflow.png',
             fullPage: false,
         });
 

@@ -22,7 +22,7 @@ test.describe('Issue #186 — Starship Extended Actions panel', () => {
         await page.goto('/iframe.html?id=dev-actor-voidcraftactorsheet--extended-actions');
         await page.waitForLoadState('networkidle');
         // Always screenshot first so visual review has the artefact.
-        await page.screenshot({ path: '.e2e-screenshots/issue-186-extended-actions.png', fullPage: true });
+        await page.screenshot({ path: '.storybook-screenshots/issue-186-extended-actions.png', fullPage: true });
         // Confirm Storybook actually rendered the requested story rather than
         // a "story not found" page. The story-level play function still asserts
         // on the 13 extended actions; this spec exists for visual review.
