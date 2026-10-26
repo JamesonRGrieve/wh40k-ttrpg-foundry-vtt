@@ -136,7 +136,7 @@ import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
-import { contentRefName } from '../../utils/content-ref-name.ts';
+import { contentRefName, documentRefName } from '../../utils/content-ref-name.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
@@ -193,6 +193,11 @@ function titleCase(s: string): string {
 /** The name to show for a stored content reference: a document UUID's name, or the value as stored (#160, #161). */
 function cachedRefName(ref: string): string {
     return contentRefName(ref, (uuid) => uuidNameCache.getName(uuid));
+}
+
+/** The name to show for a conferred award: its medal's name, never a stored id (#699). */
+function awardRefName(ref: string): string {
+    return documentRefName(ref, (uuid) => uuidNameCache.getName(uuid), game.i18n.localize('WH40K.OW.RegimentalAward.Unknown'));
 }
 
 /** Currency wallets another sheet panel already edits (RT Dynasty tab, OW Logistics panel), so the Resources panel skips them. */
@@ -710,8 +715,9 @@ const PANEL_BUILDERS: SystemPanels = {
                 const cooldown = typeof record['supportCooldown'] === 'number' ? record['supportCooldown'] : 0;
                 // Award descriptors come from the conferred medal items (Direction #7),
                 // resolved before the panels build; an id that no longer resolves is
-                // still shown by its document's name, and keeps its id so it toggles off.
-                return buildBattlefieldPanel(ids, cooldown, (id) => s._owAwardDescriptor(id), cachedRefName);
+                // still shown by its document's name (or "Unknown award", never the id),
+                // and keeps its id so it toggles off.
+                return buildBattlefieldPanel(ids, cooldown, (id) => s._owAwardDescriptor(id), awardRefName);
             },
         },
     ],

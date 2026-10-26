@@ -4253,6 +4253,7 @@ export type I18nKey =
     | 'WH40K.OW.RegimentalAward.PickTitle'
     | 'WH40K.OW.RegimentalAward.Remove'
     | 'WH40K.OW.RegimentalAward.RemoveNamed'
+    | 'WH40K.OW.RegimentalAward.Unknown'
     | 'WH40K.OW.VehicleMovement.Action.EvasiveManoeuvring'
     | 'WH40K.OW.VehicleMovement.Action.FloorIt'
     | 'WH40K.OW.VehicleMovement.Action.HitAndRun'

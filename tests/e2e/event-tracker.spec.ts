@@ -26,7 +26,9 @@ const SEED = {
     location: 'Tracker Probe Spire',
     locationJournal: 'Tracker Probe Spire (GM notes)',
     npc: 'Tracker Probe Magos Holt',
-    pc: 'tracker-probe-acolyte',
+    // A PC's name, as a player names one: the Party Attitudes row is labelled by it
+    // (a slug here made the row read like an id, #699).
+    pc: 'Tracker Probe Acolyte',
     rootEvent: 'evt-probe-arrival',
     lockedEvent: 'evt-probe-audience',
 } as const;
@@ -209,6 +211,8 @@ test.describe.serial('Event Tracker dashboard (Tier B, #589 / #590)', () => {
             const dashboard = page.locator(DASHBOARD);
             await dashboard.locator('[data-action="selectTab"][data-tab="relations"]').click();
             const input = dashboard.locator(`[data-wh40k-hook="evt-pc-attitude"][data-npc="${SEED.npc}"][data-pc="${SEED.pc}"]`);
+            // #699: the Party Attitudes row is labelled by the PC's name, never an id.
+            await expect(input.locator('xpath=preceding-sibling::span[1]')).toHaveText(SEED.pc);
             await input.fill('hostile');
             await input.press('Tab');
             await expect

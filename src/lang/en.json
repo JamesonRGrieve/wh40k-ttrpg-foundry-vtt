@@ -8900,7 +8900,8 @@
                 "Remove": "Remove award",
                 "RemoveNamed": "Remove award: {name}",
                 "Confer": "Confer award",
-                "ConferNamed": "Confer award: {name}"
+                "ConferNamed": "Confer award: {name}",
+                "Unknown": "Unknown award"
             }
         },
         "Location": {

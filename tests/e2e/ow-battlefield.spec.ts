@@ -19,8 +19,18 @@ interface ActorRef {
     id: string;
 }
 
+/**
+ * Two medals from the OW core compendium, as a sheet stores a conferred award: by
+ * document UUID. The fixture once stored slugs ("award-cadian-valour"), and the panel
+ * printed them (#699).
+ */
+const AWARDS = {
+    'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01': 'Winged Skull',
+    'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalCogHet01': 'Cog of Het',
+} as const;
+
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
-    const result = await page.evaluate(async () => {
+    const result = await page.evaluate(async (awards: string[]) => {
         interface ActorCreateGlobals {
             Actor?: { create?: (data: object) => Promise<{ id?: string } | null> };
         }
@@ -34,7 +44,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
                 system: {
                     gameSystem: 'ow',
                     supportCooldown: 3,
-                    regimentalAwards: ['award-cadian-valour', 'award-purgation-cross'],
+                    regimentalAwards: awards,
                 },
             });
             if (!actor) return { id: null, error: 'Actor.create returned null' };
@@ -42,7 +52,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
         } catch (err) {
             return { id: null, error: err instanceof Error ? err.message : String(err) };
         }
-    });
+    }, Object.keys(AWARDS));
     if (result.id == null) return { error: result.error ?? 'unknown' };
     return { id: result.id };
 }
@@ -97,6 +107,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                 let cooldownBefore: number | null = null;
                 let awardRosterSize: number | null = null;
                 let hasAwardListOrEmpty = false;
+                let awardNames: string[] = [];
                 let probeError: string | null = null;
 
                 try {
@@ -120,6 +131,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                         hasAwardListOrEmpty =
                             el.querySelector('[data-wh40k-hook="ow-battlefield-panel__award-list"], [data-wh40k-hook="ow-battlefield-panel__awards"] p') !==
                             null;
+                        awardNames = Array.from(el.querySelectorAll('[data-field="award-name"]'), (span) => span.textContent.trim());
                     }
 
                     g.__c161sheet = sheet;
@@ -136,6 +148,7 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
                     cooldownBefore,
                     awardRosterSize,
                     hasAwardListOrEmpty,
+                    awardNames,
                     error: probeError,
                 };
             }, actorId);
@@ -162,11 +175,8 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
 
             expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'sheet did not render').toBe(true);
-            expectHooks(hookCounts, ['ow-battlefield-panel__awards']);
-            // The roster falls back to its empty-state <p> for this fixture, so the
-            // <ul> hook is legitimately unrendered — `hasAwardListOrEmpty` below accepts
-            // either branch. Pin the id in the template so that either-branch selector
-            // cannot quietly stop matching the list half.
+            // This fixture confers two medals, so the roster renders as its list.
+            expectHooks(hookCounts, ['ow-battlefield-panel__awards', 'ow-battlefield-panel__award-list']);
             expectHooksAuthored(authoredHooks, ['ow-battlefield-panel__award-list']);
             expect(result.hasPanel, 'battlefield panel should render in OW sheet').toBe(true);
             expect(result.hasRequestBtn, 'Request Support button should render').toBe(true);
@@ -183,6 +193,8 @@ test.describe.serial('OW Battlefield Awareness panel (Tier B, #161)', () => {
             expect(result.cooldownBefore, 'initial cooldown should be 3').toBe(3);
             expect(result.awardRosterSize, 'initial award roster should hold 2 ids').toBe(2);
             expect(result.hasAwardListOrEmpty, 'awards section should render either the list or the empty-state notice').toBe(true);
+            // #699: each award reads as its medal's name, never a stored id.
+            expect(result.awardNames, 'awards named by their medals').toEqual(Object.values(AWARDS));
 
             // The discriminating half: clear the cooldown, re-render, and require the
             // button to come back. A context missing `canRequestSupport` leaves it

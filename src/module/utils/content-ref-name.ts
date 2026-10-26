@@ -23,3 +23,13 @@ export function isDocumentUuid(ref: string): boolean {
 export function contentRefName(ref: string, lookup: (uuid: string) => string): string {
     return isDocumentUuid(ref) ? lookup(ref) : ref;
 }
+
+/**
+ * The name to show for a slot that only ever holds a document reference (a
+ * regimental award): the document's name for a UUID, or `unknownLabel` for
+ * anything else. Such a slot never shows its raw value, which is an id, not a
+ * name (#699: an award stored as "award-cadian-valour" printed that slug).
+ */
+export function documentRefName(ref: string, lookup: (uuid: string) => string, unknownLabel: string): string {
+    return isDocumentUuid(ref) ? lookup(ref) : unknownLabel;
+}
