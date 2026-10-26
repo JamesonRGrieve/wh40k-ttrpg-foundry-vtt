@@ -19,6 +19,9 @@ import { expect, test } from './lib/test';
  *
  * Snap is taken WITH THE SHEET OPEN — cleanup runs after the snap.
  */
+/** The widest gap between the SP spent / budget numbers and their slash: they read as one figure. */
+const MAX_READOUT_GAP_PX = 40;
+
 test('ship-component-modifiers apply to derived ship stats (#196)', async ({ page }) => {
     await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
@@ -175,6 +178,20 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
     });
 
     expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
+
+    // #701: SP spent / budget read as one figure: the slash sits between the two numbers, close to both,
+    // on their line. It used to float mid-panel with the numbers at opposite edges.
+    const readout = page.locator('[data-wh40k-hook="ship-points-readout"]').first();
+    const [spentBox, slashBox, budgetBox] = await Promise.all([
+        readout.locator('[data-field="spent"]').boundingBox(),
+        readout.locator('[data-wh40k-hook="ship-points-slash"]').boundingBox(),
+        readout.locator('[data-field="budget"]').boundingBox(),
+    ]);
+    if (spentBox === null || slashBox === null || budgetBox === null) throw new Error('SP readout not rendered');
+    expect(slashBox.x).toBeGreaterThan(spentBox.x + spentBox.width - 1);
+    expect(slashBox.x - (spentBox.x + spentBox.width)).toBeLessThan(MAX_READOUT_GAP_PX);
+    expect(budgetBox.x - (slashBox.x + slashBox.width)).toBeLessThan(MAX_READOUT_GAP_PX);
+    expect(Math.abs(slashBox.y + slashBox.height - (spentBox.y + spentBox.height))).toBeLessThan(4);
 
     await snap(page, 'ship-component-modifiers');
 

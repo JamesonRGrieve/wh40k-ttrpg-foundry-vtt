@@ -22,16 +22,18 @@
     rootClass="tw-col-span-6 wh40k-ship-points-budget-panel"
     titleClass=(concat "tw-text-gold " (themeClassFor 'accent'))}}
     <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3" data-component="ship-points-budget">
-        <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-3">
+        {{!-- Spent / budget read as one figure (#701): the pair sits together, the slash on the numbers'
+             baseline between them. The row used to spread them to opposite edges with the slash adrift mid-panel. --}}
+        <div class="tw-flex tw-flex-row tw-items-end tw-justify-start tw-gap-3" data-wh40k-hook="ship-points-readout">
             <div class="tw-flex tw-flex-col">
                 <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Voidcraft.Build.SpentLabel"}}</span>
-                <span class="tw-text-2xl tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}"
+                <span class="tw-text-2xl tw-leading-tight tw-font-semibold {{#if buildValidation.isOverBudget}}tw-text-crimson-l40{{else}}tw-text-success-l20{{/if}}"
                       data-field="spent">{{buildValidation.spent}}</span>
             </div>
-            <div class="tw-text-3xl tw-opacity-40">/</div>
-            <div class="tw-flex tw-flex-col tw-items-end">
+            <div class="tw-text-2xl tw-leading-tight tw-opacity-40" data-wh40k-hook="ship-points-slash" aria-hidden="true">/</div>
+            <div class="tw-flex tw-flex-col">
                 <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Voidcraft.Build.BudgetLabel"}}</span>
-                <span class="tw-text-2xl tw-font-semibold" data-field="budget">{{buildValidation.budget}}</span>
+                <span class="tw-text-2xl tw-leading-tight tw-font-semibold" data-field="budget">{{buildValidation.budget}}</span>
             </div>
         </div>
 
