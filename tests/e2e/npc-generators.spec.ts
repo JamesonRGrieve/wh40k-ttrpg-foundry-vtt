@@ -105,6 +105,22 @@ test.describe.serial('NPC generators create registered NPCs (Tier B, #644)', () 
         await dialog.locator('input[name="namePattern"]').fill(`${PREFIX} Batch {n}`);
         await dialog.locator('input[name="count"]').fill('3');
         await dialog.locator('input[name="count"]').press('Tab');
+        // #701: the inputs have a visible border and field background, like Quick Create's (they read as plain text).
+        const fields = await dialog.locator('input[name="namePattern"], input[name="count"], input[name="faction"], select[name="role"]').evaluateAll((els) =>
+            els.map((el) => {
+                const style = getComputedStyle(el);
+                return `${el.getAttribute('name') ?? ''}: ${style.borderTopStyle} ${style.borderTopWidth} ${style.borderTopColor} on ${style.backgroundColor}`;
+            }),
+        );
+        const visible = (field: string): boolean => {
+            const match = /: solid (\d+(?:\.\d+)?)px (rgba?\([^)]*\)) on (rgba?\([^)]*\))$/u.exec(field);
+            const opaque = (colour: string): boolean => !/rgba\([^)]*,\s*0\)$/u.test(colour);
+            return match !== null && Number(match[1]) >= 1 && opaque(match[2]) && opaque(match[3]);
+        };
+        expect(
+            fields.filter((field) => !visible(field)),
+            fields.join('\n'),
+        ).toEqual([]);
         await clearScreenOverlays(page, id);
         await snap(page, 'npc-batch-create-dialog', { selector: `#${id}` });
         await dialog.locator('button[type="submit"]').click();

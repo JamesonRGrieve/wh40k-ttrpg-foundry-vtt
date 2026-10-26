@@ -1428,12 +1428,19 @@ module.exports = {
             marginBottom: '0.25rem',
             display: 'block',
           },
+          // The field look Quick Create's inputs carry (#701). Every var() keeps a fallback:
+          // the old --color-border-light-tertiary / --color-bg-option are not defined under
+          // Foundry V14's dark theme, which made the whole border and background declarations
+          // invalid, so the fields rendered borderless on a transparent background.
           '& input[type="text"], & input[type="number"], & input[type="email"], & input[type="password"], & select, & textarea': {
             width: '100%',
+            height: 'auto',
             padding: '0.4rem 0.5rem',
-            border: '1px solid var(--color-border-light-tertiary)',
-            borderRadius: 'var(--wh40k-radius-md)',
-            background: 'var(--color-bg-option)',
+            lineHeight: '1.5',
+            border: '1px solid var(--color-border-light, #555)',
+            borderRadius: 'var(--wh40k-radius-md, 4px)',
+            background: 'var(--color-bg-input, #222)',
+            color: 'var(--color-text-light, #fff)',
           },
           '& input:focus, & select:focus, & textarea:focus': {
             outline: 'none',
