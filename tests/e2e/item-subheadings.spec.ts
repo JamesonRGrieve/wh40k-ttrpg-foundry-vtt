@@ -98,6 +98,22 @@ test.describe.serial('item sheet sub-headings (Tier B, #699)', () => {
 
             await sheet.locator('nav [data-tab="effects"]').first().click();
             expectPanelFamily(await headingFonts(page, sheetId), ['Characteristics', 'Skills', 'Talents']);
+            // #701: the effects summary strip is a styled row inset with the sheet's padding (it sat flush
+            // to the window edge as bare text): pills with a background and their counts.
+            const banner = sheet.locator('[data-wh40k-hook="talent-effects-banner"]');
+            const strip = await banner.evaluate((el) => {
+                const root = el.closest('.application');
+                const left = el.getBoundingClientRect().left - (root?.getBoundingClientRect().left ?? 0);
+                const pills = Array.from(el.querySelectorAll('[data-wh40k-hook="talent-effect-pill"]'), (pill) => ({
+                    text: pill.textContent.replace(/\s+/gu, ' ').trim(),
+                    background: getComputedStyle(pill).backgroundColor,
+                }));
+                return { left, border: getComputedStyle(el).borderTopStyle, pills };
+            });
+            expect(strip.left, 'the strip is inset from the window edge').toBeGreaterThanOrEqual(8);
+            expect(strip.border).toBe('solid');
+            expect(strip.pills.map((pill) => pill.text)).toEqual(['Modifiers 1', 'Grants 1+1']);
+            expect(strip.pills.every((pill) => pill.background !== 'rgba(0, 0, 0, 0)')).toBe(true);
             await snap(page, 'talent-sheet-subheadings', { selector: `#${sheetId}` });
         } finally {
             await closeAndDelete(page, itemId);

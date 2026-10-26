@@ -158,42 +158,38 @@
          EFFECTS BANNER: Quick summary of talent effects (visible on all tabs)
     ═══════════════════════════════════════════════════════════════════ --}}
     {{#if (or modifiersData.hasAny situationalData.hasAny grantsData.hasAny)}}
-    <div class="tw-flex tw-items-center tw-gap-2">
-      <div class="tw-flex tw-items-center tw-gap-1">
-        <i class="fa-solid fa-sparkles"></i>
+    {{!-- One pill per effect kind; the count goes in the block (#701: the strip was unstyled, flush to the sheet edge). --}}
+    {{#*inline "talentEffectPill"}}
+    <div data-wh40k-hook="talent-effect-pill" class="tw-inline-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-0.5 tw-rounded-full tw-bg-[rgba(100,100,120,0.3)] tw-whitespace-nowrap" title="{{pillTitle}}">
+      <i class="fa-solid {{pillIcon}}" aria-hidden="true"></i>
+      <span>{{pillLabel}}</span>
+      <span class="tw-font-bold tw-text-[color:var(--wh40k-gold)]">{{> @partial-block}}</span>
+    </div>
+    {{/inline}}
+    <div data-wh40k-hook="talent-effects-banner" class="tw-mx-3 tw-mb-2 tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-px-3 tw-py-1.5 tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-bg-black/25 tw-text-xs">
+      <div class="tw-flex tw-items-center tw-gap-1 tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">
+        <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
         <span>{{localize "WH40K.Tabs.Effects"}}</span>
       </div>
       <div class="tw-flex tw-flex-wrap tw-gap-1">
         {{!-- Permanent Modifiers Pill --}}
         {{#if modifiersData.hasAny}}
-        <div class="tw-flex tw-items-center tw-gap-1" title="{{localize 'WH40K.ItemSheet.Talent.ModifiersTooltip'}}">
-          <i class="fa-solid fa-chart-line"></i>
-          <span >{{localize "WH40K.Tabs.Modifiers"}}</span>
-          <span >{{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}}{{/if}}{{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}+{{/if}}{{#if modifiersData.hasSkills}}{{modifiersData.skills.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}+{{/if}}{{#if modifiersData.hasCombat}}{{modifiersData.combat.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}+{{/if}}{{#if modifiersData.hasResources}}{{modifiersData.resources.length}}{{/if}}</span>
-        </div>
+        {{#> talentEffectPill pillIcon="fa-chart-line" pillLabel=(localize "WH40K.Tabs.Modifiers") pillTitle=(localize "WH40K.ItemSheet.Talent.ModifiersTooltip")}}{{#if modifiersData.hasCharacteristics}}{{modifiersData.characteristics.length}}{{/if}}{{#if (and modifiersData.hasCharacteristics modifiersData.hasSkills)}}+{{/if}}{{#if modifiersData.hasSkills}}{{modifiersData.skills.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills) modifiersData.hasCombat)}}+{{/if}}{{#if modifiersData.hasCombat}}{{modifiersData.combat.length}}{{/if}}{{#if (and (or modifiersData.hasCharacteristics modifiersData.hasSkills modifiersData.hasCombat) modifiersData.hasResources)}}+{{/if}}{{#if modifiersData.hasResources}}{{modifiersData.resources.length}}{{/if}}{{/talentEffectPill}}
         {{/if}}
 
         {{!-- Situational Modifiers Pill --}}
         {{#if situationalData.hasAny}}
-        <div class="tw-flex tw-items-center tw-gap-1" title="{{localize 'WH40K.ItemSheet.Talent.SituationalTooltip'}}">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <span >{{localize "WH40K.Roll.ModifierSource.Situational"}}</span>
-          <span >{{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}}{{/if}}{{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}+{{/if}}{{#if situationalData.hasSkills}}{{situationalData.skills.length}}{{/if}}{{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}+{{/if}}{{#if situationalData.hasCombat}}{{situationalData.combat.length}}{{/if}}</span>
-        </div>
+        {{#> talentEffectPill pillIcon="fa-clock-rotate-left" pillLabel=(localize "WH40K.Roll.ModifierSource.Situational") pillTitle=(localize "WH40K.ItemSheet.Talent.SituationalTooltip")}}{{#if situationalData.hasCharacteristics}}{{situationalData.characteristics.length}}{{/if}}{{#if (and situationalData.hasCharacteristics situationalData.hasSkills)}}+{{/if}}{{#if situationalData.hasSkills}}{{situationalData.skills.length}}{{/if}}{{#if (and (or situationalData.hasCharacteristics situationalData.hasSkills) situationalData.hasCombat)}}+{{/if}}{{#if situationalData.hasCombat}}{{situationalData.combat.length}}{{/if}}{{/talentEffectPill}}
         {{/if}}
 
         {{!-- Grants Pill --}}
         {{#if grantsData.hasAny}}
-        <div class="tw-flex tw-items-center tw-gap-1" title="{{localize 'WH40K.ItemSheet.Talent.GrantsTooltip'}}">
-          <i class="fa-solid fa-gift"></i>
-          <span >{{localize "WH40K.Talent.Grants"}}</span>
-          <span >{{#if grantsData.hasSkills}}{{grantsData.skills.length}}{{/if}}{{#if (and grantsData.hasSkills grantsData.hasTalents)}}+{{/if}}{{#if grantsData.hasTalents}}{{grantsData.talents.length}}{{/if}}{{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}+{{/if}}{{#if grantsData.hasTraits}}{{grantsData.traits.length}}{{/if}}</span>
-        </div>
+        {{#> talentEffectPill pillIcon="fa-gift" pillLabel=(localize "WH40K.Talent.Grants") pillTitle=(localize "WH40K.ItemSheet.Talent.GrantsTooltip")}}{{#if grantsData.hasSkills}}{{grantsData.skills.length}}{{/if}}{{#if (and grantsData.hasSkills grantsData.hasTalents)}}+{{/if}}{{#if grantsData.hasTalents}}{{grantsData.talents.length}}{{/if}}{{#if (and (or grantsData.hasSkills grantsData.hasTalents) grantsData.hasTraits)}}+{{/if}}{{#if grantsData.hasTraits}}{{grantsData.traits.length}}{{/if}}{{/talentEffectPill}}
         {{/if}}
       </div>
-      <a class="tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" data-action="switchTab" data-tab="effects" data-group="primary">
+      <a class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-cursor-pointer tw-text-[color:var(--wh40k-gold)] hover:tw-underline" data-action="switchTab" data-tab="effects" data-group="primary">
         <span>{{localize "WH40K.Common.ViewDetails"}}</span>
-        <i class="fa-solid fa-arrow-right"></i>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
     </div>
     {{/if}}
