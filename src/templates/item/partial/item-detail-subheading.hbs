@@ -1,0 +1,22 @@
+{{!--
+  A sub-heading inside an item-detail-section panel: "Characteristics" over a
+  modifier list, "Skills" over granted skills, a special ability's name over
+  its text.
+
+  It is set in the panel title's own face (Foundry's h3 font, Signika) at a
+  compact size, so a panel and its sub-headings read as one family (#699).
+  A bare <h4> takes Foundry's h4 style, Modesto Condensed at 24px, which made
+  the sub-headings larger and showier than the panel titles above them.
+
+  Hash arguments:
+    label — the heading text, already localized (or a document name). Required.
+    icon  — Font Awesome icon class shown before it (e.g. "fa-dumbbell"). Optional.
+    extraClass — classes appended to the heading, for the caller's spacing (e.g. "tw-mb-2"). Optional.
+
+  Usage:
+    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-dumbbell" label=(localize "WH40K.Characteristics")}}
+--}}
+<h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-font-[family-name:var(--font-h3)] tw-text-[0.8rem] tw-leading-tight tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] {{extraClass}}" data-item-subheading>
+    {{#if icon}}<i class="fa-solid {{icon}}" aria-hidden="true"></i>{{/if}}
+    <span class="tw-min-w-0">{{label}}</span>
+</h4>

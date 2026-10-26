@@ -246,10 +246,7 @@
             <div class="tw-flex tw-flex-col tw-gap-2">
               {{#each grantsData.specialAbilities}}
               <div >
-                <h4 class="tw-flex tw-items-center tw-gap-1">
-                  <i class="fa-solid fa-circle-dot"></i>
-                  {{this.name}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-circle-dot" label=this.name}}
                 <div >
                   {{{this.description}}}
                 </div>
@@ -569,10 +566,7 @@
               {{!-- Characteristic Modifiers --}}
               {{#if modifiersData.hasCharacteristics}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
-                  <i class="fa-solid fa-dumbbell"></i>
-                  {{localize "WH40K.Characteristics"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-dumbbell" label=(localize "WH40K.Characteristics")}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.characteristics}}
                   <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
@@ -589,10 +583,7 @@
               {{!-- Skill Modifiers --}}
               {{#if modifiersData.hasSkills}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
-                  <i class="fa-solid fa-graduation-cap"></i>
-                  {{localize "WH40K.Tabs.Skills"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-graduation-cap" label=(localize "WH40K.Tabs.Skills")}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.skills}}
                   <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
@@ -609,10 +600,7 @@
               {{!-- Combat Modifiers --}}
               {{#if modifiersData.hasCombat}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
-                  <i class="fa-solid fa-swords"></i>
-                  {{localize "WH40K.Tabs.Combat"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-swords" label=(localize "WH40K.Tabs.Combat")}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.combat}}
                   <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
@@ -629,10 +617,7 @@
               {{!-- Resource Modifiers --}}
               {{#if modifiersData.hasResources}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
-                  <i class="fa-solid fa-heart"></i>
-                  {{localize "WH40K.ItemSheet.Modifiers.Resources"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-heart" label=(localize "WH40K.ItemSheet.Modifiers.Resources")}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.resources}}
                   <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
@@ -649,10 +634,7 @@
               {{!-- Other Modifiers --}}
               {{#if modifiersData.hasOther}}
               <div class="tw-flex tw-flex-col tw-gap-[var(--wh40k-space-sm)]">
-                <h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.9em] tw-font-semibold tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] tw-uppercase tw-tracking-[0.5px]">
-                  <i class="fa-solid fa-ellipsis"></i>
-                  {{localize "WH40K.ItemSheet.Modifiers.Other"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-ellipsis" label=(localize "WH40K.ItemSheet.Modifiers.Other")}}
                 <div class="tw-flex tw-flex-col tw-gap-1">
                   {{#each modifiersData.other}}
                   <div class="tw-flex tw-items-center tw-justify-between tw-gap-[var(--wh40k-space-md)] tw-p-[10px] tw-bg-[rgba(0,0,0,0.2)] tw-border-l-[3px] tw-border-l-transparent tw-rounded-[var(--wh40k-radius-md)] tw-transition-all">
@@ -756,10 +738,7 @@
               {{!-- Skills Granted --}}
               {{#if grantsData.hasSkills}}
               <div >
-                <h4 class="tw-flex tw-items-center tw-gap-1">
-                  <i class="fa-solid fa-graduation-cap"></i>
-                  {{localize "WH40K.Tabs.Skills"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-graduation-cap" label=(localize "WH40K.Tabs.Skills")}}
                 <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.skills}}
                   <div class="tw-flex tw-items-center tw-gap-1">
@@ -774,10 +753,7 @@
               {{!-- Talents Granted --}}
               {{#if grantsData.hasTalents}}
               <div >
-                <h4 class="tw-flex tw-items-center tw-gap-1">
-                  <i class="fa-solid fa-star"></i>
-                  {{localize "WH40K.Tabs.Talents"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-star" label=(localize "WH40K.Tabs.Talents")}}
                 <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.talents}}
                   <div class="tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}tw-cursor-pointer{{/if}}"
@@ -798,10 +774,7 @@
               {{!-- Traits Granted --}}
               {{#if grantsData.hasTraits}}
               <div >
-                <h4 class="tw-flex tw-items-center tw-gap-1">
-                  <i class="fa-solid fa-dna"></i>
-                  {{localize "WH40K.Traits"}}
-                </h4>
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-dna" label=(localize "WH40K.Traits")}}
                 <div class="tw-flex tw-flex-wrap tw-gap-1">
                   {{#each grantsData.traits}}
                   <div class="tw-flex tw-items-center tw-gap-1 {{#if this.hasLink}}tw-cursor-pointer{{/if}}"
