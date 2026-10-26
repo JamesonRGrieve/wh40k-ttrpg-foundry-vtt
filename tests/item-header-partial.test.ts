@@ -97,12 +97,17 @@ describe('item-header partial — name input', () => {
 });
 
 describe('item-header partial — image overlay', () => {
-    it('renders editImage action with data-edit="img"', () => {
+    // The editImage action and data-edit="img" sit on the <img>, not the wrapper (#699):
+    // on the wrapper, the sheet's form data submitted the wrapper's markup as `img`.
+    it('renders the editImage action with data-edit="img" on the image itself', () => {
         const html = directTemplate(baseContext());
         const wrap = dom(html).querySelector('.wh40k-item-header__image');
-        expect(wrap?.getAttribute('data-action')).toBe('editImage');
-        expect(wrap?.getAttribute('data-edit')).toBe('img');
-        expect(wrap?.querySelector('img')?.getAttribute('src')).toBe('icons/test.svg');
+        const img = wrap?.querySelector('img');
+        expect(img?.getAttribute('data-action')).toBe('editImage');
+        expect(img?.getAttribute('data-edit')).toBe('img');
+        expect(img?.getAttribute('src')).toBe('icons/test.svg');
+        expect(wrap?.hasAttribute('data-edit')).toBe(false);
+        expect(wrap?.hasAttribute('data-action')).toBe(false);
     });
 });
 

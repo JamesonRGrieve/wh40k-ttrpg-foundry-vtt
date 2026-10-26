@@ -25,6 +25,7 @@ import {
 import type { WH40KItemSystemData } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { capitalize } from '../utils/format.ts';
+import { isValidImagePath } from '../utils/image-path.ts';
 import {
     hasLineVariantContainers,
     materializeItemVariants,
@@ -199,37 +200,21 @@ export class WH40KItem extends WH40KItemContainer {
         // (see `resolveOwnedLineContent`). Partial update diffs are not a source.
         if (options.partial !== true) rememberLineVariantSource(_state.model, source['system']);
 
-        // CRITICAL: Clean img field if present - V13 validation is very strict
-        if ('img' in source) {
-            const imgValue = source['img'];
+        // An invalid img in a partial update is dropped, keeping the stored image. An update
+        // diff carries no `type`, so the type default below would be the generic placeholder:
+        // a stray value (a portrait's `<img>` markup, #699) replaced the item's image with it.
+        if (options.partial === true && 'img' in source && !isValidImagePath(source['img'])) {
+            delete source['img'];
+        }
+
+        // A whole source (a create, an import) with an unusable img takes its type's default
+        // icon. V13+ validation rejects an img that is not an image path.
+        if ('img' in source && !isValidImagePath(source['img'])) {
             const sourceType = source['type'];
             const typeStr = typeof sourceType === 'string' && sourceType.length > 0 ? sourceType : 'unknown';
-
-            // Handle empty, null, undefined, or non-string img values
-            if (typeof imgValue !== 'string' || imgValue.trim() === '') {
-                // Set to type-specific default
-                source['img'] = this._getDefaultIcon(typeStr);
-                console.warn(`WH40K | cleanData: Invalid img value "${String(imgValue)}" for type "${typeStr}", using default: ${String(source['img'])}`);
-            } else {
-                // Check if has valid extension
-                const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif', '.webm'];
-                const imgStr = imgValue.toLowerCase().trim();
-
-                // Also check for obviously invalid paths
-                if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
-                    source['img'] = this._getDefaultIcon(typeStr);
-                    console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${typeStr}", using default: ${String(source['img'])}`);
-                } else {
-                    const imgPath = imgStr.split('?')[0] ?? imgStr;
-                    const hasValidExtension = validExtensions.some((ext) => imgPath.endsWith(ext) || imgPath.includes(`${ext}/`));
-
-                    if (!hasValidExtension) {
-                        // Invalid extension - use type-specific default
-                        source['img'] = this._getDefaultIcon(typeStr);
-                        console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${typeStr}", using default: ${String(source['img'])}`);
-                    }
-                }
-            }
+            const invalid = String(source['img']);
+            source['img'] = this._getDefaultIcon(typeStr);
+            console.warn(`WH40K | cleanData: Invalid img "${invalid}" for type "${typeStr}", using default: ${String(source['img'])}`);
         }
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain

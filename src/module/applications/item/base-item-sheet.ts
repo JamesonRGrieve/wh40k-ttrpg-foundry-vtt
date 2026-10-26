@@ -5,6 +5,7 @@
 
 import { WH40K } from '../../config.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import { isValidImagePath } from '../../utils/image-path.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
@@ -336,26 +337,9 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
         const proto = Object.getPrototypeOf(BaseItemSheet.prototype) as SuperWithPrepare;
         let submitData = proto._prepareSubmitData?.call(this, event, form, formData, updateData) ?? {};
 
-        // CRITICAL FIX: Clean img field if present to prevent validation errors
-        // Foundry V13 has very strict validation on img field
-        if ('img' in submitData) {
-            const imgValue = submitData['img'];
-
-            // If img is invalid (empty, null, undefined, or no extension), remove it
-            // This prevents validation errors and lets the document use its existing value
-            if (typeof imgValue !== 'string' || imgValue.trim() === '') {
-                delete submitData['img'];
-            } else {
-                const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
-                const imgStr = imgValue.toLowerCase().trim();
-                const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
-
-                if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
-                    // Invalid img - remove from submit data so it doesn't override existing valid value
-                    delete submitData['img'];
-                }
-            }
-        }
+        // An unusable img is dropped so the document keeps its stored image (V13+ validation
+        // rejects anything that is not an image path).
+        if ('img' in submitData && !isValidImagePath(submitData['img'])) delete submitData['img'];
 
         submitData = remapSubmitDataToVariantPaths(this.item, submitData);
 
