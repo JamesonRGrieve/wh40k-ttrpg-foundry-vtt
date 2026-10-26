@@ -1,6 +1,6 @@
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -28,6 +28,7 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
             let hasQuarantineWorld = false;
             let hasCorruptionRider = false;
             let hasSubtletyClampRider = false;
+            let appId: string | null = null;
 
             try {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import returns `any`; cast to typed dialog module shape
@@ -47,11 +48,8 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                     hasCorruptionRider = el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
                     hasSubtletyClampRider = el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
                 }
-                try {
-                    await inst.close();
-                } catch {
-                    /* ignore */
-                }
+                // Left open for the capture (#700: closing it here made the snap a full-scene shot).
+                appId = inst.element?.id ?? null;
             } catch (err) {
                 error = err instanceof Error ? err.message : String(err);
             }
@@ -64,11 +62,14 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                 hasQuarantineWorld,
                 hasCorruptionRider,
                 hasSubtletyClampRider,
+                appId,
                 error,
             };
         });
 
-        await snap(page, 'beyond-homeworld-info-dialog');
+        expect(result.appId, 'dialog did not open').not.toBeNull();
+        await snap(page, 'beyond-homeworld-info-dialog', { selector: `#${result.appId ?? ''}`, closeWindows: true, keepWindow: result.appId ?? undefined });
+        await clearScreenOverlays(page);
 
         expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'dialog did not render').toBe(true);

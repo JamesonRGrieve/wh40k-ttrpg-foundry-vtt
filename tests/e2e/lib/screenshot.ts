@@ -23,8 +23,11 @@
  *     verify the DOM mutation rendered visually;
  *   - diffing two snaps to confirm a CSS / template change.
  *
- * Screenshots are best-effort: they swallow errors so a missing
- * filesystem permission can't fail an otherwise-passing test.
+ * A capture is evidence, so it fails the test when it would not show its subject
+ * (#700): a selector that matches nothing, an element with no size, an element
+ * covered at its centre, or a default capture with no window open. The capture
+ * moves the pointer away and hides the hover tooltip (unless `keepTooltip`), the
+ * notifications, and, unless the subject is one of them, the persistent HUD windows.
  */
 
 import { mkdirSync } from 'node:fs';
@@ -256,6 +259,64 @@ export async function clearScreenOverlays(page: Page, keepIdFragment?: string): 
     await clearOverlays(page, { closeWindows: true, keepIdFragment: keepIdFragment ?? null });
 }
 
+/** Id of the style element {@link withCaptureStyle} mounts for the length of one capture. */
+const CAPTURE_STYLE_ID = 'e2e-capture-style';
+
+/** Foundry's shared hover tooltip, and the locked tooltips it can leave pinned. */
+const TOOLTIP_HIDE = '#tooltip, .locked-tooltip { display: none !important; }';
+
+/**
+ * Mount `css` as a real stylesheet for the length of `run`, so the visibility guard
+ * sees the page exactly as the capture will (Playwright's own `style` option only
+ * applies inside the screenshot call, after the guard has looked).
+ */
+async function withCaptureStyle<T>(page: Page, css: string, run: () => Promise<T>): Promise<T> {
+    await page.evaluate(
+        ({ id, text }: { id: string; text: string }) => {
+            document.getElementById(id)?.remove();
+            const style = document.createElement('style');
+            style.id = id;
+            style.textContent = text;
+            document.head.appendChild(style);
+        },
+        { id: CAPTURE_STYLE_ID, text: css },
+    );
+    try {
+        return await run();
+    } finally {
+        await page.evaluate((id: string) => document.getElementById(id)?.remove(), CAPTURE_STYLE_ID);
+    }
+}
+
+/**
+ * Why `target` would not show as the subject of a capture, or null when it would:
+ * it must be in the DOM, have a size, and be the topmost element at its own centre.
+ * The capture evidence of #700 failed every one of these silently: a closed dialog
+ * fell back to a full-scene shot, and the time widget sat on top of the window named.
+ */
+async function obstruction(target: Locator): Promise<string | null> {
+    if ((await target.count()) === 0) return 'not in the DOM';
+    await target.scrollIntoViewIfNeeded().catch(() => undefined);
+    return target.evaluate((el: Element) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return 'has no size (hidden or collapsed)';
+        const x = Math.min(Math.max(rect.left + rect.width / 2, 0), window.innerWidth - 1);
+        const y = Math.min(Math.max(rect.top + rect.height / 2, 0), window.innerHeight - 1);
+        const top = document.elementFromPoint(x, y);
+        if (top === null) return 'is outside the viewport';
+        if (top === el || el.contains(top)) return null;
+        const owner = top.closest('[id]');
+        const name = owner === null ? top.tagName.toLowerCase() : `#${owner.id}`;
+        return `is covered at its centre by ${name}`;
+    });
+}
+
+/** Fail the capture, naming the subject and what is wrong with it. */
+async function assertCapturable(target: Locator, what: string, label: string): Promise<void> {
+    const problem = await obstruction(target);
+    if (problem !== null) throw new Error(`snap('${label}'): the subject ${what} ${problem}, so the screenshot would not show it`);
+}
+
 /** Pixels of margin kept around the marked capture hosts. */
 const CAPTURE_HOST_MARGIN_PX = 8;
 
@@ -312,7 +373,7 @@ export async function snap(
         /** Keep the hover tooltip up: the capture shows what hovering reveals. */
         keepTooltip?: boolean;
     } = {},
-): Promise<string | null> {
+): Promise<string> {
     ensureDir();
     await clearOverlays(page, { closeWindows: opts.closeWindows === true, keepIdFragment: opts.keepWindow ?? null, keepTooltip: opts.keepTooltip === true });
 
@@ -325,49 +386,52 @@ export async function snap(
     const suffix = n === 1 ? '' : `-${n}`;
     const path = resolve(SCREENSHOT_DIR, `${key}${suffix}.png`);
 
-    try {
-        if (opts.fullPage === true) {
-            await page.screenshot({ path, fullPage: true, style: CAPTURE_STYLE });
+    // A hover tooltip re-opens under a pointer still resting on the control a spec
+    // last clicked (an attack-mode hint covered a Roll Test dialog's buttons, #701),
+    // so the pointer moves off every window before the capture.
+    if (opts.keepTooltip !== true) await page.mouse.move(0, 0).catch(() => undefined);
+    const tooltipCss = opts.keepTooltip === true ? '' : ` ${TOOLTIP_HIDE}`;
+
+    // Whole page and explicit viewport regions (canvas areas) have no single
+    // subject to guard; they capture what is on screen.
+    if (opts.fullPage === true || opts.clip !== undefined) {
+        const region = opts.fullPage === true ? { fullPage: true } : { clip: opts.clip };
+        return withCaptureStyle(page, `${CAPTURE_STYLE}${tooltipCss}`, async () => {
+            await page.screenshot({ path, ...region });
             return path;
-        }
+        });
+    }
 
-        // Explicit viewport region (a canvas area such as a token pair or a template).
-        if (opts.clip !== undefined) {
-            await page.screenshot({ path, clip: opts.clip, style: CAPTURE_STYLE });
+    // Explicit selector: capture just that element. A selector that matches nothing
+    // fails the capture: it used to fall back to whatever window was open.
+    if (typeof opts.selector === 'string' && opts.selector !== '') {
+        const loc = page.locator(opts.selector).first();
+        // The persistent HUD windows are hidden unless the subject is one of them.
+        const subjectIsHud =
+            (await loc.count()) > 0 &&
+            (await loc.evaluate((el: Element, ids: string[]) => ids.some((id) => el.closest(`#${id}`) !== null), PERSISTENT_HUD_IDS));
+        const css = `${subjectIsHud ? CAPTURE_STYLE : DEFAULT_CAPTURE_STYLE}${tooltipCss}`;
+        return withCaptureStyle(page, css, async () => {
+            await assertCapturable(loc, `"${opts.selector ?? ''}"`, label);
+            await loc.screenshot({ path });
             return path;
-        }
+        });
+    }
 
-        // Explicit selector: capture just that element.
-        if (typeof opts.selector === 'string' && opts.selector !== '') {
-            const loc = page.locator(opts.selector).first();
-            if ((await loc.count()) > 0) {
-                await loc.screenshot({ path, style: CAPTURE_STYLE });
-                return path;
-            }
-            // Selector requested but not found → fall through to default
-            // application capture so the spec still gets a PNG.
-        }
-
+    return withCaptureStyle(page, `${DEFAULT_CAPTURE_STYLE}${tooltipCss}`, async () => {
         // A page-mounted template host the spec marked for capture.
         const hostClip = await captureHostClip(page);
         if (hostClip !== null) {
-            await page.screenshot({ path, clip: hostClip, style: DEFAULT_CAPTURE_STYLE });
+            await page.screenshot({ path, clip: hostClip });
             return path;
         }
 
-        // Default: prep + capture the most recent ApplicationV2 / sheet /
-        // dialog element on-screen.
+        // Default: the most recent application window. With none open there is no
+        // subject, and a full-scene shot would only pass for evidence (#700).
         const appLoc = await prepareApplicationForCapture(page);
-        if (appLoc !== null) {
-            await appLoc.screenshot({ path, style: DEFAULT_CAPTURE_STYLE });
-            return path;
-        }
-
-        // Last-resort fallback: full-page capture so the spec still has
-        // a record of the runtime state for debugging.
-        await page.screenshot({ path, fullPage: true, style: DEFAULT_CAPTURE_STYLE });
+        if (appLoc === null) throw new Error(`snap('${label}'): no application window is open to capture; pass a selector, clip or fullPage`);
+        await assertCapturable(appLoc, 'application window', label);
+        await appLoc.screenshot({ path });
         return path;
-    } catch {
-        return null;
-    }
+    });
 }

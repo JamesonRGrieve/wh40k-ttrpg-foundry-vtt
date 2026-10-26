@@ -115,7 +115,19 @@ async function semiAutoBurst(
     const target = (await settledTarget(page, dialogId)) ?? 0;
     expect(target, 'the dialog shows the burst’s target').toBeGreaterThan(10);
     await enterRoll(page, dialogId, roll(target));
-    if (label.endsWith('capped')) expect(await snapWindow(page, `${label}-dialog`, dialogId)).not.toBeNull();
+    if (label.endsWith('capped')) {
+        // Typing the roll scrolled the dialog to its manual-roll field; the capture
+        // starts at its first section (#701).
+        await page.evaluate((id: string) => {
+            document
+                .getElementById(id)
+                ?.querySelectorAll<HTMLElement>('*')
+                .forEach((el) => {
+                    if (el.scrollTop > 0) el.scrollTop = 0;
+                });
+        }, dialogId);
+        expect(await snapWindow(page, `${label}-dialog`, dialogId)).not.toBeNull();
+    }
     await submitRoll(page, dialogId);
     const attack = await awaitCard(page, before, 'data-hit-ceiling');
     const beforeDamage = await messageIds(page);

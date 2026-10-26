@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -124,6 +124,7 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 hasFearInput: boolean;
                 fearInputValue: string | null;
                 hasRollButton: boolean;
+                appId: string | null;
                 error: string | null;
             }
             const result = await page.evaluate(async (): Promise<DialogProbeResult> => {
@@ -136,6 +137,7 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                 let hasFearInput = false;
                 let fearInputValue: string | null = null;
                 let hasRollButton = false;
+                let appId: string | null = null;
 
                 try {
                     // eslint-disable-next-line no-restricted-syntax -- boundary: dynamic import of compiled JS module; shape declared via DialogModule
@@ -152,19 +154,18 @@ test.describe.serial('FearTestDialog (Tier B)', () => {
                         fearInputValue = fr?.value ?? null;
                         hasRollButton = inst.element.querySelector('[data-action="rollTest"]') !== null;
                     }
-                    try {
-                        await inst.close();
-                    } catch {
-                        /* ignore */
-                    }
+                    // Left open for the capture (#700: closing it here made the snap a full-scene shot).
+                    appId = inst.element?.id ?? null;
                 } catch (err) {
                     error = String((err as Error).message);
                 }
 
-                return { rendered, hasFearInput, fearInputValue, hasRollButton, error };
+                return { rendered, hasFearInput, fearInputValue, hasRollButton, appId, error };
             });
 
-            await snap(page, 'fear-test-dialog-fr3');
+            expect(result.appId, 'dialog did not open').not.toBeNull();
+            await snap(page, 'fear-test-dialog-fr3', { selector: `#${result.appId ?? ''}`, closeWindows: true, keepWindow: result.appId ?? undefined });
+            await clearScreenOverlays(page);
 
             expect(result.error, `dialog probe error: ${result.error ?? ''}`).toBeNull();
             expect(result.rendered, 'dialog did not render').toBe(true);

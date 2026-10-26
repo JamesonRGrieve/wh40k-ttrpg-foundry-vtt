@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { snap } from './lib/screenshot';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
@@ -35,6 +35,9 @@ interface ProbeResult {
     createError: string | null;
     divinationApplied: boolean;
     divinationNote: string;
+    /** The builder left open in Roll mode for the capture, and its probe actor. */
+    builderId: string | null;
+    actorId: string | null;
 }
 
 async function probeCharGenModes(page: Page): Promise<ProbeResult> {
@@ -50,6 +53,7 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
                 readonly create?: (data: DocData) => Promise<ActorDoc | null>;
             }
             interface BuilderInstance {
+                readonly id: string;
                 _charGenMode: string;
                 element: HTMLElement;
                 allOrigins?: { length: number };
@@ -206,18 +210,12 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
                 divinationNote = `threw: ${String(err instanceof Error ? err.message : err)}`;
             }
 
-            try {
-                await builder.close?.();
-            } catch {
-                /* ignore */
-            }
-            try {
-                await g.game?.actors?.get?.(actorId)?.delete?.();
-            } catch {
-                /* ignore */
-            }
+            // Left open in Roll mode for the capture; the spec closes it and deletes the
+            // actor afterwards (#700: closing it here made the snap a full-scene shot).
+            activeBuilder._charGenMode = 'roll';
+            await activeBuilder.render(true);
 
-            return { flows, created: true, createError: null, divinationApplied, divinationNote };
+            return { flows, created: true, createError: null, divinationApplied, divinationNote, builderId: activeBuilder.id, actorId };
         },
         [...CHAR_GEN_MODES],
     );
@@ -228,6 +226,8 @@ async function probeCharGenModes(page: Page): Promise<ProbeResult> {
         createError: result.createError,
         divinationApplied: 'divinationApplied' in result && result.divinationApplied === true,
         divinationNote: 'divinationNote' in result && typeof result.divinationNote === 'string' ? result.divinationNote : 'not run',
+        builderId: 'builderId' in result ? (result.builderId ?? null) : null,
+        actorId: 'actorId' in result ? (result.actorId ?? null) : null,
     };
 }
 
@@ -238,7 +238,17 @@ test.describe.serial('character-generation modes (Tier B)', () => {
         const probe = await probeCharGenModes(page);
         test.skip(!probe.created, `could not bootstrap OriginPathBuilder: ${probe.createError ?? 'unknown'}`);
 
-        await snap(page, 'char-gen-roll-mode');
+        expect(probe.builderId, 'the builder was not left open for the capture').not.toBeNull();
+        await snap(page, 'char-gen-roll-mode', { selector: `#${probe.builderId ?? ''}`, closeWindows: true, keepWindow: probe.builderId ?? undefined });
+        await clearScreenOverlays(page);
+        await page.evaluate(async (id: string | null) => {
+            interface Actors {
+                get: (i: string) => { delete: () => Promise<void> } | undefined;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no shipped types
+            const g = globalThis as unknown as { game: { actors: Actors } };
+            if (id !== null) await g.game.actors.get(id)?.delete();
+        }, probe.actorId);
 
         const failures: string[] = [];
         for (const mode of CHAR_GEN_MODES) {

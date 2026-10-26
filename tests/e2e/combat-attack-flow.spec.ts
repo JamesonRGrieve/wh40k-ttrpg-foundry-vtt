@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { GAME_SYSTEM_IDS, joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -41,6 +42,8 @@ interface FlowResult {
 
 interface ProbeResult {
     flows: FlowResult[];
+    /** The rendered audit card, posted to chat for the capture. */
+    auditMessageId: string | null;
 }
 
 async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promise<ProbeResult> {
@@ -90,9 +93,11 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                 if (idx >= 0) flows[idx] = { flow, success, note };
             };
 
+            /** The audit card posted to chat for the capture, or null. */
+            let auditMessageId: string | null = null;
             if (ActorCls?.create == null) {
                 for (const f of flowNames) setResult(f, false, 'Actor.create unavailable');
-                return { flows };
+                return { flows, auditMessageId };
             }
 
             const cleanups: Array<() => Promise<void>> = [];
@@ -264,6 +269,14 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                     // And it actually renders into the card now.
                     const fixedHtml = await renderTmpl('systems/wh40k-rpg/templates/chat/action-roll-chat.hbs', { rollData: flat });
                     const renders48 = /\b48\b/.test(fixedHtml);
+                    // Post the rendered card so the spec can capture it (#700: it was only a string).
+                    interface ChatMessageStatic {
+                        create: (d: object) => Promise<{ id: string } | null>;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime ChatMessage global has no shipped types
+                    const chat = (globalThis as unknown as { ChatMessage: ChatMessageStatic }).ChatMessage;
+                    // The spec deletes it after the capture.
+                    auditMessageId = (await chat.create({ content: fixedHtml }))?.id ?? null;
 
                     if (isPrototypeGetter && flatHasOwnTarget) {
                         setResult(
@@ -304,11 +317,11 @@ async function probeAttackFlow(page: Page, systemIds: readonly string[]): Promis
                 );
             }
 
-            return { flows };
+            return { flows, auditMessageId };
         },
         [COMBAT_ATTACK_FLOWS, systemIds] as const,
     );
-    return { flows: result.flows as FlowResult[] };
+    return { flows: result.flows as FlowResult[], auditMessageId: result.auditMessageId };
 }
 
 test.describe.serial('combat attack→damage→audit flow (Tier B)', () => {
@@ -317,8 +330,16 @@ test.describe.serial('combat attack→damage→audit flow (Tier B)', () => {
 
         const probe = await probeAttackFlow(page, GAME_SYSTEM_IDS);
 
-        // Screenshot the rendered audit card for visual record (best-effort).
-        await snap(page, 'combat-attack-audit-card');
+        // Capture the rendered audit card from chat, then remove it.
+        expect(probe.auditMessageId, 'the audit card was not posted').not.toBeNull();
+        const auditId = probe.auditMessageId ?? '';
+        await snap(page, 'combat-attack-audit-card', { selector: await popOutChatMessage(page, auditId) });
+        await page.evaluate(async (id: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no shipped types
+            await (globalThis as unknown as { game: { messages: { get: (i: string) => { delete: () => Promise<void> } | undefined } } }).game.messages
+                .get(id)
+                ?.delete();
+        }, auditId);
 
         const failures: string[] = [];
         for (const flow of COMBAT_ATTACK_FLOWS) {
