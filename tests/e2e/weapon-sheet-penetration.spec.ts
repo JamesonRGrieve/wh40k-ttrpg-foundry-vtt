@@ -4,7 +4,7 @@ import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { allWithinContainer, createProbeActor, deleteProbeActors, openProbeSheet, type SheetWidth } from './lib/sheet-probe';
-import { test } from './lib/test';
+import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
 /**
@@ -115,6 +115,30 @@ test.describe.serial('weapon sheet Penetration tile (Tier B, #614)', () => {
                     await snap(page, `weapon-penetration-${slug}-${tag}-width`, { selector: `#${sheet.appId}`, closeWindows: true, keepWindow: sheet.appId });
                 }
                 record(flow, fits.length === 0, fits.join('; '));
+            }
+
+            // #701: the weapon sheet uses the shared item title, so a long name steps its font down
+            // and fits, with the whole name in the tooltip, at the default and minimum widths.
+            const longName = 'Mars Pattern Mk IV Long Hand Flamer';
+            const longOwner = await createProbeActor(page, {
+                name: 'Title probe (long name)',
+                type: 'dh2-character',
+                items: [leanWeapon(longName, HAND_FLAMER, 2)],
+            });
+            if (longOwner === null) throw new Error('long-name probe actor was not created');
+            actors.push(longOwner);
+            for (const width of ['default', 'min'] as const) {
+                // eslint-disable-next-line no-await-in-loop -- one sheet open at a time, captured in turn
+                const sheet = await openProbeSheet(page, longOwner, { itemName: longName, width });
+                if (sheet === null) throw new Error(`the long-name weapon sheet did not open at ${width} width`);
+                // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
+                const title = await page.evaluate((appId) => {
+                    const input = document.querySelector<HTMLInputElement>(`#${appId} input[name="name"]`);
+                    return { fits: input !== null && input.scrollWidth <= input.clientWidth + 1, tooltip: input?.dataset['tooltip'] ?? null };
+                }, sheet.appId);
+                expect(title, `the long weapon name at ${width} width (${sheet.width}px)`).toEqual({ fits: true, tooltip: longName });
+                // eslint-disable-next-line no-await-in-loop -- captures the sheet just opened
+                await snap(page, `weapon-sheet-long-name-${width}-width`, { selector: `#${sheet.appId}`, closeWindows: true, keepWindow: sheet.appId });
             }
         } finally {
             await deleteProbeActors(page, actors);

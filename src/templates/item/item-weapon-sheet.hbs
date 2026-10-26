@@ -14,9 +14,8 @@
         {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name sizeClass="tw-w-[50px] tw-h-[50px]" frameClass="tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105" overlay=false editAttr=false extraClass="tw-shrink-0"}}
 
         <div class="tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
-          <input type="text" class="tw-font-heading tw-text-[1.1rem] tw-font-semibold tw-text-[rgba(240,232,220,0.95)] wh40k-input--readonly {{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
-                 name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.ItemSheet.NamePlaceholder.Weapon'}}"
-                 {{#unless inEditMode}}readonly{{/unless}} />
+          {{!-- The shared item title (#701): its font steps down as the name grows, with the full name in the tooltip. --}}
+          {{> systems/wh40k-rpg/templates/item/partial/item-name-input.hbs placeholderKey="WH40K.ItemSheet.NamePlaceholder.Weapon" lockable=true}}
 
           <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
             <span class="tw-inline-flex tw-items-center tw-gap-[3px] tw-px-2 tw-py-[2px] tw-bg-[linear-gradient(135deg,rgba(182,62,46,0.25),rgba(182,62,46,0.12))] tw-border tw-border-[rgba(182,62,46,0.5)] tw-rounded-sm tw-text-xs tw-text-[rgba(246,151,139,0.95)]" title="{{localize 'WH40K.ItemSheet.Weapon.ClassTooltip' class=system.classLabel}}">
