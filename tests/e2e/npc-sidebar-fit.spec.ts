@@ -151,6 +151,19 @@ test.describe.serial('NPC sidebar fit and per-line aptitudes (#630, #631, Tier B
             const field = await measureNameField(page, appId);
             expect(field.fits, `${sample.label}: name clipped (${field.scrollWidth}px in ${field.clientWidth}px)`).toBe(true);
             expect(field.tooltip).toBe(sample.name);
+            // #701: the sidebar names its armour and shows every facing (it was a lone, unlabelled "FRONT 0").
+            const armour = page.locator(`#${appId} [data-wh40k-hook="craft-sidebar-armour"]`);
+            await expect(armour).toContainText('Armour');
+            const facings = await armour
+                .locator('[data-facing]')
+                .evaluateAll((cells) =>
+                    cells.map((cell) => [cell instanceof HTMLElement ? cell.dataset['facing'] ?? '' : '', /\d/u.test(cell.textContent)] as const),
+                );
+            expect(facings, sample.label).toEqual([
+                ['front', true],
+                ['side', true],
+                ['rear', true],
+            ]);
             await snap(page, `sidebar-${sample.label}`, { selector: `#${appId}`, closeWindows: true, keepWindow: appId });
             await closeApp(page, appId);
         }

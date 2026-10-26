@@ -41,9 +41,24 @@
                 / {{source.integrity.max}}
             </span>
         </div>
-        <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
-            <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.ArmourFront"}}</span>
-            <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">{{source.armour.front.value}}</span>
+        {{!-- Armour by facing (#701): labelled "Armour" with all three facings. A lone "FRONT 30" row named
+             no stat and left out the side and rear armour. --}}
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-px-1" data-wh40k-hook="craft-sidebar-armour">
+            <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Armour"}}</span>
+            <div class="tw-grid tw-grid-cols-3 tw-gap-1 tw-text-center">
+                <div class="tw-flex tw-flex-col" data-facing="front">
+                    <span class="tw-text-[0.55rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.ArmourFront"}}</span>
+                    <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">{{source.armour.front.value}}</span>
+                </div>
+                <div class="tw-flex tw-flex-col" data-facing="side">
+                    <span class="tw-text-[0.55rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.ArmourSide"}}</span>
+                    <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">{{source.armour.side.value}}</span>
+                </div>
+                <div class="tw-flex tw-flex-col" data-facing="rear">
+                    <span class="tw-text-[0.55rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.ArmourRear"}}</span>
+                    <span class="tw-font-bold tw-tabular-nums tw-text-[color:var(--color-text-primary)]">{{source.armour.rear.value}}</span>
+                </div>
+            </div>
         </div>
         <div class="tw-flex tw-items-center tw-justify-between tw-px-1">
             <span class="tw-text-[0.6rem] tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.Vehicle.Size"}}</span>
