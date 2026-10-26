@@ -1674,18 +1674,19 @@ export class WH40KBaseActor extends Actor {
     getStatBreakdown(statKey: string): WH40KStatBreakdown | null {
         // Try characteristic
         /* eslint-disable no-restricted-syntax -- boundary: system fields accessed via index; cast to Record<string, unknown> is necessary for dynamic stat lookup */
-        const sysChars = (this.system as Record<string, unknown>)['characteristics'] as Record<string, unknown> | undefined;
+        const sysChars = (this.system as Record<string, unknown>)['characteristics'] as Record<string, unknown> | null | undefined;
         /* eslint-enable no-restricted-syntax */
-        const characteristic = sysChars !== undefined ? sysChars[statKey] : undefined;
+        // A craft or voidcraft has no creature profile: its `characteristics` is null (#689 freeze).
+        const characteristic = sysChars == null ? undefined : sysChars[statKey];
         if (characteristic !== undefined && characteristic !== null) {
             return this.#getCharacteristicBreakdown(statKey, characteristic as CharacteristicLike);
         }
 
         // Try skill
         /* eslint-disable no-restricted-syntax -- boundary: system fields accessed via index; cast to Record<string, unknown> is necessary for dynamic stat lookup */
-        const sysSkills = (this.system as Record<string, unknown>)['skills'] as Record<string, unknown> | undefined;
+        const sysSkills = (this.system as Record<string, unknown>)['skills'] as Record<string, unknown> | null | undefined;
         /* eslint-enable no-restricted-syntax */
-        const skill = sysSkills !== undefined ? sysSkills[statKey] : undefined;
+        const skill = sysSkills == null ? undefined : sysSkills[statKey];
         if (skill !== undefined && skill !== null) {
             return this.#getSkillBreakdown(statKey, skill as SkillLike);
         }
@@ -1898,10 +1899,11 @@ export class WH40KBaseActor extends Actor {
      * @returns {Object} Breakdown object
      * @private
      */
-    #getFateBreakdown(): WH40KStatBreakdown {
-        const label = game.i18n.localize('WH40K.Resource.FatePoints');
+    #getFateBreakdown(): WH40KStatBreakdown | null {
         const { fate, modifierSources } = this.system;
-        if (fate === undefined) return { label, base: 0, modifiers: [], total: 0 };
+        // An actor with no Fate (a vehicle, a craft) has no breakdown, so no tooltip.
+        if (fate === undefined) return null;
+        const label = game.i18n.localize('WH40K.Resource.FatePoints');
 
         // Each source of Fate is its own row, named after that source (#689): every
         // origin path, then every talent, trait or other item.
