@@ -53,6 +53,14 @@ describe('dark chat cards', () => {
     });
 });
 
+/**
+ * An `-ink` token is text on its own fill (`--wh40k-card-gold-ink` on the gold disc),
+ * not on a panel: it is measured against that fill (chat-card-dark-theme.test.ts).
+ */
+function isFillInk(key: string): boolean {
+    return key.endsWith('-ink');
+}
+
 describe('dark surface tokens (design-tokens.js)', () => {
     const tokensSource = read('tailwind/design-tokens.js');
     const surface = objectLiteral(tokensSource, 'darkSurface');
@@ -75,7 +83,7 @@ describe('dark surface tokens (design-tokens.js)', () => {
         ];
         const failing = panels.flatMap(({ rgb, alpha }) =>
             [...surface.entries()]
-                .filter(([, value]) => value.startsWith('#'))
+                .filter(([key, value]) => value.startsWith('#') && !isFillInk(key))
                 .filter(([, value]) => contrast(hexRgb(value), over(rgb, alpha, PARCHMENT)) < 4.5)
                 .map(([key]) => `${key} on rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`),
         );
@@ -118,7 +126,7 @@ describe('chat message surface tokens (design-tokens.js)', () => {
     it('every text token clears WCAG AA (4.5:1) on each chat message under each card wash', () => {
         const backgrounds = MESSAGES.flatMap((message) => [message, ...WASHES.map(({ rgb, alpha }) => over(rgb, alpha, message))]);
         const failing = [...surface.entries()]
-            .filter(([, value]) => value.startsWith('#'))
+            .filter(([key, value]) => value.startsWith('#') && !isFillInk(key))
             .filter(([, value]) => backgrounds.some((bg) => contrast(hexRgb(value), bg) < 4.5))
             .map(([key]) => key);
         expect(failing).toEqual([]);

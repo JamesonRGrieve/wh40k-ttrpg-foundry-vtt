@@ -25,8 +25,10 @@
                     <span class="tw-font-semibold tw-text-[color:var(--wh40k-text-dark)]">{{localize "WH40K.Chat.ForceField.OverloadBand" roll=roll.total min=overloadMin max=overloadRating}}</span>
                 </div>
                 {{#if overload}}
-                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-fate-bg)] tw-border-2 tw-border-[#ffd700] tw-rounded-md tw-text-center">
-                        <div class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[#ffd700] tw-uppercase tw-tracking-[0.15em] tw-[text-shadow:0_0_10px_rgba(255,215,0,0.5)]">⚠ {{localize "WH40K.Chat.ForceField.Overload"}} ⚠</div>
+                    {{!-- Warning tokens, so the alarm reads on the parchment message on either theme
+                          (a fixed #ffd700 on the fate wash measured 1.2:1, #698). --}}
+                    <div class="tw-my-2 tw-p-3 tw-bg-[var(--wh40k-warning-bg)] tw-border-2 tw-border-[var(--wh40k-warning-secondary)] tw-rounded-md tw-text-center" data-force-field-overload>
+                        <div class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[var(--wh40k-warning-secondary)] tw-uppercase tw-tracking-[0.15em]">⚠ {{localize "WH40K.Chat.ForceField.Overload"}} ⚠</div>
                         <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-dark)] tw-mt-2 tw-leading-[1.4]">{{localize "WH40K.Chat.ForceField.OverloadDetail"}}</div>
                     </div>
                 {{/if}}

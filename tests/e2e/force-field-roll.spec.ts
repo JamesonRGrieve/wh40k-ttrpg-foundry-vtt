@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { CHAT_PANEL_TRANSLUCENT, readChatCardOnDarkTheme } from './lib/chat-dark-theme';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
@@ -111,6 +112,10 @@ test.describe.serial('force-field protection roll (#645)', () => {
         expect(card.content).toContain('Field Overload!');
         await expect.poll(async () => fieldOverloaded(page, actorId)).toBe(true);
         await snapMessage(page, 'force-field-card-overloaded', card.id);
+        // On the dark theme the card keeps the parchment's panels, and every line reads (#698).
+        const dark = await readChatCardOnDarkTheme(page, card.id, 'force-field-card-dark-theme');
+        expect(dark.unreadable, 'unreadable text on the dark theme').toEqual([]);
+        expect(dark.panel).toBe(CHAT_PANEL_TRANSLUCENT);
         recordCoverage('action', 'forceField.overloaded');
     });
 

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { popOutChatMessage } from './lib/chat-capture';
+import { CHAT_PANEL_TRANSLUCENT, readChatCardOnDarkTheme } from './lib/chat-dark-theme';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -15,12 +16,14 @@ import { scaledMs } from './lib/timing';
  * value against a named target wrapped onto two lines. The DH1 Conversion Beamer is
  * fired at a target 5 m away and its damage rolled; the card is captured in a chat
  * popout (the chat sidebar's width), and its overline and Effective value are read.
+ * The card is popped out again under the dark theme: its panel washes stay the
+ * parchment message's and every line of its text meets WCAG AA there (#698).
  *
  * Grid: 100 px = 1 m. Each flow records under `damage-card-layout.flow`. Keys MUST
  * match DAMAGE_CARD_LAYOUT_FLOWS in scripts/e2e-coverage.mjs.
  */
 
-const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line'] as const;
+const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line', 'card-reads-on-dark-theme'] as const;
 type FlowName = (typeof DAMAGE_CARD_LAYOUT_FLOWS)[number];
 
 const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
@@ -120,6 +123,15 @@ test.describe.serial('damage card chrome (Tier B, #615)', () => {
                 `card ${JSON.stringify(read)}`,
             );
             await snap(page, 'damage-card-effective-two-digit', { selector });
+
+            // Under the dark theme the card's panels stay the parchment message's, and
+            // every line of text reads on them (#698).
+            const dark = await readChatCardOnDarkTheme(page, damageId, 'damage-card-dark-theme');
+            record(
+                'card-reads-on-dark-theme',
+                dark.unreadable.length === 0 && dark.panel === CHAT_PANEL_TRANSLUCENT,
+                `panel token ${dark.panel}; unreadable ${JSON.stringify(dark.unreadable)}`,
+            );
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
         }

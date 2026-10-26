@@ -214,6 +214,8 @@ const chatSurface = {
     '--wh40k-text-muted': '#5a4630',
     '--wh40k-text-secondary': '#5a4630',
     '--wh40k-card-gold': '#6e500c',
+    // Text on a --wh40k-card-gold fill (a damage card's hit badge): light on the deep gold (#698).
+    '--wh40k-card-gold-ink': '#fbf6ea',
     '--wh40k-accent-gold': '#6e500c',
     '--wh40k-talents-primary': '#6e500c',
     '--wh40k-bronze': '#74431a',
@@ -247,6 +249,8 @@ const darkSurface = {
     '--wh40k-text-muted': '#b8ae9c',
     '--wh40k-text-secondary': '#c8b8a0',
     '--wh40k-card-gold': '#e0b84a',
+    // Text on a --wh40k-card-gold fill: dark on the bright gold (#698).
+    '--wh40k-card-gold-ink': '#0a0a0f',
     '--wh40k-accent-gold': '#e0b84a',
     '--wh40k-talents-primary': '#e0b84a',
     '--wh40k-bronze': '#e0a060',

@@ -33,12 +33,21 @@ const FALLBACK_SURFACE = '#1a1a1a';
 interface ScanOptions {
     /** Also read each select's chosen option and each text/number input's value, drawn in the control's colour. */
     controls?: boolean;
+    /**
+     * The colour under an ancestor painted with an image (`url(…)`), as `#rrggbb`: the
+     * chat message's parchment. Without it, text over such an ancestor is skipped.
+     * Gradients still skip.
+     */
+    imageSurface?: string;
 }
+
+/** The chat message parchment's base colour, for {@link ScanOptions.imageSurface}. */
+export const CHAT_PARCHMENT_SURFACE = '#ebe1cd';
 
 /** Scan `rootSelector` for failing text contrast. Returns at most `limit` violations, worst first. */
 export async function scanContrast(page: Page, rootSelector: string, limit = 40, options: ScanOptions = {}): Promise<ContrastViolation[]> {
     return page.evaluate(
-        ({ selector, fallback, max, controls }) => {
+        ({ selector, fallback, max, controls, imageSurface }) => {
             type Rgba = [number, number, number, number];
             const parse = (value: string): Rgba | null => {
                 const m = /rgba?\(([^)]+)\)/.exec(value);
@@ -71,14 +80,19 @@ export async function scanContrast(page: Page, rootSelector: string, limit = 40,
                 const lb = luminance(b);
                 return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
             };
-            const fallbackRgb = parse(`rgb(${[1, 3, 5].map((i) => parseInt(fallback.slice(i, i + 2), 16)).join(',')})`) ?? [26, 26, 26, 1];
+            const fromHex = (value: string): Rgba | null => parse(`rgb(${[1, 3, 5].map((i) => parseInt(value.slice(i, i + 2), 16)).join(',')})`);
+            const fallbackRgb = fromHex(fallback) ?? [26, 26, 26, 1];
+            const imageRgb = imageSurface === null ? null : fromHex(imageSurface);
 
-            /** Effective opaque background under `el`, or null when an image sits in the stack. */
+            /** Effective opaque background under `el`, or null when an image sits in the stack and no image surface is given. */
             const backgroundOf = (el: Element): Rgba | null => {
                 const layers: Rgba[] = [];
                 for (let node: Element | null = el; node !== null; node = node.parentElement) {
                     const cs = getComputedStyle(node);
-                    if (cs.backgroundImage !== 'none') return null;
+                    if (cs.backgroundImage !== 'none') {
+                        if (imageRgb === null || !cs.backgroundImage.startsWith('url(')) return null;
+                        return layers.reduceRight<Rgba>((under, top) => blend(top, under), imageRgb);
+                    }
                     const bg = parse(cs.backgroundColor);
                     if (bg !== null && bg[3] > 0) {
                         layers.push(bg);
@@ -133,7 +147,7 @@ export async function scanContrast(page: Page, rootSelector: string, limit = 40,
             }
             return out.sort((a, b) => a.ratio - b.ratio).slice(0, max);
         },
-        { selector: rootSelector, fallback: FALLBACK_SURFACE, max: limit, controls: options.controls === true },
+        { selector: rootSelector, fallback: FALLBACK_SURFACE, max: limit, controls: options.controls === true, imageSurface: options.imageSurface ?? null },
     );
 }
 

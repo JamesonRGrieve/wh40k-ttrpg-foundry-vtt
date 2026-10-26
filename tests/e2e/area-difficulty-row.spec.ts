@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { popOutChatMessage } from './lib/chat-capture';
+import { CHAT_PANEL_TRANSLUCENT, readChatCardOnDarkTheme } from './lib/chat-dark-theme';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -20,7 +21,7 @@ import { scaledMs } from './lib/timing';
  * match AREA_DIFFICULTY_ROW_FLOWS in scripts/e2e-coverage.mjs.
  */
 
-const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept'] as const;
+const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept', 'results-read-on-dark-theme'] as const;
 type FlowName = (typeof AREA_DIFFICULTY_ROW_FLOWS)[number];
 
 const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
@@ -118,6 +119,13 @@ test.describe.serial('area results card provenance rows (Tier B, #616)', () => {
             );
             record('tests-and-statement-kept', read.tests === 2 && read.statement.includes('(+0)'), `statement "${read.statement}", tests ${read.tests}`);
             await snap(page, 'area-spray-results-no-zero-difficulty', { selector });
+            // On the dark theme the results card keeps the parchment's panels, and every line reads (#698).
+            const dark = await readChatCardOnDarkTheme(page, resultsCard, 'area-spray-results-dark-theme');
+            record(
+                'results-read-on-dark-theme',
+                dark.unreadable.length === 0 && dark.panel === CHAT_PANEL_TRANSLUCENT,
+                `panel token ${dark.panel}; unreadable ${JSON.stringify(dark.unreadable)}`,
+            );
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
         }

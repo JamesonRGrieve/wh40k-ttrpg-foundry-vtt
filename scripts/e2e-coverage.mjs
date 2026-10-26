@@ -712,12 +712,12 @@ recordDimension('weapon-penetration.flow', covered['weapon-penetration.flow'], W
 
 // The damage card's chrome (#615), tests/e2e/damage-card-layout.spec.ts.
 // Keep in sync with DAMAGE_CARD_LAYOUT_FLOWS there.
-const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line'];
+const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line', 'card-reads-on-dark-theme'];
 recordDimension('damage-card-layout.flow', covered['damage-card-layout.flow'], DAMAGE_CARD_LAYOUT_FLOWS);
 
 // The area results card's provenance rows (#616), tests/e2e/area-difficulty-row.spec.ts.
 // Keep in sync with AREA_DIFFICULTY_ROW_FLOWS there.
-const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept'];
+const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept', 'results-read-on-dark-theme'];
 recordDimension('area-difficulty-row.flow', covered['area-difficulty-row.flow'], AREA_DIFFICULTY_ROW_FLOWS);
 
 // The Combat tab's Armour | Movement row fits the sheet (#617, #620), tests/e2e/combat-tab-layout.spec.ts.
