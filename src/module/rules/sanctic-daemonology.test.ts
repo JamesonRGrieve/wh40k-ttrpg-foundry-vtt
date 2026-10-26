@@ -74,7 +74,7 @@ describe('resolveSancticManifestation (composition with psychic-push + mitigatio
             basePR: 5,
             success: true,
         });
-        expect(r.effectivePR).toBe(2);
+        expect(r.effectivePR).toBe(3);
         expect(r.focusModifier).toBe(10);
         expect(r.corruption).toBe(0);
         expect(r.phenomenaFires).toBe(false);

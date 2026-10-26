@@ -12,7 +12,7 @@
  *   - Psyker Class (Table 6-1): Bound (+3 push), Unbound (+5 push), and
  *     Daemonic (+4 push). Each class caps how many additional points of
  *     PR a psyker may add when Pushing.
- *   - Fettered (core.md :9486): half PR rounded down, no Psychic
+ *   - Fettered (core.md :9486): half PR rounded up, no Psychic
  *     Phenomena roll on a successful test.
  *   - Unfettered (core.md :9499): full PR, one Psychic Phenomena roll
  *     on a successful test as RAW.
@@ -28,6 +28,7 @@
  */
 
 import { nonNegInt } from './_num.ts';
+import { fetteredPsyRating } from './psychic-push.ts';
 
 /** Psyker class identifiers from BC Table 6-1. */
 export type PsykerClass = 'bound' | 'unbound' | 'daemonic';
@@ -86,7 +87,7 @@ export interface EffectivePsyRatingArgs {
 /**
  * Resolve the effective PR used to manifest a power.
  *
- * - Fettered: `floor(basePR / 2)`, no phenomena (handled in
+ * - Fettered: half the base PR rounded up ({@link fetteredPsyRating}), no phenomena (handled in
  *   {@link phenomenaRollCount}).
  * - Unfettered: `basePR`.
  * - Push: `basePR + min(pushLevel, maxPushLevel(psykerClass))`.
@@ -96,7 +97,7 @@ export interface EffectivePsyRatingArgs {
  */
 export function effectivePsyRating(args: EffectivePsyRatingArgs): number {
     const base = nonNegInt(args.basePR);
-    if (args.mode === 'fettered') return Math.floor(base / 2);
+    if (args.mode === 'fettered') return fetteredPsyRating(base);
     if (args.mode === 'unfettered') return base;
     // push
     const requested = nonNegInt(args.pushLevel);

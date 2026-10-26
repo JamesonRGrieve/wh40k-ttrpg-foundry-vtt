@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolvePsyMode } from './psychic-push';
+import { fetteredPsyRating, resolvePsyMode } from './psychic-push';
 
 describe('resolvePsyMode', () => {
     it('fettered halves PR and grants +10 focus bonus, no phenomena', () => {
@@ -11,8 +11,16 @@ describe('resolvePsyMode', () => {
         });
     });
 
-    it('fettered floors odd PR halves', () => {
-        expect(resolvePsyMode({ mode: 'fettered', basePR: 5 }).effectivePR).toBe(2);
+    // #178: every line prints "halve his PR (rounding up)".
+    it.each([
+        [1, 1],
+        [2, 1],
+        [3, 2],
+        [5, 3],
+        [0, 0],
+    ])('fettered halves PR %i rounding up to %i', (basePR, expected) => {
+        expect(resolvePsyMode({ mode: 'fettered', basePR }).effectivePR).toBe(expected);
+        expect(fetteredPsyRating(basePR)).toBe(expected);
     });
 
     it('unfettered keeps base PR and 0 modifier', () => {

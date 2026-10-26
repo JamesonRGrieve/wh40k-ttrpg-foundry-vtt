@@ -4,7 +4,7 @@
  *
  * Each manifestation chooses a Psy Rating mode:
  *
- *  - **Fettered:** roll uses half PR for both the focus test difficulty
+ *  - **Fettered:** roll uses half PR (rounded up) for both the focus test difficulty
  *    bonus and downstream PR-scaling. No Psychic Phenomena chance
  *    (the safe option).
  *  - **Unfettered:** roll uses the full PR. Phenomena trigger via the
@@ -36,11 +36,20 @@ export interface PsyModeInput {
     pushLevel?: number;
 }
 
+/**
+ * The Psy Rating a Fettered manifestation uses (#178): half the base PR, rounding
+ * up. Every line prints it that way: BC and RT core "halve his PR (rounding up)",
+ * OW "Half of his Active Psy Rating, rounding up", DW "half his normal rating
+ * (rounding up)". A PR 1 psyker therefore still manifests at PR 1.
+ */
+export function fetteredPsyRating(basePR: number): number {
+    return Math.ceil(nonNegInt(basePR) / 2);
+}
+
 export function resolvePsyMode(input: PsyModeInput): PsyModeResolved {
     const basePR = nonNegInt(input.basePR);
     if (input.mode === 'fettered') {
-        const half = Math.floor(basePR / 2);
-        return { effectivePR: half, focusModifier: 10, forcePhenomena: false, phenomenaModifier: 0 };
+        return { effectivePR: fetteredPsyRating(basePR), focusModifier: 10, forcePhenomena: false, phenomenaModifier: 0 };
     }
     if (input.mode === 'push') {
         const push = Math.max(1, Math.trunc(input.pushLevel ?? 1));

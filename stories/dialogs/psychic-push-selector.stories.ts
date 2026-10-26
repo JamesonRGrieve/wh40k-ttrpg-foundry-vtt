@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { resolvePsyMode, type PsyMode, type PsyModeResolved } from '../../src/module/rules/psychic-push.ts';
 import psychicPanelSrc from '../../src/templates/prompt/unified/panels/psychic-panel.hbs?raw';
 import { initializeStoryHandlebars } from '../template-support';
@@ -71,6 +72,15 @@ type Story = StoryObj<PsyContextArgs>;
 export const Fettered: Story = {
     name: 'Fettered (safe — half PR, no phenomena)',
     args: { mode: 'fettered', pushLevel: 1, pr: 4 },
+};
+
+// #178: Fettered halves PR rounding up, as every line prints it, so PR 3 manifests at 2.
+export const FetteredOddRating: Story = {
+    name: 'Fettered at PR 3 (rounds up to 2)',
+    args: { mode: 'fettered', pushLevel: 1, pr: 3 },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-testid="psy-effective-pr"]')?.textContent.trim()).toBe('2');
+    },
 };
 
 export const Unfettered: Story = {

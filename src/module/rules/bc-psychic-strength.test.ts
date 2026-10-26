@@ -32,13 +32,15 @@ describe('bc-psychic-strength :: push ceilings', () => {
 });
 
 describe('bc-psychic-strength :: effectivePsyRating', () => {
-    it('fettered halves base PR (round down) for even base', () => {
+    it('fettered halves base PR for even base', () => {
         expect(effectivePsyRating({ mode: 'fettered', basePR: 4, pushLevel: 0, psykerClass: 'bound' })).toBe(2);
     });
 
-    it('fettered halves base PR (round down) for odd base', () => {
-        expect(effectivePsyRating({ mode: 'fettered', basePR: 5, pushLevel: 0, psykerClass: 'unbound' })).toBe(2);
-        expect(effectivePsyRating({ mode: 'fettered', basePR: 7, pushLevel: 0, psykerClass: 'daemonic' })).toBe(3);
+    it('fettered halves base PR rounding up for odd base (#178: BC core "halve his PR (rounding up)")', () => {
+        expect(effectivePsyRating({ mode: 'fettered', basePR: 3, pushLevel: 0, psykerClass: 'bound' })).toBe(2);
+        expect(effectivePsyRating({ mode: 'fettered', basePR: 5, pushLevel: 0, psykerClass: 'unbound' })).toBe(3);
+        expect(effectivePsyRating({ mode: 'fettered', basePR: 7, pushLevel: 0, psykerClass: 'daemonic' })).toBe(4);
+        expect(effectivePsyRating({ mode: 'fettered', basePR: 1, pushLevel: 0, psykerClass: 'bound' })).toBe(1);
     });
 
     it('fettered ignores push level entirely', () => {
@@ -131,7 +133,7 @@ describe('bc-psychic-strength :: resolvePsychicTest', () => {
             pushLevel: 0,
             sustainedPowerCount: 0,
         });
-        expect(result.effectivePR).toBe(2);
+        expect(result.effectivePR).toBe(3);
         expect(result.sustainPenalty).toBe(0);
         expect(result.phenomenaRolls).toBe(0);
     });
