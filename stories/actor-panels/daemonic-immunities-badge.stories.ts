@@ -8,8 +8,8 @@
  *
  * #630: the pill used to sit in the sidebar column under the origin bubbles,
  * where its wrapped text overflowed and pushed Threat / Tier below the fold. It
- * is now overlaid on the portrait's bottom edge, kept to one line (the
- * immunities end in an ellipsis), and a long NPC name steps its font size down
+ * is now overlaid on the portrait's bottom edge, kept to one line (#699: the
+ * immunities are three glyphs, not truncated text), and a long NPC name steps its font size down
  * to fit the narrow name field with the full name in a tooltip. Layout itself is
  * measured in the Tier B spec (`tests/e2e/npc-sidebar-fit.spec.ts`); these plays
  * pin the structure that layout depends on.
@@ -84,13 +84,23 @@ export const Default: Story = {
         const badge = canvasElement.querySelector<HTMLElement>(BADGE);
         await expect(badge).not.toBeNull();
         if (badge === null) return;
-        // One line, always: the pill never wraps, the immunities truncate.
+        // One line, always: the pill never wraps.
         await expect(badge.classList.contains('tw-whitespace-nowrap')).toBe(true);
+        // #699: readable on any portrait, a solid black pill with light-red text, not crimson on crimson.
+        await expect(badge.classList.contains('tw-bg-black')).toBe(true);
+        await expect(badge.classList.contains('tw-text-crimson-l40')).toBe(true);
+        // #699: nothing truncates. The immunities are three glyphs, each naming its immunity in a tooltip.
         const immunities = badge.querySelector<HTMLElement>('[data-wh40k-hook="daemonic-immunities-badge__immunities"]');
-        await expect(immunities?.classList.contains('tw-truncate')).toBe(true);
-        await expect(immunities?.classList.contains('tw-min-w-0')).toBe(true);
+        await expect(immunities?.classList.contains('tw-truncate')).toBe(false);
+        const glyphs = Array.from(immunities?.querySelectorAll<HTMLElement>('[data-immunity]') ?? []);
+        await expect(glyphs.map((g) => [g.dataset['immunity'], g.dataset['tooltip']])).toEqual([
+            ['disease', 'Immune to Disease'],
+            ['poison', 'Immune to Poison'],
+            ['undying', 'Undying'],
+        ]);
+        await expect(badge.scrollWidth).toBeLessThanOrEqual(badge.clientWidth);
         await expect(badge.querySelector('[data-wh40k-hook="daemonic-immunities-badge__label"]')?.textContent.trim()).toBe('Daemonic');
-        // The full text survives truncation in the tooltip and the accessible name.
+        // The full text is in the tooltip and the accessible name.
         await expect(badge.getAttribute('role')).toBe('img');
         await expect(badge.getAttribute('aria-label')).toBe('Daemonic: Immune to Disease, Immune to Poison, Undying');
         await expect(badge.dataset['tooltip']).toContain('immune to disease and poison');

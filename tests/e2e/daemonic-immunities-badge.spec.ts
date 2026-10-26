@@ -44,6 +44,10 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
             let sheetRendered = false;
             let badgeFound = false;
             let labelText: string | null = null;
+            let fitsWhole = false;
+            let insidePortrait = false;
+            let glyphs: string[] = [];
+            let colors: { text: string; background: string } | null = null;
             let error: string | null = null;
 
             try {
@@ -69,18 +73,34 @@ test.describe.serial('Daemonic Immunities header badge (Tier B)', () => {
                     const badge = sheet.element.querySelector('[data-wh40k-hook="daemonic-immunities-badge"]');
                     badgeFound = badge !== null;
                     labelText = badge?.querySelector('[data-wh40k-hook="daemonic-immunities-badge__label"]')?.textContent.trim() ?? null;
+                    if (badge instanceof HTMLElement) {
+                        // #699: nothing in the pill is cut off, and it sits wholly on the portrait.
+                        fitsWhole = badge.scrollWidth <= badge.clientWidth;
+                        const portrait = badge.closest('[data-wh40k-hook="actor-portrait"]')?.getBoundingClientRect();
+                        const pill = badge.getBoundingClientRect();
+                        insidePortrait = portrait !== undefined && pill.left >= portrait.left && pill.right <= portrait.right && pill.bottom <= portrait.bottom;
+                        glyphs = Array.from(badge.querySelectorAll<HTMLElement>('[data-immunity]')).map((glyph) => glyph.dataset['immunity'] ?? '');
+                        const style = getComputedStyle(badge);
+                        colors = { text: style.color, background: style.backgroundColor };
+                    }
                 }
             } catch (err) {
                 error = String((err as Error).message);
             }
 
-            return { actorId, sheetRendered, badgeFound, labelText, error };
+            return { actorId, sheetRendered, badgeFound, labelText, fitsWhole, insidePortrait, glyphs, colors, error };
         });
 
         expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.sheetRendered, 'NPC sheet did not render').toBe(true);
         expect(result.badgeFound, 'expected Daemonic Immunities badge on the sheet').toBe(true);
         expect(result.labelText, 'badge label should be the localized "Daemonic" string').toBe('Daemonic');
+        // #699: the pill shows whole (no ellipsis), on the portrait, with its three immunity glyphs.
+        expect(result.fitsWhole, 'the Daemonic pill is cut off').toBe(true);
+        expect(result.insidePortrait, 'the Daemonic pill spills off the portrait').toBe(true);
+        expect(result.glyphs).toEqual(['disease', 'poison', 'undying']);
+        // #699: light-red text on a solid black pill (it was crimson on crimson).
+        expect(result.colors).toEqual({ text: 'rgb(255, 90, 90)', background: 'rgb(0, 0, 0)' });
 
         await snap(page, 'daemonic-immunities-badge');
         recordCoverage('sheet.partial', 'DaemonicImmunitiesBadge');
