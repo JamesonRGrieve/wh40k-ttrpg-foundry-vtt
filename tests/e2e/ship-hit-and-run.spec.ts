@@ -1,3 +1,4 @@
+import { CHAT_PARCHMENT_SURFACE, scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { expect, test } from './lib/test';
 import {
@@ -76,6 +77,9 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(ran.card.text).toContain('The raiders win by 4 degrees and cause mayhem.');
             expect(ran.card.text).toContain('4 degrees won by');
             expect(ran.card.text).not.toContain('(s)');
+            // #698: each test's TARGET is in the sheet accent on the dark card, and every line reads there.
+            const tests = `#sidebar .chat-log .message[data-message-id="${ran.card.id}"] [data-wh40k-hook="ship-assault-test"]`;
+            expect(await scanContrast(page, tests, 40, { imageSurface: CHAT_PARCHMENT_SURFACE })).toEqual([]);
 
             // 4 Hull (and on an RT hull 4 Crew and 4 Morale), plus the chosen Critical Hit as a ship status.
             expect(await readShip(page, target.id)).toMatchObject({ hull: 24, population: 51, morale: 56, statuses: 1 });

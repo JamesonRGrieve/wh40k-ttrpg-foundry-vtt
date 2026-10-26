@@ -76,6 +76,23 @@ describe('chat accent (#635)', () => {
         expect(Math.min(...stops)).toBeGreaterThanOrEqual(4.5);
     });
 
+    it('the ship assault test (boarding, Hit and Run, ramming) draws its TARGET in the sheet accent, on cards that are all dark (#698)', () => {
+        const partial = 'systems/wh40k-rpg/templates/chat/partial/ship-assault-test.hbs';
+        const dir = 'src/templates/chat';
+        const consumers = readdirSync(join(process.cwd(), dir), { recursive: true, encoding: 'utf8' })
+            .filter((name) => name.endsWith('.hbs') && readRepoFile(`${dir}/${name}`).includes(partial))
+            .sort();
+        expect(consumers.length).toBeGreaterThan(0);
+        expect(consumers.filter((name) => !readRepoFile(`${dir}/${name}`).includes('data-wh40k-surface="dark"'))).toEqual([]);
+        expect(readRepoFile('src/templates/chat/partial/ship-assault-test.hbs')).toContain('modifier-breakdown.hbs accentRole="accent"');
+    });
+
+    it.each(LINES)('the %s sheet accent clears 4.5:1 on the dark ship card panel over the parchment (#698)', (line) => {
+        const accent = /\baccent:\s*'([^']+)'/u.exec(readRepoFile(`src/module/config/game-systems/${line}-config.ts`))?.[1] ?? '';
+        const panel = over({ r: 8, g: 16, b: 28 }, 0.9, { r: 235, g: 225, b: 205 });
+        expect(contrast(hexRgb(paletteHex(accent)), panel)).toBeGreaterThanOrEqual(4.5);
+    });
+
     it('light chat cards draw the chat accent, never the sheet accent', () => {
         const dir = 'src/templates/chat';
         const templates = readdirSync(join(process.cwd(), dir), { recursive: true, encoding: 'utf8' }).filter((name) => name.endsWith('.hbs'));
