@@ -17,7 +17,8 @@
                             <div class="tw-flex tw-flex-wrap tw-gap-1.5">
                                 {{#each (specialQualities weapon.system.effectiveSpecial) as |quality|}}
                                     <span class="tw-inline-block tw-px-2.5 tw-py-1 tw-bg-[rgba(75,192,115,0.15)] tw-border tw-border-[rgba(75,192,115,0.3)] tw-rounded-md tw-text-[var(--wh40k-success-secondary)] tw-text-[0.8rem] tw-font-semibold tw-cursor-help hover:tw-bg-[rgba(75,192,115,0.25)] hover:tw-border-[rgba(75,192,115,0.5)] hover:-tw-translate-y-px hover:tw-transition-all" data-tooltip="{{quality.description}}" title="{{quality.description}}">
-                                        {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
+                                        {{!-- The helper's label already carries the rating ("Blast (3)", #698). --}}
+                                        {{quality.label}}
                                     </span>
                                 {{/each}}
                             </div>

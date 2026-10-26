@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import HandlebarsLib from 'handlebars';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registerHandlebarsHelpers } from './handlebars-helpers.ts';
@@ -18,6 +20,11 @@ interface QualityDefinition {
 const DEFINITIONS: Partial<Record<string, QualityDefinition>> = {
     reliable: { label: 'Reliable', description: 'Rarely jams.' },
     accurate: { label: 'Accurate', description: 'Rewards aiming.' },
+    blast: { label: 'Blast (X)', description: 'Hits everyone in the area.', hasLevel: true },
+    snare: { label: 'Snare (X)', description: 'Entangles.', hasLevel: true },
+    flame: { label: 'Flame', description: 'Sets alight.' },
+    spray: { label: 'Spray', description: 'A cone.' },
+    tearing: { label: 'Tearing', description: 'Rolls an extra die.' },
 };
 
 const hbs = HandlebarsLib.create();
@@ -37,6 +44,25 @@ describe('weapon-quality helpers read CONFIG.wh40k', () => {
         installSystemConfig();
         const out = render('{{#each (specialQualities ids)}}{{label}};{{/each}}', { ids: new Set(['reliable', 'accurate']) });
         expect(out).toBe('Reliable;Accurate;');
+    });
+
+    it('labels the area and autocannon qualities by their base id, each rating once (#698)', () => {
+        installSystemConfig();
+        const out = render('{{#each (specialQualities ids)}}{{label}};{{/each}}', {
+            ids: new Set(['blast-3', 'flame', 'spray', 'snare-1', 'tearing', 'reliable']),
+        });
+        expect(out).toBe('Blast (3);Flame;Spray;Snare (1);Tearing;Reliable;');
+    });
+
+    it('the attack card prints the chip label alone, since the label already carries the rating (#698)', () => {
+        // The card appended " ({{quality.level}})" after the label, so a Blast (3) chip read "Blast (3) (3)".
+        const card = readFileSync(path.resolve(import.meta.dirname, '../../templates/chat/action-roll-chat.hbs'), 'utf8');
+        const loop = card.slice(
+            card.indexOf('(specialQualities weapon.system.effectiveSpecial)'),
+            card.indexOf('{{/each}}', card.indexOf('(specialQualities weapon.system.effectiveSpecial)')),
+        );
+        expect(loop).toContain('{{quality.label}}');
+        expect(loop).not.toContain('quality.level');
     });
 
     it('qualityLookup resolves one quality from the system config', () => {

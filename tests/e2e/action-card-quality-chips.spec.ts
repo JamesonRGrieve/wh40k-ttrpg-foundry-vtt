@@ -29,20 +29,29 @@ interface ProbeWindow {
     game: { messages: { filter: (fn: (m: { flavor: string }) => boolean) => Array<{ delete: () => Promise<void> }> } };
 }
 
-async function postActionCard(page: Page): Promise<string> {
+/**
+ * The qualities the freeze audit saw as an empty Active Qualities box (#698): the area
+ * weapons' Blast, Flame, Spray and Snare, and the autocannon's Tearing and Reliable, by the
+ * ids the DH2 packs author. Each resolves through its base id to the compendium's own name,
+ * its rating printed once.
+ */
+const AUDITED_QUALITIES = ['blast-3', 'flame', 'spray', 'snare-1', 'tearing', 'reliable'] as const;
+const AUDITED_CHIPS = ['Blast (3)', 'Flame', 'Spray', 'Snare (1)', 'Tearing', 'Reliable'];
+
+async function postActionCard(page: Page, weaponName: string, qualities: readonly string[]): Promise<string> {
     return page.evaluate(
-        async ({ flavor, qualities }) => {
+        async ({ flavor, name, ids }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
             const w = globalThis as unknown as ProbeWindow;
             const content = await w.foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/action-roll-chat.hbs', {
                 label: 'Semi-Auto Burst',
-                rollData: { name: 'Lasgun', action: 'Attack', weapon: { system: { effectiveSpecial: new Set(qualities) } } },
+                rollData: { name, action: 'Attack', weapon: { system: { effectiveSpecial: new Set(ids) } } },
             });
             const message = await w.ChatMessage.create({ content, flavor });
             if (message === null) throw new Error('ChatMessage.create returned null');
             return message.id;
         },
-        { flavor: PREFIX, qualities: [...QUALITIES] },
+        { flavor: PREFIX, name: weaponName, ids: [...qualities] },
     );
 }
 
@@ -57,7 +66,7 @@ test.describe.serial('attack-card quality chips read on the chat message (Tier B
 
     test('each quality chip meets WCAG AA on its surface', async ({ page }) => {
         await joinOrSkip(page);
-        const messageId = await postActionCard(page);
+        const messageId = await postActionCard(page, 'Lasgun', QUALITIES);
         const message = await showChatMessage(page, messageId);
         const chips = page.locator(`${message} ${CHIP}`);
         await expect(chips).toHaveCount(QUALITIES.length);
@@ -107,6 +116,18 @@ test.describe.serial('attack-card quality chips read on the chat message (Tier B
         const report = ratios.map((r) => `${r.ratio.toFixed(2)} (${r.detail})`).join('; ');
         await snap(page, 'action-card-quality-chips', { selector: message });
         expect(Math.min(...ratios.map((r) => r.ratio)), `chip contrast ${report}`).toBeGreaterThanOrEqual(MIN_TEXT_CONTRAST);
+        recordCoverage('chat.contrast', 'action-roll-chat.quality-chips');
+    });
+
+    test('each audited quality resolves to a chip named by its compendium document, its rating once (#698)', async ({ page }) => {
+        await joinOrSkip(page);
+        const messageId = await postActionCard(page, 'Autocannon', AUDITED_QUALITIES);
+        const message = await showChatMessage(page, messageId);
+        const chips = page.locator(`${message} ${CHIP}`);
+        await expect(chips).toHaveCount(AUDITED_QUALITIES.length);
+        const labels = (await chips.allTextContents()).map((text) => text.replace(/\s+/g, ' ').trim());
+        await snap(page, 'action-card-quality-chips-audited', { selector: message });
+        expect(labels).toEqual(AUDITED_CHIPS);
         recordCoverage('chat.contrast', 'action-roll-chat.quality-chips');
     });
 });
