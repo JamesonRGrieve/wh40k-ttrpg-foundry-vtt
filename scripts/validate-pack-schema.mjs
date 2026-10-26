@@ -163,7 +163,15 @@ export const RIDER_CONDITION_ID = /^(?:[a-z0-9]+(?:-[a-z0-9]+)*)?$/;
  */
 export const grenadeRiderShape = z
     .object({
-        test: z.object({ characteristic: z.enum(RIDER_TEST_CHARACTERISTIC), modifier: z.number().int(), psykerModifier: z.number().int() }).strict(),
+        test: z
+            .object({
+                characteristic: z.enum(RIDER_TEST_CHARACTERISTIC),
+                modifier: z.number().int(),
+                psykerModifier: z.number().int(),
+                // Optional: the DataModel fills 0 for a test with no damage penalty (#698).
+                damagePenalty: z.number().int().optional(),
+            })
+            .strict(),
         affects: z.enum(RIDER_AFFECTS),
         condition: z.string().regex(RIDER_CONDITION_ID),
         area: z.object({ size: z.string(), measure: z.enum(RIDER_AREA_MEASURE) }).strict(),

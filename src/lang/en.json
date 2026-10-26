@@ -2769,7 +2769,8 @@
             },
             "Component": {
                 "Grenade": "{name}",
-                "Psyker": "Psyker"
+                "Psyker": "Psyker",
+                "DamageSuffered": "{damage} damage suffered"
             },
             "ConditionRounds": {
                 "One": "{condition} for {rounds} round",

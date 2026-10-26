@@ -51,6 +51,7 @@ const OUTCOME_LABEL_KEYS: Readonly<Record<RiderOutcome, I18nKey>> = {
 const COMPONENT_LABEL_KEYS: Readonly<Record<RiderComponentSource, I18nKey>> = {
     grenade: 'WH40K.GrenadeRider.Component.Grenade',
     psyker: 'WH40K.GrenadeRider.Component.Psyker',
+    damage: 'WH40K.GrenadeRider.Component.DamageSuffered',
 };
 
 /** How a creature came out of the rider. */
@@ -130,7 +131,10 @@ export function buildRiderResultsCard(
                               target: test.target,
                               degreesLabel: test.passed ? '' : labels.localize('WH40K.GrenadeRider.DegreesOfFailure', { degrees: test.degreesOfFailure }),
                               components: test.components.map((component) => {
-                                  const label = labels.localize(COMPONENT_LABEL_KEYS[component.source], { name: rider.name });
+                                  const label = labels.localize(COMPONENT_LABEL_KEYS[component.source], {
+                                      name: rider.name,
+                                      damage: component.damageSuffered ?? 0,
+                                  });
                                   return {
                                       label,
                                       value: component.value,

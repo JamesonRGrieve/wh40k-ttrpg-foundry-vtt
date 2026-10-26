@@ -46,7 +46,9 @@ import { scaledMs } from './lib/timing';
  *   takes its rolled 2d10 Toughness damage (#698);
  * - a Rogue Trader thrower's Psyk-out (the shared document's RT branch, Faith and Coin
  *   p.85) tests the psyker only: it is Stunned for its rolled rounds, its Stunned visual
- *   on the token, and the bystander is unaffected.
+ *   on the token, and the bystander is unaffected;
+ * - the RT Rad grenade (Faith and Coin) blasts both RT creatures, and each one's
+ *   Toughness test carries a "N damage suffered" row of −5 per point it took (#698).
  *
  * Grid: 100 px = 1 m. Each flow records under `grenade-throw.flow`. Keys MUST match
  * GRENADE_THROW_FLOWS in scripts/e2e-coverage.mjs.
@@ -71,6 +73,7 @@ const GRENADE_THROW_FLOWS = [
     'rider-condition-applied-to-token',
     'damaging-rider-resolves-after-damage',
     'rider-psyker-only-condition-with-visual',
+    'rad-rider-damage-penalty-row',
 ] as const;
 type FlowName = (typeof GRENADE_THROW_FLOWS)[number];
 
@@ -84,6 +87,10 @@ const TEARS = `${WITHIN_WEAPONS}.WUQMZb3rGzvRiJi8`;
 const RAD_GRENADE = `${WITHIN_WEAPONS}.Pr6BN0flDXSlUxnc`;
 /** The Psyk-out canonical (DH2 Enemies Beyond); an RT owner reads its `rt` branch (Faith and Coin p.85). */
 const PSYK_OUT = 'Compendium.wh40k-rpg.dh2-beyond-items-weapons.Item.lScsj4tB78fJdtkt';
+/** The RT Rad grenade (Faith and Coin): Toughness +0, −5 per point of damage suffered (#698). */
+const RT_RAD_GRENADE = 'Compendium.wh40k-rpg.rt-faith-items-weapons.Item.JG4AY6KIs4F5bBDq';
+/** The RT Rad rider's printed penalty per point of damage suffered. */
+const RT_RAD_DAMAGE_PENALTY = -5;
 /** The RT Psyk-out results card: Willpower −10 for psykers only; the psyker (30 − 10 = 20 against 60) is Stunned, the bystander untouched. */
 const PSYK_OUT_RESULTS_TEXT = ['Willpower -10', 'Psykers only', 'Rogue Psyker', 'Stunned for', 'Applied', 'Bystander', 'Unaffected'];
 /** The face both creatures roll on a rider test (see TOKENS). */
@@ -156,12 +163,28 @@ const TOKENS = [
         type: 'rt-character',
         x: 200,
         y: 1200,
-        items: [leanWeapon('Psyk-Out Grenade', PSYK_OUT, 1)],
+        items: [leanWeapon('Psyk-Out Grenade', PSYK_OUT, 1), leanWeapon('Rad Grenade', RT_RAD_GRENADE, 1)],
         system: { characteristics: { ballisticSkill: { base: 50 }, strength: { base: 40 } } },
         flags: { 'wh40k-rpg': { sheetSource: 'authored-build' } },
     },
-    { key: 'rtPsyker', name: 'Rogue Psyker', type: 'rt-npc', x: 700, y: 1200, system: { characteristics: { willpower: { base: 30 } }, psy: { rating: 3 } } },
-    { key: 'rtBystander', name: 'Bystander', type: 'rt-npc', x: 800, y: 1200, system: { characteristics: { willpower: { base: 30 } } } },
+    // Their Toughness differs so each soaks the RT Rad grenade's blast to a different damage,
+    // and so takes a different −5-per-point penalty on the rider's test (#698).
+    {
+        key: 'rtPsyker',
+        name: 'Rogue Psyker',
+        type: 'rt-npc',
+        x: 700,
+        y: 1200,
+        system: { characteristics: { willpower: { base: 30 }, toughness: { base: 40 } }, psy: { rating: 3 } },
+    },
+    {
+        key: 'rtBystander',
+        name: 'Bystander',
+        type: 'rt-npc',
+        x: 800,
+        y: 1200,
+        system: { characteristics: { willpower: { base: 30 }, toughness: { base: 60 } } },
+    },
 ];
 
 /** The damage prompt's damage-type select (#624): its chosen option, its content height and the option's line height. */
@@ -397,10 +420,15 @@ interface WeaponRollThrow {
 }
 
 /** Throw `weaponName` at the target through the weapon roll (a BS hit), then resolve its Blast from the attack card. */
-async function throwThroughWeaponRoll(page: Page, scene: HarnessScene, weaponName: string): Promise<WeaponRollThrow> {
+async function throwThroughWeaponRoll(
+    page: Page,
+    scene: HarnessScene,
+    weaponName: string,
+    who: { firer: string; target: string } = { firer: 'thrower', target: 'target' },
+): Promise<WeaponRollThrow> {
     const thrown = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
-        firer: scene.tokens['thrower'] ?? '',
-        target: scene.tokens['target'] ?? '',
+        firer: scene.tokens[who.firer] ?? '',
+        target: scene.tokens[who.target] ?? '',
         weaponName,
         faces: [[20, 100]] as Array<[number, number]>,
     });
@@ -510,6 +538,8 @@ interface RiderResultsRead {
     rows: number;
     /** Each row's "what landed" line, in row order. */
     effects: string[];
+    /** Each row's test: its base, its provenance rows ("4 damage suffered -20") and its "roll vs target" line. */
+    tests: Array<{ base: number; components: string[]; roll: string }>;
 }
 
 /** Both creatures rolling `face` on their d100. */
@@ -543,6 +573,11 @@ async function resolveRiderFrom(page: Page, messageId: string, faces: Array<[num
             text: (root?.textContent ?? '').replace(/\s+/g, ' '),
             rows: root?.querySelectorAll('[data-rider-target]').length ?? 0,
             effects: Array.from(root?.querySelectorAll('[data-rider-effect]') ?? [], (el) => el.textContent.replace(/\s+/g, ' ').trim()),
+            tests: Array.from(root?.querySelectorAll<HTMLElement>('[data-rider-target]') ?? [], (row) => ({
+                base: Number(row.querySelector('[data-rider-base]')?.textContent.trim() ?? 'NaN'),
+                components: Array.from(row.querySelectorAll('[data-rider-component]'), (el) => el.textContent.replace(/\s+/g, ' ').trim()),
+                roll: row.querySelector('[data-rider-roll]')?.textContent.replace(/\s+/g, ' ').trim() ?? '',
+            })),
         };
     }, resultsCard);
 }
@@ -882,6 +917,31 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
                 'grenade-rt-psyk-out-stunned-psyker',
                 rtConditions.map((token) => token.center),
             );
+
+            // --- RT Rad grenade: its test takes −5 per point of damage suffered from the blast (#698)
+            const rtRad = await throwThroughWeaponRoll(page, scene, 'Rad Grenade', { firer: 'rtThrower', target: 'rtPsyker' });
+            const rtRadDamage = rtRad.resolved === null ? null : await rollDamageFrom(page, rtRad.resolved);
+            const rtRadResults = rtRadDamage === null ? null : await resolveRiderFrom(page, rtRadDamage.id, bothRoll(PHOTON_RIDER_FACE));
+            const penaltyRows = (rtRadResults?.tests ?? []).map((riderTest) => {
+                const match = riderTest.components.length === 1 ? /^(\d+) damage suffered (-\d+)$/.exec(riderTest.components[0] ?? '') : null;
+                const suffered = Number(match?.[1] ?? 'NaN');
+                const value = Number(match?.[2] ?? 'NaN');
+                return { suffered, value, roll: riderTest.roll, target: riderTest.base + value };
+            });
+            record(
+                'rad-rider-damage-penalty-row',
+                penaltyRows.length === 2 &&
+                    penaltyRows.every(
+                        (row) =>
+                            row.suffered > 0 &&
+                            row.value === RT_RAD_DAMAGE_PENALTY * row.suffered &&
+                            row.roll.includes(`vs ${String(Math.max(row.target, 0))}`),
+                    ),
+                `${rtRad.detail}; damage card ${JSON.stringify(rtRadDamage)}; penalty rows ${JSON.stringify(penaltyRows)}; results ${JSON.stringify(
+                    rtRadResults,
+                )}`,
+            );
+            if (rtRadResults !== null) await snap(page, 'grenade-rt-rad-rider-damage-penalty', { selector: await popOutChatMessage(page, rtRadResults.id) });
         } finally {
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
         }

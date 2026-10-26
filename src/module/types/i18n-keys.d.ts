@@ -2524,6 +2524,7 @@ export type I18nKey =
     | 'WH40K.GrenadeRider.Cancel'
     | 'WH40K.GrenadeRider.CharacteristicDamage'
     | 'WH40K.GrenadeRider.ChatTitle'
+    | 'WH40K.GrenadeRider.Component.DamageSuffered'
     | 'WH40K.GrenadeRider.Component.Grenade'
     | 'WH40K.GrenadeRider.Component.Psyker'
     | 'WH40K.GrenadeRider.ConditionEncounter'

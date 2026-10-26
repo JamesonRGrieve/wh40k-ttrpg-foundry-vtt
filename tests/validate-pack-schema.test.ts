@@ -188,6 +188,13 @@ describe('grenade riders (#135)', () => {
         expect(validateDoc(grenade(rider({ duration: { kind: 'encounter', base: 0, formula: '1d5' } }))).length).toBeGreaterThan(0);
     });
 
+    it('accepts an integer damage-suffered penalty on the test, or none (#698)', () => {
+        const test = { characteristic: 'toughness', modifier: 0, psykerModifier: 0 };
+        expect(validateDoc(grenade(rider({ test: { ...test, damagePenalty: -5 } })))).toEqual([]);
+        expect(validateDoc(grenade(rider({ test })))).toEqual([]);
+        expect(validateDoc(grenade(rider({ test: { ...test, damagePenalty: -2.5 } }))).length).toBeGreaterThan(0);
+    });
+
     it('accepts characteristic damage authored whole, and rejects a half-authored or stray one (#698)', () => {
         const rad = { characteristic: 'toughness', formula: '2d10', perDegree: 0 };
         expect(validateDoc(grenade(rider({ characteristicDamage: rad })))).toEqual([]);

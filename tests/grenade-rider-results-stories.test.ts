@@ -9,5 +9,11 @@ import * as resultsCard from '../stories/chat-cards/grenade-rider-results-card.s
 import { namedStoryPlayTests } from './lib/story-runner.ts';
 
 describe('#698 grenade rider results card stories', () => {
-    namedStoryPlayTests(resultsCard, ['RadDealsToughnessDamage', 'PsychotrokeStepsTheEffectRoll', 'SporeBombPsykerPenalty', 'PhotonFlashBlinds']);
+    namedStoryPlayTests(resultsCard, [
+        'RadDealsToughnessDamage',
+        'RtRadDamagePenalty',
+        'PsychotrokeStepsTheEffectRoll',
+        'SporeBombPsykerPenalty',
+        'PhotonFlashBlinds',
+    ]);
 });

@@ -39,6 +39,8 @@ interface Caught {
     rounds?: number;
     /** The rolled characteristic-damage formula (#698). */
     damage?: number;
+    /** The damage it suffered from the grenade's hit, after soak (#698). */
+    damageSuffered?: number;
     /** Whether its condition was applied (false: the GM applies it). */
     applied?: boolean;
 }
@@ -53,6 +55,7 @@ function card(name: string, special: string[], rider: GrenadeRiderData, caught: 
             name: c.name,
             isPsyker: c.isPsyker === true,
             characteristic: c.characteristic,
+            damageSuffered: c.damageSuffered ?? 0,
         };
         return resolveRiderCreature({ rider, creature, roll: c.roll, rolledRounds: c.rounds ?? null, rolledDamage: c.damage ?? null });
     });
@@ -97,6 +100,12 @@ const RAD = riderFixture({
     test: { characteristic: 'toughness', modifier: -20 },
     characteristicDamage: { characteristic: 'toughness', formula: '2d10', perDegree: 0 },
     effect: 'All living creatures caught in the blast must pass a Hard (–20) Toughness test or suffer 2d10 Toughness damage.',
+});
+
+const RT_RAD = riderFixture({
+    test: { characteristic: 'toughness', modifier: 0, damagePenalty: -5 },
+    characteristicDamage: { characteristic: 'toughness', formula: '1d10', perDegree: 2 },
+    effect: "In addition to the Damage dealt by the explosion, each living target within the rad grenade's blast radius must make a Challenging (+0) Toughness Test with a −5 penalty for every point of Damage it suffers. If it fails, it suffers 1d10 Toughness Damage, plus 2 additional Toughness Damage per Degree of Failure he suffers on the Test.",
 });
 
 const meta: Meta = { title: 'Chat/Grenade Rider Results (#623)' };
@@ -203,5 +212,29 @@ export const RadDealsToughnessDamage: Story = {
         await expect(mutant.querySelector('[data-rider-effect]')?.textContent).not.toContain('Suffers the effect');
         await expect(mutant.querySelector('[data-rider-applied]')).toBeTruthy();
         await expect(rowOf(canvasElement, 'Enforcer').querySelector('[data-rider-effect]')).toBeNull();
+    },
+};
+
+/**
+ * An RT Rad grenade's test takes −5 per point of damage suffered (Faith and Coin, #698): the
+ * creature that took 4 damage tests at −20, a provenance row naming the damage, and fails.
+ */
+export const RtRadDamagePenalty: Story = {
+    render: () =>
+        card('Rad Grenade', ['blast-3'], RT_RAD, [
+            { name: 'Mutineer', characteristic: 40, damageSuffered: 4, roll: 35, damage: 6, applied: true },
+            { name: 'Deckhand', characteristic: 40, roll: 35 },
+        ]),
+    play: async ({ canvasElement }) => {
+        const mutineer = rowOf(canvasElement, 'Mutineer');
+        const rows = Array.from(mutineer.querySelectorAll<HTMLElement>('[data-rider-component]')).map((el) => el.textContent.replace(/\s+/g, ' ').trim());
+        await expect(rows).toEqual(['4 damage suffered -20']);
+        // 40 − 20 = 20 against 35: two degrees of failure; 1d10 rolled 6, +2 per degree.
+        await expect(mutineer.querySelector('[data-rider-roll]')?.textContent).toContain('2 DoF');
+        await expect(mutineer.querySelector('[data-rider-effect]')?.textContent).toContain('10 Toughness damage');
+        // Unhurt, the same roll passes against the unmodified 40.
+        const deckhand = rowOf(canvasElement, 'Deckhand');
+        await expect(deckhand.dataset['riderOutcome']).toBe('resisted');
+        await expect(deckhand.querySelector('[data-rider-component]')).toBeNull();
     },
 };

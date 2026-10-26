@@ -24,15 +24,19 @@ export interface RiderCreature {
     isPsyker: boolean;
     /** The creature's total in the rider's test characteristic (0 when the rider has no test). */
     characteristic: number;
+    /** The damage the creature suffered from the grenade's own hit, after soak (#698); 0 when it took none or the grenade deals none. */
+    damageSuffered: number;
 }
 
 /** Where a test modifier came from, for the card's provenance rows. */
-export type RiderComponentSource = 'grenade' | 'psyker';
+export type RiderComponentSource = 'grenade' | 'psyker' | 'damage';
 
 /** One provenance-bearing modifier on a rider test. */
 export interface RiderTestComponent {
     source: RiderComponentSource;
     value: number;
+    /** For the `damage` row, the points of damage suffered it scales with. */
+    damageSuffered?: number;
 }
 
 /** A creature's rolled rider test. */
@@ -91,6 +95,27 @@ export interface RiderResolutionInput {
     rolledDamage: number | null;
 }
 
+/** A damage card's hit, as the rider reads the damage a creature suffered from it. */
+export interface RiderHitView {
+    /** The actor an area hit landed on; '' for a hit on the card's own target. */
+    targetUuid: string;
+    /** Whether the hit's damage after soak was worked out against its target. */
+    hasEffective: boolean;
+    /** The hit's damage after the target's armour and Toughness Bonus. */
+    effectiveDamage: number;
+}
+
+/**
+ * The damage a creature suffered from the grenade's hits (#698): the after-soak damage of
+ * every hit that landed on it — an area hit on its actor, or, when it is the card's own
+ * target, every hit that names no other actor.
+ */
+export function riderDamageSuffered(hits: readonly RiderHitView[], actorUuid: string, isCardTarget: boolean): number {
+    return hits
+        .filter((hit) => hit.hasEffective && (hit.targetUuid === '' ? isCardTarget : hit.targetUuid === actorUuid))
+        .reduce((sum, hit) => sum + hit.effectiveDamage, 0);
+}
+
 /** Whether the rider touches the creature at all. */
 export function riderAffectsCreature(rider: GrenadeRiderData, creature: Pick<RiderCreature, 'isPsyker'>): boolean {
     return rider.affects === '' || creature.isPsyker;
@@ -98,13 +123,15 @@ export function riderAffectsCreature(rider: GrenadeRiderData, creature: Pick<Rid
 
 /**
  * The modifiers on the creature's test, each with its provenance; only the ones that
- * change the target (a +0 test adds no row, #616).
+ * change the target (a +0 test adds no row, #616). The damage row (#698) is the rider's
+ * penalty per point of damage the creature suffered from the grenade's hit.
  */
-export function riderTestComponents(rider: GrenadeRiderData, creature: Pick<RiderCreature, 'isPsyker'>): RiderTestComponent[] {
-    const { modifier, psykerModifier } = rider.test;
+export function riderTestComponents(rider: GrenadeRiderData, creature: Pick<RiderCreature, 'isPsyker' | 'damageSuffered'>): RiderTestComponent[] {
+    const { modifier, psykerModifier, damagePenalty } = rider.test;
     const components: RiderTestComponent[] = [
         { source: 'grenade', value: modifier },
         { source: 'psyker', value: creature.isPsyker ? psykerModifier : 0 },
+        { source: 'damage', value: damagePenalty * creature.damageSuffered, damageSuffered: creature.damageSuffered },
     ];
     return components.filter((component) => component.value !== 0);
 }

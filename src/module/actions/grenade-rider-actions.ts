@@ -34,6 +34,8 @@ export interface RiderToken {
     id: string;
     name: string;
     actor: WH40KBaseActorDocument | null;
+    /** The damage this creature suffered from the grenade's own hit, after soak (#698); 0 off a damage card. */
+    damageSuffered: number;
 }
 
 /** The grenade whose rider resolves, and who threw it. */
@@ -64,6 +66,7 @@ function riderCreature(token: RiderToken, actor: WH40KBaseActorDocument, charact
         name: token.name,
         isPsyker: actor.system.psy !== undefined && actor.system.psy.rating > 0,
         characteristic: total,
+        damageSuffered: token.damageSuffered,
     };
 }
 

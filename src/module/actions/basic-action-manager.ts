@@ -41,6 +41,7 @@ import { type AreaTargetResult, areaAvoidanceComponents, areaHitResult, avoidanc
 import { assassinsStrikeTest } from '../rules/assassins-strike.ts';
 import { isSameRound, readCombatRoundStamp } from '../rules/counter-attack.ts';
 import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rules/evasion.ts';
+import { riderDamageSuffered } from '../rules/grenade-rider-resolution.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { soakRows } from '../rules/target-soak.ts';
 import {
@@ -869,11 +870,17 @@ export class BasicActionManager {
         const rollData = actionData?.rollData;
         const weapon = rollData?.weapon;
         if (rollData == null || weapon?.id == null) return null;
-        const struck =
-            rollData instanceof WeaponRollData && rollData.areaResults.length > 0
-                ? rollData.areaResults.filter((result) => result.hit).map((result) => canvas.tokens?.get(result.tokenId) ?? null)
-                : [activeTokenOf(rollData.targetActor)];
-        const tokens = struck.flatMap((token) => (token === null ? [] : [{ id: token.id, name: token.name, actor: token.actor }]));
+        const isArea = rollData instanceof WeaponRollData && rollData.areaResults.length > 0;
+        const struck = isArea
+            ? rollData.areaResults.filter((result) => result.hit).map((result) => canvas.tokens?.get(result.tokenId) ?? null)
+            : [activeTokenOf(rollData.targetActor)];
+        // What each creature suffered from the hits, for a rider whose test scales with it (#698).
+        const hits = actionData?.damageData?.hits ?? [];
+        const tokens = struck.flatMap((token) =>
+            token === null
+                ? []
+                : [{ id: token.id, name: token.name, actor: token.actor, damageSuffered: riderDamageSuffered(hits, token.actor?.uuid ?? '', !isArea) }],
+        );
         return {
             source: { item: { id: weapon.id, name: weapon.name, uuid: weapon.uuid, system: weapon.system }, thrower: rollData.sourceActor ?? null },
             tokens,
@@ -897,7 +904,8 @@ export class BasicActionManager {
             ui.notifications.warn(t('WH40K.GrenadeRider.NoArea'));
             return null;
         }
-        return { source, tokens: caught.map((token) => ({ id: token.id, name: token.name, actor: token.actor })) };
+        // A grenade thrown from its dialog deals no damage, so no creature suffered any.
+        return { source, tokens: caught.map((token) => ({ id: token.id, name: token.name, actor: token.actor, damageSuffered: 0 })) };
     }
 
     async _refundResources(event: Event): Promise<void> {

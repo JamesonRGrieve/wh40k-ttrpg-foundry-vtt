@@ -21,6 +21,6 @@ export function riderFixture(overrides: RiderOverrides = {}): GrenadeRiderData {
         characteristicDamage: { characteristic: '', formula: '', perDegree: 0 },
         effect: 'The effect.',
         ...rest,
-        test: { characteristic: '', modifier: 0, psykerModifier: 0, ...test },
+        test: { characteristic: '', modifier: 0, psykerModifier: 0, damagePenalty: 0, ...test },
     };
 }

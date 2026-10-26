@@ -39,11 +39,18 @@ function result(
     name: string,
     roll: number | null,
     rider = PHOTON_FLASH,
-    extra: { isPsyker?: boolean; rolledRounds?: number; rolledDamage?: number } = {},
+    extra: { isPsyker?: boolean; rolledRounds?: number; rolledDamage?: number; damageSuffered?: number } = {},
 ): RiderTargetResult {
     return resolveRiderCreature({
         rider,
-        creature: { tokenId: name, actorUuid: `Actor.${name}`, name, isPsyker: extra.isPsyker === true, characteristic: 30 },
+        creature: {
+            tokenId: name,
+            actorUuid: `Actor.${name}`,
+            name,
+            isPsyker: extra.isPsyker === true,
+            characteristic: 30,
+            damageSuffered: extra.damageSuffered ?? 0,
+        },
         roll,
         rolledRounds: extra.rolledRounds ?? null,
         rolledDamage: extra.rolledDamage ?? null,
@@ -119,6 +126,27 @@ describe('buildRiderResultsCard', () => {
             effectLabel: 'Suffers the effect',
             applied: null,
         });
+    });
+
+    it('prints the damage-suffered penalty as its own provenance row (RT Rad grenade, #698)', () => {
+        const rtRad = riderFixture({ test: { characteristic: 'toughness', modifier: 0, damagePenalty: -5 } });
+        const card = buildRiderResultsCard(
+            choiceFor('Rad Grenade', rtRad),
+            [result('Z', 50, rtRad, { damageSuffered: 4 })],
+            new Map(),
+            conditionName,
+            LABELS,
+            'toughness',
+        );
+        expect(card.rows[0]?.test?.components).toEqual([
+            {
+                label: '4 damage suffered',
+                value: -20,
+                tooltipData: JSON.stringify({ source: 'damage', label: '4 damage suffered', value: -20 }),
+            },
+        ]);
+        // Toughness 30 − 20 = 10 against 50.
+        expect(card.rows[0]?.test).toMatchObject({ base: 30, target: 10 });
     });
 
     it('states the Toughness damage a Rad grenade failure dealt, not the bare effect (#698)', () => {

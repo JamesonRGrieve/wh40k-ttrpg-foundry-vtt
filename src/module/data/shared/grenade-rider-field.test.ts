@@ -65,6 +65,8 @@ describe('grenadeRiderField', () => {
         expect(characteristic.options.initial).toBe('');
         expect(expectStub(test.fields['modifier'], NumberFieldStub).options).toMatchObject({ integer: true, initial: 0 });
         expect(expectStub(test.fields['psykerModifier'], NumberFieldStub).options).toMatchObject({ integer: true, initial: 0 });
+        // A penalty per point of damage suffered from the grenade's hit (RT Rad grenade, #698); none by default.
+        expect(expectStub(test.fields['damagePenalty'], NumberFieldStub).options).toMatchObject({ integer: true, initial: 0 });
     });
 
     it('touches everyone by default, and applies no condition unless one is authored (#623)', async () => {

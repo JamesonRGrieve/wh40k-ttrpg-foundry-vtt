@@ -44,8 +44,10 @@ export interface GrenadeRiderData {
     /**
      * The test each character in the area makes; `characteristic` '' when the rider has
      * no test. `psykerModifier` is a further modifier a psyker takes (a Spore Bomb's −20).
+     * `damagePenalty` is a further modifier per point of damage the creature suffered
+     * from the grenade's own hit (an RT Rad grenade's −5, #698); 0 for none.
      */
-    test: { characteristic: string; modifier: number; psykerModifier: number };
+    test: { characteristic: string; modifier: number; psykerModifier: number; damagePenalty: number };
     /** Who among the creatures caught the rider touches. */
     affects: RiderAffects;
     /**

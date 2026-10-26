@@ -12,7 +12,8 @@ import { RIDER_AFFECTS, RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CH
  * against the creatures caught reads: who it touches, a psyker's extra modifier, and the
  * condition registry id a failed test applies ('' for none). `characteristicDamage`
  * (#698) is the characteristic damage a failed test deals: a formula, plus a step per
- * degree of failure.
+ * degree of failure. `test.damagePenalty` (#698) is the test modifier per point of
+ * damage the creature suffered from the grenade's hit.
  */
 export function grenadeRiderField(): foundry.data.fields.SchemaField.Any {
     const fields = foundry.data.fields;
@@ -22,6 +23,7 @@ export function grenadeRiderField(): foundry.data.fields.SchemaField.Any {
                 characteristic: new fields.StringField({ required: true, blank: true, initial: '', choices: ['', ...RIDER_TEST_CHARACTERISTICS] }),
                 modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
                 psykerModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                damagePenalty: new fields.NumberField({ required: true, initial: 0, integer: true }),
             }),
             affects: new fields.StringField({ required: true, blank: true, initial: '', choices: [...RIDER_AFFECTS] }),
             condition: new fields.StringField({ required: true, blank: true, initial: '' }),

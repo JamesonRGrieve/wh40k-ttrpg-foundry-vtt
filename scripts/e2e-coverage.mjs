@@ -751,6 +751,7 @@ const GRENADE_THROW_FLOWS = [
     'rider-condition-applied-to-token',
     'damaging-rider-resolves-after-damage',
     'rider-psyker-only-condition-with-visual',
+    'rad-rider-damage-penalty-row',
 ];
 recordDimension('grenade-throw.flow', covered['grenade-throw.flow'], GRENADE_THROW_FLOWS);
 

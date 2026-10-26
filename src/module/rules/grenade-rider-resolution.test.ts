@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { riderFixture } from '../testing/grenade-rider-fixture.ts';
 import {
     type RiderCreature,
+    type RiderHitView,
     resolveRiderCreature,
+    riderDamageSuffered,
     riderAffectsCreature,
     riderCharacteristicDamage,
     riderDurationRounds,
@@ -48,7 +50,7 @@ const RT_RAD = riderFixture({
 });
 
 function creature(overrides: Partial<RiderCreature> = {}): RiderCreature {
-    return { tokenId: 't1', actorUuid: 'Actor.a1', name: 'Heretic', isPsyker: false, characteristic: 30, ...overrides };
+    return { tokenId: 't1', actorUuid: 'Actor.a1', name: 'Heretic', isPsyker: false, characteristic: 30, damageSuffered: 0, ...overrides };
 }
 
 describe('riderAffectsCreature', () => {
@@ -192,6 +194,55 @@ describe('resolveRiderCreature', () => {
         expect(
             resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 68, rolledRounds: null, rolledDamage: 13 }).characteristicDamage,
         ).toBeNull();
+    });
+});
+
+describe('the damage-suffered penalty (RT Faith and Coin Rad grenade, #698)', () => {
+    const RT_RAD_PENALTY = riderFixture({
+        test: { characteristic: 'toughness', modifier: 0, damagePenalty: -5 },
+        characteristicDamage: { characteristic: 'toughness', formula: '1d10', perDegree: 2 },
+    });
+
+    it('takes the penalty per point of damage suffered, as its own provenance row', () => {
+        expect(riderTestComponents(RT_RAD_PENALTY, creature({ damageSuffered: 3 }))).toEqual([{ source: 'damage', value: -15, damageSuffered: 3 }]);
+        expect(riderTestComponents(RT_RAD_PENALTY, creature())).toEqual([]);
+        expect(riderTestComponents(DH2_RAD, creature({ damageSuffered: 3 }))).toEqual([{ source: 'grenade', value: -20 }]);
+    });
+
+    it('lowers the target, so a roll that would pass fails', () => {
+        // Toughness 40 − 5 × 4 = 20 against 35: two degrees of failure; without the damage it passes.
+        const hurt = resolveRiderCreature({
+            rider: RT_RAD_PENALTY,
+            creature: creature({ characteristic: 40, damageSuffered: 4 }),
+            roll: 35,
+            rolledRounds: null,
+            rolledDamage: 6,
+        });
+        expect(hurt.test).toMatchObject({ target: 20, passed: false, degreesOfFailure: 2 });
+        expect(hurt.characteristicDamage).toEqual({ characteristic: 'toughness', amount: 10 });
+        const unhurt = resolveRiderCreature({
+            rider: RT_RAD_PENALTY,
+            creature: creature({ characteristic: 40 }),
+            roll: 35,
+            rolledRounds: null,
+            rolledDamage: 6,
+        });
+        expect(unhurt.test?.passed).toBe(true);
+    });
+});
+
+describe('riderDamageSuffered', () => {
+    const hit = (targetUuid: string, effectiveDamage: number, hasEffective = true): RiderHitView => ({ targetUuid, hasEffective, effectiveDamage });
+
+    it('sums the after-soak damage of the area hits that landed on the creature', () => {
+        const hits = [hit('Actor.a1', 4), hit('Actor.b2', 7), hit('Actor.a1', 2)];
+        expect(riderDamageSuffered(hits, 'Actor.a1', false)).toBe(6);
+        expect(riderDamageSuffered(hits, 'Actor.c3', false)).toBe(0);
+    });
+
+    it("counts a single-target card's hits for its target only, and no hit without a worked-out soak", () => {
+        expect(riderDamageSuffered([hit('', 5), hit('', 3, false)], 'Actor.a1', true)).toBe(5);
+        expect(riderDamageSuffered([hit('', 5)], 'Actor.a1', false)).toBe(0);
     });
 });
 
