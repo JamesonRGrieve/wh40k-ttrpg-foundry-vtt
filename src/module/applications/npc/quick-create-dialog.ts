@@ -1,4 +1,5 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { isNpcCharacteristic } from '../../helpers/characteristic-labels.ts';
 import { capitalize } from '../../utils/format.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import DialogResolution from '../dialogs/dialog-resolution.ts';
@@ -114,14 +115,16 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
         const previewData = ThreatCalculator.generateNPCData(this.#state as unknown as Record<string, unknown>);
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
-        // Prepare characteristics for display
-        const characteristics = Object.entries(previewData.characteristics).map(([key, char]) => ({
-            key,
-            label: char.label,
-            short: char.short,
-            value: char.base,
-            bonus: Math.floor(char.base / 10),
-        }));
+        // Prepare characteristics for display: the NPC's nine, without Influence (#701).
+        const characteristics = Object.entries(previewData.characteristics)
+            .filter(([key]) => isNpcCharacteristic(key))
+            .map(([key, char]) => ({
+                key,
+                label: char.label,
+                short: char.short,
+                value: char.base,
+                bonus: Math.floor(char.base / 10),
+            }));
 
         // Prepare skills for display
         const skills = Object.entries(previewData.trainedSkills).map(([key, skill]) => {

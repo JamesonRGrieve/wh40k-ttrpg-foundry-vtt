@@ -6,6 +6,7 @@
  * to create NPCs with pre-configured stats, equipment, and abilities.
  */
 
+import { isNpcCharacteristic } from '../../helpers/characteristic-labels.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import { computeCharacteristicTotals } from '../shared/characteristic-math.ts';
 import { CHARACTERISTICS } from '../shared/characteristics.ts';
@@ -645,13 +646,16 @@ export default class NPCTemplateData extends ItemDataModel {
         const { half, full, charge, run } = data.movement;
         return {
             threatLevel: targetThreat,
-            characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
-                key,
-                label: char.short,
-                short: char.short,
-                value: char.base,
-                unnatural: char.unnatural,
-            })),
+            // The NPC's nine, without Influence (#701).
+            characteristics: Object.entries(data.characteristics)
+                .filter(([key]) => isNpcCharacteristic(key))
+                .map(([key, char]) => ({
+                    key,
+                    label: char.short,
+                    short: char.short,
+                    value: char.base,
+                    unnatural: char.unnatural,
+                })),
             wounds: data.wounds.max,
             armour: data.armour.total,
             movement: `${half}/${full}/${charge}/${run}`,

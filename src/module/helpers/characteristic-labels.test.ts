@@ -6,8 +6,29 @@ import {
     combatLabel,
     formatCharacteristicMods,
     formatWounds,
+    isNpcCharacteristic,
+    NPC_CHARACTERISTIC_KEYS,
     resourceLabel,
 } from './characteristic-labels.ts';
+
+/** NPCs show nine characteristics, never a PC's Influence (#701), on every NPC surface. */
+describe('NPC_CHARACTERISTIC_KEYS (#701)', () => {
+    it('lists the nine NPC characteristics in table order, without Influence', () => {
+        expect(NPC_CHARACTERISTIC_KEYS).toEqual([
+            'weaponSkill',
+            'ballisticSkill',
+            'strength',
+            'toughness',
+            'agility',
+            'intelligence',
+            'perception',
+            'willpower',
+            'fellowship',
+        ]);
+        expect(isNpcCharacteristic('influence')).toBe(false);
+        expect(isNpcCharacteristic('fellowship')).toBe(true);
+    });
+});
 
 /** Minimal CONFIG.wh40k stub exposing only the tables these helpers read. */
 const I18N: Record<string, string> = {

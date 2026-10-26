@@ -12,7 +12,20 @@
  * swap is behaviour-preserving.
  */
 
+import { CHARACTERISTICS } from '../data/shared/characteristics.ts';
 import { capitalize } from '../utils/format.ts';
+
+/**
+ * The characteristics an NPC shows: the nine, without Influence (#701). Influence
+ * is a player character's standing, not an NPC stat; the NPC schema keeps the field,
+ * but the NPC sheet, an NPC template and Quick Create never show it.
+ */
+export const NPC_CHARACTERISTIC_KEYS: readonly string[] = CHARACTERISTICS.filter((c) => c.key !== 'influence').map((c) => c.key);
+
+/** Does an NPC show this characteristic? See {@link NPC_CHARACTERISTIC_KEYS}. */
+export function isNpcCharacteristic(key: string): boolean {
+    return NPC_CHARACTERISTIC_KEYS.includes(key);
+}
 
 /** Full localized characteristic label (e.g. `weaponSkill` → "Weapon Skill"). */
 export function characteristicLabel(key: string): string {

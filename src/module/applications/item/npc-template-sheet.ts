@@ -4,7 +4,7 @@
  */
 
 import type NPCTemplateData from '../../data/item/npc-template.ts';
-import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
+import { characteristicAbbrev, characteristicLabel, isNpcCharacteristic } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { appendTag, withoutIndex } from '../../utils/list-edit.ts';
 import { createNpcFromTemplate } from '../npc/npc-from-template.ts';
@@ -216,13 +216,16 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
         // Prepare characteristics for display — list + labels/abbreviations come
         // from CONFIG.wh40k.characteristics (single-sourced, langpack-backed) — #286.
         const baseChars = sys.baseCharacteristics;
-        const characteristics = Object.keys(CONFIG.wh40k.characteristics).map((key) => ({
-            key,
-            label: characteristicLabel(key),
-            short: characteristicAbbrev(key),
-            value: baseChars[key as keyof typeof baseChars],
-            unnatural: sys.unnaturals[key] ?? 0,
-        }));
+        // An NPC's nine, without Influence, as the NPC sheet shows them (#701).
+        const characteristics = Object.keys(CONFIG.wh40k.characteristics)
+            .filter(isNpcCharacteristic)
+            .map((key) => ({
+                key,
+                label: characteristicLabel(key),
+                short: characteristicAbbrev(key),
+                value: baseChars[key as keyof typeof baseChars],
+                unnatural: sys.unnaturals[key] ?? 0,
+            }));
 
         // The Preview tab's stat block at the chosen threat (#699: it read `previewData`, which nothing supplied).
         const previewData = sys.previewAtThreat(this.#previewThreat);

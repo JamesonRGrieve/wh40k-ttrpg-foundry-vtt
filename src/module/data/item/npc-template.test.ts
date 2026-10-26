@@ -103,7 +103,8 @@ describe('generateAtThreat', () => {
         // The Preview tab read stats nothing supplied, so it showed labels with no values.
         const previewedFields = {
             ...template,
-            baseCharacteristics: { weaponSkill: 35, perception: 40 },
+            // Influence is stored but never previewed: it is a PC's standing, not an NPC stat (#701).
+            baseCharacteristics: { weaponSkill: 35, perception: 40, influence: 25 },
             unnaturals: { weaponSkill: 2 },
             talents: [{ name: 'Ambidextrous' }],
             traits: [{ name: 'Dark-sight' }],

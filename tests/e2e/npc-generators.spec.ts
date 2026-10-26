@@ -81,6 +81,17 @@ test.describe.serial('NPC generators create registered NPCs (Tier B, #644)', () 
         const dialog = page.locator(`#${id}`);
         await dialog.locator('input[name="name"]').fill(`${PREFIX} Quick`);
         await clearScreenOverlays(page, id);
+        // #701: the preview shows an NPC's nine characteristics, never a PC's Influence; and each select
+        // shows its whole text (they were clipped at the bottom).
+        await expect(dialog).not.toContainText(/\bInf\b/u);
+        for (const name of ['role', 'type', 'preset']) {
+            const fits = await dialog.locator(`select[name="${name}"]`).evaluate((select) => {
+                const style = getComputedStyle(select);
+                const textHeight = Number.parseFloat(style.lineHeight) || Number.parseFloat(style.fontSize) * 1.2;
+                return select.clientHeight - Number.parseFloat(style.paddingTop) - Number.parseFloat(style.paddingBottom) >= textHeight - 0.5;
+            });
+            expect(fits, `${name} select clips its text`).toBe(true);
+        }
         await snap(page, 'npc-quick-create-dialog', { selector: `#${id}` });
         await dialog.locator('button[type="submit"]').click();
         await expect.poll(async () => createdTypes(page, `${PREFIX} Quick`)).toEqual(['dh2-npc']);

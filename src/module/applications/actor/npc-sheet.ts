@@ -8,6 +8,7 @@
 
 import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
+import { NPC_CHARACTERISTIC_KEYS } from '../../helpers/characteristic-labels.ts';
 import { hasDaemonic } from '../../rules/daemonic-immunities.ts';
 import { getInteractionCap } from '../../rules/disposition.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../../rules/token-senses.ts';
@@ -584,10 +585,8 @@ export default class NPCSheet extends CharacterSheet {
         const chars = sys.characteristics;
         const charArray = [];
 
-        // Define the 9 characteristics for NPCs (exclude Influence)
-        const npcCharKeys = ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship'];
-
-        for (const key of npcCharKeys) {
+        // The nine an NPC shows; Influence is a PC's standing (one list for every NPC surface, #701).
+        for (const key of NPC_CHARACTERISTIC_KEYS) {
             const char = chars[key];
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: chars is Record-indexed so entries may be absent at runtime
             if (char === undefined) continue;

@@ -88,6 +88,9 @@ test.describe.serial('NPC Template sheet layout (Tier B, #656)', () => {
             const sheet = page.locator(`#${sheetId}`);
             await sheet.locator('nav.tabs [data-tab="characteristics"]').click();
             await expect(sheet.locator('[data-field="base-characteristics-note"]')).toBeVisible();
+            // #701: an NPC template edits an NPC's nine characteristics, never a PC's Influence.
+            await expect(sheet.locator('input[name="system.baseCharacteristics.influence"]')).toHaveCount(0);
+            await expect(sheet.locator('input[name="system.baseCharacteristics.fellowship"]')).toHaveCount(1);
             await snap(page, 'npc-template-characteristics-default-width', { selector: `#${sheetId}` });
             expect(await layoutProblems(page, sheetId)).toEqual([]);
 
