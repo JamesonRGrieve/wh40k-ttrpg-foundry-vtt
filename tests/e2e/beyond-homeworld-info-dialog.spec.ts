@@ -28,6 +28,7 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
             let hasQuarantineWorld = false;
             let hasCorruptionRider = false;
             let hasSubtletyClampRider = false;
+            let quarantineText = '';
             let appId: string | null = null;
 
             try {
@@ -47,6 +48,7 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                     hasQuarantineWorld = el.querySelector('[data-homeworld-id="quarantineWorld"]') !== null;
                     hasCorruptionRider = el.querySelector('[data-homeworld-id="daemonWorld"] [data-rider="corruption"]') !== null;
                     hasSubtletyClampRider = el.querySelector('[data-homeworld-id="quarantineWorld"] [data-rider="subtlety-clamp"]') !== null;
+                    quarantineText = el.querySelector('[data-homeworld-id="quarantineWorld"]')?.textContent.replace(/\s+/g, ' ') ?? '';
                 }
                 // Left open for the capture (#700: closing it here made the snap a full-scene shot).
                 appId = inst.element?.id ?? null;
@@ -62,6 +64,7 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
                 hasQuarantineWorld,
                 hasCorruptionRider,
                 hasSubtletyClampRider,
+                quarantineText,
                 appId,
                 error,
             };
@@ -79,6 +82,9 @@ test.describe.serial('BeyondHomeworldInfoDialog (Tier B)', () => {
         expect(result.hasQuarantineWorld, 'Quarantine World card should render').toBe(true);
         expect(result.hasCorruptionRider, 'Daemon World should surface the Corruption rider').toBe(true);
         expect(result.hasSubtletyClampRider, 'Quarantine World should surface the subtlety-clamp rider').toBe(true);
+        // Characteristics read as their langpack labels, not capitalised keys ("+BallisticSkill").
+        expect(result.quarantineText).toContain('+Ballistic Skill');
+        expect(result.quarantineText).not.toMatch(/[+−-][A-Z][a-z]+[A-Z]/);
 
         recordCoverage('dialog.render', 'BeyondHomeworldInfoDialog');
     });

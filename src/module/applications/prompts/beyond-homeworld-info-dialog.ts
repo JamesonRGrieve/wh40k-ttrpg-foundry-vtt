@@ -17,9 +17,9 @@
  * See GitHub issue #140.
  */
 
+import { formatCharacteristicMods } from '../../helpers/characteristic-labels.ts';
 import { listBeyondHomeworlds, type BeyondHomeworldDef } from '../../rules/beyond-homeworlds.ts';
 import { readHomeworldMechanics, type HomeworldMechanics } from '../../rules/homeworld-compendium.ts';
-import { capitalize } from '../../utils/format.ts';
 import { defineInfoCardDialog } from './define-info-card-dialog.ts';
 
 /** Fully-qualified compendium pack id holding the Beyond home-world `originPath` documents. */
@@ -50,12 +50,17 @@ interface BeyondHomeworldCardContext {
     readonly subtletyClampLabel: string | null;
 }
 
+/**
+ * The card's bonus and penalty lines, each characteristic named by its langpack
+ * label through the shared formatter the Within and Without dialogs use. Capitalising
+ * the raw key printed "+BallisticSkill".
+ */
 function formatBonuses(bonuses: readonly string[]): string {
-    return bonuses.map((b) => `+${capitalize(b)}`).join(', ');
+    return formatCharacteristicMods(bonuses, []);
 }
 
 function formatPenalties(penalties: readonly string[]): string {
-    return penalties.map((p) => `-${capitalize(p)}`).join(', ');
+    return formatCharacteristicMods([], penalties);
 }
 
 /** Join a slimmed registry entry with its compendium-sourced mechanical basics. */
