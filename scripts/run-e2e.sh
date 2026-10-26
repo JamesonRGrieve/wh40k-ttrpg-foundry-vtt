@@ -86,4 +86,10 @@ if [[ -z "${E2E_WORKERS:-}" ]]; then
 fi
 echo "[integration] Full run (isolated worlds, workers=${E2E_WORKERS})…"
 rm -rf "${SCRIPT_DIR}/.e2e-raw-coverage" "${SCRIPT_DIR}/.e2e-runtime-coverage.jsonl"
-exec "${PLAYWRIGHT}" test -c "${CONFIG}" --project=all
+# Captures no spec rewrites this run are stale; a green full run sets them aside.
+RUN_START="$(mktemp)"
+status=0
+"${PLAYWRIGHT}" test -c "${CONFIG}" --project=all || status=$?
+if [[ "${status}" -eq 0 ]]; then node "${SCRIPT_DIR}/scripts/e2e-stale-captures.mjs" "${RUN_START}"; fi
+rm -f "${RUN_START}"
+exit "${status}"
