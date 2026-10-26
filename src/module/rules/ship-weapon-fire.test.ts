@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { buildLangStub } from '../testing/lang-stub.ts';
 import {
     allocateSalvoShields,
     applyVoidShields,
@@ -50,6 +51,18 @@ describe('ship weapon fire (#184)', () => {
         expect([rangeBandReach('close', 6), rangeBandReach('standard', 6), rangeBandReach('long', 6)]).toEqual([3, 6, 12]);
         expect(toRangeBand('long')).toBe('long');
         expect(toRangeBand('nonsense')).toBe('standard');
+    });
+
+    it('names each range row for its band, as the dialog does: Long range is beyond the weapon range (#698)', () => {
+        const lang = buildLangStub();
+        const row = (band: 'close' | 'long'): string => {
+            const component = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band, range: 6 }).modifiers.at(0);
+            return component === undefined ? '' : lang.format(component.labelKey, { range: String(component.data?.['range'] ?? '') });
+        };
+        expect(row('long')).toBe('Long range (beyond 6 VU weapon)');
+        expect(row('close')).toBe('Within half range (6 VU weapon)');
+        // The dialog's band list calls the same band "Long".
+        expect(lang.format('WH40K.Voidcraft.Fire.Range.Long', { reach: '12' })).toMatch(/^Long\b/u);
     });
 
     it('carries ship-action and situational modifiers through as their own rows', () => {

@@ -260,7 +260,9 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
                 label: 'ship-weapon-fire-miss',
             });
             expect(fired.unusedDice).toBe(0);
-            expect(fired.card.text).toContain('Beyond range (6 VU weapon) -10');
+            // #698: the −10 row names its band, Long range, as the dialog does.
+            expect(fired.card.text).toContain('Long range (beyond 6 VU weapon) -10');
+            expect(fired.card.text).not.toContain('Beyond range');
             expect(fired.card.text).toContain('The shot misses. No hits reach Fire Target Raider.');
             expect(await readShip(page, raider.id)).toMatchObject({ hull: 30, statuses: 0 });
         } finally {

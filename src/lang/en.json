@@ -5224,7 +5224,7 @@
                 "Component": {
                     "GunnerSkill": "Gunner's Ballistic Skill",
                     "RangeClose": "Within half range ({range} VU weapon)",
-                    "RangeLong": "Beyond range ({range} VU weapon)",
+                    "RangeLong": "Long range (beyond {range} VU weapon)",
                     "BaseHit": "Successful hit",
                     "DegreeHits": "{dos} DoS: +1 hit each",
                     "LanceDegreeHits": "{dos} DoS: +1 hit per 3",
