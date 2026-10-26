@@ -765,6 +765,7 @@ recordDimension('created-item-hydrate.flow', covered['created-item-hydrate.flow'
 const AREA_ATTACK_FLOWS = [
     'spray-places-cone',
     'spray-card-no-attack-roll',
+    'spray-card-qualities-spaced',
     'spray-resolves-caught',
     'blast-places-circle',
     'blast-resolves-caught',

@@ -36,6 +36,7 @@ import { scaledMs } from './lib/timing';
 const AREA_ATTACK_FLOWS = [
     'spray-places-cone',
     'spray-card-no-attack-roll',
+    'spray-card-qualities-spaced',
     'spray-resolves-caught',
     'blast-places-circle',
     'blast-resolves-caught',
@@ -49,6 +50,8 @@ const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
 const HAND_FLAMER = `${WEAPONS}.j7K8l9M0n1O2p3Q4`;
 const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
 const STUN_GRENADE = `${WEAPONS}.yzrs7m1lir9zo000`;
+/** The Hand Flamer card's quality line (#698): its Flame and Spray, comma and space. */
+const HAND_FLAMER_EFFECTS = 'Flame, Spray';
 
 const FIRER_CENTRE = { x: 250, y: 550 };
 const TARGET_CENTRE = { x: 750, y: 550 };
@@ -87,6 +90,8 @@ interface CardView {
     hasRollDamage: boolean;
     hasNoDamage: boolean;
     statement: string;
+    /** The card's quality line under the action ("Flame, Spray"). */
+    effects: string;
     targets: Array<{ name: string; hit: boolean }>;
 }
 
@@ -140,6 +145,7 @@ async function readCard(page: Page, messageId: string): Promise<CardView> {
             hasRollDamage: card?.querySelector('.roll-control__roll-damage') !== null,
             hasNoDamage: card?.querySelector('[data-no-damage]') !== null,
             statement: card?.querySelector('[data-area-statement]')?.textContent.trim() ?? '',
+            effects: card?.querySelector('[data-roll-card-subtitle2]')?.textContent.trim() ?? '',
             targets: Array.from(card?.querySelectorAll<HTMLElement>('[data-area-target]') ?? []).map((li) => ({
                 name: li.querySelector('span')?.textContent.trim() ?? '',
                 hit: li.dataset['areaHit'] === 'true',
@@ -216,6 +222,12 @@ test.describe.serial('area attacks on a live canvas (Tier B, #599, #600, #601)',
                 `spray messages ${spray.messageIds.length}; card with Resolve: ${
                     sprayCard === null ? 'none' : JSON.stringify(sprayCard.card)
                 }; notices ${spray.notices.join(' | ')}`,
+            );
+            // The quality line lists the Hand Flamer's qualities with a space after each comma (#698).
+            pass(
+                'spray-card-qualities-spaced',
+                sprayCard?.card.effects === HAND_FLAMER_EFFECTS,
+                `quality line ${JSON.stringify(sprayCard?.card.effects ?? null)}, expected ${JSON.stringify(HAND_FLAMER_EFFECTS)}`,
             );
             if (sprayCard !== null) {
                 await snapCard(page, 'area-spray-attack-card', sprayCard.id);

@@ -205,6 +205,9 @@ export function buildModifierComponents(
     }));
 }
 
+/** How the attack card's subtitle lists its qualities and mods: "Balanced, Tearing" (#698). */
+export const EFFECT_LIST_SEPARATOR = ', ';
+
 /**
  * Base class for all roll-related data
  */
@@ -435,7 +438,7 @@ export class RollData {
             str.push(ammoName);
         }
 
-        const specials = this.attackSpecials.map((s: { name: string }) => s.name).join(',');
+        const specials = this.attackSpecials.map((s: { name: string }) => s.name).join(EFFECT_LIST_SEPARATOR);
         if (specials !== '') {
             str.push(specials);
         }
@@ -443,7 +446,7 @@ export class RollData {
         // eslint-disable-next-line no-restricted-syntax -- structural cast to detect WeaponRollData via duck-typed method check
         const weaponRollData = this as unknown as WeaponRollData;
         if (typeof weaponRollData.hasWeaponModification === 'function') {
-            const mods = weaponRollData.weaponModifications.map((m: { name: string }) => m.name).join(',');
+            const mods = weaponRollData.weaponModifications.map((m: { name: string }) => m.name).join(EFFECT_LIST_SEPARATOR);
             if (mods !== '') {
                 str.push(mods);
             }

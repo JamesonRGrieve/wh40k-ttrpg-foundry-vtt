@@ -414,3 +414,14 @@ describe('a weapon that deals no damage offers no damage roll (#601)', () => {
         expect(actionData).toContain("if (!this.hasDamage || this.damageData === undefined) return 'action has no damage data';");
     });
 });
+
+describe('RollData.effectString lists (#698)', () => {
+    it('separates the qualities and the mods with a comma and a space', () => {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one getter
+        const rd = Object.create(WeaponRollData.prototype) as WeaponRollData;
+        rd.weapon = { system: {} } as WeaponRollData['weapon'];
+        rd.attackSpecials = [{ name: 'Balanced' }, { name: 'Tearing' }];
+        rd.weaponModifications = [{ name: 'Red-Dot Laser Sight' }, { name: 'Fluid Action' }];
+        expect(rd.effectString).toBe('Balanced, Tearing | Red-Dot Laser Sight, Fluid Action');
+    });
+});
