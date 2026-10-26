@@ -77,14 +77,14 @@ test.describe.serial('DwSpecialAmmoPanel (Tier B)', () => {
                 // Kraken — RAW +3 Penetration, unconditional. Exercises the
                 // effect-block path and the selected-radio highlight.
                 const options = [
-                    { id: 'standard', label: 'Standard', selected: false, summary: 'No engine effect.' },
-                    { id: 'hellfire', label: 'Hellfire', selected: false, summary: '+1d10 damage vs. unarmored targets.' },
-                    { id: 'kraken', label: 'Kraken', selected: true, summary: '+3 Penetration.' },
-                    { id: 'metal-storm', label: 'Metal Storm', selected: false, summary: '+1 hit per DoS.' },
-                    { id: 'tempest', label: 'Tempest', selected: false, summary: 'Ignores energy fields.' },
-                    { id: 'stalker', label: 'Stalker', selected: false, summary: 'Silent; +10 Stealth.' },
-                    { id: 'vengeance', label: 'Vengeance', selected: false, summary: '+2 dmg; -1 Reliability.' },
-                    { id: 'dragonfire', label: 'Dragonfire', selected: false, summary: '+1d10 Fire; ignores cover.' },
+                    { id: 'standard', label: 'Standard', selected: false },
+                    { id: 'hellfire', label: 'Hellfire', selected: false },
+                    { id: 'kraken', label: 'Kraken', selected: true },
+                    { id: 'metal-storm', label: 'Metal Storm', selected: false },
+                    { id: 'tempest', label: 'Tempest', selected: false },
+                    { id: 'stalker', label: 'Stalker', selected: false },
+                    { id: 'vengeance', label: 'Vengeance', selected: false },
+                    { id: 'dragonfire', label: 'Dragonfire', selected: false },
                 ];
                 const html = tpl({
                     ammoPanel: {

@@ -502,7 +502,6 @@ type DwAmmoPanelContext = {
         id: DwSelectedAmmoId;
         label: string;
         selected: boolean;
-        summary: string;
     }>;
     effect: AmmoEffect | null;
 };
@@ -2160,9 +2159,6 @@ export default class CharacterSheet extends BaseActorSheet {
                 id,
                 label: labelFor(id),
                 selected: id === selected,
-                // Only Standard carries a one-line note; a special round's effects are
-                // read out in the panel's detail block once it is loaded.
-                summary: id === 'standard' ? game.i18n.localize('WH40K.DW.SpecialAmmo.NoSelection') : '',
             })),
             effect,
         };

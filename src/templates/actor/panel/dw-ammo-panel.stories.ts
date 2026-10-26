@@ -16,6 +16,7 @@
  * for diff stability — no Math.random in this module.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import { DW_SPECIAL_AMMO_EFFECTS, type DwSpecialAmmoId } from '../../../module/rules/dw-special-ammo.ts';
@@ -29,7 +30,6 @@ interface AmmoOption {
     id: DwSelectedAmmoId;
     label: string;
     selected: boolean;
-    summary: string;
 }
 
 interface AmmoEffectCtx {
@@ -65,17 +65,6 @@ const AMMO_LABELS: Readonly<Record<DwSelectedAmmoId, string>> = Object.freeze({
     'dragonfire': 'Dragonfire',
 });
 
-const AMMO_SUMMARIES: Readonly<Record<DwSelectedAmmoId, string>> = Object.freeze({
-    'standard': 'No engine effect.',
-    'hellfire': '+1d10 damage vs. unarmored targets.',
-    'kraken': '+3 Penetration.',
-    'metal-storm': '+1 hit per Degree of Success.',
-    'tempest': 'Ignores energy fields.',
-    'stalker': 'Silent; +10 Stealth.',
-    'vengeance': '+2 damage; -1 Reliability.',
-    'dragonfire': '+1d10 Fire damage; ignores cover.',
-});
-
 const SELECT_ORDER: ReadonlyArray<DwSelectedAmmoId> = ['standard', 'hellfire', 'kraken', 'metal-storm', 'tempest', 'stalker', 'vengeance', 'dragonfire'];
 
 function buildOptions(selected: DwSelectedAmmoId): AmmoOption[] {
@@ -83,7 +72,6 @@ function buildOptions(selected: DwSelectedAmmoId): AmmoOption[] {
         id,
         label: AMMO_LABELS[id],
         selected: id === selected,
-        summary: AMMO_SUMMARIES[id],
     }));
 }
 
@@ -128,6 +116,12 @@ export const Standard: Story = {
         },
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        // #701: the empty state is said once, below the picker (the Standard option printed it too).
+        const placeholders = [...canvasElement.querySelectorAll('p')].filter((el) => el.textContent.trim() === 'No special ammunition loaded.');
+        await expect(placeholders.length).toBe(1);
+        await expect(canvasElement.querySelector('fieldset')?.textContent.includes('No special ammunition loaded.')).toBe(false);
+    },
 };
 
 export const Kraken: Story = {

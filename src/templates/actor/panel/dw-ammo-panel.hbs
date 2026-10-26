@@ -5,9 +5,10 @@
     ammunition (DW core.md §"WEAPONS" / Special Issue Ammunition). Eight
     options total: a `'standard'` sentinel + the seven RAW kinds
     (Hellfire / Kraken / Metal Storm / Tempest / Stalker / Vengeance /
-    Dragonfire). The selected row shows a summary of the engine effect
-    pulled from `DW_SPECIAL_AMMO_EFFECTS`; the `'standard'` row shows the
-    `WH40K.DW.SpecialAmmo.NoSelection` placeholder.
+    Dragonfire). Below the picker, a loaded special round's engine effects
+    from `DW_SPECIAL_AMMO_EFFECTS` are listed; with Standard loaded, the
+    `WH40K.DW.SpecialAmmo.NoSelection` placeholder shows there, once (#701:
+    the Standard option printed it as well).
 
     Context (built by the character sheet's _prepareContext; gated on
     `actor._gameSystemId === 'dw'`):
@@ -19,7 +20,6 @@
           id:            DwSelectedAmmoId
           label:         string                    // localized name
           selected:      boolean                   // matches `selected`
-          summary:       string                    // one-line effect summary
         }>
         effect:          {                         // null when selected === 'standard'
           bonusDamageDice:     number
@@ -52,25 +52,18 @@
             {{localize "WH40K.DW.SpecialAmmo.Select"}}
         </legend>
         {{#each ammoPanel.options}}
-            <label class="tw-flex tw-items-start tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.05)]
+            <label class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer hover:tw-bg-[rgba(255,255,255,0.05)]
                           {{#if this.selected}}tw-bg-[rgba(255,255,255,0.08)] dw:tw-border dw:tw-border-solid dw:tw-border-bronze{{/if}}"
                    data-ammo-id="{{this.id}}">
                 <input type="radio"
                        name="system.selectedAmmo"
                        value="{{this.id}}"
-                       data-wh40k-hook="dw-ammo-radio" class="tw-mt-1"
+                       data-wh40k-hook="dw-ammo-radio" class="tw-my-0"
                        data-action="dwSelectAmmo"
                        data-ammo-id="{{this.id}}"
                        {{#if this.selected}}checked{{/if}} />
-                <span class="tw-flex tw-flex-col tw-gap-0.5">
-                    <span class="tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
-                        {{this.label}}
-                    </span>
-                    {{#if this.summary}}
-                    <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">
-                        {{this.summary}}
-                    </span>
-                    {{/if}}
+                <span class="tw-font-semibold tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-bright)]">
+                    {{this.label}}
                 </span>
             </label>
         {{/each}}

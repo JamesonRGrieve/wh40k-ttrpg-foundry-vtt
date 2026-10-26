@@ -127,6 +127,9 @@ test.describe.serial('DW Requisition (Tier B)', () => {
             return build();
         });
 
+        // #701: with Standard loaded, the ammunition panel says "No special ammunition loaded." once, at its foot
+        // (the Standard option printed it as well).
+        await expect(page.locator('.wh40k-dw-ammo-panel').getByText('No special ammunition loaded.', { exact: true })).toHaveCount(1);
         await snap(page, 'dw-requisition-panel');
 
         // Tear down so the actor doesn't leak into a sibling spec.
