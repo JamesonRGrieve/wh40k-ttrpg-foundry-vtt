@@ -55,6 +55,7 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
             const g = globalThis as unknown as {
                 Handlebars?: {
                     compile: (src: string) => (ctx: object, opts?: object) => string;
+                    helpers: Record<string, object>;
                 };
             };
             const results: { name: string; ok: boolean; detail: string }[] = [];
@@ -81,8 +82,12 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
             function probeHandlebarsHelperFlows(): void {
                 // ---------------------------------------------------------
                 // 1. Number-formatter helpers: signedNumber / inc / floor /
-                //    add / subtract / multiply / divide / min /
-                //    clampCritical / percent / inversePercent.
+                //    add / subtract / multiply / divide /
+                //    clampCritical / percent / inversePercent. There is no
+                //    `min` helper (#613, 6dbdfa87f): it shadowed the `min`
+                //    argument of stat-box, field-row and the vital inputs, so a
+                //    bare `{{min}}` rendered `min=""`. The probe checks it stays
+                //    unregistered.
                 // ---------------------------------------------------------
                 try {
                     const tpl = HB.compile(
@@ -96,15 +101,15 @@ test.describe.serial('handlebars / helpers extra coverage (Tier B)', () => {
                             '{{multiply 3 4}}',
                             '{{divide 9 3}}',
                             '{{divide 1 0}}',
-                            '{{min 7 2}}',
                             '{{clampCritical 25}}',
                             '{{percent 1 4}}',
                             '{{inversePercent 1 4}}',
                         ].join('|'),
                     );
                     const out = tpl({});
-                    const ok = out === '+5|-3|5|3|5|6|12|3|0|2|10|25|75';
-                    record('handlebars-number-formatters', ok, `out=${out}`);
+                    const noMinHelper = !('min' in HB.helpers);
+                    const ok = out === '+5|-3|5|3|5|6|12|3|0|10|25|75' && noMinHelper;
+                    record('handlebars-number-formatters', ok, `out=${out} noMinHelper=${String(noMinHelper)}`);
                 } catch (err) {
                     record('handlebars-number-formatters', false, `threw: ${String((err as Error).message)}`);
                 }
