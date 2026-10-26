@@ -296,6 +296,15 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
             const shown = labels.map((label) => label.trim());
             expect(shown.filter((label) => label.startsWith('WH40K.'))).toEqual([]);
             expect(shown).toEqual(expect.arrayContaining(['Weapon Type', 'Location', 'Hull Types']));
+            // #701: the Weapon Statistics and Resource inputs line up in equal columns, every input in a grid
+            // the same width as its neighbours (they were uneven, sized to each label).
+            for (const grid of ['ship-weapon-stat-grid', 'ship-weapon-resource-grid']) {
+                const widths = await page
+                    .locator(`#${appId} [data-wh40k-hook="${grid}"] input`)
+                    .evaluateAll((inputs) => inputs.map((input) => Math.round(input.getBoundingClientRect().width)));
+                expect(widths.length, grid).toBeGreaterThan(1);
+                expect(Math.max(...widths) - Math.min(...widths), `${grid} input widths ${widths.join(',')}`).toBeLessThanOrEqual(1);
+            }
             expect(await snapWindow(page, 'ship-weapon-item-sheet', appId)).not.toBeNull();
         } finally {
             await deleteActors(page, [sabre.id]);

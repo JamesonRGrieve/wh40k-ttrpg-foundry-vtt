@@ -45,47 +45,41 @@
 
                 <!-- Weapon Stats -->
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-dice-d20" labelKey="WH40K.ItemSheet.Ship.WeaponStatistics"}}
-                    <div>
-                        <div class="form-row tw-flex tw-gap-2">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Characteristic.Strength"}}</label>
-                                <input type="number" name="system.strength" value="{{source.strength}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Weapon.Damage"}}</label>
-                                <input type="text" name="system.damage" value="{{source.damage}}" placeholder="1d10+2" />
-                            </div>
+                    {{!-- Equal columns (#701): flex rows sized each cell to its label, so the two columns never lined up. --}}
+                    <div class="tw-grid tw-grid-cols-2 tw-gap-x-3 tw-gap-y-1" data-wh40k-hook="ship-weapon-stat-grid">
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.Characteristic.Strength"}}</label>
+                            <input class="tw-w-full" type="number" name="system.strength" value="{{source.strength}}" />
                         </div>
-
-                        <div class="form-row tw-flex tw-gap-2">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ItemSheet.Ship.CritRating"}}</label>
-                                <input type="number" name="system.crit" value="{{source.crit}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ItemSheet.Ship.RangeVU"}}</label>
-                                <input type="number" name="system.range" value="{{source.range}}" />
-                            </div>
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.Weapon.Damage"}}</label>
+                            <input class="tw-w-full" type="text" name="system.damage" value="{{source.damage}}" placeholder="1d10+2" />
+                        </div>
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.ItemSheet.Ship.CritRating"}}</label>
+                            <input class="tw-w-full" type="number" name="system.crit" value="{{source.crit}}" />
+                        </div>
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.ItemSheet.Ship.RangeVU"}}</label>
+                            <input class="tw-w-full" type="number" name="system.range" value="{{source.range}}" />
                         </div>
                     </div>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Resource Requirements -->
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-battery-half" labelKey="WH40K.ItemSheet.Ship.ResourceRequirements"}}
-                    <div>
-                        <div class="form-row tw-flex tw-gap-2">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ShipComponent.Power"}}</label>
-                                <input type="number" name="system.power" value="{{source.power}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ShipComponent.Space"}}</label>
-                                <input type="number" name="system.space" value="{{source.space}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ItemSheet.Ship.ShipPoints"}}</label>
-                                <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
-                            </div>
+                    <div class="tw-grid tw-grid-cols-3 tw-gap-x-3 tw-gap-y-1" data-wh40k-hook="ship-weapon-resource-grid">
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.ShipComponent.Power"}}</label>
+                            <input class="tw-w-full" type="number" name="system.power" value="{{source.power}}" />
+                        </div>
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.ShipComponent.Space"}}</label>
+                            <input class="tw-w-full" type="number" name="system.space" value="{{source.space}}" />
+                        </div>
+                        <div class="form-group tw-min-w-0">
+                            <label>{{localize "WH40K.ItemSheet.Ship.ShipPoints"}}</label>
+                            <input class="tw-w-full" type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
                         </div>
                     </div>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
