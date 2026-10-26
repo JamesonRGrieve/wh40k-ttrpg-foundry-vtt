@@ -83,7 +83,15 @@ for (const type of ['shipWeapon', 'shipComponent'] as const) {
             await field.scrollIntoViewIfNeeded();
             await snap(page, `ship-hull-types-${type}`, { selector: `#${sheetId} [data-field="hull-types"]` });
             const read = await readCheckboxes(page, sheetId);
-            expect(read.values).toEqual(['all', 'transport', 'raider', 'frigate', 'light-cruiser', 'cruiser', 'battlecruiser', 'grand-cruiser']);
+            // The "All" sentinel, then every hull type CONFIG declares, in order. The
+            // list grows with content (battleship, space station and repurposed
+            // asteroid joined in content#31), so it is read, not hardcoded.
+            const hullIds = await page.evaluate(
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `CONFIG` global is injected by the licensed app; no shipped types
+                () => Object.keys((globalThis as unknown as { CONFIG: { wh40k: { hullTypes: Record<string, object> } } }).CONFIG.wh40k.hullTypes),
+            );
+            expect(hullIds).toEqual(expect.arrayContaining(['transport', 'raider', 'frigate', 'light-cruiser', 'cruiser', 'battlecruiser', 'grand-cruiser']));
+            expect(read.values).toEqual(['all', ...hullIds]);
             expect(read.clipped, 'no hull type label is clipped').toEqual([]);
             expect(read.fieldScrolls, 'the field shows every option without scrolling').toBe(false);
             await expect(field.locator('input[value="transport"]')).toBeChecked();
