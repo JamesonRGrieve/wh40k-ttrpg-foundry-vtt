@@ -103,7 +103,9 @@ describe('iconRoleFor', () => {
         expect(iconRoleFor({ name: 'Pinned', type: 'condition' })).toBe('condition.pinned');
         expect(iconRoleFor({ name: 'Stunned', type: 'condition' })).toBe('condition.stunned');
         expect(iconRoleFor({ name: 'Surprised / Unaware', type: 'condition' })).toBe('condition.surprised');
-        expect(Object.keys(ICON_TABLE.rules.conditionName)).toHaveLength(10);
+        expect(iconRoleFor({ name: 'Ablaze', type: 'condition' })).toBe('condition.fire');
+        expect(iconRoleFor({ name: "Nurgle's Breath", type: 'condition' })).toBe('condition.disease.nurgles-breath');
+        expect(Object.keys(ICON_TABLE.rules.conditionName)).toHaveLength(28);
     });
 
     it('refuses to guess an icon for a condition the table has not chosen', () => {

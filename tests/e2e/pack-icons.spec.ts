@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { CONDITION_PLACEHOLDER_ART, nonSynonymArtClashes } from '../helpers/condition-docs';
 import { canvasClip } from './lib/canvas-capture';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -346,6 +347,23 @@ test.describe.serial('game-icons pack icons (#625, Tier B)', () => {
             const palette = await gameIconLoads(page, '#token-hud .palette.status-effects');
             expect(palette.broken, 'broken palette icons').toEqual([]);
             expect(palette.loaded, 'game-icons in the status palette').toBeGreaterThanOrEqual(REPOINTED_STATUSES.length);
+            // #699: each palette button has its own glyph. About fifteen were one placeholder face
+            // (Foundry's poison.svg on every disease, mystery-man on every IM condition).
+            const buttons = await page.evaluate(() =>
+                // Foundry's palette names each button in `data-tooltip-text`.
+                Array.from(document.querySelectorAll<HTMLImageElement>('#token-hud .palette.status-effects img')).map((img) => ({
+                    name: img.dataset['tooltipText'] ?? '',
+                    img: img.getAttribute('src') ?? '',
+                })),
+            );
+            expect(buttons.length, 'status palette buttons').toBeGreaterThan(REPOINTED_STATUSES.length);
+            expect(
+                buttons.filter((button) => button.name === ''),
+                'palette buttons with no name',
+            ).toEqual([]);
+            const placeholders: readonly string[] = CONDITION_PLACEHOLDER_ART;
+            expect(buttons.filter((button) => placeholders.includes(button.img)).map((button) => button.name)).toEqual([]);
+            expect(nonSynonymArtClashes(buttons)).toEqual([]);
             await snap(page, 'pack-icons-token-hud-status-palette', { clip: await hudClip(page) });
 
             // The same icons drawn on the token itself.
