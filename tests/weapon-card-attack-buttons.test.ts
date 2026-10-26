@@ -25,8 +25,11 @@ function button(action: string): string {
 }
 
 describe('weapon card action buttons (#248)', () => {
-    it('makes Attack the larger primary button (flex-1)', () => {
-        expect(button('attack')).toContain('tw-flex-1');
+    it('makes Attack the larger primary button: it grows, from a basis sized to its label', () => {
+        // flex-auto, not flex-1: a 0% basis let the row squeeze Attack until its label
+        // split across two lines rather than wrap the button to its own line (freeze run).
+        expect(button('attack')).toContain('tw-flex-auto');
+        expect(button('attack')).not.toContain('tw-flex-1');
     });
 
     it('keeps Damage and Reload as compact secondary buttons (not flex-1), which may still shrink to fit the card', () => {

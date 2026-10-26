@@ -87,10 +87,13 @@
 
     {{!-- Action Buttons. Attack is the larger, central primary; Damage is a compact
          secondary that hides when auto-apply-damage is on (#248), and for a weapon
-         that deals no damage (#601). --}}
+         that deals no damage (#601). Every button sizes from its label (flex-auto /
+         flex-initial), so when the row is too narrow a whole button moves to the next
+         line instead of squeezing its label onto two; min-w-0 still lets one button
+         wider than the card shrink inside it. --}}
     {{#if hasActions}}
     <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-justify-center tw-items-stretch">
-      <button type="button" class="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-text-center tw-leading-tight tw-px-3 tw-py-2 tw-border tw-rounded-md tw-text-[0.9rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white tw-shadow-[0_2px_6px_rgba(139,0,0,0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
+      <button type="button" class="tw-flex tw-flex-auto tw-items-center tw-justify-center tw-gap-1.5 tw-min-w-0 tw-text-center tw-leading-tight tw-px-3 tw-py-2 tw-border tw-rounded-md tw-text-[0.9rem] tw-font-bold tw-uppercase tw-tracking-[0.03em] tw-cursor-pointer tw-transition-all tw-duration-200 tw-ease-in-out tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border-[var(--wh40k-red-dark)] tw-text-white tw-shadow-[0_2px_6px_rgba(139,0,0,0.3)] hover:tw-bg-[linear-gradient(135deg,var(--wh40k-red-bright)_0%,var(--wh40k-red)_100%)] hover:-tw-translate-y-px hover:tw-shadow-[0_3px_8px_rgba(139,0,0,0.4)]" data-action="attack" data-item-uuid="{{item.uuid}}">
         <i class="fas fa-crosshairs"></i>
         {{localize "WH40K.Combat.Attack"}}
       </button>
