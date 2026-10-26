@@ -148,7 +148,8 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
             await checkTable(page, `${componentTables}:has([data-type="shipUpgrade"])`, 'ship-upgrades', { headers: 5, rows: 1 });
 
             const crewSheet = await openActorSheet(page, ship.id, 'crew');
-            await checkTable(page, `#${crewSheet} [data-table]`, 'ship-crew', { headers: 3, rows: 1 });
+            // Role, Officer, Bonus, and the Assign / Delete actions column (#701 item 3).
+            await checkTable(page, `#${crewSheet} [data-table]`, 'ship-crew', { headers: 4, rows: 1 });
         } finally {
             await deleteDocuments(page, { actors: [ship.id] });
         }
@@ -172,7 +173,18 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
             await expectListed(page, { actorId: character.id, tab: 'combat', name: 'Lasgun', shot: 'live-character-combat-weapons', rowText: ['1d10+3'] });
             await expectListed(page, { actorId: character.id, tab: 'equipment', name: 'Flak Vest', shot: 'live-character-equipment-armour' });
             await expectListed(page, { actorId: vehicle.id, tab: 'combat', name: 'Heavy Bolter', shot: 'live-vehicle-combat-weapons', rowText: ['1d10+8'] });
+            // #701: a vehicle upgrade has no "active" field, so the row's unlabelled checkbox wrote nothing.
+            // The live schema drops the write; the row no longer offers the box.
+            const storedActive = await page.evaluate(async (actorId) => {
+                const upgrade = game.actors.get(actorId)?.items.find((item) => item.type === 'vehicleUpgrade');
+                if (upgrade === undefined) throw new Error('no vehicle upgrade');
+                await upgrade.update({ 'system.active': true });
+                return 'active' in upgrade.system;
+            }, vehicle.id);
+            expect(storedActive, 'a vehicleUpgrade stores system.active').toBe(false);
             await expectListed(page, { actorId: vehicle.id, tab: 'components', name: 'Reinforced Plating', shot: 'live-vehicle-components-upgrades' });
+            const componentsSheet = await openActorSheet(page, vehicle.id, 'components');
+            await expect(page.locator(`#${componentsSheet} .tab.active [data-item-id] input[type="checkbox"]`)).toHaveCount(0);
         } finally {
             await deleteDocuments(page, { actors: [character.id, vehicle.id] });
         }

@@ -8,14 +8,9 @@
             <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each components}}
                 <div class="tw-px-3 tw-py-3 tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-color-light)] {{themeClassFor 'border'}} tw-rounded-md" data-item-id="{{this._id}}">
-                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
-                        <input type="checkbox"
-                               class="tw-m-0"
-                               data-action="toggleComponentActive"
-                               data-item-id="{{this._id}}"
-                               {{#if this.system.active}}checked{{/if}} />
-                        {{this.name}}
-                    </div>
+                    {{!-- No on/off checkbox (#701): a vehicle upgrade has no "active" field, so ticking one wrote
+                         nothing and the box never stayed checked. --}}
+                    <div class="tw-font-bold tw-mb-1" data-wh40k-hook="craft-component-name">{{this.name}}</div>
                     {{!-- `system.description` is the structured {value, chat, summary} record. --}}
                     {{#if this.system.description.value}}
                     <div class="tw-text-[0.85rem] tw-text-[color:var(--wh40k-text-medium)] tw-mt-2" data-wh40k-hook="craft-component-description">

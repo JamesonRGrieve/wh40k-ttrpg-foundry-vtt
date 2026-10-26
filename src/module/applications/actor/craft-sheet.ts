@@ -231,7 +231,6 @@ export default class CraftActorSheet extends BaseActorSheet {
             rollInitiative: CraftActorSheet.#rollInitiative,
             adjustIntegrity: CraftActorSheet.#adjustIntegrity,
             repairDamage: CraftActorSheet.#repairDamage,
-            toggleComponentActive: CraftActorSheet.#toggleComponentActive,
             damageComponent: CraftActorSheet.#damageComponent,
             openOccupant: CraftActorSheet.#openOccupant,
             embarkSelected: CraftActorSheet.#embarkSelected,
@@ -727,22 +726,6 @@ export default class CraftActorSheet extends BaseActorSheet {
         await this.actor.update({ 'system.integrity.value': newValue });
 
         ui.notifications.info(game.i18n.format('WH40K.Vehicle.Repaired', { amount: String(amount) }));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle component active state.
-     * @this {CraftActorSheet}
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
-     */
-    static async #toggleComponentActive(this: CraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
-        const item = this._resolveItemFromTarget(target);
-        if (!item) return;
-
-        const componentSystem = item.system as { active?: boolean };
-        await item.update({ 'system.active': componentSystem.active !== true });
     }
 
     /* -------------------------------------------- */
