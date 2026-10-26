@@ -90,6 +90,10 @@ async function expectListed(page: Page, args: { actorId: string; tab: string; na
     await entry.scrollIntoViewIfNeeded();
     await expect(entry, `${args.name} on the ${args.tab} tab`).toBeVisible();
     const row = entry.locator('xpath=ancestor::*[@data-item-id][1]');
+    // #699: a row prints localized labels and derived values, never the stored data
+    // (an armour type id like "flak", a raw "false", an "0 ALL" AP, a class slug).
+    const rowText = await row.innerText();
+    expect(rowText, `${args.name}'s row prints no raw data`).not.toMatch(/\bflak\b|\bfalse\b|\btrue\b|0 ALL|\b[a-z]+-[a-z]+\b/u);
     for (const text of args.rowText ?? []) {
         // eslint-disable-next-line no-await-in-loop -- each fragment is asserted on the same row in turn
         await expect(row, `${args.name}'s row`).toContainText(text);
