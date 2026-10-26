@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../../testing/model-import.ts';
-import type { RollDispatch } from './base-roll-dialog.ts';
+import type { RollDialogFooterSubmit, RollDispatch } from './base-roll-dialog.ts';
 
 /**
  * Tests for the shared finalize/select plumbing hoisted into BaseRollDialog (#348).
@@ -45,7 +45,15 @@ interface BaseRollDialogProto {
         selectFn: ((name: string) => void) | undefined,
         name: string,
     ) => Promise<void>;
-    _prepareContext: (this: { rollData: ThemeContextRollData; initialized: boolean }, options: Record<string, never>) => Promise<{ _gameSystemId?: string }>;
+    _prepareContext: (this: PrepareContextHost, options: Record<string, never>) => Promise<{ _gameSystemId?: string; footer?: RollDialogFooterSubmit }>;
+    _footerSubmit: (this: PrepareContextHost) => RollDialogFooterSubmit;
+}
+
+/** What `_prepareContext` reads off the dialog: its roll data, and the footer's submit button (#698). */
+interface PrepareContextHost {
+    rollData: ThemeContextRollData;
+    initialized: boolean;
+    _footerSubmit: () => RollDialogFooterSubmit;
 }
 
 /** The subset of rollData `_prepareContext` reads for the #422 theme-context injection. */
@@ -213,7 +221,7 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
         if (proto === undefined) return;
 
-        const stub = { rollData: { sourceActor: { system: { gameSystem: 'dw' } } }, initialized: true };
+        const stub = { rollData: { sourceActor: { system: { gameSystem: 'dw' } } }, initialized: true, _footerSubmit: proto._footerSubmit };
         const context = await proto._prepareContext.call(stub, {});
         expect(context._gameSystemId).toBe('dw');
     });
@@ -223,8 +231,19 @@ describe('BaseRollDialog shared roll plumbing (#348)', () => {
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
         if (proto === undefined) return;
 
-        const stub = { rollData: {}, initialized: true };
+        const stub = { rollData: {}, initialized: true, _footerSubmit: proto._footerSubmit };
         const context = await proto._prepareContext.call(stub, {});
         expect(context._gameSystemId).toBeUndefined();
+    });
+
+    // #698: the footer part renders the dialog's submit button; a roll dialog's is Roll.
+    it('_prepareContext hands the footer part its submit button: Roll with the dice icon', async () => {
+        const proto = await loadProto();
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the ApplicationV2 runtime is unavailable, not an assertion branch
+        if (proto === undefined) return;
+
+        const stub = { rollData: {}, initialized: true, _footerSubmit: proto._footerSubmit };
+        const context = await proto._prepareContext.call(stub, {});
+        expect(context.footer).toEqual({ labelKey: 'WH40K.Common.Roll', icon: 'fa-dice' });
     });
 });
