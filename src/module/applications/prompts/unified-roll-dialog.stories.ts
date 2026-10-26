@@ -6,7 +6,7 @@ import footerSrc from '../../../../src/templates/prompt/unified/footer.hbs?raw';
 import headerSrc from '../../../../src/templates/prompt/unified/header.hbs?raw';
 import modifiersSrc from '../../../../src/templates/prompt/unified/modifiers.hbs?raw';
 import targetSrc from '../../../../src/templates/prompt/unified/target-display.hbs?raw';
-import { renderSheetParts } from '../../../../stories/test-helpers';
+import { renderSheetParts, toggleControls } from '../../../../stories/test-helpers';
 import { type AttackOptionWeapon, getAvailableAttackModes } from '../../rules/attack-options.ts';
 import { canAttemptGrapple } from '../../rules/grapple.ts';
 import { overflowingLabels } from '../../testing/label-fit.ts';
@@ -842,3 +842,23 @@ export const Dh1ManualDegrees: Story = {
         await expect(view.getByText(/7 DoS/)).toBeTruthy();
     },
 };
+
+/* ------------------------------------------------------------------ */
+/*  Extended Test is one accessible toggle (#696, #699)                */
+/* ------------------------------------------------------------------ */
+
+function extendedToggleStory(on: boolean): Story {
+    return {
+        args: baseContext({ extended: on }),
+        play: async ({ canvasElement }) => {
+            const button = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="extended-test-controls__toggle"]');
+            if (button === null) throw new Error('no Extended Test toggle rendered');
+            const [control] = toggleControls(button.parentElement ?? button).filter((c) => c.name === button.textContent.trim());
+            await expect(control).toEqual({ name: button.textContent.trim(), pressed: String(on), checkboxes: 0, icons: 1, iconsHidden: true });
+            // The threshold field shows only while the toggle is on.
+            await expect(canvasElement.querySelector('[data-wh40k-hook="extended-test-controls__threshold-input"]') !== null).toBe(on);
+        },
+    };
+}
+export const ExtendedTestOff = extendedToggleStory(false);
+export const ExtendedTestOn = extendedToggleStory(true);

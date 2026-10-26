@@ -33,16 +33,17 @@
       </h4>
       <div class="tw-grid tw-grid-cols-3 tw-gap-2">
         {{#each config.characteristics}}
-        <div class="tw-flex tw-flex-col tw-gap-0.5">
-          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center" title="{{localize label}}">
-            {{short}}
-          </label>
+        {{!-- The label wraps its input, so each box is named (#699). The config carries
+              `abbreviation`; the old `short` was undefined and left every box unlabelled. --}}
+        <label class="tw-flex tw-flex-col tw-gap-0.5" data-wh40k-hook="modifier-characteristic">
+          <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center" title="{{localize label}}">{{abbreviation}}</span>
           <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
                  name="system.modifiers.characteristics.{{@key}}"
                  type="number"
                  value="{{lookup ../system.modifiers.characteristics @key}}"
+                 aria-label="{{localize label}}"
                  placeholder="0" />
-        </div>
+        </label>
         {{/each}}
       </div>
     </div>

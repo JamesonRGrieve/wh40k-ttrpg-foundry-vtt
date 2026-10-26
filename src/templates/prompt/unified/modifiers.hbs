@@ -167,14 +167,15 @@
     {{!-- Extended Test toggle (#59) — cumulative DoS toward a threshold. --}}
     <div data-wh40k-hook="extended-test-controls" class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-mb-2 tw-py-1.5 tw-px-2 tw-border tw-border-[rgba(99,102,241,0.25)] tw-rounded-md tw-bg-[rgba(99,102,241,0.06)]"
          data-tooltip="{{localize "WH40K.ExtendedTest.Tooltip"}}">
-        <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-[0.78rem] tw-text-[#c8c8b8] tw-uppercase tw-tracking-[0.05em] tw-font-medium">
-            <input type="checkbox"
-                   data-wh40k-hook="extended-test-controls__checkbox" class="tw-w-4 tw-h-4 tw-cursor-pointer tw-accent-indigo-500"
-                   data-action="toggleExtended"
-                   name="extended"
-                   {{#if extended}}checked{{/if}} />
+        {{!-- One accessible toggle (#696, #699): its state is aria-pressed, the square is decorative. --}}
+        <button type="button"
+                data-wh40k-hook="extended-test-controls__toggle"
+                class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-bg-transparent tw-border-0 tw-p-0 tw-text-[0.78rem] tw-text-[#c8c8b8] tw-uppercase tw-tracking-[0.05em] tw-font-medium"
+                data-action="toggleExtended"
+                aria-pressed="{{#if extended}}true{{else}}false{{/if}}">
+            {{> systems/wh40k-rpg/templates/shared/toggle-state-icon.hbs on=extended iconClass="tw-text-indigo-400"}}
             <span>{{localize "WH40K.ExtendedTest.ToggleLabel"}}</span>
-        </label>
+        </button>
         {{#if extended}}
         <div class="tw-flex tw-items-center tw-gap-1.5">
             <span class="tw-text-[0.72rem] tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.05em]">{{localize "WH40K.ExtendedTest.ThresholdLabel"}}</span>

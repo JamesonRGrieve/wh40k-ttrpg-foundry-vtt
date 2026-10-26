@@ -2065,10 +2065,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /* ---- Extended Test toggle (#59) ----                                                 */
     /* When enabled, the rolled DoS feeds into an ExtendedTestData ladder on the chat card. */
 
-    static async #onToggleExtended(this: UnifiedRollDialog, _event: Event, target: HTMLElement): Promise<void> {
-        // Action may fire from either the checkbox itself or a wrapper label/button.
-        const checkbox = target instanceof HTMLInputElement ? target : target.querySelector<HTMLInputElement>('input[type="checkbox"]');
-        this._extended = checkbox?.checked ?? !this._extended;
+    static async #onToggleExtended(this: UnifiedRollDialog): Promise<void> {
+        // The control is a toggle button (#699): each press flips the state.
+        this._extended = !this._extended;
         await this.render(false, { parts: ['modifiers'] });
     }
 

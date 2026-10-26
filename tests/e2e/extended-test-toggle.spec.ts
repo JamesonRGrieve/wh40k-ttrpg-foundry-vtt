@@ -90,21 +90,24 @@ test.describe.serial('extended test toggle (#59)', () => {
             }
             function readState(label: string): ExtendedTestState {
                 const wrapper = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="extended-test-controls"]');
-                const checkbox = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
+                const toggle = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="extended-test-controls__toggle"]');
                 const thresholdInput = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__threshold-input"]');
+                // The toggle's state is its aria-pressed (#699), and its square shows it.
+                const pressed = toggle?.getAttribute('aria-pressed');
+                const iconOn = toggle?.querySelector('[data-toggle-icon]')?.classList.contains('fa-check-square');
                 return {
                     label,
                     rendered: wrapper !== null,
-                    checked: checkbox?.checked ?? null,
+                    checked: pressed === undefined || pressed === null ? null : pressed === 'true' && iconOn === true,
                     thresholdVisible: thresholdInput !== null,
                     thresholdValue: thresholdInput?.value ?? null,
                 };
             }
 
             async function clickCheckbox(): Promise<void> {
-                const cb = rootEl.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
-                const expectThreshold = cb?.checked !== true;
-                cb?.click();
+                const toggle = rootEl.querySelector<HTMLElement>('[data-wh40k-hook="extended-test-controls__toggle"]');
+                const expectThreshold = toggle?.getAttribute('aria-pressed') !== 'true';
+                toggle?.click();
                 // Wait for the re-render to show (or drop) the threshold input for
                 // the new toggle state; the assertions report a miss.
                 await globalThis.wh40kE2E.pollUntil(
@@ -117,8 +120,10 @@ test.describe.serial('extended test toggle (#59)', () => {
             const afterToggleOn = readState('after-toggle-on');
             await clickCheckbox();
             const afterToggleOff = readState('after-toggle-off');
+            // Back on for the capture.
+            await clickCheckbox();
 
-            return { error: null, snaps: { initial, afterToggleOn, afterToggleOff } };
+            return { error: null, snaps: { initial, afterToggleOn, afterToggleOff }, appId: rootEl.id };
         });
 
         expect(result.error, result.error ?? 'ok').toBeNull();
@@ -140,16 +145,10 @@ test.describe.serial('extended test toggle (#59)', () => {
         expect(snaps.afterToggleOff.checked).toBe(false);
         expect(snaps.afterToggleOff.thresholdVisible).toBe(false);
 
-        // Visual record with the toggle on.
-        await page.evaluate(async () => {
-            const root = document.querySelector<HTMLElement>('.application[data-application-part]');
-            const cb = root?.querySelector<HTMLInputElement>('[data-wh40k-hook="extended-test-controls__checkbox"]');
-            if (cb !== null && cb !== undefined && !cb.checked) {
-                cb.click();
-                // Let the re-render settle before the snap.
-                await globalThis.wh40kE2E.settle(60);
-            }
-        });
-        await snap(page, 'extended-test-toggle-on');
+        // Visual record of this dialog with the toggle on (it picked the first window
+        // on the page before, so the capture showed another dialog's unchecked box).
+        const appId = 'appId' in result ? result.appId : '';
+        expect(await page.locator(`#${appId} [data-wh40k-hook="extended-test-controls__toggle"]`).getAttribute('aria-pressed')).toBe('true');
+        await snap(page, 'extended-test-toggle-on', { selector: `#${appId}`, closeWindows: true, keepWindow: appId });
     });
 });

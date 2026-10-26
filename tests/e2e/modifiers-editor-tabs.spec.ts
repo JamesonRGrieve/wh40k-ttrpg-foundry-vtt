@@ -86,6 +86,13 @@ test.describe.serial('modifiers editor tabs (Tier B, #669)', () => {
             };
 
             await expectOnly('basic', 'on opening');
+            // #699: every characteristic box is named by its abbreviation and full name.
+            const boxes = panel('basic').locator('[data-wh40k-hook="modifier-characteristic"]');
+            expect(await boxes.count()).toBeGreaterThan(0);
+            const unnamed = await boxes.evaluateAll(
+                (labels) => labels.filter((l) => l.textContent.trim() === '' || (l.querySelector('input')?.getAttribute('aria-label') ?? '') === '').length,
+            );
+            expect(unnamed, 'every characteristic input has a visible abbreviation and an accessible name').toBe(0);
             for (const tab of [...TABS].reverse()) {
                 await nav.locator(`[data-tab="${tab}"]`).click();
                 await expectOnly(tab, `after clicking ${tab}`);
