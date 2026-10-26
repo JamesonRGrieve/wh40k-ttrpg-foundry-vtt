@@ -12,4 +12,5 @@
                          (mirrors the ammo sheet: appends the readonly class +
                          attribute gated on the caller's `inEditMode`).
 --}}
-<input type="text" class="tw-font-display tw-text-xl tw-text-gold {{themeClassFor 'accent'}} tw-bg-transparent tw-border-none tw-w-full tw-p-1{{#if lockable}}{{#unless inEditMode}} wh40k-input--readonly{{/unless}}{{/if}}" name="name" value="{{item.name}}" placeholder="{{#if placeholderKey}}{{localize placeholderKey}}{{else}}{{placeholder}}{{/if}}"{{#if lockable}}{{#unless inEditMode}} readonly{{/unless}}{{/if}} />
+{{!-- The font steps down as the name grows (#699): an input cannot wrap, so a long name was clipped mid-letter. --}}
+<input type="text" class="tw-font-display {{nameFitClass item.name 'itemHeader'}} tw-text-ellipsis tw-text-gold {{themeClassFor 'accent'}} tw-bg-transparent tw-border-none tw-w-full tw-min-w-0 tw-p-1{{#if lockable}}{{#unless inEditMode}} wh40k-input--readonly{{/unless}}{{/if}}" name="name" value="{{item.name}}" data-tooltip="{{item.name}}" placeholder="{{#if placeholderKey}}{{localize placeholderKey}}{{else}}{{placeholder}}{{/if}}"{{#if lockable}}{{#unless inEditMode}} readonly{{/unless}}{{/if}} />

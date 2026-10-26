@@ -146,6 +146,12 @@ async function verifyCase(page: Page, c: Case): Promise<void> {
     if (!c.snapIt) return;
     const sheetId = await openSheet(page, c);
     await expect(page.locator(`#${sheetId} [name="${c.field}"]`)).toHaveValue(c.value);
+    // #699: the title shows whole; its font steps down instead of clipping mid-letter.
+    const clipped = await page
+        .locator(`#${sheetId} input[name="name"]`)
+        .first()
+        .evaluate((input) => input.scrollWidth > input.clientWidth + 1);
+    expect(clipped, `${c.type} title clipped`).toBe(false);
     await snapSheet(page, sheetId, `item-persist-${c.family}-after-reload`);
     await closeSheet(page, c);
 }

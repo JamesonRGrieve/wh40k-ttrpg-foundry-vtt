@@ -54,7 +54,8 @@
     {{> systems/wh40k-rpg/templates/shared/editable-portrait.hbs src=item.img alt=item.name extraClass="wh40k-item-header__image"}}
 
     <div class="tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
-        <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="{{#if namePlaceholder}}{{namePlaceholder}}{{else}}{{localize (or namePlaceholderKey 'WH40K.Item.NamePlaceholder')}}{{/if}}" />
+        {{!-- The font steps down as the name grows (#699): an input cannot wrap, so a long name was clipped mid-letter. --}}
+        <input type="text" class="wh40k-item-header__name tw-w-full tw-min-w-0 tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display {{nameFitClass item.name 'itemHeader'}} tw-text-ellipsis tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" data-tooltip="{{item.name}}" placeholder="{{#if namePlaceholder}}{{namePlaceholder}}{{else}}{{localize (or namePlaceholderKey 'WH40K.Item.NamePlaceholder')}}{{/if}}" />
 
         <div class="tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
             {{#if (eq variant "physical")}}

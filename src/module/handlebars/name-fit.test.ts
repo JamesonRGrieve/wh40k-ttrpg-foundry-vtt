@@ -1,7 +1,41 @@
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { NAME_FIT_MAX_FITTED_CHARS, nameFitClass } from './name-fit.ts';
+import { ITEM_NAME_FIT_MAX_FITTED_CHARS, NAME_FIT_MAX_FITTED_CHARS, nameFitClass } from './name-fit.ts';
+
+describe('nameFitClass for the item header (#699)', () => {
+    it('keeps text-xl for a name that fits', () => {
+        expect(nameFitClass('Lasgun', 'itemHeader')).toBe('tw-text-xl');
+        expect(nameFitClass('x'.repeat(22), 'itemHeader')).toBe('tw-text-xl');
+    });
+
+    it('steps down for the name the freeze audit found clipped mid-letter', () => {
+        expect(nameFitClass('e2e-612 weaponModification', 'itemHeader')).toBe('tw-text-[1.1rem]');
+        expect(nameFitClass('x'.repeat(30), 'itemHeader')).toBe('tw-text-[0.95rem]');
+        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS), 'itemHeader')).toBe('tw-text-[0.8rem]');
+    });
+
+    it('takes the floor past the longest fitted name, where the field ends in an ellipsis', () => {
+        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS + 1), 'itemHeader')).toBe('tw-text-[0.75rem]');
+    });
+
+    it('the sidebar stays the default field', () => {
+        expect(nameFitClass('x'.repeat(18))).toBe(nameFitClass('x'.repeat(18), 'sidebar'));
+    });
+
+    it('throws on an unknown field, a template bug', () => {
+        expect(() => nameFitClass('Lasgun', 'banner')).toThrow('unknown field');
+    });
+});
+
+describe('every item-sheet title input is fitted (#699)', () => {
+    const templates = resolve(__dirname, '../../templates/item');
+    it.each(['panel/item-header.hbs', 'partial/item-name-input.hbs', 'item-weapon-quality-sheet.hbs', 'npc-template/header.hbs'])('%s', (path) => {
+        const source = readFileSync(join(templates, path), 'utf8');
+        expect(source).toContain("{{nameFitClass item.name 'itemHeader'}} tw-text-ellipsis");
+        expect(source).toContain('data-tooltip="{{item.name}}"');
+    });
+});
 
 describe('nameFitClass (#630)', () => {
     it('keeps the base size for a short name', () => {

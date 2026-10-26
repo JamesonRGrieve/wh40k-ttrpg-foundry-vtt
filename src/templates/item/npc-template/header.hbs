@@ -18,7 +18,7 @@
 
     <div class="tw-flex tw-flex-1 tw-flex-col tw-gap-2">
         <div>
-            <input class="tw-text-xl tw-font-bold tw-w-full tw-border-0 tw-bg-transparent tw-px-1 focus:tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="text" name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.NPC.Template.Name'}}" />
+            <input class="{{nameFitClass item.name 'itemHeader'}} tw-text-ellipsis tw-font-bold tw-w-full tw-min-w-0 tw-border-0 tw-bg-transparent tw-px-1 focus:tw-bg-[var(--wh40k-bg-primary)] focus:tw-outline focus:tw-outline-1 focus:tw-outline-[var(--wh40k-accent-color)]" type="text" name="name" value="{{item.name}}" data-tooltip="{{item.name}}" placeholder="{{localize 'WH40K.NPC.Template.Name'}}" />
         </div>
 
         <div class="tw-flex tw-gap-4 tw-flex-wrap">

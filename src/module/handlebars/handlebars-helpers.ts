@@ -195,7 +195,10 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
     hbs.registerHelper('itemTableColumns', (headers: TplValue, addAction: TplValue): string => itemTableColumnsHelper(headers, addAction));
 
     /** Font-size class that fits an actor name into the sidebar name input (#630). */
-    hbs.registerHelper('nameFitClass', (name: TplValue): string => nameFitClass(typeof name === 'string' ? name : ''));
+    /** `{{nameFitClass name}}` (the actor sidebar) or `{{nameFitClass name "itemHeader"}}` (#630, #699). */
+    hbs.registerHelper('nameFitClass', (name: TplValue, field: TplValue): string =>
+        nameFitClass(typeof name === 'string' ? name : '', typeof field === 'string' ? field : 'sidebar'),
+    );
 
     // `{{chatActionButton "wounds"}}` / `{{chatActionButton "powers" "sm"}}`: a chat-card action
     // button's shared classes. The size is optional, so it may be Handlebars' options object.
