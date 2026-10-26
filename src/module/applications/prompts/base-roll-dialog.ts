@@ -1,3 +1,4 @@
+import type { I18nKey } from '../../types/i18n-keys';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
@@ -12,6 +13,12 @@ const { ApplicationV2 } = foundry.applications.api;
 export interface RollDispatch {
     finalize?: (() => Promise<void> | void) | undefined;
     performActionAndSendToChat?: (() => Promise<void> | void) | undefined;
+}
+
+/** The footer's submit button (#698): the langpack key of its label, and its Font Awesome icon. */
+export interface RollDialogFooterSubmit {
+    labelKey: I18nKey;
+    icon: string;
 }
 
 /**
@@ -58,12 +65,20 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /**
+     * The form, then the footer with the submit and Cancel buttons (#698). A subclass
+     * replaces only `form` (`{ ...BaseRollDialog.PARTS, form: … }`), so every roll
+     * dialog keeps the one footer.
+     * @override
+     */
     static override PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/base-roll-prompt.hbs',
             classes: [],
             scrollable: [],
+        },
+        footer: {
+            template: 'systems/wh40k-rpg/templates/prompt/roll-dialog-footer.hbs',
         },
     };
 
@@ -113,8 +128,20 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
             rollData: this.rollData,
             dh: CONFIG.wh40k,
             isEditable: true,
+            footer: this._footerSubmit(),
             ...(gameSystemId !== undefined && gameSystemId !== '' ? { _gameSystemId: gameSystemId } : {}),
         };
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * The footer's submit button: its label and icon. Roll by default; a dialog whose
+     * action is not a roll (Assign Damage's Apply) overrides it.
+     * @protected
+     */
+    _footerSubmit(): RollDialogFooterSubmit {
+        return { labelKey: 'WH40K.Common.Roll', icon: 'fa-dice' };
     }
 
     /* -------------------------------------------- */

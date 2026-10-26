@@ -277,6 +277,7 @@ export class HandlebarManager {
             // template with no renderer is exactly what made those dialogs look
             // present while being unreachable.
             'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/roll-dialog-footer.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-row.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs',

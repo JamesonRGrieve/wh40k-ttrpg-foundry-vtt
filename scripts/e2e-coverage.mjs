@@ -737,6 +737,7 @@ const GRENADE_THROW_FLOWS = [
     'grenade-needs-no-training',
     'grenade-damage-adds-no-strength-bonus',
     'damage-prompt-type-unclipped',
+    'damage-prompt-rolls-and-cancels',
     'save-grenade-opens-dialog-on-it',
     'dialog-lists-only-rider-grenades',
     'dialog-selection-shows-its-rider',

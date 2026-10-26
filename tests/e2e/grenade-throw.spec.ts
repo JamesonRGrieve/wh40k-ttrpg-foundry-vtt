@@ -35,6 +35,8 @@ import { scaledMs } from './lib/timing';
  * - Tears of the Emperor is a rider grenade that deals damage (#622): its Throw takes
  *   the weapon roll too (BS test, Blast, damage), and its damage card states its rider
  *   after the hits, for both creatures the Blast caught;
+ * - the Frag Grenade's damage prompt has its Roll and Cancel footer (#698): Cancel closes
+ *   it and posts nothing, Roll posts the damage card and closes it;
  * - the Photon Flash's Throw places its rider area on the targeted Heretic (#623), and
  *   its card's Resolve Rider rolls Agility +10 for both creatures inside: the Heretic
  *   fails by three degrees and is Blinded for three rounds (the status on its token),
@@ -55,6 +57,7 @@ const GRENADE_THROW_FLOWS = [
     'grenade-needs-no-training',
     'grenade-damage-adds-no-strength-bonus',
     'damage-prompt-type-unclipped',
+    'damage-prompt-rolls-and-cancels',
     'save-grenade-opens-dialog-on-it',
     'dialog-lists-only-rider-grenades',
     'dialog-selection-shows-its-rider',
@@ -257,6 +260,80 @@ async function probeFrag(page: Page, actorId: string): Promise<ProbeRead> {
             typeSelect: readTypeSelect(prompt?.id ?? null),
         };
     }, actorId);
+}
+
+/** The damage prompt's footer buttons, in order (#698). */
+const DAMAGE_PROMPT_BUTTONS = ['Roll', 'Cancel'];
+
+/** Open the Frag Grenade's damage prompt again, as its damage roll does; null when it did not open. */
+async function openFragDamagePrompt(page: Page, actorId: string): Promise<string | null> {
+    return page.evaluate(async (id: string): Promise<string | null> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+        const g = globalThis as unknown as Globals;
+        const actor = g.game.actors.get(id);
+        const frag = actor?.items.contents.find((item) => item.name === 'Frag Grenade');
+        if (actor === undefined || frag === undefined) return null;
+        const before = new Set(g.foundry.applications.instances.keys());
+        await actor.damageItem(frag.id);
+        const findPrompt = (): { id: string } | undefined =>
+            Array.from(g.foundry.applications.instances.values()).find((app) => !before.has(app.id) && app.constructor.name === 'DamageRollDialog');
+        await globalThis.wh40kE2E.pollUntil(() => findPrompt() !== undefined);
+        return findPrompt()?.id ?? null;
+    }, actorId);
+}
+
+/** What a damage prompt's footer showed, and what clicking one of its buttons did. */
+interface FooterClickRead {
+    /** The footer's button labels, in order. */
+    buttons: string[];
+    /** Whether the clicked button was the topmost element at its centre. */
+    onTop: boolean;
+    /** Whether the prompt closed. */
+    closed: boolean;
+    newMessages: number;
+    /** Whether the one new message is a damage card. */
+    damageCard: boolean;
+}
+
+/** Read a damage prompt's footer, click its `roll` or `cancel` button as a user would, and read what followed. */
+async function clickDamagePromptFooter(page: Page, appId: string, action: 'roll' | 'cancel'): Promise<FooterClickRead> {
+    const button = `#${appId} [data-roll-dialog-footer] button[data-action="${action}"]`;
+    const before = await page.evaluate(
+        (args: { appId: string; button: string }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as Globals;
+            const labels = Array.from(document.querySelectorAll<HTMLButtonElement>(`#${args.appId} [data-roll-dialog-footer] button`), (label) =>
+                label.textContent.trim(),
+            );
+            const clicked = document.querySelector<HTMLElement>(args.button);
+            const box = clicked?.getBoundingClientRect();
+            const top = box === undefined ? null : document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+            return { labels, onTop: clicked !== null && top !== null && clicked.contains(top), messages: g.game.messages.contents.map((m) => m.id) };
+        },
+        { appId, button },
+    );
+    await page.locator(button).click();
+    const after = await page.evaluate(
+        async (args: { appId: string; known: string[]; action: string }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as Globals & { game: { i18n: { localize: (key: string) => string } } };
+            const { pollUntil, settle } = globalThis.wh40kE2E;
+            const known = new Set(args.known);
+            const fresh = (): Array<{ id: string; content: string }> => g.game.messages.contents.filter((m) => !known.has(m.id));
+            await pollUntil(() => !g.foundry.applications.instances.has(args.appId) && (args.action === 'cancel' || fresh().length > 0));
+            // A Cancel posts nothing: give a stray message time to arrive before counting.
+            await settle(300);
+            const overline = g.game.i18n.localize('WH40K.Chat.Damage.Overline');
+            const created = fresh();
+            return {
+                closed: !g.foundry.applications.instances.has(args.appId),
+                newMessages: created.length,
+                damageCard: created.length === 1 && (created[0]?.content.includes(overline) ?? false),
+            };
+        },
+        { appId, known: before.messages, action },
+    );
+    return { buttons: before.labels, onTop: before.onTop, ...after };
 }
 
 /** Throw a weapon from the sheet: the sheet's own `itemRoll` action on the weapon's row. */
@@ -631,6 +708,25 @@ test.describe.serial('grenade detection (Tier B, #619)', () => {
                 await clearScreenOverlays(page, frag.damageAppId);
                 await snap(page, 'grenade-frag-damage-prompt-no-sb', { selector: `#${frag.damageAppId}` });
             }
+
+            // --- the damage prompt's footer: Cancel closes it, Roll posts the damage (#698)
+            const cancelled = frag.damageAppId === null ? null : await clickDamagePromptFooter(page, frag.damageAppId, 'cancel');
+            const reopened = await openFragDamagePrompt(page, throwerId);
+            if (reopened !== null) {
+                await clearScreenOverlays(page, reopened);
+                await snap(page, 'grenade-frag-damage-prompt-roll-cancel', { selector: `#${reopened}` });
+            }
+            const rolled = reopened === null ? null : await clickDamagePromptFooter(page, reopened, 'roll');
+            record(
+                'damage-prompt-rolls-and-cancels',
+                cancelled !== null &&
+                    rolled !== null &&
+                    [cancelled, rolled].every((footer) => footer.buttons.join('|') === DAMAGE_PROMPT_BUTTONS.join('|') && footer.onTop && footer.closed) &&
+                    cancelled.newMessages === 0 &&
+                    rolled.newMessages === 1 &&
+                    rolled.damageCard,
+                `cancel ${JSON.stringify(cancelled)}; roll ${JSON.stringify(rolled)}`,
+            );
 
             // --- Photon Flash: the sheet's throw opens the dialog on it ----------
             const photon = await throwFromSheet(page, throwerId, 'Photon Flash Grenade');

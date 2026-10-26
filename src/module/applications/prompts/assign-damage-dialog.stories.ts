@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/assign-damage-prompt.hbs?raw';
-import { renderSheet } from '../../../../stories/test-helpers';
+import footerSrc from '../../../../src/templates/prompt/roll-dialog-footer.hbs?raw';
+import { renderSheet, renderSheetParts } from '../../../../stories/test-helpers';
 
 interface ActorView {
     name: string;
@@ -81,15 +82,27 @@ export const HeadCrit: Story = {
     },
 };
 
-/** Asserts the actor header renders and the Apply / Cancel buttons are wired. */
+/**
+ * The form with the dialog's footer part, as the dialog composes them (#698): Apply and
+ * Cancel come from the base roll dialog's footer, wired to its `roll` / `cancel` actions,
+ * and the form itself carries no buttons of its own.
+ */
 export const Wired: Story = {
+    render: (args) =>
+        renderSheetParts([
+            { template: templateSrc, context: { ...args } },
+            { template: footerSrc, context: { footer: { labelKey: 'WH40K.Common.Apply', icon: 'fa-check' } } },
+        ]),
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText('Acolyte Vael')).toBeTruthy();
-        const apply = canvasElement.querySelector<HTMLButtonElement>('#assign-damage');
-        const cancel = canvasElement.querySelector<HTMLButtonElement>('#cancel-prompt');
-        await expect(apply).toBeTruthy();
-        await expect(cancel).toBeTruthy();
-        cancel?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        const footer = canvasElement.querySelector<HTMLElement>('[data-roll-dialog-footer]');
+        const buttons = Array.from(footer?.querySelectorAll<HTMLButtonElement>('button') ?? []);
+        await expect(buttons.map((button) => [button.dataset['action'], button.textContent.trim()])).toEqual([
+            ['roll', 'Apply'],
+            ['cancel', 'Cancel'],
+        ]);
+        await expect(buttons.every((button) => button.type === 'button')).toBe(true);
+        await expect(canvasElement.querySelectorAll('button').length).toBe(2);
     },
 };

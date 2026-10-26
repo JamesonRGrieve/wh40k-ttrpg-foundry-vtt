@@ -5,8 +5,8 @@
   template, but the base needs something renderable so an unspecialised
   instantiation (e.g. integration test) does not throw.
 
-  A div, not a form: the dialog root is already the form element, so the
-  submit button below submits it (#612).
+  A div, not a form: the dialog root is already the form element (#612).
+  The Roll and Cancel buttons are the dialog's own footer part (#698).
 --}}
 <div class="standard-form framed" autocomplete="off">
     {{#if rollData}}
@@ -17,7 +17,4 @@
     {{else}}
         <p>{{localize "WH40K.Prompt.BaseRoll.Configure"}}</p>
     {{/if}}
-    <footer class="form-footer">
-        <button type="submit" class="bright"><i class="fa-solid fa-dice"></i> {{localize "WH40K.Common.Roll"}}</button>
-    </footer>
 </div>

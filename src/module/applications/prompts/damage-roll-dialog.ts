@@ -33,8 +33,9 @@ export default class DamageRollDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** The damage form, with the base dialog's Roll / Cancel footer (#698). */
     static override PARTS = {
+        ...BaseRollDialog.PARTS,
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
             scrollable: [''],

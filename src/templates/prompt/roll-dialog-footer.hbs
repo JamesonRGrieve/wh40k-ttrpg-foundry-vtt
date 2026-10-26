@@ -1,0 +1,11 @@
+{{!-- The footer part every BaseRollDialog renders (#698): the shared prompt footer with
+      the dialog's submit action (Roll, or a subclass's own label such as Apply) and
+      Cancel. A subclass that sets its own form template keeps this part by spreading
+      BaseRollDialog.PARTS, so no roll prompt copies the buttons into its form. --}}
+<div class="tw-px-5 tw-pb-5" data-roll-dialog-footer>
+    {{> systems/wh40k-rpg/templates/prompt/partial/prompt-footer.hbs
+        rootClass="tw-border-[rgba(201,162,39,0.2)]"
+        confirmAction="roll"
+        confirmIcon=footer.icon
+        confirmLabelKey=footer.labelKey}}
+</div>

@@ -85,16 +85,5 @@
         {{/systems/wh40k-rpg/templates/prompt/partial/prompt-panel.hbs}}
     </div>
 </div>
-
-{{! Dialog Buttons }}
-<div class="dialog-buttons">
-    <button class="dialog-button roll default" data-button="roll" id="assign-damage">
-        <span class="material-icons">api</span>
-        {{localize "WH40K.Common.Apply"}}
-    </button>
-    <button class="dialog-button cancel" data-button="cancel" id="cancel-prompt">
-        <span class="material-icons">close</span>
-        {{localize "WH40K.Cancel"}}
-    </button>
-</div>
+{{! Apply / Cancel are the dialog's footer part (#698). }}
 </div>

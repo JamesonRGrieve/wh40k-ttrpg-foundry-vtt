@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/damage-roll-prompt.hbs?raw';
-import { assertField, renderSheet } from '../../../../stories/test-helpers';
+import footerSrc from '../../../../src/templates/prompt/roll-dialog-footer.hbs?raw';
+import { assertField, renderSheet, renderSheetParts } from '../../../../stories/test-helpers';
 
 interface Args {
     name: string;
@@ -33,6 +34,31 @@ export default meta;
 type Story = StoryObj<Args>;
 
 export const RangedWeapon: Story = {};
+
+/**
+ * A Frag Grenade's damage prompt as the dialog composes it (#698): the damage form, then
+ * the base roll dialog's footer part with Roll and Cancel. The prompt had no footer, so
+ * it could be neither rolled nor cancelled.
+ */
+export const WithFooter: Story = {
+    args: { name: 'Frag Grenade', damage: '2d10', penetration: '0', damageType: 'explosive' },
+    render: (args) =>
+        renderSheetParts([
+            { template: templateSrc, context: { ...args } },
+            { template: footerSrc, context: { footer: { labelKey: 'WH40K.Common.Roll', icon: 'fa-dice' } } },
+        ]),
+    play: async ({ canvasElement }) => {
+        const footer = canvasElement.querySelector<HTMLElement>('[data-roll-dialog-footer]');
+        const buttons = Array.from(footer?.querySelectorAll<HTMLButtonElement>('button') ?? []);
+        await expect(buttons.map((button) => [button.dataset['action'], button.textContent.trim()])).toEqual([
+            ['roll', 'Roll'],
+            ['cancel', 'Cancel'],
+        ]);
+        // The footer follows the form: the formula is above the buttons.
+        const formula = canvasElement.querySelector('#damage');
+        await expect(formula !== null && footer !== null && (formula.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0).toBe(true);
+    },
+};
 
 /** A psychic power damage roll exposes the Psychic Rating field. */
 export const PsychicPower: Story = {

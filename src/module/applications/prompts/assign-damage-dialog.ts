@@ -4,7 +4,7 @@
 
 import { readVehicleDurability } from '../../rolls/vehicle-strike.ts';
 import { hitDropdown, vehicleHitDropdown } from '../../rules/hit-locations.ts';
-import BaseRollDialog from './base-roll-dialog.ts';
+import BaseRollDialog, { type RollDialogFooterSubmit } from './base-roll-dialog.ts';
 
 /**
  * Dialog for assigning damage to a target.
@@ -33,8 +33,9 @@ export default class AssignDamageDialog extends BaseRollDialog {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /** The assignment form, with the base dialog's footer: Apply / Cancel (#698). */
     static override PARTS = {
+        ...BaseRollDialog.PARTS,
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
             scrollable: [''],
@@ -55,45 +56,10 @@ export default class AssignDamageDialog extends BaseRollDialog {
     }
 
     /* -------------------------------------------- */
-    /*  Event Listeners                             */
-    /* -------------------------------------------- */
 
-    /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are untyped Record at the base class level
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        await super._onRender(context, options);
-
-        // Set up button listeners
-        this.element.querySelector('#assign-damage')?.addEventListener('click', (e) => {
-            void this._onAssignDamage(e);
-        });
-        this.element.querySelector('#cancel-prompt')?.addEventListener('click', (e) => {
-            void this._onCancelPrompt(e);
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle assign damage button click.
-     * @param {Event} event  The click event.
-     * @protected
-     */
-    async _onAssignDamage(event: Event): Promise<void> {
-        event.preventDefault();
-        await this._performRoll();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle cancel button click.
-     * @param {Event} event  The click event.
-     * @protected
-     */
-    async _onCancelPrompt(event: Event): Promise<void> {
-        event.preventDefault();
-        await this.close();
+    /** The footer applies the damage rather than rolling it (#698). */
+    override _footerSubmit(): RollDialogFooterSubmit {
+        return { labelKey: 'WH40K.Common.Apply', icon: 'fa-check' };
     }
 }
 
