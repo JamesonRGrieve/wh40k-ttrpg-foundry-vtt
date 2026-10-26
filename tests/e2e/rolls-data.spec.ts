@@ -129,11 +129,14 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[] }> {
             }
             if (assignMod != null) {
                 const { AssignDamageData } = assignMod;
+                // Armour keyed by location id, as a character stores it (`body`, `head`):
+                // since #248 the soak resolves the hit's location (`BODY`) to its id and
+                // reads that entry through locationSoak.
                 const buildActor = (woundsValue: number): FakeActor => ({
                     system: {
                         armour: {
-                            BODY: { value: 5, toughnessBonus: 3 },
-                            HEAD: { value: 3, toughnessBonus: 3 },
+                            body: { value: 5, toughnessBonus: 3 },
+                            head: { value: 3, toughnessBonus: 3 },
                         },
                         wounds: { value: woundsValue, critical: 0 },
                         fatigue: { value: 0 },
