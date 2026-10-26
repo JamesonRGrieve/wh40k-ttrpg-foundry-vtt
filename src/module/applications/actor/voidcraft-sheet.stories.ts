@@ -131,7 +131,7 @@ export const BlackCruisadeVariant: Story = {
         const base = mockActor({
             _id: randomId('bc-starship', rng),
             name: 'Despoiler-class Battleship',
-            type: 'rt-starship',
+            type: 'rt-voidcraft',
         });
         const bcActor = withSystem(base, 'bc', 'vehicle');
         return {
@@ -159,7 +159,7 @@ function makePerSystemVoidcraftStory(systemId: SystemId, shipName: string): Stor
     const base = mockActor({
         _id: randomId(`${systemId}-starship`, rng),
         name: shipName,
-        type: 'rt-starship',
+        type: 'rt-voidcraft',
     });
     const systemActor = withSystem(base, systemId, 'vehicle');
     return {
@@ -197,7 +197,7 @@ export const LongShipNameFitsSidebar: Story = {
     name: 'Long ship name fits the sidebar',
     args: (() => {
         const ship = withSystem(
-            mockActor({ _id: randomId('rt-long-ship', rng), name: 'Vagabond-class Merchant Trader', type: 'rt-starship' }),
+            mockActor({ _id: randomId('rt-long-ship', rng), name: 'Vagabond-class Merchant Trader', type: 'rt-voidcraft' }),
             'rt',
             'vehicle',
         );
@@ -390,7 +390,7 @@ export const OtherLineAtZeroHull: Story = {
     name: 'Issue #187 — another line’s ship at 0 Hull shows no RT condition',
     args: {
         ...atZeroHull,
-        actor: withSystem(mockActor({ _id: 'dh2-zero-hull', name: 'Aquila Lander', type: 'rt-starship' }), 'dh2', 'vehicle') as SheetContextLike['actor'],
+        actor: withSystem(mockActor({ _id: 'dh2-zero-hull', name: 'Aquila Lander', type: 'rt-voidcraft' }), 'dh2', 'vehicle') as SheetContextLike['actor'],
         // The sheet gates the condition on the Rogue Trader line, so a DH2 hull at 0 gets neither.
         shipCondition: { crippled: false, destroyed: false },
     },

@@ -4773,6 +4773,17 @@
             "HullClass": "Hull Class",
             "HullClassUnset": "Not set",
             "HullClassPlaceholder": "Class name",
+            "SheetTitle": "{line} Voidcraft: {name}",
+            "SheetTitleNoLine": "Voidcraft: {name}",
+            "Legacy": {
+                "SheetTitle": "{line} Starship (legacy): {name}",
+                "Notice": "This ship uses the legacy Starship type. Voidcraft is the one ship type now; converting keeps its id, items, stats and token links.",
+                "Convert": "Convert to Voidcraft",
+                "ConfirmTitle": "Convert {name} to a Voidcraft?",
+                "ConfirmBody": "{name} becomes a Voidcraft in place. Its id, items, stats and token links stay as they are. This cannot be undone from the sheet.",
+                "Converted": "{name} is now a Voidcraft.",
+                "ConvertFailed": "{name} could not be converted to a Voidcraft."
+            },
             "Tabs": {
                 "Stats": "Stats",
                 "Components": "Components",

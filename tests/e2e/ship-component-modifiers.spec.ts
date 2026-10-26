@@ -5,7 +5,7 @@ import { expect, test } from './lib/test';
 /**
  * Ship component / role modifier surface (#196).
  *
- * Creates a `rt-starship` actor with a base detection of 10 and armour of
+ * Creates a `rt-voidcraft` actor (#701: the one ship type) with a base detection of 10 and armour of
  * 18, embeds a `shipComponent` carrying `+8 detection`, a `shipUpgrade`
  * carrying `+1 armour`, and a `shipRole` whose `shipBonuses` add
  * `+5 manoeuvrability`. Opens the actor sheet, navigates to the Components
@@ -63,7 +63,7 @@ test('ship-component-modifiers apply to derived ship stats (#196)', async ({ pag
         try {
             actor = await ActorCls.create({
                 name: 'ship-mod-probe',
-                type: 'rt-starship',
+                type: 'rt-voidcraft',
                 system: {
                     gameSystem: 'rt',
                     speed: 7,

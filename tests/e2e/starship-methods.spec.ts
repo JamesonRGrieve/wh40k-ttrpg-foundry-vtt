@@ -22,7 +22,7 @@ import { scaledMs } from './lib/timing';
  *   - methods: prepareData (called via update), fireWeapon (valid
  *     weaponId AND invalid weaponId branches), rollInitiative
  *
- * Strategy: create a fresh rt-starship, walk each getter / method,
+ * Strategy: create a fresh rt-voidcraft (#701: the one ship type), walk each getter / method,
  * record per-flow pass/fail, cleanup at end. Most flows are pure
  * property reads so failure modes are limited to schema drift.
  *
@@ -167,7 +167,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
             actor = await withTimeout(
                 ActorCls.create({
                     name: 'starship-methods-spec-rt',
-                    type: 'rt-starship',
+                    type: 'rt-voidcraft',
                     system: {
                         gameSystem: 'rt',
                         hullType: 'sword-frigate',
@@ -456,7 +456,7 @@ async function probeStarshipMethods(page: Page): Promise<{ results: FlowResult[]
 
 test.describe.serial('documents/starship method coverage (Tier B)', () => {
     test.setTimeout(scaledMs(180_000));
-    test('every WH40KStarship getter and method executes against an rt-starship', async ({ page }) => {
+    test('every WH40KStarship getter and method executes against an rt-voidcraft', async ({ page }) => {
         await joinOrSkip(page);
 
         const probe = await probeStarshipMethods(page);

@@ -83,8 +83,8 @@ const SCREENSHOT_ACTOR_FLOWS = [
     'rt-npc::rt::edit',
     'rt-vehicle::rt::view',
     'rt-vehicle::rt::edit',
-    'rt-starship::rt::view',
-    'rt-starship::rt::edit',
+    'rt-voidcraft::rt::view',
+    'rt-voidcraft::rt::edit',
     'loot::rt::view',
     'loot::rt::edit',
     'im-character::im::view',
@@ -152,13 +152,14 @@ const SYSTEM_PREFIX: Record<GameSystemId, string> = {
 };
 
 /**
- * Per-system actor-type roster. `loot` is system-agnostic; `starship` is
- * RT-only. Everything else follows the `<prefix>-<role>` shape.
+ * Per-system actor-type roster. `loot` is system-agnostic; the ship type
+ * `rt-voidcraft` is RT-only (#701: it replaced the legacy `rt-starship`).
+ * Everything else follows the `<prefix>-<role>` shape.
  */
 function actorTypesForSystem(systemId: GameSystemId): string[] {
     const prefix = SYSTEM_PREFIX[systemId];
     const base = [`${prefix}-character`, `${prefix}-npc`, `${prefix}-vehicle`];
-    if (systemId === 'rt') base.push('rt-starship');
+    if (systemId === 'rt') base.push('rt-voidcraft');
     base.push('loot');
     return base;
 }

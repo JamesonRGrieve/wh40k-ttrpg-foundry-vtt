@@ -164,13 +164,13 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
             notes['vehicle-hull-damage'] = `vehicle create threw: ${err instanceof Error ? err.message : String(err)}`;
         }
 
-        // ---- create rt-starship ----
+        // ---- create rt-voidcraft (#701: the one ship type) ----
         let starshipActor: ActorLike | null = null;
         try {
             starshipActor = await withTimeout(
                 ActorCls.create({
                     name: 'starship-spec-rt',
-                    type: 'rt-starship',
+                    type: 'rt-voidcraft',
                     system: {
                         gameSystem: 'rt',
                         hullType: 'sword-frigate',

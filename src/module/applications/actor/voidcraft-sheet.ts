@@ -5,6 +5,7 @@
  * components / weaponCapacity / …) — only the name changed.
  */
 
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import VoidcraftData, {
     CRIPPLED_SOURCE_TYPE,
     ESSENTIAL_SHIP_SLOTS,
@@ -17,6 +18,7 @@ import VoidcraftData, {
 import type OrderData from '../../data/item/order.ts';
 import type ShipWeaponData from '../../data/item/ship-weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { legacyConversionTarget } from '../../documents/legacy-actor-types.ts';
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { pluralKey } from '../../i18n/plural.ts';
 import { collectShipModifierComponents } from '../../rules/ship-action-effects.ts';
@@ -166,6 +168,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             openShipAssault: VoidcraftActorSheet.#openShipAssault,
             rollShipAction: VoidcraftActorSheet.#rollShipAction,
             assignShipOfficer: VoidcraftActorSheet.#assignShipOfficer,
+            convertToVoidcraft: VoidcraftActorSheet.#convertToVoidcraft,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
         // `player` opts into the shared sidebar + body grid (dark window body) the
@@ -278,6 +281,8 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         context['shipComponents'] = items.filter((item: WH40KItem) => item.type === 'shipComponent');
         context['shipWeapons'] = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
         context['shipUpgrades'] = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
+        // A legacy rt-starship (#701): a notice on the Stats tab, and the Convert control for a GM.
+        context['legacyShip'] = legacyConversionTarget(actor.type) === null ? null : { canConvert: game.user.isGM };
         // Ship Officers (#701): each role the ship holds, with the actor serving in it.
         context['shipRoles'] = shipOfficerRows(items.filter(isShipRole), (uuid) => {
             const officer = fromUuidSync(uuid);
@@ -924,6 +929,58 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         if (entry === undefined) return;
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         openShipAssaultDialog(this.actor as unknown as WH40KVoidcraft, entry);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * The window title names the ship's own line from its `gameSystem` (#701), never
+     * a fixed "Rogue Trader": a DH2 ship reads "Dark Heresy 2e Voidcraft". A legacy
+     * rt-starship says it is one.
+     */
+    override get title(): string {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
+        const lineKey = SystemConfigRegistry.getOrNull(actor.system.gameSystem)?.label;
+        const legacy = legacyConversionTarget(actor.type) !== null;
+        if (lineKey === undefined) return game.i18n.format('WH40K.Voidcraft.SheetTitleNoLine', { name: actor.name });
+        const key = legacy ? 'WH40K.Voidcraft.Legacy.SheetTitle' : 'WH40K.Voidcraft.SheetTitle';
+        return game.i18n.format(key, { line: game.i18n.localize(lineKey), name: actor.name });
+    }
+
+    /** A GM gets "Convert to Voidcraft" in a legacy rt-starship's header menu (#701). */
+    override _getHeaderControls(): foundry.applications.api.ApplicationV2.HeaderControlsEntry[] {
+        const controls = super._getHeaderControls();
+        if (legacyConversionTarget(this.actor.type) === null || !game.user.isGM) return controls;
+        return [...controls, { icon: 'fa-solid fa-right-left', label: 'WH40K.Voidcraft.Legacy.Convert', action: 'convertToVoidcraft' }];
+    }
+
+    /**
+     * Convert a legacy rt-starship in place to rt-voidcraft (#701), GM only, after a
+     * confirmation. Its id, items, system data and token links are kept; the result
+     * is reported either way.
+     */
+    static async #convertToVoidcraft(this: VoidcraftActorSheet): Promise<void> {
+        if (!game.user.isGM) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
+        const actor = this.actor as unknown as WH40KVoidcraft;
+        if (legacyConversionTarget(actor.type) === null) return;
+        const body = document.createElement('p');
+        body.textContent = game.i18n.format('WH40K.Voidcraft.Legacy.ConfirmBody', { name: actor.name });
+        const confirmed = await foundry.applications.api.DialogV2.confirm({
+            window: { title: game.i18n.format('WH40K.Voidcraft.Legacy.ConfirmTitle', { name: actor.name }) },
+            content: body.outerHTML,
+            rejectClose: false,
+        });
+        if (!confirmed) return;
+        try {
+            const converted = await actor.convertLegacyType();
+            if (converted === null) throw new Error(`${actor.type} is not a legacy type`);
+            ui.notifications.info(game.i18n.format('WH40K.Voidcraft.Legacy.Converted', { name: actor.name }));
+        } catch (err) {
+            console.error('wh40k-rpg | legacy ship conversion failed', err);
+            ui.notifications.error(game.i18n.format('WH40K.Voidcraft.Legacy.ConvertFailed', { name: actor.name }));
+        }
     }
 
     /* -------------------------------------------- */

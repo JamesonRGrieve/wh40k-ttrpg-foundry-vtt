@@ -61,6 +61,7 @@ import { isActorWritable } from './actor-liveness.ts';
 import { isCharacterActorType } from './actor-types.ts';
 import { documentActions } from './document-actions.ts';
 import type { WH40KItem } from './item.ts';
+import { creatableActorTypes, legacyConversionUpdate, requestedTypes } from './legacy-actor-types.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: these utility types intersect with Record<string, unknown> to allow index access on opaque roll/characteristic/skill data models */
 type RollDataLike = Record<string, unknown> & {
@@ -127,6 +128,36 @@ export class WH40KBaseActor extends Actor {
         migrateLegacyDistinctionLists(source, () => buildSpecialAbilityLookup(typeof game === 'undefined' ? [] : specialAbilityIndexEntries(game.packs)));
         materializeOwnedItemSources(source);
         return super.migrateData(source);
+    }
+
+    /**
+     * The create-actor dialog never offers a legacy type (#701): `rt-starship`
+     * stays registered so existing ships open, but every new ship is `rt-voidcraft`.
+     * A caller's own type restriction is kept, minus the legacy types.
+     */
+    static override async createDialog(...args: Parameters<typeof Actor.createDialog>): ReturnType<typeof Actor.createDialog> {
+        // `rest` carries V14's fourth `renderOptions` argument through, which fvtt-types v13 does not declare.
+        const [data, createOptions, dialogOptions, ...rest] = args;
+        // V14's `options.types` (client-document.mjs:756) is absent from fvtt-types v13's CreateDialogOptions, so it is read by guard.
+        const restrict = requestedTypes(dialogOptions);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: V14 ClientDocument.createDialog `options.types`, absent from fvtt-types v13 CreateDialogOptions
+        const restricted = { ...dialogOptions, types: creatableActorTypes(this.TYPES, restrict) } as typeof dialogOptions;
+        return super.createDialog(data, createOptions, restricted, ...rest);
+    }
+
+    /**
+     * Convert this actor in place from a legacy type to the type that replaced it
+     * (#701): same id, items, system data and token links; only the type changes.
+     * @returns The type it now has, or null when it was not of a legacy type.
+     */
+    async convertLegacyType(): Promise<string | null> {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: V14 foundry.data.operators.ForcedReplacement (operators.mjs:92), absent from fvtt-types v13's foundry.data
+        const { ForcedReplacement } = (foundry.data as unknown as { operators: { ForcedReplacement: { create: (value: object) => object } } }).operators;
+        const update = legacyConversionUpdate(this.type, this.system.toObject(), (system) => ForcedReplacement.create(system));
+        if (update === null) return null;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update payload; a type change pairs `type` with a ForcedReplacement `system` fvtt-types cannot express
+        await this.update(update as unknown as Actor.UpdateData);
+        return update.type;
     }
 
     /**

@@ -231,7 +231,7 @@ const SHEET_SPECS: Record<string, SheetSpec> = {
     },
     'starship-rt-sheet': {
         kind: 'actor',
-        type: 'rt-starship',
+        type: 'rt-voidcraft',
         gameSystem: 'rt',
         initialSystem: {
             gameSystem: 'rt',

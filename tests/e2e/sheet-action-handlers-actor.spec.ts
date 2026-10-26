@@ -59,7 +59,7 @@ const SHEET_ACTION_ACTOR_FLOWS = [
     // morale actions were removed in the vehicle/voidcraft refactor)
     'vehicle-sheet::adjustIntegrity',
     'vehicle-sheet::repairDamage',
-    // StarshipSheet (rt-starship) — RT-only shield + extended-action + build
+    // StarshipSheet (rt-voidcraft) — RT-only shield + extended-action + build
     'starship-sheet::raiseVoidShield',
     'starship-sheet::lowerVoidShield',
     'starship-sheet::restoreVoidShields',
@@ -768,10 +768,10 @@ async function probeSheetActorActions(page: Page): Promise<ProbeResult> {
         }
 
         /* =================================================================
-         * StarshipSheet flows (rt-starship)
+         * StarshipSheet flows (rt-voidcraft, #701: the one ship type)
          * ================================================================= */
         async function probeStarshipFlows(): Promise<void> {
-            const starship = await makeActor('rt-starship', 'rt', {
+            const starship = await makeActor('rt-voidcraft', 'rt', {
                 voidShields: 2,
                 voidShieldsStatus: { active: 1, exhausted: 1 },
                 shipPoints: { budget: 30 },
