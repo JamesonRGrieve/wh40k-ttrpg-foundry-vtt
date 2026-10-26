@@ -4783,7 +4783,8 @@
             "ExtendedAction": {
                 "Header": "Extended Actions",
                 "Description": "Per the Rogue Trader Stars of Inequity and Battlefleet Koronus rules, the bridge crew may dispatch one Extended Action per turn. Click an action below to post its rules card to chat.",
-                "Empty": "No Extended Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Empty": "This ship has no Extended Actions. Its line's compendiums list none, and none are on the ship.",
+                "NotFound": "That Extended Action is no longer in the compendiums or on this ship.",
                 "Dispatch": "Dispatch",
                 "DispatchTitle": "Post this Extended Action to chat",
                 "Skill": "Skill",
@@ -4796,7 +4797,8 @@
             "ManoeuvreAction": {
                 "Header": "Manoeuvre Actions",
                 "Description": "Manoeuvre Actions are the bridge pilot's turn-by-turn ship handling options. Click an action below to post its rules card to chat.",
-                "Empty": "No Manoeuvre Actions found in the active compendiums. Compendium content may not yet be loaded.",
+                "Empty": "This ship has no Manoeuvre Actions. Its line's compendiums list none, and none are on the ship.",
+                "NotFound": "That Manoeuvre Action is no longer in the compendiums or on this ship.",
                 "Dispatch": "Dispatch",
                 "DispatchTitle": "Post this Manoeuvre Action to chat",
                 "Skill": "Skill",

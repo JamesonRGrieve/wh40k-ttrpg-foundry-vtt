@@ -24,6 +24,7 @@ import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOr
 import type { ShipTestComponent } from '../../rules/ship-assault.ts';
 import { criticalRollLabelKey, shipConditionView } from '../../rules/ship-crippled.ts';
 import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
+import type { I18nKey } from '../../types/i18n-keys';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
 import { voidcraftHullTypeOptions } from '../../utils/ship-choices.ts';
@@ -796,7 +797,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * given langpack key and returns undefined when neither resolves. Shared by
      * the Extended Action and Manoeuvre Action dispatchers.
      */
-    async #resolveActionItem(target: HTMLElement, actor: WH40KVoidcraft, emptyKey: string): Promise<WH40KItem | undefined> {
+    async #resolveActionItem(target: HTMLElement, actor: WH40KVoidcraft, notFoundKey: I18nKey): Promise<WH40KItem | undefined> {
         const uuid = target.dataset['actionUuid'] ?? '';
         const itemId = target.dataset['actionId'] ?? '';
 
@@ -814,7 +815,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             item = actor.items.get(itemId);
         }
         if (item === undefined) {
-            ui.notifications.warn(game.i18n.localize(emptyKey));
+            ui.notifications.warn(game.i18n.localize(notFoundKey));
         }
         return item;
     }
@@ -858,7 +859,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     static async #dispatchExtendedAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
-        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.Empty');
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.NotFound');
         if (item === undefined) return;
 
         const cardData = this.#buildActionCardData(item, actor);
@@ -927,7 +928,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     static async #rollShipAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
-        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.Empty');
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ExtendedAction.NotFound');
         if (item === undefined) return;
         const view = shipActionOrderView(item);
         openShipActionDialog(
@@ -952,7 +953,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     static async #dispatchManoeuvreAction(this: VoidcraftActorSheet, _event: PointerEvent, target: HTMLElement): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: BaseActorSheet exposes Actor.Implementation; narrowed to WH40KVoidcraft for ship-specific access
         const actor = this.actor as unknown as WH40KVoidcraft;
-        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ManoeuvreAction.Empty');
+        const item = await this.#resolveActionItem(target, actor, 'WH40K.Voidcraft.ManoeuvreAction.NotFound');
         if (item === undefined) return;
 
         const cardData = this.#buildActionCardData(item, actor);

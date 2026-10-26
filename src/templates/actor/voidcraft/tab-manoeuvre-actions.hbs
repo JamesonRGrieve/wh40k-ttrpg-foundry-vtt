@@ -34,7 +34,7 @@
                 {{/each}}
             </ul>
         {{else}}
-            <p class="tw-text-[0.85em] tw-italic tw-text-[color:var(--color-text-primary)] tw-px-3 tw-py-2">{{localize "WH40K.Voidcraft.ManoeuvreAction.Empty"}}</p>
+            {{> systems/wh40k-rpg/templates/actor/partial/empty-state.hbs icon="fa-compass" textKey="WH40K.Voidcraft.ManoeuvreAction.Empty" emptyClass="tw-text-sm"}}
         {{/if}}
     </div>
 </section>

@@ -513,6 +513,37 @@ export const ExtendedActions: Story = {
     },
 };
 
+/**
+ * #699: a ship whose line ships no orders (a DH2 voidcraft) shows a real empty
+ * state on both action tabs, not a message that reads like a loading failure.
+ */
+export const ActionsEmpty: Story = {
+    name: 'Issue #699 — Extended and Manoeuvre Actions with none to list',
+    args: {
+        ...defaultCtxWithSource,
+        tab: { id: 'extendedActions', group: 'primary', active: true, cssClass: 'tab-extended-actions' },
+        extendedActions: [],
+        manoeuvreActions: [],
+    },
+    render: (args) => renderActionsPanel(extendedActionsTabSrc, args),
+    play: async ({ canvasElement }) => {
+        const empty = canvasElement.querySelector('.wh40k-panel__empty');
+        await expect(empty?.textContent.trim()).toBe("This ship has no Extended Actions. Its line's compendiums list none, and none are on the ship.");
+        await expect(empty?.querySelector('i.fa-satellite-dish')).not.toBeNull();
+        await expect(canvasElement.textContent).not.toMatch(/may not yet be loaded/u);
+        canvasElement.replaceChildren(
+            renderActionsPanel(manoeuvreActionsTabSrc, {
+                ...defaultCtxWithSource,
+                tab: { id: 'manoeuvreActions', group: 'primary', active: true, cssClass: 'tab-manoeuvre-actions' },
+                manoeuvreActions: [],
+            }),
+        );
+        await expect(canvasElement.querySelector('.wh40k-panel__empty')?.textContent.trim()).toBe(
+            "This ship has no Manoeuvre Actions. Its line's compendiums list none, and none are on the ship.",
+        );
+    },
+};
+
 export const ManoeuvreActions: Story = {
     name: 'Issue #186 — Manoeuvre Actions panel',
     args: {

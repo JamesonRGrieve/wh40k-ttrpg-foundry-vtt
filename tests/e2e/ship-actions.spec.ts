@@ -173,6 +173,9 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             const dh2Tab = await snapActionTab(page, dh2.id, 'extendedActions', 'ship-actions-extended-tab-dh2');
             expect(dh2Tab.html).not.toContain('data-action="rollShipAction"');
             expect(dh2Tab.html).not.toContain('data-wh40k-hook="ship-assault-panel"');
+            // #699: with none to list, the tab says so plainly; it read like a loading failure.
+            expect(dh2Tab.text).toContain("This ship has no Extended Actions. Its line's compendiums list none, and none are on the ship.");
+            expect(dh2Tab.text).not.toContain('may not yet be loaded');
         } finally {
             await deleteActors(page, [ship.id, dh2.id]);
         }
