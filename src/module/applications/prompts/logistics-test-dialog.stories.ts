@@ -10,7 +10,7 @@ import templateSrc from '../../../../src/templates/prompt/logistics-test-dialog.
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheet, toggleControls } from '../../../../stories/test-helpers';
 import { type LogisticsContext, type LogisticsTarget, computeLogisticsTarget } from '../../rules/ow-logistics.ts';
-import { logisticsOptions } from './logistics-test-rows.ts';
+import { type LogisticsRow, logisticsOptions, logisticsRows, type Translate } from './logistics-test-rows.ts';
 
 initializeStoryHandlebars();
 
@@ -19,7 +19,13 @@ type Args = ReturnType<typeof logisticsOptions> & {
     standardKit: boolean;
     outcome: LogisticsTarget['kind'];
     computedTarget: number | null;
+    breakdownRows: readonly LogisticsRow[];
+    rawSum: number | null;
+    clamped: boolean;
 };
+
+/** The story's translator: the key itself, as an unknown key reads in Foundry. */
+const keyOnly: Translate = (key) => key;
 
 /** The dialog's render context for a request, built as `_prepareContext` builds it. */
 function dialogArgs(ctx: LogisticsContext): Args {
@@ -30,6 +36,9 @@ function dialogArgs(ctx: LogisticsContext): Args {
         standardKit: ctx.standardKit,
         outcome: resolved.kind,
         computedTarget: resolved.kind === 'test' ? resolved.target : null,
+        breakdownRows: resolved.kind === 'test' ? logisticsRows(ctx, resolved.breakdown, keyOnly) : [],
+        rawSum: resolved.kind === 'test' ? resolved.rawSum : null,
+        clamped: resolved.kind === 'test' && resolved.clamped,
     };
 }
 
@@ -62,6 +71,13 @@ export const Default: Story = {
         await expect(canvasElement.querySelectorAll('[data-axis="troopCount"] button')).toHaveLength(3);
         await expect(canvasElement.querySelectorAll('[data-axis="warCondition"] button')).toHaveLength(6);
         await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('0');
+        // #701: the 0 shows its derivation — a row per component, the negative raw sum, and the clamp.
+        const breakdown = canvasElement.querySelector('[data-wh40k-hook="logistics-breakdown"]');
+        await expect(breakdown?.querySelector('[data-logistics-row="rating"]')).not.toBeNull();
+        await expect(breakdown?.querySelectorAll('[data-wh40k-tooltip="modifier"]').length).toBeGreaterThan(3);
+        const sum = Number(breakdown?.querySelector('[data-logistics-row="sum"] span:last-child')?.textContent.trim());
+        await expect(sum).toBeLessThan(0);
+        await expect(breakdown?.querySelector('[data-logistics-row="clamp"]')).not.toBeNull();
         // #696: Standard Kit is one toggle button, its state on aria-pressed, its square decorative.
         const kit = canvasElement.querySelector<HTMLElement>('[data-action="owToggleStandardKit"]');
         await expect(toggleControls(canvasElement)).toEqual([
@@ -83,6 +99,9 @@ export const WorkedExample: Story = {
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-axis="availability"] [data-selected="on"]')?.getAttribute('data-value')).toBe('veryRare');
         await expect(canvasElement.querySelector('[data-target-preview]')?.textContent.trim()).toBe('20');
+        // An unclamped target: the sum is the target, and no clamp note.
+        await expect(canvasElement.querySelector('[data-logistics-row="sum"] span:last-child')?.textContent.trim()).toBe('20');
+        await expect(canvasElement.querySelector('[data-logistics-row="clamp"]')).toBeNull();
     },
 };
 

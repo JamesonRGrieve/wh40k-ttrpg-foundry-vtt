@@ -37,6 +37,8 @@ function rolledCard(ctx: LogisticsContext, roll: number): LogisticsChatContext {
         degreesOfSuccess: result.degreesOfSuccess,
         degreesOfFailure: result.degreesOfFailure,
         rows: logisticsRows(ctx, result.breakdown, formatKey),
+        rawSum: test.rawSum,
+        clamped: test.clamped,
     };
 }
 
@@ -112,6 +114,9 @@ export const Failure: Story = {
     ),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('failure');
+        // #701: a negative sum shows itself and says the clamp set the target to 0.
+        await expect(Number(canvasElement.querySelector('[data-logistics-row="sum"] span:last-child')?.textContent.trim())).toBeLessThan(0);
+        await expect(canvasElement.querySelector('[data-logistics-row="clamp"]')).not.toBeNull();
     },
 };
 
@@ -126,6 +131,8 @@ export const Automatic: Story = {
         degreesOfSuccess: 0,
         degreesOfFailure: 0,
         rows: [],
+        rawSum: null,
+        clamped: false,
     },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-logistics-outcome]')?.getAttribute('data-logistics-outcome')).toBe('automatic');

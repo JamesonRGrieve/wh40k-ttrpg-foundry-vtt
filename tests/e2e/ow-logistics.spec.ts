@@ -107,6 +107,21 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
             };
         });
 
+        // #701: the target shows its derivation: each component's row with its source tooltip, their raw sum,
+        // the clamp note exactly when the sum is below 0, and a target of max(0, sum).
+        const breakdown = page.locator('[data-wh40k-hook="logistics-breakdown"]');
+        await expect(breakdown).toBeVisible();
+        const componentValues = await breakdown
+            .locator('[data-wh40k-tooltip="modifier"] span:last-child')
+            .evaluateAll((spans) => spans.map((span) => Number(span.textContent.trim())));
+        expect(componentValues.length).toBeGreaterThanOrEqual(6);
+        const rawSum = Number(((await breakdown.locator('[data-logistics-row="sum"] span').last().textContent()) ?? '').trim());
+        expect(rawSum).toBe(componentValues.reduce((total, value) => total + value, 0));
+        await expect(breakdown.locator('[data-logistics-row="clamp"]')).toHaveCount(rawSum < 0 ? 1 : 0);
+        await expect(breakdown.locator('[data-logistics-row="target"] span').last()).toHaveText(String(Math.max(0, rawSum)));
+        // The capture shows the derivation, not just the picker above it.
+        await breakdown.locator('[data-logistics-row="target"]').scrollIntoViewIfNeeded();
+
         await snap(page, 'ow-logistics-dialog');
 
         // Tear down so the dialog doesn't leak into the next serial test.

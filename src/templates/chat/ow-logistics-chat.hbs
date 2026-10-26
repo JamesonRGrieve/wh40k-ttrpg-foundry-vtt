@@ -42,21 +42,7 @@
             {{/if}}
         </div>
 
-        {{!-- Target derivation: rating, then each modifier, each row hoverable to its table row --}}
-        <div class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
-            {{localize "WH40K.OW.Logistics.BreakdownLabel"}}
-        </div>
-        <ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]">
-            {{#each rows as |row|}}
-                <li class="tw-flex tw-justify-between tw-gap-3 tw-cursor-help" data-logistics-row="{{row.key}}" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{row.tooltipData}}">
-                    <span class="tw-text-amber-300">{{row.label}}</span>
-                    <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (and (gt row.value 0) (ne row.key "rating"))}}+{{/if}}{{row.value}}</span>
-                </li>
-            {{/each}}
-            <li class="tw-flex tw-justify-between tw-gap-3 tw-border-t tw-border-[rgba(217,119,6,0.45)] tw-pt-1">
-                <span class="tw-text-amber-200 tw-font-semibold">{{localize "WH40K.OW.Logistics.Test.Target"}}</span>
-                <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{target}}</span>
-            </li>
-        </ul>
+        {{!-- Target derivation: rating, then each modifier (hoverable to its table row), the sum, the clamp --}}
+        {{> systems/wh40k-rpg/templates/prompt/partial/logistics-breakdown.hbs rows=rows rawSum=rawSum clamped=clamped target=target}}
     {{/if}}
 </div>

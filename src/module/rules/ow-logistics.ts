@@ -201,6 +201,10 @@ export interface LogisticsTestTarget {
     readonly kind: 'test';
     /** Final d100 target — sum of every breakdown entry, clamped to 0. */
     readonly target: number;
+    /** The breakdown's sum before the clamp, so the derivation shows it (#701). */
+    readonly rawSum: number;
+    /** True when the sum fell below 0 and the clamp set the target to 0. */
+    readonly clamped: boolean;
     readonly breakdown: LogisticsBreakdown;
 }
 
@@ -230,7 +234,7 @@ export function computeLogisticsTarget(ctx: LogisticsContext): LogisticsTarget {
     };
 
     const sum = Object.values(breakdown).reduce((total, value) => total + value, 0);
-    return { kind: 'test', target: Math.max(0, sum), breakdown };
+    return { kind: 'test', target: Math.max(0, sum), rawSum: sum, clamped: sum < 0, breakdown };
 }
 
 /* -------------------------------------------------------------------- */

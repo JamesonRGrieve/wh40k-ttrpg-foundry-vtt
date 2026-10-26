@@ -48,6 +48,10 @@ interface LogisticsContextRow extends Record<string, unknown> {
     /** `test` | `automatic` | `discretion` — what the request resolves to. */
     readonly outcome: LogisticsTarget['kind'];
     readonly computedTarget: number | null;
+    /** The target's derivation, one row per component (#701); empty unless the request is a test. */
+    readonly breakdownRows: readonly LogisticsRow[];
+    readonly rawSum: number | null;
+    readonly clamped: boolean;
 }
 
 /** The chat card's render context. */
@@ -60,6 +64,9 @@ export type LogisticsChatContext = {
     readonly degreesOfSuccess: number;
     readonly degreesOfFailure: number;
     readonly rows: readonly LogisticsRow[];
+    /** The components' sum before the clamp at 0, and whether the clamp fired (#701). */
+    readonly rawSum: number | null;
+    readonly clamped: boolean;
 };
 
 type Axis = 'availability' | 'troopCount' | 'timeInFront' | 'frontActive' | 'warCondition' | 'craftsmanship';
@@ -161,6 +168,9 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
             standardKit: this.standardKit,
             outcome: resolved.kind,
             computedTarget: resolved.kind === 'test' ? resolved.target : null,
+            breakdownRows: resolved.kind === 'test' ? logisticsRows(ctx, resolved.breakdown, t) : [],
+            rawSum: resolved.kind === 'test' ? resolved.rawSum : null,
+            clamped: resolved.kind === 'test' && resolved.clamped,
         };
     }
 
@@ -234,6 +244,8 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
                 degreesOfSuccess: 0,
                 degreesOfFailure: 0,
                 rows: [],
+                rawSum: null,
+                clamped: false,
             };
         } else {
             const roll = new Roll('1d100');
@@ -250,6 +262,8 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
                 degreesOfSuccess: result.degreesOfSuccess,
                 degreesOfFailure: result.degreesOfFailure,
                 rows: logisticsRows(ctx, result.breakdown, t),
+                rawSum: resolved.rawSum,
+                clamped: resolved.clamped,
             };
         }
 

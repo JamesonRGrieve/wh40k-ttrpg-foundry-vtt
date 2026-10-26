@@ -8698,7 +8698,9 @@
                     "Automatic": "Automatic Success",
                     "AutomaticNote": "Table 6-2 rates this item Automatic for the troops deployed: it is obtained without a roll.",
                     "Discretion": "GM's Discretion",
-                    "DiscretionNote": "Table 6-2 leaves this item to the GM's discretion for the troops deployed: the GM rules on the request instead of a roll."
+                    "DiscretionNote": "Table 6-2 leaves this item to the GM's discretion for the troops deployed: the GM rules on the request instead of a roll.",
+                    "Sum": "Sum",
+                    "Clamped": "The sum is {sum}, below 0, so the target is 0."
                 },
                 "Modifier": {
                     "Munitorum": "Munitorum Influence",

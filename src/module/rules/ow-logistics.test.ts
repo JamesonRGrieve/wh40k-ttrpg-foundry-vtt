@@ -184,6 +184,19 @@ describe('computeLogisticsTarget — flat bonuses and craftsmanship', () => {
     it('clamps the target to 0', () => {
         expect(expectTest(computeLogisticsTarget(baseline({ rating: 5, craftsmanship: 'best', warCondition: 'losingBadly' }))).target).toBe(0);
     });
+
+    it('a negative sum keeps its raw value and says the clamp fired, for the derivation to show (#701)', () => {
+        const test = expectTest(computeLogisticsTarget(baseline({ rating: 5, craftsmanship: 'best', warCondition: 'losingBadly' })));
+        const sum = Object.values(test.breakdown).reduce((total, value) => total + value, 0);
+        expect(sum).toBeLessThan(0);
+        expect(test).toMatchObject({ target: 0, rawSum: sum, clamped: true });
+    });
+
+    it('a non-negative sum is the target, unclamped', () => {
+        const test = expectTest(computeLogisticsTarget(baseline({ rating: 50 })));
+        expect(test.clamped).toBe(false);
+        expect(test.rawSum).toBe(test.target);
+    });
 });
 
 describe('computeLogisticsTarget — the p. 163 worked example', () => {

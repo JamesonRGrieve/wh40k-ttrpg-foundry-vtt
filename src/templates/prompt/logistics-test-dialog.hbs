@@ -40,6 +40,12 @@
             {{#if (eq outcome "automatic")}}{{localize "WH40K.OW.Logistics.Test.Automatic"}}{{else if (eq outcome "discretion")}}{{localize "WH40K.OW.Logistics.Test.Discretion"}}{{else}}{{computedTarget}}{{/if}}
         </span>
     </div>
+    {{!-- The live derivation (#701): each component with its source, the raw sum, and the clamp when it fires. --}}
+    {{#if (eq outcome "test")}}
+    <div class="tw-mb-3 tw-px-3 tw-py-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(217,119,6,0.45)] tw-bg-[rgba(120,53,15,0.18)]">
+        {{> systems/wh40k-rpg/templates/prompt/partial/logistics-breakdown.hbs rows=breakdownRows rawSum=rawSum clamped=clamped target=computedTarget}}
+    </div>
+    {{/if}}
     {{#if (eq outcome "automatic")}}
         <p class="tw-m-0 tw-mb-3 tw-text-xs tw-italic tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.AutomaticNote"}}</p>
     {{else if (eq outcome "discretion")}}

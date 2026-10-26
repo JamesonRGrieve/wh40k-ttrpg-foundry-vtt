@@ -1,0 +1,35 @@
+{{!--
+    The Logistics Test target's full derivation (#701), shared by the test dialog
+    and the result chat card: each component as a row with its value, hoverable to
+    the table row it came from; the raw sum; and, when the sum fell below 0, a note
+    that the clamp set the target to 0. The dialog used to show only the clamped
+    total, so a valid 0 read as "the target never computes".
+
+    Hash params:
+        rows    — LogisticsRow[] ({key, label, value, tooltipData})
+        rawSum  — the components' sum before the clamp
+        clamped — true when the clamp at 0 fired
+        target  — the final target
+--}}
+<div class="tw-text-[0.78rem] tw-uppercase tw-tracking-[0.08em] tw-text-amber-300 tw-mb-1">
+    {{localize "WH40K.OW.Logistics.BreakdownLabel"}}
+</div>
+<ul class="tw-list-none tw-p-0 tw-m-0 tw-flex tw-flex-col tw-gap-1 tw-text-[0.85rem]" data-wh40k-hook="logistics-breakdown">
+    {{#each rows as |row|}}
+        <li class="tw-flex tw-justify-between tw-gap-3 tw-cursor-help" data-logistics-row="{{row.key}}" data-wh40k-tooltip="modifier" data-wh40k-tooltip-data="{{row.tooltipData}}">
+            <span class="tw-text-amber-300">{{row.label}}</span>
+            <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{#if (and (gt row.value 0) (ne row.key "rating"))}}+{{/if}}{{row.value}}</span>
+        </li>
+    {{/each}}
+    <li class="tw-flex tw-justify-between tw-gap-3 tw-border-0 tw-border-t tw-border-solid tw-border-[rgba(217,119,6,0.45)] tw-pt-1" data-logistics-row="sum">
+        <span class="tw-text-amber-300">{{localize "WH40K.OW.Logistics.Test.Sum"}}</span>
+        <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{rawSum}}</span>
+    </li>
+    {{#if clamped}}
+        <li class="tw-text-[0.8rem] tw-italic tw-text-amber-200" data-logistics-row="clamp">{{localize "WH40K.OW.Logistics.Test.Clamped" sum=rawSum}}</li>
+    {{/if}}
+    <li class="tw-flex tw-justify-between tw-gap-3" data-logistics-row="target">
+        <span class="tw-text-amber-200 tw-font-semibold">{{localize "WH40K.OW.Logistics.Test.Target"}}</span>
+        <span class="tw-font-bold tw-text-amber-100 tw-tabular-nums">{{target}}</span>
+    </li>
+</ul>
