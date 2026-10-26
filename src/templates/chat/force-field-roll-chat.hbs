@@ -55,7 +55,8 @@
 
                 {{#if forceField.system.description.value}}
                     <div class="tw-h-px tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-gold)_20%,var(--wh40k-gold)_80%,transparent_100%)] tw-my-2.5 tw-opacity-50"></div>
-                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] tw-max-h-[150px] tw-overflow-y-auto [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0" data-wh40k-hook="force-field-description">{{{forceField.system.description.value}}}</div>
+                    {{!-- The rules text prints whole (#701): a 150px cap with an inner scrollbar cut it off mid-sentence in the chat log. --}}
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-[color:var(--wh40k-gold)] tw-rounded-r tw-text-[0.85rem] tw-leading-[1.5] [&_p]:tw-m-0 [&_p]:tw-mb-2 [&_p:last-child]:tw-mb-0" data-wh40k-hook="force-field-description">{{{forceField.system.description.value}}}</div>
                 {{/if}}
             {{/if}}{{! end isTargetOnly else }}
 {{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

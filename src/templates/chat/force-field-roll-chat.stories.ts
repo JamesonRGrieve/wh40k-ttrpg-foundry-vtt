@@ -63,9 +63,11 @@ export const ActivatedWithDescription: Story = {
     args: card('rt', true),
     render: (args) => render(args),
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.querySelector('[data-wh40k-hook="force-field-description"]')?.textContent.trim()).toBe(
-            'A shimmering haze that bends incoming fire.',
-        );
+        const description = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="force-field-description"]');
+        await expect(description?.textContent.trim()).toBe('A shimmering haze that bends incoming fire.');
+        // #701: the rules text prints whole, never capped behind an inner scrollbar.
+        await expect(description === null ? null : getComputedStyle(description).maxHeight).toBe('none');
+        await expect(description?.classList.contains('tw-overflow-y-auto')).toBe(false);
         await expect(canvasElement.textContent).toContain('Field Activated');
         await expect(canvasElement.textContent).toContain('Force Field Activation');
         await expect(canvasElement.textContent).not.toContain('[object Object]');

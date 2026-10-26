@@ -97,6 +97,11 @@ test.describe.serial('force-field protection roll (#645)', () => {
         expect(card.content).not.toContain('Field Overload!');
         expect(await fieldOverloaded(page, actorId)).toBe(false);
         await snapMessage(page, 'force-field-card-protected', card.id);
+        // #701: the rules text prints whole; a 150px cap scrolled it out of sight mid-sentence.
+        const description = page.locator(`#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-hook="force-field-description"]`);
+        await expect(description).toHaveCount(1);
+        const fits = await description.evaluate((el) => el.scrollHeight <= el.clientHeight + 1 && getComputedStyle(el).maxHeight === 'none');
+        expect(fits, 'force-field description clipped').toBe(true);
         recordCoverage('action', 'forceField.protected');
     });
 
