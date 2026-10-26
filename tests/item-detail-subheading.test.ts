@@ -32,6 +32,13 @@ describe('item-detail sub-headings (#699)', () => {
         expect(uses).toBe(9);
     });
 
+    it("reads only prefixed optional arguments, so an enclosing panel's icon cannot show through", () => {
+        // A hash argument the caller omits resolves up the context chain: inside an
+        // item-detail-section block, a bare `icon` is the panel's own icon.
+        expect(PARTIAL).toContain('{{#if subheadingIcon}}');
+        expect(PARTIAL).not.toMatch(/\{\{#if icon\}\}|\{\{icon\}\}|\{\{extraClass\}\}/u);
+    });
+
     it('the partial is preloaded', () => {
         expect(readRepoFile('src/module/handlebars/handlebars-manager.ts')).toContain(`'${PARTIAL_PATH}'`);
     });

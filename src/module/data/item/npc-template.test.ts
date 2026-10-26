@@ -98,6 +98,51 @@ describe('generateAtThreat', () => {
             { name: 'Ration Pack', quantity: 3 },
         ]);
     });
+
+    describe('previewAtThreat (#699)', () => {
+        // The Preview tab read stats nothing supplied, so it showed labels with no values.
+        const previewedFields = {
+            ...template,
+            baseCharacteristics: { weaponSkill: 35, perception: 40 },
+            unnaturals: { weaponSkill: 2 },
+            talents: [{ name: 'Ambidextrous' }],
+            traits: [{ name: 'Dark-sight' }],
+            specialAbilities: '<p>Hates the light.</p>',
+        };
+        const previewed = {
+            ...previewedFields,
+            generateAtThreat: (threat: number) => NPCTemplateData.prototype.generateAtThreat.call(previewedFields, threat),
+        };
+        const preview = NPCTemplateData.prototype.previewAtThreat.call(previewed, 5);
+
+        it('lists each characteristic by its abbreviation, value and Unnatural', () => {
+            expect(preview.characteristics).toEqual([
+                { key: 'weaponSkill', label: 'WS', short: 'WS', value: 35, unnatural: 2 },
+                { key: 'perception', label: 'Per', short: 'Per', value: 40, unnatural: 0 },
+            ]);
+        });
+
+        it('gives wounds, armour and the movement line', () => {
+            expect(preview).toMatchObject({ wounds: 10, armour: 3, movement: '3/7/10/20' });
+        });
+
+        it("gives each skill's test target: characteristic, +10 per rank above Trained, and its bonus", () => {
+            expect(preview.skills).toEqual([{ name: 'Awareness', target: 40 + 10 + 5 }]);
+        });
+
+        it('lists the weapons, talents, traits and special abilities', () => {
+            expect(preview.weapons).toEqual([{ name: 'Autogun', damage: '1d10+3', pen: 0, special: '' }]);
+            expect(preview.talents).toEqual([{ name: 'Ambidextrous' }]);
+            expect(preview.traits).toEqual([{ name: 'Dark-sight' }]);
+            expect(preview.specialAbilities).toBe('<p>Hates the light.</p>');
+            expect(preview).toMatchObject({ weaponCount: 1, skillCount: 1 });
+        });
+
+        it('is what the sheet hands the Preview tab, under the name the tab reads', () => {
+            expect(readRepoFile('src/module/applications/item/npc-template-sheet.ts')).toMatch(/const previewData = sys\.previewAtThreat\(/u);
+            expect(readRepoFile('src/templates/item/npc-template/tab-preview.hbs')).toContain('previewData.characteristics');
+        });
+    });
 });
 
 describe('migrateNpcTemplateLegacyPaths', () => {

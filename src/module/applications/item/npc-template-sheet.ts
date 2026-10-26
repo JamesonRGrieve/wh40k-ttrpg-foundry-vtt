@@ -224,8 +224,8 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
             unnatural: sys.unnaturals[key] ?? 0,
         }));
 
-        // Generate preview data
-        const preview = sys.previewAtThreat(this.#previewThreat);
+        // The Preview tab's stat block at the chosen threat (#699: it read `previewData`, which nothing supplied).
+        const previewData = sys.previewAtThreat(this.#previewThreat);
 
         return {
             ...context,
@@ -263,7 +263,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
 
             // Preview
             previewThreat: this.#previewThreat,
-            preview,
+            previewData,
 
             // Scaling rules
             scaling: sys.scaling,

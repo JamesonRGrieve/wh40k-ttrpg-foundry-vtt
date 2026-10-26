@@ -9,14 +9,18 @@
   the sub-headings larger and showier than the panel titles above them.
 
   Hash arguments:
-    label — the heading text, already localized (or a document name). Required.
-    icon  — Font Awesome icon class shown before it (e.g. "fa-dumbbell"). Optional.
-    extraClass — classes appended to the heading, for the caller's spacing (e.g. "tw-mb-2"). Optional.
+    label           — the heading text, already localized (or a document name). Required.
+    subheadingIcon  — Font Awesome icon class shown before it (e.g. "fa-dumbbell"). Optional.
+    subheadingClass — classes appended to the heading, for the caller's spacing (e.g. "tw-mb-2"). Optional.
+
+  The optional arguments carry a `subheading` prefix on purpose. Handlebars resolves
+  a hash argument the caller leaves out up the context chain, and this partial sits
+  inside an item-detail-section block whose own `icon` would otherwise show here.
 
   Usage:
-    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs icon="fa-dumbbell" label=(localize "WH40K.Characteristics")}}
+    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs subheadingIcon="fa-dumbbell" label=(localize "WH40K.Characteristics")}}
 --}}
-<h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-font-[family-name:var(--font-h3)] tw-text-[0.8rem] tw-leading-tight tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] {{extraClass}}" data-item-subheading>
-    {{#if icon}}<i class="fa-solid {{icon}}" aria-hidden="true"></i>{{/if}}
+<h4 class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-sm)] tw-m-0 tw-px-2 tw-py-[6px] tw-bg-[rgba(0,0,0,0.2)] tw-rounded-[var(--wh40k-radius-md)] tw-font-[family-name:var(--font-h3)] tw-text-[0.8rem] tw-leading-tight tw-font-semibold tw-uppercase tw-tracking-[0.5px] tw-text-[color:var(--wh40k-text-secondary,rgba(255,255,255,0.8))] {{subheadingClass}}" data-item-subheading>
+    {{#if subheadingIcon}}<i class="fa-solid {{subheadingIcon}}" aria-hidden="true"></i>{{/if}}
     <span class="tw-min-w-0">{{label}}</span>
 </h4>

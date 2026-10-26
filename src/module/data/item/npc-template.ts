@@ -34,7 +34,13 @@ type GeneratedCharacteristic = { label: string; short: string; base: number; mod
 /** One trained skill of a generated NPC. */
 type GeneratedSkill = { name: string; characteristic: string; trained: boolean; plus10: boolean; plus20: boolean; bonus: number };
 
-type WeaponsPayload = { mode: string; simple: object[] };
+/** One weapon line of a template's loadout: a custom weapon, or one of a preset's. */
+type TemplateWeapon = { name: string; damage: string; pen: number; range: string; rof: string; clip: number; reload: string; special: string; class: string };
+
+type WeaponsPayload = { mode: string; simple: TemplateWeapon[] };
+
+/** The test bonus each rank above Trained adds to a skill's target (+10 each, as the NPC sheet counts them). */
+const SKILL_RANK_STEP = 10;
 
 type ArmourLocations = { head: number; body: number; leftArm: number; rightArm: number; leftLeg: number; rightLeg: number };
 
@@ -82,12 +88,19 @@ type GeneratedNpcSystem = {
     };
 };
 
-/** The stat summary the template sheet's Preview tab shows. */
+/** The stat summary the template sheet's Preview tab and the template selector show. */
 type NpcTemplatePreview = {
     threatLevel: number;
-    characteristics: Array<{ key: string; label: string; value: number }>;
+    characteristics: Array<{ key: string; label: string; short: string; value: number; unnatural: number }>;
     wounds: number;
     armour: number;
+    /** Half / full / charge / run, as a stat block prints it. */
+    movement: string;
+    skills: Array<{ name: string; target: number }>;
+    weapons: Array<{ name: string; damage: string; pen: number; special: string }>;
+    talents: Array<{ name: string }>;
+    traits: Array<{ name: string }>;
+    specialAbilities: string;
     weaponCount: number;
     skillCount: number;
 };
@@ -145,17 +158,7 @@ export default class NPCTemplateData extends ItemDataModel {
 
     // Equipment
     declare equipmentPreset: string;
-    declare customWeapons: Array<{
-        name: string;
-        damage: string;
-        pen: number;
-        range: string;
-        rof: string;
-        clip: number;
-        reload: string;
-        special: string;
-        class: string;
-    }>;
+    declare customWeapons: TemplateWeapon[];
 
     declare equipment: Array<{ name: string; quantity: number }>;
     declare tags: string[];
@@ -639,15 +642,32 @@ export default class NPCTemplateData extends ItemDataModel {
      */
     previewAtThreat(targetThreat: number): NpcTemplatePreview {
         const data = this.generateAtThreat(targetThreat);
+        const { half, full, charge, run } = data.movement;
         return {
             threatLevel: targetThreat,
             characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
                 key,
                 label: char.short,
+                short: char.short,
                 value: char.base,
+                unnatural: char.unnatural,
             })),
             wounds: data.wounds.max,
             armour: data.armour.total,
+            movement: `${half}/${full}/${charge}/${run}`,
+            skills: Object.values(data.trainedSkills).map((skill) => ({
+                name: skill.name,
+                target:
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types the Record index as possibly undefined (a skill can name a characteristic the template lacks); tsconfig.test.json, ESLint's project, does not
+                    (data.characteristics[skill.characteristic]?.total ?? 0) +
+                    (skill.plus10 ? SKILL_RANK_STEP : 0) +
+                    (skill.plus20 ? SKILL_RANK_STEP : 0) +
+                    skill.bonus,
+            })),
+            weapons: data.weapons.simple.map((weapon) => ({ name: weapon.name, damage: weapon.damage, pen: weapon.pen, special: weapon.special })),
+            talents: this.talents.map((talent) => ({ name: talent.name })),
+            traits: this.traits.map((trait) => ({ name: trait.name })),
+            specialAbilities: data.specialAbilities,
             weaponCount: data.weapons.simple.length,
             skillCount: Object.keys(data.trainedSkills).length,
         };

@@ -20,7 +20,7 @@
     {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-skull" labelKey="WH40K.NPC.Template.PreviewStatBlock" label=item.name actions="npcTemplatePreviewThreat"}}
             {{! Characteristics Preview }}
             <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)] last:tw-border-b-0">
-                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Characteristics") extraClass="tw-mb-2"}}
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Characteristics") subheadingClass="tw-mb-2"}}
                 <div class="tw-flex tw-flex-wrap tw-gap-3">
                     {{#each previewData.characteristics as |char key|}}
                         <div class="tw-text-center tw-p-2 tw-rounded-md tw-min-w-[50px]" style="background: var(--wh40k-bg-secondary)">
@@ -36,7 +36,7 @@
 
             {{! Vitals Preview }}
             <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
-                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.VitalStats") extraClass="tw-mb-2"}}
+                {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.VitalStats") subheadingClass="tw-mb-2"}}
                 <div class="tw-flex tw-gap-8">
                     <div>
                         <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Wounds"}}</span>
@@ -56,7 +56,7 @@
             {{! Skills Preview }}
             {{#if (gt previewData.skills.length 0)}}
                 <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
-                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Skills") extraClass="tw-mb-2"}}
+                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Tabs.Skills") subheadingClass="tw-mb-2"}}
                     <div class="tw-flex tw-flex-wrap tw-gap-2">
                         {{#each previewData.skills as |skill|}}
                             <span class="tw-px-2 tw-py-1 tw-rounded-md tw-text-sm" style="background: var(--wh40k-bg-secondary)">{{skill.name}} {{skill.target}}</span>
@@ -68,7 +68,7 @@
             {{! Weapons Preview }}
             {{#if (gt previewData.weapons.length 0)}}
                 <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
-                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Weapons") extraClass="tw-mb-2"}}
+                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.Weapons") subheadingClass="tw-mb-2"}}
                     <div>
                         {{#each previewData.weapons as |weapon|}}
                             <div class="tw-flex tw-gap-4 tw-py-2 tw-border-b tw-border-dashed tw-border-[var(--wh40k-border-color)]">
@@ -86,7 +86,7 @@
             {{! Talents & Traits Preview }}
             {{#if (or (gt previewData.talents.length 0) (gt previewData.traits.length 0))}}
                 <div class="tw-mb-4 tw-pb-4 tw-border-b tw-border-[var(--wh40k-border-color)]">
-                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.TalentsAndTraits") extraClass="tw-mb-2"}}
+                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.TalentsAndTraits") subheadingClass="tw-mb-2"}}
                     <div class="tw-flex tw-flex-wrap tw-gap-2">
                         {{#each previewData.talents as |talent|}}
                             <span class="tw-px-2 tw-py-1 tw-rounded-md tw-text-sm" style="background: var(--wh40k-accent-color-light)">{{talent.name}}</span>
@@ -101,7 +101,7 @@
             {{! Special Abilities Preview }}
             {{#if previewData.specialAbilities}}
                 <div class="tw-mb-4">
-                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.SpecialAbilities") extraClass="tw-mb-2"}}
+                    {{> systems/wh40k-rpg/templates/item/partial/item-detail-subheading.hbs label=(localize "WH40K.NPC.Template.SpecialAbilities") subheadingClass="tw-mb-2"}}
                     <div>
                         {{{previewData.specialAbilities}}}
                     </div>
