@@ -3533,6 +3533,7 @@ export type I18nKey =
     | 'WH40K.NPC.Horde.Magnitude'
     | 'WH40K.NPC.Horde.MagnitudeCurrent'
     | 'WH40K.NPC.Horde.MagnitudeMax'
+    | 'WH40K.NPC.Horde.MagnitudeOfMax'
     | 'WH40K.NPC.Horde.MagnitudeSummary'
     | 'WH40K.NPC.Horde.SizeModifier'
     | 'WH40K.NPC.Horde.SizeModifierSummary'

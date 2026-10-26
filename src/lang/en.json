@@ -5669,6 +5669,7 @@
                 "StateDisabled": "Disabled",
                 "ToggleTooltip": "Toggle horde mode",
                 "MagnitudeSummary": "Magnitude {current} / {max}",
+                "MagnitudeOfMax": "/ {max}",
                 "DamageMultiplierSummary": "Damage ×{value}",
                 "SizeModifierSummary": "Size +{value}",
                 "EnableHint": "Enable horde mode to track magnitude as a pool of wounds.",

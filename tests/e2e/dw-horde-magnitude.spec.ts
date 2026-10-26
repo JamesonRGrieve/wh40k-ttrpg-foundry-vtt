@@ -157,6 +157,38 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
             };
         });
 
+        // #699: the sheet opens on Skills, and the sidebar still shows the horde's Magnitude beside its tier.
+        if (result.error === null) {
+            // The hit's update carried only the current Magnitude; the stored maximum survives it,
+            // and an edit that does not touch the horde leaves the horde as it was.
+            const stored = await page.evaluate(async () => {
+                interface StoredHorde {
+                    enabled: boolean;
+                    magnitude: { max: number; current: number };
+                }
+                interface ProbeActor {
+                    _source: { system: { horde: StoredHorde } };
+                    update: (data: object) => Promise<object>;
+                    sheet: { render: (force: boolean) => Promise<void> };
+                }
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+                const actor = (globalThis as unknown as { __c9horde: ProbeActor }).__c9horde;
+                const afterHit = structuredClone(actor._source.system.horde);
+                await actor.update({ 'system.threatLevel': 7 });
+                await actor.sheet.render(true);
+                await globalThis.wh40kE2E.settle(120);
+                return { afterHit, afterEdit: structuredClone(actor._source.system.horde) };
+            });
+            expect(stored.afterHit.magnitude, 'stored Magnitude after one hit').toEqual({ max: 90, current: 89 });
+            expect(stored.afterEdit.enabled, 'horde mode after an unrelated edit').toBe(true);
+            expect(stored.afterEdit.magnitude, 'stored Magnitude after an unrelated edit').toEqual({ max: 90, current: 89 });
+
+            const magnitudeInput = page.locator('.wh40k-magnitude-row input[name="system.horde.magnitude.current"]');
+            await expect(magnitudeInput).toBeVisible();
+            await expect(magnitudeInput).toHaveValue('89');
+            await expect(page.locator('.wh40k-magnitude-row')).toContainText('/ 90');
+        }
+
         await snap(page, 'dw-horde-magnitude-sheet');
 
         // Tear down so the actor doesn't leak into a sibling spec.

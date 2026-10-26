@@ -510,6 +510,22 @@ export default class NPCSheet extends CharacterSheet {
         const threatTier = (typeof tierRaw === 'object' && tierRaw !== null ? tierRaw : {}) as { color?: string; label?: string };
         const threatColor = threatTier.color;
         const threatLabel = threatTier.label;
+        const horde = npcActor.system.horde;
+        // A horde's Magnitude is its wound pool: shown beside its tier on every tab, not only the NPC tab (#699).
+        const magnitudeField: SidebarHeaderField[] = horde.enabled
+            ? [
+                  {
+                      label: game.i18n.localize('WH40K.NPC.Horde.Magnitude'),
+                      name: 'system.horde.magnitude.current',
+                      type: 'number' as const,
+                      value: horde.magnitude.current,
+                      max: horde.magnitude.max,
+                      icon: 'fa-solid fa-users',
+                      rowClass: 'wh40k-magnitude-row',
+                      valueLabel: game.i18n.format('WH40K.NPC.Horde.MagnitudeOfMax', { max: String(horde.magnitude.max) }),
+                  },
+              ]
+            : [];
         return [
             {
                 label: game.i18n.localize('WH40K.Dialog.DifficultyCalculator.Threat'),
@@ -532,6 +548,7 @@ export default class NPCSheet extends CharacterSheet {
                 value: npcActor.system.tier,
                 options: npcTierOptions(),
             },
+            ...magnitudeField,
             {
                 label: game.i18n.localize('WH40K.ItemSheet.Condition.Nature'),
                 name: 'system.nature',

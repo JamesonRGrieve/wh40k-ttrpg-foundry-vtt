@@ -37,6 +37,14 @@ describe('NPC sidebar header fields (#252)', () => {
         expect(TAB_NPC).not.toContain('value="{{source.source}}"');
     });
 
+    it("shows a horde's Magnitude beside its tier while horde mode is on (#699)", () => {
+        // The Magnitude was only on the NPC tab, so a horde opened on any other tab showed no wound pool.
+        expect(SRC).toContain("name: 'system.horde.magnitude.current'");
+        expect(SRC).toMatch(/const magnitudeField: SidebarHeaderField\[\] = horde\.enabled/u);
+        // It sits directly after the Tier select.
+        expect(SRC).toMatch(/options: npcTierOptions\(\),\s*\},\s*\.\.\.magnitudeField,/u);
+    });
+
     it('does NOT put Fate in the sidebar header — it belongs on the Combat tab (#258)', () => {
         // The Fate control was wrongly added to the header; it must be removed.
         expect(SRC).not.toContain("name: 'system.fate.value'");

@@ -1,5 +1,6 @@
 import type { WH40KBaseActor } from '../../../documents/base-actor.ts';
 import { bonusDamageDiceForMagnitude, getHordeTier, toHitBonusForMagnitude } from '../../../rules/dw-horde-magnitude.ts';
+import { type MigrationSource, migrateHordeSource } from './horde-migration.ts';
 
 const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
 
@@ -63,11 +64,6 @@ export interface HordeData {
     sizeKeyword: string;
     /** RAW: descriptive tier label from TABLE 13-1. */
     tierDescriptor: string;
-}
-
-/** Raw source data passed to DataModel migration hooks — opaque Foundry framework boundary. */
-interface MigrationSource {
-    [key: string]: string | number | boolean | null | MigrationSource | MigrationSource[];
 }
 
 /**
@@ -155,25 +151,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /** @inheritDoc */
         static override _migrateData(source: MigrationSource): void {
             super._migrateData?.(source);
-            // Ensure horde object exists (MigrationSource can have null values for absent/unset fields)
-            // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is banned project-wide but ??= is the only way to avoid prefer-nullish-coalescing here; _migrateData is a Foundry framework boundary with opaque source data
-            source['horde'] ??= {
-                enabled: false,
-                magnitude: { max: 30, current: 30 },
-                magnitudeLog: [],
-                traits: [],
-                damageMultiplier: 1.0,
-                sizeModifier: 0,
-                bonusDamageDice: 0,
-                toHitBonus: 30,
-                sizeKeyword: 'Massive',
-                tierDescriptor: 'A mob',
-            };
-            // Migrate magnitude values to integers
-            // eslint-disable-next-line no-restricted-syntax -- boundary: raw migration source data from Foundry _migrateData hook; no schema available at this point
-            const horde = source['horde'] as unknown as HordeData;
-            horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
-            horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;
+            migrateHordeSource(source);
         }
 
         /* -------------------------------------------- */
