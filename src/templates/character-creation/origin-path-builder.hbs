@@ -794,11 +794,13 @@
  {{!-- Footer --}}
  <footer class="tw-flex tw-justify-between tw-items-center tw-p-[var(--wh40k-space-md)] tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.8),var(--wh40k-bronze-dark))] tw-border-t-2 tw-border-t-[var(--wh40k-gold)]">
  <div class="tw-flex tw-gap-[var(--wh40k-space-md)]">
- <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
+ <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-wh40k-hook="origin-footer-steps">
  <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-circle-half-stroke tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
  {{status.stepsCount}}/{{status.totalSteps}} {{localize "WH40K.OriginPath.Steps"}}
  </span>
- <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
+ {{!-- Only once an origin is picked (#701): before that, "All choices complete" beside "0/6 steps" contradicted itself. --}}
+ {{#if status.hasSelections}}
+ <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-wh40k-hook="origin-footer-choices">
  <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-exclamation-triangle tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
  {{#if status.choicesComplete}}
  {{localize "WH40K.OriginPath.AllChoicesComplete"}}
@@ -806,6 +808,7 @@
  {{status.pendingChoices}} {{localize "WH40K.OriginPath.ChoicesPending"}}
  {{/if}}
  </span>
+ {{/if}}
  {{#if status.pendingRolls}}
  <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]">
  <i class="fa-solid fa-dice tw-text-[#ff9800] tw-text-[1rem]"></i>

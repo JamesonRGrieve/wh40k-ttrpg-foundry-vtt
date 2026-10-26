@@ -56,6 +56,7 @@ import {
 } from './origin-discovery.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
+import { stepProgress } from './origin-step-progress.ts';
 import type {
     ActiveModifier,
     BuilderFlagState,
@@ -3401,8 +3402,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     // eslint-disable-next-line complexity, no-restricted-syntax -- boundary: status data is prepared for Handlebars rendering; Record<string,unknown> is the template shape
     _calculateStatus(): Record<string, unknown> {
-        const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
-        const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
+        // Counted over the stepper's own steps (#701), Equipment included, so the footer and the stepper agree.
+        const progress = stepProgress(this._prepareStepNavigation().map((step) => ({ isComplete: step['isComplete'] === true })));
         const coreStepsComplete = this.selections.size >= this.systemConfig.coreSteps.length;
         // DH2e Stage 4 Armory step (core p.81) surfaces a cap of
         // floor(Influence/10) Scarce-or-better picks. The campaign also runs
@@ -3452,9 +3453,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         return {
-            stepsCount: stepsCount,
-            totalSteps: totalSteps,
+            stepsCount: progress.done,
+            totalSteps: progress.total,
             stepsComplete: coreStepsComplete,
+            // The choices indicator speaks of picked origins; with none picked there are no choices to call complete (#701).
+            hasSelections: this.selections.size > 0,
             choicesComplete: pendingChoices === 0,
             equipmentRequired,
             equipmentComplete,

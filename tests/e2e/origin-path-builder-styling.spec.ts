@@ -219,6 +219,15 @@ test('origin-path-builder renders fully-styled dialog with workspace, journey ra
 
     expect(result.setupOk, `setup error: ${result.error ?? ''}`).toBe(true);
 
+    // #701: the footer counts the stepper's own steps (it read "0/5" beside six), and says nothing of
+    // choices until an origin is picked (it showed a green "All choices complete" before any pick).
+    const stepperSteps = await page.locator('[data-action="goToStep"][data-step-index]').count();
+    const footerSteps = ((await page.locator('[data-wh40k-hook="origin-footer-steps"]').first().textContent()) ?? '').replace(/\s+/gu, ' ').trim();
+    expect(footerSteps).toMatch(/^0\/\d+ /u);
+    const total = Number(/^0\/(?<total>\d+)/u.exec(footerSteps)?.groups?.['total']);
+    expect(total, `footer "${footerSteps}" vs ${stepperSteps} stepper steps`).toBe(stepperSteps);
+    await expect(page.locator('[data-wh40k-hook="origin-footer-choices"]')).toHaveCount(0);
+
     // Snap the OPEN dialog so a regression in the visual treatment shows up
     // in the diff. The screenshot is best-effort and never gates the test.
     await snap(page, 'origin-path-builder-styled');
