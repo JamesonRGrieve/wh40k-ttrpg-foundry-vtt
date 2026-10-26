@@ -1,0 +1,14 @@
+{{!--
+    The button that opens the ship assault dialog for one guided resolver (#188),
+    shared by the assault panel and a ship-action row that carries its resolver (#701).
+
+    Hash params:
+        assault — {id, label}
+--}}
+<button type="button"
+        class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#6a2a2a] tw-bg-[linear-gradient(180deg,#8a4a4a_0%,#7a3a3a_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"
+        data-action="openShipAssault"
+        data-assault="{{assault.id}}"
+        aria-label="{{assault.label}}">
+    <span>{{localize "WH40K.Voidcraft.Assault.Open"}}</span>
+</button>

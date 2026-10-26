@@ -31,6 +31,7 @@ function order(name: string, actionType: string, uuid = `uuid-${name}`, shipEffe
         name,
         img: 'icon.png',
         system: {
+            identifier: name.toLowerCase().replace(/\W+/gu, '-'),
             actionType,
             test: { skill: 'Tech-Use', characteristic: '', modifier: -10, shipStat: '' },
             duration: '1d5 Turns',
@@ -64,6 +65,8 @@ describe('toShipActionRow', () => {
         expect(toShipActionRow(order('Emergency Repairs', 'extended-action'))).toEqual({
             uuid: 'uuid-Emergency Repairs',
             id: 'emergency repairs',
+            // #701: the row carries the order's identifier, which a guided resolver attaches by.
+            identifier: 'emergency-repairs',
             name: 'Emergency Repairs',
             img: 'icon.png',
             skill: 'Tech-Use',

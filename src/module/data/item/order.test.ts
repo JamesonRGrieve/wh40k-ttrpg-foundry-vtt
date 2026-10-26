@@ -80,6 +80,7 @@ function orderSystem(cleaned: JsonObject): ShipActionOrderSystem {
     const modifier = test['modifier'];
     if (typeof modifier !== 'number') throw new Error('expected test.modifier to be a number after cleaning');
     return {
+        identifier: typeof cleaned['identifier'] === 'string' ? cleaned['identifier'] : '',
         actionType: text(cleaned, 'actionType'),
         // `characteristic` has no initial: absent stays absent, as Foundry leaves it.
         test: {

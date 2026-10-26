@@ -32,7 +32,7 @@ import { openShipActionDialog } from '../ship-action/ship-action-dialog.ts';
 import { shipActionModifierRows, type ShipActionModifierRow } from '../ship-action/ship-action-flow.ts';
 import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
-import { findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
+import { attachShipAssaults, findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
 import { createShipWeaponFireFlow, type ShipWeaponFireCompanion } from '../ship-assault/ship-weapon-fire-flow.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
@@ -458,14 +458,17 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         }
 
         if (partId === 'extendedActions') {
-            partContext['extendedActions'] = await this._prepareExtendedActions();
-            partContext['shipAssaults'] = this._prepareShipAssaults('extended');
+            // An action with a guided resolver (Hit and Run) is one row with both buttons (#701).
+            const extended = attachShipAssaults(await this._prepareExtendedActions(), this._prepareShipAssaults('extended'));
+            partContext['extendedActions'] = extended.rows;
+            partContext['shipAssaults'] = extended.unmatched;
             partContext['shipActionModifiers'] = this._prepareShipActionModifiers();
         }
 
         if (partId === 'manoeuvreActions') {
-            partContext['manoeuvreActions'] = await this._prepareManoeuvreActions();
-            partContext['shipAssaults'] = this._prepareShipAssaults('manoeuvre');
+            const manoeuvre = attachShipAssaults(await this._prepareManoeuvreActions(), this._prepareShipAssaults('manoeuvre'));
+            partContext['manoeuvreActions'] = manoeuvre.rows;
+            partContext['shipAssaults'] = manoeuvre.unmatched;
             partContext['shipActionModifiers'] = this._prepareShipActionModifiers();
         }
 

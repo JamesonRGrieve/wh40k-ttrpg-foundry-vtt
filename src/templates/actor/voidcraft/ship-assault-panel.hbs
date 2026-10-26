@@ -3,6 +3,8 @@
 
     Each button opens the ship assault dialog for one action. Rendered only for
     Rogue Trader voidcraft: the sheet passes an empty list for the other lines.
+    A resolver whose action is also a listed ship action (Hit and Run) sits on
+    that action's row instead, so the sheet passes only the unmatched ones (#701).
 
     Hash params:
         assaults — [{id, label, hint, icon}]
@@ -18,13 +20,7 @@
                         <span class="tw-font-semibold tw-text-[0.95em] tw-text-[color:var(--wh40k-text-dark)] tw-uppercase tw-tracking-wide">{{assault.label}}</span>
                         <span class="tw-text-[0.75em] tw-text-[color:var(--wh40k-text-muted)]">{{assault.hint}}</span>
                     </div>
-                    <button type="button"
-                            class="tw-flex tw-items-center tw-gap-1 tw-px-2.5 tw-py-1 tw-rounded-md tw-border tw-border-[#6a2a2a] tw-bg-[linear-gradient(180deg,#8a4a4a_0%,#7a3a3a_100%)] tw-text-white tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer"
-                            data-action="openShipAssault"
-                            data-assault="{{assault.id}}"
-                            aria-label="{{assault.label}}">
-                        <span>{{localize "WH40K.Voidcraft.Assault.Open"}}</span>
-                    </button>
+                    {{> systems/wh40k-rpg/templates/actor/voidcraft/ship-assault-button.hbs assault=assault}}
                 </li>
             {{/each}}
         </ul>

@@ -144,6 +144,12 @@ test.describe.serial('RT ship actions from the voidcraft sheet (Tier B · #186, 
             expect(extendedButtons.rollable).toEqual(['Aid the Machine Spirit', 'Flank Speed', 'Hold Fast!', 'Lock on Target', 'Triage']);
             expect(extendedButtons.dispatch, 'every RAW Extended Action keeps its rules card').toBe(14);
             expect(extendedButtons.assaults).toEqual(['hit-and-run']);
+            // #701: Hit and Run is one row carrying both its resolver and its rules card, not two entries.
+            const hitAndRunRows = page.locator(`${extended} li`).filter({ hasText: /^\s*Hit and Run/iu });
+            await expect(hitAndRunRows).toHaveCount(1);
+            await expect(hitAndRunRows.locator('[data-action="openShipAssault"][data-assault="hit-and-run"]')).toHaveCount(1);
+            await expect(hitAndRunRows.locator('[data-action^="dispatch"]')).toHaveCount(1);
+            await expect(page.locator(`${extended} [data-wh40k-hook="ship-assault-panel"]`)).toHaveCount(0);
             expect(await snapWindow(page, 'ship-actions-extended-tab', sheetId)).not.toBeNull();
             // #186: the tab's intro paragraph meets WCAG AA on the dark sheet body (it was dim brown at 80%).
             const extendedIntro = `${extended} [data-wh40k-hook="ship-action-tab-description"]`;

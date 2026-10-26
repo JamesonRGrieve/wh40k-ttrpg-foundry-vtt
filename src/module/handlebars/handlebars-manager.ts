@@ -332,6 +332,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/chat/partial/ship-assault-damage.hbs',
             'systems/wh40k-rpg/templates/prompt/ship-assault-dialog.hbs',
             'systems/wh40k-rpg/templates/actor/voidcraft/ship-assault-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/voidcraft/ship-assault-button.hbs',
             'systems/wh40k-rpg/templates/prompt/partial/ship-field-groups.hbs',
             'systems/wh40k-rpg/templates/prompt/ship-action-dialog.hbs',
             'systems/wh40k-rpg/templates/chat/ship-action-roll-chat.hbs',

@@ -26,6 +26,8 @@ const SHIP_ACTION_ORDER_TYPE: Readonly<Record<ShipActionKind, OrderActionType>> 
 
 /** The schema-cleaned `order` system fields a ship-action row reads. */
 export interface ShipActionOrderSystem {
+    /** The order's stable identifier (`hit-and-run`); a guided assault resolver of the same id attaches to its row. */
+    identifier: string;
     actionType: string;
     /** `shipStat` names the ship stat a Combined Skill Test adds (RT Core p.212); empty otherwise. */
     test: { skill: string; characteristic: string; modifier: number; shipStat: string };
@@ -50,6 +52,8 @@ export interface ShipActionOrderView {
 export interface ShipActionRow {
     uuid: string;
     id: string;
+    /** The order's stable identifier, see {@link ShipActionOrderSystem.identifier}. */
+    identifier: string;
     name: string;
     img: string;
     skill: string;
@@ -76,6 +80,7 @@ export function toShipActionRow(order: ShipActionOrderView): ShipActionRow {
     return {
         uuid: order.uuid,
         id: order.id,
+        identifier: system.identifier,
         name: order.name,
         img: order.img,
         skill: shipActionTestLabel(system.test),

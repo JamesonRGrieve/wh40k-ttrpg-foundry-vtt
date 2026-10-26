@@ -23,6 +23,30 @@ export interface ShipAssaultButton {
     icon: string;
 }
 
+/** A ship-action row with the guided resolver for the same action, when there is one. */
+export type WithShipAssault<R> = R & { assault: ShipAssaultButton | null };
+
+/**
+ * Pair each ship-action row (the rules card a crew dispatches) with the guided
+ * assault resolver whose id is the row's order identifier (#701). Hit and Run was
+ * listed twice on the Extended Actions tab: once as the resolver, once as the
+ * rules card. One action is one row now, carrying both buttons. A resolver with
+ * no matching row (ramming, boarding) stays in the assault panel.
+ */
+export function attachShipAssaults<R extends { identifier: string }>(
+    rows: readonly R[],
+    assaults: readonly ShipAssaultButton[],
+): { rows: Array<WithShipAssault<R>>; unmatched: ShipAssaultButton[] } {
+    const byId = new Map(assaults.map((assault) => [assault.id, assault]));
+    const used = new Set<string>();
+    const paired = rows.map((row) => {
+        const assault = row.identifier === '' ? undefined : byId.get(row.identifier);
+        if (assault !== undefined) used.add(assault.id);
+        return { ...row, assault: assault ?? null };
+    });
+    return { rows: paired, unmatched: assaults.filter((assault) => !used.has(assault.id)) };
+}
+
 /** Build the button rows a voidcraft-sheet tab shows, localized. */
 export function shipAssaultButtons(tab: ShipAssaultTab, localize: (key: string) => string): ShipAssaultButton[] {
     return SHIP_ASSAULTS.filter((entry) => entry.tab === tab).map((entry) => ({

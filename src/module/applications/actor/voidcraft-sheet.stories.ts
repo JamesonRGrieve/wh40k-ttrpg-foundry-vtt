@@ -252,6 +252,7 @@ function rtOrder(name: string, actionType: string, skill: string, modifier: numb
         name,
         img: '',
         system: {
+            identifier: name.toLowerCase().replace(/\W+/gu, '-'),
             actionType,
             test: { skill, characteristic, modifier, shipStat: '' },
             duration: name === 'Emergency Repairs' ? '1d5 Turns' : '',
