@@ -680,16 +680,19 @@ export interface RanShipAssault {
 
 /**
  * Run a ship assault action as the GM does: open the attacker's sheet on the
- * action's tab, snap the Ship Assault panel, click the action, pick the target
+ * action's tab, snap the resolver's row, click the action, pick the target
  * and fill the inputs, Roll, make the winner's choices in the resolved dialog,
  * Apply, and snap each state and the posted card.
  */
 export async function runAssaultFromSheet(page: Page, attackerId: string, run: ShipAssaultRun): Promise<RanShipAssault> {
     const sheetId = await openSheet(page, attackerId);
     const section = await showTab(page, sheetId, run.tab);
-    const panel = `${section} [data-wh40k-hook="ship-assault-panel"]`;
-    await snapWindow(page, `${run.label}-panel`, sheetId, panel);
-    await page.locator(`${panel} [data-action="openShipAssault"][data-assault="${run.assault}"]`).click();
+    // The resolver's row: in the Ship Assault panel, or on its own ship-action row when the
+    // action is also a listed one (Hit and Run sits on its Extended Action row, #701).
+    const open = `[data-action="openShipAssault"][data-assault="${run.assault}"]`;
+    const row = `${section} li:has(> ${open})`;
+    await snapWindow(page, `${run.label}-panel`, sheetId, row);
+    await page.locator(`${row} > ${open}`).click();
     const dialog = await dialogId(page, 'ship-assault-dialog');
     const root = `#${dialog} [data-wh40k-hook="ship-assault-dialog"]`;
 
