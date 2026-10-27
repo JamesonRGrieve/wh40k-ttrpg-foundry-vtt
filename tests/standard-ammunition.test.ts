@@ -10,7 +10,7 @@
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = resolve(__dirname, '..');
@@ -57,22 +57,45 @@ interface AmmoDoc {
     system?: { standard?: boolean };
 }
 
-function ammunitionDocs(): Array<{ path: string; doc: AmmoDoc }> {
-    return walk(PRIVATE_ROOT, (p) => p.endsWith('.json') && p.includes('_source'))
+/** Ammunition items live only in each book's `*-items-ammo` pack. */
+const AMMO_PACK_SUFFIX = '-items-ammo';
+
+/** Every `_source` directory of an ammunition pack, at `<line>/<pack>/_source`. */
+function ammoSourceDirs(): string[] {
+    return readdirSync(PRIVATE_ROOT)
+        .filter((line) => !line.startsWith('.') && statSync(join(PRIVATE_ROOT, line)).isDirectory())
+        .flatMap((line) =>
+            readdirSync(join(PRIVATE_ROOT, line))
+                .filter((pack) => pack.endsWith(AMMO_PACK_SUFFIX))
+                .map((pack) => join(PRIVATE_ROOT, line, pack, '_source')),
+        );
+}
+
+/**
+ * The packs' ammunition documents. Only the ammunition packs are read: walking
+ * all ~12,800 pack files timed out on the build runner, where the tree is
+ * NFS-mounted.
+ */
+function loadAmmunitionDocs(): Array<{ path: string; doc: AmmoDoc }> {
+    return ammoSourceDirs()
+        .flatMap((dir) => walk(dir, (p) => p.endsWith('.json')))
         .map((path) => ({ path, doc: JSON.parse(read(path)) as AmmoDoc }))
         .filter(({ doc }) => doc.type === 'ammunition');
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('standard ammunition in the packs (#699)', () => {
+    let ammo: Array<{ path: string; doc: AmmoDoc }> = [];
+    beforeAll(() => {
+        ammo = loadAmmunitionDocs();
+    });
+
     it('no ammunition is named with the editorial prefix', () => {
-        const prefixed = ammunitionDocs()
-            .filter(({ doc }) => doc.name.startsWith('!'))
-            .map(({ doc }) => doc.name);
+        const prefixed = ammo.filter(({ doc }) => doc.name.startsWith('!')).map(({ doc }) => doc.name);
         expect(prefixed).toEqual([]);
     });
 
     it('every formerly prefixed item is flagged standard', () => {
-        const standard = ammunitionDocs()
+        const standard = ammo
             .filter(({ doc }) => doc.system?.standard === true)
             .map(({ doc }) => doc.name)
             .sort();
