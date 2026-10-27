@@ -75,12 +75,20 @@ fi
 # GPU on (default) offloads rendering to the host GPU/VRAM, so each worker is
 # light on both CPU (~3 load) and system RAM (~3-4G) — measured at 4 workers:
 # load ~12, avail steady — hence 4G and 3 threads per worker, which saturates
-# the CPU while staying inside free RAM. Software WebGL is RAM-heavy (~6.3G a
-# worker), hence 7G. Override with E2E_WORKERS (E2E_WORKERS=1 forces the
-# historical serial run).
+# the CPU while staying inside free RAM. Software WebGL (E2E_GPU=0) is heavy on
+# both: ~6.3G and ~10 cores a worker for SwiftShader, hence 7G and 10 threads.
+# Sizing it at 3 threads put 10 workers on the 32-thread build runner, and 172
+# tests timed out on the starved CPU. Override with E2E_WORKERS (E2E_WORKERS=1
+# forces the historical serial run).
 if [[ -z "${E2E_WORKERS:-}" ]]; then
-    if [[ "${E2E_GPU:-1}" != "0" ]]; then _gb_per_worker=4; else _gb_per_worker=7; fi
-    E2E_WORKERS="$(bash "${SCRIPT_DIR}/scripts/auto-workers.sh" "${_gb_per_worker}" 3)"
+    if [[ "${E2E_GPU:-1}" != "0" ]]; then
+        _gb_per_worker=4
+        _threads_per_worker=3
+    else
+        _gb_per_worker=7
+        _threads_per_worker=10
+    fi
+    E2E_WORKERS="$(bash "${SCRIPT_DIR}/scripts/auto-workers.sh" "${_gb_per_worker}" "${_threads_per_worker}")"
     export E2E_WORKERS
     echo "[integration] auto-scaled workers=${E2E_WORKERS} (threads=$(nproc), avail=$(free -g | awk 'NR==2{print $7}')G)"
 fi
