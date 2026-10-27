@@ -171,15 +171,8 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 // Inject into a persistent host so snap() (called
                 // outside this evaluate) captures the live card.
                 // Closing/removing here would leave the shot empty.
-                let host = document.getElementById('__c9_sd_host');
-                if (!host) {
-                    host = document.createElement('div');
-                    host.id = '__c9_sd_host';
-                    host.className = 'wh40k-rpg';
-                    host.style.cssText = 'position:fixed;top:40px;left:40px;width:420px;z-index:100000;';
-                    document.body.appendChild(host);
-                }
-                host.innerHTML = html;
+                // Painted with the sheet window surface, so the card reads as it does on a sheet.
+                const host = globalThis.wh40kE2E.panelHost({ html, id: '__c9_sd_host', width: 420, side: 'left', zIndex: 100000, capture: false });
 
                 const card = host.querySelector('[data-wh40k-hook="sd-card"]');
                 rendered = card instanceof HTMLElement;

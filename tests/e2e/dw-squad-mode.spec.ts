@@ -85,22 +85,9 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
                         ],
                     },
                 });
-                const host = document.createElement('div');
-                // Tailwind utilities are scoped to .wh40k-rpg via
-                // tailwind.config.js `important: '.wh40k-rpg'`; without
-                // an ancestor with that class every tw-* class is
-                // dropped. The data-wh40k-system attribute anchors the
-                // dw:tw-* per-system variants the panel uses.
-                host.className = 'wh40k-rpg';
-                host.dataset['e2eCapture'] = '';
-                host.dataset['wh40kSystem'] = 'dw';
-                host.style.position = 'fixed';
-                host.style.top = '40px';
-                host.style.right = '40px';
-                host.style.width = '360px';
-                host.style.zIndex = '99999';
-                host.innerHTML = html;
-                document.body.appendChild(host);
+                // A .wh40k-rpg host (Tailwind is scoped to it) painted with the sheet window surface;
+                // its data-wh40k-system anchors the dw:tw-* per-system variants the panel uses.
+                const host = globalThis.wh40kE2E.panelHost({ html, system: 'dw', width: 360 });
                 rendered = host.firstElementChild instanceof HTMLElement;
 
                 if (rendered) {

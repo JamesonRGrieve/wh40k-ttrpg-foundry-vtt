@@ -46,6 +46,30 @@ interface E2EPageHelpers {
     readonly textLines: (el: Element) => number;
     /** Every word under `root` drawn across more than one line (a mid-word break). */
     readonly splitWords: (root: Element) => string[];
+    /**
+     * Mount a rendered panel/card template in a fixed `.wh40k-rpg` host for a capture,
+     * painted with the sheet window surface (`--wh40k-window-surface`), so the panel reads
+     * as it does on a real sheet instead of translucent over the scene canvas (#701).
+     * With `id`, an existing host of that id is reused.
+     */
+    readonly panelHost: (opts: PanelHostOptions) => HTMLElement;
+}
+
+/** Placement and markup for {@link E2EPageHelpers.panelHost}. */
+interface PanelHostOptions {
+    /** The rendered template's HTML. */
+    readonly html: string;
+    /** Host width in px. */
+    readonly width: number;
+    /** `data-wh40k-system` for per-line variants. */
+    readonly system?: string;
+    /** The screen edge the host sits 40px from (default right). */
+    readonly side?: 'left' | 'right';
+    /** Reuse (or create with) this element id. */
+    readonly id?: string;
+    /** Mark the host `data-e2e-capture` (default true). */
+    readonly capture?: boolean;
+    readonly zIndex?: number;
 }
 
 declare global {
@@ -128,6 +152,25 @@ export async function installInPageHelpers(page: Page): Promise<void> {
                         }
                     }
                     return split;
+                },
+                panelHost: (opts: PanelHostOptions): HTMLElement => {
+                    const existing = opts.id === undefined ? null : document.getElementById(opts.id);
+                    const host = existing ?? document.createElement('div');
+                    if (opts.id !== undefined) host.id = opts.id;
+                    host.className = 'wh40k-rpg';
+                    if (opts.capture !== false) host.dataset['e2eCapture'] = '';
+                    if (opts.system !== undefined) host.dataset['wh40kSystem'] = opts.system;
+                    host.style.position = 'fixed';
+                    host.style.top = '40px';
+                    host.style[opts.side ?? 'right'] = '40px';
+                    host.style.width = `${opts.width}px`;
+                    host.style.zIndex = String(opts.zIndex ?? 99999);
+                    // The window surface a real sheet paints under its panels (#694), so a capture
+                    // shows the panel as it reads on a sheet, not over the scene canvas (#701).
+                    host.style.background = 'var(--wh40k-window-surface)';
+                    host.innerHTML = opts.html;
+                    if (existing === null) document.body.appendChild(host);
+                    return host;
                 },
             };
         },

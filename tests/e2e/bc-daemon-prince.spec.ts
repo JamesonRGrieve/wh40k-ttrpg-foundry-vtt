@@ -69,17 +69,8 @@ test.describe.serial('BcDaemonPrincePanel (Tier B)', () => {
             };
 
             const mountHost = (html: string, side: 'left' | 'right'): HTMLElement => {
-                const host = document.createElement('div');
-                host.className = 'wh40k-rpg';
-                host.dataset['e2eCapture'] = '';
-                host.dataset['wh40kSystem'] = 'bc';
-                host.style.position = 'fixed';
-                host.style.top = '40px';
-                host.style[side] = '40px';
-                host.style.width = '360px';
-                host.style.zIndex = '99999';
-                host.innerHTML = html;
-                document.body.appendChild(host);
+                // A .wh40k-rpg host (Tailwind is scoped to it) painted with the sheet window surface.
+                const host = globalThis.wh40kE2E.panelHost({ html, system: 'bc', width: 360, side });
                 return host;
             };
 
