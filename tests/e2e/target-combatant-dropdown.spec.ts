@@ -160,6 +160,29 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
         const openDialogId = result.dialogId ?? '';
         expect(openDialogId, 'the dialog stayed open for the capture').not.toBe('');
         await page.locator(`#${openDialogId} select[name="targetCombatantId"]`).scrollIntoViewIfNeeded();
+        // #701: the select shows its whole option text and the selection hint reads whole
+        // (they read "Select a Ta" and "No target — tar…").
+        const fit = await page.evaluate((id: string) => {
+            const select = document.querySelector<HTMLSelectElement>(`#${id} [data-wh40k-hook="target-combatant-select"]`);
+            const hint = document.querySelector<HTMLElement>(`#${id} [data-wh40k-hook="target-selection"]`);
+            if (select === null || hint === null) throw new Error('target row not rendered');
+            const style = getComputedStyle(select);
+            const ctx = document.createElement('canvas').getContext('2d');
+            if (ctx === null) throw new Error('no 2d context');
+            ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+            const widest = Math.max(...Array.from(select.options, (option) => ctx.measureText(option.text).width));
+            const textRoom = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+            return {
+                selectFits: select.scrollWidth <= select.clientWidth,
+                optionsFit: widest <= textRoom + 1,
+                detail: `widest option ${Math.round(widest)}px in ${Math.round(textRoom)}px`,
+                hintFits: hint.scrollWidth <= hint.clientWidth,
+                hintText: hint.textContent.trim(),
+            };
+        }, openDialogId);
+        expect(fit.selectFits, 'the select scrolls its text').toBe(true);
+        expect(fit.optionsFit, fit.detail).toBe(true);
+        expect(fit.hintFits, `the hint is clipped: "${fit.hintText}"`).toBe(true);
         await snap(page, 'target-combatant-dropdown', { selector: `#${openDialogId}` });
         await page.evaluate(async (id: string) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.instances is the untyped V14 open-application registry
