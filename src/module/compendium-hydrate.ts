@@ -396,6 +396,9 @@ interface HydrationResult {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
     actorSystem: Record<string, unknown> | null;
+    /** Each patched item's persisted system as the join read it, by item id (see {@link carryLateChanges}). */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: an item's persisted system is an open-ended Foundry source Record
+    builtOn: Map<string, Record<string, unknown>>;
 }
 
 /**
@@ -409,6 +412,8 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
     const patches: Array<Record<string, unknown>> = [];
     const unresolved: UnresolvedJoin[] = [];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: an item's persisted system is an open-ended Foundry source Record
+    const builtOn = new Map<string, Record<string, unknown>>();
     const cache = new Map<string, SourceLike | null>();
     // The line all of this actor's embedded items resolve their per-line variant
     // containers to (their owning actor's line), computed once for the pass.
@@ -475,9 +480,47 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
         const persistedImg = item._source?.img ?? item.img;
         if (source.img !== null && persistedImg !== source.img) patch['img'] = source.img;
         patches.push(patch);
+        // The join awaits more packs after this merge; an update that lands on the item
+        // meanwhile must survive the commit, so the persisted system it was built on is kept.
+        builtOn.set(item.id, structuredClone(persisted));
     }
     const actorSystem = await buildActorSystemPatch(actor, unresolved);
-    return { patches, unresolved, actorSystem };
+    return { patches, unresolved, actorSystem, builtOn };
+}
+
+/**
+ * Carry onto a joined `system` whatever changed on the item after the join was built
+ * (#701). The join merges each item, then awaits the next item's pack and the actor's
+ * own join; an update arriving in that gap (the builder writing a rolled wounds
+ * formula right after the drop) changed `_source`, and committing the stale merge as
+ * a wholesale replacement dropped it, so the character's wounds max read 0. Only
+ * paths whose value differs from the snapshot are copied, recursing through plain
+ * objects, so the canonical body stays joined everywhere else.
+ */
+export function carryLateChanges(
+    // eslint-disable-next-line no-restricted-syntax -- boundary: joined and persisted systems are open-ended Foundry source Records
+    merged: Record<string, unknown>,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
+    snapshot: Record<string, unknown>,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
+    current: Record<string, unknown>,
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
+): Record<string, unknown> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
+    const out: Record<string, unknown> = { ...merged };
+    for (const [key, value] of Object.entries(current)) {
+        const before = snapshot[key];
+        if (sameSourceValue(value, before)) continue;
+        const base = out[key];
+        out[key] = isRecord(value) && isRecord(before) && isRecord(base) ? carryLateChanges(base, before, value) : structuredClone(value);
+    }
+    return out;
+}
+
+/** A plain object (not an array or null), as a source Record. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: narrows an open-ended Foundry source value to a Record
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**
@@ -564,15 +607,22 @@ const REPLACE_SYSTEM: SourceReplaceOptions = { recursive: false };
  * as "the hybrid was authored without claws" instead of "the claws didn't load".
  */
 async function hydrateActorReporting(actor: HydratableActor): Promise<{ patched: number; unresolved: UnresolvedJoin[] }> {
-    const { patches, unresolved, actorSystem } = await buildHydration(actor);
+    const { patches, unresolved, actorSystem, builtOn } = await buildHydration(actor);
     let patched = 0;
     for (const patch of patches) {
         const item = actor.items.contents.find((i) => i.id === patch['_id']);
+        // An update that reached the item after its merge was built is carried onto the join.
+        const snapshot = typeof patch['_id'] === 'string' ? builtOn.get(patch['_id']) : undefined;
+        const current = item?._source?.system;
+        const system =
+            snapshot !== undefined && current !== undefined && isRecord(patch['system'])
+                ? carryLateChanges(patch['system'], snapshot, current)
+                : patch['system'];
         // One item whose canonical body fails validation must not abort the whole
         // join: the boot path awaits every actor, so a throw here used to stop the
         // system's `ready` before conditions, caches and the event graph loaded.
         try {
-            item?.updateSource?.({ system: patch['system'], ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
+            item?.updateSource?.({ system, ...(patch['img'] !== undefined ? { img: patch['img'] } : {}) }, REPLACE_SYSTEM);
             // A recovered link merges INTO `_stats` (recursive) — replacing it
             // wholesale would drop the item's other document stats.
             if (typeof patch['compendiumSource'] === 'string') item?.updateSource?.({ _stats: { compendiumSource: patch['compendiumSource'] } });
