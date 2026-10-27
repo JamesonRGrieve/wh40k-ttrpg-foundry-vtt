@@ -12,6 +12,8 @@ interface DropdownState {
 interface ProbeResult {
     error: string | null;
     state: DropdownState | null;
+    /** The open dialog's element id, left open for the capture (#701). */
+    dialogId?: string | null;
 }
 
 interface UnifiedRollDialogInstance {
@@ -114,6 +116,7 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
 
             let state: DropdownState | null = null;
             let error: string | null = null;
+            let dialogId: string | null = null;
             try {
                 const dialog = new Cls(actionData);
                 await dialog.render(true);
@@ -130,15 +133,16 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
                         optionLabels: select ? Array.from(select.options).map((o) => o.text.trim()) : [],
                         selectedValue: select?.value ?? null,
                     };
+                    // Left open: the capture below is of this dialog's dropdown; it closes after.
+                    dialogId = root.id;
                 }
-                if (typeof dialog.close === 'function') await dialog.close();
             } catch (err) {
                 error = `dialog render threw: ${err instanceof Error ? err.message : String(err)}`;
             } finally {
                 if (prior) Object.defineProperty(gameObj, 'combat', prior);
                 else delete gameObj.combat;
             }
-            return { error, state };
+            return { error, state, dialogId };
         });
 
         expect(result.error, result.error ?? 'ok').toBeNull();
@@ -152,6 +156,16 @@ test.describe.serial('weapon target combatant dropdown (#250)', () => {
         expect(dropdown.optionLabels.join(' | ')).toContain('Cultist Alpha');
         expect(dropdown.optionLabels.join(' | ')).toContain('Cultist Beta');
 
-        await snap(page, 'target-combatant-dropdown');
+        // The capture is the Roll Test dialog carrying the dropdown (a bare snap() found no window: it had closed).
+        const openDialogId = result.dialogId ?? '';
+        expect(openDialogId, 'the dialog stayed open for the capture').not.toBe('');
+        await page.locator(`#${openDialogId} select[name="targetCombatantId"]`).scrollIntoViewIfNeeded();
+        await snap(page, 'target-combatant-dropdown', { selector: `#${openDialogId}` });
+        await page.evaluate(async (id: string) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.instances is the untyped V14 open-application registry
+            const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<void> }> } } }).foundry
+                .applications.instances;
+            await apps.get(id)?.close();
+        }, openDialogId);
     });
 });
