@@ -31,6 +31,7 @@ import {
     type PcAttitudeMap,
     type RequirementRow,
     type ResolvedState,
+    displaySourceName,
     sourceDayLabel,
     sourceRefKind,
     stripWikiLink,
@@ -486,7 +487,8 @@ export function buildEventTrackerView(input: EventTrackerViewInput): EventTracke
     const ctx: Context = {
         input,
         shown,
-        link: (kind, name, uuid) => ({ label: name, uuid: uuid ?? input.journalLink({ kind, name }) }),
+        // The journal is found by its authored name; the label shows a day plan renumbered (#701).
+        link: (kind, name, uuid) => ({ label: displaySourceName(name), uuid: uuid ?? input.journalLink({ kind, name }) }),
         graphLabel: (graphId) => (listsSeveral && graphId !== CAMPAIGN_GRAPH_ID ? sources.find((source) => source.id === graphId)?.label ?? graphId : null),
     };
     const ids = Object.keys(shown);

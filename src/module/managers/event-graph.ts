@@ -340,10 +340,34 @@ export function compareSources(a: string, b: string): number {
     return a.localeCompare(b);
 }
 
-/** The `Day 3` prefix of a day-plan source (`Day 3 — Records` → `Day 3`), or null for any other source. */
+/**
+ * The day a day-plan source's prefix names, as players read it (#701): an ordinary
+ * day is renumbered through {@link displayDayNumber} (stored `Day 3` reads `Day 4`);
+ * an M-day keeps its authored `M<n>`. Null for a source with no `Day N` prefix.
+ */
+function displayedSourceDay(source: string): string | null {
+    const day = DAY_SOURCE_PATTERN.exec(source)?.[1];
+    if (day === undefined) return null;
+    return day.startsWith('M') ? `Day ${day}` : `Day ${displayDayNumber(Number.parseInt(day, 10))}`;
+}
+
+/** The day a day-plan source falls on, as players read it (`Day 3 — Records` → `Day 4`), or null for any other source. */
 export function sourceDayLabel(source: string): string | null {
-    if (DAY_SOURCE_PATTERN.exec(source) === null) return null;
-    return (source.split('—').at(0) ?? source).trim();
+    return displayedSourceDay(source);
+}
+
+/**
+ * A source's name as the tracker shows it (#701). A day plan's authored prefix is
+ * replaced by the renumbered day and only the title after the dash is kept
+ * (`Day 3 — Tracker Probe Arrival` → `Day 4 — Tracker Probe Arrival`); any other
+ * name stays as authored.
+ */
+export function displaySourceName(source: string): string {
+    const day = displayedSourceDay(source);
+    if (day === null) return source;
+    const dash = source.indexOf('—');
+    const title = dash === -1 ? '' : source.slice(dash + 1).trim();
+    return title === '' ? day : `${day} — ${title}`;
 }
 
 /** The plain name inside a wiki link (`[[Target|Shown]]` → `Target`); other text is trimmed. */

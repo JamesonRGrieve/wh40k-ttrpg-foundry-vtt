@@ -179,6 +179,12 @@ test.describe.serial('Event Tracker dashboard (Tier B, #589 / #590)', () => {
             await expect(dayLabel).toHaveText('Day 4');
             await expect(locked.locator('[data-wh40k-hook="evt-requirement"]')).toBeVisible();
             await expect(dashboard.locator('[data-wh40k-hook="evt-today"]')).toBeVisible();
+            // Every generated day reference is renumbered the same way: the group heading keeps the authored
+            // title after the dash, and the requirement and its jump link name the same day.
+            await expect(dashboard.getByText('Day 4 — Tracker Probe Arrival', { exact: true }).first()).toBeVisible();
+            await expect(dashboard.getByText('Day 3 — Tracker Probe Arrival', { exact: true })).toHaveCount(0);
+            await expect(locked.locator('[data-wh40k-hook="evt-requirement"]')).toContainText('on Day 4 or later');
+            await expect(locked.locator('[data-wh40k-hook="evt-requirement"] [data-action="jumpToGroup"][data-tab="timeline"]')).toHaveText('Day 4');
             await snapDashboard(page, 'event-tracker-dashboard-timeline');
 
             await dashboard.locator('[data-action="stepDay"][data-delta="1"]').click();

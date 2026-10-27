@@ -73,7 +73,8 @@ describe('Event Tracker dashboard templates', () => {
         );
         expect(rows).toEqual([
             'Requires all:',
-            '✓ Document Review at The Errant Vector on Day 0 or later',
+            // #701: the "Day 0 — Transit" source is the first campaign day, read as Day 1.
+            '✓ Document Review at The Errant Vector on Day 1 or later',
             'Requires any:',
             '○ MISSING',
             '○ Character — skill: scrutiny',

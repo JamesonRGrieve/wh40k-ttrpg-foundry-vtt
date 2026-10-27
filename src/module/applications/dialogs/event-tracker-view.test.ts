@@ -145,7 +145,8 @@ describe('buildEventTrackerView — timeline', () => {
             name: 'Crew Meal',
             location: 'The Errant Vector',
             source: 'Day 0 — Transit',
-            sourceDay: 'Day 0',
+            // #701: stored day 0 reads Day 1.
+            sourceDay: 'Day 1',
             excuse: 'Still eating.',
             indentClass: 'tw-pl-9',
         });
@@ -162,7 +163,7 @@ describe('buildEventTrackerView — timeline', () => {
     it('shows a whole-event excuse and the opened quest', () => {
         const child = rowsOf(buildEventTrackerView(input()).groups, 2).at(0);
         expect(child).toMatchObject({ excuse: 'Not yet.', quest: { label: 'The Sick Child', uuid: null } });
-        expect(child?.requirements.at(0)).toMatchObject({ name: 'Visit the Sump', sourceDay: 'Day 1' });
+        expect(child?.requirements.at(0)).toMatchObject({ name: 'Visit the Sump', sourceDay: 'Day 2' });
     });
 });
 
@@ -174,7 +175,8 @@ describe('buildEventTrackerView — location', () => {
             { key: 'The Errant Vector', isActiveScene: false, sceneAction: 'spawn' },
             { key: '', title: null, sceneAction: null, untitledKey: 'WH40K.EventTracker.NoLocation' },
         ]);
-        expect(rowsOf(groups, 1).at(1)?.detail).toEqual({ label: 'Day 0 — Transit', uuid: null });
+        // #701: the link shows the renumbered day; the journal is still found by its authored name.
+        expect(rowsOf(groups, 1).at(1)?.detail).toEqual({ label: 'Day 1 — Transit', uuid: null });
     });
 
     it('builds no NPC cards off the relations tab', () => {

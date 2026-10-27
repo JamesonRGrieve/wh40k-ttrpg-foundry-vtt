@@ -30,6 +30,7 @@ import {
     type ResolvedState,
     resolveJournalUuid,
     sceneLocationName,
+    displaySourceName,
     sourceDayLabel,
     sourceDayNumber,
     sourceRefKind,
@@ -154,10 +155,21 @@ describe('source day ordering', () => {
         expect(sorted).toEqual(['Day 0 — Arrival', 'Day 2 — Early', 'Day 10 — Late', 'Day M1 — Transit', 'Session 9 — Quiet', 'The Sick Child', '']);
     });
 
-    it('extracts the Day label of a day-plan source only', () => {
-        expect(sourceDayLabel('Day 3 — Pressure Surfaces')).toBe('Day 3');
+    it('labels a day-plan source with the day players read, stored day N as Day N+1 (#701)', () => {
+        expect(sourceDayLabel('Day 3 — Pressure Surfaces')).toBe('Day 4');
+        expect(sourceDayLabel('Day 0 — Transit and Arrival')).toBe('Day 1');
         expect(sourceDayLabel('Day M1 — Transit and Archive')).toBe('Day M1');
         expect(sourceDayLabel('The Sick Child')).toBeNull();
+    });
+
+    it('renumbers a day-plan name and keeps only the title after the dash (#701)', () => {
+        expect(displaySourceName('Day 3 — Tracker Probe Arrival')).toBe('Day 4 — Tracker Probe Arrival');
+        expect(displaySourceName('Day 0 — Transit and Arrival')).toBe('Day 1 — Transit and Arrival');
+        expect(displaySourceName('Day 3')).toBe('Day 4');
+        expect(displaySourceName('Day M2 — Midnight Run')).toBe('Day M2 — Midnight Run');
+        // A name with no "Day N" prefix stays as authored.
+        expect(displaySourceName('The Sick Child')).toBe('The Sick Child');
+        expect(displaySourceName('Session 9 — Quiet')).toBe('Session 9 — Quiet');
     });
 });
 

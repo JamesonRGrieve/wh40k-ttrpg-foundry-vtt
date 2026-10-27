@@ -308,6 +308,8 @@ test.describe.serial('Event Tracker completion hooks, adventure graphs and portr
                 adventure.sources.some((label) => label.startsWith('The Ashford Mill')) && adventure.adventureEvents > 0 && adventure.rows > 0,
                 `sources ${JSON.stringify(adventure.sources)}, adventure events ${adventure.adventureEvents}, dashboard rows ${adventure.rows}`,
             );
+            // #701: the first campaign day reads Day 1, so no generated day reference says "Day 0".
+            await expect(page.locator(DASHBOARD)).not.toContainText(/\bDay 0\b/u);
             await snap(page, 'event-tracker-adventure-graph', { selector: DASHBOARD, closeWindows: true, keepWindow: 'wh40k-event-tracker' });
             // #699: every group reads at full contrast (a later day's group faded to 40%, dark on dark); a later
             // day is labelled Upcoming; events with no day plan or quest sit under "Unscheduled", not "Unknown".
