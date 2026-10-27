@@ -379,6 +379,13 @@ interface UnresolvedJoin {
 }
 
 /** Outcome of a hydration pass over one actor. */
+/**
+ * An item's `_source.system` (a Foundry document source), as the join reads,
+ * snapshots and re-merges it: open-ended, since each item type's schema differs.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: a Foundry document's `_source.system` has no shared schema across item types
+type SourceRecord = Record<string, unknown>;
+
 interface HydrationResult {
     /** Patches produced (0 when every item was already full). */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
@@ -397,8 +404,7 @@ interface HydrationResult {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry system payloads are open-ended Records
     actorSystem: Record<string, unknown> | null;
     /** Each patched item's persisted system as the join read it, by item id (see {@link carryLateChanges}). */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: an item's persisted system is an open-ended Foundry source Record
-    builtOn: Map<string, Record<string, unknown>>;
+    builtOn: Map<string, SourceRecord>;
 }
 
 /**
@@ -412,8 +418,7 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry update payloads are open-ended Records
     const patches: Array<Record<string, unknown>> = [];
     const unresolved: UnresolvedJoin[] = [];
-    // eslint-disable-next-line no-restricted-syntax -- boundary: an item's persisted system is an open-ended Foundry source Record
-    const builtOn = new Map<string, Record<string, unknown>>();
+    const builtOn = new Map<string, SourceRecord>();
     const cache = new Map<string, SourceLike | null>();
     // The line all of this actor's embedded items resolve their per-line variant
     // containers to (their owning actor's line), computed once for the pass.
@@ -497,17 +502,8 @@ async function buildHydration(actor: HydratableActor): Promise<HydrationResult> 
  * paths whose value differs from the snapshot are copied, recursing through plain
  * objects, so the canonical body stays joined everywhere else.
  */
-export function carryLateChanges(
-    // eslint-disable-next-line no-restricted-syntax -- boundary: joined and persisted systems are open-ended Foundry source Records
-    merged: Record<string, unknown>,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-    snapshot: Record<string, unknown>,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-    current: Record<string, unknown>,
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-): Record<string, unknown> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-    const out: Record<string, unknown> = { ...merged };
+export function carryLateChanges(merged: SourceRecord, snapshot: SourceRecord, current: SourceRecord): SourceRecord {
+    const out: SourceRecord = { ...merged };
     for (const [key, value] of Object.entries(current)) {
         const before = snapshot[key];
         if (sameSourceValue(value, before)) continue;
@@ -517,9 +513,8 @@ export function carryLateChanges(
     return out;
 }
 
-/** A plain object (not an array or null), as a source Record. */
-// eslint-disable-next-line no-restricted-syntax -- boundary: narrows an open-ended Foundry source value to a Record
-function isRecord(value: unknown): value is Record<string, unknown> {
+/** A plain object (not an array or null): a nested {@link SourceRecord}. */
+function isRecord(value: SourceRecord[string]): value is SourceRecord {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
