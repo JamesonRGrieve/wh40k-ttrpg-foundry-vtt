@@ -1,3 +1,4 @@
+import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
@@ -209,7 +210,9 @@ test.describe.serial('Ace · Right Stuff (Tier B)', () => {
             },
         );
 
-        await snap(page, 'right-stuff-chat');
+        // The capture is the posted Right Stuff card itself (no window is open for a bare snap()).
+        expect(result.messageId, 'ChatMessage.create returned no id').not.toBeNull();
+        await snap(page, 'right-stuff-chat', { selector: await popOutChatMessage(page, result.messageId ?? '') });
 
         // Card captured; remove it so it doesn't leak into the next
         // serial test's chat log.
