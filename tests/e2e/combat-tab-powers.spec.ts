@@ -127,8 +127,12 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
         expect(layout.prWidth).toBeGreaterThan(0);
         await clearScreenOverlays(page, sheetId);
         await row.hover();
-        await snap(page, 'combat-tab-psychic-row-hover', { selector: `#${sheetId} [data-item-type="psychicPower"]` });
+        // keepTooltip leaves the pointer on the row: snap() otherwise moves it to (0, 0) (0b2561d57), which
+        // un-hovers the row, so the capture lost the hover it exists to show and the hidden button took no click.
+        await snap(page, 'combat-tab-psychic-row-hover', { selector: `#${sheetId} [data-item-type="psychicPower"]`, keepTooltip: true });
 
+        // The row is still hovered after the capture, so its revealed invoke button takes the click.
+        await expect.poll(opacity).toBe('1');
         await invoke.click();
         const dialog = page.locator('.unified-roll-dialog');
         await expect(dialog).toBeVisible();
