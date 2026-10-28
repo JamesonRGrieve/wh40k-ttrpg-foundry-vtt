@@ -262,6 +262,10 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
         await expect.poll(async () => readActorSystem(page, actorId, 'corruption')).toBe(Number(corruption));
         // content#30: the card shows the power's printed text, not a leftover "100xp" cost line.
         expect(card.content).not.toMatch(BARE_XP_LINE);
+        // The power's text shows whole: its Effect block no longer scrolls inside a 150px box (#699 audit).
+        const effect = page.locator(`#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-hook="psychic-card-effect"]`);
+        await expect(effect).toHaveCount(1);
+        expect(await effect.evaluate((block) => block.scrollHeight - block.clientHeight)).toBeLessThanOrEqual(1);
         await snapMessage(page, 'malefic-cast-card-corruption', card.id);
         // In the 300px chat log the controls wrap instead of clipping the last button.
         const controls = page.locator(`#sidebar .chat-log .message[data-message-id="${card.id}"] [data-wh40k-hook="psychic-card-controls"]`);

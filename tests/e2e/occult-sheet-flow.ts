@@ -200,11 +200,28 @@ export async function waitForMessage(page: Page, before: readonly string[], mark
     return holder.found;
 }
 
+/** How many pixels of a chat popout's card are scrolled out of its window (0 when it shows whole). */
+async function popoutOverflow(page: Page, popoutId: string): Promise<number> {
+    return page.evaluate((id) => {
+        const popout = document.getElementById(id);
+        const content = popout?.querySelector<HTMLElement>('.window-content');
+        if (popout === null || content === undefined || content === null) throw new Error(`popout ${id} has no content`);
+        // The window clips as well as scrolls: measure every child's foot against the window's own.
+        const foot = Math.max(...Array.from(content.querySelectorAll<HTMLElement>('*'), (el) => el.getBoundingClientRect().bottom));
+        const clipped = Math.ceil(foot - Math.min(popout.getBoundingClientRect().bottom, content.getBoundingClientRect().bottom));
+        return Math.max(0, clipped, content.scrollHeight - content.clientHeight);
+    }, popoutId);
+}
+
 /**
  * Snap one message by id. The card is first shown in the sidebar chat log (where
  * the player sees it), then framed whole in Foundry's own chat popout — the window
  * the log's "Pop Out" entry opens — because a tall card's foot (a ritual's outcome
  * block) sits under the sidebar's message editor and would be cut off in the log.
+ *
+ * The popout is clamped to the viewport, so a card taller than the window scrolled
+ * inside it and the capture cut its text mid-sentence (the #699 audit). The viewport
+ * grows until the whole card fits, for the capture only.
  */
 export async function snapMessage(page: Page, label: string, messageId: string): Promise<void> {
     await clearScreenOverlays(page);
@@ -213,19 +230,43 @@ export async function snapMessage(page: Page, label: string, messageId: string):
     await expect(page.locator(logSelector)).toBeVisible();
     const popoutId = await page.evaluate(async (id) => {
         interface PopoutGlobals {
-            CONFIG: { ChatMessage: { popoutClass: new (options: { message: object }) => { id: string; render: (o: { force: boolean }) => Promise<object> } } };
+            CONFIG: {
+                ChatMessage: {
+                    popoutClass: new (options: { message: object; position: { left: number; top: number } }) => {
+                        id: string;
+                        render: (o: { force: boolean }) => Promise<object>;
+                    };
+                };
+            };
             game: { messages: { get: (i: string) => object | undefined } };
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (CONFIG, game) have no repo types
         const w = globalThis as unknown as PopoutGlobals;
         const message = w.game.messages.get(id);
         if (message === undefined) throw new Error(`message ${id} missing`);
-        const popout = new w.CONFIG.ChatMessage.popoutClass({ message });
+        const popout = new w.CONFIG.ChatMessage.popoutClass({ message, position: { left: 420, top: 10 } });
         await popout.render({ force: true });
         return popout.id;
     }, messageId);
     await expect(page.locator(`#${popoutId}`)).toBeVisible();
-    expect(await snap(page, label, { selector: `#${popoutId}` }), `snap ${label}`).not.toBeNull();
+    const viewport = page.viewportSize();
+    const hidden = await popoutOverflow(page, popoutId);
+    if (hidden > 0 && viewport !== null) {
+        await page.setViewportSize({ width: viewport.width, height: viewport.height + hidden + 40 });
+        await page.evaluate(async (id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (foundry.applications.instances) have no repo types
+            const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { setPosition: (p: object) => void }> } } }).foundry
+                .applications.instances;
+            apps.get(id)?.setPosition({ top: 10, height: 'auto' });
+            await globalThis.wh40kE2E.settle(300);
+        }, popoutId);
+    }
+    try {
+        expect(await popoutOverflow(page, popoutId), `${label}: the card scrolls inside its popout, so the capture cuts it off`).toBe(0);
+        expect(await snap(page, label, { selector: `#${popoutId}` }), `snap ${label}`).not.toBeNull();
+    } finally {
+        if (hidden > 0 && viewport !== null) await page.setViewportSize(viewport);
+    }
     await page.evaluate(async (id) => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (foundry.applications.instances) have no repo types
         const apps = (globalThis as unknown as { foundry: { applications: { instances: Map<string, { close: () => Promise<object> }> } } }).foundry.applications

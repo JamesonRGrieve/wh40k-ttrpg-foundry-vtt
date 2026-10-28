@@ -70,11 +70,12 @@
                 </div>
             {{/with}}
 
-            {{!-- Collapsible Effect --}}
+            {{!-- Collapsible Effect: the power's whole text, uncapped. A 150px cap scrolled it inside the card,
+                  so the card read cut off mid-sentence (#699 audit); the Effect button already collapses it. --}}
             {{#if rollData.success}}
                 <div id="{{@root.id}}" class="tw-mt-2" hidden>
                     <div class="tw-relative tw-h-3 tw-my-2.5 tw-opacity-50 [&::before]:tw-content-['⬥'] [&::before]:tw-absolute [&::before]:tw-left-1/2 [&::before]:tw-top-1/2 [&::before]:-tw-translate-x-1/2 [&::before]:-tw-translate-y-1/2 [&::before]:tw-text-[color:var(--wh40k-card-gold)] [&::before]:tw-text-[10px] [&::after]:tw-content-[''] [&::after]:tw-absolute [&::after]:tw-top-1/2 [&::after]:tw-left-[10%] [&::after]:tw-right-[10%] [&::after]:tw-h-px [&::after]:tw-bg-[linear-gradient(90deg,transparent_0%,var(--wh40k-card-gold)_30%,transparent_48%,transparent_52%,var(--wh40k-card-gold)_70%,transparent_100%)]"></div>
-                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-gold tw-rounded-r tw-text-[0.85rem] tw-leading-relaxed tw-max-h-[150px] tw-overflow-y-auto">{{{psychicEffect}}}</div>
+                    <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-l-gold tw-rounded-r tw-text-[0.85rem] tw-leading-relaxed" data-wh40k-hook="psychic-card-effect">{{{psychicEffect}}}</div>
                 </div>
             {{/if}}
 {{/systems/wh40k-rpg/templates/chat/partial/roll-card-shell.hbs}}

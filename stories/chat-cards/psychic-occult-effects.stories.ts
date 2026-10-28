@@ -39,6 +39,8 @@ interface PsychicCardArgs {
     phenomenaNegated: boolean;
     /** Offer the Spend-Fate re-roll (a third control on a successful cast). */
     withReroll?: boolean;
+    /** The power's printed text, shown in the card's Effect block. */
+    psychicEffect?: string;
 }
 
 /** The effect rows the cast pipeline adds for these args. */
@@ -76,7 +78,7 @@ function renderPsychicCard(args: PsychicCardArgs): HTMLElement {
             dof: args.success ? 0 : 2,
             roll: { total: args.success ? 11 : 66 },
         },
-        psychicEffect: '',
+        psychicEffect: args.psychicEffect ?? '',
     };
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg', 'theme-dark');
@@ -131,6 +133,24 @@ export const ControlsWrapAtChatWidth: Story = {
         const right = row?.getBoundingClientRect().right ?? 0;
         const overflowing = [...(row?.querySelectorAll('button') ?? [])].filter((button) => button.getBoundingClientRect().right > right + 1);
         await expect(overflowing).toEqual([]);
+    },
+};
+
+/** A long power text shows whole: the Effect block is not capped into an inner scroll (#699 audit). */
+export const LongEffectUncapped: Story = {
+    args: {
+        psychicEffect: `<p>${'The psyker draws on the warp and the power takes hold of everything around him. '.repeat(8)}The working ends.</p>`,
+    },
+    render: (args) => {
+        const card = renderPsychicCard(args);
+        card.style.maxWidth = '300px';
+        return card;
+    },
+    play: async ({ canvasElement }) => {
+        const block = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="psychic-card-effect"]');
+        await expect(block).not.toBeNull();
+        await expect(block?.className).not.toMatch(/tw-max-h-|tw-overflow-y-auto/);
+        await expect(block?.textContent).toContain('The working ends.');
     },
 };
 
