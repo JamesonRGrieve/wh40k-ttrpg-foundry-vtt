@@ -554,8 +554,12 @@ export function mockWeaponSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 description: { value: '<p>Holy wrath delivered at range.</p>' },
                 notes: 'A relic maintained by the chapter artificers.',
             },
+            // The edit fields read the stored source: the same boltgun the header tiles show.
             source: {
-                damage: { type: 'explosive' },
+                damage: { type: 'explosive', formula: '1d10', bonus: 5, penetration: 4 },
+                attack: { range: { value: 100, special: '' }, rateOfFire: { single: true, semi: 3, full: 0 } },
+                clip: { value: 18, max: 24 },
+                weight: 8.5,
                 class: 'basic',
                 type: 'bolt',
                 reload: 'full',
