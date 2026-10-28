@@ -114,6 +114,14 @@ test.describe.serial('Fate breakdown (Tier B, #689)', () => {
             { name: 'Fated for Greatness (Chosen by Destiny)', value: 1 },
         ]);
 
+        // Every sidebar origin field keeps room for its text: in the narrow
+        // sidebar it wraps under its label instead of clipping ("Home Wor").
+        const fieldWidths = await page
+            .locator(`#${sheetId} [data-sidebar-field] input[type="text"]`)
+            .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
+        expect(fieldWidths.length).toBeGreaterThan(0);
+        for (const width of fieldWidths) expect(width).toBeGreaterThanOrEqual(112);
+
         await clearScreenOverlays(page, sheetId);
         await label.hover();
         const tooltip = page.locator('#tooltip');
