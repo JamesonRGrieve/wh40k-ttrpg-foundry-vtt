@@ -32,7 +32,7 @@
                 <div class="tw-flex tw-flex-col tw-gap-1">
                     <label class="tw-text-xs tw-font-semibold tw-uppercase tw-text-[var(--wh40k-text-muted)]">{{localize "WH40K.Availability.Label"}}</label>
                     <select name="system.availability" class="tw-px-2 tw-py-1 tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-sm tw-bg-[var(--wh40k-bg-primary)]">
-                        {{selectOptions dh.availabilities selected=source.availability labelAttr="label" blank=""}}
+                        {{selectOptions dh.availabilities selected=source.availability labelAttr="label" localize=true blank=""}}
                     </select>
                 </div>
 

@@ -152,6 +152,7 @@ test.describe.serial('locked compendium sheets (#628, #629, Tier B)', () => {
                 };
             });
             expect(shown.text, `${name} names no option`).not.toBe('');
+            expect(shown.text, `${name} shows a raw langpack key`).not.toMatch(/^WH40K\./u);
             expect(shown.content, `${name} has no room for its value`).toBeGreaterThanOrEqual(shown.fontSize);
         }
         await snap(page, 'locked-weapon-details-expanded', { selector: `#${appId}`, closeWindows: true, keepWindow: appId });
