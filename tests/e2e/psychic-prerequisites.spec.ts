@@ -155,23 +155,58 @@ async function rawKeyChips(page: Page, appId: string): Promise<string[] | string
     }, appId);
 }
 
+/** A DH2 character who can buy Smite: the Psyker elite advance, Psy Rating 1 and XP to spend. */
+async function createDh2Psyker(page: Page): Promise<string | null> {
+    return page.evaluate(async () => {
+        interface PackLike {
+            getIndex: () => Promise<Array<{ _id: string; name: string }>>;
+            getDocument: (id: string) => Promise<{ uuid: string; toObject: () => object } | null>;
+        }
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
+        const g = globalThis as unknown as {
+            Actor: { create: (data: object) => Promise<{ id: string } | null> };
+            game: { packs: { get: (id: string) => PackLike | undefined } };
+        };
+        const pack = g.game.packs.get('wh40k-rpg.dh2-core-origins-elite-advances');
+        const entry = (await pack?.getIndex())?.find((e) => e.name === 'Psyker');
+        const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
+        if (doc === null || doc === undefined) return null;
+        const actor = await g.Actor.create({
+            name: 'Prerequisite probe (dh2 psyker)',
+            type: 'dh2-character',
+            system: { gameSystem: 'dh2', psy: { rating: 1 }, experience: { total: 5000 } },
+            items: [{ ...doc.toObject(), _stats: { compendiumSource: doc.uuid } }],
+        });
+        return actor?.id ?? null;
+    });
+}
+
 interface ToggleRead {
     pressed: string | null;
     iconHidden: boolean;
     checked: boolean;
+    /** Power rows listed, and those carrying a lock (blocked). */
+    rows: number;
+    blockedRows: number;
 }
 
-/** The "Available only" toggle's state (#696), before and after one click. */
+/** The "Available only" toggle's state (#696) and the rows it lists, before and after one click. */
 async function availableOnlyClick(page: Page, appId: string): Promise<{ before: ToggleRead; after: ToggleRead } | string> {
     return page.evaluate(async (id: string) => {
         const read = (): ToggleRead | null => {
-            const button = document.getElementById(id)?.querySelector<HTMLElement>('[data-action="toggleAvailableOnly"]') ?? null;
+            const dialog = document.getElementById(id);
+            const button = dialog?.querySelector<HTMLElement>('[data-action="toggleAvailableOnly"]') ?? null;
             const icon = button?.querySelector('[data-toggle-icon]') ?? null;
-            if (button === null || icon === null) return null;
+            if (dialog === null || button === null || icon === null) return null;
+            const rows = Array.from(dialog.querySelectorAll<HTMLElement>('[data-action="openCompendiumItem"]'), (link) =>
+                link.closest<HTMLElement>('.tw-rounded-md'),
+            );
             return {
                 pressed: button.getAttribute('aria-pressed'),
                 iconHidden: icon.getAttribute('aria-hidden') === 'true',
                 checked: icon.classList.contains('fa-check-square'),
+                rows: rows.length,
+                blockedRows: rows.filter((row) => row?.querySelector('.fa-lock') != null).length,
             };
         };
         const before = read();
@@ -310,23 +345,8 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                     // Every chip is worded from the langpack: no raw key ("aligned nurgle", "infamy 70+").
                     const raw = await rawKeyChips(page, field.appId);
                     record('gate-chips-langpack-labels', Array.isArray(raw) && raw.length === 0, JSON.stringify(raw));
-                    // #696: "Available only" is one toggle whose state reads as aria-pressed.
-                    const toggle = await availableOnlyClick(page, field.appId);
-                    record(
-                        'available-only-toggle',
-                        typeof toggle !== 'string' &&
-                            toggle.before.pressed === 'false' &&
-                            !toggle.before.checked &&
-                            toggle.after.pressed === 'true' &&
-                            toggle.after.checked &&
-                            toggle.before.iconHidden &&
-                            toggle.after.iconHidden,
-                        JSON.stringify(toggle),
-                    );
-                    await snap(page, 'psychic-prerequisites-available-only', { selector: `#${field.appId}`, closeWindows: true, keepWindow: field.appId });
                 } else {
                     record('gated-names-not-truncated', false, field);
-                    record('available-only-toggle', false, field);
                     record('gate-chips-full-contrast', false, field);
                     record('gate-chips-langpack-labels', false, field);
                 }
@@ -343,6 +363,43 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                         reads[3]?.includes('Corruption 30+') === false,
                     JSON.stringify({ field, wind, fieldMet, windMet }),
                 );
+            }
+
+            // #696: "Available only" is one toggle whose state reads as aria-pressed, and on a
+            // psyker who can buy Smite it keeps Smite's row and hides every blocked one.
+            const psykerId = await createDh2Psyker(page);
+            if (psykerId === null) {
+                record('available-only-toggle', false, 'psyker did not create');
+            } else {
+                actors.push(psykerId);
+                const smiteRow = await powerUnmet(page, psykerId, willpower(40), 'Smite', false);
+                if (typeof smiteRow === 'string') {
+                    record('available-only-toggle', false, smiteRow);
+                } else {
+                    const toggle = await availableOnlyClick(page, smiteRow.appId);
+                    const kept = await scrollToRow(page, smiteRow.appId, 'Smite');
+                    record(
+                        'available-only-toggle',
+                        smiteRow.unmet.length === 0 &&
+                            typeof toggle !== 'string' &&
+                            toggle.before.pressed === 'false' &&
+                            !toggle.before.checked &&
+                            toggle.after.pressed === 'true' &&
+                            toggle.after.checked &&
+                            toggle.before.iconHidden &&
+                            toggle.after.iconHidden &&
+                            toggle.after.rows > 0 &&
+                            toggle.after.blockedRows === 0 &&
+                            toggle.before.blockedRows > 0 &&
+                            kept,
+                        JSON.stringify({ smiteRow, toggle, kept }),
+                    );
+                    await snap(page, 'psychic-prerequisites-available-only', {
+                        selector: `#${smiteRow.appId}`,
+                        closeWindows: true,
+                        keepWindow: smiteRow.appId,
+                    });
+                }
             }
 
             const sheet = await sheetRoundTrip(page);
