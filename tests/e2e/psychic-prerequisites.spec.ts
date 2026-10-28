@@ -39,10 +39,11 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'gated-names-not-truncated',
     'available-only-toggle',
     'gate-chips-full-contrast',
+    'gate-chips-langpack-labels',
 ] as const;
 type FlowName = (typeof PSYCHIC_PREREQUISITE_FLOWS)[number];
 
-const SMITE_GATE = 'willpower 40+';
+const SMITE_GATE = 'Willpower 40+';
 const SHEET_POWER = 'e2e-673 psychic power';
 const TYPED = 'Willpower 45, Psyniscience';
 
@@ -140,6 +141,17 @@ async function fadedGateChips(page: Page, appId: string): Promise<{ chips: numbe
             if (opacity < 1) faded.push(`${chip.textContent.trim()} @ ${opacity.toFixed(2)}`);
         }
         return { chips: chips.length, faded };
+    }, appId);
+}
+
+/** The gate chips in the dialog that print a raw key instead of a langpack label (#699 audit). */
+async function rawKeyChips(page: Page, appId: string): Promise<string[] | string> {
+    return page.evaluate((id: string) => {
+        const dialog = document.getElementById(id);
+        if (dialog === null) return 'dialog not open';
+        const chips = Array.from(dialog.querySelectorAll<HTMLElement>('.fa-lock ~ span'), (chip) => chip.textContent.trim());
+        // A lowercase word first ("willpower 40+", "aligned nurgle") is a key, not a label.
+        return chips.filter((chip) => /^[a-z]/.test(chip));
     }, appId);
 }
 
@@ -295,6 +307,9 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                         typeof chipRead !== 'string' && chipRead.chips > 0 && chipRead.faded.length === 0,
                         JSON.stringify(chipRead),
                     );
+                    // Every chip is worded from the langpack: no raw key ("aligned nurgle", "infamy 70+").
+                    const raw = await rawKeyChips(page, field.appId);
+                    record('gate-chips-langpack-labels', Array.isArray(raw) && raw.length === 0, JSON.stringify(raw));
                     // #696: "Available only" is one toggle whose state reads as aria-pressed.
                     const toggle = await availableOnlyClick(page, field.appId);
                     record(
@@ -313,6 +328,7 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                     record('gated-names-not-truncated', false, field);
                     record('available-only-toggle', false, field);
                     record('gate-chips-full-contrast', false, field);
+                    record('gate-chips-langpack-labels', false, field);
                 }
                 const wind = await powerUnmet(page, bcId, unaligned, 'Wind of Chaos', false);
                 const nurgle = { 'system.chaosAlignment': 'nurgle', 'system.corruption': 30 };
@@ -321,10 +337,10 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
                 const reads = [field, wind, fieldMet, windMet].map((read) => (typeof read === 'string' ? null : read.unmet));
                 record(
                     'bc-alignment-and-corruption-gate',
-                    reads[0]?.includes('aligned nurgle') === true &&
-                        reads[1]?.includes('corruption 30+') === true &&
-                        reads[2]?.includes('aligned nurgle') === false &&
-                        reads[3]?.includes('corruption 30+') === false,
+                    reads[0]?.includes('Aligned to Nurgle') === true &&
+                        reads[1]?.includes('Corruption 30+') === true &&
+                        reads[2]?.includes('Aligned to Nurgle') === false &&
+                        reads[3]?.includes('Corruption 30+') === false,
                     JSON.stringify({ field, wind, fieldMet, windMet }),
                 );
             }

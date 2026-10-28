@@ -1,5 +1,37 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { type PrerequisiteActorView, type StructuredPrerequisites, toStructuredPrerequisites, unmetPrerequisites } from './prerequisites.ts';
+import { CHARACTERISTICS } from '../data/shared/characteristics.ts';
+import {
+    type PrerequisiteActorView,
+    prerequisiteLabels,
+    type StructuredPrerequisites,
+    toStructuredPrerequisites,
+    unmetPrerequisites as unmetWith,
+} from './prerequisites.ts';
+
+/** The langpack: nested groups whose leaves are strings. */
+interface LangTree {
+    [key: string]: string | LangTree;
+}
+
+const LANG = JSON.parse(readFileSync(resolve(__dirname, '../../lang/en.json'), 'utf8')) as LangTree;
+
+/** `game.i18n.format` in English: a langpack key's text with its `{name}` substitutions. */
+function format(key: string, data: Record<string, string | number> = {}): string {
+    let node: string | LangTree = LANG;
+    for (const part of key.split('.')) {
+        if (typeof node === 'string') return key;
+        const next: string | LangTree | undefined = Object.entries(node).find(([name]) => name === part)?.[1];
+        if (next === undefined) return key;
+        node = next;
+    }
+    return typeof node === 'string' ? node.replace(/\{(\w+)\}/g, (_match: string, name: string) => String(data[name] ?? '')) : key;
+}
+
+/** The English langpack wording, as the advancement dialog words it. */
+const LABELS = prerequisiteLabels(format, (key) => CHARACTERISTICS.find((c) => c.key === key)?.label ?? key);
+const unmetPrerequisites = (prereqs: StructuredPrerequisites, actor: PrerequisiteActorView): string[] => unmetWith(prereqs, actor, LABELS);
 
 const NONE: StructuredPrerequisites = { text: '', characteristics: {}, skills: [], talents: [], talentsAny: [], alignment: '', thresholds: {} };
 
@@ -62,7 +94,7 @@ describe('unmetPrerequisites (#673, #675)', () => {
 
     it('names an unmet characteristic minimum, as DH2 Smite needs Willpower 40', () => {
         const prereqs = { ...NONE, characteristics: { willpower: 40 } };
-        expect(unmetPrerequisites(prereqs, actor({ characteristics: { willpower: 25 } }))).toEqual(['willpower 40+']);
+        expect(unmetPrerequisites(prereqs, actor({ characteristics: { willpower: 25 } }))).toEqual(['Willpower 40+']);
     });
 
     it('reads a skill suffix as the training level: none Known, +10 Trained, +20 Experienced', () => {
@@ -88,13 +120,20 @@ describe('unmetPrerequisites (#673, #675)', () => {
     });
 
     it('requires the printed Chaos alignment, as BC "Aligned Nurgle" powers do', () => {
-        expect(unmetPrerequisites({ ...NONE, alignment: 'tzeentch' }, actor())).toEqual(['aligned tzeentch']);
-        expect(unmetPrerequisites({ ...NONE, alignment: 'nurgle' }, actor({ alignment: 'unaligned' }))).toEqual(['aligned nurgle']);
+        expect(unmetPrerequisites({ ...NONE, alignment: 'tzeentch' }, actor())).toEqual(['Aligned to Tzeentch']);
+        expect(unmetPrerequisites({ ...NONE, alignment: 'nurgle' }, actor({ alignment: 'unaligned' }))).toEqual(['Aligned to Nurgle']);
     });
 
     it('names each unmet Corruption, Infamy, Insanity or rank threshold', () => {
         const prereqs = { ...NONE, thresholds: { corruption: 40, infamy: 40, insanity: 5, rank: 5 } };
-        expect(unmetPrerequisites(prereqs, actor())).toEqual(['corruption 40+', 'infamy 40+', 'insanity 5+', 'rank 5+']);
+        expect(unmetPrerequisites(prereqs, actor())).toEqual(['Corruption 40+', 'Infamy 40+', 'Insanity 5+', 'Rank 5+']);
+    });
+
+    it('words every chip from the langpack, never a raw key (#699 audit)', () => {
+        const prereqs = { ...NONE, characteristics: { weaponSkill: 45 }, alignment: 'slaanesh' as const, thresholds: { infamy: 70 } };
+        const unmet = unmetPrerequisites(prereqs, actor());
+        expect(unmet).toEqual(['Weapon Skill 45+', 'Aligned to Slaanesh', 'Infamy 70+']);
+        for (const chip of unmet) expect(chip).not.toMatch(/weaponSkill|aligned |slaanesh|infamy/);
     });
 
     it('lets text alone gate nothing', () => {

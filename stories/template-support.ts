@@ -71,6 +71,15 @@ function applySubstitutions(value: string, data: HbsRecord): string {
     });
 }
 
+/**
+ * `game.i18n.format` in English, for stories and tests that word a string the way
+ * the live system does; an unknown key comes back as itself.
+ */
+export function storyFormat(key: string, data: Readonly<Record<string, string | number>> = {}): string {
+    const resolved = lookupLocalization(key, enLang);
+    return resolved === null ? key : applySubstitutions(resolved, { ...data });
+}
+
 /** Handlebars' own truthiness: everything but undefined, null, false, 0 and ''. */
 function isTruthy(value: HbsValue): boolean {
     return value !== undefined && value !== null && value !== false && value !== 0 && value !== '';

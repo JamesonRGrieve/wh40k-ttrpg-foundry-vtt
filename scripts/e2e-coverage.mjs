@@ -702,6 +702,7 @@ const PSYCHIC_PREREQUISITE_FLOWS = [
     'gated-names-not-truncated',
     'available-only-toggle',
     'gate-chips-full-contrast',
+    'gate-chips-langpack-labels',
 ];
 recordDimension('psychic-prerequisites.flow', covered['psychic-prerequisites.flow'], PSYCHIC_PREREQUISITE_FLOWS);
 

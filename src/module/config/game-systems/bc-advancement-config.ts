@@ -243,5 +243,10 @@ export function isChaosAlignment(value: string): value is ChaosAlignment {
  * A value that is not an alignment id comes back unchanged, so it shows rather than vanishing.
  */
 export function chaosAlignmentLabelKey(alignment: string): string {
-    return isChaosAlignment(alignment) ? CHAOS_ALIGNMENT_LABEL_KEYS[alignment] : alignment;
+    return isChaosAlignment(alignment) ? alignmentLabelKey(alignment) : alignment;
+}
+
+/** The langpack key of a known alignment's display label. */
+export function alignmentLabelKey(alignment: ChaosAlignment): I18nKey {
+    return CHAOS_ALIGNMENT_LABEL_KEYS[alignment];
 }

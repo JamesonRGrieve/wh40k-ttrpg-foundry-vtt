@@ -11,8 +11,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/dialogs/advancement-dialog.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { storyFormat } from '../../../../stories/template-support';
 import { renderSheet, clickAction, toggleControls } from '../../../../stories/test-helpers';
-import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
+import { CHARACTERISTICS as CHARACTERISTIC_DEFS } from '../../data/shared/characteristics.ts';
+import { type PrerequisiteActorView, prerequisiteLabels, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
 import { psychicPowerCharge, psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { type SupportedLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
 
@@ -276,6 +278,9 @@ export const PsychicPrintedXpDH2 = printedXpStory('dh2', { Precognition: 400, Ca
 // psyker who falls short sees the power blocked, its row naming the unmet gates the
 // shared check reports.
 
+/** The chips worded in English from the langpack, as the dialog words them live. */
+const STORY_PREREQUISITE_LABELS = prerequisiteLabels(storyFormat, (key) => CHARACTERISTIC_DEFS.find((c) => c.key === key)?.label ?? key);
+
 /** A psyker's characteristics, alignment and thresholds, with nothing else owned. */
 function psyker(view: Partial<PrerequisiteActorView>): PrerequisiteActorView {
     return { characteristics: {}, skillRanks: {}, talents: [], alignment: 'unaligned', thresholds: {}, ...view };
@@ -294,7 +299,7 @@ interface GatedPower {
 
 /** The psychic tab with one power, gated through the real prerequisite check. */
 function gatedPanel({ power, discipline, prerequisites, actor }: GatedPower): PsychicPanel {
-    const unmet = unmetPrerequisites(toStructuredPrerequisites(prerequisites), actor);
+    const unmet = unmetPrerequisites(toStructuredPrerequisites(prerequisites), actor, STORY_PREREQUISITE_LABELS);
     const row: PsychicRow = {
         name: power,
         displayName: power,
@@ -348,7 +353,7 @@ const SMITE = { power: 'Smite', discipline: 'Biomancy', line: 'dh2', prerequisit
 export const PrerequisiteBlocksSmite = gatedStory('Smite at Willpower 25', {
     ...SMITE,
     actor: psyker({ characteristics: { willpower: 25 } }),
-    unmet: ['willpower 40+'],
+    unmet: ['Willpower 40+'],
 });
 export const PrerequisiteMetSmite = gatedStory('Smite at Willpower 40', { ...SMITE, actor: psyker({ characteristics: { willpower: 40 } }), unmet: [] });
 
@@ -361,7 +366,7 @@ const FIELD_OF_PESTILENCE = {
 export const PrerequisiteBlocksUnaligned = gatedStory('Field of Pestilence, unaligned', {
     ...FIELD_OF_PESTILENCE,
     actor: psyker({ alignment: 'unaligned' }),
-    unmet: ['aligned nurgle'],
+    unmet: ['Aligned to Nurgle'],
 });
 export const PrerequisiteMetAligned = gatedStory('Field of Pestilence, aligned to Nurgle', {
     ...FIELD_OF_PESTILENCE,
@@ -382,7 +387,7 @@ export const PrerequisiteManyGates: Story = {
             thresholds: { infamy: 70 },
         },
         actor: psyker({}),
-        unmet: ['Forbidden Lore (The Warp) +30', 'Scholastic Lore (Occult) +30', 'Child of the Warp', 'infamy 70+'],
+        unmet: ['Forbidden Lore (The Warp) +30', 'Scholastic Lore (Occult) +30', 'Child of the Warp', 'Infamy 70+'],
     }),
     play: async ({ canvasElement }) => {
         const lock = canvasElement.querySelector<HTMLElement>('.fa-lock')?.parentElement ?? null;
@@ -402,7 +407,7 @@ const WIND_OF_CHAOS: GatedPower = {
     line: 'bc',
     prerequisites: { text: 'Corruption 30+', thresholds: { corruption: 30 } },
     actor: psyker({ thresholds: { corruption: 10 } }),
-    unmet: ['corruption 30+'],
+    unmet: ['Corruption 30+'],
 };
 export const PrerequisiteBlocksCorruption = gatedStory('Wind of Chaos at Corruption 10', WIND_OF_CHAOS);
 

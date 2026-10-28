@@ -12,9 +12,17 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import { t as localizeKey } from '../../i18n/t.ts';
 import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from '../../rules/elite-advances.ts';
-import { type PrerequisiteActorView, toStructuredPrerequisites, unmetPrerequisites } from '../../rules/prerequisites.ts';
+import {
+    type PrerequisiteActorView,
+    type PrerequisiteLabels,
+    prerequisiteLabels,
+    toStructuredPrerequisites,
+    unmetPrerequisites,
+} from '../../rules/prerequisites.ts';
 import { grantsPsychicPowers, psykerUnlockHint } from '../../rules/psyker-unlock.ts';
 import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
@@ -35,6 +43,9 @@ const { ApplicationV2, HandlebarsApplicationMixin } =
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract DialogV2
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
+
+/** The langpack wording of unmet prerequisite chips (read when rendered, so the language is loaded). */
+const PREREQUISITE_LABELS = (): PrerequisiteLabels => prerequisiteLabels(localizeKey, characteristicLabel);
 
 interface AdvancementAdvance {
     name: string;
@@ -1019,7 +1030,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites come raw from a compendium index, narrowed by toStructuredPrerequisites
     #checkPrerequisites(raw: unknown): { valid: boolean; unmet: string[] } {
-        const unmet = unmetPrerequisites(toStructuredPrerequisites(raw), this.#prerequisiteView());
+        const unmet = unmetPrerequisites(toStructuredPrerequisites(raw), this.#prerequisiteView(), PREREQUISITE_LABELS());
         return { valid: unmet.length === 0, unmet };
     }
 
@@ -1145,12 +1156,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 if (!ownedPowers.has(reqName.toLowerCase())) missingPrereqNames.push(reqName);
             }
             // The printed characteristic / skill / talent gates (#673).
-            const unmetPrinted = unmetPrerequisites(toStructuredPrerequisites(entrySys.prerequisites), prerequisiteView);
+            const unmetPrinted = unmetPrerequisites(toStructuredPrerequisites(entrySys.prerequisites), prerequisiteView, PREREQUISITE_LABELS());
             const prereqMissing = missingPrereqNames.length > 0 || unmetPrinted.length > 0;
             const blocked = prGate || prereqMissing;
 
             const prereqDisplay: string[] = [];
-            if (prGate) prereqDisplay.push(`Psy Rating ${prCost}`);
+            if (prGate) prereqDisplay.push(localizeKey('WH40K.Advancement.Prereq.Chip.PsyRating', { rating: prCost }));
             for (const n of missingPrereqNames) prereqDisplay.push(n);
             prereqDisplay.push(...unmetPrinted);
 
@@ -1930,12 +1941,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
+        const displayName = localizeKey('WH40K.Advancement.Prereq.Chip.PsyRating', { rating: nextRating });
         await this.#confirmAndSpend({
             cost,
-            displayName: `Psy Rating ${nextRating}`,
+            displayName,
             apply: async () => {
                 await this.actor.update({ 'system.psy.rating': nextRating });
-                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: `Psy Rating ${nextRating}`, cost: String(cost) }));
+                ui.notifications.info(game.i18n.format('WH40K.Advancement.Purchased', { name: displayName, cost: String(cost) }));
             },
         });
     }

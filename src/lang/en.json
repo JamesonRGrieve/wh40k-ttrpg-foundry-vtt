@@ -2102,7 +2102,19 @@
                 "Characteristic": "Requires {char} {required}+ (current: {current})",
                 "SkillMissing": "Requires {skill} skill",
                 "SkillLevel": "Requires {skill} at {level}",
-                "TalentMissing": "Requires {talent} talent"
+                "TalentMissing": "Requires {talent} talent",
+                "Chip": {
+                    "Minimum": "{label} {min}+",
+                    "AnySpecialisation": "{talent} (any)",
+                    "Aligned": "Aligned to {alignment}",
+                    "PsyRating": "Psy Rating {rating}",
+                    "Threshold": {
+                        "Corruption": "Corruption",
+                        "Infamy": "Infamy",
+                        "Insanity": "Insanity",
+                        "Rank": "Rank"
+                    }
+                }
             },
             "PrereqsNotMetLabel": "Prerequisites not met:",
             "NoDiscipline": "No discipline",

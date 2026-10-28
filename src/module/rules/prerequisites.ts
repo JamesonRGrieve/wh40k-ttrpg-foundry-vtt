@@ -17,13 +17,56 @@
  * skill, talent or alignment.
  */
 
+import { alignmentLabelKey } from '../config/game-systems/bc-advancement-config.ts';
+import type { I18nKey } from '../types/i18n-keys';
+
 /** The Chaos alignments a prerequisite can require; '' requires none. */
 export const PREREQUISITE_ALIGNMENTS = ['', 'khorne', 'nurgle', 'slaanesh', 'tzeentch', 'unaligned'] as const;
 type PrerequisiteAlignment = (typeof PREREQUISITE_ALIGNMENTS)[number];
 
 /** The actor stats a threshold can name. */
 const PREREQUISITE_THRESHOLDS = ['corruption', 'infamy', 'insanity', 'rank'] as const;
-type PrerequisiteThreshold = (typeof PREREQUISITE_THRESHOLDS)[number];
+export type PrerequisiteThreshold = (typeof PREREQUISITE_THRESHOLDS)[number];
+
+/**
+ * How an unmet prerequisite is worded. The caller supplies the langpack labels, so
+ * this module stays free of `game` and the list never shows a raw key ("willpower 40+").
+ */
+export interface PrerequisiteLabels {
+    /** A characteristic minimum, from its key ("Willpower 40+"). */
+    characteristic: (key: string, min: number) => string;
+    /** A talent of which any specialisation will do ("Hatred (any)"). */
+    anySpecialisation: (talent: string) => string;
+    /** A required Chaos alignment, from its id ("Aligned to Nurgle"). */
+    alignment: (alignment: Exclude<PrerequisiteAlignment, ''>) => string;
+    /** An actor-stat minimum ("Corruption 30+"). */
+    threshold: (stat: PrerequisiteThreshold, min: number) => string;
+}
+
+/** A langpack formatter: a key and its substitutions → the localized string (`t`, or a story's). */
+export type PrerequisiteFormat = (key: I18nKey, data?: Record<string, string | number>) => string;
+
+const THRESHOLD_LABEL_KEYS: Readonly<Record<PrerequisiteThreshold, I18nKey>> = {
+    corruption: 'WH40K.Advancement.Prereq.Chip.Threshold.Corruption',
+    infamy: 'WH40K.Advancement.Prereq.Chip.Threshold.Infamy',
+    insanity: 'WH40K.Advancement.Prereq.Chip.Threshold.Insanity',
+    rank: 'WH40K.Advancement.Prereq.Chip.Threshold.Rank',
+};
+
+/**
+ * The langpack wording of unmet prerequisites.
+ * @param format          Resolves a langpack key with its substitutions.
+ * @param characteristic  A characteristic key's localized label ("willpower" → "Willpower").
+ */
+export function prerequisiteLabels(format: PrerequisiteFormat, characteristic: (key: string) => string): PrerequisiteLabels {
+    const minimum = (label: string, min: number): string => format('WH40K.Advancement.Prereq.Chip.Minimum', { label, min });
+    return {
+        characteristic: (key, min) => minimum(characteristic(key), min),
+        anySpecialisation: (talent) => format('WH40K.Advancement.Prereq.Chip.AnySpecialisation', { talent }),
+        alignment: (alignment) => format('WH40K.Advancement.Prereq.Chip.Aligned', { alignment: format(alignmentLabelKey(alignment)) }),
+        threshold: (stat, min) => minimum(format(THRESHOLD_LABEL_KEYS[stat]), min),
+    };
+}
 
 /** A document's prerequisites, structured. */
 export interface StructuredPrerequisites {
@@ -115,13 +158,15 @@ function talentBase(name: string): string {
 
 /**
  * The prerequisites `actor` does not meet, each as a display string. Empty when all are met.
+ * Skills and talents print as the compendium spells them; the rest are worded by `labels`.
  * @param prereqs  The structured prerequisites.
  * @param actor    The actor's characteristics, skills, talents, alignment and thresholds.
+ * @param labels   The langpack wording of characteristics, alignments and thresholds.
  */
-export function unmetPrerequisites(prereqs: StructuredPrerequisites, actor: PrerequisiteActorView): string[] {
+export function unmetPrerequisites(prereqs: StructuredPrerequisites, actor: PrerequisiteActorView, labels: PrerequisiteLabels): string[] {
     const unmet: string[] = [];
     for (const [key, min] of Object.entries(prereqs.characteristics)) {
-        if ((actor.characteristics[key] ?? 0) < min) unmet.push(`${key} ${min}+`);
+        if ((actor.characteristics[key] ?? 0) < min) unmet.push(labels.characteristic(key, min));
     }
     const ranks = new Map(Object.entries(actor.skillRanks).map(([label, rank]) => [skillKey(label), rank]));
     for (const skill of prereqs.skills) {
@@ -135,11 +180,12 @@ export function unmetPrerequisites(prereqs: StructuredPrerequisites, actor: Prer
     }
     const ownedBases = new Set(actor.talents.map(talentBase));
     for (const talent of prereqs.talentsAny) {
-        if (!ownedBases.has(talent.toLowerCase())) unmet.push(`${talent} (any)`);
+        if (!ownedBases.has(talent.toLowerCase())) unmet.push(labels.anySpecialisation(talent));
     }
-    if (prereqs.alignment !== '' && actor.alignment !== prereqs.alignment) unmet.push(`aligned ${prereqs.alignment}`);
-    for (const [stat, min] of Object.entries(prereqs.thresholds)) {
-        if ((actor.thresholds[stat as PrerequisiteThreshold] ?? 0) < min) unmet.push(`${stat} ${min}+`);
+    if (prereqs.alignment !== '' && actor.alignment !== prereqs.alignment) unmet.push(labels.alignment(prereqs.alignment));
+    for (const stat of PREREQUISITE_THRESHOLDS) {
+        const min = prereqs.thresholds[stat];
+        if (min !== undefined && (actor.thresholds[stat] ?? 0) < min) unmet.push(labels.threshold(stat, min));
     }
     return unmet;
 }
