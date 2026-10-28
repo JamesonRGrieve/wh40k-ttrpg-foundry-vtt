@@ -213,6 +213,26 @@ async function popoutOverflow(page: Page, popoutId: string): Promise<number> {
     }, popoutId);
 }
 
+/** The viewport rectangle of a popout's width, from the top of `from` to the foot of `to`, with a small margin. */
+async function regionClip(
+    page: Page,
+    popoutId: string,
+    region: { from: string; to: string },
+): Promise<{ x: number; y: number; width: number; height: number }> {
+    return page.evaluate(
+        ({ id, from, to }) => {
+            const popout = document.getElementById(id);
+            const top = popout?.querySelector(from)?.getBoundingClientRect();
+            const foot = popout?.querySelector(to)?.getBoundingClientRect();
+            const frame = popout?.getBoundingClientRect();
+            if (top === undefined || foot === undefined || frame === undefined) throw new Error(`region ${from} → ${to} not in popout ${id}`);
+            const y = Math.max(0, top.top - 8);
+            return { x: frame.left, y, width: frame.width, height: foot.bottom + 8 - y };
+        },
+        { id: popoutId, ...region },
+    );
+}
+
 /**
  * Snap one message by id. The card is first shown in the sidebar chat log (where
  * the player sees it), then framed whole in Foundry's own chat popout — the window
@@ -221,9 +241,11 @@ async function popoutOverflow(page: Page, popoutId: string): Promise<number> {
  *
  * The popout is clamped to the viewport, so a card taller than the window scrolled
  * inside it and the capture cut its text mid-sentence (the #699 audit). The viewport
- * grows until the whole card fits, for the capture only.
+ * grows until the whole card fits, for the capture only. Pass `region` to frame one
+ * part of the card: the popout's width, from the top of `region.from` to the foot of
+ * `region.to` (selectors inside the popout).
  */
-export async function snapMessage(page: Page, label: string, messageId: string): Promise<void> {
+export async function snapMessage(page: Page, label: string, messageId: string, region?: { from: string; to: string }): Promise<void> {
     await clearScreenOverlays(page);
     // `#sidebar .chat-log .message[data-message-id=…]`: exactly the one message in the sidebar log.
     const logSelector = await showChatMessage(page, messageId);
@@ -263,7 +285,9 @@ export async function snapMessage(page: Page, label: string, messageId: string):
     }
     try {
         expect(await popoutOverflow(page, popoutId), `${label}: the card scrolls inside its popout, so the capture cuts it off`).toBe(0);
-        expect(await snap(page, label, { selector: `#${popoutId}` }), `snap ${label}`).not.toBeNull();
+        const clip = region === undefined ? null : await regionClip(page, popoutId, region);
+        const shot = clip === null ? await snap(page, label, { selector: `#${popoutId}` }) : await snap(page, label, { clip });
+        expect(shot, `snap ${label}`).not.toBeNull();
     } finally {
         if (hidden > 0 && viewport !== null) await page.setViewportSize(viewport);
     }

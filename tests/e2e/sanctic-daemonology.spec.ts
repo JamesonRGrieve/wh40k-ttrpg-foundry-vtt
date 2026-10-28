@@ -275,8 +275,11 @@ test.describe.serial('Malefic Corruption and Sanctic Purity casts (Tier B)', () 
             return [...row.querySelectorAll('button')].filter((b) => b.getBoundingClientRect().right > right + 1 || b.scrollWidth > b.clientWidth + 1).length;
         });
         expect(overflow, 'no control overflows the card').toBe(0);
-        await clearScreenOverlays(page);
-        await snap(page, 'psychic-action-card-controls', { selector: `#sidebar .chat-log .message[data-message-id="${card.id}"]` });
+        // Framed in the card's popout (as wide as the log): in the log the chat input covered the controls (#699 audit).
+        await snapMessage(page, 'psychic-action-card-controls', card.id, {
+            from: '[data-wh40k-hook="degrees-count"]',
+            to: '[data-wh40k-hook="psychic-card-controls"]',
+        });
         recordCoverage('chat.render', 'psychic-action-chat.malefic');
     });
 
