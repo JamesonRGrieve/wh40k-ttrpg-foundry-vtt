@@ -104,7 +104,10 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
 
     test('hovering a psychic power row reveals its invoke button, which opens the roll', async ({ page }) => {
         await joinOrSkip(page);
-        const sheetId = await openCombatTab(page, { psy: { rating: 3 } }, [{ name: 'e2e Fixture Power', type: 'psychicPower' }]);
+        // Willpower 40, so the power's Willpower focus test has a real target (it read 0% on a blank actor).
+        const sheetId = await openCombatTab(page, { psy: { rating: 3 }, characteristics: { willpower: { base: 40 } } }, [
+            { name: 'e2e Fixture Power', type: 'psychicPower' },
+        ]);
         const row = page.locator(`#${sheetId} [data-item-type="psychicPower"]`).first();
         const invoke = row.locator('button[data-action="rollPower"]');
         const opacity = async (): Promise<string> => invoke.evaluate((el) => getComputedStyle(el).opacity);
@@ -137,6 +140,10 @@ test.describe.serial('Combat tab power panels (Tier B, #194)', () => {
         const dialog = page.locator('.unified-roll-dialog');
         await expect(dialog).toBeVisible();
         const dialogId = (await dialog.getAttribute('id')) ?? '';
+        // The roll starts from the psyker's Willpower, not an empty 0%.
+        await expect(dialog.locator('[data-wh40k-hook="target-base"]')).toContainText('40');
+        const target = Number((await dialog.locator('.urd-target__number').getAttribute('data-value')) ?? '0');
+        expect(target, 'the invoke dialog target').toBeGreaterThanOrEqual(40);
         await clearScreenOverlays(page, dialogId);
         await snap(page, 'combat-tab-psychic-invoke-dialog', { selector: `#${dialogId}` });
         await page.evaluate(async (id) => {
