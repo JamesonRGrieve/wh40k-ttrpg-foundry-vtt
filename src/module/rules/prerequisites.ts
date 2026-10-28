@@ -26,7 +26,7 @@ type PrerequisiteAlignment = (typeof PREREQUISITE_ALIGNMENTS)[number];
 
 /** The actor stats a threshold can name. */
 const PREREQUISITE_THRESHOLDS = ['corruption', 'infamy', 'insanity', 'rank'] as const;
-export type PrerequisiteThreshold = (typeof PREREQUISITE_THRESHOLDS)[number];
+type PrerequisiteThreshold = (typeof PREREQUISITE_THRESHOLDS)[number];
 
 /**
  * How an unmet prerequisite is worded. The caller supplies the langpack labels, so
