@@ -96,6 +96,10 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
             const armedDialog = await attackWith(page, attacker.id, chainswordId);
             await expect(page.locator(`#${armedDialog} [data-action="selectAttackMode"][data-mode-key="charge"]`)).toBeVisible();
             await expect(page.locator(`#${armedDialog} ${GRAPPLE_TOGGLE}`)).toHaveCount(0);
+            // Frame the attack modes, where the toggle would sit, clear of the sticky footer.
+            await page
+                .locator(`#${armedDialog} [data-action="selectAttackMode"][data-mode-key="charge"]`)
+                .evaluate((el) => el.scrollIntoView({ block: 'center' }));
             expect(await snapWindow(page, 'grapple-armed-no-toggle', armedDialog)).not.toBeNull();
             await page.locator(`#${armedDialog} [data-action="cancel"]`).click();
             await expect(page.locator(`#${armedDialog}`)).toHaveCount(0);
