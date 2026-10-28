@@ -136,8 +136,13 @@ module.exports = {
             "flex-direction": "column",
             "input,\n        select": {
                 "width": "100%",
-                "min-height": "42px",
-                "padding": "24px 12px 8px",
+                // Foundry sets inputs and selects to height and line-height
+                // var(--input-height); under the floating label's top padding
+                // that left a 10px content box, which hid select values.
+                "height": "auto",
+                "line-height": "1.25",
+                "min-height": "46px",
+                "padding": "20px 12px 6px",
                 "background": "rgba(0, 0, 0, 0.25)",
                 "border": "1px solid rgba(255, 255, 255, 0.12)",
                 "border-radius": "6px",
@@ -203,7 +208,7 @@ module.exports = {
             "&--narrow": {
                 "max-width": "100px",
                 "input": {
-                    "padding": "24px 8px 8px",
+                    "padding": "20px 8px 6px",
                 },
                 "label": {
                     "left": "8px",

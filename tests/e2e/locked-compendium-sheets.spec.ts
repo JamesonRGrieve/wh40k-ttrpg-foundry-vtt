@@ -137,6 +137,23 @@ test.describe.serial('locked compendium sheets (#628, #629, Tier B)', () => {
             .last()
             .scrollIntoViewIfNeeded();
         await page.waitForTimeout(scaledMs(1_000));
+
+        // The floating-label selects show their value: each one names an
+        // option, and its content box is tall enough for a line of text.
+        for (const name of ['system.availability', 'system.craftsmanship']) {
+            const shown = await app.locator(`select[name="${name}"]`).evaluate((el) => {
+                const select = el as HTMLSelectElement;
+                const style = getComputedStyle(select);
+                const content = select.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+                return {
+                    text: Array.from(select.selectedOptions, (option) => option.textContent.trim()).join(''),
+                    content,
+                    fontSize: parseFloat(style.fontSize),
+                };
+            });
+            expect(shown.text, `${name} names no option`).not.toBe('');
+            expect(shown.content, `${name} has no room for its value`).toBeGreaterThanOrEqual(shown.fontSize);
+        }
         await snap(page, 'locked-weapon-details-expanded', { selector: `#${appId}`, closeWindows: true, keepWindow: appId });
         await closeApp(page, appId);
     });
