@@ -252,8 +252,9 @@
           <div class="tw-relative tw-z-[2] tw-text-[0.9rem] tw-mb-[2px] tw-transition-transform">
             <i class="fa-solid fa-star"></i>
           </div>
-          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-text-[0.7rem] tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis tw-max-w-full">{{label}}</span>
+          {{!-- A long quality name ("Hallucinogenic (2)") wraps to two lines inside the tile instead of running past its edge. --}}
+          <div class="tw-relative tw-z-[2] tw-flex tw-w-full tw-min-w-0 tw-flex-col tw-items-center tw-gap-[2px]">
+            <span class="tw-w-full tw-text-[0.7rem] tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-break-words tw-line-clamp-2" data-weapon-quality-label>{{label}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
