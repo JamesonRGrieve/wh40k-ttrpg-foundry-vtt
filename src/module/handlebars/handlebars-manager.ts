@@ -35,6 +35,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/sidebar-field-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/sidebar-fields-panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/origin-path-bubbles.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/drop-add-row.hbs',
             // Character-creation builder: characteristic-generation mode partials
             'systems/wh40k-rpg/templates/character-creation/partials/char-gen-characteristic-grid.hbs',
             'systems/wh40k-rpg/templates/character-creation/partials/char-gen-divination.hbs',

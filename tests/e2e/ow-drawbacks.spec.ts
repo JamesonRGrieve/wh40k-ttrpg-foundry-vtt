@@ -136,6 +136,9 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             const panel = page.locator(`#${sheetId} ${PANEL}`);
             await panel.scrollIntoViewIfNeeded();
             await expect(panel.locator('[data-ow-drawback-drop]')).toBeVisible();
+            // The add button keeps its label on one line (it wrapped and overflowed its box).
+            const addBox = await panel.locator('button[data-action="owAddDrawback"]').boundingBox();
+            expect(addBox?.height ?? 0).toBeLessThan(32);
 
             // A drawback dropped on the sheet is recorded, not owned, and refunds its points.
             const dropped = await page.evaluate(

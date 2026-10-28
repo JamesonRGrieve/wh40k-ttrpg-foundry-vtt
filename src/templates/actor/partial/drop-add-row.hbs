@@ -1,0 +1,22 @@
+{{!--
+    Drop-or-add row: a dashed drop target with a hint, and a button that picks
+    the same kind of item from the compendiums. Shared by the OW Regimental
+    Award and Regiment Drawback panels.
+
+    The button never wraps or shrinks; the hint takes the remaining width and
+    wraps instead ("+ Add Award" broke over two lines and overflowed its box).
+
+    Hash params:
+        dropAttr — required, the data attribute marking the drop zone (e.g. "data-ow-award-drop")
+        hint     — required, the localized drop hint
+        action   — required, the button's data-action
+        label    — required, the localized button label
+--}}
+<div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-rounded-[6px] tw-border tw-border-dashed tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-px-2 tw-py-1.5" {{dropAttr}}>
+    <span class="tw-min-w-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)]">{{hint}}</span>
+    <button type="button"
+            class="tw-inline-flex tw-shrink-0 tw-items-center tw-gap-1 tw-whitespace-nowrap tw-cursor-pointer tw-bg-transparent tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)] ow:tw-border-brass tw-rounded tw-px-2 tw-py-0.5 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-dark)] ow:tw-text-brass"
+            data-action="{{action}}">
+        <i class="fas fa-plus" aria-hidden="true"></i> {{label}}
+    </button>
+</div>

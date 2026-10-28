@@ -153,6 +153,8 @@ export const AddDrawbackControl: Story = {
         ]);
         await expect(canvasElement.querySelector('[data-adjusted-budget]')?.textContent.trim()).toBe(`= ${REGIMENT_BUDGET + 6}`);
         await expect(canvasElement.querySelector('[data-ow-drawback-drop]')).not.toBeNull();
+        // The shared drop-add row keeps its button on one line.
+        await expect(canvasElement.querySelector('[data-action="owAddDrawback"]')?.classList.contains('tw-whitespace-nowrap')).toBe(true);
         const clicks = captureActionClicks(canvasElement);
         canvasElement.querySelector<HTMLElement>('[data-action="owAddDrawback"]')?.click();
         await expect(clicks.map((click) => click.action)).toEqual(['owAddDrawback']);
