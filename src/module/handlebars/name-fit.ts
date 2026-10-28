@@ -41,6 +41,15 @@ const NAME_FIT_PROFILES = {
         ],
         floorClass: 'tw-text-[0.75rem]',
     },
+    qualityTile: {
+        // The weapon header's quality tile: ~68px of text that wraps at spaces over
+        // two lines, so a long single word ("Hallucinogenic") must fit one line.
+        steps: [
+            { maxChars: 10, className: 'tw-text-[0.7rem]' },
+            { maxChars: 14, className: 'tw-text-[0.62rem]' },
+        ],
+        floorClass: 'tw-text-[0.55rem]',
+    },
 } as const satisfies Record<string, NameFitProfile>;
 
 type NameFitField = keyof typeof NAME_FIT_PROFILES;

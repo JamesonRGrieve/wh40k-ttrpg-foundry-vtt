@@ -97,3 +97,15 @@ describe('every sidebar name renders through the one fitted name field (#630)', 
         expect(header).not.toContain('nameLabelKey');
     });
 });
+
+describe('nameFitClass for a weapon quality tile (#701 audit)', () => {
+    it('keeps the tile size for a short quality', () => {
+        expect(nameFitClass('Blast (6)', 'qualityTile')).toBe('tw-text-[0.7rem]');
+    });
+
+    it('steps down so a long single word fits one line instead of breaking mid-word', () => {
+        expect(nameFitClass('Hallucinogenic (2)', 'qualityTile')).toBe('tw-text-[0.55rem]');
+        expect(nameFitClass('Inaccurate', 'qualityTile')).toBe('tw-text-[0.7rem]');
+        expect(nameFitClass('Unreliable (2)', 'qualityTile')).toBe('tw-text-[0.62rem]');
+    });
+});

@@ -252,9 +252,9 @@
           <div class="tw-relative tw-z-[2] tw-text-[0.9rem] tw-mb-[2px] tw-transition-transform">
             <i class="fa-solid fa-star"></i>
           </div>
-          {{!-- A long quality name ("Hallucinogenic (2)") wraps to two lines inside the tile instead of running past its edge. --}}
+          {{!-- A long quality name ("Hallucinogenic (2)") steps its font down and wraps at its spaces, inside the tile. --}}
           <div class="tw-relative tw-z-[2] tw-flex tw-w-full tw-min-w-0 tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-w-full tw-text-[0.7rem] tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-break-words tw-line-clamp-2" data-weapon-quality-label>{{label}}</span>
+            <span class="tw-w-full {{nameFitClass label 'qualityTile'}} tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-line-clamp-2" data-weapon-quality-label>{{label}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
@@ -404,7 +404,7 @@
               <select name="system.damage.type" id="damage-type"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions damageTypes selected=source.damage.type labelAttr="label"}}
+                {{selectOptions damageTypes selected=source.damage.type labelAttr="label" localize=true}}
               </select>
               <label for="damage-type">{{localize "WH40K.DamageType.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -415,7 +415,7 @@
               <select name="system.class" id="weapon-class"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions weaponClasses selected=source.class labelAttr="label"}}
+                {{selectOptions weaponClasses selected=source.class labelAttr="label" localize=true}}
               </select>
               <label for="weapon-class">{{localize "WH40K.ItemSheet.Weapon.WeaponClass"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -426,7 +426,7 @@
               <select name="system.type" id="weapon-type"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions weaponTypes selected=source.type labelAttr="label"}}
+                {{selectOptions weaponTypes selected=source.type labelAttr="label" localize=true}}
               </select>
               <label for="weapon-type">{{localize "WH40K.ItemSheet.Weapon.WeaponType"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -559,7 +559,7 @@
               <select name="system.reload" id="reload-time"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions reloadTimes selected=source.reload labelAttr="label"}}
+                {{selectOptions reloadTimes selected=source.reload labelAttr="label" localize=true}}
               </select>
               <label for="reload-time">{{localize "WH40K.Weapon.Reload"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -592,7 +592,7 @@
               <select name="system.availability" id="availability"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions availabilities selected=source.availability labelAttr="label"}}
+                {{selectOptions availabilities selected=source.availability labelAttr="label" localize=true}}
               </select>
               <label for="availability">{{localize "WH40K.Availability.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
@@ -603,7 +603,7 @@
               <select name="system.craftsmanship" id="craftsmanship"
                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                       {{#unless inEditMode}}disabled{{/unless}}>
-                {{selectOptions craftsmanships selected=source.craftsmanship labelAttr="label"}}
+                {{selectOptions craftsmanships selected=source.craftsmanship labelAttr="label" localize=true}}
               </select>
               <label for="craftsmanship">{{localize "WH40K.Craftsmanship.Label"}}</label>
               <i class="fa-solid fa-chevron-down wh40k-float-field__arrow"></i>
