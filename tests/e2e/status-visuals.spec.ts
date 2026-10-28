@@ -158,7 +158,9 @@ async function probeStatusVisuals(page: Page): Promise<ProbeState> {
             actorId = actor.id;
             const scene = await g.Scene.create({ name: 'status-visual probe', width: 800, height: 800 });
             sceneId = scene.id;
-            const td = await actor.getTokenDocument({ x: 300, y: 300 });
+            // A gold tint on the probe: its white art under the dim filter (×0.6) came out
+            // the exact grey of the canvas, so a dimmed token vanished from its capture.
+            const td = await actor.getTokenDocument({ x: 300, y: 300, texture: { tint: '#d4a53a' } });
             const tokenDoc = (await scene.createEmbeddedDocuments('Token', [td.toObject()])).at(0);
             if (tokenDoc === undefined) {
                 record('condition-item-starts-visual', false, 'token placement failed');
