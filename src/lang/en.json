@@ -837,6 +837,7 @@
                 "Value": "{raw} → {capped}",
                 "Tooltip": "The total modifier is capped at ±60 (DH2 core). The raw sum before the cap is shown for transparency."
             },
+            "TargetFloor": "The rows sum to {sum}, below 0, so the target is 0.",
             "ResultFormula": {
                 "Success": "{dos} DoS = 1 + {degree} (roll {roll} vs target {target})",
                 "Failure": "{dof} DoF = 1 + {degree} (roll {roll} vs target {target})",

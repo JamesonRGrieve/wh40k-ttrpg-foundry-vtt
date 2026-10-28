@@ -5200,6 +5200,7 @@ export type I18nKey =
     | 'WH40K.Roll.SpreadHitsHint'
     | 'WH40K.Roll.Success'
     | 'WH40K.Roll.TargetFirst'
+    | 'WH40K.Roll.TargetFloor'
     | 'WH40K.Roll.TargetLabel'
     | 'WH40K.Roll.TargetSizeOverride'
     | 'WH40K.Roll.TestLabel'
