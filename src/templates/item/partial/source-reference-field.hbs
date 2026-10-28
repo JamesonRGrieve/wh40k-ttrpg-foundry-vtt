@@ -11,13 +11,16 @@
     its value stringifies to "[object Object]" and a submit would write that
     string back over the whole reference. Display goes through `sourceLabel`, the
     same helper the chat cards and the psychic-power header badge use.
+
+    In a narrow cell (a three-column item grid) Page wraps under Book, so Book keeps
+    room for a whole title ("BC: Tome of Fate" clipped beside Page, #699 audit).
 --}}
 {{#if editable}}
-<div class="tw-flex tw-gap-1 tw-min-w-0 tw-w-full">
+<div data-wh40k-hook="source-reference-inputs" class="tw-flex tw-flex-wrap tw-gap-1 tw-min-w-0 tw-w-full">
     <input type="text" name="system.source.book" value="{{source.book}}"
-           aria-label="{{localize 'WH40K.Source.Book'}}" title="{{localize 'WH40K.Source.Book'}}"
+           aria-label="{{localize 'WH40K.Source.Book'}}" title="{{#if source.book}}{{source.book}}{{else}}{{localize 'WH40K.Source.Book'}}{{/if}}"
            placeholder="{{localize 'WH40K.Source.Book'}}"
-           class="tw-flex-1 tw-min-w-0 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+           class="tw-flex-1 tw-basis-40 tw-min-w-0 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
     <input type="text" name="system.source.page" value="{{source.page}}"
            aria-label="{{localize 'WH40K.Source.Page'}}" title="{{localize 'WH40K.Source.Page'}}"
            placeholder="{{localize 'WH40K.Source.Page'}}"

@@ -56,6 +56,11 @@ test.describe.serial('Psychic power sheet (Tier B, #659)', () => {
             expect(sheetId).not.toBe('');
             const sheet = page.locator(`#${sheetId}`);
             await expect(sheet.locator('[data-field="discipline-label"]')).toHaveText('Pyromancy Power');
+            // The Source Book input shows its whole title in the three-column grid ("BC: Tome of Fa" clipped, #699 audit).
+            const book = sheet.locator('input[name="system.source.book"]');
+            await expect(book).toHaveValue('BC: Tome of Fate');
+            const bookFits = await book.evaluate((el) => el.scrollWidth <= el.clientWidth);
+            expect(bookFits, 'the Source Book input clips its title').toBe(true);
             await snap(page, 'psychic-power-sheet-header', { selector: `#${sheetId}` });
 
             const slotWidth = await sheet.locator('[data-field="item-header-slot"]').evaluate((el) => el.getBoundingClientRect().width);

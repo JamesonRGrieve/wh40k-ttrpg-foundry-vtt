@@ -40,6 +40,16 @@ describe('source-reference-field partial (#229)', () => {
         expect(root.querySelector('input[name="system.source"]')).toBeNull();
     });
 
+    it('lets Page wrap under Book in a narrow cell, so Book keeps a whole title (#699 audit)', () => {
+        const root = render({ source: mockSourceReference({ book: 'BC: Tome of Fate', page: '61' }), editable: true });
+        const row = root.querySelector('[data-wh40k-hook="source-reference-inputs"]');
+        const book = root.querySelector('input[name="system.source.book"]');
+        expect(row?.classList.contains('tw-flex-wrap')).toBe(true);
+        expect(book?.classList.contains('tw-basis-40')).toBe(true);
+        // The full title is one hover away even when the input is short.
+        expect(book?.getAttribute('title')).toBe('BC: Tome of Fate');
+    });
+
     it('labels both inputs for assistive tech', () => {
         const root = render({ source: mockSourceReference(), editable: true });
         expect(root.querySelector('input[name="system.source.book"]')?.getAttribute('aria-label')).toBe('Book');
