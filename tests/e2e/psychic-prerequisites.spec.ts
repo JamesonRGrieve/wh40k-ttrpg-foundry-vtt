@@ -276,6 +276,24 @@ async function sheetRoundTrip(page: Page): Promise<{ stored: string; shown: stri
     }, SHEET_POWER);
 }
 
+/**
+ * Scrolls the sheet's Prerequisites field into view, so the capture shows it whole rather
+ * than cut by the window's bottom edge. True when the field then lies wholly inside the window.
+ */
+async function revealPrerequisitesField(page: Page, sheetId: string): Promise<boolean> {
+    return page.evaluate(async (id: string) => {
+        const sheet = document.getElementById(id);
+        if (sheet === null) return false;
+        const input = sheet.querySelector<HTMLInputElement>('[name="system.prerequisites.text"]');
+        if (input === null) return false;
+        input.scrollIntoView({ block: 'center' });
+        await globalThis.wh40kE2E.settle(200);
+        const field = input.getBoundingClientRect();
+        const frame = sheet.getBoundingClientRect();
+        return field.height > 0 && field.top >= frame.top && field.bottom <= frame.bottom;
+    }, sheetId);
+}
+
 async function deleteSheetPower(page: Page): Promise<void> {
     await page.evaluate(async (name: string) => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
@@ -403,7 +421,12 @@ test.describe.serial('psychic power prerequisites are stored and enforced (Tier 
             }
 
             const sheet = await sheetRoundTrip(page);
-            record('sheet-keeps-prerequisites', typeof sheet !== 'string' && sheet.stored === TYPED && sheet.shown === TYPED, JSON.stringify(sheet));
+            const inView = typeof sheet !== 'string' && (await revealPrerequisitesField(page, sheet.sheetId));
+            record(
+                'sheet-keeps-prerequisites',
+                typeof sheet !== 'string' && sheet.stored === TYPED && sheet.shown === TYPED && inView,
+                JSON.stringify({ sheet, inView }),
+            );
             if (typeof sheet !== 'string') {
                 await snap(page, 'psychic-prerequisites-sheet', { selector: `#${sheet.sheetId}`, closeWindows: true, keepWindow: sheet.sheetId });
             }
