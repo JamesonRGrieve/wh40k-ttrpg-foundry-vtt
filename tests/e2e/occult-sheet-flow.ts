@@ -87,7 +87,16 @@ export async function addCompendiumItems(page: Page, actorId: string, uuids: rea
                 fromUuid: (uuid: string) => Promise<object | null>;
                 game: {
                     items: { fromCompendium: (doc: object) => object };
-                    actors: { get: (i: string) => { createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }>> } | undefined };
+                    actors: {
+                        get: (i: string) =>
+                            | {
+                                  createEmbeddedDocuments: (
+                                      type: string,
+                                      data: object[],
+                                  ) => Promise<Array<{ id: string; _stats: { compendiumSource: string | null } }>>;
+                              }
+                            | undefined;
+                    };
                 };
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals (fromUuid, game) have no repo types
@@ -100,7 +109,14 @@ export async function addCompendiumItems(page: Page, actorId: string, uuids: rea
             const actor = w.game.actors.get(id);
             if (actor === undefined) throw new Error(`actor ${id} missing`);
             const created = await actor.createEmbeddedDocuments('Item', data);
-            return created.map((item) => item.id);
+            // Match each item to its source rather than trusting the returned order: the
+            // creation pipeline can hand them back reordered, and a Dark Pact capture once
+            // opened the armour's sheet in its place.
+            return sources.map((uuid) => {
+                const match = created.find((item) => item._stats.compendiumSource === uuid);
+                if (match === undefined) throw new Error(`no item was created from ${uuid}`);
+                return match.id;
+            });
         },
         { id: actorId, sources: [...uuids] },
     );
