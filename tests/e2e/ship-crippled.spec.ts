@@ -90,6 +90,11 @@ test.describe.serial('Crippled and destroyed RT ships on the voidcraft sheet (Ti
             expect(condition.crippled).toContain('Crippled');
             expect(condition.crippled).toContain('weapons at half Strength');
             expect(condition.destroyed, 'a ship at 0 Hull is never destroyed by Hull').toBe('');
+            // The callout is one line in the sidebar, with the rule as its tooltip
+            // (its paragraph was cut off by the sidebar's scroll region).
+            const callout = page.locator(`#${sheetId} [data-wh40k-hook="ship-condition-crippled"]`);
+            await expect(callout).toHaveAttribute('data-tooltip', /weapons at half Strength/u);
+            expect((await callout.boundingBox())?.height ?? 0).toBeLessThan(40);
             expect(await snapWindow(page, 'ship-crippled-sheet-condition', sheetId, vitalsColumn(sheetId))).not.toBeNull();
 
             // RT_FRIGATE: Speed 7, Manoeuvrability 15, Detection 20 → 4, 5, 10.

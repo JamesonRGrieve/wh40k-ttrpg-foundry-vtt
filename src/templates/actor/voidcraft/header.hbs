@@ -55,16 +55,18 @@
             value=source.hullIntegrity.value
             maxName="system.hullIntegrity.max"
             max=source.hullIntegrity.max}}
-        {{!-- RT ship condition (#187): Crippled at 0 Hull Integrity; destroyed only by a Critical Hit result. --}}
+        {{!-- RT ship condition (#187): Crippled at 0 Hull Integrity; destroyed only by a Critical Hit result.
+             The callout is one line in the narrow sidebar (its paragraph was cut off by the
+             scroll region); the rule text is its tooltip and stays in the DOM for screen readers. --}}
         {{#if shipCondition.destroyed}}
-            <div data-wh40k-hook="ship-condition-destroyed" class="tw-flex tw-flex-col tw-gap-0.5 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(248,113,113,0.6)] tw-bg-[rgba(127,29,29,0.45)] tw-px-2 tw-py-1 tw-text-red-100">
+            <div data-wh40k-hook="ship-condition-destroyed" class="tw-cursor-help tw-rounded-md tw-border tw-border-solid tw-border-[rgba(248,113,113,0.6)] tw-bg-[rgba(127,29,29,0.45)] tw-px-2 tw-py-1 tw-text-red-100" data-tooltip="{{localize "WH40K.Voidcraft.Crippled.DestroyedHint"}}">
                 <span class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-wide"><i class="fas fa-explosion" aria-hidden="true"></i> {{localize "WH40K.Voidcraft.Crippled.Destroyed"}}</span>
-                <span class="tw-text-[0.7rem] tw-leading-snug">{{localize "WH40K.Voidcraft.Crippled.DestroyedHint"}}</span>
+                <span class="tw-sr-only">{{localize "WH40K.Voidcraft.Crippled.DestroyedHint"}}</span>
             </div>
         {{else if shipCondition.crippled}}
-            <div data-wh40k-hook="ship-condition-crippled" class="tw-flex tw-flex-col tw-gap-0.5 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(251,191,36,0.6)] tw-bg-[rgba(120,53,15,0.45)] tw-px-2 tw-py-1 tw-text-amber-100">
+            <div data-wh40k-hook="ship-condition-crippled" class="tw-cursor-help tw-rounded-md tw-border tw-border-solid tw-border-[rgba(251,191,36,0.6)] tw-bg-[rgba(120,53,15,0.45)] tw-px-2 tw-py-1 tw-text-amber-100" data-tooltip="{{localize "WH40K.Voidcraft.Crippled.StatusHint"}}">
                 <span class="tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-wide"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> {{localize "WH40K.Voidcraft.Crippled.Status"}}</span>
-                <span class="tw-text-[0.7rem] tw-leading-snug">{{localize "WH40K.Voidcraft.Crippled.StatusHint"}}</span>
+                <span class="tw-sr-only">{{localize "WH40K.Voidcraft.Crippled.StatusHint"}}</span>
             </div>
         {{/if}}
         {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
