@@ -44,7 +44,7 @@
         <div data-wh40k-hook="bc-pending-flip" class="tw-px-2 tw-py-1 tw-text-[0.75rem] tw-italic tw-text-crimson-l40 bc:tw-text-crimson-light"
              data-pending-alignment="{{alignmentPanel.derived}}">
             <i class="fas fa-exclamation-triangle"></i>
-            {{localize "WH40K.BC.Advancement.PendingFlip" target=alignmentPanel.derived}}
+            {{localize "WH40K.BC.Advancement.PendingFlip" target=(localize (chaosAlignmentLabelKey alignmentPanel.derived))}}
         </div>
     {{/if}}
 

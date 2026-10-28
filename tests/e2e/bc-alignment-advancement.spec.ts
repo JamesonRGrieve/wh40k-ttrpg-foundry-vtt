@@ -29,6 +29,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
             let hasInfamyButton = false;
             let currentAlignment = '';
             let derivedAlignment = '';
+            let flipText = '';
 
             try {
                 /* eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fetch`/`Handlebars` globals are injected by the licensed app; Handlebars compile ctx is opaque */
@@ -48,6 +49,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                         hasInfamyButton,
                         currentAlignment,
                         derivedAlignment,
+                        flipText,
                         error: 'Handlebars not available on globalThis',
                     };
                 }
@@ -76,6 +78,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                 if (rendered) {
                     tallyRows = host.querySelectorAll('[data-wh40k-hook="bc-tally-row"]').length;
                     hasPendingFlip = host.querySelector('[data-wh40k-hook="bc-pending-flip"]') !== null;
+                    flipText = host.querySelector('[data-wh40k-hook="bc-pending-flip"]')?.textContent.replace(/\s+/g, ' ').trim() ?? '';
                     hasPsykerLock = host.querySelector('[data-wh40k-hook="bc-psyker-lock"]') !== null;
                     hasInfamyButton = host.querySelector('button[data-wh40k-hook="bc-infamy-buy-btn"]') !== null;
                     currentAlignment = host.querySelector('[data-wh40k-hook="bc-current-alignment"]')?.getAttribute('data-alignment') ?? '';
@@ -99,6 +102,7 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
                 hasInfamyButton,
                 currentAlignment,
                 derivedAlignment,
+                flipText,
                 error,
             };
         });
@@ -125,6 +129,9 @@ test.describe.serial('BcAlignmentAdvancementPanel (Tier B)', () => {
         expectHooks(hookCounts, ['bc-current-alignment', 'bc-pending-flip', 'bc-psyker-lock', 'bc-tally-row', 'bc-infamy-buy-btn']);
         expect(result.tallyRows, 'expected four per-god tally rows').toBe(4);
         expect(result.hasPendingFlip, 'pending-flip banner should render when current !== derived').toBe(true);
+        // The god is named by its langpack label, not the raw id ("tzeentch").
+        expect(result.flipText).toContain('Alignment to Tzeentch.');
+        expect(result.flipText).not.toMatch(/\btzeentch\b/);
         expect(result.hasPsykerLock, 'psyker-lock warning should render when psykerLocked=true').toBe(true);
         expect(result.hasInfamyButton, 'infamy advance button should render while below cap').toBe(true);
         expect(result.currentAlignment, 'current-alignment data attr should round-trip').toBe('khorne');

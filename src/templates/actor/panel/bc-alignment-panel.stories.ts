@@ -17,6 +17,7 @@
  * value is fixed for diff stability).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { renderSheet } from '../../../../stories/test-helpers';
 import panelSrc from './bc-alignment-panel.hbs?raw';
 
@@ -94,6 +95,13 @@ export const PendingFlip: Story = {
         },
     },
     render: (args) => renderPanel(args),
+    play: async ({ canvasElement }) => {
+        // The warning names the god by its langpack label, never the raw id ("khorne").
+        const flip = canvasElement.querySelector('[data-wh40k-hook="bc-pending-flip"]');
+        const text = flip?.textContent.replace(/\s+/g, ' ').trim() ?? '';
+        await expect(text).toContain('Alignment to Khorne.');
+        await expect(text).not.toMatch(/\bkhorne\b/);
+    },
 };
 
 export const KhornePsykerLocked: Story = {
