@@ -2,6 +2,7 @@ import { chaosAlignmentLabelKey } from '../config/game-systems/bc-advancement-co
 import { type GameSystemId, type SystemThemeRole, SystemConfigRegistry, themeClassFor } from '../config/game-systems/index.ts';
 import { WH40K } from '../config.ts';
 import { pluralKey } from '../i18n/plural.ts';
+import { breakdownRawTarget } from '../rolls/aggregate-target.ts';
 import { combatActionIcon, combatTimingKey } from '../rules/combat-action-display.ts';
 import { anyLocationLabelKey, HIT_LOCATION_IDS, hitLocationAbbreviationKey } from '../rules/hit-locations.ts';
 import { corruptionTrackModifier, DAMNED_CORRUPTION } from '../rules/malignancy-test.ts';
@@ -619,6 +620,22 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
     hbs.registerHelper('lt', (a: TplValue, b: TplValue): boolean => Number(a) < Number(b));
     hbs.registerHelper('gte', (a: TplValue, b: TplValue): boolean => Number(a) >= Number(b));
     hbs.registerHelper('lte', (a: TplValue, b: TplValue): boolean => Number(a) <= Number(b));
+
+    /**
+     * The raw sum a target breakdown prints (base + every row), so a card can
+     * say when its target was floored at 0.
+     * Usage: {{breakdownRawTarget baseTarget modifierSources activeModifiers}}
+     */
+    hbs.registerHelper('breakdownRawTarget', (base: TplValue, sources: TplValue, active: TplValue): number => {
+        const components = Array.isArray(sources)
+            ? sources.map((row) => ({ value: typeof row === 'object' && row !== null && 'value' in row ? Number(row.value) : 0 }))
+            : undefined;
+        const modifiers =
+            typeof active === 'object' && active !== null
+                ? Object.fromEntries(Object.entries(active).map(([label, value]) => [label, Number(value)]))
+                : undefined;
+        return breakdownRawTarget(Number(base), components, modifiers);
+    });
 
     hbs.registerHelper('multiply', (a: TplValue, b: TplValue): number => {
         const aN = Number(a);

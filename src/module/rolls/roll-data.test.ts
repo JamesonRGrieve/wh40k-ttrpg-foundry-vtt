@@ -425,3 +425,22 @@ describe('RollData.effectString lists (#698)', () => {
         expect(rd.effectString).toBe('Balanced, Tearing | Red-Dot Laser Sight, Fluid Action');
     });
 });
+
+describe('RollData.modifiedTarget floors at 0 like the Roll Test dialog (#701 audit)', () => {
+    function rollWith(baseTarget: number, modifierTotal: number): RollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one getter, as the cases above do
+        const rd = Object.create(RollData.prototype) as RollData;
+        rd.baseTarget = baseTarget;
+        rd.modifierTotal = modifierTotal;
+        return rd;
+    }
+
+    it('keeps a positive sum', () => {
+        expect(rollWith(40, -10).modifiedTarget).toBe(30);
+    });
+
+    it('floors a negative sum at 0, so the card matches the dialog', () => {
+        expect(rollWith(-20, 0).modifiedTarget).toBe(0);
+        expect(rollWith(10, -30).modifiedTarget).toBe(0);
+    });
+});

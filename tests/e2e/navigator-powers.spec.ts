@@ -220,6 +220,7 @@ test.describe.serial('Navigator powers (Tier B)', () => {
         await expect(card).toContainText('-30');
         await expect(card).toContainText(POWER_NAME);
         await expect(card.locator('[data-action="rollNavigatorMutation"]')).toBeVisible();
+        await expect(card.locator('[data-breakdown-row="floor"]')).toContainText('-20');
         await snapCard(page, id, 'navigator-power-failure-card');
         recordCoverage('chat.render', 'navigator-power.failure');
     });

@@ -124,6 +124,9 @@ test.describe.serial('skill-use item picker (#535)', () => {
         await expect(card).toContainText(/Auspex is repaired|The repair of Auspex fails|so badly that Auspex is destroyed/);
         const repaired = ((await card.textContent()) ?? '').includes('Auspex is repaired');
         await expect.poll(async () => itemState(page, 'Auspex')).toEqual({ broken: !repaired, locked: false });
+        // The untrained base is -20: the card floors the target at 0, matching
+        // the dialog's 0%, and says so instead of printing a negative target.
+        await expect(card.locator('[data-breakdown-row="floor"]')).toContainText('-20');
 
         await snap(page, 'repair-chat-card', { selector: cardSelector });
     });

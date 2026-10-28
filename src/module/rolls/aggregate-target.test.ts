@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { aggregateModifierTotal, aggregateRollTarget, clampModifierToCap, ROLL_MODIFIER_CAP, sumModifierValues } from './aggregate-target';
+import { aggregateModifierTotal, aggregateRollTarget, breakdownRawTarget, clampModifierToCap, ROLL_MODIFIER_CAP, sumModifierValues } from './aggregate-target';
 
 /**
  * Pure modifier-aggregation helpers backing the Roll Test / weapon-attack
@@ -75,5 +75,21 @@ describe('clampModifierToCap (re-homed from roll-data)', () => {
 
     it('treats non-finite inputs as zero', () => {
         expect(clampModifierToCap(Number.NaN)).toEqual({ clamped: 0, raw: 0, capFired: false });
+    });
+});
+
+describe('breakdownRawTarget', () => {
+    it('sums the base and every component row, so a floored card can show its raw sum', () => {
+        expect(breakdownRawTarget(20, [{ value: -50 }], undefined)).toBe(-30);
+        expect(breakdownRawTarget(10, [{ value: 0 }, { value: -30 }], undefined)).toBe(-20);
+    });
+
+    it('falls back to the legacy label → value map when there are no component rows', () => {
+        expect(breakdownRawTarget(0, [], { Difficulty: -30, Situational: -10 })).toBe(-40);
+        expect(breakdownRawTarget(40, undefined, undefined)).toBe(40);
+    });
+
+    it('counts a non-finite row or base as zero', () => {
+        expect(breakdownRawTarget(Number.NaN, [{ value: Number.NaN }, { value: -5 }], undefined)).toBe(-5);
     });
 });

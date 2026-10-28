@@ -151,8 +151,9 @@ export const SourcedComponents: Story = {
         await expect(scope.getByText('+20')).toBeTruthy();
         await expect(scope.getByText('-20')).toBeTruthy();
 
-        // No cap row on a sub-±60 total.
+        // No cap row on a sub-±60 total, and no floor row on a positive sum.
         await expect(canvasElement.textContent).not.toContain('Modifier cap');
+        await expect(canvasElement.querySelector('[data-breakdown-row="floor"]')).toBeNull();
     },
 };
 
@@ -217,6 +218,27 @@ export const CapFired: Story = {
         // The clamped final target still renders.
         const scope = within(canvasElement);
         await expect(scope.getByText(String(BASE_TARGET + 60))).toBeTruthy();
+    },
+};
+
+// ── 3b. Target floored at 0 ───────────────────────────────────────────────────
+
+const FLOOR_COMPONENTS: SourcedComponent[] = [sourced('Near Unique', -50, 'availability', { rating: 'near-unique' })];
+
+export const TargetFloored: Story = {
+    name: 'Floored — the rows sum below 0, so the target is 0',
+    args: {
+        baseTarget: 20,
+        modifiedTarget: 0,
+        modifierSources: FLOOR_COMPONENTS,
+        activeModifiers: {},
+    },
+    render: (args) => renderBreakdown(args),
+    play: async ({ canvasElement }) => {
+        // The floor row names the raw sum (20 − 50 = −30) the card did not use.
+        const floor = canvasElement.querySelector<HTMLElement>('[data-breakdown-row="floor"]');
+        await expect(floor).not.toBeNull();
+        await expect(floor?.textContent).toContain('-30');
     },
 };
 

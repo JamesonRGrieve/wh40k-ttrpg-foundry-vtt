@@ -454,8 +454,11 @@ export class RollData {
         return str.join(' | ');
     }
 
+    /** Floored at 0 like the Roll Test dialog's displayed target, so the dialog
+     *  and the posted card never disagree on a negative sum; the card's
+     *  breakdown says when the floor applied. */
     get modifiedTarget(): number {
-        return this.baseTarget + this.modifierTotal;
+        return Math.max(0, this.baseTarget + this.modifierTotal);
     }
 
     get activeModifiers(): Record<string, number> {

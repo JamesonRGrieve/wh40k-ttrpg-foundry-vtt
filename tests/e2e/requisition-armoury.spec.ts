@@ -200,6 +200,8 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         expect(card.html).toContain('War Conditions');
         expect(card.html).toContain('Table 6-2');
         expect(card.html).not.toContain('falls from');
+        // The rows sum below 0, so the card says the target was floored.
+        expect(card.html).toContain('data-breakdown-row="floor"');
         const shot = await snapCard(page, 'armoury-card-ow-logistics', card.messageId ?? '');
         expect(shot).not.toBeNull();
         await deleteMessage(page, card.messageId);
@@ -217,6 +219,7 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         expect(card.error, card.error ?? '').toBeNull();
         expect(card.html).toContain('data-requisition-outcome="denied"');
         expect(card.html).toContain('Influence falls from 20 to');
+        expect(card.html).toContain('The rows sum to -30, below 0, so the target is 0.');
         const shot = await snapCard(page, 'armoury-card-dh2-influence-loss', card.messageId ?? '');
         expect(shot).not.toBeNull();
         await deleteMessage(page, card.messageId);

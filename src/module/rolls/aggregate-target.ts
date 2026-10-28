@@ -50,3 +50,24 @@ export function aggregateModifierTotal(modifiers: Readonly<Record<string, number
 export function aggregateRollTarget(baseTarget: number, modifiers: Readonly<Record<string, number>>): number {
     return baseTarget + aggregateModifierTotal(modifiers).total;
 }
+
+/** One printed row of a target breakdown: only its signed value matters here. */
+export interface BreakdownComponent {
+    readonly value: number;
+}
+
+/** The raw sum a card's target breakdown prints: base plus every component
+ *  row (or, without components, every value of the legacy label → value map).
+ *  A card whose target is floored at 0 compares its target against this sum,
+ *  so it can show the player why the rows add up to less than the target. */
+export function breakdownRawTarget(
+    baseTarget: number,
+    components: readonly BreakdownComponent[] | undefined,
+    activeModifiers: Readonly<Record<string, number>> | undefined,
+): number {
+    const base = Number.isFinite(baseTarget) ? baseTarget : 0;
+    if (components !== undefined && components.length > 0) {
+        return components.reduce((sum, component) => sum + (Number.isFinite(component.value) ? component.value : 0), base);
+    }
+    return base + (activeModifiers === undefined ? 0 : sumModifierValues(activeModifiers));
+}

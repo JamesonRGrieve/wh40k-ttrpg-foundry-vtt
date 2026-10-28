@@ -59,6 +59,12 @@
     </div>
 {{/if}}
 
+{{#with (breakdownRawTarget baseTarget modifierSources activeModifiers) as |rawTarget|}}
+    {{#if (and (lt rawTarget 0) (lt rawTarget ../modifiedTarget))}}
+        <div class="tw-py-1 tw-text-[0.8rem] tw-pl-3 tw-border-l-2 tw-border-l-[var(--wh40k-danger-secondary)] tw-ml-1 tw-italic tw-text-[var(--wh40k-danger-secondary)]" data-breakdown-row="floor">{{localize "WH40K.Roll.TargetFloor" sum=rawTarget}}</div>
+    {{/if}}
+{{/with}}
+
 <div class="tw-flex tw-justify-between tw-items-center tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-accent-overlay)] tw-border tw-border-[var(--wh40k-border-color)] tw-rounded-md">
     <span class="tw-min-w-0 tw-text-[var(--wh40k-card-muted)] tw-font-semibold tw-uppercase tw-tracking-[0.05em]" data-breakdown-label>{{#if targetLabel}}{{targetLabel}}{{else}}{{localize "WH40K.Roll.TargetLabel"}}{{/if}}</span>
     <span class="tw-ml-2 tw-shrink-0 tw-whitespace-nowrap tw-tabular-nums tw-text-[1.2rem] tw-font-bold {{themeClassFor (defaultVal accentRole 'chatAccent')}}" data-breakdown-value>{{modifiedTarget}}</span>
