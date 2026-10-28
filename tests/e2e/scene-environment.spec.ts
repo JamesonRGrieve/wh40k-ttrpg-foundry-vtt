@@ -186,6 +186,12 @@ test.describe.serial('Scene environment (Tier B, #604)', () => {
             await dialog.locator('select[name="atmosphere"]').selectOption('vacuum');
             await expect(dialog.getByText('Vacuum: resolve exposure with the Environmental Hazards tool')).toBeVisible();
             await expect(gravity, 'nothing is written before Save').toHaveAttribute('data-gravity', 'standard');
+            // The weather label fits in at most two tight lines (it spread over three tall ones).
+            const weatherLabel = await dialog.locator('[data-env-harsh-label]').evaluate((el) => {
+                const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+                return { height: el.getBoundingClientRect().height, lineHeight };
+            });
+            expect(weatherLabel.height).toBeLessThanOrEqual(weatherLabel.lineHeight * 2 + 1);
             await clearScreenOverlays(page, 'wh40k-scene-environment');
             expect(await snap(page, 'scene-env-dialog-zero-g-vacuum', { selector: DIALOG })).not.toBeNull();
 

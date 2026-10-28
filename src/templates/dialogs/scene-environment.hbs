@@ -14,8 +14,9 @@
     </div>
 
     <div class="form-group">
-        <label for="wh40k-env-harsh">{{localize "WH40K.Environment.WeatherLabel"}}</label>
-        <div class="form-fields">
+        {{!-- The checkbox needs no width: the long label takes the row and wraps tight instead of over three tall lines. --}}
+        <label for="wh40k-env-harsh" class="tw-flex-1 tw-leading-snug" data-env-harsh-label>{{localize "WH40K.Environment.WeatherLabel"}}</label>
+        <div class="form-fields tw-flex-none">
             <input id="wh40k-env-harsh" type="checkbox" name="harshConditions" data-wh40k-hook="env-harsh-input" {{#if harshConditions}}checked{{/if}} />
         </div>
         <p class="hint">{{localize "WH40K.Environment.WeatherHint"}}</p>
