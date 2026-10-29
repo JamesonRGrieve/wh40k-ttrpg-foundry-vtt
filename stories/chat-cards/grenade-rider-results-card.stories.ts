@@ -73,7 +73,7 @@ const PHOTON_FLASH = riderFixture({
     test: { characteristic: 'agility', modifier: 10 },
     condition: 'blinded',
     duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-    effect: 'Everyone in the flash tests Agility (+10); a failure leaves them Blinded for a round per degree of failure.',
+    effect: 'Everyone in the flash tests Agility (+10); a failure leaves them blinded for a round per degree of failure.',
 });
 
 const RT_PSYK_OUT = riderFixture({

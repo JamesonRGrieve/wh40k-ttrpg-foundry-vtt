@@ -55,7 +55,7 @@ const ITEMS: GrenadeItemView[] = [
             test: { characteristic: 'agility', modifier: 10 },
             condition: 'blinded',
             duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-            effect: 'Everyone in the flash tests Agility (+10); a failure leaves them Blinded for a round per degree of failure.',
+            effect: 'Everyone in the flash tests Agility (+10); a failure leaves them blinded for a round per degree of failure.',
         }),
     ),
     grenade(
@@ -221,7 +221,7 @@ export const ThrownCard: Story = {
     },
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-grenade-card]')?.getAttribute('data-wh40k-system')).toBe('dh2');
-        await expect(canvasElement.querySelector('[data-grenade-effect]')?.textContent).toContain('Ordinary (+10) Agility test');
+        await expect(canvasElement.querySelector('[data-grenade-effect]')?.textContent).toContain('tests Agility (+10)');
         const view = within(canvasElement);
         await expect(view.getByText('Photon Flash Grenade')).toBeTruthy();
         await expect(view.getByText('Agility +10')).toBeTruthy();
@@ -241,7 +241,7 @@ export const SmokeCardHasNothingToResolve: Story = {
         return renderSheet(chatTemplateSrc, { rider: selectedGrenade, canResolve: selectedGrenade?.resolvable === true, gameSystem: 'dh2' });
     },
     play: async ({ canvasElement }) => {
-        await expect(canvasElement.querySelector('[data-grenade-effect]')?.textContent).toContain('smokescreen');
+        await expect(canvasElement.querySelector('[data-grenade-effect]')?.textContent).toContain('blocks sight');
         await expect(canvasElement.querySelector('.roll-control__resolve-rider')).toBeNull();
     },
 };

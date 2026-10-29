@@ -93,7 +93,7 @@ export const RadGrenadeRiderFollowsDamage: Story = {
         await expect(rider.querySelector('[data-damage-rider-struck]')?.textContent).toContain('Heretic, Accomplice');
         await expect(rider.querySelector('[data-grenade-test]')?.textContent).toBe('Toughness -20');
         await expect(view.getByText('2 m radius')).toBeTruthy();
-        await expect(rider.querySelector('[data-grenade-effect]')?.textContent).toContain('2d10 Toughness damage');
+        await expect(rider.querySelector('[data-grenade-effect]')?.textContent).toContain('loses 2d10 Toughness');
         // Resolve Rider (#623) rolls each creature struck from this card's stored roll.
         const resolve = view.getByRole('button', { name: /Resolve Rider/i });
         await expect(resolve.classList.contains('roll-control__resolve-rider')).toBe(true);
