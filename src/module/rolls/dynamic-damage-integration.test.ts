@@ -3,6 +3,7 @@ import type { DynamicModifierEntry, GrantedEffectEntry } from '../data/shared/mo
 import { invalidateCriticalDamageCache } from '../rules/critical-damage.ts';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
 import type { TargetTagSource } from '../rules/situation-tags.ts';
+import { packCollection } from '../testing/pack-metadata.ts';
 import { AssignDamageData, type ActorLike } from './assign-damage-data.ts';
 import { type AttackDataLike, Hit, resetInertTriggerReports } from './damage-data.ts';
 
@@ -475,7 +476,7 @@ describe('Hit.applyDynamicModifiers — GM warning for triggers that can never m
 /* -------------------------------------------------------------------------- */
 
 describe('AssignDamageData — defender-side crit-reduction hooks (Direction #7)', () => {
-    beforeEach(() => vi.stubGlobal('game', { packs: { get: () => undefined } }));
+    beforeEach(() => vi.stubGlobal('game', { packs: packCollection() }));
     afterEach(() => {
         invalidateCriticalDamageCache();
         vi.unstubAllGlobals();

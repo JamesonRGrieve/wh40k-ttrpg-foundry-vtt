@@ -7,6 +7,7 @@ import { collectWeaponQualityDieOps } from '../rules/weapon-quality-effects.ts';
 import { chosenQualityEffects, setWeaponQualityPayloadsForTesting } from '../rules/weapon-quality-payloads.ts';
 import { hookScale, makeDynamicHook } from '../testing/dynamic-modifier-hook.ts';
 import { installFindSplice, uninstallFindSplice } from '../testing/find-splice.ts';
+import { packCollection } from '../testing/pack-metadata.ts';
 import { type AttackDataLike, Hit } from './damage-data.ts';
 import type { ModifierSourcesShape } from './passive-modifiers.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
@@ -705,7 +706,7 @@ describe.each(SYSTEMS)('a pack weapon’s quality ids reach the roll’s attack 
 
     it('Vengeful (9) turns a damage 9 into Righteous Fury; without it a 9 does not', async () => {
         // A Righteous Fury looks up the critical-damage table pack; none is loaded here.
-        vi.stubGlobal('game', { i18n: { localize: (key: string) => key }, wh40k: { log: () => undefined }, packs: { get: () => undefined } });
+        vi.stubGlobal('game', { i18n: { localize: (key: string) => key }, wh40k: { log: () => undefined }, packs: packCollection() });
         dieQueue.push(9, 3);
         expect((await Hit.createHit(attack(actor(gameSystem), weapon({ qualities: ['vengeful-9'] })), 1)).righteousFury).toHaveLength(1);
         dieQueue.push(9);

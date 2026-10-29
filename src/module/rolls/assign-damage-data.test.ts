@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
 import { invalidateCriticalDamageCache } from '../rules/critical-damage';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
+import { packCollection } from '../testing/pack-metadata.ts';
 import { AssignDamageData, type ActorLike, criticalChartOf } from './assign-damage-data';
 import type { CriticalChartLookupFn } from './vehicle-critical-tables.ts';
 
@@ -386,7 +387,7 @@ describe('Critical Damage record capture (#108)', () => {
     it('populates criticalRecord when damage overflows wounds into critical', async () => {
         // No content pack installed → the record still resolves with empty effect
         // + riders, proving the capture wiring runs off the same lookup.
-        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        vi.stubGlobal('game', { packs: packCollection() });
         invalidateCriticalDamageCache();
         const actor = buildActor({ wounds: { value: 2, critical: 0 } });
         // Body armour 4 (pen 10 → 0) + TB 3 = 3 reduction; 20 - 3 = 17 damage.
@@ -403,7 +404,7 @@ describe('Critical Damage record capture (#108)', () => {
 
     it("reads a Daemon Engine's Critical damage on the chart its trait names, from its own book (#678; BC Tome of Decay p. 96)", async () => {
         // The creature's source pack sits in a book folder; the chart lookup prefers that folder.
-        vi.stubGlobal('game', { packs: { get: (id: string) => (id === 'wh40k-rpg.bc-bestiary' ? { folder: { id: 'book-folder' } } : undefined) } });
+        vi.stubGlobal('game', { packs: packCollection([], (id) => (id === 'wh40k-rpg.bc-bestiary' ? { folder: { id: 'book-folder' } } : undefined)) });
         invalidateCriticalDamageCache();
         const daemonEngine = { name: 'Daemon Engine (5)', system: { specialization: '5', criticalChart: 'daemon-engine' } };
         // An NPC's DataModel carries its line on its class (`BCNPCData.gameSystem`), not as a field.
@@ -437,7 +438,7 @@ describe('Critical Damage record capture (#108)', () => {
     });
 
     it("keeps the Critical Effects tables when the creature's traits name no chart, or the line's packs carry none", async () => {
-        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        vi.stubGlobal('game', { packs: packCollection() });
         invalidateCriticalDamageCache();
         const plain = new AssignDamageData(buildActor({ wounds: { value: 2, critical: 0 } }), {
             location: 'Body',
@@ -456,7 +457,7 @@ describe('Critical Damage record capture (#108)', () => {
     });
 
     it('leaves criticalRecord null when the hit deals no critical damage', async () => {
-        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        vi.stubGlobal('game', { packs: packCollection() });
         invalidateCriticalDamageCache();
         const actor = buildActor(); // wounds 10
         const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 10, totalPenetration: 0, totalFatigue: 0 });
@@ -468,7 +469,7 @@ describe('Critical Damage record capture (#108)', () => {
 });
 
 describe('defender-side crit reduction via dynamicModifiers (True Grit, data-driven)', () => {
-    beforeEach(() => vi.stubGlobal('game', { packs: { get: () => undefined } }));
+    beforeEach(() => vi.stubGlobal('game', { packs: packCollection() }));
     afterEach(() => {
         invalidateCriticalDamageCache();
         vi.unstubAllGlobals();
