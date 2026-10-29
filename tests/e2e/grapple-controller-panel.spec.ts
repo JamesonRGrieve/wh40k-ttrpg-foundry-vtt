@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { actorFlag, createActor, deleteDocuments, openActorSheet, prepareStage, snapWindow } from './combat-resolution-flow';
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
+import { fixD100 } from './lib/dice';
 import { joinOrSkip } from './lib/join';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -48,22 +49,6 @@ async function readSection(page: Page, sheetId: string, selector: string): Promi
         },
         { id: sheetId, sel: selector },
     );
-}
-
-/** Feed Foundry's dice these d100 faces in order (then restore the RNG once they are drawn). */
-async function fixD100(page: Page, faces: number[]): Promise<void> {
-    await page.evaluate((queue) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `CONFIG.Dice` has no browser-side types
-        const dice = (globalThis as unknown as { CONFIG: { Dice: { randomUniform: () => number } } }).CONFIG.Dice;
-        const original = dice.randomUniform;
-        const pending = [...queue];
-        dice.randomUniform = (): number => {
-            const face = pending.shift();
-            if (pending.length === 0) dice.randomUniform = original;
-            // Foundry maps a uniform u to the face ceil((1 − u) × faces) (DiceTerm#mapRandomFace).
-            return face === undefined ? original() : 1 - (face - 0.5) / 100;
-        };
-    }, faces);
 }
 
 async function setGrappleFlag(page: Page, actorId: string, value: object): Promise<void> {

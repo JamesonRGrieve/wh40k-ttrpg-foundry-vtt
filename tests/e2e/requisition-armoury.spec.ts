@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
+import { fixD100 } from './lib/dice';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
@@ -189,7 +190,9 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
 
     test('OW armoury card: priced through the Logistics Test, Table 6-2 rows, no rating loss (#496)', async ({ page }) => {
         await joinOrSkip(page);
-        // Rating 0 and a Rare item (Company −30, Violent Impasse −10) clamp the target to 0: always a failure.
+        // Rating 0 and a Rare item (Company −30, Violent Impasse −10) floor the target at 0. The d100 is
+        // pinned to 50: left to chance, an 01 succeeds even against 0, and the denied card turned granted.
+        await fixD100(page, [50]);
         const card = await postArmouryCard(page, {
             gameSystem: 'ow',
             system: { logisticsRating: 0 },
@@ -210,7 +213,9 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
 
     test('DH2 armoury card: a failure prints the Influence loss row (core p. 269, #496)', async ({ page }) => {
         await joinOrSkip(page);
-        // 20 Influence − 50 (Near Unique) clamps to 0: always fails, and every DoF is beyond a Fellowship bonus of 0.
+        // 20 Influence − 50 (Near Unique) floors at 0, and every DoF is beyond a Fellowship bonus of 0.
+        // The d100 is pinned to 50 so the test can't draw the 01 that would succeed against 0.
+        await fixD100(page, [50]);
         const card = await postArmouryCard(page, {
             gameSystem: 'dh2',
             system: { influence: 20, characteristics: { fellowship: { bonus: 0 } } },
