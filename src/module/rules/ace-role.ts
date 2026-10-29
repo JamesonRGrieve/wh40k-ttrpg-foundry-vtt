@@ -1,5 +1,5 @@
 /**
- * Ace role — Right Stuff Fate spend (without.md L948-L980, p. 39; #100).
+ * Ace role — Right Stuff Fate spend (#100).
  *
  * Summary: besides the usual Fate uses, an Ace can burn one Fate point to
  * pass a vehicle- or mount-related Operate or Survival test outright, scoring
@@ -22,42 +22,22 @@
 
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
+import { hasItemWithIdentifier, type IdentifiableItem } from '../utils/item-identifier.ts';
 import { RIGHT_STUFF } from './xenos-features.ts';
 
 /** Skill keys Right Stuff applies to (mirrors `RIGHT_STUFF.applicableSkills`). */
 export type RightStuffSkill = (typeof RIGHT_STUFF.applicableSkills)[number];
 
-/**
- * Case-insensitive substrings on the actor's `originPath.role` string
- * that identify the Ace role. Matching by name keeps detection content-
- * agnostic: the compendium role item is the source of truth; this only
- * narrows the actor's resolved role to the "Ace" entry at runtime. No hardcoded UUIDs (Direction
- * #7).
- */
-const ACE_ROLE_NAME_HINTS: ReadonlyArray<string> = Object.freeze(['ace']);
+/** The Ace role document's `system.identifier`. */
+export const ACE_IDENTIFIER = 'ace';
 
 /**
- * Without is an FFG-family supplement; the canonical Ace role ships
- * for the six d100 lines and is opt-in for IM via its own role mapping.
- * Imperium Maledictum does not ship the Without "Ace" role entry, so
- * the gate excludes it — matching the homologation pattern used by
- * `isMedicaeMechadendriteSystem`. Returning `true` for the six FFG
- * systems and `false` for `im` keeps homologation explicit rather
- * than accidental.
+ * Whether the actor owns the Ace role: an `originPath` item whose
+ * `system.identifier` is `ace` — matched by identifier, never by the role's
+ * display name, so a line whose packs carry no Ace role simply has none.
  */
-export function isRightStuffSystem(gameSystem: string | undefined): boolean {
-    return gameSystem !== undefined && gameSystem !== 'im';
-}
-
-/** True when the actor's resolved origin-path role is the Without "Ace" role. */
-export function actorIsAce(actor: WH40KBaseActorDocument): boolean {
-    const gameSystem = (actor.system as { gameSystem?: string } | undefined)?.gameSystem;
-    if (!isRightStuffSystem(gameSystem)) return false;
-    // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is untyped at this boundary; only role is narrowed below
-    const originPath = (actor.system as { originPath?: { role?: unknown } } | undefined)?.originPath;
-    const role = typeof originPath?.role === 'string' ? originPath.role.trim().toLowerCase() : '';
-    if (role === '') return false;
-    return ACE_ROLE_NAME_HINTS.some((hint) => role === hint || role.endsWith(` ${hint}`) || role.startsWith(`${hint} `) || role.includes(` ${hint} `));
+export function actorIsAce(actor: { readonly items: Iterable<IdentifiableItem> }): boolean {
+    return hasItemWithIdentifier(actor.items, 'originPath', ACE_IDENTIFIER);
 }
 
 /** True when Right Stuff applies to the supplied skill key. */

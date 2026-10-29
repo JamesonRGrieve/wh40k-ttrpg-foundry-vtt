@@ -1,20 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { asBaseActor as asActor } from '../testing/actor-stub.ts';
 import { stubChatRuntime, type ChatRuntimeHandle } from '../testing/chat-runtime.ts';
-import {
-    actorHasFatePoints,
-    actorIsAce,
-    canSpendRightStuff,
-    getAgilityBonus,
-    isRightStuffSkill,
-    isRightStuffSystem,
-    resolveRightStuff,
-    spendRightStuff,
-} from './ace-role.ts';
+import { actorHasFatePoints, actorIsAce, canSpendRightStuff, getAgilityBonus, isRightStuffSkill, resolveRightStuff, spendRightStuff } from './ace-role.ts';
 
 /**
- * Contract tests for the Ace role's Right Stuff Fate spend
- * (without.md L948-L980, #100). Covers detection (role + system gate),
+ * Contract tests for the Ace role's Right Stuff Fate spend (#100). Covers
+ * detection (the role owned by identifier),
  * pure resolution (DoS = AgB), and the runtime spend (fate deduction
  * + chat card with the per-system anchor).
  */
@@ -22,22 +13,6 @@ import {
 /* -------------------------------------------- */
 /*  System gating (homologation)                */
 /* -------------------------------------------- */
-
-describe('isRightStuffSystem', () => {
-    it('enables Right Stuff for the six FFG-family systems', () => {
-        for (const sys of ['dh1', 'dh2', 'bc', 'dw', 'ow', 'rt']) {
-            expect(isRightStuffSystem(sys)).toBe(true);
-        }
-    });
-
-    it('excludes Imperium Maledictum (no Without "Ace" role entry)', () => {
-        expect(isRightStuffSystem('im')).toBe(false);
-    });
-
-    it('excludes an undefined game system', () => {
-        expect(isRightStuffSystem(undefined)).toBe(false);
-    });
-});
 
 /* -------------------------------------------- */
 /*  Skill applicability                         */
@@ -67,21 +42,23 @@ interface FakeFate {
 
 interface FakeAceActor {
     name: string;
+    items: Array<{ type: string; system: { identifier: string } }>;
     system: {
         gameSystem: string;
-        originPath: { role: string };
         fate: FakeFate;
         characteristics: { agility: { bonus: number } };
     };
     update: ReturnType<typeof vi.fn>;
 }
 
+/** An actor owning a role `originPath` whose identifier is `role` (none when blank). */
 function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateValue?: number; agilityBonus?: number }): FakeAceActor {
+    const role = opts.role ?? '';
     return {
         name: 'Vex Tannor',
+        items: role === '' ? [] : [{ type: 'originPath', system: { identifier: role } }],
         system: {
             gameSystem: opts.gameSystem ?? 'dh2',
-            originPath: { role: opts.role ?? '' },
             fate: { value: opts.fateValue ?? 0 },
             characteristics: { agility: { bonus: opts.agilityBonus ?? 0 } },
         },
@@ -90,30 +67,19 @@ function makeActor(opts: { gameSystem?: string; role?: string | undefined; fateV
 }
 
 describe('actorIsAce', () => {
-    it('matches a DH2 actor whose role is "Ace"', () => {
-        expect(actorIsAce(asActor(makeActor({ role: 'Ace' })))).toBe(true);
-        expect(actorIsAce(asActor(makeActor({ role: 'ace' })))).toBe(true);
+    it('matches an actor owning the role whose identifier is `ace`', () => {
+        expect(actorIsAce(makeActor({ role: 'ace' }))).toBe(true);
     });
 
-    it('matches when the role name has descriptive prefix / suffix (word-boundary, e.g. "Tank Ace")', () => {
-        expect(actorIsAce(asActor(makeActor({ role: 'Tank Ace' })))).toBe(true);
-        expect(actorIsAce(asActor(makeActor({ role: 'Ace Operator' })))).toBe(true);
-        expect(actorIsAce(asActor(makeActor({ role: 'Ace (Pilot)' })))).toBe(true);
+    it('matches by identifier only — no role, another role, or a look-alike identifier is not the Ace', () => {
+        expect(actorIsAce(makeActor({ role: '' }))).toBe(false);
+        expect(actorIsAce(makeActor({ role: 'assassin' }))).toBe(false);
+        expect(actorIsAce(makeActor({ role: 'tank-ace' }))).toBe(false);
     });
 
-    it('rejects when the role is empty / unrelated', () => {
-        expect(actorIsAce(asActor(makeActor({ role: '' })))).toBe(false);
-        expect(actorIsAce(asActor(makeActor({ role: 'Assassin' })))).toBe(false);
-        expect(actorIsAce(asActor(makeActor({ role: 'Acolyte' })))).toBe(false);
-    });
-
-    it('rejects on Imperium Maledictum even with role "Ace" (homologation gate)', () => {
-        expect(actorIsAce(asActor(makeActor({ gameSystem: 'im', role: 'Ace' })))).toBe(false);
-    });
-
-    it('matches across the other five FFG systems', () => {
-        for (const sys of ['dh1', 'bc', 'dw', 'ow', 'rt']) {
-            expect(actorIsAce(asActor(makeActor({ gameSystem: sys, role: 'Ace' })))).toBe(true);
+    it('is the same on every line that ships the role', () => {
+        for (const sys of ['dh1', 'dh2', 'bc', 'dw', 'ow', 'rt', 'im']) {
+            expect(actorIsAce(makeActor({ gameSystem: sys, role: 'ace' }))).toBe(true);
         }
     });
 });
@@ -133,9 +99,9 @@ describe('actorHasFatePoints / getAgilityBonus', () => {
 
 describe('canSpendRightStuff', () => {
     it('requires both Ace role and at least one Fate point', () => {
-        expect(canSpendRightStuff(asActor(makeActor({ role: 'Ace', fateValue: 1 })))).toBe(true);
-        expect(canSpendRightStuff(asActor(makeActor({ role: 'Ace', fateValue: 0 })))).toBe(false);
-        expect(canSpendRightStuff(asActor(makeActor({ role: 'Assassin', fateValue: 3 })))).toBe(false);
+        expect(canSpendRightStuff(asActor(makeActor({ role: 'ace', fateValue: 1 })))).toBe(true);
+        expect(canSpendRightStuff(asActor(makeActor({ role: 'ace', fateValue: 0 })))).toBe(false);
+        expect(canSpendRightStuff(asActor(makeActor({ role: 'assassin', fateValue: 3 })))).toBe(false);
     });
 });
 
@@ -196,7 +162,7 @@ describe('spendRightStuff', () => {
     });
 
     it('deducts one Fate point and emits an auto-success card', async () => {
-        const actor = makeActor({ role: 'Ace', fateValue: 3, agilityBonus: 4 });
+        const actor = makeActor({ role: 'ace', fateValue: 3, agilityBonus: 4 });
         const res = await spendRightStuff(asActor(actor), 'operate');
 
         expect(res).not.toBeNull();
@@ -209,7 +175,7 @@ describe('spendRightStuff', () => {
     });
 
     it('refuses to spend when the actor is not an Ace', async () => {
-        const actor = makeActor({ role: 'Assassin', fateValue: 3, agilityBonus: 4 });
+        const actor = makeActor({ role: 'assassin', fateValue: 3, agilityBonus: 4 });
         const res = await spendRightStuff(asActor(actor), 'operate');
         expect(res).toBeNull();
         expect(actor.update).not.toHaveBeenCalled();
@@ -217,34 +183,28 @@ describe('spendRightStuff', () => {
     });
 
     it('refuses to spend when the actor has no Fate points', async () => {
-        const actor = makeActor({ role: 'Ace', fateValue: 0, agilityBonus: 4 });
+        const actor = makeActor({ role: 'ace', fateValue: 0, agilityBonus: 4 });
         const res = await spendRightStuff(asActor(actor), 'operate');
         expect(res).toBeNull();
         expect(actor.update).not.toHaveBeenCalled();
     });
 
     it('refuses to spend on a non-applicable skill', async () => {
-        const actor = makeActor({ role: 'Ace', fateValue: 3, agilityBonus: 4 });
+        const actor = makeActor({ role: 'ace', fateValue: 3, agilityBonus: 4 });
         // The runtime guard rejects non-applicable skills; cast through string narrowed to the parameter union.
         const res = await spendRightStuff(asActor(actor), 'dodge' as 'operate' | 'survival');
         expect(res).toBeNull();
     });
 
     it('propagates the actor game system onto the chat card for per-system theming', async () => {
-        const actor = makeActor({ gameSystem: 'rt', role: 'Ace', fateValue: 2, agilityBonus: 3 });
+        const actor = makeActor({ gameSystem: 'rt', role: 'ace', fateValue: 2, agilityBonus: 3 });
         await spendRightStuff(asActor(actor), 'survival');
         expect(chat.lastContent()).toContain('sys="rt"');
         expect(chat.lastContent()).toContain('skill="survival"');
     });
 
-    it('refuses on Imperium Maledictum even when role is "Ace"', async () => {
-        const actor = makeActor({ gameSystem: 'im', role: 'Ace', fateValue: 2, agilityBonus: 3 });
-        const res = await spendRightStuff(asActor(actor), 'operate');
-        expect(res).toBeNull();
-    });
-
     it('still spends when Agility bonus is 0 — auto-success itself is the value', async () => {
-        const actor = makeActor({ role: 'Ace', fateValue: 1, agilityBonus: 0 });
+        const actor = makeActor({ role: 'ace', fateValue: 1, agilityBonus: 0 });
         const res = await spendRightStuff(asActor(actor), 'operate');
         expect(res).not.toBeNull();
         expect(res?.degrees).toBe(0);

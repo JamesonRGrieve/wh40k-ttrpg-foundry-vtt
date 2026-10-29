@@ -5,8 +5,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the Ace role's Right Stuff Fate spend
- * (GitHub #100 — without.md L948-L980).
+ * Tier B coverage of the Ace role's Right Stuff Fate spend (GitHub #100).
  *
  *  1. Renders the RightStuffDialog via its deployed module URL,
  *     asserts the skill picker (Operate / Survival), the spend button,
