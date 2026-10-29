@@ -16,7 +16,7 @@
 
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../../config/game-systems/types.ts';
 import { isLineVariantContainer, isPlainObject, systemForLine } from '../../utils/item-variant-utils.ts';
-import { isLineOriginPack } from '../../utils/line-packs.ts';
+import { isLineOriginPack, type PackMetadataLike } from '../../utils/line-packs.ts';
 
 /** The fields the discovery index loads: the type, the art, and the whole stored `system` with its per-line containers. */
 export const DISCOVERY_INDEX_FIELDS: readonly string[] = ['type', 'img', 'system'];
@@ -45,9 +45,9 @@ export function carriesLineBranch(source: unknown, line: GameSystemId): boolean 
     return isPlainObject(branch) && typeof branch['provenance'] === 'string';
 }
 
-/** The origin packs, by name, of every line other than `line`. */
-export function otherLineOriginPacks(packNames: readonly string[], line: GameSystemId): string[] {
-    return packNames.filter((name) => ALL_SYSTEM_IDS.some((other) => other !== line && isLineOriginPack(name, other)));
+/** The names of the origin packs, by their declared line, of every line other than `line`. */
+export function otherLineOriginPacks(packs: readonly PackMetadataLike[], line: GameSystemId): string[] {
+    return packs.filter((pack) => ALL_SYSTEM_IDS.some((other) => other !== line && isLineOriginPack(pack, other))).map((pack) => pack.name);
 }
 
 /**

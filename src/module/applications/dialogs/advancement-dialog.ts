@@ -418,7 +418,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      */
     async #loadLineOrigins(): Promise<LineOriginEntry[]> {
         const gameSystem = this.#getGameSystemId();
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineOriginPack(p.metadata.name, gameSystem));
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineOriginPack(p.metadata, gameSystem));
         const indexes = await Promise.all(packs.map(async (pack) => ({ pack, index: await pack.getIndex({ fields: [...LINE_ORIGIN_FIELDS] }) })));
         return indexes.flatMap(({ pack, index }) =>
             Array.from(index, (rawEntry) => {
@@ -832,7 +832,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const result: PreparedTalentAdvance[] = [];
 
         // Every book's talent pack of the line, not a hand-kept list (#674).
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata.name, gameSystem, 'talents'));
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata, gameSystem, 'talents'));
 
         // Cache owned talents by (base name, specialization)
         const ownedByKey = new Map<string, Item>();
@@ -1088,7 +1088,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         };
 
         // Every book's psychic power pack of the line, not a hand-kept list (#674).
-        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata.name, gameSystem, 'psychic-powers'));
+        const packs = game.packs.filter((p) => p.documentName === 'Item' && isLineBookPack(p.metadata, gameSystem, 'psychic-powers'));
 
         const ownedPowers = new Set(this.actor.items.filter((i) => i.type === 'psychicPower').map((i) => i.name.toLowerCase()));
 

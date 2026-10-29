@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
-import { isLineOriginPack } from '../utils/line-packs.ts';
+import { isLineOriginPack, type PackMetadataLike } from '../utils/line-packs.ts';
 import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from './elite-advances.ts';
 
 /**
@@ -78,11 +78,17 @@ function readSourceDoc(path: string): { _id: string; name: string; system: objec
 
 /** The documents in `line`'s origin packs in the private content, as compiled, for the dialog's walk. */
 function privateLineOrigins(line: string): LineOriginEntry[] {
+    // Select by each pack's declared flags in the private manifest, as the dialog does.
+    const manifest = JSON.parse(readFileSync(join(PRIVATE_ROOT, 'system.packs.json'), 'utf8')) as { packs: PackMetadataLike[] };
+    const declared = new Map(manifest.packs.map((pack) => [pack.name, pack]));
     const packDirs = readdirSync(PRIVATE_ROOT, { withFileTypes: true })
         .filter((entry) => entry.isDirectory())
         .flatMap((group) =>
             readdirSync(join(PRIVATE_ROOT, group.name), { withFileTypes: true })
-                .filter((pack) => pack.isDirectory() && isLineOriginPack(pack.name, line))
+                .filter((pack) => {
+                    const metadata = declared.get(pack.name);
+                    return pack.isDirectory() && metadata !== undefined && isLineOriginPack(metadata, line);
+                })
                 .map((pack) => join(PRIVATE_ROOT, group.name, pack.name, '_source')),
         );
     return packDirs.flatMap((dir) =>

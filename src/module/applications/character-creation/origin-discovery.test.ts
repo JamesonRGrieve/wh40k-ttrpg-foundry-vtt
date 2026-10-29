@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { PackMetadataLike } from '../../utils/line-packs.ts';
 import { carriesLineBranch, type DiscoveryIndexEntry, discoverableEntries, discoveredOriginDocument, otherLineOriginPacks } from './origin-discovery.ts';
 
 /**
@@ -34,14 +35,18 @@ describe('carriesLineBranch', () => {
 
 describe('otherLineOriginPacks', () => {
     it('keeps every other line’s origin packs and drops the line’s own, item packs and homebrew packs', () => {
-        const names = [
-            'dh2-core-origins-homeworlds',
-            'ow-core-origins-homeworlds',
-            'rt-storm-origins-motivations',
-            'ow-core-items-talents',
-            'hb-dh2-origins-homeworlds',
+        const pack = (name: string, line: string, category: string, homebrew = false): PackMetadataLike => ({
+            name,
+            flags: { 'wh40k-rpg': { line, category, homebrew } },
+        });
+        const packs = [
+            pack('a', 'dh2', 'origins-homeworlds'),
+            pack('b', 'ow', 'origins-homeworlds'),
+            pack('c', 'rt', 'origins-motivations'),
+            pack('d', 'ow', 'talents'),
+            pack('e', 'dh2', 'origins-homeworlds', true),
         ];
-        expect(otherLineOriginPacks(names, 'dh2')).toEqual(['ow-core-origins-homeworlds', 'rt-storm-origins-motivations']);
+        expect(otherLineOriginPacks(packs, 'dh2')).toEqual(['b', 'c']);
     });
 });
 

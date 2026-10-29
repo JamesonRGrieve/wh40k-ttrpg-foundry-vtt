@@ -1051,7 +1051,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _discoverCrossLineOrigins(seen: Set<string>): Promise<NormalizedOrigin[]> {
         const packNames = otherLineOriginPacks(
-            game.packs.map((p) => p.metadata.name),
+            game.packs.map((p) => p.metadata),
             this.gameSystem,
         );
         const indexes = await Promise.all(
