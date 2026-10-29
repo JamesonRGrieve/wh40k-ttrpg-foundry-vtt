@@ -47,13 +47,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare addictive: number;
     /** A service's hire consequences: the threat it draws and the Subtlety it changes by. */
     declare hire: { threatLevel: number; subtlety: number };
-    /**
-     * Profane Object payload. When non-null, this gear
-     * piece carries the corruption-bound mechanical hook; the engine
-     * consults `rules/profane-objects.ts` for the shape and applies the
-     * aura / per-action effect while the item is held / equipped.
-     */
-    declare profaneObjectId: string | null;
 
     // Properties from PhysicalItemTemplate
     declare weight: number;
@@ -112,9 +105,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
-
-            // Profane Object slug. Null for ordinary gear.
-            profaneObjectId: new fields.StringField({ required: false, blank: true, initial: '', nullable: true }),
 
             // What hiring a service costs beyond its requisition: the threat it draws on
             // the warband and the Subtlety it changes by (negative = lost). Both 0 for

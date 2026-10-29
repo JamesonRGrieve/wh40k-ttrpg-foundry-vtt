@@ -2362,16 +2362,6 @@
                 "BadgeLabel": "Manacled"
             }
         },
-        "ProfaneObject": {
-            "Badge": "Profane Object",
-            "AuraLabel": "Aura",
-            "AuraRadius": "Radius",
-            "HookLabel": "Per-Action Hook",
-            "HookTrigger": "Trigger",
-            "Corruption": "Corruption",
-            "Insanity": "Insanity",
-            "EmptyHookText": "No per-action hook — aura only."
-        },
         "Lead": {
             "Label": "Investigation Lead",
             "Type": {

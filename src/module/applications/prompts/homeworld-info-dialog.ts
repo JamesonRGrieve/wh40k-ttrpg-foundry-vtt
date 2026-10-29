@@ -30,6 +30,7 @@ function dialogFor(line: string): ApplicationV2Ctor {
         template: 'systems/wh40k-rpg/templates/prompt/homeworld-info-dialog.hbs',
         contextKey: 'groups',
         extraClasses: ['standard-form'],
+        context: { line },
         // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs is Foundry's CompendiumCollection (untyped document shape); narrowed to the HomeworldPack surface the reader reads
         cards: async () => homeworldCardGroups(await readLineHomeworlds(line, game.packs as unknown as Iterable<HomeworldPack>)),
     });

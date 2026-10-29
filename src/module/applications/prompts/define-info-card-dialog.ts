@@ -32,6 +32,9 @@ export interface InfoCardDialogConfig {
     cards: () => readonly unknown[] | Promise<readonly unknown[]>;
     /** Extra root classes beyond `['wh40k-rpg', 'dialog', id]`. */
     extraClasses?: readonly string[];
+    /** Fixed values merged into the context beside the cards (e.g. the game line the template themes by). */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: a free-form Handlebars context bag, merged as-is
+    context?: Readonly<Record<string, unknown>>;
     /** Scrollable selectors for the cards PART (default `['.{id}__scroll']`). */
     scrollable?: string[];
 }
@@ -61,7 +64,7 @@ export function defineInfoCardDialog(config: InfoCardDialogConfig): ApplicationV
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns a free-form Handlebars context bag
         override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = await super._prepareContext(options);
-            return { ...context, [config.contextKey]: await config.cards() };
+            return { ...context, ...config.context, [config.contextKey]: await config.cards() };
         }
     }
 

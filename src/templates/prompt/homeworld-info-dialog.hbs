@@ -1,5 +1,5 @@
 {{!-- Home-world reference dialog: every home-world the line's packs carry, grouped by pack. --}}
-<div class="homeworld-info-dialog__scroll tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] tw-max-h-[70vh] tw-overflow-y-auto">
+<div class="homeworld-info-dialog__scroll tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9] tw-max-h-[70vh] tw-overflow-y-auto" data-wh40k-system="{{line}}">
 
     <div class="tw-mb-4 tw-text-center tw-text-[0.85rem] tw-text-[#9a9a8a] tw-italic">
         {{localize "WH40K.HomeworldInfo.Description"}}
@@ -7,7 +7,7 @@
 
     {{#each groups as |group|}}
         <section class="tw-mb-5" data-homeworld-group="{{group.label}}">
-            <h2 class="tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.1em] tw-text-[#9a9a8a] tw-border-b tw-border-[rgba(255,255,255,0.08)] tw-pb-1 tw-mb-3">
+            <h2 class="tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.1em] tw-text-[#9a9a8a] tw-border-b tw-border-[rgba(255,255,255,0.08)] dh2:tw-border-bronze dh1:tw-border-bronze rt:tw-border-amber-700 bc:tw-border-crimson tw-pb-1 tw-mb-3">
                 {{group.label}}
             </h2>
 

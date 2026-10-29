@@ -734,10 +734,6 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         title: 'Item Sheets/LeadSheet',
         exports: ['Default', 'Pursued', 'DeadEnd', 'RendersFields'],
     },
-    {
-        title: 'Item Sheets/ProfaneObjectGearSheet',
-        exports: ['EyeOfTzeentch', 'FoundationStone', 'HammerOfSaintLucillius', 'LibrisMaleficarum', 'OrdinaryGearHidesPanel', 'RendersPanel'],
-    },
 ];
 
 // ---------------------------------------------------------------------------

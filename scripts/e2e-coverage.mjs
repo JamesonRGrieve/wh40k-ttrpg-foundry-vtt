@@ -1384,10 +1384,9 @@ const UTILS_EXTRA_FLOWS = [
 recordDimension('utils-extra.flow', covered['utils-extra.flow'], UTILS_EXTRA_FLOWS);
 
 // tests/e2e/rules-progression.spec.ts — remaining uncovered src/module/rules/*
-// (xenos-features, profane-objects, weapon-training, weapon-modifiers, range).
+// (xenos-features, weapon-training, weapon-modifiers, range).
 const RULE_PROGRESSION_FLOWS = [
     'xenos-features-constants',
-    'profane-objects-module-shape',
     'weapon-training-check-noTraining',
     'weapon-training-check-untrained',
     'weapon-training-modifier',

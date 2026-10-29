@@ -17,8 +17,6 @@ import { test } from './lib/test';
  * before this spec because the system code reaches them only via
  * Actor / Item roll methods, which take other paths in headless mode):
  *   - `xenos-features.ts` — role / talent / homeworld constant table.
- *   - `profane-objects.ts` — Profane Object item-shape module (type
- *     surface; covered for the import + module-shape sanity).
  *   - `weapon-training.ts` — `checkWeaponTraining`,
  *     `getWeaponTrainingModifier`, `getWeaponTrainingDescription`
  *     (no-training / untrained branches against a synthetic actor).
@@ -38,7 +36,6 @@ import { test } from './lib/test';
 
 const RULE_PROGRESSION_FLOWS = [
     'xenos-features-constants',
-    'profane-objects-module-shape',
     'weapon-training-check-noTraining',
     'weapon-training-check-untrained',
     'weapon-training-modifier',
@@ -74,7 +71,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         interface TalentDoc {
             system?: { modifiers?: { situational?: { skills?: SituationalSkillRow[] } } };
         }
-        type ProfaneObjectsModule = ImportError;
         interface TrainingCheckResult {
             trained?: boolean;
             talent?: { name: string } | null;
@@ -132,7 +128,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             }
         };
 
-        // ---------- content registries (xenos / profane) ----------
+        // ---------- content registries (xenos) ----------
         async function probeContentRegistries(): Promise<void> {
             // ---------- xenos-features ----------
             const xenos = await loadModule<XenosFeaturesModule>('xenos-features');
@@ -158,20 +154,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     );
                 } catch (err) {
                     record('xenos-features-constants', false, String((err as Error).message));
-                }
-            }
-
-            // ---------- profane-objects ----------
-            // Type-only module: importing it confirms the build emits a
-            // resolvable chunk and that the shape surface stays stable.
-            const profane = await loadModule<ProfaneObjectsModule>('profane-objects');
-            if (profane.__importError !== undefined) {
-                record('profane-objects-module-shape', false, String(profane.__importError));
-            } else {
-                try {
-                    record('profane-objects-module-shape', typeof profane === 'object', null);
-                } catch (err) {
-                    record('profane-objects-module-shape', false, String((err as Error).message));
                 }
             }
         }

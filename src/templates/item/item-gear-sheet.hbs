@@ -30,56 +30,10 @@
             ×{{system.quantity}}
           </span>
           {{/if}}
-          {{#if profaneObject}}
-          {{!-- An outlined chip in the themed danger red: red text on a red fill was unreadable (#660). --}}
-          <span data-wh40k-hook="gear-profane-badge" class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-solid tw-border-crimson/60 tw-bg-crimson/10 tw-text-[color:var(--wh40k-danger-text)] tw-px-2 tw-py-0.5 tw-text-xs tw-font-display" title="{{localize 'WH40K.ProfaneObject.Badge'}}">
-            <i class="fas fa-skull"></i>
-            {{profaneObject.label}}
-          </span>
-          {{/if}}
         </div>
       </div>
     </header>
 
-    {{#if profaneObject}}
-    {{!-- ═══════════════════════════════════════════════════════════════════
-         PROFANE OBJECT PANEL: aura + per-action hook (within.md p. 52)
-    ═══════════════════════════════════════════════════════════════════ --}}
-    {{!-- Theme text on a light crimson wash: the strip's red-on-maroon text read at ~2:1 (#660). --}}
-    <section data-wh40k-hook="gear-profane-panel" class="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-border-b tw-border-crimson/60 tw-bg-crimson/10 tw-text-[color:var(--wh40k-text-dark)]">
-      <div class="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-display tw-uppercase tw-tracking-wider tw-text-[color:var(--wh40k-danger-text)]">
-        <i class="fas fa-skull"></i>
-        <span>{{localize "WH40K.ProfaneObject.Badge"}}</span>
-      </div>
-      {{#if profaneObject.aura}}
-      <div data-wh40k-hook="gear-profane-aura" class="tw-flex tw-items-start tw-gap-2 tw-text-xs">
-        <i class="fas fa-circle-dot tw-mt-0.5 tw-text-[color:var(--wh40k-danger-text)]"></i>
-        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1">
-          <span class="tw-font-medium tw-text-[color:var(--wh40k-danger-text)]">
-            {{localize "WH40K.ProfaneObject.AuraLabel"}}
-            <span class="tw-text-[color:var(--wh40k-text-muted)]">— {{localize "WH40K.ProfaneObject.AuraRadius"}}: {{profaneObject.aura.radiusMetres}}m</span>
-          </span>
-          <span>{{profaneObject.aura.label}}</span>
-        </div>
-      </div>
-      {{/if}}
-      <div data-wh40k-hook="gear-profane-hook" class="tw-flex tw-items-start tw-gap-2 tw-text-xs">
-        <i class="fas fa-bolt tw-mt-0.5 tw-text-[color:var(--wh40k-danger-text)]"></i>
-        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-flex-1">
-          <span class="tw-font-medium tw-text-[color:var(--wh40k-danger-text)]">{{localize "WH40K.ProfaneObject.HookLabel"}}</span>
-          {{#if profaneObject.hook}}
-          <span>
-            {{localize "WH40K.ProfaneObject.HookTrigger"}}: <strong>{{profaneObject.hook.trigger}}</strong>
-            · {{localize "WH40K.ProfaneObject.Corruption"}} +{{profaneObject.hook.corruptionPerTrigger}}
-            · {{localize "WH40K.ProfaneObject.Insanity"}} +{{profaneObject.hook.insanityPerTrigger}}
-          </span>
-          {{else}}
-          <span class="tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize "WH40K.ProfaneObject.EmptyHookText"}}</span>
-          {{/if}}
-        </div>
-      </div>
-    </section>
-    {{/if}}
 
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Key gear statistics with quick adjusters
