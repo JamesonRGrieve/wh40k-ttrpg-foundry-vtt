@@ -5,6 +5,8 @@ export interface DeclaredPack {
     path: string;
     type: string;
     system?: string;
+    /** The pack's line, category and builder ranks (`src/module/utils/line-packs.ts`). */
+    flags?: { 'wh40k-rpg'?: Partial<import('../../src/module/utils/line-packs.ts').PackLineFlags> };
 }
 
 /** A `packFolders` tree node. */

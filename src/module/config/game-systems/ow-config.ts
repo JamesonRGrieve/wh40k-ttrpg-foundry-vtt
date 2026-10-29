@@ -265,25 +265,9 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
                 { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
             ],
             optionalStep: null,
-            // Home worlds, and the Regiment Creation steps (Core Rulebook p. 57).
+            // Home worlds, and the regiment-creation steps.
             additionalSteps: ['homeWorld', 'regimentType', 'commandingOfficer', 'trainingDoctrine', 'specialEquipmentDoctrine', 'regimentalDrawback'],
             grantFields: ['fateThreshold'],
-            packs: [
-                'ow-core-origins-homeworlds',
-                'ow-core-origins-regiment-types',
-                'ow-core-origins-specialities',
-                'ow-core-origins-commanding-officers',
-                'ow-core-origins-training-doctrines',
-                'ow-core-origins-special-equipment-doctrines',
-                'ow-hammer-origins-homeworlds',
-                'ow-hammer-origins-regiment-types',
-                'ow-hammer-origins-training-doctrines',
-                'ow-hammer-origins-special-equipment-doctrines',
-                'ow-shield-origins-homeworlds',
-                'ow-shield-origins-regiment-types',
-                'ow-shield-origins-training-doctrines',
-                'ow-shield-origins-special-equipment-doctrines',
-            ],
         };
     }
 

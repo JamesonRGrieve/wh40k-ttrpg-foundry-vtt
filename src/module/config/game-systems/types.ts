@@ -65,11 +65,11 @@ export interface OriginStepConfig {
     additionalSteps?: string[];
     /** The line-specific grant fields this line's origins carry (Fate threshold, the Emperor's Blessing). */
     grantFields?: OriginGrantField[];
-    packs: string[];
-    /** Optional "Equip Acolyte" step (DH2e Stage 4) for selecting starting gear. */
+    /**
+     * Optional starting-gear step. The packs the builder reads for origins and for
+     * this step are the ones whose manifest flags rank them for the line (`line-packs.ts`).
+     */
     equipmentStep?: OriginStepDef | null;
-    /** Compendium packs to browse for the equipment step (Item packs). */
-    equipmentPacks?: string[];
 }
 
 /** Result of computing an advancement cost */

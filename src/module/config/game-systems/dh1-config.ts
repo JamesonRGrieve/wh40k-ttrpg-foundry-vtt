@@ -159,11 +159,9 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
                 { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 2 },
             ],
             optionalStep: null,
-            // The supplements' backgrounds (Inquisitor's Handbook), divinations, elite
-            // advances and Ascension career paths.
+            // Backgrounds, divinations, elite advances and career paths the line's packs carry.
             additionalSteps: ['background', 'divination', 'elite', 'careerPath'],
             grantFields: ['fateThreshold'],
-            packs: ['dh1-core-origins-homeworlds', 'dh1-inquisitor-origins-homeworlds', 'dh1-core-origins-careers'],
         };
     }
 

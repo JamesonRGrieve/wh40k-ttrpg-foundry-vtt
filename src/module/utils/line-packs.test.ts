@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isLineBookPack, isLineOriginPack, type PackMetadataLike, packLineFlags, uniqueByName } from './line-packs.ts';
+import { builderPacks, isLineBookPack, isLineOriginPack, lineCategoryPack, type PackMetadataLike, packLineFlags, uniqueByName } from './line-packs.ts';
 
 /** A pack's metadata with the manifest flags. The name is arbitrary: selection reads only the flags. */
 function pack(line: string, category: string, homebrew = false): PackMetadataLike {
@@ -75,5 +75,50 @@ describe('isLineOriginPack (#681)', () => {
         expect(isLineOriginPack(pack('dh1', 'origins-careers'), 'dh2')).toBe(false);
         expect(isLineOriginPack(pack('dh2', 'talents'), 'dh2')).toBe(false);
         expect(isLineOriginPack(pack('dh2', 'origins-backgrounds', true), 'dh2')).toBe(false);
+    });
+});
+
+/** A Foundry-like pack wrapping `metadata`, with builder ranks. */
+function ranked(
+    name: string,
+    line: string,
+    category: string,
+    ranks: { originBuilder?: number; startingEquipment?: number },
+    homebrew = false,
+): { metadata: PackMetadataLike } {
+    return { metadata: { name, flags: { 'wh40k-rpg': { line, category, homebrew, ...ranks } } } };
+}
+
+describe('builderPacks', () => {
+    const packs = [
+        ranked('third', 'dh2', 'origins-roles', { originBuilder: 3 }),
+        ranked('first', 'dh2', 'origins-homeworlds', { originBuilder: 1 }),
+        ranked('gear', 'dh2', 'weapons', { startingEquipment: 1 }),
+        ranked('second', 'dh2', 'origins-backgrounds', { originBuilder: 2 }),
+        ranked('other-line', 'rt', 'origins-homeworlds', { originBuilder: 1 }),
+        ranked('unranked', 'dh2', 'origins-homeworlds', {}),
+    ];
+
+    it("returns the line's packs for the role, in their declared order", () => {
+        expect(builderPacks(packs, 'dh2', 'originBuilder').map((p) => p.metadata.name)).toEqual(['first', 'second', 'third']);
+        expect(builderPacks(packs, 'dh2', 'startingEquipment').map((p) => p.metadata.name)).toEqual(['gear']);
+    });
+
+    it('returns nothing for a line that ranks no pack for the role', () => {
+        expect(builderPacks(packs, 'rt', 'startingEquipment')).toEqual([]);
+        expect(builderPacks([{ metadata: { name: 'undeclared' } }], 'dh2', 'originBuilder')).toEqual([]);
+    });
+});
+
+describe('lineCategoryPack', () => {
+    it("returns the line's first book pack of exactly the category", () => {
+        const packs = [
+            ranked('brew', 'dh2', 'origins-divinations', {}, true),
+            ranked('sub', 'dh2', 'origins-divinations-extra', {}),
+            ranked('book', 'dh2', 'origins-divinations', {}),
+            ranked('later', 'dh2', 'origins-divinations', {}),
+        ];
+        expect(lineCategoryPack(packs, 'dh2', 'origins-divinations')?.metadata.name).toBe('book');
+        expect(lineCategoryPack(packs, 'dh1', 'origins-divinations')).toBeUndefined();
     });
 });

@@ -121,20 +121,6 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
             optionalStep: { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 },
             additionalSteps: ['eliteAdvance'],
             grantFields: ['fateThreshold'],
-            packs: [
-                'rt-core-origins-homeworlds',
-                'rt-core-origins-birthrights',
-                'rt-core-origins-lure-of-the-void',
-                'rt-core-origins-trials-and-travails',
-                'rt-core-origins-motivations',
-                'rt-core-origins-careers',
-                'rt-storm-origins-homeworlds',
-                'rt-storm-origins-birthrights',
-                'rt-storm-origins-lure-of-the-void',
-                'rt-storm-origins-trials-and-travails',
-                'rt-storm-origins-motivations',
-                'rt-storm-origins-lineages',
-            ],
         };
     }
 

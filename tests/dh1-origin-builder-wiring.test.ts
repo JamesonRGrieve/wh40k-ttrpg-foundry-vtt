@@ -21,7 +21,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
-import { stepsInPack } from './helpers/origin-pack-content.ts';
+import { builderPackNames, lineCategoryPackName, stepsInPack } from './helpers/origin-pack-content.ts';
 
 interface I18nStub {
     localize: (key: string) => string;
@@ -48,19 +48,19 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('DH1 origin-path builder wiring', () => {
 
     it('declares core steps and packs (not the empty placeholder)', () => {
         expect(config.coreSteps.length).toBeGreaterThan(0);
-        expect(config.packs.length).toBeGreaterThan(0);
+        expect(builderPackNames('dh1', 'originBuilder').length).toBeGreaterThan(0);
         expect(config.coreSteps.map((s) => s.step)).toEqual(['homeWorld', 'career']);
     });
 
     it('career content uses the canonical `career` step, never `careerPath`', () => {
-        const careerSteps = stepsInPack('dh1-core-origins-careers');
+        const careerSteps = stepsInPack(lineCategoryPackName('dh1', 'origins-careers') ?? '');
         expect(careerSteps.length).toBeGreaterThan(0);
         expect(careerSteps.every((s) => s === 'career')).toBe(true);
         expect(careerSteps).not.toContain('careerPath');
     });
 
     it('every configured step resolves to at least one compendium item', () => {
-        const availableSteps = new Set(config.packs.flatMap((pack) => stepsInPack(pack)));
+        const availableSteps = new Set(builderPackNames('dh1', 'originBuilder').flatMap((pack) => stepsInPack(pack)));
         const stepsWithoutContent = config.coreSteps.map((s) => s.step).filter((step) => !availableSteps.has(step));
         expect(stepsWithoutContent, `DH1 steps with no matching compendium items: ${stepsWithoutContent.join(', ')}`).toEqual([]);
     });

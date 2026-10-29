@@ -9,8 +9,30 @@
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { readDeclaredPacks } from '../../scripts/lib/pack-manifest.mjs';
+import { type BuilderPackRole, builderPacks, lineCategoryPack, type PackMetadataLike } from '../../src/module/utils/line-packs.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../../src/packs-private');
+
+/** Every declared pack's metadata, as Foundry would hold it. */
+function declaredPackMetadata(): Array<{ metadata: PackMetadataLike }> {
+    return readDeclaredPacks(resolve(__dirname, '../..')).packs.map((pack) => ({ metadata: pack }));
+}
+
+/** The names of the packs `line`'s builder reads for `role`, in the order it reads them. */
+export function builderPackNames(line: string, role: BuilderPackRole): string[] {
+    return builderPacks(declaredPackMetadata(), line, role).map((pack) => pack.metadata.name);
+}
+
+/** The name of `line`'s first book pack of exactly `category`, if it has one. */
+export function lineCategoryPackName(line: string, category: string): string | undefined {
+    return lineCategoryPack(declaredPackMetadata(), line, category)?.metadata.name;
+}
+
+/** Every declared pack's metadata, for selecting by flags. */
+export function declaredPacks(): PackMetadataLike[] {
+    return declaredPackMetadata().map((pack) => pack.metadata);
+}
 
 /** Locate a pack's `_source` directory under any game-line group dir. */
 function packSourceDir(packName: string): string | null {

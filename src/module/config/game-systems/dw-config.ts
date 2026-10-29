@@ -100,13 +100,6 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
             ],
             optionalStep: null,
             grantFields: ['fateThreshold'],
-            packs: [
-                'dw-core-origins-chapters',
-                'dw-core-origins-specialities',
-                'dw-founding-origins-chapters',
-                'dw-rites-origins-chapters',
-                'dw-honour-origins-chapters',
-            ],
         };
     }
 

@@ -35,6 +35,7 @@ import { originFateContribution } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
+import { builderPacks, lineCategoryPack, packLineFlags } from '../../utils/line-packs.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
@@ -985,20 +986,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (this._originsLoaded) return;
         this._originsLoaded = true;
 
-        // Load from all configured packs for this game system
-        const packNames = this.systemConfig.packs;
+        // Load from the packs this line's builder reads, in the order their flags declare.
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: NormalizedOrigin[] = [];
         // Canonical ids already listed, so a document reached through two packs lists once.
         const seen = new Set<string>();
 
-        for (const packName of packNames) {
-            // Try fully qualified ID first, then metadata.name fallback
-            const pack = resolvePack(packName);
-            if (!pack) {
-                console.warn(`Origin path compendium '${packName}' not found`);
-                continue;
-            }
+        for (const pack of builderPacks(game.packs, this.gameSystem, 'originBuilder')) {
             // eslint-disable-next-line no-await-in-loop -- sequential: walks packs in priority order
             const documents = await pack.getDocuments();
             // Filter and normalize
@@ -2160,8 +2154,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     async _loadEquipmentItems(): Promise<void> {
         if (this._equipmentLoaded) return;
 
-        const packNames = this.systemConfig.equipmentPacks ?? [];
-        if (packNames.length === 0) {
+        const equipmentPacks = builderPacks(game.packs, this.gameSystem, 'startingEquipment');
+        if (equipmentPacks.length === 0) {
             this._equipmentLoaded = true;
             return;
         }
@@ -2172,10 +2166,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const availabilityConfig = configWh40k?.availabilities ?? {};
         const scarceRank = AVAILABILITY_KEYS.indexOf('scarce');
         const packLoadResults = await Promise.all(
-            packNames.map(async (packName): Promise<EquipmentEntry[]> => {
-                const pack = resolvePack(packName);
-                if (!pack) return [];
-
+            equipmentPacks.map(async (pack): Promise<EquipmentEntry[]> => {
                 const index = await pack.getIndex({
                     fields: [
                         'system.availability',
@@ -5166,7 +5157,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._divinationSelection = null;
         const text = this._divination.trim();
         if (text === '') return;
-        const pack = resolvePack(`${this.gameSystem}-core-origins-divinations`);
+        const pack = lineCategoryPack(game.packs, this.gameSystem, 'origins-divinations');
         if (!pack) return;
         const documents = await pack.getDocuments();
         const wanted = text.toLowerCase();
@@ -5548,14 +5539,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<ItemDataLike | null> {
-        const packNames = this.systemConfig.equipmentPacks ?? [];
         const weaponIdentifier = (weapon.system as OriginPathSystemData).identifier;
         if (weaponIdentifier === undefined || weaponIdentifier === '') return null;
 
-        for (const packName of packNames) {
-            if (!packName.includes('ammo')) continue;
-            const pack = resolvePack(packName);
-            if (!pack) continue;
+        for (const pack of builderPacks(game.packs, this.gameSystem, 'startingEquipment')) {
+            if (packLineFlags(pack.metadata)?.category !== 'ammo') continue;
 
             // eslint-disable-next-line no-await-in-loop -- sequential: search packs in priority order, stop at first match
             const index = await pack.getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });

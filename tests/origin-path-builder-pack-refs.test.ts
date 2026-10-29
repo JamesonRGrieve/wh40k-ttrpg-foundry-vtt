@@ -1,31 +1,24 @@
 /**
- * Regression guard: every compendium pack a game-system config lists for the
- * origin-path builder MUST be a pack name registered in system.json.
+ * Regression guard: the origin-path builder reads the packs whose manifest flags
+ * rank them for its line, and every step it shows resolves to content.
  *
- * History: the builder shows nothing for any origin step because
- * `OriginPathBuilder._loadOrigins()` resolves packs by
- * `game.packs.get('wh40k-rpg.<name>')` (with a `metadata.name` fallback), and
- * a missing pack is skipped with a console.warn — a SILENT failure. The DH2
- * config referenced `dh2-core-stats-homeworlds` while the registered packs are
- * `dh2-core-origins-homeworlds` (and BC/DW/RT/OW dropped the `-origins-` infix
- * entirely), so every pack resolved to nothing and all step lists rendered
- * empty. No test linked the config pack references to the registered packs, so
- * the drift was invisible.
- *
- * This test reads the pack names straight from system.json (the manifest
- * Foundry loads from) and asserts every `packs` / `equipmentPacks` entry across
- * all seven configs resolves. It does NOT require a live Foundry — configs are
- * plain objects reached via SystemConfigRegistry (see
- * system-config-header-fields.test.ts for the same `game.i18n` stub pattern).
+ * History: the builder once resolved packs from a name list in each line's
+ * config, and a name that matched no registered pack was skipped with a
+ * console.warn — a SILENT failure that left every step list empty. The builder
+ * now selects packs by their declared `originBuilder` / `startingEquipment`
+ * ranks (`src/module/utils/line-packs.ts`), so these tests read the same flags
+ * from the declared manifest and assert the ranks are well formed, every
+ * home-step pack is offered, and every core step has content. They do NOT need
+ * a live Foundry — configs are plain objects reached via SystemConfigRegistry
+ * (see system-config-header-fields.test.ts for the same `game.i18n` stub pattern).
  */
 
-import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
 import { ALL_SYSTEM_IDS, type GameSystemId } from '../src/module/config/game-systems/types.ts';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
-import { stepsInPack } from './helpers/origin-pack-content.ts';
+import { type BuilderPackRole, isLineBookPack, packLineFlags } from '../src/module/utils/line-packs.ts';
+import { builderPackNames, declaredPacks, stepsInPack } from './helpers/origin-pack-content.ts';
 
 interface I18nStub {
     localize: (key: string) => string;
@@ -53,51 +46,51 @@ afterAll(() => {
     G.game = ORIGINAL_GAME;
 });
 
-/**
- * Pack names registered in system.json. `game.packs.get('wh40k-rpg.<name>')`
- * resolves by exactly this `name` field, so it is the authoritative set the
- * builder's pack references must match.
- */
-function registeredPackNames(): Set<string> {
-    // Public src/system.json packs + the private content's fragment (scripts/lib/pack-manifest.mjs).
-    return new Set(readDeclaredPacks(resolve(__dirname, '..')).packs.map((pack) => pack.name));
-}
-
-const PACK_NAMES = registeredPackNames();
 const SYSTEM_IDS: readonly GameSystemId[] = ALL_SYSTEM_IDS;
+const ROLES: readonly BuilderPackRole[] = ['originBuilder', 'startingEquipment'];
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder pack references resolve to registered compendiums', () => {
-    it('system.json registers packs (guards against an empty/garbled manifest read)', () => {
-        expect(PACK_NAMES.size).toBeGreaterThan(0);
+describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder pack ranks are well formed', () => {
+    it('the manifest declares packs (guards against an empty/garbled manifest read)', () => {
+        expect(declaredPacks().length).toBeGreaterThan(0);
     });
 
     for (const id of SYSTEM_IDS) {
-        const config = SystemConfigRegistry.get(id).getOriginStepConfig();
-        const refs = [...config.packs, ...(config.equipmentPacks ?? [])];
+        for (const role of ROLES) {
+            it(`${id}: ${role} ranks run 1..N with no gap or repeat`, () => {
+                const ranks = declaredPacks()
+                    .map((pack) => packLineFlags(pack))
+                    .filter((flags) => flags?.line === id)
+                    .map((flags) => flags?.[role])
+                    .filter((rank): rank is number => rank !== undefined)
+                    .sort((a, b) => a - b);
+                expect(ranks).toEqual(ranks.map((_, index) => index + 1));
+            });
+        }
 
-        it(`${id}: every configured origin/equipment pack exists in system.json`, () => {
-            const missing = refs.filter((name) => !PACK_NAMES.has(name));
-            expect(missing, `${id} references unregistered packs: ${missing.join(', ')}`).toEqual([]);
+        it(`${id}: has packs ranked for exactly the builder steps it declares`, () => {
+            const config = SystemConfigRegistry.get(id).getOriginStepConfig();
+            expect(builderPackNames(id, 'originBuilder').length > 0).toBe(config.coreSteps.length > 0);
+            expect(builderPackNames(id, 'startingEquipment').length > 0).toBe(config.equipmentStep != null);
         });
     }
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('every registered home-step origin pack is offered by the builder (#222)', () => {
-    // Reverse of the check above: a supplement's home-step pack (DH2 home worlds,
-    // DW chapters) silently missing from the config leaves those origins
-    // unselectable — "no selections available". These groups are unambiguous: the
-    // step matches packs the config already lists for the other supplements.
-    const homeStepGroups: { id: GameSystemId; pattern: RegExp }[] = [
-        { id: 'dh2', pattern: /^dh2-.*-origins-homeworlds$/ },
-        { id: 'dw', pattern: /^dw-.*-origins-chapters$/ },
+    // A home-step pack (DH2 home worlds, DW chapters) the builder does not read
+    // leaves those origins unselectable — "no selections available".
+    const homeStepGroups: { id: GameSystemId; category: string }[] = [
+        { id: 'dh2', category: 'origins-homeworlds' },
+        { id: 'dw', category: 'origins-chapters' },
     ];
 
-    for (const { id, pattern } of homeStepGroups) {
-        it(`${id}: configures every registered ${pattern.source} pack`, () => {
-            const registered = [...PACK_NAMES].filter((name) => pattern.test(name));
-            expect(registered.length, `expected registered ${pattern.source} packs`).toBeGreaterThan(0);
-            const configured = new Set(SystemConfigRegistry.get(id).getOriginStepConfig().packs);
-            const missing = registered.filter((name) => !configured.has(name));
+    for (const { id, category } of homeStepGroups) {
+        it(`${id}: reads every ${category} pack`, () => {
+            const registered = declaredPacks()
+                .filter((pack) => isLineBookPack(pack, id, category))
+                .map((pack) => pack.name);
+            expect(registered.length, `expected registered ${category} packs`).toBeGreaterThan(0);
+            const read = new Set(builderPackNames(id, 'originBuilder'));
+            const missing = registered.filter((name) => !read.has(name));
             expect(missing, `${id} home-step packs not offered by the builder: ${missing.join(', ')}`).toEqual([]);
         });
     }
@@ -107,8 +100,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder steps resolve to comp
     // A configured step renders empty unless some item in the step's packs carries
     // a matching `system.step`. This is the failure mode that hid the DH2 pack-name
     // drift, the DH1 careerPath/career mismatch, and the IM missing-step-metadata —
-    // each left a wired step with zero options. Guard it for every system that
-    // declares both steps and packs (systems still unwired skip cleanly).
+    // each left a wired step with zero options. Guard it for every system.
     //
     // Known pre-existing gap (NOT introduced here, tracked separately): OW's config
     // declares a `regiment` step, but its content items use `regimentType` and OW
@@ -119,11 +111,9 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path builder steps resolve to comp
     const KNOWN_EMPTY_STEPS: Partial<Record<GameSystemId, string[]>> = { ow: ['regiment'] };
 
     for (const id of SYSTEM_IDS) {
-        const config = SystemConfigRegistry.get(id).getOriginStepConfig();
-        if (config.coreSteps.length === 0 || config.packs.length === 0) continue;
-
         it(`${id}: every core step has a matching origin item (modulo known gaps)`, () => {
-            const availableSteps = new Set(config.packs.flatMap((pack) => stepsInPack(pack)));
+            const config = SystemConfigRegistry.get(id).getOriginStepConfig();
+            const availableSteps = new Set(builderPackNames(id, 'originBuilder').flatMap((pack) => stepsInPack(pack)));
             const emptySteps = config.coreSteps.map((s) => s.step).filter((step) => !availableSteps.has(step));
             expect(emptySteps, `${id} steps with no matching compendium items: ${emptySteps.join(', ')}`).toEqual(KNOWN_EMPTY_STEPS[id] ?? []);
         });

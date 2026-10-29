@@ -17,7 +17,14 @@ export interface PackLineFlags {
     readonly homebrew: boolean;
     /** A content split of the same category (`gw-copyright`, `gw-mild`), when there is one. */
     readonly variant?: string;
+    /** The pack's place among the line's packs the character builder reads origins from (1 = first). */
+    readonly originBuilder?: number;
+    /** The pack's place among the line's packs the builder offers starting equipment from (1 = first). */
+    readonly startingEquipment?: number;
 }
+
+/** A use the character builder makes of a pack, declared with its position on the pack. */
+export type BuilderPackRole = 'originBuilder' | 'startingEquipment';
 
 /** The part of a pack's metadata this module reads. */
 export interface PackMetadataLike {
@@ -34,7 +41,33 @@ export function packLineFlags(metadata: PackMetadataLike): PackLineFlags | null 
         category: flags.category,
         homebrew: flags.homebrew === true,
         ...(flags.variant === undefined ? {} : { variant: flags.variant }),
+        ...(typeof flags.originBuilder === 'number' ? { originBuilder: flags.originBuilder } : {}),
+        ...(typeof flags.startingEquipment === 'number' ? { startingEquipment: flags.startingEquipment } : {}),
     };
+}
+
+/**
+ * The packs `line`'s character builder reads for `role`, in the order their flags
+ * declare. Order matters: where two packs hold the same document, the builder keeps
+ * the first copy it reads.
+ */
+export function builderPacks<T extends { readonly metadata: PackMetadataLike }>(packs: Iterable<T>, line: string, role: BuilderPackRole): T[] {
+    const ranked: Array<{ pack: T; rank: number }> = [];
+    for (const pack of packs) {
+        const flags = packLineFlags(pack.metadata);
+        const rank = flags?.[role];
+        if (flags !== null && flags.line === line && rank !== undefined) ranked.push({ pack, rank });
+    }
+    return ranked.sort((a, b) => a.rank - b.rank).map((entry) => entry.pack);
+}
+
+/** The first of `line`'s book packs of exactly `category`, or undefined when there is none. */
+export function lineCategoryPack<T extends { readonly metadata: PackMetadataLike }>(packs: Iterable<T>, line: string, category: string): T | undefined {
+    for (const pack of packs) {
+        const flags = packLineFlags(pack.metadata);
+        if (flags !== null && !flags.homebrew && flags.line === line && flags.category === category) return pack;
+    }
+    return undefined;
 }
 
 /** Does `category` name `wanted` itself or a sub-grouping of it (`talents-specializations` under `talents`)? */
