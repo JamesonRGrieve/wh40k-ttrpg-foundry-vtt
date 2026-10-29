@@ -1,5 +1,5 @@
 /**
- * DW Kill-team Cohesion (#162 — core.md §"COHESION", p.9351) schema slot.
+ * DW Kill-team Cohesion (#162 — Cohesion) schema slot.
  *
  * Cohesion is a kill-team SQUAD-LEVEL pool. For first integration we
  * attach it to the kill-team LEADER character. Once a dedicated
@@ -12,7 +12,7 @@
  * values the resolver reads/writes:
  *
  *   - `cohesionMax`              — derived from leader Fellowship Bonus
- *                                  + Table 7-8 (Rank/Command).
+ *                                  + the Rank/Command cohesion table.
  *   - `cohesionCurrent`          — current pool value.
  *   - `cohesionLostThisTurn`     — bumped by `applyCohesionDamage`;
  *                                  driver clears it on turn boundary.

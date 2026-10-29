@@ -1,15 +1,15 @@
 /**
- * @file DaemonologyRitualDialog — the DH2 Enemies Beyond ritual surface
+ * @file DaemonologyRitualDialog — the DH2 daemonology ritual surface
  * opened from the character sheet's Daemonology panel.
  *
- * Exorcism (#83, p. 71): the exorcist (the sheet's actor) targets the possessed
- * individual's token, ticks the Table 2–21 rows that apply and confirms. The
+ * Exorcism (#83): the exorcist (the sheet's actor) targets the possessed
+ * individual's token, ticks the exorcism modifiers table rows that apply and confirms. The
  * whole extended test resolves in one go through
  * `actions/daemonology-actions.ts`; the exorcist's Fatigue (and Corruption, on
  * a collapse) are written back, a cast-out Daemon clears the host's possession
  * track, and a chat card prints every test's formula with sourced rows.
  *
- * Summoning (#80, p. 59): the summoner targets the Daemon's token (its
+ * Summoning (#80): the summoner targets the Daemon's token (its
  * Willpower pre-fills), notes a known True Name / patron service and any GM
  * factors, and confirms. The Hellish ritual test is rolled; if the Daemon
  * appears, the opposed Daemonic Mastery test decides whether it is bound and
@@ -164,7 +164,7 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
                 id,
                 labelKey: EXORCISM_MODIFIERS[id].labelKey,
                 signed: signed(EXORCISM_MODIFIERS[id].modifier),
-                // Table 2–21's first row applies when the exorcist targets himself.
+                // The exorcism modifiers table's first row applies when the exorcist targets himself.
                 checked: id === 'SELF_EXORCISM' && target?.actor.id === this.performer.id,
             })),
             daemonWillpowerBonus: 0,

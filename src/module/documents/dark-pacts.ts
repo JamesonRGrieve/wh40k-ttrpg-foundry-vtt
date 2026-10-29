@@ -1,5 +1,5 @@
 /**
- * @file Striking and tracking Dark Pacts on a character (Enemies Beyond pp. 72–76, #84).
+ * @file Striking and tracking Dark Pacts on a character (a DH2 supplement, #84).
  *
  * The Document-side flows the Dark Pacts panel calls. The rules they apply are
  * pure, in `rules/dark-pact.ts`; every pact-specific value comes from the pact

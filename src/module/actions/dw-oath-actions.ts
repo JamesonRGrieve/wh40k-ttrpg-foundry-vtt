@@ -1,6 +1,6 @@
 /**
  * Action handler module for the Deathwatch Mission Oath panel
- * (#168 — core.md Table 7-16 §"OATHS", p.10165).
+ * (#168 — the Oaths table).
  *
  * Two `data-action` handlers wired through `CharacterSheet`'s
  * `DEFAULT_OPTIONS.actions` (per `.integration-staging/168.json`):

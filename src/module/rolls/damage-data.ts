@@ -45,7 +45,7 @@ import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-mod
 import type { VehicleCardRow } from './vehicle-card-rows.ts';
 import { reversedTableRoll, strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
 
-/** The die an extra hit on a vehicle rolls on its hit-location table (DH2 Core p. 254). */
+/** The die an extra hit on a vehicle rolls on its hit-location table (DH2 core). */
 const FRESH_LOCATION_DIE = '1d100';
 
 /**
@@ -249,7 +249,7 @@ export interface DamageDieResult {
 }
 
 /**
- * DH2 core (core.md L10398-10414): the attacker may replace ONE damage
+ * DH2 core: the attacker may replace ONE damage
  * die with the attack roll's Degrees of Success. Mutates the chosen
  * active die in place — the lowest by default, or the attacker-selected
  * index into the active-die list — and reports the swapped-out value plus
@@ -456,7 +456,7 @@ export class Hit {
             const roll = attackData.rollData.roll;
             const initialHit = getHitLocationForRoll(roll?.total ?? 0) ?? DEFAULT_HIT_LOCATION;
             // `hitNumber` is this hit's index WITHIN ITS OWN TARGET (#513), so a hit
-            // spread onto a second enemy starts that enemy's Table 7-2 walk over
+            // spread onto a second enemy starts that enemy's multiple-hits location table walk over
             // rather than inheriting the original target's position in it.
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (flag off) vs tsconfig.json (flag on)
             hit.location = additionalHitLocations()[initialHit][hitNumber <= 5 ? hitNumber : 5] ?? DEFAULT_HIT_LOCATION;
@@ -586,7 +586,7 @@ export class Hit {
 
     /**
      * Apply the DH2 "replace a damage die with Degrees of Success" option
-     * to this hit's damage roll (core.md L10398-10414). Adjusts the
+     * to this hit's damage roll. Adjusts the
      * dice-sum base by the delta and recomputes the damage total. Returns
      * true when a die was replaced. (#129)
      */
@@ -613,7 +613,7 @@ export class Hit {
      * Land this hit on a vehicle (content#28). The first hit reads the line's
      * Vehicle Hit Locations table on the reversed attack roll; each extra hit on the
      * same vehicle, and every hit spread onto a second one, rolls a fresh d100
-     * (DH2 Core p. 254). A line with one chart
+     * (DH2 core). A line with one chart
      * strikes the Hull. Righteous Fury rolls the vehicle's die (1d5, or a trait's,
      * e.g. Ramshackle's 1d10) on the struck location's chart instead of a creature's
      * Critical Effects table, and is not Critical damage.

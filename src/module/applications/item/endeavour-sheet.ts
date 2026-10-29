@@ -1,7 +1,7 @@
 /**
  * @file EndeavourSheet — ApplicationV2 sheet for Rogue Trader Endeavour items.
  *
- * Endeavours track Dynasty-scale goals (per RAW Rogue Trader, Core p. 290–298).
+ * Endeavours track Dynasty-scale goals (per RAW Rogue Trader core).
  * Each Endeavour owns a list of Objectives; objectives toggle complete, AP
  * accrues, and once `apEarned >= apRequired` the reward is granted by the
  * Endeavour panel action on the actor sheet.

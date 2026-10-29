@@ -4,7 +4,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
- * Data model for Medal items: Only War's Medals and Honours (core pp. 294–295).
+ * Data model for Medal items: Only War's Medals and Honours (OW core).
  *
  * The book presents each one as a Description (the medal itself, kept in
  * `description`), what it is Awarded for, and the Squad Bonus the Squad gains

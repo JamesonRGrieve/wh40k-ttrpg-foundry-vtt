@@ -607,7 +607,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             // Required training (for future talent integration)
             requiredTraining: new fields.StringField({ required: false, blank: true }),
 
-            // === Vehicle mounting (OW core p.211-212; printed on every line's
+            // === Vehicle mounting (OW core; printed on every line's
             // vehicle weapon lines as e.g. "Turret-mounted", "Front Facing") ===
             // Per-installation, not per-weapon-type: the same Heavy Bolter is
             // hull-mounted on one tank and sponson-mounted on the next. The

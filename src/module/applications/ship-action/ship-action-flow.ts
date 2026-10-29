@@ -4,11 +4,11 @@
  *
  * The action's test is composed with full provenance (the acting character's
  * skill, the ship's Manoeuvrability / Detection for a Combined Skill Test,
- * RT Core p.212, the printed difficulty, a situational modifier). On a success
+ * RT core, the printed difficulty, a situational modifier). On a success
  * the order's `shipEffect` block decides what happens — never the action's
  * name:
  *
- *   • `reducePriorTurnDamage` — Hold Fast! / Triage (p.218): the ship's
+ *   • `reducePriorTurnDamage` — Hold Fast! / Triage: the ship's
  *     previous-turn Morale or Crew Population damage drops by the magnitude;
  *   • `shipModifier` — a timed ActiveEffect on the ship: a stat bonus (Aid
  *     the Machine Spirit, Flank Speed) or a Ballistic Skill modifier that the

@@ -19,8 +19,8 @@ import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHea
 /**
  * Drive and Pilot as DH1 prints them: Drive's skill groups are Ground Vehicle,
  * Hover Vehicle and Walker ("autos, trucks, landspeeders and other land-based or
- * hover vehicles", core p. 102); Pilot's are Civilian Craft, Military Craft and
- * Spacecraft (core p. 105). Which Pilot group an aircraft takes depends on the
+ * hover vehicles", core); Pilot's are Civilian Craft, Military Craft and
+ * Spacecraft (core). Which Pilot group an aircraft takes depends on the
  * craft, not its locomotion, so a flyer has no single printed test here; neither
  * skill covers boats.
  */
@@ -42,13 +42,13 @@ const DH1_VEHICLE_DRIVING: VehicleDrivingRules = {
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dh1' as const;
     readonly usesMalignancyTest = true;
-    // Disciples of the Dark Gods prints its own Malefic powers; its cost rule is unverified.
+    // A DH1 supplement prints its own Malefic powers; its cost rule is unverified.
     readonly maleficCorruptionOnManifest = false;
 
     /**
-     * Influence requisition — Ascension Table 1-5: Availability Modifiers (p. 14).
+     * Influence requisition — a DH1 supplement's Availability Modifiers table.
      * The test "may be modified by the duration of the requisition, the
-     * Availability of the Item, or the number of individuals" (p. 16): no
+     * Availability of the Item, or the number of individuals": no
      * craftsmanship modifier.
      */
     readonly inquestRules = null;
@@ -115,7 +115,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
             unique: -70,
         },
         craftsmanship: null,
-        // Ascension p. 16: "if the Test fails by four or more degrees, the group loses 1 Influence" —
+        // The same supplement: "if the Test fails by four or more degrees, the group loses 1 Influence" —
         // a DH1 degree is each full 10 points of margin (core: "for each full 10 points by which you fail").
         failureLoss: { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' },
     };
@@ -133,7 +133,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return FATIGUE_MODES.halving;
     }
 
-    /** DH1 Dispositions are the seven-step ladder; a success gains one step plus one per degree (p. 230, Table 8–2) — #73. */
+    /** DH1 Dispositions are the seven-step ladder; a success gains one step plus one per degree (DH1 core) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }
@@ -151,8 +151,8 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         // DH1e core character creation is Home World → Career Path. Divination is
         // rolled on the Tarot RollTable (handled separately, not a card step) and
         // "Rank"/role is derived within the chosen career — neither is a builder
-        // step. Inquisitor's Handbook home worlds extend the same Home World step.
-        // Ascension careers (a post-campaign tier) are intentionally excluded.
+        // step. Supplement home worlds extend the same Home World step.
+        // Ascended careers (a post-campaign tier) are intentionally excluded.
         return {
             coreSteps: [
                 { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },

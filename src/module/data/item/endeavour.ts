@@ -4,7 +4,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 /**
  * A single Objective within an Endeavour.
  *
- * Per RAW Rogue Trader (Core p. 290–298), an Endeavour is decomposed into one
+ * Per RAW Rogue Trader core, an Endeavour is decomposed into one
  * or more Objectives the Dynasty must complete to advance. Each Objective
  * carries its own AP value contributed toward the parent Endeavour's
  * `apEarned` total when marked complete.

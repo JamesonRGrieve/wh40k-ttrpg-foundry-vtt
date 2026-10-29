@@ -1,5 +1,5 @@
 /**
- * @file MedicaeMechadendriteDialog — surfaces the errata p. 183
+ * @file MedicaeMechadendriteDialog — surfaces the errata
  * Half-Action "Staunch Blood Loss" button for an actor that owns a
  * Medicae Mechadendrite cybernetic (#104).
  *

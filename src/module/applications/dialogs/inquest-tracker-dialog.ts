@@ -1,13 +1,13 @@
 /**
  * @file InquestTrackerDialog — the GM's tracker for the warband's Inquests
- * (DH2 Enemies Within pp. 62–69, #90).
+ * (a DH2 supplement, #90).
  *
  * Each Inquest records its target, objective, requirements, lead investigator,
  * scope, approach and running Investigation point (IP) total. The GM uses this
- * dialog to add clues (Table 2–7), record lead tests (±IP per degree), tailor
+ * dialog to add clues (the Clue Values table), record lead tests (±IP per degree), tailor
  * the Revelation thresholds and resolve the Inquest. Whenever the IP total
  * crosses a Revelation threshold, the dialog posts a Revelation chat card. On
- * resolution it posts the Influence outcome (Table 2–9).
+ * resolution it posts the Influence outcome (the Inquest Rewards table).
  *
  * Inquests are world data (the `warband-inquests` setting). The Party Overview
  * panel on DH2 character sheets shows their progress and opens this dialog.

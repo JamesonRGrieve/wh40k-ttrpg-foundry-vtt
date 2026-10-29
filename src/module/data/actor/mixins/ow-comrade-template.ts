@@ -1,5 +1,5 @@
 /**
- * Only War "Comrade in Combat" (#152 — core.md §"COMRADES IN COMBAT", p.12137)
+ * Only War "Comrade in Combat" (#152)
  * schema slot.
  *
  * Each OW PC has exactly ONE Comrade — an NPC abstraction acting on the
@@ -74,18 +74,18 @@ export function owComradeSchemaFields(): Record<string, foundry.data.fields.Data
             }),
             distanceM: new NumberField({ required: true, initial: 0, min: 0 }),
             hasVisualLine: new BooleanField({ required: true, initial: true }),
-            // Fear and Pinning (OW Core p. 271): the Comrade fails with its PC.
+            // Fear and Pinning (OW core): the Comrade fails with its PC.
             fleeing: new BooleanField({ required: true, initial: false }),
             pinned: new BooleanField({ required: true, initial: false }),
             fearImmune: new BooleanField({ required: true, initial: false }),
             pinningImmune: new BooleanField({ required: true, initial: false }),
-            // Half Actions spent in the combat Round they were spent in (p. 269).
+            // Half Actions spent in the combat Round they were spent in.
             turn: new SchemaField({
                 combatId: new StringField({ required: true, initial: '', blank: true }),
                 round: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
                 halvesSpent: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),
             }),
-            // Insanity and Corruption suffered in one combat Round (p. 271).
+            // Insanity and Corruption suffered in one combat Round.
             mental: new SchemaField({
                 combatId: new StringField({ required: true, initial: '', blank: true }),
                 round: new NumberField({ required: true, initial: 0, integer: true, min: 0 }),

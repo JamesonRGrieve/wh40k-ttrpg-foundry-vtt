@@ -443,14 +443,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return undefined;
     }
 
-    /** Whether the Mutant background's Twisted Flesh bonus applies (within.md p. 32). */
+    /** Whether the Mutant background's Twisted Flesh bonus applies (a DH2 supplement). */
     get hasTwistedFlesh(): boolean {
         return this.getFlag(SYSTEM_ID, TWISTED_FLESH_FLAG) === true;
     }
 
     /**
      * Roll one owed Malignancy Test. No-op when no test is owed. A Twisted Flesh
-     * Mutant is first offered RAW's choice to fail it (within.md p. 32: "can
+     * Mutant is first offered RAW's choice to fail it ("can
      * always choose to fail any test associated with resisting malignancy").
      */
     rollMalignancyTest(): void {
@@ -531,7 +531,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await, @typescript-eslint/no-misused-promises -- override returns Promise; consumers may await it. Base impl is sync.
     override async rollCharacteristic(charKey: string, flavorOverride?: string, _options: Record<string, unknown> = {}): Promise<void> {
-        // Issue #13: Influence is a percentile testable stat (DH2e core p. 28) regardless of
+        // Issue #13: Influence is a percentile testable stat (DH2e core) regardless of
         // whether it currently lives on the Statistics panel (RAW) or the Overview > Resources
         // panel (Homebrew). The DataModel stores it as a flat 0-100 number outside the
         // `characteristics` map, so synthesize a CharacteristicField-shaped target here so
@@ -750,7 +750,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
     /**
      * The target modifiers the picked item brings (#535), shown in the dialog before
-     * the roll: a repair's Table 5-2 craftsmanship row (#444), and the xenos rows when
+     * the roll: a repair's craftsmanship row (#444), and the xenos rows when
      * the roller holds a Forbidden Lore insight on the item (#136).
      */
     _skillUseItemModifiers(use: SkillUseDef, choice: SkillUseItemChoice, target: WH40KBaseActor | null): Record<string, number> {
@@ -777,7 +777,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * The xenos rows for repairing or modifying an item (DH2 Enemies Without p. 42,
+     * The xenos rows for repairing or modifying an item (a DH2 supplement,
      * #136). A non-xenos item, or a line without the rule, adds nothing. A xenos item
      * gets the −20 alien-nature and +5-per-DoS rows when the roller holds a Forbidden
      * Lore insight on it, and the attempt spends it. Null when they hold none yet.
@@ -820,11 +820,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Fit a weapon modification personally (#136): DH2 core p. 162's Trade
+     * Fit a weapon modification personally (#136): DH2 core's Trade
      * (Armourer) test, or the plain test DH1 / RT / OW print. The parts are a
      * weapon modification the Acolyte carries. On DH2 the test takes the
      * modification's Availability, and a xenos weapon first needs the Forbidden
-     * Lore step (Enemies Without p. 42).
+     * Lore step (a DH2 supplement).
      */
     async rollFitWeaponModification(weaponId: string, partsId: string): Promise<void> {
         const rules = weaponModificationRulesFor(this.system.gameSystem);
@@ -868,7 +868,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
     /**
      * Remove a fitted weapon modification and try to keep its parts (#136, DH2
-     * core p. 162 "Removing and Re-using Modifications"): Tech-Use at the
+     * core "Removing and Re-using Modifications"): Tech-Use at the
      * modification's Availability. Only a line that prints the removal test
      * offers it; elsewhere the GM detaches modifications freely.
      */
@@ -909,8 +909,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * The Forbidden Lore step before repairing or modifying a xenos item (DH2
-     * Enemies Without p. 42, #136). If the race that built the item is unknown it
+     * The Forbidden Lore step before repairing or modifying a xenos item (a DH2
+     * supplement, #136). If the race that built the item is unknown it
      * cannot be repaired or modified at all, which is a GM ruling made here.
      * Otherwise the Acolyte picks the Forbidden Lore specialisation that covers
      * that race and rolls it at Hard (−20); success records the insight their

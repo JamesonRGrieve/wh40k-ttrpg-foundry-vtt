@@ -1,5 +1,5 @@
 /**
- * DW Mission Oaths (#168 — core.md Table 7-16 §"OATHS", p.10165) schema slot.
+ * DW Mission Oaths (#168 — the Oaths table) schema slot.
  *
  * Oaths are a kill-team SQUAD-LEVEL contract that the leader swears at the
  * start of the mission. For first integration we attach the leader marker

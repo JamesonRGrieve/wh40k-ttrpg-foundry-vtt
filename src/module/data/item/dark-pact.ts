@@ -4,7 +4,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
- * Data model for a Dark Pact (DH2 Enemies Beyond pp. 72–76).
+ * Data model for a Dark Pact (a DH2 supplement).
  *
  * A pact is content: the Boons a Daemon may grant and the Banes that come with
  * them, plus the terms of striking it (`negotiation`, `corruptionFormula`). The

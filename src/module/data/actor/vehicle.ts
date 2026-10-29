@@ -113,8 +113,8 @@ export const LOCOMOTION_CHOICES = [
 export type Locomotion = (typeof LOCOMOTION_CHOICES)[number];
 
 /**
- * Imperium Maledictum rates vehicle speed as a named band (IM core p.203 for
- * the three creature speeds, p.225 for the vehicle-only `swift`), not as the
+ * Imperium Maledictum rates vehicle speed as a named band (IM core: the three
+ * creature speeds, plus the vehicle-only `swift`), not as the
  * FFG kph/metres pair. IM craft therefore leave `speed.cruising` / `.tactical`
  * at 0 and author this instead; the six FFG lines leave it blank.
  */
@@ -122,7 +122,7 @@ export const SPEED_BAND_CHOICES = ['', 'slow', 'normal', 'fast', 'swift'] as con
 
 /**
  * Deathwatch gates vehicle access behind the squad's Renown tier rather than a
- * generic availability grade (DW: Rites of Battle prints `Renown:` on every
+ * generic availability grade (DW: a supplement prints `Renown:` on every
  * vehicle entry). The other six lines leave this blank and use `availability`.
  */
 export const RENOWN_CHOICES = ['', 'initiate', 'respected', 'distinguished', 'famed', 'hero'] as const;
@@ -237,7 +237,7 @@ export default class VehicleData extends ActorDataModel {
             availability: new fields.StringField({ required: false, initial: 'common', blank: true }),
 
             // Deathwatch gates vehicle access on the squad's Renown tier
-            // instead of an availability grade (DW: Rites of Battle prints
+            // instead of an availability grade (DW: a supplement prints
             // `Renown:` on every vehicle). Blank on the other six lines.
             renown: new fields.StringField({
                 required: false,
@@ -559,7 +559,7 @@ export class ConventionalCraftData extends VehicleData {
 
     /**
      * Walk embedded vehicle-trait items and fold their stat modifiers
-     * into the derived stat block (core.md §"Vehicle Traits"). Each
+     * into the derived stat block ("Vehicle Traits"). Each
      * trait carries `modifiers: { speed, manoeuvrability, armour, integrity }`;
      * non-zero entries adjust the corresponding stat. Armour applies to
      * every facing equally (RAW does not distinguish trait-driven

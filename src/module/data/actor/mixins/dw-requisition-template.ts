@@ -1,6 +1,6 @@
 /**
- * Deathwatch Requisition DataModel mixin (#165 — core.md §"REQUISITION",
- * p. 5845, Tables 5-1 and 5-3).
+ * Deathwatch Requisition DataModel mixin (#165 — Requisition and its
+ * core tables).
  *
  * Exposes the two persisted fields a Battle-Brother's character record
  * needs in order to drive the requisition engine in

@@ -1,6 +1,6 @@
 /**
  * Only War "Healing Comrades" + replacement-on-return-to-camp RAW
- * (#157 — core.md §"Healing Comrades" p.12269; replacement p.12261)
+ * (#157 — "Healing Comrades" and replacement)
  * schema slot.
  *
  * Persistent state owned by this slot:
@@ -17,7 +17,7 @@
  *     into refit by GM-toggle, Regiment Resource spend, or Munitorum
  *     supply.
  *   - `comradeMedicaeUsed` — whether the current wound's single
- *     Difficult (-10) Medicae Test has been made (OW Core p.271). A new
+ *     Difficult (-10) Medicae Test has been made (OW core). A new
  *     wound clears it.
  *
  * No actor coupling — the pure rules in

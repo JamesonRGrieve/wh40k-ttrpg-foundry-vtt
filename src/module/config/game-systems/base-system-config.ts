@@ -35,7 +35,7 @@ import type {
 
 /**
  * The Grapple action's option lists as DH2, RT, BC, DW and OW print them, word for
- * word but for the Slip Free skill (#120; DH2 core pp. 221–222, RT core / BC core /
+ * word but for the Slip Free skill (#120; DH2 core, RT core / BC core /
  * DW core / OW core "Grapple"). The controller has Damage Opponent, Throw Down
  * Opponent, Push Opponent, Stand (each an Opposed Strength test), Ready and Use Item
  * (no test). The grappled target has Break Free and Take Control (Opposed Strength)
@@ -58,13 +58,13 @@ function printedGrappleOptions(slipFreeSkill: string): GrappleOptionRule[] {
 }
 
 /**
- * Damage Opponent as DH2 (core p. 221), RT, BC, DW and OW print it: the unarmed
+ * Damage Opponent as DH2, RT, BC, DW and OW print it: the unarmed
  * hit lands on the opponent's "Body location", with "one level of Fatigue".
  */
 const PRINTED_GRAPPLE_DAMAGE: GrappleDamageRule = { location: 'body', fatigue: 1 };
 
 /**
- * Push Opponent as DH2 (core p. 221), RT, BC, DW and OW print it: "one metre …
+ * Push Opponent as DH2, RT, BC, DW and OW print it: "one metre …
  * plus one additional metre for each degree of success", capped at "the active
  * character's Half Move distance".
  */
@@ -78,7 +78,7 @@ export function printedGrappleRules(slipFreeSkill: string, thrownDownBonus: numb
 /**
  * The fitting rule DH1, RT and OW print word for word: "A character with the
  * Trade (Armourer) skill may upgrade weapons by making a successful test" (DH1
- * core Weapon Upgrades; RT core p. 133; OW core Weapon Upgrades). No modifier,
+ * core Weapon Upgrades; RT core; OW core Weapon Upgrades). No modifier,
  * no failure consequence, no removal test (#136).
  */
 export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
@@ -121,7 +121,7 @@ export const OPERATE_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 /**
- * Drive and Pilot as RT (core pp. 81, 84) and DW (core pp. 98, 103) print them:
+ * Drive and Pilot as RT and DW core print them:
  * Drive's skill groups are Ground Vehicle, Skimmer/Hover and Walker ("land-based,
  * hover, or skimmer-type vehicles"); Pilot's are Personal, Flyers and Space Craft.
  * Neither skill covers boats, so a watercraft has no printed driving test.
@@ -142,8 +142,8 @@ export const DRIVE_PILOT_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 /**
- * The Vehicle Hit Locations table DH2 (core p. 254, Table 7-29) and OW (core
- * p. 276, Table 8-24) print with the same bands, read on the reversed attack roll.
+ * The Vehicle Hit Locations table DH2 and OW core
+ * print with the same bands, read on the reversed attack roll.
  */
 const PRINTED_VEHICLE_HIT_LOCATIONS: readonly VehicleHitLocationBand[] = [
     { max: 20, location: 'motive' },
@@ -155,7 +155,7 @@ const PRINTED_VEHICLE_HIT_LOCATIONS: readonly VehicleHitLocationBand[] = [
 /**
  * Attacking vehicles on a line printing a hit-location table and one chart per
  * location (DH2, OW). OW also prints that Righteous Fury needs the hit to damage
- * the vehicle (core p. 276); DH2 does not.
+ * the vehicle; DH2 does not.
  */
 export function locatedVehicleCombat(righteousFuryNeedsDamage: boolean): VehicleCombatRules {
     return { hitLocations: PRINTED_VEHICLE_HIT_LOCATIONS, righteousFuryDie: '1d5', righteousFuryNeedsDamage };
@@ -163,7 +163,7 @@ export function locatedVehicleCombat(righteousFuryNeedsDamage: boolean): Vehicle
 
 /**
  * Attacking vehicles on a line printing one Vehicle Critical Hit Chart and no
- * hit-location table (RT Into the Storm p. 178; DW Rites of Battle p. 169, which
+ * hit-location table (an RT supplement; a DW supplement, which
  * adds that Righteous Fury needs the hit to damage the vehicle).
  */
 export function singleChartVehicleCombat(righteousFuryNeedsDamage: boolean): VehicleCombatRules {
@@ -201,7 +201,7 @@ export abstract class BaseSystemConfig {
 
     /**
      * Whether a successful Malefic Daemonology manifestation costs the psyker
-     * Corruption equal to the Psy Rating used (DH2 Enemies Beyond p. 56). Only
+     * Corruption equal to the Psy Rating used (a DH2 supplement). Only
      * lines whose rule has been verified opt in.
      */
     abstract readonly maleficCorruptionOnManifest: boolean;
@@ -214,15 +214,15 @@ export abstract class BaseSystemConfig {
     abstract readonly acquisitionLadder: AcquisitionLadder | null;
 
     /**
-     * The line's printed Inquest tables (DH2 Enemies Within pp. 62–69, #90), or
+     * The line's printed Inquest tables (a DH2 supplement, #90), or
      * `null` for a line that prints no Inquest rules. A non-null value is what
      * turns on the Party Overview Inquest panel and tracker.
      */
     abstract readonly inquestRules: InquestRules | null;
 
     /**
-     * The line's printed item-repair rule (DH2 core p. 142: Table 5–2 repair
-     * modifier + destruction on a bad failure, #444; plus the Enemies Without
+     * The line's printed item-repair rule (DH2 core: the craftsmanship repair
+     * modifier + destruction on a bad failure, #444; plus a supplement's
      * xenos step, #136), or `null` for a line whose book leaves the Tech-Use
      * repair difficulty to the GM.
      */
@@ -230,7 +230,7 @@ export abstract class BaseSystemConfig {
 
     /**
      * The line's printed rule for fitting a weapon modification personally
-     * (DH2 core p. 162 / Enemies Without p. 42; DH1 / RT / OW "a successful
+     * (DH2 core and a supplement; DH1 / RT / OW "a successful
      * Trade (Armourer) test", #136), or `null` for a line that prints no
      * fitting test (DW folds the labour into the Requisition cost; BC prints
      * none).

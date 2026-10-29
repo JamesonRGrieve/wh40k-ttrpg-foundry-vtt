@@ -2,8 +2,8 @@
  * @file Resolving a Malignancy the character would gain (#91).
  *
  * A failed Malignancy Test draws on the line's Malignancies table. A Mutant with
- * Twisted Flesh (within.md p. 32, Enemies Within) may instead roll on Table
- * 8-16: Mutations — offered as a choice, since the bonus says "may". Lives in
+ * Twisted Flesh (a DH2 supplement) may instead roll on the Mutations
+ * table — offered as a choice, since the bonus says "may". Lives in
  * the roll layer and reaches the dialog through the `foundry.applications`
  * global (via `promptItemChoice`), so documents can call it without importing
  * the applications layer.

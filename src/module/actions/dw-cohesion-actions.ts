@@ -1,6 +1,5 @@
 /**
- * Deathwatch Kill-team Cohesion action handlers (#162 — core.md
- * §"COHESION", p.9351).
+ * Deathwatch Kill-team Cohesion action handlers (#162 — Cohesion).
  *
  * Three `data-action` handlers wired through `CharacterSheet`'s
  * `DEFAULT_OPTIONS.actions`:

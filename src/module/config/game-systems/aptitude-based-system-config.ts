@@ -55,7 +55,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     /**
      * Skill advance cost table: [matchingAptitudes][rankIndex].
-     * Default is DH2e Table 2-4. Subclasses can override.
+     * Default is the DH2e skill advance table. Subclasses can override.
      */
     getSkillCostTable(): Record<number, number[]> {
         return {
@@ -67,7 +67,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     /**
      * Characteristic advance cost table: [matchingAptitudes][tierIndex].
-     * Default is DH2e Table 2-2. Subclasses can override.
+     * Default is the DH2e characteristic advance table. Subclasses can override.
      */
     getCharacteristicCostTable(): Record<number, number[]> {
         return {
@@ -79,7 +79,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     /**
      * Talent advance cost table: [matchingAptitudes] at each tier.
-     * Default is DH2e Table 2-6. Subclasses can override.
+     * Default is the DH2e talent advance table. Subclasses can override.
      */
     getTalentCostTable(): Record<number, Record<number, number>> {
         return {
@@ -92,7 +92,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     // ── Aptitude Resolution ──────────────────────────────────────
 
     /**
-     * The 2 aptitudes associated with each characteristic (DH2e Core Table 2-3).
+     * The 2 aptitudes associated with each characteristic (the DH2e core rules).
      * Default shared by DH2e / BC / OW / IM; override only on genuine divergence.
      */
     getCharacteristicAptitudes(charKey: string): [string, string] {
@@ -120,7 +120,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
-     * Skill aptitude pairs (DH2e Core Table 2-5). Default shared by DH2e / BC / OW / IM;
+     * Skill aptitude pairs (the DH2e core rules). Default shared by DH2e / BC / OW / IM;
      * override only on genuine divergence. Keys are schema skill keys (camelCase).
      */
     getSkillAptitudeTable(): Record<string, [string, string]> {
@@ -158,7 +158,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     /**
      * Aptitudes every actor in an aptitude-based system possesses regardless of
-     * origin path. Per DH2 Core p.79 (and the equivalent BC/DW/OW/IM rules) the
+     * origin path. Per the DH2 core rules (and the equivalent BC/DW/OW/IM rules) the
      * General aptitude is universal — it is never granted by home world /
      * background / role / elite, so it is injected at read time rather than
      * stored on the actor. Most basic skill and talent advances list General as

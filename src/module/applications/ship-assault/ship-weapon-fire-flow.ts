@@ -1,5 +1,5 @@
 /**
- * Ship weapon fire flow (#184 — RT Core 1.4 errata, Chapter VIII).
+ * Ship weapon fire flow (#184 — RT core, 1.4 errata).
  *
  * Fired from a Weapon Component's row on the voidcraft sheet, through the
  * shared ship dialog: pick the target ship, enter the gunner's Ballistic Skill,
@@ -10,7 +10,7 @@
  * this module only rolls, applies and renders.
  *
  * A macrobattery may be combined with the ship's other macrobatteries into one
- * salvo (p.221): each battery makes its own test and scores its own hits, the
+ * salvo: each battery makes its own test and scores its own hits, the
  * shields discard hits from the battery the attacker names first, the remaining
  * hits' damage is added into one total, Armour is subtracted once, and the
  * salvo inflicts at most one Critical Hit.
@@ -414,7 +414,7 @@ async function resolveSingleShot(weapon: ShipWeaponFireWeapon, lead: { shot: Sal
 }
 
 /**
- * A combined salvo (p.221): the shields discard hits from the attacker's chosen
+ * A combined salvo: the shields discard hits from the attacker's chosen
  * battery first, every remaining hit's damage goes into one total, Armour is
  * subtracted once, and the salvo causes at most one Critical Hit.
  */

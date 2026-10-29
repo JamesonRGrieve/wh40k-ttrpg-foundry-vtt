@@ -10,8 +10,7 @@
 /**
  * Discriminator for how a content entry shifts the warband's Subtlety pool.
  * - `clamp`: the entry resists Subtlety loss — any decrease is reduced toward
- *   zero, never below `minAbsoluteDelta` in magnitude (e.g. Quarantine World,
- *   Enemies Beyond p. 30).
+ *   zero, never below `minAbsoluteDelta` in magnitude (e.g. Quarantine World).
  * - `passive`: a standing modifier surfaced while the entry is owned (and, for
  *   weapons, wielded). Display/aggregation only — never decremented per turn.
  * - `event`: a one-shot delta applied when the triggering event resolves

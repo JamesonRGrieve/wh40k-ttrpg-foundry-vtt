@@ -1,5 +1,5 @@
 /**
- * Only War Comrade-Healing action handlers (#157 — OW Core p.271,
+ * Only War Comrade-Healing action handlers (#157 — OW core,
  * "Healing Comrades" and replacement on return to camp).
  *
  * Four sheet-action methods wired into the character-sheet action map:
@@ -107,7 +107,7 @@ async function emitHealingChat(host: Host, event: ChatPayload): Promise<void> {
 
 /**
  * Write the recovery clock after a tick or a Medicae test. The day the clock
- * reaches 0 the wounded Comrade is back on their feet (OW Core p.271), so the
+ * reaches 0 the wounded Comrade is back on their feet (OW core), so the
  * state moves to unharmed in the same update.
  */
 async function saveRecoveryClock(host: Host, remainingDays: number, extra: { 'system.comradeMedicaeUsed'?: boolean } = {}): Promise<void> {
@@ -193,7 +193,7 @@ async function promptDegreesOfSuccess(): Promise<number | null> {
  * recovery clock.
  *
  * Wired to `data-action="owComradeMedicae"`. RAW allows a single test per
- * wound (OW Core p.271): the attempt is recorded as `comradeMedicaeUsed`, and
+ * wound (OW core): the attempt is recorded as `comradeMedicaeUsed`, and
  * the panel disables the button once it is spent or when no wound is healing.
  * A test that clears the clock returns the Comrade to unharmed.
  */
@@ -252,7 +252,7 @@ export async function owComradeReplace2(this: Host, event: Event, _target: HTMLE
 
 /**
  * Mark the squad as back in camp for refitting, or as having left it. While it
- * is, a dead Comrade can be replaced (OW Core p.271). Wired to
+ * is, a dead Comrade can be replaced (OW core). Wired to
  * `data-action="owComradeToggleRefit"` on the healing panel's refit row.
  */
 export async function owComradeToggleRefit(this: Host, event: Event, _target: HTMLElement): Promise<void> {

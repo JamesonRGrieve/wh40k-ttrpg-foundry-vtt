@@ -1,6 +1,6 @@
 /**
  * @file comrade-order-modifiers — the Path B rows a PC's Comrade Orders add to its
- * tests (#152). Ranged Volley (OW Core p. 270): "The Player Character gains an
+ * tests (#152). Ranged Volley (OW core): "The Player Character gains an
  * additional +5 to all Ballistics Skill Tests this Turn." Each Order in force this
  * Round is one sourced row in the `comrade-orders` bucket, which sums into the
  * target through the central aggregator and expands on the card.

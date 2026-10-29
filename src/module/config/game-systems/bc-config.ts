@@ -1,12 +1,12 @@
 /**
  * @file Black Crusade system configuration.
  *
- * BC has no aptitudes and no career ranks (`bc/core/core.md` :2557). Cost
- * is a flat True / Allied / Opposed × tier matrix (Tables 2-6 / 2-7 / 2-9)
- * over 4 characteristic tiers, 4 skill ranks, and 3 talent tiers. Alignment
+ * BC has no aptitudes and no career ranks. Cost
+ * is a flat True / Allied / Opposed × tier matrix (the characteristic, skill
+ * and talent cost tables) over 4 characteristic tiers, 4 skill ranks, and 3 talent tiers. Alignment
  * is derived from the actor's `chaosAdvancements` log via
  * `bc-alignment-derivation.ts`, re-evaluated at every 10-CP threshold
- * (`core.md` :2569).
+ * (BC core).
  *
  * BC remains an `AptitudeBasedSystemConfig` subclass so that the shared
  * skill-bonus formula in `creature.ts` (which switches on `usesAptitudes`)
@@ -78,13 +78,13 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly maleficCorruptionOnManifest = false;
 
     /**
-     * Infamy Acquisition Test — core Table 9-11: Acquisition Test Modifiers
-     * (p. 306). (Table 5-20's ladder on p. 200 is daemon-weapon crafting, not
+     * Infamy Acquisition Test — the core Acquisition Test Modifiers table.
+     * (The core daemon-weapon crafting ladder is a different table, not
      * acquisition.)
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** BC core p. 169: upgrades are "applied by characters with the Tech Skill", with no test printed (#136). */
+    /** BC core: upgrades are "applied by characters with the Tech Skill", with no test printed (#136). */
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
@@ -136,7 +136,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
-        // p. 306: "If he fails, he does not" obtain it — no Infamy is lost.
+        // BC core: "If he fails, he does not" obtain it — no Infamy is lost.
         failureLoss: null,
     };
 
@@ -155,7 +155,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return 1000;
     }
 
-    /** BC Dispositions are the seven-step ladder; a success gains one step per degree (p. 276, Table 8–2) — #73. */
+    /** BC Dispositions are the seven-step ladder; a success gains one step per degree (BC core) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderDegrees;
     }
@@ -179,7 +179,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * BC uses a 4-tier characteristic ladder
-     * (Simple / Intermediate / Trained / Expert — `core.md` :2581).
+     * (Simple / Intermediate / Trained / Expert — BC core).
      * The aptitude-based default ladder is 5-tier (DH2-style); BC overrides.
      */
     override getCharacteristicTiers(): CharacteristicTierDef[] {
@@ -191,14 +191,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * BC uses a 4-rank skill ladder (Known / Trained / Experienced / Veteran
-     * — `core.md` :2677) with DH2-style schema slot keys and RAW labels that
+     * — BC core) with DH2-style schema slot keys and RAW labels that
      * match DH2 byte-for-byte, so `getSkillRanks` is inherited unchanged from
      * `AptitudeBasedSystemConfig`.
      *
      * BC psykers are an archetype; the compendium document flagged
      * `grantsPsychicPowers` names which (#681). Aligned-to-Khorne characters
      * lose Psyker Trait counts even while owning the archetype
-     * (`core.md` :2750-2754).
+     * (BC core).
      */
     override readonly psykerUnlock = { step: 'archetype' };
 
@@ -220,9 +220,9 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /**
      * BC has no aptitudes, so it has no universal one either (#631). Advance cost
      * is set by the advance's Chaos alignment against the character's — True,
-     * Allied or Opposed (core p.76, Tables 2-4 / 2-5) — and an adversary profile
+     * Allied or Opposed (BC core) — and an adversary profile
      * lists characteristics, skills, talents, traits and weapons with no
-     * aptitudes (core p.352). The inherited `['General']` would put a lone
+     * aptitudes. The inherited `['General']` would put a lone
      * "General" pill on every BC sheet's Aptitudes panel.
      */
     override readonly universalAptitudes: readonly string[] = [];
@@ -290,7 +290,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * Resolve the alignment of a characteristic for cost purposes.
-     * Per `core.md` :2586 only Str/Tou/Fel/WP have non-Unaligned
+     * Per BC core, only Str/Tou/Fel/WP have non-Unaligned
      * affiliations.
      */
     getCharacteristicAlignment(charKey: string): ChaosAlignment {
@@ -299,8 +299,8 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * Black Crusade characteristic cost: True/Allied/Opposed × tier
-     * (Table 2-6). The aptitude-based base method is bypassed — BC has no
-     * aptitudes (`core.md` :2557).
+     * (the characteristic cost table). The aptitude-based base method is
+     * bypassed — BC has no aptitudes.
      */
     override getCharacteristicAdvanceCost(actor: SystemConfigActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const charAlignment = this.getCharacterAlignment(actor);
@@ -314,11 +314,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     }
 
     /**
-     * Black Crusade skill cost: True/Allied/Opposed × rank (Table 2-7).
+     * Black Crusade skill cost: True/Allied/Opposed × rank (the skill cost table).
      * The skill's per-advance alignment is supplied by callers in
      * `context.advanceAlignment`. When omitted, defaults to 'unaligned'
      * (which is Allied for every alignment, matching the RAW "unaligned
-     * advances" treatment in :2599).
+     * advances" treatment).
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: context matches abstract base signature; advanceAlignment is extracted and narrowed below
     override getSkillAdvanceCost(actor: SystemConfigActor, _skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
@@ -327,7 +327,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     }
 
     /**
-     * Black Crusade talent cost: True/Allied/Opposed × tier (Table 2-9).
+     * Black Crusade talent cost: True/Allied/Opposed × tier (the talent cost table).
      * The talent's alignment and tier come from the talent item's system
      * data (compendium content); callers may override via `context`.
      */
@@ -342,8 +342,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * Infamy advance cost. Returns null when Infamy is at or above 40
-     * (`core.md` :2667). Independent of Alignment — Infamy is unaligned
-     * (`core.md` :2586).
+     * (BC core). Independent of Alignment — Infamy is unaligned.
      */
     getInfamyAdvanceCost(actor: SystemConfigActor): number | null {
         return infamyAdvanceCost(readBcSystem(actor).infamy ?? 0);

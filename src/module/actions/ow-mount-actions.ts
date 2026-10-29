@@ -1,7 +1,7 @@
 /**
  * Action handler module for the Only War Mounted Combat panel
- * (#159 — Hammer of the Emperor §"MOUNTED COMBAT" /
- * "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS", hammer.md lines 4046-4260).
+ * (#159 — an OW supplement's Mounted Combat, Mount Special Actions and
+ * Mount Traits rules).
  *
  * The exported `owMountedAction` function is registered into the
  * CharacterSheet's `DEFAULT_OPTIONS.actions` map by the orchestrator

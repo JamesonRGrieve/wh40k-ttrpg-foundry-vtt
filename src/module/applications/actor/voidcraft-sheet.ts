@@ -569,7 +569,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Fire a Weapon Component at another ship (#184 — RT Core, Chapter VIII).
+     * Fire a Weapon Component at another ship (#184 — RT core).
      *
      * Opens the shared ship dialog on the fire flow: the target ship comes
      * from the GM's targeted tokens, then the scene, then the world. The
@@ -601,7 +601,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
         }
         const bsModifiers = (id: string): ShipTestComponent[] =>
             collectShipModifierComponents(actor.shipActionEffects, { target: 'ballisticSkill', weaponId: id });
-        // The ship's other macrobatteries may join this one in a salvo (RT Core p.221).
+        // The ship's other macrobatteries may join this one in a salvo (RT core).
         const companions: ShipWeaponFireCompanion[] = [];
         for (const other of actor.shipWeapons) {
             const otherSystem = (other as ShipWeaponItem).system;
@@ -896,7 +896,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      * Roll on the Rogue Trader Critical Hit chart (issue #187).
      *
      * Per RAW (RT Core, "Starship Weapons"), a weapon's Critical Hit rolls 1d5
-     * on the Critical Hit chart (Table 8-12). Each result applies a persistent
+     * on the starship Critical Hit chart. Each result applies a persistent
      * status that lasts until cleared by an Emergency Repair or Quick Repair
      * extended action (or the Stats tab's clear control).
      *

@@ -148,7 +148,7 @@ export interface VehicleTraitEffects {
     forceFieldNeverOverloads: boolean;
     /** The field's craftsmanship, which picks its overload chance (Shield Generator); `''` = none recorded. */
     forceFieldCraftsmanship: FieldCraftsmanship;
-    /** The highest protection roll that overloads the field, by craftsmanship (DH2 Core p. 169 Table 5–13); null = not printed. */
+    /** The highest protection roll that overloads the field, by craftsmanship (DH2 core, Field Overload Chance); null = not printed. */
     forceFieldOverload: FieldOverloadTable;
     /** Weapon qualities (identifiers) whose attacks the field does not stop (Daemon Engine: Sanctified, Force). */
     forceFieldBypassQualities: string[];
@@ -169,7 +169,7 @@ export interface NamedVehicleTraitEffects {
  * multiplicatively; test modifiers concatenate (each naming its trait); booleans
  * OR together; incoming to-hit modifiers take the strongest penalty; a force
  * field takes the highest rating. Ponderous and Enhanced Motive Systems cancel
- * each other out (DH2 core p. 188, OW core p. 214).
+ * each other out (DH2 core, OW core).
  */
 export interface AggregatedVehicleTraitEffects extends Omit<VehicleTraitEffects, 'testModifiers' | 'incomingRangedCondition' | 'forceFieldOverload'> {
     testModifiers: SourcedVehicleTestModifier[];
@@ -234,7 +234,7 @@ export function vehicleTraitEffectsSchema(): foundry.data.fields.SchemaField.Any
         cannotRam: flag(),
         freeTurn: flag(),
         canParryWithMelee: flag(),
-        // Enhanced Motive Systems: 2x Tactical Speed as a Half-Action, 3x as Full, triple on Floor It! (DH2 Core p.188).
+        // Enhanced Motive Systems: 2x Tactical Speed as a Half-Action, 3x as Full, triple on Floor It! (DH2 core).
         enhancedMovement: flag(),
         orbitalDeployment: flag(),
         deploymentIncomingToHitModifier: modifier(),
@@ -466,7 +466,7 @@ export function aggregateVehicleTraitEffects(traits: readonly NamedVehicleTraitE
         if (out.structuralRegeneration === '') out.structuralRegeneration = e.structuralRegeneration;
     }
     // "If a vehicle has both the Enhanced Motive Systems Vehicle Trait and the Ponderous
-    // Vehicle Trait, then these two Traits cancel each other out" (OW core p. 213–214).
+    // Vehicle Trait, then these two Traits cancel each other out" (OW core).
     if (out.enhancedMovement && out.ponderous) {
         out.enhancedMovement = false;
         out.ponderous = false;

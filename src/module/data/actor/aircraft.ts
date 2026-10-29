@@ -4,7 +4,7 @@ import { ConventionalCraftData, locomotionField } from './vehicle.ts';
  * Data model for atmospheric / sub-orbital flyers and skimmers.
  *
  * Adds the air-specific block on top of `ConventionalCraftData`:
- *   • `altitude` — the current flight tier (without.md p. 54-55). Only
+ *   • `altitude` — the current flight tier (a DH2 supplement). Only
  *     meaningful for craft with the Flyer trait. Moved OFF the base here so
  *     land/water craft do not carry a flight-tier field they never use.
  *   • `ceiling` — the maximum altitude tier the craft can reach.
@@ -19,7 +19,7 @@ export default class AircraftData extends ConventionalCraftData {
         const schema = super.defineSchema();
         schema['locomotion'] = locomotionField('flyer');
 
-        // === Flyer altitude (without.md p. 54-55) ===
+        // === Flyer altitude ===
         schema['altitude'] = new fields.StringField({
             required: true,
             initial: 'ground',

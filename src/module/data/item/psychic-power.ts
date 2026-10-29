@@ -70,7 +70,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             // Psy Rating cost
             prCost: new fields.NumberField({ required: true, initial: 1, min: 0, integer: true }),
 
-            // XP cost the book prints ("Value: 300 xp", DH2 core p. 206), #642.
+            // XP cost the book prints ("Value: 300 xp", DH2 core), #642.
             // Null when not authored: the advancement charge and the XP-spend
             // calculation then fall back to the PR heuristic (`psychicPowerCost`).
             cost: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),

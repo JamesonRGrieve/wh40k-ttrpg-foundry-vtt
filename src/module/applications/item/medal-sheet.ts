@@ -1,5 +1,5 @@
 /**
- * @file MedalSheet — sheet for Only War Medals and Honours (core pp. 294–295, content#32).
+ * @file MedalSheet — sheet for Only War Medals and Honours (content#32).
  *
  * Uses the shared `item-content-block-sheet.hbs` template: the medal's
  * description, what it is Awarded For, its Squad Bonus, and its type.

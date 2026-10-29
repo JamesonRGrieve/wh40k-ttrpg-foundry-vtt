@@ -1,12 +1,12 @@
 /**
  * @file MutantBackgroundDialog — GM dialog finishing the Mutant origin path
- * background for a dh2 character (Enemies Within p. 32).
+ * background for a dh2 character (a DH2 supplement).
  *
  * The Mutant's 10 starting Corruption is an origin resource: the origin-grant
  * ledger applies it from the Mutant origin's `modifiers.resources.corruption`
  * when the origin is committed, and queues no Malignancy Test for it. In place
- * of that test the book has the character "roll 5d10 on Table 8-16: Mutations
- * ... to determine a starting mutation". This dialog makes that roll (the
+ * of that test the rules have the character roll 5d10 on the Mutations table
+ * to determine a starting mutation. This dialog makes that roll (the
  * formula is the origin's `grants.startingMutationFormula`), adds the rolled
  * mutation to the character, sets the Twisted Flesh flag, and posts a chat card.
  *
@@ -126,7 +126,7 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
         const formula = origin === null ? null : startingMutationFormula(origin.system);
         if (actor === null || origin === null || formula === null) return;
 
-        // Within p. 32: roll the formula on Table 8-16 for the starting mutation.
+        // Roll the formula on the Mutations table for the starting mutation.
         const roll = await new Roll(formula).evaluate();
         const total = roll.total;
         const entries = (await loadMutationEntries()) ?? [];

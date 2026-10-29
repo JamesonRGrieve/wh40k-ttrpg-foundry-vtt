@@ -296,17 +296,17 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      * Disposition toward the player characters (#73), on the line's scale
      * (`dispositionModel`): DH2's 0–100 characteristic, the other FFG lines'
      * −3..+3 ladder. `scale` records which model the value was stored under.
-     * `personality` is the DH2 Personality (core pp. 277–280): per Interaction
+     * `personality` is the DH2 Personality (core): per Interaction
      * skill, the test modifier and the Disposition effect per degree.
      */
     declare disposition: { value: number; scale: string; personality: NpcPersonality };
     /**
      * Flag marking this NPC as available as a Reinforcement Character
-     * (core.md §"Reinforcement Characters", p. 294). Shows the GM's
+     * ("Reinforcement Characters"). Shows the GM's
      * "Call in" panel on the NPC sheet (#77).
      */
     declare isReinforcement: boolean;
-    /** The RC's printed call terms (core p. 294, #77). */
+    /** The RC's printed call terms (core, #77). */
     declare reinforcement: {
         influenceMinimum: number | null;
         influenceCost: number | null;
@@ -593,10 +593,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             // === SOCIAL / DISPOSITION (#73) — the line's model sets the scale ===
             disposition: NPCData.#dispositionSchema(NPCData.dispositionModelFor((this as { gameSystem?: string }).gameSystem)),
 
-            // === REINFORCEMENT (core.md §"Reinforcement Characters", p. 294) ===
+            // === REINFORCEMENT ("Reinforcement Characters") ===
             // True when this NPC may be called in via Influence as a Reinforcement.
             isReinforcement: new BooleanField({ required: true, initial: false }),
-            // The RC's printed call terms (core p. 294): Influence Minimum, Influence
+            // The RC's printed call terms (core): Influence Minimum, Influence
             // Cost, and an optional Peer-talent discount ("Peer (X) talent lowers
             // Influence Cost by N"). Null/blank for an NPC with no printed terms.
             reinforcement: new SchemaField({
@@ -609,7 +609,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                     amount: new StringField({ required: true, initial: '', blank: true }),
                 }),
                 // Extra terms some RCs print for the Acolyte who calls them, e.g. the
-                // Thrice-Bound Daemonhost (Enemies Beyond p. 38): "must possess the
+                // Thrice-Bound Daemonhost (a DH2 supplement): "must possess the
                 // Forbidden Lore (Daemonology) skill at the Trained level, and gains
                 // 1d5 Corruption points". Blank / null when the RC prints none.
                 caller: new SchemaField({
@@ -871,7 +871,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /**
      * The Disposition field for a line's model: the value on its scale, the model
      * it was stored under, and the DH2 Personality (one row per Interaction skill
-     * a Personality table lists, core pp. 278–280). Every row starts empty: the
+     * a Personality table lists). Every row starts empty: the
      * GM enters the NPC's Personality, from the book's examples or their own.
      */
     static #dispositionSchema(model: DispositionModelDef): foundry.data.fields.SchemaField<Record<string, foundry.data.fields.DataField.Any>> {

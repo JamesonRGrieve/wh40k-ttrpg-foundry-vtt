@@ -321,14 +321,14 @@ export default class CreatureTemplate extends CommonTemplate {
         value: number;
     };
     /**
-     * Shock counter (core.md §"Shock And Snapping Out Of It", p. 287).
+     * Shock counter ("Shock And Snapping Out Of It").
      * Accumulates from Fear failures / mental trauma; drives the Snap-Out
      * recovery test. Capped at WP-bonus + Toughness-bonus per RAW.
      */
     declare shock: { value: number; max: number };
 
     /**
-     * Possession track (beyond.md p. 69). Latent / Possessed states
+     * Possession track (a DH2 supplement). Latent / Possessed states
      * gate session-limited Unleash Daemon uses.
      */
     declare possession: {
@@ -1277,7 +1277,7 @@ export default class CreatureTemplate extends CommonTemplate {
             // Recalculate total from BASE values to avoid accumulation, routing
             // through the shared SSOT so the unnatural/bonus rule stays identical to
             // the pre-item `_prepareCharacteristics` pass. The `extra` term folds in
-            // `advance*5 - damage` (core.md §"Characteristic Damage") plus the item /
+            // `advance*5 - damage` ("Characteristic Damage") plus the item /
             // origin-path modifier; `clampTotalToZero` floors the total at 0.
             const { total, bonus } = computeCharacteristicTotals(
                 char.base,

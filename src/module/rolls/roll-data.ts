@@ -320,7 +320,7 @@ export class RollData {
     /** The un-clamped sum of modifiers (un-capped). Equals `modifierTotal`
      *  except when the ±60 cap fired, in which case this exposes what the
      *  raw accumulator would have been so chat cards can surface "cap
-     *  absorbed X" to the GM (DH2 core.md L1050). */
+     *  absorbed X" to the GM (DH2 core). */
     rawModifierTotal: number = 0;
     /** True when the ±60 cap clamped `rawModifierTotal` down to
      *  `modifierTotal`. The chat-card layer reads this to render a
@@ -739,7 +739,7 @@ export class WeaponRollData extends RollData {
     vehicleHitLocation: I18nKey | '' = '';
     /**
      * The declared target rides in the open on a vehicle and can be singled out only
-     * by a Called Shot (Open-Topped, DH2 Core p. 187) — except a Bike's rider in
+     * by a Called Shot (Open-Topped, DH2 core) — except a Bike's rider in
      * melee. Null when the target is not aboard one.
      */
     crewTarget: { vehicleName: string; riderTargetableInMelee: boolean } | null = null;
@@ -859,7 +859,7 @@ export class WeaponRollData extends RollData {
         this.isKnockDown = this.action === 'Knock Down';
         this.isManoeuvre = this.action === 'Manoeuvre';
         this.isDisarm = this.action === 'Disarm';
-        // A grapple attempt deals no damage: its hit starts a grapple (DH2 p. 228). It is an unarmed
+        // A grapple attempt deals no damage: its hit starts a grapple (DH2). It is an unarmed
         // Standard Attack or Charge, so a Charge keeps its bonus; it keeps its controls — the
         // card's Begin Grapple — and its evasion window.
         this.isGrappleAttempt = this.grappleAttempt && this.canGrapple;
@@ -1045,7 +1045,7 @@ export class WeaponRollData extends RollData {
     /**
      * Path B: the attacker's Comrade Orders in force this Turn on the test's
      * characteristic (#152; Ranged Volley's "+5 to all Ballistics Skill Tests this
-     * Turn", OW Core p. 270), folded as ONE `comrade-orders` bucket whose sourced
+     * Turn", OW core), folded as ONE `comrade-orders` bucket whose sourced
      * rows the card expands. Reads the base characteristic, so it runs after
      * {@link updateBaseTarget}.
      */
@@ -1081,8 +1081,8 @@ export class WeaponRollData extends RollData {
 
     /**
      * Someone riding in the open on a vehicle can be singled out only by a Called
-     * Shot (Open-Topped, DH2 Core p. 187; OW Core p. 212), so an attack on them IS
-     * one — unless it is a melee attack on a Bike's rider (DH2 Core p. 187).
+     * Shot (Open-Topped, DH2 core; OW core), so an attack on them IS
+     * one — unless it is a melee attack on a Bike's rider (DH2 core).
      */
     requireCrewCalledShot(): void {
         const crew = this.crewTarget;

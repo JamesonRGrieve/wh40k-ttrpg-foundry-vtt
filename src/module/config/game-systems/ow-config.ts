@@ -20,9 +20,9 @@ import { locatedVehicleCombat, printedGrappleRules, TRADE_ARMOURER_FITTING_RULES
 import type { DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
- * Logistics test — core Table 6-2: Availability by Front Conditions, its
- * "Company or Less" column (p. 163), and Table 6-6: Craftsmanship and
- * Logistics (p. 167). The line's flat ladder (the one every cross-line
+ * Logistics test — the core Availability by Front Conditions table, its
+ * "Company or Less" column, and the Craftsmanship and Logistics table.
+ * The line's flat ladder (the one every cross-line
  * consumer reads) is the smallest deployment; the larger-deployment columns
  * of the same table are `OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops`.
  */
@@ -41,7 +41,7 @@ export const OW_ACQUISITION_LADDER = {
         unique: 'discretion',
     },
     craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
-    // p. 162: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
+    // OW core: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
     failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
@@ -56,7 +56,7 @@ const COMRADE_MOVE_KEYS = {
     'tactical-advance': 'TacticalAdvance',
 } as const;
 
-/** A Comrade move Order (OW Core pp. 269–270): it moves the Comrade and grants the PC nothing. */
+/** A Comrade move Order (OW core): it moves the Comrade and grants the PC nothing. */
 function comradeMoveOrder(id: keyof typeof COMRADE_MOVE_KEYS, actionCost: ComradeActionCost, cohesion: ComradeOrderCohesion = 'none'): ComradeOrderDef {
     const segment = COMRADE_MOVE_KEYS[id];
     return {
@@ -70,13 +70,13 @@ function comradeMoveOrder(id: keyof typeof COMRADE_MOVE_KEYS, actionCost: Comrad
     };
 }
 
-/** One availability column of Table 6-2 (a printed cell per rating). */
+/** One availability column of the Availability by Front Conditions table (a printed cell per rating). */
 type AvailabilityColumn = AcquisitionLadder['availability'];
 
 /**
- * Core Table 6-2: Availability by Front Conditions (p. 163) in full — the four
+ * The core Availability by Front Conditions table in full — the four
  * cumulative parts of a Logistics Test's difficulty, plus the standard-kit
- * bonus printed above it (p. 163). Every value was read off the page image.
+ * bonus printed above it. Every value was read off the page image.
  *
  * - `availabilityByTroops`: "Difficulty by Number of Troops", the item's
  *   Availability cross-referenced with the deployment size. `company` is the
@@ -143,8 +143,8 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly itemRepair = null;
     /**
      * OW core Weapon Upgrades: an acquired upgrade is integrated by a successful
-     * Trade (Armourer) test (#136). The separate Weapon Customisations (p. 190,
-     * Routine (+20)) have no pack items yet, so they are not distinguished here.
+     * Trade (Armourer) test (#136). The separate Weapon Customisations (Routine
+     * (+20)) have no pack items yet, so they are not distinguished here.
      */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
@@ -156,8 +156,8 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
     /**
-     * OW core p. 247: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
-     * Ballistic Skill Test"; p. 245: Full Auto Burst (Type: Half Action) is made
+     * OW core: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
+     * Ballistic Skill Test"; Full Auto Burst (Type: Half Action) is made
      * "with a −10 penalty" — #607.
      */
     readonly burstActions: BurstActionRules = {
@@ -175,7 +175,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
 
     /**
-     * OW Core p. 276 onward: Table 8-24, a Vehicle Critical Hit chart per location,
+     * OW core: the vehicle hit-location table, a Vehicle Critical Hit chart per location,
      * and Righteous Fury only when "this attack must actually Damage the vehicle".
      */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(true);
@@ -184,7 +184,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     /**
-     * OW Core pp. 269–271, Comrades in Combat: Cohesion is "within 5 metres of his
+     * OW core, Comrades in Combat: Cohesion is "within 5 metres of his
      * controlling Player Character"; a Comrade "is limited to two Half Actions or one
      * Full Action per Turn"; it dies when it "would suffer 10 Insanity or 10
      * Corruption in a single Round".
@@ -283,7 +283,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     /** OW psykers are a speciality; the compendium document flagged `grantsPsychicPowers` names which (#681). */
     override readonly psykerUnlock = { step: 'speciality' };
 
-    /** OW Dispositions are the seven-step ladder; a success gains one step per degree (p. 304, Table 9–4) — #73. */
+    /** OW Dispositions are the seven-step ladder; a success gains one step per degree (OW core) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderDegrees;
     }

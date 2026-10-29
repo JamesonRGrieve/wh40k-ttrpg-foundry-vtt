@@ -256,7 +256,7 @@ export default class CharacterData extends CreatureTemplate {
     declare requisition: number;
     declare throneGelt: number;
     /**
-     * Subtlety pool (core.md §"Influence And Subtlety", p. 268). DH2-only
+     * Subtlety pool ("Influence And Subtlety"). DH2-only
      * concept tracking how covert the warband is. Adjusted by mission
      * events; tested against on certain triggers. Max defaults to 100;
      * starting value is set by the GM at campaign start.
@@ -282,7 +282,7 @@ export default class CharacterData extends CreatureTemplate {
     declare aptitudes: string[];
     /**
      * The ONLY persisted aptitude state: the player's elective double-up picks
-     * (DH2 Core p.79). When the origin path would grant the same aptitude twice,
+     * (DH2 core). When the origin path would grant the same aptitude twice,
      * the player instead picks a Characteristic aptitude they do not already
      * have; that genuine choice cannot be derived, so it lives here. Validated
      * by {@link aptitudeValidation}: exactly one Characteristic elective per
@@ -302,8 +302,8 @@ export default class CharacterData extends CreatureTemplate {
      * `src/module/rules/bc-alignment-derivation.ts`). Each entry records
      * the advance's category, key (charKey/skillKey/talent UUID/etc.),
      * paid xp cost, the alignment of the advance, and whether it came
-     * from the Archetype (excluded from the tally per `bc/core/core.md`
-     * :2561). Empty for non-BC actors.
+     * from the Archetype (excluded from the tally per BC core). Empty for
+     * non-BC actors.
      */
     declare chaosAdvancements: Array<{
         category: 'characteristic' | 'skill' | 'talent' | 'psychic-power' | 'infamy';
@@ -314,14 +314,14 @@ export default class CharacterData extends CreatureTemplate {
     }>;
     /**
      * Last Corruption-Point threshold at which BC Alignment was
-     * re-evaluated (`bc/core/core.md` :2569). Used to gate the 10-CP
+     * re-evaluated (BC core). Used to gate the 10-CP
      * re-check so we only flip Alignment once per threshold crossed.
      * Always a non-negative multiple of 10 (or 0 if never checked).
      */
     declare alignmentCheckpoint: number;
     declare infamy: number;
     /**
-     * Dark Pacts struck with Daemons (Enemies Beyond pp. 72–76). `pactUuid`
+     * Dark Pacts struck with Daemons (a DH2 supplement). `pactUuid`
      * resolves to the compendium `darkPact` item; `boons` / `banes` name the
      * entries this bargain carries; `disposition` is the Daemon's Disposition
      * (0–100); `discovered` and `paymentCurrent` are the GM's bookkeeping.
@@ -497,7 +497,7 @@ export default class CharacterData extends CreatureTemplate {
                     }),
                     { required: true, initial: [] },
                 ),
-                // Colony (Stars of Inequity, #195). Founding defaults match
+                // Colony (Rogue Trader, #195). Founding defaults match
                 // COLONY_CHARACTERISTICS[*].default in `src/module/rules/rt-colony.ts`.
                 // The Type field is blank until the Dynasty founds a Colony —
                 // when set, it picks one of the four canonical Colony Type
@@ -532,12 +532,12 @@ export default class CharacterData extends CreatureTemplate {
             }),
 
             // ===== DH2e RESOURCES =====
-            // Influence is a 0-100 characteristic per DH2 RAW (DH2e core p. 28). In Homebrew
+            // Influence is a 0-100 characteristic per DH2 RAW (DH2e core). In Homebrew
             // mode it presents as an economy resource, but the cap still applies — Influence
             // never exceeds a percentile characteristic ceiling.
             influence: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
 
-            // Subtlety pool — DH2-only per core.md §"Influence And Subtlety".
+            // Subtlety pool — DH2-only per "Influence And Subtlety".
             // RAW: 0–100. Adjusted by mission events; consulted by Subtlety
             // tests. Per-system gate: the character sheet hides this field
             // on non-DH2 systems.
@@ -563,7 +563,7 @@ export default class CharacterData extends CreatureTemplate {
             // aptitude-based systems for XP cost calculation.
             aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
-            // Player's elective double-up picks (DH2 Core p.79) — the ONLY
+            // Player's elective double-up picks (DH2 core) — the ONLY
             // persisted aptitude state. Each entry resolves one origin-path
             // double-up by choosing a Characteristic aptitude the player does not
             // already have. Validated in _computeOriginPathEffects; see #381.
@@ -576,8 +576,8 @@ export default class CharacterData extends CreatureTemplate {
                 choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
             }),
             // Per-advance log driving Alignment derivation. Empty for non-BC actors.
-            // Per `bc/core/core.md` :2559 alignment is computed from this tally,
-            // re-checked at 10-CP thresholds (:2569).
+            // Per BC core, alignment is computed from this tally,
+            // re-checked at 10-CP thresholds.
             chaosAdvancements: new fields.ArrayField(
                 new fields.SchemaField({
                     category: new fields.StringField({
@@ -599,16 +599,16 @@ export default class CharacterData extends CreatureTemplate {
             // BC Alignment re-check checkpoint (highest 10-CP threshold last evaluated).
             // 0 = never checked; rounds up to 10/20/30/... as Corruption accrues.
             alignmentCheckpoint: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            // BC Infamy stat (`core.md` :2667). Flat 500xp/+5 advance, blocked at >=40.
+            // BC Infamy stat (BC core). Flat 500xp/+5 advance, blocked at >=40.
             // Sibling issue tracks Infamy's RAW role outside advancement; this slot is
             // the canonical persistence so `BCSystemConfig.getInfamyAdvanceCost` works.
             infamy: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
 
-            // ===== DARK PACTS (Enemies Beyond, pp. 72–76) =====
+            // ===== DARK PACTS (a DH2 supplement) =====
             // Pacts struck with Daemons. `pactUuid` is the compendium `darkPact`
             // item; `boons` / `banes` are the identifiers of the entries this
             // bargain carries; `disposition` is the Daemon's Disposition on the
-            // core 0–100 scale (core p. 277). See src/module/rules/dark-pact.ts.
+            // core 0–100 scale. See src/module/rules/dark-pact.ts.
             pacts: new fields.ArrayField(
                 new fields.SchemaField({
                     pactUuid: new fields.StringField({ required: true, blank: false }),
@@ -942,7 +942,7 @@ export default class CharacterData extends CreatureTemplate {
         // Collect aptitudes from the origin path (DH2e/BC/OW use aptitudes for XP
         // costs). Aptitudes are 1:1 with origin (#381): every origin item carries
         // fixed grants.aptitudes + resolved grants.choices[type=aptitude]. Per DH2
-        // Core p.79 the characteristic-named aptitudes are NOT auto-granted, and
+        // core the characteristic-named aptitudes are NOT auto-granted, and
         // General (universal) is injected by consumers — neither is stored here.
         //
         // Per-item grants are deduped within the item, then concatenated so a

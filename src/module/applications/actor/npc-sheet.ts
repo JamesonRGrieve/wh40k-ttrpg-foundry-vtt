@@ -314,11 +314,11 @@ export default class NPCSheet extends CharacterSheet {
             toggleGMTools: NPCSheet.#toggleGMTools,
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
             generateInventory: NPCSheet.#generateInventory,
-            // Reinforcement Character call (DH2 core p. 294, #77)
+            // Reinforcement Character call (DH2 core, #77)
             callReinforcement: NPCSheet.#callReinforcement,
-            // Interaction tally (DH2 errata p.125, #145)
+            // Interaction tally (DH2 errata, #145)
             adjustInteractionCount: NPCSheet.#adjustInteractionCount,
-            // Disposition test (DH2 core p. 277, #73)
+            // Disposition test (DH2 core, #73)
             rollDisposition: NPCSheet.#rollDisposition,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
@@ -411,7 +411,7 @@ export default class NPCSheet extends CharacterSheet {
         const npcTier = this.npcActor.system.tier;
         context['npcFateHidden'] = !(npcTier === 'elite' || npcTier === 'master');
 
-        // Daemonic immunities header badge (#143 — DH2 Errata L69-73).
+        // Daemonic immunities header badge (#143 — DH2 errata).
         // Surfaces a crimson skull pill above the sidebar-fields panel when
         // the actor carries the Daemonic trait (matched by identifier).
         context['isDaemonic'] = hasDaemonic(this.actor);
@@ -436,7 +436,7 @@ export default class NPCSheet extends CharacterSheet {
         this._prepareInteractionsContext(context);
         context['npcDisposition'] = npcDispositionView(this.npcActor.dispositionState, (skill) => this.npcActor.system.skillLabel(skill));
 
-        // Reinforcement Character call (DH2 core p. 294, #77): GM-only, for a DH2
+        // Reinforcement Character call (DH2 core, #77): GM-only, for a DH2
         // NPC flagged as an RC. Other lines print no RC rules.
         const npc = this.npcActor.system;
         if (game.user.isGM && npc.isReinforcement && this._resolveGameSystemId() === 'dh2') {
@@ -460,7 +460,7 @@ export default class NPCSheet extends CharacterSheet {
 
     /**
      * Prepare the per-PC interaction-tally context for the "Interaction Counts"
-     * panel (DH2 errata p.125, #145). Each PC actor in the world contributes
+     * panel (DH2 errata, #145). Each PC actor in the world contributes
      * one row showing how many qualifying interactions they've had with this
      * NPC, capped by their Fellowship bonus.
      *
@@ -1539,7 +1539,7 @@ export default class NPCSheet extends CharacterSheet {
 
     /* -------------------------------------------- */
 
-    /** Test the NPC's Disposition: a d100 against it through the roll dialog (DH2 core p. 277, #73). */
+    /** Test the NPC's Disposition: a d100 against it through the roll dialog (DH2 core, #73). */
     static #rollDisposition(this: NPCSheet, event: Event): void {
         event.preventDefault();
         this.npcActor.rollDisposition();
@@ -1551,7 +1551,7 @@ export default class NPCSheet extends CharacterSheet {
      * count is clamped to zero on the low end; the cap is enforced visually
      * only — the GM can intentionally push past it when narrative dictates.
      *
-     * Errata reference: DH2 p.125 (#145).
+     * Errata reference: DH2 errata (#145).
      *
      * @param event Triggering pointer event.
      * @param target Button element carrying `data-pc-id` and `data-delta`.

@@ -9,8 +9,8 @@ export type { LeadStatus };
 /**
  * Data model for Journal Entry items.
  *
- * Doubles as the Investigation Lead container per core.md §"Leads"
- * (p. 282) — when `isLead === true`, the additional lead-specific
+ * Doubles as the Investigation Lead container per the core "Leads"
+ * rules — when `isLead === true`, the additional lead-specific
  * fields (status, source, owner) are populated and the sheet renders
  * the lead view. Otherwise the entry is a plain in-character note. The
  * lead-status vocabulary is shared with {@link ../item/lead.ts LeadData}

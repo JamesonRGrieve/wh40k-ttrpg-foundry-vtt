@@ -896,7 +896,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             skillPanel,
             hasSkillPanel: skillPanel?.visible === true,
             isSimple,
-            // Climbing-surface picker (#146 — errata L113). Visible only on Athletics rolls.
+            // Climbing-surface picker (#146 — errata). Visible only on Athletics rolls.
             isAthletics,
             climbSurface: this._climbSurface,
             climbSurfaceOptions: [
@@ -1431,7 +1431,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /**
      * A toggled situational row's failure consequence (#101): when the boosted
      * test fails by the row's `minDof` or more, the card says which table to roll
-     * and with what dice. Push the Limit (DH2 Enemies Without p. 63) authors this
+     * and with what dice. Push the Limit (a DH2 supplement) authors this
      * on its Operate row (Motive Systems) and its Survival row (Impact – Leg). The
      * threshold, table and dice are all row data; nothing here names a talent.
      */
@@ -1577,7 +1577,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         return this.rollType === 'simple' && rd.type === 'Skill' && rollKey === 'athletics';
     }
 
-    /** Climbing surface modifier (#146 — errata L113), applied on Athletics rolls only. */
+    /** Climbing surface modifier (#146 — errata), applied on Athletics rolls only. */
     _climbModifier(): number {
         return this._isAthletics() ? getClimbingModifier({ surfaceType: this._climbSurface }) : 0;
     }
@@ -1817,7 +1817,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /**
      * Toggle whether a burst's extra hits may spread onto nearby enemies (#513).
      *
-     * RAW (DH2 core ch. VII) makes this the attacker's choice — hits after the first
+     * RAW (DH2 core) makes this the attacker's choice — hits after the first
      * may stay on the target or move to an eligible enemy within 2 m — so it is a
      * per-roll decision rather than a setting. `rollData.spreadTargets` is already
      * filtered to the eligible ones; this only picks which allocation strategy
@@ -1974,7 +1974,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /* ---- Assistance chips (#60) ----                                                    */
-    /* +10 per selected ally up to DEFAULT_ASSISTANT_CAP (core.md §"Assistance", p. 25).    */
+    /* +10 per selected ally up to DEFAULT_ASSISTANT_CAP ("Assistance").                    */
 
     /**
      * Allies on the active scene eligible to assist this test: friendly, not the
@@ -2051,7 +2051,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /* ---- Climbing surface picker for Athletics rolls (#146) ----              */
-    /* Errata p. 113 — sheer surfaces add Hard (-20) to the Athletics test.      */
+    /* Errata — sheer surfaces add Hard (-20) to the Athletics test.             */
 
     static async #onSetClimbSurface(this: UnifiedRollDialog, event: Event, _target: HTMLElement): Promise<void> {
         const select = event.target as HTMLSelectElement | null;

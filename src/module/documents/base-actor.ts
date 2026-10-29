@@ -241,7 +241,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Apply fatigue to the actor (core.md §"Fatigue"). Knock-Down, Forced
+     * Apply fatigue to the actor ("Fatigue"). Knock-Down, Forced
      * Marching, Suppressing Fire, and several conditions all push fatigue
      * without going through the full damage pipeline. Clamps at the
      * fatigue threshold (typically `2 × TB`) but does NOT auto-knock the
@@ -509,7 +509,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Apply recoverable characteristic damage (core.md §"Characteristic
+     * Apply recoverable characteristic damage ("Characteristic
      * Damage"). The damage slot lives on each characteristic; the actor's
      * effective value is `total − damage`. Always non-negative.
      *
@@ -530,7 +530,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Adjust the actor's Shock counter (core.md §"Shock And Snapping
+     * Adjust the actor's Shock counter ("Shock And Snapping
      * Out Of It"). Positive amounts add shock; negative amounts (e.g.
      * after a successful Snap-Out test) reduce it. Clamps at 0.
      */
@@ -605,13 +605,13 @@ export class WH40KBaseActor extends Actor {
     }
 
     /**
-     * Adjust the actor's Subtlety pool (DH2-only, core.md §"Influence
+     * Adjust the actor's Subtlety pool (DH2-only, "Influence
      * And Subtlety"). Positive amounts raise the warband's subtlety;
      * negative amounts (most common, since missions usually erode it)
      * lower it. Clamps at 0..max.
      *
      * Any "resist Subtlety loss" clamp the actor carries (e.g. Quarantine
-     * World, Enemies Beyond p. 30) is applied to losses first — discovered by
+     * World) is applied to losses first — discovered by
      * tree-walking owned items, with the minimum retained loss read from the
      * governing compendium entry rather than hardcoded.
      *
@@ -1117,7 +1117,7 @@ export class WH40KBaseActor extends Actor {
             label: characteristic.label,
             target: characteristic.total,
             ...(override !== undefined ? { typeOverride: override } : {}),
-            // A Comrade Order in force this Turn (Ranged Volley's +5 BS, OW Core p. 270, #152).
+            // A Comrade Order in force this Turn (Ranged Volley's +5 BS, OW core, #152).
             sourcedModifiers: { bucket: COMRADE_ORDER_BUCKET, components: comradeOrderModifiersFor(this, characteristicName) },
         });
         openRollPrompt(simpleSkillData);
@@ -1145,7 +1145,7 @@ export class WH40KBaseActor extends Actor {
             target: willpower.total,
             situationalKey: 'willpower',
             extraModifiers: { fear: -getFearTestPenalty(rating) },
-            // An Only War PC's Comrade passes or fails with it (OW Core p. 271, #152).
+            // An Only War PC's Comrade passes or fails with it (OW core, #152).
             instance: comradeMirrorTestFor(this, 'fear'),
         });
         openRollPrompt(simpleSkillData);
@@ -1206,7 +1206,7 @@ export class WH40KBaseActor extends Actor {
             label: t('WH40K.Pinning.TestLabel'),
             target,
             situationalKey: 'willpower',
-            // An Only War PC's Comrade passes or fails with it (OW Core p. 271, #152).
+            // An Only War PC's Comrade passes or fails with it (OW core, #152).
             instance: comradeMirrorTestFor(this, 'pinning'),
         });
         openRollPrompt(simpleSkillData);

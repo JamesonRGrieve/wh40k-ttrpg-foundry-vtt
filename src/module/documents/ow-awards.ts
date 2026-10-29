@@ -2,7 +2,7 @@
  * @file Conferring Only War Medals and Honours on a character, and reading each
  * for the Battlefield panel (#161, content#32).
  *
- * A medal is a `medal` item (core pp. 294–295). A character records the medals
+ * A medal is a `medal` item (OW core). A character records the medals
  * conferred on it as their UUIDs in `system.regimentalAwards`; the panel names
  * each one and shows its Squad Bonus.
  */

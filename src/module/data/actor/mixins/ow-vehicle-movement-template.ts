@@ -1,5 +1,5 @@
 /**
- * Only War · Vehicle Movement persistence slot (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+ * Only War · Vehicle Movement persistence slot (#156 — Vehicle Movement).
  *
  * The engine (`src/module/rules/ow-vehicle-movement.ts`) is RNG-free and
  * actor-decoupled. The only state that must persist on an OW driver is

@@ -23,7 +23,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** DW core p. 156: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
+    /** DW core: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
@@ -34,8 +34,8 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * DW core p. 242: Semi-Auto Burst (Type: Full Action) "a Ballistic Skill Test
-     * with a +10 bonus"; p. 239: Full Auto Burst (Type: Full Action) "with a +20
+     * DW core: Semi-Auto Burst (Type: Full Action) "a Ballistic Skill Test
+     * with a +10 bonus"; Full Auto Burst (Type: Full Action) "with a +20
      * bonus" — #607.
      */
     readonly burstActions: BurstActionRules = {
@@ -50,7 +50,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly grappleRules: GrappleRules = printedGrappleRules('contortionist', 0);
 
     /**
-     * DW Rites of Battle pp. 169–170: one Vehicle Critical Hit Chart, and Righteous
+     * A DW supplement: one Vehicle Critical Hit Chart, and Righteous
      * Fury only when "this attack must actually damage the vehicle".
      */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(true);
@@ -87,7 +87,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         return { ...FATIGUE_MODES.flat, wakeBehavior: 'drop-one-level', fullRecoveryHours: 1 };
     }
 
-    /** DW Dispositions are the seven-step ladder; a success gains one step plus one per degree (p. 276, Table 9–5) — #73. */
+    /** DW Dispositions are the seven-step ladder; a success gains one step plus one per degree (DW core) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }

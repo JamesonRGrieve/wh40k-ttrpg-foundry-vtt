@@ -2149,7 +2149,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Load Armoury items (Chapter V) for the Equip Acolyte step, filtering to Scarce or better.
+     * Load Armoury items for the Equip Acolyte step, filtering to Scarce or better.
      * @private
      */
     async _loadEquipmentItems(): Promise<void> {
@@ -3397,7 +3397,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Counted over the stepper's own steps (#701), Equipment included, so the footer and the stepper agree.
         const progress = stepProgress(this._prepareStepNavigation().map((step) => ({ isComplete: step['isComplete'] === true })));
         const coreStepsComplete = this.selections.size >= this.systemConfig.coreSteps.length;
-        // DH2e Stage 4 Armory step (core p.81) surfaces a cap of
+        // DH2e Stage 4 Armory step (core) surfaces a cap of
         // floor(Influence/10) Scarce-or-better picks. The campaign also runs
         // a homebrew interpretation in which the Armory step is skipped
         // entirely (Influence is spent in play instead), so the cap is for
@@ -4399,7 +4399,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Roll on the Divination compendium RollTable (DH2 Core Rulebook Table 2-9).
+     * Roll on the Divination compendium RollTable (the DH2 core Divination table).
      * The table text lives in the private packs submodule (GW-copyrighted); if
      * the pack isn't installed, fall back to a bare 1d100 so the player at
      * least records a roll result and can fill in the maxim by hand.
@@ -4969,7 +4969,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Then every owned talent, trait or equipped item adds its resources on top.
             await this.actor.syncItemResourceDeltas();
 
-            // A starting-mutation origin (DH2 Mutant, Within p. 32) rolls its
+            // A starting-mutation origin (DH2 Mutant) rolls its
             // starting mutation now, in place of a Malignancy Test.
             if (this.actor.items.some((i) => i.type === 'originPath' && startingMutationFormula(i.system) !== null)) {
                 openMutantBackgroundDialog(this.actor);
@@ -4984,7 +4984,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // builder open can re-hydrate the UI to what was last committed.
             await this._persistBuilderFlagState();
 
-            // Stage 4 XP spend (DH2e Core p.78): if the actor has unspent
+            // Stage 4 XP spend (DH2e core): if the actor has unspent
             // starting XP (which _resetExperienceAndAdvancements set to the
             // system's startingXP, e.g. 1000 for DH2e), offer to open the
             // Advancement dialog so the player can spend it now instead of
@@ -5168,7 +5168,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const ledgerUpdate: Record<string, unknown> = {
                 ...updates,
-                // A starting-mutation origin's Corruption queues no Malignancy Test (Within p. 32).
+                // A starting-mutation origin's Corruption queues no Malignancy Test.
                 ...startingCorruptionHoldsMalignancy(origin.system, updates, this.actor.system),
                 [originDeltaFlagPath(identityKey)]: newDelta,
             };

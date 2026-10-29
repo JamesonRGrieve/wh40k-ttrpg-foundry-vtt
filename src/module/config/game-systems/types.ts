@@ -167,11 +167,11 @@ export interface FatigueModelDef {
 /**
  * How a game line models an NPC's Disposition toward the player characters (#73).
  * The lines split three ways at RAW:
- *   - `characteristic` — DH2 (core p. 277): an NPC characteristic on the 0–100
+ *   - `characteristic` — DH2: an NPC characteristic on the 0–100
  *                        scale, tested with a d100 like any characteristic; how
  *                        Interaction skills move it comes from the NPC's Personality.
- *   - `ladder`         — DH1 (p. 230), RT (p. 294), BC (p. 276), DW (p. 276),
- *                        OW (p. 304): seven steps from Very Hard (−30) through
+ *   - `ladder`         — DH1, RT, BC, DW,
+ *                        OW: seven steps from Very Hard (−30) through
  *                        Indifferent to Easy (+30); the step sets the base
  *                        difficulty of Interaction tests and moves with their degrees.
  *   - `none`           — IM: no Disposition rule.

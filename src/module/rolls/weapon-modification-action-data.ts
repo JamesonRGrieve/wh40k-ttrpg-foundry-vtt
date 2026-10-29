@@ -1,6 +1,6 @@
 /**
- * @file Fitting and removing a weapon modification personally (#136, DH2 core
- * p. 162; DH1 / RT / OW Weapon Upgrades).
+ * @file Fitting and removing a weapon modification personally (#136, DH2 core;
+ * DH1 / RT / OW Weapon Upgrades).
  *
  * Both are skill tests rolled through the actor's own pipeline, so the card
  * shows every modifier (the modification's Availability, the xenos rows) as a

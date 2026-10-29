@@ -4,7 +4,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
  * Data model for Oath items — the solemn vows a Battle-Brother swears before or
- * during a mission (Deathwatch Oaths, First Founding Chapter Oaths, and the like).
+ * during a mission (Deathwatch Oaths, Chapter Oaths, and the like).
  * An oath is a declared benefit: it is sworn (not rolled), optionally gated by a
  * requirement, and grants an effect for its duration.
  * @extends ItemDataModel

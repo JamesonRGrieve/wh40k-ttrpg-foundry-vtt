@@ -20,7 +20,7 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-/** The game line whose packs hold the advance (an Enemies Within, DH2 advance). */
+/** The game line whose packs hold the advance (a DH2 supplement advance). */
 const ADVANCE_LINE = 'dh2';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type

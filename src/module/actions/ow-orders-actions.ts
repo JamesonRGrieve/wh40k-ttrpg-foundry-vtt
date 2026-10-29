@@ -1,5 +1,5 @@
 /**
- * Only War: giving the Comrade an Order (#152, #153; OW Core pp. 269–271).
+ * Only War: giving the Comrade an Order (#152, #153; OW core).
  *
  * `owIssueOrder` (wired into the character sheet's action map) resolves the
  * clicked Order against the line's printed Orders (`comradeOrdersFor`) through

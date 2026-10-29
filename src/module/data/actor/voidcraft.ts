@@ -49,8 +49,8 @@ function isFunctional(sys: { condition?: string }): boolean {
 }
 
 /**
- * RAW Rogue Trader ship initiative: `1d10 + Detection Bonus` (core rulebook,
- * Ch. XI — Starship Combat). Read by `WH40KCombatant._getInitiativeFormula()`
+ * RAW Rogue Trader ship initiative: `1d10 + Detection Bonus` (core rules,
+ * Starship Combat). Read by `WH40KCombatant._getInitiativeFormula()`
  * so voidcraft roll through Foundry's combat tracker on the same path as every
  * other actor type, instead of the characteristic-driven global formula in
  * `CONFIG.Combat.initiative`. `@detBonus` is published by `getRollData()`.
@@ -158,14 +158,14 @@ export default class VoidcraftData extends VehicleData {
     declare hullType: string;
     declare hullClass: string;
     declare dimensions: string;
-    /** Printed displacement, e.g. "9 megatonnes approx." (RT core p.190 onward). */
+    /** Printed displacement, e.g. "9 megatonnes approx." (RT core). */
     declare mass: string;
     /** Printed maximum acceleration, e.g. "1.6 gravities max acceleration". */
     declare acceleration: string;
     /**
      * Printed crew headcount, e.g. "20,000 crew, approx." — flavour, and NOT
      * the same quantity as `crew.population`. RAW treats Crew Population and
-     * Morale as abstract ratings, not headcounts (RT core p.224), both ~0–100.
+     * Morale as abstract ratings, not headcounts (RT core), both ~0–100.
      * Conflating the two is what put five-digit headcounts into the mechanical
      * pool across the authored ships.
      */
@@ -255,8 +255,8 @@ export default class VoidcraftData extends VehicleData {
     }>;
 
     /**
-     * Per-turn damage record for Hold Fast! / Triage (issue #189, RT Core
-     * p.218). Tracks the Hull / Crew Population / Morale lost during the
+     * Per-turn damage record for Hold Fast! / Triage (issue #189, RT
+     * core). Tracks the Hull / Crew Population / Morale lost during the
      * current strategic turn, plus the turn before it as `previous`. A
      * successful Hold Fast! (Morale) or Triage (Crew Population) on the
      * following turn reduces one pool of the previous turn's loss.
@@ -882,7 +882,7 @@ export default class VoidcraftData extends VehicleData {
 
     /**
      * Is the ship destroyed? A Rogue Trader ship only by a Critical Hit result
-     * that destroys it (RT Core Table 8-12) — 0 Hull only Cripples it. Other
+     * that destroys it (the RT starship Critical Hit chart) — 0 Hull only Cripples it. Other
      * lines keep the 0-Hull reading.
      * @type {boolean}
      */

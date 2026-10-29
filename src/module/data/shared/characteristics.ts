@@ -1,7 +1,7 @@
 /**
  * Canonical characteristic short→full key map (#271).
  *
- * Core Rulebook characteristic abbreviations (`WS`, `BS`, …) → the full schema
+ * Core-rules characteristic abbreviations (`WS`, `BS`, …) → the full schema
  * keys (`weaponSkill`, …). Previously declared twice — `CreatureTemplate`
  * (missing `Inf`) and `npc-import-migration` (with `Inf`) — which drifted; this
  * is the single superset both import.

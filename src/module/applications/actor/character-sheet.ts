@@ -820,35 +820,35 @@ export default class CharacterSheet extends BaseActorSheet {
             'restoreFate': StatActions.restoreFate,
             'spendFate': StatActions.spendFate,
 
-            // Possession track (#82 — beyond.md p.69)
+            // Possession track (#82)
             'unleashDaemon': CharacterSheet.#unleashDaemon,
             'resetPossessionSession': CharacterSheet.#resetPossessionSession,
             'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
             'possessionMismanifest': CharacterSheet.#possessionMismanifest,
-            // Daemonology rituals (DH2 Enemies Beyond) — Exorcism (#83).
+            // Daemonology rituals (DH2) — Exorcism (#83).
             'performExorcism': CharacterSheet.#performExorcism,
             // Daemonology rituals — Summoning (#80).
             'performSummoning': CharacterSheet.#performSummoning,
 
-            // Shock / Snap-Out-Of-It (#66 — core.md §"Shock And Snapping Out Of It")
+            // Shock / Snap-Out-Of-It (#66 — "Shock And Snapping Out Of It")
             'snapOutOfShock': CharacterSheet.#snapOutOfShock,
 
-            // Pinning resist / escape (core.md §"Pinning") — route through the unified
+            // Pinning resist / escape ("Pinning") — route through the unified
             // roll so Willpower talents/traits surface as situational modifiers.
             'rollPinningTest': CharacterSheet.#rollPinningTest,
             'escapePinning': CharacterSheet.#escapePinning,
 
-            // Fanatic role: Death to All Who Oppose Me (#93 — within.md p.34)
+            // Fanatic role: Death to All Who Oppose Me (#93)
             'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
 
-            // Crusader role: Smite the Unholy (#141 — beyond.md p.34)
+            // Crusader role: Smite the Unholy (#141)
             'smiteTheUnholy': CharacterSheet.#smiteTheUnholy,
 
-            // Manacles condition (#105 — errata p.176)
+            // Manacles condition (#105 — errata)
             'applyManacles': CharacterSheet.#applyManacles,
             'liftManacles': CharacterSheet.#liftManacles,
 
-            // Ace role: Right Stuff Fate-spend (#100 — without.md p.39)
+            // Ace role: Right Stuff Fate-spend (#100)
             'openRightStuff': CharacterSheet.#openRightStuff,
 
             // Grapple options (#120): each line's printed options, by role
@@ -975,7 +975,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
 
-            // Dark Pact actions (Enemies Beyond p. 72, #84)
+            // Dark Pact actions (#84)
             'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
             'togglePactDiscovered': CharacterSheet.#togglePactDiscovered,
             'togglePactPayment': CharacterSheet.#togglePactPayment,
@@ -987,7 +987,7 @@ export default class CharacterSheet extends BaseActorSheet {
             'completeObjective': CharacterSheet.#completeObjective,
             'completeEndeavour': CharacterSheet.#completeEndeavour,
 
-            // Colony actions (Rogue Trader, Stars of Inequity #195)
+            // Colony actions (Rogue Trader, #195)
             'openColonyGrowthDialog': CharacterSheet.#openColonyGrowthDialog,
 
             // Experience actions
@@ -1245,7 +1245,7 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         }
 
-        // Daemonology rituals (DH2 Enemies Beyond) — shown to a DH2 character that
+        // Daemonology rituals (DH2) — shown to a DH2 character that
         // carries a Forbidden Lore (Daemonology) row, the test every ritual opens with.
         if (isDH2 && findDaemonologyLore(this.actor.system) !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload written into the free-form CharacterSheetContext
@@ -1327,11 +1327,11 @@ export default class CharacterSheet extends BaseActorSheet {
         // eslint-disable-next-line no-restricted-syntax -- boundary: context is the Foundry render payload, a free-form record under fvtt-types
         (context as Record<string, unknown>)['endeavours'] = this.actor.items.filter((item) => (item.type as string) === 'endeavour');
 
-        // Fanatic role detection (#93 — DH2 Enemies Within p.34): the actor
+        // Fanatic role detection (#93 — DH2): the actor
         // owns the role whose `system.identifier` is `fanatic`.
         context.hasFanatic = hasFanaticRole(this.actor.items);
 
-        // Crusader role detection (#141 — beyond.md p.34); matches "Crusader"
+        // Crusader role detection (#141); matches "Crusader"
         // or "Smite the Unholy".
         context.hasCrusader = hasCrusaderRole(Array.from(this.actor.items));
 
@@ -2224,8 +2224,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /**
      * OW Mission Assignment Gear panel (#155). Stateless apart from the
-     * "last outcome" readout; the request-gear action gathers Table 6-3
-     * modifiers at click time via a DialogV2 prompt.
+     * "last outcome" readout; the request-gear action gathers the
+     * mission-gear modifiers at click time via a DialogV2 prompt.
      */
     _prepareOwMissionGearPanel(): OwMissionGearPanelContext {
         const sys = this.actor.system;
@@ -2720,7 +2720,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Untrained-skill rules diverge by system. The aptitude/career family
         // (DH2 + BC/DW/OW/IM, and DH1 Errata which extended aptitudes) applies
-        // a flat -20 penalty (DH2 core.md p.95 "Untrained Skill Use"). FFG
+        // a flat -20 penalty (DH2 "Untrained Skill Use"). FFG
         // Rogue Trader is the halving outlier and lives on its own sheet class.
         // See wh40k-tooltip.ts for the same gate around the untrained-target
         // display.
@@ -4640,7 +4640,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Shift the Daemon's Disposition (core p. 277, 0–100) by the button's
+     * Shift the Daemon's Disposition (core, 0–100) by the button's
      * `data-delta`. The GM applies Interaction-test outcomes here.
      */
     static async #adjustPactDisposition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
@@ -4653,7 +4653,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Mark a pact discovered (or hidden again). Enemies Beyond p. 76 leaves the
+     * Mark a pact discovered (or hidden again). The rules leave the
      * Subtlety change "tailored to the individual bargain", so discovery applies
      * no number of its own; the GM adjusts Subtlety on its panel.
      */
@@ -4820,7 +4820,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /**
      * Open the Colony Growth Dialog for resolving a 90-day Colony growth
-     * cycle (Stars of Inequity, #195). RT-gated — the Dynasty tab where
+     * cycle (#195). RT-gated — the Dynasty tab where
      * this button lives is only rendered for RT characters, so the
      * runtime guard is defensive against accidental invocation on other
      * systems.
@@ -4987,7 +4987,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /**
      * Per-round Challenging (+0) Willpower test while the Possession power
-     * is sustained (#132 — beyond.md L2095-2116). Failure inflicts Frenzy
+     * is sustained (#132). Failure inflicts Frenzy
      * this round; the power must still be sustained.
      * @this {CharacterSheet}
      */
@@ -5030,7 +5030,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      */
     /**
-     * Open the Exorcism dialog (#83, DH2 Enemies Beyond p. 71) with this actor
+     * Open the Exorcism dialog (#83, DH2) with this actor
      * as the exorcist. DH2-only: the ritual is that line's printed rule.
      */
     static #performExorcism(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
@@ -5039,7 +5039,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Open the Summoning dialog (#80, DH2 Enemies Beyond p. 59) with this actor
+     * Open the Summoning dialog (#80, DH2) with this actor
      * as the summoner. DH2-only, like the Exorcism.
      */
     static #performSummoning(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
@@ -5087,7 +5087,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Fanatic role — Death to All Who Oppose Me! (#93, DH2 Enemies Within p.34).
+     * Fanatic role — Death to All Who Oppose Me! (#93, DH2).
      *
      * Spending 1 Fate grants Hatred toward the chosen foe until the encounter ends.
      *
@@ -5158,7 +5158,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Crusader role — Smite the Unholy (#141, beyond.md p.34).
+     * Crusader role — Smite the Unholy (#141).
      * Spend 1 Fate to auto-pass a Fear test with DoS = WPB.
      */
     static async #smiteTheUnholy(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
@@ -5189,7 +5189,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
-    /** Manacles condition — apply (#105, errata p.176). */
+    /** Manacles condition — apply (#105, errata). */
     static async #applyManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
         try {
             await applyManaclesCondition(this.actor);
@@ -5213,7 +5213,7 @@ export default class CharacterSheet extends BaseActorSheet {
         }
     }
 
-    /** Ace role — Right Stuff Fate-spend (#100, without.md p.39). */
+    /** Ace role — Right Stuff Fate-spend (#100). */
     static #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
         try {
             openRightStuffDialog({ actor: this.actor });
@@ -5239,7 +5239,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Take one of the line's grapple options (#120; DH2 core pp. 221–222). The button
+     * Take one of the line's grapple options (#120; DH2 core). The button
      * names the option and the role it belongs to. A combatant takes its own role's
      * options; the GM also sees the other role's, and takes those for the opponent.
      * The option is tested as its line prints it (`rolls/grapple-flow.ts`).
@@ -5285,7 +5285,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Shock — Snap Out of It (#66, core.md §"Shock And Snapping Out Of It").
+     * Shock — Snap Out of It (#66, "Shock And Snapping Out Of It").
      *
      * Rolls a d100 Willpower test (Challenging +0 — target equals the
      * actor's Willpower total). On success, decrements `system.shock.value`
@@ -5343,7 +5343,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /**
      * Roll a Pinning resist test (Challenging +0 Willpower). Routes through the
      * actor's unified-roll method so Willpower talents/traits surface as
-     * situational modifiers before resolving (core.md §"Pinning").
+     * situational modifiers before resolving ("Pinning").
      * @this {CharacterSheet}
      */
     static #rollPinningTest(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
@@ -5385,7 +5385,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Apply (or heal) recoverable characteristic damage (core.md §"Characteristic
+     * Apply (or heal) recoverable characteristic damage ("Characteristic
      * Damage"). Prompts for the characteristic + amount, then routes through the
      * document's `applyCharacteristicDamage` — positive damages, negative heals
      * (clamped at 0). The effective value is `total − damage`.
@@ -5688,7 +5688,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Purchase an Infamy advance for a BC actor per Table 2-9 (#173).
+     * Purchase an Infamy advance for a BC actor per the core advance cost table (#173).
      *
      * Pulls cost and increment from `bc-advancement-config.ts`, confirms
      * the spend via DialogV2.prompt (matching the prompt-driven XP-spend

@@ -1,5 +1,5 @@
 /**
- * @file DarkPactSheet — sheet for Dark Pact items (Enemies Beyond pp. 72–76, #84).
+ * @file DarkPactSheet — sheet for Dark Pact items (a DH2 supplement, #84).
  *
  * Shows the terms of striking the pact and its Boons and Banes, each with the
  * mechanics the system applies when the GM gives it to a character. The content

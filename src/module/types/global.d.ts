@@ -363,7 +363,7 @@ interface TooltipsWH40K {
  * An owned item as `openMutantBackgroundDialog` reads it. Its `system` is
  * narrowed by `rules/chaos-backgrounds.ts` to the origin path whose
  * `grants.startingMutationFormula` and `modifiers.resources.corruption` carry
- * the Mutant background's content (Within p. 32).
+ * the Mutant background's content.
  */
 export interface WH40KMutantBackgroundOrigin {
     type: string;
@@ -407,7 +407,7 @@ interface WH40KPromptLaunchers {
     openHomeworldInfoDialog: (line?: string) => void;
     /** Cybernetic install (Medicae surgery) test. */
     openCyberneticsInstallDialog: () => void;
-    /** Errata p. 183 "Staunch Blood Loss" Half Action for a Medicae Mechadendrite owner. */
+    /** Errata "Staunch Blood Loss" Half Action for a Medicae Mechadendrite owner. */
     openMedicaeMechadendriteDialog: (opts?: { actor?: WH40KBaseActorDocument }) => void;
     /** Mutant origin-path background confirmation; applies the grant when given an actor. */
     openMutantBackgroundDialog: (actor?: WH40KMutantBackgroundTarget | null) => void;

@@ -5,7 +5,7 @@ import { type MigrationSource, migrateHordeSource } from './horde-migration.ts';
 const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
 
 /**
- * Horde-trait vocabulary. RAW Horde-tagged traits from core.md p. 360-362
+ * Horde-trait vocabulary. RAW Horde-tagged traits from the core rules
  * plus the cross-supplement extensions referenced by the resolver.
  * Extend this list when a new trait is implemented; an unknown trait
  * string on a saved actor is preserved verbatim but produces no rule
@@ -43,7 +43,7 @@ interface HordeLogEntry {
  * which kept the legacy "% of starting Magnitude scales damage" abstraction
  * before #166. The DW path now reads {@link bonusDamageDice} (RAW: +d10
  * per 10 Magnitude, capped at +2d10) and {@link toHitBonus} / {@link sizeKeyword}
- * (RAW: TABLE 13-1).
+ * (RAW: the horde size table).
  */
 export interface HordeData {
     enabled: boolean;
@@ -58,11 +58,11 @@ export interface HordeData {
     sizeModifier: number;
     /** RAW: bonus damage dice the horde adds to its own attacks, capped +2d10. */
     bonusDamageDice: number;
-    /** RAW: to-hit bonus against the horde from TABLE 13-1. */
+    /** RAW: to-hit bonus against the horde from the horde size table. */
     toHitBonus: number;
-    /** RAW: size keyword from TABLE 13-1 (Massive/Immense/Monumental/Titanic). */
+    /** RAW: size keyword from the horde size table (Massive/Immense/Monumental/Titanic). */
     sizeKeyword: string;
-    /** RAW: descriptive tier label from TABLE 13-1. */
+    /** RAW: descriptive tier label from the horde size table. */
     tierDescriptor: string;
 }
 
@@ -167,7 +167,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /**
          * Calculate horde-derived values based on current magnitude.
          *
-         * DW (issue #166) uses RAW TABLE 13-1: size keyword + to-hit bonus +
+         * DW (issue #166) uses the RAW horde size table: size keyword + to-hit bonus +
          * bonus damage dice are looked up from the canonical resolver in
          * `rules/dw-horde-magnitude.ts`. The legacy `damageMultiplier` /
          * percentage-based `sizeModifier` are retained unchanged for the

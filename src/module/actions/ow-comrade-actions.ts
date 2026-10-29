@@ -1,5 +1,5 @@
 /**
- * Only War Comrade-in-Combat action handlers (#152 — core.md p.12137).
+ * Only War Comrade-in-Combat action handlers (#152).
  *
  * Three sheet-action methods wired into the character-sheet action map:
  *
@@ -218,8 +218,8 @@ export async function owComradeHeal(this: Host, event: Event, _target: HTMLEleme
 
 /**
  * The Comrade receives an Order that lets it recover from Fear and Pinning (OW
- * Core p. 271: it stays affected "until they receive an order that allows them to
- * recover"; the Sergeant's is one, p. 82). Clears both, and states it on a card.
+ * core: it stays affected "until they receive an order that allows them to
+ * recover"; the Sergeant's is one). Clears both, and states it on a card.
  *
  * Wired to `data-action="owComradeRecover"`; the panel enables it only while the
  * Comrade is fleeing or pinned.
@@ -244,7 +244,7 @@ function mentalAmount(target: HTMLElement): number {
 }
 
 /**
- * The Comrade suffers Insanity or Corruption (OW Core p. 271): it does not track
+ * The Comrade suffers Insanity or Corruption (OW core): it does not track
  * them, but dies when it "would suffer 10 Insanity or 10 Corruption in a single
  * Round". The amount comes from the panel's input, the kind from the button
  * (`data-mental-kind`). The Round's tally is saved, and a Comrade that reaches the
@@ -289,7 +289,7 @@ function readComradeHitFlag(value: unknown): ComradeHitStrike | null {
 }
 
 /**
- * A hit struck a PC's Comrade instead (OW Core p. 271): one step on its state track
+ * A hit struck a PC's Comrade instead (OW core): one step on its state track
  * (unharmed → wounded → dead), saved with the recovery clock it implies (#157), and
  * stated on a card. The damage card's poster may not own the PC, so the active GM
  * applies it when the card is created.
@@ -333,7 +333,7 @@ async function applyComradeHitTo(strike: ComradeHitStrike): Promise<void> {
 /* -------------------------------------------- */
 
 /**
- * A combat ended: a Comrade that fled stops fleeing (OW Core p. 271: "They remain
+ * A combat ended: a Comrade that fled stops fleeing (OW core: "They remain
  * affected until the end of combat, or until they receive an order"). Pinning does
  * not end with the combat. Run by the active GM only, so it happens once.
  */
@@ -355,7 +355,7 @@ export async function clearComradeFearAtCombatEnd(actors: Iterable<Actor.Impleme
 /* -------------------------------------------- */
 
 /**
- * Replace a dead Comrade with a fresh one. RAW (OW Core p.110 / p.271): only
+ * Replace a dead Comrade with a fresh one. RAW (OW core): only
  * legal while the existing Comrade is dead AND the squad is back in camp for
  * refitting — the actor's `refitAvailable` flag, which the panel gates on too.
  * The replacement uses up that refit and clears the recovery clock (#157).

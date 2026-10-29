@@ -183,7 +183,7 @@ export class ActionData {
      */
     evasion: AttackEvasion | null = null;
     /**
-     * The hit that struck the target's Comrade instead (#152; OW Core p. 271: a
+     * The hit that struck the target's Comrade instead (#152; OW core: a
      * successful hit roll on doubles against a PC whose Comrade is in Cohesion). Set
      * when the hits are calculated; null when none did.
      */
@@ -281,7 +281,7 @@ export class ActionData {
             psyPhenomenaModifier: rd.psyPhenomenaModifier ?? 0,
             powerPhenomenaModifier,
             warpWeakness: this.#activeSceneWarpWeakness(),
-            // RAW (within.md p. 58) adds +5 per Corruption Point the psyker gained
+            // RAW (a DH2 supplement) adds +5 per Corruption Point the psyker gained
             // FROM THIS PUSH. That award does not exist anywhere in the system yet —
             // nothing grants CP on a push — and deciding which talent gates it would
             // hardcode content in `src/`, which Direction #7 forbids. The rider is
@@ -600,7 +600,7 @@ export class ActionData {
                     }
                 }
 
-                // Jam threshold check per core.md §"Weapon Jams" lives in
+                // Jam threshold check per "Weapon Jams" lives in
                 // `rules/weapon-jam.ts` so it can be unit-tested without
                 // standing up a full roll/actor graph.
                 if (craftsmanship === 'poor' && hasUnreliable && !this.rollData.success) {
@@ -757,7 +757,7 @@ export class ActionData {
             const attackData = this as unknown as AttackDataLike;
 
             // Spread the burst across the eligible targets (#513). Each hit carries
-            // its index WITHIN ITS OWN TARGET, so Table 7-2 restarts per enemy
+            // its index WITHIN ITS OWN TARGET, so the multiple-hits location table restarts per enemy
             // instead of walking one sequence across all of them.
             const allocation = allocateHits({
                 hitCount: 1 + Math.max(0, this.damageData.additionalHits),
@@ -771,7 +771,7 @@ export class ActionData {
             const afterEvasion = withoutNegatedHits(allocation, declaredId, this.evasion?.outcome?.negated ?? 0);
 
             // A hit on doubles against a PC whose Comrade is in Cohesion strikes the
-            // Comrade instead: one hit, after the PC's own Dodge or Parry (OW Core p. 271).
+            // Comrade instead: one hit, after the PC's own Dodge or Parry (OW core).
             const defender = this.rollData.targetActor;
             this.comradeHit = comradeHitStrike(defender, comradeRulesFor(firstSystemId(defender)), {
                 roll: this.rollData.roll?.total ?? 0,
@@ -1168,7 +1168,7 @@ export class ActionData {
             }
 
             // Propagate attack DoS to each hit so the damage card can still offer the
-            // "replace damage die with DoS" action (#129 — DH2 core L10398-10414),
+            // "replace damage die with DoS" action (#129 — DH2 core),
             // matching the manual `_rollDamage` path.
             const attackDoS = this.rollData.dos;
             for (const hit of this.damageData?.hits ?? []) {
@@ -1378,7 +1378,7 @@ export class PsychicActionData extends ActionData {
 
     /**
      * Corruption a successful Malefic manifestation costs: the Psy Rating used
-     * (beyond.md p. 56), on lines whose config opts in (read through the
+     * (a DH2 supplement), on lines whose config opts in (read through the
      * character's `chargesMaleficCorruption`, so this layer does not import the
      * game-system configs). 0 for any other power, a failed cast, or a psyker
      * with no Corruption track.
@@ -1824,7 +1824,7 @@ export interface MalignancyTestLedger {
  * gain queues on the character. Rolling it spends one queued test — returned
  * when the roll is refunded for a re-roll — and a failure draws on the line's
  * Malignancies table, or, for a Twisted Flesh Mutant who chooses it, on the
- * Mutations table instead (within.md p. 32).
+ * Mutations table instead.
  */
 export class MalignancyTestActionData extends SimpleSkillData {
     readonly #ledger: MalignancyTestLedger;
@@ -2110,7 +2110,7 @@ export class ObjectStateActionData extends SimpleSkillData {
 
 /**
  * The Hard (−20) Forbidden Lore test that must precede repairing a xenos item
- * (DH2 Enemies Without p. 42, #136). On success it records the degrees of
+ * (a DH2 supplement, #136). On success it records the degrees of
  * success on the item as the roller's repair insight; their next Tech-Use
  * Repair of that item reads it (−20, +5 per degree). On failure nothing is
  * recorded and the item cannot be repaired on this attempt.
@@ -2290,8 +2290,8 @@ const USE_DIFFICULTY_MODIFIER_KEY = 'useDifficulty';
 
 function skillUseDifficulty(use: SkillUseDef, target: WH40KBaseActorDocument | null): number {
     let difficulty = use.difficultyMod;
-    // First Aid's RAW difficulty scales with the PATIENT's condition (DH2 Core
-    // p.110): −10 Heavily Damaged, −10 per point of Critical damage. Recomputed
+    // First Aid's RAW difficulty scales with the PATIENT's condition (DH2
+    // core): −10 Heavily Damaged, −10 per point of Critical damage. Recomputed
     // whenever the player retargets (via applySkillUseToRollData / syncSkillUse).
     if (use.kind === 'firstAid' && target !== null) {
         // eslint-disable-next-line no-restricted-syntax -- boundary: target is an opaque Foundry Actor; narrow to the wounds surface firstAidTierPenalty needs

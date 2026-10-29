@@ -92,7 +92,7 @@ export class EvasionActionData extends SimpleSkillData {
         this.prompt = prompt;
         this.skill = skill;
         this.parryWeapon = skill === 'parry' ? parryWeapon : null;
-        // A Parry against a Fast weapon (DH1 Inquisitor's Handbook: "a –20 penalty")
+        // A Parry against a Fast weapon (a DH1 supplement: "a –20 penalty")
         // is a sourced row naming the attacker's weapon, folded into the test target.
         if (skill === 'parry' && prompt.parryPenalty !== 0) {
             const label = t('WH40K.Evasion.AttackerWeaponParryPenalty', { weapon: prompt.weaponName });

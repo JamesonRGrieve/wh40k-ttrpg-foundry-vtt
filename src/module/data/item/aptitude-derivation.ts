@@ -5,7 +5,7 @@
  * background / role / elite / divination) carries `grants.aptitudes` plus
  * resolved `grants.choices[type=aptitude]` picks. The ONLY part that cannot be
  * derived is the player's elective pick when the origin would grant the same
- * aptitude twice ("double-up", DH2 Core p.79). These helpers compute the set,
+ * aptitude twice ("double-up", DH2 core). These helpers compute the set,
  * count double-ups, validate the electives, and recover legacy electives during
  * migration.
  *
@@ -18,7 +18,7 @@
 import { type SelectedChoices, iterateResolvedChoices } from '../../utils/origin-choices.ts';
 
 /**
- * The nine Characteristic aptitudes (DH2 Core p.79). When the origin path would
+ * The nine Characteristic aptitudes (DH2 core). When the origin path would
  * grant the same aptitude twice ("double-up"), the player must instead pick one
  * of these — an aptitude they do not already have. These are the ONLY valid
  * elective double-up picks. Content-agnostic mechanic primitive (the nine
@@ -120,7 +120,7 @@ export interface AptitudeDerivation {
 
 /**
  * Derive the actor's aptitude set from the flattened list of origin grants and
- * the player's stored elective double-up picks (DH2 Core p.79).
+ * the player's stored elective double-up picks (DH2 core).
  *
  * - `computed` is the de-duplicated grant set; `doubleUpCount` is how many grants
  *   collapsed (i.e. how many electives the player owes).

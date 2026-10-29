@@ -1,6 +1,6 @@
 /**
- * Deathwatch Mission framework DataModel mixin (#169 — core.md §"MISSIONS"
- * p. 10115 / §"REWARDS" p. 10390).
+ * Deathwatch Mission framework DataModel mixin (#169 — Missions
+ * and Rewards).
  *
  * Owns the persisted shape behind the Mission engine in
  * `src/module/rules/dw-mission.ts`. The engine is pure arithmetic; this

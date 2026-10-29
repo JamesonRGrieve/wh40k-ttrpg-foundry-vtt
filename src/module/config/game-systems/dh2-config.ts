@@ -21,14 +21,14 @@ import { locatedVehicleCombat, printedGrappleRules, OPERATE_VEHICLE_DRIVING } fr
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
- * Core Table 5-2: Craftsmanship, Requisition, and Repair (p. 141) — one column
- * serves both the Requisition test and the Tech-Use repair test (p. 142).
+ * The core Craftsmanship, Requisition, and Repair table — one column
+ * serves both the Requisition test and the Tech-Use repair test.
  */
 const DH2_CRAFTSMANSHIP_MODIFIERS: Readonly<Record<CraftsmanshipKey, number>> = { poor: 10, common: 0, good: -20, best: -30 };
 
 /**
- * Requisition test — core Table 5-1: Availability Modifiers and Table 5-2:
- * Craftsmanship, Requisition, and Repair (p. 141). Ubiquitous is printed
+ * Requisition test — the core Availability Modifiers table and the
+ * Craftsmanship, Requisition, and Repair table. Ubiquitous is printed
  * "Automatic"; Unique "Hellish (–60)/GM's discretion".
  */
 export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
@@ -51,9 +51,9 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
 };
 
 /**
- * Item repair — core p. 142 "Repairing Items": Tech-Use with the Table 5-2
+ * Item repair — core "Repairing Items": Tech-Use with the craftsmanship
  * modifier, destroyed on four or more degrees of failure; xenos equipment
- * (Enemies Without p. 42) first needs a Hard (−20) Forbidden Lore test, then
+ * (a DH2 supplement) first needs a Hard (−20) Forbidden Lore test, then
  * repairs at −20 +5 per degree of success on it.
  */
 const DH2_XENOS_EQUIPMENT_RULES: XenosRepairRules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
@@ -65,11 +65,11 @@ export const DH2_ITEM_REPAIR_RULES: ItemRepairRules = {
 };
 
 /**
- * Personal weapon modification — core p. 162 "Applying Personal
- * Modifications": Trade (Armourer) at the modification's Availability (Table
- * 5-1); a failure loses the parts and 2+ degrees of failure damage the weapon.
+ * Personal weapon modification — core "Applying Personal
+ * Modifications": Trade (Armourer) at the modification's Availability (the
+ * Availability Modifiers table); a failure loses the parts and 2+ degrees of failure damage the weapon.
  * "Removing and Re-using Modifications": Tech-Use at the same modifier.
- * Xenos weapons (Enemies Without p. 42) take the same lore step as repair.
+ * Xenos weapons (a DH2 supplement) take the same lore step as repair.
  */
 export const DH2_WEAPON_MODIFICATION_RULES: WeaponModificationRules = {
     fitSkill: { skill: 'trade', specialisation: 'Armourer' },
@@ -78,15 +78,14 @@ export const DH2_WEAPON_MODIFICATION_RULES: WeaponModificationRules = {
     damagesWeaponAtDegreesOfFailure: 2,
     removalSkill: { skill: 'techUse', specialisation: null },
     xenos: DH2_XENOS_EQUIPMENT_RULES,
-    // p. 162 "Applying Personal Modifications": "+30 bonus to the modification's Availability" to requisition the parts.
+    // "Applying Personal Modifications": "+30 bonus to the modification's Availability" to requisition the parts.
     partsRequisitionBonus: 30,
 };
 
 /**
- * Inquests — DH2 Enemies Within pp. 62–69: scope totals (p. 63), Table 2–7:
- * Clue Values, lead-test and lead-investigator IP (pp. 64–65), the default
- * 300-IP Revelation (p. 66), and Table 2–9: Inquest Rewards with the
- * surplus/shortfall steps (p. 69).
+ * Inquests — a DH2 supplement: scope totals, the Clue Values table,
+ * lead-test and lead-investigator IP, the default 300-IP Revelation, and the
+ * Inquest Rewards table with the surplus/shortfall steps.
  */
 export const DH2_INQUEST_RULES: InquestRules = {
     scopes: {
@@ -112,13 +111,13 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * DH2 core ch. VII: "The number of total hits scored in this manner cannot
+     * DH2 core: "The number of total hits scored in this manner cannot
      * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
-     * Storm: "up to the weapon's firing rate, as normal" (p. 149) — #607.
+     * Storm: "up to the weapon's firing rate, as normal" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
     /**
-     * DH2 core ch. VII: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
+     * DH2 core: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
      * Ballistic Skill test"; Full Auto Burst (Type: Half Action) is made "with a
      * −10 penalty" — #607.
      */
@@ -141,7 +140,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     /** DH2 vehicles: a hit-location table and a critical-effects chart per location. */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(false);
 
-    /** DH2 core p. 141: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */
+    /** DH2 core: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */
     override readonly armourCraftsmanship = DH2_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {
@@ -164,7 +163,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         return FATIGUE_MODES.halving;
     }
 
-    /** DH2 Disposition is an NPC characteristic on the 0–100 scale (core p. 277) — #73. */
+    /** DH2 Disposition is an NPC characteristic on the 0–100 scale (core) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.characteristic;
     }

@@ -423,7 +423,7 @@ export class BasicActionManager {
         }
 
         // Propagate attack DoS to each hit so the chat card can offer the
-        // "replace damage die with DoS" action (#129 — DH2 core L10398-10414).
+        // "replace damage die with DoS" action (#129 — DH2 core).
         const attackDoS = actionData.rollData.dos;
         for (const hit of actionData.damageData?.hits ?? []) {
             hit.dos = attackDoS;
@@ -434,7 +434,7 @@ export class BasicActionManager {
 
     /**
      * Begin Grapple (#450): a grapple attempt that hit and was not evaded starts a
-     * grapple the attacker controls (DH2 p. 228). Like Roll Damage, it waits for the
+     * grapple the attacker controls (DH2). Like Roll Damage, it waits for the
      * defender's evasion answer; only the GM may proceed over an open window. The
      * start card carries both participants' flag writes for the active GM.
      */
@@ -609,8 +609,8 @@ export class BasicActionManager {
     }
 
     /**
-     * Handle the chat-card "Replace die with DoS" button (#129 — DH2 core
-     * L10398-10414). Looks up the original ActionData by `data-roll-id`,
+     * Handle the chat-card "Replace die with DoS" button (#129 — DH2 core).
+     * Looks up the original ActionData by `data-roll-id`,
      * mutates the targeted Hit's lowest active damage die to the attack's
      * DoS, then re-emits the damage chat card with the updated total. A
      * short announcement card narrates the swap.
@@ -662,8 +662,8 @@ export class BasicActionManager {
     }
 
     /**
-     * Handle the chat-card "Assassin's Strike" button (#149 — DH2 errata
-     * L75). Looks up the stored ActionData by `data-roll-id` so the
+     * Handle the chat-card "Assassin's Strike" button (#149 — DH2 errata).
+     * Looks up the stored ActionData by `data-roll-id` so the
      * Acrobatics test is dispatched against the same actor that just
      * resolved the melee attack, then opens the unified roll dialog for
      * the test the talent document authors in its rollConfig (DH2:

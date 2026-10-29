@@ -189,7 +189,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
 
     /**
      * Is the ship destroyed? A Rogue Trader ship only by a Critical Hit result
-     * that destroys it (RT Core Table 8-12); at 0 Hull it is Crippled, not
+     * that destroys it (the RT starship Critical Hit chart); at 0 Hull it is Crippled, not
      * destroyed (#187). Other lines keep the 0-Hull reading.
      * @type {boolean}
      */
@@ -381,7 +381,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
 
     /**
      * Apply direct Crew Population / Morale damage (a boarding party cutting
-     * through the crew, RT Core p.215). RT only; records the losses in the
+     * through the crew, RT core). RT only; records the losses in the
      * prior-turn snapshot so Hold Fast! / Triage can cancel them next turn.
      * Returns the losses actually applied.
      */
@@ -510,7 +510,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Hold Fast! / Triage (RT Core p.218, #189): reduce one pool of the
+     * Hold Fast! / Triage (RT core, #189): reduce one pool of the
      * previous turn's damage — Morale or Crew Population — by `amount`, never
      * by more than that pool lost. RT only. Returns the amount restored (0 when
      * nothing was recorded for the previous turn).

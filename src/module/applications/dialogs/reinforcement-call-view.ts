@@ -1,6 +1,6 @@
 /**
  * @file Pure view-model builder for the Reinforcement Character call dialog
- * (DH2 core pp. 294–295, #77).
+ * (DH2 core, #77).
  *
  * Turns the RC's printed terms, the warband's Acolytes and the GM's current
  * choices into the dialog's render context: final cost, contribution cap,
@@ -89,7 +89,7 @@ export function fixedAmount(amount: string): number | null {
     return /^\d+$/u.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
 }
 
-/** DH2 skill rank names, rank 1–4 (core p. 80). */
+/** DH2 skill rank names, rank 1–4 (core). */
 const RANK_KEYS = ['WH40K.Skills.Rank.Known', 'WH40K.Skills.Rank.Trained', 'WH40K.Skills.Rank.Experienced', 'WH40K.Skills.Rank.Veteran'] as const;
 
 /** The skill rank the RC requires of its caller, or null when it requires none. */

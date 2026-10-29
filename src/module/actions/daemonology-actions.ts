@@ -1,6 +1,6 @@
 /**
  * Daemonology ritual orchestration — Exorcism (#83) and Summoning (#80),
- * DH2 Enemies Beyond pp. 59 and 71.
+ * from a DH2 supplement.
  *
  * The rules (targets, thresholds, the extended-test step, the opposed Mastery
  * contest) live in `rules/exorcism.ts` / `rules/summoning-ritual.ts`. This
@@ -68,7 +68,7 @@ function forbiddenLoreSkill(system: RitualActorSystem): { readonly current: numb
     return system.skills?.['forbiddenLore'];
 }
 
-/** The specialisation the rituals test (Forbidden Lore (Daemonology), pp. 59 / 71). */
+/** The specialisation the rituals test (Forbidden Lore (Daemonology)). */
 const DAEMONOLOGY_SPECIALISATION = 'daemonology';
 
 function entryLabel(entry: SpecialistEntry): string {
@@ -138,7 +138,7 @@ export function toCardTest(composition: RitualTestComposition, baseLabel: string
 /* -------------------------------------------- */
 
 export interface ExorcismInputs {
-    /** Table 2–21 rows that apply. */
+    /** Exorcism modifiers table rows that apply. */
     readonly modifiers: readonly ExorcismModifierId[];
     readonly daemonWillpowerBonus: number;
     readonly possessedCorruptionBonus: number;
@@ -191,7 +191,7 @@ export function parseExorcismForm(data: FormData): ExorcismInputs {
     };
 }
 
-/** Collect the Table 2–21 and GM factors for the attempts. */
+/** Collect the exorcism modifiers table and GM factors for the attempts. */
 export function exorcismFactors(inputs: ExorcismInputs): DaemonicMasteryFactor[] {
     const factors: DaemonicMasteryFactor[] = inputs.modifiers.map((id) => EXORCISM_MODIFIERS[id]);
     factors.push(circumstanceFactor('circumstance', inputs.circumstanceLabel, inputs.circumstanceValue));

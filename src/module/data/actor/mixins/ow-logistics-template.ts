@@ -9,7 +9,7 @@
  *   - `munitorum`          Squad has the Munitorum Influence Talent.
  *   - `situational`        GM-set situational modifier (stable between rolls).
  *   - `logisticsFront`     The battlefront the squad is "currently operating
- *                          in" (p. 162): Table 6-2's troops deployed, time spent
+ *                          in": the Availability by Front Conditions table's troops deployed, time spent
  *                          in front, front active and war conditions. Standing
  *                          campaign state, so the test dialog and the armoury
  *                          requisition price against the same front (#496).
@@ -102,6 +102,6 @@ export interface OwLogisticsDeclarations {
     munitorum: boolean;
     /** GM standing-state situational modifier in points (commonly ±5). */
     situational: number;
-    /** The squad's current battlefront (Table 6-2 front conditions). */
+    /** The squad's current battlefront (the Availability by Front Conditions table's front conditions). */
     logisticsFront: LogisticsFront;
 }

@@ -50,7 +50,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     declare shipActionEffect: ShipActionEffect | '';
 
     /**
-     * Optional ramming content (RT Core p.215, #188), authored on the
+     * Optional ramming content (RT core, #188), authored on the
      * Ramming Speed order: the damage die per attacking hull type and the
      * die the rammer takes back on impact. Empty on every other order.
      */
@@ -91,7 +91,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
             typeAndAction: new fields.StringField({ required: false, initial: '', blank: true }),
 
             // Required test. `shipStat` (optional, #186) names the ship stat a
-            // Combined Skill Test adds to the skill (RT Core p.212).
+            // Combined Skill Test adds to the skill (RT core).
             test: new fields.SchemaField({
                 skill: new fields.StringField({ required: true, initial: 'command' }),
                 characteristic: new fields.StringField({ required: false, blank: true }),

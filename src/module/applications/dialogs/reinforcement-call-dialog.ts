@@ -1,6 +1,6 @@
 /**
  * @file ReinforcementCallDialog — the GM calls a Reinforcement Character into
- * play (DH2 core pp. 294–295, #77).
+ * play (DH2 core, #77).
  *
  * Opened from the RC's NPC sheet. The GM picks the calling Acolyte, who needs
  * Influence ≥ the RC's Influence Minimum. The GM records what the rest of the
@@ -10,7 +10,7 @@
  * warband's Subtlety drops by the final cost, and a chat card records the call.
  *
  * An RC may also print terms for its caller (the Thrice-Bound Daemonhost,
- * Enemies Beyond p. 38): a required skill rank, which blocks a caller without
+ * from a DH2 supplement): a required skill rank, which blocks a caller without
  * it, and Corruption the caller gains, which is rolled on confirm and added to
  * their Corruption. That update queues any Malignancy Test the gain crosses
  * (`WH40KAcolyte._preUpdate`).

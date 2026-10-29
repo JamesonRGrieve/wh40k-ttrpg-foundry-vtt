@@ -1,5 +1,5 @@
 /**
- * @file Display models for Dark Pacts (Enemies Beyond pp. 72–76, #84): the pact
+ * @file Display models for Dark Pacts (#84): the pact
  * item sheet and the actor's Dark Pacts panel. Pure, so both are unit-tested
  * without Foundry; the sheet and the panel only hand the result to Handlebars.
  */
@@ -76,7 +76,7 @@ export function darkPactSheetView(system: {
     banes: DarkPactEntry[];
 }): DarkPactSheetView {
     // A pact with no formula grants no Corruption, so it reads 0 like the other terms
-    // (every Enemies Beyond pact prints 2d10+10, p. 76; a hand-made pact may set none).
+    // (every printed pact gives 2d10+10; a hand-made pact may set none).
     const corruptionFormula = system.corruptionFormula.trim();
     return {
         terms: {

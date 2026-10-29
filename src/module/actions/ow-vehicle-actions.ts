@@ -1,6 +1,6 @@
 /**
  * Action handler module for the Only War Vehicle Movement panel
- * (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+ * (#156 — Vehicle Movement).
  *
  * The exported `owVehicleAction` function is registered into the
  * CharacterSheet's `DEFAULT_OPTIONS.actions` map by the orchestrator

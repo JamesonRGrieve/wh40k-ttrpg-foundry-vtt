@@ -168,7 +168,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'regiment',
                     'speciality',
                     'chapter',
-                    // Only War Regiment Creation (Core Rulebook p.57; Hammer of the Emperor)
+                    // Only War Regiment Creation (OW core and supplements)
                     'regimentType',
                     'commandingOfficer',
                     'trainingDoctrine',
@@ -196,7 +196,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 choices: ['rt', 'dh2', 'dh1', 'bc', 'ow', 'dw'],
             }),
 
-            // XP cost (for Into The Storm advanced origins)
+            // XP cost (for RT supplement advanced origins)
             xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // This origin is the one that makes its owner a psyker who may buy psychic
@@ -205,7 +205,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             // so the unlock is discovered from data rather than by name.
             grantsPsychicPowers: new fields.BooleanField({ required: true, initial: false }),
 
-            // Only War Regiment Creation Points this option carries (Core Rulebook p.57):
+            // Only War Regiment Creation Points this option carries (OW core):
             // what a regiment choice costs from the 12-point budget, or what a Regimental
             // Drawback returns to it. The book prints both as positive numbers. Null when
             // the content has not recorded it, which the drawback panel shows as unknown.
@@ -267,7 +267,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
                 // Starting-mutation roll on the line's Mutations table, made at creation in
                 // place of the Malignancy Test this origin's starting Corruption would owe
-                // (DH2 Within p. 32, Mutant: "5d10"). See `rules/chaos-backgrounds.ts`.
+                // (DH2 Mutant: "5d10"). See `rules/chaos-backgrounds.ts`.
                 startingMutationFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
 
                 // Skills granted (with training level)
@@ -298,7 +298,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
                 // Talents this step makes AVAILABLE TO PURCHASE (at their XP cost), not
                 // grants — e.g. the Sister of Battle elite advance unlocks its nine
-                // talents (DH2 Enemies Within pp38-39). Never added to the actor.
+                // talents (a DH2 supplement). Never added to the actor.
                 unlockedTalents: new fields.ArrayField(
                     new fields.SchemaField({
                         name: new fields.StringField({ required: true }),
@@ -462,7 +462,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /**
-     * Is this an advanced origin from Into The Storm?
+     * Is this an advanced (XP-costed) origin from an RT supplement?
      * @type {boolean}
      */
     get isAdvanced(): boolean {

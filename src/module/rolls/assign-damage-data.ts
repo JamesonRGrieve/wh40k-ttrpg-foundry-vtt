@@ -110,14 +110,14 @@ interface HitLike {
     /**
      * Number of Righteous Fury triggers on the damage roll. When > 0 and
      * defences fully absorbed the hit (reducedDamage ≤ 0), RAW applies 1
-     * point of unarmoured damage anyway (core.md L10398-10414).
+     * point of unarmoured damage anyway (core rules).
      */
     righteousFuryCount?: number;
     /**
      * Whether the source weapon has Explosive (X). When the target is a
      * DW horde, RAW gives +1 Magnitude loss per hit ("Weapons that
      * inflict Explosive Damage … count as having inflicted one
-     * additional Hit", core.md p. 359).
+     * additional Hit", DW core).
      */
     isExplosive?: boolean;
     /** The source weapon ignores this location's armour and cover (Warp Weapon vs unwarded armour, #414). */
@@ -243,7 +243,7 @@ export class AssignDamageData {
 
     /**
      * A vehicle meets the hit with the armour of the facing it struck (a Turret hit
-     * reads Front, DH2 Core p. 254), and has no Toughness Bonus. A hit applied
+     * reads Front, DH2 core), and has no Toughness Bonus. A hit applied
      * without a strike (a hand-entered one) reads Front armour.
      */
     private _updateVehicleArmour(vehicle: VehicleDurability): void {
@@ -268,7 +268,7 @@ export class AssignDamageData {
      * Preview the effective damage this hit deals to the target: total damage minus
      * the location armour (reduced by penetration, floored at 0) minus the location's
      * Toughness Bonus, with the RAW 1-point minimum when defences fully absorb the hit
-     * (core.md L10398-10414). Pure — call after {@link update}; unlike {@link finalize}
+     * (core rules). Pure — call after {@link update}; unlike {@link finalize}
      * it neither applies wounds nor posts to chat. Used to surface effective damage on
      * the damage chat card up front (#247). The DW-horde application path diverges at
      * apply time; this reports the standard armour + TB reduction.
@@ -340,7 +340,7 @@ export class AssignDamageData {
         const reduction = usableArmour + this.tb;
         const reducedDamage = totalDamage - reduction;
 
-        // DW horde branch (#166 — core.md p. 359 "Damaging a Horde").
+        // DW horde branch (#166 — "Damaging a Horde").
         if (this._isDwHordeTarget()) {
             const horde = this.actor.system.horde;
             if (horde !== undefined) {
@@ -399,7 +399,7 @@ export class AssignDamageData {
         }
 
         // Righteous Fury but defences fully absorbed the hit: RAW deals 1
-        // point of unarmoured damage anyway (core.md L10398-10414).
+        // point of unarmoured damage anyway (core rules).
         if (reducedDamage <= 0 && (this.hit.righteousFuryCount ?? 0) > 0) {
             if (this.actor.system.wounds.value <= 0) {
                 // No wounds left → the 1 lands directly as critical.
