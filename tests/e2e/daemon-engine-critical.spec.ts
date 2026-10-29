@@ -6,10 +6,8 @@ import { scaledMs } from './lib/timing';
 
 /**
  * Tier B — a Black Crusade Daemon Engine reads its Critical damage on the Daemon
- * Engine Critical Hit Chart (#678): "Daemon Engines suffer Damage like all other
- * types of creatures but have their own special rules for Critical Damage" (BC
- * Tome of Decay p. 96; the Tomes of Fate, Excess and Blood print the same chart).
- * The Daemon Engine trait names the chart (`criticalChart: daemon-engine`) and
+ * Engine Critical Hit Chart (#678): a Daemon Engine takes damage like any creature
+ * but has its own Critical damage chart. The Daemon Engine trait names the chart (`criticalChart: daemon-engine`) and
  * the chart's roll tables carry the matching flag.
  *
  * A BC daemon engine with 5 wounds takes an autocannon hit of 27 + 8; what passes

@@ -19,10 +19,8 @@ import {
 } from './occult-sheet-flow';
 
 /**
- * Tier B coverage of the Mutant background (#91, DH2 Enemies Within p. 32):
- * "A Mutant character begins play with 10 Corruption points. Instead of rolling
- * as normal for malignancy or mutation, roll 5d10 on Table 8-16: Mutations ...
- * to determine a starting mutation for the character."
+ * Tier B coverage of the Mutant background (#91): starting Corruption, and a
+ * starting mutation rolled on the Mutations table in place of the normal roll.
  *
  *   - The Mutant origin, dropped from the compendium onto a character, applies
  *     its 10 Corruption when the world next readies (the boot origin-grant

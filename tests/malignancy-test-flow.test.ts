@@ -115,9 +115,9 @@ describe('MalignancyTestActionData', () => {
 });
 
 /**
- * Twisted Flesh (DH2 Enemies Within p. 32, Mutant background): "Whenever he would
- * gain a malignancy, he may roll on Table 8-16: Mutations to gain a mutation
- * instead." A failed test offers the choice; without the bonus nothing is asked.
+ * Twisted Flesh (Mutant background): the character may take a rolled mutation
+ * instead of a malignancy. A failed test offers the choice; without the bonus
+ * nothing is asked.
  */
 describe('MalignancyTestActionData — Twisted Flesh (#91)', () => {
     let rollMalignancy: MockInstance<typeof RollTableUtils.rollMalignancy>;

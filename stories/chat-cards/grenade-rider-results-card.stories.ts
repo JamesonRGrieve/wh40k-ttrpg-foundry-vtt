@@ -73,7 +73,7 @@ const PHOTON_FLASH = riderFixture({
     test: { characteristic: 'agility', modifier: 10 },
     condition: 'blinded',
     duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-    effect: 'Any character within the blast radius when it detonates must succeed on an Ordinary (+10) Agility test or be blinded for a number of rounds equal to his degrees of failure.',
+    effect: 'Everyone in the flash tests Agility (+10); a failure leaves them Blinded for a round per degree of failure.',
 });
 
 const RT_PSYK_OUT = riderFixture({
@@ -81,12 +81,12 @@ const RT_PSYK_OUT = riderFixture({
     affects: 'psyker',
     condition: 'stunned',
     duration: { kind: 'roll', base: 0, formula: '1d5+3' },
-    effect: 'Psykers caught in the blast radius of the grenade must make a Difficult (-10) Willpower Test or be Stunned for 1d5+3 Rounds.',
+    effect: 'Psykers in the blast test Willpower (−10) or are Stunned for 1d5+3 Rounds.',
 });
 
 const SPORE_BOMB = riderFixture({
     test: { characteristic: 'toughness', modifier: 10, psykerModifier: -20 },
-    effect: 'Any character within the blast radius of a spore bomb suffers the effects described under mind-mould.',
+    effect: 'Everyone in the blast is exposed to the spores.',
 });
 
 const PSYCHOTROKE = riderFixture({
@@ -105,7 +105,7 @@ const RAD = riderFixture({
 const RT_RAD = riderFixture({
     test: { characteristic: 'toughness', modifier: 0, damagePenalty: -5 },
     characteristicDamage: { characteristic: 'toughness', formula: '1d10', perDegree: 2 },
-    effect: "In addition to the Damage dealt by the explosion, each living target within the rad grenade's blast radius must make a Challenging (+0) Toughness Test with a −5 penalty for every point of Damage it suffers. If it fails, it suffers 1d10 Toughness Damage, plus 2 additional Toughness Damage per Degree of Failure he suffers on the Test.",
+    effect: 'Each living target in the blast also tests Toughness, at −5 per point of damage taken; a failure costs 1d10 Toughness plus 2 per degree of failure.',
 });
 
 const meta: Meta = { title: 'Chat/Grenade Rider Results (#623)' };

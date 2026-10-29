@@ -19,13 +19,20 @@ import { expect, test } from './lib/test';
 const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
 const HUNTERS = 'Compendium.wh40k-rpg.ow-enemies-items-medals.Item.OWeMedalHunter01';
 const PANEL = '.wh40k-ow-battlefield-panel';
-/** Each medal's Squad Bonus, as its compendium document prints it. */
-const SQUAD_BONUS = {
-    wingedSkull: '+10 to all Command Tests.',
-    hunters:
-        'The Squad is well versed in discerning the troop movements for their given enemy. The each member of the Squad gains a +10 bonus to Perception Tests to spot or track the particular enemy on the battlefield (such as Survival Tests to track them and Tests to avoid Surprise in combat).',
-};
 const DIALOG = 'dialog.application[open]';
+
+/** A medal's Squad Bonus as plain text, read from its compendium document (the test holds no book text). */
+async function squadBonus(page: Page, uuid: string): Promise<string> {
+    return page.evaluate(async (id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `fromUuid` global has no browser-side types
+        const g = globalThis as unknown as { fromUuid: (u: string) => Promise<{ system: { squadBonus: string } } | null> };
+        const medal = await g.fromUuid(id);
+        if (medal === null) throw new Error(`medal ${id} not found`);
+        const holder = document.createElement('div');
+        holder.innerHTML = medal.system.squadBonus;
+        return holder.textContent.trim();
+    }, uuid);
+}
 
 async function conferred(page: Page, actorId: string): Promise<string[]> {
     return page.evaluate((id) => {
@@ -97,11 +104,14 @@ test.describe.serial('OW Medals and Honours (Tier B, content#32)', () => {
             expect(ownedAdded).toBe(0);
             await expect.poll(async () => conferred(page, actor.id)).toEqual([WINGED_SKULL, HUNTERS]);
 
+            const [skullBonus, huntersBonus] = [await squadBonus(page, WINGED_SKULL), await squadBonus(page, HUNTERS)];
+            expect(skullBonus, 'the Winged Skull carries a Squad Bonus').not.toBe('');
+            expect(huntersBonus, 'Hunters carries a Squad Bonus').not.toBe('');
             await expect
                 .poll(async () => shownAwards(panel))
                 .toEqual([
-                    { name: 'Winged Skull', bonus: SQUAD_BONUS.wingedSkull, button: 'Remove award: Winged Skull' },
-                    { name: 'Hunters', bonus: SQUAD_BONUS.hunters, button: 'Remove award: Hunters' },
+                    { name: 'Winged Skull', bonus: skullBonus, button: 'Remove award: Winged Skull' },
+                    { name: 'Hunters', bonus: huntersBonus, button: 'Remove award: Hunters' },
                 ]);
             const text = (await panel.textContent()) ?? '';
             for (const bad of ['Compendium.', '[broken link]', 'undefined']) expect(text, `the panel must not show "${bad}"`).not.toContain(bad);

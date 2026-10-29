@@ -55,7 +55,7 @@ const ITEMS: GrenadeItemView[] = [
             test: { characteristic: 'agility', modifier: 10 },
             condition: 'blinded',
             duration: { kind: 'degreesOfFailure', base: 0, formula: '' },
-            effect: 'Any character within the blast radius when it detonates must succeed on an Ordinary (+10) Agility test or be blinded for a number of rounds equal to his degrees of failure.',
+            effect: 'Everyone in the flash tests Agility (+10); a failure leaves them Blinded for a round per degree of failure.',
         }),
     ),
     grenade(
@@ -66,7 +66,7 @@ const ITEMS: GrenadeItemView[] = [
             test: { characteristic: 'toughness', modifier: -40 },
             duration: { kind: 'degreesOfFailure', base: 1, formula: '' },
             effectRollShift: { perDegree: 1, max: 10 },
-            effect: 'Each creature struck tests Toughness against Hallucinogenic (4); respirators and sealed armour grant no bonus. On a failure it suffers a temporary delusion: roll 1d10 on Table 5–3: Hallucinogen Effects (Dark Heresy Core Rulebook, page 146).',
+            effect: 'Each target tests Toughness against the gas, with no help from respirators; a failure brings on a brief delusion rolled on the hallucinogen table.',
         }),
     ),
     grenade(
@@ -75,7 +75,7 @@ const ITEMS: GrenadeItemView[] = [
         ['blast-2', 'sanctified'],
         rider({
             duration: { kind: 'encounter', base: 0, formula: '' },
-            effect: 'A psyker struck must immediately roll on Table 6–3: Perils of the Warp (Dark Heresy Core Rulebook, page 197). A creature with the Daemonic trait struck gains the Warp Instability trait until the end of the encounter; if it already has the trait, it suffers a −20 penalty to the tests it makes for that trait until the end of the encounter.',
+            effect: 'A psyker hit rolls for Perils of the Warp. A Daemonic target hit becomes Warp Unstable for the encounter, or takes −20 on those tests if it already is.',
         }),
         '1d10',
     ),
@@ -86,7 +86,7 @@ const ITEMS: GrenadeItemView[] = [
         rider({
             area: { size: '4', measure: 'radius' },
             duration: { kind: 'roll', base: 0, formula: '1d10+10' },
-            effect: 'Creates a smokescreen of thick, black clouds at the point of impact that obscures vision, lasting less in adverse weather. It does not block detection systems that use heat or other spectral bands outside normal human eyesight.',
+            effect: 'Fills the area with smoke that blocks sight (less long in bad weather) but not thermal or other non-visual sensors.',
         }),
     ),
 ];

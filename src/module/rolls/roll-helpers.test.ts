@@ -235,9 +235,8 @@ describe('resolveDegreesMethod — RAW resolves per system', () => {
 });
 
 /**
- * The count a line PRINTS (#335). DH1 core p. 184: "For each full 10 points by
- * which you exceed your Characteristic, you achieve one degree of success" —
- * Fellowship 44, roll 12 is 3 degrees, not 4. Gen 2 counts the initial degree.
+ * The count a line PRINTS (#335). Gen 1 gives one degree per full 10 points of
+ * margin — Fellowship 44, roll 12 is 3 degrees, not 4. Gen 2 counts the initial degree.
  */
 describe('printedDegrees — the count the card shows (#335)', () => {
     it('DH1 01 vs 75 is 7 DoS, not the DH2 8 (the reported card)', () => {

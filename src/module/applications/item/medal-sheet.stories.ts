@@ -24,10 +24,10 @@ interface MedalArgs {
     editable: boolean;
 }
 
-/** The Winged Skull, OW core p. 294. */
+/** A sample medal (invented description). */
 function args(canEdit: boolean, inEditMode: boolean): MedalArgs {
     const description = {
-        value: '<p>The Winged Skull is an ancient commendation awarded to officers who have shown extraordinary and inspirational leadership.</p>',
+        value: '<p>Given to an officer whose leadership turned the tide of a hard-fought engagement.</p>',
     };
     return {
         item: { name: 'Winged Skull', img: 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/delapouite/star-medal.svg', system: { description } },

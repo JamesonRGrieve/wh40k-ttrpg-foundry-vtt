@@ -26,7 +26,7 @@ const LABELS: GrenadeLabels = {
 
 const RAD_RIDER: GrenadeRiderData = riderFixture({
     test: { characteristic: 'toughness', modifier: -20 },
-    effect: 'When a character is struck by an attack from this weapon (whether or not he suffers damage), he must immediately make a Hard (–20) Toughness test or suffer 2d10 Toughness damage.',
+    effect: 'Anyone hit, hurt or not, tests Toughness at −20 or loses 2d10 Toughness.',
 });
 
 const RAD: GrenadeItemView = {
@@ -110,7 +110,7 @@ const TEARS: GrenadeItemView = {
     system: {
         rider: riderFixture({
             duration: { kind: 'encounter', base: 0, formula: '' },
-            effect: 'A psyker struck must immediately roll on Table 6–3: Perils of the Warp (Dark Heresy Core Rulebook, page 197).',
+            effect: 'A psyker hit rolls for Perils of the Warp.',
         }),
         effectiveSpecial: new Set(['blast-2', 'sanctified']),
         fullDamageFormula: '1d10',

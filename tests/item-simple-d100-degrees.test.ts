@@ -1,9 +1,8 @@
 /**
  * The item roll cards (talent, ship order, ritual) print the line's own degrees
  * (#335). `#rollSimpleD100` added a base degree under every method, so a DH1 / DW /
- * RT card showed one degree more than the line gives ("For each full 10 points by
- * which you exceed your Characteristic, you achieve one degree of success", DH1
- * core p. 184).
+ * RT card showed one degree more than the line gives (one per full 10 points of
+ * margin, with no base degree).
  *
  * The Item document needs a booted Foundry, so this pins the wiring in source; the
  * count itself is `printedDegrees`, unit-tested in `roll-helpers.test.ts`, and the

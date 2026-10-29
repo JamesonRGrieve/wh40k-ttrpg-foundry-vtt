@@ -3,12 +3,10 @@ import { malignancyOutcomes, startingCorruptionHoldsMalignancy, startingMutation
 import { malignancyTestsQueued } from './malignancy-test';
 
 /**
- * The Within-supplement Mutant background (#91, DH2 Enemies Within p. 32):
- * "A Mutant character begins play with 10 Corruption points. Instead of rolling
- * as normal for malignancy or mutation, roll 5d10 on Table 8-16: Mutations ...
- * to determine a starting mutation for the character."
+ * The Mutant background (#91): starting Corruption, and a starting mutation
+ * rolled on the Mutations table in place of the normal roll.
  */
-describe('Mutant background (#91, Within p. 32)', () => {
+describe('Mutant background (#91)', () => {
     const mutant = { grants: { startingMutationFormula: '5d10' } };
     const homeWorld = { grants: { startingMutationFormula: '' } };
 
@@ -30,7 +28,7 @@ describe('Mutant background (#91, Within p. 32)', () => {
     });
 
     it('leaves the normal per-10-points rule alone for any other origin or write', () => {
-        // Core p. 290: "For every 10 total Corruption points a character gains, he must make a Willpower test".
+        // Every 10 Corruption gained calls for a Willpower test against malignancy.
         expect(startingCorruptionHoldsMalignancy(homeWorld, { 'system.corruption': 10 }, { malignancyTestsPending: 0 })).toEqual({});
         expect(startingCorruptionHoldsMalignancy(mutant, { 'system.wounds.max': 12 }, { malignancyTestsPending: 0 })).toEqual({});
         // An NPC has no Malignancy queue to pin.
