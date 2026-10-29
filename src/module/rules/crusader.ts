@@ -1,11 +1,11 @@
 /**
- * Crusader role mechanics (#141 — beyond.md p.34, L807-841).
+ * Crusader role mechanics (#141).
  *
- * The Crusader is a Beyond-supplement role granting two interlocking
+ * The Crusader is a DH2 supplement role granting two interlocking
  * benefits under a single "Smite the Unholy" rider:
  *
  *   1. **Fate-spend auto-pass against Fear.** On top of the standard
- *      Fate uses (core p.293), one Fate point lets a Crusader pass a
+ *      Fate uses, one Fate point lets a Crusader pass a
  *      Fear test outright, with DoS equal to their Willpower Bonus.
  *
  *   2. **Anti-Fear melee bonus.** A Crusader's melee hits on a foe
@@ -39,7 +39,7 @@ import { clampFearRating } from './fear.ts';
 
 /**
  * Cost in Fate points for one Smite-the-Unholy auto-pass invocation.
- * RAW: one Fate point per spend (beyond.md p.34 L839).
+ * RAW: one Fate point per spend.
  */
 export const SMITE_THE_UNHOLY_FATE_COST = 1;
 
@@ -89,7 +89,7 @@ export interface SmiteMeleeHitResult {
 /**
  * Apply the Smite-the-Unholy melee rider to a single hit.
  *
- * Per RAW (beyond.md p.34 L839): each melee hit on a target with
+ * Per RAW: each melee hit on a target with
  * Fear (X) adds X to both damage and weapon penetration.
  *
  * Targets without Fear (rating 0) are a no-op — base values pass

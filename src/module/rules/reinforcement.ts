@@ -1,5 +1,5 @@
 /**
- * Calling in a Reinforcement Character (DH2 core pp. 294–295, #77).
+ * Calling in a Reinforcement Character (DH2 core rules, #77).
  *
  * Each Reinforcement Character (RC) prints an **Influence Minimum** and an
  * **Influence Cost**. The calling Acolyte needs Influence ≥ the minimum and
@@ -8,8 +8,8 @@
  * The GM may raise or lower the cost, and many RCs print a Peer-talent discount.
  * Calling an RC reduces the warband's Subtlety by the final cost.
  *
- * Some RCs add terms for the caller. The Thrice-Bound Daemonhost (Enemies
- * Beyond p. 38) needs a caller with Forbidden Lore (Daemonology) at Trained
+ * Some RCs add terms for the caller. The Thrice-Bound Daemonhost (a DH2
+ * supplement) needs a caller with Forbidden Lore (Daemonology) at Trained
  * (rank 2), who gains 1d5 Corruption. The rank gate is here. The Corruption is
  * rolled and applied by the call flow through the actor's Corruption update.
  *

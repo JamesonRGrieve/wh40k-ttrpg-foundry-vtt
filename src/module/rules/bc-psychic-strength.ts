@@ -1,6 +1,6 @@
 /**
- * Black Crusade Psychic Strength RAW resolver (#178 — core.md Table 6-1
- * "Psy Rating", p.9466, and §"Manifesting a Power", p.9486-9530).
+ * Black Crusade Psychic Strength RAW resolver (#178 — core rules "Psy
+ * Rating" and "Manifesting a Power").
  *
  * Pure functions over a Heretic psyker's Psy Rating (PR), push level,
  * and sustained-power burden. The caller (sheet, chat card, psychic
@@ -9,17 +9,17 @@
  * sustain penalty, and the per-mode phenomena-roll counts.
  *
  * Canonical rules referenced here:
- *   - Psyker Class (Table 6-1): Bound (+3 push), Unbound (+5 push), and
+ *   - Psyker Class: Bound (+3 push), Unbound (+5 push), and
  *     Daemonic (+4 push). Each class caps how many additional points of
  *     PR a psyker may add when Pushing.
- *   - Fettered (core.md :9486): half PR rounded up, no Psychic
+ *   - Fettered: half PR rounded up, no Psychic
  *     Phenomena roll on a successful test.
- *   - Unfettered (core.md :9499): full PR, one Psychic Phenomena roll
+ *   - Unfettered: full PR, one Psychic Phenomena roll
  *     on a successful test as RAW.
- *   - Push (core.md :9513-9530): PR + chosen push level (clamped to the
+ *   - Push: PR + chosen push level (clamped to the
  *     class ceiling), plus one Phenomena roll PER push level on a
  *     successful test (i.e. base unfettered roll + push-level extras).
- *   - Sustain (core.md :9544): each power sustained beyond the first
+ *   - Sustain: each power sustained beyond the first
  *     applies a -10 to ALL related psychic tests and adds one extra
  *     Phenomena roll per excess power. The first sustain is "free"
  *     (penalty / phenomena floor at 0).
@@ -30,14 +30,14 @@
 import { nonNegInt } from './_num.ts';
 import { fetteredPsyRating } from './psychic-push.ts';
 
-/** Psyker class identifiers from BC Table 6-1. */
+/** Psyker class identifiers from BC's psyker-class table. */
 export type PsykerClass = 'bound' | 'unbound' | 'daemonic';
 
 /** Manifestation mode chosen by the psyker before rolling. */
 export type PsyMode = 'fettered' | 'unfettered' | 'push';
 
 /**
- * BC Table 6-1 — maximum additional PR a psyker of each class may add
+ * BC psyker-class table — maximum additional PR a psyker of each class may add
  * when Pushing. The chosen push level is clamped to this ceiling
  * before being added to base PR in {@link effectivePsyRating}.
  */

@@ -36,7 +36,7 @@ export const FALLING_IGNORES_ARMOUR = true;
 /** The base die every line rolls for a fall. */
 const FALLING_BASE_DIE = '1d10';
 
-/** One row of DH1's Table 7-27: a fall of at least `minMetres` deals 1d10 + `bonus`. */
+/** One row of DH1's Falling Damage table: a fall of at least `minMetres` deals 1d10 + `bonus`. */
 interface FallingBracket {
     minMetres: number;
     bonus: number;
@@ -58,7 +58,7 @@ export interface HazardLineRules {
     suffocation: SuffocationRule;
 }
 
-/** DH1 Core p. 210, Table 7-27: Falling Damage (ascending by distance). */
+/** DH1 core rules, Falling Damage (ascending by distance). */
 const DH1_FALLING_TABLE: readonly FallingBracket[] = [
     { minMetres: 3, bonus: 3 },
     { minMetres: 6, bonus: 5 },

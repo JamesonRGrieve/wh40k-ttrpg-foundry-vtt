@@ -16,15 +16,15 @@ import type { XenosRepairRules } from './xenos-equipment.ts';
 
 /** A line's printed item-repair rule. */
 export interface ItemRepairRules {
-    /** Repair modifier by craftsmanship (DH2 Table 5–2). */
+    /** Repair modifier by craftsmanship (DH2 core rules). */
     craftsmanship: Readonly<Record<CraftsmanshipKey, number>>;
     /** A failed repair with at least this many degrees of failure destroys the item. */
     destroyedAtDegreesOfFailure: number;
-    /** The line's xenos-equipment repair rule (DH2 Enemies Without p. 42), or null. */
+    /** The line's xenos-equipment repair rule (a DH2 supplement), or null. */
     xenos: XenosRepairRules | null;
 }
 
-/** The Table 5–2 repair modifier for an item's stored craftsmanship. Unknown grades count as Common (0). */
+/** The craftsmanship repair modifier for an item's stored craftsmanship. Unknown grades count as Common (0). */
 export function craftsmanshipRepairModifier(rules: ItemRepairRules, craftsmanship: string | null | undefined): number {
     const key = normaliseCraftsmanship(craftsmanship);
     return key === null ? 0 : rules.craftsmanship[key];

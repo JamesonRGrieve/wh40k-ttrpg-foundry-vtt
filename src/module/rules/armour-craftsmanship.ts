@@ -3,12 +3,12 @@
  * line, held in the line config and read by the armour soak, the armour item's
  * effective AP and Only War's craftsmanship panel alike:
  *
- *   - DH1 (core p. 144), RT (core p. 137) and OW: Poor −10 to Agility tests;
+ *   - DH1, RT and OW: Poor −10 to Agility tests;
  *     Good +1 AP against the first attack in any round; Best half weight and
  *     +1 AP.
  *   - DW: the same Good and Best, named Exceptional and Master-Crafted; it
  *     prints no Poor armour.
- *   - DH2 (core p. 141): Good and Best raise Maximum Agility by 10 (not modelled
+ *   - DH2: Good and Best raise Maximum Agility by 10 (not modelled
  *     here) and Best adds +1 AP to each covered location. No first-attack AP, no
  *     half weight.
  *   - BC: Good grants +5 to a social test (not an armour effect); Best adds that,

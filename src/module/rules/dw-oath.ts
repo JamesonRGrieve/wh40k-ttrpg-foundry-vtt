@@ -1,6 +1,6 @@
 /**
- * Deathwatch Mission Oaths RAW resolver (#168 — core.md Table 7-16
- * §"OATHS" p.10165).
+ * Deathwatch Mission Oaths RAW resolver (#168 — core rules,
+ * "Oaths").
  *
  * Pure functions over a kill-team leader's sworn-Oath state. The caller
  * (character DataModel, sheet action handler, chat card) owns I/O, the

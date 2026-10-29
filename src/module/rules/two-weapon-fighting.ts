@@ -1,7 +1,7 @@
 /**
  * Two-weapon fighting penalty resolver.
  *
- * core.md §"Two-Weapon Fighting" (p. 228):
+ * Core rules, "Two-Weapon Fighting":
  *  - Baseline: −20 to both attack rolls when attacking with two weapons.
  *  - Two-Weapon Wielder (Melee/Ranged): drops the **main-hand** penalty to 0.
  *  - Two-Weapon Master (Melee/Ranged): drops **both** penalties to 0.
@@ -79,10 +79,10 @@ export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenal
 }
 
 // ──────────────────────────────────────────────
-// Errata p. 132 — Two-Weapon Wielder Half-Action refocus
+// Errata — Two-Weapon Wielder Half-Action refocus
 // ──────────────────────────────────────────────
 //
-// errata/errata.md L67 — Two-Weapon Wielder (page 132), second sentence
+// Errata — Two-Weapon Wielder, second sentence
 // replaced. In summary: a character holding two one-handed weapons (melee or
 // ranged) who makes a Half Action attack — Standard, Swift or Lightning in
 // melee; single shot, semi-auto or full-auto at range — may follow it with one
@@ -99,9 +99,9 @@ export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenal
 // the dispatch path reads, mirroring the `resolveTwoWeaponPenalties`
 // contract above.
 //
-// FAQ p. 571: when combined with Devastating Assault the follow-up is
+// FAQ: when combined with Devastating Assault the follow-up is
 // restricted to a plain Standard Attack — callers pass that restriction
-// in via `restrictToStandard`. FAQ p. 693: an Aim bonus applies only to
+// in via `restrictToStandard`. FAQ: an Aim bonus applies only to
 // the first (main-hand) attack — surfaced as `aimAppliesToOffHand: false`
 // so the dispatch path does not double-count it.
 
@@ -137,7 +137,7 @@ export interface TwoWeaponRefocusContext extends TwoWeaponContext {
     /** The Half-Action attack mode chosen for the opening (main-hand) attack. */
     mode: TwoWeaponAttackMode;
     /**
-     * FAQ p. 571 (Devastating Assault interaction): force the off-hand
+     * FAQ (Devastating Assault interaction): force the off-hand
      * follow-up to a plain Standard Attack regardless of the opener.
      * Defaults to false.
      */
@@ -160,7 +160,7 @@ export interface TwoWeaponRefocusPlan {
      */
     attacks: readonly TwoWeaponPlannedAttack[];
     /**
-     * FAQ p. 693 — an Aim Half/Full bonus only applies to the attack
+     * FAQ — an Aim Half/Full bonus only applies to the attack
      * immediately following the Aim, i.e. the main-hand opener. The
      * dispatch path must NOT carry the Aim modifier onto the off-hand
      * follow-up.
@@ -174,7 +174,7 @@ export function isTwoWeaponRefocusMode(mode: TwoWeaponAttackMode, isMelee: boole
 }
 
 /**
- * Resolve the errata p. 132 two-Half-Action plan for a Two-Weapon
+ * Resolve the errata's two-Half-Action plan for a Two-Weapon
  * Wielder. Returns the main-hand Half-Action attack always, plus the
  * Free-Action same-mode off-hand follow-up when the talent + mode make
  * it legal. Per-hand modifiers come from `resolveTwoWeaponPenalties`,
@@ -200,7 +200,7 @@ export function resolveTwoWeaponRefocus(ctx: TwoWeaponRefocusContext): TwoWeapon
         return { granted: false, attacks: [mainAttack], aimAppliesToOffHand: false };
     }
 
-    // FAQ p. 571: Devastating Assault forces the follow-up to a plain
+    // FAQ: Devastating Assault forces the follow-up to a plain
     // Standard Attack; otherwise the errata's "same restrictions" makes
     // the off-hand mirror the opener exactly.
     const offMode: TwoWeaponAttackMode = ctx.restrictToStandard === true ? 'Standard Attack' : ctx.mode;

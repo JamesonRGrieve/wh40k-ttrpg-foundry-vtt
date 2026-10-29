@@ -1,6 +1,6 @@
 /**
- * Warband Subtlety adjuster plumbing (DH2 — core.md §"Influence And
- * Subtlety", beyond.md / within.md supplement features).
+ * Warband Subtlety adjuster plumbing (DH2 — core rules, "Influence And
+ * Subtlety", plus supplement features).
  *
  * This module is deliberately **content-agnostic** (CLAUDE.md Direction #7):
  * it holds only pure math and the enum of non-content adjustment kinds. The
@@ -16,7 +16,7 @@
  * (`WH40K.Subtlety.ManualAdjustment` / `WH40K.Subtlety.Inquest`), never under
  * `WH40K.Subtlety.Source.*`.
  *  - `manual`: a GM ad-hoc adjustment with no governing compendium entry.
- *  - `inquest`: pursuing an Inquest openly (within.md p. 62) — a campaign
+ *  - `inquest`: pursuing an Inquest openly — a campaign
  *    event with no owned item to walk to.
  */
 export type SubtletyPrimitive = 'manual' | 'inquest';
@@ -57,8 +57,8 @@ export interface CollectedAdjuster {
 /**
  * Apply a "resist Subtlety loss" clamp to a raw delta. A loss (negative
  * delta) is pulled toward zero so its magnitude is at most `minAbsoluteDelta`
- * (e.g. Quarantine World keeps any decrease to a minimum reduction of 1,
- * Enemies Beyond p. 30). Gains and zero pass through untouched, as does any
+ * (e.g. Quarantine World keeps any decrease to a minimum reduction of 1).
+ * Gains and zero pass through untouched, as does any
  * delta when `minAbsoluteDelta` is not positive.
  *
  * Pure and content-agnostic: the `minAbsoluteDelta` value is supplied by the

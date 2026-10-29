@@ -8,7 +8,7 @@
  * `system.subtletyAdjuster`. The ActiveEffects derived here are **display-only**
  * — they carry NO `changes`, so they never touch the pool and cannot
  * double-apply. They exist purely so a standing adjuster (e.g. the Quarantine
- * World "Secretive by Nature" loss clamp, Enemies Beyond p. 30) appears in the
+ * World "Secretive by Nature" loss clamp) appears in the
  * character sheet's Active Effects section alongside every other effect.
  *
  * This module is content-agnostic (CLAUDE.md Direction #7): it never names a

@@ -1,12 +1,12 @@
 /**
- * Inquests (DH2 Enemies Within pp. 62–69, #90).
+ * Inquests (a DH2 supplement, #90).
  *
  * An Inquest is a warband's targeted, long-running investigation. Its
- * **scope** fixes the Investigation points (IP) needed to complete it
- * (p. 63). Clues are worth IP by significance (Table 2–7, p. 65). Lead tests
- * add or remove IP per degree (p. 65). A **Revelation** happens at each IP
- * threshold: every 300 IP by default, which the GM may tailor (p. 66).
- * Resolution pays Influence by scope (Table 2–9, p. 69), with extra Influence
+ * **scope** fixes the Investigation points (IP) needed to complete it.
+ * Clues are worth IP by significance. Lead tests
+ * add or remove IP per degree. A **Revelation** happens at each IP
+ * threshold: every 300 IP by default, which the GM may tailor.
+ * Resolution pays Influence by scope, with extra Influence
  * for surplus IP and a loss for a shortfall.
  *
  * The printed tables are line data, so they live on the line's game-system
@@ -22,52 +22,52 @@ type InquestScope = (typeof INQUEST_SCOPES)[number];
 export const CLUE_SIGNIFICANCES = ['minor', 'major', 'vital'] as const;
 export type ClueSignificance = (typeof CLUE_SIGNIFICANCES)[number];
 
-/** Whether the warband pursues the Inquest openly or covertly (p. 64, "Approach"). */
+/** Whether the warband pursues the Inquest openly or covertly ("Approach"). */
 export const INQUEST_APPROACHES = ['covert', 'open'] as const;
 type InquestApproach = (typeof INQUEST_APPROACHES)[number];
 
 /**
  * `active` while the warband is prosecuting it. On resolution it becomes
  * `goalsMet` or `goalsFailed`, because the reward depends on whether the
- * warband achieved its objective (p. 69).
+ * warband achieved its objective.
  */
 const INQUEST_STATUSES = ['active', 'goalsMet', 'goalsFailed'] as const;
 type InquestStatus = (typeof INQUEST_STATUSES)[number];
 
 /** A line's printed Inquest tables. */
 export interface InquestRules {
-    /** Per scope: IP to complete (p. 63) and the Influence reward (Table 2–9). */
+    /** Per scope: IP to complete and the Influence reward. */
     scopes: Readonly<Record<InquestScope, { requiredPoints: number; influenceReward: number }>>;
-    /** Default IP between Revelations (p. 66). */
+    /** Default IP between Revelations. */
     revelationInterval: number;
-    /** IP per clue by significance (Table 2–7). */
+    /** IP per clue by significance. */
     clueValues: Readonly<Record<ClueSignificance, number>>;
-    /** IP gained per degree of success (or lost per degree of failure) on a lead test (p. 65). */
+    /** IP gained per degree of success (or lost per degree of failure) on a lead test. */
     pointsPerLeadDegree: number;
-    /** Extra IP from a clue relevant to the lead investigator's background or home world (p. 64). */
+    /** Extra IP from a clue relevant to the lead investigator's background or home world. */
     leadInvestigatorClueBonus: number;
-    /** IP per Influence step for surplus (bonus) and shortfall (loss) at resolution (p. 69). */
+    /** IP per Influence step for surplus (bonus) and shortfall (loss) at resolution. */
     rewardPointStep: number;
-    /** Cap on the surplus Influence bonus (p. 69). */
+    /** Cap on the surplus Influence bonus. */
     maxSurplusInfluence: number;
 }
 
 /** One warband Inquest as persisted in the world setting. */
 export interface InquestState {
     id: string;
-    /** The heresy targeted (p. 63, "Selecting a Heresy"). */
+    /** The heresy targeted ("Selecting a Heresy"). */
     target: string;
     objective: string;
     requirements: string;
-    /** Free-text name of the nominated lead investigator (p. 64). */
+    /** Free-text name of the nominated lead investigator. */
     leadInvestigator: string;
     scope: InquestScope;
     approach: InquestApproach;
     investigationPoints: number;
-    /** IP added to the scope total by events such as the Catspaws complication (Table 2–8). */
+    /** IP added to the scope total by events such as the Catspaws complication. */
     extraRequiredPoints: number;
     /**
-     * GM-tailored Revelation thresholds (p. 66). Empty means the default
+     * GM-tailored Revelation thresholds. Empty means the default
      * ladder of one Revelation every `revelationInterval` IP.
      */
     revelationThresholds: number[];
@@ -86,7 +86,7 @@ export function inquestRequiredPoints(rules: InquestRules, state: Pick<InquestSt
 /**
  * The ascending Revelation thresholds for an Inquest. The last threshold is
  * always the completion total, because reaching it triggers the final
- * Revelation (p. 69). GM-tailored thresholds at or past the total are dropped.
+ * Revelation. GM-tailored thresholds at or past the total are dropped.
  */
 export function inquestRevelationThresholds(
     rules: InquestRules,
@@ -123,13 +123,13 @@ export function inquestRevelationsReached(thresholds: readonly number[], points:
     return thresholds.filter((t) => v >= t).length;
 }
 
-/** IP for one clue (Table 2–7), plus the lead-investigator bonus when the clue is relevant to them. */
+/** IP for one clue, plus the lead-investigator bonus when the clue is relevant to them. */
 export function clueInvestigationPoints(rules: InquestRules, significance: ClueSignificance, leadInvestigatorRelevant: boolean): number {
     return rules.clueValues[significance] + (leadInvestigatorRelevant ? rules.leadInvestigatorClueBonus : 0);
 }
 
 /**
- * IP change from a lead test (p. 65): positive `degrees` are degrees of
+ * IP change from a lead test: positive `degrees` are degrees of
  * success, negative are degrees of failure.
  */
 export function leadTestInvestigationPoints(rules: InquestRules, degrees: number): number {
@@ -156,7 +156,7 @@ export interface InquestInfluenceOutcome {
 }
 
 /**
- * Influence at resolution (p. 69):
+ * Influence at resolution:
  *  - IP met and goals met: the scope reward, +1 per full `rewardPointStep` surplus IP (capped);
  *  - IP met, goals failed: half the scope reward, rounded down;
  *  - IP short: −1 per `rewardPointStep` IP (or part thereof) short.

@@ -1,5 +1,5 @@
 /**
- * Daemonic Mastery test framework (DH2 Enemies Beyond p. 59).
+ * Daemonic Mastery test framework (a DH2 supplement).
  *
  * A Daemonic Mastery test is an opposed Willpower test against the Daemon at a
  * Very Hard (−30) base difficulty. Printed modifiers: +10 when the summoner
@@ -28,7 +28,7 @@ export interface DaemonicMasteryFactor {
     readonly label?: string;
 }
 
-/** Printed Daemonic Mastery factors (Enemies Beyond p. 59). */
+/** Printed Daemonic Mastery factors. */
 export const DAEMONIC_MASTERY_FACTORS = {
     BASE_DIFFICULTY: { id: 'base-difficulty', labelKey: 'WH40K.Daemonology.Factor.MasteryBase', modifier: -30 },
     TRUE_NAME: { id: 'true-name', labelKey: 'WH40K.Daemonology.Factor.TrueName', modifier: 30 },

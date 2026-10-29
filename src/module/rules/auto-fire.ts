@@ -36,7 +36,7 @@ export type BurstCapBasis = 'total' | 'extra';
  *   - `rof` — "up to the weapon's firing rate, as normal" (DH2, OW).
  *   - `double-rof` — "to a maximum of twice the weapon's Full Automatic rate of
  *     fire" (BC, DW); RT's 1.4 errata FAQ answers "Double the Rate of Fire"; DH1's
- *     Ascension / Daemon Hunter / Blood of Martyrs Storm doubles every hit "up to
+ *     supplement Storm doubles every hit "up to
  *     the weapon's listed rate of fire".
  */
 export type StormCap = 'rof' | 'double-rof';

@@ -29,7 +29,7 @@ export interface ShipActionOrderSystem {
     /** The order's stable identifier (`hit-and-run`); a guided assault resolver of the same id attaches to its row. */
     identifier: string;
     actionType: string;
-    /** `shipStat` names the ship stat a Combined Skill Test adds (RT Core p.212); empty otherwise. */
+    /** `shipStat` names the ship stat a Combined Skill Test adds (RT core rules); empty otherwise. */
     test: { skill: string; characteristic: string; modifier: number; shipStat: string };
     duration: string;
     requirements: string;

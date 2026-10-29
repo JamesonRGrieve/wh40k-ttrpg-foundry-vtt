@@ -1,7 +1,6 @@
 /**
- * Deathwatch Squad Mode / Solo Mode RAW resolver (#163 — core.md
- * §"SQUAD MODE AND SOLO MODE" p.9434, §"SOLO MODE ABILITIES" p.9517,
- * §"SQUAD MODE ABILITIES" p.9676, Table 7-9 Support Range).
+ * Deathwatch Squad Mode / Solo Mode RAW resolver (#163 — core rules
+ * for Squad Mode and Solo Mode, their abilities, and Support Range).
  *
  * Pure functions over a Battle-Brother's combat-mode state. The caller
  * (character DataModel, sheet action handler, chat card) owns I/O,
@@ -14,10 +13,10 @@
  *     time. The default at scene start is Solo Mode.
  *   - Entering Squad Mode: a Battle-Brother may either spend a Full
  *     Action OR pass a Cohesion Challenge to switch from Solo to Squad.
- *   - Support Range (Table 7-9): the radius at which a Battle-Brother
+ *   - Support Range: the radius at which a Battle-Brother
  *     remains "in support" of their squadmates, by Renown rank. RAW
  *     gives BOTH a visual and a vocal range (the same value at every
- *     rank — see footnote on Table 7-9 — but kept as separate fields
+ *     rank — see the Support Range table footnote — but kept as separate fields
  *     so future per-system divergence stays opt-in). Support is
  *     maintained when EITHER channel is available within range, not
  *     both — per the table footnote.
@@ -46,7 +45,7 @@ export interface SupportRangeTier {
 }
 
 /**
- * TABLE 7-9 — Support Range by Renown Rank.
+ * Support Range by Renown Rank.
  *
  * RAW gives a single radius per rank; the visual / vocal split exists
  * so future per-system or per-chapter divergence (e.g. silence pacts,
@@ -236,7 +235,7 @@ export interface WithinSupportRangeArgs {
 /**
  * Resolve whether a squadmate is within the actor's Support Range.
  *
- * RAW (Table 7-9 footnote): support is maintained when the actor and
+ * RAW (Support Range table footnote): support is maintained when the actor and
  * squadmate are within the rank-appropriate radius AND at least one
  * channel (visual OR vocal) is available. Both channels blocked breaks
  * support even at point-blank range; in-range with neither channel

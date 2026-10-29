@@ -1,5 +1,5 @@
 /**
- * Daemon weapon binding (beyond.md p. 50).
+ * Daemon weapon binding (a DH2 supplement).
  *
  * Binding Strength tiers govern the weapon's stat baseline, the number
  * of Attributes the wielder may select, and personality traits that

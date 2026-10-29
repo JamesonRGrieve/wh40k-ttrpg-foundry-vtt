@@ -1,7 +1,6 @@
 /**
  * Deathwatch Distinctions, Marks of Distinction, and Advanced Special
- * Abilities (#171 — Rites of Battle §"DISTINCTIONS" p. 89–97;
- * §"ADVANCED SPECIAL ABILITIES" p. 99).
+ * Abilities (#171 — a Deathwatch supplement).
  *
  * All three are `specialAbility` items told apart by `category`. A
  * Distinction is a GM-built combination of Marks of Distinction; an

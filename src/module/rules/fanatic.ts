@@ -1,5 +1,5 @@
 /**
- * Fanatic role — "Death to All Who Oppose Me!" (DH2 Enemies Within p34).
+ * Fanatic role — "Death to All Who Oppose Me!" (a DH2 supplement).
  *
  * Besides the standard Fate uses, a Fanatic can burn a Fate point to gain
  * Hatred toward the enemy they are fighting, lasting until the encounter ends.

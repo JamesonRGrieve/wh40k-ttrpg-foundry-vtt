@@ -1,6 +1,6 @@
 /**
- * Cybernetics install / maintain engine (#125 — core.md §"Attaching
- * Bionics and Implants", p. 181; §"Craftsmanship", p. 141).
+ * Cybernetics install / maintain engine (#125 — core rules for attaching
+ * bionics and implants, and for craftsmanship).
  *
  * RAW summary the engine encodes:
  *  - **Install** is a Medicae (or Tech-Use) test performed by a willing
@@ -46,12 +46,12 @@ export type { Rng };
 /*  Craftsmanship → effective install band      */
 /* -------------------------------------------- */
 
-/** Four canonical craftsmanship tiers (core.md p. 141). */
+/** Four canonical craftsmanship tiers (core rules). */
 export type CyberneticCraftsmanship = 'poor' | 'common' | 'good' | 'best';
 
 /**
  * Craftsmanship modifier on the install Medicae test. Better-made
- * implants slot in cleaner (RAW p. 141: craftsmanship "covers how well
+ * implants slot in cleaner (RAW: craftsmanship "covers how well
  * it has been maintained" and a Best device "rarely provide[s]
  * additional benefits beyond ... Good ... but [is] far more impressive
  * in ... construction"). Mirrors the requisition-test ladder direction
@@ -248,7 +248,7 @@ export interface RecoveryResult {
 
 /**
  * Recovery is 2d10 days minus the recipient's Toughness Bonus, to a
- * minimum of one day (core.md p. 181). `rng` defaults to `Math.random`
+ * minimum of one day (core rules). `rng` defaults to `Math.random`
  * but is injected by stories/tests for determinism.
  */
 export function rollRecoveryTime(toughnessBonus: number, rng: Rng = Math.random): RecoveryResult {

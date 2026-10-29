@@ -1,5 +1,5 @@
 /**
- * Deathwatch Kill-team Cohesion RAW resolver (#162 — core.md §"COHESION", p.9351).
+ * Deathwatch Kill-team Cohesion RAW resolver (#162 — core rules, "Cohesion").
  *
  * Pure functions over a kill-team's Cohesion pool. The caller (sheet,
  * chat card, AssignDamageData horde branch, GM macro) owns I/O and
@@ -7,8 +7,8 @@
  * gating, and per-turn caps.
  *
  * Canonical rules referenced here:
- *   - Kill-team Cohesion = squad-leader Fellowship Bonus + Table 7-8
- *     (Rank/Command) value.
+ *   - Kill-team Cohesion = squad-leader Fellowship Bonus + the Rank/Command
+ *     table value.
  *   - Cohesion damage: when a DW horde/squad takes ≥ 10 damage *pre-soak*
  *     from a weapon with Accurate (basic), Blast, or Devastating, the
  *     squad loses 1 Cohesion. Capped at 1 lost per turn. A successful
@@ -58,12 +58,12 @@ type CohesionLossReason = 'below-threshold' | 'unqualified-weapon' | 'rallied' |
  * Kill-team Cohesion pool maximum.
  *
  * RAW: leader's Fellowship Bonus (i.e. Fel ÷ 10) plus the Rank/Command
- * row value from Table 7-8. Both inputs are clamped to non-negative
+ * row value from the Rank/Command table. Both inputs are clamped to non-negative
  * integers; the caller is responsible for resolving the leader's
  * Fellowship Bonus (`floor(Fel / 10)`) and the table lookup.
  *
  * @param leaderFellowshipBonus Squad leader's Fellowship Bonus (Fel ÷ 10).
- * @param rankCommandValue Row value from Table 7-8 (Rank/Command).
+ * @param rankCommandValue Row value from the Rank/Command table.
  * @returns The kill-team's maximum Cohesion (always ≥ 0).
  */
 export function maxCohesion(leaderFellowshipBonus: number, rankCommandValue: number): number {

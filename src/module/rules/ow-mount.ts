@@ -1,7 +1,6 @@
 /**
- * Only War · Mounted Combat P2 engine (#159 — Hammer of the Emperor
- * supplement §"MOUNTED COMBAT" / "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS",
- * hammer.md lines 4046-4260).
+ * Only War · Mounted Combat P2 engine (#159 — an Only War
+ * supplement: mounted combat, mount special actions and mount traits).
  *
  * Pure rules / math layer. Per Direction #7 the per-mount profile
  * (characteristics, full trait list, breed-specific advances) lives in
@@ -18,7 +17,7 @@
 /* -------------------------------------------------------------------- */
 
 /**
- * The mount traits Hammer of the Emperor prints (p137). A rider's cached
+ * The mount traits the supplement prints. A rider's cached
  * mount link records these ids so the sheet can badge them; none of them
  * modifies the rider's Weapon Skill, so no trait feeds an attack modifier.
  */
@@ -45,8 +44,7 @@ export interface MountedAction {
 }
 
 /**
- * RAW catalogue of mounted special actions (Hammer of the Emperor
- * §"MOUNT SPECIAL ACTIONS"). Charge, Trample, and Run Down are full
+ * RAW catalogue of mounted special actions. Charge, Trample, and Run Down are full
  * actions; Mounted Attack (the rider striking from the saddle) is a
  * half action so the rider can pair it with a movement or reaction.
  */

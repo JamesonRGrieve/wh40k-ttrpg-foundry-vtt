@@ -1,5 +1,5 @@
 /**
- * Rogue Trader starship action effects (RT Core pp.212–218, #186, #189).
+ * Rogue Trader starship action effects (RT core rules, #186, #189).
  *
  * A ship action's printed effect is authored as DATA on its `order` item — the
  * optional `shipEffect` block — never named in code. This module holds the
@@ -7,7 +7,7 @@
  *
  *   • the action's test, composed as a full derivation (the acting
  *     character's skill, plus the ship's Manoeuvrability or Detection for a
- *     Combined Skill Test, p.212, plus the printed difficulty and any
+ *     Combined Skill Test, plus the printed difficulty and any
  *     situational modifier), every term a provenance-bearing component;
  *   • the effect's magnitude, `base + step × ⌊extra degrees ÷ per⌋`, again as
  *     components so the card can show how it was reached;
@@ -56,7 +56,7 @@ export const SHIP_EFFECT_TARGETS = [...SHIP_EFFECT_POOL_TARGETS, ...SHIP_EFFECT_
 export const SHIP_EFFECT_EXPIRIES = ['turnEnd', 'turnStart'] as const;
 type ShipEffectExpiry = (typeof SHIP_EFFECT_EXPIRIES)[number];
 
-/** The ship stat a Combined Skill Test adds to the character's skill (RT Core p.212). */
+/** The ship stat a Combined Skill Test adds to the character's skill (RT core rules). */
 export const SHIP_TEST_STATS = ['manoeuvrability', 'detection'] as const;
 export type ShipTestStat = (typeof SHIP_TEST_STATS)[number];
 
@@ -113,7 +113,7 @@ export function effectTargets(effect: ShipEffectData): string[] {
 /**
  * Extra degrees of success beyond a bare success, the count RT effects scale
  * with ("every degree of success", "every two additional degrees"). RT counts
- * each full 10 points of margin (`gen1`, RT Core p.231), so a bare success is
+ * each full 10 points of margin (`gen1`, RT core rules), so a bare success is
  * 0; the `gen2` world-setting override uses the tens-digit difference. Always
  * 0 on a failure.
  */

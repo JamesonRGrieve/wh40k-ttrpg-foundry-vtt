@@ -1,11 +1,11 @@
 /**
- * Fear (X) trait + Fear test resolver (#65 — core.md §"Fear", p.286-287).
+ * Fear (X) trait + Fear test resolver (#65 — core rules, "Fear").
  *
  * Fear (X) on a creature triggers a Willpower test when an observer
  * comes face-to-face with it. The test target = WP − 10 × (X − 1),
  * where X is the Fear rating (1..4): every line prints Disturbing (1)
  * +0, Frightening (2) −10, Horrifying (3) −20 and Terrifying (4) −30.
- * Failure rolls on the Shock table (p.287).
+ * Failure rolls on the Shock table.
  *
  * Composes with `rules/pinning.ts` (#111) — several Shock outcomes
  * call for Pinning.

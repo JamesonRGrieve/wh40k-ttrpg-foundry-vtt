@@ -1,6 +1,6 @@
 /**
- * Crippled and destroyed starships — Rogue Trader (#187 — RT Core 1.4 errata,
- * Chapter VIII, "Crippled Ships" p.222, "Destroying Ships" p.221, Table 8-12).
+ * Crippled and destroyed starships — Rogue Trader (#187 — RT core rules with
+ * the 1.4 errata, "Crippled Ships", "Destroying Ships" and the Critical Hit chart).
  *
  * "When a ship reaches 0 Hull Integrity, it becomes Crippled. Apply a -10
  * penalty to its Manoeuvrability and Detection, and reduce its Speed to half.
@@ -11,8 +11,8 @@
  * the Critical Hit chart."
  *
  * 0 Hull Integrity never destroys a Rogue Trader ship: "Most of the Critical
- * Hit results will not destroy a ship outright" (p.221). A ship is destroyed
- * only by a Critical Hit result the chart marks as destroying it (Table 8-12's
+ * Hit results will not destroy a ship outright". A ship is destroyed
+ * only by a Critical Hit result the chart marks as destroying it (the chart's
  * Catastrophic Damage: hulked, or a plasma or warp drive explosion). Which
  * result does that is content — authored on the compendium table result as
  * `flags['wh40k-rpg'].destroysShip` and carried onto the ship's recorded
@@ -57,7 +57,7 @@ export type CrippledStat = 'manoeuvrability' | 'detection' | 'speed';
  * The signed change the Crippled rule makes to each stat, given the stat
  * values it applies to. Speed is halved; the book gives no rounding for it,
  * so it rounds up like the weapon Strength in the same paragraph, which also
- * keeps a Speed 1 ship moving (a ship may never stand still, p.214). All zero
+ * keeps a Speed 1 ship moving (a ship may never stand still). All zero
  * when the effects do not apply.
  */
 export function crippledStatChanges(ship: HullState, speed: number): Record<CrippledStat, number> {

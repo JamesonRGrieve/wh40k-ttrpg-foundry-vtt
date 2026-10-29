@@ -1,5 +1,5 @@
 /**
- * Only War · a Comrade's Orders (#152, #153; OW Core pp. 269–271).
+ * Only War · a Comrade's Orders (#152, #153; OW core rules).
  *
  * Pure rules over one PC ↔ Comrade pair. Which Orders a line prints, what each
  * costs the Comrade and what it grants are that line's printed content and live on
@@ -12,9 +12,9 @@
  *   - Cohesion: following the PC is only possible in Cohesion; out of it the
  *     Comrade moves only by the move Orders. An Order benefits the PC only while
  *     the Comrade is in Cohesion, unless the Order says otherwise.
- *   - A wounded Comrade "cannot Run" (p. 271); a pinned one "may not take Actions
+ *   - A wounded Comrade "cannot Run"; a pinned one "may not take Actions
  *     until they receive an order that allows them to recover"; a fleeing one flees
- *     "as quickly as possible" (p. 271).
+ *     "as quickly as possible".
  *   - A benefit that lasts "this Turn" (Ranged Volley: "+5 to all Ballistics Skill
  *     Tests this Turn") is recorded with the Round it was given in, and reaches
  *     tests through {@link comradeOrderTestComponents}, a Path B collector.

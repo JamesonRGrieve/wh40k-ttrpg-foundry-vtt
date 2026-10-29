@@ -1,6 +1,6 @@
 /**
  * Only War vehicle movement actions + High-Speed Chase tracker
- * (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+ * (#156 — core rules, "Vehicle Movement").
  *
  * Pure functions. The caller (sheet, chat card, prompt dialog, GM
  * macro) owns I/O, actor lookups, and Operate-test resolution; this
@@ -40,7 +40,7 @@ export interface OwVehicleAction {
 
 /**
  * Canonical catalogue of OW vehicle movement actions. Order matches
- * the rulebook §"VEHICLE MOVEMENT" presentation.
+ * the core rules' vehicle movement presentation.
  */
 export const OW_VEHICLE_ACTIONS: ReadonlyArray<OwVehicleAction> = [
     {

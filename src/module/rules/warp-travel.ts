@@ -1,11 +1,10 @@
 /**
  * Rogue Trader Warp Travel — 5-stage Navigation resolver + Perils of the Warp
- * lookup (core.md §"NAVIGATING THE WARP", p. 183-186; Table 6-3
- * "Perils of the Warp", p. 161).
+ * lookup (core rules, "Navigating the Warp" and "Perils of the Warp").
  *
  * The five RAW stages a Navigator works through for any warp passage are:
  *
- *   1. **Duration**           — GM-set base time of the voyage (Table 7-2).
+ *   1. **Duration**           — GM-set base time of the voyage.
  *   2. **Locate Astronomican**— Ordinary (+10) Awareness Test; degrees of
  *                               success / failure translate into a per-voyage
  *                               Navigation (Warp) modifier (±10 per DoS/DoF).
@@ -14,7 +13,7 @@
  *                               turbulence in advance (+20 on per-leg
  *                               Encounter rolls during Stage 4).
  *   4. **Steer the Vessel**   — Navigation (Warp) Skill Test using the modifier
- *                               from Stage 2 (Table 7-3 derives actual elapsed
+ *                               from Stage 2 (the duration table derives actual elapsed
  *                               duration from degrees of success/failure).
  *                               Failures rolling a 9 on either d10 throw the
  *                               vessel off-course.
@@ -25,7 +24,7 @@
  * `peril`). `resolveWarpJourney` composes the five outcomes into a single
  * journey summary that the chat card / GM dialog consume.
  *
- * Perils of the Warp (Table 6-3, p. 161) is a separate d100 lookup table
+ * Perils of the Warp is a separate d100 lookup table
  * triggered when a Gellar field breach / catastrophic stage failure occurs
  * during a journey. Its reproduced content (entry names + effect prose) lives
  * in DH2's roll-table packs as the "Perils of the Warp (Rogue
@@ -79,7 +78,7 @@ interface WarpStageResult {
     readonly note?: string;
 }
 
-/** RAW stage difficulty modifiers (Table 1-5 difficulty ladder). */
+/** RAW stage difficulty modifiers (the difficulty ladder). */
 export const STAGE_DIFFICULTY: Readonly<Record<Exclude<WarpStageId, 'duration'>, number>> = Object.freeze({
     'locate-astronomican': 10, // Ordinary (+10) Awareness
     'chart-course': 10, // Ordinary (+10) Navigation (Warp)
@@ -248,24 +247,24 @@ export interface SteerVesselInput {
 export interface SteerVesselResult extends WarpStageResult {
     /**
      * Multiplier applied to the GM-set base duration to determine elapsed
-     * subjective time (Table 7-3): 0.25 / 0.5 / 0.75 / 1 / 2 / 3 / 4.
+     * subjective time (the duration table): 0.25 / 0.5 / 0.75 / 1 / 2 / 3 / 4.
      */
     readonly durationMultiplier: number;
     /**
      * True when the Navigator failed AND rolled a 9 on either d10 (the
-     * "Off Course" rule, p. 185). The vessel translates into the wrong
+     * "Off Course" rule). The vessel translates into the wrong
      * system / region of space.
      */
     readonly offCourse: boolean;
 }
 
 /**
- * Compute the per-voyage duration multiplier from a stage-4 outcome (Table
- * 7-3): 3+ DoS = ×0.25, 2 DoS = ×0.5, 1 DoS = ×0.75, plain success = ×1,
+ * Compute the per-voyage duration multiplier from a stage-4 outcome (the
+ * duration table): 3+ DoS = ×0.25, 2 DoS = ×0.5, 1 DoS = ×0.75, plain success = ×1,
  * plain failure = ×2, 1 DoF = ×3, 2+ DoF = ×4.
  */
 export function durationMultiplierFor(degreesOfSuccess: number, degreesOfFailure: number): number {
-    if (degreesOfSuccess >= 4) return 0.25; // 3+ Degrees of Success per Table 7-3 = "1 + 3 extra" = 4 total
+    if (degreesOfSuccess >= 4) return 0.25; // 3+ Degrees of Success per the duration table = "1 + 3 extra" = 4 total
     if (degreesOfSuccess === 3) return 0.5;
     if (degreesOfSuccess === 2) return 0.75;
     if (degreesOfSuccess === 1) return 1;
@@ -354,7 +353,7 @@ export function resolveLeaveWarp(input: LeaveWarpInput): LeaveWarpResult {
 }
 
 // ---------------------------------------------------------------------------
-// Perils of the Warp (Table 6-3, p. 161)
+// Perils of the Warp
 //
 // The reproduced d100 content table (entry names + rulebook effect prose) is no
 // longer a literal here — per Direction #7 it lives in DH2's roll-table packs

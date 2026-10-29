@@ -1,7 +1,6 @@
 /**
- * Rogue Trader · Colony engine — *Stars of Inequity* "Colonial Structure"
- * (stars/stars.md §"COLONIAL STRUCTURE" / Table 3-3 Colony Growth / Table 3-4
- * Colonial Leadership). Audit issue #195.
+ * Rogue Trader · Colony engine — a Rogue Trader supplement's "Colonial
+ * Structure" rules (Colony Growth and Colonial Leadership). Audit issue #195.
  *
  * This module is the ENGINE only. Per Direction #7 the content data
  * (concrete Colony Types, Infrastructure Upgrades, Representative
@@ -12,9 +11,9 @@
  *     stats: Complacency, Order, Productivity, Piety) and their
  *     {min, max, default} clamp configuration.
  *   - The Size → "highest tier reached" name table (Outpost / Settlement /
- *     … / Hive — RT-RAW p.103) used purely for label resolution.
+ *     … / Hive — RT RAW) used purely for label resolution.
  *   - The 90-day growth-tick resolver: roll 1d10 + modifiers vs.
- *     Table 3-3, with PF "burn" bonuses, Resource-harvest growth
+ *     the Colony Growth table, with PF "burn" bonuses, Resource-harvest growth
  *     bonuses, and Agricultural / Ecclesiastical attribute overrides
  *     left to the caller as `growthModifiers` and `softeners` inputs.
  *   - The Endeavour-completion integration: each completed Endeavour
@@ -22,7 +21,7 @@
  *     deltas via a pure mapping (Industry → Productivity, Creed →
  *     Piety, etc.). Per-Endeavour content (themes, Objective AP values)
  *     stays in compendiums; this is the arithmetic only.
- *   - "Threshold effects" — RT-RAW p.103: when a Characteristic exceeds
+ *   - "Threshold effects" — RT RAW: when a Characteristic exceeds
  *     Size, the Colony earns the matching positive trait (Placated /
  *     Orderly / Productive / Pious) and the cascading bonuses. When a
  *     Characteristic hits 0, the cascading penalty fires.
@@ -94,11 +93,11 @@ export function clampCharacteristic(key: ColonyCharacteristicKey, value: number)
 }
 
 /* -------------------------------------------------------------------- */
-/*  Size tier labels (Table 3-2)                                        */
+/*  Size tier labels                                                    */
 /* -------------------------------------------------------------------- */
 
 /**
- * Stars-of-Inequity p.103 "Colony Size" tier names. Size 0 = Abandoned
+ * RT RAW "Colony Size" tier names. Size 0 = Abandoned
  * (the Colony has collapsed). Index = Size value.
  */
 export type ColonyTierKey =
@@ -143,7 +142,7 @@ export function tierForSize(size: number): ColonyTierKey {
 /* -------------------------------------------------------------------- */
 
 /**
- * Stars-of-Inequity p.103-104 cascading effects. The resolver returns
+ * RT RAW cascading effects. The resolver returns
  * these as a flat list of effects keyed by the affected stat + sign;
  * the consumer applies them to the Colony state (or surfaces them on
  * the chat card if the Colony state is read-only).
@@ -271,11 +270,11 @@ export function applyPfValueAdjustment(base: number, adj: PfValueAdjustment): nu
 }
 
 /* -------------------------------------------------------------------- */
-/*  90-day Colony Growth tick (Table 3-3)                               */
+/*  90-day Colony Growth tick                                           */
 /* -------------------------------------------------------------------- */
 
 /**
- * Stars-of-Inequity Table 3-3 — 1d10 + modifiers:
+ * Colony Growth — 1d10 + modifiers:
  *   1–2 → Size −1 (and 1d5−3 minimum-1 to a random non-Size stat)
  *   3–7 → no change
  *   ≥8  → Size +1 (Explorers may invest in Infrastructure Upgrades)
@@ -408,7 +407,7 @@ export function resolveColonyGrowth(input: ColonyGrowthInput): ColonyGrowthResul
 
         if (outcome === 'decrease') {
             // Pick a random non-Size stat for the 1d5−3 (min 1) penalty.
-            // RAW (RT Stars of Inequity, colony growth): a random non-Size
+            // RAW (RT colony growth): a random non-Size
             // Characteristic drops by 1d5−3, floored at 1. We read this as
             // "the stat decreases by an amount that is at minimum 1 (and
             // capped by the d5−3 value when that exceeds 1)" — i.e.
@@ -459,7 +458,7 @@ export function resolveColonyGrowth(input: ColonyGrowthInput): ColonyGrowthResul
 
 /**
  * Endeavour Objective Themes — RT-RAW Objective Themes (Exploration,
- * Trade, Military, Criminal, Creed) plus the Stars-of-Inequity Colonial
+ * Trade, Military, Criminal, Creed) plus the supplement's Colonial
  * Themes (Industry, Research, Agriculture). Caller passes the theme
  * of each completed Endeavour Objective along with its AP total; the
  * engine converts AP into Colony deltas.
@@ -486,7 +485,7 @@ export const AP_PER_CHARACTERISTIC_POINT = 100;
  * Notes vs. RAW:
  *  - Trade / Exploration → Complacency (improved standard of living).
  *  - Military → Order (Garrisons enforce stability).
- *  - Criminal → Productivity (smuggling moves goods, RAW p.110 Complacency
+ *  - Criminal → Productivity (smuggling moves goods, RAW Complacency
  *    softener handled separately as a Representative trait).
  *  - Creed → Piety.
  *  - Industry → Productivity.
@@ -560,11 +559,11 @@ export function applyEndeavours(state: ColonyState, endeavours: ReadonlyArray<En
 }
 
 /* -------------------------------------------------------------------- */
-/*  Leadership (Table 3-4)                                              */
+/*  Leadership                                                          */
 /* -------------------------------------------------------------------- */
 
 /**
- * Table 3-4 — Highest of Leader's Int / Per / Fel **bonus** (characteristic
+ * Colonial Leadership — Highest of Leader's Int / Per / Fel **bonus** (characteristic
  * bonus = first digit of the 1..99 characteristic, so 35 Int → 3) →
  * Colony PF Value modifier.
  *

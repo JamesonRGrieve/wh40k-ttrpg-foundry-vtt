@@ -1,5 +1,5 @@
 /**
- * Medicae Mechadendrite — errata p. 183.
+ * Medicae Mechadendrite — errata.
  *
  * The original core text described the mechadendrite as a passive
  * augmetic. The official errata replaces the entry and adds three

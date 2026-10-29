@@ -1,5 +1,5 @@
 /**
- * Sanctic Purity (#131 — DH2 Enemies Beyond).
+ * Sanctic Purity (#131 — a DH2 supplement).
  *
  * When the bearer triggers Psychic Phenomena manifesting a Sanctic
  * Daemonology power, they may spend a Fate point to negate the result

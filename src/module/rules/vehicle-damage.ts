@@ -4,23 +4,22 @@
  * Integrity, and what Critical damage it deals past it. Every line prints the
  * same model:
  *
- *   - DH2 Core pp. 253–255 "Attacking Vehicles": Front / Side / Rear facings are
- *     90° arcs measured from the vehicle's orientation; Table 7-29 Vehicle Hit
- *     Locations on the reversed attack roll (a Turret hit uses Front armour; a
+ *   - DH2 core rules, "Attacking Vehicles": Front / Side / Rear facings are
+ *     90° arcs measured from the vehicle's orientation; the Vehicle Hit
+ *     Locations table on the reversed attack roll (a Turret hit uses Front armour; a
  *     Weapon or Turret hit on a vehicle without one strikes the Hull); extra hits
  *     on the same vehicle roll a fresh d100 on the table; damage less the
  *     facing's AP (after Penetration) comes off integrity, and damage past it is
  *     Critical damage read cumulatively on the struck location's Vehicle
- *     Critical Effects table (p. 255). Righteous Fury instead rolls 1d5 on that
+ *     Critical Effects table. Righteous Fury instead rolls 1d5 on that
  *     table; it is not Critical damage and does not accumulate.
- *   - OW Core p. 276 onward: Table 8-24 (the same bands) and four location charts;
+ *   - OW core rules: a hit-location table (the same bands) and four location charts;
  *     Righteous Fury must actually damage the vehicle.
- *   - RT Into the Storm p. 178 and DW Rites of Battle pp. 169–170: one Vehicle
- *     Critical Hit Chart and no hit-location table.
+ *   - RT and DW supplements: one Vehicle Critical Hit Chart and no hit-location
+ *     table.
  *
  * Reinforced Armour / Reinforced Hull halve Critical damage, rounding up, and do
- * not touch Righteous Fury (DH2 Core p. 189, OW Core p. 214, RT Into the Storm
- * p. 178, DW Rites of Battle p. 172). That is read from the vehicle's aggregated
+ * not touch Righteous Fury (DH2 and OW core rules; RT and DW supplements). That is read from the vehicle's aggregated
  * trait effects (`critDamageMultiplier` / `critExcludesRighteousFury`), never by
  * name.
  *
@@ -30,7 +29,7 @@
 
 import type { I18nKey } from '../types/i18n-keys.d.ts';
 
-/** Where on a vehicle a hit lands (Table 7-29). A single-chart line resolves every hit to the Hull. */
+/** Where on a vehicle a hit lands (the Vehicle Hit Locations table). A single-chart line resolves every hit to the Hull. */
 export const VEHICLE_LOCATION_IDS = ['motive', 'hull', 'weapon', 'turret'] as const;
 export type VehicleLocationId = (typeof VEHICLE_LOCATION_IDS)[number];
 
@@ -55,7 +54,7 @@ export interface VehicleCombatRules {
     readonly hitLocations: readonly VehicleHitLocationBand[] | null;
     /** The die Righteous Fury rolls on the vehicle chart (1d5 on every line). */
     readonly righteousFuryDie: string;
-    /** Righteous Fury against a vehicle needs the hit to damage it (OW Core p. 276, DW Rites of Battle p. 169). */
+    /** Righteous Fury against a vehicle needs the hit to damage it (OW core rules, a DW supplement). */
     readonly righteousFuryNeedsDamage: boolean;
 }
 
@@ -171,7 +170,7 @@ export function vehicleHitLocation(
     return missing ? { location: 'hull', tableRoll, redirectedFrom: rolled } : { location: rolled, tableRoll, redirectedFrom: null };
 }
 
-/** The armour a hit meets: a Turret hit always meets Front armour (DH2 Core p. 254). */
+/** The armour a hit meets: a Turret hit always meets Front armour (DH2 core rules). */
 export function struckArmourFacing(facing: VehicleFacing, location: VehicleLocationId): VehicleArmourFacing {
     return location === 'turret' ? 'front' : armourFacingOf(facing);
 }
@@ -273,11 +272,11 @@ export const VEHICLE_TRAIT_BUCKET = 'vehicle-traits';
 
 /**
  * What must be true of the vehicle for a trait's to-hit penalty to apply. `''`
- * always; `moving` while it moves (Holofield: "a moving Darkstar", RT Battlefleet
- * Koronus p. 143); `mobile` while it can move under its own power (Feral Machine
- * Spirit: "as long as it is mobile", p. 144); `airborne` while it flies (Flyer:
- * "an airborne flyer", DH2 Enemies Without p. 53); `deploying` while it is in
- * flight on an Orbital Deployment (OW Core p. 213: −30 "whilst it is in flight").
+ * always; `moving` while it moves (Holofield: "a moving Darkstar", an RT
+ * supplement); `mobile` while it can move under its own power (Feral Machine
+ * Spirit: "as long as it is mobile"); `airborne` while it flies (Flyer:
+ * "an airborne flyer", a DH2 supplement); `deploying` while it is in
+ * flight on an Orbital Deployment (OW core rules: −30 "whilst it is in flight").
  */
 export type IncomingCondition = '' | 'moving' | 'mobile' | 'airborne' | 'deploying';
 
@@ -324,7 +323,7 @@ function strongest(entries: readonly IncomingToHitEntry[]): IncomingVehicleModif
  * strongest whose condition holds — on shooting, Holofield, Flyer, Feral Machine
  * Spirit or an Orbital Deployment in flight; on melee, Skimmer. They do not stack:
  * Feral Machine Spirit "does not stack with the penalty from Dreadclaw Assault"
- * (RT Battlefleet Koronus p. 144), the one place a book says.
+ * (an RT supplement), the one place a book says.
  */
 export function incomingVehicleModifiers(entries: readonly IncomingToHitEntry[], isMelee: boolean, state: VehicleMotionState): IncomingVehicleModifier[] {
     return strongest(entries.filter((entry) => entry.attack === (isMelee ? 'melee' : 'ranged') && conditionHolds(entry.condition, state)));
@@ -350,8 +349,8 @@ export interface CrewTargetingInput {
 
 /**
  * Whether an attack can single out someone aboard. Only an open vehicle exposes
- * its crew, and then only to a Called Shot (DH2 Core p. 187 Open-Topped, OW Core
- * p. 212); a Bike's rider is open to any melee attack (DH2 Core p. 187). A sealed
+ * its crew, and then only to a Called Shot (DH2 core rules Open-Topped, OW core
+ * rules); a Bike's rider is open to any melee attack (DH2 core rules). A sealed
  * vehicle, or one whose traits say nothing of exposure, shelters them.
  */
 export function crewTargeting(input: CrewTargetingInput): CrewTargeting {

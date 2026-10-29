@@ -1,7 +1,6 @@
 /**
- * Deathwatch Renown RAW resolver (#164 — core.md §"RENOWN", p. 5880,
- * Table 5-2; per-mission awards in rites.md Table 5-1 and §"LOSING
- * RENOWN").
+ * Deathwatch Renown RAW resolver (#164 — core rules, "Renown";
+ * per-mission awards and losing Renown in a Deathwatch supplement).
  *
  * Pure functions over a Battle-Brother's Renown score. The caller
  * (character DataModel, armoury requisition prompt, chat card) owns
@@ -9,7 +8,7 @@
  * Renown-arithmetic clamps.
  *
  * Canonical rules referenced here:
- *   - TABLE 5-2: Renown rank thresholds (Initiated … Hero).
+ *   - Renown rank thresholds (Initiated … Hero).
  *   - "Renown Requirements": Armoury items list a minimum Renown rank;
  *     the requisitioning Battle-Brother must equal or exceed that rank.
  *   - "Losing Renown": Renown can be lost, but never below 0 (RAW does
@@ -39,7 +38,7 @@ export interface RenownRankRange {
 }
 
 /**
- * TABLE 5-2 — Renown Rank thresholds. Ordered ascending; the resolver
+ * Renown Rank thresholds. Ordered ascending; the resolver
  * picks the *highest* rank whose `min` ≤ current Renown. Hero has no
  * upper bound (`Infinity`); per-mission awards can carry Marines past
  * 100 without breaking the lookup.

@@ -135,7 +135,7 @@ function parseRangeText(s: string, pr: number, wb: number): number | null {
 export interface PsychicFormulaValues {
     psyRating: number;
     willpowerBonus: number;
-    /** The caster's own Toughness Bonus (Neural Storm, BC Tome of Fate). */
+    /** The caster's own Toughness Bonus (Neural Storm, a BC supplement). */
     toughnessBonus: number;
 }
 

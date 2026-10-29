@@ -1,6 +1,6 @@
 /**
- * Deathwatch Requisition RAW resolver (#165 — core.md §"REQUISITION",
- * p. 5845, Tables 5-1 and 5-3).
+ * Deathwatch Requisition RAW resolver (#165 — core rules,
+ * "Requisition").
  *
  * Pure functions over a Battle-Brother's Requisition-Point (RP) budget
  * and the armoury catalogue. The caller (character DataModel, armoury
@@ -8,11 +8,11 @@
  * gate, RP arithmetic, and pooled-requisition validation.
  *
  * Canonical rules referenced here:
- *   - TABLE 5-1: per-Mission RP budget per Battle-Brother (mission
+ *   - Per-Mission RP budget per Battle-Brother (mission
  *     rating → RP). The RP-per-rating mapping is *content* (Direction
  *     #7), so this module accepts it as a caller-supplied
  *     {@link RequisitionPolicy} instead of hardcoding the table.
- *   - TABLE 5-3: Craftsmanship cost multipliers (Poor ×0.5, Common ×1,
+ *   - Craftsmanship cost multipliers (Poor ×0.5, Common ×1,
  *     Good ×1.5, Best ×2). These are RAW-fixed multipliers, not
  *     compendium content, so they live here.
  *   - "Renown Requirements": delegated to {@link canRequisition} in
@@ -29,7 +29,7 @@ import { canRequisition, type RenownRank } from './dw-renown.ts';
 export type Craftsmanship = 'poor' | 'common' | 'good' | 'best';
 
 /**
- * TABLE 5-3 — Craftsmanship cost multipliers. Applied to an item's base
+ * Craftsmanship cost multipliers. Applied to an item's base
  * RP cost to produce the actual cost. Best-craftsmanship gear costs
  * twice as much as Common; Poor-craftsmanship gear costs half as much.
  */
@@ -49,7 +49,7 @@ export type MissionRating = 'standard' | 'extended' | 'priority' | 'critical';
 
 /**
  * Mission-rating → RP-per-Battle-Brother policy. Sourced from compendium
- * content (TABLE 5-1) so this module remains content-agnostic per
+ * content (the per-Mission RP table) so this module remains content-agnostic per
  * Direction #7.
  */
 export interface RequisitionPolicy {

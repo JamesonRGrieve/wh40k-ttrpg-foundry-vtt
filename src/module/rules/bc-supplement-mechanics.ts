@@ -1,7 +1,7 @@
 /**
  * Black Crusade Supplement Mechanics resolver (#181 — umbrella for the
- * P2 supplement mechanics shared across Tome of Blood, Tome of Decay,
- * Tome of Excess, and Tome of Fate).
+ * P2 supplement mechanics shared across the four Black Crusade god
+ * supplements).
  *
  * Pure-rules engine. Each mechanic is a small, named function with no
  * DataModel coupling, no actor lookups, no Foundry imports. The caller
@@ -9,14 +9,14 @@
  * state persistence; this module owns only the per-mechanic arithmetic.
  *
  * Canonical rules referenced here:
- *   - Irradiated(X) weapon quality (decay.md :1007): on a successful
+ *   - Irradiated(X) weapon quality: on a successful
  *     hit, the target suffers `X` damage per tick for `X` further ticks
  *     (typically rounds) as radiation eats through armour.
- *   - Overcharge weapon quality (excess.md :945): damage of a successful
+ *   - Overcharge weapon quality: damage of a successful
  *     hit is doubled, but if the firer's Chaos Alignment is Untested or
  *     worse the weapon jams (Overcharge is the canonical "double-edged
  *     sword" of slaaneshi pleasure-tech).
- *   - Daemon Engine(X) trait (decay.md :1379-1391): rage accumulates
+ *   - Daemon Engine(X) trait: rage accumulates
  *     while the engine has not received damage, capped by the trait's
  *     rating. Bonus = rating + min(turnsSinceLastDamage, rating).
  *
@@ -105,7 +105,7 @@ export interface OverchargeOutcome {
 export interface OverchargedShotArgs {
     /**
      * Whether the firer's Chaos Alignment is at "Untested" (or worse)
-     * status. Per excess.md :945, Untested+ firers cannot safely contain
+     * status. Per RAW, Untested+ firers cannot safely contain
      * the slaaneshi feedback and the weapon jams.
      */
     untested: boolean;

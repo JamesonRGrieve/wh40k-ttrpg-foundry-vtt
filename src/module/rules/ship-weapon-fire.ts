@@ -1,5 +1,5 @@
 /**
- * Rogue Trader ship weapon fire (#184 — RT Core 1.4 errata, Chapter VIII,
+ * Rogue Trader ship weapon fire (#184 — RT core rules with the 1.4 errata,
  * "Starship Weapons" and "Damage and Defences").
  *
  * The gunner's Ballistic Skill Test, then the shot resolved against the
@@ -251,14 +251,14 @@ export function damagePastArmour(weaponClass: ShipWeaponClass, damage: readonly 
 /* -------------------------------------------- */
 
 /*
- * RT Core 1.4 errata, "Starship Weapons" (p.221): "If a ship fires multiple
+ * RT core rules with the 1.4 errata, "Starship Weapons": "If a ship fires multiple
  * macrobatteries at a single target, before rolling to hit … the character
  * directing the firing has the option of adding the totals together and
  * applying the new, larger total to the target ship once … he can only
  * inflict a maximum of one Critical Hit." Each battery still makes its own
  * Ballistic Skill Test ("Even if all of the macrobatteries cause Critical Hits
  * on their Ballistic Skill Tests, only one Critical Hit is applied"), and
- * "Damage and Defences" (p.222): "the attacker chooses which hits are
+ * "Damage and Defences": "the attacker chooses which hits are
  * discarded by the void shields." Lances are never combined.
  */
 

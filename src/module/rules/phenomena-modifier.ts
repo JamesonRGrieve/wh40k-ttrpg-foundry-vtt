@@ -3,14 +3,14 @@
  *
  * Two distinct triggers can modify the Phenomena roll path:
  *
- *  1. **Per-scene Warp weakness** (beyond.md L4605) — GM-set per scene.
+ *  1. **Per-scene Warp weakness** — GM-set per scene.
  *     Riders:
  *       - +10 to the Focus Power test (the warp is easier to channel).
  *       - +1 step on the Phenomena ladder (results are more severe).
  *       - Phenomena auto-trigger on a 9 or any odd result, in addition
  *         to the usual doubles / 9-of-a-kind rules.
  *
- *  2. **Per-actor Tainted Psyker** (within.md p. 58, formerly tracked as
+ *  2. **Per-actor Tainted Psyker** (formerly tracked as
  *     #97 — subsumed into this issue) — applies when the psyker has
  *     gained Corruption Points from a voluntary push.
  *     Rider:

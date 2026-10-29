@@ -1,5 +1,5 @@
 /**
- * Daemon summoning ritual (DH2 Enemies Beyond p. 59).
+ * Daemon summoning ritual (a DH2 supplement).
  *
  *   1. The ritual itself: a Hellish (−60) Forbidden Lore (Daemonology) test,
  *      +30 when the Daemon's True Name is known, plus GM factors (components,

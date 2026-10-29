@@ -1,5 +1,5 @@
 /**
- * Daemonhost creation + Binding Strength tables (beyond.md p. 66).
+ * Daemonhost creation + Binding Strength tables (a DH2 supplement).
  *
  * A Daemonhost is bound by the same `BindingStrength` tiers used for
  * daemon weapons (see `daemon-weapon.ts`). Each tier sets the host's

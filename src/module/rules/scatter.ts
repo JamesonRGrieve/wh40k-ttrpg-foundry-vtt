@@ -1,5 +1,5 @@
 /**
- * Scatter diagram resolver (#112 — core.md L10532-10548).
+ * Scatter diagram resolver (#112 — core rules).
  *
  * Failed ranged / thrown attacks scatter per the canonical diagram:
  * direction = 1d10 (clock-face, with 12 implied; we use 1..10 per RAW),
@@ -24,7 +24,7 @@ export interface ScatterVector {
     metres: number;
 }
 
-/** Dice for how far a scattered shot travels (DH2 p.230: 1d5 metres; Blast uses the same roll). */
+/** Dice for how far a scattered shot travels (DH2: 1d5 metres; Blast uses the same roll). */
 export const SCATTER_DISTANCE_FORMULA = '1d5';
 
 /**

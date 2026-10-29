@@ -1,6 +1,6 @@
 /**
- * Boarding Actions resolver — Rogue Trader (#188 — RT Core p.215
- * §Ramming and Boarding Actions; turret bonus p.220).
+ * Boarding Actions resolver — Rogue Trader (#188 — RT core rules,
+ * Ramming and Boarding Actions and the turret bonus).
  *
  * RAW shape:
  *   1. **Lock on.** A ship that ends its Manoeuvre Action within 1 VU of its
@@ -13,12 +13,11 @@
  *          points of difference;
  *        • the ship with the higher remaining Hull Integrity gains +10 per
  *          full 10 points of difference;
- *        • each point of a ship's Turret Rating adds +10 to its side (p.220);
+ *        • each point of a ship's Turret Rating adds +10 to its side;
  *        • a ship that tried and failed to break free this turn suffers −20.
  *   3. **Damage.** For each degree the winner wins by, the winner inflicts ONE
  *      of: 1d5 Crew Population and 1d5 Morale damage, or 1 point of Hull
- *      Integrity damage (which also costs Crew Population and Morale as normal,
- *      p.221).
+ *      Integrity damage (which also costs Crew Population and Morale as normal).
  *   4. **Morale check.** The loser rolls d100 against its current Morale; an
  *      equal or lower roll fights on, a higher roll routs and surrenders.
  *
@@ -60,7 +59,7 @@ const BOARDING_DIFFERENCE_STEP = 10;
 /** Command bonus per full difference step. */
 const BOARDING_BONUS_PER_STEP = 10;
 
-/** Command bonus per point of the ship's Turret Rating (p.220). */
+/** Command bonus per point of the ship's Turret Rating. */
 export const BOARDING_TURRET_BONUS_PER_POINT = 10;
 
 /** Hull Integrity damage per degree spent on setting charges. */

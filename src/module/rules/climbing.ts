@@ -1,5 +1,5 @@
 /**
- * Climbing surface modifiers (DH2e errata p. 113 — "Climbing Sheer Surfaces").
+ * Climbing surface modifiers (DH2e errata — "Climbing Sheer Surfaces").
  *
  * The errata clarifies that climbing a sheer surface (sheer cliffs, icy
  * crevasses, smooth building walls, hive buttresses) imposes a Hard (-20)
@@ -15,7 +15,7 @@
 
 export type ClimbingSurface = 'standard' | 'sheer' | 'easy';
 
-/** Hard (-20) penalty per errata L113. Exported so call-sites can pin against the constant. */
+/** Hard (-20) penalty per the errata. Exported so call-sites can pin against the constant. */
 export const SHEER_SURFACE_CLIMB_MODIFIER = -20;
 
 /** Standard climbable terrain — the default state on the dialog. */

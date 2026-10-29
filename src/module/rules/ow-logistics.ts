@@ -11,7 +11,7 @@
  * (`OW_LOGISTICS_FRONT_CONDITIONS`, `OW_ACQUISITION_LADDER`); this module holds
  * only the composition: it names no items, regiments or talents.
  *
- * Two Table 6-2 cells carry no number. "Automatic" resolves the test as passed
+ * Two Logistics-table cells carry no number. "Automatic" resolves the test as passed
  * with no roll — the same reading every other line's ladder gives the word
  * (`acquisition-ladder.ts`). "GM's Discretion" (Unique, Company or Less) cannot
  * be rolled at all: the GM rules on it.
@@ -27,14 +27,14 @@ import { type AvailabilityKey, availabilityCell, type CraftsmanshipKey } from '.
 /*  Base rating + flat bonuses                                          */
 /* -------------------------------------------------------------------- */
 
-/** Default starting Logistics Rating for a freshly-founded squad (OW core p. 161). */
+/** Default starting Logistics Rating for a freshly-founded squad (OW core rules). */
 export const OW_DEFAULT_LOGISTICS_RATING = 10;
 
-/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW core p. 161, talent p. 149). */
+/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW core rules). */
 export const OW_MUNITORUM_INFLUENCE_BONUS = 5;
 
 /* -------------------------------------------------------------------- */
-/*  Table 6-2 axes                                                      */
+/*  Logistics-table axes                                                */
 /* -------------------------------------------------------------------- */
 
 export type Craftsmanship = CraftsmanshipKey;
@@ -68,8 +68,8 @@ export const WAR_CONDITION_KEYS = [
 ] as const satisfies readonly WarCondition[];
 
 /**
- * The battlefront the squad is "currently operating in" (p. 162): the four
- * Table 6-2 conditions that are standing campaign state rather than
+ * The battlefront the squad is "currently operating in": the four
+ * Logistics-table conditions that are standing campaign state rather than
  * per-request input. Persisted on the OW actor so every Logistics path — the
  * test dialog and the armoury requisition — prices against the same front.
  */
@@ -85,7 +85,7 @@ export interface LogisticsFront {
  * default: Company or Less is the smallest deployment (and the line ladder's
  * own column); 3–6 Months is the time row printed Challenging (+0); War
  * Conditions has no +0 row, so Violent Impasse — the contested front of the
- * p. 163 worked example — is used (#496).
+ * printed worked example — is used (#496).
  */
 export const OW_DEFAULT_FRONT: LogisticsFront = {
     troopCount: 'company',
@@ -179,7 +179,7 @@ export interface LogisticsContext extends LogisticsFront {
 
 /**
  * Per-component values summed into the final target. `availability` is the
- * Table 6-2 cell for the item's Availability in the deployed troop column.
+ * Logistics-table cell for the item's Availability in the deployed troop column.
  */
 export type LogisticsBreakdown = {
     readonly rating: number;

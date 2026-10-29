@@ -1,6 +1,6 @@
 /**
- * Target-size to-hit modifier — the single source of truth for DH2 Table 4-6
- * (p.138), shared across the FFG-family d100 lines.
+ * Target-size to-hit modifier — the single source of truth for DH2's size
+ * table, shared across the FFG-family d100 lines.
  *
  * The size→to-hit rule is `(size − 4) × 10`: every size step away from Average
  * (4) shifts the attack test by ±10, from Minuscule (1 → −30) to Titanic

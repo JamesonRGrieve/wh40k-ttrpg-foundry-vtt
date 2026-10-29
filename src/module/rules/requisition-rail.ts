@@ -107,7 +107,7 @@ export interface RequestedItem {
     bound?: boolean | undefined;
     /**
      * The line's bonus for taking a weapon modification as parts to fit
-     * personally (DH2 core p. 162, #136). Set by the caller only for a weapon
+     * personally (DH2 core rules, #136). Set by the caller only for a weapon
      * modification on a line that prints the bonus — OW prints none, so the
      * Logistics path never sees it.
      */
@@ -127,7 +127,7 @@ export interface RequisitionGate {
     automatic?: boolean | undefined;
     /** Modifier provenance, for the chat card (never a lumped total). */
     breakdown?: RequisitionModifier[] | undefined;
-    /** OW: the Logistics Test the target came from, so the card prints its Table 6-2 / 6-6 rows. */
+    /** OW: the Logistics Test the target came from, so the card prints its Logistics and craftsmanship table rows. */
     logistics?: { context: LogisticsContext; breakdown: LogisticsBreakdown } | undefined;
     /** What a failed test costs the rating, as the buyer's line prints it; `null` when it prints none. */
     failureLoss?: AcquisitionFailureLoss | null | undefined;
@@ -198,11 +198,11 @@ export function evaluateRequisition(
 }
 
 /**
- * OW: the armoury request IS a Logistics Test (core p. 162), so it is priced by
+ * OW: the armoury request IS a Logistics Test (core rules), so it is priced by
  * the same `computeLogisticsTarget` as the Logistics Test dialog — the item's
- * Availability in the deployed troop column of Table 6-2, the squad's persisted
+ * Availability in the deployed troop column of the Logistics table, the squad's persisted
  * front conditions, Munitorum Influence, the GM's situational modifier, and
- * Table 6-6 craftsmanship (#496). The armoury cannot know whether the item is
+ * the craftsmanship table (#496). The armoury cannot know whether the item is
  * in another deployed regiment's standard kit, so that +20 is not applied here.
  */
 function evaluateLogistics(requester: RequesterState, item: RequestedItem, ladder: AcquisitionLadder | null): RequisitionGate {

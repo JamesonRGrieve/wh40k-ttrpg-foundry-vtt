@@ -5,11 +5,10 @@
  * The GM sets a scene's environment (the `flags.wh40k-rpg.environment` scene
  * flag, edited in the Scene Environment window); every effect below then applies
  * automatically to the actors standing in that scene, each against its OWN game
- * line. Only what a line's core rulebook prints is modelled, and a line that prints
+ * line. Only what a line's core rules print is modelled, and a line that prints
  * nothing for an effect gets nothing — never another line's rule:
  *
- * - **Low / high gravity** (DH1 Core p. 213, DH2 Core p. 250, RT Core p. 269,
- *   DW Core p. 210, BC Core p. 43, OW Core p. 38). Every line: Agility Bonus ±2
+ * - **Low / high gravity** (every line's core rules). Every line: Agility Bonus ±2
  *   for movement (high: to a minimum of 1), Strength Bonus + Toughness Bonus ±4
  *   for carrying, lifting and pushing (high: to a minimum of 0), Strength Bonus ±2
  *   for throwing (high: to a minimum of 0), and jumping / leaping distances ×2 or
@@ -22,7 +21,7 @@
  *   the thrower's Strength Bonus via {@link environmentThrowStrengthBonus}.
  *   A printed (manual) NPC movement line takes the same Agility Bonus shift at
  *   data prep via {@link environmentPrintedMovementShift}, never into its source.
- * - **Zero gravity** (same pages; DH1 Core p. 212, Table 7-30: Treacherous
+ * - **Zero gravity** (same rules; DH1 prints it under Treacherous
  *   Environments). Difficult terrain for movement — movement halved — and a Charge
  *   or Run needs a Hard (−20) Agility test or the character falls Prone. DH2, RT,
  *   DW, BC and OW add that a Move must start beside a surface to push off from; DH1
@@ -30,11 +29,9 @@
  *   push-off rule. "Difficult terrain" here is "for determining movement" (DH2, BC,
  *   OW) / "meaning movement is halved" (RT, DW), so the separate WS / Dodge penalty
  *   for STANDING in difficult terrain is deliberately not chained in.
- * - **Harsh weather or unnatural conditions** (DH1 Core p. 199, DH2 Core p. 231,
- *   RT Core p. 249, DW Core p. 249, BC Core p. 246, OW Core p. 255). Every line:
+ * - **Harsh weather or unnatural conditions** (every line's core rules). Every line:
  *   Weapon Skill and Ballistic Skill tests made to attack are Hard (−20).
- * - **Vacuum** (DH1 Core p. 210, DH2 Core p. 243, RT Core p. 261, DW Core p. 261,
- *   BC Core p. 256, OW Core p. 268). Composes with the suffocation resolver in
+ * - **Vacuum** (every line's core rules). Composes with the suffocation resolver in
  *   `hazards.ts` (#118). The lines print two shapes — see {@link VacuumRule}.
  *
  * Imperium Maledictum runs a different engine and is not modelled (`null`), the
@@ -263,7 +260,7 @@ const ZERO_GRAVITY_MANOEUVRE = -20;
 
 const ZERO_GRAVITY: ZeroGravityRule = { halvesMovement: true, manoeuvreTestModifier: ZERO_GRAVITY_MANOEUVRE, pushOffRequired: true };
 
-/** DH1 prints zero gravity only as a treacherous environment (Table 7-30). */
+/** DH1 prints zero gravity only as a treacherous environment. */
 const DH1_ZERO_GRAVITY: ZeroGravityRule = { ...ZERO_GRAVITY, pushOffRequired: false };
 
 /** Harsh weather makes WS / BS attack tests Hard (−20) in every line. */

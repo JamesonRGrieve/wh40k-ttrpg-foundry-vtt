@@ -1,6 +1,6 @@
 /**
- * Only War "Comrades in Combat" (#152; OW Core pp. 269–271, "Losing and
- * Replacing Comrades" p. 110).
+ * Only War "Comrades in Combat" (#152; OW core rules, including "Losing and
+ * Replacing Comrades").
  *
  * Pure functions over one PC ↔ Comrade pair. The caller (the character sheet,
  * the roll pipeline, the damage path, a chat card) owns I/O, actor lookups and
@@ -28,13 +28,13 @@
 
 import type { CombatRoundStamp } from './counter-attack.ts';
 
-/** A line's printed Comrade rules (OW Core pp. 269–271), on its game-system config. */
+/** A line's printed Comrade rules (OW core rules), on its game-system config. */
 export interface ComradeRules {
-    /** Cohesion radius in metres ("within 5 metres", p. 269). */
+    /** Cohesion radius in metres ("within 5 metres"). */
     readonly cohesionRangeM: number;
-    /** Half Actions a Comrade has per Turn ("two Half Actions or one Full Action", p. 269). */
+    /** Half Actions a Comrade has per Turn ("two Half Actions or one Full Action"). */
     readonly actionBudget: number;
-    /** Insanity or Corruption in one Round that kills the Comrade ("10 Insanity or 10 Corruption", p. 271). */
+    /** Insanity or Corruption in one Round that kills the Comrade ("10 Insanity or 10 Corruption"). */
     readonly mentalDeathThreshold: number;
 }
 
@@ -52,12 +52,12 @@ type ComradeHitTransferReason = 'doubles' | 'blast-spray' | 'none';
 export interface InCohesionArgs {
     /** Distance from the PC to the Comrade, in metres. */
     distanceM: number;
-    /** Whether no solid barrier separates the PC and the Comrade (RAW Cohesion, p.269). */
+    /** Whether no solid barrier separates the PC and the Comrade (RAW Cohesion). */
     hasVisualLine: boolean;
 }
 
 /**
- * Whether a Comrade is "in Cohesion" with its PC (p. 269): within the line's
+ * Whether a Comrade is "in Cohesion" with its PC: within the line's
  * Cohesion radius (inclusive) and not separated by a solid barrier. Either
  * failing breaks it. Negative or non-finite distances read as 0 (same point).
  */
@@ -105,7 +105,7 @@ export function healComrade(state: ComradeState): ComradeStateTransition {
 
 /**
  * Replace a dead Comrade with a fresh one: only a dead Comrade, and only when a
- * replacement is available (p. 110: "the Squad will have to wait until they have
+ * replacement is available ("the Squad will have to wait until they have
  * downtime at an Imperial Guard base"). The new Comrade enters play unharmed.
  */
 export function replaceComrade(state: ComradeState, replacementAvailable: boolean): ComradeReplaceResult {
@@ -140,9 +140,9 @@ export interface ComradeRecord {
     name: string;
     state: ComradeState;
     distanceM: number;
-    /** Whether PC and Comrade are free of a solid barrier between them (RAW Cohesion, p.269). */
+    /** Whether PC and Comrade are free of a solid barrier between them (RAW Cohesion). */
     hasVisualLine: boolean;
-    /** Failed a Fear test with its PC: flees (Table 9–5, 81–100) until the end of combat or a recovery Order. */
+    /** Failed a Fear test with its PC: flees (Fear table, 81–100) until the end of combat or a recovery Order. */
     fleeing: boolean;
     /** Failed a Pinning test with its PC: in cover, no Actions until a recovery Order. */
     pinned: boolean;
@@ -217,7 +217,7 @@ export interface ComradePanelView {
  * from the same rule its action applies, so a button is enabled exactly when its
  * action changes something), its Fear / Pinning state and its actions left.
  *
- * `inCamp` is the squad back in camp for refitting (p. 110 / p. 271), the actor's
+ * `inCamp` is the squad back in camp for refitting, the actor's
  * `refitAvailable` flag; `now` is the current combat Round, or null out of combat.
  */
 export function buildComradePanel(comrade: ComradeRecord, inCamp: boolean, rules: ComradeRules, now: CombatRoundStamp | null): ComradePanelView {
@@ -259,7 +259,7 @@ function sameRound(record: { combatId: string; round: number }, now: CombatRound
 }
 
 /**
- * The Comrade's Half Actions left this Turn (p. 269: "limited to two Half Actions
+ * The Comrade's Half Actions left this Turn ("limited to two Half Actions
  * or one Full Action per Turn"). A record from an earlier Round is spent no more.
  * Out of combat there is no Turn to spend, so the whole budget is there.
  */
@@ -299,7 +299,7 @@ export interface HitTransferResult {
 }
 
 /**
- * Whether a hit aimed at the PC strikes its Comrade (p. 271, "Comrades Being
+ * Whether a hit aimed at the PC strikes its Comrade ("Comrades Being
  * Attacked"):
  *   - Doubles: "as long as his Comrade is in Cohesion … If a successful to hit roll
  *     against a Player Character also result in doubles … the hit strikes the
@@ -331,7 +331,7 @@ export interface ComradeHitDefender {
     readonly system: object;
 }
 
-/** A hit that strikes the defender's Comrade instead (p. 271). */
+/** A hit that strikes the defender's Comrade instead. */
 export interface ComradeHitStrike {
     readonly actorUuid: string;
     readonly comradeName: string;
@@ -339,7 +339,7 @@ export interface ComradeHitStrike {
 
 /**
  * Whether one of the hits of a targeted attack strikes the defender's Comrade
- * instead (p. 271): the defender's line prints Comrades, its Comrade is alive and in
+ * instead: the defender's line prints Comrades, its Comrade is alive and in
  * Cohesion, at least one hit lands on the defender, and the successful attack roll
  * came up doubles. A targeted attack is never a Blast or Spray here: those resolve
  * their area through its template, where a Comrade (which has no token) being
@@ -416,7 +416,7 @@ export function comradeMirrorWrites(test: ComradeMirrorTest): { 'system.comrade.
 }
 
 /**
- * The `system.comrade` writes of a recovery Order (p. 271): the Comrade recovers
+ * The `system.comrade` writes of a recovery Order: the Comrade recovers
  * from Fear and from Pinning.
  */
 export function recoverComrade(): { 'system.comrade.fleeing': false; 'system.comrade.pinned': false } {
@@ -454,7 +454,7 @@ export interface ComradeMentalDamageResult {
 }
 
 /**
- * Insanity or Corruption a Comrade suffers (p. 271): "Comrades do not track
+ * Insanity or Corruption a Comrade suffers: "Comrades do not track
  * Insanity or Corruption … unless they would suffer 10 Insanity or 10 Corruption in
  * a single Round. If this occurs, the Comrade dies." The two kinds count separately,
  * and only within one Round; out of combat each amount stands alone. Negative or

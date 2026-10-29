@@ -1,6 +1,6 @@
 /**
  * Untrained-skill and alternate-characteristic resolution
- * (core.md §"Untrained Skill Use", p. 95, and individual skill
+ * (core rules, "Untrained Skill Use", and individual skill
  * descriptors' "Special Uses" sub-sections).
  *
  * - **Untrained Basic skills:** roll against the listed characteristic.

@@ -1,6 +1,6 @@
 /**
  * Only War "Healing Comrades" + replacement-on-return-to-camp RAW resolver
- * (#157 — core.md §"Healing Comrades" p.12269; replacement p.12261).
+ * (#157 — core rules, "Healing Comrades" and Comrade replacement).
  *
  * Pure functions that complement {@link ../rules/ow-comrade} by handling the
  * out-of-combat recovery clock and the camp-return replacement decision.
@@ -40,7 +40,7 @@ import type { ComradeState } from './ow-comrade';
 /** RAW auto-recovery clock: a wounded Comrade is back on their feet after 7 days. */
 export const OW_COMRADE_AUTO_RECOVERY_DAYS = 7;
 
-/** RAW Medicae shortcut difficulty: Difficult(-10) Medicae Test (p.12269). */
+/** RAW Medicae shortcut difficulty: Difficult(-10) Medicae Test. */
 export const OW_COMRADE_MEDICAE_DIFFICULTY_MODIFIER = -10;
 
 /* -------------------------------------------- */
@@ -113,7 +113,7 @@ export interface ApplyMedicaeAttemptResult {
  * Apply ONE Difficult(-10) Medicae Test result to a wounded Comrade's
  * recovery clock.
  *
- * RAW (p.12269): the test reduces remaining recovery days by its DoS.
+ * RAW: the test reduces remaining recovery days by its DoS.
  * A bare success (0 DoS) does nothing — the rule keys off Degrees, not
  * pass/fail. The caller is responsible for enforcing the "one attempt
  * per Comrade per wound" gate; this module just does the arithmetic.
@@ -159,7 +159,7 @@ export interface ReplacementResult {
 /**
  * Decide whether a dead Comrade is replaced when the squad returns to camp.
  *
- * RAW (p.12261): a dead Comrade can be replaced on return to camp
+ * RAW: a dead Comrade can be replaced on return to camp
  * provided refit logistics are available. A living Comrade (unharmed or
  * wounded) is unaffected — wounds are handled by the auto-recovery clock
  * and the Medicae shortcut, not by replacement.
@@ -196,7 +196,7 @@ export interface ComradeStateChange {
 }
 
 /**
- * The update for a Comrade moving from `previous` to `next` (OW Core p.271):
+ * The update for a Comrade moving from `previous` to `next` (OW core rules):
  *   - newly wounded: the seven-day recovery clock starts and the wound gets its
  *     one Medicae attempt;
  *   - still wounded (a no-op hit): the clock keeps running;

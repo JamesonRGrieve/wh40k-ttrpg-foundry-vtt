@@ -1,5 +1,5 @@
 /**
- * Sister of Battle elite advance (DH2 Enemies Within pp38-39; #134).
+ * Sister of Battle elite advance (a DH2 supplement; #134).
  *
  * The advance and its talents are compendium content. This module only
  * turns the advance document's `grants` into the rows the confirmation

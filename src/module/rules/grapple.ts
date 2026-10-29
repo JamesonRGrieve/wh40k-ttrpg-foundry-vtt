@@ -1,17 +1,17 @@
 /**
- * Grapple state machine (#120 — core.md L10155-10180).
+ * Grapple state machine (#120 — core rules).
  *
  * Grappling is a multi-step engagement started by a successful unarmed Charge or
  * Standard Attack and then fought round by round with the Grapple action. Each
  * combatant is in one of three states: `none` (not in a grapple), `grappling`
  * (the controller) or `controlled` (the grappled target). Each side has its own
- * options. In DH2 (core pp. 221–222) the controller has Damage, Throw Down, Push,
+ * options. In DH2 the controller has Damage, Throw Down, Push,
  * Ready, Stand and Use Item, and the target has Break Free, Slip Free and Take
  * Control. Each line prints its own lists; they live on the line's game-system
  * config (`grappleRules`).
  *
- * The opposed options resolve through the RAW Opposed-test ladder (p. 24) with the
- * grapple's Size edge (p. 222). The helpers here are pure: they take pre-rolled
+ * The opposed options resolve through the RAW Opposed-test ladder with the
+ * grapple's Size edge. The helpers here are pure: they take pre-rolled
  * `1d100` values and the targets and return a `GrappleResolution`. The character
  * sheet's grapple panel prompts the rolls and posts the chat cards.
  */
@@ -55,7 +55,7 @@ export function readGrappleState(flags: object | undefined, scope: string): Grap
  * The other participant of a grapple, as recorded on a combatant's grapple flag
  * (`flags[SYSTEM_ID][GRAPPLE_FLAG].opponentUuid`), or null when none is recorded.
  * Every grapple action is an Opposed Strength test against that participant
- * (DH2 core p. 221–222: "an Opposed Strength test with the Grappled opponent",
+ * (DH2 core rules: "an Opposed Strength test with the Grappled opponent",
  * "against the controller of the Grapple").
  */
 export function readGrappleOpponentUuid(flags: object | undefined, scope: string): string | null {
@@ -192,7 +192,7 @@ export interface GrappleRules {
     readonly options: readonly GrappleOptionRule[];
     /**
      * The bonus the controller gains on every further Opposed test of the grapple
-     * once Throw Down Opponent has put the opponent Prone (DH2 core p. 221: "+10";
+     * once Throw Down Opponent has put the opponent Prone (DH2 core: "+10";
      * OW core: "+10"); 0 for a line that prints none.
      */
     readonly thrownDownBonus: number;
@@ -421,7 +421,7 @@ export interface GrappleModifier {
 /**
  * The modifiers on one side of a grapple test. The controller of a grapple whose
  * opponent it has thrown down gains the line's bonus "to all further Opposed tests
- * made during this Grapple" (DH2 core p. 221), whichever side acts.
+ * made during this Grapple" (DH2 core rules), whichever side acts.
  */
 export function grappleSideModifiers(role: GrappleRole, thrownDown: boolean, rules: GrappleRules): GrappleModifier[] {
     if (role !== 'controller' || !thrownDown || rules.thrownDownBonus === 0) return [];
@@ -510,12 +510,12 @@ export interface GrappleResolution {
 
 /**
  * An opposed grapple test (every opposed option), by the RAW Opposed-test ladder (DH2 core
- * p. 24, `rules/opposed.ts`): a success beats a failure; both succeeding, more
+ * rules, `rules/opposed.ts`): a success beats a failure; both succeeding, more
  * degrees of success wins; then the higher Strength bonus; then the lower roll.
  * Both failing is a stalemate — "nothing happens" — so the acting side does
  * not get its way (the GM may call for a re-roll instead).
  *
- * Grappling size differences (DH2 core p. 222): the larger combatant scores one
+ * Grappling size differences (DH2 core rules): the larger combatant scores one
  * extra degree of success on a successful test for each point its Size exceeds
  * the other's.
  */

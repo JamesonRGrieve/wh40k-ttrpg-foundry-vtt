@@ -1,10 +1,9 @@
 /**
- * Malignancy Test (DH2 core §"The Malignancy Test", p. 290; the same rule and
- * Corruption Track appear in DH1 core p. 238, OW core p. 308 and RT core).
+ * Malignancy Test (DH2 core rules; the same rule and Corruption Track appear
+ * in the DH1, OW and RT core rules).
  *
  * For every 10 total Corruption Points a character gains, they make a
- * Willpower test modified by their place on the Corruption Track (Table
- * 8-14). Failure means rolling on the Malignancies table.
+ * Willpower test modified by their place on the Corruption Track. Failure means rolling on the Malignancies table.
  *
  * The caller detects the gain (`malignancyThresholdsCrossed`) and owns the
  * roll and the chat card; this module is the arithmetic.
@@ -16,7 +15,7 @@ import { nonNegInt } from './_num.ts';
 const MALIGNANCY_TEST_INTERVAL = 10;
 
 /**
- * Table 8-14: The Corruption Track — the inclusive upper CP bound of each
+ * The Corruption Track — the inclusive upper CP bound of each
  * degree and its Malignancy Test modifier. Above the last band the character
  * is Damned (removed from play); the Profane modifier is the floor.
  */
@@ -49,7 +48,7 @@ export function malignancyTestsQueued(pending: number, oldCorruption: number, ne
 }
 
 /**
- * The Malignancy Test modifier for a Corruption total (Table 8-14): +0
+ * The Malignancy Test modifier for a Corruption total (the Corruption Track): +0
  * Tainted (≤30), −10 Soiled (31–60), −20 Debased (61–90), −30 Profane (91–99).
  */
 export function corruptionTrackModifier(corruption: number): number {

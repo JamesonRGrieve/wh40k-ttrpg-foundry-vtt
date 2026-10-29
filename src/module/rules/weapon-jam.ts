@@ -1,15 +1,15 @@
 /**
  * Pure helpers for the DH2 weapon-jam threshold check.
  *
- * core.md §"Weapon Jams" (p. 224) — standard ranged attack jams on
+ * Core rules, "Weapon Jams" — standard ranged attack jams on
  * 96–100; semi/full-auto and Suppressing Fire on 94–100. Quality
  * overrides:
- *   - Reliable (core.md L6309): jams only on an unmodified 100.
- *   - Unreliable (core.md L6369): the jam floor is 91 in every fire
+ *   - Reliable: jams only on an unmodified 100.
+ *   - Unreliable: the jam floor is 91 in every fire
  *     mode, burst or not — i.e. the floor drops to 91 regardless of
  *     success/failure. The double-Unreliable
  *     case (Poor craftsmanship + Unreliable: jam on any failure
- *     per L6063) is NOT this helper's concern — see the dedicated
+ *     per the core rules) is NOT this helper's concern — see the dedicated
  *     branch in `rolls/action-data.ts` (around line 244).
  *
  * Craftsmanship "best" elides the jam (the existing

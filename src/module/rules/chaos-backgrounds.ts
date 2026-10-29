@@ -1,7 +1,7 @@
 /**
- * Within-supplement background mechanics (DH2 Enemies Within p.32).
+ * DH2 supplement background mechanics.
  *
- * The Within backgrounds and roles otherwise carry their rules as content on
+ * The supplement's backgrounds and roles otherwise carry their rules as content on
  * their compendium documents (Penitent's Cleansing Pain is a `dynamicModifiers`
  * `onDamaged` hook; the Fanatic's Fate spend lives in `fanatic.ts`).
  */
@@ -20,7 +20,7 @@ import { findBandBy } from './_dice.ts';
  * `modifiers.resources.corruption` (applied by the origin-grant ledger like any
  * origin resource), the roll in `grants.startingMutationFormula`. An origin
  * carrying a starting-mutation formula has its starting Corruption exempt from
- * the Malignancy Test (core p. 290, "for every 10 total Corruption points a
+ * the Malignancy Test (core rules, "for every 10 total Corruption points a
  * character gains"), because the book replaces that test with the roll.
  */
 
@@ -77,7 +77,7 @@ export interface MutationBand {
 }
 
 /**
- * The Mutations-table row a starting-mutation total lands on (Table 8-16 is a
+ * The Mutations-table row a starting-mutation total lands on (the Mutations table is a
  * d100 table; the 5d10 total is read against the same bands). `null` when the
  * total falls in a gap.
  */

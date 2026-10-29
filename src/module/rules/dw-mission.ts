@@ -1,11 +1,11 @@
 /**
- * Deathwatch Mission framework + reward payout (#169 — core.md
- * §"MISSIONS" p. 10115, §"REWARDS" p. 10390).
+ * Deathwatch Mission framework + reward payout (#169 — core rules,
+ * "Missions" and "Rewards").
  *
  * Pure data + math. A `DwMission` is the GM-authored structure for a
  * single kill-team operation: a rating, a set of objectives, and a set
  * of complications. Completed objectives award Renown + XP and recover
- * Cohesion (1 per completed objective per core.md). Triggered
+ * Cohesion (1 per completed objective per the core rules). Triggered
  * complications subtract from the Renown payout.
  *
  * This module owns only the arithmetic — Renown application sits in
@@ -86,7 +86,7 @@ export interface MissionRewardResult {
     totalRenown: number;
     /** Sum of XP awarded by completed objectives. */
     totalXp: number;
-    /** Cohesion points recovered — 1 per completed objective per core.md. */
+    /** Cohesion points recovered — 1 per completed objective per the core rules. */
     cohesionRecovered: number;
     /** Per-objective breakdown for chat-card display. */
     perObjective: MissionRewardEntry[];

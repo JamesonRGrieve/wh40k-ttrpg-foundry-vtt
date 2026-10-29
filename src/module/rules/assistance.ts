@@ -1,5 +1,5 @@
 /**
- * Assistance modifier (core.md §"Assistance", p. 25).
+ * Assistance modifier (core rules, "Assistance").
  *
  * RAW:
  *  - Up to two assistants on a single test (GM may waive for "right an

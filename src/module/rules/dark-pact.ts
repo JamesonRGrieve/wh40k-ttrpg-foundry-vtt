@@ -1,5 +1,5 @@
 /**
- * Dark Pacts (DH2 Enemies Beyond pp. 72–76, #84).
+ * Dark Pacts (a DH2 supplement, #84).
  *
  * A pact is a compendium `darkPact` item: the Boons a Daemon may grant, the
  * Banes that come with them, and the terms of striking it. A character's
@@ -9,16 +9,16 @@
  * this module holds only the content-agnostic plumbing.
  *
  * The rules it applies, from the book:
- * - "A Daemon's Disposition begins at 15+ the character's Corruption total"
- *   (p. 73). Disposition is the core NPC characteristic on a 0–100 scale (core
- *   p. 277). The 15 and the Corruption term are each pact's `negotiation` data.
- * - "a character who makes a Dark Pact gains 2d10+10 Corruption points"
- *   (p. 76): each pact's `corruptionFormula`.
- * - The GM chooses which Boons and Banes a bargain carries (p. 73). A taken
+ * - "A Daemon's Disposition begins at 15+ the character's Corruption total".
+ *   Disposition is the core NPC characteristic on a 0–100 scale. The 15 and
+ *   the Corruption term are each pact's `negotiation` data.
+ * - "a character who makes a Dark Pact gains 2d10+10 Corruption points":
+ *   each pact's `corruptionFormula`.
+ * - The GM chooses which Boons and Banes a bargain carries. A taken
  *   entry with mechanics (`modifiers`, `grants`) is applied to the actor through
  *   the central paths: an ActiveEffect built by `modifiersToEffectChanges` and
  *   compendium items the actor owns.
- * - The Subtlety change "should be tailored to the individual bargain" (p. 76):
+ * - The Subtlety change "should be tailored to the individual bargain":
  *   no number is printed, so discovery only records the fact.
  */
 
@@ -60,7 +60,7 @@ export type PactEntryKind = (typeof PACT_ENTRY_KINDS)[number];
 export interface PactRecord {
     pactUuid: string;
     discovered: boolean;
-    /** The Daemon's Disposition toward the character (core p. 277, 0–100). */
+    /** The Daemon's Disposition toward the character (0–100). */
     disposition: number;
     paymentCurrent: boolean;
     /** Identifiers of the Boons this bargain carries. */
@@ -69,7 +69,7 @@ export interface PactRecord {
     banes: string[];
 }
 
-/** A Daemon's Disposition is the DH2 characteristic Disposition, on its 0–100 scale (core p. 277, #73). */
+/** A Daemon's Disposition is the DH2 characteristic Disposition, on its 0–100 scale (#73). */
 const DAEMON_DISPOSITION = DISPOSITION_MODELS.characteristic;
 
 /** The Daemon's starting Disposition: the pact's base, plus the character's Corruption when the terms add it. */

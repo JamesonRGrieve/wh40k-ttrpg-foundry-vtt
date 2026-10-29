@@ -40,7 +40,7 @@ export function psychicPowerCost(prCost: number): number {
 
 /**
  * The XP a psychic power costs: the value the book prints when the power carries
- * one (DH2 core: "Value: 300 xp", p. 206), else the PR heuristic (#642). The
+ * one (DH2 core: "Value: 300 xp"), else the PR heuristic (#642). The
  * Advancement Dialog charges this and the character's spend calculation counts it,
  * so the two cannot disagree.
  * @param printed  The power's authored `cost`, or null / undefined when absent.

@@ -1,12 +1,12 @@
 /**
- * Deathwatch Horde / Magnitude RAW resolver (#166 — core.md p.359-360).
+ * Deathwatch Horde / Magnitude RAW resolver (#166 — core rules).
  *
  * Pure functions over Magnitude values. The caller (sheet, chat card,
  * AssignDamageData horde branch) owns I/O; this module owns the table
  * lookups and arithmetic.
  *
  * Canonical rules referenced here:
- *   - TABLE 13-1: Example Horde Magnitudes (size & to-hit modifier).
+ *   - Example Horde Magnitudes table (size & to-hit modifier).
  *   - "Damaging a Horde": each damaging hit removes 1 Magnitude;
  *     Explosive (X) weapons count as one extra hit per hit.
  *   - "Melee": one hit per *two* DoS on the WS test; Power Field adds +1.
@@ -27,7 +27,7 @@ import type { HordeTrait } from '../data/actor/mixins/horde-template.ts';
 // exports from this file. If a future change needs runtime access to
 // `HordeTrait`, move the union into a leaf module instead.
 
-/** Tier in TABLE 13-1: descriptive label + size and to-hit modifier. */
+/** Tier in the Example Horde Magnitudes table: descriptive label + size and to-hit modifier. */
 export interface HordeMagnitudeTier {
     /** Lower bound of Magnitude for this tier (inclusive). */
     minMagnitude: number;
@@ -40,7 +40,7 @@ export interface HordeMagnitudeTier {
 }
 
 /**
- * TABLE 13-1 — Example Horde Magnitudes. Ordered ascending; the
+ * Example Horde Magnitudes. Ordered ascending; the
  * resolver picks the *highest* tier whose `minMagnitude` ≤ current
  * Magnitude. A horde at Magnitude < 30 still counts as a Mob (the RAW
  * table treats Magnitude 30 as the canonical baseline; smaller mobs

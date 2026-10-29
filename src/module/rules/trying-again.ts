@@ -1,5 +1,5 @@
 /**
- * Trying Again helper (core.md §"Trying Again", p. 96).
+ * Trying Again helper (core rules, "Trying Again").
  *
  * Some skills cannot be retried within the same scene without a
  * meaningful change in circumstances; some incur a cumulative −10 per

@@ -1,11 +1,11 @@
 /**
- * Hit and Run resolver — Rogue Trader (#188 — RT Core p.218 §Hit and Run;
- * turret penalty p.220).
+ * Hit and Run resolver — Rogue Trader (#188 — RT core rules, Hit and Run
+ * and the turret penalty).
  *
  * RAW shape:
  *   1. **Approach.** The raid leader makes a **Challenging (+0) Pilot (Space
  *      Craft) Test** to reach an enemy ship within 5 VUs in a boarding craft.
- *      Each point of the target's Turret Rating imposes **−10** on it (p.220).
+ *      Each point of the target's Turret Rating imposes **−10** on it.
  *      A failure forces the craft back to its ship; failing by **four or more
  *      degrees** gets it shot down.
  *   2. **Raid.** On a successful approach the leader makes an opposed
@@ -35,7 +35,7 @@ import {
 /** Approach Pilot (Space Craft) difficulty — Challenging (+0). */
 export const APPROACH_BASE_DIFFICULTY = 0;
 
-/** Penalty to the approach test per point of the target's Turret Rating (p.220). */
+/** Penalty to the approach test per point of the target's Turret Rating. */
 export const APPROACH_TURRET_PENALTY_PER_POINT = -10;
 
 /** Failing the approach by this many degrees or more downs the boarding craft. */

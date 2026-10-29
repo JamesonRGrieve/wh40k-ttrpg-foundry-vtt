@@ -4,7 +4,7 @@
  *
  * Some situational rows are more than a flat bonus. A talent can grant +20 "once
  * per round", and failing the boosted test badly sends the character to a
- * critical table. Push the Limit (DH2 Enemies Without p. 63) is the first case:
+ * critical table. Push the Limit (a DH2 supplement talent) is the first case:
  * +20 Operate (or Survival on a living steed), and failing by 4+ degrees means
  * rolling 1d5 on the Motive Systems (or Impact – Leg) critical table.
  *

@@ -1,6 +1,6 @@
 /**
  * Shared primitives for the Rogue Trader ship-to-ship assault actions —
- * Ramming, Boarding Actions and Hit and Run (RT Core pp.215, 218, 220).
+ * Ramming, Boarding Actions and Hit and Run (RT core rules).
  *
  * Each of those actions is one or more d100 tests whose target is composed
  * from a base skill plus a stack of ship-derived and situational modifiers.
@@ -167,7 +167,7 @@ export const PILOT_SKILL_KEY = 'WH40K.Voidcraft.Assault.Component.PilotSkill';
 
 /**
  * Compose a Pilot (Space Craft) + Manoeuvrability test — the test that lands a
- * ram and locks two ships together for a boarding action (RT Core p.215).
+ * ram and locks two ships together for a boarding action (RT core rules).
  */
 export function composePilotManoeuvrabilityTest(input: PilotManoeuvrabilityInput): ShipTestDerivation {
     const crippled = input.ship.crippledManoeuvrability;

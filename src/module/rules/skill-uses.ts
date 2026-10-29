@@ -87,7 +87,7 @@ export interface SkillUseDef {
     /**
      * RAW per-target time gate (#458): after this use resolves against a target it
      * cannot be used on them again until the gate reopens — e.g. First Aid is "once
-     * every 24 hours" per patient (DH2 p109). `key` is the gate stamped on the target
+     * every 24 hours" per patient (DH2). `key` is the gate stamped on the target
      * actor. `windowSeconds` is the FIXED window; omit it when the window is rolled at
      * resolution (Interrogation's 1d5-day lockout), in which case the flow computes
      * the expiry itself. `blockedBy` declares OTHER gate keys on the target that also
@@ -126,7 +126,7 @@ const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKi
 /**
  * RAW per-target cooldowns on Medicae uses (#458): First Aid can be given to the
  * same patient at most once per 24 hours, and never while that patient is under
- * Extended Care (DH2 Core p109). Extended Care runs on the same 24-hour
+ * Extended Care (DH2 core rules). Extended Care runs on the same 24-hour
  * cycle and is the state that blocks First Aid.
  */
 const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, NonNullable<SkillUseDef['timeGate']>>> = {
@@ -226,8 +226,8 @@ function buffUse(buff: 'inspire' | 'terrify' | 'warCry' | 'blather', opts: { opp
 
 /**
  * Chem-Use (#441): administer a chem to a subject, or coat a weapon with it.
- * RAW across the FFG lines — DH2 p109 "Applying Poisons/Chemicals", DH1 p99,
- * BC p104, OW p126 (a botch afflicts the applicant), RT p78, DW p95.
+ * RAW across the FFG lines — DH2 "Applying Poisons/Chemicals", DH1, BC, OW
+ * (a botch afflicts the applicant), RT, DW.
  * Applying to a subject is target-directed; coating acts on your own weapon.
  */
 const CHEM_USES: readonly SkillUseDef[] = [
@@ -466,7 +466,7 @@ function objectStateMatches(kind: SkillUseKind, item: SkillUseCandidate): boolea
     if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
     const sys = candidateSystem(item);
     const broken = (sys.state?.broken ?? false) || sys.jammed === true;
-    // A destroyed item can never be repaired (DH2 core p. 142, #444).
+    // A destroyed item can never be repaired (DH2 core rules, #444).
     if (kind === 'repair') return broken && sys.state?.destroyed !== true;
     if (kind === 'bypassLock') return sys.state?.locked ?? false;
     return !broken;
@@ -636,7 +636,7 @@ export function resolveFirstAid(kind: SkillUseKind, vitals: FirstAidTargetVitals
     const clampWounds = (n: number): number => Math.max(0, Math.min(n, headroom));
 
     if (kind === 'firstAid') {
-        // RAW (DH2 Core p.110): on success remove (Intelligence Bonus + one per
+        // RAW (DH2 core rules): on success remove (Intelligence Bonus + one per
         // degree of success) damage, taking Critical damage before normal wounds.
         const total = Math.max(0, vitals.intelligenceBonus) + Math.max(0, degrees);
         const criticalResolved = Math.min(total, Math.max(0, vitals.criticalDamage));

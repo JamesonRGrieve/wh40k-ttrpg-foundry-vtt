@@ -1,5 +1,5 @@
 /**
- * Ramming resolver — Rogue Trader (#188 — RT Core p.215 §Ramming and
+ * Ramming resolver — Rogue Trader (#188 — RT core rules, Ramming and
  * Boarding Actions).
  *
  * RAW shape:

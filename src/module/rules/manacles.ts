@@ -1,5 +1,5 @@
 /**
- * Manacles — DH errata p. 176.
+ * Manacles — DH errata.
  *
  * In summary: while manacled, a character takes –40 on every BS and WS test.
  *
@@ -40,10 +40,10 @@ import { characteristicChangeKey, type EffectDataInput, MODE_ADD } from './condi
 /*  Constants                                   */
 /* -------------------------------------------- */
 
-/** Errata p. 176 — penalty applied to BS while manacled. */
+/** Errata — penalty applied to BS while manacled. */
 export const MANACLES_BS_PENALTY = -40;
 
-/** Errata p. 176 — penalty applied to WS while manacled. */
+/** Errata — penalty applied to WS while manacled. */
 export const MANACLES_WS_PENALTY = -40;
 
 /** Display name of the created AE (also the name-fallback detector). */

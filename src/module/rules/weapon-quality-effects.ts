@@ -294,7 +294,7 @@ export function attackerWeaponPreventsParry(attackerWeapon: QualityItem | null |
 /**
  * The penalty the attacker's weapon imposes on a defender's Parry (#414). Fast:
  * "Opponents that would Parry an attack against a weapon with the Fast quality
- * take a –20 penalty" (DH1 Inquisitor's Handbook). The value is the quality's
+ * take a –20 penalty" (a DH1 supplement). The value is the quality's
  * authored `enemyParryPenalty`, resolved for the attacker's line.
  *
  * @param {Item} attackerWeapon - The weapon being parried against
@@ -712,7 +712,7 @@ export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecial
 /**
  * `keepHighest` term surgery: append `extraDice` dice to the term and keep the
  * ORIGINAL count, highest first — Tearing adds a damage die and drops the lowest
- * (RT Core p.117).
+ * (RT core rules).
  *
  * Idempotent: a term that already carries any `kh` modifier is left alone, so a
  * re-prepared roll (or a weapon whose formula authored its own `kh`) never stacks the

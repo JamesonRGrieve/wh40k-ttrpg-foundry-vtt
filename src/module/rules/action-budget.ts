@@ -3,7 +3,7 @@
  * budget so it is unit-testable; the combat glue (combatant flag, turn reset,
  * HUD wiring) lives in {@link ./action-economy.ts}.
  *
- * DH2 economy (core.md "Actions", p. 218): in a turn a combatant may take one
+ * DH2 economy (core rules, "Actions"): in a turn a combatant may take one
  * **Full** action OR two **Half** actions, plus any number of **Free** actions
  * (GM-gated, uncapped here) and one **Reaction** (Dodge/Parry, used on other
  * combatants' turns). We model the Full/Half pool as 2 action points — a Full

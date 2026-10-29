@@ -4,7 +4,7 @@
  *   1. First, a Challenging (+0) Forbidden Lore (Daemonology) test: every
  *      degree of success adds +5 to the later Mastery tests.
  *   2. The exorcism is an Extended Daemonic Mastery test (Very Hard −30 base,
- *      Table 2–21 modifiers), each test taking 1d5 hours. The Daemon is cast out
+ *      Exorcism Modifiers), each test taking 1d5 hours. The Daemon is cast out
  *      once the total degrees of success EXCEED the Daemon's Willpower bonus plus
  *      the possessed individual's Corruption bonus.
  *   3. Every failed test inflicts 1 Fatigue per degree of failure. If that
@@ -27,7 +27,7 @@ import {
 } from './daemonic-mastery.ts';
 import { resolveTest, type TestOutcome } from './summoning-ritual.ts';
 
-/** Table 2–21: Exorcism Modifiers (Enemies Beyond p. 71). The +5/DoS lore row is {@link loreBonusFactor}. */
+/** Exorcism Modifiers. The +5/DoS lore row is {@link loreBonusFactor}. */
 export const EXORCISM_MODIFIERS = {
     SELF_EXORCISM: { id: 'self-exorcism', labelKey: 'WH40K.Daemonology.Factor.SelfExorcism', modifier: -10 },
     NO_PROPER_TOOLS: { id: 'no-proper-tools', labelKey: 'WH40K.Daemonology.Factor.NoProperTools', modifier: -10 },
@@ -38,7 +38,7 @@ export const EXORCISM_MODIFIERS = {
     TRUE_NAME: DAEMONIC_MASTERY_FACTORS.TRUE_NAME,
 } as const satisfies Record<string, DaemonicMasteryFactor>;
 
-/** Every Table 2–21 toggle, in printed order. */
+/** Every Exorcism Modifiers toggle, in printed order. */
 export type ExorcismModifierId = keyof typeof EXORCISM_MODIFIERS;
 export const EXORCISM_MODIFIER_ORDER: readonly ExorcismModifierId[] = [
     'SELF_EXORCISM',
@@ -78,7 +78,7 @@ export function corruptionBonus(corruptionPoints: number): number {
 
 export interface ExorcismAttemptInput {
     exorcistWillpower: number;
-    /** Table 2–21 and GM factors for the attempts (not including the lore bonus). */
+    /** Exorcism Modifiers and GM factors for the attempts (not including the lore bonus). */
     factors: readonly DaemonicMasteryFactor[];
     /** Degrees of success on the preparatory Forbidden Lore test. */
     loreDos: number;

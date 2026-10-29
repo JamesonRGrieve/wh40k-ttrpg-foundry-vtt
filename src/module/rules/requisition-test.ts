@@ -21,7 +21,7 @@ export interface RequisitionTestInput {
     craftsmanship?: CraftsmanshipKey;
     /**
      * The line's bonus for requisitioning a weapon modification as parts to fit
-     * personally (DH2 core p. 162: "+30 bonus to the modification's
+     * personally (DH2 core rules: "+30 bonus to the modification's
      * Availability"); absent when the request is not for parts or the line
      * prints no such bonus.
      */

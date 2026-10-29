@@ -1,5 +1,5 @@
 /**
- * Daemonic possession track helpers (#82 — beyond.md p.69).
+ * Daemonic possession track helpers (#82 — a DH2 supplement).
  *
  * The actor's `system.possession` slot stores the current possession
  * state (none / latent / possessed), the per-session Unleash Daemon
@@ -11,7 +11,7 @@
  * (sheet panel + session-boundary reset hook) is the follow-up.
  *
  * #132 extends this with the Possession-power Frenzy-test loop and the
- * mismanifest opposed-Willpower cascade (beyond.md L2095-2116).
+ * mismanifest opposed-Willpower cascade.
  */
 
 import { clampRoll, degreesOfFailure, degreesOfSuccess } from './_dice.ts';
@@ -74,11 +74,11 @@ export function getResistDaemonTarget(willpowerTotal: number, corruptionPoints: 
 }
 
 /* ----------------------------------------------------------------- */
-/*  Frenzy-test loop (#132 — beyond.md L2095-2116)                    */
+/*  Frenzy-test loop (#132)                                           */
 /* ----------------------------------------------------------------- */
 
 /**
- * The Possession power (beyond.md p. 67) grants the manifester
+ * The Possession power grants the manifester
  * Daemonic (½ PR) + Unnatural Strength (½ PR) + Deadly Natural Weapons
  * for as long as the power is sustained. The price is two recurring
  * tests:
@@ -93,7 +93,7 @@ export function getResistDaemonTarget(willpowerTotal: number, corruptionPoints: 
  *     manifesting Possession means a more powerful Daemon answered the
  *     invitation. The psyker makes an Opposed Willpower test against the
  *     Daemon; on a loss, the Daemon takes over and the actor escalates
- *     to the full `possessed` state (beyond.md p. 69, composes with the
+ *     to the full `possessed` state (composes with the
  *     #82 possession track).
  *
  * The state machine the consumer drives:
@@ -188,7 +188,7 @@ export interface MismanifestResolution {
 /**
  * Resolve the mismanifest cascade: a Psychic Phenomena result when
  * manifesting Possession summons a stronger Daemon, and the psyker must
- * win an Opposed Willpower test or be possessed (beyond.md p. 69).
+ * win an Opposed Willpower test or be possessed.
  *
  * Tie semantics favour the psyker (the daemon must strictly out-score
  * the psyker to seize control), matching the opposed-test convention

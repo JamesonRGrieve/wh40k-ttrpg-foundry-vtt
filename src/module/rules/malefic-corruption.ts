@@ -1,6 +1,6 @@
 /**
- * Malefic Daemonology corruption-on-use (beyond.md §"Malefic
- * Daemonology", p. 56).
+ * Malefic Daemonology corruption-on-use (a DH2
+ * supplement).
  *
  * Every successful Malefic power manifestation grants Corruption Points
  * equal to the Psy Rating used (after Push, Fettered, etc. apply).

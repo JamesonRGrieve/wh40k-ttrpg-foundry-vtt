@@ -24,12 +24,12 @@
 import type { DispositionModelDef } from '../config/game-systems/types.ts';
 import { nonNegInt } from './_num.ts';
 
-/** The 0–100 characteristic scale (DH2 core p. 277). */
+/** The 0–100 characteristic scale (DH2 core rules). */
 const CHARACTERISTIC_SCALE = { min: 0, max: 100 } as const;
 
 /**
  * The value a DH2 NPC holds when the GM has set none: the middle of the
- * 40–60 band in which "most NPCs are indifferent toward the Acolytes" (p. 277).
+ * 40–60 band in which "most NPCs are indifferent toward the Acolytes".
  */
 const CHARACTERISTIC_INDIFFERENT = 50;
 
@@ -81,7 +81,7 @@ export function clampDisposition(value: number, def: DispositionModelDef): numbe
     return Math.max(def.min, Math.min(def.max, Math.trunc(value)));
 }
 
-/** Whether the NPC has reached zero Disposition, where its Personality's zero-Disposition response applies (DH2 p. 278). */
+/** Whether the NPC has reached zero Disposition, where its Personality's zero-Disposition response applies (DH2). */
 export function isZeroDisposition(value: number, def: DispositionModelDef): boolean {
     return def.model === 'characteristic' && clampDisposition(value, def) === 0;
 }
@@ -248,7 +248,7 @@ export function dispositionModifierComponents(state: DispositionState, skill: st
 
 /**
  * Convert a value from the old −3..+3 field to the DH2 0–100 scale: its
- * Neutral 0 becomes 50, the middle of the 40–60 indifferent band (p. 277),
+ * Neutral 0 becomes 50, the middle of the 40–60 indifferent band,
  * and each old band, worth ±10 on a test, becomes 10 points. Order and spacing
  * are kept: −3 → 20, +3 → 80.
  */
@@ -278,13 +278,13 @@ export function migrateDispositionSource(disposition: unknown, def: DispositionM
 }
 
 /* -------------------------------------------- */
-/*  Interaction cap (DH2 errata p. 125)         */
+/*  Interaction cap (DH2 errata)                */
 /* -------------------------------------------- */
 
 /**
  * Cap on how many interactions can yield disposition gain for a PC.
  *
- * Per DH2 errata p.125, an NPC's affection / disposition can be shifted by
+ * Per the DH2 errata, an NPC's affection / disposition can be shifted by
  * social interactions only a number of times equal to the PC's Fellowship
  * bonus. Once the cap is reached, further interactions produce no further
  * disposition gain (though they may still produce role-play consequences
@@ -320,7 +320,7 @@ export interface InteractionDispositionGainResult {
 
 /**
  * Resolve the actual disposition gain for a social interaction, gating by
- * the PC's Fellowship-bonus cap (DH2 errata p.125).
+ * the PC's Fellowship-bonus cap (DH2 errata).
  *
  * Below the cap the raw gain passes through unchanged; at or above the cap
  * the gain is suppressed to 0 and `atCap` is set. `remainingInteractions`
