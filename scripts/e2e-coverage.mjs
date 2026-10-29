@@ -1362,10 +1362,8 @@ const DICE_ENGINE_FLOWS = [
 recordDimension('dice-engine.flow', covered['dice-engine.flow'], DICE_ENGINE_FLOWS);
 
 // tests/e2e/utils-extra.spec.ts — src/module/utils/* not owned by
-// calculators.spec.ts / utils-validators.spec.ts (9 distinct modules).
+// calculators.spec.ts / utils-validators.spec.ts (8 distinct modules).
 const UTILS_EXTRA_FLOWS = [
-    'pack-prefix-dh-editions',
-    'pack-prefix-passthrough',
     'encumbrance-carry-capacity',
     'encumbrance-table-exported',
     'origin-ui-characteristic-info',
@@ -1386,11 +1384,8 @@ const UTILS_EXTRA_FLOWS = [
 recordDimension('utils-extra.flow', covered['utils-extra.flow'], UTILS_EXTRA_FLOWS);
 
 // tests/e2e/rules-progression.spec.ts — remaining uncovered src/module/rules/*
-// (radical-services, xenos-features, profane-objects, weapon-training,
-// weapon-modifiers, range).
+// (xenos-features, profane-objects, weapon-training, weapon-modifiers, range).
 const RULE_PROGRESSION_FLOWS = [
-    'radical-services-registry',
-    'radical-services-availability',
     'xenos-features-constants',
     'profane-objects-module-shape',
     'weapon-training-check-noTraining',

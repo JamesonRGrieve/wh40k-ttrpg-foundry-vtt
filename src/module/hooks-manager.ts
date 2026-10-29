@@ -94,7 +94,7 @@ import { openHomeworldInfoDialog } from './applications/prompts/homeworld-info-d
 import { openMedicaeMechadendriteDialog } from './applications/prompts/medicae-mechadendrite-dialog.ts';
 import { openMutantBackgroundDialog } from './applications/prompts/mutant-background-dialog.ts';
 import { openMutationRollDialog } from './applications/prompts/mutation-roll-dialog.ts';
-import { openRadicalServicesDialog } from './applications/prompts/radical-services-dialog.ts';
+import { openServicesDialog } from './applications/prompts/services-dialog.ts';
 import { openSisterOfBattleDialog } from './applications/prompts/sister-of-battle-dialog.ts';
 import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.ts';
 import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.ts';
@@ -1007,7 +1007,7 @@ export class HooksManager {
                 openCyberneticsInstallDialog,
                 openMedicaeMechadendriteDialog,
                 openMutantBackgroundDialog,
-                openRadicalServicesDialog,
+                openServicesDialog,
                 openDaemonhostBindingDialog,
                 openDisorderRollDialog,
                 openFearTestDialog,

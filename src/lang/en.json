@@ -4557,9 +4557,9 @@
             "BargainingTests": "Interaction tests while bargaining",
             "NamePlaceholder": "Pact name"
         },
-        "RadicalServices": {
-            "DialogTitle": "Radical Services — Requisition",
-            "ChatTitle": "Radical Services Requisition",
+        "Services": {
+            "DialogTitle": "Hire a Service — Requisition",
+            "ChatTitle": "Service Requisition",
             "ServiceLabel": "Service",
             "AvailabilityLabel": "Availability",
             "ThreatLabel": "Threat",
@@ -4571,30 +4571,7 @@
             "Cancel": "Cancel",
             "Success": "Service Acquired",
             "Failure": "Requisition Failed",
-            "Names": {
-                "bountyHunter": "Bounty Hunter",
-                "darkOracle": "Dark Oracle",
-                "deathCult": "Death Cult",
-                "heretek": "Heretek",
-                "hiveGang": "Hive Gang",
-                "maleficScholar": "Malefic Scholar",
-                "mutantMercenary": "Mutant Mercenary",
-                "roguePsyker": "Rogue Psyker",
-                "recidivist": "Recidivist"
-            },
-            "Availability": {
-                "ubiquitous": "Ubiquitous",
-                "abundant": "Abundant",
-                "plentiful": "Plentiful",
-                "common": "Common",
-                "average": "Average",
-                "scarce": "Scarce",
-                "rare": "Rare",
-                "veryRare": "Very Rare",
-                "extremelyRare": "Extremely Rare",
-                "nearUnique": "Near Unique",
-                "unique": "Unique"
-            }
+            "Empty": "No service packs are installed for this line."
         },
         "Orders": {
             "ShipOrders": "Ship Orders",

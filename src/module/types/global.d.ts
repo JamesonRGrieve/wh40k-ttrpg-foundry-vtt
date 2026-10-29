@@ -411,8 +411,8 @@ interface WH40KPromptLaunchers {
     openMedicaeMechadendriteDialog: (opts?: { actor?: WH40KBaseActorDocument }) => void;
     /** Mutant origin-path background confirmation; applies the grant when given an actor. */
     openMutantBackgroundDialog: (actor?: WH40KMutantBackgroundTarget | null) => void;
-    /** Radical Services hire — Influence requisition test against the chosen service. */
-    openRadicalServicesDialog: (actor: WH40KBaseActor) => void;
+    /** Hire a service from the actor's line's services packs — Influence requisition test against it. */
+    openServicesDialog: (actor: WH40KBaseActor) => void;
     /** Daemonhost Binding Strength tier selection. */
     openDaemonhostBindingDialog: () => void;
     /** Mental Disorder roll at a chosen severity tier. */

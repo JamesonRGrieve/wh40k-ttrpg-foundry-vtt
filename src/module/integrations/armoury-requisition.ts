@@ -312,10 +312,25 @@ const CRAFTSMANSHIP_LABEL_KEYS: Record<CraftsmanshipKey, I18nKey> = {
 };
 
 /** One hoverable provenance row on the card. */
-interface ProvenanceRow {
+export interface ProvenanceRow {
     label: string;
     value: number;
     tooltipData: string;
+}
+
+/** The langpack key naming an availability rating. */
+export function availabilityLabelKey(availability: AvailabilityKey): I18nKey {
+    return AVAILABILITY_LABEL_KEYS[availability];
+}
+
+/** A requisition target's modifier rows (every component but the rating itself), each hoverable to its source. */
+export function requisitionProvenanceRows(breakdown: readonly RequisitionModifier[], translate: Translate = t): ProvenanceRow[] {
+    return breakdown
+        .filter((m) => m.source !== 'rating')
+        .map((m) => {
+            const label = modifierLabel(m, translate);
+            return { label, value: m.value, tooltipData: JSON.stringify({ title: label, sources: [{ name: label, value: m.value }] }) };
+        });
 }
 
 /** Langpack resolver — `t` at runtime; injectable so stories render without a `game` global. */
@@ -374,12 +389,7 @@ export function buildArmouryCardContext(outcome: ArmouryRequisitionOutcome, game
         const base = breakdown.find((m) => m.source === 'rating');
         const rows: ProvenanceRow[] =
             attempt.logistics === undefined
-                ? breakdown
-                      .filter((m) => m.source !== 'rating')
-                      .map((m) => {
-                          const label = modifierLabel(m, translate);
-                          return { label, value: m.value, tooltipData: JSON.stringify({ title: label, sources: [{ name: label, value: m.value }] }) };
-                      })
+                ? requisitionProvenanceRows(breakdown, translate)
                 : // OW: the same Table 6-2 / 6-6 provenance rows the Logistics Test card prints.
                   logisticsRows(attempt.logistics.context, attempt.logistics.breakdown, translate).filter((row) => row.key !== 'rating');
         const refusal = attempt.refusal;

@@ -701,8 +701,8 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
         exports: ['Fettered', 'Unfettered', 'PushOne', 'PushTwo', 'PushThree'],
     },
     {
-        title: 'Dialogs/RadicalServicesDialog',
-        exports: ['Default', 'ServiceSelected'],
+        title: 'Dialogs/ServicesDialog',
+        exports: ['Default', 'ServiceSelected', 'EmptyLine', 'ChatCardSuccess'],
     },
     {
         title: 'Dialogs/RightStuffDialog',

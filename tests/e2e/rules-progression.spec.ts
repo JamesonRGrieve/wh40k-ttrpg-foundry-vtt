@@ -16,10 +16,7 @@ import { test } from './lib/test';
  * Modules exercised (all were at 0% function coverage from Tier B
  * before this spec because the system code reaches them only via
  * Actor / Item roll methods, which take other paths in headless mode):
- *   - `radical-services.ts` — Radical Services requisition table +
- *     availability refs into `requisition-test.ts`.
- *   - `xenos-features.ts` — Enemies Without role / talent / homeworld
- *     constant table.
+ *   - `xenos-features.ts` — role / talent / homeworld constant table.
  *   - `profane-objects.ts` — Profane Object item-shape module (type
  *     surface; covered for the import + module-shape sanity).
  *   - `weapon-training.ts` — `checkWeaponTraining`,
@@ -40,8 +37,6 @@ import { test } from './lib/test';
  */
 
 const RULE_PROGRESSION_FLOWS = [
-    'radical-services-registry',
-    'radical-services-availability',
     'xenos-features-constants',
     'profane-objects-module-shape',
     'weapon-training-check-noTraining',
@@ -66,15 +61,6 @@ interface FlowResult {
 async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
     const results = await page.evaluate(async (): Promise<FlowResult[]> => {
         type ImportError = { __importError?: string };
-        interface RadicalServiceEntry {
-            id?: string;
-            threatLevel?: number;
-            subtletyOnHire?: number;
-            availability?: string;
-        }
-        interface RadicalServicesModule extends ImportError {
-            RADICAL_SERVICES?: Record<string, RadicalServiceEntry>;
-        }
         interface XenosFeaturesModule extends ImportError {
             RIGHT_STUFF?: { applicableSkills?: readonly string[] };
             SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
@@ -147,33 +133,8 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             }
         };
 
-        // ---------- content registries (radical / xenos / profane) ----------
+        // ---------- content registries (xenos / profane) ----------
         async function probeContentRegistries(): Promise<void> {
-            // ---------- radical-services ----------
-            const radical = await loadModule<RadicalServicesModule>('radical-services');
-            if (radical.__importError !== undefined) {
-                for (const k of ['radical-services-registry', 'radical-services-availability'] as const) record(k, false, String(radical.__importError));
-            } else {
-                try {
-                    const reg = radical.RADICAL_SERVICES ?? {};
-                    const ids = Object.keys(reg);
-                    const allShaped = ids.every(
-                        (id) => typeof reg[id].id === 'string' && typeof reg[id].threatLevel === 'number' && typeof reg[id].subtletyOnHire === 'number',
-                    );
-                    record('radical-services-registry', ids.length > 0 && allShaped, `ids=${ids.join(',')}`);
-                } catch (err) {
-                    record('radical-services-registry', false, String((err as Error).message));
-                }
-                try {
-                    const reg = radical.RADICAL_SERVICES ?? {};
-                    const availabilities = Object.values(reg).map((s) => s.availability);
-                    const allStrings = availabilities.length > 0 && availabilities.every((a) => typeof a === 'string' && a.length > 0);
-                    record('radical-services-availability', allStrings, null);
-                } catch (err) {
-                    record('radical-services-availability', false, String((err as Error).message));
-                }
-            }
-
             // ---------- xenos-features ----------
             const xenos = await loadModule<XenosFeaturesModule>('xenos-features');
             if (xenos.__importError !== undefined) {

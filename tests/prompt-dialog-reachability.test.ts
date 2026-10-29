@@ -153,7 +153,7 @@ describe('every prompt dialog is reachable', () => {
             'medicae-mechadendrite-dialog',
             'mutant-background-dialog',
             'mutation-roll-dialog',
-            'radical-services-dialog',
+            'services-dialog',
             'sister-of-battle-dialog',
             'warp-travel-dialog',
         ]);

@@ -96,4 +96,11 @@ describe('GearData dose durations (#457)', () => {
         expect(schema['addictive']).toBeTruthy();
         expect(schema['grants']).toBeTruthy();
     });
+
+    it('exposes the hire slot a service carries its threat and Subtlety change in', async () => {
+        const mod = await importModelOrSkip(import('./gear.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+        expect(mod.default.defineSchema()['hire']).toBeTruthy();
+    });
 });

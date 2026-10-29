@@ -1,0 +1,42 @@
+{{!-- Service requisition chat-card: the hired service, the full target formula and the outcome. --}}
+<div class="tw-p-3 tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-bg-gradient-to-br tw-from-[rgba(0,0,0,0.45)] tw-to-[rgba(0,0,0,0.25)] dh2:tw-border-bronze" data-wh40k-system="{{_gameSystemId}}" data-wh40k-surface="dark">
+
+    <header class="tw-mb-2 tw-pb-2 tw-border-b tw-border-[rgba(201,162,39,0.25)]">
+        <div class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Services.ChatTitle"}}</div>
+        <div class="tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--wh40k-card-gold)]">{{service.label}}</div>
+    </header>
+
+    <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-text-[0.8rem] tw-text-[#cfcab8] tw-mb-2">
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.Services.AvailabilityLabel"}}:</span> {{service.availabilityLabel}}</div>
+        <div><span class="tw-text-[#9a9a8a]">{{localize "WH40K.Services.ThreatLabel"}}:</span> <span class="tw-tabular-nums">{{service.threatLevel}}</span></div>
+    </div>
+
+    {{> systems/wh40k-rpg/templates/chat/partial/modifier-breakdown.hbs
+        baseTarget=requisition.baseTarget
+        baseLabel=(localize "WH40K.Services.InfluenceLabel")
+        modifierSources=requisition.modifierSources
+        modifiedTarget=requisition.target
+        accentRole="accent"}}
+
+    <div class="tw-flex tw-justify-between tw-items-center tw-text-[0.85rem] tw-text-[#cfcab8]">
+        <span class="tw-text-[#9a9a8a]">{{localize "WH40K.Services.RollLabel"}}</span>
+        <span class="tw-tabular-nums">{{requisition.roll}} / {{requisition.target}}</span>
+    </div>
+
+    <div class="tw-mt-3 tw-px-3 tw-py-2 tw-rounded-md tw-text-center tw-font-semibold tw-uppercase tw-tracking-[0.08em] {{#if requisition.success}}tw-bg-emerald-900/40 tw-text-emerald-300 tw-border tw-border-emerald-500/40{{else}}tw-bg-rose-900/40 tw-text-rose-300 tw-border tw-border-rose-500/40{{/if}}">
+        {{#if requisition.success}}
+            {{localize "WH40K.Services.Success"}}
+            <span class="tw-ml-2 tw-tabular-nums">(+{{requisition.dos}} {{localize "WH40K.Chat.Roll.DoS"}})</span>
+        {{else}}
+            {{localize "WH40K.Services.Failure"}}
+            <span class="tw-ml-2 tw-tabular-nums">(-{{requisition.dof}} {{localize "WH40K.Chat.Roll.DoF"}})</span>
+        {{/if}}
+    </div>
+
+    {{#if subtletyDelta}}
+    <div class="tw-mt-2 tw-text-[0.8rem] tw-text-[#f87171] tw-text-center" data-testid="services-subtlety">
+        <i class="fas fa-eye-slash"></i>
+        {{localize "WH40K.Services.SubtletyLabel"}}: {{subtletyDelta}}
+    </div>
+    {{/if}}
+</div>

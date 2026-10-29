@@ -45,8 +45,10 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * addictive. Content-authored on the item (Direction #7), never hardcoded.
      */
     declare addictive: number;
+    /** A service's hire consequences: the threat it draws and the Subtlety it changes by. */
+    declare hire: { threatLevel: number; subtlety: number };
     /**
-     * Profane Object payload (within.md p. 52). When non-null, this gear
+     * Profane Object payload. When non-null, this gear
      * piece carries the corruption-bound mechanical hook; the engine
      * consults `rules/profane-objects.ts` for the shape and applies the
      * aura / per-action effect while the item is held / equipped.
@@ -111,8 +113,16 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
 
-            // Profane Object slug (within.md p. 52). Null for ordinary gear.
+            // Profane Object slug. Null for ordinary gear.
             profaneObjectId: new fields.StringField({ required: false, blank: true, initial: '', nullable: true }),
+
+            // What hiring a service costs beyond its requisition: the threat it draws on
+            // the warband and the Subtlety it changes by (negative = lost). Both 0 for
+            // ordinary gear; content-authored on the service document (Direction #7).
+            hire: new fields.SchemaField({
+                threatLevel: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
+                subtlety: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
+            }),
 
             // Active-Effect grants (drugs primarily). Each entry creates
             // a temporary AE on use.
