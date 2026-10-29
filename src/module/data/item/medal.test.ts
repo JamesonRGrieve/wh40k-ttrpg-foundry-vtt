@@ -1,6 +1,6 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { installFoundryDataStub, LeafField } from '../../testing/foundry-data-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
@@ -58,8 +58,13 @@ function load(dir: string): MedalSource[] {
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('the printed Only War medals (content#32)', () => {
-    const core = load(PACKS.core);
-    const enemies = load(PACKS.enemies);
+    // Read in beforeAll: a skipped describe's body still runs to collect its tests.
+    let core: MedalSource[] = [];
+    let enemies: MedalSource[] = [];
+    beforeAll(() => {
+        core = load(PACKS.core);
+        enemies = load(PACKS.enemies);
+    });
     const summary = (medals: MedalSource[]): string[][] =>
         medals.map((medal) => [medal.name, medal.system.honourType, medal.system.source.ow.page]).sort((a, b) => (a.at(0) ?? '').localeCompare(b.at(0) ?? ''));
 

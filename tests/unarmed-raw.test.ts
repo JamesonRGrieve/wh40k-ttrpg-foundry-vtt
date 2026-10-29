@@ -8,7 +8,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const UNARMED = resolve(__dirname, '../src/packs-private/imperium-maledictum/im-core-items-weapons/_source/unarmed.json');
@@ -22,7 +22,11 @@ interface UnarmedSource {
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT || !existsSync(UNARMED))('the printed Unarmed strike per line (content#33)', () => {
-    const unarmed = JSON.parse(readFileSync(UNARMED, 'utf8')) as UnarmedSource;
+    // Read in beforeAll: a skipped describe's body still runs to collect its tests.
+    let unarmed: UnarmedSource;
+    beforeAll(() => {
+        unarmed = JSON.parse(readFileSync(UNARMED, 'utf8')) as UnarmedSource;
+    });
 
     it.each([
         ['dh2', [], 'DH2: Core Rulebook', '228'],

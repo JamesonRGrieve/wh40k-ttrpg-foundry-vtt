@@ -1,6 +1,6 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { isShipEffectKind, type ShipEffectData } from '../../rules/ship-action-effects.ts';
 import type { ShipActionOrderSystem, ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
@@ -192,7 +192,11 @@ describe('migrateLegacyOrderTest', () => {
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('RT ship orders through the schema (#186)', () => {
-    const orders = loadAll();
+    // Read in beforeAll: a skipped describe's body still runs to collect its tests.
+    let orders: ShipActionOrderView[] = [];
+    beforeAll(() => {
+        orders = loadAll();
+    });
 
     it('lists every RAW Extended Action from RT Core Table 8-11', () => {
         expect(shipActionRows(orders, 'extended').map((row) => row.name)).toEqual([

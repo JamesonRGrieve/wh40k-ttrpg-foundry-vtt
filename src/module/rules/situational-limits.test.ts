@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import type { CombatRoundStamp } from './counter-attack.ts';
 import {
@@ -106,8 +106,14 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
     }
     // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse of a pack source document, narrowed to the fields under test
     const read = (file: string): PackTalent => JSON.parse(readFileSync(resolve(PACKS, file), 'utf8')) as PackTalent;
-    const dh2 = read('dark-heresy-2/dh2-without-items-talents/_source/push-the-limit_nmjVhqTarVFg891j.json');
-    const rows = dh2.system.modifiers.situational.skills;
+    // Read in beforeAll, not the describe body: a skipped describe's body still runs to
+    // collect its tests, so a read here fails where the private content is absent (CI).
+    let dh2: PackTalent;
+    let rows: PackRow[] = [];
+    beforeAll(() => {
+        dh2 = read('dark-heresy-2/dh2-without-items-talents/_source/push-the-limit_nmjVhqTarVFg891j.json');
+        rows = dh2.system.modifiers.situational.skills;
+    });
     const row = (key: string): PackRow | undefined => rows.find((r) => r.key === key);
     /** Whether a `Compendium.wh40k-rpg.<dh2 rolltables pack>.RollTable.<id>` UUID names a source document that exists. */
     function tableFileExists(uuid: string): boolean {

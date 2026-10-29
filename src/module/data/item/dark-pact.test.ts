@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
@@ -102,9 +102,15 @@ function packDocumentExists(uuid: string): boolean {
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Enemies Beyond Dark Pacts (#84)', () => {
-    const files = readdirSync(resolve(PRIVATE_CONTENT_ROOT, 'dark-heresy-2/dh2-beyond-items-dark-pacts/_source')).filter((file) => file.endsWith('.json'));
-    const pacts = files.map((file) => JSON.parse(readRepoFile(`${PACK_DIR}/${file}`)) as PactSource);
-    const byName = new Map(pacts.map((pact) => [pact.name, pact]));
+    // Read in beforeAll: a skipped describe's body still runs to collect its tests,
+    // so a read here fails where the private content is absent (CI).
+    let pacts: PactSource[] = [];
+    let byName = new Map<string, PactSource>();
+    beforeAll(() => {
+        const files = readdirSync(resolve(PRIVATE_CONTENT_ROOT, 'dark-heresy-2/dh2-beyond-items-dark-pacts/_source')).filter((file) => file.endsWith('.json'));
+        pacts = files.map((file) => JSON.parse(readRepoFile(`${PACK_DIR}/${file}`)) as PactSource);
+        byName = new Map(pacts.map((pact) => [pact.name, pact]));
+    });
 
     it('authors the seven example pacts the book prints, at their pages', () => {
         const byPactName = (a: string[], b: string[]): number => (a.at(0) ?? '').localeCompare(b.at(0) ?? '');
