@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { PackMetadataLike } from '../../utils/line-packs.ts';
 import {
     buildCareerAdvancementIndex,
     getCareerAdvancementRegistry,
@@ -10,7 +11,7 @@ import {
 
 /**
  * Drives the compendium-backed career-advancement boot cache with a synthetic
- * `rt-core-origins-careers` pack stub, exercising the kebab-identifier →
+ * RT career-origins pack stub, exercising the kebab-identifier →
  * camelCase-key mapping, cost/advance normalization, and skip rules. The
  * `src/packs` submodule is not checked out in worktrees, so the docs are inline
  * rather than read from `_source`.
@@ -34,8 +35,10 @@ interface StubDoc {
     };
 }
 
-function packWith(docs: StubDoc[]): { getDocuments: () => Promise<StubDoc[]> } {
+/** A career-origins pack of `line`, by its manifest flags, holding `docs`. */
+function packWith(docs: StubDoc[], line = 'rt'): { metadata: PackMetadataLike; getDocuments: () => Promise<StubDoc[]> } {
     return {
+        metadata: { name: `${line}-careers`, flags: { 'wh40k-rpg': { line, category: 'origins-careers', homebrew: false } } },
         getDocuments: async () => {
             await Promise.resolve();
             return docs;
@@ -44,11 +47,7 @@ function packWith(docs: StubDoc[]): { getDocuments: () => Promise<StubDoc[]> } {
 }
 
 function stubPack(docs: StubDoc[] | null): void {
-    vi.stubGlobal('game', {
-        packs: {
-            get: (id: string) => (id === 'wh40k-rpg.rt-core-origins-careers' && docs !== null ? packWith(docs) : undefined),
-        },
-    });
+    vi.stubGlobal('game', { packs: docs === null ? [] : [packWith(docs), packWith([], 'dh1')] });
 }
 
 /** Fetch a built career, asserting presence — narrows the record access once so callers avoid per-site guards. */

@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { builderPacks, isLineBookPack, isLineOriginPack, lineCategoryPack, type PackMetadataLike, packLineFlags, uniqueByName } from './line-packs.ts';
+import {
+    builderPacks,
+    isLineBookPack,
+    isLineOriginPack,
+    lineBookPacks,
+    lineCategoryPack,
+    type PackMetadataLike,
+    packLineFlags,
+    skillReferencePack,
+    uniqueByName,
+} from './line-packs.ts';
 
 /** A pack's metadata with the manifest flags. The name is arbitrary: selection reads only the flags. */
 function pack(line: string, category: string, homebrew = false): PackMetadataLike {
@@ -120,5 +130,31 @@ describe('lineCategoryPack', () => {
         ];
         expect(lineCategoryPack(packs, 'dh2', 'origins-divinations')?.metadata.name).toBe('book');
         expect(lineCategoryPack(packs, 'dh1', 'origins-divinations')).toBeUndefined();
+    });
+});
+
+describe('lineBookPacks', () => {
+    it("returns every one of the line's book packs of the category, sub-groupings included, in order", () => {
+        const packs = [
+            ranked('a', 'dh2', 'talents', {}),
+            ranked('brew', 'dh2', 'talents', {}, true),
+            ranked('b', 'dh2', 'talents-specializations', {}),
+            ranked('other', 'rt', 'talents', {}),
+            ranked('c', 'dh2', 'talents', {}),
+        ];
+        expect(lineBookPacks(packs, 'dh2', 'talents').map((p) => p.metadata.name)).toEqual(['a', 'b', 'c']);
+    });
+});
+
+describe('skillReferencePack', () => {
+    it('prefers DH2, then RT, then DW, ignoring other lines', () => {
+        const rt = ranked('rt', 'rt', 'skills', {});
+        const dw = ranked('dw', 'dw', 'skills', {});
+        const dh2 = ranked('dh2', 'dh2', 'skills', {});
+        const im = ranked('im', 'im', 'skills', {});
+        expect(skillReferencePack([im, dw, rt, dh2])?.metadata.name).toBe('dh2');
+        expect(skillReferencePack([im, dw, rt])?.metadata.name).toBe('rt');
+        expect(skillReferencePack([im, dw])?.metadata.name).toBe('dw');
+        expect(skillReferencePack([im])).toBeUndefined();
     });
 });

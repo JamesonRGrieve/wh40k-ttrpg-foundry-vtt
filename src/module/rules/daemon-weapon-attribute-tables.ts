@@ -4,7 +4,7 @@
  * Per Direction #7, the Attribute tables themselves (the roll-determined
  * names + effect prose that used to be a literal array here) are
  * GW-copyrighted content and live ONLY in the packs submodule as
- * `RollTable` documents in `wh40k-rpg.bc-core-rolltables` — one table per
+ * `RollTable` documents in BC's roll-table packs — one table per
  * daemonic alignment (`general`, `khorne`, `nurgle`, `slaanesh`,
  * `tzeentch`), each tagged with `flags['wh40k-rpg'].daemonWeaponAttributeTable`
  * and each result carrying `flags['wh40k-rpg'].attribute` ({ id, label,
@@ -18,6 +18,7 @@
  */
 
 import type { ChaosAlignment } from '../config/game-systems/types.ts';
+import { isLineBookPack, type PackMetadataLike } from '../utils/line-packs.ts';
 import { clampRoll, findBandBy, rollDie, type Rng } from './_dice.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from './daemon-weapon.ts';
 
@@ -42,8 +43,8 @@ export const DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS: readonly DaemonWeaponAttributeT
 /** Loaded tables, keyed by table discriminator. */
 export type DaemonWeaponAttributeTables = ReadonlyMap<DaemonWeaponAttributeTable, readonly DaemonWeaponAttribute[]>;
 
-/** Fully-qualified pack that hosts the five Attribute RollTables. */
-export const DAEMON_WEAPON_ATTRIBUTE_PACK = 'wh40k-rpg.bc-core-rolltables';
+/** The line whose roll-table packs host the five Attribute RollTables. */
+export const DAEMON_WEAPON_ATTRIBUTE_LINE = 'bc';
 
 /* -------------------------------------------- */
 /*  Raw document shape (compendium boundary)    */
@@ -67,6 +68,7 @@ interface RawRollTable {
 
 /** Minimal pack surface: a collection whose documents this reader loads. */
 interface DaemonWeaponAttributePack {
+    readonly metadata: PackMetadataLike;
     /** Optional — a locked or unavailable pack may not expose it; the reader guards for that. */
     readonly getDocuments?: () => Promise<readonly RawRollTable[]>;
 }
@@ -109,41 +111,46 @@ function projectResult(result: RawTableResult): DaemonWeaponAttribute | null {
 /**
  * Load the Daemon Weapon Attribute RollTables from the packs submodule and
  * project each into an ordered {@link DaemonWeaponAttribute} list, keyed by
- * the table's `daemonWeaponAttributeTable` flag. A missing pack (packs
- * submodule absent, pack disabled, documentClass not ready) yields an empty
- * Map rather than throwing, so the roller degrades gracefully.
+ * the table's `daemonWeaponAttributeTable` flag. The line's roll-table packs are
+ * read in order until every table is found. A missing pack (packs submodule
+ * absent, pack disabled, documentClass not ready) yields an empty Map rather
+ * than throwing, so the roller degrades gracefully.
  *
- * @param packName Fully-qualified pack id; defaults to {@link DAEMON_WEAPON_ATTRIBUTE_PACK}.
+ * @param line The game line whose roll-table packs to read; defaults to {@link DAEMON_WEAPON_ATTRIBUTE_LINE}.
  */
-export async function readDaemonWeaponAttributeTables(packName: string = DAEMON_WEAPON_ATTRIBUTE_PACK): Promise<DaemonWeaponAttributeTables> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs.get returns Foundry's CompendiumCollection (untyped document shape); narrowed locally to the DaemonWeaponAttributePack surface this reader reads
-    const pack = game.packs.get(packName) as DaemonWeaponAttributePack | undefined;
+export async function readDaemonWeaponAttributeTables(line: string = DAEMON_WEAPON_ATTRIBUTE_LINE): Promise<DaemonWeaponAttributeTables> {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs is Foundry's CompendiumCollection (untyped document shape); narrowed locally to the DaemonWeaponAttributePack surface this reader reads
+    const packs = [...(game.packs as unknown as Iterable<DaemonWeaponAttributePack>)].filter((pack) => isLineBookPack(pack.metadata, line, 'rolltables'));
     const out = new Map<DaemonWeaponAttributeTable, readonly DaemonWeaponAttribute[]>();
-    if (pack?.getDocuments === undefined) return out;
 
-    let docs: readonly RawRollTable[];
-    try {
-        // Call as a method (not a detached reference) so Foundry's CompendiumCollection
-        // keeps its `this` binding inside getDocuments().
-        docs = await pack.getDocuments();
-    } catch (err) {
-        // A pack whose documentClass isn't ready yet throws inside getDocuments
-        // ("...reading 'database'"). Degrade to empty tables rather than letting
-        // an uncaught error escape the dialog's render.
-        console.warn(`readDaemonWeaponAttributeTables: ${packName} getDocuments failed`, err);
-        return out;
-    }
-
-    for (const doc of docs) {
-        const key = doc.flags?.['wh40k-rpg']?.daemonWeaponAttributeTable;
-        if (!isTableKey(key)) continue;
-        const entries: DaemonWeaponAttribute[] = [];
-        for (const result of doc.results ?? []) {
-            const projected = projectResult(result);
-            if (projected !== null) entries.push(projected);
+    for (const pack of packs) {
+        if (out.size === DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS.length) break;
+        if (pack.getDocuments === undefined) continue;
+        let docs: readonly RawRollTable[];
+        try {
+            // Call as a method (not a detached reference) so Foundry's CompendiumCollection
+            // keeps its `this` binding inside getDocuments().
+            // eslint-disable-next-line no-await-in-loop -- sequential by design: stop reading packs once every table is found
+            docs = await pack.getDocuments();
+        } catch (err) {
+            // A pack whose documentClass isn't ready yet throws inside getDocuments
+            // ("...reading 'database'"). Skip it rather than letting an uncaught
+            // error escape the dialog's render.
+            console.warn(`readDaemonWeaponAttributeTables: ${pack.metadata.name} getDocuments failed`, err);
+            continue;
         }
-        entries.sort((a, b) => a.roll[0] - b.roll[0]);
-        out.set(key, entries);
+
+        for (const doc of docs) {
+            const key = doc.flags?.['wh40k-rpg']?.daemonWeaponAttributeTable;
+            if (!isTableKey(key) || out.has(key)) continue;
+            const entries: DaemonWeaponAttribute[] = [];
+            for (const result of doc.results ?? []) {
+                const projected = projectResult(result);
+                if (projected !== null) entries.push(projected);
+            }
+            entries.sort((a, b) => a.roll[0] - b.roll[0]);
+            out.set(key, entries);
+        }
     }
     return out;
 }

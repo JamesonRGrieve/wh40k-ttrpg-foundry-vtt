@@ -167,12 +167,12 @@ describe('MalignancyTestActionData — Twisted Flesh (#91)', () => {
 });
 
 describe("Malignancies table lookup in the rolling line's pack", () => {
-    /** One RollTable pack whose index holds a single entry. */
-    function tablePack(collection: string, name: string): object {
+    /** One of `line`'s RollTable packs whose index holds a single entry. */
+    function tablePack(line: string, name: string): object {
         const table = { name };
         return {
             documentName: 'RollTable',
-            collection,
+            metadata: { name: `${line}-tables`, flags: { 'wh40k-rpg': { line, category: 'rolltables', homebrew: false } } },
             getIndex: async (): Promise<{ _id: string; name: string }[]> => Promise.resolve([{ _id: 't1', name }]),
             getDocument: async (): Promise<object> => Promise.resolve(table),
         };
@@ -180,10 +180,10 @@ describe("Malignancies table lookup in the rolling line's pack", () => {
 
     it('finds a table printed in capitals (Only War: "MALIGNANCIES")', async () => {
         vi.stubGlobal('game', {
-            packs: [tablePack('wh40k-rpg.dh2-core-rolltables', 'Malignancies'), tablePack('wh40k-rpg.ow-core-rolltables', 'MALIGNANCIES')],
+            packs: [tablePack('dh2', 'Malignancies'), tablePack('ow', 'MALIGNANCIES')],
         });
         try {
-            const found = await RollTableUtils.findTableInCompendiums('Malignancies', 'wh40k-rpg.ow-core-rolltables');
+            const found = await RollTableUtils.findTableInCompendiums('Malignancies', 'ow');
             expect(found).toEqual({ name: 'MALIGNANCIES' });
         } finally {
             vi.unstubAllGlobals();

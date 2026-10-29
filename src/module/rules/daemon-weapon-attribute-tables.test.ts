@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
 import {
-    DAEMON_WEAPON_ATTRIBUTE_PACK,
+    DAEMON_WEAPON_ATTRIBUTE_LINE,
     DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS,
     type DaemonWeaponAttribute,
     type DaemonWeaponAttributeTable,
@@ -37,13 +38,11 @@ interface RawTable {
     flags?: { 'wh40k-rpg'?: { daemonWeaponAttributeTable?: string } };
 }
 interface FakePack {
+    metadata: PackMetadataLike;
     getDocuments?: () => Promise<RawTable[]>;
 }
-interface PacksStub {
-    get: (id: string) => FakePack | undefined;
-}
 interface GameStub {
-    packs: PacksStub;
+    packs: FakePack[];
 }
 interface GlobalShim {
     game?: GameStub | undefined;
@@ -80,9 +79,15 @@ function fakeTableDoc(key: DaemonWeaponAttributeTable): RawTable {
     };
 }
 
-function installPack(packId: string, docs: RawTable[]): void {
+/** A roll-table pack of `line`, by its manifest flags. */
+function tableMetadata(line: string): PackMetadataLike {
+    return { name: `${line}-tables`, flags: { 'wh40k-rpg': { line, category: 'rolltables', homebrew: false } } };
+}
+
+/** Install one roll-table pack of `line` holding `docs`. */
+function installPack(line: string, docs: RawTable[]): void {
     const getDocuments = vi.fn<() => Promise<RawTable[]>>().mockResolvedValue(docs);
-    G.game = { packs: { get: (id) => (id === packId ? { getDocuments } : undefined) } };
+    G.game = { packs: [{ metadata: tableMetadata(line), getDocuments }] };
 }
 
 /** All five tables, populated from the fixture — a pure in-memory stand-in for the loaded pack. */
@@ -126,7 +131,7 @@ describe('tableForAlignment routing', () => {
 describe('readDaemonWeaponAttributeTables (#142)', () => {
     it('projects each RollTable into an ordered, keyed DaemonWeaponAttribute list', async () => {
         const docs = DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS.map(fakeTableDoc);
-        installPack(DAEMON_WEAPON_ATTRIBUTE_PACK, docs);
+        installPack(DAEMON_WEAPON_ATTRIBUTE_LINE, docs);
 
         const tables = await readDaemonWeaponAttributeTables();
         expect([...tables.keys()].sort()).toEqual([...DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS].sort());
@@ -146,29 +151,44 @@ describe('readDaemonWeaponAttributeTables (#142)', () => {
                 { range: [1, 2], flags: { 'wh40k-rpg': { attribute: { id: 'g.lo', label: 'Lo', effect: 'y' } } } },
             ],
         };
-        installPack(DAEMON_WEAPON_ATTRIBUTE_PACK, [shuffled]);
+        installPack(DAEMON_WEAPON_ATTRIBUTE_LINE, [shuffled]);
         const tables = await readDaemonWeaponAttributeTables();
         expect(tables.get('general')?.map((e) => e.id)).toEqual(['g.lo', 'g.hi']);
     });
 
     it('ignores RollTables without the daemonWeaponAttributeTable flag', async () => {
         const unrelated: RawTable = { flags: { 'wh40k-rpg': {} }, results: [{ range: [1, 10] }] };
-        installPack(DAEMON_WEAPON_ATTRIBUTE_PACK, [unrelated, fakeTableDoc('general')]);
+        installPack(DAEMON_WEAPON_ATTRIBUTE_LINE, [unrelated, fakeTableDoc('general')]);
         const tables = await readDaemonWeaponAttributeTables();
         expect([...tables.keys()]).toEqual(['general']);
     });
 
-    it('returns an empty Map when the pack is absent', async () => {
-        G.game = { packs: { get: () => undefined } };
+    it('returns an empty Map when the line has no roll-table pack', async () => {
+        installPack('dh2', DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS.map(fakeTableDoc));
         expect((await readDaemonWeaponAttributeTables()).size).toBe(0);
+    });
+
+    it("reads the line's later packs for tables the first lacks, keeping the first copy", async () => {
+        const later = vi.fn<() => Promise<RawTable[]>>().mockResolvedValue(DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS.map(fakeTableDoc));
+        const firstGeneral: RawTable = { ...fakeTableDoc('general'), results: [{ range: [1, 10], flags: { 'wh40k-rpg': { attribute: { id: 'first' } } } }] };
+        G.game = {
+            packs: [
+                { metadata: tableMetadata(DAEMON_WEAPON_ATTRIBUTE_LINE), getDocuments: vi.fn<() => Promise<RawTable[]>>().mockResolvedValue([firstGeneral]) },
+                { metadata: tableMetadata(DAEMON_WEAPON_ATTRIBUTE_LINE), getDocuments: later },
+            ],
+        };
+        const tables = await readDaemonWeaponAttributeTables();
+        expect(tables.size).toBe(DAEMON_WEAPON_ATTRIBUTE_TABLE_KEYS.length);
+        expect(tables.get('general')?.map((e) => e.id)).toEqual(['first']);
     });
 
     it('returns an empty Map (no uncaught error) when getDocuments throws', async () => {
         const failing: FakePack = {
+            metadata: tableMetadata(DAEMON_WEAPON_ATTRIBUTE_LINE),
             getDocuments: vi.fn<() => Promise<RawTable[]>>().mockRejectedValue(new Error("Cannot read properties of undefined (reading 'database')")),
         };
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        G.game = { packs: { get: () => failing } };
+        G.game = { packs: [failing] };
         expect((await readDaemonWeaponAttributeTables()).size).toBe(0);
         vi.restoreAllMocks();
     });

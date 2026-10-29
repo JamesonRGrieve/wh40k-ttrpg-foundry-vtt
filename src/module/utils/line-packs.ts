@@ -70,6 +70,24 @@ export function lineCategoryPack<T extends { readonly metadata: PackMetadataLike
     return undefined;
 }
 
+/** The lines whose skills pack serves as the shared skill reference, most complete first. */
+const SKILL_REFERENCE_LINES = ['dh2', 'rt', 'dw'] as const;
+
+/** The skills pack read for skill descriptions and info sheets: the first reference line's that is installed. */
+export function skillReferencePack<T extends { readonly metadata: PackMetadataLike }>(packs: Iterable<T>): T | undefined {
+    const all = [...packs];
+    for (const line of SKILL_REFERENCE_LINES) {
+        const pack = lineCategoryPack(all, line, 'skills');
+        if (pack !== undefined) return pack;
+    }
+    return undefined;
+}
+
+/** All of `line`'s book packs of `category` (or a sub-grouping of it), in manifest order. */
+export function lineBookPacks<T extends { readonly metadata: PackMetadataLike }>(packs: Iterable<T>, line: string, category: string): T[] {
+    return [...packs].filter((pack) => isLineBookPack(pack.metadata, line, category));
+}
+
 /** Does `category` name `wanted` itself or a sub-grouping of it (`talents-specializations` under `talents`)? */
 function inCategory(category: string, wanted: string): boolean {
     return category === wanted || category.startsWith(`${wanted}-`);

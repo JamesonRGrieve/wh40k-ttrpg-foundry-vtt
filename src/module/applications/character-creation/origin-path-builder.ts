@@ -39,6 +39,7 @@ import { builderPacks, lineCategoryPack, packLineFlags } from '../../utils/line-
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
+import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
@@ -2924,7 +2925,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _findSkillUuid(skillName: string | null | undefined, specialization: string | null | undefined = null): string | null {
         try {
-            const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-items-skills');
+            const skillPack = lineCategoryPack(game.packs, 'dh2', 'skills');
             if (!skillPack) return null;
 
             const index = skillPack.index;
@@ -4459,51 +4460,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const worldTable = (game.tables as { getName?: (name: string) => unknown } | undefined)?.getName?.('Divination');
         if (worldTable !== undefined && worldTable !== null && hasResults(worldTable)) return worldTable;
 
-        const expectedPackId = 'wh40k-rpg.dh2-core-rolltables';
-        const pack =
-            game.packs.get(expectedPackId) ??
-            game.packs.find((candidate) => candidate.metadata.id === expectedPackId || candidate.metadata.name === 'dh2-core-rolltables');
-
-        if (!pack) {
-            const availableRollTablePacks = Array.from(game.packs)
-                .filter((candidate) => candidate.documentName === 'RollTable')
-                .map((candidate) => candidate.metadata.id)
-                .sort();
-            console.warn('[wh40k-rpg] Divination RollTable pack not found.', {
-                expectedPackId,
-                availableRollTablePacks,
-            });
-            return null;
-        }
-
-        const index = await pack.getIndex({ fields: ['name'] });
-        const entry = index.find((candidate) => candidate.name === 'Divination');
-        if (entry?._id === undefined || entry._id === '') {
-            const availableTableNames = index
-                .map((candidate) => candidate.name)
-                .filter((name): name is string => typeof name === 'string')
-                .sort();
-            console.warn('[wh40k-rpg] Divination RollTable entry not found in pack.', {
-                packId: pack.metadata.id,
-                availableTableNames,
-            });
-            return null;
-        }
-
-        const document = await pack.getDocument(entry._id);
-        if (document == null) {
-            console.warn('[wh40k-rpg] Divination RollTable document failed to load from pack.', {
-                packId: pack.metadata.id,
-                tableId: entry._id,
-            });
+        // The compendium copy lives in DH2's roll-table packs.
+        const document = await RollTableUtils.findTableInCompendiums('Divination', 'dh2');
+        if (document === null) {
+            console.warn('[wh40k-rpg] Divination RollTable not found in the roll-table packs.');
             return null;
         }
 
         if (!hasResults(document)) {
-            console.warn('[wh40k-rpg] Divination RollTable has no results; using 1d100 fallback.', {
-                packId: pack.metadata.id,
-                tableId: entry._id,
-            });
+            console.warn('[wh40k-rpg] Divination RollTable has no results; using 1d100 fallback.', { tableUuid: document.uuid });
             return null;
         }
 

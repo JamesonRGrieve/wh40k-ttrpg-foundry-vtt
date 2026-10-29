@@ -25,12 +25,11 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
- * Compendium coordinates of the RT Perils-of-the-Warp content table. The
- * reproduced table lives in `dh2-core-rolltables` (Direction #7); the dialog
- * draws it at runtime rather than embedding the rulebook text in `src/`.
+ * Where the warp-travel Perils table lives: a DH2 roll-table pack (Direction #7);
+ * the dialog draws it at runtime rather than embedding its text in `src/`.
  */
 const PERILS_TABLE_NAME = 'Perils of the Warp (Rogue Trader)';
-const PERILS_PACK_ID = 'wh40k-rpg.dh2-core-rolltables';
+const PERILS_TABLE_LINE = 'dh2';
 
 /** Structural view of a Foundry RollTable result row (untyped Collection). */
 interface PerilTableRow {
@@ -45,7 +44,7 @@ interface PerilTableRow {
  * behaviour where a gap produced no peril and the chat card shows the gap note.
  */
 async function drawPeril(rolled: number): Promise<PerilResult | null> {
-    const table = await RollTableUtils.findTableInCompendiums(PERILS_TABLE_NAME, PERILS_PACK_ID);
+    const table = await RollTableUtils.findTableInCompendiums(PERILS_TABLE_NAME, PERILS_TABLE_LINE);
     if (table === null) return null;
     // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable.results is Foundry's untyped Collection; the structural [{range,text}] view satisfies it at runtime
     const rows = Array.from(table.results as Iterable<PerilTableRow>);

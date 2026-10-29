@@ -1,18 +1,16 @@
 /**
  * @file DisorderRollDialog — GM-only dialog for rolling a Mental Disorder
- * from the canonical Disorders RollTable (#116, core.md §"Insanity").
+ * from the canonical Disorders RollTable (#116).
  *
  * The GM picks a severity tier (Minor / Severe / Acute) — corresponding
  * to the 40 / 60 / 80 Insanity thresholds — clicks Roll, and the dialog
- * draws from the "Disorders" RollTable in the `dh2-core-rolltables`
- * compendium, resolves the referenced Mental Disorder item, and emits a
- * chat card surfacing the disorder's name, the chosen severity, and a
- * concise effect summary.
+ * draws from the "Disorders" RollTable in DH2's roll-table packs, resolves
+ * the referenced Mental Disorder item, and emits a chat card surfacing the
+ * disorder's name, the chosen severity, and a concise effect summary.
  *
- * The disorder content lives ONLY in the compendium packs
- * (`dh2-core-rolltables` for the range→disorder mapping and
- * `dh2-core-items-mental-disorders` for the item bodies); this file is a
- * thin UI shell that reads that content at runtime.
+ * The disorder content lives ONLY in the compendium packs (a roll table for
+ * the range→disorder mapping, mental-disorder items for the bodies); this
+ * file is a thin UI shell that reads that content at runtime.
  */
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
@@ -27,10 +25,10 @@ const { ApplicationV2 } = foundry.applications.api;
 /** Three canonical severity tiers, mirroring `MentalDisorderData.severity`. */
 export type DisorderSeverity = 'minor' | 'severe' | 'acute';
 
-/** World/compendium name of the Disorders roll table (authored in `dh2-core-rolltables`). */
+/** World/compendium name of the Disorders roll table. */
 const DISORDERS_TABLE_NAME = 'Disorders';
-/** Compendium collection id the Disorders table lives in — scopes the lookup so a shared table name can't mis-resolve. */
-const DISORDERS_ROLLTABLE_PACK = 'wh40k-rpg.dh2-core-rolltables';
+/** The line whose roll-table packs hold the Disorders table — scopes the lookup so a shared table name can't mis-resolve. */
+const DISORDERS_TABLE_LINE = 'dh2';
 
 interface SeverityOption {
     id: DisorderSeverity;
@@ -131,7 +129,7 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
         // Draw the disorder from the compendium RollTable (content lives in the
         // packs, not in this module). `displayChat: false` — we emit a bespoke card below.
         const rollResult = await RollTableUtils.rollTable(DISORDERS_TABLE_NAME, {
-            pack: DISORDERS_ROLLTABLE_PACK,
+            line: DISORDERS_TABLE_LINE,
             displayChat: false,
         });
         const results = rollResult?.results ?? [];

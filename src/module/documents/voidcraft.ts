@@ -78,13 +78,13 @@ interface ShipStatus {
 }
 
 /**
- * The RT Critical Hits chart (RT Core Table 8-12) and the compendium it ships
- * in. Scoping the lookup to the pack keeps another line's same-named table out.
+ * The RT ship Critical Hits chart and the line whose roll-table packs hold it.
+ * Scoping the lookup to the line keeps another line's same-named table out.
  */
 const CRITICAL_HIT_TABLE_NAME = 'Ship Critical Hits';
-const CRITICAL_HIT_TABLE_PACK = 'wh40k-rpg.rt-core-rolltables';
+const CRITICAL_HIT_TABLE_LINE = 'rt';
 
-/** A weapon's Critical Hit rolls 1d5 on the chart (RT Core, "Starship Weapons"). */
+/** A weapon's Critical Hit rolls 1d5 on the chart. */
 const WEAPON_CRITICAL_DIE = '1d5';
 
 /** The drawn result's fields the status reads. `description` is V13+; `text` the legacy field. */
@@ -471,7 +471,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     protected async _recordCriticalHit(formula: string, pastArmour: boolean): Promise<void> {
         const preRoll = await new Roll(formula).evaluate();
         const result = Math.trunc(preRoll.total);
-        const draw = await RollTableUtils.rollTable(CRITICAL_HIT_TABLE_NAME, { displayChat: false, pack: CRITICAL_HIT_TABLE_PACK, roll: preRoll });
+        const draw = await RollTableUtils.rollTable(CRITICAL_HIT_TABLE_NAME, { displayChat: false, line: CRITICAL_HIT_TABLE_LINE, roll: preRoll });
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's RollTable#roll returns an untyped TableResult array; reading the drawn result's id, name and text
         const drawn = draw === null ? undefined : (draw.results as unknown as DrawnCriticalResult[]).at(0);
         const resultText = drawn?.description ?? drawn?.text ?? '';

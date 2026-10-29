@@ -1,12 +1,7 @@
 import type { GameSystemId } from '../config/game-systems/types.ts';
-import { SYSTEM_ID } from '../constants.ts';
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KGameSystem } from '../types/global.d.ts';
-
-/** The compendium id of a line's core roll-table pack (`<line>-core-rolltables`). */
-function coreRollTablePack(gameSystem: GameSystemId): string {
-    return `${SYSTEM_ID}.${gameSystem}-core-rolltables`;
-}
+import { isLineBookPack } from './line-packs.ts';
 
 type RollTableResult = Awaited<ReturnType<RollTable['roll']>>;
 type RollTableDialog = HTMLDialogElement;
@@ -14,11 +9,11 @@ type RollTableRollOptions = {
     displayChat?: boolean;
     roll?: Roll | null;
     /**
-     * Optional compendium pack id to scope the lookup to. When set, only that
-     * pack is searched (after world tables) — so a table name shared across
-     * systems (e.g. "Critical Hit") can't mis-resolve to another system's copy.
+     * Optional game line to scope the lookup to. When set, only that line's
+     * roll-table packs are searched (after world tables) — so a table name shared
+     * across lines (e.g. "Critical Hit") can't mis-resolve to another line's copy.
      */
-    pack?: string;
+    line?: string;
     /**
      * Escalate the drawn result by N rows along the table's own ordering, after
      * the roll resolves. Used for "one step more severe on the ladder" riders
@@ -52,14 +47,14 @@ export class RollTableUtils {
      * @returns {Promise<TableResult | null>} The table result
      */
     static async rollTable(tableName: string, options: RollTableRollOptions = {}): Promise<RollTableResult | null> {
-        const { displayChat = true, roll = null, pack, escalateRows = 0 } = options;
+        const { displayChat = true, roll = null, line, escalateRows = 0 } = options;
 
         // Find the table in world tables first, then compendiums (scoped to
-        // `pack` when given, so a shared table name can't mis-resolve).
+        // `line` when given, so a shared table name can't mis-resolve).
         let table: RollTable | null = game.tables.getName(tableName) as RollTable | null;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: ??= is the idiomatic null-fill pattern; table is initialised from getName() above, not from schema
-        table ??= await this.findTableInCompendiums(tableName, pack);
+        table ??= await this.findTableInCompendiums(tableName, line);
 
         if (table === null) {
             ui.notifications.warn(game.i18n.format('WH40K.Notify.RollTable.NotFound', { name: tableName }));
@@ -133,16 +128,16 @@ export class RollTableUtils {
     /**
      * Find a roll table in compendium packs.
      * @param {string} tableName - The name of the table to find
-     * @param {string} [packId] - When set, search only this pack instead of all
-     *   RollTable packs (scopes a shared table name to one system's copy).
+     * @param {string} [line] - When set, search only this line's roll-table packs
+     *   instead of all RollTable packs (scopes a shared table name to one line's copy).
      * @returns {Promise<RollTable|null>} The found table or null
      */
-    static async findTableInCompendiums(tableName: string, packId?: string): Promise<RollTable | null> {
+    static async findTableInCompendiums(tableName: string, line?: string): Promise<RollTable | null> {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
-            // Scope to a single pack when requested, so a table name shared
-            // across systems doesn't mis-resolve to another system's copy.
-            if (packId !== undefined && pack.collection !== packId) continue;
+            // Scope to one line's packs when requested, so a table name shared
+            // across lines doesn't mis-resolve to another line's copy.
+            if (line !== undefined && !isLineBookPack(pack.metadata, line, 'rolltables')) continue;
 
             // eslint-disable-next-line no-await-in-loop -- sequential pack search; early-exit on first match requires ordered iteration
             const index = await pack.getIndex();
@@ -224,29 +219,29 @@ export class RollTableUtils {
 
     /**
      * Roll on the Mutations table.
-     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's core
-     *   roll-table pack (as {@link rollMalignancy} does), so a Twisted Flesh
+     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's
+     *   roll-table packs (as {@link rollMalignancy} does), so a Twisted Flesh
      *   mutation draws the rolling line's table.
      * @returns {Promise<TableResult>}
      */
     static async rollMutation(gameSystem?: GameSystemId): Promise<RollTableResult | null> {
         return this.rollTable('Mutations', {
             displayChat: true,
-            ...(gameSystem !== undefined ? { pack: coreRollTablePack(gameSystem) } : {}),
+            ...(gameSystem !== undefined ? { line: gameSystem } : {}),
         });
     }
 
     /**
      * Roll on the Malignancies table.
-     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's core
-     *   roll-table pack, so a failed Malignancy Test draws that line's table rather
+     * @param {GameSystemId} [gameSystem] - Scope the lookup to this line's
+     *   roll-table packs, so a failed Malignancy Test draws that line's table rather
      *   than whichever line's copy of the shared name is found first.
      * @returns {Promise<TableResult>}
      */
     static async rollMalignancy(gameSystem?: GameSystemId): Promise<RollTableResult | null> {
         return this.rollTable('Malignancies', {
             displayChat: true,
-            ...(gameSystem !== undefined ? { pack: coreRollTablePack(gameSystem) } : {}),
+            ...(gameSystem !== undefined ? { line: gameSystem } : {}),
         });
     }
 

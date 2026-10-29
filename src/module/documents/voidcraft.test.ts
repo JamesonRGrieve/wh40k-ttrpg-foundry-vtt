@@ -472,9 +472,9 @@ describe('WH40KVoidcraft · ship-action modifiers (issue #186)', () => {
 });
 
 /**
- * Issue #187 — the Critical Hit chart is RT Core Table 8-12, shipped as "Ship
- * Critical Hits" in `rt-core-rolltables`. The lookup named a table ("Critical
- * Hit") in a pack (`rt-core-rolltables-ship-combat`) that never existed, so
+ * Issue #187 — the Critical Hit chart ships as "Ship Critical Hits" in RT's
+ * roll-table packs. The lookup named a table ("Critical Hit") in a pack that
+ * never existed, so
  * every critical fell back to "roll table unavailable"; and a status was
  * labelled from a hard-coded five-entry list that did not match the chart.
  *
@@ -503,7 +503,7 @@ describe('WH40KVoidcraft · Critical Hits and void shields (issues #184, #187)',
     /** The table lookup the document makes, as `RollTableUtils.rollTable` sees it. */
     interface TableCall {
         name: string;
-        pack: string | undefined;
+        line: string | undefined;
         roll: number | undefined;
     }
     interface DrawnResult {
@@ -567,7 +567,7 @@ describe('WH40KVoidcraft · Critical Hits and void shields (issues #184, #187)',
         vi.stubGlobal('ChatMessage', { getSpeaker: () => ({}), create: async () => Promise.resolve({}) });
         vi.spyOn(tables.RollTableUtils, 'rollTable').mockImplementation(async (name, options) => {
             const roll = options?.roll ?? null;
-            calls.push({ name, pack: options?.pack, roll: roll === null ? undefined : Number(roll.total) });
+            calls.push({ name, line: options?.line, roll: roll === null ? undefined : Number(roll.total) });
             if (drawn === null) return Promise.resolve(null);
             // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable#roll's result is Foundry's untyped draw; the document reads only `roll` and `results`
             const draw = { roll, results: [drawn] } as unknown as Awaited<ReturnType<typeof tables.RollTableUtils.rollTable>>;
@@ -584,13 +584,13 @@ describe('WH40KVoidcraft · Critical Hits and void shields (issues #184, #187)',
 
     const FIRE: DrawnResult = { id: 'RTsc05ShipCrit05ee', name: 'Fire!', description: '<p><b>Fire!</b>: Alarms scream through the hull…</p>' };
 
-    it('draws "Ship Critical Hits" from rt-core-rolltables on the given 1d5 result', async () => {
+    it('draws "Ship Critical Hits" from RT\'s roll tables on the given 1d5 result', async () => {
         const ctx = await setup(FIRE);
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (ctx === undefined) return;
         const ship = fakeShip();
         await ctx.methods.rollShipCriticalHit.call(ship, 5);
-        expect(ctx.calls).toEqual([{ name: 'Ship Critical Hits', pack: 'wh40k-rpg.rt-core-rolltables', roll: 5 }]);
+        expect(ctx.calls).toEqual([{ name: 'Ship Critical Hits', line: 'rt', roll: 5 }]);
         expect(ship.updates).toEqual([{ 'system.shipStatuses': [expect.objectContaining({ id: FIRE.id, name: 'Fire!', rolled: 5, text: FIRE.description })] }]);
         expect(ctx.rendered[0]).toMatchObject({ resultName: 'Fire!', statusLabel: 'Fire!', resultText: FIRE.description });
     });

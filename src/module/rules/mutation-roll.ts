@@ -2,16 +2,15 @@
  * Mutation roll logic (#117).
  *
  * This module holds NO reproduced rulebook content. The Mutation table
- * (Table 8–16 — mutation names, effect prose, and d100 ranges) lives in the
- * `dh2-core-rolltables` compendium as the "Mutations" RollTable, whose results
- * reference the mutation items in `dh2-core-items-mutations` by UUID. This
+ * (mutation names, effect prose, and d100 ranges) lives in DH2's roll-table
+ * packs as the "Mutations" RollTable, whose results reference the line's
+ * mutation items by UUID. This
  * module loads that table at runtime, resolves each referenced item to a
  * structured {@link MutationEntry}, and maps a d100 roll on the selected track
  * to an entry — the roll/clamp/find plumbing is content-agnostic.
  *
- * The Minor / Major tracks are the two ways the GM samples the same table
- * (core.md §"Mutation"): a Minor roll is confined to the lower, less-severe
- * rows; a Major roll spans the whole table. Which rows are "minor" is authored
+ * The Minor / Major tracks are the two ways the GM samples the same table:
+ * a Minor roll is confined to the lower, less-severe rows; a Major roll spans the whole table. Which rows are "minor" is authored
  * on the items themselves (`system.category`), so the track's d100 band is
  * derived from the loaded content rather than hardcoded here.
  */
@@ -26,7 +25,7 @@ export type MutationTrack = 'minor' | 'major';
 export interface MutationEntry {
     /** Inclusive d100 `[low, high]` band this mutation occupies. */
     readonly range: readonly [number, number];
-    /** UUID of the backing mutation item in `dh2-core-items-mutations`. */
+    /** UUID of the backing mutation item. */
     readonly uuid: string;
     /** Display name (from the item). */
     readonly name: string;
@@ -40,8 +39,8 @@ export interface MutationEntry {
 
 /** Name of the Mutations RollTable in the compendium. */
 const MUTATION_TABLE_NAME = 'Mutations';
-/** Compendium collection holding the Mutations RollTable (`<package>.<pack>`). */
-const MUTATION_TABLE_PACK = 'wh40k-rpg.dh2-core-rolltables';
+/** The line whose roll-table packs hold the Mutations RollTable. */
+const MUTATION_TABLE_LINE = 'dh2';
 
 /** Minimal shape of a Mutations RollTable result this module depends on. */
 export interface MutationResult {
@@ -142,7 +141,7 @@ export async function buildEntries(results: readonly MutationResult[], resolveIt
  * the caller can surface a warning.
  */
 export async function loadMutationEntries(): Promise<MutationEntry[] | null> {
-    const table = await RollTableUtils.findTableInCompendiums(MUTATION_TABLE_NAME, MUTATION_TABLE_PACK);
+    const table = await RollTableUtils.findTableInCompendiums(MUTATION_TABLE_NAME, MUTATION_TABLE_LINE);
     if (table === null) return null;
     // eslint-disable-next-line no-restricted-syntax -- boundary: RollTable#results is Foundry's untyped embedded Collection; the length-2 range / documentUuid / name shape holds at runtime
     const results = Array.from(table.results as unknown as Iterable<MutationResult>);

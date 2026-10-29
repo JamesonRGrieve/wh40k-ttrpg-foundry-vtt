@@ -10,6 +10,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { hitLocationLabel } from '../../rules/hit-locations.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
+import { skillReferencePack } from '../../utils/line-packs.ts';
 import { parseQualityLevel } from '../../utils/quality-id.ts';
 import { type ActivatableTooltipManager, activateRichTooltips, makeRichTooltipsFocusable } from './tooltip-activation.ts';
 
@@ -285,9 +286,8 @@ export class TooltipsWH40K {
 
     async _loadSkillDescriptions(): Promise<void> {
         try {
-            const skillPackNames = ['wh40k-rpg.dh2-core-items-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
-            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p !== undefined) ?? null;
-            if (pack === null) {
+            const pack = skillReferencePack(game.packs);
+            if (pack === undefined) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
             }

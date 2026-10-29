@@ -4,8 +4,8 @@
  * Central registry for all career advancement configurations.
  * Provides helper functions to access career-specific data.
  *
- * The per-career tables are content and live on the `rt-core-origins-careers`
- * compendium `originPath` documents (`system.careerAdvancement`), indexed at
+ * The per-career tables are content and live on RT's career compendium
+ * `originPath` documents (`system.careerAdvancement`), indexed at
  * `ready` into an in-memory boot cache (`./career-advancement-cache.ts`) keyed
  * by the camelCase career key. This module reads that cache; its exported API
  * is unchanged (Direction #7 — no in-`src/` content table).

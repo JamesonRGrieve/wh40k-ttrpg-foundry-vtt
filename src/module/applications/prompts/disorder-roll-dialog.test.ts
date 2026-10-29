@@ -3,8 +3,8 @@
  *
  * The disorder content (which disorder, its effect prose) was moved out of a
  * hardcoded `src/module/rules/disorders-table.ts` array into the compendium:
- * the "Disorders" RollTable in `dh2-core-rolltables` maps d100 ranges onto the
- * Mental Disorder items in `dh2-core-items-mental-disorders`. The dialog now
+ * the "Disorders" RollTable in DH2's roll-table packs maps d100 ranges onto the
+ * line's Mental Disorder items. The dialog now
  * DRAWS from that table at runtime and resolves the referenced item, instead of
  * picking from an in-`src/` literal.
  *
@@ -63,10 +63,10 @@ describe('conciseEffect (#116)', () => {
 });
 
 describe('DisorderRollDialog compendium-read wiring (#116)', () => {
-    it('draws the disorder from the Disorders RollTable in the dh2-core-rolltables compendium', () => {
+    it("draws the disorder from the Disorders RollTable in DH2's roll-table packs", () => {
         expect(DIALOG_SRC).toContain('RollTableUtils');
         expect(DIALOG_SRC).toContain("'Disorders'");
-        expect(DIALOG_SRC).toContain('wh40k-rpg.dh2-core-rolltables');
+        expect(DIALOG_SRC).toContain('line: DISORDERS_TABLE_LINE');
         // Reads the drawn table result, not an in-src disorder array.
         expect(DIALOG_SRC).toContain('.rollTable(');
     });

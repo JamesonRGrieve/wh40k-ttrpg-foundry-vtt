@@ -33,6 +33,7 @@ import {
     rememberLineVariantSource,
     resolveOwnedLineContent,
 } from '../utils/item-variant-utils.ts';
+import { lineBookPacks } from '../utils/line-packs.ts';
 import { canonicalClipMax, withFullMagazine } from '../utils/magazine-load.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
@@ -1038,7 +1039,7 @@ export class WH40KItem extends WH40KItemContainer {
         // this applier's own resource→path map (Fate onto `fate.max` + `fate.value`).
         const { updates: resourceUpdates, newDelta } = reconcileResourceDeltas(actor.system, originContribution(md), priorDelta, ORIGIN_RESOURCE_PATHS);
         Object.assign(updates, resourceUpdates);
-        // A starting-mutation origin's Corruption queues no Malignancy Test (Within p. 32).
+        // A starting-mutation origin's Corruption queues no Malignancy Test.
         Object.assign(updates, startingCorruptionHoldsMalignancy(this.system, resourceUpdates, actor.system));
 
         // Record the delta this apply commits, so the next apply can reverse it.
@@ -1049,8 +1050,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const skillName of modifiers.skills) {
                 const alreadyHas = actor.items.some((i) => i.type === 'skill' && i.name.toLowerCase() === skillName.toLowerCase());
                 if (alreadyHas) continue;
-                const skillPack = game.packs.get('wh40k-rpg.dh2-core-items-skills');
-                if (skillPack) {
+                for (const skillPack of lineBookPacks(game.packs, 'dh2', 'skills')) {
                     // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await skillPack.getIndex({ fields: ['name'] });
                     const skillEntry = index.find((s) => typeof s.name === 'string' && s.name.toLowerCase() === skillName.toLowerCase());
@@ -1058,6 +1058,7 @@ export class WH40KItem extends WH40KItemContainer {
                         // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
+                        break;
                     }
                 }
             }
@@ -1068,8 +1069,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const talentName of modifiers.talents) {
                 const alreadyHas = actor.items.some((i) => i.type === 'talent' && i.name.toLowerCase() === talentName.toLowerCase());
                 if (alreadyHas) continue;
-                const talentPack = game.packs.get('wh40k-rpg.dh2-core-items-talents');
-                if (talentPack) {
+                for (const talentPack of lineBookPacks(game.packs, 'dh2', 'talents')) {
                     // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                     const index = await talentPack.getIndex({ fields: ['name'] });
                     const talentEntry = index.find((t) => typeof t.name === 'string' && t.name.toLowerCase() === talentName.toLowerCase());
@@ -1077,6 +1077,7 @@ export class WH40KItem extends WH40KItemContainer {
                         // eslint-disable-next-line no-await-in-loop -- sequential compendium access by design
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());
+                        break;
                     }
                 }
             }

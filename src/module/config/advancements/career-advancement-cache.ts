@@ -3,9 +3,9 @@
  *
  * The Rogue Trader career advancement tables (per-tier characteristic costs and
  * Rank 1 skill/talent advance options) are content, so they live on the
- * `rt-core-origins-careers` compendium `originPath` documents as a structured
+ * line's career `originPath` documents as a structured
  * `system.careerAdvancement` field (see `data/item/origin-path.ts`), NOT as an
- * in-`src/` literal. This module builds a by-registry-key index from that pack
+ * in-`src/` literal. This module builds a by-registry-key index from those packs
  * on `ready` so the synchronous advancement getters in `./index.ts` and the RT
  * system config can read a career's costs/advances without a hardcoded table.
  *
@@ -17,7 +17,7 @@
  * value lives in this file.
  */
 
-import { SYSTEM_ID } from '../../constants.ts';
+import { lineBookPacks, type PackMetadataLike } from '../../utils/line-packs.ts';
 import type { Prerequisite } from '../game-systems/types.ts';
 
 /* -------------------------------------------- */
@@ -71,8 +71,8 @@ const STANDARD_RANKS: readonly string[] = ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4
 /** Characteristic advancement tier order — a mechanic enum, not content data. */
 const STANDARD_TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'] as const;
 
-/** Full compendium pack id holding the RT career originPath docs. */
-const CAREERS_PACK_ID = `${SYSTEM_ID}.rt-core-origins-careers`;
+/** The line whose career originPath docs carry the advancement tables. */
+const CAREERS_LINE = 'rt';
 
 /**
  * Compendium `identifier` (kebab) → legacy registry key (camel). The camelCase
@@ -105,10 +105,11 @@ interface CareerPackDoc {
     system?: { identifier?: string; careerAdvancement?: RawCareerAdvancement | null };
 }
 interface CareerPack {
+    readonly metadata: PackMetadataLike;
     getDocuments?: () => Promise<CareerPackDoc[]>;
 }
 interface PackGameLike {
-    packs?: { get?: (id: string) => CareerPack | undefined };
+    packs?: Iterable<CareerPack>;
 }
 
 /* -------------------------------------------- */
@@ -169,30 +170,32 @@ function buildCareerTable(key: string, name: string, raw: RawCareerAdvancement):
 }
 
 /**
- * Build the career-advancement index from the `rt-core-origins-careers` pack.
+ * Build the career-advancement index from RT's career origin packs.
  * Call once on `ready`; idempotent (rebuilds the cache). Careers with no
- * authored `careerAdvancement` payload are skipped.
+ * authored `careerAdvancement` payload are skipped; where two packs carry the
+ * same career, the first pack's copy wins.
  */
 export async function buildCareerAdvancementIndex(): Promise<void> {
     const next: Record<string, CareerTable> = {};
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
-    const pack = packGame?.packs?.get?.(CAREERS_PACK_ID);
-    if (pack?.getDocuments === undefined) {
-        registry = next;
-        return;
-    }
-    // Bind to the owning pack — `getDocuments` reads `this.documentClass` internally.
-    const getDocuments = pack.getDocuments.bind(pack);
-    const docs = await getDocuments();
-    for (const doc of docs) {
+    const packs = lineBookPacks(packGame?.packs ?? [], CAREERS_LINE, 'origins-careers');
+    const loaded = await Promise.all(
+        packs.map(async (pack) => {
+            if (pack.getDocuments === undefined) return [];
+            // Bind to the owning pack — `getDocuments` reads `this.documentClass` internally.
+            const getDocuments = pack.getDocuments.bind(pack);
+            return getDocuments();
+        }),
+    );
+    for (const doc of loaded.flat()) {
         const identifier = doc.system?.identifier;
         if (typeof identifier !== 'string') continue;
         const key = IDENTIFIER_TO_KEY[identifier];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess (tsconfig.strict.json) types this record access as string|undefined; the main/ESLint config has the flag off and sees the guard as redundant
         if (key === undefined) continue;
         const raw = doc.system?.careerAdvancement;
-        if (raw == null) continue;
+        if (raw == null || key in next) continue;
         next[key] = buildCareerTable(key, typeof doc.name === 'string' ? doc.name : key, raw);
     }
     registry = next;
