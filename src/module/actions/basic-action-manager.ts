@@ -44,6 +44,7 @@ import { type EvasionSkill, evasionBlockReason, parryBlockReason } from '../rule
 import { riderDamageSuffered } from '../rules/grenade-rider-resolution.ts';
 import { DEFAULT_HIT_LOCATION, resolveHitLocationId } from '../rules/hit-locations.ts';
 import { soakRows } from '../rules/target-soak.ts';
+import { areaAvoidanceTest, type SubstitutionItemLike } from '../rules/test-substitution.ts';
 import {
     armourCoveringLocation,
     warpWardingProperties,
@@ -51,7 +52,6 @@ import {
     weaponIgnoresArmor,
     type WornArmourCandidate,
 } from '../rules/weapon-quality-effects.ts';
-import { sprayAvoidanceTest } from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { formatSigned } from '../utils/format.ts';
@@ -802,11 +802,11 @@ export class BasicActionManager {
                 results.push(areaHitResult(token.id, actorUuid, name));
                 continue;
             }
-            const items = Array.from(defender.items, (item) => ({ type: item.type, system: item.system as { identifier?: string } }));
+            const items = Array.from(defender.items, (item) => ({ name: item.name, system: item.system as SubstitutionItemLike['system'] }));
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.json types characteristics[key] as possibly undefined, tsconfig.test.json does not
             const agility = defender.characteristics['agility']?.total ?? 0;
-            const dodge = (defender.system as { skills?: Partial<Record<string, { current: number }>> }).skills?.['dodge']?.current ?? 0;
-            const test = sprayAvoidanceTest(items, agility, dodge);
+            const skills = (defender.system as { skills?: Partial<Record<string, { current: number }>> }).skills;
+            const test = areaAvoidanceTest(items, agility, (skill) => skills?.[skill]?.current);
             // eslint-disable-next-line no-await-in-loop -- sequential by design: each creature's d100 is its own roll on the card
             const roll = await roll1d100();
             rolls.push(roll);

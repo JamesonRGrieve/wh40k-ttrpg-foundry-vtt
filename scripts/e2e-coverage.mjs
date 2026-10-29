@@ -551,9 +551,9 @@ const ROLL_DIALOG_FLOWS = [
     'dh1-ritual-degrees',
 ];
 recordDimension('roll-dialog.flow', covered['roll-dialog.flow'], ROLL_DIALOG_FLOWS);
-// tests/e2e/without-talents.spec.ts — WITHOUT_TALENT_FLOWS.
-const WITHOUT_TALENT_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
-recordDimension('without-talents.flow', covered['without-talents.flow'], WITHOUT_TALENT_FLOWS);
+// tests/e2e/talent-test-hooks.spec.ts — TALENT_HOOK_FLOWS.
+const TALENT_HOOK_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'];
+recordDimension('talent-hooks.flow', covered['talent-hooks.flow'], TALENT_HOOK_FLOWS);
 // tests/e2e/grapple-controller-panel.spec.ts — GRAPPLE_FLOWS; tests/e2e/grapple-damage-push.spec.ts — GRAPPLE_RESOLUTION_FLOWS.
 const GRAPPLE_FLOWS = ['controller-options', 'target-options', 'take-control', 'slip-free', 'damage-opponent', 'push-opponent', 'use-item'];
 recordDimension('grapple.flow', covered['grapple.flow'], GRAPPLE_FLOWS);
@@ -1225,7 +1225,7 @@ recordDimension('rule-pure.flow', covered['rule-pure.flow'], RULE_PURE_FLOWS);
 // other Tier B spec drives directly. Pushes source-code coverage on
 // `src/module/rules/{addiction,assistance,disposition,
 // hatred,phenomena-modifier,reinforcement,requisition-test,
-// spray-avoidance}.ts` — each at 0% Tier B function
+// test-substitution}.ts` — each at 0% Tier B function
 // coverage before this spec landed. Keys MUST match the
 // recordCoverage('rule-affliction.flow', ...) calls in the spec.
 const RULE_AFFLICTION_FLOWS = [
@@ -1238,7 +1238,7 @@ const RULE_AFFLICTION_FLOWS = [
     'reinforcement-callPlan',
     'requisition-test-target',
     'requisition-test-influenceLoss',
-    'spray-avoidance-resolve',
+    'area-avoidance-resolve',
 ];
 recordDimension('rule-affliction.flow', covered['rule-affliction.flow'], RULE_AFFLICTION_FLOWS);
 

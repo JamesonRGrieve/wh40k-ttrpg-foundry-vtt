@@ -269,6 +269,57 @@ export interface CraftsmanshipGatedEntry {
     minCraftsmanship: Craftsmanship;
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Test substitutions (data-driven, Direction #7)                            */
+/* -------------------------------------------------------------------------- */
+
+/** The tests a substitution can replace: a Called Shot's attack test, or the test to avoid an area attack. */
+export const TEST_SUBSTITUTION_TESTS = ['calledShot', 'areaAvoidance'] as const;
+/** How the substitute skill sets the target: its own total, or the replaced characteristic plus the skill's training offset. */
+export const TEST_SUBSTITUTION_BASES = ['skill', 'trainingOffset'] as const;
+/** Which attacks a Called Shot substitution covers: any, melee or ranged only, or the one its bearer's specialization names. */
+export const TEST_SUBSTITUTION_ATTACKS = ['any', 'melee', 'ranged', 'bySpecialization'] as const;
+
+/**
+ * A test an item lets its bearer make with a different skill (Direction #7): an
+ * attack talent that rolls Medicae for a Called Shot against a studied target, an
+ * agility talent that rolls Dodge to avoid an area attack. The conditions are
+ * data; `rules/test-substitution.ts` evaluates them against the live test.
+ */
+export interface TestSubstitutionEntry {
+    /** The test replaced. */
+    test: (typeof TEST_SUBSTITUTION_TESTS)[number];
+    /** The skill rolled in its place (an actor skill key). */
+    skill: string;
+    /** How that skill sets the target. */
+    basis: (typeof TEST_SUBSTITUTION_BASES)[number];
+    /** Which attacks it covers (Called Shot only). */
+    attack: (typeof TEST_SUBSTITUTION_ATTACKS)[number];
+    /** Only against a target carrying this type tag (`xenos`); '' for any target. */
+    targetTag: string;
+    /** Only while the bearer has this specialist skill (`forbiddenLore`) at Known or better; '' for none. */
+    requiresSkill: string;
+    /** …in a specialization starting with this (`xenos`); '' for any. */
+    requiresSpecialization: string;
+}
+
+/** The `ArrayField` of {@link TestSubstitutionEntry} hooks. */
+function testSubstitutionsSchema(): foundry.data.fields.DataField.Any {
+    const fields = foundry.data.fields;
+    return new fields.ArrayField(
+        new fields.SchemaField({
+            test: new fields.StringField({ required: true, initial: 'calledShot', choices: [...TEST_SUBSTITUTION_TESTS] }),
+            skill: new fields.StringField({ required: true, blank: false }),
+            basis: new fields.StringField({ required: true, initial: 'skill', choices: [...TEST_SUBSTITUTION_BASES] }),
+            attack: new fields.StringField({ required: true, initial: 'any', choices: [...TEST_SUBSTITUTION_ATTACKS] }),
+            targetTag: new fields.StringField({ required: true, blank: true, initial: '' }),
+            requiresSkill: new fields.StringField({ required: true, blank: true, initial: '' }),
+            requiresSpecialization: new fields.StringField({ required: true, blank: true, initial: '' }),
+        }),
+        { required: true, initial: [] },
+    );
+}
+
 /** The `ArrayField` of {@link SenseEntry} token-sense hooks (#582). */
 function sensesSchema(): foundry.data.fields.DataField.Any {
     const fields = foundry.data.fields;
@@ -596,6 +647,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         craftsmanshipGated: CraftsmanshipGatedEntry[];
         /** Data-driven token senses (Direction #7, #582) — see {@link SenseEntry}. */
         senses: SenseEntry[];
+        /** Data-driven test substitutions (Direction #7) — see {@link TestSubstitutionEntry}. */
+        testSubstitutions: TestSubstitutionEntry[];
     };
 
     /** @inheritdoc */
@@ -651,6 +704,10 @@ export default class ModifiersTemplate extends SystemDataModel {
                 // (Dark-sight → darkvision, Unnatural Senses (X) → senseAll at X m).
                 // Folded onto the token's sight/detection modes at token creation.
                 senses: sensesSchema(),
+                // Data-driven test substitutions (Direction #7). Empty on legacy items;
+                // authored on content that lets its bearer roll a different skill in place
+                // of a Called Shot or an area-avoidance roll, under stated conditions.
+                testSubstitutions: testSubstitutionsSchema(),
             }),
         };
     }
@@ -689,6 +746,7 @@ export default class ModifiersTemplate extends SystemDataModel {
         if (!('dynamicModifiers' in mods) || mods['dynamicModifiers'] === undefined) mods['dynamicModifiers'] = [];
         if (!('craftsmanshipGated' in mods) || mods['craftsmanshipGated'] === undefined) mods['craftsmanshipGated'] = [];
         if (!('senses' in mods) || mods['senses'] === undefined) mods['senses'] = [];
+        if (!('testSubstitutions' in mods) || mods['testSubstitutions'] === undefined) mods['testSubstitutions'] = [];
         ModifiersTemplate.#normalizeGrantedEffects(mods);
     }
 

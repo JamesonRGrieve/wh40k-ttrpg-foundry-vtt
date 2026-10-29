@@ -26,30 +26,25 @@ import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B — the Enemies Without talents with a mechanic of their own (#101), each
- * driven from the sheet or the weapon the way a player uses it:
+ * Tier B — talents whose mechanic is a data hook on the talent document (#101),
+ * each driven from the sheet or the weapon the way a player uses it:
  *
- *   1. Push the Limit (p. 63): an Operate test opened from the Skills tab offers its
- *      +20 row; failing the boosted test by 4+ degrees puts the Motive Systems
- *      critical roll on the card; a second Operate test in the same combat round
- *      shows the row spent and unselectable.
- *   2. Leaping Dodge: a Spray caught in the cone is avoided with Dodge instead of
- *      Agility — the area results card names each creature's test.
- *   3. Field Vivisection (p. 62): a melee Called Shot at a xenos, by a character
- *      with Forbidden Lore (Xenos), rolls Medicae (WS) instead of Weapon Skill —
- *      the attack card's base row says so.
+ *   1. Push the Limit (situational row data): an Operate test opened from the Skills
+ *      tab offers its +20 row; failing the boosted test by 4+ degrees puts the Motive
+ *      Systems critical roll on the card; a second Operate test in the same combat
+ *      round shows the row spent and unselectable.
+ *   2. Leaping Dodge (an area-avoidance test substitution): a Spray caught in the
+ *      cone is avoided with Dodge instead of Agility — the area results card names
+ *      each creature's test.
+ *   3. Field Vivisection (a Called Shot test substitution): a melee Called Shot at a
+ *      xenos, by a character with Forbidden Lore (Xenos), rolls Medicae (WS) instead
+ *      of Weapon Skill — the attack card's base row says so.
  *
- * Each flow records a `without-talents.flow` coverage key; keep WITHOUT_TALENT_FLOWS
+ * Each flow records a `talent-hooks.flow` coverage key; keep TALENT_HOOK_FLOWS
  * in sync with the denominator in scripts/e2e-coverage.mjs.
  */
 
-const WITHOUT_TALENT_FLOWS = [
-    'push-the-limit-row',
-    'push-the-limit-crit-risk',
-    'push-the-limit-spent',
-    'leaping-dodge-spray',
-    'field-vivisection-swap',
-] as const;
+const TALENT_HOOK_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'] as const;
 
 const TALENTS = 'Compendium.wh40k-rpg.dh2-without-items-talents.Item';
 const PUSH_THE_LIMIT = `${TALENTS}.nmjVhqTarVFg891j`;
@@ -63,7 +58,7 @@ function dh2Character(name: string, system: object = {}): object {
     return { name, type: 'dh2-character', img: 'icons/svg/mystery-man.svg', system: { gameSystem: 'dh2', ...system } };
 }
 
-test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
+test.describe.serial('Talent test hooks (Tier B, DH2, #101)', () => {
     test('Push the Limit: the +20 row, the Motive Systems risk on a bad failure, and once per round', async ({ page }) => {
         await joinOrSkip(page);
         await prepareStage(page);
@@ -85,8 +80,8 @@ test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
             await expect(push).toBeEnabled();
             await push.click();
             await expect(push).toHaveAttribute('aria-pressed', 'true');
-            expect(await snapWindow(page, 'without-push-the-limit-row', dialogId)).not.toBeNull();
-            recordCoverage('without-talents.flow', 'push-the-limit-row');
+            expect(await snapWindow(page, 'talent-push-the-limit-row', dialogId)).not.toBeNull();
+            recordCoverage('talent-hooks.flow', 'push-the-limit-row');
 
             // Failing the boosted test by 4+ degrees: the card names the critical table and its dice.
             const before = await messageIds(page);
@@ -95,8 +90,8 @@ test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
             const card = await awaitCard(page, before, 'Push the Limit');
             expect(card.html, 'the +20 is a sourced row on the card').toContain('+20');
             expect(card.html, 'the critical roll is stated with its dice').toContain('1d5');
-            expect(await snapCard(page, 'without-push-the-limit-crit-risk', card.id)).not.toBeNull();
-            recordCoverage('without-talents.flow', 'push-the-limit-crit-risk');
+            expect(await snapCard(page, 'talent-push-the-limit-crit-risk', card.id)).not.toBeNull();
+            recordCoverage('talent-hooks.flow', 'push-the-limit-crit-risk');
 
             // The same combat round: the row is spent, visible and unselectable.
             const sheetAgain = await openActorSheet(page, driver.id, 'skills');
@@ -106,9 +101,9 @@ test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
             const spent = page.locator(`#${secondDialogId} [data-action="toggleSituational"]`, { hasText: 'Push the Limit' });
             await expect(spent).toBeDisabled();
             await expect(spent).toHaveAttribute('data-situational-spent', 'true');
-            expect(await snapWindow(page, 'without-push-the-limit-spent', secondDialogId)).not.toBeNull();
+            expect(await snapWindow(page, 'talent-push-the-limit-spent', secondDialogId)).not.toBeNull();
             await closeWindow(page, secondDialogId);
-            recordCoverage('without-talents.flow', 'push-the-limit-spent');
+            recordCoverage('talent-hooks.flow', 'push-the-limit-spent');
         } finally {
             await restoreSettings(page, settings);
             await viewScene(page, stage.previousSceneId);
@@ -152,8 +147,8 @@ test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
                 new RegExp(`${who}[\\s\\S]*?(?:Dodge|Agility) test</span>\\s*<span[^>]*>\\s*(\\d+)`).exec(results.html)?.[1];
             expect(testBase('Leaping Acrobat'), 'the Dodge test base (Agility 40, untrained −20)').toBe('20');
             expect(testBase('Plain Bystander'), 'the Agility test base').toBe('40');
-            expect(await snapCard(page, 'without-leaping-dodge-spray-results', results.id)).not.toBeNull();
-            recordCoverage('without-talents.flow', 'leaping-dodge-spray');
+            expect(await snapCard(page, 'talent-leaping-dodge-spray-results', results.id)).not.toBeNull();
+            recordCoverage('talent-hooks.flow', 'leaping-dodge-spray');
         } finally {
             await restoreSettings(page, settings);
             await viewScene(page, stage.previousSceneId);
@@ -188,15 +183,15 @@ test.describe.serial('Enemies Without talents (Tier B, DH2, #101)', () => {
             const dialogId = await attackWith(page, surgeon.id, surgeon.items['Chainsword'] ?? '');
             await selectAttackMode(page, dialogId, 'calledShot');
             await enterRoll(page, dialogId, 10);
-            expect(await snapWindow(page, 'without-field-vivisection-dialog', dialogId)).not.toBeNull();
+            expect(await snapWindow(page, 'talent-field-vivisection-dialog', dialogId)).not.toBeNull();
             await submitRoll(page, dialogId);
             const card = await awaitCard(page, before, 'Field Vivisection');
             expect(card.html, 'the base row names the Medicae swap').toContain('— Field Vivisection');
             // Medicae (WS) = WS 30 + Medicae's own training offset (Trained, +10 over Int): 40.
             expect(/Field Vivisection<\/span>\s*<span[^>]*>\s*(\d+)/.exec(card.html)?.[1], 'the swapped base keeps Medicae’s training over WS').toBe('40');
-            expect(await snapCard(page, 'without-field-vivisection-card', card.id)).not.toBeNull();
-            recordCoverage('without-talents.flow', 'field-vivisection-swap');
-            expect(WITHOUT_TALENT_FLOWS).toHaveLength(5);
+            expect(await snapCard(page, 'talent-field-vivisection-card', card.id)).not.toBeNull();
+            recordCoverage('talent-hooks.flow', 'field-vivisection-swap');
+            expect(TALENT_HOOK_FLOWS).toHaveLength(5);
         } finally {
             await restoreSettings(page, settings);
             await viewScene(page, stage.previousSceneId);

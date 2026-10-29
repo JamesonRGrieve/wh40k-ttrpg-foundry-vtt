@@ -260,17 +260,33 @@ describe('buildModifierComponents — one builder for card and dialog (#489)', (
     });
 });
 
-describe('Field Vivisection swaps a Called Shot onto Medicae (#101, Enemies Without p. 62)', () => {
+describe('A Called Shot test substitution swaps the attack onto a skill, from the item data (#101)', () => {
     beforeEach(() => {
-        vi.stubGlobal('game', { i18n: { localize: (k: string) => k, format: (k: string, d: Record<string, string>) => `${k}:${d['characteristic'] ?? ''}` } });
+        vi.stubGlobal('game', {
+            i18n: {
+                localize: (k: string) => k,
+                format: (k: string, d: Record<string, string>) => `${k}:${d['skill'] ?? ''}:${d['characteristic'] ?? ''}:${d['source'] ?? ''}`,
+            },
+        });
     });
     afterEach(() => vi.unstubAllGlobals());
 
-    const attacker = (specialization: string, loreRank: number): Parameters<WeaponRollData['applyFieldVivisection']>[0] => ({
-        items: [{ type: 'talent', system: { identifier: 'fieldVivisection', specialization } }],
+    /** A talent whose Called Shot substitution rolls Medicae against a studied xenos, for its specialization's attack kind. */
+    const SUBSTITUTION = {
+        test: 'calledShot',
+        skill: 'medicae',
+        basis: 'trainingOffset',
+        attack: 'bySpecialization',
+        targetTag: 'xenos',
+        requiresSkill: 'forbiddenLore',
+        requiresSpecialization: 'xenos',
+    } as const;
+
+    const attacker = (specialization: string, loreRank: number): Parameters<WeaponRollData['applyCalledShotSubstitution']>[0] => ({
+        items: [{ name: 'Fixture Talent', system: { specialization, modifiers: { testSubstitutions: [SUBSTITUTION] } } }],
         system: {
             skills: {
-                forbiddenLore: { entries: [{ name: 'Xenos', rank: loreRank }] },
+                forbiddenLore: { current: 0, characteristic: 'intelligence', entries: [{ name: 'Xenos', rank: loreRank }] },
                 medicae: { current: 55, characteristic: 'intelligence' },
             },
         },
@@ -289,14 +305,14 @@ describe('Field Vivisection swaps a Called Shot onto Medicae (#101, Enemies With
         rd.isCalledShot = opts.calledShot;
         rd.baseTarget = 38;
         rd.baseChar = 'BS';
-        rd.applyFieldVivisection(attacker(spec, rank), { system: { nature: opts.nature }, items: [] }, opts.ranged);
+        rd.applyCalledShotSubstitution(attacker(spec, rank), { system: { nature: opts.nature }, items: [] }, opts.ranged);
         return rd;
     }
 
-    it('rolls Medicae (BS) — Medicae training over BS — and labels the base row', () => {
+    it('rolls Medicae (BS) — Medicae training over BS — and labels the base row with the granting item', () => {
         const rd = attack({ calledShot: true, ranged: true, nature: 'xenos' }, 'Ranged', 1);
         expect(rd.baseTarget).toBe(48);
-        expect(rd.baseLabel).toBe('WH40K.WithoutTalents.FieldVivisection.Base:BS');
+        expect(rd.baseLabel).toBe('WH40K.TestSubstitution.Base:medicae:BS:Fixture Talent');
     });
 
     it.each([
@@ -311,12 +327,12 @@ describe('Field Vivisection swaps a Called Shot onto Medicae (#101, Enemies With
     });
 });
 
-describe('Without talents reach the roll flow (#101)', () => {
-    it('area attack cards resolve the template, each avoidance routed through the Leaping Dodge resolver (#599)', () => {
+describe('Talent test hooks reach the roll flow (#101)', () => {
+    it('area attack cards resolve the template, each avoidance routed through the test-substitution resolver (#599)', () => {
         expect(readRepoFile('src/templates/chat/action-roll-chat.hbs')).toContain('roll-control__resolve-area');
         const manager = readRepoFile('src/module/actions/basic-action-manager.ts');
         expect(manager).toContain("querySelectorAll('.roll-control__resolve-area')");
-        expect(manager).toContain('sprayAvoidanceTest(');
+        expect(manager).toContain('areaAvoidanceTest(');
         // The defenders are the tokens inside the template, not whatever the clicker controls.
         expect(manager).toContain('tokensInAreaTemplate(');
         expect(manager).not.toContain('canvas.tokens?.controlled');

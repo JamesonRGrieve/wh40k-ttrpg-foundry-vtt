@@ -63,7 +63,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         type ImportError = { __importError?: string };
         interface XenosFeaturesModule extends ImportError {
             RIGHT_STUFF?: { applicableSkills?: readonly string[] };
-            SURVIVORS_PARANOIA?: { negatedSurpriseBonus?: number };
         }
         /** A situational skill row on a compendium talent (#101 moved Push the Limit's terms here). */
         interface SituationalSkillRow {
@@ -142,7 +141,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             } else {
                 try {
                     const rightStuff = xenos.RIGHT_STUFF ?? {};
-                    const survivors = xenos.SURVIVORS_PARANOIA ?? {};
                     // Push the Limit's +20 Operate, once-per-round limit and 4+ DoF critical are
                     // row data on the compendium talent now (#101), not constants in this module.
                     const pushUuid = 'Compendium.wh40k-rpg.dh2-without-items-talents.Item.nmjVhqTarVFg891j';
@@ -155,10 +153,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                         typeof operate.failureConsequence.tableUuid === 'string';
                     record(
                         'xenos-features-constants',
-                        Array.isArray(rightStuff.applicableSkills) &&
-                            rightStuff.applicableSkills.length > 0 &&
-                            typeof survivors.negatedSurpriseBonus === 'number' &&
-                            pushRowsOk,
+                        Array.isArray(rightStuff.applicableSkills) && rightStuff.applicableSkills.length > 0 && pushRowsOk,
                         `pushTheLimitOperate=${JSON.stringify(operate ?? null)}`,
                     );
                 } catch (err) {

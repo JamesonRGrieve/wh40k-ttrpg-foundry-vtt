@@ -7,7 +7,7 @@ import { test } from './lib/test';
  * Tier B coverage of the *third* batch of pure-logic modules under
  * `src/module/rules/*` — the affliction / social / vehicle resolvers
  * (addiction, assistance, disposition,
- * phenomena-modifier, reinforcement, requisition-test, spray-avoidance)
+ * phenomena-modifier, reinforcement, requisition-test, test-substitution)
  * that neither `rules-engine.spec.ts` nor
  * `rules-pure-logic.spec.ts` touches. Same rationale as those specs:
  * every module here is at 0% Tier B function coverage because no other
@@ -33,7 +33,7 @@ const RULE_AFFLICTION_FLOWS = [
     'reinforcement-callPlan',
     'requisition-test-target',
     'requisition-test-influenceLoss',
-    'spray-avoidance-resolve',
+    'area-avoidance-resolve',
 ] as const;
 
 type FlowName = (typeof RULE_AFFLICTION_FLOWS)[number];
@@ -107,11 +107,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     fellowshipBonus: number,
                 ) => number;
             };
-            'spray-avoidance': {
-                resolveSprayAvoidance: (input: { hasLeapingDodge: boolean; agilityTotal: number; dodgeTotal: number }) => {
-                    skill: string;
-                    target: number;
-                };
+            'test-substitution': {
+                areaAvoidanceTest: (
+                    items: Array<{ name: string; system: { modifiers?: { testSubstitutions?: Array<Record<string, string>> } } }>,
+                    agilityTotal: number,
+                    skillTotal: (skill: string) => number | undefined,
+                ) => { skill: string; target: number };
             };
         }
         type ImportError = { __importError: string };
@@ -304,16 +305,30 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             });
         }
 
-        // ---------- spray-avoidance ----------
-        const spray = await loadModule('spray-avoidance');
-        if (isImportError(spray)) {
-            fail(['spray-avoidance-resolve'], spray.__importError);
+        // ---------- test-substitution (area avoidance) ----------
+        const substitution = await loadModule('test-substitution');
+        if (isImportError(substitution)) {
+            fail(['area-avoidance-resolve'], substitution.__importError);
         } else {
-            guarded('spray-avoidance-resolve', () => {
-                const def = spray.resolveSprayAvoidance({ hasLeapingDodge: false, agilityTotal: 40, dodgeTotal: 55 });
-                const leaping = spray.resolveSprayAvoidance({ hasLeapingDodge: true, agilityTotal: 40, dodgeTotal: 55 });
-                const floored = spray.resolveSprayAvoidance({ hasLeapingDodge: false, agilityTotal: -10, dodgeTotal: 30 });
-                return def.skill === 'agility' && def.target === 40 && leaping.skill === 'dodge' && leaping.target === 55 && floored.target === 0;
+            guarded('area-avoidance-resolve', () => {
+                const dodgeHook = {
+                    test: 'areaAvoidance',
+                    skill: 'dodge',
+                    basis: 'skill',
+                    attack: 'any',
+                    targetTag: '',
+                    requiresSkill: '',
+                    requiresSpecialization: '',
+                };
+                const skills = (skill: string): number | undefined => (skill === 'dodge' ? 55 : undefined);
+                const def = substitution.areaAvoidanceTest([], 40, skills);
+                const hooked = substitution.areaAvoidanceTest(
+                    [{ name: 'Probe Talent', system: { modifiers: { testSubstitutions: [dodgeHook] } } }],
+                    40,
+                    skills,
+                );
+                const floored = substitution.areaAvoidanceTest([], -10, skills);
+                return def.skill === 'agility' && def.target === 40 && hooked.skill === 'dodge' && hooked.target === 55 && floored.target === 0;
             });
         }
 

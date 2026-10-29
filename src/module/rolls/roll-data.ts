@@ -34,19 +34,10 @@ import {
     type TargetedAttackContext,
     type TargetedConditionComponent,
 } from '../rules/targeted-conditions.ts';
+import { resolveCalledShotSubstitution, type SubstitutionItemLike, type SubstitutionSkills } from '../rules/test-substitution.ts';
 import { incomingVehicleModifiers, VEHICLE_TRAIT_BUCKET } from '../rules/vehicle-damage.ts';
 import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { checkWeaponTraining, getWeaponTrainingModifier } from '../rules/weapon-training.ts';
-import {
-    FIELD_VIVISECTION_TARGET_TAG,
-    fieldVivisectionMode,
-    findWithoutTalent,
-    hasForbiddenLoreXenos,
-    medicaeAgainstCharacteristic,
-    resolveFieldVivisection,
-    type FieldVivisectionSkills,
-    type WithoutTalentItemLike,
-} from '../rules/without-talents.ts';
 import type { WH40KBaseActorDocument, WH40KPsy } from '../types/global.d.ts';
 import type { I18nKey } from '../types/i18n-keys.d.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
@@ -682,10 +673,10 @@ export class RollData {
     }
 }
 
-/** The attacker surface Field Vivisection reads (a structural slice of the actor). */
-interface FieldVivisectionAttacker {
-    readonly items: Iterable<WithoutTalentItemLike>;
-    readonly system: { readonly skills: FieldVivisectionSkills };
+/** The attacker surface a Called Shot substitution reads (a structural slice of the actor). */
+interface CalledShotAttacker {
+    readonly items: Iterable<SubstitutionItemLike>;
+    readonly system: { readonly skills: SubstitutionSkills };
     getCharacteristicFuzzy: (key: string) => { readonly total: number } | undefined;
 }
 
@@ -1130,10 +1121,10 @@ export class WeaponRollData extends RollData {
             this.baseChar = 'S';
             this.baseCharacteristicKey = 'strength';
         }
-        this.applyFieldVivisection(
+        this.applyCalledShotSubstitution(
             {
-                // The owned items as the identifier lookup reads them (the shape `combat-actions.ts` projects for Two-Weapon Fighting).
-                items: Array.from(sourceActor.items, (item) => ({ type: item.type, system: item.system as WithoutTalentItemLike['system'] })),
+                // The owned items as the substitution lookup reads them: name, specialization and modifier hooks.
+                items: Array.from(sourceActor.items, (item) => ({ name: item.name, system: item.system as SubstitutionItemLike['system'] })),
                 system: sourceActor.system,
                 getCharacteristicFuzzy: (key) => sourceActor.getCharacteristicFuzzy(key),
             },
@@ -1143,37 +1134,32 @@ export class WeaponRollData extends RollData {
     }
 
     /**
-     * Field Vivisection (#101, DH2 Enemies Without p. 62): on a Called Shot of
-     * the talent's Specialisation against a xenos the attacker's Forbidden Lore
-     * (Xenos) covers, the test is Medicae (WS) / Medicae (BS) instead of WS / BS.
-     * Ownership is read by talent identifier; the target's xenos status from its
-     * schema `nature` tag. The swap is labelled on the card's base row.
-     * @param {FieldVivisectionAttacker} sourceActor  The attacker.
+     * A Called Shot test substitution (Direction #7): an owned item whose
+     * `modifiers.testSubstitutions` covers this attack — its kind, the target's
+     * type tag, a specialist skill the attacker must know — makes the test the
+     * substitute skill instead of WS / BS. The swap is labelled on the card's base
+     * row with the skill, the replaced characteristic and the granting item.
+     * @param {CalledShotAttacker} sourceActor  The attacker.
      * @param {TargetTagSource | null} target  The attack's target, if any.
      * @param {boolean} isRanged  Whether the attack is ranged (the active weapon mode).
      */
-    applyFieldVivisection(sourceActor: FieldVivisectionAttacker, target: TargetTagSource | null, isRanged: boolean): void {
+    applyCalledShotSubstitution(sourceActor: CalledShotAttacker, target: TargetTagSource | null, isRanged: boolean): void {
         this.baseLabel = '';
-        if (!this.isCalledShot) return;
-        const talent = findWithoutTalent(sourceActor.items, 'fieldVivisection');
-        if (talent === undefined) return;
-        const mode = fieldVivisectionMode(talent.system.specialization);
-        if (mode === null || (mode === 'ranged') !== isRanged) return;
-        const skills = sourceActor.system.skills;
-        const medicae = skills.medicae;
-        if (medicae === undefined) return;
-        const medicaeCharacteristic = sourceActor.getCharacteristicFuzzy(medicae.characteristic)?.total ?? 0;
-        const result = resolveFieldVivisection({
-            mode,
-            isCalledShot: true,
-            targetIsStudiedXenos: collectTargetTags(target).byAxis.vsType.includes(FIELD_VIVISECTION_TARGET_TAG),
-            hasForbiddenLoreXenos: hasForbiddenLoreXenos(skills),
-            weaponSkillTotal: this.baseTarget,
-            medicaeTotal: medicaeAgainstCharacteristic(medicae.current, medicaeCharacteristic, this.baseTarget),
+        const result = resolveCalledShotSubstitution(sourceActor.items, {
+            isCalledShot: this.isCalledShot,
+            isRanged,
+            targetTags: collectTargetTags(target).byAxis.vsType,
+            baseTarget: this.baseTarget,
+            skills: sourceActor.system.skills,
+            characteristicTotal: (key) => sourceActor.getCharacteristicFuzzy(key)?.total ?? 0,
         });
-        if (!result.swapped) return;
+        if (result === null) return;
         this.baseTarget = result.target;
-        this.baseLabel = runtimeI18n()?.format?.('WH40K.WithoutTalents.FieldVivisection.Base', { characteristic: this.baseChar }) ?? this.baseChar;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the actor's skill map carries a display label the substitution surface does not type
+        const skillLabel = (sourceActor.system.skills[result.skill] as { label?: string } | undefined)?.label ?? result.skill;
+        this.baseLabel =
+            runtimeI18n()?.format?.('WH40K.TestSubstitution.Base', { skill: skillLabel, characteristic: this.baseChar, source: result.source }) ??
+            this.baseChar;
     }
 
     /**

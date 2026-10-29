@@ -3213,10 +3213,8 @@
             "FearTestAutoPass": "Fear test auto-passed",
             "NoFatePoints": "No Fate points remaining to spend."
         },
-        "WithoutTalents": {
-            "FieldVivisection": {
-                "Base": "Medicae ({characteristic}) — Field Vivisection"
-            }
+        "TestSubstitution": {
+            "Base": "{skill} ({characteristic}) — {source}"
         },
         "Quality": {
             "ChatTitle": "Weapon Quality Effect",
