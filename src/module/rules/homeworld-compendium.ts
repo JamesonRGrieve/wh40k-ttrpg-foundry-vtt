@@ -178,7 +178,7 @@ function projectDoc(doc: RawHomeworldDoc): HomeworldMechanics | null {
  * (e.g. before the world is ready, or pack disabled) yields an empty Map
  * rather than throwing, so callers can render an empty grid gracefully.
  *
- * @param packName Fully-qualified pack id, e.g. `wh40k-rpg.dh2-within-origins-homeworlds`.
+ * @param packName Fully-qualified pack id (`wh40k-rpg.<pack>`).
  */
 export async function readHomeworldMechanics(packName: string): Promise<Map<string, HomeworldMechanics>> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs.get returns Foundry's CompendiumCollection (untyped document shape); narrowed locally to the HomeworldPack surface this reader reads

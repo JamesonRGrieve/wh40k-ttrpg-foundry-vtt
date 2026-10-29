@@ -20,8 +20,8 @@
  *
  * The Sanctic **powers themselves** — their names, XP costs, Psy-Rating
  * gates, and effect prose — are compendium content, NOT duplicated here.
- * They live as `psychicPower` items in
- * `dh2-beyond-items-psychic-powers` with `system.discipline` set to
+ * They live as `psychicPower` items in a DH2 psychic-powers pack with
+ * `system.discipline` set to
  * "Sanctic Daemonology" (per-system on Sanctuary). A caller identifies a
  * power by its opaque `powerId` / UUID and resolves the display name from
  * the compendium at render time (`uuidNameCache.getName(uuid)` in a sync

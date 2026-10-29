@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { packMetadata } from '../testing/pack-metadata.ts';
 import {
     classifyCriticalEffect,
     clampCriticalSeverity,
@@ -102,12 +103,13 @@ const FIXTURE: FixtureItem[] = [
     },
 ];
 
+/** One of `line`'s critical-injuries packs, by its flags, holding `docs`. */
+function critPack(line: string, docs: FixtureItem[]): object {
+    return { metadata: packMetadata(`${line}-crits`, line, 'critical-injuries'), getDocuments: async () => Promise.resolve(docs) };
+}
+
 function stubGameWithFixture(docs: FixtureItem[]): void {
-    vi.stubGlobal('game', {
-        packs: {
-            get: (id: string) => (id === 'wh40k-rpg.dh2-core-items-critical-injuries' ? { getDocuments: async () => Promise.resolve(docs) } : undefined),
-        },
-    });
+    vi.stubGlobal('game', { packs: [critPack('dh2', docs)] });
 }
 
 describe('clampCriticalSeverity (#108)', () => {
@@ -388,7 +390,7 @@ describe('getCriticalDamageRecord (#108)', () => {
     it('missing compendium pack still returns a record with empty effect + riders', async () => {
         vi.unstubAllGlobals();
         invalidateCriticalDamageCache();
-        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        vi.stubGlobal('game', { packs: [] });
         const rec = await getCriticalDamageRecord('Energy', 'Body', 5);
         expect(rec).not.toBeNull();
         expect(rec?.effect).toBe('');
@@ -465,15 +467,7 @@ describe('per-line critical-injury pack (#439 homologation)', () => {
 
     beforeEach(() => {
         invalidateCriticalDamageCache();
-        vi.stubGlobal('game', {
-            packs: {
-                get: (id: string) => {
-                    if (id === 'wh40k-rpg.dh2-core-items-critical-injuries') return { getDocuments: async () => Promise.resolve(DH2) };
-                    if (id === 'wh40k-rpg.rt-core-items-critical-injuries') return { getDocuments: async () => Promise.resolve(RT) };
-                    return undefined;
-                },
-            },
-        });
+        vi.stubGlobal('game', { packs: [critPack('dh2', DH2), critPack('rt', RT)] });
     });
 
     afterEach(() => {

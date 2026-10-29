@@ -1101,7 +1101,7 @@ export function registerHandlebarsHelpers(hbs: HelperHost = Handlebars, language
      * every compendium pack index and every world-side document.
      *
      * @example  {{uuid-name grant.uuid}}
-     * @example  {{uuid-name "Compendium.wh40k-rpg.dh2-core-items-talents.Item.…"}}
+     * @example  {{uuid-name "Compendium.wh40k-rpg.<pack>.Item.…"}}
      */
     hbs.registerHelper('uuid-name', (uuid: TplValue): string => {
         if (typeof uuid !== 'string' || uuid.length === 0) return '';

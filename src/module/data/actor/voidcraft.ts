@@ -381,7 +381,7 @@ export default class VoidcraftData extends VehicleData {
             // Ship Points budget vs spent (issue #190 — RAW build validation).
             // `spent` is recomputed in prepareDerivedData from owned components;
             // `budget` is the hull's SP budget (mirrors the hull entry's shipPoints
-            // value from the rt-core-vehicles-voidcraft compendium).
+            // value from the RT voidcraft compendium).
             shipPoints: new fields.SchemaField({
                 spent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 budget: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -421,7 +421,7 @@ export default class VoidcraftData extends VehicleData {
             // rolled: 1-5, text: <result text>, appliedAt: <epoch ms> }. Cleared
             // by Emergency Repair / Quick Repair Extended Actions. Content-agnostic
             // primitive (just a typed shape) per Direction #7 — the "Ship Critical
-            // Hits" table in the rt-core-rolltables compendium is the source of
+            // Hits" table in RT's roll-table packs is the source of
             // each result's name and text.
             shipStatuses: new fields.ArrayField(
                 new fields.SchemaField({

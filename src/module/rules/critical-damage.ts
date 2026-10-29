@@ -1,3 +1,4 @@
+import { lineCategoryPack } from '../utils/line-packs.ts';
 import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, normalizeDamageType } from './damage-type.ts';
 
 /**
@@ -257,13 +258,12 @@ const DEFAULT_CRIT_SYSTEM = 'dh2';
 
 /**
  * Resolve the critical-injury compendium for a game line (#439) — the line's own
- * `<system>-core-items-critical-injuries` pack where it exists, else the DH2 pack
+ * critical-injuries pack (by its flags) where it exists, else the DH2 pack
  * (lines that share the DH2 critical table). Keeps the applied-damage descriptor
  * lookup homologated: RT/IM read their own crit tables, not DH2's.
  */
-function criticalInjuryPackId(systemId: string): string {
-    const perLine = `wh40k-rpg.${systemId}-core-items-critical-injuries`;
-    return game.packs.get(perLine) !== undefined ? perLine : `wh40k-rpg.${DEFAULT_CRIT_SYSTEM}-core-items-critical-injuries`;
+function criticalInjuryPack(systemId: string): ReturnType<typeof game.packs.get> {
+    return lineCategoryPack(game.packs, systemId, 'critical-injuries') ?? lineCategoryPack(game.packs, DEFAULT_CRIT_SYSTEM, 'critical-injuries');
 }
 
 type ConsolidatedEffect = { text?: string | null; permanent?: boolean };
@@ -299,7 +299,7 @@ async function loadCriticalDamageTable(systemId: string): Promise<CriticalDamage
 }
 
 async function buildCriticalDamageTable(systemId: string): Promise<CriticalDamageTable> {
-    const pack = game.packs.get(criticalInjuryPackId(systemId));
+    const pack = criticalInjuryPack(systemId);
     if (pack === undefined) return {};
     const docs = (await pack.getDocuments()) as ConsolidatedCriticalInjuryItem[];
 

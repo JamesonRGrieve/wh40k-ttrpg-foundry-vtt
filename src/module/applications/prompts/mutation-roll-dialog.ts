@@ -3,7 +3,7 @@
  * Mutation table (Table 8–16) after a failed Malignancy Test.
  *
  * Inputs: the active track (Minor / Major) — selects how the d100 samples the
- * "Mutations" RollTable loaded from the `dh2-core-rolltables` compendium. The
+ * "Mutations" RollTable loaded from DH2's roll-table packs. The
  * table (names, effect prose, ranges) is content and lives entirely in the
  * compendium; this dialog resolves it at runtime and emits a chat card with the
  * rolled mutation, its mechanical effect, and a visible / hidden flag.

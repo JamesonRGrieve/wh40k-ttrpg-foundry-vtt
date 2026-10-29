@@ -545,9 +545,9 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /**
      * Shared resolver for the Extended / Manoeuvre Actions tabs: the `order`
      * items owned by the actor plus those in the voidcraft line's own and
-     * homebrew Item packs (`<line>-…`, `hb-<line>-…`), listed by their
-     * `actionType`. The packs are found by their index, not by name, so the
-     * list holds whatever orders pack the line ships (RT: `rt-core-items-ship-orders`).
+     * homebrew Item packs (by their declared line), listed by their
+     * `actionType`. The packs are found by their flags and index, not by name,
+     * so the list holds whatever orders pack the line ships.
      * Per Direction #7 the compendium is the source of truth, so the list is
      * correct whether or not the GM has imported the entries onto the actor.
      */
@@ -902,7 +902,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
      *
      * Resolution order, mirroring the divination roll in issue #199:
      *   1. world `RollTable.getName("Ship Critical Hits")` — GM-imported copy;
-     *   2. the `wh40k-rpg.rt-core-rolltables` compendium pack;
+     *   2. RT's roll-table compendium packs;
      *   3. the bare 1d5 with the `WH40K.Voidcraft.Critical.TableUnavailable`
      *      message — the player still gets a result and the GM is told to
      *      apply the corresponding effect by hand.

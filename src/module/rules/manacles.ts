@@ -54,7 +54,7 @@ const MANACLES_EFFECT_IMG = 'icons/svg/chains.svg';
 
 /**
  * Compendium `system.identifier` slug on the canonical manacles gear
- * entry (see `src/packs/dark-heresy-2/dh2-core-items-tools/_source/manacles_*.json`).
+ * entry in the DH2 tools pack.
  * Identifier matching is the primary detector; name matching is the
  * fallback for items authored without an identifier yet.
  */

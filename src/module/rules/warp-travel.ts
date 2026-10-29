@@ -28,7 +28,7 @@
  * Perils of the Warp (Table 6-3, p. 161) is a separate d100 lookup table
  * triggered when a Gellar field breach / catastrophic stage failure occurs
  * during a journey. Its reproduced content (entry names + effect prose) lives
- * in the `dh2-core-rolltables` compendium as the "Perils of the Warp (Rogue
+ * in DH2's roll-table packs as the "Perils of the Warp (Rogue
  * Trader)" RollTable; `warp-travel-dialog.ts` draws it at runtime and splits
  * each drawn result into a name/effect pair via `parsePerilText()`.
  *
@@ -357,8 +357,8 @@ export function resolveLeaveWarp(input: LeaveWarpInput): LeaveWarpResult {
 // Perils of the Warp (Table 6-3, p. 161)
 //
 // The reproduced d100 content table (entry names + rulebook effect prose) is no
-// longer a literal here — per Direction #7 it lives in the `dh2-core-rolltables`
-// compendium as the "Perils of the Warp (Rogue Trader)" RollTable.
+// longer a literal here — per Direction #7 it lives in DH2's roll-table packs
+// as the "Perils of the Warp (Rogue Trader)" RollTable.
 // `warp-travel-dialog.ts` loads that table at runtime, resolves the band for a
 // rolled d100, and splits each drawn result's HTML into the name/effect pair
 // below via `parsePerilText`. Only this content-agnostic shape + parser stay in
