@@ -114,8 +114,7 @@ export function vehicleFacingFromBearings(vehicleBearing: number, attackerBearin
 /**
  * Whether an attack comes from above or below the vehicle: the attacker is
  * further off vertically than horizontally, steeper than 45° (the same half-arc
- * the facings use). "If needed for attacks coming from above or below the
- * vehicle, use the Rear facing to resolve armour and damage" (DH2 Core p. 253).
+ * the facings use). Such an attack strikes the Rear facing's armour.
  * @param horizontalMetres  Ground distance between the two.
  * @param verticalMetres  The attacker's elevation less the vehicle's.
  */

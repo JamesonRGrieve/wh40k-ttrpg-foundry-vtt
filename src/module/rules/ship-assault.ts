@@ -138,9 +138,8 @@ export interface OpposedShipOutcome {
 }
 
 /**
- * Resolve an opposed pair of rolled ship tests (RT Core "Opposed Tests"):
- * "Whoever succeeds at his test wins. If both participants succeed, the one
- * with the most degrees of success wins." Success is checked first because
+ * Resolve an opposed pair of rolled ship tests: the side that succeeds wins,
+ * and when both succeed, more degrees of success wins. Success is checked first because
  * under the RT count a bare pass scores 0 degrees, the same as a failure.
  * Equal results go to the defender (the boarded / raided ship).
  */

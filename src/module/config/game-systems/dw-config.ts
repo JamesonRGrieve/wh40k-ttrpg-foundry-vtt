@@ -42,9 +42,9 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         semi: { attackModifier: 10, actionCost: 'full' },
         full: { attackModifier: 20, actionCost: 'full' },
     };
-    /** DW core: "When Dodging Full Auto or Semi-Auto Bursts, each Degree of Success on the Dodge Test negates one additional hit." — #414. */
+    /** DW: each degree of success on a Dodge against a Semi-Auto or Full Auto Burst negates one more hit — #414. */
     /**
-     * DW core, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
+     * DW grapple: Slip Free is a Challenging (+0) Contortionist test.
      * Throw Down only makes the opponent Prone: DW prints no further bonus.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('contortionist', 0);

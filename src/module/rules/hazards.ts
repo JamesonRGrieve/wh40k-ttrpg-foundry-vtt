@@ -5,17 +5,14 @@
  * printed divergences, recorded per line in {@link HAZARD_RULES}:
  *
  * - **Falling.** 1d10 Impact damage plus 1 per metre fallen, to a random hit
- *   location, ignoring Armour (but not Toughness) — DH2 Core p. 243, RT Core
- *   p. 261, DW Core "Falling", BC Core "Falling", OW Core "Falling". DH1 prints
- *   a distance table instead (DH1 Core p. 210, Table 7-27: Falling Damage).
- * - **Suffocation.** A character conserving oxygen holds his breath for minutes
- *   equal to his Toughness Bonus; one engaged in strenuous activity, for rounds
- *   equal to twice his Toughness Bonus. Each minute (or round) he takes a
- *   Challenging (+0) Toughness test, gaining 1 level of Fatigue on a failure.
- *   At the end of the allotment he falls Unconscious; Unconscious and deprived
- *   of oxygen he dies after rounds equal to his Toughness Bonus (DH2 Core
- *   p. 243, BC, OW) or suffers 1d10 damage a round, ignoring Armour and
- *   Toughness, until dead (DH1 Core p. 210, RT Core p. 261, DW). DH1 prints only
+ *   location, ignoring Armour (but not Toughness), in DH2, RT, DW, BC and OW.
+ *   DH1 uses a distance table instead.
+ * - **Suffocation.** Air lasts TB minutes for a resting character and 2 × TB
+ *   rounds for an active one, with a Challenging (+0) Toughness test each minute
+ *   (or round) that costs a level of Fatigue on a failure. When it runs out the
+ *   character goes Unconscious, then dies after TB rounds (DH2, BC, OW) or takes
+ *   1d10 damage a round, ignoring Armour and Toughness, until dead (DH1, RT, DW).
+ *   DH1 has only
  *   the conserving-oxygen allotment. Drowning is a form of suffocation in every
  *   line — there is no separate drowning rule.
  *

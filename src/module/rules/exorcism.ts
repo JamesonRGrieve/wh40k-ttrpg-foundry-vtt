@@ -1,8 +1,8 @@
 /**
- * Exorcism ritual (DH2 Enemies Beyond p. 71, "Performing an Exorcism").
+ * Exorcism ritual.
  *
- *   1. Before beginning, the exorcist makes a Challenging (+0) Forbidden Lore
- *      (Daemonology) test; each degree of success is +5 to the Mastery tests.
+ *   1. First, a Challenging (+0) Forbidden Lore (Daemonology) test: every
+ *      degree of success adds +5 to the later Mastery tests.
  *   2. The exorcism is an Extended Daemonic Mastery test (Very Hard −30 base,
  *      Table 2–21 modifiers), each test taking 1d5 hours. The Daemon is cast out
  *      once the total degrees of success EXCEED the Daemon's Willpower bonus plus

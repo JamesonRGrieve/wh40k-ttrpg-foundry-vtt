@@ -1,25 +1,18 @@
 /**
  * Fitting and removing weapon modifications personally (#136).
  *
- * DH2 core p. 162, "Applying Personal Modifications": "Once a character has the
- * parts for a weapon modification, he can use the Trade (Armourer) skill to
- * apply that modification to the desired weapon. This test receives a modifier
- * equal to the Availability of the customisation being applied. If the test
- * succeeds, the modification is successfully applied. If the test fails, the
- * modification is not applied, and the parts necessary to apply the
- * modification are lost in the process. Characters who suffer two or more
- * degrees of failure damage their weapon, and it becomes Unreliable. If the
- * weapon was previously Reliable, it instead loses that quality." Removing one
- * (same page) is a Tech-Use test at the same Availability modifier: success
- * keeps the parts, failure loses them.
+ * In DH2 a character holding the parts fits a modification with a Trade
+ * (Armourer) test modified by its Availability. Success fits it; failure loses
+ * the parts, and two or more degrees of failure also damage the weapon, making
+ * it Unreliable (or stripping Reliable). Removing a modification is a Tech-Use
+ * test at the same modifier: success keeps the parts, failure loses them.
  *
- * DH2 Enemies Without p. 42 applies the xenos step to modifying as well as
- * repairing, so the line's rule reuses the repair rule's `XenosRepairRules`.
+ * The xenos step applies to modifying as well as repairing, so the line's rule
+ * reuses the repair rule's `XenosRepairRules`.
  *
- * DH1 / RT / OW print only "a character with the Trade (Armourer) skill may
- * upgrade weapons by making a successful test", with no modifier and no
- * failure consequence. DW and BC print no fitting test at all. The printed
- * values live on the line's game-system config
+ * DH1, RT and OW use a plain Trade (Armourer) test with no modifier and no
+ * failure consequence; DW and BC have no fitting test. The line's values live
+ * on its game-system config
  * (`BaseSystemConfig.weaponModification`); this module holds only the
  * content-agnostic math.
  */
@@ -52,9 +45,8 @@ export interface WeaponModificationRules {
     readonly xenos: XenosRepairRules | null;
     /**
      * The requisition bonus for taking a modification as parts to fit
-     * personally, or null where the book prints none. DH2 core p. 162: "he
-     * gains a +30 bonus to the modification's Availability when making the
-     * requisition test to acquire it."
+     * personally, or null where the line has none. Buying the loose parts
+     * eases the requisition test against the modification's Availability.
      */
     readonly partsRequisitionBonus: number | null;
 }

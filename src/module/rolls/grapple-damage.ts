@@ -1,10 +1,9 @@
 /**
  * @file grapple-damage — a won Damage Opponent deals the controller's unarmed hit (#665).
  *
- * DH2 core p. 221: "If the active character wins, he inflicts unarmed damage
- * (1d5-3+SB) to his opponent's Body location and one level of Fatigue". RT, BC, DW
- * and OW print the same; DH1's injure deals "normal unarmed Damage … and one level
- * of Fatigue" and names no location.
+ * In DH2, RT, BC, DW and OW a won Damage Opponent deals unarmed damage
+ * (1d5−3 + SB) to the opponent's Body and one level of Fatigue. DH1's injure deals
+ * the same damage and Fatigue but names no location.
  *
  * The hit is the controller's own unarmed strike (the weapon its content declares
  * `unarmed`), built by the same `Hit.createHit` an attack uses and posted on the

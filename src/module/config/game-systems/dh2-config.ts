@@ -46,8 +46,7 @@ export const DH2_ACQUISITION_LADDER: AcquisitionLadder = {
         unique: -60,
     },
     craftsmanship: DH2_CRAFTSMANSHIP_MODIFIERS,
-    // p. 269, "Excessive or Reckless Use": "When an Acolyte fails an Influence test by more degrees of
-    // failure than his Fellowship bonus, his Influence decreases by the difference between the two."
+    // Failing an Influence test by more degrees than the Fellowship bonus costs Influence equal to the excess.
     failureLoss: { kind: 'beyondFellowshipBonus' },
 };
 
@@ -128,20 +127,18 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
         full: { attackModifier: -10, actionCost: 'half' },
     };
     /**
-     * DH2 core ch. VII, Evasion: "When Evading Swift Attacks, Lightning Attacks,
-     * Full Auto Bursts, Semi-Auto Bursts, attacks from weapons with the Twin-Linked
-     * quality, or any other attacks that would inflict multiple hits, each degree of
-     * success … negates one additional hit. When Evading attacks from weapons with
-     * the Storm quality, each degree of success on the test negates two hits." — #414.
+     * DH2 evasion: against any multi-hit attack (bursts, Swift and Lightning
+     * Attacks, Twin-Linked) each degree of success negates one more hit; against
+     * Storm, each degree negates two — #414.
      */
     /**
-     * DH2 core pp. 221–222: Slip Free is "a Challenging (+0) Acrobatics test", and a
-     * controller who has thrown its opponent down gains "+10 to all further Opposed
-     * tests made during this Grapple until the Prone opponent manages to stand".
+     * DH2 grapple: Slip Free is a Challenging (+0) Acrobatics test, and a
+     * controller who throws its opponent down gets +10 on later opposed tests in
+     * the grapple until the opponent stands.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
 
-    /** DH2 core pp. 253–255: Table 7-29 and a Vehicle Critical Effects chart per location. */
+    /** DH2 vehicles: a hit-location table and a critical-effects chart per location. */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(false);
 
     /** DH2 core p. 141: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */

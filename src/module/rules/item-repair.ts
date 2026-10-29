@@ -1,14 +1,11 @@
 /**
- * Repairing damaged items with Tech-Use (#444, DH2 core p. 142).
+ * Repairing damaged items with Tech-Use (#444).
  *
- * "To repair a damaged item, the character makes a Tech-Use test and applies
- * the repair modifier from Table 5–2: Craftsmanship, Requisition, and Repair
- * that corresponds with the craftsmanship level for the item. If the test
- * fails with four or more degrees of failure, the item is destroyed and no
- * further repair attempts are possible."
+ * A repair is a Tech-Use test modified by the item's craftsmanship. Failing
+ * by four or more degrees destroys the item for good.
  *
- * The printed values live on the line's game-system config
- * (`BaseSystemConfig.itemRepair`). A line whose book prints no such rule
+ * The line's values live on its game-system config
+ * (`BaseSystemConfig.itemRepair`). A line without this rule
  * declares `null`, and its Tech-Use Repair stays a plain test at the GM's
  * difficulty. This module holds only the content-agnostic math.
  */

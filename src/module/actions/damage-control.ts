@@ -1,9 +1,7 @@
 /**
- * Damage Control (#678): "When a vehicle with the Damage Control vehicle trait
- * suffers Critical damage due to Righteous Fury, the vehicle's commander (or
- * driver if there is no designated commander) can force the 1d5 to be re-rolled"
- * (DH2 Core p. 188); "the second result must be accepted even if it is worse than
- * the first" (OW Core p. 213).
+ * Damage Control (#678): a vehicle with this trait lets its commander (or its
+ * driver, when it has no commander) re-roll the 1d5 of a Righteous Fury
+ * critical once, and the second result stands even when it is worse.
  *
  * The damage card offers each Righteous Fury roll on such a vehicle a re-roll
  * button. Pressing it rolls the die again, reads the new value on the vehicle's

@@ -66,16 +66,14 @@ export function readGrappleOpponentUuid(flags: object | undefined, scope: string
 }
 
 /**
- * The attack actions a grapple attempt is made with. RAW, worded alike in every
- * line ("Grappling": DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243, DW p. 246, OW
- * p. 251): "Instead of inflicting Damage with an unarmed attack, a character can
- * attempt to Grapple his opponent … a melee attack that uses either a Charge
- * Action or a Standard Attack Action." The target may use a Reaction to avoid it
+ * The attack actions a grapple attempt is made with. In every line a character
+ * may grapple instead of dealing unarmed damage, as a melee Charge or Standard
+ * Attack. The target may use a Reaction to avoid it
  * (DH1: an Agility Test; the others: Dodge or Parry — the shared evasion window
  * makes that per line); a hit starts a grapple the attacker controls.
  *
- * The table's own Grapple action is not one of them: every line prints that it
- * "is only used when a character is already engaged in a Grapple".
+ * The table's own Grapple action is not one of them: it is only for a character
+ * already in a grapple.
  */
 export const GRAPPLE_START_ACTIONS: readonly string[] = ['Standard Attack', 'Charge'];
 
@@ -206,9 +204,8 @@ export interface GrappleRules {
 
 /**
  * A won Damage Opponent: the controller's unarmed hit, through the normal damage
- * path. DH2, RT, BC, DW and OW print "unarmed damage (1d5-3+SB) to his opponent's
- * Body location and one level of Fatigue"; DH1 prints "normal unarmed Damage … and
- * one level of Fatigue" and names no location.
+ * path. In DH2, RT, BC, DW and OW it is unarmed damage (1d5−3 + SB) to the Body
+ * and one level of Fatigue; DH1 deals the same but names no location.
  */
 export interface GrappleDamageRule {
     /** The hit-location id the hit lands on; null when the line names none, so it lands where the controller's test roll puts it, like every attack. */
@@ -218,10 +215,9 @@ export interface GrappleDamageRule {
 }
 
 /**
- * A won Push Opponent: "he pushes his opponent one metre in a direction of his
- * choice, plus one additional metre for each degree of success. This pushed
- * distance cannot exceed the active character's Half Move distance" (DH2 core
- * p. 221; RT, BC, DW and OW word it alike).
+ * A won Push Opponent moves the opponent one metre in a chosen direction plus a
+ * metre per degree of success, never past the controller's Half Move (DH2, RT,
+ * BC, DW and OW).
  */
 export interface GrapplePushRule {
     readonly baseMetres: number;

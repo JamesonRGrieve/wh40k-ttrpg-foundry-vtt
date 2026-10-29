@@ -98,13 +98,12 @@ function driving(skill: string, specialisation: string): VehicleTestSkill {
 }
 
 /**
- * Operate as DH2 (core p. 111), OW (core p. 128) and BC (core pp. 105–106) print
- * it, word for word: Operate (Surface) covers "any vehicle that primarily
- * operates on the surface of a planet. Groundcars, walkers, treaded vehicles,
- * boats, and skimmers"; Operate (Aeronautica) "any vehicle that operates in three
- * dimensions", atmospheric fliers and small voidcraft; Operate (Voidship) "large
- * void-faring vessels" (DH2 core p. 112). An emplacement is never driven, and the
- * books print nothing for a submersible.
+ * Operate as DH2, OW and BC share it: Operate (Surface) drives anything that
+ * moves on a planet's surface, from groundcars and walkers to tracked vehicles,
+ * boats and skimmers; Operate (Aeronautica) flies anything that moves in three
+ * dimensions, atmospheric fliers and small voidcraft; Operate (Voidship) handles
+ * large void-going vessels. An emplacement is never driven, and submersibles
+ * have no rule.
  */
 export const OPERATE_VEHICLE_DRIVING: VehicleDrivingRules = {
     immobile: null,

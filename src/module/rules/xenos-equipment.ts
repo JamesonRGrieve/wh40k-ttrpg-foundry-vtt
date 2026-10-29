@@ -1,14 +1,11 @@
 /**
- * Modifying and Repairing Xenos Equipment (DH2 Enemies Without p. 42, #136).
+ * Modifying and repairing xenos equipment (#136).
  *
- * "To repair and modify xenos equipment, a character must first make a Hard
- * (–20) Forbidden Lore test, and the Specialisation for the Forbidden Lore
- * must be the same as the alien race that constructed the item (if this is
- * unknown, then the item cannot be repaired or modified — it is simply too
- * alien!) … He then repairs/modifies the item using the rules on page 142 or
- * 162 of the DARK HERESY Core Rulebook. There is a base –20 penalty on the
- * test, due to the alien nature of the item, but a +5 bonus on the attempt
- * for every degree of success on the Forbidden Lore test."
+ * Working on an alien device starts with a Hard (−20) Forbidden Lore test in
+ * the specialisation of the race that built it; when nobody knows the maker,
+ * the device can't be worked on at all. The repair or modification test that
+ * follows takes −20 for the device's alien nature and +5 per degree of success
+ * the lore test scored.
  *
  * The flow is two tests. The lore test's degrees of success are recorded on
  * the item as an insight for the Acolyte who rolled it. Their next attempt on

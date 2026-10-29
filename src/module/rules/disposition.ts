@@ -2,19 +2,16 @@
  * NPC Disposition (#73), homologated across the lines through each line's
  * {@link DispositionModelDef} (`getDispositionModel()`).
  *
- * DH2 (core p. 277): "Disposition is a characteristic possessed only by NPCs.
- * Like other characteristics, it is measured on a scale from 0–100." Most NPCs
- * start "between 40 and 60". The GM may test it like any characteristic. How an
- * Interaction skill moves it is the NPC's Personality (pp. 277–280): each skill
- * has a test modifier and an effect of so many points per degree of success or
- * failure. The book prints no formula turning the Disposition value into a test
- * modifier — "the GM then tells the player the difficulty of the test, factoring
- * in both the NPC's Disposition and any other applicable modifiers" (p. 279) —
- * so the GM sets that difficulty in the roll dialog.
+ * DH2: Disposition is an NPC-only characteristic on the usual 0–100 scale, and
+ * most NPCs start somewhere in the middle of it. The GM may test it like any
+ * characteristic. How an Interaction skill moves it is the NPC's Personality:
+ * each skill has a test modifier and an effect of so many points per degree of
+ * success or failure. There is no formula turning the value into a test
+ * modifier; the GM weighs it into the difficulty, so the GM sets that difficulty
+ * in the roll dialog.
  *
- * DH1 (p. 230), RT (p. 294), BC (p. 276), DW (p. 276) and OW (p. 304) print a
- * seven-step table instead: Very Hard (−30) through Indifferent (Challenging,
- * +0) to Easy (+30), the step setting the base difficulty of an Interaction test.
+ * DH1, RT, BC, DW and OW use a seven-step table instead: Very Hard (−30)
+ * through Indifferent (Challenging, +0) to Easy (+30), the step setting the base difficulty of an Interaction test.
  * A success improves the Disposition one step per degree of success (BC, OW)
  * or one step plus one per degree (DH1, RT, DW); a failure worsens it one step
  * per degree of failure.

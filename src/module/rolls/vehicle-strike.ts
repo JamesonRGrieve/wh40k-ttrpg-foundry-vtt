@@ -488,8 +488,7 @@ export function strikeFor(profile: VehicleTargetProfile, located: VehicleHitLoca
 
 /**
  * A force field's outcome on a d100 roll: nullified at or under its rating, and
- * overloaded at or under its overload chance (DH2 Core p. 169: "If the result is
- * lower than or equal to the listed number, the field overloads").
+ * overloaded at or under its overload chance.
  */
 export function forceFieldRollFor(field: VehicleForceField, roll: number): VehicleForceFieldRoll {
     const canOverload = !field.neverOverloads;

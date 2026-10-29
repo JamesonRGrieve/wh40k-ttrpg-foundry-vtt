@@ -91,8 +91,7 @@ export function getDegreeForMode(method: DegreesMethod, a: number, b: number): n
  * The degrees count a line PRINTS for a resolved test (#335) — what a card shows.
  *
  * Gen 2 (DH2 / BC / OW) counts the initial degree: `1 + tens difference`. Gen 1
- * (DH1 / DW / RT) has no base degree — DH1 core p. 184: "For each full 10 points
- * by which you exceed your Characteristic, you achieve one degree of success"
+ * (DH1 / DW / RT) has no base degree — one degree per full 10 points of margin
  * (Fellowship 44, roll 12 → 3 degrees) — so it is `⌊margin / 10⌋`, and a narrow
  * pass is a success with 0 degrees.
  *

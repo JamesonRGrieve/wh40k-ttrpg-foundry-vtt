@@ -1586,11 +1586,10 @@ const COMRADE_MIRROR_EFFECT_KEYS = {
 } as const;
 
 /**
- * A PC's Fear or Pinning test that carries its Comrade (#152; OW Core p. 271:
- * "Comrades do not take Fear Tests. If their controlling Player Character passes his
- * Fear Test, they pass as well. If their controlling Player Character fails his Fear
- * Test, they fail as well", Pinning alike). A Comrade that fails Fear flees (it counts
- * as 81–100 on Table 9–5); one that fails Pinning goes to cover with no Actions;
+ * A PC's Fear or Pinning test that carries its Comrade (#152). A Comrade never
+ * tests Fear or Pinning itself: it passes or fails with its Player Character. A
+ * Comrade that fails Fear flees (the worst band of the Fear table); one that fails
+ * Pinning goes to cover with no Actions;
  * either lasts until a recovery Order (Fear also until the end of combat). An immune
  * Comrade does not fail. The PC's own test runs as before; this adds the Comrade's
  * result to the card as an effect, and on a failure marks the Comrade fleeing or

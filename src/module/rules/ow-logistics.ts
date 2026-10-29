@@ -1,16 +1,13 @@
 /**
  * Only War · Squad Logistics Rating + Logistics Test engine (#154, #192).
  *
- * OW core p. 162, "The Logistics Test": "This is a 1d100 roll against the
- * Squad's Logistics Rating … modified based on the item's Availability,
- * Craftsmanship, and the conditions of the battlefield". The difficulty is the
- * sum of Table 6-2: Availability by Front Conditions's four cumulative parts —
- * the item's Availability cross-referenced with the number of troops deployed,
- * Time Spent in Front, Front Active, War Conditions — plus the +20 for an item
- * in a deployed regiment's standard kit (p. 163) and Table 6-6: Craftsmanship
- * and Logistics (p. 167).
+ * The Logistics Test is a d100 against the squad's Logistics Rating. Its
+ * modifier adds four front-condition parts (the item's Availability against the
+ * troops deployed, time spent at the front, how active the front is, and the war
+ * conditions), a bonus for gear that is a deployed regiment's standard kit, and
+ * the item's craftsmanship.
  *
- * Every printed value lives on the OW game-system config
+ * Every value lives on the OW game-system config
  * (`OW_LOGISTICS_FRONT_CONDITIONS`, `OW_ACQUISITION_LADDER`); this module holds
  * only the composition: it names no items, regiments or talents.
  *

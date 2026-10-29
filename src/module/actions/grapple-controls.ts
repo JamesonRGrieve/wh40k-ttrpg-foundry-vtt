@@ -2,14 +2,11 @@
  * @file grapple-controls — the prompts a grapple option needs once it resolves (#665).
  *
  * - Push Opponent: the won card's GM button asks the direction, and whether the
- *   controller moves with its opponent or lets go (DH2 core p. 221: "The active
- *   character must move with his Grappled opponent in order to maintain the
- *   Grapple, or he can choose to let go of his opponent as a Free Action, which
- *   ends the Grapple, but allows the active character to keep his ground"), then
- *   moves the tokens. Only the GM moves them, so a push never moves a token
- *   without the GM confirming it.
+ *   controller follows its opponent to keep the grapple, or lets go as a Free
+ *   Action and holds its ground), then moves the tokens. Only the GM moves
+ *   them, so a push never moves a token without the GM confirming it.
  * - Ready and Use Item: the controller picks which of its own items the option
- *   names (DH2 core p. 222: "ready one of his own items", "use a readied item").
+ *   readies or uses.
  */
 
 import { t } from '../i18n/t.ts';

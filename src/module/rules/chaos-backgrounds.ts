@@ -9,14 +9,12 @@
 import { findBandBy } from './_dice.ts';
 
 /* -------------------------------------------- */
-/*  Mutant background (within.md p. 32)         */
+/*  Mutant background                           */
 /* -------------------------------------------- */
 
 /**
- * Within p. 32, Starting Corruption and Mutation: "A Mutant character begins
- * play with 10 Corruption points. Instead of rolling as normal for malignancy
- * or mutation, roll 5d10 on Table 8-16: Mutations ... to determine a starting
- * mutation for the character."
+ * A Mutant starts play with some Corruption and, in place of the normal
+ * malignancy or mutation roll, a starting mutation rolled on the Mutations table.
  *
  * Both values are content on the Mutant origin document: the Corruption in
  * `modifiers.resources.corruption` (applied by the origin-grant ledger like any
@@ -97,10 +95,9 @@ export const TWISTED_FLESH_FLAG = 'twistedFlesh';
 export type MalignancyOutcome = 'malignancy' | 'mutation';
 
 /**
- * The outcomes a gained Malignancy may take. Twisted Flesh (within.md p. 32):
- * "Whenever he would gain a malignancy, he may roll on Table 8-16: Mutations to
- * gain a mutation instead" — a choice, so both remain open; without it, only
- * the Malignancy.
+ * The outcomes a gained Malignancy may take. Twisted Flesh lets the character
+ * take a rolled mutation instead of the malignancy — a choice, so both remain
+ * open; without it, only the Malignancy.
  */
 export function malignancyOutcomes(twistedFlesh: boolean): readonly MalignancyOutcome[] {
     return twistedFlesh ? ['malignancy', 'mutation'] : ['malignancy'];

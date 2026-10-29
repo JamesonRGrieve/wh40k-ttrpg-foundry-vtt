@@ -2,19 +2,14 @@
  * @file Reaction hooks a talent carries — Counter Attack (#603).
  *
  * Every line prints the talent the same way in substance: after a SUCCESSFUL
- * Parry the character may immediately attack the opponent "using the weapon with
- * which he Parried", at –20 (DH2 core p. 125, DH1, RT, DW, BC, OW). A Dodge does
- * not qualify. DH2 alone adds a frequency limit; the other five cores print none
- * beyond the Reaction the Parry itself spends.
+ * Parry the character may immediately attack the opponent with the parrying
+ * weapon, at –20, in every line. A Dodge does not qualify. DH2 alone adds a
+ * frequency limit; the other five lines have none beyond the Reaction the Parry
+ * itself spends.
  *
- * DH2's "Once per turn" is the book's loose word for once per ROUND (operator
- * ruling, #603). The same core uses "turn" for the round-scoped Reaction allowance:
- *   - Reactions (ch. VII, p. ~210): "A character receives one Reaction each round,
- *     which he can only use when it is not his turn."
- *   - Parry (skill): "This is a Reaction (and as such can usually only be
- *     attempted once each turn)".
- *   - Step Aside: "an additional Evasion attempt … once per round … allowing two
- *     Dodges, two Parries … in each turn".
+ * DH2's "once per turn" means once per ROUND (operator ruling, #603): DH2 uses
+ * "turn" loosely for the round-scoped Reaction allowance, as it does for the one
+ * Reaction a round, for Parry, and for Step Aside's extra Evasion per round.
  * So the limit resets when the combat round advances, not on each combatant's
  * turn — which is what keeps a Step Aside character's second Parry in the same
  * round from earning a second Counter Attack.

@@ -3,13 +3,9 @@
  *
  * Every line models Fate as a total plus a current pool: the schema's
  * `fate.max` is the total (DH2's "Fate threshold"), `fate.value` the points
- * left to spend. Burning Fate permanently lowers the total:
- * - DH2 core p. 293: "Burning Fate permanently reduces the Acolyte's Fate
- *   threshold by 1, and he immediately loses any Fate points in excess of his
- *   new threshold." It may be burnt even with no points left.
- * - DH1 core ("permanently reduce their Fate Points by 1", even after spending
- *   them all), DW core ("permanently reduce his Fate Points by one") and OW core
- *   ("permanently reducing his maximum Fate Points by one") say the same.
+ * left to spend. In every line, burning Fate lowers the total by 1 for good and
+ * drops the current points to the new total if they exceed it. A character may
+ * burn Fate even with no points left to spend.
  */
 
 import { nonNegInt } from './_num.ts';

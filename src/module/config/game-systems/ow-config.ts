@@ -124,7 +124,7 @@ export const OW_LOGISTICS_FRONT_CONDITIONS = {
     frontActive: { under3Months: -10, months3to6: 0, months6to12: 10, years1to5: 20, years5plus: 30 },
     /** "War Conditions". */
     warCondition: { losingBadly: -30, faltering: -20, violentImpasse: -10, ceasefire: 30, nearVictorious: 10, dominant: 20 },
-    /** "if a piece of equipment is a part of the standard kit for any regiment engaged within the warzone … +20" (p. 163). */
+    /** Gear that is standard kit for any regiment in the warzone is easier to get. */
     standardKit: 20,
 } as const satisfies {
     availabilityByTroops: Readonly<Record<string, AvailabilityColumn>>;
@@ -165,15 +165,12 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
         full: { attackModifier: -10, actionCost: 'half' },
     };
     /**
-     * OW core: "When Evading Swift Attacks, Lightning Attacks, Full Auto Bursts,
-     * Semi-Auto Bursts, or any weapon with the Twin-Linked Quality, each Degree of
-     * Success … negates one additional hit. When Evading weapons with the Storm
-     * Quality, each Degree of Success … negates two hits." — #414.
+     * OW evasion: against bursts, Swift and Lightning Attacks and Twin-Linked
+     * weapons each degree of success negates one more hit; against Storm, two — #414.
      */
     /**
-     * OW core, Grapple: Slip Free is "a Challenging (+0) Acrobatics Test", and a
-     * controller who has thrown its opponent down gains "+10 to all further Opposed
-     * Tests made during this Grapple".
+     * OW grapple: Slip Free is a Challenging (+0) Acrobatics test, and a controller
+     * who throws its opponent down gets +10 on later opposed tests in the grapple.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
 
@@ -195,21 +192,19 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     override readonly comradeRules: ComradeRules = { cohesionRangeM: 5, actionBudget: 2, mentalDeathThreshold: 10 };
 
     /**
-     * OW Core pp. 269–271, the Orders any Player Character can give his Comrade:
-     * - Maintain Cohesion (p. 269): "his Comrade may spend a single Half Action to
-     *   maintain Cohesion", only "Whenever the Player Character has his Comrade in
-     *   Cohesion and uses an Action to move".
-     * - The move Actions (pp. 269–270): Disengage (Full), Move (Half or Full), Run
-     *   (Full; "If a Comrade is wounded he cannot Run", p. 271), Stand/Mount (Half),
-     *   Tactical Advance (Full). Out of Cohesion these are how the Comrade moves.
-     * - Ranged Volley (Half, p. 270): "The Player Character gains an additional +5 to
-     *   all Ballistics Skill Tests this Turn."
-     * - Close Quarters (Half, p. 271): the Player Character gains "the benefit of
-     *   Ganging Up".
-     * - Take Cover! (Full, p. 271): the Comrade hunkers down in cover for the next
-     *   Round; the benefit is the Comrade's own.
-     * "Unless otherwise stated by an Order, the Comrade must be in Cohesion for the
-     * Player Character to gain benefits from an Order" (p. 270).
+     * The Orders any OW Player Character can give their Comrade:
+     * - Maintain Cohesion: when the Player Character moves with the Comrade in
+     *   Cohesion, the Comrade spends a Half Action to keep up.
+     * - The move Actions: Disengage (Full), Move (Half or Full), Run (Full; not
+     *   while the Comrade is wounded), Stand/Mount (Half), Tactical Advance (Full).
+     *   Out of Cohesion these are how the Comrade moves.
+     * - Ranged Volley (Half): +5 to the Player Character's Ballistic Skill tests
+     *   this Turn.
+     * - Close Quarters (Half): the Player Character counts as Ganging Up.
+     * - Take Cover! (Full): the Comrade hunkers down in cover for the next Round;
+     *   the benefit is the Comrade's own.
+     * An Order benefits the Player Character only while the Comrade is in Cohesion,
+     * unless the Order says otherwise.
      */
     override readonly comradeOrders: readonly ComradeOrderDef[] = [
         comradeMoveOrder('follow', 'half', 'to-act'),

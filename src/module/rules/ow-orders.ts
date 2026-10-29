@@ -5,15 +5,13 @@
  * costs the Comrade and what it grants are that line's printed content and live on
  * its game-system config (`comradeOrders`); this module resolves them:
  *
- *   - Issuing an Order is a Free Action for the PC (p. 270: "giving an Order is a
- *     Free Action that does not require a Test"). The Comrade spends the Order's
- *     Half or Full Action out of its own budget, "two Half Actions or one Full
- *     Action per Turn", and "Once a Comrade has used all of his Actions for the
- *     Turn, all additional Orders issued to him have no effect".
- *   - Cohesion (p. 269–270): following the PC ("maintain Cohesion") is only possible
- *     in Cohesion; out of it the Comrade moves only by the move Orders. "Unless
- *     otherwise stated by an Order, the Comrade must be in Cohesion for the Player
- *     Character to gain benefits from an Order."
+ *   - Issuing an Order is a Free Action for the PC, with no test. The Comrade
+ *     spends the Order's Half or Full Action out of its own budget of two Half
+ *     Actions or one Full Action a Turn; once that is spent, further Orders that
+ *     Turn do nothing.
+ *   - Cohesion: following the PC is only possible in Cohesion; out of it the
+ *     Comrade moves only by the move Orders. An Order benefits the PC only while
+ *     the Comrade is in Cohesion, unless the Order says otherwise.
  *   - A wounded Comrade "cannot Run" (p. 271); a pinned one "may not take Actions
  *     until they receive an order that allows them to recover"; a fleeing one flees
  *     "as quickly as possible" (p. 271).

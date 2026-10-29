@@ -104,16 +104,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         full: { attackModifier: -10, actionCost: 'half' },
     };
     /**
-     * BC core: "When Evading Full Auto or Semi-Auto Bursts, each Degree of Success
-     * on the Dodge Test negates one additional hit. When Evading Swift or Lightning
-     * Attacks, each Degree of Success on the Dodge or Parry Test negates one
-     * additional hit." No Storm or Twin-Linked rule — #414.
+     * BC: each degree of success on a Dodge against a Semi-Auto or Full Auto
+     * Burst, or on a Dodge or Parry against a Swift or Lightning Attack, negates
+     * one more hit. No Storm or Twin-Linked rule — #414.
      */
     /**
-     * BC core, Grapple: Slip Free prints "a Challenging (+0) Contortionist Skill
-     * Test", and BC's Contortionist is a special use of Acrobatics ("Characters may
-     * also use Acrobatics to escape from a grapple", BC core, Special Uses for
-     * Acrobatics), so it rolls Acrobatics. Throw Down only makes the opponent Prone.
+     * BC grapple: Slip Free is a Challenging (+0) Contortionist test, and BC
+     * folds Contortionist into Acrobatics, so it rolls Acrobatics. Throw Down
+     * only makes the opponent Prone.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 0);
 

@@ -6,22 +6,21 @@
  * the roll pipeline, the damage path, a chat card) owns I/O, actor lookups and
  * persistence; this module owns the rules:
  *
- *   - Cohesion (p. 269): "within 5 metres of his controlling Player Character,
- *     and they are not separated by a solid barrier". The printed values live on
- *     the line's game-system config (`comradeRules`).
- *   - The state track (p. 271, "Comrades Taking Damage"): unharmed → wounded →
- *     dead; "If a Comrade is wounded he cannot Run".
- *   - The hit transfer (p. 271, "Comrades Being Attacked"): a successful hit roll
+ *   - Cohesion: the Comrade is close to its Player Character with no solid
+ *     barrier between them. The line's values live on its game-system config
+ *     (`comradeRules`).
+ *   - The state track: unharmed → wounded → dead; a wounded Comrade can't Run.
+ *   - The hit transfer: a successful hit roll
  *     against the PC that comes up doubles strikes a Comrade in Cohesion instead
  *     (one hit of a multi-hit attack); Blast and Spray catch any Comrade in their
  *     area.
- *   - Fear and Pinning (p. 271): the Comrade passes or fails with its PC, unless it
- *     is immune. A failed Fear test counts as 81–100 on Table 9–5 (it flees) until
- *     the end of combat or a recovery Order; a failed Pinning test sends it to
- *     cover with no Actions until a recovery Order.
- *   - Insanity and Corruption (p. 271): a Comrade "would suffer 10 Insanity or 10
- *     Corruption in a single Round" dies.
- *   - Replacement (p. 110, p. 271): a dead Comrade is replaced at downtime (the
+ *   - Fear and Pinning: the Comrade passes or fails with its PC, unless it is
+ *     immune. A failed Fear test means it flees (the worst band of the Fear table)
+ *     until the end of combat or a recovery Order; a failed Pinning test sends it
+ *     to cover with no Actions until a recovery Order.
+ *   - Insanity and Corruption: a Comrade that would take 10 of either in one
+ *     Round dies.
+ *   - Replacement: a dead Comrade is replaced at downtime (the
  *     squad back in camp for refitting).
  *
  * The Comrade's Orders and its action budget are `rules/ow-orders.ts`.
@@ -86,9 +85,8 @@ export interface ComradeReplaceResult extends ComradeStateTransition {
 }
 
 /**
- * One hit on the Comrade's state track (p. 271): "If an unharmed Comrade suffers a
- * hit from a weapon, he becomes wounded … If a wounded Comrade suffers another hit
- * from a weapon, he dies." No wound count: one hit is one step.
+ * One hit on the Comrade's state track: a weapon hit wounds an unharmed Comrade
+ * and kills a wounded one. No wound count: one hit is one step.
  */
 export function applyComradeHit(state: ComradeState): ComradeStateTransition {
     if (state === 'unharmed') return { newState: 'wounded', transitioned: true };
@@ -401,11 +399,9 @@ export interface FearPinningMirrorResult {
 }
 
 /**
- * The Comrade's result on its PC's Fear or Pinning test (p. 271): "Comrades do not
- * take Fear Tests. If their controlling Player Character passes his Fear Test, they
- * pass as well. If their controlling Player Character fails his Fear Test, they fail
- * as well" (Pinning alike). "If the Comrade is benefiting from ability that makes
- * him immune … he does not fail". Cohesion plays no part. A dead Comrade has nothing
+ * The Comrade's result on its PC's Fear or Pinning test: it passes or fails with
+ * its PC, except that a Comrade immune to the effect never fails. Cohesion plays
+ * no part. A dead Comrade has nothing
  * to mirror.
  */
 export function comradeMirrorsFearPinning(args: FearPinningMirrorArgs): FearPinningMirrorResult {

@@ -53,37 +53,33 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** DH1 core Weapon Upgrades: a successful Trade (Armourer) test (#136). */
+    /** DH1 weapon upgrades: a successful Trade (Armourer) test (#136). */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     readonly vehicleDriving: VehicleDrivingRules = DH1_VEHICLE_DRIVING;
     /**
-     * DH1 core: "The number of extra hits you can score in this manner may not
-     * exceed the … rate of fire" (both bursts); Suppressing Fire: "The number of
-     * hits scored may not exceed …". DH1 core prints no Storm; Ascension, Daemon
-     * Hunter and Blood of Martyrs make every hit "up to the weapon's listed rate
-     * of fire" two hits, i.e. twice the ceiling — #607.
+     * DH1: both bursts cap their extra hits at the rate of fire, and Suppressing
+     * Fire caps its total hits. Storm turns each hit up to the rate of fire into
+     * two, so its ceiling is twice the rate of fire — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * DH1 core p. 191: "Semi-Auto Burst (Full Action)" "grants a +10 modifier to
-     * your Ballistic Skill Test"; p. 190: "Full Auto Burst (Full Action)" "grants a
-     * +20 modifier" — #607.
+     * DH1: Semi-Auto and Full Auto Bursts are Full Actions at +10 and +20 to the
+     * Ballistic Skill test — #607.
      */
     readonly burstActions: BurstActionRules = {
         semi: { attackModifier: 10, actionCost: 'full' },
         full: { attackModifier: 20, actionCost: 'full' },
     };
-    /** DH1 core: "When Dodging Full or Semi-Automatic fire, each degree of success negates an additional hit." — #414. */
+    /** DH1: each degree of success on a Dodge against Semi-Auto or Full Auto fire negates one more hit — #414. */
     /**
-     * DH1 core, Grapple (Full Action): the grappler's one option is an Opposed
-     * Strength test to injure; the grappled may break free or take control with an
-     * Opposed Strength test, or escape with "a Contortionist Test opposed by the
-     * grappler's Strength Test" (Contortionist, Escape Grapple). DH1 prints no Throw
-     * Down, Push, Ready, Stand or Use Item. A won injure deals "normal unarmed Damage
-     * (1d5–3 plus SB, with Armour Points counting double) and one level of
-     * Fatigue"; DH1 names no location, so the hit lands where the test roll puts it.
+     * DH1 grapple (Full Action): the grappler's one option is an Opposed Strength
+     * test to injure; the grappled may break free or take control with an Opposed
+     * Strength test, or escape with Contortionist against the grappler's Strength.
+     * DH1 has no Throw Down, Push, Ready, Stand or Use Item. A won injure deals
+     * unarmed damage (1d5−3 + SB, Armour doubled) and one level of Fatigue; with no
+     * location given, the hit lands where the test roll puts it.
      */
-    // DH1 core p. 144: Poor −10 Agility; Good +1 AP "against the first attack in any round"; Best half weight and +1 AP.
+    // DH1 armour craftsmanship: Poor −10 Agility; Good +1 AP against the round's first attack; Best half weight and +1 AP.
     override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     readonly grappleRules: GrappleRules = {
