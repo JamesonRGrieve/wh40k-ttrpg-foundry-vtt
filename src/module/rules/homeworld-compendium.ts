@@ -1,26 +1,31 @@
 /**
  * Compendium-sourced homeworld mechanics reader (#338).
  *
- * Per Direction #7, the mechanical values for the DH2 origin-path
- * home-worlds (characteristic modifiers, Fate threshold, Emperor's
- * Blessing breakpoint, starting wounds, key aptitude, and the named
- * home-world bonus) are authored once in the compendium packs
- * (`src/packs/dark-heresy-2/dh2-{within,beyond,without}-origins-homeworlds`),
- * NOT duplicated in `src/`. Each home-world is an `originPath` document
- * whose `system` block carries everything the GM info dialogs display.
+ * Per Direction #7, the mechanical values for the origin-path home-worlds
+ * (characteristic modifiers, Fate threshold, Emperor's Blessing breakpoint,
+ * starting wounds, key aptitude, and the named home-world bonuses) are
+ * authored once in each line's home-world packs, NOT duplicated in `src/`.
+ * Each home-world is an `originPath` document whose `system` block carries
+ * everything the GM info dialog displays.
  *
- * This module owns the single read path: given a pack name, it loads the
- * pack's documents and projects each into a {@link HomeworldMechanics}
- * view-model keyed by the document's stable `system.identifier`
- * (kebab-case, e.g. `agri-world`). The supplement-specific rider shapes
- * + resolution logic stay in the sibling `*-homeworlds.ts` registries
- * (the `bc-gifts.ts` split: shape + resolver in `src/`, catalogue in
- * packs, caller owns I/O).
+ * This module owns the single read path: given a pack, it loads the pack's
+ * documents and projects each into a {@link HomeworldMechanics} view-model
+ * keyed by the document's stable `system.identifier` (kebab-case, e.g.
+ * `agri-world`); {@link readLineHomeworlds} does so for every home-world
+ * pack a line declares.
  *
  * No DataModel coupling. The only Foundry surface touched is the
  * `game.packs` collection, which is a framework boundary (untyped
  * document shape); the access is narrowed locally to the fields read.
  */
+
+import { lineBookPacks, type PackMetadataLike } from '../utils/line-packs.ts';
+
+/** One named home-world bonus, as its document authors it. */
+export interface HomeworldAbility {
+    readonly name: string;
+    readonly description: string;
+}
 
 /**
  * The basic mechanical values a homeworld info card displays, projected
@@ -44,10 +49,8 @@ export interface HomeworldMechanics {
     readonly emperorsBlessingMin: number;
     /** Key (favoured) aptitude(s) — already-localized display strings. */
     readonly aptitudes: readonly string[];
-    /** Named home-world bonus — the rules-text title. */
-    readonly bonusName: string;
-    /** Named home-world bonus — the rules-text body. */
-    readonly bonusDescription: string;
+    /** The named home-world bonuses, in document order. */
+    readonly abilities: readonly HomeworldAbility[];
     /** Starting-wounds flat component (the `N` in `N+1d5`). */
     readonly woundsFlat: number;
     /** Starting-wounds dice count (the `1` in `N+1d5`). */
@@ -86,7 +89,8 @@ interface RawHomeworldDoc {
 }
 
 /** Minimal pack surface: a collection whose documents this reader loads. */
-interface HomeworldPack {
+export interface HomeworldPack {
+    readonly metadata: PackMetadataLike & { readonly label?: string };
     /** Optional — a locked or unavailable pack may not expose it; the reader guards for that. */
     readonly getDocuments?: () => Promise<readonly RawHomeworldDoc[]>;
 }
@@ -154,7 +158,7 @@ function projectDoc(doc: RawHomeworldDoc): HomeworldMechanics | null {
     const grants = system.grants;
     const wounds = parseWoundsFormula(grants?.woundsFormula ?? '') ?? { flat: 0, dice: 1, faces: 5 };
     const blessing = parseEmperorsBlessingMin(system.notes?.dh2 ?? '') ?? 0;
-    const firstAbility = grants?.specialAbilities?.[0];
+    const abilities = (grants?.specialAbilities ?? []).map((ability) => ({ name: ability.name ?? '', description: ability.description ?? '' }));
 
     return {
         id: identifier,
@@ -164,8 +168,7 @@ function projectDoc(doc: RawHomeworldDoc): HomeworldMechanics | null {
         fateBase: grants?.fateThreshold ?? 0,
         emperorsBlessingMin: blessing,
         aptitudes: grants?.aptitudes ?? [],
-        bonusName: firstAbility?.name ?? '',
-        bonusDescription: firstAbility?.description ?? '',
+        abilities,
         woundsFlat: wounds.flat,
         woundsDice: wounds.dice,
         woundsFaces: wounds.faces,
@@ -174,17 +177,16 @@ function projectDoc(doc: RawHomeworldDoc): HomeworldMechanics | null {
 
 /**
  * Load a homeworld pack and project each document into a
- * {@link HomeworldMechanics}, keyed by `system.identifier`. Missing pack
- * (e.g. before the world is ready, or pack disabled) yields an empty Map
- * rather than throwing, so callers can render an empty grid gracefully.
+ * {@link HomeworldMechanics}, keyed by `system.identifier`. A pack that cannot
+ * load (disabled, or its document class not ready) yields an empty Map rather
+ * than throwing, so callers can render an empty grid gracefully.
  *
- * @param packName Fully-qualified pack id (`wh40k-rpg.<pack>`).
+ * @param pack The home-world pack.
  */
-export async function readHomeworldMechanics(packName: string): Promise<Map<string, HomeworldMechanics>> {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: game.packs.get returns Foundry's CompendiumCollection (untyped document shape); narrowed locally to the HomeworldPack surface this reader reads
-    const pack = game.packs.get(packName) as HomeworldPack | undefined;
+export async function readHomeworldMechanics(pack: HomeworldPack): Promise<Map<string, HomeworldMechanics>> {
     const out = new Map<string, HomeworldMechanics>();
-    if (pack?.getDocuments === undefined) return out;
+    if (pack.getDocuments === undefined) return out;
+    const packName = pack.metadata.name;
 
     let docs: readonly RawHomeworldDoc[];
     try {
@@ -203,4 +205,28 @@ export async function readHomeworldMechanics(packName: string): Promise<Map<stri
         if (mechanics !== null) out.set(mechanics.id, mechanics);
     }
     return out;
+}
+
+/** One home-world pack's home-worlds, under the pack's own label. */
+export interface HomeworldGroup {
+    /** The pack's display label, as its manifest declares it. */
+    readonly label: string;
+    readonly homeworlds: readonly HomeworldMechanics[];
+}
+
+/**
+ * Every home-world in `line`'s home-world packs, one group per pack in manifest
+ * order. Packs are selected by their declared flags, so a newly installed pack of
+ * home-worlds appears without a code change; a pack with none is left out.
+ * @param line  The game line (`dh2`).
+ * @param packs The installed packs (`game.packs`).
+ */
+export async function readLineHomeworlds(line: string, packs: Iterable<HomeworldPack>): Promise<HomeworldGroup[]> {
+    const groups = await Promise.all(
+        lineBookPacks(packs, line, 'origins-homeworlds').map(async (pack) => ({
+            label: pack.metadata.label ?? pack.metadata.name,
+            homeworlds: [...(await readHomeworldMechanics(pack)).values()],
+        })),
+    );
+    return groups.filter((group) => group.homeworlds.length > 0);
 }

@@ -403,12 +403,8 @@ export interface WH40KMutantBackgroundTarget {
  * module directly.
  */
 interface WH40KPromptLaunchers {
-    /** Beyond-supplement home-world reference cards. */
-    openBeyondHomeworldInfoDialog: () => void;
-    /** Within-supplement home-world reference cards. */
-    openWithinHomeworldInfoDialog: () => void;
-    /** Without-supplement home-world reference cards. */
-    openWithoutHomeworldInfoDialog: () => void;
+    /** Home-world reference cards for a line (the world's primary line by default). */
+    openHomeworldInfoDialog: (line?: string) => void;
     /** Cybernetic install (Medicae surgery) test. */
     openCyberneticsInstallDialog: () => void;
     /** Errata p. 183 "Staunch Blood Loss" Half Action for a Medicae Mechadendrite owner. */

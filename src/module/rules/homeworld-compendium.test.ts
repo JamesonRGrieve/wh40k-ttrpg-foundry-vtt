@@ -1,16 +1,21 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { parseEmperorsBlessingMin, parseWoundsFormula, readHomeworldMechanics, type HomeworldMechanics } from './homeworld-compendium.ts';
+import { describe, expect, it, vi } from 'vitest';
+import { packMetadata } from '../testing/pack-metadata.ts';
+import {
+    type HomeworldMechanics,
+    type HomeworldPack,
+    parseEmperorsBlessingMin,
+    parseWoundsFormula,
+    readHomeworldMechanics,
+    readLineHomeworlds,
+} from './homeworld-compendium.ts';
 
 /**
  * Coverage for the compendium-sourced homeworld mechanics reader (#338).
  *
- * Pins the parsers (wounds formula, Emperor's Blessing breakpoint) and the
- * full projection from an `originPath` document to a {@link HomeworldMechanics}
- * view-model, including the characteristic-mod sign split. The fixtures mirror
- * the real compendium documents so the parsed values equal the values the GM
- * info dialogs used to hardcode — a regression here is a display drift.
- *
- * `game.packs` is a framework global, stubbed per-test.
+ * Pins the parsers (wounds formula, Emperor's Blessing breakpoint), the full
+ * projection from an `originPath` document to a {@link HomeworldMechanics}
+ * view-model (including the characteristic-mod sign split and every named
+ * bonus), and the per-line reader that selects home-world packs by their flags.
  */
 
 /* -------------------------------------------- */
@@ -31,37 +36,14 @@ interface RawDoc {
         notes?: { dh2?: string };
     };
 }
-interface FakePack {
-    getDocuments?: () => Promise<RawDoc[]>;
-}
-interface PacksStub {
-    get: (id: string) => FakePack | undefined;
-}
-interface GameStub {
-    packs: PacksStub;
-}
-interface GlobalShim {
-    game?: GameStub | undefined;
-}
 
-const G = globalThis as GlobalShim;
-const ORIGINAL_GAME = G.game;
-
-afterEach(() => {
-    G.game = ORIGINAL_GAME;
-});
-
-function installPack(packId: string, docs: RawDoc[]): void {
-    const getDocuments = vi.fn<() => Promise<RawDoc[]>>().mockResolvedValue(docs);
-    G.game = {
-        packs: {
-            get: (id) => (id === packId ? { getDocuments } : undefined),
-        },
-    };
+/** A home-world pack named `name`, flagged on `line`, holding `docs`. */
+function homeworldPack(docs: RawDoc[], name = 'dh2-homeworlds-a', line = 'dh2', category = 'origins-homeworlds'): HomeworldPack {
+    return { metadata: packMetadata(name, line, category), getDocuments: vi.fn<() => Promise<RawDoc[]>>().mockResolvedValue(docs) };
 }
 
 /** Minimal fixtures matching the real compendium document shape. */
-const WITHIN_DOCS: RawDoc[] = [
+const PACK_A_DOCS: RawDoc[] = [
     {
         name: 'Agri-World',
         system: {
@@ -71,7 +53,7 @@ const WITHIN_DOCS: RawDoc[] = [
                 fateThreshold: 2,
                 woundsFormula: '8+1d5',
                 aptitudes: ['Strength'],
-                specialAbilities: [{ name: 'Strength from the Land', description: 'Fixture text: starts with Brutal Charge (2).' }],
+                specialAbilities: [{ name: 'Strength from the Land', description: 'Fixture text: starts with a charge talent.' }],
             },
             notes: { dh2: "Emperor's Blessing: roll of 7+ on 1d10 → +1 Fate." },
         },
@@ -86,10 +68,8 @@ const WITHIN_DOCS: RawDoc[] = [
                 woundsFormula: '9+1d5',
                 aptitudes: ['Weapon Skill'],
                 specialAbilities: [
-                    {
-                        name: 'At Home in Armour',
-                        description: 'Fixture text: armour never caps Agility.',
-                    },
+                    { name: 'At Home in Armour', description: 'Fixture text: armour never caps Agility.' },
+                    { name: 'Second Fixture Bonus', description: 'Fixture text: a second named bonus.' },
                 ],
             },
             notes: { dh2: "Emperor's Blessing: roll of 6+ on 1d10 → +1 Fate." },
@@ -97,22 +77,7 @@ const WITHIN_DOCS: RawDoc[] = [
     },
 ];
 
-const BEYOND_DAEMON: RawDoc = {
-    name: 'Daemon World',
-    system: {
-        identifier: 'daemon-world',
-        modifiers: { characteristics: { willpower: 5, perception: 5, fellowship: -5 } },
-        grants: {
-            fateThreshold: 3,
-            woundsFormula: '7+1d5',
-            aptitudes: ['Willpower'],
-            specialAbilities: [{ name: 'Touched by the Warp', description: 'Fixture text: starts with Psyniscience at rank 1.' }],
-        },
-        notes: { dh2: "Emperor's Blessing: roll of 4+ on 1d10 → +1 Fate." },
-    },
-};
-
-const WITHOUT_DEATH: RawDoc = {
+const DEATH_WORLD: RawDoc = {
     name: 'Death World',
     system: {
         identifier: 'death-world',
@@ -121,12 +86,7 @@ const WITHOUT_DEATH: RawDoc = {
             fateThreshold: 2,
             woundsFormula: '9+1d5',
             aptitudes: ['Fieldcraft'],
-            specialAbilities: [
-                {
-                    name: "Survivor's Paranoia",
-                    description: 'Fixture text: no +30 for attackers while Surprised.',
-                },
-            ],
+            specialAbilities: [{ name: "Survivor's Paranoia", description: 'Fixture text: no bonus for attackers while Surprised.' }],
         },
         notes: { dh2: "Emperor's Blessing: roll of 5+ on 1d10 → +1 Fate." },
     },
@@ -169,50 +129,32 @@ describe('parseEmperorsBlessingMin', () => {
 /* -------------------------------------------- */
 
 describe('readHomeworldMechanics', () => {
-    it('returns an empty Map when the pack is absent', async () => {
-        G.game = { packs: { get: () => undefined } };
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
-        expect(map.size).toBe(0);
-    });
-
     it('returns an empty Map when the pack lacks getDocuments', async () => {
-        // A pack object present but without a usable getDocuments (e.g. disabled/locked) — no throw, empty Map.
-        const emptyPack: FakePack = {};
-        G.game = { packs: { get: () => emptyPack } };
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-beyond-origins-homeworlds');
+        // A pack present but without a usable getDocuments (e.g. disabled/locked) — no throw, empty Map.
+        const map = await readHomeworldMechanics({ metadata: packMetadata('locked', 'dh2', 'origins-homeworlds') });
         expect(map.size).toBe(0);
     });
 
     it('returns an empty Map (no uncaught error) when getDocuments throws', async () => {
         // A pack whose documentClass isn't ready throws inside getDocuments
         // ("...reading 'database'"); the dialog must degrade to an empty grid, not crash.
-        const failingPack: FakePack = {
+        const failing: HomeworldPack = {
+            metadata: packMetadata('failing', 'dh2', 'origins-homeworlds'),
             getDocuments: vi.fn<() => Promise<RawDoc[]>>().mockRejectedValue(new Error("Cannot read properties of undefined (reading 'database')")),
         };
         vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        G.game = { packs: { get: () => failingPack } };
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
+        const map = await readHomeworldMechanics(failing);
         expect(map.size).toBe(0);
         vi.restoreAllMocks();
     });
 
-    it('keys each projected mechanics by the document identifier', async () => {
-        installPack('wh40k-rpg.dh2-within-origins-homeworlds', WITHIN_DOCS);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
+    it('keys each projected mechanics by the document identifier, skipping documents without one', async () => {
+        const map = await readHomeworldMechanics(homeworldPack([...PACK_A_DOCS, { name: 'Orphan', system: {} }]));
         expect([...map.keys()].sort()).toEqual(['agri-world', 'feudal-world']);
     });
 
-    it('skips documents without an identifier', async () => {
-        installPack('wh40k-rpg.dh2-within-origins-homeworlds', [...WITHIN_DOCS, { name: 'Orphan', system: {} }]);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
-        expect(map.has('agri-world')).toBe(true);
-        expect(map.size).toBe(2);
-    });
-
-    it('projects Agri-World to the exact values the dialog used to hardcode', async () => {
-        installPack('wh40k-rpg.dh2-within-origins-homeworlds', WITHIN_DOCS);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
-        const agri = map.get('agri-world');
+    it('projects Agri-World to the exact values the dialog shows', async () => {
+        const agri = (await readHomeworldMechanics(homeworldPack(PACK_A_DOCS))).get('agri-world');
         expect(agri).toEqual({
             id: 'agri-world',
             label: 'Agri-World',
@@ -221,63 +163,55 @@ describe('readHomeworldMechanics', () => {
             fateBase: 2,
             emperorsBlessingMin: 7,
             aptitudes: ['Strength'],
-            bonusName: 'Strength from the Land',
-            bonusDescription: 'Fixture text: starts with Brutal Charge (2).',
+            abilities: [{ name: 'Strength from the Land', description: 'Fixture text: starts with a charge talent.' }],
             woundsFlat: 8,
             woundsDice: 1,
             woundsFaces: 5,
         } satisfies HomeworldMechanics);
     });
 
-    it('splits characteristic mods by sign in document order', async () => {
-        installPack('wh40k-rpg.dh2-within-origins-homeworlds', WITHIN_DOCS);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
-        const feudal = map.get('feudal-world');
+    it('splits characteristic mods by sign in document order, and keeps every named bonus', async () => {
+        const feudal = (await readHomeworldMechanics(homeworldPack(PACK_A_DOCS))).get('feudal-world');
         expect(feudal?.charModsPositive).toEqual(['perception', 'weaponSkill']);
         expect(feudal?.charModsNegative).toEqual(['intelligence']);
         expect(feudal?.fateBase).toBe(3);
         expect(feudal?.emperorsBlessingMin).toBe(6);
-        expect(feudal?.aptitudes).toEqual(['Weapon Skill']);
-        expect(feudal?.woundsFlat).toBe(9);
-    });
-
-    it('projects a Beyond document (Daemon World) basics', async () => {
-        installPack('wh40k-rpg.dh2-beyond-origins-homeworlds', [BEYOND_DAEMON]);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-beyond-origins-homeworlds');
-        const daemon = map.get('daemon-world');
-        expect(daemon?.charModsPositive).toEqual(['willpower', 'perception']);
-        expect(daemon?.charModsNegative).toEqual(['fellowship']);
-        expect(daemon?.fateBase).toBe(3);
-        expect(daemon?.emperorsBlessingMin).toBe(4);
-        expect(daemon?.aptitudes).toEqual(['Willpower']);
-        expect(daemon?.woundsFlat).toBe(7);
-    });
-
-    it('projects a Without document (Death World) basics', async () => {
-        installPack('wh40k-rpg.dh2-without-origins-homeworlds', [WITHOUT_DEATH]);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-without-origins-homeworlds');
-        const death = map.get('death-world');
-        expect(death?.charModsPositive).toEqual(['agility', 'perception']);
-        expect(death?.charModsNegative).toEqual(['fellowship']);
-        expect(death?.fateBase).toBe(2);
-        expect(death?.emperorsBlessingMin).toBe(5);
-        expect(death?.aptitudes).toEqual(['Fieldcraft']);
-        expect(death?.woundsFlat).toBe(9);
+        expect(feudal?.abilities.map((a) => a.name)).toEqual(['At Home in Armour', 'Second Fixture Bonus']);
     });
 
     it('falls back gracefully when wounds / blessing strings are malformed', async () => {
-        installPack('wh40k-rpg.dh2-within-origins-homeworlds', [
-            {
-                name: 'Broken',
-                system: { identifier: 'broken', grants: { woundsFormula: 'bad', aptitudes: [], specialAbilities: [] }, notes: { dh2: 'no breakpoint' } },
-            },
-        ]);
-        const map = await readHomeworldMechanics('wh40k-rpg.dh2-within-origins-homeworlds');
+        const map = await readHomeworldMechanics(
+            homeworldPack([
+                {
+                    name: 'Broken',
+                    system: { identifier: 'broken', grants: { woundsFormula: 'bad', aptitudes: [], specialAbilities: [] }, notes: { dh2: 'no breakpoint' } },
+                },
+            ]),
+        );
         const broken = map.get('broken');
         expect(broken?.woundsFlat).toBe(0);
         expect(broken?.woundsDice).toBe(1);
         expect(broken?.woundsFaces).toBe(5);
         expect(broken?.emperorsBlessingMin).toBe(0);
-        expect(broken?.bonusName).toBe('');
+        expect(broken?.abilities).toEqual([]);
+    });
+});
+
+describe('readLineHomeworlds', () => {
+    it("reads every one of the line's home-world packs, by flags, one group per pack under its label", async () => {
+        const packs = [
+            homeworldPack(PACK_A_DOCS, 'pack-a'),
+            homeworldPack([DEATH_WORLD], 'pack-b'),
+            homeworldPack([DEATH_WORLD], 'other-line', 'rt'),
+            homeworldPack([DEATH_WORLD], 'backgrounds', 'dh2', 'origins-backgrounds'),
+            homeworldPack([], 'empty'),
+        ];
+        const groups = await readLineHomeworlds('dh2', packs);
+        expect(groups.map((group) => group.label)).toEqual(['pack-a', 'pack-b']);
+        expect(groups.map((group) => group.homeworlds.map((h) => h.id))).toEqual([['agri-world', 'feudal-world'], ['death-world']]);
+    });
+
+    it('returns no groups for a line with no home-world packs', async () => {
+        expect(await readLineHomeworlds('bc', [homeworldPack(PACK_A_DOCS)])).toEqual([]);
     });
 });

@@ -84,13 +84,13 @@ import {
     NPCTemplateSheet,
 } from './applications/item/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
-import { openBeyondHomeworldInfoDialog } from './applications/prompts/beyond-homeworld-info-dialog.ts';
 import { openCyberneticsInstallDialog } from './applications/prompts/cybernetics-install-dialog.ts';
 import { promptDaemonWeaponAttributes } from './applications/prompts/daemon-weapon-attribute-dialog.ts';
 import { openDaemonhostBindingDialog } from './applications/prompts/daemonhost-binding-dialog.ts';
 import { prepareDamageRoll } from './applications/prompts/damage-roll-dialog.ts';
 import { openDisorderRollDialog } from './applications/prompts/disorder-roll-dialog.ts';
 import { openFearTestDialog } from './applications/prompts/fear-test-dialog.ts';
+import { openHomeworldInfoDialog } from './applications/prompts/homeworld-info-dialog.ts';
 import { openMedicaeMechadendriteDialog } from './applications/prompts/medicae-mechadendrite-dialog.ts';
 import { openMutantBackgroundDialog } from './applications/prompts/mutant-background-dialog.ts';
 import { openMutationRollDialog } from './applications/prompts/mutation-roll-dialog.ts';
@@ -98,8 +98,6 @@ import { openRadicalServicesDialog } from './applications/prompts/radical-servic
 import { openSisterOfBattleDialog } from './applications/prompts/sister-of-battle-dialog.ts';
 import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.ts';
 import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.ts';
-import { openWithinHomeworldInfoDialog } from './applications/prompts/within-homeworld-info-dialog.ts';
-import { openWithoutHomeworldInfoDialog } from './applications/prompts/without-homeworld-info-dialog.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
@@ -1005,9 +1003,7 @@ export class HooksManager {
             // `prompts/_module.ts`. Naming each launcher keeps the wiring
             // enumerable by knip and readable here.
             prompts: {
-                openBeyondHomeworldInfoDialog,
-                openWithinHomeworldInfoDialog,
-                openWithoutHomeworldInfoDialog,
+                openHomeworldInfoDialog,
                 openCyberneticsInstallDialog,
                 openMedicaeMechadendriteDialog,
                 openMutantBackgroundDialog,

@@ -1118,20 +1118,6 @@
             "CriticalLevel": "Critical Level",
             "DegreesOfSuccess": "{dos} Degrees of Success"
         },
-        "BeyondHomeworld": {
-            "DialogTitle": "Beyond — New Home Worlds (GM Reference)",
-            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Beyond: Daemon World, Penal Colony, and Quarantine World.",
-            "DaemonWorld": "Daemon World",
-            "PenalColony": "Penal Colony",
-            "QuarantineWorld": "Quarantine World",
-            "Characteristics": "Characteristics",
-            "FateAdjust": "Fate Threshold",
-            "WoundsAdjust": "Starting Wounds",
-            "Aptitude": "Aptitude",
-            "KeyTalents": "Key Talents & Skills",
-            "RecommendedBackgrounds": "Recommended Backgrounds",
-            "MechanicalHook": "Mechanical Hook"
-        },
         "Characteristics": "Characteristics",
         "CharacteristicModifiers": "Characteristic Modifiers",
         "SkillUse": {
@@ -2841,19 +2827,16 @@
             "Cancel": "Cancel",
             "ChatTitle": "Sister of Battle Elite Advance"
         },
-        "WithinHomeworld": {
-            "DialogTitle": "Within Homeworld Traits",
-            "Description": "Reference card for the three homeworlds introduced by the Within supplement. GM use during character creation.",
-            "AgriWorld": "Agri World",
-            "FeudalWorld": "Feudal World",
-            "FrontierWorld": "Frontier World",
-            "HomeworldTag": "Within",
+        "HomeworldInfo": {
+            "DialogTitle": "Home Worlds (GM Reference)",
+            "Description": "Every home world this line's compendium packs carry, grouped by pack. GM use during character creation.",
+            "HomeworldTag": "Home World",
             "Characteristics": "Characteristics",
-            "FateAdjust": "Fate Threshold",
-            "WoundsAdjust": "Starting Wounds",
-            "KeyTalents": "Key Talents",
-            "KeyAptitudes": "Key Aptitudes",
-            "Bonuses": "Home World Bonus",
+            "Fate": "Fate Threshold",
+            "Wounds": "Starting Wounds",
+            "Bonus": "Home World Bonus",
+            "Aptitudes": "Aptitudes",
+            "Empty": "No home-world packs are installed for this line.",
             "CloseButton": "Close"
         },
         "MutantBackground": {
@@ -3229,20 +3212,6 @@
             "AutoPassLabel": "Result",
             "FearTestAutoPass": "Fear test auto-passed",
             "NoFatePoints": "No Fate points remaining to spend."
-        },
-        "WithoutHomeworld": {
-            "DialogTitle": "Without — New Home Worlds (GM Reference)",
-            "DialogDescription": "Reference for the three new home worlds introduced in Enemies Without: Death World, Garden World, and Research Station.",
-            "DeathWorld": "Death World",
-            "GardenWorld": "Garden World",
-            "ResearchStation": "Research Station",
-            "Characteristics": "Characteristics",
-            "FateAdjust": "Fate Threshold",
-            "WoundsAdjust": "Starting Wounds",
-            "Aptitude": "Aptitude",
-            "KeyTalents": "Key Talents & Skills",
-            "RecommendedBackgrounds": "Recommended Backgrounds",
-            "MechanicalHook": "Mechanical Hook"
         },
         "WithoutTalents": {
             "FieldVivisection": {

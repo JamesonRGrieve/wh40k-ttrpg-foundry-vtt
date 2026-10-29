@@ -645,8 +645,8 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
 
     // ── stories/dialogs/ ─────────────────────────────────────────────────
     {
-        title: 'Dialogs/BeyondHomeworldInfoDialog',
-        exports: ['Default', 'AllCardsPresent'],
+        title: 'Dialogs/HomeworldInfoDialog',
+        exports: ['Default', 'RendersEveryCardGroupedByPack', 'ShowsEveryBonusAndHidesAbsentFate', 'EmptyLine'],
     },
     {
         title: 'Dialogs/Unified Roll — Climbing Surface Picker (#146)',
@@ -727,14 +727,6 @@ const STORY_MATRIX: ReadonlyArray<{ title: string; exports: readonly string[] }>
     {
         title: 'Dialogs/Unified Roll — Assistance Stepper (#60)',
         exports: ['NoAssistants', 'OneAssistant', 'TwoAssistants'],
-    },
-    {
-        title: 'Dialogs/WithinHomeworldInfoDialog',
-        exports: ['Default', 'RendersThreeHomeworldCards', 'AgriWorldShowsBrutalCharge', 'FrontierWorldShowsTechUseBonus'],
-    },
-    {
-        title: 'Dialogs/WithoutHomeworldInfoDialog',
-        exports: ['Default', 'AllCardsPresent'],
     },
 
     // ── stories/item-sheets/ ─────────────────────────────────────────────

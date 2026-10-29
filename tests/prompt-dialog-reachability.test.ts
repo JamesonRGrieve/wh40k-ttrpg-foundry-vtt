@@ -142,22 +142,20 @@ describe('every prompt dialog is reachable', () => {
         expect(modules.length).toBeGreaterThan(20);
     });
 
-    it('wires the fourteen GM launchers into game.wh40k.prompts', () => {
+    it('wires the twelve GM launchers into game.wh40k.prompts', () => {
         expect([...launcherWired()].sort()).toEqual([
-            'beyond-homeworld-info-dialog',
             'cybernetics-install-dialog',
             'daemon-weapon-attribute-dialog',
             'daemonhost-binding-dialog',
             'disorder-roll-dialog',
             'fear-test-dialog',
+            'homeworld-info-dialog',
             'medicae-mechadendrite-dialog',
             'mutant-background-dialog',
             'mutation-roll-dialog',
             'radical-services-dialog',
             'sister-of-battle-dialog',
             'warp-travel-dialog',
-            'within-homeworld-info-dialog',
-            'without-homeworld-info-dialog',
         ]);
     });
 

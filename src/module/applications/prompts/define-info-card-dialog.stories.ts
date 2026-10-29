@@ -1,41 +1,40 @@
 /**
  * Stories for defineInfoCardDialog — the factory itself, exercised via a
- * representative info-card template (the Without-homeworld card grid). The factory
- * is infrastructure, not a visual component, so these stories verify the contract:
- * the `homeworlds` context key renders a card per registry entry with its label,
- * bonus/penalty, and accent class.
+ * representative info-card template (the home-world card grid). The factory is
+ * infrastructure, not a visual component, so these stories verify the contract:
+ * the `groups` context key renders a card per entry with its label,
+ * characteristic modifiers, and accent class.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
-import templateSrc from '../../../templates/prompt/without-homeworld-info-dialog.hbs?raw';
+import templateSrc from '../../../templates/prompt/homeworld-info-dialog.hbs?raw';
+import { HOMEWORLD_ACCENTS, type HomeworldCardGroup } from './homeworld-cards.ts';
 
 initializeStoryHandlebars();
 
 interface CardCtx {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: a mock Handlebars card context is a heterogeneous bag with no single shared shape
-    homeworlds: Array<Record<string, unknown>>;
+    groups: HomeworldCardGroup[];
 }
 
 function makeCtx(): CardCtx {
     return {
-        homeworlds: [
+        groups: [
             {
-                id: 'deathWorld',
-                label: 'Death World',
-                accent: 'crimson',
-                bonusesLabel: '+Strength, +Toughness',
-                penaltiesLabel: '−Fellowship',
-                fateLabel: '2 (Emperor’s Blessing 5+)',
-                woundsLabel: '9 + 1d5',
-                aptitude: 'Offence',
-                keyTalents: ['Hardy', 'Resistance (Poisons)'],
-                recommendedBackgrounds: ['Imperial Guard'],
-                mechanicalHook: 'Survivor of a lethal world.',
-                surpriseSuppressionLabel: null,
-                serenityLabel: null,
-                pursuitOfDataLabel: null,
+                label: 'Fixture Pack',
+                cards: [
+                    {
+                        id: 'death-world',
+                        label: 'Death World',
+                        characteristicModsLabel: '+Strength, +Toughness, −Fellowship',
+                        fateLabel: '2 (5+)',
+                        woundsLabel: '9 + 1d5',
+                        aptitudes: ['Offence'],
+                        abilities: [{ name: 'Fixture Bonus', description: 'Survivor of a lethal world.' }],
+                        accent: HOMEWORLD_ACCENTS[0] ?? { border: '', accentText: '', accentBg: '' },
+                    },
+                ],
             },
         ],
     };
@@ -51,8 +50,9 @@ export const Default: Story = { render: () => renderSheet(templateSrc, makeCtx()
 export const RendersACardPerEntry: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {
-        const card = canvasElement.querySelector('[data-wh40k-hook="without-homeworld-card"]');
+        const card = canvasElement.querySelector('[data-homeworld="death-world"]');
         await expect(card).toBeTruthy();
+        await expect(card?.className).toContain('tw-border-amber-600');
         await expect(canvasElement.textContent).toContain('Death World');
         await expect(canvasElement.textContent).toContain('+Strength, +Toughness');
     },
