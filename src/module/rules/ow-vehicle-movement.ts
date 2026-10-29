@@ -46,7 +46,7 @@ export const OW_VEHICLE_ACTIONS: ReadonlyArray<OwVehicleAction> = [
     {
         id: 'evasive-manoeuvring',
         timing: 'half',
-        description: "Driver makes an Operate test; on success, attackers suffer a -10 penalty to hit the vehicle until the start of the driver's next turn.",
+        description: "The driver tests Operate; a success gives attacks on the vehicle −10 until the driver's next turn.",
     },
     {
         id: 'floor-it',

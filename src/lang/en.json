@@ -1575,7 +1575,7 @@
         "FateRerollConfirmTitle": "Spend Fate: Re-Roll",
         "FateRerollConfirmContent": "Spend a Fate Point to re-roll this test?",
         "FateAddDoSConfirmTitle": "Spend Fate: Add Degree of Success",
-        "FateAddDoSConfirmContent": "Spend a Fate Point to add one Degree of Success to this test?",
+        "FateAddDoSConfirmContent": "Spend a Fate Point for +1 Degree of Success on this test?",
         "FateAddDoSChat": "<strong>{name}</strong> spent a Fate Point to add a Degree of Success (now {dos} DoS).",
         "Reroll": {
             "FateSource": "Fate",
@@ -3060,7 +3060,7 @@
         },
         "MedicaeMechadendrite": {
             "DialogTitle": "Medicae Mechadendrite",
-            "DialogIntro": "Engage the flesh staplers to staunch Blood Loss as a Half Action.",
+            "DialogIntro": "As a Half Action, staple the wound shut to stop Blood Loss.",
             "OperatorLabel": "Operator",
             "HalfActionNote": "Staunching Blood Loss with the flesh staplers costs a Half Action (errata p. 183).",
             "BonusNote": "Includes the Medicae Mechadendrite bonus",
@@ -3152,7 +3152,7 @@
                 "HostTest": "Survival — Challenging (+0) Toughness: rolled {roll} against {target}",
                 "HostSurvives": "the host survives.",
                 "HostDies": "the host dies (unless Fate Threshold is burned).",
-                "HostTestManual": "The possessed individual must pass a Challenging (+0) Toughness test or die (Fate Threshold may be burned).",
+                "HostTestManual": "The host survives only on a Challenging (+0) Toughness test; burning Fate can save them.",
                 "TrackCleared": "The host's possession track is cleared.",
                 "SurvivingPossession": "Surviving Possession consequences apply (Enemies Beyond p. 71).",
                 "Collapsed": "The exorcist loses consciousness — the exorcism fails.",
@@ -3328,7 +3328,7 @@
             "Graviton": {
                 "Name": "Graviton",
                 "Description": "On a hit, the target makes a Strength test or falls Prone (vehicles roll Agility instead). The attack deals additional damage equal to the struck location's Armour Points.",
-                "ChatEffect": "This attack deals additional damage equal to the target's Armour points on the struck location!"
+                "ChatEffect": "Extra damage equal to the Armour on the location hit!"
             },
             "Hallucinogenic": {
                 "Name": "Hallucinogenic (X)",
@@ -3385,7 +3385,7 @@
         },
         "RightStuff": {
             "DialogTitle": "Right Stuff",
-            "DialogIntro": "Spend a Fate Point to automatically succeed at this Operate or Survival test with degrees of success equal to your Agility bonus.",
+            "DialogIntro": "Spend a Fate Point: this Operate or Survival test passes, with your Agility bonus as its degrees of success.",
             "OperatorLabel": "Ace",
             "AgilityBonusLabel": "Agility Bonus",
             "FateRemainingLabel": "Fate Points",
@@ -7858,7 +7858,7 @@
                 "Rounds": "{count} rounds",
                 "TestEachMinute": "Each minute: Challenging (+0) Toughness test; failure costs {fatigue} level of Fatigue.",
                 "TestEachRound": "Each round: Challenging (+0) Toughness test; failure costs {fatigue} level of Fatigue.",
-                "Unconscious": "Without fresh oxygen by the end of that time, the character falls Unconscious.",
+                "Unconscious": "Still without air when that time runs out, the character falls Unconscious.",
                 "DiesAfter": "Unconscious and still deprived of oxygen, the character dies after {rounds} rounds.",
                 "DamagePerRound": "Unconscious and still deprived of oxygen, the character suffers {formula} damage each round, ignoring Armour and Toughness, until dead."
             },
@@ -7874,7 +7874,7 @@
                 "SafeRounds": "Unharmed for",
                 "Depressurisation": "Then, at the end of each round: {formula} Explosive damage from depressurisation.",
                 "CumulativeTest": "Then, at the end of each round: a Toughness test at a cumulative {step}; success deals {success} Explosive damage, failure {failure}.",
-                "Cold": "At the end of each round in space: a Challenging (+0) Toughness test, or {formula} Energy damage from the cold.",
+                "Cold": "Each round in the void ends with a Challenging (+0) Toughness test; a failure deals {formula} Energy damage from the cold.",
                 "IgnoresArmourAndToughness": "This damage ignores Armour and Toughness Bonus.",
                 "IgnoresArmour": "Armour does not reduce this damage.",
                 "SuffocationRounds": "Suffocating: breath held for {count} rounds.",
@@ -8827,7 +8827,7 @@
                     "TacticalManoeuvring": "Tactical Manoeuvring"
                 },
                 "Description": {
-                    "EvasiveManoeuvring": "Driver makes an Operate test; on success, attackers suffer a -10 penalty to hit the vehicle until the start of the driver's next turn.",
+                    "EvasiveManoeuvring": "The driver tests Operate; a success gives attacks on the vehicle −10 until the driver's next turn.",
                     "FloorIt": "Vehicle moves at maximum tactical speed in a straight line; all ranged attacks against the vehicle suffer a -10 penalty, but the driver may take no other actions this turn.",
                     "HitAndRun": "Vehicle moves up to its tactical speed, gunners may fire as a free action during the move, then the vehicle continues to its end position.",
                     "Jink": "Reaction: driver attempts an Operate test against an incoming attack; on success the attack suffers a -20 penalty to hit.",
