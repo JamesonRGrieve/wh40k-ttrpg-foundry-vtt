@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { chartRows, lookupCriticalChart, lookupVehicleCritical, packBook } from './vehicle-critical-tables.ts';
+import { chartRows, lookupCriticalChart, lookupVehicleCritical, packFolderId } from './vehicle-critical-tables.ts';
 
 interface StubTable {
     _id: string;
@@ -8,11 +8,17 @@ interface StubTable {
     results: { range: number[]; description: string }[];
 }
 
-/** A RollTable pack carrying the given charts, flagged as the packs flag them. */
-function pack(collection: string, tables: StubTable[]): object {
+/** A roll-table pack's metadata: its name and the line its manifest flags declare. */
+function tableMetadata(line: string, name: string): object {
+    return { name, flags: { 'wh40k-rpg': { line, category: 'rolltables', homebrew: false } } };
+}
+
+/** One of `line`'s roll-table packs carrying the given charts, flagged as the packs flag them. */
+function pack(line: string, name: string, tables: StubTable[]): object {
+    const collection = `wh40k-rpg.${name}`;
     return {
-        collection,
-        metadata: { type: 'RollTable', packageName: 'wh40k-rpg' },
+        metadata: tableMetadata(line, name),
+        folder: null,
         getIndex: vi.fn(async () =>
             Promise.resolve(
                 tables.map((table) => ({ _id: table._id, name: table.name, flags: { 'wh40k-rpg': { vehicleCritical: { location: table.location } } } })),
@@ -49,7 +55,7 @@ const RT_CHART: StubTable = {
 describe('lookupVehicleCritical (charts found by their vehicleCritical flag)', () => {
     beforeEach(() => {
         vi.stubGlobal('game', {
-            packs: [pack('wh40k-rpg.dh2-core-rolltables', [HULL]), pack('wh40k-rpg.rt-storm-rolltables', [RT_CHART]), pack('wh40k-rpg.ow-core-rolltables', [])],
+            packs: [pack('dh2', 'dh2-tables', [HULL]), pack('rt', 'rt-tables', [RT_CHART]), pack('ow', 'ow-tables', [])],
         });
     });
     afterEach(() => {
@@ -59,7 +65,7 @@ describe('lookupVehicleCritical (charts found by their vehicleCritical flag)', (
     it("reads the row of the struck location's chart in the vehicle's line", async () => {
         expect(await lookupVehicleCritical('dh2', 'hull', 4)).toEqual({
             chartName: 'Hull Critical Hit Effects',
-            chartUuid: 'Compendium.wh40k-rpg.dh2-core-rolltables.RollTable.hull',
+            chartUuid: 'Compendium.wh40k-rpg.dh2-tables.RollTable.hull',
             value: 4,
             text: '<p>Damaged.</p>',
         });
@@ -79,11 +85,12 @@ describe('lookupVehicleCritical (charts found by their vehicleCritical flag)', (
     });
 });
 
-/** A RollTable pack carrying a creature critical chart flagged `criticalChart`. */
-function criticalChartPack(collection: string, text: string): object {
+/** A BC roll-table pack, in book folder `folder`, carrying a creature critical chart flagged `criticalChart`. */
+function criticalChartPack(name: string, folder: string, text: string): object {
+    const collection = `wh40k-rpg.${name}`;
     return {
-        collection,
-        metadata: { type: 'RollTable', packageName: 'wh40k-rpg' },
+        metadata: tableMetadata('bc', name),
+        folder: { id: folder },
         getIndex: vi.fn(async () =>
             Promise.resolve([{ _id: 'de', name: 'Daemon Engine Critical Hit Chart', flags: { 'wh40k-rpg': { criticalChart: 'daemon-engine' } } }]),
         ),
@@ -103,9 +110,9 @@ describe('lookupCriticalChart (a creature trait names its critical chart, #678)'
     beforeEach(() => {
         vi.stubGlobal('game', {
             packs: [
-                criticalChartPack('wh40k-rpg.bc-fate-rolltables', 'Daemon Unbound (Fate).'),
-                criticalChartPack('wh40k-rpg.bc-decay-rolltables', 'Daemon Unbound (Decay).'),
-                pack('wh40k-rpg.dh2-core-rolltables', [HULL]),
+                criticalChartPack('bc-tables-a', 'book-a', 'Daemon Unbound (A).'),
+                criticalChartPack('bc-tables-b', 'book-b', 'Daemon Unbound (B).'),
+                pack('dh2', 'dh2-tables', [HULL]),
             ],
         });
     });
@@ -113,25 +120,36 @@ describe('lookupCriticalChart (a creature trait names its critical chart, #678)'
         vi.unstubAllGlobals();
     });
 
-    it("reads the chart from the creature's own book, a total past the last row landing on it", async () => {
-        expect(await lookupCriticalChart('daemon-engine', 'bc', 'bc-decay', 12)).toEqual({
+    it("reads the chart from the creature's own book folder, a total past the last row landing on it", async () => {
+        expect(await lookupCriticalChart('daemon-engine', 'bc', 'book-b', 12)).toEqual({
             chartName: 'Daemon Engine Critical Hit Chart',
-            chartUuid: 'Compendium.wh40k-rpg.bc-decay-rolltables.RollTable.de',
+            chartUuid: 'Compendium.wh40k-rpg.bc-tables-b.RollTable.de',
             value: 12,
-            text: '<p>Daemon Unbound (Decay).</p>',
+            text: '<p>Daemon Unbound (B).</p>',
         });
     });
 
     it("falls back to the line's first printing for a creature from another book", async () => {
-        expect((await lookupCriticalChart('daemon-engine', 'bc', 'bc-core', 2))?.text).toBe('<p>Distracting Blow.</p>');
+        expect((await lookupCriticalChart('daemon-engine', 'bc', 'book-c', 10))?.text).toBe('<p>Daemon Unbound (A).</p>');
     });
 
     it("is null when the line's packs carry no chart with that flag", async () => {
         expect(await lookupCriticalChart('daemon-engine', 'dh2', null, 3)).toBeNull();
     });
+});
 
-    it('names the book a pack belongs to', () => {
-        expect(packBook('wh40k-rpg.bc-decay-rolltables')).toBe('bc-decay');
+describe('packFolderId', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('names the book folder an installed pack sits in, or null', () => {
+        const packs = new Map<string, object>([
+            ['wh40k-rpg.a', { folder: { id: 'book-a' } }],
+            ['wh40k-rpg.b', { folder: null }],
+        ]);
+        vi.stubGlobal('game', { packs });
+        expect([packFolderId('wh40k-rpg.a'), packFolderId('wh40k-rpg.b'), packFolderId('wh40k-rpg.missing')]).toEqual(['book-a', null, null]);
     });
 });
 

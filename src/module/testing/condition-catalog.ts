@@ -7,8 +7,15 @@
  */
 
 import type { ConditionIndexRow } from '../rules/condition-registry.ts';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
+import { packMetadata } from './pack-metadata.ts';
 
 const RAW = { provenance: 'raw' };
+
+/** A condition pack's metadata, named `name`, with the flags that place it on `line`. */
+export function conditionPack(name: string, line: string, homebrew = false): PackMetadataLike {
+    return packMetadata(name, line, 'conditions', homebrew);
+}
 
 /** One fixture condition row for a pack. */
 function row(pack: string, id: string, name: string, img: string, system: NonNullable<ConditionIndexRow['system']>): ConditionIndexRow {
@@ -134,18 +141,17 @@ function rogueTraderConditions(pack: string): ConditionIndexRow[] {
 }
 
 /**
- * Pack indices for a two-line world plus an Imperium Maledictum pack whose
- * `on-fire` document is named differently ("Ablaze"), to exercise the per-line
- * copy selection.
+ * Pack indices for a two-line world plus an IM pack whose `on-fire` document is
+ * named differently ("Ablaze"), to exercise the per-line copy selection.
  */
-export function conditionPackFixture(): Array<{ packName: string; rows: ConditionIndexRow[] }> {
+export function conditionPackFixture(): Array<{ pack: PackMetadataLike; rows: ConditionIndexRow[] }> {
     return [
-        { packName: 'dh2-core-items-conditions', rows: sharedConditions('dh2-core-items-conditions') },
-        { packName: 'rt-core-items-conditions', rows: [...sharedConditions('rt-core-items-conditions'), ...rogueTraderConditions('rt-core-items-conditions')] },
+        { pack: conditionPack('dh2-conditions', 'dh2'), rows: sharedConditions('dh2-conditions') },
+        { pack: conditionPack('rt-conditions', 'rt'), rows: [...sharedConditions('rt-conditions'), ...rogueTraderConditions('rt-conditions')] },
         {
-            packName: 'im-core-items-conditions',
+            pack: conditionPack('im-conditions', 'im'),
             rows: [
-                row('im-core-items-conditions', 'on-fire', 'Ablaze', 'icons/svg/mystery-man.svg', {
+                row('im-conditions', 'on-fire', 'Ablaze', 'icons/svg/mystery-man.svg', {
                     nature: 'harmful',
                     modifiers: { characteristics: {}, skills: {}, combat: {} },
                 }),

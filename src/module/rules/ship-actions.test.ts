@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { packMetadata } from '../testing/pack-metadata.ts';
 import { isLineOrHomebrewPack } from '../utils/compendium-query.ts';
 import type { ShipEffectData } from './ship-action-effects.ts';
 import { shipActionRows, shipActionTestLabel, shipWeaponChoices, toShipActionRow, type ShipActionOrderView } from './ship-actions.ts';
@@ -94,9 +95,11 @@ describe('shipActionTestLabel', () => {
 
 describe('isLineOrHomebrewPack', () => {
     it("admits the line's own and homebrew packs, never another line's", () => {
-        expect(isLineOrHomebrewPack('wh40k-rpg.rt-core-items-ship-orders', 'rt')).toBe(true);
-        expect(isLineOrHomebrewPack('wh40k-rpg.hb-rt-items-ship-orders', 'rt')).toBe(true);
-        expect(isLineOrHomebrewPack('wh40k-rpg.ow-core-items-orders', 'rt')).toBe(false);
-        expect(isLineOrHomebrewPack('wh40k-rpg.hb-dh2-items-weapons', 'rt')).toBe(false);
+        expect(isLineOrHomebrewPack(packMetadata('rt-orders', 'rt', 'ship-orders'), 'rt')).toBe(true);
+        expect(isLineOrHomebrewPack(packMetadata('rt-homebrew-orders', 'rt', 'ship-orders', true), 'rt')).toBe(true);
+        expect(isLineOrHomebrewPack(packMetadata('ow-orders', 'ow', 'orders'), 'rt')).toBe(false);
+        expect(isLineOrHomebrewPack(packMetadata('dh2-homebrew-weapons', 'dh2', 'weapons', true), 'rt')).toBe(false);
+        // The line is the declared flag, not the name.
+        expect(isLineOrHomebrewPack(packMetadata('rt-named', 'ow', 'orders'), 'rt')).toBe(false);
     });
 });

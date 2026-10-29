@@ -10,6 +10,7 @@
 
 import StorageLocationData from '../data/item/storage-location.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../utils/compendium-query.ts';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
 
 /** One carried-equipment entry: a name and how many. */
 export interface TemplateEquipment {
@@ -20,7 +21,8 @@ export interface TemplateEquipment {
 /** One compendium Item index entry an equipment name can resolve to. */
 export interface EquipmentCandidate {
     uuid: string;
-    packId: string;
+    /** The pack it came from, whose flags name its line. */
+    pack: PackMetadataLike;
     type: string;
     name: string;
 }
@@ -47,7 +49,7 @@ function isCarriedType(type: string): boolean {
  * compendium item on the given game line. Pure.
  */
 export function splitTemplateEquipment(equipment: readonly TemplateEquipment[], candidates: readonly EquipmentCandidate[], linePrefix: string): EquipmentSplit {
-    const onLine = candidates.filter((candidate) => isCarriedType(candidate.type) && isLineOrHomebrewPack(candidate.packId, linePrefix));
+    const onLine = candidates.filter((candidate) => isCarriedType(candidate.type) && isLineOrHomebrewPack(candidate.pack, linePrefix));
     const split: EquipmentSplit = { owned: [], listed: [] };
     for (const entry of equipment) {
         const matches = onLine.filter((candidate) => candidate.name === entry.name);
@@ -65,9 +67,9 @@ export async function equipmentCandidates(linePrefix: string): Promise<Equipment
         (entry, pack) =>
             entry.type === undefined || entry.uuid === undefined || !isCarriedType(entry.type)
                 ? undefined
-                : { uuid: entry.uuid, packId: pack.metadata.id, type: entry.type, name: entry.name },
+                : { uuid: entry.uuid, pack: pack.metadata, type: entry.type, name: entry.name },
         true,
-        (packId) => isLineOrHomebrewPack(packId, linePrefix),
+        (metadata) => isLineOrHomebrewPack(metadata, linePrefix),
     );
 }
 

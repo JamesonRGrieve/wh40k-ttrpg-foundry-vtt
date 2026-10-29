@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { conditionPackFixture } from '../testing/condition-catalog.ts';
+import { conditionPack, conditionPackFixture } from '../testing/condition-catalog.ts';
 import { coerceConditionMechanics, type ConditionMechanics } from './condition-mechanics.ts';
 import { buildConditionCatalog, conditionMechanicsFor, setConditionCatalog } from './condition-registry.ts';
 import { collectTargetedConditionModifiers, sumTargetedComponents, TARGET_CONDITION_BUCKET } from './targeted-conditions.ts';
@@ -60,7 +60,7 @@ describe('collectTargetedConditionModifiers (Path B)', () => {
         setConditionCatalog(
             buildConditionCatalog([
                 {
-                    packName: 'dh2-core-items-conditions',
+                    pack: conditionPack('dh2-conditions', 'dh2'),
                     rows: [
                         {
                             type: 'condition',

@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { type DeclaredPack, readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
 import { buildWeaponQualityPayloadIndex, getWeaponQualityHasLevel, getWeaponQualityMechanics } from './weapon-quality-payloads.ts';
 
 /**
@@ -19,44 +21,44 @@ interface PackDoc {
     system?: { identifier?: string; hasLevel?: boolean; mechanics?: object; mechanicsRef?: string };
 }
 interface PackStub {
-    metadata: { name: string };
+    metadata: PackMetadataLike;
     getDocuments: () => Promise<PackDoc[]>;
 }
 
-const PACKS: ReadonlyArray<{ systemId: string; dir: string; pack: string }> = [
-    { systemId: 'rt', dir: 'rogue-trader', pack: 'rt-core-items-weapon-qualities' },
-    { systemId: 'bc', dir: 'black-crusade', pack: 'bc-core-items-weapon-qualities' },
-    { systemId: 'dh1', dir: 'dark-heresy-1', pack: 'dh1-core-items-weapon-qualities' },
-    { systemId: 'dh2', dir: 'dark-heresy-2', pack: 'dh2-core-items-weapon-qualities' },
-    { systemId: 'dw', dir: 'deathwatch', pack: 'dw-core-items-weapon-qualities' },
-    { systemId: 'ow', dir: 'only-war', pack: 'ow-core-items-weapon-qualities' },
-    { systemId: 'im', dir: 'imperium-maledictum', pack: 'im-core-items-weapon-qualities' },
-];
+/** Every line that ships a weapon-qualities pack; RT's docs carry the shared values. */
+const PACKS: ReadonlyArray<{ systemId: string }> = ['rt', 'bc', 'dh1', 'dh2', 'dw', 'ow', 'im'].map((systemId) => ({ systemId }));
 const NON_RT = PACKS.filter((p) => p.systemId !== 'rt');
 
-function loadDocs(dir: string, pack: string): PackDoc[] {
-    const srcDir = resolve(__dirname, `../../packs-private/${dir}/${pack}/_source`);
+/** The declared weapon-qualities packs, as their manifest entries name and place them. */
+function qualityPacks(): DeclaredPack[] {
+    return readDeclaredPacks(resolve(__dirname, '../../..')).packs.filter((pack) => pack.flags?.['wh40k-rpg']?.category === 'weapon-qualities');
+}
+
+/** The docs of `line`'s weapon-qualities pack, read from its `_source`. */
+function loadDocs(line: string): PackDoc[] {
+    const pack = qualityPacks().find((candidate) => candidate.flags?.['wh40k-rpg']?.line === line);
+    if (pack === undefined) return [];
+    const srcDir = resolve(__dirname, '../../packs-private', pack.path.replace(/^packs\//, ''), '_source');
     if (!existsSync(srcDir)) return [];
     return readdirSync(srcDir)
         .filter((f) => f.endsWith('.json'))
         .map((f) => {
             const doc = JSON.parse(readFileSync(resolve(srcDir, f), 'utf8')) as { _id?: string; system?: PackDoc['system'] };
-            const packDoc: PackDoc = { uuid: `Compendium.wh40k-rpg.${pack}.Item.${doc._id ?? ''}` };
+            const packDoc: PackDoc = { uuid: `Compendium.wh40k-rpg.${pack.name}.Item.${doc._id ?? ''}` };
             if (doc.system !== undefined) packDoc.system = doc.system;
             return packDoc;
         });
 }
 
-const packStubs: PackStub[] = PACKS.map((p) => ({
-    metadata: { name: p.pack },
-    getDocuments: async () => {
-        await Promise.resolve();
-        return loadDocs(p.dir, p.pack);
-    },
-}));
-
 beforeAll(async () => {
-    vi.stubGlobal('game', { packs: { filter: (fn: (pack: PackStub) => boolean) => packStubs.filter(fn) } });
+    const packStubs: PackStub[] = qualityPacks().map((pack) => ({
+        metadata: pack,
+        getDocuments: async () => {
+            await Promise.resolve();
+            return loadDocs(pack.flags?.['wh40k-rpg']?.line ?? '');
+        },
+    }));
+    vi.stubGlobal('game', { packs: packStubs });
     await buildWeaponQualityPayloadIndex();
 });
 afterAll(() => {
@@ -117,7 +119,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('per-system weaponQuality index resolution
 });
 
 describe('stub pack content integrity (#303)', () => {
-    const rtDocs = loadDocs('rogue-trader', 'rt-core-items-weapon-qualities');
+    const rtDocs = loadDocs('rt');
     const rtUuidsByIdentifier = new Map<string, Set<string>>();
     for (const doc of rtDocs) {
         const id = doc.system?.identifier;
@@ -132,7 +134,7 @@ describe('stub pack content integrity (#303)', () => {
     // outside RT, Overheats in DW). Never both, never neither.
     for (const p of NON_RT) {
         it(`${p.systemId}: every doc is a stub onto a matching RT doc or a self-contained override`, () => {
-            const docs = loadDocs(p.dir, p.pack);
+            const docs = loadDocs(p.systemId);
             expect(docs).toHaveLength(rtIdentifiers.size);
             for (const doc of docs) {
                 const id = doc.system?.identifier;

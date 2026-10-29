@@ -77,7 +77,7 @@ async function loadLineOrders(line: string): Promise<ShipActionOrderView[]> {
             [],
             (entry) => (entry.type === 'order' ? entry.uuid : undefined),
             true,
-            (packId) => isLineOrHomebrewPack(packId, line),
+            (metadata) => isLineOrHomebrewPack(metadata, line),
         );
         const docs = await Promise.all(uuids.map(async (uuid) => fromUuid(uuid)));
         // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Foundry's untyped document union; the index already filtered to `order` Items

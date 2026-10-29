@@ -402,7 +402,8 @@ describe('Critical Damage record capture (#108)', () => {
     });
 
     it("reads a Daemon Engine's Critical damage on the chart its trait names, from its own book (#678; BC Tome of Decay p. 96)", async () => {
-        vi.stubGlobal('game', { packs: { get: () => undefined } });
+        // The creature's source pack sits in a book folder; the chart lookup prefers that folder.
+        vi.stubGlobal('game', { packs: { get: (id: string) => (id === 'wh40k-rpg.bc-bestiary' ? { folder: { id: 'book-folder' } } : undefined) } });
         invalidateCriticalDamageCache();
         const daemonEngine = { name: 'Daemon Engine (5)', system: { specialization: '5', criticalChart: 'daemon-engine' } };
         // An NPC's DataModel carries its line on its class (`BCNPCData.gameSystem`), not as a field.
@@ -416,10 +417,10 @@ describe('Critical Damage record capture (#108)', () => {
             ...buildActor(),
             system: new BcNpcSystem(),
             items: [daemonEngine],
-            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-decay-actors-bestiary.Actor.c4c977022e7a87b8' },
+            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-bestiary.Actor.c4c977022e7a87b8' },
         };
         const data = new AssignDamageData(actor, { location: 'Body', damageType: 'Impact', totalDamage: 13, totalPenetration: 10, totalFatigue: 0 });
-        const lookup = vi.fn<CriticalChartLookupFn>(async (_chart, _line, _book, value) =>
+        const lookup = vi.fn<CriticalChartLookupFn>(async (_chart, _line, _folder, value) =>
             Promise.resolve({
                 chartName: 'Daemonic Engine Critical Hit Chart',
                 chartUuid: 'RollTable.x',
@@ -431,7 +432,7 @@ describe('Critical Damage record capture (#108)', () => {
         data.update();
         await data.finalize();
         // 13 − (armour 4 − pen 10 → 0) − TB 3 = 10: 2 wounds, 8 critical.
-        expect(lookup).toHaveBeenCalledWith('daemon-engine', 'bc', 'bc-decay', 8);
+        expect(lookup).toHaveBeenCalledWith('daemon-engine', 'bc', 'book-folder', 8);
         expect(data.criticalEffect).toBe('Daemon Unbound! The engine is vaporised.');
     });
 

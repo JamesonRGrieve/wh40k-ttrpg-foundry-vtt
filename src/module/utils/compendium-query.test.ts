@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { packMetadata } from '../testing/pack-metadata.ts';
 import {
     findItemUuidByIdentifier,
     type LinkCandidate,
@@ -8,6 +9,7 @@ import {
     recoverOwnedItemLink,
     resolvePack,
 } from './compendium-query.ts';
+import type { PackMetadataLike } from './line-packs.ts';
 
 /**
  * Coverage for the shared compendium pack-resolution helpers (#289) that #307's
@@ -24,7 +26,7 @@ interface IndexEntry {
     system?: { identifier?: string };
 }
 interface FakePack {
-    metadata: { id: string; name: string; system: string; label: string };
+    metadata: { id: string; name: string; system: string; label: string; flags?: PackMetadataLike['flags'] };
     documentName: string;
     getIndex: (options: { fields: string[] }) => Promise<IndexEntry[]>;
 }
@@ -43,10 +45,11 @@ interface GlobalShim {
 const G = globalThis as GlobalShim;
 const ORIGINAL_GAME = G.game;
 
-function pack(opts: { id: string; name: string; systemId?: string; documentName?: string; entries?: IndexEntry[] }): FakePack {
+function pack(opts: { id: string; name: string; line?: string; systemId?: string; documentName?: string; entries?: IndexEntry[] }): FakePack {
     const entries = opts.entries ?? [];
+    const flags = opts.line === undefined ? {} : { flags: packMetadata(opts.name, opts.line, 'talents').flags };
     return {
-        metadata: { id: opts.id, name: opts.name, system: opts.systemId ?? 'wh40k-rpg', label: opts.name },
+        metadata: { id: opts.id, name: opts.name, system: opts.systemId ?? 'wh40k-rpg', label: opts.name, ...flags },
         documentName: opts.documentName ?? 'Item',
         getIndex: vi.fn().mockResolvedValue(entries),
     };
@@ -164,7 +167,7 @@ describe('queryItemIndex', () => {
             ['name'],
             (entry) => (entry as IndexEntry).name,
             true,
-            (packId) => packId === 'wh40k-rpg.dh2-x',
+            (metadata) => metadata.id === 'wh40k-rpg.dh2-x',
         );
 
         expect(names).toEqual(['kept']);
@@ -173,16 +176,21 @@ describe('queryItemIndex', () => {
 });
 
 describe('pickLineEntry', () => {
-    const dh1 = { uuid: 'Compendium.wh40k-rpg.dh1-core-items-talents.Item.a', packId: 'wh40k-rpg.dh1-core-items-talents' };
-    const dh2 = { uuid: 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.b', packId: 'wh40k-rpg.dh2-core-items-talents' };
+    const dh1 = { uuid: 'Compendium.wh40k-rpg.dh1-talents.Item.a', pack: packMetadata('dh1-talents', 'dh1', 'talents') };
+    const dh2 = { uuid: 'Compendium.wh40k-rpg.dh2-talents.Item.b', pack: packMetadata('dh2-talents', 'dh2', 'talents') };
 
     it("prefers the entry from the given line's packs", () => {
         expect(pickLineEntry([dh1, dh2], 'dh2')).toBe(dh2);
     });
 
-    it('does not mistake a longer prefix for the line', () => {
-        const dh2e = { uuid: 'x', packId: 'wh40k-rpg.dh2e-misc' };
-        expect(pickLineEntry([dh2e, dh1], 'dh2')).toBe(dh2e);
+    it("reads the line from the pack's flags, not its name", () => {
+        const named = { uuid: 'x', pack: packMetadata('dh2-misc', 'dh1', 'gear') };
+        expect(pickLineEntry([named, dh2], 'dh2')).toBe(dh2);
+    });
+
+    it("prefers a book pack over the line's homebrew pack", () => {
+        const brew = { uuid: 'y', pack: packMetadata('brew', 'dh2', 'talents', true) };
+        expect(pickLineEntry([brew, dh2], 'dh2')).toBe(dh2);
     });
 
     it('falls back to the first match from any line, and to null when there is none', () => {
@@ -195,13 +203,15 @@ describe('findItemUuidByIdentifier', () => {
     it('finds the Item of the right type and identifier, on the requested line', async () => {
         setPacks([
             pack({
-                id: 'wh40k-rpg.dh1-core-items-talents',
-                name: 'dh1-core-items-talents',
+                id: 'wh40k-rpg.dh1-talents',
+                name: 'dh1-talents',
+                line: 'dh1',
                 entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
             }),
             pack({
-                id: 'wh40k-rpg.dh2-core-items-talents',
-                name: 'dh2-core-items-talents',
+                id: 'wh40k-rpg.dh2-talents',
+                name: 'dh2-talents',
+                line: 'dh2',
                 entries: [
                     { _id: 'b', name: 'Hatred', type: 'trait', uuid: 'Compendium.dh2.trait', system: { identifier: 'hatred' } },
                     { _id: 'c', name: 'Renamed Hatred', type: 'talent', uuid: 'Compendium.dh2.c', system: { identifier: 'hatred' } },
@@ -213,13 +223,15 @@ describe('findItemUuidByIdentifier', () => {
 
     it("searches only the requested line's packs when they hold the Item, never loading another line's index", async () => {
         const dh1Pack = pack({
-            id: 'wh40k-rpg.dh1-core-items-talents',
-            name: 'dh1-core-items-talents',
+            id: 'wh40k-rpg.dh1-talents',
+            name: 'dh1-talents',
+            line: 'dh1',
             entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
         });
         const dh2Pack = pack({
-            id: 'wh40k-rpg.dh2-core-items-talents',
-            name: 'dh2-core-items-talents',
+            id: 'wh40k-rpg.dh2-talents',
+            name: 'dh2-talents',
+            line: 'dh2',
             entries: [{ _id: 'b', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh2.b', system: { identifier: 'hatred' } }],
         });
         setPacks([dh1Pack, dh2Pack]);
@@ -230,11 +242,12 @@ describe('findItemUuidByIdentifier', () => {
     it("falls back to any line's packs when the requested line has no match", async () => {
         setPacks([
             pack({
-                id: 'wh40k-rpg.dh1-core-items-talents',
-                name: 'dh1-core-items-talents',
+                id: 'wh40k-rpg.dh1-talents',
+                name: 'dh1-talents',
+                line: 'dh1',
                 entries: [{ _id: 'a', name: 'Hatred', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'hatred' } }],
             }),
-            pack({ id: 'wh40k-rpg.dh2-core-items-talents', name: 'dh2-core-items-talents' }),
+            pack({ id: 'wh40k-rpg.dh2-talents', name: 'dh2-talents', line: 'dh2' }),
         ]);
         expect(await findItemUuidByIdentifier('talent', 'hatred', 'dh2')).toBe('Compendium.dh1.a');
     });
@@ -252,15 +265,17 @@ describe('findItemUuidByIdentifier', () => {
  * document's body onto the item, so every non-unique case returns null.
  */
 describe('pickUniqueLinkCandidate', () => {
-    const candidate = (packId: string, uuid: string, name: string, identifier: string, type = 'talent'): LinkCandidate => ({
+    const candidate = (from: PackMetadataLike, uuid: string, name: string, identifier: string, type = 'talent'): LinkCandidate => ({
         uuid,
-        packId,
+        pack: from,
         type,
         name,
         identifier,
     });
-    const dh2 = candidate('wh40k-rpg.dh2-core-items-talents', 'Compendium.dh2.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
-    const dh1 = candidate('wh40k-rpg.dh1-core-items-talents', 'Compendium.dh1.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+    const DH2_TALENTS = packMetadata('dh2-talents', 'dh2', 'talents');
+    const DH2_MORE_TALENTS = packMetadata('dh2-more-talents', 'dh2', 'talents');
+    const dh2 = candidate(DH2_TALENTS, 'Compendium.dh2.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+    const dh1 = candidate(packMetadata('dh1-talents', 'dh1', 'talents'), 'Compendium.dh1.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
     const query = { type: 'talent', identifier: 'superiorChirurgeon', name: 'Superior Chirurgeon', linePrefix: 'dh2' };
 
     it("matches by identifier on the owner's line, ignoring the same talent on another line", () => {
@@ -268,12 +283,12 @@ describe('pickUniqueLinkCandidate', () => {
     });
 
     it("includes the owner line's homebrew packs", () => {
-        const hb = candidate('wh40k-rpg.hb-dh2-items-talents', 'Compendium.hb.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
+        const hb = candidate(packMetadata('dh2-homebrew-talents', 'dh2', 'talents', true), 'Compendium.hb.sc', 'Superior Chirurgeon', 'superiorChirurgeon');
         expect(pickUniqueLinkCandidate([dh1, hb], query)).toBe('Compendium.hb.sc');
     });
 
     it('returns null when two candidates on the line share the identifier', () => {
-        const dup = candidate('wh40k-rpg.dh2-beyond-items-talents', 'Compendium.dh2.dup', 'Superior Chirurgeon', 'superiorChirurgeon');
+        const dup = candidate(DH2_MORE_TALENTS, 'Compendium.dh2.dup', 'Superior Chirurgeon', 'superiorChirurgeon');
         expect(pickUniqueLinkCandidate([dh2, dup], query)).toBeNull();
     });
 
@@ -286,14 +301,14 @@ describe('pickUniqueLinkCandidate', () => {
     });
 
     it('falls back to an exact name match only when the item has no identifier', () => {
-        const renamed = candidate('wh40k-rpg.dh2-core-items-talents', 'Compendium.dh2.other', 'Superior Chirurgeon', 'somethingElse');
+        const renamed = candidate(DH2_TALENTS, 'Compendium.dh2.other', 'Superior Chirurgeon', 'somethingElse');
         expect(pickUniqueLinkCandidate([renamed], { ...query, identifier: '' })).toBe('Compendium.dh2.other');
         // With an identifier, a same-named candidate under another identifier is not a match.
         expect(pickUniqueLinkCandidate([renamed], query)).toBeNull();
     });
 
     it('returns null for an exact name shared by two candidates, and for no identifier and no name', () => {
-        const twin = candidate('wh40k-rpg.dh2-beyond-items-talents', 'Compendium.dh2.twin', 'Superior Chirurgeon', 'x');
+        const twin = candidate(DH2_MORE_TALENTS, 'Compendium.dh2.twin', 'Superior Chirurgeon', 'x');
         expect(pickUniqueLinkCandidate([dh2, twin], { ...query, identifier: '' })).toBeNull();
         expect(pickUniqueLinkCandidate([dh2], { ...query, identifier: '', name: '' })).toBeNull();
     });
@@ -302,13 +317,15 @@ describe('pickUniqueLinkCandidate', () => {
 describe('recoverOwnedItemLink', () => {
     it("loads only the owner line's (and its homebrew) indexes and returns the unique match", async () => {
         const dh1Pack = pack({
-            id: 'wh40k-rpg.dh1-core-items-talents',
-            name: 'dh1-core-items-talents',
+            id: 'wh40k-rpg.dh1-talents',
+            name: 'dh1-talents',
+            line: 'dh1',
             entries: [{ _id: 'a', name: 'Superior Chirurgeon', type: 'talent', uuid: 'Compendium.dh1.a', system: { identifier: 'superiorChirurgeon' } }],
         });
         const dh2Pack = pack({
-            id: 'wh40k-rpg.dh2-core-items-talents',
-            name: 'dh2-core-items-talents',
+            id: 'wh40k-rpg.dh2-talents',
+            name: 'dh2-talents',
+            line: 'dh2',
             entries: [{ _id: 'b', name: 'Superior Chirurgeon', type: 'talent', uuid: 'Compendium.dh2.b', system: { identifier: 'superiorChirurgeon' } }],
         });
         setPacks([dh1Pack, dh2Pack]);

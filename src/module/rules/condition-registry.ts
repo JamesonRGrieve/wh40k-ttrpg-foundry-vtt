@@ -32,8 +32,8 @@
 
 import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
-import { isLineOrHomebrewPack } from '../utils/compendium-query.ts';
 import { inferActiveGameLine, materializeItemVariants, normalizeGameLineKey, type SupportedLineKey } from '../utils/item-variant-utils.ts';
+import { packLineFlags, type PackMetadataLike } from '../utils/line-packs.ts';
 import {
     type ConditionMechanics,
     type ConditionMechanicsInput,
@@ -149,9 +149,9 @@ export function modifiersToEffectChanges(modifiers: RawValue): EffectChange[] {
 /** One pack's copy of a condition, as read from the pack index. */
 type ConditionSource = {
     uuid: string;
-    /** The pack's short name (`dh2-core-items-conditions`, `hb-dh2-items-conditions`). */
-    packName: string;
-    /** The pack's game line (from its `<line>-…` name), or null for a line-agnostic pack. */
+    /** The line the pack is printed for, homebrew included (its declared flags), or null when it declares none. */
+    printedLine: string | null;
+    /** The book pack's game line, or null for a homebrew or line-agnostic pack. */
     line: SupportedLineKey | null;
     name: string;
     img: string;
@@ -190,20 +190,22 @@ const CONDITION_INDEX_FIELDS: readonly string[] = [
     'system.visual',
 ];
 
-/** The game line a pack belongs to, from its `<line>-…` name prefix. */
-export function packLine(packName: string): SupportedLineKey | null {
-    return normalizeGameLineKey(packName.split('-')[0] ?? '');
+/** The game line of a book pack, from its declared flags; null for a homebrew pack or one declaring no line. */
+export function packLine(metadata: PackMetadataLike): SupportedLineKey | null {
+    const flags = packLineFlags(metadata);
+    return flags === null || flags.homebrew ? null : normalizeGameLineKey(flags.line);
 }
 
 /**
  * Build the catalog from pack index rows. Pure.
- * @param {Array<{packName: string, rows: Iterable<ConditionIndexRow>}>} packs  Each condition pack's index.
+ * @param {Array<{pack: PackMetadataLike, rows: Iterable<ConditionIndexRow>}>} packs  Each condition pack's metadata and index.
  * @returns {Map<string, ConditionCatalogEntry>}  Catalog keyed by status id.
  */
-export function buildConditionCatalog(packs: Iterable<{ packName: string; rows: Iterable<ConditionIndexRow> }>): Map<string, ConditionCatalogEntry> {
+export function buildConditionCatalog(packs: Iterable<{ pack: PackMetadataLike; rows: Iterable<ConditionIndexRow> }>): Map<string, ConditionCatalogEntry> {
     const built = new Map<string, ConditionCatalogEntry>();
-    for (const { packName, rows } of packs) {
-        const line = packLine(packName);
+    for (const { pack, rows } of packs) {
+        const line = packLine(pack);
+        const printedLine = packLineFlags(pack)?.line ?? null;
         for (const row of rows) {
             if (row.type !== 'condition' || row.system === undefined) continue;
             const identifier = row.system['identifier'];
@@ -211,7 +213,7 @@ export function buildConditionCatalog(packs: Iterable<{ packName: string; rows: 
             const id = identifier.trim();
             const source: ConditionSource = {
                 uuid: row.uuid ?? '',
-                packName,
+                printedLine,
                 line,
                 name: row.name ?? id,
                 img: row.img ?? '',
@@ -373,18 +375,18 @@ export function conditionEffectData(condition: string, line: SupportedLineKey, o
 }
 
 /**
- * Whether a condition has a copy in `line`'s own packs — its core and supplement
- * packs (`<line>-…`) or its homebrew packs (`hb-<line>-…`) — the same per-line
- * scoping the other compendium lookups use (`isLineOrHomebrewPack`).
+ * Whether a condition has a copy in `line`'s own packs — its book packs or its
+ * homebrew packs — the same per-line scoping the other compendium lookups use
+ * (`isLineOrHomebrewPack`).
  */
 function printedForLine(entry: ConditionCatalogEntry, line: SupportedLineKey): boolean {
-    return entry.sources.some((source) => isLineOrHomebrewPack(`${SYSTEM_ID}.${source.packName}`, line));
+    return entry.sources.some((source) => source.printedLine === line);
 }
 
 /**
  * Picker rows (the effect-creation dialog) — one per condition the bearer's line
  * prints, resolved for `line`. Another line's or another line's supplement's
- * condition (BC Decay's Festering Shroud for a DH2 bearer) is not offered.
+ * condition (a BC supplement's condition for a DH2 bearer) is not offered.
  */
 export function conditionPickerRows(line: SupportedLineKey): ConditionRow[] {
     return conditionRows(line, (entry) => printedForLine(entry, line));
@@ -491,7 +493,7 @@ export function activeConditionMechanics(actor: ConditionBearer | null | undefin
 /** The compendium surface the loader reads. */
 type ConditionPack = {
     documentName?: string | undefined;
-    metadata: { name: string; packageName?: string | undefined };
+    metadata: PackMetadataLike & { packageName?: string | undefined };
     index: { size: number; values: () => Iterable<ConditionIndexRow> };
     getIndex: (options?: { fields?: string[] }) => Promise<{ values: () => Iterable<ConditionIndexRow> }>;
 };
@@ -511,7 +513,7 @@ export async function loadConditionCatalog(packs: Iterable<ConditionPack>): Prom
                 const base = pack.index.size > 0 ? pack.index : await pack.getIndex();
                 if (![...base.values()].some((row) => row.type === 'condition')) return null;
                 const full = await pack.getIndex({ fields: [...CONDITION_INDEX_FIELDS] });
-                return { packName: pack.metadata.name, rows: [...full.values()] };
+                return { pack: pack.metadata, rows: [...full.values()] };
             } catch (error) {
                 console.error(`${SYSTEM_ID} | condition catalog: failed indexing ${pack.metadata.name}`, error);
                 return null;

@@ -10,6 +10,8 @@
  * (the shapes the DataModels expose) still resolve the same way.
  */
 
+import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
+
 /** A value in a compendium index entry: the packs' JSON. */
 type IndexValue = string | number | boolean | null | undefined | IndexObject | readonly IndexValue[];
 
@@ -18,13 +20,11 @@ interface IndexObject {
 }
 
 /**
- * The game line a pack belongs to, from its id (`wh40k-rpg.rt-core-items-ammo` → `rt`):
- * the packs are named `<line>-<book>-<kind>`. A homebrew pack yields its own prefix
- * (`hb`), which names no line, so its entries fall back to their first reference.
+ * The game line a pack belongs to, from its declared flags. A pack declaring none
+ * yields '', which names no line, so its entries fall back to their first reference.
  */
-export function packLine(packId: string): string {
-    const name = packId.slice(packId.indexOf('.') + 1);
-    return name.split('-')[0] ?? '';
+export function packLine(metadata: PackMetadataLike): string {
+    return packLineFlags(metadata)?.line ?? '';
 }
 
 /** A non-empty trimmed string, or ''. */

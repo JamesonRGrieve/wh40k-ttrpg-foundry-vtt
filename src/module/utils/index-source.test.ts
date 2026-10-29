@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { indexEntrySourceBook } from './index-source';
+import { packMetadata } from '../testing/pack-metadata.ts';
+import { indexEntrySourceBook, packLine } from './index-source';
 
 describe('indexEntrySourceBook (#658)', () => {
     const shared = {
@@ -25,5 +26,13 @@ describe('indexEntrySourceBook (#658)', () => {
 
     it('is empty for an entry without a source (a lean index row)', () => {
         for (const raw of [undefined, null, {}, 7, { rt: null }]) expect(indexEntrySourceBook(raw, 'rt')).toBe('');
+    });
+});
+
+describe('packLine', () => {
+    it("reads the pack's line from its declared flags, homebrew packs included, and '' when it declares none", () => {
+        expect(packLine(packMetadata('named-anything', 'rt', 'ammo'))).toBe('rt');
+        expect(packLine(packMetadata('brew', 'dh2', 'talents', true))).toBe('dh2');
+        expect(packLine({ name: 'rt-looks-like-a-line' })).toBe('');
     });
 });

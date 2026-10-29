@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { conditionPackFixture } from '../testing/condition-catalog.ts';
+import { conditionPack, conditionPackFixture } from '../testing/condition-catalog.ts';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
 import {
     activeConditionMechanics,
     buildConditionCatalog,
@@ -32,10 +33,11 @@ afterEach(() => {
 });
 
 describe('packLine', () => {
-    it('reads the game line from the pack name prefix', () => {
-        expect(packLine('dh2-core-items-conditions')).toBe('dh2');
-        expect(packLine('rt-core-items-conditions')).toBe('rt');
-        expect(packLine('hb-dh2-items-conditions')).toBeNull();
+    it("reads a book pack's game line from its declared flags; a homebrew or undeclared pack has none", () => {
+        expect(packLine(conditionPack('a', 'dh2'))).toBe('dh2');
+        expect(packLine(conditionPack('b', 'rt'))).toBe('rt');
+        expect(packLine(conditionPack('c', 'dh2', true))).toBeNull();
+        expect(packLine({ name: 'undeclared' })).toBeNull();
     });
 });
 
@@ -49,7 +51,7 @@ describe('buildConditionCatalog', () => {
     it('ignores non-condition rows and rows with no identifier', () => {
         const catalog = buildConditionCatalog([
             {
-                packName: 'dh2-core-items-talents',
+                pack: { name: 'dh2-talents', flags: { 'wh40k-rpg': { line: 'dh2', category: 'talents', homebrew: false } } },
                 rows: [
                     { type: 'talent', name: 'Ambidextrous', system: { identifier: 'ambidextrous' } },
                     { type: 'condition', name: 'Nameless', system: { identifier: '' } },
@@ -183,10 +185,10 @@ describe('status-effect rows', () => {
 
 describe('the effect-creation picker is scoped to the bearer’s line (#516)', () => {
     /** A line pack with one condition document. */
-    function pack(packName: string, id: string, name: string): { packName: string; rows: ConditionIndexRow[] } {
+    function pack(metadata: PackMetadataLike, id: string, name: string): { pack: PackMetadataLike; rows: ConditionIndexRow[] } {
         return {
-            packName,
-            rows: [{ _id: id, uuid: `Compendium.wh40k-rpg.${packName}.Item.${id}`, name, img: '', type: 'condition', system: { identifier: id } }],
+            pack: metadata,
+            rows: [{ _id: id, uuid: `Compendium.wh40k-rpg.${metadata.name}.Item.${id}`, name, img: '', type: 'condition', system: { identifier: id } }],
         };
     }
 
@@ -194,10 +196,10 @@ describe('the effect-creation picker is scoped to the bearer’s line (#516)', (
         setConditionCatalog(
             buildConditionCatalog([
                 ...conditionPackFixture(),
-                pack('bc-core-items-conditions', 'prone', 'Prone'),
-                pack('bc-decay-items-conditions', 'festering-shroud', 'Festering Shroud'),
-                pack('bc-decay-items-conditions', 'nurgles-breath', "Nurgle's Breath"),
-                pack('hb-dh2-items-conditions', 'shell-shocked', 'Shell-Shocked'),
+                pack(conditionPack('bc-conditions', 'bc'), 'prone', 'Prone'),
+                pack(conditionPack('bc-supplement-conditions', 'bc'), 'festering-shroud', 'Festering Shroud'),
+                pack(conditionPack('bc-supplement-conditions', 'bc'), 'nurgles-breath', "Nurgle's Breath"),
+                pack(conditionPack('dh2-homebrew-conditions', 'dh2', true), 'shell-shocked', 'Shell-Shocked'),
             ]),
         );
     });
@@ -235,11 +237,11 @@ describe('a line without its own copy resolves to the shared DH2 condition (#595
         setConditionCatalog(
             buildConditionCatalog([
                 {
-                    packName: 'im-core-items-conditions',
+                    pack: conditionPack('im-conditions', 'im'),
                     rows: [
                         {
                             _id: 'imb',
-                            uuid: 'Compendium.wh40k-rpg.im-core-items-conditions.Item.imb',
+                            uuid: 'Compendium.wh40k-rpg.im-conditions.Item.imb',
                             name: 'Blinded',
                             img: 'icons/svg/mystery-man.svg',
                             type: 'condition',
@@ -248,11 +250,11 @@ describe('a line without its own copy resolves to the shared DH2 condition (#595
                     ],
                 },
                 {
-                    packName: 'dh2-core-items-conditions',
+                    pack: conditionPack('dh2-conditions', 'dh2'),
                     rows: [
                         {
                             _id: 'dhb',
-                            uuid: 'Compendium.wh40k-rpg.dh2-core-items-conditions.Item.dhb',
+                            uuid: 'Compendium.wh40k-rpg.dh2-conditions.Item.dhb',
                             name: 'Blinded',
                             img: BLINDFOLD,
                             type: 'condition',

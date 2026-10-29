@@ -20,10 +20,8 @@
  * docs carry no `identifier` of their own, so the display name is the real key.
  */
 
+import { type LoadablePack, loadLinePackDocs } from '../utils/line-pack-docs.ts';
 import type { SkillVariant } from './skill-variants.ts';
-
-/** Pack-name suffix shared by every system's skills pack (`dh2-core-items-skills`, `rt-…`, …). */
-const SKILL_PACK_SUFFIX = '-core-items-skills';
 
 /** Minimal shape of a skill pack document we read. */
 interface SkillPackDoc {
@@ -31,13 +29,8 @@ interface SkillPackDoc {
     system?: { identifier?: string | undefined; variants?: SkillVariant[] | undefined } | undefined;
 }
 
-/** Minimal shape of the Foundry pack collection this module walks. */
-interface SkillPackLike {
-    metadata?: { name?: string | undefined } | undefined;
-    getDocuments?: (() => Promise<SkillPackDoc[]>) | undefined;
-}
 interface PackGameLike {
-    packs?: { filter?: (predicate: (pack: SkillPackLike) => boolean) => SkillPackLike[] } | undefined;
+    packs?: Iterable<LoadablePack<SkillPackDoc>> | undefined;
 }
 
 let variantsBySystem: Map<string, Map<string, SkillVariant[]>> | null = null;
@@ -52,13 +45,8 @@ export function normalizeSkillKey(value: string): string {
     return value.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-/** `dh2-core-items-skills` → `dh2`. */
-function systemIdFromPackName(name: string): string {
-    return name.slice(0, -SKILL_PACK_SUFFIX.length);
-}
-
 /**
- * Build the per-system variant index from every `*-core-items-skills` compendium.
+ * Build the per-system variant index from every line's skills compendiums.
  * Call once on `ready`; idempotent (rebuilds the cache).
  *
  * Only skills that actually declare variants are indexed — the vast majority
@@ -70,19 +58,9 @@ export async function buildSkillVariantIndex(): Promise<void> {
     const flat = new Map<string, SkillVariant[]>();
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
-    const packs = packGame?.packs?.filter?.((pack) => pack.metadata?.name?.endsWith(SKILL_PACK_SUFFIX) === true) ?? [];
+    const perPack = await loadLinePackDocs(packGame?.packs ?? [], 'skills');
 
-    const sources: Array<{ systemId: string; getDocuments: () => Promise<SkillPackDoc[]> }> = [];
-    for (const pack of packs) {
-        const name = pack.metadata?.name;
-        if (name === undefined || pack.getDocuments === undefined) continue;
-        // Bind to the owning pack — `getDocuments` reads `this.documentClass`
-        // internally, so a detached reference would run with the wrong `this`.
-        sources.push({ systemId: systemIdFromPackName(name), getDocuments: pack.getDocuments.bind(pack) });
-    }
-    const perPack = await Promise.all(sources.map(async (source) => ({ systemId: source.systemId, packDocs: await source.getDocuments() })));
-
-    for (const { systemId, packDocs } of perPack) {
+    for (const { line: systemId, docs: packDocs } of perPack) {
         for (const doc of packDocs) {
             const variants = doc.system?.variants;
             if (!Array.isArray(variants) || variants.length === 0) continue;

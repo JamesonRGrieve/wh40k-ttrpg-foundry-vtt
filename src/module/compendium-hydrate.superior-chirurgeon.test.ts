@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { installFoundryDataStub } from './testing/foundry-data-stub.ts';
+import { packMetadata } from './testing/pack-metadata.ts';
 
 /**
  * #484 end to end, on the two stale owned-item shapes found on the live world:
@@ -87,7 +88,7 @@ interface StoredCharacteristic {
 
 /** One Item pack as `queryItemIndex` reads `game.packs`. */
 interface IndexPackStub {
-    metadata: { id: string; system: string };
+    metadata: ReturnType<typeof packMetadata> & { system: string };
     documentName: string;
     getIndex: () => Promise<Array<{ _id: string; name: string; type: string; uuid: string; system: { identifier: string } }>>;
 }
@@ -182,7 +183,7 @@ async function hydrateAndPrepare(talent: OwnedTalent): Promise<MedicaeOutcome> {
 }
 
 const SC_PACK: IndexPackStub = {
-    metadata: { id: 'wh40k-rpg.dh2-core-items-talents', system: 'wh40k-rpg' },
+    metadata: { ...packMetadata('dh2-talents', 'dh2', 'talents'), system: 'wh40k-rpg' },
     documentName: 'Item',
     getIndex: async () =>
         Promise.resolve([

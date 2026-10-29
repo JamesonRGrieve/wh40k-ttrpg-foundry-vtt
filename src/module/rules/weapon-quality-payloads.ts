@@ -12,10 +12,8 @@
  */
 
 import type { WeaponQualityDieOp, WeaponQualityMechanics, WeaponQualityTemplate } from '../data/item/weapon-quality-mechanics.ts';
+import { type LoadablePack, loadLinePackDocs } from '../utils/line-pack-docs.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
-
-/** Pack-name suffix shared by every system's weapon-qualities pack (`rt-core-items-weapon-qualities`, `dh2-…`, …). */
-const WEAPON_QUALITY_PACK_SUFFIX = '-core-items-weapon-qualities';
 
 /** All-absent payload: scalars `null`, flags `false`, strings `''`. */
 function defaultWeaponQualityMechanics(): WeaponQualityMechanics {
@@ -137,12 +135,8 @@ interface WeaponQualityPackDoc {
     uuid?: string;
     system?: { identifier?: string; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
 }
-interface WeaponQualityPack {
-    metadata?: { name?: string };
-    getDocuments?: () => Promise<WeaponQualityPackDoc[]>;
-}
 interface PackGameLike {
-    packs?: { filter?: (fn: (pack: WeaponQualityPack) => boolean) => WeaponQualityPack[] };
+    packs?: Iterable<LoadablePack<WeaponQualityPackDoc>>;
 }
 
 /** Per-system map (systemId → identifier → mechanics) plus a cross-system flat fallback. */
@@ -152,14 +146,9 @@ let payloadFlat: Map<string, WeaponQualityMechanics> | null = null;
 let hasLevelBySystem: Map<string, Map<string, boolean>> | null = null;
 let hasLevelFlat: Map<string, boolean> | null = null;
 
-/** Derive the system id from a weapon-qualities pack name (`rt-core-items-weapon-qualities` → `rt`). */
-function systemIdFromPackName(name: string): string {
-    return name.slice(0, -WEAPON_QUALITY_PACK_SUFFIX.length);
-}
-
 /**
- * Build the per-system payload index from every `*-core-items-weapon-qualities`
- * compendium. Call once on `ready`; idempotent (rebuilds the cache).
+ * Build the per-system payload index from every line's weapon-qualities
+ * compendiums. Call once on `ready`; idempotent (rebuilds the cache).
  *
  * Two passes: canonical docs (blank `mechanicsRef`) seed a `uuid → mechanics` table
  * and their own per-system entries; stub docs (`mechanicsRef` set) resolve their
@@ -171,25 +160,13 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
     const flat = new Map<string, WeaponQualityMechanics>();
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
-    const packs = packGame?.packs?.filter?.((pack) => pack.metadata?.name?.endsWith(WEAPON_QUALITY_PACK_SUFFIX) === true) ?? [];
-
     // Read every pack concurrently, then gather all docs up front so refs resolve
-    // regardless of pack order (await lives in the map callback, not a loop).
-    const sources: Array<{ systemId: string; getDocuments: () => Promise<WeaponQualityPackDoc[]> }> = [];
-    for (const pack of packs) {
-        const name = pack.metadata?.name;
-        if (name === undefined || pack.getDocuments === undefined) continue;
-        // Bind to the owning pack: `getDocuments` reads `this.documentClass`
-        // internally, so a detached reference (called as `source.getDocuments()`)
-        // would run with `this` = the plain `source` literal and throw
-        // "Cannot read properties of undefined (reading 'database')".
-        sources.push({ systemId: systemIdFromPackName(name), getDocuments: pack.getDocuments.bind(pack) });
-    }
-    const perPack = await Promise.all(sources.map(async (source) => ({ systemId: source.systemId, packDocs: await source.getDocuments() })));
+    // regardless of pack order.
+    const perPack = await loadLinePackDocs(packGame?.packs ?? [], 'weapon-qualities');
 
     const docs: Array<{ systemId: string; doc: WeaponQualityPackDoc }> = [];
     const canonicalByUuid = new Map<string, WeaponQualityMechanics>();
-    for (const { systemId, packDocs } of perPack) {
+    for (const { line: systemId, docs: packDocs } of perPack) {
         for (const doc of packDocs) {
             docs.push({ systemId, doc });
             const ref = doc.system?.mechanicsRef;

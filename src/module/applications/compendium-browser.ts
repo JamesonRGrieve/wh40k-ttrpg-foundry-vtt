@@ -7,6 +7,7 @@ import { HIT_LOCATION_IDS, hitLocationAbbreviation } from '../rules/hit-location
 import { queryItemIndex } from '../utils/compendium-query.ts';
 import { formatSigned } from '../utils/format.ts';
 import { indexEntrySourceBook, packLine } from '../utils/index-source.ts';
+import type { PackMetadataLike } from '../utils/line-packs.ts';
 import type { ApplicationV2Ctor } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
@@ -258,7 +259,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
             ['system.source'],
             // eslint-disable-next-line no-restricted-syntax -- boundary: index entry's system field is an untyped compendium payload
             (entry, pack) => {
-                const s = this._getEntrySource(entry, pack.metadata.id);
+                const s = this._getEntrySource(entry, pack.metadata);
                 return s !== '' ? s : undefined;
             },
             true,
@@ -308,7 +309,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
                 const e = entry as CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> };
                 if (!this._passesFilters(e, pack)) return undefined;
 
-                const sourceLabel = this._getEntrySource(e, pack.metadata.id);
+                const sourceLabel = this._getEntrySource(e, pack.metadata);
                 const categoryLabel = this._getEntryCategory(e);
 
                 const result: BrowserResult = {
@@ -577,8 +578,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
     /* eslint-disable no-restricted-syntax -- boundary: entry.system and entry.flags are Foundry compendium index payloads with no typed schema */
     /** The entry's source book, from the per-line `system.source` the packs store (#658). */
-    _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }, packId: string): string {
-        return indexEntrySourceBook(entry.system?.['source'], packLine(packId));
+    _getEntrySource(entry: CompendiumIndexEntry & { system?: Record<string, unknown> }, pack: PackMetadataLike): string {
+        return indexEntrySourceBook(entry.system?.['source'], packLine(pack));
     }
 
     _getEntryCategory(entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> }): string {
@@ -602,7 +603,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     // eslint-disable-next-line complexity -- filter method is inherently branchy: each filter type adds 2–4 branches; extracting sub-methods would scatter the guard logic
     _passesFilters(
         entry: CompendiumIndexEntry & { system?: Record<string, unknown>; flags?: Record<string, unknown> },
-        pack: { readonly metadata: { readonly id: string } },
+        pack: { readonly metadata: PackMetadataLike },
     ): boolean {
         // Search filter
         if (this._filters.search !== '') {
@@ -612,7 +613,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
 
         // Source filter
         if (this._filters.source !== 'all') {
-            if (this._getEntrySource(entry, pack.metadata.id) !== this._filters.source) return false;
+            if (this._getEntrySource(entry, pack.metadata) !== this._filters.source) return false;
         }
 
         // Category filter

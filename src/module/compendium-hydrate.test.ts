@@ -11,6 +11,7 @@
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildActorVariantJoin, buildHydratedSystem, buildHydrationPatches, hydrateActorInMemory } from './compendium-hydrate.ts';
+import { packMetadata } from './testing/pack-metadata.ts';
 import { rememberLineVariantSource } from './utils/item-variant-utils.ts';
 
 /** Minimal structural shape matching the slice of an owned item `buildHydrationPatches` reads. */
@@ -475,7 +476,7 @@ describe('instance state is never deferred to canonical', () => {
     });
 
     it('a talent joined through a RECOVERED link still keeps its stored XP cost (#484)', async () => {
-        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.ic', 'Iron Cost', 'ironCost')])]);
+        installPacks([indexPack('dh2-talents', 'dh2', [indexEntry('Compendium.dh2.ic', 'Iron Cost', 'ironCost')])]);
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue({ img: null, type: 'talent', system: { identifier: 'ironCost', cost: 0, benefit: 'x' } }));
         const item = { id: 't1', name: 'Iron Cost', img: null, type: 'talent', system: { identifier: 'ironCost', cost: 300 } };
         const patches = await buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } });
@@ -496,7 +497,7 @@ interface IndexEntryStub {
     system: { identifier: string };
 }
 interface IndexPackStub {
-    metadata: { id: string; system: string };
+    metadata: ReturnType<typeof packMetadata> & { system: string };
     documentName: string;
     getIndex: () => Promise<IndexEntryStub[]>;
 }
@@ -504,8 +505,9 @@ interface IndexPackStub {
 function indexEntry(uuid: string, name: string, identifier: string, type = 'talent'): IndexEntryStub {
     return { _id: uuid, name, type, uuid, system: { identifier } };
 }
-function indexPack(id: string, entries: IndexEntryStub[]): IndexPackStub {
-    return { metadata: { id, system: 'wh40k-rpg' }, documentName: 'Item', getIndex: vi.fn().mockResolvedValue(entries) };
+/** One of `line`'s talent packs, named `name`, holding `entries`. */
+function indexPack(name: string, line: string, entries: IndexEntryStub[]): IndexPackStub {
+    return { metadata: { ...packMetadata(name, line, 'talents'), system: 'wh40k-rpg' }, documentName: 'Item', getIndex: vi.fn().mockResolvedValue(entries) };
 }
 /** `game.packs` as `queryItemIndex` reads it, plus the system debug channel; returns the `game.wh40k.log` spy. */
 function installPacks(packs: IndexPackStub[]): ReturnType<typeof vi.fn> {
@@ -534,8 +536,8 @@ describe('buildHydrationPatches — recovers the link of an unlinked owned item 
 
     it("joins the unique match on the owner's line and records the recovered link", async () => {
         installPacks([
-            indexPack('wh40k-rpg.dh1-core-items-talents', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scRecover')]),
-            indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.sc', 'Superior Chirurgeon', 'scRecover')]),
+            indexPack('dh1-talents', 'dh1', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scRecover')]),
+            indexPack('dh2-talents', 'dh2', [indexEntry('Compendium.dh2.sc', 'Superior Chirurgeon', 'scRecover')]),
         ]);
         const fromUuidSpy = vi.fn().mockResolvedValue(canonicalSc('scRecover'));
         vi.stubGlobal('fromUuid', fromUuidSpy);
@@ -548,7 +550,7 @@ describe('buildHydrationPatches — recovers the link of an unlinked owned item 
     });
 
     it('falls back to an exact name match when the item has no identifier', async () => {
-        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.byName', 'Superior Chirurgeon (by name)', 'whatever')])]);
+        installPacks([indexPack('dh2-talents', 'dh2', [indexEntry('Compendium.dh2.byName', 'Superior Chirurgeon (by name)', 'whatever')])]);
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(canonicalSc('whatever')));
         const item = { id: 't1', name: 'Superior Chirurgeon (by name)', img: null, type: 'talent', system: { identifier: '' } };
         const patches = await buildHydrationPatches({ type: 'dh2-character', items: { contents: [item] } });
@@ -557,8 +559,8 @@ describe('buildHydrationPatches — recovers the link of an unlinked owned item 
 
     it('leaves an ambiguous item untouched — never guesses — and says so on the debug channel', async () => {
         const log = installPacks([
-            indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.a', 'Superior Chirurgeon', 'scAmbiguous')]),
-            indexPack('wh40k-rpg.dh2-beyond-items-talents', [indexEntry('Compendium.dh2.b', 'Superior Chirurgeon', 'scAmbiguous')]),
+            indexPack('dh2-talents', 'dh2', [indexEntry('Compendium.dh2.a', 'Superior Chirurgeon', 'scAmbiguous')]),
+            indexPack('dh2-more-talents', 'dh2', [indexEntry('Compendium.dh2.b', 'Superior Chirurgeon', 'scAmbiguous')]),
         ]);
         const fromUuidSpy = vi.fn();
         vi.stubGlobal('fromUuid', fromUuidSpy);
@@ -569,7 +571,7 @@ describe('buildHydrationPatches — recovers the link of an unlinked owned item 
     });
 
     it("does not reach into another line's packs", async () => {
-        installPacks([indexPack('wh40k-rpg.dh1-core-items-talents', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scOtherLine')])]);
+        installPacks([indexPack('dh1-talents', 'dh1', [indexEntry('Compendium.dh1.sc', 'Superior Chirurgeon', 'scOtherLine')])]);
         const fromUuidSpy = vi.fn();
         vi.stubGlobal('fromUuid', fromUuidSpy);
         const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scOtherLine' } };
@@ -578,7 +580,7 @@ describe('buildHydrationPatches — recovers the link of an unlinked owned item 
     });
 
     it('commits the recovered link into _stats without replacing the other document stats', async () => {
-        installPacks([indexPack('wh40k-rpg.dh2-core-items-talents', [indexEntry('Compendium.dh2.commit', 'Superior Chirurgeon', 'scCommit')])]);
+        installPacks([indexPack('dh2-talents', 'dh2', [indexEntry('Compendium.dh2.commit', 'Superior Chirurgeon', 'scCommit')])]);
         vi.stubGlobal('fromUuid', vi.fn().mockResolvedValue(canonicalSc('scCommit')));
         const updateSource = vi.fn();
         const item = { id: 't1', name: 'Superior Chirurgeon', img: null, type: 'talent', system: { identifier: 'scCommit' }, updateSource };

@@ -1,5 +1,7 @@
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import { installFoundryDataStub } from '../testing/foundry-data-stub.ts';
+import { packMetadata } from '../testing/pack-metadata.ts';
+import type { EquipmentCandidate } from './npc-template-equipment.ts';
 
 /**
  * An NPC Template's carried equipment on the NPC made from it (#670). A name that is
@@ -25,20 +27,21 @@ afterAll(installFoundryDataStub({ utils: { mergeObject: mergeTwoLevels } }));
 
 const { linkedOwnedItemData, splitTemplateEquipment } = await import('./npc-template-equipment.ts');
 
-const candidate = (name: string, type: string, packId: string): { uuid: string; packId: string; type: string; name: string } => ({
-    uuid: `Compendium.${packId}.Item.${name.replace(/\W/g, '')}`,
-    packId,
+/** A carried-item candidate from a pack named `packName`, flagged as one of `line`'s packs. */
+const candidate = (name: string, type: string, packName: string, line: string, homebrew = false): EquipmentCandidate => ({
+    uuid: `Compendium.wh40k-rpg.${packName}.Item.${name.replace(/\W/g, '')}`,
+    pack: packMetadata(packName, line, type, homebrew),
     type,
     name,
 });
 
 const CANDIDATES = [
-    candidate('Flak Armour', 'armour', 'wh40k-rpg.dh2-core-armour'),
-    candidate('Flak Armour', 'armour', 'wh40k-rpg.rt-core-armour'),
-    candidate('Autogun', 'weapon', 'wh40k-rpg.dh2-core-weapons'),
-    candidate('Autogun', 'weapon', 'wh40k-rpg.dh2-enemies-weapons'),
-    candidate('Stummer', 'gear', 'wh40k-rpg.hb-dh2-gear'),
-    candidate('Hatred', 'talent', 'wh40k-rpg.dh2-core-talents'),
+    candidate('Flak Armour', 'armour', 'dh2-armour', 'dh2'),
+    candidate('Flak Armour', 'armour', 'rt-armour', 'rt'),
+    candidate('Autogun', 'weapon', 'dh2-weapons', 'dh2'),
+    candidate('Autogun', 'weapon', 'dh2-more-weapons', 'dh2'),
+    candidate('Stummer', 'gear', 'dh2-homebrew-gear', 'dh2', true),
+    candidate('Hatred', 'talent', 'dh2-talents', 'dh2'),
 ];
 
 describe('splitTemplateEquipment', () => {
@@ -56,8 +59,8 @@ describe('splitTemplateEquipment', () => {
 
     it("links a name that is one carried item on the NPC's line, or its homebrew packs, with its quantity", () => {
         expect(split.owned).toEqual([
-            { uuid: 'Compendium.wh40k-rpg.dh2-core-armour.Item.FlakArmour', quantity: 1 },
-            { uuid: 'Compendium.wh40k-rpg.hb-dh2-gear.Item.Stummer', quantity: 2 },
+            { uuid: 'Compendium.wh40k-rpg.dh2-armour.Item.FlakArmour', quantity: 1 },
+            { uuid: 'Compendium.wh40k-rpg.dh2-homebrew-gear.Item.Stummer', quantity: 2 },
         ]);
     });
 

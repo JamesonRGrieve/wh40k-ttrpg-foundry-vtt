@@ -1,6 +1,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RawRecord } from '../rules/condition-mechanics.ts';
 import { buildConditionCatalog, type ConditionIndexRow, setConditionCatalog } from '../rules/condition-registry.ts';
+import { conditionPack } from '../testing/condition-catalog.ts';
 import { MAX_ANIMATED_STATUS_VISUALS, refreshAllStatusVisuals, registerStatusVisuals, statusVisualStats } from './status-visual-layer.ts';
 
 /**
@@ -182,7 +183,7 @@ let reducedMotion = false;
 function catalogRow(id: string, visual: RawRecord): ConditionIndexRow {
     return {
         _id: id,
-        uuid: `Compendium.wh40k-rpg.dh2-core-items-conditions.Item.${id}`,
+        uuid: `Compendium.wh40k-rpg.dh2-conditions.Item.${id}`,
         name: id,
         img: '',
         type: 'condition',
@@ -243,7 +244,7 @@ beforeEach(() => {
     setConditionCatalog(
         buildConditionCatalog([
             {
-                packName: 'dh2-core-items-conditions',
+                pack: conditionPack('dh2-conditions', 'dh2'),
                 rows: [
                     catalogRow('on-fire', { preset: 'burning', intensity: { perStack: 0.5, max: 2 }, sounds: [{ event: 'apply', src: 'whoosh.ogg' }] }),
                     catalogRow('stunned', { preset: 'stunned' }),
@@ -432,7 +433,7 @@ describe('status visuals — lifecycle', () => {
         tokens = [token];
         applyStatus(actor, 'stunned');
         expect(liveVisuals(token)).toHaveLength(0);
-        setConditionCatalog(buildConditionCatalog([{ packName: 'dh2-core-items-conditions', rows: [catalogRow('stunned', { preset: 'stunned' })] }]));
+        setConditionCatalog(buildConditionCatalog([{ pack: conditionPack('dh2-conditions', 'dh2'), rows: [catalogRow('stunned', { preset: 'stunned' })] }]));
         refreshAllStatusVisuals();
         expect(liveVisuals(token)).toHaveLength(1);
     });

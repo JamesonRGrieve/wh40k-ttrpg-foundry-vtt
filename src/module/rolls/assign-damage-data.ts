@@ -21,7 +21,7 @@ import { isVehicleLocationId, resolveVehicleDamage, type VehicleArmourFacing, ty
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 import { actorGameSystemId, postFlattenedInstanceToChat } from './roll-helpers.ts';
 import { cardLocaliser, type VehicleCardRow, type VehicleDamageApplied, vehicleAssignCardRows } from './vehicle-card-rows.ts';
-import { type CriticalChartLookupFn, lookupCriticalChart, lookupVehicleCritical, packBook, type VehicleCritLookupFn } from './vehicle-critical-tables.ts';
+import { type CriticalChartLookupFn, lookupCriticalChart, lookupVehicleCritical, packFolderId, type VehicleCritLookupFn } from './vehicle-critical-tables.ts';
 import { readVehicleDurability, type VehicleDurability, type VehicleStrike, vehicleFuryResults } from './vehicle-strike.ts';
 import { buildWoundTransition, prepareWoundTransitionTooltip, type WoundTransition } from './wound-transition.ts';
 
@@ -92,7 +92,7 @@ export function criticalChartOf(items: Iterable<{ readonly system: object }>): s
     return '';
 }
 
-/** The compendium a `Compendium.<pack id>.<Document>.<id>` UUID lives in (`wh40k-rpg.bc-decay-actors-bestiary`), or '' for any other UUID. */
+/** The compendium a `Compendium.<pack id>.<Document>.<id>` UUID lives in (`<package>.<pack>`), or '' for any other UUID. */
 function packOfUuid(uuid: string): string {
     const parts = uuid.split('.');
     return parts[0] === 'Compendium' && parts.length >= 5 ? `${parts[1]}.${parts[2]}` : '';
@@ -440,10 +440,8 @@ export class AssignDamageData {
 
     /**
      * A creature whose trait names a critical chart reads its Critical damage there
-     * instead of on the Critical Effects tables (#678): a BC Daemon Engine "has its
-     * own special rules for Critical Damage" — "consult Table 3–9: Daemonic Engine
-     * Critical Hit Chart" (BC Tome of Decay p. 96; Tome of Fate p. 82, Tome of
-     * Excess p. 86, Tome of Blood p. 115). The row is read at the cumulative
+     * instead of on the Critical Effects tables (#678): a BC Daemon Engine has its
+     * own critical chart, which several books print. The row is read at the cumulative
      * Critical damage, like the creature tables, and its effect classified the same
      * way. Without such a trait, or a chart in the line's packs, the standard
      * record stands.
@@ -454,7 +452,7 @@ export class AssignDamageData {
         const line = actorGameSystemId(this.actor);
         if (standard === null || chart === '' || line === undefined) return standard;
         const source = this.actor._stats?.compendiumSource ?? null;
-        const row = await this.criticalChartLookup(chart, line, source === null ? null : packBook(packOfUuid(source)), criticalValue);
+        const row = await this.criticalChartLookup(chart, line, source === null ? null : packFolderId(packOfUuid(source)), criticalValue);
         if (row === null) return standard;
         const effect = stripOuterParagraph(row.text);
         return { ...standard, effect, riders: classifyCriticalEffect(effect) };
