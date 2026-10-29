@@ -48,5 +48,11 @@ export type DocumentTypes = Record<string, Record<string, unknown>>;
 /** Errors for a `type` (or an Actor's embedded `items[].type`) the system does not register (#136). */
 export declare function unregisteredTypeIssues(doc: unknown, documentClass: string | undefined, documentTypes: DocumentTypes): string[];
 
+/** The builder roles a pack may be ranked for. */
+export declare const BUILDER_ROLES: readonly string[];
+
+/** Issues with the declared packs' `flags["wh40k-rpg"]` (missing, malformed, or gapped builder ranks). */
+export declare function packFlagIssues(packs: ReadonlyArray<{ name: string; flags?: object }>): string[];
+
 /** Validate one `_source` document; returns human-readable error strings ([] when clean). */
 export declare function validateDoc(doc: unknown, context?: { documentClass?: string | undefined; documentTypes?: DocumentTypes }): string[];

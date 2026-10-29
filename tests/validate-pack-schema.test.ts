@@ -2,12 +2,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import {
     DAMAGE_SOURCE,
     DAMAGE_TYPE,
     type DocumentTypes,
     extensionlessImagePaths,
     IMAGE_FILE_EXTENSIONS,
+    packFlagIssues,
     RIDER_AFFECTS as GATE_RIDER_AFFECTS,
     RIDER_AREA_MEASURE,
     RIDER_DURATION_KIND,
@@ -21,6 +23,7 @@ import {
 import { WEAPON_CLASS_CHOICES } from '../src/module/data/shared/weapon-class.ts';
 import { DAMAGE_SOURCE_CHOICES, DAMAGE_TYPE_CHOICES } from '../src/module/rules/damage-profile.ts';
 import { RIDER_AFFECTS, RIDER_AREA_MEASURES, RIDER_DURATION_KINDS, RIDER_TEST_CHARACTERISTICS } from '../src/module/rules/grenade-rider.ts';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 /**
  * Unit coverage for the Zod v4 compendium content-schema gate
@@ -342,5 +345,44 @@ describe('registered document type gate (#136)', () => {
             /not a registered Item type/,
         );
         expect(validateDoc({ name: 'Sight', type: 'weapon.modification' })).toEqual([]);
+    });
+});
+
+describe('packFlagIssues — every declared pack is placed by its flags', () => {
+    const flagged = (name: string, flags: object): { name: string; flags: object } => ({ name, flags: { 'wh40k-rpg': flags } });
+
+    it('accepts packs declaring a line, a kebab-case category and a homebrew flag, with ranks running 1..N', () => {
+        expect(
+            packFlagIssues([
+                flagged('a', { line: 'dh2', category: 'origins-homeworlds', homebrew: false, originBuilder: 2 }),
+                flagged('b', { line: 'dh2', category: 'origins-roles', homebrew: false, originBuilder: 1 }),
+                flagged('c', { line: 'generic', category: 'talents', homebrew: true }),
+            ]),
+        ).toEqual([]);
+    });
+
+    it('rejects a pack with no flags, an unknown line, a malformed category or a non-boolean homebrew', () => {
+        const issues = packFlagIssues([
+            { name: 'bare' },
+            flagged('line', { line: 'dnd', category: 'talents', homebrew: false }),
+            flagged('category', { line: 'rt', category: 'Talents', homebrew: false }),
+            flagged('homebrew', { line: 'rt', category: 'talents', homebrew: 'no' }),
+        ]);
+        expect(issues).toHaveLength(4);
+        expect(issues.map((issue) => issue.split(':')[0])).toEqual(['bare', 'line', 'category', 'homebrew']);
+    });
+
+    it('rejects builder ranks that gap, repeat or are not positive integers', () => {
+        expect(
+            packFlagIssues([
+                flagged('a', { line: 'rt', category: 'origins-careers', homebrew: false, originBuilder: 1 }),
+                flagged('b', { line: 'rt', category: 'origins-lineages', homebrew: false, originBuilder: 3 }),
+                flagged('c', { line: 'rt', category: 'weapons', homebrew: false, startingEquipment: 0 }),
+            ]),
+        ).toEqual(['c: flags startingEquipment must be a positive integer', 'rt:originBuilder: ranks 1, 3 do not run 1..2']);
+    });
+
+    it.skipIf(!HAS_PRIVATE_CONTENT)('passes on the real declared packs', () => {
+        expect(packFlagIssues(readDeclaredPacks(resolve(__dirname, '..')).packs)).toEqual([]);
     });
 });

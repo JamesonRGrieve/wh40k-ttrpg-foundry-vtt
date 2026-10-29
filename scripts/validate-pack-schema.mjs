@@ -427,6 +427,51 @@ export function validateDoc(doc, context = {}) {
 }
 
 /* -------------------------------------------- */
+/*  Pack declaration flags                      */
+/* -------------------------------------------- */
+
+/** The builder roles a pack may be ranked for (`src/module/utils/line-packs.ts`). */
+export const BUILDER_ROLES = ['originBuilder', 'startingEquipment'];
+
+/**
+ * Every declared pack must carry `flags["wh40k-rpg"] = { line, category, homebrew }`:
+ * code selects packs by those flags, never by a pack's name, so an undeclared pack
+ * is invisible to every lookup. Builder ranks, where present, run 1..N per line.
+ * @param {Array<{name: string, flags?: object}>} packs  The declared packs.
+ * @returns {string[]}  Human-readable issues ([] when clean).
+ */
+export function packFlagIssues(packs) {
+    const issues = [];
+    const ranks = new Map();
+    for (const pack of packs) {
+        const flags = pack.flags?.['wh40k-rpg'];
+        if (flags === undefined || flags === null || typeof flags !== 'object') {
+            issues.push(`${pack.name}: declares no flags["wh40k-rpg"] (line, category, homebrew)`);
+            continue;
+        }
+        if (![...LINES, 'generic'].includes(flags.line)) issues.push(`${pack.name}: flags line ${JSON.stringify(flags.line)} is not a game line or "generic"`);
+        if (typeof flags.category !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(flags.category))
+            issues.push(`${pack.name}: flags category ${JSON.stringify(flags.category)} is not a kebab-case kind`);
+        if (typeof flags.homebrew !== 'boolean') issues.push(`${pack.name}: flags homebrew must be a boolean`);
+        for (const role of BUILDER_ROLES) {
+            const rank = flags[role];
+            if (rank === undefined) continue;
+            if (!Number.isInteger(rank) || rank < 1) {
+                issues.push(`${pack.name}: flags ${role} must be a positive integer`);
+                continue;
+            }
+            const key = `${flags.line}:${role}`;
+            ranks.set(key, [...(ranks.get(key) ?? []), rank]);
+        }
+    }
+    for (const [key, list] of ranks) {
+        const sorted = [...list].sort((a, b) => a - b);
+        if (sorted.some((rank, index) => rank !== index + 1)) issues.push(`${key}: ranks ${sorted.join(', ')} do not run 1..${sorted.length}`);
+    }
+    return issues;
+}
+
+/* -------------------------------------------- */
 /*  CLI walker                                  */
 /* -------------------------------------------- */
 
@@ -455,28 +500,34 @@ function systemDocumentTypes() {
 }
 
 /**
- * Pack name → document class, from the system manifest's `packs` and each pack
- * root's `system.packs.json` (the private declarations merged at build).
+ * Every declared pack, from the system manifest's `packs` and each pack root's
+ * `system.packs.json` (the private declarations merged at build).
  * @param {string[]} roots
- * @returns {Map<string, string>}
+ * @returns {Array<{name: string, type: string, flags?: object}>}
  */
-function packClasses(roots) {
+function declaredPacks(roots) {
     const declared = [...(JSON.parse(fs.readFileSync('src/system.json', 'utf8')).packs ?? [])];
     for (const root of roots) {
         const manifest = path.join(root, 'system.packs.json');
         if (fs.existsSync(manifest)) declared.push(...(JSON.parse(fs.readFileSync(manifest, 'utf8')).packs ?? []));
     }
-    return new Map(declared.map((pack) => [pack.name, pack.type]));
+    return declared;
 }
 
 function main() {
     const report = process.argv.includes('--report');
     const roots = packRoots();
     const documentTypes = systemDocumentTypes();
-    const classes = packClasses(roots);
+    const declared = declaredPacks(roots);
+    const classes = new Map(declared.map((pack) => [pack.name, pack.type]));
     let scanned = 0;
     let failed = 0;
     const failures = [];
+    const flagIssues = packFlagIssues(declared);
+    if (flagIssues.length > 0) {
+        failed++;
+        failures.push(`pack declarations:\n  - ${flagIssues.join('\n  - ')}`);
+    }
     for (const root of roots) {
         for (const file of findSourceFiles(root)) {
             scanned++;
