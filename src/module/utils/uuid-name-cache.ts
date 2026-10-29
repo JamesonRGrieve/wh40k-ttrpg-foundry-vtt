@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from '../constants.ts';
+import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
 
 /**
  * Synchronous UUID → display-name cache.
@@ -25,7 +26,7 @@ import { SYSTEM_ID } from '../constants.ts';
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Pack.getIndex returns a Foundry Collection whose entries are typed loosely as `unknown` by fvtt-types; we narrow via isIndexEntry on the next pass
 type PackLike = {
-    metadata: { id: string; name: string; type: string };
+    metadata: PackMetadataLike & { id: string; type: string };
     // eslint-disable-next-line no-restricted-syntax -- boundary: see above
     getIndex: (options?: { fields?: string[] }) => Promise<Iterable<unknown>>;
 };
@@ -39,9 +40,9 @@ class UuidNameCache {
     /** uuid → display name */
     readonly #cache = new Map<string, string>();
     /**
-     * Reverse index: `${packPrefix}|${normalized-name}` → uuid. Used by the
+     * Reverse index: `${line}|${normalized-name}` → uuid. Used by the
      * Phase F originPath backfill where we have a legacy name string and need
-     * to find the matching compendium UUID. Pack-prefix scoping keeps the
+     * to find the matching compendium UUID. Scoping by the pack's line keeps the
      * lookup per-game-system; see `findByName()` for the resolution order.
      */
     readonly #byName = new Map<string, string>();
@@ -73,7 +74,9 @@ class UuidNameCache {
                     return;
                 }
                 const docKey = packDocumentType(pack.metadata.type);
-                const packPrefix = pack.metadata.name.split('-')[0] ?? '';
+                // A book pack's declared line scopes its reverse entries; a homebrew pack's are unscoped.
+                const flags = packLineFlags(pack.metadata);
+                const packPrefix = flags === null || flags.homebrew ? '' : flags.line;
                 for (const raw of index) {
                     if (!isIndexEntry(raw)) continue;
                     const uuid = `Compendium.${pack.metadata.id}.${docKey}.${raw._id}`;
@@ -131,8 +134,8 @@ class UuidNameCache {
     }
 
     /**
-     * Reverse lookup: find a UUID by display name, scoped to the given pack
-     * prefix (`dh1`, `dh2`, `bc`, `dw`, `ow`, `rt`). Falls back to a
+     * Reverse lookup: find a UUID by display name, scoped to the given game
+     * line (`dh1`, `dh2`, `bc`, `dw`, `ow`, `rt`). Falls back to a
      * specialization-stripped match. Returns null on miss — callers should
      * treat that as "leave the legacy name alone" rather than a hard error.
      */

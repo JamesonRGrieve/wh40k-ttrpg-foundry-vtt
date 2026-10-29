@@ -1,28 +1,29 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { packMetadata } from '../testing/pack-metadata.ts';
 import { clearSkillUuidCache, findSkillUuid } from './skill-uuid-helper.ts';
 
 interface IndexEntry {
     name: string;
 }
 interface PackStub {
-    metadata: { name: string; id: string };
+    metadata: ReturnType<typeof packMetadata>;
     documentName: string;
     index: Map<string, IndexEntry>;
 }
 
-/** Install a `game.packs` stub holding the given per-system skill packs. */
-function stubPacks(packs: Array<{ name: string; entries: Array<[string, IndexEntry]> }>): void {
+/** Install a `game.packs` stub holding the given per-line skill packs, each flagged with its line. */
+function stubPacks(packs: Array<{ name: string; line: string; entries: Array<[string, IndexEntry]> }>): void {
     const packObjs: PackStub[] = packs.map((p) => ({
-        metadata: { name: p.name, id: `wh40k-rpg.${p.name}` },
+        metadata: packMetadata(p.name, p.line, 'skills'),
         documentName: 'Item',
         index: new Map(p.entries),
     }));
-    vi.stubGlobal('game', { packs: { find: (fn: (p: PackStub) => boolean) => packObjs.find(fn) } });
+    vi.stubGlobal('game', { packs: packObjs });
 }
 
 const TWO_SYSTEM_PACKS = [
-    { name: 'dh2-core-items-skills', entries: [['dh2dodge', { name: 'Dodge' }]] as Array<[string, IndexEntry]> },
-    { name: 'rt-core-items-skills', entries: [['rtdodge', { name: 'Dodge' }]] as Array<[string, IndexEntry]> },
+    { name: 'dh2-skills', line: 'dh2', entries: [['dh2dodge', { name: 'Dodge' }]] as Array<[string, IndexEntry]> },
+    { name: 'rt-skills', line: 'rt', entries: [['rtdodge', { name: 'Dodge' }]] as Array<[string, IndexEntry]> },
 ];
 
 describe('findSkillUuid per-system pack resolution (#279)', () => {
@@ -33,27 +34,28 @@ describe('findSkillUuid per-system pack resolution (#279)', () => {
 
     it('resolves from the dh2 pack for a dh2 actor', () => {
         stubPacks(TWO_SYSTEM_PACKS);
-        expect(findSkillUuid('Dodge', null, 'dh2')).toBe('Compendium.wh40k-rpg.dh2-core-items-skills.dh2dodge');
+        expect(findSkillUuid('Dodge', null, 'dh2')).toBe('Compendium.wh40k-rpg.dh2-skills.dh2dodge');
     });
 
     it('resolves from the rt pack for an rt actor — the homologation fix (was hardcoded to dh2)', () => {
         stubPacks(TWO_SYSTEM_PACKS);
-        expect(findSkillUuid('Dodge', null, 'rt')).toBe('Compendium.wh40k-rpg.rt-core-items-skills.rtdodge');
+        expect(findSkillUuid('Dodge', null, 'rt')).toBe('Compendium.wh40k-rpg.rt-skills.rtdodge');
     });
 
     it('does not cross-cache same-named skills across systems', () => {
         stubPacks(TWO_SYSTEM_PACKS);
-        expect(findSkillUuid('Dodge', null, 'dh2')).toContain('dh2-core-items-skills');
-        // The dh2 lookup above must not poison the rt lookup (cache key is pack-scoped).
-        expect(findSkillUuid('Dodge', null, 'rt')).toContain('rt-core-items-skills');
+        expect(findSkillUuid('Dodge', null, 'dh2')).toContain('dh2-skills');
+        // The dh2 lookup above must not poison the rt lookup (cache key is line-scoped).
+        expect(findSkillUuid('Dodge', null, 'rt')).toContain('rt-skills');
     });
 
-    it('defaults to the dh1 pack prefix for dh1, and passes other ids through unchanged', () => {
+    it('selects the pack by its declared line, whatever it is named', () => {
         stubPacks([
-            { name: 'dh1-core-items-skills', entries: [['dh1dodge', { name: 'Dodge' }]] },
-            { name: 'dw-core-items-skills', entries: [['dwdodge', { name: 'Dodge' }]] },
+            { name: 'rt-looking-name', line: 'dh1', entries: [['dh1dodge', { name: 'Dodge' }]] },
+            { name: 'misc', line: 'dw', entries: [['dwdodge', { name: 'Dodge' }]] },
         ]);
-        expect(findSkillUuid('Dodge', null, 'dh1')).toContain('dh1-core-items-skills');
-        expect(findSkillUuid('Dodge', null, 'dw')).toContain('dw-core-items-skills');
+        expect(findSkillUuid('Dodge', null, 'dh1')).toBe('Compendium.wh40k-rpg.rt-looking-name.dh1dodge');
+        expect(findSkillUuid('Dodge', null, 'dw')).toBe('Compendium.wh40k-rpg.misc.dwdodge');
+        expect(findSkillUuid('Dodge', null, 'rt')).toBeNull();
     });
 });

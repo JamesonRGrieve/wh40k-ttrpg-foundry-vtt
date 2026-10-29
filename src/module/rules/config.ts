@@ -31,7 +31,6 @@ WH40K['originPath'] = {
         { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
         { key: 'career', label: 'Career', choiceGroup: 'origin.career' },
     ] as OriginPathStep[],
-    compendium: 'wh40k-rpg.rt-items-origin-path',
 };
 
 // Ordered creature size labels (RAW Table 4-6). Single source of truth for the

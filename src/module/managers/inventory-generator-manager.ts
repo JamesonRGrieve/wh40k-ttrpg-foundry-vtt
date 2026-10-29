@@ -19,7 +19,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import type { InventoryCandidate } from '../inventory/inventory-generator.ts';
-import { gameSystemPackPrefix } from '../utils/game-system-pack-prefix.ts';
+import { isLinePack } from '../utils/compendium-query.ts';
 import { ItemDropManager, type StackProjection } from './item-drop-manager.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: Foundry CompendiumCollection.getIndex returns minimally-typed entries; `system` is a compendium payload with no schema at this layer, and normalizeProfiles validates raw index data */
@@ -48,18 +48,14 @@ const DEFAULT_AVAILABILITY = 'common';
 export class InventoryGeneratorManager {
     /**
      * Read every droppable physical item from the compendium packs scoped to
-     * `gameSystem` (plus shared `homebrew` packs) and project them to plain
-     * {@link InventoryCandidate}s. Scoping reuses the single shared
-     * system→pack-prefix mapping so a `dh2` actor only ever sees `dh2-*`
+     * `gameSystem` and project them to plain {@link InventoryCandidate}s. Each
+     * pack's declared line scopes it, so a `dh2` actor only ever sees DH2
      * content (`Dodge` exists six times across systems with different UUIDs).
      */
     static async collectCandidates(gameSystem: string | undefined): Promise<InventoryCandidate[]> {
-        const prefix = gameSystemPackPrefix(gameSystem);
         const packs = game.packs.filter((pack) => {
             if (pack.metadata.system !== SYSTEM_ID || pack.documentName !== 'Item') return false;
-            if (prefix.length === 0) return true;
-            const packName = pack.metadata.name;
-            return packName.startsWith(prefix) || packName.startsWith('homebrew');
+            return gameSystem === undefined || gameSystem === '' || isLinePack(pack.metadata, gameSystem);
         });
 
         const perPack = await Promise.all(

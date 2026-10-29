@@ -7,7 +7,7 @@
  * @module helpers/skill-uuid-helper
  */
 
-import { gameSystemPackPrefix } from '../utils/game-system-pack-prefix.ts';
+import { lineCategoryPack } from '../utils/line-packs.ts';
 import { parseSpecializationName } from '../utils/specialization-name.ts';
 
 // Re-export the canonical name parser under its historical name so existing
@@ -41,18 +41,18 @@ export function clearSkillUuidCache(): void {
  *
  * @example
  * // Standard skill
- * const awarenessUuid = await findSkillUuid("Awareness");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.xxx"
+ * const awarenessUuid = await findSkillUuid("Awareness", null, "dh2");
+ * // Returns: "Compendium.wh40k-rpg.<dh2 skills pack>.xxx"
  *
  * @example
  * // Specialist skill with inline specialization
- * const loreUuid = await findSkillUuid("Common Lore (Imperium)");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.yyy"
+ * const loreUuid = await findSkillUuid("Common Lore (Imperium)", null, "dh2");
+ * // Returns: "Compendium.wh40k-rpg.<dh2 skills pack>.yyy"
  *
  * @example
  * // Specialist skill with separate specialization parameter
- * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
- * // Returns: "Compendium.wh40k-rpg.dh2-core-items-skills.yyy"
+ * const loreUuid = await findSkillUuid("Common Lore", "Imperium", "dh2");
+ * // Returns: "Compendium.wh40k-rpg.<dh2 skills pack>.yyy"
  */
 // eslint-disable-next-line complexity -- UUID lookup requires checking many skill key variants; refactor deferred
 export function findSkillUuid(skillName: string | null | undefined, specialization: string | null = null, gameSystem?: string): string | null | undefined {
@@ -70,13 +70,10 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
         }
     }
 
-    // The skills pack is per-system (dh2-core-items-skills, rt-core-items-skills, …);
-    // pick it by the actor's game-system prefix so all seven systems resolve (#279).
-    const packName = `${gameSystemPackPrefix(gameSystem)}-core-items-skills`;
-
-    // Build cache key — scoped by pack so same-named skills in different systems don't collide.
+    // Build cache key — scoped by line so same-named skills in different systems don't collide.
+    const line = gameSystem ?? '';
     const baseKey = resolvedSpecialization !== null && resolvedSpecialization !== '' ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
-    const cacheKey = `${packName}::${baseKey}`;
+    const cacheKey = `${line}::${baseKey}`;
 
     // Check cache first
     if (_skillUuidCache.has(cacheKey)) {
@@ -84,11 +81,11 @@ export function findSkillUuid(skillName: string | null | undefined, specializati
     }
 
     try {
-        // Find the skills compendium pack
-        const skillPack = game.packs.find((p) => p.metadata.name === packName && p.documentName === 'Item');
-
+        // The skills pack is per-system; pick it by its flags for the actor's game
+        // system so every line resolves (#279).
+        const skillPack = lineCategoryPack(game.packs, line, 'skills');
         if (!skillPack) {
-            console.warn(`Skill compendium pack '${packName}' not found`);
+            console.warn(`Skill compendium pack for '${line}' not found`);
             _skillUuidCache.set(cacheKey, null);
             return null;
         }

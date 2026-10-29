@@ -135,11 +135,10 @@ import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } f
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation } from '../../utils/armour-calculator.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
-import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
+import { findItemUuidByIdentifier, isLinePack } from '../../utils/compendium-query.ts';
 import { contentRefName, documentRefName } from '../../utils/content-ref-name.ts';
 import { errorMessage } from '../../utils/error-message.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
-import { gameSystemPackPrefix } from '../../utils/game-system-pack-prefix.ts';
 import { ORIGIN_PROMPT_DISMISSED_FLAG, originPathPromptContent, SHEET_SOURCE_FLAG, shouldPromptOriginPath } from '../../utils/origin-path-prompt.ts';
 import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -1542,12 +1541,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const stepNames: Record<string, Set<string>> = {};
 
-        const prefix = gameSystemPackPrefix(gameSystem);
-        const relevantPacks = [...game.packs].filter((pack) => {
-            if (pack.documentName !== 'Item') return false;
-            const packName = pack.metadata.name;
-            return packName.startsWith(prefix) || packName.startsWith('homebrew');
-        });
+        const relevantPacks = [...game.packs].filter((pack) => pack.documentName === 'Item' && isLinePack(pack.metadata, gameSystem));
 
         const indexes = await Promise.all(
             relevantPacks.map(
@@ -5126,7 +5120,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 return;
             }
 
-            const hatredUuid = await findItemUuidByIdentifier('talent', HATRED_IDENTIFIER, gameSystemPackPrefix(this._resolveGameSystemId() ?? undefined));
+            const hatredUuid = await findItemUuidByIdentifier('talent', HATRED_IDENTIFIER, this._resolveGameSystemId() ?? '');
             const hatred = hatredUuid === null ? null : await fromUuid(hatredUuid);
             if (!(hatred instanceof Item)) {
                 this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoHatred'), { duration: 3000 });

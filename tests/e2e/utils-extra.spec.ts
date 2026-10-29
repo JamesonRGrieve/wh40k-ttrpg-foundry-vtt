@@ -23,7 +23,6 @@ import { test } from './lib/test';
  * every miss in one pass rather than first-fail masking.
  *
  * Modules exercised:
- *   - utils/game-system-pack-prefix.ts  — gameSystemPackPrefix
  *   - utils/encumbrance-calculator.ts   — getCarryCapacity, ENCUMBRANCE_TABLE
  *   - utils/origin-ui-labels.ts         — getCharacteristicDisplayInfo,
  *                                         getTrainingLabel
@@ -39,8 +38,6 @@ import { test } from './lib/test';
  */
 
 const UTILS_EXTRA_FLOWS = [
-    'pack-prefix-dh-editions',
-    'pack-prefix-passthrough',
     'encumbrance-carry-capacity',
     'encumbrance-table-exported',
     'origin-ui-characteristic-info',
@@ -71,9 +68,6 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[] }> {
     const results = await page.evaluate(async (): Promise<FlowResult[]> => {
         // Browser-side probe shapes. The dynamic-imported dist modules are
         // runtime-only; describe only the exported surface each flow drives.
-        interface PackPrefixModule {
-            gameSystemPackPrefix?: (id: string | undefined) => string;
-        }
         interface EncumbranceModule {
             getCarryCapacity?: (sb: number) => number;
             ENCUMBRANCE_TABLE?: number[];
@@ -133,29 +127,6 @@ async function probeUtilsExtra(page: Page): Promise<{ results: FlowResult[] }> {
         };
 
         const base = `${'/systems/wh40k-rpg'}/module/utils`;
-
-        // ---------- game-system-pack-prefix ----------
-        try {
-            const mod = (await import(`${base}/game-system-pack-prefix.js`)) as PackPrefixModule;
-            try {
-                const a = mod.gameSystemPackPrefix?.('dh1');
-                const b = mod.gameSystemPackPrefix?.('dh2');
-                record('pack-prefix-dh-editions', a === 'dh1' && b === 'dh2', `dh1=${String(a)} dh2=${String(b)}`);
-            } catch (err) {
-                record('pack-prefix-dh-editions', false, err instanceof Error ? err.message : String(err));
-            }
-            try {
-                const passthrough = mod.gameSystemPackPrefix?.('rt');
-                const absent = mod.gameSystemPackPrefix?.(undefined);
-                record('pack-prefix-passthrough', passthrough === 'rt' && absent === '', `rt=${String(passthrough)} undefined=${JSON.stringify(absent)}`);
-            } catch (err) {
-                record('pack-prefix-passthrough', false, err instanceof Error ? err.message : String(err));
-            }
-        } catch (err) {
-            for (const k of ['pack-prefix-dh-editions', 'pack-prefix-passthrough'] as const) {
-                record(k, false, `import: ${err instanceof Error ? err.message : String(err)}`);
-            }
-        }
 
         // ---------- encumbrance-calculator ----------
         try {

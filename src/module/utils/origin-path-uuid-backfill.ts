@@ -1,4 +1,3 @@
-import { gameSystemPackPrefix } from './game-system-pack-prefix.ts';
 import { uuidNameCache } from './uuid-name-cache.ts';
 
 /**
@@ -7,8 +6,7 @@ import { uuidNameCache } from './uuid-name-cache.ts';
  * name strings.
  *
  * Resolves each name against the per-game-system reverse index built by
- * `uuidNameCache`, scoped to the actor's own `system.gameSystem` (with the
- * trailing `e` stripped to match the pack prefix used by `gameSystemPackPrefix`).
+ * `uuidNameCache`, scoped to the actor's own `system.gameSystem`.
  *
  * Non-destructive: only writes the parallel `*Uuid` field, never overwrites
  * the display-name field; only fires when the UUID slot is empty AND a
@@ -59,7 +57,7 @@ export async function backfillOriginPathUuids(): Promise<void> {
         const sys = actor.system;
         const origin = sys?.originPath;
         if (origin == null) continue;
-        const prefix = gameSystemPackPrefix(sys?.gameSystem);
+        const prefix = sys?.gameSystem ?? '';
         if (prefix.length === 0) continue;
 
         const updates: Record<string, string> = {};
