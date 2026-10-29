@@ -1,8 +1,8 @@
 {{!--
-    Daemonology ritual dialog — DH2 Enemies Beyond.
-    Exorcism (#83, p. 71): Table 2–21 toggles, the threshold inputs (Daemon WP
+    Daemonology ritual dialog — DH2.
+    Exorcism (#83): Exorcism Modifiers table toggles, the threshold inputs (Daemon WP
     bonus + possessed Corruption bonus) and a GM circumstance row.
-    Summoning (#80, p. 59): True Name / patron service, the Daemon's Willpower
+    Summoning (#80): True Name / patron service, the Daemon's Willpower
     for the opposed Mastery test, and a GM row for each of the two tests.
 
     Context: isExorcism, performLabelKey, actorName, loreTotal, willpowerTotal, fatigueValue,
@@ -55,7 +55,7 @@
             </label>
         </div>
 
-        {{!-- Table 2–21: Exorcism Modifiers --}}
+        {{!-- Exorcism Modifiers table --}}
         <fieldset class="tw-m-0 tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
             <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Daemonology.Exorcism.ModifiersLegend"}}</legend>
             <div class="tw-flex tw-flex-col tw-gap-1.5">
@@ -74,7 +74,7 @@
         {{> systems/wh40k-rpg/templates/prompt/partial/daemonology-circumstance-row.hbs
             titleKey="WH40K.Daemonology.Dialog.CircumstanceLabel" labelName="circumstanceLabel" valueName="circumstanceValue"}}
     {{else}}
-        {{!-- Printed factors (p. 59) --}}
+        {{!-- Printed summoning factors --}}
         <fieldset class="tw-m-0 tw-mb-4 tw-p-3 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(201,162,39,0.25)]">
             <legend class="tw-px-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Daemonology.Summoning.FactorsLegend"}}</legend>
             <label class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-[0.85rem] tw-cursor-pointer">

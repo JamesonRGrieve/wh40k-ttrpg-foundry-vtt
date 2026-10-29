@@ -1,5 +1,5 @@
 {{!--
-    Only War "Comrade in Combat" panel (#152 — core.md p.12137).
+    Only War "Comrade in Combat" panel (#152).
 
     Renders the PC's Comrade abstraction:
       • Comrade name (or "Unnamed" fallback).
@@ -25,7 +25,7 @@
         state:           'unharmed' | 'wounded' | 'dead'
         stateLabelKey:   string   // WH40K.OW.Comrade.State.<Unharmed|Wounded|Dead>
         distanceM:       number   // sys.comrade.distanceM
-        hasVisualLine:   boolean  // sys.comrade.hasVisualLine: no solid barrier between (RAW p.269)
+        hasVisualLine:   boolean  // sys.comrade.hasVisualLine: no solid barrier between (RAW)
         cohesionRangeM:  number   // COMRADE_COHESION_RANGE_M (5)
         inCohesion:      boolean  // pre-resolved via inCohesion(...)
         isUnharmed:      boolean
@@ -34,11 +34,11 @@
         canWound:        boolean  // !isDead
         canHeal:         boolean  // isWounded
         canReplace:      boolean  // isDead && inCamp
-        inCamp:          boolean  // sys.refitAvailable: back in camp for refitting (RAW p.110 / p.271)
-        fleeing, pinned: boolean  // failed Fear / Pinning with its PC (RAW p.271)
+        inCamp:          boolean  // sys.refitAvailable: back in camp for refitting (RAW)
+        fleeing, pinned: boolean  // failed Fear / Pinning with its PC (RAW)
         fearImmune, pinningImmune: boolean
         canRecover:      boolean  // fleeing or pinned: a recovery Order has something to clear
-        actionsLeft, actionBudget: number  // Half Actions left this Turn (RAW p.269)
+        actionsLeft, actionBudget: number  // Half Actions left this Turn (RAW)
         canSufferMental: boolean  // alive: Insanity / Corruption can be applied
       }
 
@@ -69,7 +69,7 @@
     </header>
 
     {{!-- Distance + cohesion indicator. The distance and the barrier are what break
-          Cohesion (OW Core p. 269: "within 5 metres … not separated by a solid barrier"). --}}
+          Cohesion (OW core rules: "within 5 metres … not separated by a solid barrier"). --}}
     <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded
                 tw-border tw-border-solid tw-border-[color:var(--wh40k-border-color-light)]
                 tw-text-[0.78rem]">
@@ -97,7 +97,7 @@
         </span>
     </div>
 
-    {{!-- Actions left this Turn (p. 269: "two Half Actions or one Full Action per Turn"). --}}
+    {{!-- Actions left this Turn ("two Half Actions or one Full Action per Turn"). --}}
     {{#unless comradePanel.isDead}}
     <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-text-[0.78rem] tw-text-[color:var(--wh40k-text-muted)]" data-field="actions-left">
         <span>{{localize "WH40K.OW.Comrade.Actions.Label"}}</span>
@@ -107,7 +107,7 @@
     </div>
     {{/unless}}
 
-    {{!-- Fear and Pinning (p. 271): the Comrade fails with its PC; a recovery Order clears it. --}}
+    {{!-- Fear and Pinning: the Comrade fails with its PC; a recovery Order clears it. --}}
     <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-px-2 tw-text-[0.75rem]" data-field="fear-pinning">
         {{#if comradePanel.fleeing}}
         <span class="tw-inline-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-border-crimson tw-px-1.5 tw-py-0.5 tw-font-semibold tw-text-crimson-l40" data-comrade-status="fleeing">
@@ -129,7 +129,7 @@
         </label>
     </div>
 
-    {{!-- Insanity and Corruption (p. 271): 10 of either in a single Round kills the Comrade. --}}
+    {{!-- Insanity and Corruption: 10 of either in a single Round kills the Comrade. --}}
     {{#if comradePanel.canSufferMental}}
     <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-1.5 tw-px-2 tw-text-[0.75rem]" data-field="mental">
         <label class="tw-flex tw-items-center tw-gap-1 tw-text-[color:var(--wh40k-text-muted)]">

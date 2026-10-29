@@ -735,7 +735,7 @@
             "Description": "Description",
             "NotesPlaceholder": "Additional notes...",
             "Source": "Source",
-            "SourcePlaceholder": "Rogue Trader Core Rulebook, pg. 123"
+            "SourcePlaceholder": "Book, page"
         },
         "Roll": {
             "RollResult": "Roll: {total}",
@@ -968,7 +968,7 @@
             "Standard": "Standard (no modifier)",
             "Sheer": "Sheer (Hard, -20)",
             "Easy": "Easy / assisted (+10)",
-            "SheerTooltip": "Sheer cliffs, icy crevasses, smooth building walls, hive buttresses. Errata p. 113."
+            "SheerTooltip": "Sheer cliffs, icy crevasses, smooth building walls, hive buttresses (errata)."
         },
         "Possession": {
             "Title": "Possession",
@@ -1578,12 +1578,12 @@
         },
         "DamageDieReplacement": {
             "ButtonLabel": "Replace die with DoS",
-            "ButtonTooltip": "DH2 core rules (p. 247): replace one damage die with the attack's Degrees of Success ({dos}).",
+            "ButtonTooltip": "DH2 core rules: replace one damage die with the attack's Degrees of Success ({dos}).",
             "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}."
         },
         "AssassinsStrike": {
             "ButtonLabel": "Assassin's Strike: Acrobatics + Half Move",
-            "ButtonTooltip": "DH2 errata (L75): after a successful melee attack, attempt a Challenging (+0) Acrobatics Test. On success, move up to a Half Move distance as a Free Action.",
+            "ButtonTooltip": "DH2 errata: after a successful melee attack, attempt a Challenging (+0) Acrobatics Test. On success, move up to a Half Move distance as a Free Action.",
             "TestTitle": "Assassin's Strike — Acrobatics Test",
             "SuccessChatLine": "<strong>Assassin's Strike</strong>: on a successful Acrobatics test, move up to a Half Move (Agility bonus metres) as a Free Action.",
             "FailureChatLine": "<strong>Assassin's Strike</strong>: the Acrobatics test failed — no Free Action movement is granted."
@@ -2352,7 +2352,7 @@
             "Manacles": {
                 "Name": "Manacled",
                 "Description": "Bound in manacles — a -40 penalty applies to all Ballistic and Weapon Skill tests until the restraints are removed.",
-                "Source": "Manacles (errata p. 176)",
+                "Source": "Manacles (errata)",
                 "AppliedNotification": "Manacled condition applied — -40 BS/WS until removed.",
                 "LiftedNotification": "Manacled condition lifted.",
                 "AppliedFromEquip": "Manacles equipped — -40 BS/WS applied.",
@@ -3025,7 +3025,7 @@
         },
         "TwoWeaponWielder": {
             "ChatTitle": "Two-Weapon Wielder — Refocus",
-            "RefocusSummary": "Errata p. 132: after a Half-Action attack with one weapon, make a single additional same-mode Half-Action attack with the other weapon as a Free Action.",
+            "RefocusSummary": "Errata: after a Half-Action attack with one weapon, make a single additional same-mode Half-Action attack with the other weapon as a Free Action.",
             "MainHandLabel": "Main hand (Half Action)",
             "OffHandLabel": "Off hand (Free Action)",
             "FreeActionLabel": "Free Action follow-up",
@@ -3035,7 +3035,7 @@
             "DialogTitle": "Medicae Mechadendrite",
             "DialogIntro": "As a Half Action, staple the wound shut to stop Blood Loss.",
             "OperatorLabel": "Operator",
-            "HalfActionNote": "Staunching Blood Loss with the flesh staplers costs a Half Action (errata p. 183).",
+            "HalfActionNote": "Staunching Blood Loss with the flesh staplers costs a Half Action (errata).",
             "BonusNote": "Includes the Medicae Mechadendrite bonus",
             "NotEligible": "This actor has no Medicae Mechadendrite cybernetic, or this game system does not use it.",
             "StaunchButton": "Staunch Blood Loss (Half)",
@@ -3115,9 +3115,9 @@
                 "NoHostTargeted": "No possessed individual targeted — target their token to roll their survival test automatically.",
                 "DaemonWillpowerBonus": "Daemon's Willpower bonus",
                 "PossessedCorruptionBonus": "Possessed Corruption bonus",
-                "ModifiersLegend": "Exorcism modifiers (Table 2–21)",
+                "ModifiersLegend": "Exorcism modifiers",
                 "Perform": "Perform Exorcism",
-                "PerformTitle": "Drive a possessing Daemon out of its host (Enemies Beyond p. 71). Target the possessed individual's token first.",
+                "PerformTitle": "Drive a possessing Daemon out of its host. Target the possessed individual's token first.",
                 "ChatTitle": "Exorcism",
                 "ChatSubject": "{exorcist} attempts to cast the Daemon out of {host}.",
                 "ChatSubjectNoHost": "{exorcist} attempts an exorcism.",
@@ -3127,7 +3127,7 @@
                 "HostDies": "the host dies (unless Fate Threshold is burned).",
                 "HostTestManual": "The host survives only on a Challenging (+0) Toughness test; burning Fate can save them.",
                 "TrackCleared": "The host's possession track is cleared.",
-                "SurvivingPossession": "Surviving Possession consequences apply (Enemies Beyond p. 71).",
+                "SurvivingPossession": "Surviving Possession consequences apply.",
                 "Collapsed": "The exorcist loses consciousness — the exorcism fails.",
                 "CorruptionGained": "The exorcist gains {value} Corruption."
             },
@@ -3136,14 +3136,14 @@
                 "DialogIntro": "A Hellish (−60) Forbidden Lore (Daemonology) test performs the ritual. If the Daemon appears, an opposed Daemonic Mastery test (Very Hard) decides whether it is bound — for one hour per degree of success.",
                 "DaemonTargeted": "Daemon: {name}",
                 "NoDaemonTargeted": "No Daemon targeted — enter its Willpower below.",
-                "FactorsLegend": "Printed factors (Enemies Beyond p. 59)",
+                "FactorsLegend": "Printed factors",
                 "TrueNameBoth": "+30 / +30",
                 "PatronMastery": "+10 Mastery",
                 "DaemonWillpower": "Daemon's Willpower",
                 "LoreCircumstance": "Ritual circumstance (components, assistants, powers…)",
                 "MasteryCircumstance": "Mastery circumstance (Incursion, Baneful Presence…)",
                 "Perform": "Summon Daemon",
-                "PerformTitle": "Perform a summoning ritual (Enemies Beyond p. 59). Target the Daemon's token to pre-fill its Willpower.",
+                "PerformTitle": "Perform a summoning ritual. Target the Daemon's token to pre-fill its Willpower.",
                 "ChatTitle": "Daemonic Summoning",
                 "ChatSubject": "{summoner} calls {daemon} forth from the Warp.",
                 "ChatSubjectNoDaemon": "{summoner} performs a summoning ritual.",
@@ -3157,7 +3157,7 @@
                 "Free": "The summoner fails to master the Daemon — it is free to act as it wills.",
                 "Stalemate": "Both fail the Mastery test — the Daemon is not bound (the GM may call for a re-roll).",
                 "RitualFailed": "The ritual fails — no Daemon answers.",
-                "CorruptionNote": "Everyone who takes part in or witnesses the ritual gains Corruption (DH2 Core p. 289)."
+                "CorruptionNote": "Everyone who takes part in or witnesses the ritual gains Corruption."
             }
         },
         "Cybernetics": {
@@ -3356,7 +3356,7 @@
             "ChatTitle": "Right Stuff",
             "SpendButton": "Spend Fate (Right Stuff)",
             "Cancel": "Cancel",
-            "NotAce": "Only an Ace may invoke Right Stuff (Enemies Without, p. 39).",
+            "NotAce": "Only an Ace may invoke Right Stuff.",
             "NoFate": "No Fate points remaining to spend.",
             "Skill": {
                 "operate": "Operate",
@@ -3453,7 +3453,7 @@
                 "DialogRitual": "Ritual",
                 "DialogBaseTarget": "Base Target (d100)",
                 "DialogAddModifier": "Add Modifier",
-                "DialogModifiersHeader": "Modifiers (Table 6-7)",
+                "DialogModifiersHeader": "Ritual Modifiers",
                 "DialogModifierKind": "Kind",
                 "DialogModifierValue": "Value",
                 "DialogModifierDescription": "Description (optional)",
@@ -3465,7 +3465,7 @@
                 "ChatRoll": "d100 Roll",
                 "ChatDegreesOfSuccess": "Degrees of Success",
                 "ChatDegreesOfFailure": "Degrees of Failure",
-                "ChatNoModifiers": "No Table 6-7 modifiers applied.",
+                "ChatNoModifiers": "No ritual modifiers applied.",
                 "Template": {
                     "Description": "Description",
                     "Requirements": "Requirements",
@@ -4414,7 +4414,7 @@
             "PeerDiscount": "Caller has Peer ({peer}): cost −{amount}",
             "PeerShort": "Peer ({peer})",
             "GmAdjustment": "GM cost adjustment",
-            "GmAdjustmentHint": "Raise the cost for a vague rationale, a long stay or a hard-to-reach RC; lower it at your discretion (core p. 295).",
+            "GmAdjustmentHint": "Raise the cost for a vague rationale, a long stay or a hard-to-reach RC; lower it at your discretion.",
             "FinalCost": "Final Influence Cost",
             "CallerPays": "Caller spends",
             "SubtletyLoss": "Warband Subtlety",
@@ -4742,7 +4742,7 @@
             },
             "ExtendedAction": {
                 "Header": "Extended Actions",
-                "Description": "Per the Rogue Trader Stars of Inequity and Battlefleet Koronus rules, the bridge crew may dispatch one Extended Action per turn. Click an action below to post its rules card to chat.",
+                "Description": "Per the Rogue Trader starship rules, the bridge crew may dispatch one Extended Action per turn. Click an action below to post its rules card to chat.",
                 "Empty": "This ship has no Extended Actions. Its line's compendiums list none, and none are on the ship.",
                 "NotFound": "That Extended Action is no longer in the compendiums or on this ship.",
                 "Dispatch": "Dispatch",
@@ -4874,7 +4874,7 @@
                 "ChatTitle": "Ramming",
                 "Action": "Ram",
                 "ActionHint": "Within one VU, bow facing the enemy, give up the Shooting Action: Hard (−20) Pilot (Space Craft) + Manoeuvrability. Damage ignores void shields.",
-                "Citation": "Rogue Trader Core Rulebook p.215",
+                "Citation": "Rogue Trader core rules",
                 "TestTitle": "Ram — Hard (−20) Pilot (Space Craft) + Manoeuvrability",
                 "MissExplain": "The helmsman misses the ram; no collision occurs and neither hull takes damage.",
                 "DefenderHull": "Hull Integrity damage to {ship} (ignores void shields)",
@@ -4902,7 +4902,7 @@
                 "Unsupported": "Rolling ship actions is a Rogue Trader rule; this ship's game system has none.",
                 "NotRollable": "This action has no automated effect; dispatch its rules card instead.",
                 "NoWeapons": "This ship has no Weapon Component to lock on with.",
-                "Citation": "Rogue Trader Core Rulebook pp.212–218",
+                "Citation": "Rogue Trader core rules",
                 "ChatSubtitle": "Ship Action Test",
                 "TestTitle": "{test} Test",
                 "ActorLegend": "Acting character aboard {ship}",
@@ -4999,7 +4999,7 @@
                 "MoraleCheck": "{loser} tests Morale: rolled {roll} against {morale}.",
                 "FightsOn": "The crew fights on. Both ships test Command again next Strategic Turn.",
                 "Routs": "The crew routs and surrenders to its captors.",
-                "Citation": "Rogue Trader Core Rulebook p.215",
+                "Citation": "Rogue Trader core rules",
                 "Board": "Board",
                 "BoardHint": "Within 1 VU, give up the Shooting Action: Hard (−20) Pilot (Space Craft) + Manoeuvrability to lock the ships together.",
                 "Round": "Boarding Round",
@@ -5031,7 +5031,7 @@
                 "ChatTitle": "Hit and Run",
                 "Action": "Hit and Run",
                 "ActionHint": "Extended Action: raid a ship within 5 VUs by boarding craft — Challenging (+0) Pilot (Space Craft), −10 per Turret Rating point, then opposed Ordinary (+10) Command.",
-                "Citation": "Rogue Trader Core Rulebook p.218",
+                "Citation": "Rogue Trader core rules",
                 "ApproachTitle": "Approach — Challenging (+0) Pilot (Space Craft)",
                 "CommandTitle": "Command — {ship}",
                 "RaidLegend": "Raid leader of {ship}",
@@ -5115,7 +5115,7 @@
                     "shipComponent": "Component",
                     "shipUpgrade": "Upgrade",
                     "shipRole": "Role",
-                    "crippled": "RT Core: Crippled Ships"
+                    "crippled": "RT: Crippled Ships"
                 }
             },
             "Crippled": {
@@ -5124,7 +5124,7 @@
                 "StatusHint": "0 Hull Integrity: −10 Manoeuvrability and Detection, half Speed, weapons at half Strength, and damage past Armour causes a Critical Hit. Lasts until the ship regains 1 Hull Integrity.",
                 "Destroyed": "Destroyed",
                 "DestroyedHint": "A Critical Hit result destroyed this ship.",
-                "FireCritical": "{ship} is Crippled: {damage} damage past its Armour is a Critical Hit on Table 8-12.",
+                "FireCritical": "{ship} is Crippled: {damage} damage past its Armour is a Critical Hit on the starship Critical Hit table.",
                 "Component": {
                     "Manoeuvrability": "Crippled ship (−10 Manoeuvrability)",
                     "Detection": "Crippled ship (−10 Detection)"
@@ -5133,7 +5133,7 @@
             "Critical": {
                 "Header": "Critical Hit",
                 "Roll": "Roll Critical Hit",
-                "RollTooltip": "Roll 1d5 on the Critical Hit chart (RT Core Table 8-12)",
+                "RollTooltip": "Roll 1d5 on the starship Critical Hit chart",
                 "ChatSubtitle": "Ship Critical Hit",
                 "RollLabel": "Rolled {rolled} on 1d5",
                 "CrippledRollLabel": "Crippled: {rolled} damage past Armour",
@@ -5141,7 +5141,7 @@
                 "ResultLabel": "Critical Hit {rolled}",
                 "StatusApplied": "Status Applied",
                 "PersistsUntilRepaired": "Persists until cleared by Emergency Repair or Quick Repair.",
-                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from RT Core Table 8-12 by hand."
+                "TableUnavailable": "Critical Hit roll table unavailable — rolled {rolled} on 1d5. Apply the corresponding effect from the starship Critical Hit table by hand."
             },
             "DamageControl": {
                 "Header": "Damage Control",
@@ -5156,8 +5156,8 @@
                 "ActionHint": "The gunner's Ballistic Skill Test against the target ship. Hits meet its void shields, then its Armour, then its Hull Integrity.",
                 "DialogTitle": "Fire Ship Weapon",
                 "GunneryLegend": "Gunnery: {weapon} ({type})",
-                "Citation": "RT Core, Chapter VIII: Starship Weapons",
-                "DefencesCitation": "RT Core, Chapter VIII: Damage and Defences",
+                "Citation": "RT core rules: Starship Weapons",
+                "DefencesCitation": "RT core rules: Damage and Defences",
                 "Unsupported": "Ship weapon fire follows the Rogue Trader starship rules; this ship's game system has none.",
                 "NoRules": "The core rules give no firing rules for {type}. Resolve this weapon by hand.",
                 "TestTitle": "Gunner's Ballistic Skill Test",
@@ -5823,7 +5823,7 @@
             "SubfactionPlaceholder": "e.g., Cadian 8th",
             "Source": "Source",
             "SourceBook": "Source Book",
-            "SourcePlaceholder": "e.g., Core Rulebook p.123",
+            "SourcePlaceholder": "e.g., Book, page",
             "Tags": "Tags",
             "AddTag": "Add tag",
             "Armour": "Armour"
@@ -6048,7 +6048,7 @@
                 "Facing": "Facing struck",
                 "FacingFromPosition": "From the attacker's position against the vehicle's heading.",
                 "FacingAssumed": "No token positions to read: Front assumed.",
-                "FacingAboveOrBelow": "Attacked from above or below: Rear armour (DH2 Core p. 253).",
+                "FacingAboveOrBelow": "Attacked from above or below: Rear armour.",
                 "Location": "Hit location",
                 "LocationReversed": "Table roll {roll}: the attack roll reversed.",
                 "LocationFresh": "Table roll {roll}: a fresh d100 for a hit after the attack's first.",
@@ -6063,12 +6063,12 @@
                 "ForceFieldNullified": "Nullified",
                 "ForceFieldFailed": "No protection",
                 "ForceFieldOverload": "Its overload follows its craftsmanship, which the trait does not record: the GM decides.",
-                "ForceFieldOverloaded": "Overloaded (01–{max}, {craftsmanship}): it is down until recharged or repaired, a Very Hard (−30) Tech-Use test (DH2 Core p. 169).",
+                "ForceFieldOverloaded": "Overloaded (01–{max}, {craftsmanship}): it is down until recharged or repaired, a Very Hard (−30) Tech-Use test.",
                 "ForceFieldBypassed": "Bypassed",
                 "DamageControlReroll": "Damage Control: re-roll",
                 "DamageControlTitle": "Damage Control",
                 "DamageControlRerolled": "Re-rolled",
-                "DamageControlStands": "The commander forces the Righteous Fury roll to be re-rolled; the second result stands even if it is worse (OW Core p. 213, DH2 Core p. 188).",
+                "DamageControlStands": "The commander forces the Righteous Fury roll to be re-rolled; the second result stands even if it is worse (OW and DH2 core rules).",
                 "DamageControlUsed": "That Righteous Fury roll has already been re-rolled.",
                 "DamageControlGone": "The vehicle that roll struck is gone.",
                 "ForceFieldBypassedBy": "It does not stop a weapon with the {quality} quality: no roll.",
@@ -6453,7 +6453,7 @@
                 "UseOne": "Use One",
                 "MechanicalEffect": "Mechanical Effect",
                 "NotesPlaceholder": "Special rules, GM notes, etc.",
-                "SourcePlaceholder": "e.g., Rogue Trader Core Rulebook pg. 123"
+                "SourcePlaceholder": "e.g., Book, page"
             },
             "NamePlaceholder": {
                 "ForceField": "Force Field Name",
@@ -6602,7 +6602,7 @@
                 "EffectTextHint": "Brief mechanical summary or flavour text",
                 "DescriptionHint": "Full lore and background information",
                 "NotesPlaceholder": "GM notes, balance considerations, etc.",
-                "SourcePlaceholder": "Core Rulebook, pg. XX"
+                "SourcePlaceholder": "Book, page"
             },
             "ForceField": {
                 "StatusTooltip": "Status",
@@ -6643,7 +6643,7 @@
                 "NoModifiers": "No modifiers defined",
                 "UseActiveEffects": "Use Active Effects tab to add stat bonuses",
                 "NotesPlaceholder": "GM notes, clarifications, house rules, etc.",
-                "SourcePlaceholder": "Core Rulebook, pg. XX"
+                "SourcePlaceholder": "Book, page"
             },
             "Common": {
                 "GmNotes": "GM Notes"
@@ -6725,7 +6725,7 @@
                 "DefaultModifier": "Default Modifier",
                 "UntrainedPenalty": "Untrained Penalty",
                 "CanUseUntrainedLabel": "Can Use Untrained",
-                "SourcePlaceholder": "Core Rulebook"
+                "SourcePlaceholder": "Book"
             },
             "PsychicPower": {
                 "PowerLabel": "{discipline} Power",
@@ -6806,7 +6806,7 @@
                 "NoPropertiesRemoved": "No properties removed",
                 "SelectProperty": "-- Select Property --",
                 "NoArmourTypes": "No armour types configured",
-                "SourcePlaceholder": "Core Rulebook, p. 123"
+                "SourcePlaceholder": "Book, page"
             },
             "AttackSpecial": {
                 "HasLevel": "Has Level",
@@ -7218,7 +7218,7 @@
             "DecrementButton": "Undo one interaction",
             "Empty": "No player characters in the world yet.",
             "AtCapBadge": "At Cap",
-            "CapTooltip": "Per DH2 errata p.125, a PC can shift this NPC's disposition through social interaction only a number of times equal to their Fellowship bonus. Above the cap, further interactions stop yielding disposition gain."
+            "CapTooltip": "Per the DH2 errata, a PC can shift this NPC's disposition through social interaction only a number of times equal to their Fellowship bonus. Above the cap, further interactions stop yielding disposition gain."
         },
         "Description": "Description",
         "Source": {
@@ -8552,7 +8552,7 @@
                 },
                 "Mirror": {
                     "FearPasses": "Passes with you.",
-                    "FearFails": "Fails with you: it flees (81–100 on Table 9–5) until a recovery Order or the end of combat.",
+                    "FearFails": "Fails with you: it flees (81–100 on the Fear table) until a recovery Order or the end of combat.",
                     "FearImmune": "Immune to Fear: it does not fail, and may act.",
                     "PinningPasses": "Passes with you.",
                     "PinningFails": "Fails with you: it moves to cover and takes no Actions until a recovery Order.",
@@ -8643,9 +8643,9 @@
                     "DoS": "Degrees of Success",
                     "DoF": "Degrees of Failure",
                     "Automatic": "Automatic Success",
-                    "AutomaticNote": "Table 6-2 rates this item Automatic for the troops deployed: it is obtained without a roll.",
+                    "AutomaticNote": "The Availability by Front Conditions table rates this item Automatic for the troops deployed: it is obtained without a roll.",
                     "Discretion": "GM's Discretion",
-                    "DiscretionNote": "Table 6-2 leaves this item to the GM's discretion for the troops deployed: the GM rules on the request instead of a roll.",
+                    "DiscretionNote": "The Availability by Front Conditions table leaves this item to the GM's discretion for the troops deployed: the GM rules on the request instead of a roll.",
                     "Sum": "Sum",
                     "Clamped": "The sum is {sum}, below 0, so the target is 0."
                 },
@@ -8661,8 +8661,8 @@
                     "Craftsmanship": "Craftsmanship"
                 },
                 "Source": {
-                    "FrontConditions": "Table 6-2: Availability by Front Conditions",
-                    "CraftsmanshipTable": "Table 6-6: Craftsmanship and Logistics",
+                    "FrontConditions": "Availability by Front Conditions",
+                    "CraftsmanshipTable": "Craftsmanship and Logistics",
                     "StandardKit": "Standard kit of a regiment in the warzone",
                     "Rating": "Squad Logistics Rating",
                     "Row": "{table}: {row}",
@@ -8707,7 +8707,7 @@
                 "Roll": {
                     "RandomIssue": "Random Issue Gear",
                     "Result": "Result",
-                    "BonusToggle": "Also roll Random Issue Gear (Table 6-5)"
+                    "BonusToggle": "Also roll Random Issue Gear"
                 },
                 "Modifier": {
                     "Title": "Mission Gear Modifiers",

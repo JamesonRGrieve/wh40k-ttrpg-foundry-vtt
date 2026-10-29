@@ -188,7 +188,7 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         recordCoverage('dialog.render', 'LogisticsTestDialog.savedFront');
     });
 
-    test('OW armoury card: priced through the Logistics Test, Table 6-2 rows, no rating loss (#496)', async ({ page }) => {
+    test('OW armoury card: priced through the Logistics Test, front-conditions rows, no rating loss (#496)', async ({ page }) => {
         await joinOrSkip(page);
         // Rating 0 and a Rare item (Company −30, Violent Impasse −10) floor the target at 0. The d100 is
         // pinned to 50: left to chance, an 01 succeeds even against 0, and the denied card turned granted.
@@ -201,7 +201,7 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         expect(card.error, card.error ?? '').toBeNull();
         expect(card.html).toContain('data-requisition-outcome="denied"');
         expect(card.html).toContain('War Conditions');
-        expect(card.html).toContain('Table 6-2');
+        expect(card.html).toContain('Availability by Front Conditions');
         expect(card.html).not.toContain('falls from');
         // The rows sum below 0, so the card says the target was floored.
         expect(card.html).toContain('data-breakdown-row="floor"');

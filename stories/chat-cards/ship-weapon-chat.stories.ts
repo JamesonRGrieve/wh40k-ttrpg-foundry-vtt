@@ -176,7 +176,7 @@ export const CrippledTargetCritical: Story = {
     render: (_args, { loaded }) => (loaded as { el: HTMLElement }).el,
     play: async ({ canvasElement }) => {
         const lines = [...canvasElement.querySelectorAll('[data-wh40k-hook="ship-weapon-crippled-critical"]')].map((el) => el.textContent.trim());
-        await expect(lines).toEqual([`${DEFENDER_SHIP.name} is Crippled: 1 damage past its Armour is a Critical Hit on Table 8-12.`]);
+        await expect(lines).toEqual([`${DEFENDER_SHIP.name} is Crippled: 1 damage past its Armour is a Critical Hit on the starship Critical Hit table.`]);
     },
 };
 

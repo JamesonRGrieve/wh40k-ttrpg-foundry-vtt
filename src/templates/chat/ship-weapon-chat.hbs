@@ -1,5 +1,5 @@
 {{!--
-    Rogue Trader ship weapon card (#184 — RT Core 1.4 errata, Chapter VIII).
+    Rogue Trader ship weapon card (#184 — RT 1.4 errata, starship combat rules).
 
     Always shows the Weapon Component's firing profile. When a shot was fired
     at a target ship (the voidcraft sheet's Fire dialog), it also prints the
@@ -8,7 +8,7 @@
       • the hits — 1 + degrees (lance: per 3), capped at Strength, minus the target's void shields;
       • the Hull Integrity damage — each hit's roll, minus Armour (a lance ignores it), plus a critical's automatic point;
       • any Critical Hit roll, and the target's vitals before and after.
-    A combined macrobattery salvo (RT Core p.221) prints each battery's own test
+    A combined macrobattery salvo prints each battery's own test
     and hits, then the pooled hits with the shields' discards by battery, one
     damage total against Armour, and at most one Critical Hit.
 
@@ -93,7 +93,7 @@
             </p>
         {{/if}}
         {{#each crippledCriticals as |line|}}
-            {{!-- A Crippled target's Critical Hit from damage past its Armour (RT Core "Crippled Ships", #187). --}}
+            {{!-- A Crippled target's Critical Hit from damage past its Armour (RT "Crippled Ships" rule, #187). --}}
             <p data-wh40k-hook="ship-weapon-crippled-critical" class="tw-m-0 tw-mb-2 tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-[rgba(251,191,36,0.6)] tw-bg-[rgba(120,53,15,0.4)] tw-text-[0.9rem] tw-font-semibold tw-text-amber-100">
                 <i class="fas fa-triangle-exclamation" aria-hidden="true"></i> {{line}}
             </p>

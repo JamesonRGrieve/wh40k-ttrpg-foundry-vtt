@@ -100,9 +100,9 @@ test.describe.serial('Crippled and destroyed RT ships on the voidcraft sheet (Ti
             // RT_FRIGATE: Speed 7, Manoeuvrability 15, Detection 20 → 4, 5, 10.
             const section = await showTab(page, sheetId, 'components');
             const rows = await buildSummary(page, section);
-            expect(rows['speed']).toEqual({ total: '4', crippled: 'Crippled ship (0 Hull Integrity) (RT Core: Crippled Ships) -3' });
-            expect(rows['manoeuvrability']).toEqual({ total: '5', crippled: 'Crippled ship (0 Hull Integrity) (RT Core: Crippled Ships) -10' });
-            expect(rows['detection']).toEqual({ total: '10', crippled: 'Crippled ship (0 Hull Integrity) (RT Core: Crippled Ships) -10' });
+            expect(rows['speed']).toEqual({ total: '4', crippled: 'Crippled ship (0 Hull Integrity) (RT: Crippled Ships) -3' });
+            expect(rows['manoeuvrability']).toEqual({ total: '5', crippled: 'Crippled ship (0 Hull Integrity) (RT: Crippled Ships) -10' });
+            expect(rows['detection']).toEqual({ total: '10', crippled: 'Crippled ship (0 Hull Integrity) (RT: Crippled Ships) -10' });
             await page.locator(`${section} [data-wh40k-hook="ship-build-summary__row"] summary`).evaluateAll((summaries) => {
                 for (const summary of summaries) (summary.parentElement as HTMLDetailsElement).open = true;
             });
@@ -162,7 +162,7 @@ test.describe.serial('Crippled and destroyed RT ships on the voidcraft sheet (Ti
                 label: 'ship-crippled-target-macro',
             });
             expect(macro.unusedDice).toBe(0);
-            expect(macro.card.text).toContain('Crippled Spec Raider is Crippled: 1 damage past its Armour is a Critical Hit on Table 8-12.');
+            expect(macro.card.text).toContain('Crippled Spec Raider is Crippled: 1 damage past its Armour is a Critical Hit on the starship Critical Hit table.');
             expect(await readShip(page, wreck.id)).toMatchObject({ hull: 0, statuses: 1 });
             expect(await readHullCondition(page, wreck.id)).toEqual({ crippled: true, destroyed: false });
             const holed = (await messagesSince(page, before)).filter((id) => id !== macro.card.id);
@@ -183,7 +183,7 @@ test.describe.serial('Crippled and destroyed RT ships on the voidcraft sheet (Ti
                 label: 'ship-crippled-target-lance',
             });
             expect(lance.unusedDice).toBe(0);
-            expect(lance.card.text).toContain('Crippled Spec Raider is Crippled: 14 damage past its Armour is a Critical Hit on Table 8-12.');
+            expect(lance.card.text).toContain('Crippled Spec Raider is Crippled: 14 damage past its Armour is a Critical Hit on the starship Critical Hit table.');
             const crits = (await messagesSince(page, afterMacro)).filter((id) => id !== lance.card.id);
             expect(crits).toHaveLength(2);
             const texts = await Promise.all(crits.map(async (id) => (await readCard(page, id)).text));

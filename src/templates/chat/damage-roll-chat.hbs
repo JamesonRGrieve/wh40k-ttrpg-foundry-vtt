@@ -9,7 +9,7 @@
                 <div class="tw-px-3 tw-py-2 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-l-2 tw-border-[var(--wh40k-card-gold)] tw-rounded-[0_4px_4px_0] tw-text-[0.85rem] tw-leading-[1.5]">{{{psychicEffect}}}</div>
             {{/if}}
 
-            {{!-- A hit that struck the target's Comrade instead (Only War, #152; OW Core p. 271):
+            {{!-- A hit that struck the target's Comrade instead (Only War, #152):
                   doubles on the hit roll while the Comrade is in Cohesion. --}}
             {{#if comradeHit}}
                 <div class="tw-flex tw-items-center tw-gap-2 tw-my-2 tw-px-3 tw-py-2 tw-rounded tw-border-l-[3px] tw-border-crimson tw-bg-[var(--wh40k-panel-bg-translucent)] tw-text-[0.85rem]" data-damage-comrade-hit>
@@ -131,7 +131,7 @@
                         {{/unless}}
                     {{/each}}
 
-                    {{! Replace Damage Die With DoS (#129 — DH2 core L10398-10414) }}
+                    {{! Replace Damage Die With DoS (#129 — DH2) }}
                     {{#if @root.canReplaceDie}}
                         {{#if (gt hit.dos 0)}}
                             <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">

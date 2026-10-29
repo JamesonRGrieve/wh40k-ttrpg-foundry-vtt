@@ -148,7 +148,7 @@ export const CrippledShip: Story = {
         ]);
         const crippled = [...canvasElement.querySelectorAll<HTMLElement>('[data-source-type="crippled"]')];
         await expect(crippled).toHaveLength(3);
-        await expect(crippled[0]?.textContent.replace(/\s+/gu, ' ').trim()).toBe('Crippled ship (0 Hull Integrity) (RT Core: Crippled Ships) -4');
+        await expect(crippled[0]?.textContent.replace(/\s+/gu, ' ').trim()).toBe('Crippled ship (0 Hull Integrity) (RT: Crippled Ships) -4');
     },
 };
 
