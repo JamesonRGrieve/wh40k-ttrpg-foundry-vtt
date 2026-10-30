@@ -6,7 +6,7 @@
  * a chosen divination's bonus from `system.modifiers.characteristics` (flat
  * characteristic deltas) and `system.grants` (talent / skill / fate-threshold
  * grants). This reads the pack's `_source` JSON straight from disk (no live
- * Foundry) and asserts every Table-2-9 divination is present, shaped as a
+ * Foundry) and asserts every printed divination is present, shaped as a
  * `dh2` divination origin-path doc, and that the mechanical effects are encoded
  * where the applier looks — so a content regression fails loudly here.
  */
@@ -14,10 +14,22 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
+import { type DeclaredPack, readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
+import { lineBookPacks } from '../src/module/utils/line-packs.ts';
 
-const PACK_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-origins-divinations/_source');
+const ROOT = resolve(__dirname, '..');
+
+/** Every DH2 book pack of divinations, selected by its manifest flags. */
+function divinationPacks(): DeclaredPack[] {
+    const declared = readDeclaredPacks(ROOT).packs.map((pack) => ({ metadata: pack }));
+    return lineBookPacks(declared, 'dh2', 'origins-divinations').map((pack) => pack.metadata);
+}
+
+/** A declared pack's `_source` directory in the private content repo. */
+function sourceDir(pack: DeclaredPack): string {
+    return resolve(ROOT, 'src/packs-private', pack.path.replace(/^packs\//, ''), '_source');
+}
 
 interface DivinationDoc {
     name: string;
@@ -33,12 +45,15 @@ interface DivinationDoc {
 }
 
 function readDivinations(): DivinationDoc[] {
-    return (
-        readdirSync(PACK_DIR)
-            .filter((f) => f.endsWith('.json'))
-            // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); narrowed to the DivinationDoc shape the assertions below validate
-            .map((f) => JSON.parse(readFileSync(resolve(PACK_DIR, f), 'utf8')) as DivinationDoc)
-    );
+    return divinationPacks().flatMap((pack) => {
+        const dir = sourceDir(pack);
+        return (
+            readdirSync(dir)
+                .filter((f) => f.endsWith('.json'))
+                // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); narrowed to the DivinationDoc shape the assertions below validate
+                .map((f) => JSON.parse(readFileSync(resolve(dir, f), 'utf8')) as DivinationDoc)
+        );
+    });
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Divination origin pack content (#316)', () => {
@@ -51,7 +66,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Divination origin pack content (#316)
         byName = new Map(docs.map((d) => [d.name, d]));
     });
 
-    it('ships all 25 Table-2-9 divinations as dh2 origin-path docs', () => {
+    it('ships all 25 printed divinations as dh2 origin-path docs', () => {
         expect(docs).toHaveLength(25);
         for (const d of docs) {
             expect(d.type).toBe('originPath');
@@ -77,7 +92,11 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Divination origin pack content (#316)
     });
 
     it('is registered as a pack (pack entry + folder grouping)', () => {
-        const manifest = JSON.stringify(readDeclaredPacks(resolve(__dirname, '..')));
-        expect((manifest.match(/dh2-core-origins-divinations/g) ?? []).length).toBeGreaterThanOrEqual(2);
+        const manifest = JSON.stringify(readDeclaredPacks(ROOT));
+        const packs = divinationPacks();
+        expect(packs.length).toBeGreaterThan(0);
+        for (const pack of packs) {
+            expect(manifest.split(`"${pack.name}"`).length - 1).toBeGreaterThanOrEqual(2);
+        }
     });
 });

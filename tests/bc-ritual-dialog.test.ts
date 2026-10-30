@@ -21,7 +21,7 @@ initializeStoryHandlebars();
 const label = (key: string): string => `L:${key.split('.').pop() ?? key}`;
 
 describe('buildRitualDialogRows', () => {
-    it('pre-allocates the four Table 6-7 rows, seeding Daemonic Mastery from the actor', () => {
+    it('pre-allocates the four ritual-modifier rows, seeding Daemonic Mastery from the actor', () => {
         const rows = buildRitualDialogRows(3, label);
         expect(rows.map((row) => row.kinds.find((k) => k.selected)?.value)).toEqual(['cult-affiliation', 'sacrifice', 'daemonic-mastery', 'gm-other']);
         expect(rows.map((row) => row.value)).toEqual([0, 0, 3, 0]);

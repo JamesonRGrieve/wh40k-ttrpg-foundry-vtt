@@ -13,7 +13,7 @@
  * no armour on any facing and no structural integrity was never sourced from a
  * stat block. It found seven RT "vehicles" that turned out to be Tau
  * battlesuits — printed as worn armour, and already correctly authored as
- * `armour` items in `rt-tau-items-armour`.
+ * RT `armour` items.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -54,7 +54,7 @@ function craft(system: PackSystem = {}): PackDocument {
             description: { dh2: { value: '' } },
             // No `notes` — that field exists only on VoidcraftData, which is
             // itself worth knowing: the validator caught its absence here.
-            source: { dh2: { provenance: 'raw', book: 'DH2: Core Rulebook', page: '1' } },
+            source: { dh2: { provenance: 'raw', book: 'DH2: Sample Sourcebook', page: '1' } },
             ...system,
         },
     };

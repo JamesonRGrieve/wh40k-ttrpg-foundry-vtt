@@ -1,5 +1,5 @@
 /**
- * Sanctic Purity (#131, DH2 Enemies Beyond): a psyker holding the talent who
+ * Sanctic Purity (#131, a DH2 supplement talent): a psyker holding the talent who
  * triggers Psychic Phenomena while manifesting a Sanctic Daemonology power may
  * spend a Fate point to negate it entirely. `ActionData.checkForPerils` offers
  * the spend; accepting it spends the Fate, posts the "Phenomena Negated" card,

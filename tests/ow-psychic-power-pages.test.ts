@@ -1,14 +1,13 @@
 /**
- * Guard: every Only War psychic power cites a page in OW Core's psychic powers
- * chapter (content#39).
+ * Guard: every Only War psychic power cites a page in the OW core rules' psychic
+ * powers chapter (content#39).
  *
- * Endurance cited OW Core p.116, which is the Athletics skill, and seventeen
- * other powers cited p.199, which is in the armoury chapter. Chapter VII,
- * "Psychic Powers", runs from its opener on printed p.221 to Hallucination on
- * p.238; Chapter VIII, "Combat", opens on p.239. The PDF index is the printed
- * page + 1, which the page footers confirm. The powers themselves sit on
- * pp.230–238: Biomancy 230–231, Divination 231–232, Pyromancy 233–234,
- * Telekinesis 234–236, Telepathy 237–238.
+ * Endurance cited the page of the Athletics skill, and seventeen other powers
+ * cited a page in the armoury chapter. The page constants below are the printed
+ * span of the psychic powers chapter and the page each corrected power starts on.
+ *
+ * The OW core book is not named here: it is the book most of the OW branches'
+ * raw psychic-power citations name.
  *
  * The OW branch of a power can live on a canonical in another line's pack (the
  * DH2 core powers carry `source.ow`, and the OW pack stubs them), so every
@@ -17,15 +16,12 @@
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = resolve(__dirname, '../src/packs-private');
 
-/** The book string OW Core's raw citations carry. */
-const OW_CORE = 'OW: Core Rulebook';
-
-/** OW Core Chapter VII, Psychic Powers: printed pages, inclusive. */
+/** The OW core rules' psychic powers chapter: printed pages, inclusive. */
 const PSYCHIC_CHAPTER = { first: 221, last: 238 } as const;
 
 interface OwSource {
@@ -52,16 +48,23 @@ function sourceFiles(dir: string): string[] {
     return files;
 }
 
-/** Every psychic power with a raw OW Core citation: its file, name and cited page. */
+/**
+ * Every psychic power with a raw citation of the OW core book: its file, name and
+ * cited page. The core book is the one most raw OW psychic-power citations name.
+ */
 function owCorePowers(): Array<{ file: string; name: string; page: string }> {
-    const powers: Array<{ file: string; name: string; page: string }> = [];
+    const byBook = new Map<string, Array<{ file: string; name: string; page: string }>>();
     for (const path of sourceFiles(ROOT)) {
         const doc = JSON.parse(readFileSync(path, 'utf8')) as PackDoc;
         const ow = doc.system?.source?.ow;
-        if (doc.reference !== undefined || doc.type !== 'psychicPower' || ow?.provenance !== 'raw' || ow.book !== OW_CORE) continue;
+        if (doc.reference !== undefined || doc.type !== 'psychicPower' || ow?.provenance !== 'raw' || ow.book === undefined) continue;
+        const powers = byBook.get(ow.book) ?? [];
         powers.push({ file: relative(ROOT, path), name: doc.name ?? '', page: ow.page ?? '' });
+        byBook.set(ow.book, powers);
     }
-    return powers;
+    let core: Array<{ file: string; name: string; page: string }> = [];
+    for (const powers of byBook.values()) if (powers.length > core.length) core = powers;
+    return core;
 }
 
 /** Whether a cited page is a whole number inside the chapter. */
@@ -70,14 +73,18 @@ function inChapter(page: string): boolean {
     return /^\d+$/.test(page) && n >= PSYCHIC_CHAPTER.first && n <= PSYCHIC_CHAPTER.last;
 }
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('Only War psychic powers cite OW Core’s psychic powers chapter (content#39)', () => {
-    const powers = owCorePowers();
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Only War psychic powers cite the OW core psychic powers chapter (content#39)', () => {
+    // Read in beforeAll: a skipped describe's body still runs to collect its tests.
+    let powers: Array<{ file: string; name: string; page: string }> = [];
+    beforeAll(() => {
+        powers = owCorePowers();
+    });
 
-    it('finds the OW Core powers, so the guard is not vacuous', () => {
+    it('finds the OW core powers, so the guard is not vacuous', () => {
         expect(powers.length).toBeGreaterThanOrEqual(30);
     });
 
-    it(`every OW Core psychic power cites a page in pp.${PSYCHIC_CHAPTER.first}–${PSYCHIC_CHAPTER.last}`, () => {
+    it(`every OW core psychic power cites a page in pp.${PSYCHIC_CHAPTER.first}–${PSYCHIC_CHAPTER.last}`, () => {
         const offenders = powers.filter((power) => !inChapter(power.page)).map((power) => `${power.name} (${power.file}): p.${power.page}`);
         expect(offenders).toEqual([]);
     });

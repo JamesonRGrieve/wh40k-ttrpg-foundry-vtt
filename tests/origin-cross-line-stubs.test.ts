@@ -19,13 +19,29 @@
  * removed.
  */
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 import { materializeItemVariants } from '../src/module/utils/item-variant-utils.ts';
+import { lineBookPacks } from '../src/module/utils/line-packs.ts';
 
-const ROOT = resolve(__dirname, '../src/packs-private');
+const REPO_ROOT = resolve(__dirname, '..');
+const ROOT = resolve(REPO_ROOT, 'src/packs-private');
+
+/**
+ * Where `file` sits among `line`'s book packs of `category` (selected by manifest
+ * flags), relative to the private content root. Throws when no such pack holds it.
+ */
+function lineBookFile(line: string, category: string, file: string): string {
+    const declared = readDeclaredPacks(REPO_ROOT).packs.map((pack) => ({ metadata: pack }));
+    const found = lineBookPacks(declared, line, category)
+        .map(({ metadata }) => `${metadata.path.replace(/^packs\//, '')}/_source/${file}`)
+        .find((path) => existsSync(resolve(ROOT, path)));
+    if (found === undefined) throw new Error(`${file} is in none of ${line}'s ${category} packs`);
+    return found;
+}
 
 /** The line each group directory holds. */
 const LINE_OF_GROUP: ReadonlyMap<string, string> = new Map([
@@ -177,7 +193,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('origin-path stubs never hand a line anoth
 
     it('BC’s Psyker and Heretek archetypes are BC documents, not stubs', () => {
         const read = ['psyker_c22473691d53c7e1.json', 'heretek_e8311fe5e803731c.json'].map((file) => {
-            const doc = readDoc(resolve(ROOT, 'black-crusade/bc-core-origins-archetypes/_source', file)) as PackDoc & {
+            const doc = readDoc(resolve(ROOT, lineBookFile('bc', 'origins-archetypes', file))) as PackDoc & {
                 system?: { step?: string; gameSystem?: string };
             };
             return { file, isStub: doc.reference !== undefined, step: doc.system?.step, gameSystem: doc.system?.gameSystem };
@@ -204,14 +220,25 @@ function canonicalFor(path: string, line: Parameters<typeof materializeItemVaria
     return materializeItemVariants(doc.system, line) as unknown as ResolvedVoidborn;
 }
 
+/** DH2's Voidborn document, relative to the private content root. */
+const VOIDBORN = (): string => lineBookFile('dh2', 'origins-homeworlds', 'voidborn_DH2VdBrn00000006.json');
+
 /** DH2's Voidborn resolved for `line`. */
 function voidbornFor(line: Parameters<typeof materializeItemVariants>[1]): ResolvedVoidborn {
-    return canonicalFor('dark-heresy-2/dh2-core-origins-homeworlds/_source/voidborn_DH2VdBrn00000006.json', line);
+    return canonicalFor(VOIDBORN(), line);
 }
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('RT’s Void Born is RT Core’s, not DH2’s (content#37)', () => {
-    it('resolves RT Core p.18: −5 Strength, +5 Willpower, 2×TB+1d5 Wounds, the four Void Born talents', () => {
+/** The RT branch's own source entry, as DH2's Voidborn document records it. */
+function voidbornRtSource(): { book: string; page: string } {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); the stored document read for its RT source branch
+    const doc = JSON.parse(readFileSync(resolve(ROOT, VOIDBORN()), 'utf8')) as { system: { source: { rt: { book: string; page: string } } } };
+    return doc.system.source.rt;
+}
+
+describe.skipIf(!HAS_PRIVATE_CONTENT)('RT’s Void Born is RT’s own, not DH2’s (content#37)', () => {
+    it('resolves RT’s printed Void Born: −5 Strength, +5 Willpower, 2×TB+1d5 Wounds, the four Void Born talents', () => {
         const rt = voidbornFor('rt');
+        const rtSource = voidbornRtSource();
         expect({
             characteristics: rt.modifiers.characteristics,
             wounds: rt.grants.woundsFormula,
@@ -223,11 +250,11 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT’s Void Born is RT Core’s, not DH2�
             wounds: '2xTB+1d5',
             fate: '(1-5|=3),(6-10|=4)',
             talents: ['Charmed (Void Born)', 'Ill-Omened (Void Born)', 'Shipwise (Void Born)', 'Void Accustomed (Void Born)'],
-            source: ['RT: Core Rulebook', '18'],
+            source: [rtSource.book, rtSource.page],
         });
     });
 
-    it('gives OW its Shield of Humanity p.31 Void Born, and leaves DH2 and DH1 on DH2’s', () => {
+    it('gives OW its own Void Born, and leaves DH2 and DH1 on DH2’s', () => {
         const lines = (['dh2', 'dh1', 'ow'] as const).map((line) => voidbornFor(line).modifiers.characteristics);
         expect(lines).toEqual([{ intelligence: 5, willpower: 5, strength: -5 }, { intelligence: 5, willpower: 5, strength: -5 }, { willpower: 3 }]);
     });
@@ -246,10 +273,8 @@ function mechanicsOf(path: string, line: LineKey): Mechanics {
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('shared home worlds give OW and RT their own books’ mechanics (content#38)', () => {
-    const DH2 = 'dark-heresy-2/dh2-core-origins-homeworlds/_source/';
-
-    it('Hive World: DH2 Core, OW Core p.60, RT Core p.20', () => {
-        const hive = `${DH2}hive-world_DH2HvWrld0000004.json`;
+    it('Hive World: DH2, OW and RT each on its own line’s printed mechanics', () => {
+        const hive = lineBookFile('dh2', 'origins-homeworlds', 'hive-world_DH2HvWrld0000004.json');
         expect({ dh2: mechanicsOf(hive, 'dh2'), ow: mechanicsOf(hive, 'ow'), rt: mechanicsOf(hive, 'rt') }).toEqual({
             dh2: { characteristics: { agility: 5, perception: 5, willpower: -5 }, wounds: 0, formula: '8+1d5' },
             ow: { characteristics: {}, wounds: -1, formula: '' },

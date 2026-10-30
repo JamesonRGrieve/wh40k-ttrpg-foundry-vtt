@@ -6,7 +6,7 @@
  * available results which can be drawn from this table." notification
  * because the Divination compendium RollTable was missing. The fix in
  * `origin-path-builder.ts::#rollDivination` checks the world tables
- * collection, then the `dh2-core-rolltables` pack, then falls back to
+ * collection, then DH2's book rolltables pack, then falls back to
  * a bare 1d100 with the `WH40K.OriginPath.DivinationTableUnavailable`
  * message. The Divination table JSON itself lives in the `src/packs`
  * submodule and ships 22 weighted result rows covering 1–100.
@@ -39,7 +39,7 @@ test('issue #199: divination section renders a non-empty roll result', async ({ 
     const input = page.locator('input[data-wh40k-hook="csd-divination-input"]');
     await expect(input).toBeVisible();
 
-    // The Rolled story seeds the input with a real DH2 RAW Table 2-9
+    // The Rolled story seeds the input with a real DH2 RAW divination
     // result. The regression we are guarding against is the section
     // showing an empty value or the upstream "no available results"
     // string. Assert non-empty + assert no Foundry warning text leaked.

@@ -2,7 +2,7 @@
  * Tech-Use Repair resolution (#444) and the xenos Forbidden Lore step (#136).
  *
  * `ObjectStateActionData` in repair mode applies the line's printed rule: on
- * DH2 a failure by 4+ degrees destroys the item (core p. 142). A line with no
+ * DH2 a failure by 4+ degrees destroys the item. A line with no
  * printed rule (`rules: null`) never destroys. A repair that spends a xenos
  * lore insight clears it whatever the outcome. `XenosLoreActionData` records
  * the insight only on a success.
@@ -97,7 +97,7 @@ function cardText(action: AnyAction): string {
     return action.effectOutput.map((e) => e.effect).join(' ');
 }
 
-describe('ObjectStateActionData — Tech-Use Repair (#444, DH2 core p. 142)', () => {
+describe('ObjectStateActionData — Tech-Use Repair (#444, DH2)', () => {
     it('clears the broken / jammed state on a success', async () => {
         const item = makeItem();
         const action = new ObjectStateActionData('repair', item, { rules: DH2_ITEM_REPAIR_RULES, consumesXenosInsight: false });
@@ -142,7 +142,7 @@ describe('ObjectStateActionData — Tech-Use Repair (#444, DH2 core p. 142)', ()
     });
 });
 
-describe('XenosLoreActionData — the Hard (−20) Forbidden Lore step (#136, Enemies Without p. 42)', () => {
+describe('XenosLoreActionData — the Hard (−20) Forbidden Lore step (#136)', () => {
     it('records the degrees of success as the roller’s insight on a success', async () => {
         const item = makeItem();
         const action = new XenosLoreActionData(item, 'Actor.acolyte');

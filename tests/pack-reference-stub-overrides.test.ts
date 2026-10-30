@@ -43,7 +43,7 @@ function rulesFor(doc: StubUnderTest): string[] {
 describe('reference-stub override whitelist', () => {
     it('accepts a name/_id/img override over a shared body reference', () => {
         const rules = rulesFor({
-            reference: '../dh2-core-items-weapons/_source/frag-grenade_XXXX.json',
+            reference: '../dh2-weapons/_source/frag-grenade_XXXX.json',
             _id: 'AstFragGrenade001',
             name: 'Astartes Frag Grenade',
             img: 'systems/wh40k-rpg/icons/frag.png',
@@ -109,9 +109,9 @@ describe('reference-stub resolution (#77)', () => {
         expect(isReferenceStub([])).toBe(false);
     });
 
-    it('keeps the body and deep-merges only the RC terms (Enemies Without p. 41)', () => {
+    it('keeps the body and deep-merges only the RC terms', () => {
         const stub = {
-            reference: '../../dh2-without-actors-bestiary/_source/freeboota_6yWxfSDIlZw3nklV.json',
+            reference: '../../dh2-bestiary/_source/freeboota_6yWxfSDIlZw3nklV.json',
             name: 'Ork Freeboota',
             system: {
                 isReinforcement: true,
@@ -135,13 +135,13 @@ describe('reference-stub resolution (#77)', () => {
         expect(freeboota.system.isReinforcement).toBe(false);
     });
 
-    it("appends addItems after the body's own items (Enemies Without p. 41 Weapon Training)", () => {
+    it("appends addItems after the body's own items (an RC's Weapon Training)", () => {
         const body = { ...freeboota, items: [{ _id: 'bodyItem00000001', name: 'Crushing Blow', type: 'talent' }] };
         const training = {
             _id: 'RCwtKroot0000001',
             name: 'Weapon Training',
             type: 'talent',
-            _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-core-items-talents-specializations.Item.DH2aTlnt00000026' },
+            _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000026' },
             system: { specialization: 'Exotic [Kroot Rifle]' },
         };
         const out = applyReferenceOverrides(body, { reference: '../x.json', addItems: [training] });

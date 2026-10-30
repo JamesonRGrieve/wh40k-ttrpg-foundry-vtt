@@ -1,6 +1,6 @@
 /**
  * Regression guard: an RC whose caller terms name a skill (the Thrice-Bound
- * Daemonhost, Enemies Beyond p. 38) renders its NPC sheet and call dialog (#77).
+ * Daemonhost) renders its NPC sheet and call dialog (#77).
  * Both read the required skill's label from `npc.skills`, but the NPC data model
  * has no PC-style `skills` rows, so the sheet threw "Cannot read properties of
  * undefined (reading 'forbiddenLore')" the moment the panel was built for a GM.

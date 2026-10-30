@@ -120,15 +120,15 @@ describe('stats', () => {
 });
 
 describe('inventory references', () => {
-    const src = 'Compendium.wh40k-rpg.dh1-core-items-traits.Item.abcdef0123456789';
+    const src = 'Compendium.wh40k-rpg.dh1-fixture-traits.Item.abcdef0123456789';
     const withRef = (): Json => npc({}, [{ _id: 'w0000000000000001', name: 'Claws', type: 'weapon', _stats: { compendiumSource: src } }]);
 
     it('flags a ref whose id is absent from the target pack', () => {
-        expect(rulesFor(withRef(), { 'dh1-core-items-traits': new Set() })).toContain('inventory-dangling-ref');
+        expect(rulesFor(withRef(), { 'dh1-fixture-traits': new Set() })).toContain('inventory-dangling-ref');
     });
 
     it('resolves a ref present in the index', () => {
-        expect(rulesFor(withRef(), { 'dh1-core-items-traits': new Set(['abcdef0123456789']) })).not.toContain('inventory-dangling-ref');
+        expect(rulesFor(withRef(), { 'dh1-fixture-traits': new Set(['abcdef0123456789']) })).not.toContain('inventory-dangling-ref');
     });
 });
 
@@ -139,10 +139,10 @@ describe('variant exemption', () => {
             _id: 'NamedIndivId0001',
             type: 'dh1-npc',
             img: 'https://example/portrait.webp',
-            system: { variantOf: 'Compendium.wh40k-rpg.dh1-core-actors-bestiary.Actor.baseclass0000001' },
+            system: { variantOf: 'Compendium.wh40k-rpg.dh1-fixture-bestiary.Actor.baseclass0000001' },
             items: [],
         };
-        const rules = rulesFor(variant, { 'dh1-core-actors-bestiary': new Set(['baseclass0000001']) });
+        const rules = rulesFor(variant, { 'dh1-fixture-bestiary': new Set(['baseclass0000001']) });
         for (const hard of ['stats-all-default', 'stats-no-wounds', 'weapons-none', 'skills-prose-not-migrated']) {
             expect(rules).not.toContain(hard);
         }

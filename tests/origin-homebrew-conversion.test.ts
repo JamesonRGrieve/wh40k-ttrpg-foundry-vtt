@@ -17,16 +17,34 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { normalizeOrigin } from '../src/module/applications/character-creation/normalized-origin.ts';
 import { discoverableEntries, discoveredOriginDocument, type DiscoveryIndexEntry } from '../src/module/applications/character-creation/origin-discovery.ts';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 import { materializeItemVariants } from '../src/module/utils/item-variant-utils.ts';
+import { lineBookPacks } from '../src/module/utils/line-packs.ts';
 
-const PACKS = resolve(__dirname, '../src/packs-private');
-const FORTRESS = resolve(PACKS, 'only-war/ow-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
-const SCHOLA = resolve(PACKS, 'only-war/ow-core-origins-homeworlds/_source/schola-progenium_dee620a3c1ed174e.json');
-const OLD_DH2_STUB = resolve(PACKS, 'dark-heresy-2/dh2-core-origins-homeworlds/_source/fortress-world_a51ce4de508a699d.json');
+const ROOT = resolve(__dirname, '..');
+const PACKS = resolve(ROOT, 'src/packs-private');
+const FORTRESS_FILE = 'fortress-world_a51ce4de508a699d.json';
+const SCHOLA_FILE = 'schola-progenium_dee620a3c1ed174e.json';
+
+/** Where `file` sits among `line`'s book packs of homeworlds (selected by manifest flags), or null. */
+function homeworldFile(line: string, file: string): string | null {
+    const declared = readDeclaredPacks(ROOT).packs.map((pack) => ({ metadata: pack }));
+    const paths = lineBookPacks(declared, line, 'origins-homeworlds').map(({ metadata }) =>
+        resolve(PACKS, metadata.path.replace(/^packs\//, ''), '_source', file),
+    );
+    return paths.find((path) => existsSync(path)) ?? null;
+}
+
+/** The OW homeworld document `file`, which must exist. */
+function owHomeworld(file: string): string {
+    const path = homeworldFile('ow', file);
+    if (path === null) throw new Error(`${file} is in none of OW's homeworld packs`);
+    return path;
+}
 
 interface Resolved {
     grants: { aptitudes: string[]; skills: object[] };
@@ -45,6 +63,12 @@ function resolveFor(path: string, line: Parameters<typeof materializeItemVariant
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversion', () => {
+    // Resolved in beforeAll: the describe body runs while collecting even a skipped suite.
+    let FORTRESS = '';
+    beforeAll(() => {
+        FORTRESS = owHomeworld(FORTRESS_FILE);
+    });
+
     it('resolves the DH2 homebrew stats for a DH2 actor', () => {
         const sys = resolveFor(FORTRESS, 'dh2');
         expect({ aptitudes: sys.grants.aptitudes, characteristics: sys.modifiers.characteristics }).toEqual({
@@ -58,7 +82,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversio
         expect({ skills: sys.grants.skills.length, characteristics: sys.modifiers.characteristics }).toEqual({ skills: 4, characteristics: {} });
     });
 
-    it('gives RT its own Into the Storm p.11 stats, never DH2’s homebrew', () => {
+    it('gives RT its own printed stats, never DH2’s homebrew', () => {
         const sys = resolveFor(FORTRESS, 'rt');
         expect({ skills: sys.grants.skills.length, characteristics: sys.modifiers.characteristics }).toEqual({
             skills: 2,
@@ -68,7 +92,10 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversio
 
     it('has no DH2 stub and no DH2 gameSystems membership, so DH2’s compendium browser does not list it', () => {
         const stored = storedEntry(FORTRESS);
-        expect({ stub: existsSync(OLD_DH2_STUB), gameSystems: stored.system['gameSystems'] }).toEqual({ stub: false, gameSystems: ['ow', 'rt'] });
+        expect({ stub: homeworldFile('dh2', FORTRESS_FILE) !== null, gameSystems: stored.system['gameSystems'] }).toEqual({
+            stub: false,
+            gameSystems: ['ow', 'rt'],
+        });
     });
 
     it('is discovered by the DH2 builder from the OW pack, with DH2’s stats and OW and RT as its official lines', () => {
@@ -82,6 +109,11 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Fortress World — DH2 homebrew conversio
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Schola Progenium — a line with no mechanics branch falls back to raw, never homebrew', () => {
+    let SCHOLA = '';
+    beforeAll(() => {
+        SCHOLA = owHomeworld(SCHOLA_FILE);
+    });
+
     it('gives DH1, which has no grants/modifiers branch, OW’s raw stats rather than DH2’s homebrew', () => {
         const dh1 = resolveFor(SCHOLA, 'dh1');
         const dh2 = resolveFor(SCHOLA, 'dh2');

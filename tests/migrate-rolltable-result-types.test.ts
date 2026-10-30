@@ -90,7 +90,7 @@ describe('migrateResult — legacy document / compendium type', () => {
             _id: 'r2',
             type: 2,
             text: 'A curio',
-            documentCollection: 'wh40k-rpg.im-core-items',
+            documentCollection: 'wh40k-rpg.im-items',
             documentId: 'itm456',
             range: [11, 20],
             drawn: false,
@@ -99,14 +99,14 @@ describe('migrateResult — legacy document / compendium type', () => {
         const { result } = migrateResult(input);
 
         expect(result.type).toBe('document');
-        expect(result.documentUuid).toBe('Compendium.wh40k-rpg.im-core-items.itm456');
+        expect(result.documentUuid).toBe('Compendium.wh40k-rpg.im-items.itm456');
         // existing weight is preserved, not overwritten with the default.
         expect(result.weight).toBe(3);
     });
 
     it('buildDocumentUuid distinguishes world documents from compendium packs', () => {
         expect(buildDocumentUuid('Item', 'x1')).toBe('Item.x1');
-        expect(buildDocumentUuid('wh40k-rpg.dh2-core-items', 'x2')).toBe('Compendium.wh40k-rpg.dh2-core-items.x2');
+        expect(buildDocumentUuid('wh40k-rpg.dh2-items', 'x2')).toBe('Compendium.wh40k-rpg.dh2-items.x2');
         expect(buildDocumentUuid('Actor', '')).toBeNull();
         expect(buildDocumentUuid(null, 'x3')).toBeNull();
     });

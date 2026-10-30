@@ -1,5 +1,5 @@
 /**
- * Malefic Daemonology Corruption on manifestation (DH2 Enemies Beyond p. 56):
+ * Malefic Daemonology Corruption on manifestation (a DH2 supplement's rule):
  * a successful Malefic cast costs the psyker Corruption equal to the Psy Rating
  * used. `PsychicActionData` records the cost on the card when the result is
  * final, charges it with the cast's resources, and returns it when the cast is

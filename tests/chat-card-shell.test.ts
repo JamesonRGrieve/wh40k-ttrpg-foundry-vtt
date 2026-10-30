@@ -85,7 +85,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
 
     it('renders footer when footerLabel is provided', () => {
         const tpl = Hbs.compile(
-            '{{#> chat-card-shell cardClass="wh40k-condition-card" title="X" footerLabel="Core Rulebook p.245" footerIcon="fa-book"}}body{{/chat-card-shell}}',
+            '{{#> chat-card-shell cardClass="wh40k-condition-card" title="X" footerLabel="Sample Source" footerIcon="fa-book"}}body{{/chat-card-shell}}',
         );
         const html = tpl({});
         const root = dom(html);
@@ -93,7 +93,7 @@ describe('chat-card-shell partial — basic structural contract', () => {
         expect(footer).not.toBeNull();
         expect(footer?.classList.contains('wh40k-card-footer')).toBe(true);
         expect(footer?.classList.contains('wh40k-card__footer')).toBe(true);
-        expect(footer?.querySelector('.wh40k-source-ref')?.textContent).toContain('Core Rulebook p.245');
+        expect(footer?.querySelector('.wh40k-source-ref')?.textContent).toContain('Sample Source');
         expect(footer?.querySelector('.fa-book')).not.toBeNull();
     });
 
@@ -143,7 +143,7 @@ describe('chat-card-shell — HTML equivalence with legacy templates', () => {
             natureIcon: 'fa-skull',
             stackable: true,
             stacks: 2,
-            sourceReference: 'Core Rulebook p.245',
+            sourceReference: 'Sample Source',
         };
 
         // Build the legacy fixture by hand (exactly what condition-card emitted).

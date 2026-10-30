@@ -7,8 +7,9 @@
  * tests drive the ledger with the documents the packs actually ship.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { resolvePackSourceDocument } from '../scripts/lib/pack-reference.cjs';
 import {
     ORIGIN_RESOURCE_PATHS,
@@ -19,9 +20,17 @@ import {
     reconcileResourceDeltas,
 } from '../src/module/origin-grant-ledger.ts';
 import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../src/module/rules/chaos-backgrounds.ts';
+import { isLineBookPack } from '../src/module/utils/line-packs.ts';
 
 const REPO_ROOT = resolve(__dirname, '..');
 const PACKS_ROOT = resolve(REPO_ROOT, 'src/packs-private');
+
+/** Is `file` a `_source` document of one of `line`'s book packs of `category`, selected by manifest flags? */
+function inLineBookPack(file: string, line: string, category: string): boolean {
+    return readDeclaredPacks(REPO_ROOT).packs.some(
+        (pack) => isLineBookPack(pack, line, category) && dirname(file) === join(PACKS_ROOT, pack.path.replace(/^packs\//, ''), '_source'),
+    );
+}
 
 interface OriginDoc {
     name: string;
@@ -111,7 +120,7 @@ describe.skipIf(ORIGINS.length === 0)('origin resources from the shipped origin 
     });
 
     it('applies the Only War Agri-World +2 Wounds to the maximum', () => {
-        const agri = ORIGINS.find(({ file, doc }) => doc.name === 'Agri-World' && file.includes('ow-hammer-origins-homeworlds'));
+        const agri = ORIGINS.find(({ file, doc }) => doc.name === 'Agri-World' && inLineBookPack(file, 'ow', 'origins-homeworlds'));
         expect(agri).toBeDefined();
         const contribution = originContribution(deltaFromModifiers(agri?.doc.system.modifiers));
         const { updates } = reconcileResourceDeltas(freshCharacter(), contribution, {}, ORIGIN_RESOURCE_PATHS);
@@ -119,7 +128,7 @@ describe.skipIf(ORIGINS.length === 0)('origin resources from the shipped origin 
     });
 
     it("applies the Rogue Trader Fortune motivation's +1 Fate to the Fate total and points", () => {
-        const fortune = ORIGINS.find(({ file, doc }) => doc.name === 'Fortune' && file.includes('rt-core-origins-motivations'));
+        const fortune = ORIGINS.find(({ file, doc }) => doc.name === 'Fortune' && inLineBookPack(file, 'rt', 'origins-motivations'));
         expect(fortune).toBeDefined();
         const { updates } = reconcileResourceDeltas(
             freshCharacter(),
@@ -130,7 +139,7 @@ describe.skipIf(ORIGINS.length === 0)('origin resources from the shipped origin 
         expect(updates).toEqual({ 'system.fate.max': 3, 'system.fate.value': 3 });
     });
 
-    it("applies the DH2 Mutant's 10 starting Corruption and owes no Malignancy Test for it (Within p. 32)", () => {
+    it("applies the DH2 Mutant's 10 starting Corruption and owes no Malignancy Test for it", () => {
         const mutant = byName('Mutant');
         expect(startingMutationFormula(mutant.system)).toBe('5d10');
         const system = { ...freshCharacter(), malignancyTestsPending: 0 };

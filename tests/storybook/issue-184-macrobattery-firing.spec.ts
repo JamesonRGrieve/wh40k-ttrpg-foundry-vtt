@@ -1,6 +1,5 @@
 /**
- * Regression spec for issue #184 — Rogue Trader Battlefleet Koronus ship-weapon
- * firing resolution.
+ * Regression spec for issue #184 — Rogue Trader ship-weapon firing resolution.
  *
  * Renders the `MacrobatteryBookExample` ship weapon fire story (which drives
  * the real fire flow with queued dice and mounts `ship-weapon-chat.hbs` on the

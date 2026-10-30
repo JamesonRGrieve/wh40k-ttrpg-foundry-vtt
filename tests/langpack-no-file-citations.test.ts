@@ -1,6 +1,6 @@
 /**
  * Player-facing strings never cite the extracted-text files the rules were read
- * from ("without.md p. 39"): a player sees a book name or nothing. The freeze
+ * from (a "<file>.md" reference): a player sees no file name. The freeze
  * screenshot audit caught one on the Right Stuff dialog.
  */
 import { readFileSync } from 'node:fs';

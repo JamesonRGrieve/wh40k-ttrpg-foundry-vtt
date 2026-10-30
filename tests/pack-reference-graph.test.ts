@@ -48,59 +48,55 @@ function rulesFor(doc: Json, packIds: Map<string, Set<string>>): Warning[] {
 
 describe('collectUuidRefs', () => {
     it('extracts a structured-field UUID as a "pack id" key', () => {
-        expect(refsOf({ system: { variantOf: uuid('dh2-core-items-weapons', 'Item', 'Bolt3rVanilla01') } })).toEqual([
-            'dh2-core-items-weapons Bolt3rVanilla01',
-        ]);
+        expect(refsOf({ system: { variantOf: uuid('dh2-weapons', 'Item', 'Bolt3rVanilla01') } })).toEqual(['dh2-weapons Bolt3rVanilla01']);
     });
 
     it('extracts inline @UUID[…] and {{Compendium.…}} tokens from rules HTML', () => {
-        const html = `<p>See @UUID[${uuid('dh2-core-items-talents', 'Item', 'DH2aTlnt00000058')}]{Two-Weapon Wielder} and {{${uuid(
-            'dh2-core-items-skills',
+        const html = `<p>See @UUID[${uuid('dh2-talents', 'Item', 'DH2aTlnt00000058')}]{Two-Weapon Wielder} and {{${uuid(
+            'dh2-skills',
             'Item',
             'DH2SkillDodge001',
         )}}}.</p>`;
-        expect(refsOf(html).sort()).toEqual(['dh2-core-items-skills DH2SkillDodge001', 'dh2-core-items-talents DH2aTlnt00000058']);
+        expect(refsOf(html).sort()).toEqual(['dh2-skills DH2SkillDodge001', 'dh2-talents DH2aTlnt00000058']);
     });
 
     it('walks arrays of embedded compendiumSource references', () => {
         const items: Json = [
-            { _stats: { compendiumSource: uuid('dh2-core-items-weapons', 'Item', 'PowerMaul000001A') } },
-            { _stats: { compendiumSource: uuid('dh2-core-items-traits', 'Item', 'NaturalWeap0001B') } },
+            { _stats: { compendiumSource: uuid('dh2-weapons', 'Item', 'PowerMaul000001A') } },
+            { _stats: { compendiumSource: uuid('dh2-traits', 'Item', 'NaturalWeap0001B') } },
         ];
-        expect(refsOf({ items }).sort()).toEqual(['dh2-core-items-traits NaturalWeap0001B', 'dh2-core-items-weapons PowerMaul000001A']);
+        expect(refsOf({ items }).sort()).toEqual(['dh2-traits NaturalWeap0001B', 'dh2-weapons PowerMaul000001A']);
     });
 
     it('ignores a reference-stub file path and non-wh40k compendia', () => {
-        expect(refsOf({ reference: '../dh2-core-items-weapons/_source/frag.json', img: 'Compendium.dnd5e.items.Item.abc123' })).toEqual([]);
+        expect(refsOf({ reference: '../dh2-weapons/_source/frag.json', img: 'Compendium.dnd5e.items.Item.abc123' })).toEqual([]);
     });
 });
 
 describe('validateReferences', () => {
     const packIds = new Map<string, Set<string>>([
-        ['dh2-core-actors-npcs', new Set(['frCOTZ97so99RPXU'])],
-        ['dh2-core-actors-bestiary', new Set(['Grox000000000001'])],
+        ['dh2-npcs', new Set(['frCOTZ97so99RPXU'])],
+        ['dh2-bestiary', new Set(['Grox000000000001'])],
     ]);
 
     it('passes a reference whose target _id exists in the named pack', () => {
-        expect(rulesFor({ actorUuid: uuid('dh2-core-actors-npcs', 'Actor', 'frCOTZ97so99RPXU') }, packIds)).toHaveLength(0);
+        expect(rulesFor({ actorUuid: uuid('dh2-npcs', 'Actor', 'frCOTZ97so99RPXU') }, packIds)).toHaveLength(0);
     });
 
     it('warns reference-unresolved when the id is absent from the named pack (wrong-pack/dangling)', () => {
-        const warnings = rulesFor({ actorUuid: uuid('dh2-core-actors-bestiary', 'Actor', 'frCOTZ97so99RPXU') }, packIds);
+        const warnings = rulesFor({ actorUuid: uuid('dh2-bestiary', 'Actor', 'frCOTZ97so99RPXU') }, packIds);
         expect(warnings.map((w) => w.rule)).toEqual(['reference-unresolved']);
-        expect(warnings[0]?.detail).toContain('dh2-core-actors-bestiary');
+        expect(warnings[0]?.detail).toContain('dh2-bestiary');
     });
 
     it('warns reference-unknown-pack when the named pack has no source documents', () => {
-        expect(rulesFor({ actorUuid: uuid('dh2-ghost-actors-npcs', 'Actor', 'frCOTZ97so99RPXU') }, packIds).map((w) => w.rule)).toEqual([
-            'reference-unknown-pack',
-        ]);
+        expect(rulesFor({ actorUuid: uuid('dh2-ghost-npcs', 'Actor', 'frCOTZ97so99RPXU') }, packIds).map((w) => w.rule)).toEqual(['reference-unknown-pack']);
     });
 
     it('reports each distinct dangling reference once', () => {
         const doc: Json = {
-            a: uuid('dh2-core-actors-bestiary', 'Actor', 'frCOTZ97so99RPXU'),
-            b: uuid('dh2-core-actors-bestiary', 'Actor', 'frCOTZ97so99RPXU'),
+            a: uuid('dh2-bestiary', 'Actor', 'frCOTZ97so99RPXU'),
+            b: uuid('dh2-bestiary', 'Actor', 'frCOTZ97so99RPXU'),
         };
         expect(rulesFor(doc, packIds)).toHaveLength(1);
     });
@@ -110,24 +106,24 @@ describe('buildPackIdIndex', () => {
     it('indexes a full document by its pack (from the path) and _id', () => {
         const parsed: ParsedEntry[] = [
             {
-                file: '/x/dark-heresy-2/dh2-core-items-weapons/_source/bolt.json',
-                rel: 'dark-heresy-2/dh2-core-items-weapons/_source/bolt.json',
+                file: '/x/dark-heresy-2/dh2-weapons/_source/bolt.json',
+                rel: 'dark-heresy-2/dh2-weapons/_source/bolt.json',
                 doc: { _id: 'Bolt3rVanilla01', name: 'Bolter' },
             },
         ];
         const index = validator.buildPackIdIndex(parsed, '/x');
-        expect(index.get('dh2-core-items-weapons')?.has('Bolt3rVanilla01')).toBe(true);
+        expect(index.get('dh2-weapons')?.has('Bolt3rVanilla01')).toBe(true);
     });
 
     it('indexes a reference-override stub under its own _id (rides a shared body with a local identity)', () => {
         const parsed: ParsedEntry[] = [
             {
-                file: '/x/deathwatch/dw-core-items-weapons/_source/astartes-frag.json',
-                rel: 'deathwatch/dw-core-items-weapons/_source/astartes-frag.json',
-                doc: { reference: '../../../dark-heresy-2/dh2-core-items-weapons/_source/frag.json', _id: 'AstFragGrenade01' },
+                file: '/x/deathwatch/dw-weapons/_source/astartes-frag.json',
+                rel: 'deathwatch/dw-weapons/_source/astartes-frag.json',
+                doc: { reference: '../../../dark-heresy-2/dh2-weapons/_source/frag.json', _id: 'AstFragGrenade01' },
             },
         ];
         const index = validator.buildPackIdIndex(parsed, '/x');
-        expect(index.get('dw-core-items-weapons')?.has('AstFragGrenade01')).toBe(true);
+        expect(index.get('dw-weapons')?.has('AstFragGrenade01')).toBe(true);
     });
 });

@@ -1,12 +1,12 @@
 /**
- * Personal weapon-modification resolution (#136, DH2 core p. 162).
+ * Personal weapon-modification resolution (#136, the DH2 core rules).
  *
  * `FitModificationActionData` attaches the modification and uses up the parts
  * on a success. On DH2 a failure loses the parts, and 2+ degrees of failure
  * make the weapon Unreliable (or strip Reliable). A line printing only a plain
  * Trade (Armourer) test keeps the parts on a failure. `RemoveModificationActionData`
  * always detaches the modification and returns the parts only on a success.
- * Either attempt spends a xenos lore insight (Enemies Without p. 42).
+ * Either attempt spends a xenos lore insight (a DH2 supplement's rule).
  */
 
 import { afterAll, describe, expect, it } from 'vitest';
@@ -140,9 +140,9 @@ function cardText(action: AnyAction): string {
     return action.effectOutput.map((e) => e.effect).join(' ');
 }
 
-const SIGHT = entry('Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.sight', 'Red-Dot Laser Sight');
+const SIGHT = entry('Compendium.wh40k-rpg.dh2-weapon-mods.Item.sight', 'Red-Dot Laser Sight');
 
-describe('FitModificationActionData — Trade (Armourer) fitting (DH2 core p. 162)', () => {
+describe('FitModificationActionData — Trade (Armourer) fitting (DH2)', () => {
     it('fits the modification and uses up the last set of parts on a success', async () => {
         const weapon = makeWeapon();
         const parts = makeParts();
@@ -202,7 +202,7 @@ describe('FitModificationActionData — Trade (Armourer) fitting (DH2 core p. 16
         expect(cardText(action)).toContain('WH40K.WeaponModification.FitFailed|');
     });
 
-    it('spends a xenos lore insight on the attempt, whatever the outcome (Enemies Without p. 42)', async () => {
+    it('spends a xenos lore insight on the attempt, whatever the outcome', async () => {
         const weapon = makeWeapon();
         const action = new FitModificationActionData(weapon, makeParts(), SIGHT, DH2_WEAPON_MODIFICATION_RULES, true);
         resolve(action, { success: false, dof: 1 });
@@ -211,8 +211,8 @@ describe('FitModificationActionData — Trade (Armourer) fitting (DH2 core p. 16
     });
 });
 
-describe('RemoveModificationActionData — Tech-Use removal (DH2 core p. 162)', () => {
-    const GRIP = entry('Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip', 'Custom Grip');
+describe('RemoveModificationActionData — Tech-Use removal (DH2)', () => {
+    const GRIP = entry('Compendium.wh40k-rpg.dh2-weapon-mods.Item.grip', 'Custom Grip');
 
     function recoverer(available: boolean): { calls: number; recover: () => Promise<boolean> } {
         const state = {

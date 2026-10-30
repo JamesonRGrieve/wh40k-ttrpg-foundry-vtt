@@ -6,7 +6,7 @@
  * `{ book, page, url }` object, so a card that passed it straight to the card
  * shell's `footerLabel` printed "[object Object]" under every weapon and armour
  * card (seen on the Bolas card in the #601 Tier B capture). `sourceLabel`
- * collapses either shape to "Book, p.12" and to '' when there is no reference,
+ * collapses either shape to a "<book>, p.<page>" label and to '' when there is no reference,
  * which also hides the footer.
  *
  * A source scan rather than a render: the guard is the literal hash argument on

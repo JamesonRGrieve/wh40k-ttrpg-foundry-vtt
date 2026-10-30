@@ -114,9 +114,9 @@ describe('contextual damage profiles (#608)', () => {
     });
 
     it('accepts a RollTable UUID or blank for `table`, and rejects anything else', () => {
-        expect(validateDoc(weapon({ table: 'Compendium.wh40k-rpg.dh1-radical-rolltables.RollTable.15df0cf72c366222' }))).toEqual([]);
+        expect(validateDoc(weapon({ table: 'Compendium.wh40k-rpg.dh1-rolltables.RollTable.15df0cf72c366222' }))).toEqual([]);
         expect(validateDoc(weapon({ table: '' }))).toEqual([]);
-        expect(validateDoc(weapon({ table: 'Compendium.wh40k-rpg.dh1-radical-items-weapons.Item.1668f6aa4b3e9469' })).length).toBeGreaterThan(0);
+        expect(validateDoc(weapon({ table: 'Compendium.wh40k-rpg.dh1-weapons.Item.1668f6aa4b3e9469' })).length).toBeGreaterThan(0);
     });
 
     it('accepts the borrowed sources and rejects an unknown one', () => {

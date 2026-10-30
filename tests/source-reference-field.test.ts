@@ -34,20 +34,20 @@ function render(context: object): HTMLElement {
 
 describe('source-reference-field partial (#229)', () => {
     it('edits a structured source as Book + Page inputs', () => {
-        const root = render({ source: mockSourceReference({ book: 'Tome of Fate', page: '61' }), editable: true });
-        expect(root.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe('Tome of Fate');
+        const root = render({ source: mockSourceReference({ book: 'Sample Sourcebook', page: '61' }), editable: true });
+        expect(root.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe('Sample Sourcebook');
         expect(root.querySelector<HTMLInputElement>('input[name="system.source.page"]')?.value).toBe('61');
         expect(root.querySelector('input[name="system.source"]')).toBeNull();
     });
 
     it('lets Page wrap under Book in a narrow cell, so Book keeps a whole title (#699 audit)', () => {
-        const root = render({ source: mockSourceReference({ book: 'BC: Tome of Fate', page: '61' }), editable: true });
+        const root = render({ source: mockSourceReference({ book: 'BC: Sample Sourcebook', page: '61' }), editable: true });
         const row = root.querySelector('[data-wh40k-hook="source-reference-inputs"]');
         const book = root.querySelector('input[name="system.source.book"]');
         expect(row?.classList.contains('tw-flex-wrap')).toBe(true);
         expect(book?.classList.contains('tw-basis-40')).toBe(true);
         // The full title is one hover away even when the input is short.
-        expect(book?.getAttribute('title')).toBe('BC: Tome of Fate');
+        expect(book?.getAttribute('title')).toBe('BC: Sample Sourcebook');
     });
 
     it('labels both inputs for assistive tech', () => {
@@ -57,8 +57,8 @@ describe('source-reference-field partial (#229)', () => {
     });
 
     it('shows the formatted reference when read-only', () => {
-        const root = render({ source: mockSourceReference({ book: 'Tome of Fate', page: '61' }), editable: false });
-        expect(root.textContent.trim()).toBe('Tome of Fate, p.61');
+        const root = render({ source: mockSourceReference({ book: 'Sample Sourcebook', page: '61' }), editable: false });
+        expect(root.textContent.trim()).toBe('Sample Sourcebook, p.61');
         expect(root.querySelector('input')).toBeNull();
     });
 
@@ -141,7 +141,7 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
 describe('formatSourceLabel legacy custom reference', () => {
     it('falls back to the pre-provenance `custom` slot after book', () => {
         expect(formatSourceLabel({ book: '', page: '', custom: 'Homebrew addendum' })).toBe('Homebrew addendum');
-        expect(formatSourceLabel({ book: 'Core', page: '12', custom: 'ignored' })).toBe('Core, p.12');
+        expect(formatSourceLabel({ book: 'Sample Sourcebook', page: '12', custom: 'ignored' })).toBe('Sample Sourcebook, p.12');
     });
 });
 

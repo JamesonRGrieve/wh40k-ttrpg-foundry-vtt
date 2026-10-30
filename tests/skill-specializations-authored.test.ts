@@ -14,27 +14,37 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
+import { lineBookPacks } from '../src/module/utils/line-packs.ts';
 
-const SKILLS_DIR = resolve(__dirname, '../src/packs-private/dark-heresy-2/dh2-core-items-skills/_source');
+const ROOT = resolve(__dirname, '..');
+
+/** The `_source` directories of DH2's book skill packs, selected by manifest flags. */
+function skillDirs(): string[] {
+    const declared = readDeclaredPacks(ROOT).packs.map((pack) => ({ metadata: pack }));
+    return lineBookPacks(declared, 'dh2', 'skills').map(({ metadata }) => resolve(ROOT, 'src/packs-private', metadata.path.replace(/^packs\//, ''), '_source'));
+}
 
 interface SkillDoc {
     name?: string;
     system?: { specialist?: boolean; specializations?: string[]; skillType?: string };
 }
 
-/** Every DH2 core skill document, by display name. */
+/** Every DH2 book skill document, by display name (the first pack to carry a name wins). */
 function skillDocs(): Map<string, SkillDoc> {
     const out = new Map<string, SkillDoc>();
-    for (const file of readdirSync(SKILLS_DIR)) {
-        if (!file.endsWith('.json')) continue;
-        const doc = JSON.parse(readFileSync(resolve(SKILLS_DIR, file), 'utf8')) as SkillDoc;
-        if (doc.name !== undefined) out.set(doc.name, doc);
+    for (const dir of skillDirs()) {
+        for (const file of readdirSync(dir)) {
+            if (!file.endsWith('.json')) continue;
+            const doc = JSON.parse(readFileSync(resolve(dir, file), 'utf8')) as SkillDoc;
+            if (doc.name !== undefined && !out.has(doc.name)) out.set(doc.name, doc);
+        }
     }
     return out;
 }
 
-/** The DH2 specialist skills, per Chapter III. */
+/** The DH2 specialist skills, per the skills rules. */
 const SPECIALIST_SKILLS = ['Common Lore', 'Forbidden Lore', 'Linguistics', 'Operate', 'Scholastic Lore', 'Trade'];
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 specialist skills carry their canonical specialisations (#498)', () => {
@@ -47,7 +57,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 specialist skills carry their canonic
 
     it.each(SPECIALIST_SKILLS)('%s is marked specialist and lists its specialisations', (name) => {
         const doc = docs.get(name);
-        expect(doc, `${name} must exist in dh2-core-items-skills`).toBeDefined();
+        expect(doc, `${name} must exist in DH2's skills pack`).toBeDefined();
         expect(doc?.system?.specialist, `${name} must be flagged specialist`).toBe(true);
         expect((doc?.system?.specializations ?? []).length, `${name} must list at least one specialisation`).toBeGreaterThan(0);
     });
@@ -73,7 +83,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 specialist skills carry their canonic
     });
 
     it('carries the entries the rulebook actually lists', () => {
-        // Spot-checks against Chapter III, so a bad re-extraction is caught rather
+        // Spot-checks against the printed skills rules, so a bad re-extraction is caught rather
         // than silently replacing the lists with something plausible.
         expect(docs.get('Common Lore')?.system?.specializations).toContain('Adeptus Arbites');
         expect(docs.get('Common Lore')?.system?.specializations).toContain('War');

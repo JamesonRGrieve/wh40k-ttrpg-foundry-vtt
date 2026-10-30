@@ -2,15 +2,14 @@
  * Storybook regression coverage for issue #187 — Rogue Trader Critical
  * Hit chart on ship hull damage.
  *
- * Background: per RAW (RT Core, "Starship Weapons"), a weapon's Critical
- * Hit rolls 1d5 on the Critical Hit chart (Table 8-12): Holed, Internal
+ * Background: per RAW (the RT core rules for starship weapons), a weapon's Critical
+ * Hit rolls 1d5 on the ship Critical Hit chart: Holed, Internal
  * Damage, Sensors Damaged, Thrusters Damaged, Fire!. Each applies a
  * persistent status to the ship until it is repaired.
  *
  * `WH40KVoidcraft.rollShipCriticalHit` draws the 1d5 result from the world
- * `RollTable` "Ship Critical Hits", then the `rt-core-rolltables`
- * compendium pack (in the `src/packs-private` submodule at
- * `rogue-trader/rt-core-rolltables/_source/ship-critical-hits_RTshipCrit221.json`),
+ * `RollTable` "Ship Critical Hits", then RT's book rolltables pack (in the
+ * `src/packs-private` submodule, document `ship-critical-hits_RTshipCrit221.json`),
  * and only when neither exists posts the
  * `WH40K.Voidcraft.Critical.TableUnavailable` message.
  *
