@@ -92,7 +92,6 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                 interface OriginStepConfig {
                     coreSteps?: OriginCoreStep[];
                     optionalStep?: object | null;
-                    packs?: object[];
                 }
                 interface FatePointUse {
                     key: string;
@@ -336,7 +335,8 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     // ── origin-step-config::<id> (7 keys) ──────────────────
                     // getOriginStepConfig() returns a well-formed shape:
                     // coreSteps array (each step has key/step/icon/stepIndex),
-                    // optionalStep is an object or null, packs is an array.
+                    // optionalStep is an object or null, and no pack list:
+                    // the builder finds its packs by manifest flags.
                     for (const id of ids) {
                         try {
                             const cfg = Registry.get(id);
@@ -347,13 +347,13 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                                     (s) => typeof s.key === 'string' && s.step === s.key && typeof s.icon === 'string' && typeof s.stepIndex === 'number',
                                 );
                             const optOk = osc.optionalStep == null || typeof osc.optionalStep === 'object';
-                            const packsOk = Array.isArray(osc.packs);
+                            const noPackList = !('packs' in osc);
                             record(
                                 `origin-step-config::${id}`,
-                                coreOk && optOk && packsOk,
-                                `coreSteps=${String(osc.coreSteps?.length)} optionalStep=${osc.optionalStep == null ? 'null' : 'obj'} packs=${String(
-                                    osc.packs?.length ?? 0,
-                                )}`,
+                                coreOk && optOk && noPackList,
+                                `coreSteps=${String(osc.coreSteps?.length)} optionalStep=${osc.optionalStep == null ? 'null' : 'obj'} packList=${
+                                    noPackList ? 'none' : 'present'
+                                }`,
                             );
                         } catch (err) {
                             record(`origin-step-config::${id}`, false, `threw: ${String((err as Error).message)}`);
