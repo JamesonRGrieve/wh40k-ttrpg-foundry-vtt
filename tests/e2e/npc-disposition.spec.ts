@@ -7,7 +7,7 @@ import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
 /**
- * NPC Disposition on DH2 (#73, core p. 277) against live Foundry.
+ * NPC Disposition on DH2 (#73) against live Foundry.
  *
  * A DH2 NPC stored before #73 (Disposition 2 on the old −3..+3 field, no scale
  * marker) loads at 70 on the 0–100 scale. Its sheet shows the 0–100 value and its

@@ -27,8 +27,8 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of RT ship weapon fire (#184 — RT Core 1.4 errata, Chapter
- * VIII), driven from the voidcraft sheet the way a GM plays it: the Weapons
+ * Tier B coverage of RT ship weapon fire (#184 — the RT errata's starship
+ * combat rules), driven from the voidcraft sheet the way a GM plays it: the Weapons
  * tab's Fire control opens the Fire dialog, the GM picks the target ship and
  * the range, Roll previews the shot, and Apply lands it — on the TARGET. The
  * shots replay the book's own worked example (the Sabre against a raider with
@@ -137,7 +137,7 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
         await setVoidShields(page, raider.id, 1);
         const before = await chatMessageIds(page);
         try {
-            // RT Core "Crippled Ships": Crippled is 0 Hull Integrity — half Hull is only damaged.
+            // RT "Crippled Ships": Crippled is 0 Hull Integrity — half Hull is only damaged.
             await setHull(page, sabre.id, 17);
             expect((await readHullCondition(page, sabre.id)).crippled, 'half Hull is not Crippled').toBe(false);
             await setHull(page, sabre.id, 0);
@@ -174,9 +174,9 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
         const before = await chatMessageIds(page);
         const [macroId = '', lanceId = '', broadsideId = ''] = sabre.weaponIds;
         try {
-            // RT Core p.221: each battery tests on its own. The port battery: 48 + 10 (close) = 58, roll 29 → 3 hits.
+            // RT: each battery tests on its own. The port battery: 48 + 10 (close) = 58, roll 29 → 3 hits.
             // The broadside: 48 at standard range, roll 30 → 1 degree, 2 hits. The raider's shield discards one of
-            // the cheaper port hits (p.222, the attacker's choice). 9 + 7 + (6+6) + (5+5) = 38, less Armour 15 ONCE = 23.
+            // the cheaper port hits (the attacker's choice). 9 + 7 + (6+6) + (5+5) = 38, less Armour 15 ONCE = 23.
             // Fired one at a time, 16 and 22 would each lose 15 to Armour: 1 + 7 = 8.
             const fired = await fireWeaponFromSheet(page, sabre.id, {
                 weaponId: macroId,
@@ -210,7 +210,7 @@ test.describe.serial('RT ship weapon fire from the voidcraft sheet (Tier B · #1
         recordCoverage('ship-weapon.flow', 'macrobattery-salvo');
     });
 
-    test("the book's lance shot ignores Armour and its Critical Hit draws Table 8-12", async ({ page }) => {
+    test("the book's lance shot ignores Armour and its Critical Hit draws the critical hit table", async ({ page }) => {
         await joinShipWorld(page);
         const sabre = await createShip(page, SABRE);
         const raider = await createShip(page, RAIDER);

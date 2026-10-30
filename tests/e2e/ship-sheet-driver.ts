@@ -484,7 +484,7 @@ export interface ShipWeaponShot {
     /** The gunner's Ballistic Skill typed into the dialog; the ship's own when omitted. */
     gunnerSkill?: number;
     rangeBand?: 'close' | 'standard' | 'long';
-    /** Other macrobatteries ticked into a salvo (RT Core p.221), each with its own range band. */
+    /** Other macrobatteries ticked into a salvo, each with its own range band. */
     salvo?: readonly { weaponId: string; rangeBand: 'close' | 'standard' | 'long' }[];
     /** The battery the void shields take hits from first: `primary` or a salvo weapon's id. The dialog's default when omitted. */
     shieldsFirst?: string;

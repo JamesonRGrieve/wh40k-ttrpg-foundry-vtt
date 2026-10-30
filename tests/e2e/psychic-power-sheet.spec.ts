@@ -40,7 +40,7 @@ test.describe.serial('Psychic power sheet (Tier B, #659)', () => {
             const doc = await (globalThis as unknown as ItemGlobal).Item.create({
                 name: 'e2e-659 Fire Barrage',
                 type: 'psychicPower',
-                system: { discipline: 'pyromancy', range: '15 metres x Psy Rating', source: { book: 'BC: Tome of Fate', page: '61' } },
+                system: { discipline: 'pyromancy', range: '15 metres x Psy Rating', source: { book: 'BC: Clerk Ledger', page: '61' } },
             });
             return doc?.id ?? '';
         });
@@ -56,9 +56,9 @@ test.describe.serial('Psychic power sheet (Tier B, #659)', () => {
             expect(sheetId).not.toBe('');
             const sheet = page.locator(`#${sheetId}`);
             await expect(sheet.locator('[data-field="discipline-label"]')).toHaveText('Pyromancy Power');
-            // The Source Book input shows its whole title in the three-column grid ("BC: Tome of Fa" clipped, #699 audit).
+            // The Source Book input shows its whole title in the three-column grid (a 16-character title lost its last two, #699 audit).
             const book = sheet.locator('input[name="system.source.book"]');
-            await expect(book).toHaveValue('BC: Tome of Fate');
+            await expect(book).toHaveValue('BC: Clerk Ledger');
             const bookFits = await book.evaluate((el) => el.scrollWidth <= el.clientWidth);
             expect(bookFits, 'the Source Book input clips its title').toBe(true);
             await snap(page, 'psychic-power-sheet-header', { selector: `#${sheetId}` });

@@ -409,7 +409,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (isImportError(hazards)) {
             for (const k of ['hazards-fallingBonus', 'hazards-fallingFormula', 'hazards-suffocation'] as const) record(k, false, hazards.__importError);
         } else {
-            // 1d10 + 1 per metre (DH2 Core p. 243); DH1 reads Table 7-27 by bracket (DH1 Core p. 210).
+            // 1d10 + 1 per metre (DH2); DH1 reads its falling damage table by bracket.
             guarded(
                 'hazards-fallingBonus',
                 () =>
@@ -427,7 +427,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     hazards.getFallingDamageFormula(4, 'dh2') === '1d10+4' &&
                     hazards.getFallingDamageFormula(10, 'dh1') === '1d10+7',
             );
-            // Drowning is suffocation: TB minutes conserving, 2 x TB rounds strenuous (DH2 Core p. 243).
+            // Drowning is suffocation: TB minutes conserving, 2 x TB rounds strenuous (DH2).
             guarded('hazards-suffocation', () => {
                 const calm = hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: false, line: 'dh2' });
                 const strenuous = hazards.resolveSuffocation({ toughnessBonus: 4, strenuous: true, line: 'dh2' });

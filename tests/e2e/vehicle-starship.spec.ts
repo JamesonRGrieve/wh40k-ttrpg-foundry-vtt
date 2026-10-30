@@ -349,7 +349,7 @@ async function probeVehicleStarshipFlows(page: Page): Promise<ProbeResult> {
                 notes['starship-hull-and-shields'] = 'no starship available';
             } else {
                 const maxHull = s.system?.hullIntegrity?.max ?? 0;
-                // Drop hull to 40%: damaged, but not Crippled — RT Core "Crippled Ships" (#187) is 0 Hull.
+                // Drop hull to 40%: damaged, but not Crippled — RT "Crippled Ships" (#187) is 0 Hull.
                 const damaged = Math.floor(maxHull * 0.4);
                 await withTimeout(
                     s.update({

@@ -17,7 +17,7 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of the Boarding Action (#188 — RT Core p.215), run from the
+ * Tier B coverage of the Boarding Action (#188), run from the
  * voidcraft sheet's Manoeuvres-tab Ship Assault panel the way a GM does:
  *
  *   1. Board — the Hard (−20) Pilot (Space Craft) + Manoeuvrability Test that
@@ -80,7 +80,7 @@ test.describe.serial('Ship Boarding from the voidcraft sheet (Tier B · #188)', 
         const before = await chatMessageIds(page);
         try {
             // Boarder: Command 50 + 20 (Crew 80 vs 55) + 10 (Turrets) = 80, rolls 50. RT counts each full 10
-            // of margin (RT Core p.232), so that is 3 degrees — the +1 count said 4. The Corsair's Command
+            // of margin, so that is 3 degrees — the +1 count said 4. The Corsair's Command
             // 45 + 10 = 55 fails on 60 and scores none. One degree goes on Hull, two on 2d5 Crew + 2d5 Morale;
             // the Corsair then tests its reduced Morale on a 40.
             const ran = await runAssaultFromSheet(page, boarder.id, {

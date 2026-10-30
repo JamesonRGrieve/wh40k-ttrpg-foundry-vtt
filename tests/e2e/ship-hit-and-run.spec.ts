@@ -19,7 +19,7 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of Hit and Run (#188 — RT Core p.218), run from the voidcraft
+ * Tier B coverage of Hit and Run (#188), run from the voidcraft
  * sheet's Extended Actions tab Ship Assault panel the way a GM does: the
  * Challenging (+0) Pilot (Space Craft) approach at −10 per target Turret
  * Rating, then the opposed Ordinary (+10) Command Test. A won raid rolls 1d5
@@ -85,7 +85,7 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(await readShip(page, target.id)).toMatchObject({ hull: 24, population: 51, morale: 56, statuses: 1 });
             const critIds = (await messagesSince(page, before)).filter((id) => id !== ran.card.id);
             expect(critIds, 'the Critical Hit posts its own card').toHaveLength(1);
-            // #187: the roll of 5 draws Table 8-12's "Fire!" from the RT core roll tables — not the
+            // #187: the roll of 5 draws the critical hit table's "Fire!" from the RT core roll tables — not the
             // "roll table unavailable" fallback the old pack/name lookup always hit.
             const crit = await readCard(page, critIds[0] ?? '');
             expect(crit.text).toContain('Fire!');
@@ -134,7 +134,7 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
         const before = await chatMessageIds(page);
         try {
             // Approach target 30, rolls 65: a 35-point margin is three degrees of failure under RT's count
-            // (RT Core p.232). The +1 count called it four and shot the craft down (p.219: "four or more").
+            // The +1 count called it four and shot the craft down (the rule's "four or more").
             const ran = await runAssaultFromSheet(page, raider.id, {
                 tab: 'extendedActions',
                 assault: 'hit-and-run',

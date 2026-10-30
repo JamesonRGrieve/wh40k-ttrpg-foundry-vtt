@@ -13,6 +13,7 @@ import {
 } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -34,8 +35,8 @@ import { expect, test } from './lib/test';
 
 const PASSIVE_MODIFIER_FLOWS = ['skill-test', 'weapon-attack'] as const;
 
-const SUPERIOR_CHIRURGEON_UUID = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000071';
-const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
+const SUPERIOR_CHIRURGEON_UUID = compendiumUuid({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000071');
+const CHAINSWORD_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'z5A6b7C8d9E0f1G2');
 /** A test-only talent whose flat +10 Weapon Skill is baked into the attack's base. */
 const WS_DRILL = 'E2E Blade Drill';
 

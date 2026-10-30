@@ -16,7 +16,7 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of Ramming (#188 — RT Core p.215), run from the voidcraft
+ * Tier B coverage of Ramming (#188), run from the voidcraft
  * sheet the way a GM does: the Manoeuvres tab's Ship Assault panel → Ram →
  * pick the target ship and the helmsman's Pilot skill → Roll → Apply & Post.
  * The rammed ship takes the hull-size die (the Ramming Speed order's table:

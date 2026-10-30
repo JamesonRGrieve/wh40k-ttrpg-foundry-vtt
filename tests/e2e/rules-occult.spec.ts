@@ -113,12 +113,12 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             fail(['dark-pact-adjustDisposition', 'dark-pact-startingDisposition'], darkPact.__importError);
         } else {
             guarded('dark-pact-adjustDisposition', () => {
-                // Disposition is a 0–100 characteristic (core p. 277).
+                // Disposition is a 0–100 characteristic.
                 const adjust = fn<number>(darkPact, 'adjustPactDisposition');
                 return adjust(38, 1) === 39 && adjust(99, 5) === 100 && adjust(1, -5) === 0;
             });
             guarded('dark-pact-startingDisposition', () => {
-                // "A Daemon's Disposition begins at 15+ the character's Corruption total" (Enemies Beyond p. 73).
+                // "A Daemon's Disposition begins at 15+ the character's Corruption total" (the DH2 daemonology rules).
                 const start = fn<number>(darkPact, 'startingDaemonDisposition');
                 const terms = { dispositionBase: 15, addsCorruption: true, testModifier: -20 };
                 return start(terms, 23) === 38 && start({ ...terms, addsCorruption: false }, 23) === 15;
@@ -132,7 +132,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         } else {
             guarded('exorcism-threshold', () => {
                 const threshold = fn<number>(exorcism, 'getExorcismThreshold');
-                // Daemon WP bonus + possessed Corruption bonus (Enemies Beyond p. 71).
+                // Daemon WP bonus + possessed Corruption bonus.
                 return threshold(5, 3) === 8 && threshold(0, 0) === 0;
             });
             guarded('exorcism-prepareAttempt', () => {
@@ -242,7 +242,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 );
             });
             guarded('xenos-equipment-repair', () => {
-                // Enemies Without p. 42: -20 for the alien nature, +5 per DoS on the Forbidden Lore test.
+                // Xenos equipment: -20 for the alien nature, +5 per DoS on the Forbidden Lore test.
                 const rules = { loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 };
                 const mods = fn<{ alienNature: number; loreInsight: number }>(xenos, 'xenosRepairModifiers')(rules, 3);
                 const read = fn<{ actorUuid: string; degrees: number } | null>(xenos, 'readXenosRepairInsight');
@@ -277,7 +277,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 );
             });
             guarded('inquest-revelationThresholds', () => {
-                // Enemies Within pp. 63-66: a Revelation every 300 IP by default, GM-tailored
+                // Inquest: a Revelation every 300 IP by default, GM-tailored
                 // thresholds otherwise, and the completion total is always the final Revelation.
                 const rules = {
                     scopes: {
@@ -307,7 +307,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 return crossed(15, 15) === 0 && crossed(8, 12) === 1 && crossed(5, 35) === 3;
             });
             guarded('malignancy-testTarget', () => {
-                // Table 8-14: the Corruption Track modifier is banded (+0 to 30 CP, -10 to 60, -20 to 90, -30 to 99).
+                // The Corruption Track table: its modifier is banded (+0 to 30 CP, -10 to 60, -20 to 90, -30 to 99).
                 const target = fn<number>(malignancy, 'getMalignancyTestTarget');
                 return (
                     target(40, 0) === 40 &&

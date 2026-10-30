@@ -3,6 +3,7 @@ import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attac
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -18,7 +19,7 @@ import { cleanupProbes, openProbeSheet } from './occult-sheet-flow';
  * modifier row is hovered in roll-transparency.spec.ts.
  */
 
-const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
+const CONVERSION_BEAMER = compendiumUuid({ line: 'dh1', category: 'weapons' }, '804d243ba234097d');
 /** The least a tooltip line sits in from the tooltip's edge: its 2px border plus the panel padding. */
 const MIN_TOOLTIP_INSET_PX = 10;
 

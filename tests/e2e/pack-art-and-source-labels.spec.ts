@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { foundryTestDataDir } from './lib/data-dir';
 import { joinOrSkip } from './lib/join';
 import { closeApp, openPackDocument, type PackDocumentRef } from './lib/pack-document';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -51,29 +52,65 @@ interface Sample extends PackDocumentRef {
 
 /** Item sheets whose source reference must render as a label (#229). */
 const SOURCE_SHEETS: readonly Sample[] = [
-    { label: 'source-psychic-power', pack: 'bc-fate-items-psychic-powers', name: 'Fire Barrage', view: 'sheet' },
+    { label: 'source-psychic-power', pack: packHoldingName({ line: 'bc', category: 'psychic-powers' }, 'Fire Barrage'), name: 'Fire Barrage', view: 'sheet' },
     // The weapon sheet opens on its compact stat summary; its details (with Acquisition → Source) are behind "Show Details".
-    { label: 'source-weapon', pack: 'dh2-core-items-weapons', name: 'Bolt Pistol', view: 'sheet', reveal: 'toggleBody' },
-    { label: 'source-talent', pack: 'dh2-core-items-talents', name: 'Adamantium Faith', view: 'sheet' },
+    {
+        label: 'source-weapon',
+        pack: packHoldingName({ line: 'dh2', category: 'weapons' }, 'Bolt Pistol'),
+        name: 'Bolt Pistol',
+        view: 'sheet',
+        reveal: 'toggleBody',
+    },
+    { label: 'source-talent', pack: packHoldingName({ line: 'dh2', category: 'talents' }, 'Adamantium Faith'), name: 'Adamantium Faith', view: 'sheet' },
 ];
 
 /** Actors and items whose Fandom art was repointed to the file URL (#626). */
 const FANDOM_SAMPLES: readonly Sample[] = [
-    { label: 'fandom-actor-astropath', pack: 'dh2-core-actors-bestiary', name: 'Astropath', view: 'sheet' },
-    { label: 'fandom-actor-apex-noble', pack: 'dh2-core-actors-bestiary', name: 'Apex Noble', view: 'sheet' },
-    { label: 'fandom-actor-dark-eldar-grotesque', pack: 'dh2-without-actors-bestiary', name: 'Dark Eldar Grotesque', view: 'sheet' },
+    { label: 'fandom-actor-astropath', pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Astropath'), name: 'Astropath', view: 'sheet' },
+    { label: 'fandom-actor-apex-noble', pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Apex Noble'), name: 'Apex Noble', view: 'sheet' },
+    {
+        label: 'fandom-actor-dark-eldar-grotesque',
+        pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Dark Eldar Grotesque'),
+        name: 'Dark Eldar Grotesque',
+        view: 'sheet',
+    },
     // A Black Crusade NPC: its sheet crashed on open until #628.
-    { label: 'fandom-actor-asphodel-kroot-warrior', pack: 'bc-blood-actors-bestiary', name: 'Asphodel Kroot Warrior', view: 'sheet' },
-    { label: 'fandom-item-bolt-pistol', pack: 'dh2-core-items-weapons', name: 'Bolt Pistol', view: 'compendium' },
-    { label: 'fandom-item-autocannon', pack: 'dh2-core-items-weapons', name: 'Autocannon', view: 'compendium' },
-    { label: 'fandom-item-archeotech-laspistol', pack: 'rt-core-items-weapons', name: 'Archeotech Laspistol', view: 'compendium' },
+    {
+        label: 'fandom-actor-asphodel-kroot-warrior',
+        pack: packHoldingName({ line: 'bc', category: 'actors-bestiary' }, 'Asphodel Kroot Warrior'),
+        name: 'Asphodel Kroot Warrior',
+        view: 'sheet',
+    },
+    { label: 'fandom-item-bolt-pistol', pack: packHoldingName({ line: 'dh2', category: 'weapons' }, 'Bolt Pistol'), name: 'Bolt Pistol', view: 'compendium' },
+    { label: 'fandom-item-autocannon', pack: packHoldingName({ line: 'dh2', category: 'weapons' }, 'Autocannon'), name: 'Autocannon', view: 'compendium' },
+    {
+        label: 'fandom-item-archeotech-laspistol',
+        pack: packHoldingName({ line: 'rt', category: 'weapons' }, 'Archeotech Laspistol'),
+        name: 'Archeotech Laspistol',
+        view: 'compendium',
+    },
 ];
 
 /** Actors whose `packs/images` portraits the content test wrongly reported missing (#627). */
 const LOCAL_PORTRAIT_SAMPLES: readonly Sample[] = [
-    { label: 'portrait-horror-of-tzeentch', pack: 'dh2-beyond-actors-bestiary', name: 'Horror of Tzeentch', view: 'sheet' },
-    { label: 'portrait-screamer', pack: 'dh2-beyond-actors-bestiary', name: 'Screamer of Tzeentch', view: 'sheet' },
-    { label: 'portrait-nexene-turnkey', pack: 'dh2-beyond-actors-bestiary', name: 'Nexene Turnkey', view: 'sheet' },
+    {
+        label: 'portrait-horror-of-tzeentch',
+        pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Horror of Tzeentch'),
+        name: 'Horror of Tzeentch',
+        view: 'sheet',
+    },
+    {
+        label: 'portrait-screamer',
+        pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Screamer of Tzeentch'),
+        name: 'Screamer of Tzeentch',
+        view: 'sheet',
+    },
+    {
+        label: 'portrait-nexene-turnkey',
+        pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Nexene Turnkey'),
+        name: 'Nexene Turnkey',
+        view: 'sheet',
+    },
 ];
 
 /**

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, readActorSystem, showSheetTab, snapElement } from './occult-sheet-flow';
 
@@ -13,15 +14,14 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet, readActorSystem, sho
  * total read `modifiers.wounds`, a path no origin has. So when a rolled
  * wounds formula rebuilt the maximum, every origin's flat bonus was dropped.
  *
- * The first test opens Only War's Agri-World (+2 Wounds, Hammer of the Emperor
- * p.36) and checks its sheet shows the bonus. The second gives an Only War
+ * The first test opens Only War's Agri-World (+2 Wounds) and checks its sheet shows the bonus. The second gives an Only War
  * character that homeworld and a Weapon Specialist with a rolled wounds
  * formula. It checks the maximum is the roll plus the +2, and that a world boot
  * (the origin-grant reconcile) does not add it again.
  */
 
-const OW_AGRI_WORLD = 'Compendium.wh40k-rpg.ow-hammer-origins-homeworlds.Item.3422efadd4703be1';
-const OW_WEAPON_SPECIALIST = 'Compendium.wh40k-rpg.ow-core-origins-specialities.Item.ea0b23f03e614824';
+const OW_AGRI_WORLD = compendiumUuid({ line: 'ow', category: 'origins-homeworlds' }, '3422efadd4703be1');
+const OW_WEAPON_SPECIALIST = compendiumUuid({ line: 'ow', category: 'origins-specialities' }, 'ea0b23f03e614824');
 const VITALS = 'section.tab[data-tab="overview"] [data-wh40k-hook="overview-vitals"]';
 const WOUND_BONUS = '[data-wh40k-hook="origin-wounds-bonus"]';
 /** The Weapon Specialist's rolled starting wounds: its 8+1d5 with a 3 on the die. */

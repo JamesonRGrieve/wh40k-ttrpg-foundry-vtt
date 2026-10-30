@@ -4,6 +4,7 @@ import { type HarnessScene, type HarnessTokenSpec, installAttackHarness, leanWea
 import { canvasClip } from './lib/canvas-capture';
 import { popOutChatMessage, showChatMessage } from './lib/chat-capture';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid, packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -14,13 +15,13 @@ import { scaledMs } from './lib/timing';
  * its `_systemRoll` resolves the attack with seeded dice, Roll Damage rolls the hit
  * and (auto-apply on) the assign step writes Structural Integrity.
  *
- * The DH2 Chimera Armoured Transport (core p. 191; Front 30 / Side 22 / Rear 16,
+ * The DH2 Chimera Armoured Transport (Front 30 / Side 22 / Rear 16,
  * Structural Integrity 35, Enclosed) faces down the screen at rotation 0; it also
  * carries Reinforced Armour here, which halves Critical damage. The DH2 Wildcat
- * Transport Buggy (Enemies Without) is Open-Topped.
+ * Transport Buggy (a DH2 supplement) is Open-Topped.
  *
  *   1. An autocannon (3d10+8, Pen 6) from in front meets Front armour (30 − 6), from
- *      behind Rear armour (16 − 6); the attack roll 12 reads 21 on Table 7-29: Hull.
+ *      behind Rear armour (16 − 6); the attack roll 12 reads 21 on the vehicle hit location table: Hull.
  *   2. The rear hit comes off Structural Integrity on the assign card.
  *   3. With 2 Integrity left, the front hit's 11 is 2 Integrity and 9 Critical,
  *      halved by Reinforced Armour to 5 (rounded up), read on the Hull chart.
@@ -28,17 +29,22 @@ import { scaledMs } from './lib/timing';
  *      Blast on the enclosed Chimera leaves its crewman sheltered.
  */
 
-const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
-const AUTOCANNON = `${WEAPONS}.l7M8n9O0p1Q2r3S4`;
-const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
+const dh2Weapon = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'weapons' }, docId);
+const AUTOCANNON = dh2Weapon('l7M8n9O0p1Q2r3S4');
+const FRAG_GRENADE = dh2Weapon('x1Y2z3A4b5C6d7E8');
 const REINFORCED_ARMOUR = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.dF8QAP7SfJDMJW1k';
 const FLYER = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.63b3a3c62d2fe2ad';
 const SHIELD_GENERATOR = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.RnTjRMnjQEdSHJWJ';
 const DAMAGE_CONTROL = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits.Item.Hw3TrFVysIbUOXt5';
 const DAEMON_ENGINE = 'Compendium.wh40k-rpg.hb-generic-items-vehicle-traits-gw-copyright.Item.VbS93F0wE1Q8X4NA';
-const FORCE_SWORD = `${WEAPONS}.v3W4x5Y6z7A8b9C0`;
-const CHIMERA = { pack: 'wh40k-rpg.dh2-core-vehicles-terracraft', name: 'Chimera Armoured Transport' };
-const WILDCAT = { pack: 'wh40k-rpg.dh2-without-vehicles-terracraft', name: 'Wildcat Transport Buggy' };
+const FORCE_SWORD = dh2Weapon('v3W4x5Y6z7A8b9C0');
+/** The DH2 vehicle named `name`, in whichever DH2 terracraft pack holds it. */
+const dh2Craft = (name: string): { pack: string; name: string } => ({
+    pack: `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'vehicles-terracraft' }, name)}`,
+    name,
+});
+const CHIMERA = dh2Craft('Chimera Armoured Transport');
+const WILDCAT = dh2Craft('Wildcat Transport Buggy');
 
 /** Three autocannon dice of 9 (no Righteous Fury): 27 + 8. */
 const AUTOCANNON_DAMAGE: Array<[number, number]> = [
@@ -463,8 +469,8 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
     });
 
     /**
-     * #678: a Flyer's −20 applies only while it is airborne (DH2 Enemies Without
-     * p. 53), and an attack from below it reads Rear armour (DH2 Core p. 253). The
+     * #678: a Flyer's −20 applies only while it is airborne (a DH2 supplement),
+     * and an attack from below it reads Rear armour (the DH2 core rules). The
      * Chimeras here carry the Flyer trait: one 3 m up, with a gunner 1.6 m ahead of
      * its centre below it, is airborne and attacked from below; one on the ground
      * with a gunner 6.5 m ahead is neither. (3 m keeps the craft inside the scene's
@@ -542,7 +548,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
 
     /**
      * #678: a burst's extra hits may move to another target within 2 m that is no
-     * harder to hit (DH2 Core p. 254). Spread onto a second Chimera beside the
+     * harder to hit (the DH2 core rules). Spread onto a second Chimera beside the
      * first, its hit strikes that craft as a vehicle — its own facing, location
      * and armour — on a fresh d100 rather than the reversed attack roll.
      */

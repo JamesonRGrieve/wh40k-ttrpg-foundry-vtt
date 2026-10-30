@@ -13,6 +13,7 @@ import {
     viewScene,
 } from './combat-resolution-flow';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid, packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -26,7 +27,7 @@ import { expect, test } from './lib/test';
  */
 
 /** The Unarmed strike every creature is granted; its content declares it unarmed. */
-const UNARMED_UUID = 'Compendium.wh40k-rpg.im-core-items-weapons.Item.jfGqgHO39b7wpwoK';
+const UNARMED_UUID = `Compendium.wh40k-rpg.${packHoldingName({ line: 'im', category: 'weapons' }, 'Unarmed')}.Item.jfGqgHO39b7wpwoK`;
 const OWN = '[data-wh40k-hook="grapple-panel"] [data-wh40k-hook="grapple-section"][data-grapple-own="true"]';
 
 /** The held NPC's armour (simple mode) and Toughness Bonus, and the controller's Strength Bonus. */
@@ -37,8 +38,8 @@ const CONTROLLER_SB = 9;
 /** The PC target's Machine rating and its Flak Vest's Body AP (#248). */
 const PC_MACHINE = 2;
 const PC_WORN_AP = 3;
-const MACHINE_UUID = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.Ad9cR4FSt6HtEz8Q';
-const FLAK_VEST_UUID = 'Compendium.wh40k-rpg.dh2-core-items-armour.Item.Ht6xNdQ2rBw9Km3P';
+const MACHINE_UUID = compendiumUuid({ line: 'dh2', category: 'traits' }, 'Ad9cR4FSt6HtEz8Q');
+const FLAK_VEST_UUID = compendiumUuid({ line: 'dh2', category: 'armour' }, 'Ht6xNdQ2rBw9Km3P');
 
 /** The total of a damage card's damage roll (the dice and the formula's own terms, before any added modifier row). */
 async function damageRollTotal(page: Page, messageId: string): Promise<number> {

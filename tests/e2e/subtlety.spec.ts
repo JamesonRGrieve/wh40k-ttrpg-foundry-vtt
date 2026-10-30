@@ -447,7 +447,7 @@ async function probeRequiresEquipped(page: Page, actorId: string): Promise<FlowR
 
 /**
  * `clampSubtletyLoss` floor probe: embed a `kind: 'clamp'` adjuster with
- * `minAbsoluteDelta: 1` (Quarantine World shape, Enemies Beyond p. 30). Call
+ * `minAbsoluteDelta: 1` (Quarantine World shape). Call
  * `applySubtlety(-5)` twice — each call should clamp to -1, so the net loss
  * is 2 instead of 10. Drives the loss-clamp loop in `applySubtlety` and the
  * `delta >= 0 || cap <= 0` early-return paths in `clampSubtletyLoss`.

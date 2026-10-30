@@ -24,7 +24,7 @@ import {
 
 /**
  * Tier B coverage of the Rogue Trader ship actions on the voidcraft sheet
- * (#186, #189 — RT Core pp.212–218), driven the way a GM plays them: the
+ * (#186, #189), driven the way a GM plays them: the
  * Extended Actions and Manoeuvres tabs list the line's `order` items, an action
  * with an authored effect carries a Roll button, the dialog takes the acting
  * character's skill and any choice, and Roll posts the card and applies the

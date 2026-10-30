@@ -182,7 +182,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (isImportError(disposition)) {
             fail(['disposition-ladder', 'disposition-personality'], disposition.__importError);
         } else {
-            // The seven-step ladder (DH1 p. 230 and siblings, #73): ±10 per step; 1 + DoS up, DoF down.
+            // The seven-step ladder (DH1 and siblings, #73): ±10 per step; 1 + DoS up, DoF down.
             guarded('disposition-ladder', () => {
                 const ladder = disposition.DISPOSITION_MODELS.ladderStepPlusDegrees;
                 return (
@@ -192,7 +192,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     disposition.ladderShift(ladder, false, 0, 2) === -2
                 );
             });
-            // A DH2 Personality row (core pp. 277–280): its effect per degree on the outcome its basis counts.
+            // A DH2 Personality row: its effect per degree on the outcome its basis counts.
             guarded('disposition-personality', () => {
                 const effect = disposition.personalityEffect({ modifier: -20, effect: '5', basis: 'dos' }, true, 3, 0);
                 return (
@@ -227,7 +227,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         if (isImportError(reinforcement)) {
             fail(['reinforcement-callPlan'], reinforcement.__importError);
         } else {
-            // DH2 core pp. 294-295: Influence Minimum gate, the warband pays at most half the
+            // DH2 Reinforcement Characters: Influence Minimum gate, the warband pays at most half the
             // cost (rounded up), and the warband's Subtlety drops by the final cost.
             guarded('reinforcement-callPlan', () => {
                 const finalCost = reinforcement.reinforcementFinalCost(20, 5, 0);
@@ -247,7 +247,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                 const ok = call(40, 8);
                 const overCap = call(40, 9);
                 const belowMinimum = call(20, 0);
-                // Enemies Beyond p. 38: the Thrice-Bound Daemonhost needs its caller Trained (rank 2).
+                // The Thrice-Bound Daemonhost needs its caller Trained (rank 2).
                 const untrained = call(40, 8, { rank: 1, required: 2 });
                 const trained = call(40, 8, { rank: 2, required: 2 });
                 return (

@@ -24,8 +24,8 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of Crippled and destroyed starships (#187 — RT Core 1.4
- * errata p.222 "Crippled Ships", p.221 "Destroying Ships", Table 8-12), driven
+ * Tier B coverage of Crippled and destroyed starships (#187 — the RT errata's
+ * "Crippled Ships" and "Destroying Ships", and the ship critical hit table), driven
  * from the voidcraft sheet:
  *
  * - An RT ship at 0 Hull is Crippled, never destroyed by Hull: the sheet shows
@@ -152,7 +152,7 @@ test.describe.serial('Crippled and destroyed RT ships on the voidcraft sheet (Ti
             await setHull(page, wreck.id, 0);
             expect(await readHullCondition(page, wreck.id)).toEqual({ crippled: true, destroyed: false });
 
-            // The book's macrobattery shot: 16 against Armour 15 is 1 past it — Table 8-12 result 1, Holed.
+            // The book's macrobattery shot: 16 against Armour 15 is 1 past it — critical hit table result 1, Holed.
             const macro = await fireWeaponFromSheet(page, sabre.id, {
                 weaponId: sabre.weaponIds[0] ?? '',
                 defender: WRECK.name,

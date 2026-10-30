@@ -3,7 +3,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Visual + DOM-presence regression spec for #145 (DH2 errata p.125):
+ * Visual + DOM-presence regression spec for #145 (DH2 errata):
  * the NPC sheet's "Interaction Counts" panel surfaces a per-PC tally
  * gated by each PC's Fellowship bonus.
  *

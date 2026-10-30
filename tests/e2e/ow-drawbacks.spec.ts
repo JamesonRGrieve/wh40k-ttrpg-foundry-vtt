@@ -3,24 +3,25 @@ import { overflowingLabels } from '../../src/module/testing/label-fit';
 import { createActor, deleteDocuments, openActorSheet } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
  * Tier B for the Only War Regimental Drawbacks panel (#160).
  *
- * The OW character holds two real drawbacks from Hammer of the Emperor,
+ * The OW character holds two real drawbacks from an OW supplement,
  * stored as compendium UUIDs, and a Multiple Comrades roster of Comrade
  * names. The old fixture used invented ids ("short-rations"), which the panel
  * could only print raw. The panel must show each drawback by its document's
  * name, never a UUID, a raw id or "[broken link]". Each drawback refunds the
  * Regiment Creation Points its book prints (content#32): Doomed 7 and The Few 5
- * (Hammer of the Emperor Table 1-5). The spec then removes a drawback, adds a Comrade through
+ * (the regimental drawbacks table). The spec then removes a drawback, adds a Comrade through
  * the prompt, and removes one, all through the panel's own buttons.
  */
 
-const DOOMED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
-const THE_FEW = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.0e3e5f403cafdd8a';
+const DOOMED = compendiumUuid({ line: 'ow', category: 'origins-regimental-drawbacks' }, '70dcc1a74d10b5dc');
+const THE_FEW = compendiumUuid({ line: 'ow', category: 'origins-regimental-drawbacks' }, '0e3e5f403cafdd8a');
 const PANEL = '.wh40k-ow-drawback-panel';
 const DIALOG = 'dialog.application[open]';
 
@@ -179,7 +180,7 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
             await snap(page, 'ow-drawback-picker', { selector: 'dialog.application[open]' });
             await dialog.locator('button', { hasText: /^Doomed$/ }).click();
             await expect.poll(async () => (await drawbackState(page, actor.id)).drawbacks).toEqual([dropped.uuid, DOOMED]);
-            // Doomed refunds the 7 points Hammer of the Emperor prints (content#32).
+            // Doomed refunds the 7 points its book prints (content#32).
             await expect
                 .poll(async () => shownRows(panel))
                 .toEqual([

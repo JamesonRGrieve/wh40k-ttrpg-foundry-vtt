@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -13,8 +14,13 @@ import { expect, test } from './lib/test';
  */
 
 const PACKS = [
-    { label: 'rt', pack: 'wh40k-rpg.rt-core-items-ammo', id: 'eL4d1DHTGk2liwNm', name: 'Bullets' },
-    { label: 'dh2', pack: 'wh40k-rpg.dh2-core-items-ammo', id: 'oWd8OrE8AYBL48Mx', name: 'Backpack Ammo/Power Pack' },
+    { label: 'rt', pack: `wh40k-rpg.${packHoldingId({ line: 'rt', category: 'ammo' }, 'eL4d1DHTGk2liwNm')}`, id: 'eL4d1DHTGk2liwNm', name: 'Bullets' },
+    {
+        label: 'dh2',
+        pack: `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'ammo' }, 'oWd8OrE8AYBL48Mx')}`,
+        id: 'oWd8OrE8AYBL48Mx',
+        name: 'Backpack Ammo/Power Pack',
+    },
 ] as const;
 
 interface ProbeApp {

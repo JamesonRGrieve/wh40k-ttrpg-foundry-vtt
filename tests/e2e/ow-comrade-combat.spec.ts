@@ -4,11 +4,12 @@ import { installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B — Only War Comrades in Combat (#152; OW Core pp. 269–271), in a running
+ * Tier B — Only War Comrades in Combat (#152), in a running
  * combat on a live scene:
  *
  * - Cohesion breaks when the Comrade is moved past 5 m: the panel says so, the
@@ -25,7 +26,7 @@ import { expect, test } from './lib/test';
 const OW_COMRADE_FLOWS = ['cohesion-broken', 'pinning-mirrored', 'recovery-order', 'ranged-volley-bs-card'] as const;
 
 /** Only War's M36 Lasgun. */
-const OW_LASGUN = 'Compendium.wh40k-rpg.ow-core-items-weapons.Item.dwNgc34I7JMm8HuZ';
+const OW_LASGUN = compendiumUuid({ line: 'ow', category: 'weapons' }, 'dwNgc34I7JMm8HuZ');
 
 const COMRADE_PANEL = '[data-wh40k-hook="ow-comrade-panel"]';
 const ORDERS_PANEL = '.wh40k-ow-orders-panel';

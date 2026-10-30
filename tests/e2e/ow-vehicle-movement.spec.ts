@@ -7,7 +7,7 @@ import { expect, test } from './lib/test';
 
 /**
  * Tier B coverage of the Only War Vehicle Movement panel + action
- * (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+ * (#156 — the OW vehicle movement rules).
  *
  * Creates an `ow-character` actor in the seed world (with a primed
  * `chaseState` so the chase readout exercises the populated branch),

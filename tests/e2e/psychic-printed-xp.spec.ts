@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { createProbeActor, deleteProbeActors } from './lib/sheet-probe';
 import { test } from './lib/test';
@@ -17,7 +18,7 @@ import { scaledMs } from './lib/timing';
  *
  * For a DH2 and a BC character this opens the dialog on its Psychic Powers tab, reads what each
  * power is charged and captures the tab with Precognition's row outlined. It also loads Cauterise
- * from the DH2 compendium (the issue's spot check, "Value: 300 xp", DH2 core p. 206).
+ * from the DH2 compendium (the issue's spot check, "Value: 300 xp", as DH2 core prints it).
  *
  * Each flow records under `psychic-printed-xp.flow`. Keys MUST match PSYCHIC_PRINTED_XP_FLOWS in
  * scripts/e2e-coverage.mjs.
@@ -32,13 +33,13 @@ const PSYCHIC_PRINTED_XP_FLOWS = [
     'disciplines-as-printed',
 ] as const;
 
-/** The Psy Rating DH2 core prints for these powers (content#34): Molten Beam p. 209, Flame Breath p. 207. */
+/** The Psy Rating DH2 core prints for these powers (content#34). */
 const PRINTED_PSY_RATING: Record<string, number> = { 'Molten Beam': 4, 'Flame Breath': 3 };
 type FlowName = (typeof PSYCHIC_PRINTED_XP_FLOWS)[number];
 
 /**
- * What each line's printing charges: Precognition DH2 core p. 204 and BC core p. 226; Fate Loom
- * is a Tome of Fate power (corpus p. 54), and Doombolt a BC core power that Broken Chains restates
+ * What each line's printing charges: Precognition as DH2 core and BC core print it; Fate Loom
+ * is a BC supplement's power, and Doombolt a BC core power that another BC book restates
  * for a pregenerated sorcerer.
  */
 const EXPECTED: Record<'dh2' | 'bc', { flow: FlowName; charges: Record<string, number> }> = {
@@ -118,7 +119,8 @@ function sameEntries(a: Record<string, number | undefined>, b: Record<string, nu
 
 /** The DH2 compendium's Cauterise, loaded through the DataModel. */
 async function cauteriseCost(page: Page): Promise<number | null | string> {
-    return page.evaluate(async () => {
+    const packName = packHoldingName({ line: 'dh2', category: 'psychic-powers' }, 'Cauterise');
+    return page.evaluate(async (powersPack) => {
         interface Pack {
             metadata: { name: string };
             documentName: string;
@@ -127,13 +129,13 @@ async function cauteriseCost(page: Page): Promise<number | null | string> {
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as { game: { packs: { find: (fn: (p: Pack) => boolean) => Pack | undefined } } };
-        const pack = g.game.packs.find((p) => p.documentName === 'Item' && p.metadata.name === 'dh2-core-items-psychic-powers');
-        if (pack === undefined) return 'dh2-core-items-psychic-powers pack missing';
+        const pack = g.game.packs.find((p) => p.documentName === 'Item' && p.metadata.name === powersPack);
+        if (pack === undefined) return `${powersPack} pack missing`;
         const entry = (await pack.getIndex()).find((e) => e.name === 'Cauterise');
         if (entry === undefined) return 'Cauterise missing from the pack';
         const doc = await pack.getDocument(entry._id);
         return doc === null ? 'Cauterise did not load' : doc.system.cost;
-    });
+    }, packName);
 }
 
 test.describe.serial('psychic powers charge their printed XP (Tier B, content#30)', () => {
@@ -164,7 +166,7 @@ test.describe.serial('psychic powers charge their printed XP (Tier B, content#30
                     record('dh2-tiers-by-printed-psy-rating', sameEntries(tiers, PRINTED_PSY_RATING), `dh2 tiers ${JSON.stringify(tiers)}`);
                 }
                 if (line === 'bc') {
-                    // Tome of Fate is listed (#674), and a power two books print takes one row.
+                    // The BC supplement's power is listed (#674), and a power two books print takes one row.
                     const rows = { 'Fate Loom': read.listed['Fate Loom'], 'Doombolt': read.listed['Doombolt'] };
                     record('bc-lists-every-book-once', sameEntries(rows, { 'Fate Loom': 1, 'Doombolt': 1 }), `bc rows ${JSON.stringify(rows)}`);
                 }

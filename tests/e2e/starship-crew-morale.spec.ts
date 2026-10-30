@@ -23,8 +23,8 @@ import {
 } from './ship-sheet-driver';
 
 /**
- * Tier B coverage of the Rogue Trader Crew Population & Morale economy (#189,
- * RT Core p.218). A hull hit in Strategic Turn 1 costs the ship Crew and
+ * Tier B coverage of the Rogue Trader Crew Population & Morale economy (#189).
+ * A hull hit in Strategic Turn 1 costs the ship Crew and
  * Morale too; in Turn 2 the GM rolls Hold Fast! and Triage from the voidcraft
  * sheet's Extended Actions tab, and each success cancels part of the previous
  * turn's Morale or Crew Population loss — never Hull Integrity, and never more

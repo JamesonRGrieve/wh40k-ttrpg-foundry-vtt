@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { test } from './lib/test';
 
 /**
@@ -56,7 +57,8 @@ interface FlowResult {
 }
 
 async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
-    const results = await page.evaluate(async (): Promise<FlowResult[]> => {
+    const pushTheLimitUuid = compendiumUuid({ line: 'dh2', category: 'talents' }, 'nmjVhqTarVFg891j');
+    const results = await page.evaluate(async (pushUuid: string): Promise<FlowResult[]> => {
         type ImportError = { __importError?: string };
         interface XenosFeaturesModule extends ImportError {
             RIGHT_STUFF?: { applicableSkills?: readonly string[] };
@@ -139,7 +141,6 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
                     const rightStuff = xenos.RIGHT_STUFF ?? {};
                     // Push the Limit's +20 Operate, once-per-round limit and 4+ DoF critical are
                     // row data on the compendium talent now (#101), not constants in this module.
-                    const pushUuid = 'Compendium.wh40k-rpg.dh2-without-items-talents.Item.nmjVhqTarVFg891j';
                     const pushTalent = (await fromUuid(pushUuid)) as TalentDoc | null;
                     const operate = pushTalent?.system?.modifiers?.situational?.skills?.find((row) => row.key === 'operate');
                     const pushRowsOk =
@@ -311,7 +312,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
         await probeWeaponProgression();
 
         return out;
-    });
+    }, pushTheLimitUuid);
     return { results };
 }
 

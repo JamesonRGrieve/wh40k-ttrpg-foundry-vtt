@@ -281,7 +281,7 @@ async function probeRollsData(page: Page): Promise<{ results: FlowResult[] }> {
                 }
 
                 try {
-                    // The overload band by craftsmanship (DH2 core Table 5–13): 01–15 / 01–10 / 01–05 / 01.
+                    // The overload band by craftsmanship (the DH2 force field table): 01–15 / 01–10 / 01–05 / 01.
                     const band = (craftsmanship: string): number => new ForceFieldRollData(owner, field(craftsmanship, 30)).overloadRating;
                     const poor = band('poor');
                     const common = band('common');

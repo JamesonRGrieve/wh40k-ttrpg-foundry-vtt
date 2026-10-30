@@ -23,6 +23,7 @@ import {
 } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -46,13 +47,13 @@ import { expect, test } from './lib/test';
 
 const TALENT_HOOK_FLOWS = ['push-the-limit-row', 'push-the-limit-crit-risk', 'push-the-limit-spent', 'leaping-dodge-spray', 'field-vivisection-swap'] as const;
 
-const TALENTS = 'Compendium.wh40k-rpg.dh2-without-items-talents.Item';
-const PUSH_THE_LIMIT = `${TALENTS}.nmjVhqTarVFg891j`;
-const LEAPING_DODGE = `${TALENTS}.RZjZQh4sBTFlCk5k`;
-const FIELD_VIVISECTION = `${TALENTS}.V61f6ob25kbcYojg`;
-const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
-const HAND_FLAMER = `${WEAPONS}.j7K8l9M0n1O2p3Q4`;
-const CHAINSWORD = `${WEAPONS}.z5A6b7C8d9E0f1G2`;
+const dh2Talent = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'talents' }, docId);
+const PUSH_THE_LIMIT = dh2Talent('nmjVhqTarVFg891j');
+const LEAPING_DODGE = dh2Talent('RZjZQh4sBTFlCk5k');
+const FIELD_VIVISECTION = dh2Talent('V61f6ob25kbcYojg');
+const dh2Weapon = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'weapons' }, docId);
+const HAND_FLAMER = dh2Weapon('j7K8l9M0n1O2p3Q4');
+const CHAINSWORD = dh2Weapon('z5A6b7C8d9E0f1G2');
 
 function dh2Character(name: string, system: object = {}): object {
     return { name, type: 'dh2-character', img: 'icons/svg/mystery-man.svg', system: { gameSystem: 'dh2', ...system } };

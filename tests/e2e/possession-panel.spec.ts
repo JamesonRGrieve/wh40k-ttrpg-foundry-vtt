@@ -3,8 +3,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Possession Panel visual regression (#82 / #132 — beyond.md p.67-69,
- * L2095-2116).
+ * Possession Panel visual regression (#82 / #132 — the DH2 possession
+ * rules).
  *
  * Creates a `dh2-character` with `system.possession.state='latent'`
  * (the contested state), opens the actor sheet, navigates to the Status

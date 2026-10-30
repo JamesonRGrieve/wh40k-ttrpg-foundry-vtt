@@ -6,7 +6,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B for the Only War "Healing Comrades" panel (#157 — OW Core p.271).
+ * Tier B for the Only War "Healing Comrades" panel (#157).
  *
  * The sheet built only part of the panel's context, so the panel read
  * "Auto-recovery: undefined days". Wounding the Comrade never started the

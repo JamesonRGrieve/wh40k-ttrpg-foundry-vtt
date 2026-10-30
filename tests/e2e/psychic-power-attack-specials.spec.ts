@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -15,8 +16,8 @@ import { expect, test } from './lib/test';
  */
 
 const POWER = 'e2e-697 smite';
-const PACK = 'wh40k-rpg.dh2-core-items-weapon-qualities';
 const QUALITY_ID = 'AcAYn4jBRGuVzHyg';
+const PACK = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'weapon-qualities' }, QUALITY_ID)}`;
 const QUALITY = 'Defensive';
 
 interface ProbeApp {
@@ -121,14 +122,17 @@ const UNMAPPED_QUALITY_ID = '9fVL9IQvPHakQEKZ';
 
 test.describe.serial('psychic power attack specials (Tier B, #697)', () => {
     test.afterEach(async ({ page }) => {
-        await page.evaluate(async (name) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
-            const w = globalThis as unknown as ProbeWindow;
-            const power = w.game.items.getName(name);
-            await power?.sheet.close();
-            await power?.delete();
-            for (const app of w.game.packs.get('wh40k-rpg.dh2-core-items-weapon-qualities')?.apps ?? []) await app.close();
-        }, POWER);
+        await page.evaluate(
+            async ({ name, packId }) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+                const w = globalThis as unknown as ProbeWindow;
+                const power = w.game.items.getName(name);
+                await power?.sheet.close();
+                await power?.delete();
+                for (const app of w.game.packs.get(packId)?.apps ?? []) await app.close();
+            },
+            { name: POWER, packId: PACK },
+        );
     });
 
     test('a weapon quality dragged from the compendium becomes an attack special, reaches the roll, and is removed', async ({ page }) => {

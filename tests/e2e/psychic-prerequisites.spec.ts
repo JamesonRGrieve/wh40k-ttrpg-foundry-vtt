@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { createProbeActor, deleteProbeActors } from './lib/sheet-probe';
 import { test } from './lib/test';
@@ -14,7 +15,7 @@ import { scaledMs } from './lib/timing';
  * field is now the shared structured shape talents use
  * (src/module/rules/prerequisites.ts), authored from each book's printed
  * Prerequisite line, and the dialog checks it. DH2 core prints Smite's prerequisite as
- * "Willpower 40" (p. 202).
+ * "Willpower 40".
  *
  * Black Crusade's alignment and Corruption gates (#675): an unaligned, Corruption 0 sorcerer
  * sees Field of Pestilence ("Aligned Nurgle") and Wind of Chaos ("Corruption 30+") blocked;
@@ -49,7 +50,8 @@ const TYPED = 'Willpower 45, Psyniscience';
 
 /** Smite as the DH2 compendium loads it through the DataModel. */
 async function smitePrerequisites(page: Page): Promise<{ text: string; willpower: number | undefined } | string> {
-    return page.evaluate(async () => {
+    const packName = packHoldingName({ line: 'dh2', category: 'psychic-powers' }, 'Smite');
+    return page.evaluate(async (powersPack) => {
         interface Pack {
             metadata: { name: string };
             documentName: string;
@@ -58,13 +60,13 @@ async function smitePrerequisites(page: Page): Promise<{ text: string; willpower
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as { game: { packs: { find: (fn: (p: Pack) => boolean) => Pack | undefined } } };
-        const pack = g.game.packs.find((p) => p.documentName === 'Item' && p.metadata.name === 'dh2-core-items-psychic-powers');
+        const pack = g.game.packs.find((p) => p.documentName === 'Item' && p.metadata.name === powersPack);
         const entry = (await pack?.getIndex())?.find((e) => e.name === 'Smite');
-        if (pack === undefined || entry === undefined) return 'Smite not found in dh2-core-items-psychic-powers';
+        if (pack === undefined || entry === undefined) return `Smite not found in ${powersPack}`;
         const doc = await pack.getDocument(entry._id);
         if (doc === null) return 'Smite did not load';
         return { text: doc.system.prerequisites.text, willpower: doc.system.prerequisites.characteristics['willpower'] };
-    });
+    }, packName);
 }
 
 /** The unmet prerequisites the Advancement Dialog lists for `power`, after applying `update` to the actor. */
@@ -157,7 +159,8 @@ async function rawKeyChips(page: Page, appId: string): Promise<string[] | string
 
 /** A DH2 character who can buy Smite: the Psyker elite advance, Psy Rating 1 and XP to spend. */
 async function createDh2Psyker(page: Page): Promise<string | null> {
-    return page.evaluate(async () => {
+    const elitePackId = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'origins-elite-advances' }, 'Psyker')}`;
+    return page.evaluate(async (packId) => {
         interface PackLike {
             getIndex: () => Promise<Array<{ _id: string; name: string }>>;
             getDocument: (id: string) => Promise<{ uuid: string; toObject: () => object } | null>;
@@ -167,7 +170,7 @@ async function createDh2Psyker(page: Page): Promise<string | null> {
             Actor: { create: (data: object) => Promise<{ id: string } | null> };
             game: { packs: { get: (id: string) => PackLike | undefined } };
         };
-        const pack = g.game.packs.get('wh40k-rpg.dh2-core-origins-elite-advances');
+        const pack = g.game.packs.get(packId);
         const entry = (await pack?.getIndex())?.find((e) => e.name === 'Psyker');
         const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
         if (doc === null || doc === undefined) return null;
@@ -178,7 +181,7 @@ async function createDh2Psyker(page: Page): Promise<string | null> {
             items: [{ ...doc.toObject(), _stats: { compendiumSource: doc.uuid } }],
         });
         return actor?.id ?? null;
-    });
+    }, elitePackId);
 }
 
 interface ToggleRead {

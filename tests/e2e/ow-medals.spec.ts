@@ -3,21 +3,22 @@ import { createActor, deleteDocuments, openActorSheet } from './combat-resolutio
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { openPackDocument, closeApp } from './lib/pack-document';
+import { compendiumUuid, packHoldingId } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
  * Tier B for Only War Medals and Honours (content#32).
  *
- * The real compendium medals (OW core pp. 294–295, Enemies of the Imperium
- * pp. 140–143) are conferred on an OW character from the Battlefield panel's
+ * The real compendium medals (from the OW core rules and an OW supplement)
+ * are conferred on an OW character from the Battlefield panel's
  * Add Award, and by a drop on the sheet. Each shows by name with its Squad Bonus,
  * never a UUID or "[broken link]". The medal's own sheet shows what it is awarded
  * for and its Squad Bonus.
  */
 
-const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
-const HUNTERS = 'Compendium.wh40k-rpg.ow-enemies-items-medals.Item.OWeMedalHunter01';
+const WINGED_SKULL = compendiumUuid({ line: 'ow', category: 'medals' }, 'OWcMedalWingSk01');
+const HUNTERS = compendiumUuid({ line: 'ow', category: 'medals' }, 'OWeMedalHunter01');
 const PANEL = '.wh40k-ow-battlefield-panel';
 const DIALOG = 'dialog.application[open]';
 
@@ -137,7 +138,11 @@ test.describe.serial('OW Medals and Honours (Tier B, content#32)', () => {
 
     test('a medal’s sheet shows what it is awarded for and its Squad Bonus', async ({ page }) => {
         await joinOrSkip(page);
-        const opened = await openPackDocument(page, { pack: 'ow-core-items-medals', name: 'Winged Skull', view: 'sheet' });
+        const opened = await openPackDocument(page, {
+            pack: packHoldingId({ line: 'ow', category: 'medals' }, 'OWcMedalWingSk01'),
+            name: 'Winged Skull',
+            view: 'sheet',
+        });
         expect(opened.detail).toBeNull();
         const appId = opened.appId ?? '';
         const sheet = page.locator(`#${appId}`);

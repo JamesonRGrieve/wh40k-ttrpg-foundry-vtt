@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid, packHoldingName } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -32,10 +33,10 @@ const NPC_ARMOUR_FLOWS = [
 ] as const;
 type FlowName = (typeof NPC_ARMOUR_FLOWS)[number];
 
-const DH2_BESTIARY = 'wh40k-rpg.dh2-core-actors-bestiary';
+const DH2_BESTIARY = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Adeptus Arbites Arbitrator')}`;
 const HB_BESTIARY = 'wh40k-rpg.hb-dh2-actors-bestiary';
 /** The DH2 core Enforcer Light Carapace: AP 5 on every location. */
-const CARAPACE_UUID = 'Compendium.wh40k-rpg.dh2-core-items-armour.Item.Hm7xRcF2jNq4Wd9K';
+const CARAPACE_UUID = compendiumUuid({ line: 'dh2', category: 'armour' }, 'Hm7xRcF2jNq4Wd9K');
 const CARAPACE_NAME = 'Enforcer Light Carapace';
 const CARAPACE_AP = 5;
 const LINES = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt'] as const;

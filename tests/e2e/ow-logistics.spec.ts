@@ -7,7 +7,7 @@ import { expect, test } from './lib/test';
  * Tier B coverage of the OW Logistics Test dialog (#154).
  *
  * Instantiates the dialog via its deployed module URL, asserts that the
- * four Table 6-2 axis pickers (troop count, time in front, front
+ * four logistics-table axis pickers (troop count, time in front, front
  * activity, war condition), the craftsmanship picker, the standard-kit
  * toggle, the live target preview, and the Roll button render, then
  * snaps the result.
@@ -150,7 +150,7 @@ test.describe.serial('LogisticsTestDialog (Tier B)', () => {
         expect(result.hasTargetPreview, 'Target preview should render').toBe(true);
         expect(result.hasRollButton, 'Roll button should render').toBe(true);
         expect(result.hasCancelButton, 'Cancel button should render').toBe(true);
-        // Table 6-2 prints three troop columns: Company or Less, Single Regiment, Multiple Regiments.
+        // The logistics table prints three troop columns: Company or Less, Single Regiment, Multiple Regiments.
         expect(result.troopCountButtons, 'expected three Troop Count buttons').toBe(3);
 
         recordCoverage('dialog.render', 'LogisticsTestDialog');

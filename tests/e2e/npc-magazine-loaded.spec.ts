@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid, packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -27,10 +28,10 @@ import { scaledMs } from './lib/timing';
 const NPC_MAGAZINE_FLOWS = ['compendium-npc-arrives-loaded', 'added-weapon-arrives-loaded'] as const;
 type FlowName = (typeof NPC_MAGAZINE_FLOWS)[number];
 
-const BESTIARY_PACK = 'wh40k-rpg.dh2-core-actors-bestiary';
 const ARBITRATOR_NAME = 'Adeptus Arbites Arbitrator';
+const BESTIARY_PACK = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, ARBITRATOR_NAME)}`;
 /** The DH2 core Hand Flamer: clip 2. */
-const HAND_FLAMER_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
+const HAND_FLAMER_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
 
 interface FlowResult {
     name: FlowName;

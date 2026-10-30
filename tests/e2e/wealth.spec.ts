@@ -482,7 +482,7 @@ test.describe.serial('wealth / currency mechanics (Tier B)', () => {
 
         if (result.error !== null) failures.push(result.error);
         else {
-            // RT Table 9-35: Scarce → +0, Good craftsmanship → -10.
+            // RT's acquisition table: Scarce → +0, Good craftsmanship → -10.
             // (DH2's Scarce=-10 value lives in requisition-test.ts; RT
             // diverges and the dialog uses the rt rules module.)
             if (result.elementOk !== true) failures.push('dialog.element was not an HTMLElement after render');

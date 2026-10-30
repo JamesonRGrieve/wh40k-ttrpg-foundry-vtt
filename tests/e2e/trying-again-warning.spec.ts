@@ -5,7 +5,7 @@ import { expect, test } from './lib/test';
 /**
  * e2e coverage for #62 — Trying Again warning on the unified roll dialog.
  *
- * Per core.md §"Trying Again" (p. 96), some skills cannot be retried within
+ * Per the core "Trying Again" rule, some skills cannot be retried within
  * the same scene without a circumstance change, and others incur a cumulative
  * -10. The dialog surfaces this as a soft warning when the actor has already
  * attempted the skill (tracked via `actor.flags.wh40k['try-again'][skillKey]`).

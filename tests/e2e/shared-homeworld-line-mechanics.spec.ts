@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, snapElement } from './occult-sheet-flow';
 
@@ -13,6 +14,14 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet, snapElement } from '
  * on a character of the line, opens the owned origin's sheet (which resolves to
  * the owner's line), and checks the Grants tab shows the line's own values.
  */
+
+/**
+ * A line's Hive World: the stub (found by its source file's `…_<fileId>` suffix) keeps DH2's
+ * Hive World `_id`, so its UUID is that id in the line's pack.
+ */
+function stubbedHiveWorld(line: 'ow' | 'rt', fileId: string): string {
+    return `Compendium.wh40k-rpg.${packHoldingId({ line, category: 'origins-homeworlds' }, fileId)}.Item.DH2HvWrld0000004`;
+}
 
 interface ProbeSheet {
     id: string;
@@ -51,9 +60,9 @@ test.describe.serial('Shared home worlds resolve per line (Tier B, content#38)',
         await cleanupProbes(page);
     });
 
-    test('an Only War character’s Hive World is OW Core p.60', async ({ page }) => {
+    test('an Only War character’s Hive World is OW’s own', async ({ page }) => {
         const { actorId } = await openProbeSheet(page, { name: 'Hive Guardsman', type: 'ow-character', system: { gameSystem: 'ow' } });
-        const [originId] = await addCompendiumItems(page, actorId, ['Compendium.wh40k-rpg.ow-core-origins-homeworlds.Item.DH2HvWrld0000004']);
+        const [originId] = await addCompendiumItems(page, actorId, [stubbedHiveWorld('ow', 'ae1b1da8a39a0c9c')]);
         const sheetId = await openOwnedSheet(page, actorId, originId);
         const sheet = page.locator(`#${sheetId}`);
         // OW Hive World: no fixed characteristic change (+3 to two of Ag/Fel/Per is a choice), −1 starting Wound, Deceive.
@@ -66,9 +75,9 @@ test.describe.serial('Shared home worlds resolve per line (Tier B, content#38)',
         recordCoverage('sheet.render', 'originPath.ow.homeWorld.hiveWorld');
     });
 
-    test('a Rogue Trader character’s Hive World is RT Core p.20', async ({ page }) => {
+    test('a Rogue Trader character’s Hive World is RT’s own', async ({ page }) => {
         const { actorId } = await openProbeSheet(page, { name: 'Hive Explorer', type: 'rt-character', system: { gameSystem: 'rt' } });
-        const [originId] = await addCompendiumItems(page, actorId, ['Compendium.wh40k-rpg.rt-core-origins-homeworlds.Item.DH2HvWrld0000004']);
+        const [originId] = await addCompendiumItems(page, actorId, [stubbedHiveWorld('rt', 'sFqrqi9aW6SYJiti')]);
         const sheetId = await openOwnedSheet(page, actorId, originId);
         const sheet = page.locator(`#${sheetId}`);
         // RT Hive World: −5 Toughness, +5 Fellowship, Speak Language (Hive Dialect), the four Hive World talents.

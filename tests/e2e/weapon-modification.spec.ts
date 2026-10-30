@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { popOutChatMessage, showChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -9,11 +10,11 @@ import { expect, test } from './lib/test';
  * Tier B coverage of fitting and removing a weapon modification personally
  * (#136), driven from the weapon sheet the way a player does it:
  *
- *   - DH2 core p. 162: Fit a modification rolls Trade (Armourer) at the parts'
+ *   - DH2 core: Fit a modification rolls Trade (Armourer) at the parts'
  *     Availability (the Red-Dot Laser Sight is Scarce, −10); a success fits it
  *     and uses up the parts. The fitted row's screwdriver removes it with a
  *     Tech-Use test at the same modifier; a success returns the parts.
- *   - DH2 Enemies Without p. 42: a xenos weapon first needs the GM's ruling that
+ *   - A DH2 supplement: a xenos weapon first needs the GM's ruling that
  *     the maker is known and a Hard Forbidden Lore test; the next fitting then
  *     carries the alien-nature (−20) and lore-insight (+5 per DoS) rows.
  *   - Deathwatch prints no fitting test, so a DW owner's weapon sheet offers none.
@@ -24,13 +25,13 @@ import { expect, test } from './lib/test';
  */
 
 /**
- * The parts, taken from the dh2-core-items-weapon-mods compendium as DH2 core
- * p. 164 prints them (Scarce). The compendium mods were once typed
+ * The parts, taken from the DH2 core weapon-mods compendium as DH2 core
+ * prints them (Scarce). The compendium mods were once typed
  * `weapon.modification`, which no Item type registers, so an actor dropped them
  * on embedding (#136); the spec now uses the compendium document itself.
  */
 const MOD_NAME = 'Red-Dot Laser Sight';
-const MOD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.9dd13b0f5d3d2b15';
+const MOD_UUID = compendiumUuid({ line: 'dh2', category: 'weapon-mods' }, '9dd13b0f5d3d2b15');
 /** Uniform that rolls a d100 of 05: a success on any target above 5. */
 const SUCCESS_UNIFORM = 0.955;
 const ROLL_DIALOG = '.unified-roll-dialog';

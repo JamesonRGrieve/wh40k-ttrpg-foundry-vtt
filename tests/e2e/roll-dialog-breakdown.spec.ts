@@ -26,6 +26,7 @@ import {
 } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -43,7 +44,7 @@ import { expect, test } from './lib/test';
  *      from the environment widget shows its −20 row; the shooter's passive BS
  *      talent sits under a note that says "characteristic", not "skill".
  *   3. DH1 burst + degrees: Semi-Auto Burst is +10 on the mode card and on its
- *      breakdown row (DH1 core p. 191); a 01 posts a card that prints DH1's count,
+ *      breakdown row (as DH1 core prints it); a 01 posts a card that prints DH1's count,
  *      one degree per full 10 points of margin.
  *   4. DH2 burst: Full Auto Burst stays −10.
  *   5. Fitting a weapon modification from the weapon sheet: the parts'
@@ -63,9 +64,9 @@ const ROLL_DIALOG_FLOWS = [
     'dh1-ritual-degrees',
 ] as const;
 
-const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
-const DH2_AUTOGUN_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.r5S6t7U8v9W0x1Y2';
-const DH1_AUTOGUN_UUID = 'Compendium.wh40k-rpg.dh1-core-items-weapons.Item.r5S6t7U8v9W0x1Y2';
+const CHAINSWORD_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'z5A6b7C8d9E0f1G2');
+const DH2_AUTOGUN_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'r5S6t7U8v9W0x1Y2');
+const DH1_AUTOGUN_UUID = compendiumUuid({ line: 'dh1', category: 'weapons' }, 'r5S6t7U8v9W0x1Y2');
 /** A test-only talent whose `onParry` hook must reach the Parry dialog as its own row. */
 const PARRY_DRILL = 'E2E Parry Drill';
 /** A test-only talent whose flat BS bonus is folded into the characteristic (a passive row). */
@@ -354,7 +355,7 @@ test.describe.serial('Roll Test dialog target breakdown (Tier B)', () => {
             },
             items: [
                 { name: 'Probe Autogun', type: 'weapon', system: { class: 'basic', type: 'solid-projectile', equipped: true } },
-                // Scarce parts (DH2 core p. 164): the fitting test takes the line's Availability modifier.
+                // Scarce parts: the fitting test takes the line's Availability modifier.
                 { name: 'Red-Dot Laser Sight', type: 'weaponModification', system: { availability: 'scarce' } },
             ],
         });

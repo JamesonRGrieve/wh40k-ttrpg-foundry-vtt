@@ -12,10 +12,10 @@ import { expect, test } from './lib/test';
  *   1. The OW Logistics Test dialog opens on the squad's SAVED battlefront
  *      (`system.logisticsFront`) and saves a picker change back to the actor.
  *   2. The Inquisition Armoury request card for an OW buyer, priced through the
- *      Logistics Test with its Table 6-2 / 6-6 rows and no rating loss.
+ *      Logistics Test with its logistics-table rows and no rating loss.
  *   3. The armoury card for a DH2 buyer whose failure prints the Influence loss
- *      row (DoF beyond Fellowship bonus, core p. 269).
- *   4. The DH2 weapon-modification parts row (+30, core p. 162).
+ *      row (DoF beyond Fellowship bonus).
+ *   4. The DH2 weapon-modification parts row (+30).
  *
  * The cards go through the production `gateArmouryTrade` hook handler (the real
  * roll, rule resolution, template render and ChatMessage.create). Targets are
@@ -211,7 +211,7 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         recordCoverage('chat.render', 'armoury-requisition.ow');
     });
 
-    test('DH2 armoury card: a failure prints the Influence loss row (core p. 269, #496)', async ({ page }) => {
+    test('DH2 armoury card: a failure prints the Influence loss row (#496)', async ({ page }) => {
         await joinOrSkip(page);
         // 20 Influence − 50 (Near Unique) floors at 0, and every DoF is beyond a Fellowship bonus of 0.
         // The d100 is pinned to 50 so the test can't draw the 01 that would succeed against 0.
@@ -231,7 +231,7 @@ test.describe.serial('Requisition and armoury (Tier B)', () => {
         recordCoverage('chat.render', 'armoury-requisition.dh2-loss');
     });
 
-    test('DH2 armoury card: weapon-modification parts print their +30 row (core p. 162, #136)', async ({ page }) => {
+    test('DH2 armoury card: weapon-modification parts print their +30 row (#136)', async ({ page }) => {
         await joinOrSkip(page);
         const card = await postArmouryCard(page, {
             gameSystem: 'dh2',

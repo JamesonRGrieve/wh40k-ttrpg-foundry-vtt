@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { countHooks, expectHooks, expectHooksAuthored, fetchAuthoredHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -24,10 +25,10 @@ interface ActorRef {
  * document UUID. The fixture once stored slugs ("award-cadian-valour"), and the panel
  * printed them (#699).
  */
-const AWARDS = {
-    'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01': 'Winged Skull',
-    'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalCogHet01': 'Cog of Het',
-} as const;
+const AWARDS: Readonly<Record<string, string>> = {
+    [compendiumUuid({ line: 'ow', category: 'medals' }, 'OWcMedalWingSk01')]: 'Winged Skull',
+    [compendiumUuid({ line: 'ow', category: 'medals' }, 'OWcMedalCogHet01')]: 'Cog of Het',
+};
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
     const result = await page.evaluate(async (awards: string[]) => {

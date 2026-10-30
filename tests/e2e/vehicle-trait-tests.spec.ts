@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { overflowingLabels } from '../../src/module/testing/label-fit';
 import { joinOrSkip } from './lib/join';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -8,7 +9,7 @@ import { chatMessageIds, firstNewCard, snapChatCard, snapWindow } from './scene-
 
 /**
  * Tier B — vehicle traits as enforceable mechanics (content#28), on the REAL
- * compiled compendium: the DH2 Chimera Armoured Transport (core p. 191) with its
+ * compiled compendium: the DH2 Chimera Armoured Transport with its
  * lean-embedded Amphibious / Enclosed / Rugged / Tracked Vehicle traits, whose
  * structured effects reach the craft only through the compendium join.
  *
@@ -18,14 +19,14 @@ import { chatMessageIds, firstNewCard, snapChatCard, snapWindow } from './scene-
  *   2. With a crewman aboard, Repair opens the crewman's Tech-Use test, titled
  *      "Repair Test: Chimera Armoured Transport", with a Rugged row; the posted
  *      card names the trait as the row's source.
- *   3. Difficult Terrain is the crewman's Operate (Surface) test (DH2 core
- *      p. 111: treaded vehicles). He lacks that specialisation, so it is rolled
+ *   3. Difficult Terrain is the crewman's Operate (Surface) test (DH2 core:
+ *      treaded vehicles). He lacks that specialisation, so it is rolled
  *      untrained (rank 0), with Tracked Vehicle's +10 row.
  */
 
 const ROLL_DIALOG = '.unified-roll-dialog';
-const CHIMERA_PACK = 'wh40k-rpg.dh2-core-vehicles-terracraft';
 const CHIMERA_NAME = 'Chimera Armoured Transport';
+const CHIMERA_PACK = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'vehicles-terracraft' }, CHIMERA_NAME)}`;
 const CREWMAN_NAME = 'Vehicle Trait Probe Crewman';
 /** The skill the crewman's Difficult Terrain test rolls, as the dialog and card name it (#677). */
 const OPERATE_SURFACE_UNTRAINED = 'Operate (Surface), untrained';

@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { leanWeapon } from './lib/attack-harness';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { allWithinContainer, createProbeActor, deleteProbeActors, openProbeSheet, type SheetWidth } from './lib/sheet-probe';
 import { expect, test } from './lib/test';
@@ -29,8 +30,8 @@ const WEAPON_PENETRATION_FLOWS = [
 ] as const;
 type FlowName = (typeof WEAPON_PENETRATION_FLOWS)[number];
 
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
-const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
+const HAND_FLAMER = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
+const CONVERSION_BEAMER = compendiumUuid({ line: 'dh1', category: 'weapons' }, '804d243ba234097d');
 const VALUE = '[data-weapon-penetration]';
 /** The weapon sheet's minimum width (tailwind/weapon.js `min-width`, #614). */
 const MIN_SHEET_WIDTH_PX = 400;

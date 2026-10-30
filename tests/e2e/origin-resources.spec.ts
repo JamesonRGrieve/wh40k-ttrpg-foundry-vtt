@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, readActorSystem, showSheetTab, snapElement } from './occult-sheet-flow';
 
@@ -16,8 +17,8 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet, readActorSystem, sho
  */
 
 const VITALS = 'section.tab[data-tab="overview"] [data-wh40k-hook="overview-vitals"]';
-const OW_AGRI_WORLD = 'Compendium.wh40k-rpg.ow-hammer-origins-homeworlds.Item.3422efadd4703be1';
-const RT_FORTUNE = 'Compendium.wh40k-rpg.rt-core-origins-motivations.Item.Sw4y6TekvknMmLBo';
+const OW_AGRI_WORLD = compendiumUuid({ line: 'ow', category: 'origins-homeworlds' }, '3422efadd4703be1');
+const RT_FORTUNE = compendiumUuid({ line: 'rt', category: 'origins-motivations' }, 'Sw4y6TekvknMmLBo');
 
 /** Drop `origin` on a fresh `type` character and let a world boot apply it; returns its ids. */
 async function boot(page: Page, name: string, type: string, system: object, origin: string): Promise<{ actorId: string; sheetId: string }> {

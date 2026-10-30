@@ -4,8 +4,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the Two-Weapon Wielder errata p. 132 refocus
- * (GitHub #147 — errata/errata.md L67).
+ * Tier B coverage of the Two-Weapon Wielder errata refocus
+ * (GitHub #147).
  *
  * Drives the deployed `two-weapon-fighting` rules module to resolve a
  * ranged single-shot refocus plan, renders the refocus chat card via

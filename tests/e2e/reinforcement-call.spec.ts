@@ -2,20 +2,21 @@ import type { Page } from '@playwright/test';
 import { popOutChatMessage, showChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId, packHoldingName } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
  * Tier B coverage of calling a Reinforcement Character into play (DH2 core
- * pp. 294–295, #77), driven the way the GM does it: the RC is imported from its
+ * rules, #77), driven the way the GM does it: the RC is imported from its
  * compendium, its NPC sheet shows the GM-only Reinforcement panel, the panel's
  * Call button opens the call dialog, and the GM picks the caller, the
  * contributions and the Peer discount in that dialog.
  *
- *   - The Thrice-Bound Daemonhost (Enemies Beyond p. 38) needs a caller with
+ *   - The Thrice-Bound Daemonhost (a DH2 supplement) needs a caller with
  *     Forbidden Lore (Daemonology) at Trained: a caller without it is refused,
  *     one with it calls the Daemonhost and gains 1d5 Corruption.
- *   - The Eldar Ranger (Enemies Without, Influence Minimum 55, Cost 7, Peer
+ *   - The Eldar Ranger (a DH2 supplement, Influence Minimum 55, Cost 7, Peer
  *     (Craftworld Eldar) −2) is called with the Peer discount and another
  *     Acolyte paying part of the cost.
  *
@@ -24,8 +25,9 @@ import { expect, test } from './lib/test';
  */
 
 const DIALOG = '.reinforcement-call-dialog';
-const BEYOND_PACK = 'wh40k-rpg.dh2-beyond-actors-reinforcements';
-const WITHOUT_PACK = 'wh40k-rpg.dh2-without-actors-reinforcements';
+const DAEMONHOST_PACK = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'actors-reinforcements' }, 'Thrice-Bound Daemonhost')}`;
+/** The Eldar Ranger RC is a stub of the bestiary actor, so its pack is found by the stub's source file id. */
+const RANGER_PACK = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'actors-reinforcements' }, '0ede3d81eda64611')}`;
 const CALLERS = { lore: 'RC Probe Ibnad', noLore: 'RC Probe Magnus' } as const;
 
 interface Setup {
@@ -198,7 +200,7 @@ test.describe.serial('Reinforcement Character call (Tier B, #77)', () => {
         try {
             const callers = await setupCallers(page);
             expect(callers.error, callers.error ?? '').toBeNull();
-            const rc = await openRcSheet(page, BEYOND_PACK, 'Thrice-Bound Daemonhost');
+            const rc = await openRcSheet(page, DAEMONHOST_PACK, 'Thrice-Bound Daemonhost');
             expect(rc.error, rc.error ?? '').toBeNull();
 
             const panel = page.locator(`#${rc.sheetId} [data-wh40k-hook="rc-panel"]`);
@@ -237,12 +239,12 @@ test.describe.serial('Reinforcement Character call (Tier B, #77)', () => {
         }
     });
 
-    test('Enemies Without Eldar Ranger: the Peer discount and a contribution split the cost', async ({ page }) => {
+    test('Eldar Ranger: the Peer discount and a contribution split the cost', async ({ page }) => {
         await joinOrSkip(page);
         try {
             const callers = await setupCallers(page);
             expect(callers.error, callers.error ?? '').toBeNull();
-            const rc = await openRcSheet(page, WITHOUT_PACK, 'Eldar Ranger');
+            const rc = await openRcSheet(page, RANGER_PACK, 'Eldar Ranger');
             expect(rc.error, rc.error ?? '').toBeNull();
 
             const panel = page.locator(`#${rc.sheetId} [data-wh40k-hook="rc-panel"]`);

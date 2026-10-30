@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -20,6 +21,16 @@ import { expect, test } from './lib/test';
  * test collects failures into an array then asserts once at the end so the
  * single assertion message names every broken expectation.
  */
+
+const DH2_ELITE_ADVANCES = { line: 'dh2', category: 'origins-elite-advances' } as const;
+/** The DH2 elite-advance pack holding the Psyker elite advance. */
+const DH2_PSYKER_ELITE_PACK = `wh40k-rpg.${packHoldingId(DH2_ELITE_ADVANCES, 'DH2PsyElt0000002')}`;
+/** Every DH2 elite-advance pack, each found by one elite it holds (Psyker, Sister of Battle, Astropath). */
+const DH2_ELITE_PACKS = ['DH2PsyElt0000002', 'DH2SoBElt0000004', '96ae963f974c2de3'].map((docId) => packHoldingId(DH2_ELITE_ADVANCES, docId));
+/** The OW speciality pack holding the Sanctioned Psyker. */
+const OW_PSYKER_SPECIALITY_PACK = `wh40k-rpg.${packHoldingId({ line: 'ow', category: 'origins-specialities' }, 'c264ab5610140a8c')}`;
+/** The BC archetype pack holding BC's own Psyker archetype. */
+const BC_PSYKER_ARCHETYPE_PACK = `wh40k-rpg.${packHoldingId({ line: 'bc', category: 'origins-archetypes' }, 'c22473691d53c7e1')}`;
 
 interface BCEmbeddedItem {
     id: string;
@@ -467,8 +478,8 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     // #681: owning the origin flagged `grantsPsychicPowers` unlocks the Psychic Powers tab, by data
     // and not by name: each origin is renamed before it is given to the character.
     for (const { line, origin } of [
-        { line: 'dh2', origin: { pack: 'wh40k-rpg.dh2-core-origins-elite-advances', name: 'Psyker', rename: 'Renamed Psyker Advance (#681)' } },
-        { line: 'ow', origin: { pack: 'wh40k-rpg.ow-core-origins-specialities', name: 'Sanctioned Psyker', rename: 'Renamed Psyker Speciality (#681)' } },
+        { line: 'dh2', origin: { pack: DH2_PSYKER_ELITE_PACK, name: 'Psyker', rename: 'Renamed Psyker Advance (#681)' } },
+        { line: 'ow', origin: { pack: OW_PSYKER_SPECIALITY_PACK, name: 'Sanctioned Psyker', rename: 'Renamed Psyker Speciality (#681)' } },
     ]) {
         test(`${line}: a character owning the flagged psyker origin, renamed, has psychic powers unlocked (#681)`, async ({ page }) => {
             await joinOrSkip(page);
@@ -491,7 +502,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
     test('dh2: the Elite Advances tab lists elites from every book, a renamed owned one Taken (#684)', async ({ page }) => {
         await joinOrSkip(page);
         const opened = await openAdvancementDialog(page, 'dh2', {
-            pack: 'wh40k-rpg.dh2-core-origins-elite-advances',
+            pack: DH2_PSYKER_ELITE_PACK,
             name: 'Psyker',
             rename: 'Renamed Psyker Advance (#684)',
         });
@@ -500,11 +511,11 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             await dialog.locator('[data-action="switchTab"][data-tab="traits"]').click();
             const tiles = dialog.locator('[data-elite-uuid]');
             await expect(tiles.first()).toBeVisible();
-            const books = await tiles.evaluateAll((els) => [
-                ...new Set(els.map((el) => /Compendium\.wh40k-rpg\.dh2-([a-z0-9]+)-origins-/.exec(el.getAttribute('data-elite-uuid') ?? '')?.[1] ?? '')),
+            const packs = await tiles.evaluateAll((els) => [
+                ...new Set(els.map((el) => /Compendium\.wh40k-rpg\.([^.]+)\./u.exec(el.getAttribute('data-elite-uuid') ?? '')?.[1] ?? '')),
             ]);
-            expect(books.sort(), 'elites from every DH2 book that prints them').toEqual(['beyond', 'core', 'within']);
-            await expect(dialog.locator('[data-elite-uuid*="dh2-core-origins-elite-advances"][data-owned="true"]')).toContainText('Psyker');
+            expect(packs.sort(), 'elites from every DH2 book that prints them').toEqual([...DH2_ELITE_PACKS].sort());
+            await expect(dialog.locator(`[data-elite-uuid*="${DH2_PSYKER_ELITE_PACK}."][data-owned="true"]`)).toContainText('Psyker');
             await expect(dialog.locator('[data-owned="true"]')).toHaveCount(1);
             await snap(page, 'advancement-elite-advances-dh2', { selector: `#${opened.appId}` });
         } finally {
@@ -527,11 +538,11 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         });
     }
 
-    // content#36: BC's Psyker archetype is BC's own document (BC Core pp. 68-69), not a stub of DH2's
+    // content#36: BC's Psyker archetype is BC's own document (the BC core rules), not a stub of DH2's
     // Psyker elite advance: its sheet shows the archetype's Chaos Psyker ability and 8+1d5 Wounds.
     test('bc: the Psyker archetype is authored as BC prints it (content#36)', async ({ page }) => {
         await joinOrSkip(page);
-        const sheetId = await page.evaluate(async () => {
+        const sheetId = await page.evaluate(async (archetypePackId: string) => {
             interface SheetLike {
                 id: string;
                 render: (force: boolean) => Promise<object>;
@@ -542,7 +553,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry browser-side globals have no shipped types
             const g = globalThis as unknown as { game: { packs: { get: (id: string) => PackLike | undefined } } };
-            const pack = g.game.packs.get('wh40k-rpg.bc-core-origins-archetypes');
+            const pack = g.game.packs.get(archetypePackId);
             const entry = (await pack?.getIndex())?.find((e) => e.name === 'Psyker');
             const doc = entry === undefined ? null : await pack?.getDocument(entry._id);
             if (!doc?.sheet) throw new Error('BC Psyker archetype not found');
@@ -550,7 +561,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
             await doc.sheet.render(true);
             await globalThis.wh40kE2E.waitFor(() => document.getElementById(doc.sheet?.id ?? '') !== null, 'the BC Psyker sheet');
             return doc.sheet.id;
-        });
+        }, BC_PSYKER_ARCHETYPE_PACK);
         const sheet = page.locator(`#${sheetId}`);
         await expect(sheet).toContainText('Chaos Psyker');
         await expect(sheet).toContainText('8+1d5');

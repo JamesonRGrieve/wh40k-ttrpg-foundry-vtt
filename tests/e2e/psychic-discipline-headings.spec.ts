@@ -16,7 +16,7 @@ import { scaledMs } from './lib/timing';
  * `disciplines-as-printed` flow; this spec checks the heading text itself.)
  */
 
-/** Headings each book prints that must appear (BC core p. 212; DH2 Enemies Beyond p. 37). */
+/** Headings each line's books print that must appear (the BC core rules; a DH2 supplement). */
 const EXPECTED_HEADINGS: Record<'bc' | 'dh2', readonly string[]> = {
     bc: ['Unaligned', 'Nurgle', 'Slaanesh', 'Tzeentch', 'Exalted', 'Divination', 'Telepathy', 'Telekinesis'],
     dh2: ['Biomancy', 'Divination', 'Pyromancy', 'Telekinesis', 'Telepathy', 'Astropath Psychic Powers', 'Minor Psychic Powers'],

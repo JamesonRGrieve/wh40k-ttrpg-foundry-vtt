@@ -1,5 +1,6 @@
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, snapElement } from './occult-sheet-flow';
 
@@ -13,7 +14,8 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet, snapElement } from '
  * Emperor's Blessing.
  */
 
-const RT_VOID_BORN = 'Compendium.wh40k-rpg.rt-core-origins-homeworlds.Item.DH2VdBrn00000006';
+/** The RT pack's Void Born: a stub (source file `…_YwBPZ0s6JNPnHNI5`) that keeps DH2's Voidborn `_id`. */
+const RT_VOID_BORN = `Compendium.wh40k-rpg.${packHoldingId({ line: 'rt', category: 'origins-homeworlds' }, 'YwBPZ0s6JNPnHNI5')}.Item.DH2VdBrn00000006`;
 /** Rogue Trader's origin steps, in builder order (rt-config.ts `getOriginPathStepKeys`). */
 const RT_STEPS = ['homeWorld', 'birthright', 'lureOfTheVoid', 'trialsAndTravails', 'motivation', 'career', 'lineage', 'eliteAdvance'];
 

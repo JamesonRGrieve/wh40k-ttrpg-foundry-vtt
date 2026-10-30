@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -16,7 +17,8 @@ import { expect, test } from './lib/test';
  */
 
 const PREFIX = 'e2e-641';
-const PACK = 'wh40k-rpg.dh2-beyond-items-weapon-mods';
+/** The DH2 weapon-mod pack holding Truesilver Gilding. */
+const PACK = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'weapon-mods' }, 'EB2TrSlvGld00001')}`;
 
 interface ProbeItem {
     id: string;

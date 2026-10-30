@@ -2,13 +2,14 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { countHooks, expectHooks } from './lib/hooks';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
  * Tier B coverage of the Only War Mounted Combat panel + action
- * (#159 — Hammer of the Emperor §"MOUNTED COMBAT" /
- * "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS", hammer.md lines 4046-4260).
+ * (#159 — the OW mounted combat rules: mount special actions and
+ * mount traits).
  *
  * Creates an `ow-character` actor in the seed world (with a primed
  * `mountedOn` link so the mount readout exercises the populated branch),
@@ -27,7 +28,7 @@ interface ActorRef {
     id: string;
 }
 
-const MOUNT_HORSE = 'Compendium.wh40k-rpg.ow-hammer-actors-mounts.Actor.4bceba2781bd8d4f';
+const MOUNT_HORSE = compendiumUuid({ line: 'ow', category: 'actors-mounts' }, '4bceba2781bd8d4f', 'Actor');
 const READOUT = '.wh40k-ow-mount-panel [data-wh40k-hook="ow-mount-current-readout"]';
 
 async function createOwActor(page: Page): Promise<ActorRef | { error: string }> {
@@ -44,7 +45,7 @@ async function createOwActor(page: Page): Promise<ActorRef | { error: string }> 
                 type: 'ow-character',
                 system: {
                     gameSystem: 'ow',
-                    // A real mount (Hammer of the Emperor's Horse) and two of its traits:
+                    // A real mount (the OW Horse) and two of its traits:
                     // an invented UUID read "[broken link]" (#159).
                     mountedOn: {
                         mountId: mountUuid,

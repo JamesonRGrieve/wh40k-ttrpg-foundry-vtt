@@ -1,5 +1,6 @@
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -63,7 +64,9 @@ test.describe.serial('Homebrew conversions are discovered, not stubbed (Tier B, 
             },
             { moduleUrl: BUILDER_MODULE_URL, fortressId: FORTRESS_ID },
         );
-        expect(opened.fortress, 'Fortress World lists once, from the OW pack').toEqual([`Compendium.wh40k-rpg.ow-core-origins-homeworlds.Item.${FORTRESS_ID}`]);
+        expect(opened.fortress, 'Fortress World lists once, from the OW pack').toEqual([
+            compendiumUuid({ line: 'ow', category: 'origins-homeworlds' }, FORTRESS_ID),
+        ]);
 
         const card = page.locator(`#${opened.builderId} [data-action="selectOriginCard"][data-origin-uuid$="${FORTRESS_ID}"]`);
         await expect(card).toHaveCount(1);

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -48,7 +49,8 @@ interface ProbeResult {
     flows: FlowResult[];
 }
 
-const TALENT_PACK = 'wh40k-rpg.dh2-core-items-talents';
+/** The DH2 core talents pack, found by the Superior Chirurgeon talent it holds. */
+const TALENT_PACK = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000071')}`;
 
 async function probeSheetMixins(page: Page): Promise<ProbeResult> {
     const flows = await page.evaluate(async (talentPackId: string): Promise<Array<{ flow: string; ok: boolean; detail: string | null }>> => {

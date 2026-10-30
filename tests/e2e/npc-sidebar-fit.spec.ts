@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { closeApp, openPackDocument, type PackDocumentRef } from './lib/pack-document';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -29,20 +30,52 @@ interface SidebarSample extends PackDocumentRef {
 }
 
 const SIDEBAR_SAMPLES: readonly SidebarSample[] = [
-    { label: 'bc-bloodletter', pack: 'bc-core-actors-bestiary', name: 'Bloodletter', view: 'sheet', daemonic: true },
-    { label: 'bc-axsenaea', pack: 'bc-core-actors-npcs', name: "Ax'senaea", view: 'sheet', daemonic: true },
-    { label: 'bc-beast-of-nurgle', pack: 'bc-decay-actors-bestiary', name: 'Beast of Nurgle', view: 'sheet', daemonic: true },
-    { label: 'bc-asphodel-kroot-warrior', pack: 'bc-blood-actors-bestiary', name: 'Asphodel Kroot Warrior', view: 'sheet', daemonic: false },
+    {
+        label: 'bc-bloodletter',
+        pack: packHoldingName({ line: 'bc', category: 'actors-bestiary' }, 'Bloodletter'),
+        name: 'Bloodletter',
+        view: 'sheet',
+        daemonic: true,
+    },
+    { label: 'bc-axsenaea', pack: packHoldingName({ line: 'bc', category: 'actors-npcs' }, "Ax'senaea"), name: "Ax'senaea", view: 'sheet', daemonic: true },
+    {
+        label: 'bc-beast-of-nurgle',
+        pack: packHoldingName({ line: 'bc', category: 'actors-bestiary' }, 'Beast of Nurgle'),
+        name: 'Beast of Nurgle',
+        view: 'sheet',
+        daemonic: true,
+    },
+    {
+        label: 'bc-asphodel-kroot-warrior',
+        pack: packHoldingName({ line: 'bc', category: 'actors-bestiary' }, 'Asphodel Kroot Warrior'),
+        name: 'Asphodel Kroot Warrior',
+        view: 'sheet',
+        daemonic: false,
+    },
 ];
 
 /** The vehicle sheets the freeze audit caught clipping ('CHIMERA ARMOL', 'ADEPTUS ASTARTI'). */
 const VEHICLE_SAMPLES: readonly (PackDocumentRef & { label: string })[] = [
-    { label: 'dh2-chimera-armoured-transport', pack: 'dh2-core-vehicles-terracraft', name: 'Chimera Armoured Transport', view: 'sheet' },
-    { label: 'dw-adeptus-astartes-dreadnought', pack: 'dw-rites-vehicles-terracraft', name: 'Adeptus Astartes Dreadnought', view: 'sheet' },
+    {
+        label: 'dh2-chimera-armoured-transport',
+        pack: packHoldingName({ line: 'dh2', category: 'vehicles-terracraft' }, 'Chimera Armoured Transport'),
+        name: 'Chimera Armoured Transport',
+        view: 'sheet',
+    },
+    {
+        label: 'dw-adeptus-astartes-dreadnought',
+        pack: packHoldingName({ line: 'dw', category: 'vehicles-terracraft' }, 'Adeptus Astartes Dreadnought'),
+        name: 'Adeptus Astartes Dreadnought',
+        view: 'sheet',
+    },
 ];
 
 /** The longest RT core ship name. */
-const VOIDCRAFT_SAMPLE: PackDocumentRef = { pack: 'rt-core-vehicles-voidcraft', name: 'Vagabond-class Merchant Trader', view: 'sheet' };
+const VOIDCRAFT_SAMPLE: PackDocumentRef = {
+    pack: packHoldingName({ line: 'rt', category: 'vehicles-voidcraft' }, 'Vagabond-class Merchant Trader'),
+    name: 'Vagabond-class Merchant Trader',
+    view: 'sheet',
+};
 
 interface NameField {
     fits: boolean;
@@ -65,8 +98,8 @@ async function measureNameField(page: Page, appId: string): Promise<NameField> {
     }, appId);
 }
 
-const BC_NPC: PackDocumentRef = { pack: 'bc-core-actors-bestiary', name: 'Bloodletter', view: 'sheet' };
-const DH2_NPC: PackDocumentRef = { pack: 'dh2-core-actors-bestiary', name: 'Astropath', view: 'sheet' };
+const BC_NPC: PackDocumentRef = { pack: packHoldingName({ line: 'bc', category: 'actors-bestiary' }, 'Bloodletter'), name: 'Bloodletter', view: 'sheet' };
+const DH2_NPC: PackDocumentRef = { pack: packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Astropath'), name: 'Astropath', view: 'sheet' };
 
 /** The tallest a one-line pill renders (0.65rem text + padding + border). */
 const ONE_LINE_PILL_MAX_PX = 26;

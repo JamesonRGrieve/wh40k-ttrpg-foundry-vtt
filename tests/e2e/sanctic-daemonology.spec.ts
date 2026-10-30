@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import {
@@ -21,12 +22,14 @@ import {
 /** A card block whose whole text is a cost line, as the packs' old descriptions were (content#30). */
 const BARE_XP_LINE = />\s*\d+\s*xp\s*</i;
 
-/** Sacrifice — a Malefic Daemonology power (DH2 Enemies Beyond), not an attack. */
-const SACRIFICE_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.fs2LEOnlo15rJYiN';
+/** Sacrifice — a Malefic Daemonology power (a DH2 supplement), not an attack. */
+const SACRIFICE_UUID = compendiumUuid({ line: 'dh2', category: 'psychic-powers' }, 'fs2LEOnlo15rJYiN');
 /** Psychic Communion — a Sanctic Daemonology power, not an attack. */
-const COMMUNION_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.r2CakaLPtwzotW0W';
+const COMMUNION_UUID = compendiumUuid({ line: 'dh2', category: 'psychic-powers' }, 'r2CakaLPtwzotW0W');
+/** Cleansing Flame — the power the manifestation card resolves. */
+const CLEANSING_FLAME_UUID = compendiumUuid({ line: 'dh2', category: 'psychic-powers' }, 'HoHmYJ5qyQq6h5r2');
 /** The Sanctic Purity talent (#131). */
-const SANCTIC_PURITY_UUID = 'Compendium.wh40k-rpg.dh2-beyond-items-talents.Item.2DuNNAkyTTMgGzJb';
+const SANCTIC_PURITY_UUID = compendiumUuid({ line: 'dh2', category: 'talents' }, '2DuNNAkyTTMgGzJb');
 
 /** Dice uniform giving a d100 of 05: a pass, and not a double, so no Phenomena. */
 const ROLL_05 = 0.955;
@@ -64,8 +67,7 @@ async function castFromSheet(page: Page, sheetId: string, itemId: string, label:
 }
 
 /**
- * Tier B coverage of the Sanctic Daemonology discipline (GitHub #130 —
- * beyond.md L1813–2090).
+ * Tier B coverage of the Sanctic Daemonology discipline (GitHub #130).
  *
  * Drives the deployed `sanctic-daemonology` rules module to resolve a
  * pushed manifestation, renders the manifestation chat card via
@@ -79,7 +81,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
     test('renders the manifestation card with zero corruption and snaps', async ({ page }) => {
         await joinOrSkip(page);
 
-        const result = await page.evaluate(async () => {
+        const result = await page.evaluate(async (cleansingFlameUuid: string) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `foundry` global + `fromUuid` are injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
                 foundry?: { applications?: { handlebars?: { renderTemplate?: (path: string, ctx: object) => Promise<string> } } };
@@ -127,7 +129,6 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 // Identify the power by its compendium UUID; the resolver
                 // echoes it back and the display name is read from the
                 // compendium at runtime (the migrated content home).
-                const cleansingFlameUuid = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.HoHmYJ5qyQq6h5r2';
                 const r = resolve({
                     powerId: cleansingFlameUuid,
                     mode: 'push',
@@ -195,7 +196,7 @@ test.describe.serial('SancticDaemonology (Tier B)', () => {
                 hasWh40kClass,
                 error,
             };
-        });
+        }, CLEANSING_FLAME_UUID);
 
         await clearScreenOverlays(page);
         await snap(page, 'sanctic-daemonology', { selector: '#__c9_sd_host [data-wh40k-hook="sd-card"]' });
