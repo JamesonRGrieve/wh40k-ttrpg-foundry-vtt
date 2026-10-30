@@ -1,9 +1,12 @@
 import type { Page } from '@playwright/test';
 import { createPlayer, deleteDocuments, restoreSettings, setWorldSettings } from './combat-resolution-flow';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
+import { canvasClip } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
+import { armCueFreeze, awaitCueFreeze, installCueProbe, releaseFreeze } from './lib/cue-probe';
 import { joinAsUser, joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
+import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
@@ -19,7 +22,7 @@ import { scaledMs } from './lib/timing';
  *
  * | Outcome | How |
  * |---|---|
- * | fire, hit | a Lasgun hit |
+ * | fire, hit | a Lasgun hit; and a Semi-Auto Burst spread onto a second creature, whose spread hit is drawn on it when the damage is rolled (#513) |
  * | miss | a Lasgun miss |
  * | critical | the hit's damage rolls a 10 (Righteous Fury) |
  * | dodge | the target Dodges a hit from its evasion prompt |
@@ -34,6 +37,9 @@ import { scaledMs } from './lib/timing';
  * | manifest | Smite cast at the target |
  * | phenomena | Smite on a doubles Focus Power roll (11): the Phenomena table rolls 30 |
  * | perils | Smite on doubles (22): the Phenomena table rolls 90, so Perils follow |
+ *
+ * Each outcome's canvas is captured on the GM's client, the frame frozen just after
+ * its own cue (lib/cue-probe.ts): `attack-cue-outcome-<outcome>`.
  *
  * Each event records under `attack-cue.outcome`. Keys MUST match
  * ATTACK_CUE_OUTCOMES in scripts/e2e-coverage.mjs (the cue vocabulary).
@@ -94,8 +100,19 @@ const TOKENS = [
         },
     },
     { key: 'target', name: 'Cue Heretic', type: 'dh2-npc', x: 800, y: 400 },
+    // 1 m beside the target: a burst can spread onto it (#513).
+    { key: 'cultist', name: 'Cue Cultist', type: 'dh2-npc', x: 900, y: 400 },
     { key: 'foe', name: 'Cue Brawler', type: 'dh2-npc', x: 300, y: 600 },
 ];
+/** Token centres, for the canvas capture region. */
+const TOKEN_CENTRES = [
+    { x: 250, y: 450 },
+    { x: 850, y: 450 },
+    { x: 950, y: 450 },
+    { x: 350, y: 650 },
+];
+/** How long after its cue appears the capture frame is frozen, in ms. */
+const FREEZE_AFTER_MS = 120;
 
 /** One played cue step, as the hook carries it. */
 interface Played {
@@ -170,12 +187,22 @@ test.describe.serial('every attack-cue outcome on a live canvas, on every client
             const clients = [page, player];
             await Promise.all(clients.map(listenForCues));
 
-            const attack = async (weaponName: string, target: string | null, faces: Array<[number, number]>): Promise<string[]> => {
+            await installCueProbe(page, FREEZE_AFTER_MS);
+            await clearScreenOverlays(page);
+            const clip = await canvasClip(page, TOKEN_CENTRES, 150);
+
+            const attack = async (
+                weaponName: string,
+                target: string | null,
+                faces: Array<[number, number]>,
+                choices?: { action: string; hitAllocation: 'spread' },
+            ): Promise<string[]> => {
                 const result = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {
                     firer: scene.tokens['firer'] ?? '',
                     target: target === null ? null : scene.tokens[target] ?? '',
                     weaponName,
                     faces,
+                    ...(choices === undefined ? {} : { choices }),
                 });
                 expect(result.messageIds.length, `${weaponName} posted its card (${result.notices.join(' | ')})`).toBeGreaterThan(0);
                 return result.messageIds;
@@ -203,9 +230,14 @@ test.describe.serial('every attack-cue outcome on a live canvas, on every client
                     faces: [[face, 100]] as Array<[number, number]>,
                 });
             };
-            /** Run one outcome and check both clients drew its events. */
-            const expectCues = async (label: string, events: readonly CueEvent[], run: () => Promise<void>): Promise<void> => {
+            /**
+             * Run one outcome, check both clients drew its events, and capture the GM's
+             * canvas frozen just after the `capture` cue (the outcome's own, drawn last; a
+             * run that has to arm the freeze itself passes null).
+             */
+            const expectCues = async (label: string, events: readonly CueEvent[], capture: CueEvent | null, run: () => Promise<void>): Promise<void> => {
                 await clearCues(clients);
+                if (capture !== null) await armCueFreeze(page, capture);
                 await run();
                 for (const [index, client] of clients.entries()) {
                     // eslint-disable-next-line no-await-in-loop -- each client is checked in turn, after the attack resolved
@@ -215,22 +247,53 @@ test.describe.serial('every attack-cue outcome on a live canvas, on every client
                         expect(drawnEvents(log), `${label}: the ${who}’s client draws ${event} (it played ${JSON.stringify(log)})`).toContain(event);
                     }
                 }
+                expect(await awaitCueFreeze(page, scaledMs(3_000)), `${label}: the capture froze on its cue`).toBe(true);
+                const slug = label.toLowerCase().replace(/[^a-z0-9]+/gu, '-');
+                expect(await snap(page, `attack-cue-outcome-${slug}`, clip === null ? { selector: '#board' } : { clip })).not.toBeNull();
+                await releaseFreeze(page);
+                // An area attack's template stays on the scene; clear it so it does not sit in the next outcome's capture.
+                await page.evaluate(async (id) => {
+                    interface TemplateScene {
+                        templates: { contents: Array<{ id: string }> };
+                        deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]>;
+                    }
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.scenes` has no browser-side types
+                    const g = globalThis as unknown as { game: { scenes: { get: (i: string) => TemplateScene | undefined } } };
+                    const stage = g.game.scenes.get(id);
+                    const ids = stage?.templates.contents.map((t) => t.id) ?? [];
+                    if (ids.length > 0) await stage?.deleteEmbeddedDocuments('MeasuredTemplate', ids);
+                }, scene.sceneId);
                 for (const event of events) recordCoverage('attack-cue.outcome', event);
             };
 
-            await expectCues('a Lasgun hit', ['fire', 'hit'], async () => {
-                const hit = await attack('Lasgun', 'target', [[5, 100]]);
-                await click(hit, '.roll-control__take-hit', []);
+            await expectCues('a Lasgun hit', ['fire', 'hit'], 'hit', async () => {
+                await attack('Lasgun', 'target', [[5, 100]]);
             });
-            await expectCues('a successful Dodge', ['dodge'], async () => {
+            await expectCues('a successful Dodge', ['dodge'], 'dodge', async () => {
                 const hit = await attack('Lasgun', 'target', [[5, 100]]);
                 // The target Dodges from its evasion prompt (whispered to the GM, who plays it).
                 await evade(hit, 'dodge', 1);
             });
-            await expectCues('a Lasgun miss', ['fire', 'miss'], async () => {
+            await expectCues('a Lasgun miss', ['fire', 'miss'], 'miss', async () => {
                 await attack('Lasgun', 'target', [[90, 100]]);
             });
-            await expectCues('Righteous Fury on the damage', ['critical'], async () => {
+            await expectCues('a burst spread onto a second creature', ['fire', 'hit'], null, async () => {
+                const burst = await attack('Autogun', 'target', [[1, 100]], { action: 'Semi-Auto Burst', hitAllocation: 'spread' });
+                await click(burst, '.roll-control__take-hit', []);
+                // Only the damage roll's cues from here on: a targeted burst's hits are drawn
+                // again at damage time only where one was spread onto another creature.
+                await clearCues(clients);
+                await armCueFreeze(page, 'hit');
+                await click(burst, '.roll-control__roll-damage', [
+                    [5, 10],
+                    [5, 10],
+                    [5, 10],
+                    [5, 10],
+                    [5, 10],
+                    [5, 10],
+                ]);
+            });
+            await expectCues('Righteous Fury on the damage', ['critical'], 'critical', async () => {
                 const hit = await attack('Lasgun', 'target', [[5, 100]]);
                 await click(hit, '.roll-control__take-hit', []);
                 await click(hit, '.roll-control__roll-damage', [
@@ -239,50 +302,49 @@ test.describe.serial('every attack-cue outcome on a live canvas, on every client
                     [5, 10],
                 ]);
             });
-            await expectCues('an Autogun jam', ['jam'], async () => {
+            await expectCues('an Autogun jam', ['jam'], 'jam', async () => {
                 await attack('Autogun', 'target', [[97, 100]]);
             });
-            await expectCues('a Plasma Gun overheat', ['overheat'], async () => {
+            await expectCues('a Plasma Gun overheat', ['overheat'], 'overheat', async () => {
                 await attack('Plasma Gun', 'target', [[95, 100]]);
             });
-            await expectCues('a Scavenged weapon on 00', ['explode'], async () => {
+            await expectCues('a Scavenged weapon on 00', ['explode'], 'explode', async () => {
                 await attack('Junk Autogun', 'target', [[100, 100]]);
             });
-            await expectCues('a Hand Flamer', ['spray'], async () => {
+            await expectCues('a Hand Flamer', ['spray'], 'spray', async () => {
                 await attack('Hand Flamer', 'target', [[50, 100]]);
             });
-            await expectCues('a Frag Grenade that hits', ['blast'], async () => {
+            await expectCues('a Frag Grenade that hits', ['blast'], 'blast', async () => {
                 await attack('Frag Grenade', 'target', [[10, 100]]);
             });
-            await expectCues('a Frag Grenade that misses', ['scatter', 'blast'], async () => {
+            await expectCues('a Frag Grenade that misses', ['scatter', 'blast'], 'blast', async () => {
                 await attack('Frag Grenade', 'target', [
                     [95, 100],
                     [5, 10],
                     [3, 10],
                 ]);
             });
-            await expectCues('a Chainsword hit', ['melee-hit'], async () => {
-                const hit = await attack('Chainsword', 'foe', [[5, 100]]);
-                await click(hit, '.roll-control__take-hit', []);
+            await expectCues('a Chainsword hit', ['melee-hit'], 'melee-hit', async () => {
+                await attack('Chainsword', 'foe', [[5, 100]]);
             });
-            await expectCues('a Chainsword miss', ['melee-miss'], async () => {
+            await expectCues('a Chainsword miss', ['melee-miss'], 'melee-miss', async () => {
                 await attack('Chainsword', 'foe', [[95, 100]]);
             });
-            await expectCues('a successful Parry', ['parry'], async () => {
+            await expectCues('a successful Parry', ['parry'], 'parry', async () => {
                 const hit = await attack('Chainsword', 'foe', [[5, 100]]);
                 await evade(hit, 'parry', 1);
             });
-            await expectCues('Smite manifests', ['manifest'], async () => {
+            await expectCues('Smite manifests', ['manifest'], 'manifest', async () => {
                 await attack('Smite', 'target', [[5, 100]]);
             });
             // A doubles Focus Power roll draws Phenomena; the table's 75+ is Perils.
-            await expectCues('Smite on doubles draws Phenomena', ['manifest', 'phenomena'], async () => {
+            await expectCues('Smite on doubles draws Phenomena', ['manifest', 'phenomena'], 'phenomena', async () => {
                 await attack('Smite', 'target', [
                     [11, 100],
                     [30, 100],
                 ]);
             });
-            await expectCues('Smite on doubles falls into Perils', ['perils'], async () => {
+            await expectCues('Smite on doubles falls into Perils', ['perils'], 'perils', async () => {
                 await attack('Smite', 'target', [
                     [22, 100],
                     [90, 100],

@@ -165,6 +165,27 @@ describe('planHitCues', () => {
         expect(events(steps)).toEqual(['critical']);
     });
 
+    it('draws a burst’s spread hit as a shot from the firer to the creature it landed on (#513)', () => {
+        const steps = planHitCues(
+            [
+                { tokenId: 't', critical: false },
+                { tokenId: 'n', critical: false, spreadFromTokenId: 'f' },
+                { tokenId: 'm', critical: true, spreadFromTokenId: 'f' },
+            ],
+            [],
+            'ranged',
+            EMPTY,
+            false,
+            first,
+        );
+        expect(steps.map((step) => [step.event, step.from, step.to])).toEqual([
+            ['fire', { kind: 'token', tokenId: 'f' }, { kind: 'token', tokenId: 'n' }],
+            ['hit', { kind: 'token', tokenId: 'n' }, null],
+            ['fire', { kind: 'token', tokenId: 'f' }, { kind: 'token', tokenId: 'm' }],
+            ['critical', { kind: 'token', tokenId: 'm' }, null],
+        ]);
+    });
+
     it('draws an area attack on every creature it hit, and a dodge on each that avoided it', () => {
         const steps = planHitCues(
             [

@@ -151,6 +151,12 @@ export interface ReactionCueOutcome {
 export interface HitCue {
     tokenId: string;
     critical: boolean;
+    /**
+     * The firer's token, when the burst spread this hit onto a creature other than its
+     * declared target (#513). The attack's cue drew every shot at the target, before the
+     * hits were allocated, so this one is drawn again where it landed.
+     */
+    spreadFromTokenId?: string;
 }
 
 /** Gap between successive shots of a semi-auto burst or swings of a multi-attack (ms). */
@@ -366,7 +372,8 @@ export function planReactionCues(outcome: ReactionCueOutcome, profile: CueProfil
  * Cues once an attack's damage is rolled: a critical (the line's Righteous Fury) on
  * each hit that rolled one. An area attack's hits are also each drawn on the creature
  * they landed on, and each creature that avoided the area dodges, since the attack cue
- * only knew the template.
+ * only knew the template. A burst's hit spread onto another creature is a shot from
+ * the firer to it and an impact (or critical) there.
  */
 export function planHitCues(
     hits: readonly HitCue[],
@@ -380,7 +387,10 @@ export function planHitCues(
     hits.slice(0, MAX_SHOTS).forEach((hit, index) => {
         const at: CueAnchor = { kind: 'token', tokenId: hit.tokenId };
         const delay = index * SHOT_STAGGER_MS;
-        if (hit.critical) build.add('critical', at, null, delay);
+        if (hit.spreadFromTokenId !== undefined) {
+            build.add('fire', { kind: 'token', tokenId: hit.spreadFromTokenId }, at, delay);
+            build.add(hit.critical ? 'critical' : 'hit', at, null, delay + TRAVEL_MS);
+        } else if (hit.critical) build.add('critical', at, null, delay);
         else if (area) build.add('hit', at, null, delay);
     });
     if (area) {

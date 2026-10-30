@@ -97,6 +97,18 @@ describe('hitCueSteps', () => {
         expect(steps).toEqual([expect.objectContaining({ event: 'critical', from: { kind: 'token', tokenId: 'tgt' } })]);
     });
 
+    it('draws a burst’s spread hits on the creatures they landed on, shot from the firer (#513)', () => {
+        const hits = [{ righteousFury: [] }, { righteousFury: [], targetUuid: 'Actor.N' }, { righteousFury: [{}], targetUuid: 'Actor.gone' }];
+        const resolve = (uuid: string): ReturnType<typeof actor> | null => (uuid === 'Actor.N' ? actor('near') : null);
+        const steps = hitCueSteps(action({}, { damageData: { hits, additionalHits: 2 } }), first, resolve);
+        expect(steps.map((step) => [step.event, step.from, step.to])).toEqual([
+            ['fire', { kind: 'token', tokenId: 'src' }, { kind: 'token', tokenId: 'near' }],
+            ['hit', { kind: 'token', tokenId: 'near' }, null],
+            // A spread target that is gone is drawn at the declared target, as before.
+            ['critical', { kind: 'token', tokenId: 'tgt' }, null],
+        ]);
+    });
+
     it('draws an area attack per creature: hits in order, dodges for those who avoided it', () => {
         const areaResults = [
             { tokenId: 'a', actorUuid: 'A', name: 'A', hit: true, test: null },

@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { canvasClip } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
+import { installCueProbe, releaseFreeze } from './lib/cue-probe';
 import { joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
@@ -50,67 +51,6 @@ const FREEZE_AFTER_MS = 120;
 /** How long to watch for a cue graphic after the attack resolves, in ms. */
 const CUE_WATCH_MS = 1500;
 
-interface CueProbeGlobals {
-    canvas: { interface: { addChild: (...children: object[]) => object } };
-    PIXI: { Graphics: abstract new (...a: never[]) => object };
-}
-
-interface CueProbe {
-    drawn: number;
-    frozen: boolean;
-    release: () => void;
-    reset: (freeze: boolean) => void;
-}
-
-declare global {
-    // eslint-disable-next-line no-var -- a global installed at runtime must be declared with `var` to land on globalThis
-    var wh40kCueProbe: CueProbe | undefined;
-}
-
-/** Count the cue graphics added to the interface layer and, when armed, freeze the frame shortly after the first. */
-async function installCueProbe(page: Page, freezeAfterMs: number): Promise<void> {
-    await page.evaluate((delay: number) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals (`canvas`, `PIXI`) are injected by the licensed app; no shipped types
-        const g = globalThis as unknown as CueProbeGlobals;
-        const realRaf = window.requestAnimationFrame.bind(window);
-        let frozenTs: number | null = null;
-        let lastTs = 0;
-        let armed = false;
-        window.requestAnimationFrame = (cb: FrameRequestCallback): number =>
-            realRaf((ts) => {
-                lastTs = ts;
-                cb(frozenTs ?? ts);
-            });
-        const probe: CueProbe = {
-            drawn: 0,
-            frozen: false,
-            release: () => {
-                frozenTs = null;
-                probe.frozen = false;
-            },
-            reset: (freeze: boolean) => {
-                probe.drawn = 0;
-                armed = freeze;
-            },
-        };
-        const layer = g.canvas.interface;
-        const addChild = layer.addChild.bind(layer);
-        layer.addChild = (...children: object[]): object => {
-            if (children.some((c) => c instanceof g.PIXI.Graphics)) {
-                probe.drawn += 1;
-                if (armed && probe.drawn === 1) {
-                    window.setTimeout(() => {
-                        frozenTs = lastTs;
-                        probe.frozen = true;
-                    }, delay);
-                }
-            }
-            return addChild(...children);
-        };
-        globalThis.wh40kCueProbe = probe;
-    }, freezeAfterMs);
-}
-
 /** Attack with the lasgun rolling `face` and report how many cue graphics drew. */
 async function fire(page: Page, scene: HarnessScene, face: number, freeze: boolean): Promise<number> {
     await page.evaluate((f: boolean) => globalThis.wh40kCueProbe?.reset(f), freeze);
@@ -129,12 +69,6 @@ async function fire(page: Page, scene: HarnessScene, face: number, freeze: boole
         },
         { watch: CUE_WATCH_MS, freeze },
     );
-}
-
-async function releaseFreeze(page: Page): Promise<void> {
-    await page.evaluate(() => {
-        globalThis.wh40kCueProbe?.release();
-    });
 }
 
 async function setCues(page: Page, on: boolean): Promise<boolean> {

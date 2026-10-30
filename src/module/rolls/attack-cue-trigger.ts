@@ -81,7 +81,13 @@ export interface CueActionLike {
         /** Who the resolved template caught, and whether the area hit each. */
         readonly areaResults?: readonly { readonly tokenId: string; readonly hit: boolean }[] | undefined;
     };
-    readonly damageData?: { readonly hits: readonly { readonly righteousFury: readonly object[] }[]; readonly additionalHits: number } | undefined;
+    readonly damageData?:
+        | {
+              /** Each rolled hit; `targetUuid` names the creature a burst spread it onto ('' or absent: the declared target). */
+              readonly hits: readonly { readonly righteousFury: readonly object[]; readonly targetUuid?: string }[];
+              readonly additionalHits: number;
+          }
+        | undefined;
 }
 
 /** The first token of an actor on the viewed scene, or null. */
@@ -150,7 +156,11 @@ export function attackCueSteps(action: CueActionLike, rng: () => number = Math.r
  * Righteous Fury (or the line's equivalent), and, for an area attack, an impact on
  * each creature hit and a dodge on each that avoided it.
  */
-export function hitCueSteps(action: CueActionLike, rng: () => number = Math.random): CueStep[] {
+export function hitCueSteps(
+    action: CueActionLike,
+    rng: () => number = Math.random,
+    resolveActor: (uuid: string) => CueActorLike | null = actorByUuid,
+): CueStep[] {
     const rollData = action.rollData;
     const kind = cueAttackKind(rollData);
     const hits = action.damageData?.hits ?? [];
@@ -165,8 +175,21 @@ export function hitCueSteps(action: CueActionLike, rng: () => number = Math.rand
     }
     const targetTokenId = tokenIdOf(rollData.targetActor);
     if (targetTokenId === null) return [];
-    const cues: HitCue[] = hits.map((hit) => ({ tokenId: targetTokenId, critical: hit.righteousFury.length > 0 }));
+    const firerTokenId = tokenIdOf(rollData.sourceActor);
+    const cues: HitCue[] = hits.map((hit) => {
+        const critical = hit.righteousFury.length > 0;
+        // A hit the burst spread onto another creature (#513) is drawn where it landed.
+        const spreadTokenId = hit.targetUuid === undefined || hit.targetUuid === '' ? null : tokenIdOf(resolveActor(hit.targetUuid));
+        if (spreadTokenId === null || firerTokenId === null) return { tokenId: targetTokenId, critical };
+        return { tokenId: spreadTokenId, critical, spreadFromTokenId: firerTokenId };
+    });
     return planHitCues(cues, [], kind, profile, false, rng);
+}
+
+/** The actor a hit's `targetUuid` names, or null when it is gone (or not an actor). */
+function actorByUuid(uuid: string): CueActorLike | null {
+    const doc = fromUuidSync(uuid, { strict: false });
+    return doc instanceof Actor ? doc : null;
 }
 
 /** The scene a drawn canvas shows, or null: no canvas before the scene draws, nor in headless contexts (tests). */
