@@ -6,7 +6,7 @@
  * `icons/svg/mystery-man.svg` — the Sentinel Walker among them — and nothing
  * distinguished "we could not source art for this" from "nobody looked". This
  * test inverts that: every actor still on a placeholder must be listed in
- * `.vehicle-art-skips.json` with a reason, so the gap is a declared, reviewable
+ * the private content's `checks/vehicle-art-skips.json` with a reason, so the gap is a declared, reviewable
  * inventory rather than an invisible one, and a NEW placeholder fails the build.
  *
  * Shrinking the skip list is the ongoing work; growing it requires a deliberate,
@@ -19,7 +19,7 @@ import { describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const PACKS_ROOT = resolve(__dirname, '../src/packs-private');
-const SKIPS_FILE = resolve(__dirname, '../.vehicle-art-skips.json');
+const SKIPS_FILE = resolve(PACKS_ROOT, 'checks/vehicle-art-skips.json');
 
 /**
  * Any Foundry core `icons/svg/*` glyph on an ACTOR is placeholder art.

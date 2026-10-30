@@ -274,11 +274,11 @@ export interface CraftsmanshipGatedEntry {
 /* -------------------------------------------------------------------------- */
 
 /** The tests a substitution can replace: a Called Shot's attack test, or the test to avoid an area attack. */
-export const TEST_SUBSTITUTION_TESTS = ['calledShot', 'areaAvoidance'] as const;
+const TEST_SUBSTITUTION_TESTS = ['calledShot', 'areaAvoidance'] as const;
 /** How the substitute skill sets the target: its own total, or the replaced characteristic plus the skill's training offset. */
-export const TEST_SUBSTITUTION_BASES = ['skill', 'trainingOffset'] as const;
+const TEST_SUBSTITUTION_BASES = ['skill', 'trainingOffset'] as const;
 /** Which attacks a Called Shot substitution covers: any, melee or ranged only, or the one its bearer's specialization names. */
-export const TEST_SUBSTITUTION_ATTACKS = ['any', 'melee', 'ranged', 'bySpecialization'] as const;
+const TEST_SUBSTITUTION_ATTACKS = ['any', 'melee', 'ranged', 'bySpecialization'] as const;
 
 /**
  * A test an item lets its bearer make with a different skill (Direction #7): an

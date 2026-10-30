@@ -365,7 +365,7 @@ describe('buildArmouryCardContext — roll transparency', () => {
         const attempt = ctx.attempts.at(0);
         expect(attempt?.baseLabel).toBe('WH40K.Requisition.Economy.influence');
         expect(attempt?.baseTarget).toBe(40);
-        // DH2: Rare −20, Good −20 (core Tables 5-1 / 5-2).
+        // DH2: Rare −20, Good −20 (DH2's availability and craftsmanship modifier tables).
         expect(attempt?.modifierSources.map((r) => r.value)).toEqual([-20, -20]);
         const availabilityRow = attempt?.modifierSources.at(0);
         expect(availabilityRow?.label).toContain('WH40K.Requisition.Source.Availability');

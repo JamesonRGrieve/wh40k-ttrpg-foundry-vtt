@@ -29,7 +29,7 @@ export const HOMEWORLD_ACCENTS: readonly HomeworldAccent[] = [
 ];
 
 /** One home-world card. */
-export interface HomeworldCard {
+interface HomeworldCard {
     readonly id: string;
     readonly label: string;
     readonly characteristicModsLabel: string;

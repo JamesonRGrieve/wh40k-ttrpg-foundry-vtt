@@ -60,6 +60,7 @@
     "size-limit": "size-limit",
     "size-limit:json": "size-limit --json",
     "lockfile:validate": "node scripts/lockfile-validate.mjs",
+    "copyright:audit": "node scripts/copyright-audit.mjs",
     "packs:audit": "node scripts/build-compendium-uuid-index.mjs",
     "packs:audit:strict": "node scripts/build-compendium-uuid-index.mjs --strict",
     "packs:validate": "node src/packs/validate-schema.cjs",
@@ -120,7 +121,7 @@
     "foundry:setup-test-world": "bash scripts/setup-foundry-test-world.sh",
     "check": "pnpm validate:json && pnpm lint && pnpm lint:biome && pnpm format && pnpm stylelint && pnpm typecheck && pnpm typecheck:tests && pnpm test",
     "check:parallel": "bash scripts/check-parallel.sh",
-    "ci:ratchets": "pnpm i18n:check && pnpm lint:ratchet && pnpm biome:ratchet && pnpm ts:ratchet && pnpm strict:ratchet && pnpm test:typecheck:ratchet && pnpm type-coverage:ratchet && pnpm knip:ratchet && pnpm deps:ratchet && pnpm css:ratchet && pnpm important:ratchet && pnpm animation:ratchet && pnpm theme:ratchet && pnpm symmetry:ratchet && pnpm preload:drift && pnpm css:plugin-audit && pnpm lockfile:validate && pnpm actors:ratchet && pnpm images:ratchet",
+    "ci:ratchets": "pnpm i18n:check && pnpm lint:ratchet && pnpm biome:ratchet && pnpm ts:ratchet && pnpm strict:ratchet && pnpm test:typecheck:ratchet && pnpm type-coverage:ratchet && pnpm knip:ratchet && pnpm deps:ratchet && pnpm css:ratchet && pnpm important:ratchet && pnpm animation:ratchet && pnpm theme:ratchet && pnpm symmetry:ratchet && pnpm preload:drift && pnpm css:plugin-audit && pnpm lockfile:validate && pnpm copyright:audit && pnpm actors:ratchet && pnpm images:ratchet",
     "prepare": "husky"
   },
   "browserslist": [

@@ -418,7 +418,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     if (Registry === undefined || mod === null) return;
                     // ── aptitude-cost-tables-dh2 ──────────────────────────
                     // The DH2e config's three default cost tables pin the
-                    // canonical core-rulebook values (Tables 2-2 / 2-4 / 2-6)
+                    // canonical rules values
                     // and countMatchingAptitudes is case-insensitive.
                     try {
                         const cfg = Registry.get('dh2');

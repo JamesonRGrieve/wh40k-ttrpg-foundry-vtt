@@ -122,6 +122,7 @@ run_bg "hook-orphans"   pnpm -s hooks:orphan-audit
 run_bg "unconsumed"     pnpm -s unconsumed:ratchet
 run_bg "dry-todo"       pnpm -s dry-todo:ratchet
 run_bg "lockfile"       pnpm -s lockfile:validate
+run_bg "copyright"      pnpm -s copyright:audit
 
 # Conditional pack validation.
 changed="$(git diff --cached --name-only --diff-filter=ACMR)"
