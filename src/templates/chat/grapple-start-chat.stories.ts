@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the grapple-start card (#450; DH2 core p. 228): a grapple
+ * Storybook stories for the grapple-start card (#450; DH2): a grapple
  * attempt landed and was not evaded, so the attacker controls a grapple on the
  * target. Grappling is in every line; the card renders under each line's system
  * attribute.

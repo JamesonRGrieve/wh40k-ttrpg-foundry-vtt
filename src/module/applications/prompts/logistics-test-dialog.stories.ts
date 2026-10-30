@@ -1,8 +1,8 @@
 /**
  * Storybook stories for the OW Logistics Test dialog (#154, #192).
- * Exercises the availability + Table 6-2 front-condition pickers, craftsmanship,
+ * Exercises the availability + Logistics-table front-condition pickers, craftsmanship,
  * the standard-kit toggle and the live target preview, including the two
- * Table 6-2 cells that print no number (Automatic, GM's Discretion).
+ * Logistics-table cells that print no number (Automatic, GM's Discretion).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
@@ -97,7 +97,7 @@ export const ClampedBelowZero: Story = {
     },
 };
 
-/** The p. 163 worked example: Very Rare plasma gun, Multiple Regiments, another regiment's kit. */
+/** The rules' worked example: Very Rare plasma gun, Multiple Regiments, another regiment's kit. */
 export const WorkedExample: Story = {
     args: dialogArgs({
         ...DEFAULT_CONTEXT,
@@ -116,7 +116,7 @@ export const WorkedExample: Story = {
     },
 };
 
-/** Ubiquitous item with a Single Regiment deployed — Table 6-2 prints "Automatic". */
+/** Ubiquitous item with a Single Regiment deployed — the Logistics table prints "Automatic". */
 export const Automatic: Story = {
     args: dialogArgs({ ...DEFAULT_CONTEXT, availability: 'ubiquitous', troopCount: 'regiment' }),
     play: async ({ canvasElement }) => {
@@ -125,7 +125,7 @@ export const Automatic: Story = {
     },
 };
 
-/** Unique item, Company or Less — Table 6-2 prints "GM's Discretion": the roll is disabled. */
+/** Unique item, Company or Less — the Logistics table prints "GM's Discretion": the roll is disabled. */
 export const GmDiscretion: Story = {
     args: dialogArgs({ ...DEFAULT_CONTEXT, availability: 'unique' }),
     play: async ({ canvasElement }) => {

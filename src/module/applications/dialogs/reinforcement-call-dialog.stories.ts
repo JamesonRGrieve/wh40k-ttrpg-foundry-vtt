@@ -1,6 +1,6 @@
 /**
  * Stories for ReinforcementCallDialog (#77): the GM calls a Reinforcement
- * Character into play (DH2 core pp. 294–295). The stories render the dialog's
+ * Character into play (DH2). The stories render the dialog's
  * `.hbs` against the same `buildReinforcementCallView` context the dialog
  * builds. RCs are a DH2 rule (the NPC sheet only offers the call on a DH2
  * NPC), so the wrapper carries `data-wh40k-system="dh2"`.
@@ -27,7 +27,7 @@ const WARBAND = [
     { id: GUS, name: 'Gus', influence: 20, skillRank: 0 },
 ];
 
-// Sister of Battle Canoness (core p. 296).
+// Sister of Battle Canoness.
 const CANONESS: ReinforcementTerms = {
     influenceMinimum: 50,
     influenceCost: 5,
@@ -35,7 +35,7 @@ const CANONESS: ReinforcementTerms = {
     caller: { skill: '', specialization: '', rank: null, corruption: '' },
 };
 
-// Thrice-Bound Daemonhost (Enemies Beyond p. 38).
+// Thrice-Bound Daemonhost.
 const DAEMONHOST: ReinforcementTerms = {
     influenceMinimum: 50,
     influenceCost: 5,

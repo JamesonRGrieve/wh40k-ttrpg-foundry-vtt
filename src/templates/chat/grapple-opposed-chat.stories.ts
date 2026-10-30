@@ -1,10 +1,10 @@
 /**
- * Storybook stories for the grapple option card (#120, #450; DH2 core pp. 221–222).
+ * Storybook stories for the grapple option card (#120, #450; DH2).
  *
  * Each opposed story resolves a real test through the rules module and renders the
  * card from `buildGrappleCard`, so the card shows exactly what the sheet posts: each
  * side's base, its modifiers with their source, target, roll and degrees, the Size
- * edge, the verdict by the RAW Opposed-test ladder (p. 24) and the option's effect.
+ * edge, the verdict by the RAW Opposed-test ladder and the option's effect.
  * Grappling is in every line, so the card renders under each line's system attribute.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
@@ -116,7 +116,7 @@ function pushOf(resolved: GrappleCardContext, halfMove: number, line: SystemId =
 const PUSH_WON = card('push-opponent', side('Sister Ophelia', 45, 22), side('Cultist', 30, 61));
 
 /**
- * Push Opponent won (#665; DH2 core p. 221): 1 m plus 1 m per degree of success,
+ * Push Opponent won (#665; DH2): 1 m plus 1 m per degree of success,
  * part by part, and the GM's button to move the tokens.
  */
 export const PushWon: Story = {
@@ -161,7 +161,7 @@ export const PushLost: Story = {
 };
 
 /**
- * A thrown-down opponent (DH2 core p. 221): the controller's +10 is a row with its
+ * A thrown-down opponent (DH2): the controller's +10 is a row with its
  * source, folded into the target.
  */
 export const ThrownDownBonus: Story = {

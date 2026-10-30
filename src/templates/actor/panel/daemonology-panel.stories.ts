@@ -1,5 +1,5 @@
 /**
- * Daemonology panel (DH2 Enemies Beyond) on the character Overview tab: the
+ * Daemonology panel (DH2) on the character Overview tab: the
  * Forbidden Lore (Daemonology) readout and the ritual launchers. The sheet
  * builds it only for a DH2 character with a Forbidden Lore (Daemonology) row.
  */
@@ -41,7 +41,7 @@ export const Daemonologist: Story = {
     },
 };
 
-/** Each launcher dispatches its own ritual: Summoning (#80, p. 59), then Exorcism (#83, p. 71). */
+/** Each launcher dispatches its own ritual: Summoning (#80), then Exorcism (#83). */
 export const LaunchersDispatchTheirRitual: Story = {
     args: { daemonologyPanel: { loreTotal: 52 } },
     render: (args) => renderPanel(args),

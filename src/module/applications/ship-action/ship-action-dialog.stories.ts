@@ -58,7 +58,7 @@ export const HoldFast: Story = {
 
 /** Aid the Machine Spirit as the RT pack authors it: a choice of two stats. */
 const AID_THE_MACHINE_SPIRIT: ShipActionOrder = {
-    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.MfflpLsJRiNPVpsn',
+    uuid: 'Compendium.wh40k-rpg.rt-ship-orders.Item.MfflpLsJRiNPVpsn',
     name: 'Aid the Machine Spirit',
     img: '',
     test: { skill: 'Tech-Use', characteristic: '', modifier: 0, shipStat: '' },

@@ -1,5 +1,5 @@
 /**
- * Stories for the Dark Pacts panel (#84, Enemies Beyond pp. 72–76).
+ * Stories for the Dark Pacts panel (#84, DH2).
  *
  * The context is the panel's own view (`darkPactPanelView`) over struck pact
  * records and their resolved pact content (the Pact of Might / Pact of

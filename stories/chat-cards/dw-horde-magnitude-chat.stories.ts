@@ -5,9 +5,9 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the DW Horde Magnitude resolution path (#166 —
- * core.md p. 359 "Damaging a Horde"). When AssignDamageData sees a
+ * "Damaging a Horde"). When AssignDamageData sees a
  * horde target on the DW ruleset, it replaces the wounds card with a
- * Magnitude delta card. Stories exercise each TABLE 13-1 tier so the
+ * Magnitude delta card. Stories exercise each Horde damage-table tier so the
  * per-system theme cascade and the RAW math are both visible in review.
  */
 initializeStoryHandlebars();

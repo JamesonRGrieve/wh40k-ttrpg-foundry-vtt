@@ -1,7 +1,7 @@
 /**
  * Storybook stories for the Only War Battlefield Awareness panel
- * (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
- * §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+ * (#161 — Battlefield Awareness and Manoeuvres, Support, and Regimental
+ * Awards).
  *
  * Three visual states an operator needs to verify:
  *
@@ -159,15 +159,15 @@ export const ReadyMultiAwards: Story = {
     render: (args) => renderPanel(args),
 };
 
-/** Two medal items as the sheet resolves them (OW core p. 294, content#32). */
+/** Two medal items as the sheet resolves them (content#32). */
 const MEDALS: RegimentalAward[] = [
     medalAwardDescriptor(
         { name: 'Winged Skull', system: { squadBonus: '<p>+10 to all Command Tests.</p>' } },
-        'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01',
+        'Compendium.wh40k-rpg.ow-medals.Item.OWcMedalWingSk01',
     ),
     medalAwardDescriptor(
         { name: 'Triple Skull', system: { squadBonus: '<p>+5 to all Dodge and Parry Tests.</p>' } },
-        'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalTripSk01',
+        'Compendium.wh40k-rpg.ow-medals.Item.OWcMedalTripSk01',
     ),
 ];
 

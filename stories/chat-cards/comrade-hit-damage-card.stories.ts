@@ -7,7 +7,7 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Only War (#152; OW Core p. 271): a successful hit roll on doubles against a PC
+ * Only War (#152): a successful hit roll on doubles against a PC
  * whose Comrade is in Cohesion strikes the Comrade instead — one hit of the attack.
  * The damage card states it above the hits that still land on the PC.
  */

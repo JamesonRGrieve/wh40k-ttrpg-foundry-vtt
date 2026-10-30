@@ -8,10 +8,10 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * The Trade (Armourer) fitting card's target formula (#136, DH2 core p. 162):
+ * The Trade (Armourer) fitting card's target formula (#136, DH2):
  * the modification's Availability as its own hoverable provenance row and, on a
  * xenos weapon, the alien-nature penalty plus the +5-per-DoS Forbidden Lore
- * insight (Enemies Without p. 42). Values come from the same pure resolvers the
+ * insight (a DH2 supplement). Values come from the same pure resolvers the
  * fitting flow calls.
  */
 initializeStoryHandlebars();

@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the Rogue Trader Boarding Action chat card (#188 —
- * RT Core p.215).
+ * Storybook stories for the Rogue Trader Boarding Action chat card (#188).
  *
  * Renders `ship-boarding-chat.hbs` against contexts built by the same pure
  * rules (`rules/ship-boarding.ts`) and view builders (`ship-assault-card.ts`)

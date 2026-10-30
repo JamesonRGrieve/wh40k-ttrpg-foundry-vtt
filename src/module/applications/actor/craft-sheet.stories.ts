@@ -55,7 +55,7 @@ function renderCraftComponents(ctx: SheetContextLike): HTMLElement {
 
 /**
  * A daemon-engine characteristics profile in the derived shape the sheet reads
- * (base = printed value, total/bonus computed). Defiler (OW Core p.355):
+ * (base = printed value, total/bonus computed). Defiler (OW):
  * WS/BS 25, S 75 with Unnatural Strength (7) → SB 49, T — (0).
  */
 const daemonEngineCharacteristics = {

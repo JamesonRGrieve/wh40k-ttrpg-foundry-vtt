@@ -5,7 +5,7 @@ import { renderSheet } from '../../../../stories/test-helpers';
 
 /**
  * Dialog story for the Medicae Mechadendrite Half-Action staunch prompt
- * (#104 — errata p. 183). Covers the eligible state (button enabled)
+ * (#104). Covers the eligible state (button enabled)
  * and the ineligible state (no cybernetic / IM system → button disabled).
  */
 

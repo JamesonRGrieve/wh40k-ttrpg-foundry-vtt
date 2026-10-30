@@ -12,8 +12,7 @@ import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeLabels } fr
 /**
  * Grenade throw dialog and its chat card (#135). Each grenade's rider is its compendium
  * document's `system.rider`; the fixtures below carry the DH2 values the packs author
- * (Photon Flash and Smoke, Core p.158 / p.149; Psychotroke and Tears of the Emperor,
- * Enemies Within pp.44–45), plus a Frag Grenade with no rider. Tears of the Emperor
+ * (Photon Flash, Smoke, Psychotroke and Tears of the Emperor), plus a Frag Grenade with no rider. Tears of the Emperor
  * deals damage, so it takes the weapon roll and the dialog does not list it (#622).
  */
 

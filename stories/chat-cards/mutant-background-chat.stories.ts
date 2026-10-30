@@ -1,5 +1,5 @@
 /**
- * The Mutant background card (#91, Within p. 32) the GM's Roll Starting Mutation
+ * The Mutant background card (#91) the GM's Roll Starting Mutation
  * posts: the starting Corruption the origin applied (owing no Malignancy Test),
  * the starting-mutation roll and the mutation it landed on, and the Twisted
  * Flesh grant. The card states the rule the grant gives; the choice itself is

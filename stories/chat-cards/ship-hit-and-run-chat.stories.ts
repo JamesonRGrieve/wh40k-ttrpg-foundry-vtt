@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the Rogue Trader Hit and Run chat card (#188 —
- * RT Core p.218).
+ * Storybook stories for the Rogue Trader Hit and Run chat card (#188).
  *
  * Each story drives the real Hit and Run flow (with queued dice) and renders
  * the card it produces, so the stories exercise the same rules, view builders

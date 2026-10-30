@@ -1,7 +1,7 @@
 /**
  * Storybook stories for the Only War Logistics Test chat card (#154, #192).
- * Exercises a pass, a fail, a full modifier stack, and an item Table 6-2
- * rates Automatic (no roll), so review can verify the per-component derivation
+ * Exercises a pass, a fail, a full modifier stack, and an item the Logistics
+ * table rates Automatic (no roll), so review can verify the per-component derivation
  * against `computeLogisticsTarget()` in `src/module/rules/ow-logistics.ts`.
  */
 
@@ -42,7 +42,7 @@ function rolledCard(ctx: LogisticsContext, roll: number): LogisticsChatContext {
     };
 }
 
-/** The p. 163 worked example: Very Rare plasma gun, five regiments deployed. */
+/** The rules' worked example: Very Rare plasma gun, five regiments deployed. */
 const WORKED_EXAMPLE: LogisticsContext = {
     rating: 10,
     munitorum: false,
@@ -64,7 +64,7 @@ export default meta;
 type Story = StoryObj<LogisticsChatContext>;
 
 export const Success: Story = {
-    name: 'Success — the p. 163 worked example',
+    name: 'Success — the worked example',
     args: rolledCard(WORKED_EXAMPLE, 7),
     play: async ({ canvasElement }) => {
         const rows = canvasElement.querySelectorAll('[data-wh40k-tooltip="modifier"]');

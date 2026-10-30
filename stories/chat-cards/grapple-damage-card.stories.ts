@@ -8,7 +8,7 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * A won grapple Damage Opponent on the damage card (#665; DH2 core p. 221): the
+ * A won grapple Damage Opponent on the damage card (#665; DH2): the
  * controller's unarmed hit, on the line's location, with its Strength Bonus as a
  * sourced row, the level of Fatigue it adds as its own row naming its source, and
  * the option stated as the hit's effect. A hit with no Fatigue shows no Fatigue row.

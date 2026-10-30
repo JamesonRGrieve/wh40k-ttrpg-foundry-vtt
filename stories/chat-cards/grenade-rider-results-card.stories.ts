@@ -16,8 +16,7 @@ import { renderSheet } from '../test-helpers';
  * shared "modifier" tooltip), and what the rider did — the condition applied for its
  * duration, left for the GM, the effect-roll step, or nothing. Every row comes from the
  * resolution path's own `resolveRiderCreature` and `buildRiderResultsCard`, fed the
- * riders the packs author (DH2 Core p.158; Enemies Beyond p.41; Enemies Within p.44–45;
- * RT Faith and Coin p.85).
+ * riders the packs author (DH2 and RT).
  */
 initializeStoryHandlebars();
 
@@ -93,7 +92,7 @@ const PSYCHOTROKE = riderFixture({
     test: { characteristic: 'toughness', modifier: -40 },
     duration: { kind: 'degreesOfFailure', base: 1, formula: '' },
     effectRollShift: { perDegree: 1, max: 10 },
-    effect: 'Roll 1d10 on Table 5–3: Hallucinogen Effects.',
+    effect: 'Roll 1d10 on the Hallucinogen Effects table.',
 });
 
 const RAD = riderFixture({
@@ -193,7 +192,7 @@ export const PsychotrokeStepsTheEffectRoll: Story = {
     play: async ({ canvasElement }) => {
         // 40 - 40 = 0 against 15: two degrees of failure.
         await expect(rowOf(canvasElement, 'Cultist').querySelector('[data-rider-effect]')?.textContent).toContain('+2 to the effect roll');
-        await expect(canvasElement.querySelector('[data-rider-effect-text]')?.textContent).toContain('Table 5–3');
+        await expect(canvasElement.querySelector('[data-rider-effect-text]')?.textContent).toContain('Hallucinogen Effects table');
     },
 };
 
@@ -216,7 +215,7 @@ export const RadDealsToughnessDamage: Story = {
 };
 
 /**
- * An RT Rad grenade's test takes −5 per point of damage suffered (Faith and Coin, #698): the
+ * An RT Rad grenade's test takes −5 per point of damage suffered (an RT supplement, #698): the
  * creature that took 4 damage tests at −20, a provenance row naming the damage, and fails.
  */
 export const RtRadDamagePenalty: Story = {

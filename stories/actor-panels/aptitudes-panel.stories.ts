@@ -4,7 +4,7 @@
  * The panel lists the actor's granted aptitudes plus its line's universal ones
  * (`AptitudeBasedSystemConfig.universalAptitudes`), and the template drops the
  * whole panel when that list is empty. Black Crusade has no aptitudes (it
- * prices advances by Chaos alignment, BC Core p.76), so a BC NPC must show no
+ * prices advances by Chaos alignment), so a BC NPC must show no
  * panel at all rather than a lone "General"; DH2 and Only War keep General.
  *
  * The pills are built from the real line config, the same source the sheet

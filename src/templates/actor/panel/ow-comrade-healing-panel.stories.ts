@@ -1,6 +1,6 @@
 /**
- * Storybook stories for the Only War Comrade Healing panel (#157 — OW Core
- * p.271, Healing Comrades and replacement on return to camp).
+ * Storybook stories for the Only War Comrade Healing panel (#157 — OW
+ * Healing Comrades and replacement on return to camp).
  *
  *   1. Wounded mid-recovery — yellow badge, 5 of 7 days left, Tick Day and
  *      Medicae enabled, Replace disabled.

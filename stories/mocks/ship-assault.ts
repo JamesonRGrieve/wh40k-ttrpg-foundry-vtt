@@ -105,14 +105,14 @@ export function storyActionShip(restored = 3, hull = ATTACKER_SHIP.hullIntegrity
 
 /** Hold Fast! and Lock on Target as the RT pack authors them. */
 export const STORY_HOLD_FAST: ShipActionOrder = {
-    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.s67eT5kqEhgBT2It',
+    uuid: 'Compendium.wh40k-rpg.rt-ship-orders.Item.s67eT5kqEhgBT2It',
     name: 'Hold Fast!',
     img: '',
     test: { skill: '', characteristic: 'Willpower', modifier: 0, shipStat: '' },
     shipEffect: { kind: 'reducePriorTurnDamage', targets: ['morale'], base: 1, step: 1, per: 1, rounds: 0, expiry: '' },
 };
 export const STORY_LOCK_ON_TARGET: ShipActionOrder = {
-    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.O37ZbK1Nvi3cGwGc',
+    uuid: 'Compendium.wh40k-rpg.rt-ship-orders.Item.O37ZbK1Nvi3cGwGc',
     name: 'Lock on Target',
     img: '',
     test: { skill: 'Scrutiny', characteristic: '', modifier: 0, shipStat: 'detection' },

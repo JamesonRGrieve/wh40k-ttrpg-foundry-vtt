@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the RT ship action roll card (#186, #189 — RT Core
- * pp.212–218).
+ * Storybook stories for the RT ship action roll card (#186, #189 — RT).
  *
  * Each story drives the real ship-action flow on queued dice and renders the
  * card it posts:
@@ -113,7 +112,7 @@ const CHAT_WIDTH_PX = 280;
 
 /** An action whose effect falls with each degree, as Evasive Manoeuvres' does. */
 const NEGATIVE_STEP_ORDER: ShipActionOrder = {
-    uuid: 'Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.storyEvasive0001',
+    uuid: 'Compendium.wh40k-rpg.rt-ship-orders.Item.storyEvasive0001',
     name: 'Evasive Manoeuvres',
     img: '',
     test: { skill: 'Pilot (Spacecraft)', characteristic: '', modifier: 0, shipStat: 'manoeuvrability' },

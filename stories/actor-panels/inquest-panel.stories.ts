@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the warband Inquests panel (DH2 Enemies Within
- * pp. 62–69, #90) in the Party Overview.
+ * Storybook stories for the warband Inquests panel (DH2, #90) in the Party Overview.
  *
  * The rows come from the same pure `inquestPanelRows` builder the DH2
  * character sheet calls in `_prepareContext`, using DH2's printed tables. The

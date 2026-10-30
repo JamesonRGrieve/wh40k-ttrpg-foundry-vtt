@@ -1,6 +1,6 @@
 /**
  * Stories for the GM Reinforcement Character panel on the NPC sheet (#77,
- * DH2 core p. 294). The NPC sheet builds `reinforcementPanel` only for a DH2
+ * DH2). The NPC sheet builds `reinforcementPanel` only for a DH2
  * NPC flagged `isReinforcement`, from its `system.reinforcement` terms; the
  * other lines never build it, so the include site renders nothing there.
  */
@@ -33,7 +33,7 @@ function renderPanel(args: Args): HTMLElement {
 const meta = {
     title: 'Actor/Panels/ReinforcementPanel',
     render: renderPanel,
-    // Arco-Flagellant (Enemies Within p. 40): a dice-formula Peer discount.
+    // Arco-Flagellant: a dice-formula Peer discount.
     args: { hasTerms: true, influenceMinimum: 35, influenceCost: 6, peer: 'Adeptus Ministorum', peerAmount: '1d5', callerRequirement: null },
 } satisfies Meta<Args>;
 export default meta;
@@ -50,7 +50,7 @@ export const WithTerms: Story = {
     },
 };
 
-/** Thrice-Bound Daemonhost (Enemies Beyond p. 38): terms for the caller, no Peer discount. */
+/** Thrice-Bound Daemonhost: terms for the caller, no Peer discount. */
 export const DaemonhostCallerTerms: Story = {
     args: {
         hasTerms: true,

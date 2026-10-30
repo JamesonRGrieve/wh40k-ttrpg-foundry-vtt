@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the Rogue Trader ship weapon card and its Fire dialog
- * (#184 — RT Core 1.4 errata, Chapter VIII).
+ * (#184 — RT errata, starship combat).
  *
  * Each card story drives the real fire flow (with queued dice) against a
  * target ship and renders the card it produces, so the stories exercise the
@@ -15,7 +15,7 @@
  *   5. The profile card (no shot), as `WH40KVoidcraft.fireWeapon` posts it, on
  *      another line to show the card has no RT-only assumption in its shell.
  *   6. A Crippled firing ship — Strength halved.
- *   7. A combined macrobattery salvo (p.221) — each battery's own test, the
+ *   7. A combined macrobattery salvo — each battery's own test, the
  *      pooled hits with the shields' discard by battery, Armour once, and at
  *      most one Critical Hit.
  *
@@ -60,7 +60,7 @@ const LANCE: ShipWeaponFireInput['weapon'] = {
 /** The book's raider: Armour 15. */
 const RAIDER = { ...DEFENDER_SHIP, armour: 15 };
 
-/** A second macrobattery the clicked one can combine with into a salvo (p.221). */
+/** A second macrobattery the clicked one can combine with into a salvo. */
 const BROADSIDE: ShipWeaponFireInput['weapon'] = {
     ...MACROBATTERY,
     name: 'Mars Broadside',

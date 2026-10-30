@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the Rogue Trader Ramming chat card (#188 — RT Core
- * p.215).
+ * Storybook stories for the Rogue Trader Ramming chat card (#188).
  *
  * Each story drives the real ramming flow (queued dice, an inline Ramming
  * Speed profile standing in for the compendium content) and renders the card:

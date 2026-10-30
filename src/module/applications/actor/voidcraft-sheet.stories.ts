@@ -224,7 +224,7 @@ export const LongShipNameFitsSidebar: Story = {
 // ── Issue #186 — Starship Extended Actions panel ─────────────────────────────
 //
 // Renders the Extended and Manoeuvre Action tabs from one mixed list of
-// `order` views — the RT Core Table 8-10 / 8-11 names and tests — run
+// `order` views — the RT Extended and Manoeuvre Action names and tests — run
 // through the sheet's own `shipActionRows`, so the story exercises the same
 // actionType split the sheet uses on the real pack (no compendium access
 // from inside a Storybook story).
@@ -247,7 +247,7 @@ const RT_SHIP_EFFECTS: Readonly<Record<string, ShipEffectData>> = {
 function rtOrder(name: string, actionType: string, skill: string, modifier: number, characteristic = ''): ShipActionOrderView {
     const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return {
-        uuid: `Compendium.wh40k-rpg.rt-core-items-ship-orders.Item.${id}`,
+        uuid: `Compendium.wh40k-rpg.rt-ship-orders.Item.${id}`,
         id,
         name,
         img: '',
@@ -301,7 +301,7 @@ function renderActionsPanel(tabSrc: string, ctx: SheetContextLike): HTMLElement 
 // ── Issues #184 / #187 — Damage Control panel on the Stats tab ──────────────
 //
 // The raised void shields (with their raise / lower / restore controls) and the
-// Critical Hits the hull carries, each with its Table 8-12 name, roll and text
+// Critical Hits the hull carries, each with its critical-hit table name, roll and text
 // and a Clear control. One story per state: criticals recorded, and a sound hull.
 
 const RECORDED_CRITICALS = [

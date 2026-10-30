@@ -174,7 +174,7 @@ function fatiguedNpcContext(): SheetContextLike {
 // DH2 NPC flagged `isReinforcement`. These stories render the whole NPC tab so
 // the panel is reviewed in place among the GM tools.
 
-/** A DH2 RC NPC context: the Thrice-Bound Daemonhost's printed terms (Enemies Beyond p. 38). */
+/** A DH2 RC NPC context: the Thrice-Bound Daemonhost's printed terms. */
 function daemonhostRcContext(): SheetContextLike {
     return mockNpcSheetContext({
         systemId: 'dh2',

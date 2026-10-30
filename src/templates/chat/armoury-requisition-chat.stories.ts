@@ -6,7 +6,7 @@
  * card builder (`buildArmouryCardContext`), with the langpack resolved from
  * en.json, so a change to the live payload shape surfaces here first. Covers a
  * granted test, a denied DH2 test with its printed Influence loss, a denied OW
- * Logistics Test (Table 6-2 rows, no rating loss), a refusal
+ * Logistics Test (Logistics-table rows, no rating loss), a refusal
  * before any test, a pool-economy (Deathwatch Requisition) spend, and the same
  * granted card framed under every game system.
  */
@@ -104,7 +104,7 @@ export const Granted: Story = {
 
 export const DeniedWithInfluenceLoss: Story = {
     name: 'Denied — DH2 loses the DoF beyond Fellowship bonus',
-    // 96 vs 0: 10 DoF, 6 beyond a Fellowship bonus of 4 (core p. 269).
+    // 96 vs 0: 10 DoF, 6 beyond a Fellowship bonus of 4.
     render: () => card({ economy: 'influence', rating: 40, fellowshipBonus: 4, entries: [HELLGUN], roll: 96, gameSystem: 'dh2' }),
     play: async ({ canvasElement }) => {
         const scope = within(canvasElement);
@@ -114,7 +114,7 @@ export const DeniedWithInfluenceLoss: Story = {
 };
 
 export const ModificationParts: Story = {
-    name: 'Granted — DH2 weapon-modification parts (+30, p. 162)',
+    name: 'Granted — DH2 weapon-modification parts (+30)',
     render: () =>
         card({
             economy: 'influence',
@@ -136,7 +136,7 @@ export const ModificationParts: Story = {
 };
 
 export const LogisticsDeniedNoLoss: Story = {
-    name: 'Denied — OW Logistics Test, Table 6-2 rows, no rating lost',
+    name: 'Denied — OW Logistics Test, Logistics-table rows, no rating lost',
     render: () => card({ economy: 'logistics', rating: 30, entries: [HELLGUN], roll: 100, gameSystem: 'ow' }),
     play: async ({ canvasElement }) => {
         const scope = within(canvasElement);

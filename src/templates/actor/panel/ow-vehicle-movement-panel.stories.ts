@@ -1,6 +1,6 @@
 /**
- * Storybook stories for the OW Vehicle Movement panel (#156 — core.md
- * §"VEHICLE MOVEMENT", p.12305). Covers the three visual states an
+ * Storybook stories for the OW Vehicle Movement panel (#156 — Vehicle
+ * Movement). Covers the three visual states an
  * operator needs to verify in review:
  *
  *   1. NoChase     — five action rows render, chase readout shows the

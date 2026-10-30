@@ -377,7 +377,7 @@ export function mockNpcSheetContext(opts: NpcSheetContextOptions = {}): SheetCon
         faction: 'Imperium Nihilus Separatists',
         subfaction: 'The Ragged Choir',
         allegiance: 'Chaos',
-        source: 'IM Core p.214',
+        source: 'IM: Sample Book',
         quickNotes: '<p>Uses bodyguards aggressively.</p>',
         tactics: '<p>Opens with suppression and retreats to elevation.</p>',
     } as MockActor['system'] & SheetContextExtensions;

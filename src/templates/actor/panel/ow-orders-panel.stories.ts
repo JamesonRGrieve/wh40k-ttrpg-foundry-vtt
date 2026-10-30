@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Only War Orders panel (#152, #153; OW Core pp. 269–271).
+ * Storybook stories for the Only War Orders panel (#152, #153).
  * Each context is built by `orderPanelRows` — the builder the character sheet
  * uses — over Only War's printed Orders and rules from its line config:
  *

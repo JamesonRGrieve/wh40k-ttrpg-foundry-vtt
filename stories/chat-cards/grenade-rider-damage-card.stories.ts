@@ -13,7 +13,7 @@ import { renderSheet } from '../test-helpers';
  * A rider grenade that deals damage (#622): it throws, scatters and rolls its damage
  * like any weapon, and its rider then applies to everyone the blast struck. The damage
  * card states the rider after the hits, naming each creature struck once. The rider is
- * the Rad Grenade's as DH2 Enemies Within p.44 prints it.
+ * the Rad Grenade's as DH2 prints it.
  */
 initializeStoryHandlebars();
 

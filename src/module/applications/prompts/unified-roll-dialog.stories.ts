@@ -674,7 +674,7 @@ function modeCost(root: HTMLElement, key: string): string {
     return card?.children.item(2)?.textContent.trim() ?? '';
 }
 
-/** DH1 core p. 191 / p. 190: Semi-Auto Burst +10, Full Auto Burst +20, both Full Actions (DW and RT print the same). */
+/** DH1: Semi-Auto Burst +10, Full Auto Burst +20, both Full Actions (DW and RT print the same). */
 export const Dh1BurstModes: Story = {
     args: burstPanel('dh1'),
     render: (args: Ctx) => renderSheetParts(PARTS, args, { systemId: 'dh1' }),

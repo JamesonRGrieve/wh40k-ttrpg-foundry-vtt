@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Crusader role button panel (#141, beyond.md p.34).
+ * Storybook stories for the Crusader role button panel (#141).
  *
  * Covers the two states the panel must render correctly:
  *   1. Active   — `hasCrusader: true`, the Smite-the-Unholy button renders.

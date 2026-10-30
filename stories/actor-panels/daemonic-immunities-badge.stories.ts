@@ -2,7 +2,7 @@
  * Storybook stories for the Daemonic Immunities badge (issue #143) and the NPC
  * sidebar it sits in (#630).
  *
- * The badge renders for an actor carrying the Daemonic trait. DH2 Errata L69-73
+ * The badge renders for an actor carrying the Daemonic trait. The DH2 errata
  * makes the trait grant disease + poison immunity plus the Undying trait; the
  * pill summarises all three on one line, and the tooltip elaborates.
  *

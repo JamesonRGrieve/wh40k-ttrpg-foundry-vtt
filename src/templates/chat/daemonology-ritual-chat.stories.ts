@@ -1,6 +1,5 @@
 /**
- * Daemonology ritual chat card — Exorcism (#83, p. 71) and Summoning (#80,
- * p. 59), DH2 Enemies Beyond.
+ * Daemonology ritual chat card — Exorcism (#83) and Summoning (#80), DH2.
  *
  * Contexts come from the real orchestration (`runExorcism` / `runSummoning`)
  * driven by scripted dice and the real card builders, localised from en.json,

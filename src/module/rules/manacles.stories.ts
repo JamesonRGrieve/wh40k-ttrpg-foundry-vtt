@@ -59,7 +59,7 @@ function manaclesSituationalRow(): SituationalRow {
     return {
         toggleKey: 'manacles',
         source: 'Manacled',
-        condition: 'Errata p. 176 — Manacles impose −40 BS/WS while worn.',
+        condition: 'Manacles impose −40 BS/WS while worn.',
         icon: 'fas fa-link',
         value: MANACLES_BS_PENALTY,
         valueLabel: String(MANACLES_BS_PENALTY),

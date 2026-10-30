@@ -1,8 +1,8 @@
 /**
  * The Malignancy Test roll card (35092c9ab, #91): a Willpower test whose Corruption
- * Track modifier (Table 8-14) is its own sourced, hoverable row, and whose effect
+ * Track modifier is its own sourced, hoverable row, and whose effect
  * row reports what the test did — the taint held, a Malignancy gained, or (Twisted
- * Flesh, within.md p. 32) a Mutation rolled instead.
+ * Flesh) a Mutation rolled instead.
  *
  * Every number comes from the real rules (`corruptionTrackModifier`,
  * `getMalignancyTestTarget`) and every string from the langpack, so the card
@@ -111,7 +111,7 @@ export const ResistedTainted: Story = {
     },
 };
 
-/** Twisted Flesh (within.md p. 32): the Mutant took a Mutation instead of the Malignancy. */
+/** Twisted Flesh: the Mutant took a Mutation instead of the Malignancy. */
 export const TwistedFleshMutationInstead: Story = {
     args: { corruption: 64, outcome: 'mutation', roll: 88 },
     play: async ({ canvasElement }) => {

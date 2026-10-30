@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the Deathwatch Mission Oath panel (#168 —
- * core.md Table 7-16 §"OATHS", p.10165). Covers the three visual
+ * the Mission Oaths table). Covers the three visual
  * states an operator needs to verify in review:
  *
  *   1. NoOathLeader     — leader, no Oath sworn; swear available.

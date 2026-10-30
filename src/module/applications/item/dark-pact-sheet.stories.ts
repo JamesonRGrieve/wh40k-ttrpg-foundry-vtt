@@ -1,5 +1,5 @@
 /**
- * Stories for the Dark Pact item sheet (#84, Enemies Beyond pp. 72–76).
+ * Stories for the Dark Pact item sheet (#84, DH2).
  *
  * The context is built by the sheet's own view (`darkPactSheetView`) from the
  * Pact of Might / Pact of Knowledge fixtures, and granted-item names render
@@ -29,7 +29,7 @@ const IMG = 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/skoll/pentacle.
 function args(name: string, definition: PactDefinitionView, canEdit = false, inEditMode = false): DarkPactSheetArgs {
     return {
         item: { name, img: IMG },
-        system: { description: { value: `<p>See Enemies Beyond.</p>` } },
+        system: { description: { value: `<p>A pact struck with a daemon.</p>` } },
         pact: darkPactSheetView({ corruptionFormula: CORRUPTION_FORMULA, negotiation: BOOK_TERMS, ...definition }),
         canEdit,
         inEditMode,

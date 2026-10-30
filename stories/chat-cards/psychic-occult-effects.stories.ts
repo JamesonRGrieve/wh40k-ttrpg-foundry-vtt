@@ -1,7 +1,7 @@
 /**
- * The occult rows a psychic cast can add to its card (DH2 Enemies Beyond):
+ * The occult rows a psychic cast can add to its card (DH2):
  *
- * - Malefic Daemonology (a92810cbc, beyond.md p. 56): a successful cast taints the
+ * - Malefic Daemonology (a92810cbc): a successful cast taints the
  *   psyker with Corruption equal to the Psy Rating used, printed as its own effect
  *   row. Only lines whose config sets `maleficCorruptionOnManifest` charge it.
  * - Sanctic Purity (7fc6b6332, #131): a Sanctic psyker who spends a Fate point to

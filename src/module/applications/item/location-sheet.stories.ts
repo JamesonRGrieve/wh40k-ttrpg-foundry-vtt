@@ -48,7 +48,7 @@ const meta = {
     render: (args) => renderSheet(templateSrc, args),
     args: {
         locationTypes: { planet: 'Planet', moon: 'Moon', sector: 'Sector', site: 'Site' },
-        source: { source: { book: 'Core Rulebook', page: '24', url: '' } },
+        source: { source: { book: 'DH2: Sample Book', page: '24', url: '' } },
         item: {
             name: 'Hive Desoleum',
             img: 'icons/svg/city.svg',
@@ -67,7 +67,7 @@ const meta = {
                 specialRules: '',
                 sampleCharacters: [{ name: 'Hive Noble', description: 'A member of the ruling elite.' }],
                 description: { value: '<p>A sprawling hive world.</p>' },
-                source: { book: 'Core Rulebook', page: '24', url: '' },
+                source: { book: 'DH2: Sample Book', page: '24', url: '' },
             },
         },
     },

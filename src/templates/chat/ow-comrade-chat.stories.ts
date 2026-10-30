@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the OW Comrade chat card (#152 — core.md
- * p.12137).
+ * Storybook stories for the OW Comrade chat card (#152).
  *
  * Each story builds its payload through the canonical rules functions
  * in `src/module/rules/ow-comrade.ts` so any change to the doubles /
@@ -141,7 +140,7 @@ export const StateReplaceDeadToUnharmed: Story = {
     render: () => renderSheet(chatSrc, { ...stateChangeContext('dead', 'replace') }),
 };
 
-/** A hit on doubles struck the Comrade instead (#152, p. 271): the card states the reason and the step it took. */
+/** A hit on doubles struck the Comrade instead (#152): the card states the reason and the step it took. */
 export const HitTransferWounds: Story = {
     name: 'Hit transfer — doubles wound the Comrade',
     render: () => {
@@ -154,7 +153,7 @@ export const HitTransferWounds: Story = {
     },
 };
 
-/** A recovery Order (p. 271) clears Fear and Pinning. */
+/** A recovery Order clears Fear and Pinning. */
 export const Recovered: Story = {
     name: 'Recovery Order — no longer fleeing or pinned',
     render: () => renderSheet(chatSrc, { ...BASE, event: { kind: 'recover', wasFleeing: true, wasPinned: false } }),
@@ -163,7 +162,7 @@ export const Recovered: Story = {
     },
 };
 
-/** Insanity or Corruption (p. 271): the Round's total against the threshold, and death at it. */
+/** Insanity or Corruption: the Round's total against the threshold, and death at it. */
 function mentalContext(amount: number, total: number): object {
     return {
         ...BASE,

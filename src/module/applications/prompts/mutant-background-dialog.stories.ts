@@ -8,7 +8,7 @@ interface Args {
     actorName: string | null;
 }
 
-/** The Mutant origin's content (Within p. 32), as the dialog reads it off the character's origin. */
+/** The Mutant origin's content, as the dialog reads it off the character's origin. */
 const MUTANT_ORIGIN = { startingCorruption: 10, mutationFormula: '5d10' };
 
 const meta = {

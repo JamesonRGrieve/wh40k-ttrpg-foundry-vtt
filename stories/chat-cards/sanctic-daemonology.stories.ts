@@ -6,14 +6,13 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Sanctic Daemonology manifestation chat card (#130 — beyond.md
- * L1813–2090). Verifies the holy-discipline card renders the
+ * Sanctic Daemonology manifestation chat card (#130). Verifies the holy-discipline card renders the
  * always-zero corruption contrast and the Phenomena / Soul-Binding /
  * Emperor's-Anathema mitigation states the `resolveSancticManifestation`
  * resolver produces.
  *
  * The power display name is compendium content (a `psychicPower` item in
- * `dh2-beyond-items-psychic-powers`); at runtime it is resolved from the
+ * a DH2 psychic-powers pack); at runtime it is resolved from the
  * compendium via the power's UUID. Storybook has no live `game.packs`, so
  * the story supplies the name as mock render data.
  */

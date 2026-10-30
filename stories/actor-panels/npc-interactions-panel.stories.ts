@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the NPC Interaction Counts panel (#145, DH2 errata p.125).
+ * Storybook stories for the NPC Interaction Counts panel (#145, DH2 errata).
  *
  * The panel surfaces a per-PC tally of social interactions and visually
  * caps each row at the PC's Fellowship-bonus worth of cap-relevant

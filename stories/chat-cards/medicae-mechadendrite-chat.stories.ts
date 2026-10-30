@@ -6,7 +6,7 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the Medicae Mechadendrite Half-Action Blood-Loss
- * staunch (#104 — errata p. 183).
+ * staunch (#104).
  *
  * Exercises the success / failure branches plus a per-system (RT) theme
  * variant so the data-wh40k-system anchor and the wh40k-rpg cascade

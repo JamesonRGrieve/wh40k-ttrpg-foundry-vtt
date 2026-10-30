@@ -1,7 +1,7 @@
 /**
- * Daemonology ritual dialog (DH2 Enemies Beyond): the Exorcism (#83, p. 71)
- * and Summoning (#80, p. 59) forms the Daemonology panel opens. Context
- * mirrors `DaemonologyRitualDialog._prepareContext`; the Table 2–21 rows come
+ * Daemonology ritual dialog (DH2): the Exorcism (#83)
+ * and Summoning (#80) forms the Daemonology panel opens. Context
+ * mirrors `DaemonologyRitualDialog._prepareContext`; the exorcism modifier rows come
  * from the real `EXORCISM_MODIFIERS` table, and the play functions read the
  * rendered form back through the real `parseExorcismForm` /
  * `parseSummoningForm`, so the form's field names and the parsers cannot drift.
@@ -73,7 +73,7 @@ export const ExorcismHostTargeted: Story = {
         const form = canvasElement.querySelector('form');
         await expect(form).not.toBeNull();
         if (form === null) return;
-        // Every Table 2–21 row renders once.
+        // Every exorcism modifier row renders once.
         await expect(form.querySelectorAll('input[name="modifiers"]').length).toBe(EXORCISM_MODIFIER_ORDER.length);
         await expect(canvasElement.querySelector('[data-wh40k-hook="daemonology-target"]')?.textContent).toContain('Brother Ostrava');
 

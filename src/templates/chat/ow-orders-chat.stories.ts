@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the OW Order chat card (#152, #153; OW Core pp. 269–271):
+ * Storybook stories for the OW Order chat card (#152, #153):
  * what the Comrade did with the Order it was given.
  *
  *   1. RangedVolley       — carried out in Cohesion; one Half Action left.

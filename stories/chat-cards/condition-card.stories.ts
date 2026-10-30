@@ -59,7 +59,7 @@ function buildContext(args: ConditionArgs): ConditionContext {
         name: args.name,
         stackable: args.stackable,
         stacks: args.stacks,
-        sourceReference: 'Core Rulebook, p. 159',
+        sourceReference: 'DH2: Sample Book',
         appliesToIcon: 'fa-user',
         appliesToLabel: 'Affects the bearer',
         isTemporary: args.isTemporary,

@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the Only War Regimental Drawbacks panel (#160 —
- * Hammer of the Emperor, Regimental Drawbacks; Multiple Comrades).
+ * Regimental Drawbacks; Multiple Comrades).
  *
  *   1. No drawbacks, RAW single Comrade — empty list, exact budget.
  *   2. Two real drawbacks (Doomed, The Few) stored as compendium UUIDs — each
@@ -31,8 +31,8 @@ interface DrawbackPanelCtx {
     editable?: boolean;
 }
 
-const DOOMED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
-const THE_FEW = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.0e3e5f403cafdd8a';
+const DOOMED = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.70dcc1a74d10b5dc';
+const THE_FEW = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.0e3e5f403cafdd8a';
 
 /** Stands in for `uuidNameCache.getName`: the names those pack documents carry. */
 const NAMES: Record<string, string> = {

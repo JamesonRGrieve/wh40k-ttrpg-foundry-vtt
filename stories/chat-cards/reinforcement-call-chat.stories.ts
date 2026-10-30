@@ -7,7 +7,7 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * The chat card posted when the GM calls in a Reinforcement Character (#77,
- * DH2 core pp. 294–295). It shows the cost breakdown (printed cost, Peer
+ * DH2). It shows the cost breakdown (printed cost, Peer
  * discount, GM adjustment), who spent what, and the Subtlety loss. Values come
  * from the same pure resolvers the call dialog uses.
  */
@@ -59,7 +59,7 @@ export const CanonessWithContribution: Story = {
     },
 };
 
-/** Thrice-Bound Daemonhost (Enemies Beyond p. 38): the caller gains 1d5 Corruption. */
+/** Thrice-Bound Daemonhost: the caller gains 1d5 Corruption. */
 export const DaemonhostCorruption: Story = {
     render: () => {
         const root = document.createElement('div');

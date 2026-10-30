@@ -54,7 +54,7 @@ function makeCtx(overrides: Partial<PsychicPowerCtx> = {}): PsychicPowerCtx {
             damageFormula: '1d10+PR',
             damageType: 'Energy',
             overbleed: false,
-            source: mockSourceReference(),
+            source: mockSourceReference({ book: 'DH2: Sample Book' }),
             description: { value: '<p>Blast foes with pure psychic force.</p>' },
         },
     });
@@ -109,10 +109,10 @@ export const SourceReferenceEditable: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
-        void expect(storyCanvas.getByText('Dark Heresy 2e Core, p.198')).toBeTruthy();
+        void expect(storyCanvas.getByText('DH2: Sample Book, p.198')).toBeTruthy();
         const book = canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]');
         const page = canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]');
-        void expect(book?.value).toBe('Dark Heresy 2e Core');
+        void expect(book?.value).toBe('DH2: Sample Book');
         void expect(page?.value).toBe('198');
         void expect(canvasElement.querySelector('input[name="system.source"]')).toBeNull();
         void expect(canvasElement.innerHTML).not.toContain('[object Object]');
@@ -123,7 +123,7 @@ export const SourceReferenceReadOnly: Story = {
     render: () => renderSheet(templateSrc, makeCtx({ editable: false })),
     play: ({ canvasElement }) => {
         const storyCanvas = within(canvasElement);
-        void expect(storyCanvas.getAllByText('Dark Heresy 2e Core, p.198')).toHaveLength(2);
+        void expect(storyCanvas.getAllByText('DH2: Sample Book, p.198')).toHaveLength(2);
         void expect(canvasElement.querySelector('input[name="system.source.book"]')).toBeNull();
         void expect(canvasElement.innerHTML).not.toContain('[object Object]');
     },
@@ -214,7 +214,7 @@ export const DisciplineSelectAndHeaderWidth: Story = {
 };
 
 /**
- * content#35: a power keeps the discipline its book prints ("Nurgle", BC core p. 212). The
+ * content#35: a power keeps the discipline its book prints ("Nurgle", BC). The
  * select lists it first and selected, so saving the sheet never overwrites it with a
  * tree name, and the header shows it as printed.
  */

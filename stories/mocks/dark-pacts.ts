@@ -1,10 +1,10 @@
 /**
  * Dark Pact fixtures for the pact item sheet and Dark Pacts panel stories (#84).
  *
- * Two of the Enemies Beyond pacts (pp. 74–75), with the identifiers, names,
- * terms and mechanics their compendium documents author and their real pack
- * UUIDs. The rules text lives only in the private packs, so each entry's
- * description here is a page pointer, not the book's words.
+ * Two of the DH2 pacts, with the identifiers, names, terms and mechanics their
+ * compendium documents author, under neutral fixture pack UUIDs. The rules text
+ * lives only in the private packs, so each entry's description here is a
+ * placeholder, not the book's words.
  *
  * `registerPactNames()` seeds `uuidNameCache` with the pact and granted-item
  * names and registers the `uuid-name` helper exactly as the runtime does
@@ -15,48 +15,48 @@ import type { PactDefinitionView } from '../../src/module/applications/item/dark
 import type { DarkPactEntry, DarkPactTerms, PactRecord } from '../../src/module/rules/dark-pact.ts';
 import { uuidNameCache } from '../../src/module/utils/uuid-name-cache.ts';
 
-export const PACT_OF_MIGHT = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactMight0001';
-export const PACT_OF_KNOWLEDGE = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactKnowl0001';
+export const PACT_OF_MIGHT = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.EB2PactMight0001';
+export const PACT_OF_KNOWLEDGE = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.EB2PactKnowl0001';
 /** A pact whose compendium document is gone: its row must still render (as unresolved) so the GM can remove it. */
-export const PACT_MISSING = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.Missing000000001';
+export const PACT_MISSING = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.Missing000000001';
 
-const UNNATURAL = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.UnnatCharDh2TrX1';
-const FRENZY = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000011';
-const COMBAT_MASTER = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000031';
-const COUNTER_ATTACK = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000006';
-const STEP_ASIDE = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000055';
+const UNNATURAL = 'Compendium.wh40k-rpg.dh2-traits.Item.UnnatCharDh2TrX1';
+const FRENZY = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000011';
+const COMBAT_MASTER = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000031';
+const COUNTER_ATTACK = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000006';
+const STEP_ASIDE = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000055';
 
-/** The book's terms, shared by every example pact (p. 73, p. 76). */
+/** The book's terms, shared by every example pact. */
 export const BOOK_TERMS: DarkPactTerms = { dispositionBase: 15, addsCorruption: true, testModifier: -20 };
 export const CORRUPTION_FORMULA = '2d10+10';
 
-function entry(page: number, identifier: string, name: string, extra: Partial<Pick<DarkPactEntry, 'modifiers' | 'grants'>> = {}): DarkPactEntry {
-    return { identifier, name, description: `<p>See Enemies Beyond p. ${page}.</p>`, modifiers: {}, grants: [], ...extra };
+function entry(identifier: string, name: string, extra: Partial<Pick<DarkPactEntry, 'modifiers' | 'grants'>> = {}): DarkPactEntry {
+    return { identifier, name, description: '<p>Rules text lives in the pack.</p>', modifiers: {}, grants: [], ...extra };
 }
 
 export const MIGHT: PactDefinitionView = {
     boons: [
-        entry(75, 'mighty', 'Mighty', { grants: [{ uuid: UNNATURAL, specialization: 'Strength', level: 2 }] }),
-        entry(75, 'lord-of-battle', 'Lord of Battle', { modifiers: { characteristics: { weaponSkill: 5 } } }),
-        entry(75, 'reaver', 'Reaver', { grants: [{ uuid: FRENZY, specialization: '', level: null }] }),
-        entry(75, 'unassailable', 'Unassailable', {
+        entry('mighty', 'Mighty', { grants: [{ uuid: UNNATURAL, specialization: 'Strength', level: 2 }] }),
+        entry('lord-of-battle', 'Lord of Battle', { modifiers: { characteristics: { weaponSkill: 5 } } }),
+        entry('reaver', 'Reaver', { grants: [{ uuid: FRENZY, specialization: '', level: null }] }),
+        entry('unassailable', 'Unassailable', {
             grants: [COMBAT_MASTER, COUNTER_ATTACK, STEP_ASIDE].map((uuid) => ({ uuid, specialization: '', level: null })),
         }),
     ],
-    banes: [entry(75, 'aspect-of-war', 'Aspect of War'), entry(75, 'blood-rage', 'Blood Rage'), entry(75, 'bloodthirsty', 'Bloodthirsty')],
+    banes: [entry('aspect-of-war', 'Aspect of War'), entry('blood-rage', 'Blood Rage'), entry('bloodthirsty', 'Bloodthirsty')],
 };
 
 export const KNOWLEDGE: PactDefinitionView = {
     boons: [
-        entry(74, 'blasphemous-knowledge', 'Blasphemous Knowledge'),
-        entry(74, 'dark-genius', 'Dark Genius', { modifiers: { characteristics: { intelligence: 5 } } }),
-        entry(74, 'seer', 'Seer'),
-        entry(74, 'true-savant', 'True Savant'),
+        entry('blasphemous-knowledge', 'Blasphemous Knowledge'),
+        entry('dark-genius', 'Dark Genius', { modifiers: { characteristics: { intelligence: 5 } } }),
+        entry('seer', 'Seer'),
+        entry('true-savant', 'True Savant'),
     ],
     banes: [
-        entry(74, 'detached', 'Detached', { modifiers: { characteristics: { fellowship: -10 } } }),
-        entry(74, 'terrible-truths', 'Terrible Truths'),
-        entry(74, 'unquenchable-thirst', 'Unquenchable Thirst'),
+        entry('detached', 'Detached', { modifiers: { characteristics: { fellowship: -10 } } }),
+        entry('terrible-truths', 'Terrible Truths'),
+        entry('unquenchable-thirst', 'Unquenchable Thirst'),
     ],
 };
 

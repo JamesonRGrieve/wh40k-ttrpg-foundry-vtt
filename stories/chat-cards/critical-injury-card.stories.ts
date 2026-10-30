@@ -71,7 +71,7 @@ function buildContext(args: InjuryArgs): InjuryContext {
         permanent: args.permanent,
         img: 'icons/svg/blood.svg',
         name: `Critical ${d.label} Damage — ${b.label}`,
-        sourceReference: 'Core Rulebook, Table 7–9',
+        sourceReference: 'DH2: Sample Book, Critical Damage table',
         effect: '<p>The target is knocked Prone and suffers 1 level of Fatigue. They take 1d5 Rending Damage that ignores Armour.</p>',
         notes: 'Apply after reducing Wounds to 0 or below.',
         description: '<p>A vicious blow that staggers even a hardened veteran.</p>',

@@ -1,6 +1,6 @@
 /**
- * Storybook stories for the DW Horde Magnitude panel (#166 — core.md
- * p. 359 TABLE 13-1). The panel surfaces the four RAW derived values
+ * Storybook stories for the DW Horde Magnitude panel (#166 — the Horde
+ * Magnitude table). The panel surfaces the four RAW derived values
  * the HordeTemplate mixin populates from `bonusDamageDiceForMagnitude`
  * and `toHitBonusForMagnitude`:
  *
@@ -9,7 +9,7 @@
  *   3. Bonus damage dice the horde adds to its own attacks (capped +2d10).
  *   4. Magnitude bar with break-threshold marker (25% line).
  *
- * Stories cover every tier from TABLE 13-1 plus the broken-threshold
+ * Stories cover every tier from the Horde Magnitude table plus the broken-threshold
  * state for visual review. The companion e2e spec
  * (`tests/e2e/dw-horde-magnitude.spec.ts`) instantiates the live NPC
  * sheet on a DW horde actor and snaps the rendered panel.

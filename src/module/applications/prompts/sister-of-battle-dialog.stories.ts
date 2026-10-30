@@ -10,17 +10,15 @@ interface Args {
 
 /**
  * A fixture shaped like the Sister of Battle elite advance document's
- * `grants` block (DH2 Enemies Within). At runtime the dialog reads the real
+ * `grants` block (DH2). At runtime the dialog reads the real
  * document by identifier; the story feeds the same pure row builder.
  */
 const FIXTURE_GRANTS = {
     talents: [
-        { name: 'Peer', specialization: 'Adepta Sororitas', uuid: 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000018' },
-        { name: 'Weapon Training', specialization: 'Bolt', uuid: 'Compendium.wh40k-rpg.dh2-core-items-talents-specializations.Item.DH2aTlnt00000026' },
+        { name: 'Peer', specialization: 'Adepta Sororitas', uuid: 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000018' },
+        { name: 'Weapon Training', specialization: 'Bolt', uuid: 'Compendium.wh40k-rpg.dh2-talent-specializations.Item.DH2aTlnt00000026' },
     ],
-    specialAbilities: [
-        { name: 'Unlocked Advances', description: '<p>The character gains access to the Sister of Battle talent suite from Enemies Within.</p>' },
-    ],
+    specialAbilities: [{ name: 'Unlocked Advances', description: '<p>The character gains access to the Sister of Battle talent suite.</p>' }],
 };
 
 const meta = {

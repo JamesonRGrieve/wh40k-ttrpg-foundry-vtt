@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the OW Comrade Healing chat card
- * (#157 — core.md §"Healing Comrades" p.12269; replacement p.12261).
+ * (#157 — Healing Comrades, and replacement on return to camp).
  *
  * Each story builds its payload through the canonical rules functions
  * in `src/module/rules/ow-comrade-healing.ts` so any change to the

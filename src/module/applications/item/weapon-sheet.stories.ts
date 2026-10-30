@@ -309,7 +309,7 @@ export const LockedCompendiumShowDetails: Story = {
 const FITTED_MODIFICATIONS = [
     {
         index: 0,
-        uuid: 'Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip',
+        uuid: 'Compendium.wh40k-rpg.dh2-weapon-mods.Item.grip',
         name: 'Custom Grip',
         active: true,
         category: 'stock',
@@ -328,7 +328,7 @@ export const PersonalModificationDH2: Story = {
         await expect(fit).toBeTruthy();
         await expect(fit?.textContent).toContain('Fit a modification');
         const remove = canvasElement.querySelector<HTMLButtonElement>('[data-action="unfitModification"]');
-        await expect(remove?.dataset['modUuid']).toBe('Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip');
+        await expect(remove?.dataset['modUuid']).toBe('Compendium.wh40k-rpg.dh2-weapon-mods.Item.grip');
         await expect(remove?.getAttribute('aria-label')).toBeTruthy();
     },
 };

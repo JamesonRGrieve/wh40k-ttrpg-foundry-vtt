@@ -11,8 +11,7 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Two-Weapon Wielder errata p. 132 refocus chat card (#147 —
- * errata/errata.md L67). Verifies the card renders the structured
+ * Two-Weapon Wielder errata refocus chat card (#147). Verifies the card renders the structured
  * two-Half-Action plan: the main-hand Half-Action opener plus the
  * same-mode Free-Action off-hand follow-up that the
  * `resolveTwoWeaponRefocus` resolver produces. Ranged single-shot

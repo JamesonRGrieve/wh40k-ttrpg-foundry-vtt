@@ -737,7 +737,7 @@ function naturalOneVs75(gameSystem: SystemId, printed: number, resultFormula: st
     };
 }
 
-/** DH1 core p. 184: one degree per full 10 points of margin, no base degree — 74 → 7. */
+/** DH1: one degree per full 10 points of margin, no base degree — 74 → 7. */
 export const Dh1PrintedDegrees: Story = {
     name: 'DH1 (Gen 1) — 01 vs 75 prints 7 DoS',
     args: naturalOneVs75('dh1', 7, '7 DoS = ⌊74 ÷ 10⌋ (roll 1 vs target 75)'),

@@ -7,8 +7,7 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Chat cards posted by the GM Inquest tracker (#90 — DH2 Enemies Within
- * pp. 66–69): the Revelation card (posted when the IP total crosses a
+ * Chat cards posted by the GM Inquest tracker (#90 — DH2): the Revelation card (posted when the IP total crosses a
  * threshold) and the resolution card (each Acolyte's Influence change, with
  * its scope reward, surplus bonus and shortfall penalty). The values come from
  * the same pure resolvers the tracker calls. The card carries

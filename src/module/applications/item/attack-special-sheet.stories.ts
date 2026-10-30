@@ -28,7 +28,7 @@ const baseItem = (): Args['item'] => ({
         hasLevel: true,
         enabled: true,
         level: 2,
-        source: mockSourceReference({ book: 'Rogue Trader Core', page: '139' }),
+        source: mockSourceReference({ book: 'RT: Sample Book', page: '139' }),
         description: { value: 'Releases a coruscating arc of lightning on a successful hit.' },
     },
 });
@@ -66,7 +66,7 @@ export const RendersAndAcceptsName: Story = {
 export const SourceReferenceLabel: Story = {
     play: ({ canvasElement }) => {
         const cv = within(canvasElement);
-        void expect(cv.getByText('Rogue Trader Core, p.139')).toBeTruthy();
+        void expect(cv.getByText('RT: Sample Book, p.139')).toBeTruthy();
         void expect(canvasElement.innerHTML).not.toContain('[object Object]');
     },
 };
@@ -75,7 +75,7 @@ export const SourceReferenceLabel: Story = {
 export const SourceReferenceInputs: Story = {
     args: { item: baseItem(), editable: true },
     play: ({ canvasElement }) => {
-        void expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe('Rogue Trader Core');
+        void expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.book"]')?.value).toBe('RT: Sample Book');
         void expect(canvasElement.querySelector<HTMLInputElement>('input[name="system.source.page"]')?.value).toBe('139');
         void expect(canvasElement.querySelector('input[name="system.source"]')).toBeNull();
     },

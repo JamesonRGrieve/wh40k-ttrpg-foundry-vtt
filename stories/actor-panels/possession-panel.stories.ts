@@ -1,6 +1,6 @@
 /**
- * Storybook stories for the Possession track panel (#82, beyond.md p.69)
- * + Possession-power Frenzy-test loop (#132, beyond.md L2095-2116).
+ * Storybook stories for the Possession track panel (#82)
+ * + Possession-power Frenzy-test loop (#132).
  *
  * Renders the panel against a hand-crafted `system.possession` context. The
  * stories cover the visible states the panel must render correctly:

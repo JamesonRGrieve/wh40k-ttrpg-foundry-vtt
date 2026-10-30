@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Only War Comrade panel (#152 — OW Core pp. 269–271).
+ * Storybook stories for the Only War Comrade panel (#152).
  * The states an operator needs to verify in review:
  *
  *   - Unharmed / Wounded / Dead: the state badge, and Wound / Heal / Replace
@@ -113,7 +113,7 @@ export const Wounded: Story = {
     },
 };
 
-/** Cohesion breaks past 5 m (OW Core p. 269) … */
+/** Cohesion breaks past 5 m … */
 export const CohesionBrokenByDistance: Story = {
     name: 'Out of Cohesion — 8 m away',
     args: buildContext({ distanceM: 8 }),
@@ -133,7 +133,7 @@ export const CohesionBrokenByBarrier: Story = {
     },
 };
 
-/** Failed a Pinning test with its PC (p. 271): pinned until a recovery Order. */
+/** Failed a Pinning test with its PC: pinned until a recovery Order. */
 export const Pinned: Story = {
     name: 'Pinned — the recovery Order is enabled',
     args: buildContext({ pinned: true }),
@@ -146,7 +146,7 @@ export const Pinned: Story = {
     },
 };
 
-/** Failed a Fear test with its PC (p. 271): fleeing; immunity is a toggle. */
+/** Failed a Fear test with its PC: fleeing; immunity is a toggle. */
 export const Fleeing: Story = {
     name: 'Fleeing — failed Fear with its PC',
     args: buildContext({ fleeing: true, pinningImmune: true }),
@@ -158,7 +158,7 @@ export const Fleeing: Story = {
     },
 };
 
-/** The Comrade has spent its Turn (p. 269): "two Half Actions or one Full Action". */
+/** The Comrade has spent its Turn: "two Half Actions or one Full Action". */
 export const ActionsSpent: Story = {
     name: 'Actions spent this Turn',
     args: buildContext({ turn: { combatId: NOW.combatId, round: NOW.round, halvesSpent: 2 } }),
@@ -168,7 +168,7 @@ export const ActionsSpent: Story = {
     },
 };
 
-/** Insanity and Corruption (p. 271): the amount and the two buttons. */
+/** Insanity and Corruption: the amount and the two buttons. */
 export const MentalDamage: Story = {
     name: 'Insanity and Corruption controls',
     args: buildContext({}),

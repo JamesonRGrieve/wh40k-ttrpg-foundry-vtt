@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the Fanatic "Death to All Who Oppose Me" button
- * (#93, within.md p.34/967).
+ * (#93).
  *
  * Renders the action button panel against a minimal context. The button
  * itself is gated on `hasFanatic` (computed by

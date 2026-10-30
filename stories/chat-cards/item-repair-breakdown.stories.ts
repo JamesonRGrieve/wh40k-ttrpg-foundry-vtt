@@ -9,9 +9,9 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * The Tech-Use Repair card's target formula (#444 / #136), with each printed
- * repair rule as its own hoverable provenance row: the Table 5–2 craftsmanship
- * modifier (DH2 core p. 141) and, for xenos equipment, the alien-nature penalty
- * plus the +5-per-DoS Forbidden Lore insight (Enemies Without p. 42). Values
+ * repair rule as its own hoverable provenance row: the craftsmanship
+ * modifier (DH2) and, for xenos equipment, the alien-nature penalty
+ * plus the +5-per-DoS Forbidden Lore insight (a DH2 supplement). Values
  * come from the same pure resolvers the repair flow calls.
  */
 initializeStoryHandlebars();
