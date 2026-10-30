@@ -11,7 +11,7 @@ import {
 
 const base: CompendiumDropInput = {
     type: 'Actor',
-    uuid: 'Compendium.wh40k-rpg.dh2-core-actors-bestiary.Actor.abcdefghijklmnop',
+    uuid: 'Compendium.wh40k-rpg.dh2-bestiary.Actor.abcdefghijklmnop',
     actorType: 'dh2-npc',
     isCharacter: false,
     ctrlKey: false,

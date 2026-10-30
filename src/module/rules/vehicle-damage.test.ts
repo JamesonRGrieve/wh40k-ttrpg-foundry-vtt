@@ -18,7 +18,7 @@ import {
     vehicleHitLocation,
 } from './vehicle-damage.ts';
 
-/** Table 7-29 / 8-24 as DH2 and OW print it. */
+/** The vehicle hit location table as DH2 and OW print it. */
 const BANDS: VehicleHitLocationBand[] = [
     { max: 20, location: 'motive' },
     { max: 60, location: 'hull' },
@@ -28,7 +28,7 @@ const BANDS: VehicleHitLocationBand[] = [
 
 const ARMED = { hasTurret: true, weaponFacings: ['front'] };
 
-describe('vehicleFacingFromBearings (DH2 Core p. 254 facings)', () => {
+describe('vehicleFacingFromBearings (DH2 facings)', () => {
     it('reads an attacker dead ahead as Front and dead astern as Rear', () => {
         expect(vehicleFacingFromBearings(90, 90)).toBe('front');
         expect(vehicleFacingFromBearings(90, 270)).toBe('rear');
@@ -66,7 +66,7 @@ describe('armour facings', () => {
     });
 });
 
-describe('vehicleHitLocation (Table 7-29)', () => {
+describe('vehicleHitLocation (the vehicle hit location table)', () => {
     it('maps each band', () => {
         expect(vehicleHitLocation(1, BANDS, ARMED, 'front').location).toBe('motive');
         expect(vehicleHitLocation(20, BANDS, ARMED, 'front').location).toBe('motive');
@@ -187,7 +187,7 @@ describe('isVehicleLocationId', () => {
     });
 });
 
-describe('crew exposure (DH2 Core p. 187 Open-Topped, Bike)', () => {
+describe('crew exposure (DH2 Open-Topped, Bike)', () => {
     const open = { exposure: 'open', riderTargetableInMelee: false, isMelee: false, attackerAboard: false };
 
     it('lets a Called Shot single out crew in an open vehicle', () => {
@@ -223,17 +223,17 @@ describe('incomingVehicleModifiers', () => {
     const orbital: IncomingToHitEntry = { value: -30, attack: 'ranged', condition: 'deploying', trait: 'Orbital Deployment' };
     const still: VehicleMotionState = { moving: false, airborne: false, mobile: true };
 
-    it('applies Holofield only to a vehicle that moved on its last turn (RT Battlefleet Koronus p. 143)', () => {
+    it('applies Holofield only to a vehicle that moved on its last turn (an RT supplement)', () => {
         expect(incomingVehicleModifiers([holofield], false, still)).toEqual([]);
         expect(incomingVehicleModifiers([holofield], false, { ...still, moving: true })).toEqual([{ value: -20, trait: 'Holofield' }]);
     });
 
-    it('applies Feral Machine Spirit while the vehicle can move, not once it is Immobile (p. 144)', () => {
+    it('applies Feral Machine Spirit while the vehicle can move, not once it is Immobile', () => {
         expect(incomingVehicleModifiers([feral], false, still)).toEqual([{ value: -10, trait: 'Feral Machine Spirit' }]);
         expect(incomingVehicleModifiers([feral], false, { ...still, mobile: false })).toEqual([]);
     });
 
-    it('applies Flyer only to an airborne flyer (DH2 Enemies Without p. 53)', () => {
+    it('applies Flyer only to an airborne flyer (a DH2 supplement)', () => {
         expect(incomingVehicleModifiers([flyer], false, still)).toEqual([]);
         expect(incomingVehicleModifiers([flyer], false, { ...still, airborne: true })).toEqual([{ value: -20, trait: 'Flyer' }]);
     });
@@ -243,13 +243,13 @@ describe('incomingVehicleModifiers', () => {
         expect(incomingVehicleModifiers([feral, holofield], false, still)).toEqual([{ value: -10, trait: 'Feral Machine Spirit' }]);
     });
 
-    it('applies Orbital Deployment −30 to shooting while the vehicle is in flight (OW Core p. 213)', () => {
+    it('applies Orbital Deployment −30 to shooting while the vehicle is in flight (OW)', () => {
         expect(incomingVehicleModifiers([orbital], false, still)).toEqual([]);
         expect(incomingVehicleModifiers([orbital], false, { ...still, airborne: true })).toEqual([{ value: -30, trait: 'Orbital Deployment' }]);
         expect(incomingVehicleModifiers([orbital], true, { ...still, airborne: true })).toEqual([]);
     });
 
-    it('does not stack Feral Machine Spirit with a Dreadclaw Assault in flight: the stronger applies (RT Battlefleet Koronus p. 144)', () => {
+    it('does not stack Feral Machine Spirit with a Dreadclaw Assault in flight: the stronger applies (an RT supplement)', () => {
         const dreadclaw: IncomingToHitEntry = { ...orbital, trait: 'Dreadclaw Assault' };
         expect(incomingVehicleModifiers([feral, dreadclaw], false, { ...still, airborne: true })).toEqual([{ value: -30, trait: 'Dreadclaw Assault' }]);
     });
@@ -260,7 +260,7 @@ describe('incomingVehicleModifiers', () => {
     });
 });
 
-describe('isAttackFromAboveOrBelow (DH2 Core p. 253)', () => {
+describe('isAttackFromAboveOrBelow (DH2)', () => {
     it('reads an attacker steeper than 45° above or below as from above or below', () => {
         expect(isAttackFromAboveOrBelow(10, 30)).toBe(true);
         expect(isAttackFromAboveOrBelow(10, -30)).toBe(true);

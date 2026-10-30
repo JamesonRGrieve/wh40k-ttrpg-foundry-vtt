@@ -66,11 +66,11 @@ describe('ItemDataModel', () => {
         if (mod === undefined) return;
         const ItemDataModel = mod.default;
 
-        const source = { source: 'Dark Heresy 2e, p.123' as string | SourceField };
+        const source = { source: 'A legacy free-text source' as string | SourceField };
         ItemDataModel._migrateData(source);
         expect(typeof source.source).toBe('object');
         const src = source.source as SourceField;
-        expect(src.custom).toBe('Dark Heresy 2e, p.123');
+        expect(src.custom).toBe('A legacy free-text source');
         expect(src.book).toBe('');
         expect(src.page).toBe('');
     });

@@ -115,7 +115,7 @@ describe('mergeMarkGrants', () => {
     });
 
     it('coalesces duplicate traits and Active Effect ids and skips blanks', () => {
-        const trait = 'Compendium.wh40k-rpg.dw-core-items-traits.Item.abc';
+        const trait = 'Compendium.wh40k-rpg.dw-traits.Item.abc';
         const merged = mergeMarkGrants([makeMark({ trait, activeEffect: 'fx' }), makeMark({ trait, activeEffect: 'fx' }), makeMark()]);
         expect(merged.traits).toEqual([trait]);
         expect(merged.activeEffects).toEqual(['fx']);

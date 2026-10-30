@@ -46,7 +46,7 @@ function expectTest(result: LogisticsTarget): LogisticsTestTarget {
 
 type Cell = number | 'automatic' | 'discretion';
 
-/** OW core Table 6-2 (p. 163), "Difficulty by Number of Troops", as printed. */
+/** OW's "Difficulty by Number of Troops" table, as printed. */
 const TABLE_6_2: Readonly<Record<AvailabilityKey, readonly [Cell, Cell, Cell]>> = {
     ubiquitous: [30, 'automatic', 'automatic'],
     abundant: [20, 30, 'automatic'],
@@ -62,20 +62,20 @@ const TABLE_6_2: Readonly<Record<AvailabilityKey, readonly [Cell, Cell, Cell]>> 
 };
 
 describe('OW Squad Logistics Rating constants', () => {
-    it('default Logistics Rating is 10 (p. 161)', () => {
+    it('default Logistics Rating is 10', () => {
         expect(OW_DEFAULT_LOGISTICS_RATING).toBe(10);
     });
 
-    it('Munitorum Influence Talent grants +5 (p. 161)', () => {
+    it('Munitorum Influence Talent grants +5', () => {
         expect(OW_MUNITORUM_INFLUENCE_BONUS).toBe(5);
     });
 
-    it('standard kit of a deployed regiment grants +20 (p. 163)', () => {
+    it('standard kit of a deployed regiment grants +20', () => {
         expect(OW_LOGISTICS_FRONT_CONDITIONS.standardKit).toBe(20);
     });
 });
 
-describe('Table 6-2 — Difficulty by Number of Troops', () => {
+describe('Difficulty by Number of Troops', () => {
     it('prints exactly three troop columns: Company or Less, Single Regiment, Multiple Regiments', () => {
         expect(TROOP_COUNT_KEYS).toEqual(['company', 'regiment', 'regiments']);
         expect(Object.keys(OW_LOGISTICS_FRONT_CONDITIONS.availabilityByTroops).sort()).toEqual([...TROOP_COUNT_KEYS].sort());
@@ -123,7 +123,7 @@ describe('Table 6-2 — Difficulty by Number of Troops', () => {
     });
 });
 
-describe('Table 6-2 — front-condition rows', () => {
+describe('Difficulty by Number of Troops — front-condition rows', () => {
     const PRINTED_TIME = [-10, 0, 10, 20, 30];
 
     it.each(FRONT_TIME_KEYS.map((key, index) => [key, PRINTED_TIME[index]] as const))('Time Spent in Front and Front Active %s = %i', (key, expected) => {
@@ -177,7 +177,7 @@ describe('computeLogisticsTarget — flat bonuses and craftsmanship', () => {
         ['common', 0],
         ['good', -30],
         ['best', -50],
-    ] as const)('Table 6-6 %s = %i (p. 167)', (craftsmanship, expected) => {
+    ] as const)('craftsmanship table: %s = %i', (craftsmanship, expected) => {
         expect(expectTest(computeLogisticsTarget(baseline({ craftsmanship }))).breakdown.craftsmanship).toBe(expected);
     });
 
@@ -199,7 +199,7 @@ describe('computeLogisticsTarget — flat bonuses and craftsmanship', () => {
     });
 });
 
-describe('computeLogisticsTarget — the p. 163 worked example', () => {
+describe('computeLogisticsTarget — the printed worked example', () => {
     it('Very Rare plasma gun, five regiments, just deployed, century-old front, Violent Impasse, another regiment’s kit: difficulty +10', () => {
         const { target, breakdown } = expectTest(
             computeLogisticsTarget(

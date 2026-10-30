@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { MAX_SIZE, MIN_SIZE, targetSizeModifier } from './target-size';
 
 /**
- * Tests for the shared target-size to-hit SSOT (DH2 Table 4-6, p.138).
+ * Tests for the shared target-size to-hit SSOT (DH2's size modifiers table).
  *
  * The formula was previously encoded twice, and a 7-row table that stopped at
  * Size 7 gave Size 8–10 targets +30 instead of +40/+50/+60 (#421). These tests
  * pin the full 1–10 ladder.
  */
-describe('targetSizeModifier (Table 4-6 SSOT, #421)', () => {
+describe('targetSizeModifier (size table SSOT, #421)', () => {
     it('returns 0 for an Average (4) target', () => {
         expect(targetSizeModifier(4)).toBe(0);
     });

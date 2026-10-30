@@ -10,8 +10,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
+import { lineCategoryPack } from '../utils/line-packs.ts';
 import { weaponDestroysOnCriticalFail } from './weapon-destroy.ts';
 import {
     applyKeepHighestToDie,
@@ -43,7 +45,19 @@ function weaponWith(qualities: ReadonlyArray<string>): QualityWeapon {
 
 // Read the real weaponQuality pack `_source` and build the by-identifier mechanics
 // map the boot index would build, then seed the resolver index from it.
-const PACK_DIR = resolve(__dirname, '../../packs-private/rogue-trader/rt-core-items-weapon-qualities/_source');
+// The packs are found by their manifest flags; without the private content none is
+// declared, so the directories are '' and the guarded reads below find nothing.
+const REPO_ROOT = resolve(__dirname, '../../..');
+function qualitySourceDir(line: string): string {
+    const pack = lineCategoryPack(
+        readDeclaredPacks(REPO_ROOT).packs.map((metadata) => ({ metadata })),
+        line,
+        'weapon-qualities',
+    )?.metadata;
+    return pack === undefined ? '' : resolve(REPO_ROOT, 'src/packs-private', pack.path.replace(/^packs\//, ''), '_source');
+}
+// RT's weapon-qualities pack holds the canonical docs.
+const PACK_DIR = qualitySourceDir('rt');
 const mechanicsById = new Map<string, WeaponQualityMechanics>();
 if (existsSync(PACK_DIR)) {
     for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {
@@ -417,7 +431,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Spray — cone template, Agility avoidanc
 
     it('the shared FFG payload carries no wielder bonuses; DH2 adds +20 untrained and +30 unbraced Heavy', () => {
         expect(mech('spray').template.avoidUntrainedBonus).toBeNull();
-        const dh2Path = resolve(__dirname, '../../packs-private/dark-heresy-2/dh2-core-items-weapon-qualities/_source/spray_oc7tLjpRxKGMQyqk.json');
+        const dh2Path = resolve(qualitySourceDir('dh2'), 'spray_oc7tLjpRxKGMQyqk.json');
         const dh2 = JSON.parse(readFileSync(dh2Path, 'utf8')) as { system: { mechanics?: WeaponQualityMechanicsInput; mechanicsRef?: string } };
         const dh2Mechanics = weaponQualityMechanicsFromRaw(dh2.system.mechanics);
         expect(dh2.system.mechanicsRef).toBeUndefined();

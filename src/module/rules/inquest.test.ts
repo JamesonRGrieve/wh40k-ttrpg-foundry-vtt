@@ -21,16 +21,16 @@ import {
 
 const rules = DH2_INQUEST_RULES;
 
-describe('DH2 Inquest tables (Enemies Within pp. 62–69)', () => {
-    it('scope totals are 600 / 900 / 1200 IP (p. 63)', () => {
+describe('DH2 Inquest tables', () => {
+    it('scope totals are 600 / 900 / 1200 IP', () => {
         expect(rules.scopes.minoris.requiredPoints).toBe(600);
         expect(rules.scopes.majoris.requiredPoints).toBe(900);
         expect(rules.scopes.extremis.requiredPoints).toBe(1200);
     });
-    it('scope rewards are 3 / 5 / 7 Influence (Table 2–9)', () => {
+    it('scope rewards are 3 / 5 / 7 Influence (the Inquest rewards table)', () => {
         expect([rules.scopes.minoris.influenceReward, rules.scopes.majoris.influenceReward, rules.scopes.extremis.influenceReward]).toEqual([3, 5, 7]);
     });
-    it('clue values are 50 / 100 / 200 (Table 2–7)', () => {
+    it('clue values are 50 / 100 / 200 (the clue values table)', () => {
         expect(rules.clueValues).toEqual({ minor: 50, major: 100, vital: 200 });
     });
 });
@@ -44,14 +44,14 @@ describe('inquestRequiredPoints', () => {
 
 describe('inquestRevelationThresholds', () => {
     // Regression (#90): the module used to hardcode 200/400/600/900/1200 for
-    // every Inquest — the Echoes of Kappellax example, not the rule.
+    // every Inquest — the printed sample adventure's example, not the rule.
     it('defaults to one Revelation every 300 IP, ending at the scope total', () => {
         expect(inquestRevelationThresholds(rules, createInquest('a', { scope: 'minoris' }))).toEqual([300, 600]);
         expect(inquestRevelationThresholds(rules, createInquest('a', { scope: 'majoris' }))).toEqual([300, 600, 900]);
         expect(inquestRevelationThresholds(rules, createInquest('a', { scope: 'extremis' }))).toEqual([300, 600, 900, 1200]);
     });
     it('uses GM-tailored thresholds and always ends at the completion total', () => {
-        // Echoes of Kappellax (p. 71): 200 / 400 / 600 / 900 / 1200.
+        // The printed sample adventure's thresholds: 200 / 400 / 600 / 900 / 1200.
         expect(inquestRevelationThresholds(rules, createInquest('a', { scope: 'extremis', revelationThresholds: [900, 200, 400, 600] }))).toEqual([
             200, 400, 600, 900, 1200,
         ]);
@@ -80,11 +80,11 @@ describe('inquestRevelationsCrossed / inquestRevelationsReached', () => {
 });
 
 describe('clue and lead-test IP', () => {
-    it('adds the lead-investigator bonus to a relevant clue (p. 64)', () => {
+    it('adds the lead-investigator bonus to a relevant clue', () => {
         expect(clueInvestigationPoints(rules, 'major', false)).toBe(100);
         expect(clueInvestigationPoints(rules, 'major', true)).toBe(125);
     });
-    it('is ±10 IP per degree on a lead test (p. 65)', () => {
+    it('is ±10 IP per degree on a lead test', () => {
         expect(leadTestInvestigationPoints(rules, 3)).toBe(30);
         expect(leadTestInvestigationPoints(rules, -2)).toBe(-20);
         expect(leadTestInvestigationPoints(rules, Number.NaN)).toBe(0);
@@ -95,7 +95,7 @@ describe('clue and lead-test IP', () => {
     });
 });
 
-describe('inquestInfluenceOutcome (p. 69)', () => {
+describe('inquestInfluenceOutcome', () => {
     const minoris = (points: number): InquestState => createInquest('a', { scope: 'minoris', investigationPoints: points });
     it('pays the scope reward when goals are met', () => {
         expect(inquestInfluenceOutcome(rules, minoris(600), true)).toEqual({ total: 3, scopeReward: 3, surplusBonus: 0, shortfallPenalty: 0 });

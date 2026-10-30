@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { WEAPON_FACING_CHOICES, WEAPON_MOUNTING_CHOICES, type WeaponFacing, type WeaponMounting } from './vehicle-mounting.ts';
 
 /**
- * The mounting vocabulary is RAW (Only War core p.211-212) and shared verbatim
+ * The mounting vocabulary is RAW (Only War's core rules) and shared verbatim
  * by all six FFG lines, so these assertions pin the printed set. A mounting
  * added or renamed here silently changes what every vehicle weapon can declare.
  */

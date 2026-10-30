@@ -1,14 +1,14 @@
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../../scripts/lib/pack-manifest.mjs';
 import { installFoundryDataStub, LeafField } from '../../testing/foundry-data-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
-import { readRepoFile } from '../../testing/repo-file.ts';
+import { lineBookPacks } from '../../utils/line-packs.ts';
 
 /**
  * MedalData schema contract, and the Only War Medals and Honours authored
- * through it (content#32): OW core pp. 294–295 and Enemies of the Imperium
- * pp. 140–143. The model evaluates `foundry.data.fields` at module load, so the
+ * through it (content#32): the core rules' and a supplement's. The model evaluates `foundry.data.fields` at module load, so the
  * recording stub is installed before the dynamic import.
  */
 
@@ -46,53 +46,61 @@ interface MedalSource {
     };
 }
 
-const PACKS = {
-    core: 'src/packs-private/only-war/ow-core-items-medals/_source',
-    enemies: 'src/packs-private/only-war/ow-enemies-items-medals/_source',
-};
+const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
 
-function load(dir: string): MedalSource[] {
-    return readdirSync(resolve(__dirname, '..', '..', '..', '..', dir))
+/** The medals in a declared pack's `_source`, read from the private content root. */
+function load(path: string | undefined): MedalSource[] {
+    if (path === undefined) throw new Error('missing an OW medals pack');
+    const dir = resolve(REPO_ROOT, 'src/packs-private', path.replace(/^packs\//, ''), '_source');
+    return readdirSync(dir)
         .filter((file) => file.endsWith('.json'))
-        .map((file) => JSON.parse(readRepoFile(`${dir}/${file}`)) as MedalSource);
+        .map((file) => JSON.parse(readFileSync(resolve(dir, file), 'utf8')) as MedalSource);
 }
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('the printed Only War medals (content#32)', () => {
     // Read in beforeAll: a skipped describe's body still runs to collect its tests.
     let core: MedalSource[] = [];
-    let enemies: MedalSource[] = [];
+    let supplement: MedalSource[] = [];
     beforeAll(() => {
-        core = load(PACKS.core);
-        enemies = load(PACKS.enemies);
+        // OW's medals packs, in manifest order: the core rules', then the supplement's.
+        const packs = lineBookPacks(
+            readDeclaredPacks(REPO_ROOT).packs.map((metadata) => ({ metadata })),
+            'ow',
+            'medals',
+        );
+        if (packs.length !== 2) throw new Error(`expected two OW medals packs, found ${packs.length}`);
+        core = load(packs.at(0)?.metadata.path);
+        supplement = load(packs.at(1)?.metadata.path);
     });
     const summary = (medals: MedalSource[]): string[][] =>
-        medals.map((medal) => [medal.name, medal.system.honourType, medal.system.source.ow.page]).sort((a, b) => (a.at(0) ?? '').localeCompare(b.at(0) ?? ''));
+        medals.map((medal) => [medal.name, medal.system.honourType]).sort((a, b) => (a.at(0) ?? '').localeCompare(b.at(0) ?? ''));
 
     it('OW core: the six Imperial Honours, four Campaign Honours and the example Regimental Award', () => {
         expect(summary(core)).toEqual([
-            ['Cog of Het', 'campaign', '295'],
-            ['Drusian Laurels', 'campaign', '295'],
-            ['Honorifica Imperialis', 'imperial', '295'],
-            ['Macharian Cross', 'imperial', '294'],
-            ['Medallion Crimson', 'imperial', '294'],
-            ['Ribbon Intrinsic', 'imperial', '294'],
-            ['The Order of St. Kark', 'campaign', '295'],
-            ['The Shield of Sacrous', 'regimental', '295'],
-            ["Trenchman's Long Service Medal", 'campaign', '295'],
-            ['Triple Skull', 'imperial', '294'],
-            ['Winged Skull', 'imperial', '294'],
+            ['Cog of Het', 'campaign'],
+            ['Drusian Laurels', 'campaign'],
+            ['Honorifica Imperialis', 'imperial'],
+            ['Macharian Cross', 'imperial'],
+            ['Medallion Crimson', 'imperial'],
+            ['Ribbon Intrinsic', 'imperial'],
+            ['The Order of St. Kark', 'campaign'],
+            ['The Shield of Sacrous', 'regimental'],
+            ["Trenchman's Long Service Medal", 'campaign'],
+            ['Triple Skull', 'imperial'],
+            ['Winged Skull', 'imperial'],
         ]);
+        for (const medal of core) expect(medal.system.source.ow.page).toMatch(/^\d+$/);
     });
 
-    it('Enemies of the Imperium: three Kill Markers (informal Regimental Awards) and ten Distinguished Service Medals (Campaign Honours)', () => {
-        const byType = (type: string): number => enemies.filter((medal) => medal.system.honourType === type).length;
-        expect(enemies).toHaveLength(13);
+    it('the OW supplement: three Kill Markers (informal Regimental Awards) and ten Distinguished Service Medals (Campaign Honours)', () => {
+        const byType = (type: string): number => supplement.filter((medal) => medal.system.honourType === type).length;
+        expect(supplement).toHaveLength(13);
         expect(byType('regimental')).toBe(3);
         expect(byType('campaign')).toBe(10);
     });
 
     it('every medal is a raw OW medal with what it is awarded for and its Squad Bonus', () => {
-        for (const medal of [...core, ...enemies]) {
+        for (const medal of [...core, ...supplement]) {
             expect(medal.type).toBe('medal');
             expect(medal.system.gameSystems).toEqual(['ow']);
             expect(medal.system.source.ow.provenance).toBe('raw');

@@ -16,7 +16,7 @@ import {
 } from './ship-boarding';
 
 /**
- * RT Boarding Action pins (#188 — RT Core p.215, turret bonus p.220).
+ * RT Boarding Action pins (#188 — RT, with its turret bonus).
  *
  * Regression guards for the RAW corrections: the previous resolver dealt Hull
  * AND 1d5/1d5 crew/morale on every win, invented a "boarders lost at 3+ DoS"
@@ -92,7 +92,7 @@ describe('ship-boarding — Command composition', () => {
     });
 });
 
-describe('ship-boarding — opposed round, RT degrees (each full 10 of margin, p.232)', () => {
+describe('ship-boarding — opposed round, RT degrees (each full 10 of margin)', () => {
     const command = (target: number, roll: number): ShipTestResult => resolveShipTest(deriveTarget({ labelKey: 'command', value: target }, []), roll, 'gen1');
 
     it('awards the attacker the difference in degrees', () => {

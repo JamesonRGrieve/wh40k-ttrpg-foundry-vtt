@@ -120,7 +120,7 @@ describe('ConventionalCraftData characteristics profile', () => {
         const mod = await importModelOrSkip(import('./vehicle.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
-        // Defiler daemon-engine profile (OW Core p.355): WS/BS 25, S 75, T — (0).
+        // Defiler daemon-engine profile (OW): WS/BS 25, S 75, T — (0).
         const source: { characteristics: VehicleCharsField } = {
             characteristics: { ws: 25, bs: 25, s: 75, t: 0, ag: 35, int: 10, per: 40, wp: 40, fel: 1 },
         };
@@ -193,16 +193,16 @@ describe('VehicleData description / source migration', () => {
         const mod = await importModelOrSkip(import('./vehicle.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
-        const source: LegacyCraftSource = { source: 'DH2: Enemies Without' };
+        const source: LegacyCraftSource = { source: 'DH2: Sample Book' };
         mod.default._migrateData(source);
-        expect(source.source).toMatchObject({ provenance: 'raw', book: 'DH2: Enemies Without' });
+        expect(source.source).toMatchObject({ provenance: 'raw', book: 'DH2: Sample Book' });
     });
 
     it('leaves a per-line variant container alone for the resolver to collapse', async () => {
         const mod = await importModelOrSkip(import('./vehicle.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
-        const authored = { dh2: { provenance: 'raw', book: 'DH2: Enemies Without', page: '56' } };
+        const authored = { dh2: { provenance: 'raw', book: 'DH2: Sample Book', page: '56' } };
         const source: LegacyCraftSource = { source: authored };
         mod.default._migrateData(source);
         expect(source.source).toEqual(authored);

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { SMITE_THE_UNHOLY_FATE_COST, applySmiteTheUnholyBonus, hasCrusaderRole, resolveSmiteTheUnholyDoS } from './crusader';
 
 /**
- * Contract tests for the Crusader role rider (#141, beyond.md p.34).
+ * Contract tests for the Crusader role rider (#141, DH2).
  *
  * Pins the Fate-spend auto-pass DoS math, the Fear(X) melee damage /
  * penetration rider, and the item-name role-detection probe so the
@@ -10,7 +10,7 @@ import { SMITE_THE_UNHOLY_FATE_COST, applySmiteTheUnholyBonus, hasCrusaderRole, 
  * damage pipeline, status panel context) cannot drift away from RAW.
  */
 
-describe('Crusader role — Smite the Unholy (#141, beyond.md p.34)', () => {
+describe('Crusader role — Smite the Unholy (#141)', () => {
     describe('SMITE_THE_UNHOLY_FATE_COST', () => {
         it('costs 1 Fate point per invocation per RAW', () => {
             expect(SMITE_THE_UNHOLY_FATE_COST).toBe(1);

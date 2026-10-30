@@ -5,7 +5,7 @@ import { CRAFTSMANSHIP_TIERS, getArmourCraftsmanshipEffect } from './ow-craftsma
 
 /** Each line's printed armour craftsmanship (#679), as `[line, tier, agility, first-attack AP, half weight, AP]`. */
 const PRINTED: ReadonlyArray<readonly [string, ArmourCraftsmanshipTier, number, number, boolean, number]> = [
-    // DH1 core p. 144, RT core p. 137, OW core: the same table.
+    // DH1, RT and OW print the same table.
     ...(['dh1', 'rt', 'ow'] as const).flatMap(
         (line) =>
             [
@@ -15,7 +15,7 @@ const PRINTED: ReadonlyArray<readonly [string, ArmourCraftsmanshipTier, number, 
                 [line, 'best', 0, 0, true, 1],
             ] as const,
     ),
-    // DH2 core p. 141: Best +1 AP at each covered location; Maximum Agility is not modelled here.
+    // DH2: Best +1 AP at each covered location; Maximum Agility is not modelled here.
     ['dh2', 'poor', 0, 0, false, 0],
     ['dh2', 'good', 0, 0, false, 0],
     ['dh2', 'best', 0, 0, false, 1],

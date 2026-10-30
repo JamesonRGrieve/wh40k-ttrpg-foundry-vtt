@@ -34,7 +34,7 @@ const EMPTY_MODIFIERS = {
     situational: { characteristics: [], skills: [], combat: [] },
 };
 
-const SC_UUID = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000071';
+const SC_UUID = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000071';
 
 /** A talent's stored system slice: its identifier and its modifiers block. */
 type TalentSystem = { identifier: string; modifiers: typeof EMPTY_MODIFIERS | (Omit<typeof EMPTY_MODIFIERS, 'skills'> & { skills: Record<string, number> }) };

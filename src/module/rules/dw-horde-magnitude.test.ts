@@ -16,13 +16,13 @@ import {
 } from './dw-horde-magnitude';
 
 /**
- * RAW Horde / Magnitude resolver tests (#166 — core.md p. 359-360).
+ * RAW Horde / Magnitude resolver tests (#166 — the DW core Horde rules).
  *
  * Mental-math style: every literal assertion is grounded in a single
  * RAW citation and a hand-checked value, so failures fingerprint to a
  * specific rule rather than a vague "math drifted".
  */
-describe('TABLE 13-1 — Horde Magnitude tiers (#166)', () => {
+describe('the Horde Magnitude tiers table (#166)', () => {
     it('exposes the four canonical tiers in ascending order', () => {
         expect(HORDE_MAGNITUDE_TIERS).toHaveLength(4);
         const labels = HORDE_MAGNITUDE_TIERS.map((t) => t.sizeKeyword);

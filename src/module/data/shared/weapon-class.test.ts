@@ -18,8 +18,8 @@ describe('which weapon classes fire (#699)', () => {
 
 /**
  * The weapon schema's `class` choices and the `_migrateData` guard that maps
- * anything else to `exotic`. `vehicle` (OW Core: Battle Cannon, Earthshaker, …)
- * and `placed` (DW Rites of Battle: Melta Bomb, "Placed Explosive") are printed
+ * anything else to `exotic`. `vehicle` (OW: Battle Cannon, Earthshaker, …)
+ * and `placed` (a DW supplement: Melta Bomb, "Placed Explosive") are printed
  * classes, so they must survive migration instead of collapsing to `exotic`.
  */
 describe('weapon class choices', () => {

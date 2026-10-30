@@ -9,8 +9,8 @@ import {
 } from './dw-requisition';
 
 /**
- * RAW Requisition resolver tests (#165 — core.md §"REQUISITION"
- * p. 5845, Tables 5-1 and 5-3).
+ * RAW Requisition resolver tests (#165 — the DW core "Requisition" rules, its
+ * mission Requisition and craftsmanship tables).
  *
  * Every assertion is grounded in a single RAW reference and a
  * hand-checked value, so failures fingerprint to a specific rule.
@@ -25,7 +25,7 @@ const TEST_POLICY: RequisitionPolicy = {
     },
 };
 
-describe('CRAFTSMANSHIP_MULTIPLIER (Table 5-3)', () => {
+describe('CRAFTSMANSHIP_MULTIPLIER (the craftsmanship table)', () => {
     it('matches the RAW table exactly', () => {
         expect(CRAFTSMANSHIP_MULTIPLIER.poor).toBe(0.5);
         expect(CRAFTSMANSHIP_MULTIPLIER.common).toBe(1);
@@ -187,7 +187,7 @@ describe('canPoolRequisition', () => {
     });
 });
 
-describe('computeMissionRpBudget (Table 5-1)', () => {
+describe('computeMissionRpBudget (the mission Requisition table)', () => {
     it('multiplies per-brother RP by brother count', () => {
         expect(
             computeMissionRpBudget({

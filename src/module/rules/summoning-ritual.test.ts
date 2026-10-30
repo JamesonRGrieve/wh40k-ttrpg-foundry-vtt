@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { circumstanceFactor } from './daemonic-mastery';
 import { bindingDurationHours, prepareSummoningRitual, resolveMasteryContest, resolveTest, SUMMONING_LORE_FACTORS } from './summoning-ritual';
 
-/** Daemon summoning (#80 — DH2 Enemies Beyond p. 59). */
+/** Daemon summoning (#80 — DH2). */
 describe('prepareSummoningRitual', () => {
     const base = { forbiddenLoreTotal: 80, willpowerTotal: 40, hasTrueName: false, servesPatron: false, loreFactors: [], masteryFactors: [] };
 

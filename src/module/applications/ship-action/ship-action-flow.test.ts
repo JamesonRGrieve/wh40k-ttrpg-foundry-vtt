@@ -97,7 +97,7 @@ describe('isRollableShipAction', () => {
     });
 });
 
-describe('Hold Fast! (RT Core p.218, #189)', () => {
+describe('Hold Fast! (RT, #189)', () => {
     it('on a success reduces last turn’s Morale damage by 1 plus each degree of success', async () => {
         const target = ship();
         queueRolls(15);
@@ -126,7 +126,7 @@ describe('Hold Fast! (RT Core p.218, #189)', () => {
     });
 });
 
-describe('Triage (RT Core p.218, #189)', () => {
+describe('Triage (RT, #189)', () => {
     it('tests Medicae at −10 with full provenance and reduces Crew Population only', async () => {
         const target = ship();
         queueRolls(10);
@@ -139,7 +139,7 @@ describe('Triage (RT Core p.218, #189)', () => {
     });
 });
 
-describe('Lock on Target (RT Core p.218, #186)', () => {
+describe('Lock on Target (RT, #186)', () => {
     it('adds the ship’s Detection to Scrutiny and locks the chosen weapon on a success', async () => {
         const target = ship({
             weapons: [
@@ -195,7 +195,7 @@ describe('Lock on Target (RT Core p.218, #186)', () => {
     });
 });
 
-describe('Aid the Machine Spirit (RT Core p.217, #186)', () => {
+describe('Aid the Machine Spirit (RT, #186)', () => {
     it('lets the character choose Manoeuvrability or Detection', async () => {
         const target = ship();
         const choice = shipActionInputGroups(context(target, AID))
@@ -208,7 +208,7 @@ describe('Aid the Machine Spirit (RT Core p.217, #186)', () => {
     });
 });
 
-describe('Evasive Manoeuvres (RT Core p.215, #186)', () => {
+describe('Evasive Manoeuvres (RT, #186)', () => {
     it('penalises the ship’s own fire −10 per success and degree until its next turn', async () => {
         const target = ship({ effects: [{ name: 'Aid the Machine Spirit', active: true, modifier: { target: 'manoeuvrability', value: 5, weaponId: '' } }] });
         queueRolls(20);

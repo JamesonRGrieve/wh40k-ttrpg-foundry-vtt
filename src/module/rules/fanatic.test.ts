@@ -4,7 +4,7 @@ import { hookApplies } from './dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG, FANATIC_IDENTIFIER, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from './fanatic.ts';
 
 /**
- * Fanatic "Death to All Who Oppose Me!" (DH2 Enemies Within p34): a Fate point
+ * Fanatic "Death to All Who Oppose Me!" (DH2): a Fate point
  * buys the Hatred talent against the current foe for the encounter. The role and
  * the Hatred talent are matched by identifier; Hatred's own hooks are re-aimed.
  */

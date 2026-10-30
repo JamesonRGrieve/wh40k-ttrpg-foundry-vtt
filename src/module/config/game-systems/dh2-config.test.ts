@@ -3,9 +3,9 @@ import { asBaseActor } from '../../testing/actor-stub.ts';
 import { DH2eSystemConfig } from './dh2-config';
 
 /**
- * DH2 errata regression tests (errata.md L33):
+ * DH2 errata regression tests:
  *
- *   Table 2–5 (p.81): Common Lore's second aptitude becomes General.
+ *   Skill aptitudes table: Common Lore's second aptitude becomes General.
  *
  * The codebase already encodes this — `commonLore: ['Intelligence',
  * 'General']` in `getSkillAptitudeTable()`. This test pins the value so
@@ -16,7 +16,7 @@ describe('DH2eSystemConfig skill-aptitude table (#150 errata)', () => {
     const cfg = new DH2eSystemConfig();
     const aptitudes = cfg.getSkillAptitudeTable();
 
-    it("Common Lore's aptitudes are [Intelligence, General] (errata L33)", () => {
+    it("Common Lore's aptitudes are [Intelligence, General] (errata)", () => {
         expect(aptitudes['commonLore']).toEqual(['Intelligence', 'General']);
     });
 
@@ -30,8 +30,8 @@ describe('DH2eSystemConfig skill-aptitude table (#150 errata)', () => {
 });
 
 /**
- * DH2 aptitude advance-cost matrix (#126) — core.md Tables 2-2, 2-4, 2-6
- * (p. 41 region). Each advance's XP cost is modified by how many of the
+ * DH2 aptitude advance-cost matrix (#126) — the characteristic, skill and talent
+ * advance cost tables. Each advance's XP cost is modified by how many of the
  * actor's Aptitudes match (0 / 1 / 2 matches). `aptitude-based-system-
  * config.ts` exposes the three matrix lookups; these tests pin the
  * canonical DH2e values so a future refactor of the cost tables cannot
@@ -40,7 +40,7 @@ describe('DH2eSystemConfig skill-aptitude table (#150 errata)', () => {
 describe('DH2eSystemConfig advance cost matrix (#126)', () => {
     const cfg = new DH2eSystemConfig();
 
-    describe('getSkillCostTable() — Table 2-4 (Skill Ranks)', () => {
+    describe('getSkillCostTable() — skill rank costs', () => {
         const skillCosts = cfg.getSkillCostTable();
         // ranks 0..3 = Known, Trained, Experienced, Veteran
         it('2 matching aptitudes: [100, 200, 300, 400]', () => {
@@ -54,7 +54,7 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
         });
     });
 
-    describe('getCharacteristicCostTable() — Table 2-2 (Characteristics)', () => {
+    describe('getCharacteristicCostTable() — characteristic advance costs', () => {
         const charCosts = cfg.getCharacteristicCostTable();
         // tiers 0..4 = Simple, Intermediate, Trained, Proficient, Expert
         it('2 matching aptitudes: [100, 250, 500, 750, 1250]', () => {
@@ -68,7 +68,7 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
         });
     });
 
-    describe('getTalentCostTable() — Table 2-6 (Talents)', () => {
+    describe('getTalentCostTable() — talent costs', () => {
         const talentCosts = cfg.getTalentCostTable();
         it('Tier 1: 2/1/0 matches → 200/300/600', () => {
             expect(talentCosts[1]).toEqual({ 2: 200, 1: 300, 0: 600 });
@@ -101,12 +101,12 @@ describe('DH2eSystemConfig advance cost matrix (#126)', () => {
     });
 
     // Every character/NPC in an aptitude system has the universal General aptitude
-    // (DH2 Core p.79). It is never origin-granted, so getCharacterAptitudes injects
+    // (DH2). It is never origin-granted, so getCharacterAptitudes injects
     // it — otherwise advances that list General (most basic skills/talents) are
     // mispriced as 0-match. Lives on the shared AptitudeBasedSystemConfig, so the
     // DH2 config exercises the behaviour BC/DW/OW/IM inherit.
     // isPsyker reads the origin-path item's `grantsPsychicPowers` flag (#681), never
-    // its name: DH2's unlock is the Psyker elite advance (DH2 core p. 90), flagged
+    // its name: DH2's unlock is the Psyker elite advance, flagged
     // on the compendium document.
     describe('isPsyker() — origin flagged grantsPsychicPowers', () => {
         const actorWithItem = (name: string, grantsPsychicPowers: boolean): ReturnType<typeof asBaseActor> =>

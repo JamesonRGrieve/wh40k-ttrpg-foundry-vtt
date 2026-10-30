@@ -103,7 +103,7 @@ function shownRanged(key: string, line: string | undefined): { modifier: number;
 
 describe('ranged Rate-of-Fire to-hit modifiers (#231, #607)', () => {
     // Standard Attack has no inherent to-hit bonus (#383). DH2 core "a Challenging
-    // (+0) Ballistic Skill test" / "with a −10 penalty"; DH1 core p. 191 / p. 190
+    // (+0) Ballistic Skill test" / "with a −10 penalty"; DH1 core
     // "+10" / "+20", and DW and RT print the same.
     it.each([
         ['dh2', 0, -10],

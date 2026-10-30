@@ -17,8 +17,8 @@ import {
  * Resolving a grenade's rider against the creatures caught (#623): each creature tests
  * the rider's characteristic with its modifier (and a psyker's, where printed); a
  * failure applies the rider's condition for base + degrees, rolled, or encounter rounds.
- * The riders are the ones the packs author (DH2 Core p.158 Photon Flash; Enemies Within
- * p.44–45 Psychotroke, Rad, Spore Bomb, Tears of the Emperor; RT Faith and Coin p.85
+ * The riders are the ones the packs author (DH2's Photon Flash; a DH2 supplement's
+ * Psychotroke, Rad, Spore Bomb, Tears of the Emperor; an RT supplement's
  * Psyk-out).
  */
 
@@ -99,7 +99,7 @@ describe('riderEffectRollShift', () => {
 });
 
 describe('resolveRiderCreature', () => {
-    it('blinds a Photon Flash failure for its degrees of failure (Core p.158)', () => {
+    it('blinds a Photon Flash failure for its degrees of failure (DH2)', () => {
         // Agility 30 + 10 = 40 against 68: three degrees of failure.
         const result = resolveRiderCreature({ rider: PHOTON_FLASH, creature: creature(), roll: 68, rolledRounds: null, rolledDamage: null });
         expect(result).toMatchObject({ affected: true, suffers: true, condition: 'blinded', rounds: 3, untilEncounterEnd: false });
@@ -139,7 +139,7 @@ describe('resolveRiderCreature', () => {
         });
     });
 
-    it('stuns a psyker who fails for the rolled rounds (RT Faith and Coin p.85)', () => {
+    it('stuns a psyker who fails for the rolled rounds (an RT supplement)', () => {
         const result = resolveRiderCreature({
             rider: RT_PSYK_OUT,
             creature: creature({ isPsyker: true, characteristic: 40 }),
@@ -160,7 +160,7 @@ describe('resolveRiderCreature', () => {
         });
     });
 
-    it('steps a Psychotroke failure into the effect roll (Enemies Within p.44)', () => {
+    it('steps a Psychotroke failure into the effect roll (a DH2 supplement)', () => {
         // Toughness 40 − 40 = 0 against 15: two degrees of failure.
         expect(
             resolveRiderCreature({ rider: PSYCHOTROKE, creature: creature({ characteristic: 40 }), roll: 15, rolledRounds: null, rolledDamage: null }),
@@ -171,14 +171,14 @@ describe('resolveRiderCreature', () => {
         });
     });
 
-    it('deals a Rad grenade failure its rolled Toughness damage (Enemies Within p.45, #698)', () => {
+    it('deals a Rad grenade failure its rolled Toughness damage (a DH2 supplement, #698)', () => {
         // Toughness 30 − 20 = 10 against 38: three degrees of failure; 2d10 rolled 13.
         const result = resolveRiderCreature({ rider: DH2_RAD, creature: creature(), roll: 38, rolledRounds: null, rolledDamage: 13 });
         expect(result).toMatchObject({ suffers: true, condition: '', characteristicDamage: { characteristic: 'toughness', amount: 13 } });
         expect(result.test?.degreesOfFailure).toBe(3);
     });
 
-    it('adds the per-degree step to an RT Rad grenade failure (Faith and Coin, #698)', () => {
+    it('adds the per-degree step to an RT Rad grenade failure (an RT supplement, #698)', () => {
         // Toughness 30 + 0 against 52: three degrees of failure; 1d10 rolled 4, +2 per degree.
         expect(resolveRiderCreature({ rider: RT_RAD, creature: creature(), roll: 52, rolledRounds: null, rolledDamage: 4 }).characteristicDamage).toEqual({
             characteristic: 'toughness',
@@ -197,7 +197,7 @@ describe('resolveRiderCreature', () => {
     });
 });
 
-describe('the damage-suffered penalty (RT Faith and Coin Rad grenade, #698)', () => {
+describe('the damage-suffered penalty (the RT supplement Rad grenade, #698)', () => {
     const RT_RAD_PENALTY = riderFixture({
         test: { characteristic: 'toughness', modifier: 0, damagePenalty: -5 },
         characteristicDamage: { characteristic: 'toughness', formula: '1d10', perDegree: 2 },

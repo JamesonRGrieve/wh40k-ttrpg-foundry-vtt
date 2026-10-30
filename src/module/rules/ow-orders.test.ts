@@ -12,7 +12,7 @@ import {
     sumComradeOrderComponents,
 } from './ow-orders.ts';
 
-/** Only War's printed Orders (OW Core pp. 269–271), from the line config. */
+/** Only War's printed Orders, from the line config. */
 const ORDERS = comradeOrdersFor('ow');
 
 function order(id: string): ComradeOrderDef {
@@ -27,7 +27,7 @@ function resolve(id: string, over: Partial<ComradeOrderContext> = {}): ReturnTyp
     return resolveComradeOrder({ order: order(id), comrade: FIT, inCohesion: true, actionsLeft: 2, inCombat: true, ...over });
 }
 
-describe('ow-orders — the printed Orders (OW Core pp. 269–271)', () => {
+describe('ow-orders — the printed Orders (OW)', () => {
     it('Only War prints Maintain Cohesion, the five move Actions, Ranged Volley, Close Quarters and Take Cover!', () => {
         expect(ORDERS.map((candidate) => [candidate.id, candidate.actionCost])).toEqual([
             ['follow', 'half'],

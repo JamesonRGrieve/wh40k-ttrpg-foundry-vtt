@@ -256,7 +256,7 @@ describe('stampVehicleRows', () => {
     });
 });
 
-describe('Damage Control (#678; OW Core p. 213)', () => {
+describe('Damage Control (#678; OW)', () => {
     const request: DamageControlRequest = { vehicleUuid: 'Actor.chimera', trait: 'Damage Control', line: 'dh2', location: 'hull', die: '1d5', key: '0.0' };
 
     it('rejects a malformed request', () => {

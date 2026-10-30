@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BINDING_STRENGTH_PROFILES, DAEMON_PERSONALITY_TRIGGERS, type BindingStrength, type DaemonPersonality } from './daemon-weapon';
 
 /**
- * Daemon weapon binding (#81 — beyond.md p.50). Binding Strength tiers
+ * Daemon weapon binding (#81 — DH2). Binding Strength tiers
  * govern attributes, Subtlety penalty while wielded, and the difficulty
  * of the Daemonic Mastery binding test. Personality triggers are
  * per-personality flavour hooks consumed when their trigger condition

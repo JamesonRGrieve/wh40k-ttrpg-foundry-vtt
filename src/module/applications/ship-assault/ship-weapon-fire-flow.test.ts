@@ -120,7 +120,7 @@ describe('ship weapon fire flow (#184)', () => {
         expect((applied?.card.data as CardData)['allShielded']).toBe(true);
     });
 
-    it('fires a Crippled ship’s weapon at half Strength, named on the hits derivation (RT Core "Crippled Ships")', async () => {
+    it('fires a Crippled ship’s weapon at half Strength, named on the hits derivation (RT "Crippled Ships")', async () => {
         // The firing ship is at 0 Hull Integrity: the book's 3-hit shot from a Strength 3 battery lands 2.
         const firer: RecordingShip = { ...recordingShip(SABRE), hullIntegrity: { value: 0, max: 35 } };
         const target = recordingShip(RAIDER, { voidShields: 1 });
@@ -152,7 +152,7 @@ describe('ship weapon fire flow (#184)', () => {
         expect(hits.rows.some((row) => row.label.includes('CrippledStrength'))).toBe(false);
     });
 
-    describe('a Crippled target takes a Critical Hit from damage past its Armour (RT Core "Crippled Ships", #187)', () => {
+    describe('a Crippled target takes a Critical Hit from damage past its Armour (RT "Crippled Ships", #187)', () => {
         function crippledTarget(gameSystem = 'rt', shields = 1): RecordingShip {
             const target = recordingShip(RAIDER, { voidShields: shields });
             return Object.assign(target, { hullIntegrity: { value: 0, max: 30 }, system: { ...target.system, gameSystem } });
@@ -241,7 +241,7 @@ describe('ship weapon fire flow (#184)', () => {
     });
 });
 
-describe('ship weapon fire flow — a combined macrobattery salvo (#184, RT Core p.221)', () => {
+describe('ship weapon fire flow — a combined macrobattery salvo (#184, RT)', () => {
     const BROADSIDE: ShipWeaponFireInput['weapon'] = { ...MACROBATTERY, name: 'Broadside Battery', strength: 4, damage: '2d10', locationLabel: 'Starboard' };
     const LOCK = { labelKey: 'WH40K.Voidcraft.ShipAction.Component.Effect', value: 10, data: { name: 'Lock on Target' } };
 

@@ -123,7 +123,7 @@ describe('attackCardVehicleLocation (#682: the attack card names the location th
         for (const line of ['dh2', 'ow']) expect(attackCardVehicleLocation(profileFor(line), 12)).toBe('WH40K.Vehicle.Location.Hull');
     });
 
-    it('names the Turret a turreted craft takes, and the Hull for a turret it lacks (DH2 Core p. 254)', () => {
+    it('names the Turret a turreted craft takes, and the Hull for a turret it lacks (DH2)', () => {
         // 19 → 91: Turret.
         expect(attackCardVehicleLocation(profileFor('dh2', [TURRET_WEAPON]), 19)).toBe('WH40K.Vehicle.Location.Turret');
         expect(attackCardVehicleLocation(profileFor('dh2'), 19)).toBe('WH40K.Vehicle.Location.Hull');
@@ -169,7 +169,7 @@ describe('struck facing from tokens', () => {
         expect(profile?.facingAssumed).toBe(true);
     });
 
-    it('reads Rear for an attacker above the craft, steeper than 45° (DH2 Core p. 253)', () => {
+    it('reads Rear for an attacker above the craft, steeper than 45° (DH2)', () => {
         // 1 m in front of the nose, 5 m up.
         const flyer = { center: { x: 500, y: 600 }, document: { rotation: 0, elevation: 5 } };
         const profile = vehicleTargetProfileFromTokens({ system: craftSystem(), items: [] }, chimera, flyer, grid, still);
@@ -231,7 +231,7 @@ describe('force fields', () => {
         expect(forceFieldRollFor({ ...field, neverOverloads: true }, 5).overloadUnmodelled).toBe(false);
     });
 
-    it('overloads at or under its craftsmanship overload chance, still stopping the attack (DH2 Core p. 169) (#678)', () => {
+    it('overloads at or under its craftsmanship overload chance, still stopping the attack (DH2) (#678)', () => {
         const common = { ...field, overloadMax: 10, craftsmanship: 'common' };
         expect(forceFieldRollFor(common, 10)).toMatchObject({ nullified: true, overloaded: true, overloadUnmodelled: false, overloadMax: 10 });
         expect(forceFieldRollFor(common, 11)).toMatchObject({ nullified: true, overloaded: false });

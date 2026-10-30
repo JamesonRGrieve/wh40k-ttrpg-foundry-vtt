@@ -13,25 +13,25 @@ import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSou
  * shows only when there are some, and an owned elite is matched by its compendium source.
  */
 
-const PSYKER = 'Compendium.wh40k-rpg.dh2-core-origins-elite-advances.Item.DH2PsyElt0000002';
-const INQUISITOR = 'Compendium.wh40k-rpg.dh2-core-origins-elite-advances.Item.DH2InqElt0000001';
+const PSYKER = 'Compendium.wh40k-rpg.dh2-elite-advances.Item.DH2PsyElt0000002';
+const INQUISITOR = 'Compendium.wh40k-rpg.dh2-elite-advances.Item.DH2InqElt0000001';
 
 const DH2_ORIGINS: LineOriginEntry[] = [
-    { uuid: 'Compendium.wh40k-rpg.dh2-core-origins-homeworlds.Item.hive', name: 'Hive World', system: { step: 'homeWorld', gameSystems: ['dh2', 'dh1'] } },
+    { uuid: 'Compendium.wh40k-rpg.dh2-homeworlds.Item.hive', name: 'Hive World', system: { step: 'homeWorld', gameSystems: ['dh2', 'dh1'] } },
     { uuid: INQUISITOR, name: 'Inquisitor', system: { step: 'elite', gameSystems: ['dh2'] } },
     { uuid: PSYKER, name: 'Psyker', system: { step: 'elite', gameSystems: ['dh2'] } },
 ];
 const OW_ORIGINS: LineOriginEntry[] = [
     {
-        uuid: 'Compendium.wh40k-rpg.ow-core-origins-specialities.Item.psyker',
+        uuid: 'Compendium.wh40k-rpg.ow-specialities.Item.psyker',
         name: 'Sanctioned Psyker',
         system: { step: 'speciality', grantsPsychicPowers: true, gameSystems: ['ow'] },
     },
 ];
 /** BC's archetype pack references DH2's Psyker elite advance: a DH2 document, not a BC elite. */
 const BC_ORIGINS: LineOriginEntry[] = [
-    { uuid: 'Compendium.wh40k-rpg.bc-core-origins-archetypes.Item.chosen', name: 'Chosen', system: { step: 'archetype', gameSystems: ['bc'] } },
-    { uuid: 'Compendium.wh40k-rpg.bc-core-origins-archetypes.Item.psyker', name: 'Psyker', system: { step: 'elite', gameSystems: ['dh2'] } },
+    { uuid: 'Compendium.wh40k-rpg.bc-archetypes.Item.chosen', name: 'Chosen', system: { step: 'archetype', gameSystems: ['bc'] } },
+    { uuid: 'Compendium.wh40k-rpg.bc-archetypes.Item.psyker', name: 'Psyker', system: { step: 'elite', gameSystems: ['dh2'] } },
 ];
 
 describe('elite advances', () => {

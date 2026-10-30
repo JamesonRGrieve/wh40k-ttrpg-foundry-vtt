@@ -416,10 +416,7 @@ describe('collectGrantedQualities', () => {
     it('ignores non-quality grant kinds — only qualities become attack specials', () => {
         // A talent-kind grant rides the same channel but must not be pushed into the
         // attack's specials list; it awaits its own consumer.
-        const item = grantItem('Mixed', [
-            grant({}),
-            grant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-core-items-talents.Item.abc' }),
-        ]);
+        const item = grantItem('Mixed', [grant({}), grant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-talents.Item.abc' })]);
         expect(collectGrantedQualities([item], { action: 'All Out Attack', isMelee: true })).toEqual([{ name: 'Concussive', level: 2, source: 'Mixed' }]);
     });
 });
@@ -437,7 +434,7 @@ describe('collectGrantedEffects', () => {
     });
 
     it('carries the kind and uuid through for non-quality kinds', () => {
-        const uuid = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.xyz';
+        const uuid = 'Compendium.wh40k-rpg.dh2-traits.Item.xyz';
         const item: DynamicModifierItemLike = {
             name: 'Some Talent',
             system: { modifiers: { grantedEffects: [grant({ kind: 'trait', name: 'Fear', uuid, level: 1 })] } },
@@ -540,7 +537,7 @@ describe('when: onDamaged (armed test hooks)', () => {
         expect(mergeArmedTestHooks([...old, other], fresh)).toEqual([other, ...fresh]);
     });
 
-    // EW p36 prints Cleansing Pain as lasting "before the end of his next turn" — a
+    // A DH2 supplement prints Cleansing Pain as lasting "before the end of his next turn" — a
     // `turns` duration counting the bearer's own turn-ends, not combat rounds.
     describe("a `turns` duration (until the end of the bearer's next turn)", () => {
         const nextTurn = makeHook({ target: 'test', when: 'onDamaged', value: 10, duration: { ...makeHook().duration, unit: 'turns', value: 1, uses: 1 } });

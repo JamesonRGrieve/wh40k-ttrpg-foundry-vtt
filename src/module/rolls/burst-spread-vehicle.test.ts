@@ -4,7 +4,7 @@ import { installApplicationV2Stub } from '../testing/app-v2-stub.ts';
 import type { VehicleTargetProfile } from './vehicle-strike.ts';
 
 /**
- * A burst's extra hits spread onto a second target (#513, #678; DH2 Core p. 254):
+ * A burst's extra hits spread onto a second target (#513, #678; DH2):
  * each spread hit lands on its own actor, and a spread craft takes its hits as a
  * vehicle — on its own locations and armour, every hit reading a fresh location
  * roll. The hit itself and the cues are stubbed; which hits are created against

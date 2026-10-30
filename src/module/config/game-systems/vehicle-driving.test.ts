@@ -15,7 +15,7 @@ import { RTSystemConfig } from './rt-config';
 
 const operate = (specialisation: string): { skill: string; specialisation: string } => ({ skill: 'operate', specialisation });
 
-describe('aptitude lines: Operate (DH2 core pp. 111–112, OW core p. 128, BC core pp. 105–106)', () => {
+describe('aptitude lines: Operate (DH2, OW, BC)', () => {
     for (const config of [new DH2eSystemConfig(), new OWSystemConfig(), new BCSystemConfig()]) {
         describe(`line ${config.id}`, () => {
             const drive = (locomotion: Parameters<typeof vehicleTestSkill>[1]): ReturnType<typeof vehicleTestSkill> =>
@@ -52,7 +52,7 @@ describe('aptitude lines: Operate (DH2 core pp. 111–112, OW core p. 128, BC co
     }
 });
 
-describe('RT and DW: Drive / Pilot (RT core pp. 81, 84; DW core pp. 98, 103)', () => {
+describe('RT and DW: Drive / Pilot (RT, DW)', () => {
     for (const config of [new RTSystemConfig(), new DWSystemConfig()]) {
         describe(`line ${config.id}`, () => {
             const drive = (locomotion: Parameters<typeof vehicleTestSkill>[1]): ReturnType<typeof vehicleTestSkill> =>
@@ -76,7 +76,7 @@ describe('RT and DW: Drive / Pilot (RT core pp. 81, 84; DW core pp. 98, 103)', (
     }
 });
 
-describe('DH1: Drive / Pilot (DH1 core pp. 102, 105)', () => {
+describe('DH1: Drive / Pilot (DH1)', () => {
     const drive = (locomotion: Parameters<typeof vehicleTestSkill>[1]): ReturnType<typeof vehicleTestSkill> =>
         vehicleTestSkill('floorIt', locomotion, new DH1eSystemConfig().vehicleDriving);
 

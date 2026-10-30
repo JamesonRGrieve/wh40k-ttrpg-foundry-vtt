@@ -10,7 +10,7 @@ import {
 
 /**
  * RAW OW vehicle movement action + High-Speed Chase tracker tests
- * (#156 — core.md §"VEHICLE MOVEMENT", p.12305).
+ * (#156 — the OW core "Vehicle Movement" rules).
  *
  * Every literal in the timing table is grounded in the rulebook; the
  * chase arithmetic uses round numbers so a failure points to a

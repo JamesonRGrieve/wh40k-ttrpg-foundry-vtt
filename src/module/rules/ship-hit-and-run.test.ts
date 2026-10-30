@@ -17,7 +17,7 @@ import {
 } from './ship-hit-and-run';
 
 /**
- * RT Hit and Run pins (#188 — RT Core p.218, turret penalty p.220).
+ * RT Hit and Run pins (#188 — RT, with its turret penalty).
  *
  * Regression guards: the previous resolver subtracted the raw Turret Rating
  * (a rating of 2 cost −2, not −20), and counted the shot-down threshold with a
@@ -66,7 +66,7 @@ describe('ship-hit-and-run — approach', () => {
         expect(derivation.target).toBe(20);
     });
 
-    it('downs the craft at four RT degrees of failure: a margin of 40 or more (p.219)', () => {
+    it('downs the craft at four RT degrees of failure: a margin of 40 or more', () => {
         const derivation = composeApproachTest({ pilotSkill: 40, target: target(0) });
         expect(isShotDown(resolveShipTest(derivation, 80, 'gen1'))).toBe(true);
         // Margin 39 is three RT degrees; the +1 count called it four and shot the craft down.

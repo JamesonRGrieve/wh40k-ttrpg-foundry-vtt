@@ -11,7 +11,7 @@
  *
  * The Sanctic power content (names, XP costs, Psy-Rating gates, effect
  * prose) is NOT tested here — it lives as `psychicPower` compendium
- * items in `dh2-beyond-items-psychic-powers` (`discipline` =
+ * items in a DH2 psychic-powers pack (`discipline` =
  * "Sanctic Daemonology"). The resolver treats `powerId` as opaque; the
  * display name is resolved from the compendium at render time (exercised
  * by `tests/e2e/sanctic-daemonology.spec.ts`).
@@ -151,7 +151,7 @@ describe('resolveSancticManifestation (composition with psychic-push + mitigatio
     });
 
     it('echoes an opaque powerId (compendium UUID) untouched', () => {
-        const uuid = 'Compendium.wh40k-rpg.dh2-beyond-items-psychic-powers.Item.EB2Bnshmnt000001';
+        const uuid = 'Compendium.wh40k-rpg.dh2-psychic-powers.Item.banishment00001';
         const r = resolveSancticManifestation({
             powerId: uuid,
             mode: 'unfettered',

@@ -24,9 +24,9 @@ class StubItem {
     }
 }
 
-const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
-const TRIPLE_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalTripSk01';
-const TALENT = 'Compendium.wh40k-rpg.ow-core-items-talents.Item.someTalent000001';
+const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-medals.Item.OWcMedalWingSk01';
+const TRIPLE_SKULL = 'Compendium.wh40k-rpg.ow-medals.Item.OWcMedalTripSk01';
+const TALENT = 'Compendium.wh40k-rpg.ow-talents.Item.someTalent000001';
 
 const documents = new Map<string, StubItem>([
     [WINGED_SKULL, new StubItem(WINGED_SKULL, 'medal', 'Winged Skull', { honourType: 'imperial', squadBonus: '<p>+10 to all Command Tests.</p>' })],

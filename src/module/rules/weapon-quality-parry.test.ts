@@ -70,7 +70,7 @@ describe('weaponParryModifiers — the parrying weapon’s own qualities (#414)'
 });
 
 describe('getAttackerWeaponParryPenalty', () => {
-    it('reads Fast’s authored penalty (DH1 Inquisitor’s Handbook: –20)', () => {
+    it('reads Fast’s authored penalty (a DH1 supplement: –20)', () => {
         setWeaponQualityPayloadsForTesting({ fast: { enemyParryPenalty: -20 } });
         expect(getAttackerWeaponParryPenalty(weaponWith(['fast']), 'dh1')).toBe(-20);
         expect(getAttackerWeaponParryPenalty(weaponWith(['balanced']), 'dh1')).toBe(0);

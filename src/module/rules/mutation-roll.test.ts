@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { type MutationEntry, type MutationResult, buildEntries, rollMutation, trackRange } from './mutation-roll';
 
-const PACK = 'Compendium.wh40k-rpg.dh2-core-items-mutations.Item';
+const PACK = 'Compendium.wh40k-rpg.dh2-mutations.Item';
 
 /** Representative slice of the real Mutations table (minor boundary + major-only rows + top). */
 const entries: MutationEntry[] = [

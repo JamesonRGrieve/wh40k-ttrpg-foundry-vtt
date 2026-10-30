@@ -40,8 +40,8 @@ function mockRollData(action: string, weaponAttackBonus: number, talents: StubTa
 }
 
 /**
- * Combat actions registry coverage (#119) — core.md §"Actions in Combat"
- * (L10007-L10316) lists the named combat actions DH2 RAW supports.
+ * Combat actions registry coverage (#119) — the core rules' "Actions in Combat"
+ * lists the named combat actions DH2 RAW supports.
  *
  * The registry in `combat-actions.ts:allCombatActions()` carries the
  * canonical list; these tests pin coverage so a future refactor cannot
@@ -104,8 +104,8 @@ const EXPECTED_ATTACK_MODIFIERS: Readonly<Record<string, number>> = {
 };
 
 /**
- * The burst bonus each line prints (#607). DH1 core p. 191 / p. 190, DW core
- * p. 242 / p. 239, RT core: Semi-Auto +10, Full Auto +20. DH2, BC and OW cores:
+ * The burst bonus each line prints (#607). DH1, DW and RT cores: Semi-Auto +10,
+ * Full Auto +20. DH2, BC and OW cores:
  * Semi-Auto +0, Full Auto −10.
  */
 const BURST_MODIFIERS_BY_LINE: ReadonlyArray<readonly [string, number, number]> = [
@@ -322,8 +322,7 @@ describe('burst to-hit modifier per line (#607)', () => {
 });
 
 /**
- * The burst action cost each line prints (#607): DH1 core p. 191 / p. 190
- * "(Full Action)", DW and RT "Type: Full Action"; DH2, BC and OW "Type: Half Action".
+ * The burst action cost each line prints (#607): DH1 "(Full Action)", DW and RT "Type: Full Action"; DH2, BC and OW "Type: Half Action".
  */
 const BURST_COST_BY_LINE: ReadonlyArray<readonly [string, 'half' | 'full']> = [
     ['dh1', 'full'],

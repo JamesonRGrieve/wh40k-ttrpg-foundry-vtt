@@ -12,7 +12,7 @@ import {
 
 const NO_CALLER_TERMS: ReinforcementCallerTerms = { skill: '', specialization: '', rank: null, corruption: '' };
 
-// Sister of Battle Canoness (DH2 core p. 296): minimum 50, cost 5, Peer (Adepta Sororitas) −2.
+// Sister of Battle Canoness (DH2): minimum 50, cost 5, Peer (Adepta Sororitas) −2.
 const CANONESS: ReinforcementTerms = {
     influenceMinimum: 50,
     influenceCost: 5,
@@ -20,7 +20,7 @@ const CANONESS: ReinforcementTerms = {
     caller: NO_CALLER_TERMS,
 };
 
-// Thrice-Bound Daemonhost (Enemies Beyond p. 38): minimum 50, cost 5; the caller needs
+// Thrice-Bound Daemonhost (a DH2 supplement): minimum 50, cost 5; the caller needs
 // Forbidden Lore (Daemonology) at Trained and gains 1d5 Corruption.
 const DAEMONHOST: ReinforcementTerms = {
     influenceMinimum: 50,

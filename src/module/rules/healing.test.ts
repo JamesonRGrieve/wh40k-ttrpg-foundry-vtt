@@ -32,7 +32,7 @@ describe('getDamageTier', () => {
     });
 });
 
-describe('firstAidTierPenalty (#432, RAW DH2 Core p.110)', () => {
+describe('firstAidTierPenalty (#432, RAW DH2)', () => {
     it('no penalty for unharmed or lightly damaged', () => {
         expect(firstAidTierPenalty('unharmed')).toBe(0);
         expect(firstAidTierPenalty('lightlyDamaged')).toBe(0);

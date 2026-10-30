@@ -1,15 +1,17 @@
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { type DeclaredPack, readDeclaredPacks } from '../../../../scripts/lib/pack-manifest.mjs';
 import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
-import { readRepoFile } from '../../testing/repo-file.ts';
+import { lineCategoryPack } from '../../utils/line-packs.ts';
 
-/** `src/packs-private`, from this file (three levels below `src/`). */
-const PRIVATE_CONTENT_ROOT = resolve(__dirname, '..', '..', '..', 'packs-private');
+/** The repo root and `src/packs-private`, from this file (three levels below `src/`). */
+const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
+const PRIVATE_CONTENT_ROOT = resolve(REPO_ROOT, 'src', 'packs-private');
 
 /**
- * DarkPactData schema contract and the Enemies Beyond pacts through it (#84).
+ * DarkPactData schema contract and the DH2 pacts through it (#84).
  *
  * The model evaluates `foundry.data.fields` at module load, so the recording
  * stub is installed BEFORE the dynamic import.
@@ -89,43 +91,58 @@ interface PactSource {
     };
 }
 
-const PACK_DIR = 'src/packs-private/dark-heresy-2/dh2-beyond-items-dark-pacts/_source';
+/** A declared pack's `_source` directory under the private content root. */
+function sourceDir(pack: DeclaredPack): string {
+    return resolve(PRIVATE_CONTENT_ROOT, pack.path.replace(/^packs\//, ''), '_source');
+}
 
 /** Whether a `Compendium.wh40k-rpg.<pack>.Item.<id>` UUID names a real private-pack document. */
-function packDocumentExists(uuid: string): boolean {
+function packDocumentExists(declared: DeclaredPack[], uuid: string): boolean {
     const match = /^Compendium\.wh40k-rpg\.([^.]+)\.Item\.([A-Za-z0-9]{16})$/.exec(uuid);
     if (match === null) return false;
-    const [, pack = '', id = ''] = match;
-    const line = pack.startsWith('dh2-') ? 'dark-heresy-2' : '';
-    const dir = resolve(PRIVATE_CONTENT_ROOT, line, pack, '_source');
+    const [, name = '', id = ''] = match;
+    const pack = declared.find((candidate) => candidate.name === name);
+    if (pack === undefined) return false;
+    const dir = sourceDir(pack);
     return existsSync(dir) && readdirSync(dir).some((file) => file.endsWith(`_${id}.json`));
 }
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('Enemies Beyond Dark Pacts (#84)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('DH2 Dark Pacts (#84)', () => {
     // Read in beforeAll: a skipped describe's body still runs to collect its tests,
     // so a read here fails where the private content is absent (CI).
+    let declared: DeclaredPack[] = [];
+    let traitsPack = '';
     let pacts: PactSource[] = [];
     let byName = new Map<string, PactSource>();
     beforeAll(() => {
-        const files = readdirSync(resolve(PRIVATE_CONTENT_ROOT, 'dark-heresy-2/dh2-beyond-items-dark-pacts/_source')).filter((file) => file.endsWith('.json'));
-        pacts = files.map((file) => JSON.parse(readRepoFile(`${PACK_DIR}/${file}`)) as PactSource);
+        declared = readDeclaredPacks(REPO_ROOT).packs;
+        const asPacks = declared.map((metadata) => ({ metadata }));
+        const pactPack = lineCategoryPack(asPacks, 'dh2', 'dark-pacts')?.metadata;
+        if (pactPack === undefined) throw new Error('no dh2 dark-pacts pack is declared');
+        traitsPack = lineCategoryPack(asPacks, 'dh2', 'traits')?.metadata.name ?? '';
+        const dir = sourceDir(pactPack);
+        const files = readdirSync(dir).filter((file) => file.endsWith('.json'));
+        pacts = files.map((file) => JSON.parse(readFileSync(resolve(dir, file), 'utf8')) as PactSource);
         byName = new Map(pacts.map((pact) => [pact.name, pact]));
     });
 
-    it('authors the seven example pacts the book prints, at their pages', () => {
-        const byPactName = (a: string[], b: string[]): number => (a.at(0) ?? '').localeCompare(b.at(0) ?? '');
-        expect(pacts.map((pact) => [pact.name, pact.system.source.dh2.page]).sort(byPactName)).toEqual([
-            ['Pact of Desire', '74'],
-            ['Pact of Dominion', '74'],
-            ['Pact of Knowledge', '74'],
-            ['Pact of Might', '75'],
-            ['Pact of Power', '75'],
-            ['Pact of Survival', '73'],
-            ['Pact of Vengeance', '74'],
+    it('authors the seven example pacts the book prints, each citing its page', () => {
+        expect(pacts.map((pact) => pact.name).sort()).toEqual([
+            'Pact of Desire',
+            'Pact of Dominion',
+            'Pact of Knowledge',
+            'Pact of Might',
+            'Pact of Power',
+            'Pact of Survival',
+            'Pact of Vengeance',
         ]);
+        for (const pact of pacts) expect(pact.system.source.dh2.page).toMatch(/^\d+$/);
+        // Every pact cites the one DH2 book that prints them.
+        expect(new Set(pacts.map((pact) => pact.system.source.dh2.book)).size).toBe(1);
         for (const pact of pacts) {
             expect(pact.type).toBe('darkPact');
-            expect(pact.system.source.dh2).toMatchObject({ provenance: 'raw', book: 'DH2: Enemies Beyond' });
+            expect(pact.system.source.dh2).toMatchObject({ provenance: 'raw' });
+            expect(pact.system.source.dh2.book).toMatch(/^DH2: \S/);
             expect(pact.system.gameSystems).toEqual(['dh2']);
         }
     });
@@ -149,7 +166,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Enemies Beyond Dark Pacts (#84)', () => {
     it('grants only items that exist in the packs', () => {
         const grants = pacts.flatMap((pact) => [...pact.system.boons, ...pact.system.banes].flatMap((entry) => entry.grants));
         expect(grants.length).toBeGreaterThan(0);
-        expect(grants.filter((grant) => !packDocumentExists(grant.uuid)).map((grant) => grant.uuid)).toEqual([]);
+        expect(grants.filter((grant) => !packDocumentExists(declared, grant.uuid)).map((grant) => grant.uuid)).toEqual([]);
     });
 
     it('turns the characteristic Boons and Banes into central ActiveEffect changes', () => {
@@ -164,10 +181,8 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Enemies Beyond Dark Pacts (#84)', () => {
             { key: 'system.characteristics.weaponSkill.modifier', mode: 2, value: 5 },
         ]);
         expect(entryOf('Pact of Might', 'mighty').grants).toEqual([
-            { uuid: 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.UnnatCharDh2TrX1', specialization: 'Strength', level: 2 },
+            { uuid: `Compendium.wh40k-rpg.${traitsPack}.Item.UnnatCharDh2TrX1`, specialization: 'Strength', level: 2 },
         ]);
-        expect(entryOf('Pact of Power', 'wyrd').grants.map((grant) => grant.uuid)).toEqual([
-            'Compendium.wh40k-rpg.dh2-core-items-traits.Item.Hl2kY7NAa9QaLg1X',
-        ]);
+        expect(entryOf('Pact of Power', 'wyrd').grants.map((grant) => grant.uuid)).toEqual([`Compendium.wh40k-rpg.${traitsPack}.Item.Hl2kY7NAa9QaLg1X`]);
     });
 });

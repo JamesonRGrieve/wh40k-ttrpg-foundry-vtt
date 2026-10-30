@@ -23,7 +23,7 @@ import {
 } from './ship-weapon-fire.ts';
 
 /**
- * RT ship weapon fire (#184 — RT Core 1.4 errata, Chapter VIII). The book's
+ * RT ship weapon fire (#184 — RT core errata, the space combat rules). The book's
  * own worked example (the Sabre against a raider) is the anchor: BS 48 at
  * close range is a 58; a 29 is two degrees and three macrobattery hits; the
  * raider's one void shield takes the first; 16 damage against Armour 15 is one
@@ -102,7 +102,7 @@ describe('ship weapon fire (#184)', () => {
         expect(scoreHits('lance', 3, resolveGunneryTest(target, 29), false).hits).toBe(1);
     });
 
-    describe('a Crippled firing ship (RT Core "Crippled Ships": Strength halved, round up)', () => {
+    describe('a Crippled firing ship (RT "Crippled Ships":Strength halved, round up)', () => {
         const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
         const CRIPPLED_KEY = 'WH40K.Voidcraft.Fire.Component.CrippledStrength';
 
@@ -212,7 +212,7 @@ describe('ship-weapon-fire — damage past Armour (the value a Crippled target�
     });
 });
 
-describe('ship-weapon-fire — macrobattery salvos (RT Core p.221–222)', () => {
+describe('ship-weapon-fire — macrobattery salvos (RT)', () => {
     const raider = { name: 'Raider', armour: 15 };
     const target = composeGunneryTest({ ballisticSkill: 48, shipModifiers: [], band: 'close', range: 6 });
     const battery = (name: string, damage: string, strength: number, roll: number, crit = 4): SalvoBatteryShot => {
@@ -241,7 +241,7 @@ describe('ship-weapon-fire — macrobattery salvos (RT Core p.221–222)', () =>
             { damage: '1d10', hits: 1 },
             { damage: '1d10+2', hits: 3 },
         ];
-        // "the attacker chooses which hits are discarded by the void shields" (p.222).
+        // "the attacker chooses which hits are discarded by the void shields".
         const lost = (shields: number, first: number): number[] => allocateSalvoShields(pool, shields, first).map((entry) => entry.cancelled);
         expect(lost(2, 1)).toEqual([0, 1, 1]);
         expect(lost(2, 0)).toEqual([2, 0, 0]);

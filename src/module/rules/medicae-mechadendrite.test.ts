@@ -13,10 +13,10 @@ import {
 } from './medicae-mechadendrite.ts';
 
 /* -------------------------------------------- */
-/*  Constants (errata p. 183)                   */
+/*  Constants (errata)                          */
 /* -------------------------------------------- */
 
-describe('MEDICAE_MECHADENDRITE constants (#104, errata p. 183)', () => {
+describe('MEDICAE_MECHADENDRITE constants (#104, errata)', () => {
     it('staunches Blood Loss as a Half Action', () => {
         expect(MEDICAE_MECHADENDRITE.bloodLossClearAction).toBe('half');
         expect(MEDICAE_MECHADENDRITE.staunchActionKind).toBe('half');

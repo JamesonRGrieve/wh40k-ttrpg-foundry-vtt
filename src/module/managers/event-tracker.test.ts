@@ -111,7 +111,7 @@ describe('EventTracker graph transport (#33)', () => {
 });
 
 describe('EventTracker adventure graphs (#592)', () => {
-    const ACTOR_SOURCE = 'Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001';
+    const ACTOR_SOURCE = 'Compendium.wh40k-rpg.hb-dh2-npcs.Actor.ashOrrinVael0001';
 
     /** A world document as the lookups read it. */
     interface DocStub {

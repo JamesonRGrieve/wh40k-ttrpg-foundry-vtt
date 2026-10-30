@@ -164,14 +164,14 @@ describe('resolveRequisition — the outcome', () => {
         expect(out).toEqual({ transfer: true, ratingAfter: 50, poolAfter: undefined });
     });
 
-    it('DH2: a failure costs the degrees of failure beyond Fellowship bonus (core p. 269)', () => {
+    it('DH2: a failure costs the degrees of failure beyond Fellowship bonus', () => {
         const within = resolveRequisition(gate(50), { rating: 50, fellowshipBonus: 3 }, { success: false, degreesOfFailure: 3 });
         expect(within).toMatchObject({ transfer: false, ratingAfter: 50 });
         const beyond = resolveRequisition(gate(50), { rating: 50, fellowshipBonus: 3 }, { success: false, degreesOfFailure: 5 });
         expect(beyond).toMatchObject({ transfer: false, ratingAfter: 48 });
     });
 
-    it('DH1: a failure by four or more full-ten degrees costs 1 Influence (Ascension p. 16)', () => {
+    it('DH1: a failure by four or more full-ten degrees costs 1 Influence (a DH1 supplement)', () => {
         const dh1Gate = evaluateRequisition('influence', { rating: 40 }, { availability: 'common' }, DH1_LADDER);
         // plusOne DoF 4 = margin 30–39 = three DH1 degrees: no loss.
         expect(resolveRequisition(dh1Gate, { rating: 40 }, { success: false, degreesOfFailure: 4 }).ratingAfter).toBe(40);

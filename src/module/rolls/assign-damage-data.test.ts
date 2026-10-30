@@ -235,7 +235,7 @@ describe('Righteous Fury no-break branch (#109)', () => {
     // proves the RF-no-break trigger fires.
 });
 
-describe('DW horde branch (#166 — core.md p. 359 "Damaging a Horde")', () => {
+describe('DW horde branch (#166 — "Damaging a Horde")', () => {
     function buildHordeActor(magnitude = 30, gameSystem: string | undefined = 'dw'): ActorLike {
         const actor = buildActor();
         actor.system.gameSystem = gameSystem;
@@ -402,7 +402,7 @@ describe('Critical Damage record capture (#108)', () => {
         expect(data.criticalRecord?.riders.stunned).toBe(false);
     });
 
-    it("reads a Daemon Engine's Critical damage on the chart its trait names, from its own book (#678; BC Tome of Decay p. 96)", async () => {
+    it("reads a Daemon Engine's Critical damage on the chart its trait names, from its own book (#678; a BC supplement)", async () => {
         // The creature's source pack sits in a book folder; the chart lookup prefers that folder.
         vi.stubGlobal('game', { packs: packCollection([], (id) => (id === 'wh40k-rpg.bc-bestiary' ? { folder: { id: 'book-folder' } } : undefined)) });
         invalidateCriticalDamageCache();

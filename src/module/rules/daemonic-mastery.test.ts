@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { buildDaemonicMasteryTest, circumstanceFactor, composeRitualTest, DAEMONIC_MASTERY_FACTORS } from './daemonic-mastery';
 
-/** Daemonic Mastery (DH2 Enemies Beyond p. 59). */
+/** Daemonic Mastery (DH2). */
 describe('DAEMONIC_MASTERY_FACTORS', () => {
     it('carries exactly the printed factors', () => {
         expect(DAEMONIC_MASTERY_FACTORS.BASE_DIFFICULTY.modifier).toBe(-30);
         expect(DAEMONIC_MASTERY_FACTORS.TRUE_NAME.modifier).toBe(30);
         expect(DAEMONIC_MASTERY_FACTORS.PATRON_SERVANT.modifier).toBe(10);
         expect(DAEMONIC_MASTERY_FACTORS.AGAINST_NATURE.modifier).toBe(-30);
-        // Regression: invented "ritual components" / "consecrated ground" factors are not on p. 59.
+        // Regression: invented "ritual components" / "consecrated ground" factors are not printed.
         expect(Object.keys(DAEMONIC_MASTERY_FACTORS).sort()).toEqual(['AGAINST_NATURE', 'BASE_DIFFICULTY', 'PATRON_SERVANT', 'TRUE_NAME']);
     });
 

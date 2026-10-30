@@ -79,12 +79,12 @@ describe('resolveTwoWeaponPenalties', () => {
             expect(resolveTwoWeaponPenalties({ isMelee: false, talents: set('Two-Weapon Master (Melee)') })).toEqual({ mainPenalty: -20, offPenalty: -20 });
         });
 
-        // Errata p. 132 regression: Two-Weapon Wielder applies to ranged
+        // Errata regression: Two-Weapon Wielder applies to ranged
         // single-shot AND single-burst (not just standard attacks). The
         // resolver doesn't distinguish modes — it returns the same penalty
         // pair regardless of which ranged action is selected — so the
         // errata's clarification holds.
-        it('errata p. 132: Wielder (Ranged) returns the same pair regardless of attack mode', () => {
+        it('errata: Wielder (Ranged) returns the same pair regardless of attack mode', () => {
             const w = resolveTwoWeaponPenalties({ isMelee: false, talents: set('Two-Weapon Wielder (Ranged)') });
             expect(w).toEqual({ mainPenalty: 0, offPenalty: -20 });
             // No conditional on a "mode" parameter — the resolver doesn't
@@ -95,7 +95,7 @@ describe('resolveTwoWeaponPenalties', () => {
 });
 
 // ──────────────────────────────────────────────
-// Errata p. 132 — Half-Action refocus (#147)
+// Errata — Half-Action refocus (#147)
 // ──────────────────────────────────────────────
 //
 // The acceptance criteria require asserting on the *standard-attack
@@ -122,7 +122,7 @@ describe('isTwoWeaponRefocusMode — errata-legal openers', () => {
     });
 });
 
-describe('resolveTwoWeaponRefocus (#147 — errata p. 132 ranged Half-Action refocus)', () => {
+describe('resolveTwoWeaponRefocus (#147 — errata ranged Half-Action refocus)', () => {
     it('ranged Wielder + single shot fires a Half-Action Standard Attack ×2 (NOT a Full-Action lump or Semi-Auto ×2)', () => {
         const plan = resolveTwoWeaponRefocus({
             isMelee: false,
@@ -227,7 +227,7 @@ describe('resolveTwoWeaponRefocus (#147 — errata p. 132 ranged Half-Action ref
         expect(plan.attacks).toHaveLength(1);
     });
 
-    it('FAQ p. 571: restrictToStandard forces the off-hand follow-up to a plain Standard Attack', () => {
+    it('FAQ: restrictToStandard forces the off-hand follow-up to a plain Standard Attack', () => {
         const plan = resolveTwoWeaponRefocus({
             isMelee: false,
             mode: 'Full Auto Burst',
@@ -240,7 +240,7 @@ describe('resolveTwoWeaponRefocus (#147 — errata p. 132 ranged Half-Action ref
         expect(plan.attacks[1]?.actionCost).toBe('Free');
     });
 
-    it('FAQ p. 693: an Aim bonus never carries onto the off-hand follow-up', () => {
+    it('FAQ: an Aim bonus never carries onto the off-hand follow-up', () => {
         const plan = resolveTwoWeaponRefocus({
             isMelee: false,
             mode: 'Standard Attack',

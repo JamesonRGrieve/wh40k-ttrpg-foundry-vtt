@@ -4,10 +4,9 @@ import type { DispositionModelDef, GameSystemId } from './types';
 import { SystemConfigRegistry } from './index';
 
 /**
- * Per-line Disposition model (#73). DH2 makes Disposition a 0–100 characteristic
- * (core p. 277); DH1 (p. 230), RT (p. 294) and DW (p. 276) print the seven-step
- * ladder with "one step, plus one step per degree of success"; BC (p. 276) and OW
- * (p. 304) the same ladder with "one step per Degree of Success"; IM prints none.
+ * Per-line Disposition model (#73). DH2 makes Disposition a 0–100 characteristic;
+ * DH1, RT and DW print the seven-step ladder with "one step, plus one step per
+ * degree of success"; BC and OW the same ladder with "one step per Degree of Success"; IM prints none.
  */
 describe('per-system Disposition model (#73)', () => {
     const EXPECTED: Record<GameSystemId, DispositionModelDef> = {

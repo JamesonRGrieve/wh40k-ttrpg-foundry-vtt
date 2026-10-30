@@ -7,7 +7,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { canonicalClipMax, fullMagazineFor, type LoadableWeapon, loadableFromSource, magazineToLoad, withFullMagazine } from './magazine-load.ts';
 
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
+const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-weapons.Item.j7K8l9M0n1O2p3Q4';
 
 function weapon(overrides: Partial<LoadableWeapon> = {}): LoadableWeapon {
     return { type: 'weapon', clipValue: 0, clipMax: 0, magazineSegments: 0, compendiumSource: HAND_FLAMER, clipValueAuthored: false, ...overrides };

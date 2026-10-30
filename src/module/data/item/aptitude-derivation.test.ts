@@ -2,7 +2,7 @@
  * Tests for the pure aptitude-derivation logic (#381).
  *
  * Aptitudes are computed from the origin path; only the player's elective
- * double-up picks (DH2 Core p.79) are persisted. These helpers are Foundry-free,
+ * double-up picks (DH2) are persisted. These helpers are Foundry-free,
  * so they load and run directly under happy-dom without the DataModel cascade.
  */
 
@@ -25,7 +25,7 @@ describe('aptitudeIdentity', () => {
 });
 
 describe('CHARACTERISTIC_APTITUDES', () => {
-    it('is exactly the nine Characteristic aptitudes (DH2 Core p.79)', () => {
+    it('is exactly the nine Characteristic aptitudes (DH2)', () => {
         expect([...CHARACTERISTIC_APTITUDES]).toEqual([
             'Weapon Skill',
             'Ballistic Skill',

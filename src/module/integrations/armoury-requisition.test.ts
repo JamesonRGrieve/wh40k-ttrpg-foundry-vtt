@@ -151,7 +151,7 @@ describe('resolveArmouryRequisition', () => {
         expect(rollD100).not.toHaveBeenCalled();
     });
 
-    it('DH2: denies a failed test and drops Influence by the DoF beyond Fellowship bonus (core p. 269)', () => {
+    it('DH2: denies a failed test and drops Influence by the DoF beyond Fellowship bonus', () => {
         const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
@@ -179,7 +179,7 @@ describe('resolveArmouryRequisition', () => {
                 degreesMethod,
             }).attempts[0]?.dof;
         // The card prints the line's own count (#335): Gen 1 has no base degree, so a
-        // miss by 9 points is 0 DoF (DH1 core p. 184), Gen 2's crossed tens digit 2.
+        // miss by 9 points is 0 DoF (as DH1 counts them), Gen 2's crossed tens digit 2.
         expect(fail('gen1')).toBe(0);
         expect(fail('gen2')).toBe(2);
         const pass = (degreesMethod: 'gen1' | 'gen2'): number | undefined =>
@@ -219,7 +219,7 @@ describe('resolveArmouryRequisition', () => {
         expect(three.after.rating).toBe(35);
     });
 
-    it('DH2: weapon-modification parts take +30, printed as their own row (core p. 162, #136)', () => {
+    it('DH2: weapon-modification parts take +30, printed as their own row (#136)', () => {
         const outcome = resolve({
             economy: 'influence',
             ladder: DH2_ACQUISITION_LADDER,
@@ -375,7 +375,7 @@ describe('buildArmouryCardContext — roll transparency', () => {
         expect(ctx.gameSystem).toBe('dh2');
     });
 
-    it('OW: prints the same Table 6-2 / 6-6 provenance rows as the Logistics Test card (#496)', () => {
+    it('OW: prints the same troop-difficulty / craftsmanship provenance rows as the Logistics Test card (#496)', () => {
         stubI18n();
         const outcome = resolve({
             economy: 'logistics',

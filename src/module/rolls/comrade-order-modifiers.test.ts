@@ -3,7 +3,7 @@ import { comradeOrderModifiersFor } from './comrade-order-modifiers.ts';
 
 /**
  * The Path B rows a PC's Comrade Orders add to its tests (#152): Ranged Volley's
- * "+5 to all Ballistics Skill Tests this Turn" (OW Core p. 270), one sourced row,
+ * "+5 to all Ballistics Skill Tests this Turn" (OW), one sourced row,
  * only this Round, only on Ballistic Skill, only in a line that prints Comrades.
  */
 

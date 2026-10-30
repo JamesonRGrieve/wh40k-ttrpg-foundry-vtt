@@ -5,8 +5,8 @@ import { composePhenomenaModifier } from './phenomena-modifier';
  * Tests for the shared Phenomena-modifier composer (#137 — subsumes #97).
  *
  * RAW sources:
- *  - beyond.md L4605 — per-scene Warp weakness.
- *  - within.md p. 58 — per-actor Tainted Psyker (+5/CP from push).
+ *  - a DH2 supplement — per-scene Warp weakness.
+ *  - a DH2 supplement — per-actor Tainted Psyker (+5/CP from push).
  */
 describe('composePhenomenaModifier (#137)', () => {
     describe('baseline (no triggers)', () => {
@@ -21,7 +21,7 @@ describe('composePhenomenaModifier (#137)', () => {
         });
     });
 
-    describe('per-scene Warp weakness (beyond.md L4605)', () => {
+    describe('per-scene Warp weakness', () => {
         it('grants +10 Focus Power, +1 ladder step, and the odd/9 auto-trigger', () => {
             const r = composePhenomenaModifier({ warpWeakness: true, taintedPsykerPushCP: 0 });
             expect(r.focusModifier).toBe(10);
@@ -33,7 +33,7 @@ describe('composePhenomenaModifier (#137)', () => {
         });
     });
 
-    describe('per-actor Tainted Psyker (within.md p.58)', () => {
+    describe('per-actor Tainted Psyker', () => {
         it('adds +5 to the Phenomena roll per CP gained from voluntary push', () => {
             expect(composePhenomenaModifier({ warpWeakness: false, taintedPsykerPushCP: 1 }).phenomenaModifier).toBe(5);
             expect(composePhenomenaModifier({ warpWeakness: false, taintedPsykerPushCP: 3 }).phenomenaModifier).toBe(15);

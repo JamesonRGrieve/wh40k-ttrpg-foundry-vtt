@@ -1,6 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readDeclaredPacks } from '../../../../scripts/lib/pack-manifest.mjs';
 import { isShipEffectKind, type ShipEffectData } from '../../rules/ship-action-effects.ts';
 import type { ShipActionOrderSystem, ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { ElementField, installFoundryDataStub, LeafField, SchemaRecord } from '../../testing/foundry-data-stub.ts';
@@ -123,11 +124,14 @@ function shipEffect(cleaned: JsonObject): ShipEffectData {
     };
 }
 
-const PACK_DIRS = [
-    'src/packs-private/rogue-trader/rt-core-items-ship-orders/_source',
-    'src/packs-private/homebrew-generic/hb-rt-items-ship-orders/_source',
-    'src/packs-private/homebrew-gw-copyright/hb-rt-items-ship-orders-gw-copyright/_source',
-];
+const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
+
+/** Every declared RT ship-orders pack's `_source` (book and homebrew), by manifest flags. */
+function packDirs(): string[] {
+    return readDeclaredPacks(REPO_ROOT)
+        .packs.filter((pack) => pack.flags?.['wh40k-rpg']?.line === 'rt' && pack.flags['wh40k-rpg'].category === 'ship-orders')
+        .map((pack) => `src/packs-private/${pack.path.replace(/^packs\//, '')}/_source`);
+}
 
 /** Load a pack document as the RT voidcraft sheet sees it after load. */
 function loadOrder(dir: string, file: string): ShipActionOrderView {
@@ -147,8 +151,10 @@ function loadOrder(dir: string, file: string): ShipActionOrderView {
 }
 
 function loadAll(): ShipActionOrderView[] {
-    return PACK_DIRS.flatMap((dir) =>
-        readdirSync(resolve(__dirname, '..', '..', '..', '..', dir))
+    const dirs = packDirs();
+    if (dirs.length === 0) throw new Error('no RT ship-orders pack is declared');
+    return dirs.flatMap((dir) =>
+        readdirSync(resolve(REPO_ROOT, dir))
             .filter((file) => file.endsWith('.json'))
             .map((file) => loadOrder(dir, file)),
     );
@@ -198,7 +204,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT ship orders through the schema (#186)'
         orders = loadAll();
     });
 
-    it('lists every RAW Extended Action from RT Core Table 8-11', () => {
+    it('lists every RAW Extended Action from the RT Extended Actions table', () => {
         expect(shipActionRows(orders, 'extended').map((row) => row.name)).toEqual([
             'Active Augury',
             'Aid the Machine Spirit',

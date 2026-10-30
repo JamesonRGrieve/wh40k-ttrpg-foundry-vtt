@@ -162,7 +162,7 @@ function toStored(delta: OriginAppliedDelta): Stored {
 
 describe('origin-grant-ledger: the world-ready reconcile is idempotent through Foundry storage (#42)', () => {
     // A compendium-UUID identity key: the dots make Foundry nest the ledger entry.
-    const KEY = 'Compendium.wh40k-rpg.ow-hammer-origins-homeworlds.Item.3422efadd4703be1';
+    const KEY = 'Compendium.wh40k-rpg.ow-homeworlds.Item.3422efadd4703be1';
     const AGRI_WORLD: OriginModifierBag = { resources: { wounds: 2 } };
 
     /** One boot's reconcile of the origin: read the ledger, reconcile, store the update as Foundry would. */

@@ -103,7 +103,7 @@ describe('recordHullHit + reducePriorTurnDamage (Hold Fast! / Triage)', () => {
     });
 
     // Regression (#189): Hold Fast! / Triage used to restore ALL of the
-    // previous turn's hull, crew AND morale. RAW (RT Core p.218) each reduces
+    // previous turn's hull, crew AND morale. RAW (RT) each reduces
     // ONE pool — Hold Fast! Morale, Triage Crew Population — by 1 + DoS.
     it('Hold Fast! reduces only the previous turn Morale loss, by the amount given', () => {
         let state = baseState();
@@ -203,7 +203,7 @@ describe('replenishBetweenCombat', () => {
     });
 });
 
-describe('isCrippled (RT Core "Crippled Ships": 0 Hull Integrity)', () => {
+describe('isCrippled (RT "Crippled Ships":0 Hull Integrity)', () => {
     it('is true only at 0 Hull Integrity', () => {
         expect(isCrippled({ value: 0, max: 35 })).toBe(true);
         expect(isCrippled({ value: 1, max: 35 })).toBe(false);

@@ -3,7 +3,7 @@ import { DH2_ITEM_REPAIR_RULES } from '../config/game-systems/dh2-config.ts';
 import { isXenosEquipment, readXenosRepairInsight, xenosRepairModifiers, type XenosRepairRules } from './xenos-equipment';
 
 // Regression (#136): the module used to model an invented charge-based
-// pristine/worn/degraded/ruined ladder. RAW (Enemies Without p. 42) is a Hard
+// pristine/worn/degraded/ruined ladder. RAW (a DH2 supplement) is a Hard
 // (−20) Forbidden Lore test, then the repair at −20 +5 per DoS on it.
 const xenos: XenosRepairRules = (() => {
     const printed = DH2_ITEM_REPAIR_RULES.xenos;
@@ -11,7 +11,7 @@ const xenos: XenosRepairRules = (() => {
     return printed;
 })();
 
-describe('DH2 xenos repair values (Enemies Without p. 42)', () => {
+describe('DH2 xenos repair values', () => {
     it('is Hard (−20) lore, −20 repair, +5 per lore DoS', () => {
         expect(xenos).toEqual({ loreModifier: -20, repairModifier: -20, bonusPerLoreDegree: 5 });
     });

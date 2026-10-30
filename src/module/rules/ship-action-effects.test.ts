@@ -15,7 +15,7 @@ import {
     type ShipEffectView,
 } from './ship-action-effects.ts';
 
-/** RT starship action effects (RT Core pp.212–218, #186, #189). */
+/** RT starship action effects (RT, #186, #189). */
 
 const ADD = 2;
 
@@ -24,7 +24,7 @@ function effect(overrides: Partial<ShipEffectData>): ShipEffectData {
 }
 
 describe('extraDegreesOfSuccess', () => {
-    it('counts RT degrees as each full 10 of margin, a bare success scoring 0 (p.231)', () => {
+    it('counts RT degrees as each full 10 of margin, a bare success scoring 0', () => {
         expect(extraDegreesOfSuccess('gen1', 40, 45, true)).toBe(0);
         expect(extraDegreesOfSuccess('gen1', 25, 45, true)).toBe(2);
         expect(extraDegreesOfSuccess('gen1', 5, 45, true)).toBe(4);
@@ -159,7 +159,7 @@ describe('liveShipModifiers', () => {
 });
 
 describe('composeShipActionTest', () => {
-    it('adds the ship stat to the skill and splits out the live modifiers inside it (p.212)', () => {
+    it('adds the ship stat to the skill and splits out the live modifiers inside it', () => {
         const aid = { labelKey: SHIP_MODIFIER_COMPONENT_KEY, value: 5, data: { name: 'Aid the Machine Spirit' } };
         const derivation = composeShipActionTest({
             skillLabel: 'Scrutiny',

@@ -10,9 +10,11 @@
  */
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
+import { lineBookPacks } from '../../utils/line-packs.ts';
 import {
     isJsonArray,
     isJsonObject,
@@ -320,8 +322,22 @@ describe('migrateSkills (#256)', () => {
 });
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('real bestiary pack data migrates to a usable shape', () => {
-    const PACK_DIR = resolve(__dirname, '../../../packs-private/dark-heresy-2/dh2-core-actors-bestiary/_source');
-    const files = existsSync(PACK_DIR) ? readdirSync(PACK_DIR).filter((f) => f.endsWith('.json')) : [];
+    // Every DH2 bestiary pack, found by its manifest flags; each file is `<pack dir>/_source/<doc>.json`
+    // under PACK_DIR. Without the private content the merged manifest declares none, so the list is empty.
+    const REPO_ROOT = resolve(__dirname, '../../../..');
+    const PACK_DIR = resolve(REPO_ROOT, 'src/packs-private');
+    const files = lineBookPacks(
+        readDeclaredPacks(REPO_ROOT).packs.map((metadata) => ({ metadata })),
+        'dh2',
+        'actors-bestiary',
+    ).flatMap(({ metadata }) => {
+        const dir = join(metadata.path.replace(/^packs\//, ''), '_source');
+        return existsSync(resolve(PACK_DIR, dir))
+            ? readdirSync(resolve(PACK_DIR, dir))
+                  .filter((f) => f.endsWith('.json'))
+                  .map((f) => join(dir, f))
+            : [];
+    });
     // Whole-file reference stubs carry no system; relinked actors are canonically
     // weapons.mode 'embedded' (UUID-linked items; simple[] keeps any original
     // no-catalog-match rows verbatim) and pass through migration untouched. Only a
@@ -525,7 +541,7 @@ describe('migrateSkills structural hardening (#503)', () => {
     };
 
     it('splits pipe-joined characteristic groups, not just newlines', () => {
-        // hb-rt-actors-npcs "Warlord Grashmekx the Blue" — previously produced the
+        // The RT homebrew NPC "Warlord Grashmekx the Blue" — previously produced the
         // keys `athletics+10|T:|Ag:Operate|Wp:Interrogation` and `|T:|Ag:Dodge`.
         const ts = parse('S: Intimidate +50, Athletics +10 | T: | Ag: Operate(Ground, Flyer) | WP: Interrogation');
         expect(Object.keys(ts).sort()).toEqual(['athletics', 'interrogation', 'intimidate', 'operate']);
@@ -535,14 +551,14 @@ describe('migrateSkills structural hardening (#503)', () => {
     });
 
     it('drops sentence-ending punctuation instead of baking it into the key', () => {
-        // hb-dh2-actors-bestiary "PDF Riot Officer" / "Genestealer Patriarch (Young)".
+        // The DH2 homebrew bestiary's "PDF Riot Officer" / "Genestealer Patriarch (Young)".
         const ts = parse('Awareness (Per), Intimidate (S), Inquiry (Fel), Scrutiny (Per).');
         expect(Object.keys(ts)).toContain('scrutiny');
         expect(Object.keys(ts).some((k) => k.includes('.'))).toBe(false);
     });
 
     it('peels every trailing modifier group, keeping the highest advance', () => {
-        // dh2-beyond-actors-npcs "The Lord of Wrath" — previously `athletics+30`.
+        // A DH2 supplement NPC, "The Lord of Wrath" — previously `athletics+30`.
         const ts = parse('Athletics (S) +30 (Ag) +20, Awareness (Per)');
         expect(Object.keys(ts).sort()).toEqual(['athletics', 'awareness']);
         const athletics = ts['athletics'] as JsonObject;
@@ -572,7 +588,7 @@ describe('migrateSkills structural hardening (#503)', () => {
 
 describe('parseSkillEntries overflow (#503)', () => {
     it('carries an advance printed above the +30 ceiling as a flat bonus', () => {
-        // hb-rt-actors-npcs "Warlord Grashmekx the Blue" prints Intimidate +50.
+        // The RT homebrew NPC "Warlord Grashmekx the Blue" prints Intimidate +50.
         // Truncating to rank 4 (+30) would silently drop 20 points.
         const entries = parseSkillEntries('S: Intimidate +50');
         expect(entries).toHaveLength(1);

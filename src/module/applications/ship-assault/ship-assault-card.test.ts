@@ -9,9 +9,9 @@ import { buildDamageView, buildTestView, componentRow, shipDegreesFormula } from
  */
 describe('ship-assault-card', () => {
     it('localizes a component and carries a parseable "modifier" tooltip payload', () => {
-        const row = componentRow({ labelKey: 'WH40K.X', value: -20, data: { rating: 2 } }, 'RT Core p.220', echoLocalize);
+        const row = componentRow({ labelKey: 'WH40K.X', value: -20, data: { rating: 2 } }, 'Turret rating', echoLocalize);
         expect(row.label).toBe('WH40K.X{"rating":2}');
-        expect(JSON.parse(row.tooltipData)).toEqual({ title: row.label, sources: [{ name: 'RT Core p.220', value: -20 }] });
+        expect(JSON.parse(row.tooltipData)).toEqual({ title: row.label, sources: [{ name: 'Turret rating', value: -20 }] });
     });
 
     it('builds a test view with the full derivation and the roll outcome', () => {

@@ -3,10 +3,10 @@ import type { DarkPactEntry, PactRecord } from '../../rules/dark-pact';
 import { darkPactPanelView, darkPactSheetView, pactEntryMechanics, pactEntryView, type PactDefinitionView } from './dark-pact-view';
 
 /** Dark Pacts display models (#84): the pact item sheet and the actor's panel. */
-const MIGHT = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactMight0001';
-const POWER = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactPower0001';
-const UNNATURAL = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.UnnatCharDh2TrX1';
-const FRENZY = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000011';
+const MIGHT = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.pactMight000001';
+const POWER = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.pactPower000001';
+const UNNATURAL = 'Compendium.wh40k-rpg.dh2-traits.Item.UnnatCharDh2TrX1';
+const FRENZY = 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000011';
 
 function entry(identifier: string, extra: Partial<DarkPactEntry> = {}): DarkPactEntry {
     return { identifier, name: identifier.toUpperCase(), description: `<p>${identifier}</p>`, modifiers: {}, grants: [], ...extra };

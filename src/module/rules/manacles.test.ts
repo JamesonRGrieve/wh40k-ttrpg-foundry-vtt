@@ -38,10 +38,10 @@ vi.mock('./active-effects.ts', () => ({
 }));
 
 /* -------------------------------------------- */
-/*  Constants (errata p. 176)                   */
+/*  Constants (errata)                          */
 /* -------------------------------------------- */
 
-describe('Manacles constants (errata p. 176)', () => {
+describe('Manacles constants (errata)', () => {
     it('applies −40 to BS and WS while the restraints are worn', () => {
         expect(MANACLES_BS_PENALTY).toBe(-40);
         expect(MANACLES_WS_PENALTY).toBe(-40);

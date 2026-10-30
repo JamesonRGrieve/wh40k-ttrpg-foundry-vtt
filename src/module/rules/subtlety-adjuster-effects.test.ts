@@ -18,7 +18,7 @@ import type { CollectedAdjuster } from './subtlety-adjusters';
 
 function adjuster(overrides: Partial<CollectedAdjuster> = {}): CollectedAdjuster {
     return {
-        sourceUuid: 'Compendium.wh40k-rpg.dh2-beyond-origins-homeworlds.Item.quarantine',
+        sourceUuid: 'Compendium.wh40k-rpg.dh2-homeworlds.Item.quarantine',
         primitive: null,
         label: 'Quarantine World',
         kind: 'clamp',
@@ -30,7 +30,7 @@ function adjuster(overrides: Partial<CollectedAdjuster> = {}): CollectedAdjuster
 
 describe('subtletyAdjusterSourceKey', () => {
     it('prefers the compendium source UUID', () => {
-        expect(subtletyAdjusterSourceKey(adjuster())).toBe('Compendium.wh40k-rpg.dh2-beyond-origins-homeworlds.Item.quarantine');
+        expect(subtletyAdjusterSourceKey(adjuster())).toBe('Compendium.wh40k-rpg.dh2-homeworlds.Item.quarantine');
     });
 
     it('falls back to the primitive tag when there is no UUID', () => {
@@ -47,7 +47,7 @@ describe('desiredSubtletyAdjusterEffects', () => {
         const [effect, ...rest] = desiredSubtletyAdjusterEffects([adjuster()]);
         expect(rest).toHaveLength(0);
         expect(effect).toEqual({
-            sourceKey: 'Compendium.wh40k-rpg.dh2-beyond-origins-homeworlds.Item.quarantine',
+            sourceKey: 'Compendium.wh40k-rpg.dh2-homeworlds.Item.quarantine',
             name: 'Quarantine World',
             kind: 'clamp',
             delta: 0,

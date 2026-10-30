@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { castEffectsFor } from './psychic-cast-effects.ts';
 
-const POWER = 'Compendium.wh40k-rpg.dh2-core-items-psychic-powers.Item.abc';
+const POWER = 'Compendium.wh40k-rpg.dh2-psychic-powers.Item.abc';
 
 describe('castEffectsFor — what a manifested power applies, and to whom', () => {
     it('casts only non-transfer effects, re-pointed at the power and stripped of their id', () => {

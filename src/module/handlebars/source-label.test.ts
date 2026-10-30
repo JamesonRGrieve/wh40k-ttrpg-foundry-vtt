@@ -14,15 +14,15 @@ import { formatSourceLabel } from './source-label.ts';
 
 describe('formatSourceLabel', () => {
     it('formats a book + page reference', () => {
-        expect(formatSourceLabel({ book: 'Core Rulebook', page: '229' })).toBe('Core Rulebook, p.229');
+        expect(formatSourceLabel({ book: 'Sample Book', page: '229' })).toBe('Sample Book, p.229');
     });
 
     it('coerces a numeric page', () => {
-        expect(formatSourceLabel({ book: 'Enemies Within', page: 42 })).toBe('Enemies Within, p.42');
+        expect(formatSourceLabel({ book: 'Other Book', page: 42 })).toBe('Other Book, p.42');
     });
 
     it('falls back to the book alone, then a url', () => {
-        expect(formatSourceLabel({ book: 'Core Rulebook' })).toBe('Core Rulebook');
+        expect(formatSourceLabel({ book: 'Sample Book' })).toBe('Sample Book');
         expect(formatSourceLabel({ url: 'https://example.test/ref' })).toBe('https://example.test/ref');
     });
 
@@ -33,7 +33,7 @@ describe('formatSourceLabel', () => {
     });
 
     it('passes a plain-string source through (trimmed)', () => {
-        expect(formatSourceLabel('Core p.123')).toBe('Core p.123');
+        expect(formatSourceLabel('Sample source note')).toBe('Sample source note');
         expect(formatSourceLabel('  spaced  ')).toBe('spaced');
         expect(formatSourceLabel('')).toBe('');
     });

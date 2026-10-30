@@ -68,7 +68,7 @@ describe('applyRequisition', () => {
         const result = applyRequisition(planRequisition(req), req, failedBadly);
         expect(result.transfer).toBe(false);
         expect(result.stockAfter).toBeUndefined();
-        // DH2's printed loss still lands: 4 DoF beyond a Fellowship bonus of 0 (core p. 269, #496).
+        // DH2's printed loss still lands: 4 DoF beyond a Fellowship bonus of 0 (#496).
         expect(result.ratingAfter).toBe(36);
     });
 

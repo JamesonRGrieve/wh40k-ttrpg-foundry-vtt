@@ -11,7 +11,7 @@ import {
 
 const PACK: SpecialAbilityPack = {
     documentName: 'Item',
-    collection: 'wh40k-rpg.dw-rites-items-special-abilities',
+    collection: 'wh40k-rpg.dw-special-abilities',
     index: {
         values: () => [
             { _id: '16ddcb89ff581b77', name: 'Campaign Hero', type: 'specialAbility', img: 'campaign-hero.webp' },
@@ -48,7 +48,7 @@ describe('specialAbilityIndexEntries (#171)', () => {
         const actorPack: SpecialAbilityPack = { ...PACK, documentName: 'Actor' };
         const entries = specialAbilityIndexEntries([PACK, actorPack]);
         expect(entries.map((entry) => entry.name)).toEqual(['Campaign Hero', 'Deathwing']);
-        expect(entries.at(0)?.uuid).toBe('Compendium.wh40k-rpg.dw-rites-items-special-abilities.Item.16ddcb89ff581b77');
+        expect(entries.at(0)?.uuid).toBe('Compendium.wh40k-rpg.dw-special-abilities.Item.16ddcb89ff581b77');
     });
 });
 
@@ -58,7 +58,7 @@ describe('buildSpecialAbilityLookup (#171)', () => {
         expect(resolve('campaign-hero')?.name).toBe('Campaign Hero');
         expect(resolve('Campaign Hero')?.name).toBe('Campaign Hero');
         expect(resolve('d066301eaae6105b')?.name).toBe('Deathwing');
-        expect(resolve('Compendium.wh40k-rpg.dw-rites-items-special-abilities.Item.d066301eaae6105b')?.name).toBe('Deathwing');
+        expect(resolve('Compendium.wh40k-rpg.dw-special-abilities.Item.d066301eaae6105b')?.name).toBe('Deathwing');
         expect(resolve('bolter')).toBeNull();
     });
 
@@ -77,7 +77,7 @@ describe('migrateLegacyDistinctionLists (#171)', () => {
         const byName = new Map(source.items.map((item) => [item.name, item]));
         expect(byName.get('Deathwing')?.system.category).toBe('distinction');
         expect(byName.get('Campaign Hero')?.system.category).toBe('mark');
-        expect(byName.get('Campaign Hero')?._stats?.compendiumSource).toBe('Compendium.wh40k-rpg.dw-rites-items-special-abilities.Item.16ddcb89ff581b77');
+        expect(byName.get('Campaign Hero')?._stats?.compendiumSource).toBe('Compendium.wh40k-rpg.dw-special-abilities.Item.16ddcb89ff581b77');
         expect(byName.get('Campaign Hero')?.img).toBe('campaign-hero.webp');
     });
 
@@ -91,7 +91,7 @@ describe('migrateLegacyDistinctionLists (#171)', () => {
     });
 
     it('keeps an unindexed compendium UUID as the join key', () => {
-        const uuid = 'Compendium.wh40k-rpg.dw-rites-items-special-abilities.Item.0b6614504484f359';
+        const uuid = 'Compendium.wh40k-rpg.dw-special-abilities.Item.0b6614504484f359';
         const { source } = migrate({ marksOfDistinction: [uuid] });
         expect(source.items.at(0)?._stats?.compendiumSource).toBe(uuid);
         expect(source.items.at(0)?.system.category).toBe('mark');

@@ -5,7 +5,7 @@ import { craftsmanshipRepairModifier, repairDestroysItem } from './item-repair';
 
 const rules = DH2_ITEM_REPAIR_RULES;
 
-describe('craftsmanshipRepairModifier (DH2 Table 5–2)', () => {
+describe('craftsmanshipRepairModifier (DH2 craftsmanship table)', () => {
     it('reads the printed repair column', () => {
         expect(craftsmanshipRepairModifier(rules, 'poor')).toBe(10);
         expect(craftsmanshipRepairModifier(rules, 'common')).toBe(0);
@@ -18,7 +18,7 @@ describe('craftsmanshipRepairModifier (DH2 Table 5–2)', () => {
     });
 });
 
-describe('repairDestroysItem (DH2 core p. 142)', () => {
+describe('repairDestroysItem (DH2)', () => {
     it('destroys on a failure by four or more degrees', () => {
         expect(repairDestroysItem(rules, false, 4)).toBe(true);
         expect(repairDestroysItem(rules, false, 7)).toBe(true);
@@ -32,7 +32,7 @@ describe('repairDestroysItem (DH2 core p. 142)', () => {
 describe('itemRepairRulesFor — per-line gating', () => {
     it('only DH2 prints the item-repair rule', () => {
         expect(itemRepairRulesFor('dh2')).toBe(DH2_ITEM_REPAIR_RULES);
-        // DH1 core p. 108 leaves the repair difficulty to the GM; RT / DW print only vehicle repair.
+        // DH1 leaves the repair difficulty to the GM; RT / DW print only vehicle repair.
         for (const line of ['dh1', 'bc', 'dw', 'ow', 'rt', 'im']) {
             expect(itemRepairRulesFor(line)).toBeNull();
         }

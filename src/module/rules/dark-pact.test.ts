@@ -21,13 +21,13 @@ import { DISPOSITION_MODELS } from './disposition';
 const DISPOSITION_SCALE = DISPOSITION_MODELS.characteristic;
 
 /**
- * Dark Pacts (#84, Enemies Beyond pp. 72–76). Every pact-specific number is the
+ * Dark Pacts (#84, DH2). Every pact-specific number is the
  * pact item's data; these tests feed the terms the book prints for every example
  * pact ("15+ the character's Corruption total", Hard (−20) bargaining) and check
  * the content-agnostic plumbing.
  */
 const BOOK_TERMS: DarkPactTerms = { dispositionBase: 15, addsCorruption: true, testModifier: -20 };
-const PACT = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactMight0001';
+const PACT = 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.pactMight000001';
 
 function entry(identifier: string, modifiers: DarkPactEntry['modifiers'] = {}): DarkPactEntry {
     return { identifier, name: identifier, description: '', modifiers, grants: [] };
@@ -86,7 +86,7 @@ describe('newPactRecord / holdsPact (#84)', () => {
     it('finds a held pact by UUID', () => {
         const records = [newPactRecord(PACT, BOOK_TERMS, 0)];
         expect(holdsPact(records, PACT)).toBe(true);
-        expect(holdsPact(records, 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactPower0001')).toBe(false);
+        expect(holdsPact(records, 'Compendium.wh40k-rpg.dh2-dark-pacts.Item.pactPower000001')).toBe(false);
         expect(holdsPact([], PACT)).toBe(false);
     });
 });

@@ -14,14 +14,14 @@ import {
 } from './dw-renown';
 
 /**
- * RAW Renown resolver tests (#164 — core.md §"RENOWN" p. 5880, Table 5-2;
- * rites.md Table 5-1, §"LOSING RENOWN").
+ * RAW Renown resolver tests (#164 — the DW core "Renown" rules and Renown Rank
+ * table; a DW supplement's per-mission Renown table and "Losing Renown").
  *
  * Every literal assertion is grounded in a single RAW citation and a
  * hand-checked value, so failures fingerprint to a specific rule rather
  * than vague "math drifted".
  */
-describe('TABLE 5-2 — Renown Rank thresholds (#164)', () => {
+describe('the Renown Rank thresholds table (#164)', () => {
     it('exposes the five canonical ranks in ascending order', () => {
         expect(RENOWN_RANK_ORDER).toEqual(['initiated', 'respected', 'distinguished', 'famed', 'hero']);
     });
@@ -136,7 +136,7 @@ describe('canRequisition — Armoury Renown gate', () => {
     });
 });
 
-describe('awardRenown — per-mission rewards (rites.md Table 5-1)', () => {
+describe('awardRenown — per-mission rewards (the per-mission Renown table)', () => {
     it('adds the awarded amount to current Renown', () => {
         expect(awardRenown(15, 5)).toBe(20);
     });

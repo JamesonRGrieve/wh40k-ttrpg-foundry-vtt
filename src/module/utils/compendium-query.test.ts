@@ -72,11 +72,11 @@ afterEach(() => {
 
 describe('resolvePack', () => {
     beforeEach(() => {
-        setPacks([pack({ id: 'wh40k-rpg.dh2-core', name: 'dh2-core' }), pack({ id: 'wh40k-rpg.dh2-talents', name: 'dh2-talents' })]);
+        setPacks([pack({ id: 'wh40k-rpg.dh2-skills', name: 'dh2-skills' }), pack({ id: 'wh40k-rpg.dh2-talents', name: 'dh2-talents' })]);
     });
 
     it('resolves by the fully-qualified id first', () => {
-        expect(resolvePack('dh2-core')?.metadata.id).toBe('wh40k-rpg.dh2-core');
+        expect(resolvePack('dh2-skills')?.metadata.id).toBe('wh40k-rpg.dh2-skills');
     });
 
     it('falls back to a metadata.name match when the qualified id misses', () => {
@@ -86,8 +86,8 @@ describe('resolvePack', () => {
     });
 
     it('falls back to a metadata.id === wh40k-rpg.<name> match', () => {
-        setPacks([pack({ id: 'wh40k-rpg.dh2-core', name: 'Core Rulebook' })]);
-        expect(resolvePack('dh2-core')?.metadata.id).toBe('wh40k-rpg.dh2-core');
+        setPacks([pack({ id: 'wh40k-rpg.dh2-skills', name: 'Skills' })]);
+        expect(resolvePack('dh2-skills')?.metadata.id).toBe('wh40k-rpg.dh2-skills');
     });
 
     it('returns undefined when nothing matches', () => {
@@ -97,7 +97,7 @@ describe('resolvePack', () => {
 
 describe('queryItemIndex', () => {
     it('collects across system packs, passing fields and flattening per-pack results', async () => {
-        const corePack = pack({ id: 'wh40k-rpg.dh2-core', name: 'core', entries: [{ _id: 'a', name: 'Dodge' }] });
+        const corePack = pack({ id: 'wh40k-rpg.dh2-skills', name: 'core', entries: [{ _id: 'a', name: 'Dodge' }] });
         const talentPack = pack({
             id: 'wh40k-rpg.dh2-talents',
             name: 'talents',

@@ -692,7 +692,7 @@ describe('Hit._calculateSpecials — conditional quality grants (Direction #7, �
 
     it('ignores a non-quality grant kind — it never becomes an attack special', () => {
         const talentGrant = grantItem('Some Talent', [
-            makeGrant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-core-items-talents.Item.abc', level: 0 }),
+            makeGrant({ kind: 'talent', name: 'Berserk Charge', uuid: 'Compendium.wh40k-rpg.ow-talents.Item.abc', level: 0 }),
         ]);
         const data = attackData([talentGrant], { isMelee: true, action: 'All Out Attack' });
         const hit = new Hit();

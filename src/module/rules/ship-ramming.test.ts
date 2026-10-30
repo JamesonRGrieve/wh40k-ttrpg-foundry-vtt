@@ -3,7 +3,7 @@ import { HARD_DIFFICULTY_KEY, MANOEUVRABILITY_KEY, resolveShipTest, type ShipAss
 import { composeRammingTest, computeRammingDamage, RAMMING_DIFFICULTY, RAMMING_KEYS, ramDamageFormula, type RammingProfile } from './ship-ramming';
 
 /**
- * RT Ramming pins (#188 — RT Core p.215).
+ * RT Ramming pins (#188 — RT).
  *
  * Regression guards for the RAW corrections: the previous resolver made the
  * ram an OPPOSED Pilot test, dealt 1d10 + attacker Speed, and subtracted each

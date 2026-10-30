@@ -5,7 +5,7 @@ import { OWSystemConfig } from './ow-config.ts';
 /**
  * Only War psyker gating (#424, #681). A character is a psyker when it owns an
  * origin-path item whose compendium document carries `grantsPsychicPowers`
- * (OW's Sanctioned Psyker speciality, OW core p. 94). The predicate reads the
+ * (OW's Sanctioned Psyker speciality). The predicate reads the
  * flag, never the name, so a renamed speciality still unlocks and a namesake
  * without the flag does not.
  */

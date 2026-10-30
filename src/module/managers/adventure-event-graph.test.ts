@@ -26,8 +26,8 @@ function asScenario<T>(value: T): AdventureScenario {
     return value;
 }
 
-const ACTOR = 'Compendium.wh40k-rpg.hb-dh2-ashford-actors-npcs.Actor.ashOrrinVael0001';
-const ITEM = 'Compendium.wh40k-rpg.hb-dh2-ashford-items-gear.Item.ashLedgerItem001';
+const ACTOR = 'Compendium.wh40k-rpg.hb-dh2-npcs.Actor.ashOrrinVael0001';
+const ITEM = 'Compendium.wh40k-rpg.hb-dh2-gear.Item.ashLedgerItem001';
 
 /** World documents by UUID, plus the compendium documents an import made them from. */
 const WORLD = new Map<string, ResolvedDocRef>([

@@ -31,7 +31,7 @@ const leanWeapon: MockItem = {
     img: null,
     type: 'weapon',
     system: { cost: 7 },
-    _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.abc' },
+    _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-weapons.Item.abc' },
 };
 
 describe('buildHydratedSystem (persisted-wins merge)', () => {
@@ -139,7 +139,7 @@ describe('buildHydrationPatches — resilience on the hot prep/render path', () 
                         img: null,
                         type: 'trait',
                         system: { description: { value: 'Actor override', chat: '', summary: '' } },
-                        _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.c' },
+                        _stats: { compendiumSource: 'Compendium.wh40k-rpg.dh2-traits.Item.c' },
                     },
                 ],
             },
@@ -168,7 +168,7 @@ describe('buildHydrationPatches — resilience on the hot prep/render path', () 
             img: null,
             type: 'psychicPower',
             system: structuredClone(worldFlat),
-            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-core-items-psychic-powers.Item.fb' },
+            _stats: { compendiumSource: 'Compendium.wh40k-rpg.bc-psychic-powers.Item.fb' },
         };
 
         const patches = await buildHydrationPatches({ type: 'bc-character', system: {}, items: { contents: [item] } });

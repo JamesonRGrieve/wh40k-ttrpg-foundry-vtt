@@ -1,9 +1,12 @@
+import { resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { readDeclaredPacks } from '../../../../scripts/lib/pack-manifest.mjs';
 import type { ShipAssaultShip } from '../../rules/ship-assault.ts';
 import type { RammingProfile } from '../../rules/ship-ramming.ts';
 import { HAS_PRIVATE_CONTENT } from '../../testing/private-content.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
 import { assaultContext, formValues, queueRolls, QueuedRollStub, recordingShip, type RecordingShip } from '../../testing/ship-assault.ts';
+import { lineCategoryPack } from '../../utils/line-packs.ts';
 import { createRammingFlow, RAMMING_ORDER_IDENTIFIER } from './ramming-flow.ts';
 import { ShipAssaultInputError, type ShipAssaultSession } from './ship-assault-flow.ts';
 
@@ -86,7 +89,11 @@ describe('ramming flow', () => {
 
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Ramming Speed compendium content', () => {
     it('carries the RAW hull-size dice and rebound die under its identifier', () => {
-        const order = JSON.parse(readRepoFile('src/packs-private/rogue-trader/rt-core-items-ship-orders/_source/ramming-speed_0718293a4b5c6d7e.json')) as {
+        const declared = readDeclaredPacks(resolve(__dirname, '../../../..')).packs.map((metadata) => ({ metadata }));
+        const pack = lineCategoryPack(declared, 'rt', 'ship-orders')?.metadata;
+        expect(pack).toBeDefined();
+        const dir = `src/packs-private/${(pack?.path ?? '').replace(/^packs\//, '')}/_source`;
+        const order = JSON.parse(readRepoFile(`${dir}/ramming-speed_0718293a4b5c6d7e.json`)) as {
             system: { identifier: string; ramming: RammingProfile };
         };
         expect(order.system.identifier).toBe(RAMMING_ORDER_IDENTIFIER);

@@ -13,7 +13,7 @@ function testTarget(input: RequisitionTestInput): number {
 
 const dh2 = DH2_ACQUISITION_LADDER;
 
-describe('getRequisitionTestTarget — DH2 ladder (core Tables 5-1 / 5-2, p. 141)', () => {
+describe('getRequisitionTestTarget — DH2 ladder (availability and craftsmanship tables)', () => {
     it('Common is Ordinary (+10): Influence 40 → 50', () => {
         expect(testTarget({ influence: 40, ladder: dh2, availability: 'common', craftsmanship: 'common' })).toBe(50);
     });

@@ -75,7 +75,7 @@ describe('ship-assault — test resolution, Rogue Trader degrees (gen1)', () => 
     const derivation = deriveTarget({ labelKey: 'base', value: 45 }, []);
 
     it('counts each full 10 of margin as a degree of success, with no base degree', () => {
-        // RT Core p.232: Fellowship 42, roll 18 → two degrees.
+        // RT: Fellowship 42, roll 18 → two degrees.
         expect(resolveShipTest(deriveTarget({ labelKey: 'base', value: 42 }, []), 18, 'gen1')).toMatchObject({ success: true, dos: 2, dof: 0, method: 'gen1' });
         expect(resolveShipTest(derivation, 23, 'gen1')).toMatchObject({ success: true, dos: 2, dof: 0 });
     });
@@ -109,7 +109,7 @@ describe('ship-assault — test resolution, the Gen 2 world override', () => {
     });
 });
 
-describe('ship-assault — opposed tests (RT Core p.233 "Opposed Tests")', () => {
+describe('ship-assault — opposed tests (RT "Opposed Tests")', () => {
     const at = (target: number, roll: number): ReturnType<typeof resolveShipTest> =>
         resolveShipTest(deriveTarget({ labelKey: 'base', value: target }, []), roll, 'gen1');
 

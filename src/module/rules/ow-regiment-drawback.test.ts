@@ -238,7 +238,7 @@ describe('buildDrawbackPanel', () => {
     });
 
     it('names each row through nameOf: a drawback document UUID reads as its name (#160)', () => {
-        const uuid = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.70dcc1a74d10b5dc';
+        const uuid = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.70dcc1a74d10b5dc';
         const panel = buildDrawbackPanel(
             [uuid],
             null,

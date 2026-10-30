@@ -58,7 +58,7 @@ describe('isActorWritable', () => {
 
     it('is true for a compendium actor, which is never in game.actors either', () => {
         withWorldActors([]);
-        expect(isActorWritable({ _id: 'aaaaaaaaaaaaaaaa', pack: 'wh40k-rpg.dh2-core-actors' })).toBe(true);
+        expect(isActorWritable({ _id: 'aaaaaaaaaaaaaaaa', pack: 'wh40k-rpg.dh2-actors' })).toBe(true);
     });
 
     it('is still false for a token/compendium actor whose deletion was requested', () => {

@@ -1,8 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import { grappleRulesFor } from '../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { lineBookPacks } from '../utils/line-packs.ts';
 import { MELEE_SPECIAL_OPTIONS } from './attack-options';
 import { allCombatActions, combatActionAttackModifier } from './combat-actions.ts';
 import {
@@ -56,7 +58,7 @@ function rulesOf(line: string): GrappleRules {
 const ids = (rules: GrappleRules, role: GrappleRole): GrappleOptionId[] => grappleOptionsFor(rules, role).map((option) => option.id);
 
 /**
- * Grapple state-machine resolver pins (#120 — core.md L10155-10180).
+ * Grapple state-machine resolver pins (#120 — the DH2 core Grapple rules).
  *
  * The five exported resolvers all share the same opposed-Strength engine,
  * so the tests pin: (a) the DoS math, (b) the action-tag round-trip, and
@@ -124,7 +126,7 @@ describe('grapple — resolveBreakGrapple', () => {
 });
 
 describe('grapple — Stand (controller, opposed Strength)', () => {
-    it('a dead heat (same DoS, Strength bonus and roll) is a stalemate: nobody stands (DH2 p. 24)', () => {
+    it('a dead heat (same DoS, Strength bonus and roll) is a stalemate: nobody stands (DH2)', () => {
         const r = resolveStand({ actorRoll: 40, actorStrength: 40, opponentRoll: 40, opponentStrength: 40 });
         expect(r.actorDoS).toBe(1);
         expect(r.opponentDoS).toBe(1);
@@ -134,7 +136,7 @@ describe('grapple — Stand (controller, opposed Strength)', () => {
         expect(r.action).toBe('stand');
     });
 
-    it('a degree tie goes to the higher Strength bonus, then the lower roll (DH2 p. 24)', () => {
+    it('a degree tie goes to the higher Strength bonus, then the lower roll (DH2)', () => {
         // Both 1 DoS; the actor's SB 5 beats the opponent's SB 4.
         expect(resolveStand({ actorRoll: 50, actorStrength: 50, opponentRoll: 45, opponentStrength: 45 }).outcome).toBe('won');
         // Both 1 DoS and SB 4; the opponent's lower roll wins.
@@ -150,7 +152,7 @@ describe('grapple — Stand (controller, opposed Strength)', () => {
 });
 
 describe('grapple — Push Opponent', () => {
-    it('both fail → stalemate, nothing happens (DH2 p. 24)', () => {
+    it('both fail → stalemate, nothing happens (DH2)', () => {
         const r = resolvePush({ actorRoll: 95, actorStrength: 35, opponentRoll: 88, opponentStrength: 35 });
         expect(r.actorDoS).toBe(0);
         expect(r.opponentDoS).toBe(0);
@@ -298,7 +300,7 @@ describe('what a won option does to the grapple (#120)', () => {
     });
 });
 
-describe('the thrown-down bonus on the card (#120; DH2 core p. 221)', () => {
+describe('the thrown-down bonus on the card (#120; DH2)', () => {
     const dh2 = rulesOf('dh2');
 
     it('the controller gains +10 on every further Opposed test, whichever side acts', () => {
@@ -350,7 +352,7 @@ describe('opposed-skill sides (DH1 Escape Grapple)', () => {
     });
 });
 
-describe('grapple — size differences (DH2 p. 222)', () => {
+describe('grapple — size differences (DH2)', () => {
     it('the larger combatant scores an extra DoS per Size point on a success', () => {
         // Both pass with 2 DoS; the actor is one Size larger, so it wins 3–2.
         const r = resolveDamageOpponent({ actorRoll: 30, actorStrength: 40, opponentRoll: 30, opponentStrength: 40, actorSize: 5, opponentSize: 4 });
@@ -428,7 +430,7 @@ describe('character sheet reads the grapple state through readGrappleState (#120
     });
 });
 
-describe('starting a grapple (#450; DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243, DW p. 246, OW p. 251)', () => {
+describe('starting a grapple (#450; DH1, DH2, RT, BC, DW, OW)', () => {
     it('a successful attempt makes the attacker the controller and the target held, each naming the other', () => {
         expect(grappleStartWrites('Actor.a', 'Actor.b')).toEqual([
             { uuid: 'Actor.a', state: 'grappling', opponentUuid: 'Actor.b', thrownDown: false },
@@ -486,8 +488,18 @@ describe('starting a grapple (#450; DH1 p. 197, DH2 p. 228, RT p. 246, BC p. 243
         expect(weapon).toContain('unarmed: new fields.BooleanField({ required: false, initial: false })');
     });
 
-    const unarmedSource = resolve(__dirname, '../../packs-private/imperium-maledictum/im-core-items-weapons/_source/unarmed.json');
-    it.skipIf(!existsSync(unarmedSource))('the Unarmed strike every creature is granted declares itself unarmed', () => {
+    // The Unarmed document in whichever IM weapons pack holds it, found by manifest flags
+    // (none is declared without the private content, so the test skips there).
+    const REPO_ROOT = resolve(__dirname, '../../..');
+    const unarmedSource =
+        lineBookPacks(
+            readDeclaredPacks(REPO_ROOT).packs.map((metadata) => ({ metadata })),
+            'im',
+            'weapons',
+        )
+            .map(({ metadata }) => resolve(REPO_ROOT, 'src/packs-private', metadata.path.replace(/^packs\//, ''), '_source/unarmed.json'))
+            .find((path) => existsSync(path)) ?? '';
+    it.skipIf(unarmedSource === '')('the Unarmed strike every creature is granted declares itself unarmed', () => {
         expect(JSON.parse(readFileSync(unarmedSource, 'utf8'))).toMatchObject({
             name: 'Unarmed',
             type: 'weapon',

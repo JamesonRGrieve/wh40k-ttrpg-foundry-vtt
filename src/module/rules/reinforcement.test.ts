@@ -4,7 +4,7 @@ import { maxWarbandContribution, meetsCallerSkill, planReinforcementCall, reinfo
 /** An RC that prints no caller skill requirement. */
 const NO_SKILL = { rank: 0, required: null };
 
-describe('reinforcementFinalCost (core p. 295)', () => {
+describe('reinforcementFinalCost (DH2 core rules)', () => {
     it('subtracts the Peer discount and applies the GM adjustment', () => {
         // Sister of Battle Canoness: cost 5, Peer (Adepta Sororitas) −2.
         expect(reinforcementFinalCost(5, 2, 0)).toBe(3);
@@ -25,7 +25,7 @@ describe('maxWarbandContribution', () => {
     });
 });
 
-describe('meetsCallerSkill (Enemies Beyond p. 38)', () => {
+describe('meetsCallerSkill (a DH2 supplement)', () => {
     it('passes any caller when the RC prints no requirement', () => {
         expect(meetsCallerSkill({ rank: 0, required: null })).toBe(true);
     });

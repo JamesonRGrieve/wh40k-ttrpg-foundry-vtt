@@ -111,7 +111,7 @@ describe('WH40K.currencies — per-line acquisition currency registry', () => {
 /**
  * `WH40K.calculateDegrees` is a labelled display count with no actor, so it prints
  * the degrees the active method gives (#335): under a forced Gen 1 there is no base
- * degree (DH1 core p. 184), under Gen 2 (the unscoped default) there is.
+ * degree (as DH1 prints it), under Gen 2 (the unscoped default) there is.
  */
 describe('WH40K.calculateDegrees prints the method’s own count (#335)', () => {
     function stubMode(mode: string): void {

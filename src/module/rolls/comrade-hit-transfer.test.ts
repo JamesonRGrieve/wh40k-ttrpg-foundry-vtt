@@ -4,7 +4,7 @@ import type { ComradeRecord } from '../rules/ow-comrade.ts';
 import { installApplicationV2Stub } from '../testing/app-v2-stub.ts';
 
 /**
- * The damage path's Comrade hit transfer (#152; OW Core p. 271): when an attack's
+ * The damage path's Comrade hit transfer (#152; OW): when an attack's
  * hits are calculated against a PC whose Comrade is in Cohesion, a successful hit
  * roll on doubles sends one hit to the Comrade instead, and the rest land on the PC.
  * The hit itself and the cues are stubbed; which hits are created is asserted.

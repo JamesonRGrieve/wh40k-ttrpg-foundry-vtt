@@ -107,7 +107,7 @@ describe('availabilityDisplayLabel', () => {
 });
 
 describe('placeRatingLabels', () => {
-    // DH1 Inquisitor's Handbook prints Gloom Eyes "Scarce (Volg) or Very Rare
+    // A DH1 supplement prints Gloom Eyes "Scarce (Volg) or Very Rare
     // (elsewhere)": `availabilityByPlace` holds the place-qualified ratings while
     // `availability` stays the general one.
     it('labels each place with its own localized rating, in printed order', () => {

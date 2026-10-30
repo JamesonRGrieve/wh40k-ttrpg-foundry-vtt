@@ -111,7 +111,7 @@ describe('weapon firing modes (#430)', () => {
         });
     });
 
-    // DH2 Enemies Without prints the Kroot Rifle with a "Pulse Round" sub-row carrying
+    // A DH2 supplement prints the Kroot Rifle with a "Pulse Round" sub-row carrying
     // its own Dam/Pen/Clip/Rld; it is authored as one mode on the base weapon.
     it('models a sub-profile row with its own damage, pen, clip and reload', () => {
         const pulseRound = mode({ label: 'Pulse Round', damage: '1d10+5', damageType: 'energy', penetration: 1, clipMax: 6, reload: '2-full' });

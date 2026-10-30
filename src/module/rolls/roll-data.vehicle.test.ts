@@ -78,7 +78,7 @@ describe('WeaponRollData vehicle traits on the attack (Path B, content#28)', () 
         expect(rd.expandedBuckets[VEHICLE_TRAIT_BUCKET]).toEqual([expect.objectContaining({ label: 'Feral Machine Spirit', value: -10 })]);
     });
 
-    it('folds Orbital Deployment −30 on shooting at a drop pod in flight, and nothing once it has landed (OW Core p. 213)', () => {
+    it('folds Orbital Deployment −30 on shooting at a drop pod in flight, and nothing once it has landed (OW)', () => {
         const pod = craft([['Orbital Deployment', { orbitalDeployment: true, deploymentIncomingToHitModifier: -30 }]]);
         const inFlight = attack(pod, false, { ...STILL, airborne: true });
         inFlight.applyTargetVehicleModifiers();

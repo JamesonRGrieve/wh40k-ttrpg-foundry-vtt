@@ -15,7 +15,7 @@ import {
     type RitualDice,
 } from './daemonology-actions';
 
-/** Exorcism orchestration (#83 — DH2 Enemies Beyond p. 71). */
+/** Exorcism orchestration (#83 — DH2). */
 
 function actor(
     overrides: Partial<{ lore: number | null; willpower: number; fatigue: number; fatigueMax: number; corruption: number }> = {},
@@ -131,7 +131,7 @@ describe('runExorcism', () => {
         expect(exorcistUpdate(actor(), outcome)).toEqual({});
     });
 
-    it('applies Table 2–21 rows and the GM row', () => {
+    it('applies the Exorcism Modifiers table rows and the GM row', () => {
         const factors = exorcismFactors({ ...NO_MODIFIERS, modifiers: ['WEAK_VEIL'], circumstanceLabel: 'Relic', circumstanceValue: 5 });
         expect(factors.map((f) => [f.id, f.modifier])).toEqual([
             ['weak-veil', -10],
@@ -189,7 +189,7 @@ describe('card shaping', () => {
     });
 });
 
-/** Summoning orchestration (#80 — DH2 Enemies Beyond p. 59). */
+/** Summoning orchestration (#80 — DH2). */
 describe('parseSummoningForm', () => {
     it('reads the checkboxes, derives the Daemon WP bonus and the two GM rows', () => {
         const data = new FormData();

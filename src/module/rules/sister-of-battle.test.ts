@@ -3,7 +3,7 @@ import { advanceGrantCards, SISTER_OF_BATTLE_ADVANCE_IDENTIFIER } from './sister
 
 /**
  * The Sister of Battle dialog lists what the elite advance document grants
- * (DH2 Enemies Within pp38-39) — never a talent list held in `src/`.
+ * (a DH2 supplement) — never a talent list held in `src/`.
  */
 describe('Sister of Battle elite advance (#134)', () => {
     it('is found by the advance document identifier', () => {
@@ -25,7 +25,7 @@ describe('Sister of Battle elite advance (#134)', () => {
         ]);
     });
 
-    // The nine Sister of Battle talents (EW pp38-39) are made PURCHASABLE, not
+    // The nine Sister of Battle talents are made PURCHASABLE, not
     // granted — `grants.unlockedTalents` lists them, flagged so the UI says so.
     it('lists unlocked-for-purchase talents after granted ones, flagged as unlocked', () => {
         const cards = advanceGrantCards({

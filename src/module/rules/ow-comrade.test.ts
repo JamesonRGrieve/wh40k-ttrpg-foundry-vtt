@@ -22,7 +22,7 @@ import {
     withoutOneHitOn,
 } from './ow-comrade';
 
-/** Only War's printed Comrade rules (the line config, OW Core pp. 269–271). */
+/** Only War's printed Comrade rules (the line config). */
 function owRules(): ComradeRules {
     const rules = comradeRulesFor('ow');
     if (rules === null) throw new Error('Only War prints Comrades');
@@ -56,7 +56,7 @@ describe('ow-comrade — the printed rules on the line config', () => {
     });
 });
 
-describe('ow-comrade — inCohesion (p. 269)', () => {
+describe('ow-comrade — inCohesion', () => {
     it('is true inside the 5 m radius with no barrier, and at exactly 5 m', () => {
         expect(inCohesion({ distanceM: 4, hasVisualLine: true }, RULES)).toBe(true);
         expect(inCohesion({ distanceM: 5, hasVisualLine: true }, RULES)).toBe(true);
@@ -73,7 +73,7 @@ describe('ow-comrade — inCohesion (p. 269)', () => {
     });
 });
 
-describe('ow-comrade — state-track transitions (p. 271)', () => {
+describe('ow-comrade — state-track transitions', () => {
     it('a hit moves unharmed → wounded → dead; dead stays dead', () => {
         expect(applyComradeHit('unharmed')).toEqual({ newState: 'wounded', transitioned: true });
         expect(applyComradeHit('wounded')).toEqual({ newState: 'dead', transitioned: true });
@@ -86,7 +86,7 @@ describe('ow-comrade — state-track transitions (p. 271)', () => {
         expect(healComrade('dead').transitioned).toBe(false);
     });
 
-    it('only a dead Comrade is replaced, and only with a replacement available (p. 110)', () => {
+    it('only a dead Comrade is replaced, and only with a replacement available', () => {
         expect(replaceComrade('dead', true)).toEqual({ newState: 'unharmed', transitioned: true, replaced: true });
         expect(replaceComrade('dead', false).replaced).toBe(false);
         expect(replaceComrade('wounded', true).replaced).toBe(false);
@@ -94,7 +94,7 @@ describe('ow-comrade — state-track transitions (p. 271)', () => {
     });
 });
 
-describe('ow-comrade — the action budget (p. 269)', () => {
+describe('ow-comrade — the action budget', () => {
     it('two Half Actions a Turn; a Full Action is both', () => {
         expect(comradeActionsLeft(comrade().turn, ROUND, RULES)).toBe(2);
         const afterHalf = spendComradeActions(comrade().turn, ROUND, 1);
@@ -115,7 +115,7 @@ describe('ow-comrade — the action budget (p. 269)', () => {
     });
 });
 
-describe('ow-comrade — a hit on the PC strikes the Comrade (p. 271)', () => {
+describe('ow-comrade — a hit on the PC strikes the Comrade', () => {
     it('doubles in Cohesion transfers; out of Cohesion it does not', () => {
         const base = { weaponBlastOrSpray: false, comradeInBlastSprayRange: false };
         expect(transfersToComrade({ ...base, pcRollDoubles: true, comradeInCohesion: true })).toEqual({ transfers: true, reason: 'doubles' });
@@ -167,7 +167,7 @@ describe('ow-comrade — a hit on the PC strikes the Comrade (p. 271)', () => {
     });
 });
 
-describe('ow-comrade — the Fear and Pinning mirror (p. 271)', () => {
+describe('ow-comrade — the Fear and Pinning mirror', () => {
     it.each(['fear', 'pinning'] as const)('%s: the Comrade passes or fails with its PC, whatever its Cohesion', (test) => {
         expect(comradeMirrorsFearPinning({ test, pcPassed: true, comradeImmune: false, comradeState: 'unharmed' })).toEqual({
             applies: true,
@@ -205,7 +205,7 @@ describe('ow-comrade — the Fear and Pinning mirror (p. 271)', () => {
     });
 });
 
-describe('ow-comrade — Insanity and Corruption (p. 271)', () => {
+describe('ow-comrade — Insanity and Corruption', () => {
     const suffer = (
         tally: ComradeRecord['mental'],
         kind: 'insanity' | 'corruption',

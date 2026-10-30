@@ -80,7 +80,7 @@ describe('aggregateVehicleTraitEffects', () => {
         expect(agg.testModifiers).toStrictEqual([{ test: 'floorIt', value: 20, source: 'Enhanced Motive Systems' }]);
     });
 
-    it('cancels Ponderous against Enhanced Motive Systems, in either order (OW core p. 213–214)', () => {
+    it('cancels Ponderous against Enhanced Motive Systems, in either order (OW)', () => {
         const ems = trait('Enhanced Motive Systems', { enhancedMovement: true });
         const ponderous = trait('Ponderous', { ponderous: true });
         for (const order of [

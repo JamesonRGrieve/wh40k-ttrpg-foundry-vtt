@@ -26,8 +26,8 @@ interface JoinItem {
     updateSource: Mock<(changes: { system?: StubSystem }, options?: object) => void>;
 }
 
-const SPECIALIST = 'Compendium.wh40k-rpg.ow-core-origins-specialities.Item.specialist';
-const AGRI_WORLD = 'Compendium.wh40k-rpg.ow-hammer-origins-homeworlds.Item.agriWorld';
+const SPECIALIST = 'Compendium.wh40k-rpg.ow-specialities.Item.specialist';
+const AGRI_WORLD = 'Compendium.wh40k-rpg.ow-homeworlds.Item.agriWorld';
 const ROLLED = { formula: '8+1d5', rolled: 11, breakdown: '8 + 3', timestamp: 0 };
 
 function leanOrigin(id: string, uuid: string): JoinItem {

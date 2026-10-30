@@ -1,8 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import type { WeaponQualityMechanics } from '../data/item/weapon-quality-mechanics.ts';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
+import { lineCategoryPack } from '../utils/line-packs.ts';
 import { attackerWeaponPreventsParry, calculateQualityPenetrationModifiers } from './weapon-quality-effects';
 import { weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
 
@@ -13,7 +15,15 @@ import { weaponQualityMechanicsFromRaw } from './weapon-quality-payloads.ts';
  * default-merge) instead of the former in-`src/` WEAPON_QUALITY_EFFECTS registry.
  */
 
-const PACK_DIR = resolve(__dirname, '../../packs-private/rogue-trader/rt-core-items-weapon-qualities/_source');
+// RT's weapon-qualities pack (the canonical docs), found by its manifest flags; without
+// the private content none is declared, so the guarded read below finds nothing.
+const REPO_ROOT = resolve(__dirname, '../../..');
+const qualityPack = lineCategoryPack(
+    readDeclaredPacks(REPO_ROOT).packs.map((metadata) => ({ metadata })),
+    'rt',
+    'weapon-qualities',
+)?.metadata;
+const PACK_DIR = qualityPack === undefined ? '' : resolve(REPO_ROOT, 'src/packs-private', qualityPack.path.replace(/^packs\//, ''), '_source');
 const mechanicsById = new Map<string, WeaponQualityMechanics>();
 if (existsSync(PACK_DIR)) {
     for (const file of readdirSync(PACK_DIR).filter((f) => f.endsWith('.json'))) {

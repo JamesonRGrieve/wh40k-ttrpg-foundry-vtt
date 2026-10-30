@@ -12,8 +12,8 @@ import {
 } from './ship-crippled.ts';
 
 /**
- * Crippled and destroyed starships (#187 — RT Core 1.4 errata p.222 "Crippled
- * Ships", p.221 "Destroying Ships", Table 8-12). Every effect is gated on the
+ * Crippled and destroyed starships (#187 — RT core errata "Crippled Ships",
+ * "Destroying Ships" and the ship destruction table). Every effect is gated on the
  * Rogue Trader line; other lines' voidcraft keep their own reading.
  */
 

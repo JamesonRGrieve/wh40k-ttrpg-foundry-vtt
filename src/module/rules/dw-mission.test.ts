@@ -3,7 +3,7 @@ import { computeMissionRewards, type DwMission, type MissionComplication, type M
 
 /**
  * Deathwatch Mission framework + Renown/XP rewards tests (#169 —
- * core.md §"MISSIONS" p. 10115, §"REWARDS" p. 10390).
+ * the DW core "Missions" and "Rewards" rules).
  *
  * Pure-function payout: completed objectives award Renown/XP and recover
  * 1 Cohesion each; triggered complications subtract from the Renown total
@@ -82,7 +82,7 @@ describe('computeMissionRewards (#169)', () => {
         expect(result.cohesionRecovered).toBe(0);
     });
 
-    it('recovers 1 Cohesion per completed objective (core.md §REWARDS)', () => {
+    it('recovers 1 Cohesion per completed objective (Rewards)', () => {
         const mission = makeMission({
             objectives: [
                 makeObjective({ id: 'a', status: 'complete' }),

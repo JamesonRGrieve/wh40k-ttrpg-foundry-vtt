@@ -183,8 +183,8 @@ describe('checkAndMigrateWorld — v4 token footprints (#501)', () => {
     });
 });
 
-const AUTOGUN = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.autogun0000000';
-const SWORD = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.sword00000000000';
+const AUTOGUN = 'Compendium.wh40k-rpg.dh2-weapons.Item.autogun0000000';
+const SWORD = 'Compendium.wh40k-rpg.dh2-weapons.Item.sword00000000000';
 
 /** Canonical clip sizes the stubbed `fromUuid` hands back. */
 const CANONICAL_CLIP: Record<string, number> = { [AUTOGUN]: 30, [SWORD]: 0 };

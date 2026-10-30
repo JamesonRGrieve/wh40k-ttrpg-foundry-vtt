@@ -24,7 +24,7 @@ interface JoinItem {
     render: Mock<(force?: boolean) => void>;
 }
 
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.handFlamer';
+const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-weapons.Item.handFlamer';
 
 /** A lean Hand Flamer stub: the join key and the actor's own clip. */
 function leanFlamer(): JoinItem {

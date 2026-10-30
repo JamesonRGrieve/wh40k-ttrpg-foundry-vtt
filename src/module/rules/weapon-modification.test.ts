@@ -15,12 +15,12 @@ import {
 const dh2 = DH2_WEAPON_MODIFICATION_RULES;
 const plain = TRADE_ARMOURER_FITTING_RULES;
 
-function mod(overrides: Partial<ModificationSource['system']> = {}, uuid = 'Compendium.wh40k-rpg.dh2-core-items-weapon-mods.Item.grip'): ModificationSource {
+function mod(overrides: Partial<ModificationSource['system']> = {}, uuid = 'Compendium.wh40k-rpg.dh2-weapon-mods.Item.grip'): ModificationSource {
     return { uuid, name: 'Custom Grip', system: { category: 'stock', modifiers: { toHit: 5 }, ...overrides } };
 }
 
-describe('modificationAvailabilityModifier (DH2 core p. 162)', () => {
-    it('takes the Table 5-1 value of the modification’s Availability', () => {
+describe('modificationAvailabilityModifier (DH2)', () => {
+    it('takes the availability table value of the modification’s Availability', () => {
         expect(modificationAvailabilityModifier(dh2, DH2_ACQUISITION_LADDER, 'rare')).toBe(-20);
         expect(modificationAvailabilityModifier(dh2, DH2_ACQUISITION_LADDER, 'very-rare')).toBe(-30);
         expect(modificationAvailabilityModifier(dh2, DH2_ACQUISITION_LADDER, 'plentiful')).toBe(20);

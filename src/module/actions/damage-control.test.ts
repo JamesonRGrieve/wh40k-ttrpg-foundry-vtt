@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { aggregateVehicleTraitEffects, neutralVehicleTraitEffects } from '../data/shared/vehicle-trait-effects-template.ts';
 
 /**
- * Damage Control (#678; DH2 Core p. 188, OW Core p. 213): the damage card's re-roll
+ * Damage Control (#678; DH2, OW): the damage card's re-roll
  * button rolls the Righteous Fury die again, reads the new value on the struck
  * location's chart and posts it — once per roll, recorded on the card.
  */

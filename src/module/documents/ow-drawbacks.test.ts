@@ -24,9 +24,9 @@ class StubItem {
     }
 }
 
-const DOOMED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.doomed';
-const THE_FEW = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.the-few';
-const UNRECORDED = 'Compendium.wh40k-rpg.ow-hammer-origins-regimental-drawbacks.Item.unrecorded';
+const DOOMED = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.doomed';
+const THE_FEW = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.the-few';
+const UNRECORDED = 'Compendium.wh40k-rpg.ow-regimental-drawbacks.Item.unrecorded';
 const HOME_WORLD = 'Compendium.wh40k-rpg.ow-origins.Item.agri-world';
 
 const documents = new Map<string, StubItem>([

@@ -13,8 +13,8 @@ import {
     stepExorcism,
 } from './exorcism';
 
-/** Exorcism (#83 — DH2 Enemies Beyond p. 71). */
-describe('Table 2–21: Exorcism Modifiers', () => {
+/** Exorcism (#83 — DH2). */
+describe('the Exorcism Modifiers table', () => {
     it('matches the printed values', () => {
         expect(EXORCISM_MODIFIERS.SELF_EXORCISM.modifier).toBe(-10);
         expect(EXORCISM_MODIFIERS.NO_PROPER_TOOLS.modifier).toBe(-10);

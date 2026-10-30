@@ -41,7 +41,7 @@ function ownedTrait(name: string, effects: Partial<VehicleTraitEffects>): CraftU
 describe('vehicle traits never re-apply what the printed stat line already includes (content#28)', () => {
     it('a Chimera-shaped actor with Tracked Vehicle keeps its printed Manoeuvrability', () => {
         const craft = Object.create(ConventionalCraftData.prototype) as CraftUnderTest;
-        // The DH2 Chimera Armoured Transport's printed line (DH2 core p. 191).
+        // The DH2 Chimera Armoured Transport's printed line.
         craft.manoeuverability = 0;
         craft.speed = { cruising: 70, tactical: 15 };
         craft.armour = { front: { value: 30 }, side: { value: 22 }, rear: { value: 16 } };

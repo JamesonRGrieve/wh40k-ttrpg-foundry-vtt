@@ -38,7 +38,7 @@ const BASE: ColonyState = { size: 3, complacency: 2, order: 2, productivity: 2, 
 /*  Characteristic registry                                       */
 /* -------------------------------------------------------------- */
 
-describe('Colony Characteristic registry (Stars-of-Inequity §"Colony Characteristics")', () => {
+describe('Colony Characteristic registry (RT "Colony Characteristics")', () => {
     it('lists Size + four affective stats', () => {
         expect(COLONY_CHARACTERISTIC_KEYS).toEqual(['size', 'complacency', 'order', 'productivity', 'piety']);
         expect(COLONY_AFFECTIVE_KEYS).toEqual(['complacency', 'order', 'productivity', 'piety']);
@@ -79,7 +79,7 @@ describe('clampCharacteristic', () => {
 /*  Size tier table                                               */
 /* -------------------------------------------------------------- */
 
-describe('tierForSize (Stars-of-Inequity Table 3-2)', () => {
+describe('tierForSize (the colony size table)', () => {
     it('Size 0 → Abandoned', () => {
         expect(tierForSize(0)).toBe('abandoned');
     });
@@ -106,7 +106,7 @@ describe('tierForSize (Stars-of-Inequity Table 3-2)', () => {
 });
 
 /* -------------------------------------------------------------- */
-/*  Threshold effects (RAW p.103-104)                             */
+/*  Threshold effects (RAW)                                       */
 /* -------------------------------------------------------------- */
 
 describe('activeColonyEffects — Characteristic > Size positive cascade', () => {
@@ -199,10 +199,10 @@ describe('applyPfValueAdjustment', () => {
 });
 
 /* -------------------------------------------------------------- */
-/*  Growth tick (Table 3-3)                                       */
+/*  Growth tick (the colony growth table)                         */
 /* -------------------------------------------------------------- */
 
-describe('resolveColonyGrowth (Table 3-3)', () => {
+describe('resolveColonyGrowth (the colony growth table)', () => {
     it('rolls in the noChange band 3..7 → no Size delta', () => {
         // d10 = floor(0.45 * 10) + 1 = 5 → in 3..7
         const rng = fixed(0.45);
@@ -379,7 +379,7 @@ describe('ENDEAVOUR_THEME_MAPPING completeness', () => {
 /*  Leadership table                                              */
 /* -------------------------------------------------------------- */
 
-describe('leadershipPfValueModifier (Table 3-4)', () => {
+describe('leadershipPfValueModifier (the leadership table)', () => {
     it('bonus ≤ 2 → −2', () => {
         expect(leadershipPfValueModifier({ intBonus: 1, perBonus: 2, felBonus: 0 })).toBe(-2);
     });

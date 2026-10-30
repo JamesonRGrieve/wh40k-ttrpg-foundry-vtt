@@ -51,7 +51,7 @@ function makeActor(stub: BcActorStub = {}): WH40KBaseActor {
 
 const cfg = new BCSystemConfig();
 
-describe('BCSystemConfig: characteristic cost dispatch (Table 2-6)', () => {
+describe('BCSystemConfig: characteristic cost dispatch', () => {
     it('uses True row for Strength when Aligned to Khorne', () => {
         const actor = makeActor({ chaosAlignment: 'khorne' });
         expect(cfg.getCharacteristicAdvanceCost(actor, 'strength', 0)).toEqual({ cost: 100, tier: 'simple' });
@@ -84,7 +84,7 @@ describe('BCSystemConfig: characteristic cost dispatch (Table 2-6)', () => {
     });
 });
 
-describe('BCSystemConfig: skill cost dispatch (Table 2-7)', () => {
+describe('BCSystemConfig: skill cost dispatch', () => {
     it('uses Opposed row when the advance alignment opposes the character', () => {
         const actor = makeActor({ chaosAlignment: 'khorne' });
         // Charm (Slaanesh) for a Khorne PC: RAW worked example, "further 500 xp".
@@ -102,7 +102,7 @@ describe('BCSystemConfig: skill cost dispatch (Table 2-7)', () => {
     });
 });
 
-describe('BCSystemConfig: talent cost dispatch (Table 2-9)', () => {
+describe('BCSystemConfig: talent cost dispatch', () => {
     it('reads tier and alignment off the talent item when present', () => {
         const actor = makeActor({ chaosAlignment: 'khorne' });
         const talent = { system: { chaosAlignment: 'khorne', tier: 2 } };
@@ -121,7 +121,7 @@ describe('BCSystemConfig: talent cost dispatch (Table 2-9)', () => {
     });
 });
 
-describe('BCSystemConfig: Infamy advancement (core.md :2667)', () => {
+describe('BCSystemConfig: Infamy advancement', () => {
     it('returns 500 xp while infamy is below 40', () => {
         expect(cfg.getInfamyAdvanceCost(makeActor({ infamy: 0 }))).toBe(500);
         expect(cfg.getInfamyAdvanceCost(makeActor({ infamy: 39 }))).toBe(500);
@@ -165,7 +165,7 @@ describe('BCSystemConfig: alignment derivation from advance log', () => {
         expect(cfg.deriveAlignmentFor(actor)).toBe('unaligned');
     });
 
-    it('reports a pending re-check after each 10-CP threshold (core.md :2569)', () => {
+    it('reports a pending re-check after each 10-CP threshold', () => {
         const a0 = makeActor({ corruption: 0, alignmentCheckpoint: 0 });
         const a9 = makeActor({ corruption: 9, alignmentCheckpoint: 0 });
         const a10 = makeActor({ corruption: 10, alignmentCheckpoint: 0 });
@@ -183,7 +183,7 @@ describe('BCSystemConfig: alignment derivation from advance log', () => {
     });
 });
 
-describe('BCSystemConfig: Khorne / psyker lock (core.md :2750)', () => {
+describe('BCSystemConfig: Khorne / psyker lock', () => {
     it('returns true for a psyker-archetype actor while Unaligned', () => {
         const actor = makeActor({ chaosAlignment: 'unaligned', archetypeName: 'Psyker', archetypeGrantsPsychicPowers: true });
         expect(cfg.isPsyker(actor)).toBe(true);
@@ -201,7 +201,7 @@ describe('BCSystemConfig: Khorne / psyker lock (core.md :2750)', () => {
         expect(cfg.isAlignmentBlockingPsyker(actor)).toBe(false);
     });
 
-    it('unlocks any flagged archetype, by data not name: the Sorcerer starts with the Psyker Trait (BC core p. 60)', () => {
+    it('unlocks any flagged archetype, by data not name: the Sorcerer starts with the Psyker Trait (BC)', () => {
         expect(cfg.isPsyker(makeActor({ chaosAlignment: 'unaligned', archetypeName: 'Sorcerer', archetypeGrantsPsychicPowers: true }))).toBe(true);
     });
 
@@ -211,7 +211,7 @@ describe('BCSystemConfig: Khorne / psyker lock (core.md :2750)', () => {
     });
 });
 
-describe('BCSystemConfig: tier and rank definitions (core.md :2581, :2677)', () => {
+describe('BCSystemConfig: tier and rank definitions', () => {
     it('declares the 4 BC characteristic tiers in RAW order', () => {
         expect(cfg.getCharacteristicTiers().map((t) => t.key)).toEqual(['simple', 'intermediate', 'trained', 'expert']);
     });

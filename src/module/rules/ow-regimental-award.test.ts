@@ -209,7 +209,7 @@ describe('buildBattlefieldPanel', () => {
 });
 
 describe('medalAwardDescriptor (content#32)', () => {
-    const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-core-items-medals.Item.OWcMedalWingSk01';
+    const WINGED_SKULL = 'Compendium.wh40k-rpg.ow-medals.Item.OWcMedalWingSk01';
 
     it('names the medal and shows its Squad Bonus as plain text', () => {
         expect(

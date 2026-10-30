@@ -161,7 +161,7 @@ describe('advance pricing', () => {
     });
 
     it('charges a power its printed XP cost, as a PC pays it (#642)', () => {
-        // Cauterise prints "Value: 300 xp" (DH2 core p. 206); the PR heuristic would charge 200.
+        // Cauterise prints "Value: 300 xp" (DH2); the PR heuristic would charge 200.
         const powers = [
             { cost: 300, prCost: 1 },
             { cost: null, prCost: 2 },

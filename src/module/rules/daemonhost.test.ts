@@ -3,7 +3,7 @@ import type { BindingStrength } from './daemon-weapon';
 import { DAEMONHOST_TIERS } from './daemonhost';
 
 /**
- * Daemonhost creation + binding tiers (#85 — beyond.md p.66). Each
+ * Daemonhost creation + binding tiers (#85 — DH2). Each
  * Binding Strength tier maps to a daemonhost with a stat baseline, the
  * number of Unholy Changes applied, and the Influence modifier + minimum
  * required to summon as a Reinforcement.

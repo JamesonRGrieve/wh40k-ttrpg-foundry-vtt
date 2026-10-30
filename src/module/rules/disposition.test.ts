@@ -23,7 +23,7 @@ import {
 } from './disposition';
 
 /**
- * NPC Disposition (#73). DH2 (core p. 277) is a 0–100 characteristic moved by the
+ * NPC Disposition (#73). DH2 is a 0–100 characteristic moved by the
  * NPC's Personality; DH1/RT/DW and BC/OW print a seven-step ladder whose step sets
  * the Interaction test's difficulty and moves with its degrees; IM has none.
  */
@@ -31,7 +31,7 @@ const { characteristic, ladderStepPlusDegrees, ladderDegrees, none } = DISPOSITI
 
 const EMPTY_ROW: PersonalityRow = { modifier: 0, effect: '', basis: '' };
 
-/** The Aggressive Personality (DH2 Table 8–5), as a GM would enter it. */
+/** The Aggressive Personality (from DH2's Personality table), as a GM would enter it. */
 function aggressive(): NpcPersonality {
     return {
         name: 'Aggressive',
@@ -89,7 +89,7 @@ describe('clampDisposition / isZeroDisposition', () => {
     });
 });
 
-describe('ladder (DH1 p. 230, RT p. 294, BC p. 276, DW p. 276, OW p. 304)', () => {
+describe('ladder (DH1, RT, BC, DW, OW)', () => {
     it('sets the difficulty from Very Hard (−30) to Easy (+30)', () => {
         expect([-3, -2, -1, 0, 1, 2, 3].map((step) => ladderModifier(step, ladderDegrees))).toEqual([-30, -20, -10, 0, 10, 20, 30]);
         expect(ladderModifier(9, ladderDegrees)).toBe(30);
@@ -123,7 +123,7 @@ describe('ladder (DH1 p. 230, RT p. 294, BC p. 276, DW p. 276, OW p. 304)', () =
     });
 });
 
-describe('Personality (DH2 pp. 277–280)', () => {
+describe('Personality (DH2)', () => {
     it('lists the six Interaction skills a Personality table prints', () => {
         expect([...PERSONALITY_SKILLS]).toEqual(['charm', 'command', 'deceive', 'inquiry', 'intimidate', 'scrutiny']);
         expect(isPersonalitySkill('charm')).toBe(true);

@@ -4,7 +4,7 @@ import type { ComradeRecord } from '../rules/ow-comrade.ts';
 import { installApplicationV2Stub } from '../testing/app-v2-stub.ts';
 
 /**
- * The Comrade's sheet actions and GM relays (#152; OW Core p. 271): a recovery
+ * The Comrade's sheet actions and GM relays (#152; OW): a recovery
  * Order clears Fear and Pinning; Insanity and Corruption kill the Comrade at 10 in
  * one Round; a hit that struck it instead moves its state track; the end of combat
  * ends its Fear. The chat card and the actor writes are stubbed at the Foundry

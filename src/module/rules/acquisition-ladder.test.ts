@@ -11,8 +11,8 @@ import { type AcquisitionLadder, availabilityTerm, normaliseAvailability, normal
  * copy of each, on the line's game-system config.
  */
 const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
-    // DH1 Ascension Table 1-5 (p. 14). The Influence requisition test takes no
-    // craftsmanship modifier (p. 16: duration, Availability, number of individuals).
+    // A DH1 supplement's Influence availability table. The Influence requisition test
+    // takes no craftsmanship modifier (only duration, Availability, number of individuals).
     dh1: {
         availability: {
             ubiquitous: 70,
@@ -28,10 +28,10 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: null,
-        // Ascension p. 16: fails by four or more (full-ten) degrees → the group loses 1 Influence.
+        // Fails by four or more (full-ten) degrees → the group loses 1 Influence.
         failureLoss: { kind: 'flat', minDegrees: 4, loss: 1, counting: 'fullTens' },
     },
-    // DH2 core Table 5-1 / Table 5-2 (p. 141).
+    // DH2's availability and craftsmanship modifier tables.
     dh2: {
         availability: {
             ubiquitous: 'automatic',
@@ -47,10 +47,10 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -60,
         },
         craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },
-        // Core p. 269 "Excessive or Reckless Use": the DoF beyond Fellowship bonus.
+        // "Excessive or Reckless Use": the DoF beyond Fellowship bonus.
         failureLoss: { kind: 'beyondFellowshipBonus' },
     },
-    // RT core Table 9-35 (p. 272).
+    // RT's acquisition modifiers table.
     rt: {
         availability: {
             ubiquitous: 70,
@@ -66,10 +66,10 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -30 },
-        // p. 271: a failure only means waiting to try again.
+        // A failure only means waiting to try again.
         failureLoss: null,
     },
-    // BC core Table 9-11 (p. 306).
+    // BC's acquisition modifiers table.
     bc: {
         availability: {
             ubiquitous: 70,
@@ -85,10 +85,10 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
-        // p. 306: "If he fails, he does not" — no Infamy loss.
+        // "If he fails, he does not" — no Infamy loss.
         failureLoss: null,
     },
-    // OW core Table 6-2 "Company or Less" column (p. 163) and Table 6-6 (p. 167).
+    // OW's troop-difficulty table ("Company or Less" column) and craftsmanship table.
     ow: {
         availability: {
             ubiquitous: 30,
@@ -104,7 +104,7 @@ const BOOK_LADDERS: Record<string, AcquisitionLadder | null> = {
             unique: 'discretion',
         },
         craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
-        // p. 162: failure only means the item could not be obtained.
+        // Failure only means the item could not be obtained.
         failureLoss: null,
     },
     // DW spends Requisition points; IM has no availability-modified test.

@@ -44,8 +44,8 @@ describe('voidcraft hull type (#647)', () => {
     });
 
     it('knows the hull types the RT books print for unique vessels (content#31)', () => {
-        // Kroot Warsphere (Battlefleet Koronus p. 101), Wayfarer Station (RT Core p. 210) and
-        // the Bulwark (The Frozen Reaches p. 67), Ork Rok (Battlefleet Koronus p. 82).
+        // Kroot Warsphere, Wayfarer Station, the Bulwark and the Ork Rok, across the RT
+        // core rules and its supplements.
         expect(hullTypeLabelKey('battleship')).toBe('WH40K.HullType.Battleship');
         expect(hullTypeLabelKey('space-station')).toBe('WH40K.HullType.SpaceStation');
         expect(hullTypeLabelKey('repurposed-asteroid')).toBe('WH40K.HullType.RepurposedAsteroid');

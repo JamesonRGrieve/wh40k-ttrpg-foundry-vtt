@@ -1,7 +1,9 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
+import { type DeclaredPack, readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
+import { isLineBookPack } from '../utils/line-packs.ts';
 import type { CombatRoundStamp } from './counter-attack.ts';
 import {
     activeFailureConsequence,
@@ -60,7 +62,7 @@ describe('once-per-round situational rows (#101)', () => {
 });
 
 describe('failure consequences on situational rows (#101)', () => {
-    const consequence: SituationalFailureConsequence = { minDof: 4, tableUuid: 'Compendium.wh40k-rpg.dh2-core-rolltables.RollTable.x', formula: '1d5' };
+    const consequence: SituationalFailureConsequence = { minDof: 4, tableUuid: 'Compendium.wh40k-rpg.dh2-rolltables.RollTable.x', formula: '1d5' };
 
     it('fires on a failure by the threshold or more, never on a success or a smaller failure', () => {
         expect(failureConsequenceFires(consequence, { success: false, dof: 4 })).toBe(true);
@@ -84,14 +86,32 @@ describe('failure consequences on situational rows (#101)', () => {
 });
 
 /**
- * Push the Limit (DH2 Enemies Without p. 63): "Once per round, the character may
- * add +20 to an Operate test (or Survival test in the case of living steeds);
- * however, if he fails the test by 4 or more degrees of failure, immediately roll
- * 1d5 on Table 7–32: Motive Systems Critical Hit Effects … If he is riding a
- * living mount, roll 1d5 on Table 7–18: Impact Critical Effects – Leg".
+ * Push the Limit (a DH2 supplement): once per round, the character may add +20 to
+ * an Operate test (or Survival test in the case of living steeds); failing it by 4
+ * or more degrees of failure rolls 1d5 on the Motive Systems Critical Hit Effects
+ * table, or, riding a living mount, on the Impact Critical Effects – Leg table.
  */
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
-    const PACKS = resolve(__dirname, '../../packs-private');
+    const REPO_ROOT = resolve(__dirname, '../../..');
+    const PACKS = resolve(REPO_ROOT, 'src/packs-private');
+    /** A declared pack's `_source` directory under the private content root. */
+    const sourceDir = (pack: DeclaredPack): string => resolve(PACKS, pack.path.replace(/^packs\//, ''), '_source');
+    /** `line`'s book packs of `category`, by manifest flags (read only inside a test). */
+    const bookPacks = (line: string, category: string): DeclaredPack[] =>
+        readDeclaredPacks(REPO_ROOT).packs.filter((pack) => isLineBookPack(pack, line, category));
+    /** The path of `file` in whichever of `line`'s book talents packs holds it. */
+    function talentSource(line: string, file: string): string {
+        const path = bookPacks(line, 'talents')
+            .map((pack) => resolve(sourceDir(pack), file))
+            .find((candidate) => existsSync(candidate));
+        if (path === undefined) throw new Error(`no ${line} talents pack holds ${file}`);
+        return path;
+    }
+    /** The UUID a DH2 rolltables pack gives the table document `id`, wherever it is declared. */
+    function dh2TableUuid(id: string): string {
+        const pack = bookPacks('dh2', 'rolltables').find((candidate) => readdirSync(sourceDir(candidate)).some((name) => name.endsWith(`_${id}.json`)));
+        return `Compendium.wh40k-rpg.${pack?.name ?? ''}.RollTable.${id}`;
+    }
     interface PackRow {
         key: string;
         value: number;
@@ -105,22 +125,24 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
         };
     }
     // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse of a pack source document, narrowed to the fields under test
-    const read = (file: string): PackTalent => JSON.parse(readFileSync(resolve(PACKS, file), 'utf8')) as PackTalent;
+    const read = (path: string): PackTalent => JSON.parse(readFileSync(path, 'utf8')) as PackTalent;
     // Read in beforeAll, not the describe body: a skipped describe's body still runs to
     // collect its tests, so a read here fails where the private content is absent (CI).
     let dh2: PackTalent;
     let rows: PackRow[] = [];
     beforeAll(() => {
-        dh2 = read('dark-heresy-2/dh2-without-items-talents/_source/push-the-limit_nmjVhqTarVFg891j.json');
+        dh2 = read(talentSource('dh2', 'push-the-limit_nmjVhqTarVFg891j.json'));
         rows = dh2.system.modifiers.situational.skills;
     });
     const row = (key: string): PackRow | undefined => rows.find((r) => r.key === key);
     /** Whether a `Compendium.wh40k-rpg.<dh2 rolltables pack>.RollTable.<id>` UUID names a source document that exists. */
     function tableFileExists(uuid: string): boolean {
-        const pattern = /^Compendium\.wh40k-rpg\.(dh2-[a-z]+-rolltables)\.RollTable\.([A-Za-z0-9]{16})$/;
-        const dir = resolve(PACKS, 'dark-heresy-2', uuid.replace(pattern, '$1'), '_source');
+        const pattern = /^Compendium\.wh40k-rpg\.([^.]+)\.RollTable\.([A-Za-z0-9]{16})$/;
+        const pack = bookPacks('dh2', 'rolltables').find((candidate) => candidate.name === uuid.replace(pattern, '$1'));
+        if (!pattern.test(uuid) || pack === undefined) return false;
+        const dir = sourceDir(pack);
         const suffix = `_${uuid.replace(pattern, '$2')}.json`;
-        return pattern.test(uuid) && existsSync(dir) && readdirSync(dir).some((name) => name.endsWith(suffix));
+        return existsSync(dir) && readdirSync(dir).some((name) => name.endsWith(suffix));
     }
 
     it('+20 once per round on Operate and on Survival (living steed)', () => {
@@ -128,15 +150,15 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
         expect(row('survival')).toMatchObject({ value: 20, oncePerRound: true });
     });
 
-    it('4+ DoF: 1d5 on Motive Systems (Operate) or Impact – Leg (Survival), each an existing DH2 core rolltable', () => {
+    it('4+ DoF: 1d5 on Motive Systems (Operate) or Impact – Leg (Survival), each an existing DH2 rolltable', () => {
         expect(row('operate')?.failureConsequence).toEqual({
             minDof: 4,
-            tableUuid: 'Compendium.wh40k-rpg.dh2-core-rolltables.RollTable.pYlUeFBqbiSNrpIh',
+            tableUuid: dh2TableUuid('pYlUeFBqbiSNrpIh'),
             formula: '1d5',
         });
         expect(row('survival')?.failureConsequence).toEqual({
             minDof: 4,
-            tableUuid: 'Compendium.wh40k-rpg.dh2-core-rolltables.RollTable.Eadf0zjxW4iWpdqT',
+            tableUuid: dh2TableUuid('Eadf0zjxW4iWpdqT'),
             formula: '1d5',
         });
         for (const r of rows) expect(tableFileExists(r.failureConsequence?.tableUuid ?? '')).toBe(true);
@@ -148,7 +170,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
     });
 
     it('the OW Push the Limit (a different printed rule) carries no DH2 limit or table', () => {
-        const ow = read('only-war/ow-hammer-items-talents/_source/push-the-limit_XV2bPZ2H5z8VydMh.json');
+        const ow = read(talentSource('ow', 'push-the-limit_XV2bPZ2H5z8VydMh.json'));
         expect(ow.system.modifiers.situational.skills.some((r) => r.oncePerRound === true || r.failureConsequence !== undefined)).toBe(false);
     });
 });

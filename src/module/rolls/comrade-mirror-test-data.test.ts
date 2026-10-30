@@ -3,7 +3,7 @@ import type { ComradeRecord } from '../rules/ow-comrade.ts';
 import { installApplicationV2Stub } from '../testing/app-v2-stub.ts';
 
 /**
- * A PC's Fear or Pinning test carries its Comrade (#152; OW Core p. 271): the card
+ * A PC's Fear or Pinning test carries its Comrade (#152; OW): the card
  * states the Comrade's result, and a Comrade that fails with its PC is marked
  * fleeing or pinned on the PC. The PC's own test (the skill pipeline's text) is
  * stubbed; what the mirror adds is asserted.

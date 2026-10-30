@@ -1,8 +1,10 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { materializeItemVariants } from '../utils/item-variant-utils.ts';
+import { isLineBookPack } from '../utils/line-packs.ts';
 import {
     type CombatRoundStamp,
     counterAttackOffer,
@@ -97,24 +99,33 @@ describe('round stamps', () => {
  * other five cores print no limit beyond the Reaction.
  */
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Counter Attack pack data', () => {
-    const PACKS = resolve(__dirname, '../../packs-private');
+    const REPO_ROOT = resolve(__dirname, '../../..');
+    /** The path of `file` in whichever of `packLine`'s book talents packs holds it, by manifest flags. */
+    function talentSource(packLine: string, file: string): string {
+        for (const pack of readDeclaredPacks(REPO_ROOT).packs) {
+            if (!isLineBookPack(pack, packLine, 'talents')) continue;
+            const path = resolve(REPO_ROOT, 'src/packs-private', pack.path.replace(/^packs\//, ''), '_source', file);
+            if (existsSync(path)) return path;
+        }
+        throw new Error(`no ${packLine} talents pack holds ${file}`);
+    }
     /** The talent's `reactionHooks` as the compendium join resolves them for `line`. */
-    function hooksFor(file: string, line: 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow'): ReactionHook[] {
+    function hooksFor(packLine: string, file: string, line: 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow'): ReactionHook[] {
         // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse of a pack source document; the item-variant resolver takes its untyped system bag
-        const doc = JSON.parse(readFileSync(resolve(PACKS, file), 'utf8')) as { system: Parameters<typeof materializeItemVariants>[0] };
+        const doc = JSON.parse(readFileSync(talentSource(packLine, file), 'utf8')) as { system: Parameters<typeof materializeItemVariants>[0] };
         return materializeItemVariants(doc.system, line)['reactionHooks'] as ReactionHook[];
     }
-    const SHARED = 'dark-heresy-2/dh2-core-items-talents/_source/counter-attack_DH2aTlnt00000006.json';
+    const SHARED = 'counter-attack_DH2aTlnt00000006.json';
 
     it('DH2: once per round, –20', () => {
-        expect(hooksFor(SHARED, 'dh2')).toEqual([PER_ROUND]);
+        expect(hooksFor('dh2', SHARED, 'dh2')).toEqual([PER_ROUND]);
     });
 
     it.each(['bc', 'ow', 'rt', 'dw'] as const)('%s: –20, no limit of its own', (line) => {
-        expect(hooksFor(SHARED, line)).toEqual([UNLIMITED]);
+        expect(hooksFor('dh2', SHARED, line)).toEqual([UNLIMITED]);
     });
 
     it('DH1: –20, no limit of its own', () => {
-        expect(hooksFor('dark-heresy-1/dh1-core-items-talents/_source/counter-attack_eemvc5UFqlY96qI8.json', 'dh1')).toEqual([UNLIMITED]);
+        expect(hooksFor('dh1', 'counter-attack_eemvc5UFqlY96qI8.json', 'dh1')).toEqual([UNLIMITED]);
     });
 });
