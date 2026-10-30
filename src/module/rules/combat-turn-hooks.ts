@@ -14,6 +14,12 @@
  * fans out to subscribers. Deliberately conservative: every subscriber call is
  * isolated, so one throwing handler can never wedge the turn cycle or block the
  * others.
+ *
+ * Subscribers run ONCE per boundary, on the active GM's client. `updateCombat`
+ * fires on every connected client, and the subscribers reset shared state on the
+ * combatant (the action budget, the movement budget): each player client writing
+ * it too failed with a permission error for every combatant it did not own
+ * (#414, seen with a second player connected).
  */
 
 /** Minimal Combatant view a turn subscriber receives. Kept structural so the
@@ -106,6 +112,7 @@ function safeInvoke(callback: TurnCallback, combatant: TurnCombatant | null, com
 
 /** updateCombat handler: derive the boundary and fan out to subscribers. */
 function onUpdateCombat(combat: TurnCombat, changes: { turn?: number | null | undefined; round?: number | null | undefined }): void {
+    if (game.users.activeGM?.isSelf !== true) return;
     try {
         const boundary = deriveTurnBoundary({
             turnChanged: 'turn' in changes || 'round' in changes,

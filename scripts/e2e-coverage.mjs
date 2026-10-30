@@ -537,6 +537,9 @@ recordDimension('combat.attack-flow', covered['combat.attack-flow'], COMBAT_ATTA
 // tests/e2e/evasion-counter-attack.spec.ts — EVASION_FLOWS.
 const EVASION_FLOWS = ['prompt', 'parry-negates', 'counter-attack', 'take-hit', 'counter-attack-spent', 'grapple-blocked'];
 recordDimension('evasion.flow', covered['evasion.flow'], EVASION_FLOWS);
+// tests/e2e/evasion-two-client.spec.ts — TWO_CLIENT_FLOWS (#414: GM, defending player and bystander clients).
+const EVASION_TWO_CLIENT_FLOWS = ['owner-prompted', 'bystander-not-prompted', 'partial-dodge', 'reaction-spent', 'full-evade'];
+recordDimension('evasion.two-client.flow', covered['evasion.two-client.flow'], EVASION_TWO_CLIENT_FLOWS);
 // tests/e2e/auto-fire-cap.spec.ts — AUTO_FIRE_FLOWS.
 const AUTO_FIRE_FLOWS = ['dh2-capped', 'dh2-under-cap', 'dh1-capped', 'dh1-under-cap'];
 recordDimension('auto-fire.flow', covered['auto-fire.flow'], AUTO_FIRE_FLOWS);

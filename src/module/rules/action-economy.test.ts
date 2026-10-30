@@ -81,6 +81,36 @@ describe('action-economy combat glue (#264)', () => {
         expect(c.flag).toMatchObject({ half: 1 });
     });
 
+    it('finds the actor in a started combat on a scene this client does not view (#414: a player elsewhere)', () => {
+        const c = makeCombatant('a1');
+        // The player's client views another scene: no `game.combat`, but the GM's combat is started.
+        vi.stubGlobal('game', { combat: null, combats: [{ started: true, combatant: c, combatants: [c] }] });
+        vi.stubGlobal('console', { ...console, error: vi.fn() });
+        expect(spendActionForActor('a1', 'reaction')).toMatchObject({ reactionRemaining: 0 });
+        expect(readActionsSpent(c)).toMatchObject({ reaction: 1 });
+        expect(actionBudgetForActor('a1')).toMatchObject({ reactionRemaining: 0 });
+    });
+
+    it('prefers the viewed combat, and ignores a combat that has not started', () => {
+        const viewed = makeCombatant('a1');
+        const elsewhere = makeCombatant('a1');
+        const unstarted = makeCombatant('a2');
+        const viewedCombat = { started: true, combatant: viewed, combatants: [viewed] };
+        vi.stubGlobal('game', {
+            combat: viewedCombat,
+            combats: [
+                { started: true, combatant: elsewhere, combatants: [elsewhere] },
+                viewedCombat,
+                { started: false, combatant: unstarted, combatants: [unstarted] },
+            ],
+        });
+        vi.stubGlobal('console', { ...console, error: vi.fn() });
+        spendActionForActor('a1', 'reaction');
+        expect(readActionsSpent(viewed)).toMatchObject({ reaction: 1 });
+        expect(readActionsSpent(elsewhere)).toEqual(EMPTY_ACTIONS_SPENT);
+        expect(spendActionForActor('a2', 'reaction'), 'an unstarted combat holds no budget').toBeNull();
+    });
+
     it('returns null for an actor with no combatant', () => {
         stubCombat(makeCombatant('other'));
         expect(spendActionForActor('missing', 'full')).toBeNull();
@@ -109,6 +139,8 @@ describe('action-economy combat glue (#264)', () => {
                 if (event === 'updateCombat') updateCombatHandler = fn;
             },
         });
+        // The turn boundary fans out on the active GM's client only.
+        vi.stubGlobal('game', { users: { activeGM: { isSelf: true } } });
         vi.stubGlobal('console', { ...console, error: vi.fn() });
 
         const started = makeCombatant('a1', { full: 0, half: 2, free: 3, reaction: 1 });

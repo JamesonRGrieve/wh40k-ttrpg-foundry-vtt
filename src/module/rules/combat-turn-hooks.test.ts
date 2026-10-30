@@ -51,14 +51,15 @@ describe('deriveTurnBoundary (#413)', () => {
 });
 
 describe('combat turn-hook fan-out (#413)', () => {
-    /** Capture the updateCombat handler registerCombatTurnHooks installs. */
-    function installHooks(): (combat: TurnCombat, changes: { turn?: number; round?: number }) => void {
+    /** Capture the updateCombat handler registerCombatTurnHooks installs, on the active GM's client unless `activeGM` is false. */
+    function installHooks(activeGM = true): (combat: TurnCombat, changes: { turn?: number; round?: number }) => void {
         let handler: ((combat: TurnCombat, changes: { turn?: number; round?: number }) => void) | undefined;
         vi.stubGlobal('Hooks', {
             on: (event: string, fn: (combat: TurnCombat, changes: { turn?: number; round?: number }) => void) => {
                 if (event === 'updateCombat') handler = fn;
             },
         });
+        vi.stubGlobal('game', { users: { activeGM: { isSelf: activeGM } } });
         vi.stubGlobal('console', { ...console, error: vi.fn() });
         registerCombatTurnHooks();
         if (handler === undefined) throw new Error('updateCombat handler was not registered');
@@ -80,6 +81,17 @@ describe('combat turn-hook fan-out (#413)', () => {
 
         expect(ended).toEqual(['c-a']);
         expect(started).toEqual(['c-b']);
+    });
+
+    it('fans out only on the active GM’s client, so a player client never writes another combatant’s budget (#414)', () => {
+        const handler = installHooks(false);
+        const start = vi.fn();
+        const end = vi.fn();
+        onTurnStart(start);
+        onTurnEnd(end);
+        handler(combat, { turn: 1 });
+        expect(start).not.toHaveBeenCalled();
+        expect(end).not.toHaveBeenCalled();
     });
 
     it('does not fire when no turn/round changed', () => {

@@ -26,7 +26,6 @@ import { activeConditionMechanics, type ConditionBearer } from './condition-regi
 
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 
-/* eslint-disable no-restricted-syntax -- boundary: Foundry Combat / Combatant are loosely typed framework surfaces; reads are structural and guarded, all wrapped in resolve-on-error */
 // Kept minimal (no getFlag/setFlag) so Foundry's Combat/Combatant are structurally
 // assignable to it; the flag accessor is reached via the cast below (its getFlag
 // scope type is too narrow to put on the contravariant hook handler param).
@@ -37,8 +36,9 @@ type LooseCombat = {
     combatants?: Iterable<LooseCombatant> | null | undefined;
 };
 type FlagAccessor = {
-    getFlag?: (scope: string, key: string) => unknown;
-    setFlag?: (scope: string, key: string, value: ActionsSpent) => Promise<unknown>;
+    /** The persisted budget this module writes: partial, or absent on a fresh combatant (coerceActionsSpent re-validates it). */
+    getFlag?: (scope: string, key: string) => Partial<ActionsSpent> | null | undefined;
+    setFlag?: (scope: string, key: string, value: ActionsSpent) => Promise<object>;
 };
 
 /** Read a combatant's spent-actions budget (fresh when unset / unreadable). */
@@ -54,13 +54,20 @@ function writeActionsSpent(combatant: LooseCombatant | null | undefined, spent: 
     if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, ACTIONS_SPENT_FLAG, spent);
 }
 
-/** Locate the combatant for an actor id in the active combat. */
+/** Locate the combatant for an actor id: in the combat this client views, else in any started combat. */
 function findCombatant(actorId: string): LooseCombatant | null {
-    const combat = (globalThis as { game?: { combat?: LooseCombat | null } }).game?.combat;
-    const combatants = combat?.combatants;
-    if (!combatants) return null;
-    for (const c of combatants) {
-        if (c.actorId === actorId) return c;
+    // `game.combat` is the combat on the scene THIS client views. A player looking at
+    // another scene (their own map, a journal handout) has none there, yet their actor
+    // still fights in the GM's started combat — and its Reaction must be read and spent
+    // on that combatant, not silently skipped (#414). Prefer the viewed combat, then
+    // any other started one that holds the actor.
+    const g = (globalThis as { game?: { combat?: LooseCombat | null; combats?: Iterable<LooseCombat> | null } }).game;
+    const viewed = g?.combat ?? null;
+    const started = [...(g?.combats ?? [])].filter((combat) => combat !== viewed && combat.started === true);
+    for (const combat of viewed === null ? started : [viewed, ...started]) {
+        for (const c of combat.combatants ?? []) {
+            if (c.actorId === actorId) return c;
+        }
     }
     return null;
 }
@@ -118,7 +125,6 @@ function resetOnTurnStart(combatant: TurnCombatant | null): void {
         console.error('WH40K | action economy (turn reset) — ignoring', err);
     }
 }
-/* eslint-enable no-restricted-syntax */
 
 /** Register the per-turn action-economy reset via the shared turn-start hook (#413). */
 export function registerActionEconomy(): void {

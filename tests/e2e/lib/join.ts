@@ -56,14 +56,14 @@ const GAME_NAVIGATION_TIMEOUT_MS = scaledMs(30_000);
  * One attempt to reach /join and confirm the world's user list is loaded.
  * `backoff` inserts a short wait first (used on retries) to let a slow world boot
  * catch up. Returns true once the username field is present and the join page's
- * `game.users` contains the GM.
+ * `game.users` contains the user joining.
  *
  * V14 (build 368) replaced the user `<select name="userid">` with a typed
  * `<input name="username">`, resolved client-side via `game.users` by name. The
  * old wait for a populated `<option>` never matched, so every spec burned its
  * whole join budget and then skipped.
  */
-async function joinFormReady(page: Page, origin: string, backoff: boolean): Promise<boolean> {
+async function joinFormReady(page: Page, origin: string, userName: string, backoff: boolean): Promise<boolean> {
     if (backoff) await page.waitForTimeout(2_000);
     await page.goto(`${origin}/join`);
     await page.waitForLoadState('networkidle');
@@ -75,7 +75,7 @@ async function joinFormReady(page: Page, origin: string, backoff: boolean): Prom
                 (globalThis as unknown as { game?: { users?: { some?: (fn: (u: { name: string }) => boolean) => boolean } } }).game?.users?.some?.(
                     (u) => u.name === name,
                 ) === true,
-            GM_USER_NAME,
+            userName,
             { timeout: JOIN_ATTEMPT_TIMEOUT_MS },
         );
         return true;
@@ -85,6 +85,15 @@ async function joinFormReady(page: Page, origin: string, backoff: boolean): Prom
 }
 
 export async function joinAsGM(page: Page): Promise<boolean> {
+    return joinAsUser(page, GM_USER_NAME);
+}
+
+/**
+ * Join this worker's test world as the named user (no password), the same way
+ * {@link joinAsGM} joins as the GM. A player user must exist first: the GM creates
+ * it, then a second client (`openClient()`) joins as it.
+ */
+export async function joinAsUser(page: Page, userName: string): Promise<boolean> {
     const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
     // The first spec to reach /join can beat the world's boot: the user list
     // (`game.users` holding the Gamemaster) isn't loaded until the world finishes loading.
@@ -117,11 +126,11 @@ export async function joinAsGM(page: Page): Promise<boolean> {
     let populated = false;
     for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
         // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
-        populated = await joinFormReady(page, origin, attempt > 0);
+        populated = await joinFormReady(page, origin, userName, attempt > 0);
         if (populated) break;
     }
     if (!populated) return false;
-    await page.fill('input[name="username"]', GM_USER_NAME);
+    await page.fill('input[name="username"]', userName);
     await page.click('button[name="join"]');
     await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS });
     let ready = false;

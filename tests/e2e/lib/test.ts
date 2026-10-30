@@ -1,6 +1,6 @@
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { test as base } from '@playwright/test';
+import { test as base, type Page, type TestInfo } from '@playwright/test';
 import { type CapturedError, formatCapturedError, unexpectedErrors } from './console-guard';
 import { installDialogOpener } from './dialog-opener';
 import { installInPageHelpers } from './in-page-helpers';
@@ -26,6 +26,11 @@ import { installInPageHelpers } from './in-page-helpers';
  *  3. In-page helpers on every document the page loads: `globalThis.wh40kE2E`
  *     (scaled `withTimeout` / `waitFor` / `settle`, see in-page-helpers.ts) and
  *     `globalThis.wh40kOpenDialog` (see dialog-opener.ts).
+ *
+ *  4. `openClient()`: a second (third, …) browser client in its own context — a
+ *     separate Foundry session that joins as another user — with the same coverage,
+ *     error guard and in-page helpers as `page`. For the specs that need a player
+ *     and the GM at the table together.
  */
 
 const RAW_DIR = resolve(__dirname, '..', '..', '..', '.e2e-raw-coverage');
@@ -36,31 +41,34 @@ const GUARD_MODE = process.env['E2E_CONSOLE_GUARD'] ?? 'on';
 
 let runCounter = 0;
 
-export const test = base.extend({
-    page: async ({ page }, use, testInfo) => {
-        // ── Browser-error guard: capture BEFORE the test runs so nothing is missed.
-        const errors: CapturedError[] = [];
-        const onPageError = (err: Error): void => {
-            errors.push(err.stack === undefined ? { kind: 'pageerror', text: err.message } : { kind: 'pageerror', text: err.message, stack: err.stack });
-        };
-        const onConsole = (msg: { type: () => string; text: () => string }): void => {
-            if (msg.type() === 'error') errors.push({ kind: 'console.error', text: msg.text() });
-        };
-        if (GUARD_MODE !== 'off') {
-            page.on('pageerror', onPageError);
-            page.on('console', onConsole);
-        }
+/**
+ * Instrument a page for a test: start the error guard and coverage capture and
+ * install the in-page helpers. The returned `finish` dumps the coverage and,
+ * for a test that would otherwise pass, fails it on an unexpected browser error.
+ */
+async function instrumentPage(page: Page, testInfo: TestInfo, clientLabel: string): Promise<() => Promise<void>> {
+    // ── Browser-error guard: capture BEFORE the test runs so nothing is missed.
+    const errors: CapturedError[] = [];
+    const onPageError = (err: Error): void => {
+        errors.push(err.stack === undefined ? { kind: 'pageerror', text: err.message } : { kind: 'pageerror', text: err.message, stack: err.stack });
+    };
+    const onConsole = (msg: { type: () => string; text: () => string }): void => {
+        if (msg.type() === 'error') errors.push({ kind: 'console.error', text: msg.text() });
+    };
+    if (GUARD_MODE !== 'off') {
+        page.on('pageerror', onPageError);
+        page.on('console', onConsole);
+    }
 
-        try {
-            await page.coverage.startJSCoverage({ resetOnNavigation: false });
-        } catch {
-            // page.coverage is chromium-only; non-chromium projects skip.
-        }
-        await installInPageHelpers(page);
-        await installDialogOpener(page);
+    try {
+        await page.coverage.startJSCoverage({ resetOnNavigation: false });
+    } catch {
+        // page.coverage is chromium-only; non-chromium projects skip.
+    }
+    await installInPageHelpers(page);
+    await installDialogOpener(page);
 
-        await use(page);
-
+    return async (): Promise<void> => {
         try {
             const entries = await page.coverage.stopJSCoverage();
             const filtered = entries.filter((e) => e.url.includes('/systems/wh40k-rpg/module/') && e.url.endsWith('.js'));
@@ -69,7 +77,7 @@ export const test = base.extend({
                 // separate process with its own runCounter) never collide on a
                 // shared filename when two specs share a title.
                 const slot = String(testInfo.parallelIndex).padStart(2, '0');
-                const id = `w${slot}-${String(++runCounter).padStart(4, '0')}-${testInfo.title.replace(/[^a-z0-9]/gi, '_').slice(0, 60)}`;
+                const id = `w${slot}-${String(++runCounter).padStart(4, '0')}-${clientLabel}${testInfo.title.replace(/[^a-z0-9]/gi, '_').slice(0, 60)}`;
                 writeFileSync(resolve(RAW_DIR, `${id}.json`), JSON.stringify(filtered));
             }
         } catch {
@@ -91,6 +99,30 @@ export const test = base.extend({
         if (unexpected.length > 0) {
             const list = unexpected.slice(0, 10).map(formatCapturedError).join('\n');
             throw new Error(`Browser emitted ${unexpected.length} unexpected error(s) (global console guard; allowlist in lib/console-guard.ts):\n${list}`);
+        }
+    };
+}
+
+export const test = base.extend<{ openClient: () => Promise<Page> }>({
+    page: async ({ page }, use, testInfo) => {
+        const finish = await instrumentPage(page, testInfo, '');
+        await use(page);
+        await finish();
+    },
+    openClient: async ({ browser }, use, testInfo) => {
+        const opened: Array<{ close: () => Promise<void>; finish: () => Promise<void> }> = [];
+        await use(async () => {
+            const context = await browser.newContext();
+            const page = await context.newPage();
+            const finish = await instrumentPage(page, testInfo, `c${String(opened.length + 1)}-`);
+            opened.push({ close: async () => context.close(), finish });
+            return page;
+        });
+        for (const client of opened) {
+            // eslint-disable-next-line no-await-in-loop -- each client's coverage is dumped and its guard checked before its context closes
+            await client.finish();
+            // eslint-disable-next-line no-await-in-loop -- see above
+            await client.close();
         }
     },
 });

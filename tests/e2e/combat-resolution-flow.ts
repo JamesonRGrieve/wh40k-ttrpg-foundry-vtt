@@ -437,16 +437,28 @@ export async function viewScene(page: Page, sceneId: string | null): Promise<voi
     }, sceneId);
 }
 
+/** Create a Player-role user (no password) for a second client to join as; returns its id. */
+export async function createPlayer(page: Page, name: string): Promise<string> {
+    return page.evaluate(async (userName) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `User` global has no browser-side types
+        const g = globalThis as unknown as { User: { create: (data: object) => Promise<{ id: string } | null> } };
+        const user = await g.User.create({ name: userName, role: 1 });
+        if (user === null) throw new Error(`could not create user ${userName}`);
+        return user.id;
+    }, name);
+}
+
 /** Delete documents by id from their world collections (best-effort; for teardown). */
-export async function deleteDocuments(page: Page, docs: { actors?: string[]; scenes?: string[]; combats?: string[] }): Promise<void> {
+export async function deleteDocuments(page: Page, docs: { actors?: string[]; scenes?: string[]; combats?: string[]; users?: string[] }): Promise<void> {
     await page.evaluate(async (ids) => {
         interface Deletable {
             delete: () => Promise<object>;
         }
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game` global has no browser-side types
-        const g = globalThis as unknown as Record<'game', Record<'actors' | 'scenes' | 'combats', { get: (id: string) => Deletable | undefined }>>;
+        const g = globalThis as unknown as Record<'game', Record<'actors' | 'scenes' | 'combats' | 'users', { get: (id: string) => Deletable | undefined }>>;
         for (const id of ids.combats ?? []) await g.game.combats.get(id)?.delete();
         for (const id of ids.scenes ?? []) await g.game.scenes.get(id)?.delete();
         for (const id of ids.actors ?? []) await g.game.actors.get(id)?.delete();
+        for (const id of ids.users ?? []) await g.game.users.get(id)?.delete();
     }, docs);
 }
