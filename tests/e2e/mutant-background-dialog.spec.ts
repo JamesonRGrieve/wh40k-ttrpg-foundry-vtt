@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { scanContrast } from './lib/contrast';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import {
     LOWEST_FACE,
@@ -34,7 +35,7 @@ import {
 
 const DIALOG = 'form.mutant-background-dialog';
 const VITALS = 'section.tab[data-tab="overview"] [data-wh40k-hook="overview-vitals"]';
-const MUTANT_ORIGIN = 'Compendium.wh40k-rpg.dh2-within-origins-backgrounds.Item.DH2WMutBkg000006';
+const MUTANT_ORIGIN = compendiumUuid({ line: 'dh2', category: 'origins-backgrounds' }, 'DH2WMutBkg000006');
 
 /** Open the dialog for an actor through the GM launcher; returns the dialog's element id. */
 async function openForActor(page: Page, actorId: string): Promise<string> {

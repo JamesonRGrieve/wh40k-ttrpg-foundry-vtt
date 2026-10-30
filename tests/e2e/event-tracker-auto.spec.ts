@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -33,7 +34,7 @@ const EVENT_TRACKER_AUTO_FLOWS = ['item-acquired-auto-resolves', 'gm-undo-persis
 
 type FlowName = (typeof EVENT_TRACKER_AUTO_FLOWS)[number];
 
-const BOLAS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.1w94jpt1uzmfph00';
+const BOLAS = compendiumUuid({ line: 'dh2', category: 'weapons' }, '1w94jpt1uzmfph00');
 const PC_NAME = 'E2E Tracker Acolyte';
 /**
  * Unique per run. The tracker's resolved and suppressed sets are world settings that

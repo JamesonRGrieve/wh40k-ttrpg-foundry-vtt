@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { emptyContentSections, shownContentSections } from './content-sections';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -28,7 +29,7 @@ import { expect, test } from './lib/test';
 const ACTOR_NAME = 'e2e-dw-distinction-brother';
 const PANEL = '[data-wh40k-hook="dw-distinction-entry"]';
 const PANEL_ROOT = '.wh40k-dw-distinction-panel';
-const COMMAND_AND_CONTROL = 'Compendium.wh40k-rpg.dw-rites-items-special-abilities.Item.d3ca0b695ce56753';
+const COMMAND_AND_CONTROL = compendiumUuid({ line: 'dw', category: 'special-abilities' }, 'd3ca0b695ce56753');
 const REWARD_FIXTURE = 'e2e Fixture Distinction';
 const FREEFORM_SETTING = 'freeform-characters';
 const SCREENSHOT_DIR = resolve(__dirname, '..', '..', '.e2e-screenshots');

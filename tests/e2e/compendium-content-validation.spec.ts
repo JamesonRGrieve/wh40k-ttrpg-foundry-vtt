@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId, type PackQuery } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
@@ -35,54 +36,65 @@ import { scaledMs } from './lib/timing';
  * Strategy mirrors `weapon-attack.spec.ts`: one page.evaluate per pack
  * wrapped in `withTimeout(p, label, <scaled 30s>)` so a slow pack can't hang the
  * whole spec. Read-only — no documents are created, updated, or deleted.
- * Each pack records a flow under `<packId>::validated` so the orchestrator
- * can sum per-pack coverage.
+ * Each pack records a flow under `<line>-<category>::validated` (homebrew packs
+ * under their own id) so the orchestrator can sum per-pack coverage.
  *
  * The enumerated pack list below is the canonical denominator. Adding a
  * new system pack means adding it here AND to COMPENDIUM_CONTENT_FLOWS in
  * scripts/e2e-coverage.mjs.
  */
 
-const COMPENDIUM_CONTENT_FLOWS = [
-    'bc-core-items-talents::validated',
-    'bc-core-items-weapons::validated',
-    'bc-core-origins-archetypes::validated',
-    'dh1-core-items-talents::validated',
-    'dh1-core-items-weapons::validated',
-    'dh2-core-items-talents::validated',
-    'dh2-core-items-weapons::validated',
-    'dh2-core-items-skills::validated',
-    'dh2-core-items-conditions::validated',
-    'dh2-core-items-traits::validated',
-    'dh2-core-origins-homeworlds::validated',
-    'dh2-core-actors-bestiary::validated',
-    'dh2-core-rolltables::validated',
-    'dh2-core-journals::validated',
-    'dw-core-items-talents::validated',
-    'dw-core-items-weapons::validated',
-    'dw-core-origins-chapters::validated',
-    'hb-dh2-items-weapons::validated',
-    'hb-dh2-items-actors::validated',
-    'ow-core-items-talents::validated',
-    'ow-core-items-weapons::validated',
-    'ow-core-origins-homeworlds::validated',
-    'rt-core-items-talents::validated',
-    'rt-core-items-weapons::validated',
-    'rt-core-vehicles-voidcraft::validated',
-    'rt-core-items-traits::validated',
-] as const;
+/** One probed pack: its coverage flow, and a document pinning which of its line's packs of that category it is. */
+interface ProbedPack {
+    flow: string;
+    query: PackQuery;
+    docId: string;
+}
 
-type FlowName = (typeof COMPENDIUM_CONTENT_FLOWS)[number];
+const PROBED_PACKS = [
+    { flow: 'bc-talents::validated', query: { line: 'bc', category: 'talents' }, docId: 'wruUiFND0cvAy3yV' },
+    { flow: 'bc-weapons::validated', query: { line: 'bc', category: 'weapons' }, docId: 'PHbO6y6ZpEkUHoGO' },
+    { flow: 'bc-origins-archetypes::validated', query: { line: 'bc', category: 'origins-archetypes' }, docId: 'ed2e931bd08c5206' },
+    { flow: 'dh1-talents::validated', query: { line: 'dh1', category: 'talents' }, docId: '4pgMjTTeaqGqqi8S' },
+    { flow: 'dh1-weapons::validated', query: { line: 'dh1', category: 'weapons' }, docId: 'r5S6t7U8v9W0x1Y2' },
+    { flow: 'dh2-talents::validated', query: { line: 'dh2', category: 'talents' }, docId: 'Cq9lWdpTdfT23efy' },
+    { flow: 'dh2-weapons::validated', query: { line: 'dh2', category: 'weapons' }, docId: 'b0c338d6c6ddc9f2' },
+    { flow: 'dh2-skills::validated', query: { line: 'dh2', category: 'skills' }, docId: 'Ga9jZe2fOv6pQy4C' },
+    { flow: 'dh2-conditions::validated', query: { line: 'dh2', category: 'conditions' }, docId: 'ffmap8beap8f59o9' },
+    { flow: 'dh2-traits::validated', query: { line: 'dh2', category: 'traits' }, docId: 'kjk6p2WjkJEFJ20a' },
+    { flow: 'dh2-origins-homeworlds::validated', query: { line: 'dh2', category: 'origins-homeworlds' }, docId: 'DH2FrlWld0000001' },
+    { flow: 'dh2-actors-bestiary::validated', query: { line: 'dh2', category: 'actors-bestiary' }, docId: 'ilzIIA8QCJ5TxcMi' },
+    { flow: 'dh2-rolltables::validated', query: { line: 'dh2', category: 'rolltables' }, docId: 'wh40kDH2Disorder' },
+    { flow: 'dh2-journals::validated', query: { line: 'dh2', category: 'journals' }, docId: 'SkXw5Ki8FWjt9QPs' },
+    { flow: 'dw-talents::validated', query: { line: 'dw', category: 'talents' }, docId: 'geRrB2xK0YSHcVxb' },
+    { flow: 'dw-weapons::validated', query: { line: 'dw', category: 'weapons' }, docId: 'UMmfWESxww0dbi3K' },
+    { flow: 'dw-origins-chapters::validated', query: { line: 'dw', category: 'origins-chapters' }, docId: 'DWBlkTmpCh000001' },
+    { flow: 'hb-dh2-items-weapons::validated', query: { line: 'dh2', category: 'weapons', homebrew: true }, docId: 'mOBUvYP7iibkXGFF' },
+    { flow: 'hb-dh2-items-actors::validated', query: { line: 'dh2', category: 'actors', homebrew: true }, docId: '99ae93a58e182952' },
+    { flow: 'ow-talents::validated', query: { line: 'ow', category: 'talents' }, docId: 'uzlRRMNKLdIYKiCn' },
+    { flow: 'ow-weapons::validated', query: { line: 'ow', category: 'weapons' }, docId: 'FMo6McBn123PJeyG' },
+    { flow: 'ow-origins-homeworlds::validated', query: { line: 'ow', category: 'origins-homeworlds' }, docId: '6fe75d7ae9c91315' },
+    { flow: 'rt-talents::validated', query: { line: 'rt', category: 'talents' }, docId: 'HW00000000000001' },
+    { flow: 'rt-weapons::validated', query: { line: 'rt', category: 'weapons' }, docId: 'McpZcoCnjOE9yPVW' },
+    { flow: 'rt-vehicles-voidcraft::validated', query: { line: 'rt', category: 'vehicles-voidcraft' }, docId: 'DJEreXbBSu4hULI6' },
+    { flow: 'rt-traits::validated', query: { line: 'rt', category: 'traits' }, docId: 'ghEVc0D35Vb259Ss' },
+] as const satisfies readonly ProbedPack[];
+
+type FlowName = (typeof PROBED_PACKS)[number]['flow'];
+
+const COMPENDIUM_CONTENT_FLOWS: readonly FlowName[] = PROBED_PACKS.map((probed) => probed.flow);
 
 /**
- * Map a flow key (`<short-pack-id>::validated`) back to the full Foundry
- * compendium id (`wh40k-rpg.<short-pack-id>`). The short id is what the
- * orchestrator uses as the coverage denominator; the full id is what
- * `game.packs.get(...)` needs.
+ * The full Foundry compendium id (`wh40k-rpg.<pack-id>`) of each flow's pack,
+ * found by its pinned document. The flow key is what the orchestrator uses as
+ * the coverage denominator; the full id is what `game.packs.get(...)` needs.
  */
+const PACK_IDS = new Map<FlowName, string>(PROBED_PACKS.map((probed) => [probed.flow, `wh40k-rpg.${packHoldingId(probed.query, probed.docId)}`]));
+
 function flowToPackId(flow: FlowName): string {
-    const short = flow.replace(/::validated$/u, '');
-    return `wh40k-rpg.${short}`;
+    const packId = PACK_IDS.get(flow);
+    if (packId === undefined) throw new Error(`no pack for flow ${flow}`);
+    return packId;
 }
 
 interface PackProbeOutcome {
@@ -105,7 +117,8 @@ interface ProbeResult {
 }
 
 async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
-    const result = await page.evaluate(async (flows: readonly string[]) => {
+    const probes = COMPENDIUM_CONTENT_FLOWS.map((flow) => ({ flow, packId: flowToPackId(flow) }));
+    const result = await page.evaluate(async (flows: readonly { flow: string; packId: string }[]) => {
         // Materialized compendium documents have no shipped TS schema in
         // this browser-side probe; we narrow each field defensively below.
         interface RawDoc {
@@ -425,9 +438,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
             outcome.valid = perDocFailures === 0;
         }
 
-        for (const flow of flows) {
-            const short = flow.replace(/::validated$/u, '');
-            const packId = `wh40k-rpg.${short}`;
+        for (const { flow, packId } of flows) {
             const outcome: PackProbeOutcome = {
                 valid: false,
                 docCount: 0,
@@ -441,7 +452,7 @@ async function probeCompendiumContent(page: Page): Promise<ProbeResult> {
         }
 
         return { outcomes };
-    }, COMPENDIUM_CONTENT_FLOWS);
+    }, probes);
 
     return {
         outcomes: result.outcomes,

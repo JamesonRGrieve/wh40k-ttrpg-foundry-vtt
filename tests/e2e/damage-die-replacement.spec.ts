@@ -2,8 +2,8 @@ import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
- * e2e snapshot for the DH2 "Replace damage die with DoS" action (#129 —
- * core.md L10398-10414). Renders `damage-roll-chat.hbs` directly via
+ * e2e snapshot for the DH2 "Replace damage die with DoS" action (#129).
+ * Renders `damage-roll-chat.hbs` directly via
  * Foundry's `renderTemplate` API with an inline context that simulates a
  * successful attack carrying positive Degrees of Success, then asserts:
  *

@@ -1,4 +1,5 @@
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -13,7 +14,7 @@ import { expect, test } from './lib/test';
  * uses, so a live actor's +20 is guaranteed once the current system is deployed.
  */
 
-const SUPERIOR_CHIRURGEON_UUID = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000071';
+const SUPERIOR_CHIRURGEON_UUID = compendiumUuid({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000071');
 
 interface LeanProbe {
     baseline: number | null;

@@ -4,6 +4,7 @@ import { canvasClip } from './lib/canvas-capture';
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -46,10 +47,10 @@ const AREA_ATTACK_FLOWS = [
 
 type FlowName = (typeof AREA_ATTACK_FLOWS)[number];
 
-const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
-const HAND_FLAMER = `${WEAPONS}.j7K8l9M0n1O2p3Q4`;
-const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
-const STUN_GRENADE = `${WEAPONS}.yzrs7m1lir9zo000`;
+const dh2Weapon = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'weapons' }, docId);
+const HAND_FLAMER = dh2Weapon('j7K8l9M0n1O2p3Q4');
+const FRAG_GRENADE = dh2Weapon('x1Y2z3A4b5C6d7E8');
+const STUN_GRENADE = dh2Weapon('yzrs7m1lir9zo000');
 /** The Hand Flamer card's quality line (#698): its Flame and Spray, comma and space. */
 const HAND_FLAMER_EFFECTS = 'Flame, Spray';
 

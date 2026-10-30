@@ -11,7 +11,7 @@ import { cleanupProbes, messageIds, openProbeSheet, readActorSystem, showSheetTa
  *     DH2 Fate threshold since #63) and the current pool (`fate.value`);
  *   - clicking a pip spends down to it; Restore refills the pool to the total;
  *   - Burn Fate asks first, then lowers the total by one and cuts the pool to it
- *     (DH2 core p. 293), and announces the burn in chat.
+ *     (DH2 RAW), and announces the burn in chat.
  *
  * An origin's Fate grant reaching `fate.max` is applied by the Origin Path
  * Builder's commit, which needs a whole character built first; it is covered by

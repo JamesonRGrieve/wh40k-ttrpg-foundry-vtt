@@ -21,6 +21,7 @@ import {
 } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid, packHoldingName } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { forceDice, LOWEST_FACE, restoreDice } from './occult-sheet-flow';
@@ -28,7 +29,7 @@ import { forceDice, LOWEST_FACE, restoreDice } from './occult-sheet-flow';
 /**
  * Tier B: a grapple starts from the attack and ends on a Break Free (#450).
  *
- * RAW, worded alike in every line (DH2 core p. 228 "Grappling"): instead of
+ * RAW, worded alike in every line (the DH2 "Grappling" rules): instead of
  * inflicting damage with an unarmed attack, the attacker makes a Weapon Skill attack
  * with a Charge or a Standard Attack; the target may use a Reaction to avoid it; if
  * it succeeds the two are grappling with the attacker in control.
@@ -43,9 +44,12 @@ import { forceDice, LOWEST_FACE, restoreDice } from './occult-sheet-flow';
  * Strength) ends the grapple for both.
  */
 
-const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
-/** The Unarmed strike every creature is granted; its content declares it unarmed. */
-const UNARMED_UUID = 'Compendium.wh40k-rpg.im-core-items-weapons.Item.jfGqgHO39b7wpwoK';
+const CHAINSWORD_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'z5A6b7C8d9E0f1G2');
+/**
+ * The Unarmed strike every creature is granted; its content declares it unarmed.
+ * Its source file is named without its id, so its pack is found by name.
+ */
+const UNARMED_UUID = `Compendium.wh40k-rpg.${packHoldingName({ line: 'im', category: 'weapons' }, 'Unarmed')}.Item.jfGqgHO39b7wpwoK`;
 const GRAPPLE_TOGGLE = '[data-wh40k-hook="grapple-attempt-toggle"]';
 
 function dh2Character(name: string, weaponSkill: number, strength: number): object {

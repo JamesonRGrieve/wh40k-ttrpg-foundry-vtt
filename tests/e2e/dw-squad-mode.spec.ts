@@ -157,9 +157,9 @@ test.describe.serial('DwSquadModePanel (Tier B)', () => {
         expectHooksAuthored(authoredHooks, ['dw-mode-enter-btn']);
         expect(result.mode, 'data-dw-combat-mode should round-trip').toBe('squad');
         expect(result.renownRank, 'data-dw-renown-rank should round-trip').toBe('respected');
-        // Support range table — Renown rank `respected` is 60 m on both channels (Table 7-9).
-        expect(result.visualDistance, 'visual support distance should match Table 7-9 for respected (60 m)').toBe('60');
-        expect(result.vocalDistance, 'vocal support distance should match Table 7-9 for respected (60 m)').toBe('60');
+        // Support range table — Renown rank `respected` is 60 m on both channels.
+        expect(result.visualDistance, 'visual support distance should match the support range table for respected (60 m)').toBe('60');
+        expect(result.vocalDistance, 'vocal support distance should match the support range table for respected (60 m)').toBe('60');
         expect(result.sustainedRows, 'expected both sustained-ability rows to render').toBe(2);
         expect(result.hasLeaveButton, 'Squad-mode panel should render the Leave button').toBe(true);
         expect(result.hasEnterButton, 'Squad-mode panel should NOT render the Enter button').toBe(false);

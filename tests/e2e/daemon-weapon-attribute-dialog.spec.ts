@@ -2,8 +2,8 @@ import { joinOrSkip } from './lib/join';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage for the DaemonWeaponAttributeDialog (#142, beyond.md
- * L1651-1820). Drives the constructor, `_prepareContext`, and `_renderHTML`
+ * Tier B coverage for the DaemonWeaponAttributeDialog (#142).
+ * Drives the constructor, `_prepareContext`, and `_renderHTML`
  * paths so the V2 dialog appears in coverage. Then triggers the `roll`
  * action and asserts the rendered DOM gained an Attributes section.
  */

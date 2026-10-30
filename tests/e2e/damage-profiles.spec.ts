@@ -3,6 +3,7 @@ import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attac
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -35,9 +36,9 @@ const DAMAGE_PROFILE_FLOWS = [
 
 type FlowName = (typeof DAMAGE_PROFILE_FLOWS)[number];
 
-const BOLAS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.1w94jpt1uzmfph00';
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
-const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
+const BOLAS = compendiumUuid({ line: 'dh2', category: 'weapons' }, '1w94jpt1uzmfph00');
+const HAND_FLAMER = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
+const CONVERSION_BEAMER = compendiumUuid({ line: 'dh1', category: 'weapons' }, '804d243ba234097d');
 
 const marksman = { characteristics: { ballisticSkill: { base: 60 }, strength: { base: 40 } } };
 
@@ -262,7 +263,7 @@ test.describe.serial('no-damage and range-band damage profiles (Tier B, #601, #6
                 `bolas sheet damage reads "${bolasSheet?.damage ?? 'no sheet'}"`,
             );
             if (bolasSheet !== null) {
-                // #699: the Bolas is Thrown 10m (DH2 Core): a thrown weapon shows its range.
+                // #699: the Bolas is Thrown 10m (DH2): a thrown weapon shows its range.
                 await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-range-tile"]`)).toContainText('10m');
                 // #701: a thrown weapon is the round itself, so the owned Bolas shows no Clip or Reload tile.
                 await expect(page.locator(`#${bolasSheet.appId} [data-field="weapon-clip-tile"]`)).toHaveCount(0);

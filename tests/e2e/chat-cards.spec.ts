@@ -222,7 +222,7 @@ test.describe.serial('chat-card templates (Tier B)', () => {
                         icon: 'fa-bolt',
                         iconClass: 'fa-bolt',
                         description: '<p>e2e description</p>',
-                        sourceReference: 'Core Rulebook p.1',
+                        sourceReference: 'e2e reference',
 
                         // Roll-related
                         roll: baseRoll,

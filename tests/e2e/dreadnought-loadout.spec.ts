@@ -1,4 +1,5 @@
 import { joinOrSkip } from './lib/join';
+import { packHoldingName } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -62,7 +63,8 @@ interface ProbeResult {
 test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and trait items (#572/#27)', async ({ page }) => {
     await joinOrSkip(page);
 
-    const result = await page.evaluate(async (): Promise<ProbeResult> => {
+    const terracraftPackId = `wh40k-rpg.${packHoldingName({ line: 'dw', category: 'vehicles-terracraft' }, 'Adeptus Astartes Dreadnought')}`;
+    const result = await page.evaluate(async (packId): Promise<ProbeResult> => {
         const fail = (error: string): ProbeResult => ({
             error,
             data: null,
@@ -110,8 +112,8 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
             delete: () => Promise<void>;
         }
 
-        const pack = g.game.packs.get('wh40k-rpg.dw-rites-vehicles-terracraft');
-        if (pack === undefined) return fail('pack wh40k-rpg.dw-rites-vehicles-terracraft not found');
+        const pack = g.game.packs.get(packId);
+        if (pack === undefined) return fail(`pack ${packId} not found`);
         const index = await pack.getIndex();
         const entry = index.find((e) => e.name === 'Adeptus Astartes Dreadnought');
         if (entry === undefined) return fail('Dreadnought not in pack index');
@@ -191,7 +193,7 @@ test('Adeptus Astartes Dreadnought loads with hardpoints, pilot/N-A profile, and
                 /* ignore cleanup */
             }
         }
-    });
+    }, terracraftPackId);
 
     expect(result.error, `probe error: ${result.error ?? ''}`).toBeNull();
     const data = result.data;

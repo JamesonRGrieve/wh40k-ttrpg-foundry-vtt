@@ -7,7 +7,7 @@ import { expect, test } from './lib/test';
 
 /**
  * Tier B: grapple actions are Opposed Strength tests against the other
- * participant (#450; DH2 core p. 221–222).
+ * participant (#450; DH2 Grappling rules).
  *
  * The sheet's grapple roller tested the opponent's side against a copy of the
  * acting actor's own Strength and posted nothing. A grappler (Strength 45) holds

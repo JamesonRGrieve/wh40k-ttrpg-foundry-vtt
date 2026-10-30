@@ -4,7 +4,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the DW Requisition engine (#165 — core.md §"REQUISITION").
+ * Tier B coverage of the DW Requisition engine (#165).
  *
  * Creates a DW Battle-Brother character, opens its sheet, asserts the
  * requisition panel renders with the expected affordances (RP readout,

@@ -17,11 +17,12 @@ import {
 import { canvasClip } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingName } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B — what the grapple options do once they resolve (#665; DH2 core pp. 221–222).
+ * Tier B — what the grapple options do once they resolve (#665; DH2 Grappling rules).
  *
  * - Damage Opponent won: the controller's own Unarmed strike hits the held target
  *   through the normal damage path. The damage card shows the hit on the Body, the
@@ -38,8 +39,11 @@ import { expect, test } from './lib/test';
 
 const GRAPPLE_RESOLUTION_FLOWS = ['damage-opponent', 'push-opponent', 'use-item'] as const;
 
-/** The Unarmed strike every creature is granted; its content declares it unarmed. */
-const UNARMED_UUID = 'Compendium.wh40k-rpg.im-core-items-weapons.Item.jfGqgHO39b7wpwoK';
+/**
+ * The Unarmed strike every creature is granted; its content declares it unarmed.
+ * Its source file is named without its id, so its pack is found by name.
+ */
+const UNARMED_UUID = `Compendium.wh40k-rpg.${packHoldingName({ line: 'im', category: 'weapons' }, 'Unarmed')}.Item.jfGqgHO39b7wpwoK`;
 
 const PANEL = '[data-wh40k-hook="grapple-panel"]';
 const OWN = `${PANEL} [data-wh40k-hook="grapple-section"][data-grapple-own="true"]`;

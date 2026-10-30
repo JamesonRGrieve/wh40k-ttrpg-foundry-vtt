@@ -20,6 +20,7 @@ import {
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -31,10 +32,10 @@ import { expect, test } from './lib/test';
  * card prints the burst's hit ceiling as hoverable rows, and Roll Damage posts one
  * damage entry per hit actually scored:
  *
- *   - DH2 caps the TOTAL hits at the rate of fire (core p. 223): a 01 against BS 75
+ *   - DH2 caps the TOTAL hits at the rate of fire: a 01 against BS 75
  *     earns more than three hits, and three land.
  *   - DH1 caps only the EXTRA hits, so the first hit sits outside the cap and a
- *     burst can land RoF + 1 (DH1 core): four land, and the card shows the
+ *     burst can land RoF + 1: four land, and the card shows the
  *     first-hit row.
  *   - A barely-passing roll lands one hit under either rule (under the cap).
  *
@@ -55,8 +56,8 @@ interface LineCase {
 }
 
 const CASES: readonly LineCase[] = [
-    { line: 'dh2', weaponUuid: 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.r5S6t7U8v9W0x1Y2', ceiling: 3, firstHitRow: false },
-    { line: 'dh1', weaponUuid: 'Compendium.wh40k-rpg.dh1-core-items-weapons.Item.r5S6t7U8v9W0x1Y2', ceiling: 4, firstHitRow: true },
+    { line: 'dh2', weaponUuid: compendiumUuid({ line: 'dh2', category: 'weapons' }, 'r5S6t7U8v9W0x1Y2'), ceiling: 3, firstHitRow: false },
+    { line: 'dh1', weaponUuid: compendiumUuid({ line: 'dh1', category: 'weapons' }, 'r5S6t7U8v9W0x1Y2'), ceiling: 4, firstHitRow: true },
 ];
 
 /** The hits the attack's damage roll produced, read off the client's stored attack. */

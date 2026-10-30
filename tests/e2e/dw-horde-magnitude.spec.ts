@@ -4,7 +4,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the DW Horde Magnitude path (#166 — core.md p. 359).
+ * Tier B coverage of the DW Horde Magnitude path (#166).
  *
  * Creates a DW horde NPC, opens its sheet, drives `applyMagnitudeDamage`
  * through the RAW resolver, and asserts the chat-card / actor state

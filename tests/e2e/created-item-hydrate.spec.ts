@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { leanWeapon } from './lib/attack-harness';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { createProbeActor, deleteProbeActors, openProbeSheet } from './lib/sheet-probe';
 import { test } from './lib/test';
@@ -27,8 +28,8 @@ import { scaledMs } from './lib/timing';
 const CREATED_ITEM_HYDRATE_FLOWS = ['created-item-joined-at-once', 'joined-without-db-write', 'item-sheet-shows-profile'] as const;
 type FlowName = (typeof CREATED_ITEM_HYDRATE_FLOWS)[number];
 
-/** The DH2 core Hand Flamer: pistol, 1d10+4 E, Pen 2, 10 m, Flame + Spray, clip 2. */
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
+/** The DH2 Hand Flamer: pistol, 1d10+4 E, Pen 2, 10 m, Flame + Spray, clip 2. */
+const HAND_FLAMER = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
 /** How long the join may take after creation (one compendium fetch). */
 const JOIN_WAIT_MS = 3_000;
 

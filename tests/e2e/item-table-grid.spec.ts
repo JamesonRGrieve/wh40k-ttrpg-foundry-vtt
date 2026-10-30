@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { createActor, deleteDocuments, openActorSheet } from './combat-resolution-flow';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
@@ -112,14 +113,14 @@ async function expectListed(page: Page, args: { actorId: string; tab: string; na
     await snap(page, args.shot, { selector: `#${sheetId}` });
 }
 
-const DH2_WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
+const dh2Weapon = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'weapons' }, docId);
 /**
  * The weapons the live sheets list, as an actor holds them: lean compendium items the
  * runtime joins to their profile. Inline weapons with no damage profile showed "-" in
  * the DMG column (#698), which was the fixture, not the sheet.
  */
-const LASGUN = { name: 'Lasgun', type: 'weapon', _stats: { compendiumSource: `${DH2_WEAPONS}.z3A4b5C6d7E8f9G0` } };
-const HEAVY_BOLTER = { name: 'Heavy Bolter', type: 'weapon', _stats: { compendiumSource: `${DH2_WEAPONS}.t5U6v7W8x9Y0z1A2` } };
+const LASGUN = { name: 'Lasgun', type: 'weapon', _stats: { compendiumSource: dh2Weapon('z3A4b5C6d7E8f9G0') } };
+const HEAVY_BOLTER = { name: 'Heavy Bolter', type: 'weapon', _stats: { compendiumSource: dh2Weapon('t5U6v7W8x9Y0z1A2') } };
 
 test.describe.serial('Item table grid (Tier B, #662)', () => {
     test('the voidcraft weapon, component, upgrade and crew tables line up as grids', async ({ page }) => {
@@ -169,7 +170,7 @@ test.describe.serial('Item table grid (Tier B, #662)', () => {
             items: [HEAVY_BOLTER, { name: 'Reinforced Plating', type: 'vehicleUpgrade' }],
         });
         try {
-            // DH2 Core: the Lasgun is 1d10+3 E, the Heavy Bolter 1d10+8 X.
+            // DH2: the Lasgun is 1d10+3 E, the Heavy Bolter 1d10+8 X.
             await expectListed(page, { actorId: character.id, tab: 'combat', name: 'Lasgun', shot: 'live-character-combat-weapons', rowText: ['1d10+3'] });
             await expectListed(page, { actorId: character.id, tab: 'equipment', name: 'Flak Vest', shot: 'live-character-equipment-armour' });
             await expectListed(page, { actorId: vehicle.id, tab: 'combat', name: 'Heavy Bolter', shot: 'live-vehicle-combat-weapons', rowText: ['1d10+8'] });

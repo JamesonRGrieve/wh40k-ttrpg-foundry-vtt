@@ -1,11 +1,12 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { closeApp, openPackDocument } from './lib/pack-document';
+import { compendiumUuid, packHoldingId } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Dark Pacts (#84, Enemies Beyond pp. 72–76) against live Foundry, with the
+ * Dark Pacts (#84, a DH2 supplement rule) against live Foundry, with the
  * real compendium pacts.
  *
  * A GM strikes the Pact of Might by dropping it on a character sheet's Dark
@@ -17,9 +18,11 @@ import { expect, test } from './lib/test';
  * panel names each pact through `uuidNameCache`, never "[broken link]".
  */
 
-const MIGHT = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactMight0001';
-const KNOWLEDGE = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactKnowl0001';
-const UNNATURAL = 'Compendium.wh40k-rpg.dh2-core-items-traits.Item.UnnatCharDh2TrX1';
+const MIGHT = compendiumUuid({ line: 'dh2', category: 'dark-pacts' }, 'EB2PactMight0001');
+const KNOWLEDGE = compendiumUuid({ line: 'dh2', category: 'dark-pacts' }, 'EB2PactKnowl0001');
+const UNNATURAL = compendiumUuid({ line: 'dh2', category: 'traits' }, 'UnnatCharDh2TrX1');
+/** The pack holding the Pact of Might. */
+const PACTS_PACK = packHoldingId({ line: 'dh2', category: 'dark-pacts' }, 'EB2PactMight0001');
 const ACTOR_NAME = 'dark-pact-panel-probe';
 const START_CORRUPTION = 10;
 
@@ -222,7 +225,7 @@ test('a GM strikes real Dark Pacts and chooses their Boons and Banes (#84)', asy
 test("the Dark Pact item sheet shows a real pact's terms, Boons and Banes (#84)", async ({ page }) => {
     await joinOrSkip(page, 'no Gamemaster user available in this test world');
 
-    const opened = await openPackDocument(page, { pack: 'dh2-beyond-items-dark-pacts', name: 'Pact of Might', view: 'sheet' });
+    const opened = await openPackDocument(page, { pack: PACTS_PACK, name: 'Pact of Might', view: 'sheet' });
     expect(opened.detail).toBeNull();
     const appId = opened.appId ?? '';
     const sheet = page.locator(`#${appId}`);

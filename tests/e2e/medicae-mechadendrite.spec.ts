@@ -19,7 +19,7 @@ interface MedicaeDialogModule {
 
 /**
  * Tier B coverage of the Medicae Mechadendrite Half-Action dialog
- * (GitHub #104, errata p. 183).
+ * (GitHub #104, errata).
  *
  * Instantiates the dialog via its deployed module URL, asserts that the
  * "Staunch Blood Loss (Half Action)" button and the Cancel button

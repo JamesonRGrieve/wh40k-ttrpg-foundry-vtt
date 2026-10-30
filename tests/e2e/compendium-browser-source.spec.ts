@@ -1,5 +1,8 @@
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { readSelectFit } from './select-fit';
@@ -18,6 +21,34 @@ import { readSelectFit } from './select-fit';
  */
 
 const BROWSER_MODULE_URL = '/systems/wh40k-rpg/module/applications/compendium-browser.js';
+const PRIVATE_ROOT = resolve(__dirname, '..', '..', 'src', 'packs-private');
+
+interface SourcedDoc {
+    system?: { source?: Partial<Record<string, { book?: string }>> };
+}
+
+/**
+ * The source book a line's weapon document names for that line, read from the
+ * private content the run serves, so the spec never spells a book's title.
+ */
+function sourceBookOf(line: string, docId: string): string {
+    const packId = packHoldingId({ line, category: 'weapons' }, docId);
+    for (const dir of readdirSync(PRIVATE_ROOT)) {
+        const sourceDir = join(PRIVATE_ROOT, dir, packId, '_source');
+        if (!existsSync(sourceDir)) continue;
+        const file = readdirSync(sourceDir).find((name) => name === `${docId}.json` || name.endsWith(`_${docId}.json`));
+        if (file === undefined) continue;
+        const doc = JSON.parse(readFileSync(join(sourceDir, file), 'utf8')) as SourcedDoc;
+        const book = doc.system?.source?.[line]?.book;
+        if (book !== undefined) return book;
+    }
+    throw new Error(`no ${line} source book for document ${docId}`);
+}
+
+/** The books of three lines' core weapons (an RT, a DH2 and an OW Bolt Pistol). */
+const RT_BOOK = sourceBookOf('rt', 'sP8EISc5dzqzlwBo');
+const DH2_BOOK = sourceBookOf('dh2', 'l3M4n5O6p7Q8r9S0');
+const OW_BOOK = sourceBookOf('ow', 'rPeQkdXymta7KUX9');
 
 interface BrowserState {
     subtitle: string;
@@ -90,16 +121,14 @@ test.describe.serial('Compendium Browser sources and controls (Tier B, #658)', (
                 expect(fit?.fits, `${hook}: line ${fit?.lineHeight ?? 0}px in a ${fit?.contentHeight ?? 0}px box`).toBe(true);
             }
 
-            expect(Object.keys(searched.counts), 'results group under their books').toEqual(
-                expect.arrayContaining(['RT: Core Rulebook', 'DH2: Core Rulebook', 'OW: Core Rulebook']),
-            );
+            expect(Object.keys(searched.counts), 'results group under their books').toEqual(expect.arrayContaining([RT_BOOK, DH2_BOOK, OW_BOOK]));
             // A few entries name no source and stay "Unknown Source"; it no longer holds everything.
             const total = Object.values(searched.counts).reduce((sum, n) => sum + n, 0);
             const unknown = searched.counts['Unknown Source'] ?? 0;
             expect(unknown, `${unknown} of ${total} results without a source`).toBeLessThan(total / 10);
-            expect(searched.sources).toEqual(expect.arrayContaining(['RT: Core Rulebook', 'DH2: Core Rulebook']));
+            expect(searched.sources).toEqual(expect.arrayContaining([RT_BOOK, DH2_BOOK]));
 
-            const book = 'RT: Core Rulebook';
+            const book = RT_BOOK;
             await browser.locator('[data-wh40k-hook="cb-filter-source"]').selectOption(book);
             await expect.poll(async () => Object.keys((await readBrowser(page, id)).counts)).toEqual([book]);
             expect((await readBrowser(page, id)).counts[book]).toBe(searched.counts[book]);

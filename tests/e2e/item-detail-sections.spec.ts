@@ -43,7 +43,7 @@ const CASES: readonly Case[] = [
 ];
 
 /** The Source book the probe items carry, which the shared Source control shows. */
-const SOURCE_BOOK = 'Dark Heresy 2e Core';
+const SOURCE_BOOK = 'Ordo Clerk Ledger';
 
 interface ProbeApp {
     id: string;

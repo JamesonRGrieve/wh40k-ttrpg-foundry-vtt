@@ -18,8 +18,8 @@ import {
 } from './occult-sheet-flow';
 
 /**
- * Tier B coverage of the DH2 Enemies Beyond rituals, driven from the character
- * sheet the way a player performs them (#80 Summoning p. 59, #83 Exorcism p. 71):
+ * Tier B coverage of the DH2 daemonology rituals, driven from the character
+ * sheet the way a player performs them (#80 Summoning, #83 Exorcism):
  *
  *   Daemonology panel (Overview tab) → Summon / Exorcise button → ritual dialog
  *   (fill the Daemon's Willpower / bonus) → Perform → the ritual card in chat,

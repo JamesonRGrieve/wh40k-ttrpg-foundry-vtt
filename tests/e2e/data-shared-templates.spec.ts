@@ -732,13 +732,13 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 const instance = new T(
                     {
                         description: { value: '<p>Rich text</p>', chat: 'chat-blurb', summary: 'summary line' },
-                        source: { book: 'Core Rulebook', page: '12', custom: '' },
+                        source: { book: 'Ordo Clerk Ledger', page: '12', custom: '' },
                         extra: 42,
                     },
                     { parent: makeParent() },
                 ) as DescriptionInstance;
                 if (instance.description.value !== '<p>Rich text</p>') return `desc.value ${instance.description.value}`;
-                if (instance.source.book !== 'Core Rulebook') return `source.book ${instance.source.book}`;
+                if (instance.source.book !== 'Ordo Clerk Ledger') return `source.book ${instance.source.book}`;
 
                 // _migrateData branches: flat string -> object form. The source
                 // schema is now { provenance, book, page, url, derivedFrom, errata }
@@ -773,20 +773,20 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 const bookPage = new T(
                     {
                         description: { value: '', chat: '', summary: '' },
-                        source: { book: 'Core', page: '42', custom: '' },
+                        source: { book: 'Ledger', page: '42', custom: '' },
                     },
                     { parent: makeParent() },
                 ) as DescriptionInstance;
-                if (bookPage.sourceReference !== 'Core, p.42') return `bookPage sourceReference ${bookPage.sourceReference}`;
+                if (bookPage.sourceReference !== 'Ledger, p.42') return `bookPage sourceReference ${bookPage.sourceReference}`;
 
                 const bookOnly = new T(
                     {
                         description: { value: '', chat: '', summary: '' },
-                        source: { book: 'CoreOnly', page: '', custom: '' },
+                        source: { book: 'LedgerOnly', page: '', custom: '' },
                     },
                     { parent: makeParent() },
                 ) as DescriptionInstance;
-                if (bookOnly.sourceReference !== 'CoreOnly') return `bookOnly sourceReference ${bookOnly.sourceReference}`;
+                if (bookOnly.sourceReference !== 'LedgerOnly') return `bookOnly sourceReference ${bookOnly.sourceReference}`;
 
                 const empty = new T(
                     {

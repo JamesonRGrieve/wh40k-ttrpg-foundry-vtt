@@ -3,8 +3,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Fanatic role "Death to All Who Oppose Me!" action e2e (#93, DH2 Enemies
- * Within p.34).
+ * Fanatic role "Death to All Who Oppose Me!" action e2e (#93, a DH2
+ * supplement role).
  *
  * Creates a `dh2-character` owning the Fanatic role (an originPath item with
  * `system.identifier: 'fanatic'`) and a starting Fate pool, opens the actor

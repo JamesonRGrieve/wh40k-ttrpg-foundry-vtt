@@ -8,8 +8,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B — the grapple panel on both sides of a DH2 grapple (#120; DH2 core
- * pp. 221–222).
+ * Tier B — the grapple panel on both sides of a DH2 grapple (#120; DH2
+ * Grappling rules).
  *
  * The controller (`grappling`) and the target (`controlled`) each see their own
  * role's options as DH2 prints them. The controller has Damage Opponent, Throw Down

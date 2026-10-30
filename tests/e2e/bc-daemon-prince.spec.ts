@@ -18,7 +18,7 @@ interface DaemonPrinceProbeResult {
 }
 
 /**
- * Tier B coverage of the BC apotheosis panel (#182 — BC Core p267).
+ * Tier B coverage of the BC apotheosis panel (#182).
  *
  * Renders the Handlebars partial into the deployed Foundry world via
  * the `templates/actor/panel/bc-daemon-prince-panel.hbs` URL, asserts

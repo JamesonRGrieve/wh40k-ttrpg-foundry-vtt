@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { packHoldingId } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -279,10 +280,12 @@ test.describe.serial('dh2 flows (Tier B)', () => {
         await joinOrSkip(page);
 
         const failures: string[] = [];
-        const result = await page.evaluate(async () => {
+        // The DH2 elite-advance pack holding the Inquisitor elite advance.
+        const elitePackId = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'origins-elite-advances' }, 'DH2InqElt0000001')}`;
+        const result = await page.evaluate(async (packId) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context globalThis.game (Foundry global, no repo type)
             const { game: gameObj } = globalThis as unknown as PageWindow;
-            const pack = gameObj?.packs?.get?.('wh40k-rpg.dh2-core-origins-elite-advances');
+            const pack = gameObj?.packs?.get?.(packId);
             if (!pack) return { error: 'pack not found' };
             const packType = pack.metadata?.type ?? null;
             let docs: FoundryPackDoc[] = [];
@@ -303,7 +306,7 @@ test.describe.serial('dh2 flows (Tier B)', () => {
                 sampleGameSystem,
                 error: null,
             };
-        });
+        }, elitePackId);
 
         if (result.error !== null) failures.push(result.error);
         else {

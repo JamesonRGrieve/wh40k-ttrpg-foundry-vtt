@@ -86,7 +86,7 @@ async function probeDataLayer(page: Page): Promise<{ results: FlowResult[] }> {
             getRankAdvancements: (key: string, rank?: number) => object[] | null;
             getNextCharacteristicCost: (key: string, characteristic: string, current: number) => { cost: number } | null;
         }
-        // The career tables load from the rt-core-origins-careers compendium into
+        // The career tables load from the RT careers compendium into
         // a boot cache built at `ready` (Direction #7). To make this probe
         // independent of ready-hook timing in the ephemeral seed world, rebuild
         // the (idempotent) index explicitly before reading it.

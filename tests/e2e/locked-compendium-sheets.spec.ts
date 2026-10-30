@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { joinOrSkip } from './lib/join';
 import { closeApp, openPackDocument, type PackDocumentRef } from './lib/pack-document';
+import { packHoldingId } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -23,15 +24,25 @@ import { scaledMs } from './lib/timing';
 
 /** BC NPCs from several packs, captured with their sheets open. */
 const BC_NPC_SAMPLES: ReadonlyArray<PackDocumentRef & { label: string }> = [
-    { label: 'bc-npc-asphodel-kroot-warrior', pack: 'bc-blood-actors-bestiary', name: 'Asphodel Kroot Warrior', view: 'sheet' },
-    { label: 'bc-npc-bloodletter', pack: 'bc-core-actors-bestiary', name: 'Bloodletter', view: 'sheet' },
-    { label: 'bc-npc-axsenaea', pack: 'bc-core-actors-npcs', name: "Ax'senaea", view: 'sheet' },
-    { label: 'bc-npc-glimmerclaw', pack: 'bc-excess-actors-mounts', name: 'Glimmerclaw', view: 'sheet' },
-    { label: 'bc-npc-beast-of-nurgle', pack: 'bc-decay-actors-bestiary', name: 'Beast of Nurgle', view: 'sheet' },
+    {
+        label: 'bc-npc-asphodel-kroot-warrior',
+        pack: packHoldingId({ line: 'bc', category: 'actors-bestiary' }, '503f0c9007b0c7c7'),
+        name: 'Asphodel Kroot Warrior',
+        view: 'sheet',
+    },
+    { label: 'bc-npc-bloodletter', pack: packHoldingId({ line: 'bc', category: 'actors-bestiary' }, '19e70067037c4861'), name: 'Bloodletter', view: 'sheet' },
+    { label: 'bc-npc-axsenaea', pack: packHoldingId({ line: 'bc', category: 'actors-npcs' }, '79d7be8e23a3f86c'), name: "Ax'senaea", view: 'sheet' },
+    { label: 'bc-npc-glimmerclaw', pack: packHoldingId({ line: 'bc', category: 'actors-mounts' }, '2d08438136a03c90'), name: 'Glimmerclaw', view: 'sheet' },
+    {
+        label: 'bc-npc-beast-of-nurgle',
+        pack: packHoldingId({ line: 'bc', category: 'actors-bestiary' }, '9c2cb83e3c925ee4'),
+        name: 'Beast of Nurgle',
+        view: 'sheet',
+    },
 ];
 
 /** A compendium weapon whose details sit behind "Show Details". */
-const LOCKED_WEAPON: PackDocumentRef = { pack: 'dh2-core-items-weapons', name: 'Bolt Pistol', view: 'sheet' };
+const LOCKED_WEAPON: PackDocumentRef = { pack: packHoldingId({ line: 'dh2', category: 'weapons' }, 'l3M4n5O6p7Q8r9S0'), name: 'Bolt Pistol', view: 'sheet' };
 
 /** The number of `bc-npc` actors across the BC packs when this spec was written (263). */
 const MIN_BC_NPCS = 250;

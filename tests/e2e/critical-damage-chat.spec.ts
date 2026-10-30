@@ -4,8 +4,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the Critical Damage chat card (GitHub #108 —
- * core.md §"Critical Damage", Tables 7–7 … 7–22).
+ * Tier B coverage of the Critical Damage chat card (GitHub #108 — the
+ * Critical Damage tables).
  *
  * Renders the critical-damage chat card via Foundry's deployed
  * Handlebars runtime, asserts the (damageType × bodyPart × severity)

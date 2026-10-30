@@ -5,8 +5,8 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the DW Mission Oath panel (#168 — core.md Table
- * 7-16 §"OATHS", p.10165).
+ * Tier B coverage of the DW Mission Oath panel (#168 — the Oaths
+ * table).
  *
  * Renders the Handlebars partial directly into the deployed Foundry
  * world via the `templates/actor/panel/dw-oath-panel.hbs` URL,

@@ -19,7 +19,7 @@ import {
 
 /**
  * Tier B coverage of the Malignancy Test queue (35092c9ab) and Twisted Flesh
- * (#91, within.md p. 32), driven from the character sheet:
+ * (#91), driven from the character sheet:
  *
  *   gain Corruption with the Overview vitals "+" → the crossed 10-CP threshold
  *   queues a test and the "Malignancy Tests due" button appears → click it →
@@ -81,7 +81,7 @@ test.describe.serial('Malignancy Tests (Tier B)', () => {
     });
 
     test('a Corruption gain queues a test; a failed roll draws a Malignancy (DH2)', async ({ page }) => {
-        // 39 → 40 crosses into Soiled, so the card carries a −10 Corruption Track row (Table 8-14).
+        // 39 → 40 crosses into Soiled, so the card carries a −10 Corruption Track row (the Corruption Track table).
         const { actorId, sheetId } = await openProbeSheet(page, acolyte('Tainted Acolyte', 'dh2-character', 'dh2', {}, 39));
         await expect(page.locator(`#${sheetId} ${VITALS} ${ROLL_BUTTON}`)).toHaveCount(0);
 

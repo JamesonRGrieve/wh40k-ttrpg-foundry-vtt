@@ -6,7 +6,7 @@ import { readSelectFit } from './select-fit';
 /**
  * e2e coverage for #146 — Climbing Surface picker on the unified roll dialog.
  *
- * Errata L113: climbing a sheer surface (sheer cliff, icy crevasse,
+ * Per the errata, climbing a sheer surface (sheer cliff, icy crevasse,
  * building wall, hive buttress) is a Hard (-20) Athletics test. The
  * dialog surfaces a per-roll picker that mutates the final-target math.
  * This test opens an Athletics roll, switches the surface to Sheer,

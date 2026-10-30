@@ -30,7 +30,7 @@ interface ManaclesResult {
 }
 
 /**
- * Manacles tracked condition visual regression (#105 — errata p. 176).
+ * Manacles tracked condition visual regression (#105 — errata).
  *
  * Creates a `dh2-character`, applies the Manacled ActiveEffect (the
  * condition that imposes −40 BS / −40 WS), opens the actor sheet,

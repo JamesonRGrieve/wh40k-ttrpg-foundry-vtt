@@ -3,7 +3,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Crusader role "Smite the Unholy" action e2e (#141, beyond.md p.34/L807-841).
+ * Crusader role "Smite the Unholy" action e2e (#141).
  *
  * Creates a `dh2-character` with a Crusader-named talent and a starting Fate
  * pool, opens the actor sheet, navigates to the Status tab, clicks the

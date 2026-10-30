@@ -313,7 +313,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             /* ============================================================
              * Flow 2: armour-craftsmanship-ap
              * Best craftsmanship on the dh2 PC → +1 AP on every covered
-             * location (getEffectiveAPForLocation). DH2 (core p. 141)
+             * location (getEffectiveAPForLocation). DH2
              * prints no half weight for Best armour (#679), so
              * effectiveWeight stays 10. Base body AP 5 → effective 6.
              * ============================================================ */

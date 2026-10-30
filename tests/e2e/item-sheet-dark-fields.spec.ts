@@ -63,7 +63,7 @@ async function openSheet(page: Page, type: string): Promise<string> {
             const item = await w.Item.create({
                 name,
                 type: itemType,
-                system: { notes: 'Kept by the Ordo clerk.', source: { book: 'Dark Heresy 2e Core', page: '178' } },
+                system: { notes: 'Kept by the Ordo clerk.', source: { book: 'Ordo Clerk Ledger', page: '178' } },
             });
             if (item === null) throw new Error('Item.create returned null');
             await item.sheet.render({ force: true });

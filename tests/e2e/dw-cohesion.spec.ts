@@ -5,8 +5,7 @@ import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the DW Kill-team Cohesion panel (#162 —
- * core.md §"COHESION", p.9351).
+ * Tier B coverage of the DW Kill-team Cohesion panel (#162).
  *
  * Renders the Handlebars partial into the deployed Foundry world via
  * the `templates/actor/panel/dw-cohesion-panel.hbs` URL, asserts the

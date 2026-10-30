@@ -277,7 +277,7 @@ async function probeDiceEngine(page: Page): Promise<{ results: FlowResult[] }> {
             // ---- Flow: d100-success-degrees-of-success ----
             // target 60, roll 28 → success. An actor-less roll counts by the DH2 method
             // (#335): one degree, plus the target's tens digit minus the roll's
-            // (DH2 core p. 25: BS 51, roll 13 → 1 + 4) = 1 + (6 − 2) = 5. The Gen 1
+            // (the DH2 rules' example: BS 51, roll 13 → 1 + 4) = 1 + (6 − 2) = 5. The Gen 1
             // full-tens margin, floor(32 / 10) + 1 = 4, is DH1 / RT / DW only.
             try {
                 const roll = await makeD100(28, { target: 60 });

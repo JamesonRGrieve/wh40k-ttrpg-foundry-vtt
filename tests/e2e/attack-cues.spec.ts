@@ -3,6 +3,7 @@ import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attac
 import { canvasClip } from './lib/canvas-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -27,7 +28,7 @@ const ATTACK_CUE_FLOWS = ['hit-draws-cue', 'miss-draws-cue', 'world-switch-off-d
 
 type FlowName = (typeof ATTACK_CUE_FLOWS)[number];
 
-const LASGUN = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z3A4b5C6d7E8f9G0';
+const LASGUN = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'z3A4b5C6d7E8f9G0');
 
 const TOKENS = [
     {

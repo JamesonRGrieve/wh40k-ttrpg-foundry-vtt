@@ -6,12 +6,12 @@ import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of the warband Inquest tracker (DH2 Enemies Within pp. 62–69,
+ * Tier B coverage of the warband Inquest tracker (a DH2 supplement rule,
  * #90), driven the way the GM uses it: the DH2 character sheet's Party Overview
  * shows the Inquests panel, its Open Tracker button opens the GM tracker, and
  * every change is a click or a typed field in that dialog. Crossing a Revelation
  * threshold posts the Revelation card; resolving posts the Influence card
- * (Table 2–9). DH1 prints no Inquest rules, so its sheet has no panel.
+ * (from the Inquest reward table). DH1 prints no Inquest rules, so its sheet has no panel.
  *
  * DH2 values (dh2-config): Hereticus Minoris needs 600 IP and pays 3 Influence;
  * a Revelation every 300 IP; clues 50 / 100 / 200 IP, +25 when relevant to the

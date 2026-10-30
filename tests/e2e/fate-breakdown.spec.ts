@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, showSheetTab } from './occult-sheet-flow';
@@ -16,8 +17,8 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet, showSheetTab } from 
  * base is the character's starting Fate: 2 + Fortune 1 + Fated 1 = 4.
  */
 
-const RT_FORTUNE = 'Compendium.wh40k-rpg.rt-core-origins-motivations.Item.Sw4y6TekvknMmLBo';
-const RT_FATED_FOR_GREATNESS = 'Compendium.wh40k-rpg.rt-core-items-talents.Item.CB00000000000003';
+const RT_FORTUNE = compendiumUuid({ line: 'rt', category: 'origins-motivations' }, 'Sw4y6TekvknMmLBo');
+const RT_FATED_FOR_GREATNESS = compendiumUuid({ line: 'rt', category: 'talents' }, 'CB00000000000003');
 const STARTING_FATE = 2;
 const FATE_TOTAL = 4;
 

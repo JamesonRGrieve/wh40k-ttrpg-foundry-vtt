@@ -28,7 +28,7 @@ const CASES: readonly Case[] = [
     {
         type: 'originPath',
         tabs: ['grants', 'requirements', 'choices', 'description'],
-        data: { gameSystem: 'dh2', step: 'homeWorld', stepIndex: 1, source: { book: 'Dark Heresy 2e Core', page: '36' }, notes: 'Kept by the Ordo clerk.' },
+        data: { gameSystem: 'dh2', step: 'homeWorld', stepIndex: 1, source: { book: 'Ordo Clerk Ledger', page: '36' }, notes: 'Kept by the Ordo clerk.' },
     },
     { type: 'trait', tabs: ['properties', 'effects', 'description'], data: {} },
     { type: 'talent', tabs: [], data: {} },
@@ -110,9 +110,7 @@ test.describe.serial('accent tab strip switches tabs (Tier B, #690)', () => {
             }
             if (c.type === 'originPath') {
                 await sheet.locator('nav.wh40k-tabs [data-tab="description"]').click();
-                await expect(sheet.locator('.wh40k-tab-content > [data-tab="description"] input[name="system.source.book"]')).toHaveValue(
-                    'Dark Heresy 2e Core',
-                );
+                await expect(sheet.locator('.wh40k-tab-content > [data-tab="description"] input[name="system.source.book"]')).toHaveValue('Ordo Clerk Ledger');
                 await snap(page, 'origin-sheet-description-tab', { selector: `#${appId}` });
             }
             recordCoverage('sheet.tab', `${c.type}.accent-strip`);

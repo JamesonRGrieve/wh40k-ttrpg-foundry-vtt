@@ -4,6 +4,7 @@ import { popOutChatMessage } from './lib/chat-capture';
 import { CHAT_PANEL_TRANSLUCENT, readChatCardOnDarkTheme } from './lib/chat-dark-theme';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -26,7 +27,7 @@ import { scaledMs } from './lib/timing';
 const DAMAGE_CARD_LAYOUT_FLOWS = ['overline-from-langpack', 'effective-value-one-line', 'card-reads-on-dark-theme'] as const;
 type FlowName = (typeof DAMAGE_CARD_LAYOUT_FLOWS)[number];
 
-const CONVERSION_BEAMER = 'Compendium.wh40k-rpg.dh1-daemonhunter-items-weapons.Item.804d243ba234097d';
+const CONVERSION_BEAMER = compendiumUuid({ line: 'dh1', category: 'weapons' }, '804d243ba234097d');
 const marksman = { characteristics: { ballisticSkill: { base: 60 }, strength: { base: 40 } } };
 const TOKENS = [
     { key: 'beamer', name: 'Beamer', type: 'dh1-character', x: 100, y: 100, items: [leanWeapon('Conversion Beamer', CONVERSION_BEAMER, 4)], system: marksman },

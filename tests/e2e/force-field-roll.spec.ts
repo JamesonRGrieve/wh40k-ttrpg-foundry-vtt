@@ -9,7 +9,7 @@ import { cleanupProbes, forceDice, messageIds, openProbeSheet, restoreDice, snap
  * Tier B for #645: a character rolls an active force field, the roll opens in the
  * unified roll dialog, and the card resolves it per RAW. RAW is the same in every
  * line: 1d100 at or under the protection rating nullifies the attack, and a roll
- * inside the overload band (Common craftsmanship: 01–10, DH2 core Table 5–13)
+ * inside the overload band (Common craftsmanship: 01–10, the DH2 force field overload table)
  * overloads the field. The card prints both checks.
  *
  * Dice faces are fixed through `CONFIG.Dice.randomUniform`: a d100 face is

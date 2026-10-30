@@ -1,4 +1,5 @@
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -19,7 +20,7 @@ interface FoundryWindow {
     foundry: { utils?: { getProperty?: (obj: object, path: string) => number | string | boolean | null | undefined } };
 }
 
-const SUPERIOR_CHIRURGEON_UUID = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000071';
+const SUPERIOR_CHIRURGEON_UUID = compendiumUuid({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000071');
 
 test.describe.serial('First Aid flow (Tier B, #432)', () => {
     test('Superior Chirurgeon grants +20 to Medicae on a live actor', async ({ page }) => {

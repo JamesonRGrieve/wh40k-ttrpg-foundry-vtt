@@ -5,6 +5,7 @@ import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -41,13 +42,13 @@ import { scaledMs } from './lib/timing';
  *   its card's Resolve Rider rolls Agility +10 for both creatures inside: the Heretic
  *   fails by three degrees and is Blinded for three rounds (the status on its token),
  *   the Accomplice resists;
- * - the Rad Grenade (Enemies Within p.44) rolls its damage, then its damage card's
+ * - the Rad Grenade rolls its damage, then its damage card's
  *   Resolve Rider rolls Toughness −20 for both creatures struck, and the one that fails
  *   takes its rolled 2d10 Toughness damage (#698);
- * - a Rogue Trader thrower's Psyk-out (the shared document's RT branch, Faith and Coin
- *   p.85) tests the psyker only: it is Stunned for its rolled rounds, its Stunned visual
+ * - a Rogue Trader thrower's Psyk-out (the shared document's RT branch) tests
+ *   the psyker only: it is Stunned for its rolled rounds, its Stunned visual
  *   on the token, and the bystander is unaffected;
- * - the RT Rad grenade (Faith and Coin) blasts both RT creatures, and each one's
+ * - the RT Rad grenade blasts both RT creatures, and each one's
  *   Toughness test carries a "N damage suffered" row of −5 per point it took (#698).
  *
  * Grid: 100 px = 1 m. Each flow records under `grenade-throw.flow`. Keys MUST match
@@ -77,18 +78,17 @@ const GRENADE_THROW_FLOWS = [
 ] as const;
 type FlowName = (typeof GRENADE_THROW_FLOWS)[number];
 
-const WEAPONS = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item';
-const WITHIN_WEAPONS = 'Compendium.wh40k-rpg.dh2-within-items-weapons.Item';
-const FRAG_GRENADE = `${WEAPONS}.x1Y2z3A4b5C6d7E8`;
-const PHOTON_FLASH = `${WEAPONS}.rpn0j61j1euqi000`;
-const SMOKE_GRENADE = `${WEAPONS}.v5W6x7Y8z9A0b1C2`;
-const PSYCHOTROKE = `${WITHIN_WEAPONS}.11H4xA4yCvZojuHn`;
-const TEARS = `${WITHIN_WEAPONS}.WUQMZb3rGzvRiJi8`;
-const RAD_GRENADE = `${WITHIN_WEAPONS}.Pr6BN0flDXSlUxnc`;
-/** The Psyk-out canonical (DH2 Enemies Beyond); an RT owner reads its `rt` branch (Faith and Coin p.85). */
-const PSYK_OUT = 'Compendium.wh40k-rpg.dh2-beyond-items-weapons.Item.lScsj4tB78fJdtkt';
-/** The RT Rad grenade (Faith and Coin): Toughness +0, −5 per point of damage suffered (#698). */
-const RT_RAD_GRENADE = 'Compendium.wh40k-rpg.rt-faith-items-weapons.Item.JG4AY6KIs4F5bBDq';
+const dh2Weapon = (docId: string): string => compendiumUuid({ line: 'dh2', category: 'weapons' }, docId);
+const FRAG_GRENADE = dh2Weapon('x1Y2z3A4b5C6d7E8');
+const PHOTON_FLASH = dh2Weapon('rpn0j61j1euqi000');
+const SMOKE_GRENADE = dh2Weapon('v5W6x7Y8z9A0b1C2');
+const PSYCHOTROKE = dh2Weapon('11H4xA4yCvZojuHn');
+const TEARS = dh2Weapon('WUQMZb3rGzvRiJi8');
+const RAD_GRENADE = dh2Weapon('Pr6BN0flDXSlUxnc');
+/** The Psyk-out canonical (a DH2 supplement weapon); an RT owner reads its `rt` branch. */
+const PSYK_OUT = dh2Weapon('lScsj4tB78fJdtkt');
+/** The RT Rad grenade (an RT supplement weapon): Toughness +0, −5 per point of damage suffered (#698). */
+const RT_RAD_GRENADE = compendiumUuid({ line: 'rt', category: 'weapons' }, 'JG4AY6KIs4F5bBDq');
 /** The RT Rad rider's printed penalty per point of damage suffered. */
 const RT_RAD_DAMAGE_PENALTY = -5;
 /** The RT Psyk-out results card: Willpower −10 for psykers only; the psyker (30 − 10 = 20 against 60) is Stunned, the bystander untouched. */
@@ -111,21 +111,21 @@ const RAD_RIDER_FACES: Array<[number, number]> = [
 ];
 /** The Toughness damage the Rad rider deals the Heretic on those faces. */
 const RAD_TOUGHNESS_DAMAGE = 10;
-/** The Photon Flash results card (Core p.158): Agility +10, the Heretic blinded for its three degrees, the Accomplice resisting. */
+/** The Photon Flash results card: Agility +10, the Heretic blinded for its three degrees, the Accomplice resisting. */
 const PHOTON_RESULTS_TEXT = ['Grenade Rider', 'Agility +10', 'Heretic', 'Accomplice', 'Blinded for 3 rounds', 'Applied', 'Resisted', '3 DoF'];
-/** The Rad Grenade results card (Enemies Within p.44): Toughness −20, the Heretic taking its rolled Toughness damage, applied, the Accomplice resisting. */
+/** The Rad Grenade results card: Toughness −20, the Heretic taking its rolled Toughness damage, applied, the Accomplice resisting. */
 const RAD_RESULTS_TEXT = ['Grenade Rider', 'Toughness -20', 'Heretic', 'Accomplice', 'Applied', 'Resisted', '2d10 Toughness damage'];
 /** What the Rad rider's one failing row states landed (the effect prose above also says "2d10 Toughness damage", so the row is read alone). */
 const RAD_EFFECT_ROW = `${RAD_TOUGHNESS_DAMAGE} Toughness damage Applied`;
 /** The rider grenades the dialog lists: those that deal no damage. Tears of the Emperor deals 1d10 X, so it takes the weapon roll (#622). */
 const RIDER_GRENADES = ['Photon Flash Grenade', 'Smoke Grenade', 'Psychotroke Grenade'];
-/** Tears of the Emperor's damage card (Enemies Within p.45): its rider, after the damage, on both creatures its Blast (2) caught. */
+/** Tears of the Emperor's damage card: its rider, after the damage, on both creatures its Blast (2) caught. */
 const TEARS_DAMAGE_CARD_TEXT = ['Rider — after the damage', 'Perils of the Warp', 'Until the end of the encounter'];
 /** Who the Blast struck, as the rider's Struck line names them (in canvas order, which is not fixed). */
 const TEARS_STRUCK = ['Accomplice', 'Heretic'];
-/** The Photon Flash rider the DH2 pack authors (Core p.158), as its card prints it. */
+/** The Photon Flash rider the DH2 pack authors, as its card prints it. */
 const PHOTON_CARD_TEXT = ['Agility +10', '6 m radius', '1 round per degree of failure', 'Ordinary (+10) Agility test or be blinded'];
-/** Psychotroke's step-up (Enemies Within p.44), as the dialog prints it. */
+/** Psychotroke's step-up, as the dialog prints it. */
 const PSYCHOTROKE_SHIFT = '+1 to the effect roll per degree of failure (max 10)';
 const STRENGTH_BONUS = 4;
 /** The Frag Grenade's printed damage: no Strength Bonus is added to a grenade. */
@@ -155,7 +155,7 @@ const TOKENS = [
     // the Heretic (10) fails and the Accomplice (40) passes on a 30 (see RAD_RIDER_FACES).
     { key: 'target', name: 'Heretic', type: 'dh2-npc', x: 700, y: 500, system: { characteristics: { agility: { base: 30 }, toughness: { base: 30 } } } },
     { key: 'near', name: 'Accomplice', type: 'dh2-npc', x: 800, y: 500, system: { characteristics: { agility: { base: 70 }, toughness: { base: 60 } } } },
-    // A Rogue Trader group well clear of every DH2 area: the RT Psyk-out (Faith and Coin p.85)
+    // A Rogue Trader group well clear of every DH2 area: the RT Psyk-out
     // touches psykers only and Stuns them for 1d5+3 rounds — a condition with a token visual (#595).
     {
         key: 'rtThrower',

@@ -317,7 +317,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                             const isAptitude = (aptitudeSystems as readonly string[]).includes(id);
                             // Aptitude systems use the 5-tier DH2 ladder, EXCEPT BC which
                             // overrides to a 4-tier ladder (Simple/Intermediate/Trained/
-                            // Expert — core.md :2581); career systems use 4.
+                            // Expert); career systems use 4.
                             const expectedCount = id === 'bc' ? 4 : isAptitude ? 5 : 4;
                             const countOk = Array.isArray(tiers) && tiers.length === expectedCount;
                             const orderOk = Array.isArray(order) && order.length === expectedCount && order.every((k, i) => k === tiers[i]?.key);
@@ -518,7 +518,7 @@ test.describe.serial('game-system config registry + helpers (Tier B)', () => {
                     }
 
                     // ── bc-patron-status-matrix ────────────────────────────
-                    // BC's Allies/Opponents matrix (Table 2-4, core.md :2594)
+                    // BC's Allies/Opponents matrix (its patron-status cost table)
                     // routes through the new True/Allied/Opposed × tier cost
                     // engine introduced in #173. Verify the four canonical
                     // patron-status outcomes round-trip through the public

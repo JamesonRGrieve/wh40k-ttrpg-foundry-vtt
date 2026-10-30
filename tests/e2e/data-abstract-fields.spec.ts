@@ -294,10 +294,10 @@ async function probeAbstractFields(page: Page): Promise<{ results: FlowResult[] 
                 // errata } (the legacy `custom` field was removed); a flat non-homebrew
                 // string migrates into `book` under provenance 'raw'. Owned by
                 // DescriptionTemplate, not bare ItemDataModel.
-                const source: ItemMigrateSource = { source: 'Dark Heresy 2e, p.123' };
+                const source: ItemMigrateSource = { source: 'Ordo Clerk Ledger, folio 12' };
                 DescriptionTemplate._migrateData(source);
                 const src = source.source;
-                return typeof src === 'object' && src.provenance === 'raw' && src.book === 'Dark Heresy 2e, p.123' && src.page === '';
+                return typeof src === 'object' && src.provenance === 'raw' && src.book === 'Ordo Clerk Ledger, folio 12' && src.page === '';
             });
             guarded('item-data-model-migrate-coverage-array-to-set', () => {
                 const source: ItemMigrateSource = { coverage: ['head', 'body'], properties: ['reliable', 'tearing'] };

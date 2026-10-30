@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet } from './occult-sheet-flow';
@@ -16,8 +17,8 @@ import { addCompendiumItems, cleanupProbes, openProbeSheet } from './occult-shee
  * read: some layer from the window body up to the window must paint an opaque fill.
  */
 
-const DH2_FLAK_ARMOUR = 'Compendium.wh40k-rpg.dh2-core-items-armour.Item.Ht6xNdQ2rBw9Km3P';
-const DH2_PACT_OF_POWER = 'Compendium.wh40k-rpg.dh2-beyond-items-dark-pacts.Item.EB2PactPower0001';
+const DH2_FLAK_ARMOUR = compendiumUuid({ line: 'dh2', category: 'armour' }, 'Ht6xNdQ2rBw9Km3P');
+const DH2_PACT_OF_POWER = compendiumUuid({ line: 'dh2', category: 'dark-pacts' }, 'EB2PactPower0001');
 
 /** One layer from the window body up to the window root: its fill. */
 interface Layer {
@@ -110,7 +111,7 @@ test.describe.serial('item sheet bodies are opaque (Tier B, #694)', () => {
         }, actorId);
         const [bareId = '', gearId = ''] = created;
         const sheets: Array<[string, string, string | null]> = [
-            // The book's pact grants 2d10+10 Corruption (Enemies Beyond p. 76); a pact with no formula reads 0.
+            // The book's pact grants 2d10+10 Corruption; a pact with no formula reads 0.
             ['dark-pact', pactId, '2d10+10'],
             ['dark-pact-unset', bareId, '0'],
             ['gear', gearId, null],

@@ -4,6 +4,7 @@ import { popOutChatMessage } from './lib/chat-capture';
 import { CHAT_PANEL_TRANSLUCENT, readChatCardOnDarkTheme } from './lib/chat-dark-theme';
 import { assertFlowResults } from './lib/flow-assert';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -24,7 +25,7 @@ import { scaledMs } from './lib/timing';
 const AREA_DIFFICULTY_ROW_FLOWS = ['no-zero-difficulty-row', 'tests-and-statement-kept', 'results-read-on-dark-theme'] as const;
 type FlowName = (typeof AREA_DIFFICULTY_ROW_FLOWS)[number];
 
-const HAND_FLAMER = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.j7K8l9M0n1O2p3Q4';
+const HAND_FLAMER = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
 const agility30 = { characteristics: { agility: { base: 30 } } };
 const TOKENS = [
     {

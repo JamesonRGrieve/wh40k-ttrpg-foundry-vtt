@@ -1,6 +1,7 @@
 import { awaitCard, cardHtml, messageIds, restoreSettings, setWorldSettings, snapCard } from './combat-resolution-flow';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
 
@@ -14,8 +15,8 @@ import { scaledMs } from './lib/timing';
  * its wounds is Critical damage past the chart's last row, 10: Daemon Unbound!
  */
 
-const AUTOCANNON = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.l7M8n9O0p1Q2r3S4';
-const DAEMON_ENGINE = 'Compendium.wh40k-rpg.bc-core-items-traits.Item.daa6cb2b520ede6f';
+const AUTOCANNON = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'l7M8n9O0p1Q2r3S4');
+const DAEMON_ENGINE = compendiumUuid({ line: 'bc', category: 'traits' }, 'daa6cb2b520ede6f');
 
 test.describe.serial('BC Daemon Engine critical chart (Tier B, #678)', () => {
     test.setTimeout(scaledMs(180_000));

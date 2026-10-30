@@ -28,6 +28,7 @@ import {
 } from './combat-resolution-flow';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
+import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
 
 /**
@@ -58,8 +59,8 @@ import { expect, test } from './lib/test';
 
 const EVASION_FLOWS = ['prompt', 'parry-negates', 'counter-attack', 'take-hit', 'counter-attack-spent', 'grapple-blocked'] as const;
 
-const CHAINSWORD_UUID = 'Compendium.wh40k-rpg.dh2-core-items-weapons.Item.z5A6b7C8d9E0f1G2';
-const COUNTER_ATTACK_UUID = 'Compendium.wh40k-rpg.dh2-core-items-talents.Item.DH2aTlnt00000006';
+const CHAINSWORD_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'z5A6b7C8d9E0f1G2');
+const COUNTER_ATTACK_UUID = compendiumUuid({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000006');
 /** A test-only talent whose `onParry` hook must reach the Parry test as a sourced row. */
 const PARRY_DRILL = 'E2E Parry Drill';
 

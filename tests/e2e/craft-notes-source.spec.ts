@@ -9,7 +9,7 @@ import { cleanupProbes, openProbeSheet, snapElement } from './occult-sheet-flow'
  * from the structured `system.source`.
  */
 
-const BOOK = 'Dark Heresy 2e Core';
+const BOOK = 'Ordo Clerk Ledger';
 const PAGE = '247';
 const SOURCE_PANEL = 'section.tab[data-tab="notes"]';
 
