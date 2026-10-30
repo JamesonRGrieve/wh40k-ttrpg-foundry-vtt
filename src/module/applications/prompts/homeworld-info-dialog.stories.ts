@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/prompt/homeworld-info-dialog.hbs?raw';
+import { installStoryCharacteristicLabels } from '../../../../stories/mocks/characteristic-labels';
 import { renderSheet } from '../../../../stories/test-helpers';
 import type { HomeworldGroup } from '../../rules/homeworld-compendium.ts';
 import { homeworldCardGroups } from './homeworld-cards.ts';
@@ -72,7 +73,10 @@ const GROUPS: HomeworldGroup[] = [
 
 const meta = {
     title: 'Dialogs/HomeworldInfoDialog',
-    render: () => renderSheet(templateSrc, { groups: homeworldCardGroups(GROUPS) }),
+    render: () => {
+        installStoryCharacteristicLabels();
+        return renderSheet(templateSrc, { groups: homeworldCardGroups(GROUPS) });
+    },
 } satisfies Meta;
 export default meta;
 
