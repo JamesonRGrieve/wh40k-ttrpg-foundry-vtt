@@ -8,7 +8,7 @@ import { expect, test } from './lib/test';
  *
  * Creates a DW horde NPC, opens its sheet, drives `applyMagnitudeDamage`
  * through the RAW resolver, and asserts the chat-card / actor state
- * reflects the canonical TABLE 13-1 derived values. Snaps the open
+ * reflects the canonical Example Horde Magnitudes values. Snaps the open
  * sheet for visual review (kept OPEN through snap() so the screenshot
  * captures the live DOM).
  */
@@ -225,7 +225,7 @@ test.describe.serial('DW Horde Magnitude (Tier B)', () => {
 
         expect(result.error, `horde probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.actorId, 'actor must have been created').not.toBeNull();
-        // RAW TABLE 13-1: Magnitude 90 → Monumental / +50 to hit.
+        // RAW Example Horde Magnitudes: Magnitude 90 → Monumental / +50 to hit.
         expect(
             result.toHitBonus,
             `Magnitude 90 to-hit bonus (enabled=${String(result.hordeEnabled)} magBefore=${String(result.magnitudeBefore)} src=${String(

@@ -85,7 +85,7 @@ test.describe.serial('Ship Hit and Run from the voidcraft sheet (Tier B · #188)
             expect(await readShip(page, target.id)).toMatchObject({ hull: 24, population: 51, morale: 56, statuses: 1 });
             const critIds = (await messagesSince(page, before)).filter((id) => id !== ran.card.id);
             expect(critIds, 'the Critical Hit posts its own card').toHaveLength(1);
-            // #187: the roll of 5 draws the critical hit table's "Fire!" from the RT core roll tables — not the
+            // #187: the roll of 5 draws the critical hit table's "Fire!" from RT's roll tables — not the
             // "roll table unavailable" fallback the old pack/name lookup always hit.
             const crit = await readCard(page, critIds[0] ?? '');
             expect(crit.text).toContain('Fire!');

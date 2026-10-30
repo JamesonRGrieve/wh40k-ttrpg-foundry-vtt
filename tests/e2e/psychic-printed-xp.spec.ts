@@ -12,13 +12,13 @@ import { scaledMs } from './lib/timing';
  * `systemForLine`). Every psychic power now carries the XP its book prints in `system.cost`: a
  * plain number, or a per-line map where the power is shared and the books differ.
  * Precognition is one canonical DH2 document, stubbed into the BC pack, printing 400 xp in DH2
- * core and 100 xp in BC core. The Advancement Dialog reads the raw compendium index, resolves the
+ * and 100 xp in BC. The Advancement Dialog reads the raw compendium index, resolves the
  * map to the actor's line and charges that value; before, a per-line map read as "not authored"
  * and every power was priced by the Psy Rating heuristic.
  *
  * For a DH2 and a BC character this opens the dialog on its Psychic Powers tab, reads what each
  * power is charged and captures the tab with Precognition's row outlined. It also loads Cauterise
- * from the DH2 compendium (the issue's spot check, "Value: 300 xp", as DH2 core prints it).
+ * from the DH2 compendium (the issue's spot check, "Value: 300 xp", as DH2 prints it).
  *
  * Each flow records under `psychic-printed-xp.flow`. Keys MUST match PSYCHIC_PRINTED_XP_FLOWS in
  * scripts/e2e-coverage.mjs.
@@ -33,13 +33,13 @@ const PSYCHIC_PRINTED_XP_FLOWS = [
     'disciplines-as-printed',
 ] as const;
 
-/** The Psy Rating DH2 core prints for these powers (content#34). */
+/** The Psy Rating DH2 prints for these powers (content#34). */
 const PRINTED_PSY_RATING: Record<string, number> = { 'Molten Beam': 4, 'Flame Breath': 3 };
 type FlowName = (typeof PSYCHIC_PRINTED_XP_FLOWS)[number];
 
 /**
- * What each line's printing charges: Precognition as DH2 core and BC core print it; Fate Loom
- * is a BC supplement's power, and Doombolt a BC core power that another BC book restates
+ * What each line's printing charges: Precognition as DH2 and BC print it; Fate Loom
+ * is a BC supplement's power, and Doombolt a BC power that another BC book restates
  * for a pregenerated sorcerer.
  */
 const EXPECTED: Record<'dh2' | 'bc', { flow: FlowName; charges: Record<string, number> }> = {

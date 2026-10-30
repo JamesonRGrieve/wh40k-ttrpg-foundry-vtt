@@ -7,7 +7,7 @@ import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 
 /**
- * Tier B coverage of calling a Reinforcement Character into play (DH2 core
+ * Tier B coverage of calling a Reinforcement Character into play (DH2
  * rules, #77), driven the way the GM does it: the RC is imported from its
  * compendium, its NPC sheet shows the GM-only Reinforcement panel, the panel's
  * Call button opens the call dialog, and the GM picks the caller, the

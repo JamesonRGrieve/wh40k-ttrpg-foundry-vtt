@@ -70,7 +70,7 @@ const VEHICLE_SAMPLES: readonly (PackDocumentRef & { label: string })[] = [
     },
 ];
 
-/** The longest RT core ship name. */
+/** The longest RT ship name. */
 const VOIDCRAFT_SAMPLE: PackDocumentRef = {
     pack: packHoldingName({ line: 'rt', category: 'vehicles-voidcraft' }, 'Vagabond-class Merchant Trader'),
     name: 'Vagabond-class Merchant Trader',

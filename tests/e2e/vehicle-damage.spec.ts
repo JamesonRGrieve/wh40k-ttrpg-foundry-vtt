@@ -470,7 +470,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
 
     /**
      * #678: a Flyer's −20 applies only while it is airborne (a DH2 supplement),
-     * and an attack from below it reads Rear armour (the DH2 core rules). The
+     * and an attack from below it reads Rear armour (the DH2 rules). The
      * Chimeras here carry the Flyer trait: one 3 m up, with a gunner 1.6 m ahead of
      * its centre below it, is airborne and attacked from below; one on the ground
      * with a gunner 6.5 m ahead is neither. (3 m keeps the craft inside the scene's
@@ -548,7 +548,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
 
     /**
      * #678: a burst's extra hits may move to another target within 2 m that is no
-     * harder to hit (the DH2 core rules). Spread onto a second Chimera beside the
+     * harder to hit (the DH2 rules). Spread onto a second Chimera beside the
      * first, its hit strikes that craft as a vehicle — its own facing, location
      * and armour — on a fresh d100 rather than the reversed attack roll.
      */

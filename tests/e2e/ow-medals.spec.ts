@@ -10,7 +10,7 @@ import { expect, test } from './lib/test';
 /**
  * Tier B for Only War Medals and Honours (content#32).
  *
- * The real compendium medals (from the OW core rules and an OW supplement)
+ * The real compendium medals (from the OW rules and an OW supplement)
  * are conferred on an OW character from the Battlefield panel's
  * Add Award, and by a drop on the sheet. Each shows by name with its Squad Bonus,
  * never a UUID or "[broken link]". The medal's own sheet shows what it is awarded

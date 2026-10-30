@@ -1,6 +1,5 @@
 /**
- * Storybook stories for the Black Crusade apotheosis chat card (#182 —
- * BC Core p267).
+ * Storybook stories for the Black Crusade apotheosis chat card (#182).
  *
  * The two fates the action records:
  *

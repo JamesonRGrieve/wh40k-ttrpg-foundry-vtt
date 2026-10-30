@@ -2,7 +2,7 @@
  * Storybook stories for the Deathwatch Requisition chat card (#165).
  * Exercises the two emission modes (single-brother spend, pooled spend)
  * across the four craftsmanship tiers so review can verify the cost
- * multiplier rendering against the canonical Table 5-3.
+ * multiplier rendering against the canonical craftsmanship cost multipliers.
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';

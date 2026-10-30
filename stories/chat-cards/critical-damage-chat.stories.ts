@@ -6,7 +6,7 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * Chat-card story for the DH2 Critical Damage table lookup (#108 —
- * core.md §"Critical Damage", Tables 7–7 … 7–22).
+ * §"Critical Damage", the Critical Effects tables).
  *
  * Exercises the (damageType × bodyPart × severity) → effect + rider
  * card across all four damage types and a representative low / mid /

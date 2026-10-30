@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Black Crusade Chaos Ritual dialog body (Table 6-7).
+ * Storybook stories for the Black Crusade Chaos Ritual dialog body (the Ritual Modifiers table).
  *
  * The dialog is BC-only (the action gates on the actor's line), so there is no
  * per-line variant to render. The stories frame it at the DialogV2 width it

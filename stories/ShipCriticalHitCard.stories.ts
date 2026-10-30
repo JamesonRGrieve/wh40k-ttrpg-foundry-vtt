@@ -4,14 +4,14 @@
  *
  * The runtime path is `WH40KVoidcraft.rollShipCriticalHit`: it rolls the
  * weapon's 1d5 and draws that result from the world `RollTable` "Ship
- * Critical Hits", else the `wh40k-rpg.rt-core-rolltables` compendium (RT Core
- * Table 8-12), and only when neither exists posts the
+ * Critical Hits", else RT's rolltables compendium, and only when neither
+ * exists posts the
  * `WH40K.Voidcraft.Critical.TableUnavailable` message. The card is
  * `ship-critical-hit-chat.hbs`, a thin shell over `partial/chat-card-shell.hbs`
  * that shows the drawn result's name, its rules text (the table's HTML) and
  * the source roll.
  *
- * One story per 1d5 result of Table 8-12 (Holed, Internal Damage, Sensors
+ * One story per 1d5 result of the Ship Critical Hits table (Holed, Internal Damage, Sensors
  * Damaged, Thrusters Damaged, Fire!) plus the table-unavailable fallback, so
  * `tests/storybook/issue-187-critical-hit-chart.spec.ts` can dump a screenshot.
  */
@@ -34,7 +34,7 @@ interface CardArgs {
     destroyedLabel?: string;
 }
 
-/** One Table 8-12 result as the compendium table draws it: its name and its HTML text. */
+/** One Ship Critical Hits result as the compendium table draws it: its name and its HTML text. */
 function result(rolled: number, name: string, text: string): CardArgs {
     return {
         actorName: 'Whispering Star',

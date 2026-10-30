@@ -38,7 +38,7 @@ import {
  *   three hits; the shield takes one; 9 + 7 = 16 against Armour 15 → 1 Hull.
  * - lance: roll 11 → four degrees, enough for Crit Rating 4; the shield is
  *   down, Armour is ignored, 1d10+4 = 9 Hull; the 1d5 Critical Hit is a 5,
- *   which the RT core table draws as "Fire!" (#187).
+ *   which the RT Ship Critical Hits table draws as "Fire!" (#187).
  *
  * Dice are queued per shot (see the driver). Every state is snapped: the
  * target's vitals and Damage Control before and after, the Weapons tab, the

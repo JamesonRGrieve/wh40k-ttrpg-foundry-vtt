@@ -1,8 +1,8 @@
 /**
  * Regression guard (#296): every compendium pack whose name follows the actor
  * atomization taxonomy (`<line>-<book>-actors-<category>`) must be declared in
- * `system.json` with `type: "Actor"`. Five named-NPC / bestiary packs (DH1 core,
- * DH1 ascension, DW xenos) were declared `type: "Item"` — so Foundry filed them
+ * `system.json` with `type: "Actor"`. Five named-NPC / bestiary packs (DH1 and
+ * DW ones) were declared `type: "Item"` — so Foundry filed them
  * under the Item compendium sidebar (or failed to surface them as actors), which
  * read in-world as "only the bestiary is available". The pack documents are
  * genuine Actor docs (`npc` / `dw-npc` with `system.characteristics`), so the

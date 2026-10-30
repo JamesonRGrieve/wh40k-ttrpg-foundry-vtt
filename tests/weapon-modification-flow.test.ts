@@ -1,5 +1,5 @@
 /**
- * Personal weapon-modification resolution (#136, the DH2 core rules).
+ * Personal weapon-modification resolution (#136, the DH2 rules).
  *
  * `FitModificationActionData` attaches the modification and uses up the parts
  * on a success. On DH2 a failure loses the parts, and 2+ degrees of failure

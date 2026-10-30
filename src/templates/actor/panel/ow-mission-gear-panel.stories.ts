@@ -3,7 +3,7 @@
  *
  * Covers the three visual states an operator needs to verify in review:
  *   1. Default        — squad has never rolled gear (no "last result" row).
- *   2. StandardKit    — last roll resolved to standard-kit (Table 6-4 row 3).
+ *   2. StandardKit    — last roll resolved to standard-kit (Mission Assignment Gear Results table row 3).
  *   3. SurrenderKit   — last roll catastrophically failed (4+ DoF).
  *
  * All values are fixed; per CLAUDE.md screenshot-diff stability, no

@@ -5,7 +5,7 @@
  *
  *   1. Success     — modifiers favourable, roll under target by ≥ 20.
  *   2. Failure     — no stacked modifiers, roll over base target by ≥ 30.
- *   3. NoModifiers — clean roll with no Table 6-7 stack, marginal success.
+ *   3. NoModifiers — clean roll with no Ritual Modifiers stack, marginal success.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../stories/template-support';

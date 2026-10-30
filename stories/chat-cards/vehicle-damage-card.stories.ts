@@ -21,7 +21,7 @@ import { renderSheet } from '../test-helpers';
 
 /**
  * A hit on a vehicle (content#28) on the damage and assign cards: the facing struck
- * (from the attacker's position), the hit location off Table 7-29, the facing's
+ * (from the attacker's position), the hit location off the Vehicle Hit Locations table, the facing's
  * armour after Penetration, a trait force field, the Structural Integrity it costs,
  * Critical damage past it with Reinforced Armour halving it, and the vehicle chart
  * rows — every number hoverable to its parts, every trait named. Crew sheltered by
@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 const i18n: CardLocaliser = { localize: localizeKey, format: formatKey };
 
-/** A Chimera's facing armour (DH2 Core: Front 30 / Side 22 / Rear 16). */
+/** A Chimera's facing armour (DH2: Front 30 / Side 22 / Rear 16). */
 const CHIMERA_ARMOUR = { front: 30, side: 22, rear: 16 } as const;
 
 function strike(over: Partial<VehicleStrike> = {}): VehicleStrike {
@@ -133,7 +133,7 @@ export const FrontVersusRear: Story = {
 };
 
 export const TurretRedirectedToHull: Story = {
-    name: 'Table 7-29 names a Turret the vehicle lacks: the Hull',
+    name: 'The hit location table names a Turret the vehicle lacks: the Hull',
     render: () => frame(damageCard(strike({ tableRoll: 91, redirectedFrom: 'turret' }))),
     play: async ({ canvasElement }) => {
         const note = canvasElement.querySelector('[data-vehicle-row="vehicle-location"] [data-vehicle-row-note]')?.textContent ?? '';

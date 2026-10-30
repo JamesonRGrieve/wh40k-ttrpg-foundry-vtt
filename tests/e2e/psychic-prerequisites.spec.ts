@@ -14,7 +14,7 @@ import { scaledMs } from './lib/timing';
  * the pack text never loaded, and the Advancement Dialog gated only on Psy Rating. The
  * field is now the shared structured shape talents use
  * (src/module/rules/prerequisites.ts), authored from each book's printed
- * Prerequisite line, and the dialog checks it. DH2 core prints Smite's prerequisite as
+ * Prerequisite line, and the dialog checks it. DH2 prints Smite's prerequisite as
  * "Willpower 40".
  *
  * Black Crusade's alignment and Corruption gates (#675): an unaligned, Corruption 0 sorcerer

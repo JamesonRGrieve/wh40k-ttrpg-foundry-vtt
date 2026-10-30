@@ -92,7 +92,7 @@ export interface MockSourceReference {
  * object raw renders `[object Object]` in the story the way it does in Foundry.
  */
 export function mockSourceReference(overrides?: Partial<MockSourceReference>): MockSourceReference {
-    return { provenance: 'raw', book: 'Dark Heresy 2e Core', page: '198', url: '', derivedFrom: '', errata: false, ...overrides };
+    return { provenance: 'raw', book: 'DH2 Sample Book', page: '198', url: '', derivedFrom: '', errata: false, ...overrides };
 }
 
 // ── Item ─────────────────────────────────────────────────────────────────────

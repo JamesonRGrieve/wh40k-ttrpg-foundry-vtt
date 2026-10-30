@@ -5,7 +5,7 @@ import { expect, test } from './lib/test';
 import { addCompendiumItems, cleanupProbes, openProbeSheet, snapElement } from './occult-sheet-flow';
 
 /**
- * Tier B for content#37: Rogue Trader's Void Born home world is the RT core rules' own.
+ * Tier B for content#37: Rogue Trader's Void Born home world is the RT rules' own.
  *
  * RT's pack stubs DH2's Voidborn, and that document had no RT branch, so an RT
  * character took DH2's text, DH2's source and DH2's mechanics. The

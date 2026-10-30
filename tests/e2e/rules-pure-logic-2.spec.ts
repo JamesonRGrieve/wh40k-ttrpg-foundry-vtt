@@ -273,7 +273,7 @@ async function probeRules(page: Page): Promise<{ results: FlowResult[] }> {
             fail(['requisition-test-target'], requisition.__importError);
         } else {
             guarded('requisition-test-target', () => {
-                // DH2 core Tables 5-1 / 5-2 (the ladder lives on the line config, #192).
+                // DH2's availability and craftsmanship modifier tables (the ladder lives on the line config, #192).
                 const ladder = {
                     availability: { ubiquitous: 'automatic', common: 10, rare: -20 },
                     craftsmanship: { poor: 10, common: 0, good: -20, best: -30 },

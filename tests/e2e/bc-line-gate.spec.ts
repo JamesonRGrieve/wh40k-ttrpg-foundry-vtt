@@ -142,7 +142,7 @@ test.describe.serial('BC line gate (Tier B, #596)', () => {
             await dialog.locator('select[name="mode"]').selectOption('fettered');
         });
         const { id, card } = await newCard(page, before);
-        // #178: Fettered halves PR rounding up (BC core), so a PR 3 Bound psyker manifests at 2, not 1.
+        // #178: Fettered halves PR rounding up (the BC rules), so a PR 3 Bound psyker manifests at 2, not 1.
         await expect(card).toContainText(/Effective PR\s*2(?!\d)/);
         await snapCard(page, id, 'bc-line-gate-psychic-card');
         recordCoverage('action', 'bcPsychicTest');

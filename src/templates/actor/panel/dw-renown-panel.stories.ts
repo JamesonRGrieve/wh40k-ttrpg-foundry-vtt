@@ -1,7 +1,7 @@
 /**
  * Storybook stories for the Deathwatch Renown panel (#164).
  *
- * One story per rank from TABLE 5-2 (RAW: core.md §"RENOWN"):
+ * One story per rank from the RAW Renown Rank thresholds:
  *   1. Initiated    (Renown 0..19)
  *   2. Respected    (Renown 20..39)
  *   3. Distinguished (Renown 40..59)

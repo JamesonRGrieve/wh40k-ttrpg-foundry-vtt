@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the DH2 Pinning panel (core.md §"Pinning").
+ * Storybook stories for the DH2 Pinning panel (§"Pinning").
  *
  * Renders the panel — two quick-test buttons ("Pinning Test" / "Escape
  * Pinning") that dispatch the `rollPinningTest` / `escapePinning` CharacterSheet

@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Black Crusade apotheosis panel (#182 — BC Core p267).
+ * Storybook stories for the Black Crusade apotheosis panel (#182).
  *
  * Two canonical states an operator needs to verify in review:
  *

@@ -13,7 +13,7 @@
     footerIcon="fa-rocket"
     gameSystem=gameSystem
 }}
-    {{!-- The drawn Table 8-12 result's rules text, as the compendium table authors it (HTML). --}}
+    {{!-- The drawn Ship Critical Hits result's rules text, as the compendium table authors it (HTML). --}}
     <div class="tw-px-2 tw-py-2 tw-mb-2 tw-bg-[rgba(254,245,231,0.5)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)] tw-rounded-md tw-leading-relaxed [&_p]:tw-m-0">
         {{{resultText}}}
     </div>
@@ -30,7 +30,7 @@
             {{localize "WH40K.Voidcraft.Critical.PersistsUntilRepaired"}}
         </div>
         {{#if destroyedLabel}}
-            {{!-- A result the table marks as destroying the ship (RT Core Table 8-12, #187). --}}
+            {{!-- A result the table marks as destroying the ship (#187). --}}
             <div data-wh40k-hook="ship-critical-destroyed" class="tw-font-bold tw-text-[#c0392b]">
                 <i class="fas fa-explosion"></i> {{destroyedLabel}}
             </div>

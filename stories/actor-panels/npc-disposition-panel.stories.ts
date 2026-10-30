@@ -29,7 +29,7 @@ interface PanelArgs {
 
 const EMPTY_ROW: PersonalityRow = { modifier: 0, effect: '', basis: '' };
 
-/** A Personality as a GM enters it (here the Aggressive example, DH2 Table 8–5). */
+/** A Personality as a GM enters it (here the Aggressive example, DH2's Personality table). */
 const AGGRESSIVE: NpcPersonality = {
     name: 'Aggressive',
     zeroDisposition: 'Lashes out at the Acolytes.',

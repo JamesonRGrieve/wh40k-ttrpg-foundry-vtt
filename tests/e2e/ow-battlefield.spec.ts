@@ -21,7 +21,7 @@ interface ActorRef {
 }
 
 /**
- * Two medals from the OW core compendium, as a sheet stores a conferred award: by
+ * Two medals from the OW compendium, as a sheet stores a conferred award: by
  * document UUID. The fixture once stored slugs ("award-cadian-valour"), and the panel
  * printed them (#699).
  */

@@ -6,8 +6,8 @@ import { initializeStoryHandlebars } from '../template-support';
 import { renderSheet } from '../test-helpers';
 
 /**
- * Chat-card story for the "Replace damage die with DoS" action (#129 —
- * DH2 core L10398-10414). Verifies that the amber accent button renders
+ * Chat-card story for the "Replace damage die with DoS" action (#129, DH2).
+ * Verifies that the amber accent button renders
  * alongside the standard damage card when the parent context exposes
  * `canReplaceDie: true` and the hit carries a positive `dos` value.
  */

@@ -214,7 +214,7 @@ async function compilePacks() {
     }
 
     // Determine the document collection type from the folder name.
-    // Some packs end with the segment (e.g. dh2-core-rolltables), so
+    // Some packs end with the segment (e.g. a `<line>-<book>-rolltables` pack), so
     // matching only *-type-* misclassifies them as items.
     const collectionType = detectCollectionType(folder);
 

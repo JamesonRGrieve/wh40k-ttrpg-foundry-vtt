@@ -19,7 +19,7 @@ import { chatMessageIds, firstNewCard, snapChatCard, snapWindow } from './scene-
  *   2. With a crewman aboard, Repair opens the crewman's Tech-Use test, titled
  *      "Repair Test: Chimera Armoured Transport", with a Rugged row; the posted
  *      card names the trait as the row's source.
- *   3. Difficult Terrain is the crewman's Operate (Surface) test (DH2 core:
+ *   3. Difficult Terrain is the crewman's Operate (Surface) test (DH2:
  *      treaded vehicles). He lacks that specialisation, so it is rolled
  *      untrained (rank 0), with Tracked Vehicle's +10 row.
  */

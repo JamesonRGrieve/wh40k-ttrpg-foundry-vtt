@@ -1,7 +1,7 @@
 /**
- * Storybook stories for the OW Mount panel (#159 — Hammer of the
- * Emperor §"MOUNTED COMBAT" / "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS",
- * hammer.md lines 4046-4260). Covers the three visual states an
+ * Storybook stories for the OW Mount panel (#159 — an OW supplement's
+ * §"MOUNTED COMBAT" / "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS").
+ * Covers the three visual states an
  * operator needs to verify in review:
  *
  *   1. Unmounted             — no mount linked; trait badges absent;

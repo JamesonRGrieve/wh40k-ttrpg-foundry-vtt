@@ -16,7 +16,7 @@ import { scaledMs } from './lib/timing';
  * armour silhouette used to read the PC shape off every NPC and show 0 on every
  * location — the live symptom (Wulf Tavik, built on the PDF Breacher).
  *
- * Real cases: the PDF Breacher (stat block AP 5), and the DH2 core Arbitrator
+ * Real cases: the PDF Breacher (stat block AP 5), and the DH2 Arbitrator
  * (stat block AP 9, carrying an Enforcer Light Carapace, AP 5) before and after
  * equipping the carapace. Each NPC's sheet is captured on its Combat tab.
  *
@@ -35,7 +35,7 @@ type FlowName = (typeof NPC_ARMOUR_FLOWS)[number];
 
 const DH2_BESTIARY = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, 'Adeptus Arbites Arbitrator')}`;
 const HB_BESTIARY = 'wh40k-rpg.hb-dh2-actors-bestiary';
-/** The DH2 core Enforcer Light Carapace: AP 5 on every location. */
+/** The DH2 Enforcer Light Carapace: AP 5 on every location. */
 const CARAPACE_UUID = compendiumUuid({ line: 'dh2', category: 'armour' }, 'Hm7xRcF2jNq4Wd9K');
 const CARAPACE_NAME = 'Enforcer Light Carapace';
 const CARAPACE_AP = 5;

@@ -70,8 +70,8 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
                     };
                 }
                 const tpl = HbsLib.compile(src);
-                // Renown 50 falls in the Distinguished band (40..59 per RAW
-                // TABLE 5-2). Bar fills 50% of the 40-to-60 window.
+                // Renown 50 falls in the Distinguished band (40..59 per the RAW
+                // Renown Rank thresholds). Bar fills 50% of the 40-to-60 window.
                 const html = tpl({
                     renownPanel: {
                         value: 50,
@@ -146,7 +146,7 @@ test.describe.serial('DwRenownPanel (Tier B)', () => {
         expect(result.error, `panel probe error: ${result.error ?? ''}`).toBeNull();
         expect(result.rendered, 'panel did not render').toBe(true);
         expectHooks(hookCounts, ['dw-renown-rank', 'dw-renown-progress-fill', 'dw-renown-award-btn', 'dw-renown-loss-btn']);
-        // Renown 50 must resolve to the Distinguished band (RAW TABLE 5-2).
+        // Renown 50 must resolve to the Distinguished band (RAW Renown Rank thresholds).
         expect(result.rankAttr, 'rank data attr should be "distinguished"').toBe('distinguished');
         expect(result.rankReadout, 'rank label should be "Distinguished"').toBe('Distinguished');
         expect(result.renownAttr, 'renown value should round-trip onto the section').toBe('50');

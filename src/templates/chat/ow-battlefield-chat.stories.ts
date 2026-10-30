@@ -1,7 +1,7 @@
 /**
  * Storybook stories for the OW Battlefield Awareness chat card
- * (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
- * §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+ * (#161 — §"BATTLEFIELD AWARENESS AND MANOEUVRES", §"Support";
+ * §"CREATING REGIMENTAL AWARDS").
  *
  * Payloads come straight from `requestSupport()` so any change to the
  * effective-target arithmetic / arrival timing surfaces visually here

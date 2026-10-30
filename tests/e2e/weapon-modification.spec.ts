@@ -10,7 +10,7 @@ import { expect, test } from './lib/test';
  * Tier B coverage of fitting and removing a weapon modification personally
  * (#136), driven from the weapon sheet the way a player does it:
  *
- *   - DH2 core: Fit a modification rolls Trade (Armourer) at the parts'
+ *   - DH2: Fit a modification rolls Trade (Armourer) at the parts'
  *     Availability (the Red-Dot Laser Sight is Scarce, −10); a success fits it
  *     and uses up the parts. The fitted row's screwdriver removes it with a
  *     Tech-Use test at the same modifier; a success returns the parts.
@@ -25,7 +25,7 @@ import { expect, test } from './lib/test';
  */
 
 /**
- * The parts, taken from the DH2 core weapon-mods compendium as DH2 core
+ * The parts, taken from the DH2 weapon-mods compendium as DH2
  * prints them (Scarce). The compendium mods were once typed
  * `weapon.modification`, which no Item type registers, so an actor dropped them
  * on embedding (#136); the spec now uses the compendium document itself.

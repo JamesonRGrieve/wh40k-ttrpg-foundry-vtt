@@ -1,6 +1,6 @@
 /**
  * Storybook stories for the Deathwatch Kill-team Cohesion panel
- * (#162 — core.md §"COHESION"). Covers the three visual states an
+ * (#162 — §"COHESION"). Covers the three visual states an
  * operator needs to verify in review:
  *
  *   1. FullPool   — fresh kill-team, current = max, no losses, not rallied.

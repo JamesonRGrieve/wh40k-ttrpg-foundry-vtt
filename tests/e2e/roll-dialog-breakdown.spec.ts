@@ -44,7 +44,7 @@ import { expect, test } from './lib/test';
  *      from the environment widget shows its −20 row; the shooter's passive BS
  *      talent sits under a note that says "characteristic", not "skill".
  *   3. DH1 burst + degrees: Semi-Auto Burst is +10 on the mode card and on its
- *      breakdown row (as DH1 core prints it); a 01 posts a card that prints DH1's count,
+ *      breakdown row (as DH1 prints it); a 01 posts a card that prints DH1's count,
  *      one degree per full 10 points of margin.
  *   4. DH2 burst: Full Auto Burst stays −10.
  *   5. Fitting a weapon modification from the weapon sheet: the parts'

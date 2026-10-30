@@ -390,7 +390,7 @@ async function probeOriginPathBuilder(page: Page): Promise<BuilderProbeResult> {
             }
 
             // ── 7. builder-completes-full-path ──────────────────────
-            // Walk all three DH2 core steps in sequence: preview +
+            // Walk all three DH2 steps in sequence: preview +
             // confirm an origin for each, then jump to the lineage
             // (optional) step and skip it, then advance to the
             // characteristics step. Asserts selections.size === 3 and

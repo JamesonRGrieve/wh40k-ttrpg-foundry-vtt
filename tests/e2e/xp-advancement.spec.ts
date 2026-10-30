@@ -538,7 +538,7 @@ test.describe.serial('xp gain & advancement flows (Tier B)', () => {
         });
     }
 
-    // content#36: BC's Psyker archetype is BC's own document (the BC core rules), not a stub of DH2's
+    // content#36: BC's Psyker archetype is BC's own document (the BC rules), not a stub of DH2's
     // Psyker elite advance: its sheet shows the archetype's Chaos Psyker ability and 8+1d5 Wounds.
     test('bc: the Psyker archetype is authored as BC prints it (content#36)', async ({ page }) => {
         await joinOrSkip(page);

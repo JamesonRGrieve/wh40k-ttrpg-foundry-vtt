@@ -1,5 +1,5 @@
 {{!-- Only War Logistics Test dialog (#154, #192). --}}
-{{!-- GM/player picks the item's Availability and the Table 6-2 front conditions + craftsmanship, then rolls 1d100 vs target. --}}
+{{!-- GM/player picks the item's Availability and the Logistics table's front conditions + craftsmanship, then rolls 1d100 vs target. --}}
 <div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-wh40k-system="ow">
 
     <div class="tw-mb-3 tw-text-center tw-text-[0.85rem] tw-text-amber-300 tw-italic">
@@ -14,16 +14,16 @@
         <span class="tw-font-bold tw-tabular-nums tw-text-amber-100" data-base-rating>{{baseRating}}</span>
     </div>
 
-    {{!-- Table 6-2: the item's Availability, cross-referenced with the troops deployed --}}
+    {{!-- The Logistics table: the item's Availability, cross-referenced with the troops deployed --}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="availability" labelKey="WH40K.OW.Logistics.Modifier.Availability" options=availabilityOptions gridClass="tw-grid-cols-4"}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="troopCount" labelKey="WH40K.OW.Logistics.Modifier.TroopCount" options=troopCountOptions gridClass="tw-grid-cols-3"}}
 
-    {{!-- Table 6-2: the three front-condition rows --}}
+    {{!-- The Logistics table: the three front-condition rows --}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="timeInFront" labelKey="WH40K.OW.Logistics.Modifier.TimeInFront" options=timeInFrontOptions gridClass="tw-grid-cols-5"}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="frontActive" labelKey="WH40K.OW.Logistics.Modifier.FrontActive" options=frontActiveOptions gridClass="tw-grid-cols-5"}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="warCondition" labelKey="WH40K.OW.Logistics.Modifier.WarCondition" options=warConditionOptions gridClass="tw-grid-cols-3"}}
 
-    {{!-- Table 6-6 --}}
+    {{!-- The craftsmanship table --}}
     {{> systems/wh40k-rpg/templates/prompt/partial/logistics-axis-picker.hbs axis="craftsmanship" labelKey="WH40K.OW.Logistics.CraftsmanshipLabel" options=craftsmanshipOptions gridClass="tw-grid-cols-4"}}
 
     {{!-- Standard kit toggle --}}
@@ -31,7 +31,7 @@
         {{> systems/wh40k-rpg/templates/prompt/partial/prompt-toggle.hbs action="owToggleStandardKit" on=standardKit labelKey="WH40K.OW.Logistics.StandardKitToggle"}}
     </div>
 
-    {{!-- Live target preview: a number, or the cell Table 6-2 prints instead of one --}}
+    {{!-- Live target preview: a number, or the cell the Logistics table prints instead of one --}}
     <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-2 tw-mb-3 tw-rounded-md tw-border tw-border-amber-500 tw-bg-[rgba(217,119,6,0.18)]" data-logistics-outcome="{{outcome}}">
         <span class="tw-text-sm tw-uppercase tw-tracking-[0.06em] tw-text-amber-100">
             {{localize "WH40K.OW.Logistics.TargetPreview"}}

@@ -18,7 +18,7 @@ import { scaledMs } from './lib/timing';
  * the actor's creation data), and a weapon added to an existing actor. A weapon
  * fired empty after creation stays empty (lean-weapon-hydrate.spec.ts).
  *
- * The Adeptus Arbites Arbitrator (DH2 core bestiary) carries a lean Shotgun.
+ * The Adeptus Arbites Arbitrator (DH2 bestiary) carries a lean Shotgun.
  * The imported Shotgun's weapon sheet (its Clip tile) is captured.
  *
  * Each flow records under `npc-magazine.flow`. Keys MUST match
@@ -30,7 +30,7 @@ type FlowName = (typeof NPC_MAGAZINE_FLOWS)[number];
 
 const ARBITRATOR_NAME = 'Adeptus Arbites Arbitrator';
 const BESTIARY_PACK = `wh40k-rpg.${packHoldingName({ line: 'dh2', category: 'actors-bestiary' }, ARBITRATOR_NAME)}`;
-/** The DH2 core Hand Flamer: clip 2. */
+/** The DH2 Hand Flamer: clip 2. */
 const HAND_FLAMER_UUID = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'j7K8l9M0n1O2p3Q4');
 
 interface FlowResult {

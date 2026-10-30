@@ -74,7 +74,7 @@ export const Standard: Story = {
 };
 
 export const Sheer: Story = {
-    name: 'Sheer — Hard (-20) per errata L113',
+    name: 'Sheer — Hard (-20) per errata',
     args: { surface: 'sheer' },
 };
 

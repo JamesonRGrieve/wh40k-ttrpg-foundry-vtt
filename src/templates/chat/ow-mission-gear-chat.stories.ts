@@ -64,18 +64,18 @@ function breakdownFromTarget(modifierLabels: ReadonlyArray<{ description: string
     return { target: composed.target, breakdown: rows };
 }
 
-/** Neutral context — only the Ordinary +10 bonus stacked, no Table 6-3 mods. */
+/** Neutral context — only the Ordinary +10 bonus stacked, no gear modifier table mods. */
 const NEUTRAL = breakdownFromTarget([]);
 const NEUTRAL_RESOLUTION = resolveGearOutcome({ degreesOfSuccess: 1, degreesOfFailure: 0 });
 
-/** Stacked failure context — desperate situation, Table 6-3 mods drag target down. */
+/** Stacked failure context — desperate situation, gear modifier table mods drag target down. */
 const STACKED_FAIL = breakdownFromTarget([
     { description: 'remote-warzone', value: -10, labelKey: 'WH40K.OW.MissionGear.Modifier.OrdinaryBonus' },
     { description: 'unusual-request', value: -20, labelKey: 'WH40K.OW.MissionGear.Modifier.OrdinaryBonus' },
 ]);
 const FAIL_RESOLUTION = resolveGearOutcome({ degreesOfSuccess: 0, degreesOfFailure: 5 });
 
-/** Stacked success context — favourable Table 6-3 mods, big DoS, bonus item earned. */
+/** Stacked success context — favourable gear modifier table mods, big DoS, bonus item earned. */
 const STACKED_SUCCESS = breakdownFromTarget([{ description: 'standard-mission', value: 10, labelKey: 'WH40K.OW.MissionGear.Modifier.OrdinaryBonus' }]);
 const SUCCESS_RESOLUTION = resolveGearOutcome({ degreesOfSuccess: 4, degreesOfFailure: 0 });
 // Deterministic RNG so the bonus-item screenshot doesn't drift between runs.
@@ -123,7 +123,7 @@ export const SurrenderKitStacked: Story = {
 };
 
 export const BonusItemsSuccess: Story = {
-    name: 'Bonus Items — standard mission, 4 DoS, Table 6-5 bonus rolled',
+    name: 'Bonus Items — standard mission, 4 DoS, Random Issue Gear bonus rolled',
     args: {
         gameSystem: 'ow',
         success: true,

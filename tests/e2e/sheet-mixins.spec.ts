@@ -49,7 +49,7 @@ interface ProbeResult {
     flows: FlowResult[];
 }
 
-/** The DH2 core talents pack, found by the Superior Chirurgeon talent it holds. */
+/** The DH2 talents pack, found by the Superior Chirurgeon talent it holds. */
 const TALENT_PACK = `wh40k-rpg.${packHoldingId({ line: 'dh2', category: 'talents' }, 'DH2aTlnt00000071')}`;
 
 async function probeSheetMixins(page: Page): Promise<ProbeResult> {

@@ -1,5 +1,5 @@
 /**
- * Storybook stories for the Navigator Powers panel (dd17cf9c6, RT core
+ * Storybook stories for the Navigator Powers panel (dd17cf9c6, RT
  * §"Using Navigator Powers").
  *
  * Each owned power is a row with its test, its action and three controls: Use
