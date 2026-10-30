@@ -13,15 +13,13 @@
  * - `system`: a partial overlay DEEP-merged onto the body's `system`. A stub
  *   that is the same thing as its target under extra terms carries only those
  *   terms, not a copy of the whole body. Example: a DH2 Reinforcement Character
- *   that "uses the rules from the NPC profile" in the bestiary, plus its
- *   Influence terms and Fate (Enemies Without p. 41, #77).
+ *   that uses the rules of an NPC profile in the bestiary, plus its Influence
+ *   terms and Fate (#77).
  *   Objects merge key by key. Arrays and scalars in the overlay replace the
  *   body's value.
  * - `addItems`: embedded items APPENDED to the body's `items`, never replacing
  *   them. They are lean compendium-joined items like any actor's. Example: the
- *   Weapon Training talents those RCs get for their standard weapons ("All have
- *   any appropriate Weapon Training talents associated with their standard
- *   weapons", Enemies Without p. 41).
+ *   Weapon Training talents those RCs get for their standard weapons.
  */
 
 const fs = require('node:fs');

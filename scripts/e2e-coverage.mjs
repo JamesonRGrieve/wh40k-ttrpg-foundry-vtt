@@ -917,7 +917,7 @@ recordDimension('dh2.elite-advance', covered['dh2.elite-advance'], ['compendium-
 // src/module/applications/character-creation/origin-path-builder.ts: step
 // navigation (#goToStep, #goToLineage, #skipLineage), origin preview/confirm
 // (#previewOriginCard, #confirmSelection), reset of in-memory state, and a
-// multi-step walk through every DH2 core step. Keys MUST match the
+// multi-step walk through every DH2 origin step. Keys MUST match the
 // recordCoverage('origin-builder.flow', ...) calls in the spec.
 const ORIGIN_BUILDER_FLOWS = [
     'builder-renders-step-list',

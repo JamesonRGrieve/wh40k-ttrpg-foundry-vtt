@@ -10,11 +10,11 @@
  * nothing that isn't a current pack survives.
  *
  * Book labels are taken (in priority order) from: the labels already present in the
- * current `packFolders` tree (authoritative), then a known book registry, then a
- * title-cased slug fallback. Run via `pnpm packs:folders`; `--check` only verifies
+ * current `packFolders` tree (authoritative), then the private content's book-label
+ * registry (`book-labels.json`), then a title-cased slug fallback. Run via `pnpm packs:folders`; `--check` only verifies
  * (non-zero exit on drift) so it can gate CI / pre-commit.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { PRIVATE_PACK_MANIFEST } from './lib/pack-manifest.mjs';
@@ -23,6 +23,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 // The foldered packs are the private content's, declared in its own fragment
 // (scripts/lib/pack-manifest.mjs) — the public src/system.json declares none.
 const SYS_PATH = resolve(ROOT, PRIVATE_PACK_MANIFEST);
+// Book titles are content, so their slug → label map lives beside the manifest.
+const BOOK_LABELS_PATH = resolve(dirname(SYS_PATH), 'book-labels.json');
 
 const LINE_LABELS = {
     bc: 'Black Crusade',
@@ -40,62 +42,8 @@ const LINE_LABELS = {
 const CATEGORY_PREFIXES = new Set(['items', 'origins', 'actors', 'journals', 'rolltables', 'vehicles', 'adventures', 'patrons', 'endeavours', 'locations']);
 
 /** Book slug → display label, for books with no pack currently foldered (so the
- *  tree can't supply the label). Mirrors the Book-slug registry in docs/pack-authoring.md. */
-const BOOK_REGISTRY = {
-    core: 'Core Rulebook',
-    // DH1
-    inquisitor: "Inquisitor's Handbook",
-    ascension: 'Ascension',
-    // DH2
-    beyond: 'Enemies Beyond',
-    within: 'Enemies Within',
-    without: 'Enemies Without',
-    // BC
-    binding: 'Binding Contracts',
-    blood: 'Tome of Blood',
-    decay: 'Tome of Decay',
-    excess: 'Tome of Excess',
-    fate: 'Tome of Fate',
-    corruption: 'Hand of Corruption',
-    chains: 'Broken Chains',
-    // DW
-    achilus: 'The Achilus Assault',
-    chosen: "The Emperor's Chosen",
-    founding: 'First Founding',
-    honour: 'Honour the Chapter',
-    jericho: 'The Jericho Reach',
-    outer: 'The Outer Reach',
-    rites: 'Rites of Battle',
-    xenos: 'Mark of the Xenos',
-    knownofear: 'Know No Fear',
-    ark: 'Ark of Lost Souls',
-    tempest: 'Rising Tempest',
-    // OW
-    enemies: 'Enemies of the Imperium',
-    hammer: 'Hammer of the Emperor',
-    shield: 'Shield of Humanity',
-    surrender: 'No Surrender',
-    eleventh: 'Eleventh Hour',
-    testament: 'Final Testament',
-    // RT
-    abyss: 'Edge of the Abyss',
-    faith: 'Faith and Coin',
-    hostile: 'Hostile Acquisitions',
-    storm: 'Into the Storm',
-    koronus: 'Koronus Bestiary',
-    stars: 'Stars of Inequity',
-    inequity: 'Stars of Inequity',
-    tau: 'Tau Character Guide',
-    navis: 'The Navis Primer',
-    reaver: 'The Soul Reaver',
-    kin: 'The Dark Kin',
-    epoch: 'Epoch Koronus',
-    // IM
-    inquisition: "Inquisition Player's Guide",
-    chemical: 'Chemical Burn',
-    // shared
-    gmkit: "Game Master's Kit",
-};
+ *  tree can't supply the label). Absent without the private content. */
+const BOOK_REGISTRY = existsSync(BOOK_LABELS_PATH) ? JSON.parse(readFileSync(BOOK_LABELS_PATH, 'utf8')).labels : {};
 
 const GENERAL = 'General';
 const HOMEBREW_BOOK = 'Homebrew';

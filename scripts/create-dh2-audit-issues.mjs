@@ -2,7 +2,8 @@
 /**
  * Bootstrap-create the DH2 gameplay-rules audit issues on GitHub.
  *
- * Reads `docs/dh2-audit-issues.yaml`, looks up the active set of open and
+ * Reads the private content's `audits/dh2-audit-issues.yaml` (it cites the
+ * books, so it lives with them), looks up the active set of open and
  * closed audit issues via `gh issue list --label dh2-audit`, and creates
  * any entry whose title is not already present. Idempotent — running it
  * twice never produces duplicates.
@@ -17,7 +18,7 @@ import yaml from 'js-yaml';
 
 const __filename = fileURLToPath(import.meta.url);
 const repoRoot = path.resolve(path.dirname(__filename), '..');
-const inventoryPath = path.join(repoRoot, 'docs', 'dh2-audit-issues.yaml');
+const inventoryPath = path.join(repoRoot, 'src', 'packs-private', 'audits', 'dh2-audit-issues.yaml');
 const repo = 'JamesonRGrieve/wh40k-ttrpg-foundry-vtt';
 
 const inventory = yaml.load(fs.readFileSync(inventoryPath, 'utf8'));

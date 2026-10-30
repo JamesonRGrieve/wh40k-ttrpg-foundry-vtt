@@ -158,7 +158,7 @@ Effects vary by:
 -   **Damage Type**: Impact, Rending, Explosive, Energy
 -   **Hit Location**: Head, Body, Arm, Leg
 
-See Core Rulebook p.251-255 for full tables.
+The full tables are the critical-injury compendium content each line's packs supply.
 
 ## FAQ
 

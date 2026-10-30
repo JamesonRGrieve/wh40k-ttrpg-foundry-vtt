@@ -25,8 +25,8 @@
  * matching Foundry's `buildUuid`:
  *   - world document  (collection is a bare Document type name, e.g. "Actor") ->
  *       `<DocumentName>.<id>`               e.g. `Actor.abcd1234`
- *   - compendium pack (collection is a pack id, e.g. "wh40k-rpg.im-core-items") ->
- *       `Compendium.<packId>.<id>`          e.g. `Compendium.wh40k-rpg.im-core-items.abcd1234`
+ *   - compendium pack (collection is a pack id, e.g. "wh40k-rpg.<pack>") ->
+ *       `Compendium.<packId>.<id>`          e.g. `Compendium.wh40k-rpg.<pack>.abcd1234`
  *     (the embedded DocType is resolved by Foundry's `parseUuid` from the pack at
  *      load time; it is not knowable offline without the running `game.packs`, and
  *      Foundry's own `buildUuid` omits it here too.)

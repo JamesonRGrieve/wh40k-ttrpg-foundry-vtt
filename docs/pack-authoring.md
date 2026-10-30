@@ -276,7 +276,8 @@ registry is the authoritative slug ↔ title map and **must mirror the standardi
 `source.<line>.book` string** the book's content carries. One book = one slug; do
 not coin a new slug for a book that already has one, and do not reuse a slug for
 two books. The concrete per-line registry lives with the content (the private
-submodule holds the real book titles); public generic content uses `core` for its
+submodule's `book-labels.json` holds the real book titles, read by
+`scripts/gen-pack-folders.mjs`); public generic content uses `core` for its
 single implied book. `errata` is **not** a book slug — errata is an entity flag
 (see *Migration debt*), not a pack/book.
 
@@ -465,7 +466,7 @@ variant of. It holds the Foundry UUID of that base item, or `""` when the item
 
 ```json
 "system": {
-  "variantOf": "Compendium.wh40k-rpg.dh2-core-items-weapons.Item.<base-id>"
+  "variantOf": "Compendium.wh40k-rpg.<line>-<book>-items-weapons.Item.<base-id>"
 }
 ```
 
@@ -587,7 +588,7 @@ Pack source files in `_source/` may be authored in one of two formats:
 
 ```json
 {
-  "reference": "../../../dark-heresy-2/dh2-core-items-weapons/_source/base-item_<id>.json",
+  "reference": "../../../<line-dir>/<line>-<book>-items-weapons/_source/base-item_<id>.json",
   "_id": "<own 16-char id>",
   "name": "<local name over the shared body>",
   "img": "systems/wh40k-rpg/..."

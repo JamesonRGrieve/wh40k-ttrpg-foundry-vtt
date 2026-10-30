@@ -243,7 +243,7 @@ best: { label: 'RT.Craftsmanship.Best', modifier: 10 },
 **Line 672-698: `weaponQualities` object**
 
 -   ✅ Has `'reliable'`, `'unreliable'`, `'unreliable-2'`
--   ❓ What is `'unreliable-2'`? (not in core rulebook)
+-   ❓ What is `'unreliable-2'`? (no printed quality)
 -   ❓ What is `'never-jam'`? (not in weaponQualities)
 
 ## Questions for Clarification
@@ -340,7 +340,5 @@ best: { label: 'RT.Craftsmanship.Best', modifier: 10 },
 
 ## References
 
--   Rogue Trader Core Rulebook: Weapon Craftsmanship (p. ???)
--   Dark Heresy 2e Core Rulebook: Craftsmanship (p. ???)
 -   Current implementation: `src/module/data/item/weapon.mjs:254-290`
 -   CONFIG: `src/module/config.mjs:59-64`
