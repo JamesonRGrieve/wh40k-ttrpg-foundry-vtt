@@ -1,5 +1,5 @@
 /**
- * Drugs and Addiction tests (#122 — core.md L7530-7630).
+ * Drugs and Addiction tests (#122).
  *
  * Each use of a drug-class item with an addictive rating triggers a
  * Willpower test (target = WP − substance rating). On failure, the

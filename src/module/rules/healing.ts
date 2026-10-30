@@ -52,7 +52,7 @@ export function getNaturalHealingDays(tier: DamageTier): number {
 }
 
 /**
- * RAW First-Aid test penalty for the patient's condition (DH2 core rules):
+ * RAW First-Aid test penalty for the patient's condition (DH2 rules):
  * Challenging (+0) base, **−10 if Heavily Damaged**, **−10 per point of Critical
  * damage** if Critically Damaged. Lightly Damaged / Unharmed carry no penalty.
  * Content-agnostic — it is the First Aid rule keyed off the patient's tier, not a

@@ -6,7 +6,7 @@
  * via `mergeGiftDeltas`, and the acquisition-roll bookkeeping.
  *
  * Per Direction #7 the fixtures are structural — no real gift names or
- * values from Table 9-1; the catalogue lives in the compendium.
+ * values from the Gifts of the Gods table; the catalogue lives in the compendium.
  */
 import { describe, expect, it } from 'vitest';
 import {

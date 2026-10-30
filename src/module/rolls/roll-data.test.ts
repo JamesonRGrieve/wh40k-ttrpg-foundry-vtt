@@ -6,7 +6,7 @@ import { readRepoFile } from '../testing/repo-file.ts';
 import { buildModifierComponents, clampModifierToCap, collectTargetConditionRows, RollData, ROLL_MODIFIER_CAP, WeaponRollData } from './roll-data';
 
 /**
- * Regression tests for the ±60 modifier cap (DH2 core.md L1050).
+ * Regression tests for the ±60 modifier cap (DH2 rules).
  * The clamp is consumed by `RollData.calculateTotalModifiers` and the
  * resulting `rawModifierTotal` / `modifierCapFired` fields are
  * surfaced on chat cards so the GM can see when the cap fired.

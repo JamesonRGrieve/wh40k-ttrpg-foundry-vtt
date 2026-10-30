@@ -4,12 +4,11 @@
  *
  * The runtime fix for #199 lives in `origin-path-builder.ts`:
  * `#rollDivination` consults the world `RollTable.getName("Divination")`,
- * then the `dh2-core-rolltables` compendium, and finally falls back to a
+ * then the line's Divination rolltable compendium, and finally falls back to a
  * 1d100 with the `WH40K.OriginPath.DivinationTableUnavailable` message —
  * so the player never sees Foundry's "no available results" notification
  * even when the compendium pack is absent. The actual Divination
- * RollTable JSON ships in the `src/packs` submodule at
- * `dark-heresy-2/dh2-core-rolltables/_source/divination_*.json` with 22
+ * RollTable JSON ships in a private packs submodule with 22
  * weighted result rows covering 1–100.
  *
  * This story renders the same `[data-wh40k-hook="csd-divination"]` markup
@@ -88,7 +87,7 @@ export const Empty: Story = {
 
 /**
  * Post-roll state with a real DH2 RAW Divination result text (rolled
- * 6–9 on Table 2-9). This is the happy-path result the user should
+ * 6–9 on the Divination table). This is the happy-path result the user should
  * see when the compendium pack is loaded.
  */
 export const Rolled: Story = {

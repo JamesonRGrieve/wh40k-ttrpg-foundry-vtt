@@ -1,7 +1,7 @@
 /**
  * Only War · Battlefield Awareness & Manoeuvres persistence slot
- * (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
- * §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+ * (#161 — the OW "Battlefield Awareness and Manoeuvres", "Support" and
+ * "Creating Regimental Awards" rules).
  *
  * Two engines fold into one actor-level mixin because they share the
  * Battlefield panel and chat surface: the Support Asset Request loop

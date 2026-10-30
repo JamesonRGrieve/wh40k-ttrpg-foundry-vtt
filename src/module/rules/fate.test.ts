@@ -10,7 +10,7 @@ import { burnFateUpdate, fateBreakdownRows, fateTotalWithLegacyThreshold, origin
  * has, so neither landed.
  */
 
-describe('burnFateUpdate (DH2; DH1 / DW / OW core)', () => {
+describe('burnFateUpdate (DH2; DH1 / DW / OW)', () => {
     it('lowers the Fate total by 1 and cuts current points above it', () => {
         expect(burnFateUpdate({ max: 3, value: 3 })).toEqual({ 'system.fate.max': 2, 'system.fate.value': 2 });
     });

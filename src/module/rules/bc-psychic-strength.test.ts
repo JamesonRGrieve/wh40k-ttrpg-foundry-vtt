@@ -18,7 +18,7 @@ import {
 } from './bc-psychic-strength';
 
 describe('bc-psychic-strength :: push ceilings', () => {
-    it('exposes the RAW Table 6-1 ceilings', () => {
+    it('exposes the RAW psyker class push ceilings', () => {
         expect(BC_PSYKER_PUSH_CEILING.bound).toBe(3);
         expect(BC_PSYKER_PUSH_CEILING.unbound).toBe(5);
         expect(BC_PSYKER_PUSH_CEILING.daemonic).toBe(4);
@@ -36,7 +36,7 @@ describe('bc-psychic-strength :: effectivePsyRating', () => {
         expect(effectivePsyRating({ mode: 'fettered', basePR: 4, pushLevel: 0, psykerClass: 'bound' })).toBe(2);
     });
 
-    it('fettered halves base PR rounding up for odd base (#178: BC core "halve his PR (rounding up)")', () => {
+    it('fettered halves base PR rounding up for odd base (#178: BC "halve his PR (rounding up)")', () => {
         expect(effectivePsyRating({ mode: 'fettered', basePR: 3, pushLevel: 0, psykerClass: 'bound' })).toBe(2);
         expect(effectivePsyRating({ mode: 'fettered', basePR: 5, pushLevel: 0, psykerClass: 'unbound' })).toBe(3);
         expect(effectivePsyRating({ mode: 'fettered', basePR: 7, pushLevel: 0, psykerClass: 'daemonic' })).toBe(4);

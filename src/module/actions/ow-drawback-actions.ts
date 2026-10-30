@@ -1,7 +1,7 @@
 /**
  * Only War Regimental-Drawback + Multiple-Comrade action handlers
- * (#160 — hammer.md §"REGIMENTAL DRAWBACKS" line 1150,
- *         §"Comrade Advances / Multiple Comrades" lines 1677, 1713).
+ * (#160 — the OW Regimental Drawbacks and Comrade Advances /
+ *         Multiple Comrades rules).
  *
  * Three sheet-action methods wired into the character-sheet action map:
  *

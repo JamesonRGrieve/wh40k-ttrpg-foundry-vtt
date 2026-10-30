@@ -83,7 +83,7 @@ export const Default: Story = {
         await expect(active?.querySelector<HTMLSelectElement>('[data-field="scope"]')?.value).toBe('minoris');
         await expect(active?.querySelector<HTMLInputElement>('[data-field="investigationPoints"]')?.value).toBe('350');
         await expect(active?.textContent).toContain('350 / 600 IP');
-        // Clue buttons carry the printed Table 2–7 values and the card's index.
+        // Clue buttons carry the printed clue values and the card's index.
         const clues = Array.from(active?.querySelectorAll<HTMLElement>('[data-action="addClue"]') ?? []);
         await expect(clues.map((b) => b.dataset['significance'])).toEqual(['minor', 'major', 'vital']);
         await expect(clues.at(2)?.textContent).toContain('+200');

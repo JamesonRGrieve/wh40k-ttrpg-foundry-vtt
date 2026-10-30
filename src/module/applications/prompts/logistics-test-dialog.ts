@@ -1,10 +1,10 @@
 /**
  * @file LogisticsTestDialog — OW Squad Logistics Test dialog (#154, #192).
  *
- * The player / GM picks the requested item's Availability and the Table 6-2
+ * The player / GM picks the requested item's Availability and the
  * front conditions (troops deployed, time spent in front, front active, war
  * conditions), toggles the standard-kit bonus, picks craftsmanship, then
- * rolls. An item Table 6-2 rates "Automatic" for the deployed troops is
+ * rolls. An item the Availability by Front Conditions table rates "Automatic" for the deployed troops is
  * obtained with no roll; a "GM's Discretion" cell cannot be rolled.
  *
  * Pure UI shell over `src/module/rules/ow-logistics.ts` — the dialog holds no

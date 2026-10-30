@@ -1,23 +1,23 @@
 /**
  * @file Spreading a burst's hits across targets (#513).
  *
- * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst follows the same rule), in
+ * DH2, Semi-Auto Burst (Full Auto Burst follows the same rule), in
  * summary: each hit beyond the first may stay on the original target or move to
  * another target within 2 m, as long as that target is no harder to hit than the
- * original. Extra hits kept on one target take their locations from Table 7-2
- * (Multiple Hits).
+ * original. Extra hits kept on one target take their locations from the
+ * Multiple Hits table.
  *
  * Two rules live here, and they interact:
  *
  *   1. The FIRST hit always strikes the declared target — only hits after it may
  *      be moved.
- *   2. Table 7-2 is walked PER TARGET. A hit moved onto a second target is that
+ *   2. The Multiple Hits table is walked PER TARGET. A hit moved onto a second target is that
  *      target's first hit and starts its sequence over; it does not inherit the
  *      original target's position in the walk. Getting this wrong is the
  *      difference between "three hits to the body" and "a hit each on three
  *      people".
  *
- * Suppressing Fire allocates differently (DH2 core ch. VII): the GM places each
+ * Suppressing Fire allocates differently (DH2): the GM places each
  * hit on a randomly chosen occupant of the fire zone, and each further pair of
  * DoS adds one more randomly placed hit. It therefore supplies its own ordering
  * rather than an attacker-chosen one.
@@ -43,7 +43,7 @@ export interface AllocatedHit {
     /** The target this hit lands on. */
     readonly target: AllocationTarget;
     /**
-     * This hit's ordinal WITHIN ITS OWN TARGET, zero-based. Table 7-2 is indexed
+     * This hit's ordinal WITHIN ITS OWN TARGET, zero-based. The Multiple Hits table is indexed
      * by this, not by the hit's position in the burst — the fourth hit of a burst
      * that is the first to land on a second target is that target's hit 0.
      */

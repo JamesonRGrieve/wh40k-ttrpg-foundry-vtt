@@ -39,7 +39,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      */
     declare specialization: string;
     /**
-     * Fear (X) rating per core.md §"Fear" — 0 = no fear test required,
+     * Fear (X) rating per the "Fear" rules — 0 = no fear test required,
      * 1–4 = test difficulty tiers, 5+ = roll on Shock table with the X
      * value as a modifier. Independent of `level` because some non-Fear
      * traits already use `level` for unrelated tiers.

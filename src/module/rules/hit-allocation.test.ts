@@ -13,7 +13,7 @@ describe('allocateHits', () => {
     });
 
     it('pins the FIRST hit to the declared target even when spreading', () => {
-        // RAW (DH2 core ch. VII) only lets the hits AFTER the first be moved to
+        // RAW (DH2) only lets the hits AFTER the first be moved to
         // other eligible targets within 2 m.
         const hits = allocateHits({ hitCount: 3, originalTarget: CULTIST, extraTargets: [CHAMPION], strategy: 'spread' });
         expect(hits[0]?.target.id).toBe('cultist');
@@ -24,7 +24,7 @@ describe('allocateHits', () => {
         expect(hits.map((h) => h.target.id)).toEqual(['cultist', 'champion', 'heretek', 'cultist']);
     });
 
-    it('restarts Table 7-2 per target — a moved hit is that target’s FIRST hit', () => {
+    it('restarts the Multiple Hits table per target — a moved hit is that target’s FIRST hit', () => {
         // The load-bearing rule: a hit moved onto a second target does not inherit
         // the original target's position in the location walk.
         const hits = allocateHits({ hitCount: 4, originalTarget: CULTIST, extraTargets: [CHAMPION], strategy: 'spread' });

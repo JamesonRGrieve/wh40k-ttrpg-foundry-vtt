@@ -1,5 +1,5 @@
 /**
- * Ramming flow (#188 — RT core).
+ * Ramming flow (#188 — RT).
  *
  * A Manoeuvre-phase action: the helmsman's Hard (−20) Pilot (Space Craft) +
  * Manoeuvrability Test. On a success the rammed ship takes the hull-size die

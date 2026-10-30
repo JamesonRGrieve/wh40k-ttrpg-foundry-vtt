@@ -18,7 +18,7 @@ describe('dw-squad-mode — defaults', () => {
     });
 });
 
-describe('dw-squad-mode — getSupportRange (Table 7-9)', () => {
+describe('dw-squad-mode — getSupportRange', () => {
     it('returns 30m for Initiated (visual + vocal)', () => {
         expect(getSupportRange('initiated')).toEqual({ visual: 30, vocal: 30 });
     });

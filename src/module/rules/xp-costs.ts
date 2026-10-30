@@ -28,7 +28,7 @@ export function psyRatingTotalCost(rating: number): number {
 }
 
 /**
- * Heuristic XP cost of learning a psychic power. DH2 core powers range
+ * Heuristic XP cost of learning a psychic power. DH2 powers range
  * 100–600 XP; the cost scales with the power's PR requirement (`prCost`),
  * floored at 100. Mirrors the Advancement Dialog's per-power charge so derived
  * spend matches what was paid.
@@ -40,7 +40,7 @@ export function psychicPowerCost(prCost: number): number {
 
 /**
  * The XP a psychic power costs: the value the book prints when the power carries
- * one (DH2 core: "Value: 300 xp"), else the PR heuristic (#642). The
+ * one (DH2: "Value: 300 xp"), else the PR heuristic (#642). The
  * Advancement Dialog charges this and the character's spend calculation counts it,
  * so the two cannot disagree.
  * @param printed  The power's authored `cost`, or null / undefined when absent.

@@ -1,7 +1,7 @@
 /**
  * Only War · Regimental Drawbacks + Mixed Regiments + Multiple Comrades
- * (#160 — hammer.md §"REGIMENTAL DRAWBACKS" line 1150, §"MIXED REGIMENTS"
- * line 1311, §"Comrade Advances / Multiple Comrades" lines 1677, 1713).
+ * (#160 — the OW Regimental Drawbacks, Mixed Regiments, and Comrade
+ * Advances / Multiple Comrades rules).
  *
  * Pure rules / math layer. Per Direction #7 the engine never references
  * concrete drawback names, homeworld ids, or commanding officer ids —
@@ -198,8 +198,8 @@ export function applyMixedRegimentOverrides(
 
 /**
  * A character's full Comrade roster. RAW each PC has exactly one
- * Comrade; Comrade Advances (hammer.md line 1677) and Multiple
- * Comrades (line 1713) extend that with additional Comrades that
+ * Comrade; Comrade Advances and Multiple
+ * Comrades extend that with additional Comrades that
  * are tracked independently.
  *
  * - `primaryId` — the canonical Comrade (the one whose Cohesion / hit-

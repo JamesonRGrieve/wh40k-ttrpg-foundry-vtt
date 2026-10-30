@@ -52,7 +52,7 @@ describe('logisticsOptions', () => {
 });
 
 describe('logisticsRows', () => {
-    it('prints the rating, the four Table 6-2 parts and craftsmanship, omitting bonuses that are off', () => {
+    it('prints the rating, the four front-conditions parts and craftsmanship, omitting bonuses that are off', () => {
         const ctx = context();
         const rows = logisticsRows(ctx, breakdownOf(ctx), echo);
         expect(rows.map((r) => r.key)).toEqual(['rating', 'availability', 'timeInFront', 'frontActive', 'warCondition', 'craftsmanship']);

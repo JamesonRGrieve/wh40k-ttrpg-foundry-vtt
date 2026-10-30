@@ -1,8 +1,7 @@
 /**
  * Only War · Regimental Drawbacks + Multiple Comrades roster
- * persistence slot (#160 — hammer.md §"REGIMENTAL DRAWBACKS" line 1150,
- * §"MIXED REGIMENTS" line 1311, §"Comrade Advances / Multiple Comrades"
- * lines 1677, 1713).
+ * persistence slot (#160 — the OW Regimental Drawbacks, Mixed Regiments
+ * and Comrade Advances / Multiple Comrades rules).
  *
  * Two pieces of state owned by this slot:
  *

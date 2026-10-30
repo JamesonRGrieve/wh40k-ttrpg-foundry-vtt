@@ -29,7 +29,7 @@ export function isD100Success(roll: number, target: number): boolean {
 
 /**
  * Degrees of Success for a passed d100 test (`roll ≤ target`): the full tens of
- * the margin, plus one — a bare pass is 1 DoS (core.md §"Degrees of Success").
+ * the margin, plus one — a bare pass is 1 DoS (the "Degrees of Success" rules).
  * A failed roll (`roll > target`) yields 0, so callers can use the return value
  * directly without a separate pass check.
  *

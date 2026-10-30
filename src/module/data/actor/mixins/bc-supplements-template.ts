@@ -5,7 +5,7 @@
  * `src/module/rules/bc-supplement-mechanics.ts`:
  *
  *   - `daemonEngineRating`     — the X value of the Daemon Engine(X) trait
- *                                (decay.md :1379-1391). 0 means "not a
+ *                                (a BC supplement). 0 means "not a
  *                                Daemon Engine" — the rage bonus surface
  *                                is hidden. Non-zero values drive
  *                                {@link daemonEngineRageBonus} along with

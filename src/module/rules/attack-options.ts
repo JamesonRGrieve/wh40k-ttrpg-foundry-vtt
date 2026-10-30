@@ -55,7 +55,7 @@ type SituationalDamageEffect = {
     coverAP?: number;
     /**
      * Override the rolled hit location. Used by Helpless-target melee per
-     * core.md §"Helpless Targets" (RAW: auto-hit head).
+     * the "Helpless Targets" rules (RAW: auto-hit head).
      */
     forceLocation?: string;
 };

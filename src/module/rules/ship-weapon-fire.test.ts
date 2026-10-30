@@ -23,7 +23,7 @@ import {
 } from './ship-weapon-fire.ts';
 
 /**
- * RT ship weapon fire (#184 — RT core errata, the space combat rules). The book's
+ * RT ship weapon fire (#184 — RT errata, the space combat rules). The book's
  * own worked example (the Sabre against a raider) is the anchor: BS 48 at
  * close range is a 58; a 29 is two degrees and three macrobattery hits; the
  * raider's one void shield takes the first; 16 damage against Armour 15 is one

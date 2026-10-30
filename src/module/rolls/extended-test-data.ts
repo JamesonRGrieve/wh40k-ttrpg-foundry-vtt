@@ -1,5 +1,5 @@
 /**
- * Extended Test state container (core.md §"Extended Tests").
+ * Extended Test state container (the "Extended Tests" rules).
  *
  * Tracks cumulative DoS toward a threshold over multiple attempts,
  * plus a fail counter to short-circuit on too many failures. Lives on

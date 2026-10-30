@@ -447,7 +447,7 @@ export interface VehicleStrike {
  * The hit-location table value a hit reads off the attack roll — the roll
  * reversed — or null when it reads none: on a line with one chart (every hit
  * strikes the Hull), for a hit after the first on its vehicle, for any hit on a
- * craft a burst spread onto (each rolls a fresh d100, DH2 core), and with
+ * craft a burst spread onto (each rolls a fresh d100, DH2 rules), and with
  * no attack roll.
  */
 export function reversedTableRoll(profile: VehicleTargetProfile, hitNumber: number, attackRoll: number | null): number | null {

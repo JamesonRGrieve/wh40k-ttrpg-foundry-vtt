@@ -6,7 +6,7 @@ import { isVehicleLocationId, VEHICLE_LOCATION_IDS, vehicleLocationLabelKey } fr
 /** Stable hit-location identifier (`rightArm`, …): what a hit and a called shot store; labels resolve via {@link hitLocationLabel}. */
 export type HitLocationId = BodyLocationId;
 
-/** A hit location's langpack keys and Table 7-3 reversed-roll band. */
+/** A hit location's langpack keys and hit locations table reversed-roll band. */
 interface HitLocationDef {
     /** Full display name ("Right Arm"). */
     readonly labelKey: I18nKey;
@@ -19,7 +19,7 @@ interface HitLocationDef {
 }
 
 /**
- * Labels and Table 7-3 bands for every location id. Keyed by the shared
+ * Labels and hit locations table bands for every location id. Keyed by the shared
  * {@link BODY_LOCATIONS} ids, so the compiler rejects a missing or unknown
  * location — ids, labels and bands cannot drift apart.
  */
@@ -56,7 +56,7 @@ const HIT_LOCATION_DEFS: Record<HitLocationId, HitLocationDef> = {
     },
 };
 
-/** Location ids in Table 7-3 (d100) order. */
+/** Location ids in hit locations table (d100) order. */
 export const HIT_LOCATION_IDS: readonly HitLocationId[] = [...BODY_LOCATIONS].sort((a, b) => HIT_LOCATION_DEFS[a].min - HIT_LOCATION_DEFS[b].min);
 
 /** Where a hit lands when no location was rolled, called, or recognised. */
@@ -109,7 +109,7 @@ export function hitLocationAbbreviation(id: HitLocationId): string {
     return game.i18n.localize(hitLocationAbbreviationKey(id));
 }
 
-/** The Table 7-3 reversed-roll band of a location, as the printed `01-10` / `86-00` range. */
+/** The hit locations table reversed-roll band of a location, as the printed `01-10` / `86-00` range. */
 export function hitLocationRollRange(id: HitLocationId): string {
     const { min, max } = HIT_LOCATION_DEFS[id];
     const printed = (n: number): string => String(n === 100 ? 0 : n === 0 ? 1 : n).padStart(2, '0');
@@ -118,7 +118,7 @@ export function hitLocationRollRange(id: HitLocationId): string {
 
 /**
  * Reverse the digits of a d100 attack-roll result to derive the hit-
- * location lookup index per core.md L10372-10390 (Table 7-3).
+ * location lookup index per the hit locations table.
  *
  * Examples: 23 → 32 (Body), 47 → 74 (Right Leg), 100 → 001 → 1 (Head).
  * Doubles / palindromes (33, 55) pass through unchanged.
@@ -163,7 +163,7 @@ export function hitLocationNames(): HitLocationId[] {
     return [...HIT_LOCATION_IDS];
 }
 
-/** Table 7-2: the location each additional hit of a multi-hit attack lands on, by initial location. */
+/** Multiple Hits: the location each additional hit of a multi-hit attack lands on, by initial location. */
 export function additionalHitLocations(): Record<HitLocationId, HitLocationId[]> {
     return {
         head: ['head', 'head', 'rightArm', 'body', 'leftArm', 'body'],

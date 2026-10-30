@@ -4,8 +4,8 @@
  * Pure (DataModel-free) helpers for the RT void-combat damage economy:
  *
  *   • Every Hull Integrity point lost ALSO decrements Crew Population by 1
- *     AND Morale by 1, floored at 0. (RT core rules and a supplement.)
- *   • The Hold Fast! and Triage extended actions (RT core rules), on a
+ *     AND Morale by 1, floored at 0. (RT rules and a supplement.)
+ *   • The Hold Fast! and Triage extended actions (RT rules), on a
  *     success, each reduce ONE pool of the previous turn's damage — Hold
  *     Fast! Morale, Triage Crew Population — by 1 plus 1 per degree of
  *     success, never by more than that pool actually lost. Neither touches
@@ -135,7 +135,7 @@ export type PriorTurnPool = 'morale' | 'crewPopulation';
 
 /**
  * The losses recorded for the turn immediately before `currentTurn`, or null
- * when nothing was recorded for it. RAW (RT core rules): Hold Fast! / Triage
+ * when nothing was recorded for it. RAW (RT rules): Hold Fast! / Triage
  * "may only cancel ... damage suffered during the previous turn" — not this
  * turn's, and not anything older.
  */
@@ -149,7 +149,7 @@ export function previousTurnLosses(snapshot: PriorTurnDamageSnapshot, currentTur
 
 /**
  * Reduce one pool of the previous turn's damage (Hold Fast! → Morale,
- * Triage → Crew Population, RT core rules) by `amount`.
+ * Triage → Crew Population, RT rules) by `amount`.
  *
  * The reduction never exceeds what that pool lost in the previous turn, and
  * Morale never rises above its maximum. Crew Population has no schema max
@@ -218,7 +218,7 @@ export function replenishBetweenCombat(state: ShipCombatState): ShipCombatState 
 }
 
 /**
- * Is the ship Crippled? RT Core 1.4 errata, "Crippled Ships": "When a ship
+ * Is the ship Crippled? RT 1.4 errata, "Crippled Ships": "When a ship
  * reaches 0 Hull Integrity, it becomes Crippled … A ship will remain Crippled
  * … until it has regained at least 1 Hull Integrity." The single definition
  * the voidcraft DataModel and Document getters and the fire path read. A hull
@@ -259,7 +259,7 @@ export function recordHullHit(
 
 /**
  * Record direct Crew Population / Morale damage that does not come through
- * Hull Integrity (e.g. a boarding party cutting through the crew, RT core
+ * Hull Integrity (e.g. a boarding party cutting through the crew, RT
  * rules). Floors both stats at 0 and appends the losses to the running
  * prior-turn snapshot so Hold Fast! / Triage can cancel them next turn.
  */

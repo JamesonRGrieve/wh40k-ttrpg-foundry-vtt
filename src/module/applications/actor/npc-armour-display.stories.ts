@@ -18,7 +18,7 @@ import { npcArmourAtLocation } from './npc-armour-display.ts';
 const HIT_LOCATIONS = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'] as const;
 const GAME_LINES = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt'] as const;
 
-/** The Adeptus Arbites Arbitrator's Toughness bonus (DH2 core bestiary). */
+/** The Adeptus Arbites Arbitrator's Toughness bonus (DH2 bestiary). */
 const TOUGHNESS_BONUS = 3;
 
 interface ArmourItemStub {

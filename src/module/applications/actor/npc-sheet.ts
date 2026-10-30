@@ -314,11 +314,11 @@ export default class NPCSheet extends CharacterSheet {
             toggleGMTools: NPCSheet.#toggleGMTools,
             toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
             generateInventory: NPCSheet.#generateInventory,
-            // Reinforcement Character call (DH2 core, #77)
+            // Reinforcement Character call (DH2, #77)
             callReinforcement: NPCSheet.#callReinforcement,
             // Interaction tally (DH2 errata, #145)
             adjustInteractionCount: NPCSheet.#adjustInteractionCount,
-            // Disposition test (DH2 core, #73)
+            // Disposition test (DH2, #73)
             rollDisposition: NPCSheet.#rollDisposition,
         },
         /* eslint-enable @typescript-eslint/unbound-method */
@@ -436,7 +436,7 @@ export default class NPCSheet extends CharacterSheet {
         this._prepareInteractionsContext(context);
         context['npcDisposition'] = npcDispositionView(this.npcActor.dispositionState, (skill) => this.npcActor.system.skillLabel(skill));
 
-        // Reinforcement Character call (DH2 core, #77): GM-only, for a DH2
+        // Reinforcement Character call (DH2, #77): GM-only, for a DH2
         // NPC flagged as an RC. Other lines print no RC rules.
         const npc = this.npcActor.system;
         if (game.user.isGM && npc.isReinforcement && this._resolveGameSystemId() === 'dh2') {
@@ -1539,7 +1539,7 @@ export default class NPCSheet extends CharacterSheet {
 
     /* -------------------------------------------- */
 
-    /** Test the NPC's Disposition: a d100 against it through the roll dialog (DH2 core, #73). */
+    /** Test the NPC's Disposition: a d100 against it through the roll dialog (DH2, #73). */
     static #rollDisposition(this: NPCSheet, event: Event): void {
         event.preventDefault();
         this.npcActor.rollDisposition();

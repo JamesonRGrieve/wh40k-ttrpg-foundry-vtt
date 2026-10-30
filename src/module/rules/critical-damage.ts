@@ -3,7 +3,7 @@ import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, no
 
 /**
  * How a Critical Effects row's outcome is gated on armour worn at the struck
- * location (core.md §"Critical Effects" decision-tree rows). Content-agnostic —
+ * location (the Critical Effects decision-tree rows). Content-agnostic —
  * derived from the row prose, not a hand-maintained per-row table.
  *
  * - `none`               — the row applies unconditionally.
@@ -29,8 +29,8 @@ interface CriticalDamageTable {
 
 /**
  * Content-agnostic classification of the conditions / special damage a
- * Critical Effects row inflicts (core.md §"Conditions And Special
- * Damage"). These flags are derived by scanning the row text for the
+ * Critical Effects row inflicts (the "Conditions And Special
+ * Damage" rules). These flags are derived by scanning the row text for the
  * system's own condition vocabulary — they are NOT a hand-maintained
  * content table (the prose text itself stays in the GW-copyrighted
  * compendium pack per Direction #7). The damage-application path reads
@@ -378,7 +378,7 @@ export async function getCriticalDamage(type: string, location: string, amount: 
 /**
  * Clamp a raw Critical-damage total to a table row (1 … 10, where 10 is
  * the "10+" row). Values below 1 clamp up to 1 — any Critical damage at
- * all triggers at least the row-1 effect (core.md L10650).
+ * all triggers at least the row-1 effect.
  */
 export function clampCriticalSeverity(amount: number): number {
     const n = Number.isFinite(amount) ? Math.trunc(amount) : 1;
@@ -397,7 +397,7 @@ export function clampCriticalSeverity(amount: number): number {
  * ActiveEffects / conditions (Stunned, Burning, Blood Loss, Helpless,
  * lost limb, …) to apply. The hit location is collapsed onto its
  * Critical Effects body-part; an unknown damage type falls back to
- * Impact per core.md L10646.
+ * Impact.
  *
  * Returns null only when the damage type / body-part cannot be
  * resolved at all. When the compendium pack is absent the record is
@@ -410,7 +410,7 @@ export async function getCriticalDamageRecord(
     criticalValue: number,
     systemId: string = DEFAULT_CRIT_SYSTEM,
 ): Promise<CriticalDamageRecord | null> {
-    // core.md L10646: an unspecified / unknown damage type is Impact.
+    // RAW: an unspecified / unknown damage type is Impact.
     const dt = normalizeDamageType(damageType) ?? 'Impact';
     const bp = normalizeBodyPart(hitLocation);
     if (bp === null) return null;

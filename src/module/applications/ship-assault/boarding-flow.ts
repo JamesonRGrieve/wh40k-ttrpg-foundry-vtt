@@ -1,5 +1,5 @@
 /**
- * Boarding Action flows (#188 — RT core).
+ * Boarding Action flows (#188 — RT).
  *
  * `board` rolls the Hard (−20) Pilot (Space Craft) + Manoeuvrability Test that
  * locks the two ships together. `boarding-round` is run once per Strategic

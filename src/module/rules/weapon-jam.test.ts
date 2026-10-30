@@ -47,7 +47,7 @@ describe('shouldJamRoll', () => {
         });
     });
 
-    describe('Unreliable weapon (#128 — RAW core.md L6369)', () => {
+    describe('Unreliable weapon (#128 — RAW)', () => {
         const unreliable = { hasReliable: false, hasUnreliable: true };
 
         it('does NOT jam on rolls below 91, regardless of success/failure or action', () => {

@@ -1,6 +1,6 @@
 /**
  * Psychic power three-step difficulty selector
- * (core.md §"Step 2: Make Focus Power Test").
+ * (the "Step 2: Make Focus Power Test" rules).
  *
  * Each manifestation chooses a Psy Rating mode:
  *
@@ -38,7 +38,7 @@ export interface PsyModeInput {
 
 /**
  * The Psy Rating a Fettered manifestation uses (#178): half the base PR, rounding
- * up. Every line prints it that way: BC and RT core "halve his PR (rounding up)",
+ * up. Every line prints it that way: BC and RT "halve his PR (rounding up)",
  * OW "Half of his Active Psy Rating, rounding up", DW "half his normal rating
  * (rounding up)". A PR 1 psyker therefore still manifests at PR 1.
  */

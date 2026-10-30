@@ -74,7 +74,7 @@ export function owComradeSchemaFields(): Record<string, foundry.data.fields.Data
             }),
             distanceM: new NumberField({ required: true, initial: 0, min: 0 }),
             hasVisualLine: new BooleanField({ required: true, initial: true }),
-            // Fear and Pinning (OW core): the Comrade fails with its PC.
+            // Fear and Pinning (OW rules): the Comrade fails with its PC.
             fleeing: new BooleanField({ required: true, initial: false }),
             pinned: new BooleanField({ required: true, initial: false }),
             fearImmune: new BooleanField({ required: true, initial: false }),

@@ -115,7 +115,7 @@ const SCALE_LABEL_KEYS: Record<ScaleKey, string> = {
     vast: 'WH40K.AcquisitionScale.Scale.Vast',
 };
 
-// The Profit Factor Acquisition Test is Rogue Trader's: its Table 9-35 ladder
+// The Profit Factor Acquisition Test is Rogue Trader's: its acquisition ladder
 // (the line config, #192) and Scale column (the rules module) are the sources.
 const AVAILABILITY_MOD_VALUES = RT_ACQUISITION_LADDER.availability;
 const CRAFTSMANSHIP_MOD_VALUES = RT_ACQUISITION_LADDER.craftsmanship;
@@ -360,7 +360,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Get availability modifier — RT Table 9-35, from the RT ladder.
+     * Get availability modifier — RT Acquisition Modifiers, from the RT ladder.
      * @param {string} availability  Availability rating (any case / separator).
      * @returns {number}  Modifier value (0 when unrecognised).
      */
@@ -373,7 +373,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Get craftsmanship modifier — RT Table 9-35.
+     * Get craftsmanship modifier — RT Acquisition Modifiers.
      * @param {string} craftsmanship  Craftsmanship quality (any case).
      * @returns {number}  Modifier value (0 when unrecognised).
      */
@@ -473,7 +473,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         const context = await this._prepareContext({ force: true });
         const finalTarget = context.finalTarget;
 
-        // Auto-success / auto-fail short-circuit (core.md §12238–12239):
+        // Auto-success / auto-fail short-circuit ("Automatic Success and Failure"):
         // if the adjusted PF ≥ 100 or ≤ 0 before rolling, no die is rolled.
         let roll: Roll | null = null;
         let success: boolean;

@@ -75,7 +75,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('the printed Only War medals (content#32)'
     const summary = (medals: MedalSource[]): string[][] =>
         medals.map((medal) => [medal.name, medal.system.honourType]).sort((a, b) => (a.at(0) ?? '').localeCompare(b.at(0) ?? ''));
 
-    it('OW core: the six Imperial Honours, four Campaign Honours and the example Regimental Award', () => {
+    it('OW rules: the six Imperial Honours, four Campaign Honours and the example Regimental Award', () => {
         expect(summary(core)).toEqual([
             ['Cog of Het', 'campaign'],
             ['Drusian Laurels', 'campaign'],

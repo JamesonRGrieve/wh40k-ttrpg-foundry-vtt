@@ -183,7 +183,7 @@ export class ActionData {
      */
     evasion: AttackEvasion | null = null;
     /**
-     * The hit that struck the target's Comrade instead (#152; OW core: a
+     * The hit that struck the target's Comrade instead (#152; OW: a
      * successful hit roll on doubles against a PC whose Comrade is in Cohesion). Set
      * when the hits are calculated; null when none did.
      */
@@ -491,7 +491,7 @@ export class ActionData {
         rd.targetHelpless = false;
 
         // The automatic hit is printed for Weapon Skill tests only — a MELEE attack —
-        // in every line (DH2 p229, RT/DW p248, OW p253, BC p245, DH1 p199).
+        // in every line (DH2, RT/DW, OW, BC, DH1).
         // eslint-disable-next-line no-restricted-syntax -- boundary: rollData.weapon is a WH40KItem; isMelee is a DataModel getter not surfaced on that union at this layer
         const weapon = rd.weapon as { isMelee?: boolean } | undefined;
         const isMeleeAttack = weapon?.isMelee === true;
@@ -771,7 +771,7 @@ export class ActionData {
             const afterEvasion = withoutNegatedHits(allocation, declaredId, this.evasion?.outcome?.negated ?? 0);
 
             // A hit on doubles against a PC whose Comrade is in Cohesion strikes the
-            // Comrade instead: one hit, after the PC's own Dodge or Parry (OW core).
+            // Comrade instead: one hit, after the PC's own Dodge or Parry (OW rules).
             const defender = this.rollData.targetActor;
             this.comradeHit = comradeHitStrike(defender, comradeRulesFor(firstSystemId(defender)), {
                 roll: this.rollData.roll?.total ?? 0,
@@ -1168,7 +1168,7 @@ export class ActionData {
             }
 
             // Propagate attack DoS to each hit so the damage card can still offer the
-            // "replace damage die with DoS" action (#129 — DH2 core),
+            // "replace damage die with DoS" action (#129 — DH2),
             // matching the manual `_rollDamage` path.
             const attackDoS = this.rollData.dos;
             for (const hit of this.damageData?.hits ?? []) {
@@ -1647,7 +1647,7 @@ export class MedicaeActionData extends SimpleSkillData {
 
         // RAW per-target cooldown (#458), enforced against the FINAL target: First Aid
         // is once every 24 in-universe hours per patient, and may not be given through
-        // Extended Care at all (DH2 p109). A closed gate applies nothing.
+        // Extended Care at all (DH2). A closed gate applies nothing.
         if (blockedByTimeGate(this, 'Medicae', getSkillUse('medicae', this.useKind), target)) return;
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KBaseActor.wounds is the loosely-typed system wounds block
@@ -2177,7 +2177,7 @@ export class PalmActionData extends SimpleSkillData {
 /**
  * A Chem-Use roll (#441) — administer a chem to a subject, or coat a weapon with it.
  * RAW: "administers a drug/poison/toxin to a patient, or applies it to a weapon"
- * (DH2 p109). The chosen chem's `grants.activeEffects` are applied to the TARGET
+ * (DH2). The chosen chem's `grants.activeEffects` are applied to the TARGET
  * (rather than the bearer, as a self-consumed dose would be, #457), so a toxin lands
  * on the victim and wears off on the clock. A dose is consumed either way. OW/BC RAW:
  * a botch afflicts the applicant instead — modelled by applying the dose to the user.
@@ -2200,7 +2200,7 @@ export class ChemUseActionData extends SimpleSkillData {
         const chemName = this.chem.name;
 
         if (!this.rollData.success) {
-            // RAW (OW p126 / BC p104): a botched application afflicts the applicant.
+            // RAW (OW / BC): a botched application afflicts the applicant.
             const user = this.rollData.sourceActor;
             if (this.mode === 'applyChem' && user !== null) {
                 await applyChemDose(this.chem, user);

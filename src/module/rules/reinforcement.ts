@@ -1,5 +1,5 @@
 /**
- * Calling in a Reinforcement Character (DH2 core rules, #77).
+ * Calling in a Reinforcement Character (DH2 rules, #77).
  *
  * Each Reinforcement Character (RC) prints an **Influence Minimum** and an
  * **Influence Cost**. The calling Acolyte needs Influence ≥ the minimum and

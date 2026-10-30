@@ -40,7 +40,7 @@ export function provenanceField(): foundry.data.fields.DataField.Any {
  * Normalize the legacy shapes of `description` and `source` in raw stored data
  * so they satisfy {@link descriptionField} / {@link provenanceField}.
  *
- * Both a flat string (`description: "…"`, `source: "DH2 Core"`) and the older
+ * Both a flat string (`description: "…"`, `source: "Sample Book"`) and the older
  * `{book, page, custom}` provenance triple predate the structured schema, and
  * live worlds still hold them. A per-line variant container is left untouched —
  * the variant resolver collapses that one pass later, before validation.

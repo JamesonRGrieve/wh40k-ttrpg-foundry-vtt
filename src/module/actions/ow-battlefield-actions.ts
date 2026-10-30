@@ -1,7 +1,7 @@
 /**
  * Only War · Battlefield Awareness action handlers
- * (#161 — core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
- * §"Support" line 13411; §"CREATING REGIMENTAL AWARDS" line 13103).
+ * (#161 — the OW "Battlefield Awareness and Manoeuvres", "Support" and
+ * "Creating Regimental Awards" rules).
  *
  * Two sheet-action methods wired into the character-sheet action map:
  *

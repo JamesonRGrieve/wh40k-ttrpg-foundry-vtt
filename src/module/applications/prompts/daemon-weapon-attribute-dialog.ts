@@ -1,6 +1,6 @@
 /**
  * @file DaemonWeaponAttributeDialog - GM-facing roller for Daemon Weapon
- * Attributes (beyond.md L1651-1820, issue #142).
+ * Attributes (a DH2 supplement, issue #142).
  *
  * The dialog lets the GM pick a daemonic alignment + binding strength,
  * rolls 1d10 per Attribute slot allowed by the binding tier, and emits

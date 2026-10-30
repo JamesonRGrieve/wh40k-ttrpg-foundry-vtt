@@ -1,8 +1,7 @@
 /**
- * Black Crusade Chaos Ritual engine (#179 — core.md §"Chaos Ritual
- * Template" :11081, Table 6-7 "Ritual Modifiers" :11062,
- * §"Contempt of the Warp" :10992, §"Daemonic Mastery" / §"Breaking
- * Mastery" :11095-11103).
+ * Black Crusade Chaos Ritual engine (#179 — the Chaos Ritual Template,
+ * the Ritual Modifiers table, Contempt of the Warp, and the Daemonic
+ * Mastery / Breaking Mastery rules).
  *
  * Pure rules / math layer for Heretics performing Chaos Rituals.
  *
@@ -11,7 +10,7 @@
  *     Requirements, Effects, Duration, Cost, Price of Failure). The
  *     template carries a base d100 target the ritualist must roll
  *     under to succeed.
- *   - Table 6-7 collects the standard modifiers a ritualist can stack
+ *   - The Ritual Modifiers table collects the standard modifiers a ritualist can stack
  *     onto the target — Cult Affiliation, Sacrifice, Sanctified
  *     Ground, Component Reagent, and Daemonic Mastery — each with a
  *     RAW numeric delta. A free-form `gm-other` slot is supplied for
@@ -38,13 +37,13 @@
 import { degreesOfFailure, degreesOfSuccess } from './_dice.ts';
 
 /* -------------------------------------------------------------------- */
-/*  Modifier registry — Table 6-7                                       */
+/*  Modifier registry — Ritual Modifiers                                */
 /* -------------------------------------------------------------------- */
 
 /**
  * Discriminator for a ritual modifier stacked onto the base target.
  *
- * The six canonical kinds correspond to Table 6-7's rows; `gm-other`
+ * The six canonical kinds correspond to the Ritual Modifiers table's rows; `gm-other`
  * is the catch-all slot for situational adjustments the GM applies
  * outside the table (e.g. astrological alignment, narrative flourish).
  */
@@ -66,10 +65,10 @@ export interface RitualModifier {
 /* -------------------------------------------------------------------- */
 
 /**
- * Six-slot authoring template per core.md §"Chaos Ritual Template"
- * :11081. The five descriptive slots are surfaced verbatim to the UI;
+ * Six-slot authoring template per the Chaos Ritual Template rules.
+ * The five descriptive slots are surfaced verbatim to the UI;
  * `baseTarget` is the d100 the ritualist rolls under before any
- * Table 6-7 modifiers stack on top.
+ * Ritual Modifiers stack on top.
  *
  * Concrete rituals live in compendium documents shaped like this
  * interface (extended with their UUID and any per-ritual mechanical
@@ -84,8 +83,8 @@ export interface RitualTemplate {
     readonly cost: string;
     readonly priceOfFailure: string;
     /**
-     * Base d100 target — RAW per-ritual difficulty before Table 6-7
-     * modifiers stack on top. Must be a finite integer; the caller is
+     * Base d100 target — RAW per-ritual difficulty before Ritual
+     * Modifiers stack on top. Must be a finite integer; the caller is
      * responsible for sourcing this value from the ritual's compendium
      * document, not for synthesising it here.
      */
@@ -147,8 +146,8 @@ export interface ContemptOfTheWarpResult {
 }
 
 /**
- * Resolve a Contempt of the Warp test (core.md :10992) against a
- * Table 6-7-composed target. BC d100 convention is roll-under-or-equal:
+ * Resolve a Contempt of the Warp test against a
+ * Ritual-Modifiers-composed target. BC d100 convention is roll-under-or-equal:
  * `roll <= target` succeeds, one DoS / DoF per full 10-point margin.
  */
 export function resolveContemptOfTheWarp(input: ContemptOfTheWarpInput): ContemptOfTheWarpResult {
@@ -186,7 +185,7 @@ export interface BreakingMasteryResult {
 }
 
 /**
- * Resolve a Breaking Mastery contest (core.md :11095-11103). The
+ * Resolve a Breaking Mastery contest. The
  * higher-Mastery side wins; a tie favours the defender (the existing
  * binding holds). The signed differential is returned so callers can
  * surface the margin in narrative output.

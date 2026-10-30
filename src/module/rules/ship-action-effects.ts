@@ -1,5 +1,5 @@
 /**
- * Rogue Trader starship action effects (RT core rules, #186, #189).
+ * Rogue Trader starship action effects (RT rules, #186, #189).
  *
  * A ship action's printed effect is authored as DATA on its `order` item — the
  * optional `shipEffect` block — never named in code. This module holds the
@@ -56,7 +56,7 @@ export const SHIP_EFFECT_TARGETS = [...SHIP_EFFECT_POOL_TARGETS, ...SHIP_EFFECT_
 export const SHIP_EFFECT_EXPIRIES = ['turnEnd', 'turnStart'] as const;
 type ShipEffectExpiry = (typeof SHIP_EFFECT_EXPIRIES)[number];
 
-/** The ship stat a Combined Skill Test adds to the character's skill (RT core rules). */
+/** The ship stat a Combined Skill Test adds to the character's skill (RT rules). */
 export const SHIP_TEST_STATS = ['manoeuvrability', 'detection'] as const;
 export type ShipTestStat = (typeof SHIP_TEST_STATS)[number];
 
@@ -113,7 +113,7 @@ export function effectTargets(effect: ShipEffectData): string[] {
 /**
  * Extra degrees of success beyond a bare success, the count RT effects scale
  * with ("every degree of success", "every two additional degrees"). RT counts
- * each full 10 points of margin (`gen1`, RT core rules), so a bare success is
+ * each full 10 points of margin (`gen1`, RT rules), so a bare success is
  * 0; the `gen2` world-setting override uses the tens-digit difference. Always
  * 0 on a failure.
  */

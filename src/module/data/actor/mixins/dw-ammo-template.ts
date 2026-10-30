@@ -7,7 +7,7 @@
  * pure; this mixin owns only the persistence shape and the typed
  * declarations the consuming DataModel class spreads / declares.
  *
- * RAW reference: DW core.md §"WEAPONS" / Special Issue Ammunition.
+ * RAW reference: the DW Special Issue Ammunition rules.
  * A Battle-Brother may load one of seven Special-Issue ammunition kinds
  * into a bolt-pattern weapon; otherwise the weapon fires standard
  * ammunition (no engine effect). We represent "no special ammo" as the

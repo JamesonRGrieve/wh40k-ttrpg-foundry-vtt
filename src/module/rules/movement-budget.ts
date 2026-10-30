@@ -132,7 +132,7 @@ export interface MoveModeToken {
 /**
  * Clear the selected move mode on a combatant's tokens when its turn ends (#610).
  * The move action — Half, Full, Charge or Run — is chosen and spent on each turn
- * (DH2 core Chapter VII, likewise every line), so a mode picked last turn must not
+ * (DH2, likewise every line), so a mode picked last turn must not
  * carry into the next one. Only tokens that actually carry the flag are written.
  * @returns How many tokens were cleared.
  */

@@ -19,11 +19,11 @@ const PRINTED: ReadonlyArray<readonly [string, ArmourCraftsmanshipTier, number, 
     ['dh2', 'poor', 0, 0, false, 0],
     ['dh2', 'good', 0, 0, false, 0],
     ['dh2', 'best', 0, 0, false, 1],
-    // BC core: Poor −10 Agility, Good a social bonus, Best half weight and +1 AP.
+    // BC: Poor −10 Agility, Good a social bonus, Best half weight and +1 AP.
     ['bc', 'poor', -10, 0, false, 0],
     ['bc', 'good', 0, 0, false, 0],
     ['bc', 'best', 0, 0, true, 1],
-    // DW core: Exceptional (Good) and Master-Crafted (Best); no Poor armour.
+    // DW: Exceptional (Good) and Master-Crafted (Best); no Poor armour.
     ['dw', 'poor', 0, 0, false, 0],
     ['dw', 'good', 0, 1, false, 0],
     ['dw', 'best', 0, 0, true, 1],

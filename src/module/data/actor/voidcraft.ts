@@ -158,14 +158,14 @@ export default class VoidcraftData extends VehicleData {
     declare hullType: string;
     declare hullClass: string;
     declare dimensions: string;
-    /** Printed displacement, e.g. "9 megatonnes approx." (RT core). */
+    /** Printed displacement, e.g. "9 megatonnes approx." (RT). */
     declare mass: string;
     /** Printed maximum acceleration, e.g. "1.6 gravities max acceleration". */
     declare acceleration: string;
     /**
      * Printed crew headcount, e.g. "20,000 crew, approx." — flavour, and NOT
      * the same quantity as `crew.population`. RAW treats Crew Population and
-     * Morale as abstract ratings, not headcounts (RT core), both ~0–100.
+     * Morale as abstract ratings, not headcounts (RT rules), both ~0–100.
      * Conflating the two is what put five-digit headcounts into the mechanical
      * pool across the authored ships.
      */
@@ -873,7 +873,7 @@ export default class VoidcraftData extends VehicleData {
     }
 
     /**
-     * Is the ship Crippled (0 Hull Integrity, RT Core "Crippled Ships")?
+     * Is the ship Crippled (0 Hull Integrity, RT "Crippled Ships")?
      * @type {boolean}
      */
     get isCrippled(): boolean {

@@ -73,7 +73,7 @@ export function characteristicField(label: string, short: string, opts: Characte
     if (opts.advancement) {
         schema['cost'] = new NumberField({ required: true, initial: 0, min: 0, integer: true });
         /**
-         * Recoverable characteristic damage (core.md §"Characteristic Damage").
+         * Recoverable characteristic damage (the "Characteristic Damage" rules).
          * Subtracted from the effective value and bonus during data prep so a
          * 30-WS character with `damage: 10` rolls against 20-WS. Restored by
          * rest and certain Medicae actions. Always ≥ 0.

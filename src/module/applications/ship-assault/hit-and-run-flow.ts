@@ -1,5 +1,5 @@
 /**
- * Hit and Run flow (#188 — RT core).
+ * Hit and Run flow (#188 — RT).
  *
  * An Extended Action: the raid leader's Challenging (+0) Pilot (Space Craft)
  * approach (−10 per target Turret Rating point), then on arrival an opposed

@@ -1,6 +1,6 @@
 /**
  * @file WarpTravelDialog — GM-only dialog for resolving the RT 5-stage
- * Warp Travel workflow (#193, core.md §"NAVIGATING THE WARP").
+ * Warp Travel workflow (#193, the RT "Navigating the Warp" rules).
  *
  * The GM enters a base voyage duration (days), the Navigator's Awareness
  * + Navigation (Warp) characteristics, and the per-stage d100 rolls. The

@@ -1,5 +1,5 @@
 /**
- * Per-scene Warp weakness (#137, beyond.md L4605).
+ * Per-scene Warp weakness (#137, a DH2 supplement's rule).
  *
  * A GM marks a scene as Warp-weak when the veil is thin there. The riders it
  * carries — a bonus to Focus Power, a more severe Phenomena ladder, and extra

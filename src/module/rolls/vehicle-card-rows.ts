@@ -207,7 +207,7 @@ function furyRows(
 /**
  * The card a Damage Control re-roll posts: the trait that re-rolled, and the new
  * roll's chart row. "The second result must be accepted even if it is worse than
- * the first" (OW core; DH2 core prints the same re-roll).
+ * the first" (OW; DH2 prints the same re-roll).
  */
 export function damageControlCardRows(request: DamageControlRequest, fury: VehicleFuryResult, i18n: CardLocaliser): VehicleCardRow[] {
     return [

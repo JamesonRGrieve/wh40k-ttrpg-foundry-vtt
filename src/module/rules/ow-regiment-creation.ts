@@ -1,6 +1,6 @@
 /**
- * Only War · Regiment Creation budget engine (#151 — OW core.md
- * §"CREATING A REGIMENT" line 1795).
+ * Only War · Regiment Creation budget engine (#151 — the OW
+ * "Creating a Regiment" rules).
  *
  * Pure rules / math layer. Per Direction #7 the content (specific
  * Home Worlds, Commanding Officers, Regiment Types, Training and
@@ -16,8 +16,7 @@
  *   - 12-point Regiment Creation budget across six categories
  *     (Home World, Commanding Officer, Regiment Type, Training
  *     Doctrines, Special Equipment Doctrines, Favoured Weapons).
- *   - 30-point Standard Kit allocation (separate pool, OW core.md
- *     line 2454).
+ *   - 30-point Standard Kit allocation (separate pool).
  *
  * The engine is RNG-free and actor-decoupled; no I/O, no Foundry
  * Document reads. The consuming DataModel / sheet / dialog calls
@@ -31,7 +30,7 @@
 /** Total Regiment Creation points available across all six categories. */
 export const REGIMENT_BUDGET = 12;
 
-/** Total Standard Kit allocation points (OW core.md line 2454). */
+/** Total Standard Kit allocation points. */
 export const STANDARD_KIT_BUDGET = 30;
 
 /* -------------------------------------------------------------------- */
@@ -73,7 +72,7 @@ export const REGIMENT_CATEGORIES: ReadonlyArray<RegimentCategory> = Object.freez
  *   for deduplication if a single grant from two sources should not
  *   double-count.
  * - `wounds`: starting-wound modifier; sums.
- * - `logistics`: Logistics rating modifier (OW core.md "Logistics").
+ * - `logistics`: Logistics rating modifier (the OW "Logistics" rules).
  * - `kitModifier`: bonus / penalty to the Standard Kit budget.
  */
 export interface RegimentGrants {

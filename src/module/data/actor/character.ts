@@ -229,7 +229,7 @@ export default class CharacterData extends CreatureTemplate {
         };
         acquisitions: AcquisitionEntry[];
         /**
-         * Stars-of-Inequity Colony state owned by the Rogue Trader Dynasty
+         * Colony state owned by the Rogue Trader Dynasty
          * (#195). The engine in `src/module/rules/rt-colony.ts` operates
          * on the five characteristics; type/name/lastTick are persisted
          * for sheet display and chat-card re-emission. RT-gated — the
@@ -282,7 +282,7 @@ export default class CharacterData extends CreatureTemplate {
     declare aptitudes: string[];
     /**
      * The ONLY persisted aptitude state: the player's elective double-up picks
-     * (DH2 core). When the origin path would grant the same aptitude twice,
+     * (DH2 rules). When the origin path would grant the same aptitude twice,
      * the player instead picks a Characteristic aptitude they do not already
      * have; that genuine choice cannot be derived, so it lives here. Validated
      * by {@link aptitudeValidation}: exactly one Characteristic elective per
@@ -302,7 +302,7 @@ export default class CharacterData extends CreatureTemplate {
      * `src/module/rules/bc-alignment-derivation.ts`). Each entry records
      * the advance's category, key (charKey/skillKey/talent UUID/etc.),
      * paid xp cost, the alignment of the advance, and whether it came
-     * from the Archetype (excluded from the tally per BC core). Empty for
+     * from the Archetype (excluded from the tally per the BC rules). Empty for
      * non-BC actors.
      */
     declare chaosAdvancements: Array<{
@@ -314,7 +314,7 @@ export default class CharacterData extends CreatureTemplate {
     }>;
     /**
      * Last Corruption-Point threshold at which BC Alignment was
-     * re-evaluated (BC core). Used to gate the 10-CP
+     * re-evaluated (BC rules). Used to gate the 10-CP
      * re-check so we only flip Alignment once per threshold crossed.
      * Always a non-negative multiple of 10 (or 0 if never checked).
      */
@@ -532,7 +532,7 @@ export default class CharacterData extends CreatureTemplate {
             }),
 
             // ===== DH2e RESOURCES =====
-            // Influence is a 0-100 characteristic per DH2 RAW (DH2e core). In Homebrew
+            // Influence is a 0-100 characteristic per DH2 RAW. In Homebrew
             // mode it presents as an economy resource, but the cap still applies — Influence
             // never exceeds a percentile characteristic ceiling.
             influence: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),
@@ -563,7 +563,7 @@ export default class CharacterData extends CreatureTemplate {
             // aptitude-based systems for XP cost calculation.
             aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
-            // Player's elective double-up picks (DH2 core) — the ONLY
+            // Player's elective double-up picks (DH2 rules) — the ONLY
             // persisted aptitude state. Each entry resolves one origin-path
             // double-up by choosing a Characteristic aptitude the player does not
             // already have. Validated in _computeOriginPathEffects; see #381.
@@ -576,7 +576,7 @@ export default class CharacterData extends CreatureTemplate {
                 choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
             }),
             // Per-advance log driving Alignment derivation. Empty for non-BC actors.
-            // Per BC core, alignment is computed from this tally,
+            // Per the BC rules, alignment is computed from this tally,
             // re-checked at 10-CP thresholds.
             chaosAdvancements: new fields.ArrayField(
                 new fields.SchemaField({
@@ -599,7 +599,7 @@ export default class CharacterData extends CreatureTemplate {
             // BC Alignment re-check checkpoint (highest 10-CP threshold last evaluated).
             // 0 = never checked; rounds up to 10/20/30/... as Corruption accrues.
             alignmentCheckpoint: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            // BC Infamy stat (BC core). Flat 500xp/+5 advance, blocked at >=40.
+            // BC Infamy stat (BC rules). Flat 500xp/+5 advance, blocked at >=40.
             // Sibling issue tracks Infamy's RAW role outside advancement; this slot is
             // the canonical persistence so `BCSystemConfig.getInfamyAdvanceCost` works.
             infamy: new fields.NumberField({ required: true, initial: 0, min: 0, max: 100, integer: true }),

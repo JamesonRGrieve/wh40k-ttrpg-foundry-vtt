@@ -1,7 +1,7 @@
 /**
- * Only War · Mounted Combat persistence slot (#159 — Hammer of the
- * Emperor §"MOUNTED COMBAT" / "MOUNT SPECIAL ACTIONS" / "MOUNT TRAITS",
- * hammer.md lines 4046-4260).
+ * Only War · Mounted Combat persistence slot (#159 — an OW
+ * supplement's "Mounted Combat" / "Mount Special Actions" / "Mount Traits"
+ * rules).
  *
  * The engine (`src/module/rules/ow-mount.ts`) is RNG-free and
  * actor-decoupled. The only state that must persist on an OW rider

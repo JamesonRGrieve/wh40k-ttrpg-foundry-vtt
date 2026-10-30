@@ -285,7 +285,7 @@ export function allCombatActions(line?: string): CombatAction[] {
             },
         },
         {
-            // DH2 Core "Throw" (Half Action): hurl a grenade or thrown weapon.
+            // DH2 "Throw" (Half Action): hurl a grenade or thrown weapon.
             // Resolves as a Ballistic Skill attack (thrown weapons are ranged),
             // with maximum range read from the weapon's own range data
             // (Strength-Bonus-based formula); a miss scatters per the scatter

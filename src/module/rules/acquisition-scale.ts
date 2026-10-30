@@ -1,8 +1,7 @@
 /**
- * Acquisition Scale resolver — RT core, Table 9-35: Acquisition Modifiers
- * (core.md §12256 et seq.) plus the supporting "Automatic Success and
- * Failure" (core.md §12234) and "Combining Acquisitions" (core.md §12226)
- * rules.
+ * Acquisition Scale resolver — Rogue Trader's Acquisition Modifiers table
+ * plus the supporting "Automatic Success and Failure" and "Combining
+ * Acquisitions" rules.
  *
  * The Rogue Trader Acquisition Test rolls 1d100 ≤ (Profit Factor +
  * Availability + Craftsmanship + Scale + extra). Two short-circuits
@@ -29,7 +28,7 @@ import { RT_ACQUISITION_LADDER } from '../config/game-systems/rt-config.ts';
 import type { AvailabilityKey, CraftsmanshipKey } from './acquisition-ladder.ts';
 
 /*
- * The Availability and Craftsmanship columns of Table 9-35 are Rogue Trader's
+ * The Availability and Craftsmanship columns of the Acquisition Modifiers table are Rogue Trader's
  * acquisition ladder, read from the line's config (`RT_ACQUISITION_LADDER`),
  * its single source (#192). Every RT cell is a number.
  */
@@ -43,9 +42,9 @@ const RT_CRAFTSMANSHIP_MODIFIERS = RT_ACQUISITION_LADDER.craftsmanship;
 export type ScaleKey = 'negligible' | 'trivial' | 'minor' | 'standard' | 'major' | 'significant' | 'vast';
 
 /**
- * Table 9-35 Scale column. Default for personal items is Negligible
+ * Acquisition Modifiers Scale column. Default for personal items is Negligible
  * (+30) — this is the modifier Herodor uses for a single pistol in the
- * core.md example.
+ * rules' worked example.
  */
 export const ACQUISITION_SCALE_MODIFIERS: Record<ScaleKey, number> = {
     negligible: 30,
@@ -83,7 +82,7 @@ export function normaliseScale(raw: string | null | undefined): ScaleKey | null 
 /* -------------------------------------------------------------------- */
 
 /**
- * RT core §"Combining Acquisitions" (core.md §12226), in summary: the
+ * RT "Combining Acquisitions", in summary: the
  * component with the worst Availability sets the base modifier, and every
  * component past the first adds a further -5.
  *
@@ -182,11 +181,11 @@ const SIX_DIGIT_TRUNC = (n: number): number => Math.trunc(n);
 /**
  * Pure resolver. No I/O, no actor reads, no random.
  *
- * Composition order matches the RT core example (Herodor / Lady Fane):
+ * Composition order matches the RT worked example (Herodor / Lady Fane):
  *   PF + Availability (or combined Availability) + Craftsmanship + Scale + extra.
  *
  * Auto-success / auto-fail are evaluated against the **adjusted** PF
- * (i.e. target), per core.md §12238–12239.
+ * (i.e. target), per "Automatic Success and Failure".
  */
 export function resolveAcquisitionTest(input: ResolveAcquisitionInput): ResolveAcquisitionResult {
     const pf = SIX_DIGIT_TRUNC(input.profitFactor);

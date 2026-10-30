@@ -7,7 +7,7 @@ import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSou
 
 /**
  * The advancement dialog's Elite Advances tab (#684). It showed on every aptitude
- * line from a hard-coded DH2 core pack, so OW and BC got an empty tab and DH2 missed
+ * line from one hard-coded DH2 pack, so OW and BC got an empty tab and DH2 missed
  * the elites printed in its other books; owned elites were matched by name. A line's
  * elites are now the elite-step documents of that line in its origin packs, the tab
  * shows only when there are some, and an owned elite is matched by its compendium source.

@@ -58,7 +58,7 @@ export interface HazardLineRules {
     suffocation: SuffocationRule;
 }
 
-/** DH1 core rules, Falling Damage (ascending by distance). */
+/** DH1 rules, Falling Damage (ascending by distance). */
 const DH1_FALLING_TABLE: readonly FallingBracket[] = [
     { minMetres: 3, bonus: 3 },
     { minMetres: 6, bonus: 5 },

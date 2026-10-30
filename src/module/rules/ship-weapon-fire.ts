@@ -1,5 +1,5 @@
 /**
- * Rogue Trader ship weapon fire (#184 — RT core rules with the 1.4 errata,
+ * Rogue Trader ship weapon fire (#184 — RT rules with the 1.4 errata,
  * "Starship Weapons" and "Damage and Defences").
  *
  * The gunner's Ballistic Skill Test, then the shot resolved against the
@@ -124,7 +124,7 @@ const LANCE_DEGREES_PER_HIT = 3;
 
 /**
  * A Crippled ship's weapon Strength: "reduce the strength of all weapon
- * Components by half (round up)" (RT Core 1.4 errata, "Crippled Ships").
+ * Components by half (round up)" (RT 1.4 errata, "Crippled Ships").
  */
 export function crippledStrength(strength: number): number {
     return Math.ceil(strength / 2);
@@ -251,7 +251,7 @@ export function damagePastArmour(weaponClass: ShipWeaponClass, damage: readonly 
 /* -------------------------------------------- */
 
 /*
- * RT core rules with the 1.4 errata, "Starship Weapons": "If a ship fires multiple
+ * RT rules with the 1.4 errata, "Starship Weapons": "If a ship fires multiple
  * macrobatteries at a single target, before rolling to hit … the character
  * directing the firing has the option of adding the totals together and
  * applying the new, larger total to the target ship once … he can only

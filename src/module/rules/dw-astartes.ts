@@ -1,5 +1,5 @@
 /**
- * Deathwatch Astartes baseline (#167 — Deathwatch core.md "The
+ * Deathwatch Astartes baseline (#167 — the Deathwatch "The
  * Adeptus Astartes" / "Implants of the Astartes" / "Black Carapace").
  *
  * Pure-rules engine for the always-on traits every Battle-Brother

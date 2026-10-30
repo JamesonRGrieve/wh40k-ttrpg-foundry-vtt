@@ -30,7 +30,7 @@ import {
 } from './npc-advancement.ts';
 import { psychicPowerCharge } from './xp-costs.ts';
 
-/** DH2e Core tables 2-2 / 2-4 / 2-6, the defaults `AptitudeBasedSystemConfig` supplies. */
+/** The DH2 skill / characteristic / talent advance cost tables, the defaults `AptitudeBasedSystemConfig` supplies. */
 const TABLES: AdvancementCostTables = {
     skill: { 2: [100, 200, 300, 400], 1: [200, 400, 600, 800], 0: [300, 600, 900, 1200] },
     characteristic: { 2: [100, 250, 500, 750, 1250], 1: [250, 500, 750, 1000, 1500], 0: [500, 750, 1000, 1500, 2500] },

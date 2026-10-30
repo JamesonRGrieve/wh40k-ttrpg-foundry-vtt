@@ -1,5 +1,5 @@
 /**
- * Pinning test driver (#111 — core.md L10540-10546).
+ * Pinning test driver (#111).
  *
  * Pinning Test = Challenging (+0) Willpower. Triggered by Suppressing
  * Fire (Hard −20 BS, kill-zone) and by certain heavy ranged hits.

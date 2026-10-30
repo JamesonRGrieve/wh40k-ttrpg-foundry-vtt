@@ -4,7 +4,7 @@ import { asBaseActor } from '../testing/actor-stub.ts';
 import { type ArmourSystemLike, computeArmour, getArmourAPForLocation } from './armour-calculator';
 
 /**
- * Regression tests for the DH2 errata stacking rules (errata.md L69-73):
+ * Regression tests for the DH2 errata stacking rules:
  *
  *   Machine trait AP adds to worn armour but not to Natural Armour.
  *

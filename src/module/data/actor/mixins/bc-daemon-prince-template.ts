@@ -1,5 +1,5 @@
 /**
- * Black Crusade apotheosis DataModel mixin (#182 — BC Core p267).
+ * Black Crusade apotheosis DataModel mixin (#182).
  *
  * Persists the record of a champion claimed by the Ruinous Powers at 100
  * Corruption, which the pure resolver in `src/module/rules/bc-daemon-prince.ts`

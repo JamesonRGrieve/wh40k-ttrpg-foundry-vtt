@@ -17,7 +17,7 @@
  *     into refit by GM-toggle, Regiment Resource spend, or Munitorum
  *     supply.
  *   - `comradeMedicaeUsed` — whether the current wound's single
- *     Difficult (-10) Medicae Test has been made (OW core). A new
+ *     Difficult (-10) Medicae Test has been made (OW rules). A new
  *     wound clears it.
  *
  * No actor coupling — the pure rules in

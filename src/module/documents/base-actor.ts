@@ -1117,7 +1117,7 @@ export class WH40KBaseActor extends Actor {
             label: characteristic.label,
             target: characteristic.total,
             ...(override !== undefined ? { typeOverride: override } : {}),
-            // A Comrade Order in force this Turn (Ranged Volley's +5 BS, OW core, #152).
+            // A Comrade Order in force this Turn (Ranged Volley's +5 BS, OW, #152).
             sourcedModifiers: { bucket: COMRADE_ORDER_BUCKET, components: comradeOrderModifiersFor(this, characteristicName) },
         });
         openRollPrompt(simpleSkillData);
@@ -1145,7 +1145,7 @@ export class WH40KBaseActor extends Actor {
             target: willpower.total,
             situationalKey: 'willpower',
             extraModifiers: { fear: -getFearTestPenalty(rating) },
-            // An Only War PC's Comrade passes or fails with it (OW core, #152).
+            // An Only War PC's Comrade passes or fails with it (OW, #152).
             instance: comradeMirrorTestFor(this, 'fear'),
         });
         openRollPrompt(simpleSkillData);
@@ -1206,7 +1206,7 @@ export class WH40KBaseActor extends Actor {
             label: t('WH40K.Pinning.TestLabel'),
             target,
             situationalKey: 'willpower',
-            // An Only War PC's Comrade passes or fails with it (OW core, #152).
+            // An Only War PC's Comrade passes or fails with it (OW, #152).
             instance: comradeMirrorTestFor(this, 'pinning'),
         });
         openRollPrompt(simpleSkillData);

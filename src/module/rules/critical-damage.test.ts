@@ -11,8 +11,8 @@ import {
 import { normalizeBodyPart, normalizeDamageType } from './damage-type';
 
 /**
- * Tests for the DH2 Critical Damage table lookup (#108 — core.md
- * §"Critical Damage", Tables 7–7 … 7–22).
+ * Tests for the DH2 Critical Damage table lookup (#108 — the
+ * "Critical Damage" rules and their Critical Effects tables).
  *
  * The GW-copyrighted effect prose lives in a compendium pack, so the
  * structured-record path is exercised against a small fixture built
@@ -376,7 +376,7 @@ describe('getCriticalDamageRecord (#108)', () => {
         expect(rec?.riders.fatal).toBe(true);
     });
 
-    it('unknown damage type falls back to Impact (core.md L10646)', async () => {
+    it('unknown damage type falls back to Impact', async () => {
         const rec = await getCriticalDamageRecord('Plasma', 'Head', 4);
         expect(rec?.damageType).toBe('Impact');
         expect(rec?.riders.stunned).toBe(true);

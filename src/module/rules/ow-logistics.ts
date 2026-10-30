@@ -27,10 +27,10 @@ import { type AvailabilityKey, availabilityCell, type CraftsmanshipKey } from '.
 /*  Base rating + flat bonuses                                          */
 /* -------------------------------------------------------------------- */
 
-/** Default starting Logistics Rating for a freshly-founded squad (OW core rules). */
+/** Default starting Logistics Rating for a freshly-founded squad (OW rules). */
 export const OW_DEFAULT_LOGISTICS_RATING = 10;
 
-/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW core rules). */
+/** Munitorum Influence Talent bonus to Squad Logistics Rating (OW rules). */
 export const OW_MUNITORUM_INFLUENCE_BONUS = 5;
 
 /* -------------------------------------------------------------------- */

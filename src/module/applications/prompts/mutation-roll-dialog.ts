@@ -1,6 +1,6 @@
 /**
  * @file MutationRollDialog — GM-only dialog for rolling on the
- * Mutation table (Table 8–16) after a failed Malignancy Test.
+ * Mutation table after a failed Malignancy Test.
  *
  * Inputs: the active track (Minor / Major) — selects how the d100 samples the
  * "Mutations" RollTable loaded from DH2's roll-table packs. The

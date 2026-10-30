@@ -9,7 +9,7 @@ import {
 } from './dw-requisition';
 
 /**
- * RAW Requisition resolver tests (#165 — the DW core "Requisition" rules, its
+ * RAW Requisition resolver tests (#165 — the DW "Requisition" rules, its
  * mission Requisition and craftsmanship tables).
  *
  * Every assertion is grounded in a single RAW reference and a

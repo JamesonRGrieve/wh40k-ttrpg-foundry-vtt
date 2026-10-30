@@ -3,7 +3,7 @@ import { computeMissionRewards, type DwMission, type MissionComplication, type M
 
 /**
  * Deathwatch Mission framework + Renown/XP rewards tests (#169 —
- * the DW core "Missions" and "Rewards" rules).
+ * the DW "Missions" and "Rewards" rules).
  *
  * Pure-function payout: completed objectives award Renown/XP and recover
  * 1 Cohesion each; triggered complications subtract from the Renown total

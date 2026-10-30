@@ -7,7 +7,7 @@ import { ACQUISITION_SCALE_MODIFIERS, combineAvailabilityModifier, normaliseScal
 /*  Table integrity                                               */
 /* -------------------------------------------------------------- */
 
-describe('Acquisition modifier tables (RT Table 9-35)', () => {
+describe('Acquisition modifier tables (RT)', () => {
     // The Availability / Craftsmanship columns are pinned to the book in
     // acquisition-ladder.test.ts; here, the resolver must read that ladder.
     it.each(AVAILABILITY_KEYS)('resolver prices %s from the RT ladder', (availability) => {
@@ -50,7 +50,7 @@ describe('Scale normalisation', () => {
 /*  Combining Acquisitions                                        */
 /* -------------------------------------------------------------- */
 
-describe('combineAvailabilityModifier (RT core.md §12226)', () => {
+describe('combineAvailabilityModifier (RT Combining Acquisitions)', () => {
     it('empty input → all zeros', () => {
         const r = combineAvailabilityModifier({ components: [] });
         expect(r.baseModifier).toBe(0);

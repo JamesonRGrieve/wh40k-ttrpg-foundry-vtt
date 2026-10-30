@@ -5,7 +5,7 @@ import { allocateHits } from './hit-allocation.ts';
 /**
  * RAW eligibility for a burst's extra hits (#513).
  *
- * DH2 core ch. VII: hits after the first may shift to a target within 2 m that
+ * DH2: hits after the first may shift to a target within 2 m that
  * is no harder to hit than the original.
  */
 

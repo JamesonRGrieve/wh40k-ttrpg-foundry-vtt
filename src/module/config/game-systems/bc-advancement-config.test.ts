@@ -1,16 +1,16 @@
 /**
  * Unit coverage for the Black Crusade advancement matrix (#173).
  *
- * Each assertion is keyed to a RAW page reference so a future content
+ * Each assertion is keyed to the RAW table it checks so a future content
  * audit can re-verify the table values without re-reading the engine.
  *
- * RAW sources (`.pdf/bc/core/core.md`):
- *   - Table 2-4 (Allies and Opponents, :2594)
- *   - Table 2-6 (Characteristic Advancement Costs, :2657)
- *   - Table 2-7 (Skill Advance Costs, :2700)
- *   - Table 2-9 (Talent Advance Costs, :2776)
- *   - Infamy advance: :2667 (500 xp / +5, capped at 40)
- *   - Khorne / psyker lock: :2750
+ * RAW sources (the BC rules):
+ *   - the Allies and Opponents table
+ *   - the Characteristic Advancement Costs table
+ *   - the Skill Advance Costs table
+ *   - the Talent Advance Costs table
+ *   - Infamy advance (500 xp / +5, capped at 40)
+ *   - Khorne / psyker lock
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -34,7 +34,7 @@ import {
     talentAdvanceCost,
 } from './bc-advancement-config.ts';
 
-describe('BC patron status (Table 2-4, core.md :2594)', () => {
+describe('BC patron status (Allies and Opponents)', () => {
     it('treats matching alignment as True', () => {
         expect(patronStatusFor('khorne', 'khorne')).toBe('true');
         expect(patronStatusFor('nurgle', 'nurgle')).toBe('true');
@@ -78,7 +78,7 @@ describe('BC patron status (Table 2-4, core.md :2594)', () => {
     });
 });
 
-describe('BC characteristic advance cost (Table 2-6, core.md :2657)', () => {
+describe('BC characteristic advance cost (Characteristic Advancement Costs)', () => {
     it('matches True costs row [100, 250, 500, 750]', () => {
         // Strength (Khorne-affiliated) for a Khorne-Aligned character.
         expect(characteristicAdvanceCost('khorne', 'khorne', 0)).toBe(100);
@@ -113,7 +113,7 @@ describe('BC characteristic advance cost (Table 2-6, core.md :2657)', () => {
     });
 });
 
-describe('BC skill advance cost (Table 2-7, core.md :2700)', () => {
+describe('BC skill advance cost (Skill Advance Costs)', () => {
     it('matches True costs row [100, 200, 400, 600]', () => {
         // Athletics (Khorne) for a Khorne-Aligned character.
         expect(skillAdvanceCost('khorne', 'khorne', 0)).toBe(100);
@@ -132,7 +132,7 @@ describe('BC skill advance cost (Table 2-7, core.md :2700)', () => {
 
     it('matches Opposed costs row [250, 500, 750, 1000]', () => {
         // Charm (Slaanesh) for a Khorne-Aligned character — matches the
-        // RAW worked example at core.md :2688 ("further 500 xp").
+        // RAW worked example ("further 500 xp").
         expect(skillAdvanceCost('khorne', 'slaanesh', 0)).toBe(250);
         expect(skillAdvanceCost('khorne', 'slaanesh', 1)).toBe(500);
         expect(skillAdvanceCost('khorne', 'slaanesh', 2)).toBe(750);
@@ -145,7 +145,7 @@ describe('BC skill advance cost (Table 2-7, core.md :2700)', () => {
     });
 });
 
-describe('BC talent advance cost (Table 2-9, core.md :2776)', () => {
+describe('BC talent advance cost (Talent Advance Costs)', () => {
     it('matches True costs row [200, 300, 400]', () => {
         // Khorne-affiliated talent for a Khorne-Aligned character.
         expect(talentAdvanceCost('khorne', 'khorne', 1)).toBe(200);
@@ -171,7 +171,7 @@ describe('BC talent advance cost (Table 2-9, core.md :2776)', () => {
     });
 });
 
-describe('BC characteristic affiliation (Table 2-5, core.md :2601, :2586)', () => {
+describe('BC characteristic affiliation', () => {
     it('pairs the four named characteristics with their gods', () => {
         expect(characteristicAffiliation('strength')).toBe('khorne');
         expect(characteristicAffiliation('toughness')).toBe('nurgle');
@@ -193,7 +193,7 @@ describe('BC characteristic affiliation (Table 2-5, core.md :2601, :2586)', () =
     });
 });
 
-describe('BC Infamy advance (core.md :2667)', () => {
+describe('BC Infamy advance', () => {
     it('exposes a flat 500 xp / +5 advance', () => {
         expect(BC_INFAMY_ADVANCE_COST).toBe(500);
         expect(BC_INFAMY_INCREMENT).toBe(5);
@@ -213,7 +213,7 @@ describe('BC Infamy advance (core.md :2667)', () => {
     });
 });
 
-describe('Khorne / psyker lock (core.md :2750)', () => {
+describe('Khorne / psyker lock', () => {
     it('blocks psyker status only when Aligned to Khorne', () => {
         expect(alignmentBlocksPsyker('khorne')).toBe(true);
         expect(alignmentBlocksPsyker('nurgle')).toBe(false);
@@ -223,7 +223,7 @@ describe('Khorne / psyker lock (core.md :2750)', () => {
     });
 });
 
-describe('BC alignment constants (core.md :2559, :2569)', () => {
+describe('BC alignment constants', () => {
     it('exposes a 5-advance switch threshold', () => {
         expect(BC_ALIGNMENT_SWITCH_THRESHOLD).toBe(5);
     });

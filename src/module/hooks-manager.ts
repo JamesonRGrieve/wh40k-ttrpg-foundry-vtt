@@ -383,7 +383,7 @@ export class HooksManager {
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();
 
-        // A Comrade's Fear lasts until the end of combat (OW core, #152).
+        // A Comrade's Fear lasts until the end of combat (OW, #152).
         Hooks.on('deleteCombat', (combat: Combat) => {
             void clearComradeFearAtCombatEnd(Array.from(combat.combatants, (combatant) => combatant.actor));
         });

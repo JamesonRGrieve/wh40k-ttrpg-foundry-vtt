@@ -1,10 +1,10 @@
 /**
- * Canonical DH2 difficulty ladder (core.md §"Test Difficulty"). Keyed by
+ * Canonical DH2 difficulty ladder (the "Test Difficulty" rules). Keyed by
  * modifier string for stable dropdown ordering; values are localised
  * labels suitable for display in roll dialogs.
  *
  * Range: Trivial (+60) through Hellish (−60). Some product lines also
- * include Infernal (−70) — not RAW in DH2 core, so omitted here. If a
+ * include Infernal (−70) — not RAW in DH2, so omitted here. If a
  * sibling system needs it, surface it via a per-system override rather
  * than amending this baseline.
  */

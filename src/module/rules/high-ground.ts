@@ -1,7 +1,7 @@
 /**
  * RAW "Higher Ground" combat modifier, per game line (#407).
  *
- * Verified against each core rulebook: the five FFG lines that scope it to melee
+ * Verified against each line's rules: the five FFG lines that scope it to melee
  * grant +10 to Weapon Skill tests from higher ground (DH2, BC, DW, OW, RT); DH1
  * instead grants +10 to shooting (Ballistic Skill) from higher ground; Cubicle
  * 7's Imperium Maledictum has no such rule. This module maps each line to its
@@ -18,7 +18,7 @@
 export type HighGroundMode = 'melee' | 'ranged' | 'none';
 
 /**
- * The Higher Ground mode for a game line (verified against each core rulebook,
+ * The Higher Ground mode for a game line (verified against each line's rules,
  * #407). Accepts the raw `system.gameSystem` string; an unknown line (or IM,
  * which has no such rule) resolves to `none`. Exhaustiveness across the seven
  * `GameSystemId` values is pinned by high-ground.test.ts.

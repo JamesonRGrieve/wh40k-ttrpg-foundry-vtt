@@ -113,7 +113,7 @@ export const LOCOMOTION_CHOICES = [
 export type Locomotion = (typeof LOCOMOTION_CHOICES)[number];
 
 /**
- * Imperium Maledictum rates vehicle speed as a named band (IM core: the three
+ * Imperium Maledictum rates vehicle speed as a named band (IM rules: the three
  * creature speeds, plus the vehicle-only `swift`), not as the
  * FFG kph/metres pair. IM craft therefore leave `speed.cruising` / `.tactical`
  * at 0 and author this instead; the six FFG lines leave it blank.

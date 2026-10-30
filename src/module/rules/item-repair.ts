@@ -16,7 +16,7 @@ import type { XenosRepairRules } from './xenos-equipment.ts';
 
 /** A line's printed item-repair rule. */
 export interface ItemRepairRules {
-    /** Repair modifier by craftsmanship (DH2 core rules). */
+    /** Repair modifier by craftsmanship (DH2 rules). */
     craftsmanship: Readonly<Record<CraftsmanshipKey, number>>;
     /** A failed repair with at least this many degrees of failure destroys the item. */
     destroyedAtDegreesOfFailure: number;

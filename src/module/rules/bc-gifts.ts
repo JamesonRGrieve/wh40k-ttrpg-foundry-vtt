@@ -1,7 +1,6 @@
 /**
- * Black Crusade Gifts of the Gods resolver (#180 — core.md Table 9-1
- * "Gifts of the Gods", plus sub-tables 9-2 "Limb Table" and 9-4
- * "Random Creatures").
+ * Black Crusade Gifts of the Gods resolver (#180 — the "Gifts of the
+ * Gods" table, plus its "Limb Table" and "Random Creatures" sub-tables).
  *
  * A Gift of the Gods is a `mutation` item whose `category` is
  * {@link GIFT_MUTATION_CATEGORY}. The item's own `effect` is the base

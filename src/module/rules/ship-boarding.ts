@@ -1,5 +1,5 @@
 /**
- * Boarding Actions resolver — Rogue Trader (#188 — RT core rules,
+ * Boarding Actions resolver — Rogue Trader (#188 — RT rules,
  * Ramming and Boarding Actions and the turret bonus).
  *
  * RAW shape:

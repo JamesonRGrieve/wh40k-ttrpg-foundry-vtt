@@ -91,7 +91,7 @@ export const FallingEverySystem: Story = {
     },
 };
 
-/** A DH1 fall below Table 7-27's first row deals nothing, so the dialog cannot resolve. */
+/** A DH1 fall below the Falling Damage table's first row deals nothing, so the dialog cannot resolve. */
 export const FallingTooShort: Story = {
     args: { kind: 'falling', metres: 2, lines: ['dh1'] },
     play: async ({ canvasElement }) => {

@@ -1,5 +1,5 @@
 /**
- * Crippled and destroyed starships — Rogue Trader (#187 — RT core rules with
+ * Crippled and destroyed starships — Rogue Trader (#187 — RT rules with
  * the 1.4 errata, "Crippled Ships", "Destroying Ships" and the Critical Hit chart).
  *
  * "When a ship reaches 0 Hull Integrity, it becomes Crippled. Apply a -10

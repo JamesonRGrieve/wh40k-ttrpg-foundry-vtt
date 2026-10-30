@@ -16,7 +16,7 @@ import {
 } from './dw-horde-magnitude';
 
 /**
- * RAW Horde / Magnitude resolver tests (#166 — the DW core Horde rules).
+ * RAW Horde / Magnitude resolver tests (#166 — the DW Horde rules).
  *
  * Mental-math style: every literal assertion is grounded in a single
  * RAW citation and a hand-checked value, so failures fingerprint to a

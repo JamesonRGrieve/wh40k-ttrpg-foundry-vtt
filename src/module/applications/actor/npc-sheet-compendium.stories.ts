@@ -78,7 +78,7 @@ export const AsphodelKrootWarrior: Story = {
 };
 
 export const ChaosSpaceMarine: Story = {
-    name: 'BC core — Chaos Space Marine',
+    name: 'BC — Chaos Space Marine',
     args: compendiumBcNpc('Chaos Space Marine'),
     play: async ({ canvasElement }) => expectBcNpcSheet(canvasElement, 'Chaos Space Marine'),
 };

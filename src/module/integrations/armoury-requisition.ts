@@ -166,7 +166,7 @@ interface ArmouryAttempt {
     refusal?: { key: I18nKey; data?: Record<string, number | string> | undefined } | undefined;
     target?: number | undefined;
     breakdown?: RequisitionModifier[] | undefined;
-    /** OW: the Logistics Test the target came from (its Table 6-2 / 6-6 rows). */
+    /** OW: the Logistics Test the target came from (its front-conditions / craftsmanship table rows). */
     logistics?: { context: LogisticsContext; breakdown: LogisticsBreakdown } | undefined;
     roll?: number | undefined;
     /** Degrees as the line prints them (Gen 1 has no base degree, #335): the card's count. */
@@ -390,7 +390,7 @@ export function buildArmouryCardContext(outcome: ArmouryRequisitionOutcome, game
         const rows: ProvenanceRow[] =
             attempt.logistics === undefined
                 ? requisitionProvenanceRows(breakdown, translate)
-                : // OW: the same Table 6-2 / 6-6 provenance rows the Logistics Test card prints.
+                : // OW: the same front-conditions / craftsmanship provenance rows the Logistics Test card prints.
                   logisticsRows(attempt.logistics.context, attempt.logistics.breakdown, translate).filter((row) => row.key !== 'rating');
         const refusal = attempt.refusal;
         return {

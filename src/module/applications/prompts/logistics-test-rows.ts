@@ -3,7 +3,7 @@
  * card (#154, #192).
  *
  * Pure presentation over `rules/ow-logistics.ts`: the option label keys for
- * each Table 6-2 / 6-6 axis, and the hoverable component rows a rolled test
+ * each Availability by Front Conditions / Craftsmanship and Logistics axis, and the hoverable component rows a rolled test
  * prints (each row names the table row it came from). The translator is
  * injected so the module stays free of the `game` global.
  */
@@ -114,7 +114,7 @@ export interface LogisticsRow {
  * The full derivation of a rolled test: the Squad Logistics Rating, then every
  * modifier with the table row it was read from. Optional bonuses that are off
  * (Munitorum Influence, standard kit, a zero situational adjustment) are left
- * out; the four Table 6-2 parts and craftsmanship always print, even at +0.
+ * out; the four front-conditions parts and craftsmanship always print, even at +0.
  */
 export function logisticsRows(ctx: LogisticsContext, breakdown: LogisticsBreakdown, translate: Translate): LogisticsRow[] {
     const frontTable = translate('WH40K.OW.Logistics.Source.FrontConditions');

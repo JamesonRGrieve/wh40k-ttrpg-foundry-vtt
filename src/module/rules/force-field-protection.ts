@@ -7,7 +7,7 @@ import type { WH40KItemDocument } from '../types/global.d.ts';
  * is nullified. At or under the field's overload number, the field overloads and
  * stops working until it is repaired. That number comes from the item (DW's core
  * rules print one per field), or from its craftsmanship (Poor 01–15, Common
- * 01–10, Good 01–05, Best 01; the DH2, OW and BC core rules).
+ * 01–10, Good 01–05, Best 01; the DH2, OW and BC rules).
  */
 
 /** A force-field item: its `system` is the force-field DataModel. */

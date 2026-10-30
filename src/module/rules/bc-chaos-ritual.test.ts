@@ -1,7 +1,7 @@
 /**
  * Tests for Black Crusade Chaos Ritual engine (#179).
  *
- * Covers Table 6-7 modifier composition, target clamping, the Contempt
+ * Covers Ritual Modifiers composition, target clamping, the Contempt
  * of the Warp roll resolver (success / failure, DoS / DoF margins),
  * and the Breaking Mastery opposed contest.
  */

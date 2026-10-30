@@ -712,7 +712,7 @@ export function collectWeaponQualityDieOps(specials: ReadonlyArray<AttackSpecial
 /**
  * `keepHighest` term surgery: append `extraDice` dice to the term and keep the
  * ORIGINAL count, highest first — Tearing adds a damage die and drops the lowest
- * (RT core rules).
+ * (RT rules).
  *
  * Idempotent: a term that already carries any `kh` modifier is left alone, so a
  * re-prepared roll (or a weapon whose formula authored its own `kh`) never stacks the

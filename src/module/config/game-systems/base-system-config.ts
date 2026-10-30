@@ -35,8 +35,8 @@ import type {
 
 /**
  * The Grapple action's option lists as DH2, RT, BC, DW and OW print them, word for
- * word but for the Slip Free skill (#120; DH2 core, RT core / BC core /
- * DW core / OW core "Grapple"). The controller has Damage Opponent, Throw Down
+ * word but for the Slip Free skill (#120; each line's "Grapple" rules).
+ * The controller has Damage Opponent, Throw Down
  * Opponent, Push Opponent, Stand (each an Opposed Strength test), Ready and Use Item
  * (no test). The grappled target has Break Free and Take Control (Opposed Strength)
  * and Slip Free ("a Challenging (+0) <skill> test").
@@ -78,7 +78,7 @@ export function printedGrappleRules(slipFreeSkill: string, thrownDownBonus: numb
 /**
  * The fitting rule DH1, RT and OW print word for word: "A character with the
  * Trade (Armourer) skill may upgrade weapons by making a successful test" (DH1
- * core Weapon Upgrades; RT core; OW core Weapon Upgrades). No modifier,
+ * Weapon Upgrades; RT; OW Weapon Upgrades). No modifier,
  * no failure consequence, no removal test (#136).
  */
 export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
@@ -121,7 +121,7 @@ export const OPERATE_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 /**
- * Drive and Pilot as RT and DW core print them:
+ * Drive and Pilot as RT and DW print them:
  * Drive's skill groups are Ground Vehicle, Skimmer/Hover and Walker ("land-based,
  * hover, or skimmer-type vehicles"); Pilot's are Personal, Flyers and Space Craft.
  * Neither skill covers boats, so a watercraft has no printed driving test.
@@ -142,7 +142,7 @@ export const DRIVE_PILOT_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 /**
- * The Vehicle Hit Locations table DH2 and OW core
+ * The Vehicle Hit Locations table DH2 and OW
  * print with the same bands, read on the reversed attack roll.
  */
 const PRINTED_VEHICLE_HIT_LOCATIONS: readonly VehicleHitLocationBand[] = [
@@ -195,7 +195,7 @@ export abstract class BaseSystemConfig {
 
     /**
      * Whether gaining every 10 Corruption Points forces a Malignancy Test
-     * against the Corruption Track (DH1 / DH2 / OW / RT core rules).
+     * against the Corruption Track (DH1 / DH2 / OW / RT rules).
      */
     abstract readonly usesMalignancyTest: boolean;
 
@@ -221,7 +221,7 @@ export abstract class BaseSystemConfig {
     abstract readonly inquestRules: InquestRules | null;
 
     /**
-     * The line's printed item-repair rule (DH2 core: the craftsmanship repair
+     * The line's printed item-repair rule (DH2: the craftsmanship repair
      * modifier + destruction on a bad failure, #444; plus a supplement's
      * xenos step, #136), or `null` for a line whose book leaves the Tech-Use
      * repair difficulty to the GM.
@@ -230,7 +230,7 @@ export abstract class BaseSystemConfig {
 
     /**
      * The line's printed rule for fitting a weapon modification personally
-     * (DH2 core and a supplement; DH1 / RT / OW "a successful
+     * (DH2 and a supplement; DH1 / RT / OW "a successful
      * Trade (Armourer) test", #136), or `null` for a line that prints no
      * fitting test (DW folds the labour into the Requisition cost; BC prints
      * none).
@@ -517,7 +517,7 @@ export abstract class BaseSystemConfig {
 
     /**
      * Canonical list of ways a Fate Point can be spent in this game system.
-     * The default returns the DH2e core uses (which match BC / OW / DW / DH1e
+     * The default returns the uses DH2 prints (which match BC / OW / DW / DH1e
      * within minor wording differences and are a safe baseline for RT and IM
      * until a per-system override lands). Subclasses override to surface
      * system-specific entries (e.g. IM's Patron Boons).

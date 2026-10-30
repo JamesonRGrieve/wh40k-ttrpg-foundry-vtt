@@ -1,5 +1,5 @@
 /**
- * Surprise + Surprised round mechanics (#113 — core.md L9940-9954).
+ * Surprise + Surprised round mechanics (#113).
  *
  * Surprised combatants:
  *   - Lose their round 1 turn entirely.

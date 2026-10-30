@@ -39,7 +39,7 @@ export const RT_ACQUISITION_LADDER = {
         unique: -70,
     },
     craftsmanship: { poor: 10, common: 0, good: -10, best: -30 },
-    // RT core: on a failure "the Explorer must wait until later to try again" — no Profit Factor is lost.
+    // RT: on a failure "the Explorer must wait until later to try again" — no Profit Factor is lost.
     failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
@@ -50,18 +50,18 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** RT core Weapon Upgrades: a successful Trade (Armourer) test (#136). */
+    /** RT Weapon Upgrades: a successful Trade (Armourer) test (#136). */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
-     * RT core with the 1.4 errata: "The total number of hits scored
+     * RT with the 1.4 errata: "The total number of hits scored
      * by a weapon cannot exceed the weapon's … Rate of Fire"; Suppressing Fire:
      * "The number of hits scored may not exceed …"; Storm: the errata FAQ answers
      * "Double the Rate of Fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * RT core (1.4 errata): Semi-Auto Burst (Type: Full Action) "a Ballistic
+     * RT (1.4 errata): Semi-Auto Burst (Type: Full Action) "a Ballistic
      * Skill Test with a +10 bonus"; Full Auto Burst (Type: Full Action) "with a +20
      * bonus" — #607.
      */
@@ -69,9 +69,9 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         semi: { attackModifier: 10, actionCost: 'full' },
         full: { attackModifier: 20, actionCost: 'full' },
     };
-    /** RT core: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
+    /** RT: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
     /**
-     * RT core, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
+     * RT, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
      * Throw Down only makes the opponent Prone: RT prints no further bonus.
      */
     readonly grappleRules: GrappleRules = printedGrappleRules('contortionist', 0);
@@ -79,7 +79,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     /** An RT supplement: one Vehicle Critical Hit Chart and no hit-location table. */
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(false);
 
-    /** RT core: Poor −10 Agility; Good +1 AP "against the first attack in any round"; Best half weight and +1 AP. */
+    /** RT: Poor −10 Agility; Good +1 AP "against the first attack in any round"; Best half weight and +1 AP. */
     override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {
@@ -103,7 +103,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         return { ...FATIGUE_MODES.flat, fullRecoveryHours: 8 };
     }
 
-    /** RT Dispositions are the seven-step ladder; a success gains one step plus one per degree (RT core) — #73. */
+    /** RT Dispositions are the seven-step ladder; a success gains one step plus one per degree (RT rules) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }

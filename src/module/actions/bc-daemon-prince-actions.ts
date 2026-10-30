@@ -1,5 +1,5 @@
 /**
- * Black Crusade apotheosis action handler (#182 — BC Core p267).
+ * Black Crusade apotheosis action handler (#182).
  *
  * Exported `bcAscend` is registered into the character sheet's
  * `DEFAULT_OPTIONS.actions` map and invoked with `this` bound to the sheet.

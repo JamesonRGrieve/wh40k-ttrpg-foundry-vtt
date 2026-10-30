@@ -136,8 +136,8 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get craftsmanship-derived modifiers for force fields.
      * Applies WH40K RPG force field craftsmanship rules:
      *
-     * FORCE FIELDS (Field Overload Chance: DH2 core,
-     * OW core and BC core, all alike):
+     * FORCE FIELDS (Field Overload Chance: DH2,
+     * OW and BC, all alike):
      * - Poor: Overload on 01-15
      * - Common: Overload on 01-10
      * - Good: Overload on 01-05

@@ -1,6 +1,6 @@
 /**
  * @file Pure view-model builder for the Reinforcement Character call dialog
- * (DH2 core, #77).
+ * (DH2, #77).
  *
  * Turns the RC's printed terms, the warband's Acolytes and the GM's current
  * choices into the dialog's render context: final cost, contribution cap,

@@ -1,5 +1,5 @@
 /**
- * Tests for the Black Crusade apotheosis resolver (#182 — BC Core p267).
+ * Tests for the Black Crusade apotheosis resolver (#182).
  *
  * Covers the claim at 100 Corruption, the Infamy-threshold split between
  * Daemon Prince and Chaos Spawn, and the {@link isAscended} predicate.

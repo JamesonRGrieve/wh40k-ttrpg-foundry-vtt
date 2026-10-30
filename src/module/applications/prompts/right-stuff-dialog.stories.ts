@@ -5,7 +5,7 @@ import { renderSheet } from '../../../../stories/test-helpers';
 
 /**
  * Dialog story for the Ace role's Right Stuff Fate spend
- * (#100 — without.md L948-L980). Covers the eligible state
+ * (#100). Covers the eligible state
  * (button enabled, skill picker visible), the no-Fate state,
  * and the non-Ace state (button disabled with explanatory copy).
  */

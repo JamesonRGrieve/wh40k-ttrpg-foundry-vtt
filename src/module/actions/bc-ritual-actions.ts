@@ -13,7 +13,7 @@
  * Flow:
  *
  *   1. Prompt the operator for a ritual template id + base d100 target
- *      and a stacked list of Table 6-7 modifiers via DialogV2. Concrete
+ *      and a stacked list of Ritual Modifiers via DialogV2. Concrete
  *      ritual catalogues live in compendiums (Direction #7); this dialog
  *      is the engine's input surface — the operator selects/types the
  *      template id and pulls the base target off the compendium document
@@ -123,7 +123,7 @@ export interface RitualDialogRow {
 }
 
 /**
- * The dialog's four pre-allocated Table 6-7 rows: cult affiliation, sacrifice,
+ * The dialog's four pre-allocated Ritual Modifiers rows: cult affiliation, sacrifice,
  * Daemonic Mastery (seeded from the actor's ritual mastery) and the GM
  * catch-all. Each lists every kind so a row can be repurposed.
  */
@@ -143,12 +143,12 @@ export function buildRitualDialogRows(initialMastery: number, localize: (key: st
 
 /**
  * Prompt the operator for ritual template id + base target + a list of
- * stacked Table 6-7 modifiers. Returns null if the dialog API is
+ * stacked Ritual Modifiers. Returns null if the dialog API is
  * unavailable (storybook / probe) or the operator cancels.
  *
  * The dialog renders three pre-allocated modifier rows; operators wire
  * additional rows through the freeform `Other Adjustment` row, which is
- * how RAW Table 6-7 is meant to be used (the explicit five rows + one
+ * how the RAW Ritual Modifiers table is meant to be used (the explicit five rows + one
  * GM catch-all).
  */
 async function promptBcRitualInputs(args: { initialMastery: number }): Promise<BcRitualDialogResult | null> {

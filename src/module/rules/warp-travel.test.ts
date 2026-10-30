@@ -118,7 +118,7 @@ describe('resolveChartCourse (#193)', () => {
     });
 });
 
-describe('durationMultiplierFor (#193 / Table 7-3)', () => {
+describe('durationMultiplierFor (#193)', () => {
     it('matches the canonical 7-bucket table', () => {
         expect(durationMultiplierFor(4, 0)).toBe(0.25); // 3+ DoS (≥ 4 total DoS)
         expect(durationMultiplierFor(3, 0)).toBe(0.5); // 2 DoS

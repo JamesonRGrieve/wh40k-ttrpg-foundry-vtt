@@ -33,7 +33,7 @@ WH40K['originPath'] = {
     ] as OriginPathStep[],
 };
 
-// Ordered creature size labels (RAW Table 4-6). Single source of truth for the
+// Ordered creature size labels (the RAW Size table). Single source of truth for the
 // size dropdown (#426): both the standalone `sizes` config entry and the
 // `bio.size` map derive from this one definition. Keys run 1..10 in order
 // because `sizes` is consumed via `Object.entries` where display order matters

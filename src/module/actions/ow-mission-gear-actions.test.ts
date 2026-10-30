@@ -5,7 +5,7 @@ import { deriveGearDegrees } from './ow-mission-gear-actions.ts';
 /**
  * Regression coverage for #301 (reopened): the OW Mission Assignment Gear
  * handler used to re-inline the d100 success rule as `margin >= 0`, which
- * treats a natural 100 as a success once Table 6-3 modifiers push the
+ * treats a natural 100 as a success once gear modifiers push the
  * effective target to ≥100. `deriveGearDegrees` now routes pass/fail through
  * `isD100Success` and the degrees through the shared `_dice` primitives, so
  * a natural 100 always fails and still reports at least one Degree of Failure.
@@ -21,7 +21,7 @@ describe('deriveGearDegrees — #301 natural-100 / natural-01 override', () => {
         expect(degrees.degreesOfSuccess).toBe(0);
         expect(degrees.degreesOfFailure).toBeGreaterThanOrEqual(1);
 
-        // A failure must not land on a success tier of Table 6-4.
+        // A failure must not land on a success tier of the Mission Assignment Gear Results.
         const outcome = resolveGearOutcome(degrees);
         expect(outcome.outcome).toBe('minimum-kit');
         expect(outcome.bonusItemCount).toBe(0);

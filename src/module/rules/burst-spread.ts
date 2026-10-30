@@ -1,7 +1,7 @@
 /**
  * @file Which targets a burst's extra hits may be moved onto (#513).
  *
- * DH2 core ch. VII, Semi-Auto Burst (Full Auto Burst follows the same rule), in
+ * DH2, Semi-Auto Burst (Full Auto Burst follows the same rule), in
  * summary: hits after the first may move to another target within 2 m, but only
  * one that is no harder to hit than the original target.
  *

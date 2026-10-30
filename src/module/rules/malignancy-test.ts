@@ -1,6 +1,6 @@
 /**
- * Malignancy Test (DH2 core rules; the same rule and Corruption Track appear
- * in the DH1, OW and RT core rules).
+ * Malignancy Test (DH2 rules; the same rule and Corruption Track appear
+ * in the DH1, OW and RT rules).
  *
  * For every 10 total Corruption Points a character gains, they make a
  * Willpower test modified by their place on the Corruption Track. Failure means rolling on the Malignancies table.

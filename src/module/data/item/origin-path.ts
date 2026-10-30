@@ -168,7 +168,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'regiment',
                     'speciality',
                     'chapter',
-                    // Only War Regiment Creation (OW core and supplements)
+                    // Only War Regiment Creation (OW rules and supplements)
                     'regimentType',
                     'commandingOfficer',
                     'trainingDoctrine',
@@ -205,7 +205,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             // so the unlock is discovered from data rather than by name.
             grantsPsychicPowers: new fields.BooleanField({ required: true, initial: false }),
 
-            // Only War Regiment Creation Points this option carries (OW core):
+            // Only War Regiment Creation Points this option carries (OW rules):
             // what a regiment choice costs from the 12-point budget, or what a Regimental
             // Drawback returns to it. The book prints both as positive numbers. Null when
             // the content has not recorded it, which the drawback panel shows as unknown.

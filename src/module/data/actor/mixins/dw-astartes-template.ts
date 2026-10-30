@@ -7,7 +7,7 @@
  * pure — this module owns only the persistence shape and the typed
  * declarations the Character DataModel class spreads / declares.
  *
- * RAW reference: core.md "The Adeptus Astartes" / "Implants of the
+ * RAW reference: the DW "The Adeptus Astartes" / "Implants of the
  * Astartes" / "Black Carapace". Each implant id is one of the 19
  * canonical strings declared by {@link AstartesImplantId} in
  * `src/module/rules/dw-astartes.ts`; the schema stores them as raw

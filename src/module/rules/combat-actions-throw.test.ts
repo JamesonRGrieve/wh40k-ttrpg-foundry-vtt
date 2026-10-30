@@ -13,7 +13,7 @@ const RIDER = riderFixture({
 });
 
 /**
- * "Throw" half-action coverage (DH2 Core "Throw"): hurl a grenade or
+ * "Throw" half-action coverage (DH2 "Throw"): hurl a grenade or
  * thrown weapon as a Half Action, resolved as a Ballistic Skill attack
  * (thrown weapons report `isRanged === true`). Range is read from the
  * weapon's own range data (Strength-Bonus-based formula) and a miss

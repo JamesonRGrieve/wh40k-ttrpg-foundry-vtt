@@ -531,7 +531,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/require-await, @typescript-eslint/no-misused-promises -- override returns Promise; consumers may await it. Base impl is sync.
     override async rollCharacteristic(charKey: string, flavorOverride?: string, _options: Record<string, unknown> = {}): Promise<void> {
-        // Issue #13: Influence is a percentile testable stat (DH2e core) regardless of
+        // Issue #13: Influence is a percentile testable stat (DH2 RAW) regardless of
         // whether it currently lives on the Statistics panel (RAW) or the Overview > Resources
         // panel (Homebrew). The DataModel stores it as a flat 0-100 number outside the
         // `characteristics` map, so synthesize a CharacteristicField-shaped target here so
@@ -820,7 +820,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
 
     /**
-     * Fit a weapon modification personally (#136): DH2 core's Trade
+     * Fit a weapon modification personally (#136): DH2's Trade
      * (Armourer) test, or the plain test DH1 / RT / OW print. The parts are a
      * weapon modification the Acolyte carries. On DH2 the test takes the
      * modification's Availability, and a xenos weapon first needs the Forbidden

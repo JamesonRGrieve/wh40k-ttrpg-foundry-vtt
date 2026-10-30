@@ -1,5 +1,5 @@
 /**
- * Only War · Regimental Awards (#161 — OW core rules, creating
+ * Only War · Regimental Awards (#161 — OW rules, creating
  * regimental awards).
  *
  * Pure-rules engine for the medal / honor items that recognise notable
@@ -66,7 +66,7 @@ export interface RegimentalAward {
 /* -------------------------------------------------------------------- */
 
 /**
- * The broad types of medal the OW core rules name: Imperial Honours, Campaign
+ * The broad types of medal the OW rules name: Imperial Honours, Campaign
  * Honours and Regimental Awards.
  */
 export const MEDAL_HONOUR_TYPES = ['imperial', 'campaign', 'regimental'] as const;

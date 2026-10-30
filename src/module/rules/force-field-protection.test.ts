@@ -4,7 +4,7 @@ import { type ForceFieldRollTerms, forceFieldOutcome, isForceFieldItem } from '.
 /**
  * The force-field protection roll (#645): 1d100 at or under the protection rating
  * nullifies the attack; inside the overload band the field overloads. RAW Common
- * craftsmanship overloads on 01–10 (DH2 core Table 5–13).
+ * craftsmanship overloads on 01–10 (the DH2 Field Overload Chance table).
  */
 const commonField = (protectionRating: number): ForceFieldRollTerms => ({
     protectionRating,

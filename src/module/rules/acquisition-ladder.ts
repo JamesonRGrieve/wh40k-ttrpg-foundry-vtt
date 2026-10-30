@@ -2,8 +2,8 @@
  * The acquisition-ladder plumbing shared by every line's availability /
  * craftsmanship modifier table (#192).
  *
- * Each game line prints its own ladder (DH2 Table 5-1, RT Table 9-35, BC
- * Table 9-11, …) and the values differ between lines, so the VALUES live on
+ * Each game line prints its own ladder (DH2, RT, BC, …) and the values
+ * differ between lines, so the VALUES live on
  * the line's game-system config (`BaseSystemConfig.acquisitionLadder`). This
  * module holds only the content-agnostic part: the rating keys, the ladder
  * shape, the key normalisers, and how a printed cell resolves.

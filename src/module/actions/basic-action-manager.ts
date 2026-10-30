@@ -423,7 +423,7 @@ export class BasicActionManager {
         }
 
         // Propagate attack DoS to each hit so the chat card can offer the
-        // "replace damage die with DoS" action (#129 — DH2 core).
+        // "replace damage die with DoS" action (#129 — DH2).
         const attackDoS = actionData.rollData.dos;
         for (const hit of actionData.damageData?.hits ?? []) {
             hit.dos = attackDoS;
@@ -609,7 +609,7 @@ export class BasicActionManager {
     }
 
     /**
-     * Handle the chat-card "Replace die with DoS" button (#129 — DH2 core).
+     * Handle the chat-card "Replace die with DoS" button (#129 — DH2).
      * Looks up the original ActionData by `data-roll-id`,
      * mutates the targeted Hit's lowest active damage die to the attack's
      * DoS, then re-emits the damage chat card with the updated total. A

@@ -210,7 +210,7 @@ export const SystemIM = perSystemStory('im');
 // ── Printed XP per line (content#30) ──────────────────────────────────────────
 //
 // A power shared across lines prints a different XP value in each book:
-// Precognition is 400 xp in DH2 core and 100 xp in BC core, and DH1 prints none
+// Precognition is 400 xp in DH2 and 100 xp in BC, and DH1 prints none
 // (its powers are bought from career tables). The compendium index carries the
 // per-line map raw; the dialog resolves it to the actor's line before charging.
 
@@ -273,7 +273,7 @@ export const PsychicPrintedXpDH2 = printedXpStory('dh2', { Precognition: 400, Ca
 
 // ── Printed prerequisites (#673) ──────────────────────────────────────────────
 //
-// DH2 core prints Smite's prerequisite as "Willpower 40"; BC core prints Field of
+// DH2 prints Smite's prerequisite as "Willpower 40"; BC prints Field of
 // Pestilence's as "Aligned Nurgle" and Wind of Chaos's as "Corruption 30+" (#675). A
 // psyker who falls short sees the power blocked, its row naming the unmet gates the
 // shared check reports.

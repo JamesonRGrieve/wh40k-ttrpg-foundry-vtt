@@ -1,14 +1,14 @@
 /**
  * Only War · Mission Assignment Gear
- * (#155 — OW core.md §"MISSION ASSIGNMENT GEAR", line 7156).
+ * (#155 — the OW Mission Assignment Gear rules).
  *
  * Pure rules / math layer for the gear-roll layered on top of the standard
- * Logistics Test. Per OW core.md the Mission Assignment Gear roll is an
+ * Logistics Test. Per the OW rules the Mission Assignment Gear roll is an
  * **Ordinary (+10) Logistics Test** with situational modifiers drawn from
- * **Table 6-3** stacked on top of the Logistics target. The result ladder
- * is encoded in **Table 6-4** (DoF/DoS → kit tier), and a successful gear
- * roll may be supplemented with a d100 roll on **Table 6-5: Random Issue
- * Gear** to pick a bonus item.
+ * the **gear modifier table** stacked on top of the Logistics target. The
+ * result ladder is encoded in the **Mission Assignment Gear Results** table
+ * (DoF/DoS → kit tier), and a successful gear roll may be supplemented with
+ * a d100 roll on the **Random Issue Gear** table to pick a bonus item.
  *
  * RNG-free except for the explicit `rollRandomIssueGear` helper, which
  * accepts an injected `() => number` so callers can seed deterministic
@@ -20,16 +20,16 @@
  * don't apply. Callers pass the squad's Logistics Rating
  * (with Munitorum Influence and the GM's situational modifier) as the base
  * target, and `applyTable63Modifiers` stacks the +10 Ordinary bonus and the
- * Table 6-3 deltas before the d100 is resolved.
+ * gear modifier table deltas before the d100 is resolved.
  */
 
 /* -------------------------------------------------------------------- */
-/*  Ordinary bonus + Table 6-3 modifier composition                     */
+/*  Ordinary bonus + gear modifier table composition                    */
 /* -------------------------------------------------------------------- */
 
 /**
  * Mission Assignment Gear rolls are made at Ordinary difficulty
- * (+10 to the underlying Logistics target). OW core.md line 7156.
+ * (+10 to the underlying Logistics target).
  */
 export const ORDINARY_DIFFICULTY_BONUS = 10;
 
@@ -42,13 +42,13 @@ export interface MissionGearModifier {
     readonly value: number;
 }
 
-/** Result of composing the base target with the Ordinary bonus + Table 6-3. */
+/** Result of composing the base target with the Ordinary bonus + the gear modifier table. */
 export interface MissionGearTarget {
     /** Final d100 target — the base target plus every breakdown entry. */
     readonly target: number;
     /**
      * Per-row breakdown. The first entry is always the Ordinary (+10)
-     * bonus; subsequent entries are the caller's Table 6-3 modifiers,
+     * bonus; subsequent entries are the caller's gear modifier table rows,
      * preserved in their incoming order.
      */
     readonly breakdown: ReadonlyArray<MissionGearModifier>;
@@ -56,11 +56,11 @@ export interface MissionGearTarget {
 
 /**
  * Compose the final gear-roll target from a base Logistics target and a
- * caller-supplied list of Table 6-3 situational modifiers. The Ordinary
+ * caller-supplied list of gear modifier table situational modifiers. The Ordinary
  * (+10) bonus is always pre-applied as the first breakdown row so the
  * UI can render it transparently alongside the situational rows.
  *
- * Pure: makes no assumption about which Table 6-3 modifiers apply —
+ * Pure: makes no assumption about which gear modifier table rows apply —
  * those are content-specific and discovered at the consumer (compendium-
  * driven mission documents, GM dialog inputs, etc.).
  */
@@ -71,17 +71,17 @@ export function applyTable63Modifiers(baseTarget: number, modifiers: ReadonlyArr
 }
 
 /* -------------------------------------------------------------------- */
-/*  Table 6-4 — result ladder                                           */
+/*  Mission Assignment Gear Results — result ladder                     */
 /* -------------------------------------------------------------------- */
 
 /**
  * Tiers of gear issued by the Mission Assignment Gear roll
- * (OW core.md Table 6-4, line 7156+).
+ * (the Mission Assignment Gear Results table).
  */
 export type GearOutcome = 'surrender-kit' | 'minimum-kit' | 'standard-kit' | 'bonus-items';
 
 /**
- * One row of Table 6-4. Each entry matches when the rolled DoF/DoS hits
+ * One row of the Mission Assignment Gear Results table. Each entry matches when the rolled DoF/DoS hits
  * the row's threshold; the ladder is scanned top-to-bottom so callers
  * MUST order it from harshest failure to greatest success.
  *
@@ -93,12 +93,12 @@ export interface GearResultLadder {
     readonly outcome: GearOutcome;
     readonly minDof?: number;
     readonly minDos?: number;
-    /** Number of d100 rolls on Table 6-5 the squad earns at this tier. */
+    /** Number of d100 rolls on the Random Issue Gear table the squad earns at this tier. */
     readonly bonusItemCount: number;
 }
 
 /**
- * **Table 6-4: Mission Assignment Gear Results** (OW core.md line 7156+).
+ * **Mission Assignment Gear Results**.
  *
  * Ordered from harshest failure to greatest success so a linear scan
  * picks the first matching row. Entries are exclusive — a 4-DoF roll
@@ -109,7 +109,7 @@ export const GEAR_RESULT_LADDER: ReadonlyArray<GearResultLadder> = [
     { outcome: 'surrender-kit', minDof: 4, bonusItemCount: 0 },
     /** 1-3 DoF → minimum kit. */
     { outcome: 'minimum-kit', minDof: 1, bonusItemCount: 0 },
-    /** 4+ DoS → standard kit + 1 bonus item from Table 6-5. */
+    /** 4+ DoS → standard kit + 1 bonus item from the Random Issue Gear table. */
     { outcome: 'bonus-items', minDos: 4, bonusItemCount: 1 },
     /** 0-3 DoS (success / marginal) → standard kit. */
     { outcome: 'standard-kit', minDos: 0, bonusItemCount: 0 },
@@ -152,16 +152,16 @@ export function resolveGearOutcome({ degreesOfSuccess, degreesOfFailure }: GearR
 }
 
 /* -------------------------------------------------------------------- */
-/*  Table 6-5 — Random Issue Gear d100                                  */
+/*  Random Issue Gear d100                                              */
 /* -------------------------------------------------------------------- */
 
 /**
- * Roll 1d100 on Table 6-5: Random Issue Gear. The caller passes an
+ * Roll 1d100 on the Random Issue Gear table. The caller passes an
  * `rng` returning a value in `[0, 1)`; this helper converts to the
  * canonical d100 range `[1, 100]` via `floor(rng() * 100) + 1` and
  * clamps defensively in case a caller hands in a malformed RNG.
  *
- * The Table 6-5 row lookup itself lives at the content layer — this
+ * The Random Issue Gear row lookup itself lives at the content layer — this
  * helper just produces the raw die result so chat cards / dialog UIs
  * can resolve it against the compendium row.
  */

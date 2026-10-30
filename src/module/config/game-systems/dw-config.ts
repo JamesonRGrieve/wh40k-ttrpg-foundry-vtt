@@ -23,18 +23,18 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly acquisitionLadder = null;
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** DW core: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
+    /** DW: an Upgrade's Requisition cost covers "any labour required to install" it; there is no fitting test (#136). */
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
-     * DW core: "The number of extra hits scored in this manner cannot exceed the
+     * DW: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … Rate of Fire" (both bursts); Suppressing Fire: "The number of
      * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
      * Full Automatic rate of fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * DW core: Semi-Auto Burst (Type: Full Action) "a Ballistic Skill Test
+     * DW: Semi-Auto Burst (Type: Full Action) "a Ballistic Skill Test
      * with a +10 bonus"; Full Auto Burst (Type: Full Action) "with a +20
      * bonus" — #607.
      */
@@ -56,7 +56,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     override readonly vehicleCombat: VehicleCombatRules = singleChartVehicleCombat(true);
 
     /**
-     * DW core, Armour Craftsmanship: Exceptional (read as Good) adds 1 AP against
+     * DW, Armour Craftsmanship: Exceptional (read as Good) adds 1 AP against
      * the first attack in any round; Master-Crafted (read as Best) weighs half and
      * adds 1 AP. DW prints no Poor armour.
      */
@@ -87,7 +87,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         return { ...FATIGUE_MODES.flat, wakeBehavior: 'drop-one-level', fullRecoveryHours: 1 };
     }
 
-    /** DW Dispositions are the seven-step ladder; a success gains one step plus one per degree (DW core) — #73. */
+    /** DW Dispositions are the seven-step ladder; a success gains one step plus one per degree (DW rules) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }

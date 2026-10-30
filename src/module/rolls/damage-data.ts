@@ -45,7 +45,7 @@ import { type ModifierSourcesShape, passiveCombatModifiers } from './passive-mod
 import type { VehicleCardRow } from './vehicle-card-rows.ts';
 import { reversedTableRoll, strikeFor, type VehicleStrike, type VehicleTableRollKind, type VehicleTargetProfile } from './vehicle-strike.ts';
 
-/** The die an extra hit on a vehicle rolls on its hit-location table (DH2 core). */
+/** The die an extra hit on a vehicle rolls on its hit-location table (DH2 rules). */
 const FRESH_LOCATION_DIE = '1d100';
 
 /**
@@ -249,7 +249,7 @@ export interface DamageDieResult {
 }
 
 /**
- * DH2 core: the attacker may replace ONE damage
+ * DH2: the attacker may replace ONE damage
  * die with the attack roll's Degrees of Success. Mutates the chosen
  * active die in place — the lowest by default, or the attacker-selected
  * index into the active-die list — and reports the swapped-out value plus
@@ -613,7 +613,7 @@ export class Hit {
      * Land this hit on a vehicle (content#28). The first hit reads the line's
      * Vehicle Hit Locations table on the reversed attack roll; each extra hit on the
      * same vehicle, and every hit spread onto a second one, rolls a fresh d100
-     * (DH2 core). A line with one chart
+     * (DH2 rules). A line with one chart
      * strikes the Hull. Righteous Fury rolls the vehicle's die (1d5, or a trait's,
      * e.g. Ramshackle's 1d10) on the struck location's chart instead of a creature's
      * Critical Effects table, and is not Critical damage.
@@ -730,8 +730,8 @@ export class Hit {
         this.damage = damageRoll.total ?? 0;
 
         // A helpless target (a condition with `helplessTarget`) takes damage rolled
-        // twice and ADDED together — every line prints it that way (DH2 p229, RT/DW
-        // p248, OW p253, BC p245, DH1 p199). The second roll re-uses the first's
+        // twice and ADDED together — every line prints it that way (DH2, RT/DW,
+        // OW, BC, DH1). The second roll re-uses the first's
         // formula AFTER the dice-pool surgery above, so Tearing etc. apply to both;
         // it is a named, sourced modifier so the card shows where it came from.
         if (attackData.rollData.targetHelpless === true) {

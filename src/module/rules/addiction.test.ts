@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ADDICTION_TREATMENT_DAYS, getTreatmentClockDays, resolveAddictionCheck } from './addiction';
 
 /**
- * Drugs and Addiction tests (#122 — core.md L7530-7630).
+ * Drugs and Addiction tests (#122).
  *
  * Pins the addiction-check target math (WP − substance rating) and the
  * tier-escalation ladder (none → mild → moderate → severe) along with

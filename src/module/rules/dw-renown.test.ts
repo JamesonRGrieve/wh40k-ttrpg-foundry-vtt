@@ -14,7 +14,7 @@ import {
 } from './dw-renown';
 
 /**
- * RAW Renown resolver tests (#164 — the DW core "Renown" rules and Renown Rank
+ * RAW Renown resolver tests (#164 — the DW "Renown" rules and Renown Rank
  * table; a DW supplement's per-mission Renown table and "Losing Renown").
  *
  * Every literal assertion is grounded in a single RAW citation and a

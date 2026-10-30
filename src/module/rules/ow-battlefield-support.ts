@@ -1,15 +1,15 @@
 /**
  * Only War · Battlefield Awareness & Manoeuvres — Support Asset Request
- * (#161 — OW core.md §"BATTLEFIELD AWARENESS AND MANOEUVRES" line 13361,
- * §"Support" line 13411).
+ * (#161 — the OW "Battlefield Awareness and Manoeuvres" and "Support"
+ * rules).
  *
  * Pure-rules engine for calling in off-table support assets (artillery
  * barrages, air strikes, reinforcement waves, orbital fire). Each
  * support call is a Logistics-flavored d100 test against a modified
  * target: the squad's current Logistics target is shifted by the
  * asset's `logisticsModifier` (a negative number makes the request
- * harder, mirroring how scarcer / more potent assets do in Table 6-2's
- * column structure). On a successful request the asset arrives in a
+ * harder, mirroring how scarcer / more potent assets do in the Availability
+ * by Front Conditions table's column structure). On a successful request the asset arrives in a
  * fixed number of turns (`turnsUntilArrival`) and the squad's per-asset
  * cooldown begins ticking down via `applySupportCooldown`.
  *

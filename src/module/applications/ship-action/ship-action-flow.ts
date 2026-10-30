@@ -4,7 +4,7 @@
  *
  * The action's test is composed with full provenance (the acting character's
  * skill, the ship's Manoeuvrability / Detection for a Combined Skill Test,
- * RT core, the printed difficulty, a situational modifier). On a success
+ * RT rules, the printed difficulty, a situational modifier). On a success
  * the order's `shipEffect` block decides what happens — never the action's
  * name:
  *

@@ -1,5 +1,5 @@
 /**
- * Only War "Comrades in Combat" (#152; OW core rules, including "Losing and
+ * Only War "Comrades in Combat" (#152; OW rules, including "Losing and
  * Replacing Comrades").
  *
  * Pure functions over one PC ↔ Comrade pair. The caller (the character sheet,
@@ -28,7 +28,7 @@
 
 import type { CombatRoundStamp } from './counter-attack.ts';
 
-/** A line's printed Comrade rules (OW core rules), on its game-system config. */
+/** A line's printed Comrade rules (OW rules), on its game-system config. */
 export interface ComradeRules {
     /** Cohesion radius in metres ("within 5 metres"). */
     readonly cohesionRangeM: number;

@@ -863,7 +863,7 @@ export class WH40KItem extends WH40KItemContainer {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: characteristics[key] may be undefined at runtime
         if (characteristic === undefined) return this.sendToChat();
 
-        // RAW (RT core §"Using Navigator Powers"): the power's own characteristic
+        // RAW (RT "Using Navigator Powers"): the power's own characteristic
         // + the mastery bonus (+0/+10/+20) + the power's difficulty from the compendium.
         const level: NavigatorPowerLevel = isNavigatorPowerLevel(power.mastery) ? power.mastery : 'novice';
         const testInput = { characteristic: characteristic.total, level, difficultyModifier: power.test.modifier };

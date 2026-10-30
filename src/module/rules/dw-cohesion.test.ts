@@ -11,7 +11,7 @@ import {
 } from './dw-cohesion';
 
 /**
- * RAW Kill-team Cohesion resolver tests (#162 — core.md §"COHESION").
+ * RAW Kill-team Cohesion resolver tests (#162 — the DW Cohesion rules).
  *
  * Mental-math style: every literal assertion is grounded in a single
  * RAW citation and a hand-checked value, so failures fingerprint to a
@@ -30,7 +30,7 @@ describe('Constants', () => {
     });
 });
 
-describe('maxCohesion — leader FelBonus + Rank/Command (Table 7-8)', () => {
+describe('maxCohesion — leader FelBonus + Rank/Command', () => {
     it('FB 4 + Rank value 3 → 7', () => {
         expect(maxCohesion(4, 3)).toBe(7);
     });

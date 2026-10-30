@@ -1,5 +1,5 @@
 /**
- * Only War · a Comrade's Orders (#152, #153; OW core rules).
+ * Only War · a Comrade's Orders (#152, #153; OW rules).
  *
  * Pure rules over one PC ↔ Comrade pair. Which Orders a line prints, what each
  * costs the Comrade and what it grants are that line's printed content and live on

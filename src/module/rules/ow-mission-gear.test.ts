@@ -19,7 +19,7 @@ describe('OW Mission Gear · constants', () => {
     });
 });
 
-describe('OW Mission Gear · resolveGearOutcome (Table 6-4)', () => {
+describe('OW Mission Gear · resolveGearOutcome (Mission Assignment Gear Results)', () => {
     it('4+ DoF → surrender-kit', () => {
         expect(resolveGearOutcome({ degreesOfSuccess: 0, degreesOfFailure: 4 })).toEqual({
             outcome: 'surrender-kit',
@@ -84,7 +84,7 @@ describe('OW Mission Gear · applyTable63Modifiers', () => {
         expect(breakdown[0]).toEqual({ description: ORDINARY_BONUS_KEY, value: 10 });
     });
 
-    it('sums Table 6-3 modifier rows on top of the base + Ordinary bonus', () => {
+    it('sums gear modifier rows on top of the base + Ordinary bonus', () => {
         const { target, breakdown } = applyTable63Modifiers(40, [
             { description: 'short-notice', value: -10 },
             { description: 'specialist-mission', value: 20 },
@@ -107,7 +107,7 @@ describe('OW Mission Gear · applyTable63Modifiers', () => {
     });
 });
 
-describe('OW Mission Gear · rollRandomIssueGear (Table 6-5 d100)', () => {
+describe('OW Mission Gear · rollRandomIssueGear (Random Issue Gear d100)', () => {
     it('rng=0 returns 1 (lowest d100 face)', () => {
         expect(rollRandomIssueGear(() => 0)).toBe(1);
     });

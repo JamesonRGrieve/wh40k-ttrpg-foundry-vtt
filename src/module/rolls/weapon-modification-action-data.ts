@@ -1,5 +1,5 @@
 /**
- * @file Fitting and removing a weapon modification personally (#136, DH2 core;
+ * @file Fitting and removing a weapon modification personally (#136, DH2;
  * DH1 / RT / OW Weapon Upgrades).
  *
  * Both are skill tests rolled through the actor's own pipeline, so the card

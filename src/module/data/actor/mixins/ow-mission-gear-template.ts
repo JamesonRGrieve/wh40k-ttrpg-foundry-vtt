@@ -3,7 +3,7 @@
  *
  * Backs the OW Mission Assignment Gear engine in
  * `src/module/rules/ow-mission-gear.ts`. Per the brief, the engine has
- * NO persistent state — Table 6-3 modifiers are per-test inputs, never
+ * NO persistent state — gear modifiers are per-test inputs, never
  * standing actor state. The only persisted slot is `lastGearOutcome`,
  * a nullable string surfacing the most recent gear-roll outcome so the
  * panel can display "Last result: <tier>" on the next sheet open.

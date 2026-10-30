@@ -13,7 +13,7 @@
  */
 
 /**
- * RAW weapon mountings, shared by every FFG-era line. Only War core
+ * RAW weapon mountings, shared by every FFG-era line. Only War
  * defines the canonical six; DH2, DW, RT, BC, and DH1 print the same set on
  * their vehicle weapon lines. Each mounting fixes the weapon's fire arc and
  * carries its own rules:
@@ -29,7 +29,7 @@
  */
 export const WEAPON_MOUNTING_CHOICES = ['', 'fixed', 'hull', 'turret', 'sponson', 'coaxial', 'pintle'] as const;
 
-/** A mounting's fire arc is measured from one of the craft's facings (OW core). */
+/** A mounting's fire arc is measured from one of the craft's facings (OW rules). */
 export const WEAPON_FACING_CHOICES = ['', 'front', 'rear', 'left', 'right', 'all'] as const;
 
 /** A single RAW weapon mounting. Empty string = personal-scale (unmounted). */

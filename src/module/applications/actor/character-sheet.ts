@@ -457,7 +457,7 @@ type BcSupplementsPanelContext = {
     daemonEngineRageBonus: number;
 };
 
-/** BC apotheosis panel (#182 — BC Core p267). */
+/** BC apotheosis panel (#182). */
 type BcDaemonPrincePanelContext = {
     ascended: boolean;
     ascendedAt: number | null;
@@ -2058,7 +2058,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * BC apotheosis panel (#182 — BC Core p267). Reads the persisted record off
+     * BC apotheosis panel (#182). Reads the persisted record off
      * `system.daemonPrinceAscension` and reports the eligibility readout: the
      * claim at 100 Corruption, the GM's Infamy threshold, and the fate (Daemon
      * Prince or Chaos Spawn) met — or faced, before the claim.
@@ -5239,7 +5239,7 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Take one of the line's grapple options (#120; DH2 core). The button
+     * Take one of the line's grapple options (#120; DH2). The button
      * names the option and the role it belongs to. A combatant takes its own role's
      * options; the GM also sees the other role's, and takes those for the opponent.
      * The option is tested as its line prints it (`rolls/grapple-flow.ts`).

@@ -6,7 +6,7 @@
  * module owns only the persistence shape and the typed declarations the
  * Character DataModel class spreads / declares.
  *
- * RAW reference: core.md "RENOWN" (TABLE 5-2) — Renown is a non-negative
+ * RAW reference: the DW "Renown" rules and Renown Rank table — Renown is a non-negative
  * integer; ranks are looked up at render time via `getRenownRank()` and
  * are NOT persisted. This keeps a single source of truth and avoids
  * rank/value drift on partial updates.

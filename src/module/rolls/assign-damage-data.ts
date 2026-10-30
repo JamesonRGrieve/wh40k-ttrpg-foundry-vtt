@@ -117,7 +117,7 @@ interface HitLike {
      * Whether the source weapon has Explosive (X). When the target is a
      * DW horde, RAW gives +1 Magnitude loss per hit ("Weapons that
      * inflict Explosive Damage … count as having inflicted one
-     * additional Hit", DW core).
+     * additional Hit", DW rules).
      */
     isExplosive?: boolean;
     /** The source weapon ignores this location's armour and cover (Warp Weapon vs unwarded armour, #414). */
@@ -243,7 +243,7 @@ export class AssignDamageData {
 
     /**
      * A vehicle meets the hit with the armour of the facing it struck (a Turret hit
-     * reads Front, DH2 core), and has no Toughness Bonus. A hit applied
+     * reads Front, DH2 rules), and has no Toughness Bonus. A hit applied
      * without a strike (a hand-entered one) reads Front armour.
      */
     private _updateVehicleArmour(vehicle: VehicleDurability): void {

@@ -111,13 +111,13 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * DH2 core: "The number of total hits scored in this manner cannot
+     * DH2: "The number of total hits scored in this manner cannot
      * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
      * Storm: "up to the weapon's firing rate, as normal" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
     /**
-     * DH2 core: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
+     * DH2: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
      * Ballistic Skill test"; Full Auto Burst (Type: Half Action) is made "with a
      * −10 penalty" — #607.
      */
@@ -140,7 +140,7 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     /** DH2 vehicles: a hit-location table and a critical-effects chart per location. */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(false);
 
-    /** DH2 core: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */
+    /** DH2: Best armour adds +1 AP to each covered location (Good and Best's Maximum Agility +10 is not an AP effect). */
     override readonly armourCraftsmanship = DH2_ARMOUR_CRAFTSMANSHIP;
 
     readonly evasionRules: EvasionRules = {

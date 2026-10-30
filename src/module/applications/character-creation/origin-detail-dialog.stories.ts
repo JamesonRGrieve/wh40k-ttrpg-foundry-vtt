@@ -79,7 +79,7 @@ const meta = {
         isAdvanced: false,
         xpCost: null,
         hasSource: true,
-        source: { book: 'Dark Heresy 2e Core', page: 32 },
+        source: { book: 'Sample Book', page: 32 },
         hasCharacteristics: true,
         characteristics: [
             { short: 'Int', label: 'Intelligence', value: 3, positive: true },

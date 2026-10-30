@@ -2136,11 +2136,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Influence bonus (tens digit of Influence) — used to cap starting equipment selections per DH2e core pg 80.
+     * Influence bonus (tens digit of Influence) — used to cap starting equipment selections per the DH2 rules.
      * @private
      */
     _getInfluenceBonus(): number {
-        // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2e core pg 80 rule (floor(Influence/10)).
+        // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2 rule (floor(Influence/10)).
         if (this.gameSystem === 'dh2' && WH40KSettings.isHomebrew()) return 3;
         const rolled = this._influenceRolled;
         const stored = Number(this._actorSys().influence ?? 0);
@@ -4399,7 +4399,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Roll on the Divination compendium RollTable (the DH2 core Divination table).
+     * Roll on the Divination compendium RollTable (the DH2 Divination table).
      * The table text lives in the private packs submodule (GW-copyrighted); if
      * the pack isn't installed, fall back to a bare 1d100 so the player at
      * least records a roll result and can fill in the maxim by hand.
@@ -4984,7 +4984,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // builder open can re-hydrate the UI to what was last committed.
             await this._persistBuilderFlagState();
 
-            // Stage 4 XP spend (DH2e core): if the actor has unspent
+            // Stage 4 XP spend (DH2): if the actor has unspent
             // starting XP (which _resetExperienceAndAdvancements set to the
             // system's startingXP, e.g. 1000 for DH2e), offer to open the
             // Advancement dialog so the player can spend it now instead of
@@ -5321,7 +5321,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     /**
      * Create embedded items on the actor for the Equip Acolyte selections.
-     * Per DH2e core pg 80, each acquired weapon comes with two clips of standard ammunition.
+     * Per the DH2 rules, each acquired weapon comes with two clips of standard ammunition.
      * @private
      */
     async _applyEquipmentSelections(): Promise<void> {

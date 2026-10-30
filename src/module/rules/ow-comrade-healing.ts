@@ -196,7 +196,7 @@ export interface ComradeStateChange {
 }
 
 /**
- * The update for a Comrade moving from `previous` to `next` (OW core rules):
+ * The update for a Comrade moving from `previous` to `next` (OW rules):
  *   - newly wounded: the seven-day recovery clock starts and the wound gets its
  *     one Medicae attempt;
  *   - still wounded (a no-op hit): the clock keeps running;

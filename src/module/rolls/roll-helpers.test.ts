@@ -244,7 +244,7 @@ describe('printedDegrees — the count the card shows (#335)', () => {
         expect(printedDegrees('gen2', true, 75, 1)).toBe(8);
     });
 
-    it('reproduces the DH1 core example: Fellowship 44, roll 12 → 3 degrees', () => {
+    it('reproduces the DH1 worked example: Fellowship 44, roll 12 → 3 degrees', () => {
         expect(printedDegrees('gen1', true, 44, 12)).toBe(3);
     });
 

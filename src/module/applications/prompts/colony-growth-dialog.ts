@@ -1,6 +1,6 @@
 /**
  * @file ColonyGrowthDialog — GM dialog for resolving a Rogue Trader
- * 90-day Colony Growth tick (#195, Stars-of-Inequity Table 3-3).
+ * 90-day Colony Growth tick (#195, an RT supplement's colony growth table).
  *
  * The GM enters the Colony's current state (Size + four affective
  * Characteristics), optional growth modifier (PF burn, Resource-harvest

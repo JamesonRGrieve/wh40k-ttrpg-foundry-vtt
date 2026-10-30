@@ -107,7 +107,7 @@ export interface RequestedItem {
     bound?: boolean | undefined;
     /**
      * The line's bonus for taking a weapon modification as parts to fit
-     * personally (DH2 core rules, #136). Set by the caller only for a weapon
+     * personally (DH2 rules, #136). Set by the caller only for a weapon
      * modification on a line that prints the bonus — OW prints none, so the
      * Logistics path never sees it.
      */

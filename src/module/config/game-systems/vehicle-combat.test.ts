@@ -10,7 +10,7 @@ import { vehicleCombatRulesFor } from './index';
 
 /** Each line's printed rules for attacking vehicles (content#28). */
 describe('vehicleCombat line config', () => {
-    it('gives DH2 and OW the Vehicle Hit Locations table (Table 7-29 / 8-24)', () => {
+    it('gives DH2 and OW the Vehicle Hit Locations table', () => {
         for (const config of [new DH2eSystemConfig(), new OWSystemConfig()]) {
             expect(config.vehicleCombat.hitLocations).toEqual([
                 { max: 20, location: 'motive' },

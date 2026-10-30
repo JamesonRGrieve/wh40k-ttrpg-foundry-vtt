@@ -1,6 +1,6 @@
 /**
  * @file ReinforcementCallDialog — the GM calls a Reinforcement Character into
- * play (DH2 core, #77).
+ * play (DH2, #77).
  *
  * Opened from the RC's NPC sheet. The GM picks the calling Acolyte, who needs
  * Influence ≥ the RC's Influence Minimum. The GM records what the rest of the

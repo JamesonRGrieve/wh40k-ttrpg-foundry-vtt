@@ -5,7 +5,7 @@ import { RollTableUtils } from './roll-table-utils.ts';
  * The out-of-range clamp and the ladder escalation of `RollTableUtils.rollTable`
  * (#187). Foundry hands `table.results` over as an EmbeddedCollection, not an
  * Array; the old `Array.isArray` guard made both dead in play, so a Crippled
- * ship's critical valued past Table 8-12 (or any modified roll past a table's
+ * ship's critical valued past the ship Critical Hit table (or any modified roll past a table's
  * last row) drew nothing.
  */
 

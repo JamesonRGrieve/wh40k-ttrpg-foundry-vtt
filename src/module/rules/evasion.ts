@@ -1,7 +1,7 @@
 /**
  * @file Evasion (#414): a Dodge or Parry resolved against the attack it answers.
  *
- * DH2 core ch. VII, Evasion: "If he succeeds on the test … the hit is negated
+ * DH2, Evasion: "If he succeeds on the test … the hit is negated
  * and the attack is considered to have missed." Against an attack that
  * inflicts several hits, "each degree of success on the Evasion test negates
  * one additional hit" — and against Storm, "each degree of success on the test

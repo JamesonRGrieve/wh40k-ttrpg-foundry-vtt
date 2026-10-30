@@ -1,6 +1,6 @@
 /**
  * Shared primitives for the Rogue Trader ship-to-ship assault actions —
- * Ramming, Boarding Actions and Hit and Run (RT core rules).
+ * Ramming, Boarding Actions and Hit and Run (RT rules).
  *
  * Each of those actions is one or more d100 tests whose target is composed
  * from a base skill plus a stack of ship-derived and situational modifiers.
@@ -119,7 +119,7 @@ export function deriveTarget(base: ShipTestComponent, modifiers: readonly ShipTe
  * rule (natural 01 passes, natural 100 fails). Degrees are counted the way the
  * roll engine counts them for the line (`printedDegrees`): Rogue Trader counts
  * each full 10 points of margin with no base degree, so a bare pass or a bare
- * failure is 0 degrees (RT Core "Degrees of Success and Failure"); the Gen 2
+ * failure is 0 degrees (RT "Degrees of Success and Failure"); the Gen 2
  * method counts the first degree, so a result there is never below 1.
  */
 export function resolveShipTest(derivation: ShipTestDerivation, roll: number, method: DegreesMethod): ShipTestResult {
@@ -167,7 +167,7 @@ export const PILOT_SKILL_KEY = 'WH40K.Voidcraft.Assault.Component.PilotSkill';
 
 /**
  * Compose a Pilot (Space Craft) + Manoeuvrability test — the test that lands a
- * ram and locks two ships together for a boarding action (RT core rules).
+ * ram and locks two ships together for a boarding action (RT rules).
  */
 export function composePilotManoeuvrabilityTest(input: PilotManoeuvrabilityInput): ShipTestDerivation {
     const crippled = input.ship.crippledManoeuvrability;

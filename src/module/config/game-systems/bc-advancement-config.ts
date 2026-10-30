@@ -3,15 +3,15 @@
  *
  * Replaces aptitude-based cost reuse for BC. BC has no aptitudes and no
  * career ranks — its advancement cost is a flat True / Allied / Opposed
- * × tier matrix (`bc/core/core.md` Table 2-6 :2657, Table 2-7 :2700,
- * Table 2-9 :2776) over 4 characteristic tiers, 4 skill ranks, and 3
- * talent tiers. Allies/Opponents are resolved via Table 2-4 :2594.
+ * × tier matrix (the characteristic, skill and talent advance cost tables)
+ * over 4 characteristic tiers, 4 skill ranks, and 3 talent tiers.
+ * Allies/Opponents are resolved via the Allies and Opponents table.
  *
  * Content-affiliations (which characteristic, skill, or talent counts
  * toward which Dark God for Alignment purposes) live in compendium
  * `_source/*.json` per Direction #7 — this module's
  * `characteristicAffiliation` map only covers the four characteristics
- * the core RAW explicitly affiliates (Str/Tou/Fel/WP, :2586). All
+ * the RAW explicitly affiliates (Str/Tou/Fel/WP). All
  * others, and per-talent / per-skill affiliations, are read off the
  * advance's `chaosAlignment` slot at advance time.
  *
@@ -27,13 +27,13 @@ import type { ChaosAlignment } from './types.ts';
 export type PatronStatus = 'true' | 'allied' | 'opposed';
 
 /**
- * Table 2-4: Allies and Opponents (`core.md` :2594).
+ * Allies and Opponents.
  * Row = character alignment, column = advance alignment.
  *
  * Unaligned row: every advance is Allied (the "Unaligned" character pays
- * the standard cost — `core.md` :2599 reads `Allied` across the row).
+ * the standard cost — the RAW table reads `Allied` across the row).
  * Unaligned column: every advance is Allied for everyone (unaligned
- * advances have no affiliation, `core.md` :2561).
+ * advances have no affiliation).
  */
 const ALLIES_OPPONENTS: Record<ChaosAlignment, Record<ChaosAlignment, PatronStatus>> = {
     khorne: {
@@ -74,7 +74,7 @@ const ALLIES_OPPONENTS: Record<ChaosAlignment, Record<ChaosAlignment, PatronStat
 };
 
 /**
- * Table 2-6: Characteristic Advancement Costs (`core.md` :2657).
+ * Characteristic Advancement Costs.
  * Index = number of advances already purchased on this characteristic
  * (0 = next is Simple, 3 = next is Expert).
  */
@@ -85,7 +85,7 @@ const CHAR_COST_TABLE: Record<PatronStatus, readonly number[]> = {
 } as const;
 
 /**
- * Table 2-7: Skill Advance Costs (`core.md` :2700).
+ * Skill Advance Costs.
  * Index = current rank (0 = next is Known, 3 = next is Veteran).
  */
 const SKILL_COST_TABLE: Record<PatronStatus, readonly number[]> = {
@@ -95,7 +95,7 @@ const SKILL_COST_TABLE: Record<PatronStatus, readonly number[]> = {
 } as const;
 
 /**
- * Table 2-9: Talent Advance Costs (`core.md` :2776).
+ * Talent Advance Costs.
  * Index = (tier - 1); tiers are 1-based in RAW.
  */
 const TALENT_COST_TABLE: Record<PatronStatus, readonly number[]> = {
@@ -104,17 +104,16 @@ const TALENT_COST_TABLE: Record<PatronStatus, readonly number[]> = {
     opposed: [500, 750, 1000],
 } as const;
 
-/** BC tier keys for characteristic advancement (4-tier, `core.md` :2581). */
+/** BC tier keys for characteristic advancement (4-tier). */
 export const BC_CHARACTERISTIC_TIERS = ['simple', 'intermediate', 'trained', 'expert'] as const;
 
-/** BC skill rank keys (4-rank, `core.md` :2677). */
+/** BC skill rank keys (4-rank). */
 export const BC_SKILL_RANK_KEYS = ['known', 'trained', 'experienced', 'veteran'] as const;
 
 /**
- * Characteristic affiliation (Table 2-5, `core.md` :2601). Only the four
+ * Characteristic affiliation (the RAW affiliation table). Only the four
  * characteristics the RAW pairs to a Dark God are non-null; the other six
- * (WS / BS / Agility / Intelligence / Perception / Infamy) are unaligned
- * (`core.md` :2586).
+ * (WS / BS / Agility / Intelligence / Perception / Infamy) are unaligned.
  */
 const CHARACTERISTIC_AFFILIATION: Record<string, ChaosAlignment> = {
     strength: 'khorne',
@@ -129,23 +128,21 @@ const CHARACTERISTIC_AFFILIATION: Record<string, ChaosAlignment> = {
     infamy: 'unaligned',
 };
 
-/** Flat Infamy advance cost (`core.md` :2667). +5 per purchase, blocked at >=40. */
+/** Flat Infamy advance cost. +5 per purchase, blocked at >=40. */
 export const BC_INFAMY_ADVANCE_COST = 500;
-/** Maximum Infamy value at which advance purchase is still legal (`core.md` :2667). */
+/** Maximum Infamy value at which advance purchase is still legal. */
 export const BC_INFAMY_ADVANCE_CAP = 40;
-/** Per-advance Infamy increment (`core.md` :2667). */
+/** Per-advance Infamy increment. */
 export const BC_INFAMY_INCREMENT = 5;
 
 /**
- * Threshold delta for triggering an alignment switch (`core.md` :2559,
- * :2569): a character switches alignment when one Dark God's advance
+ * Threshold delta for triggering an alignment switch: a character switches alignment when one Dark God's advance
  * tally exceeds the next-highest god's tally by this many advances.
  */
 export const BC_ALIGNMENT_SWITCH_THRESHOLD = 5;
 
 /**
- * Corruption Point interval at which Alignment is re-evaluated
- * (`core.md` :2569).
+ * Corruption Point interval at which Alignment is re-evaluated.
  */
 export const BC_ALIGNMENT_CHECK_CP_INTERVAL = 10;
 
@@ -196,7 +193,7 @@ export function talentAdvanceCost(characterAlignment: ChaosAlignment, advanceAli
 
 /**
  * Infamy advance cost. Returns null if the character is already at or
- * above the cap (`core.md` :2667).
+ * above the cap.
  *
  * @param currentInfamy The character's current Infamy value.
  */
@@ -209,7 +206,7 @@ export function infamyAdvanceCost(currentInfamy: number): number | null {
  * Characteristic affiliation lookup. Returns 'unaligned' when the key is
  * unknown (defensive: a content-authoring miss in a future characteristic
  * shouldn't crash). Per Direction #7 the canonical table for characteristic
- * affiliation is RAW Table 2-5 (`core.md` :2601); only four entries are
+ * affiliation is the RAW affiliation table; only four entries are
  * non-unaligned.
  */
 export function characteristicAffiliation(charKey: string): ChaosAlignment {
@@ -217,7 +214,7 @@ export function characteristicAffiliation(charKey: string): ChaosAlignment {
 }
 
 /**
- * Whether the supplied alignment locks psychic powers (`core.md` :2750).
+ * Whether the supplied alignment locks psychic powers.
  * Aligned to Khorne → no psychic powers, lose Psyker Trait counts.
  */
 export function alignmentBlocksPsyker(alignment: ChaosAlignment): boolean {

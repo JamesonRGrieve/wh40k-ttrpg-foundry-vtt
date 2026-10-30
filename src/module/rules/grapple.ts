@@ -55,7 +55,7 @@ export function readGrappleState(flags: object | undefined, scope: string): Grap
  * The other participant of a grapple, as recorded on a combatant's grapple flag
  * (`flags[SYSTEM_ID][GRAPPLE_FLAG].opponentUuid`), or null when none is recorded.
  * Every grapple action is an Opposed Strength test against that participant
- * (DH2 core rules: "an Opposed Strength test with the Grappled opponent",
+ * (DH2 rules: "an Opposed Strength test with the Grappled opponent",
  * "against the controller of the Grapple").
  */
 export function readGrappleOpponentUuid(flags: object | undefined, scope: string): string | null {
@@ -192,8 +192,8 @@ export interface GrappleRules {
     readonly options: readonly GrappleOptionRule[];
     /**
      * The bonus the controller gains on every further Opposed test of the grapple
-     * once Throw Down Opponent has put the opponent Prone (DH2 core: "+10";
-     * OW core: "+10"); 0 for a line that prints none.
+     * once Throw Down Opponent has put the opponent Prone (DH2: "+10";
+     * OW: "+10"); 0 for a line that prints none.
      */
     readonly thrownDownBonus: number;
     /** What a won Damage Opponent deals with the controller's unarmed hit. */
@@ -421,7 +421,7 @@ export interface GrappleModifier {
 /**
  * The modifiers on one side of a grapple test. The controller of a grapple whose
  * opponent it has thrown down gains the line's bonus "to all further Opposed tests
- * made during this Grapple" (DH2 core rules), whichever side acts.
+ * made during this Grapple" (DH2 rules), whichever side acts.
  */
 export function grappleSideModifiers(role: GrappleRole, thrownDown: boolean, rules: GrappleRules): GrappleModifier[] {
     if (role !== 'controller' || !thrownDown || rules.thrownDownBonus === 0) return [];
@@ -509,13 +509,13 @@ export interface GrappleResolution {
 }
 
 /**
- * An opposed grapple test (every opposed option), by the RAW Opposed-test ladder (DH2 core
+ * An opposed grapple test (every opposed option), by the RAW Opposed-test ladder (DH2
  * rules, `rules/opposed.ts`): a success beats a failure; both succeeding, more
  * degrees of success wins; then the higher Strength bonus; then the lower roll.
  * Both failing is a stalemate — "nothing happens" — so the acting side does
  * not get its way (the GM may call for a re-roll instead).
  *
- * Grappling size differences (DH2 core rules): the larger combatant scores one
+ * Grappling size differences (DH2 rules): the larger combatant scores one
  * extra degree of success on a successful test for each point its Size exceeds
  * the other's.
  */

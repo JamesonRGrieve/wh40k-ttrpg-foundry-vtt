@@ -1,11 +1,11 @@
 /**
  * Unit coverage for BC Alignment derivation (#173).
  *
- * RAW sources (`.pdf/bc/core/core.md`):
- *   - "The Five Alignments" / Aligned definition: :2549, :2559
- *   - "Checking Alignment" 10-CP re-check: :2569
- *   - Archetype-granted advance exclusion: :2561
- *   - Khorne psyker lock: :2750
+ * RAW sources (the BC rules):
+ *   - "The Five Alignments" / Aligned definition
+ *   - "Checking Alignment" 10-CP re-check
+ *   - Archetype-granted advance exclusion
+ *   - Khorne psyker lock
  */
 import { describe, expect, it } from 'vitest';
 import {
@@ -21,13 +21,13 @@ function advance(alignment: ChaosAdvanceEntry['alignment'], fromArchetype = fals
     return { category: 'skill', key, xpCost: 100, alignment, fromArchetype };
 }
 
-describe('tallyAdvancesByAlignment (core.md :2559, :2561)', () => {
+describe('tallyAdvancesByAlignment', () => {
     it('counts non-archetype advances per god', () => {
         const tally = tallyAdvancesByAlignment([advance('khorne'), advance('khorne'), advance('nurgle'), advance('slaanesh'), advance('tzeentch')]);
         expect(tally).toEqual({ khorne: 2, nurgle: 1, slaanesh: 1, tzeentch: 1 });
     });
 
-    it('excludes advances marked fromArchetype (core.md :2561)', () => {
+    it('excludes advances marked fromArchetype', () => {
         const tally = tallyAdvancesByAlignment([
             advance('khorne', true), // free Archetype bonus — ignored
             advance('khorne'),
@@ -47,7 +47,7 @@ describe('tallyAdvancesByAlignment (core.md :2559, :2561)', () => {
     });
 });
 
-describe('deriveAlignmentFromTally — 5-over-next-highest rule (core.md :2559)', () => {
+describe('deriveAlignmentFromTally — 5-over-next-highest rule', () => {
     it('returns unaligned when no god leads by 5+ advances', () => {
         // Largest gap = 4, below threshold.
         expect(deriveAlignmentFromTally({ khorne: 6, nurgle: 2, slaanesh: 0, tzeentch: 0 })).toBe('unaligned');
@@ -77,7 +77,7 @@ describe('deriveAlignmentFromTally — 5-over-next-highest rule (core.md :2559)'
     });
 });
 
-describe('shouldRecheckAlignment / nextAlignmentCheckpoint (core.md :2569)', () => {
+describe('shouldRecheckAlignment / nextAlignmentCheckpoint', () => {
     it('does not fire before the first 10-CP threshold', () => {
         expect(shouldRecheckAlignment(0, 0)).toBe(false);
         expect(shouldRecheckAlignment(9, 0)).toBe(false);
@@ -105,7 +105,7 @@ describe('shouldRecheckAlignment / nextAlignmentCheckpoint (core.md :2569)', () 
     });
 });
 
-describe('psykerLockedByAlignment (core.md :2750)', () => {
+describe('psykerLockedByAlignment', () => {
     it('locks psykers iff Aligned to Khorne', () => {
         expect(psykerLockedByAlignment('khorne')).toBe(true);
         expect(psykerLockedByAlignment('nurgle')).toBe(false);

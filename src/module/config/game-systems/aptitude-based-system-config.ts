@@ -92,7 +92,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     // ── Aptitude Resolution ──────────────────────────────────────
 
     /**
-     * The 2 aptitudes associated with each characteristic (the DH2e core rules).
+     * The 2 aptitudes associated with each characteristic (the DH2 rules).
      * Default shared by DH2e / BC / OW / IM; override only on genuine divergence.
      */
     getCharacteristicAptitudes(charKey: string): [string, string] {
@@ -120,7 +120,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
-     * Skill aptitude pairs (the DH2e core rules). Default shared by DH2e / BC / OW / IM;
+     * Skill aptitude pairs (the DH2 rules). Default shared by DH2e / BC / OW / IM;
      * override only on genuine divergence. Keys are schema skill keys (camelCase).
      */
     getSkillAptitudeTable(): Record<string, [string, string]> {
@@ -158,7 +158,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     /**
      * Aptitudes every actor in an aptitude-based system possesses regardless of
-     * origin path. Per the DH2 core rules (and the equivalent BC/DW/OW/IM rules) the
+     * origin path. Per the DH2 rules (and the equivalent BC/DW/OW/IM rules) the
      * General aptitude is universal — it is never granted by home world /
      * background / role / elite, so it is injected at read time rather than
      * stored on the actor. Most basic skill and talent advances list General as

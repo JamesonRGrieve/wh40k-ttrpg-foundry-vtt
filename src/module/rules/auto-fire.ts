@@ -1,12 +1,12 @@
 /**
  * @file Auto-fire burst resolution — shots fired vs hits scored (#510, #511, #512).
  *
- * DH2 core ch. VII gives a burst three separate numbers, and the system used to
+ * DH2 gives a burst three separate numbers, and the system used to
  * collapse them into one (`rollData.fireRate`), which is where all three bugs
  * came from:
  *
- *   1. HOW MANY ROUNDS LEAVE THE GUN. Ch. V, Rate of Fire: the RoF entry is
- *      the ammunition a firing mode consumes; ch. V, Indirect, confirms a burst
+ *   1. HOW MANY ROUNDS LEAVE THE GUN. Rate of Fire: the RoF entry is
+ *      the ammunition a firing mode consumes; Indirect confirms a burst
  *      spends its full count even when shots miss. Storm doubles the ammunition
  *      used.
  *   2. HOW MANY HITS THE ROLL EARNS. Semi-Auto: one hit for passing, then one
@@ -24,7 +24,7 @@ import type { I18nKey } from '../types/i18n-keys';
 
 /**
  * What a line's rate-of-fire ceiling counts (#607).
- *   - `total` — the TOTAL hits may not exceed the RoF (DH2 core; RT core with
+ *   - `total` — the TOTAL hits may not exceed the RoF (DH2; RT with
  *     the 1.4 errata: "The total number of hits scored … cannot exceed").
  *   - `extra` — only the EXTRA hits past the first may not exceed it, so a burst
  *     can land RoF + 1 (BC, DH1, DW and OW cores: "The number of extra hits …").
@@ -111,7 +111,7 @@ interface RateOfFire {
  * Every action that fires a burst, and which RoF entry it draws on.
  *
  * Suppressing Fire is here because RAW treats it as a semi- or full-auto burst
- * that spends that mode's ammunition (DH2 core ch. VII) — omitting it left it
+ * that spends that mode's ammunition (DH2) — omitting it left it
  * firing a single round and scoring a single hit.
  *
  * Melee multi-attacks (Swift / Lightning) and psychic barrage / storm share the

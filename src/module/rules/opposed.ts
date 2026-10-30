@@ -4,8 +4,8 @@
  *
  * An opposed test is target-directed: both sides roll, a victor is decided, and the
  * margin (degrees of victory) drives the consequence. The RAW victor ladder is
- * identical across every line (DH1 p184, DH2 p24, DW p203, BC p37, OW p31, RT core,
- * IM p186/p190 by Success Level):
+ * identical across every line (DH1, DH2, DW, BC, OW, RT, and IM by Success
+ * Level):
  *
  *   1. Higher SUCCESS wins (a success beats a failure).
  *   2. Both succeed  → more DEGREES OF SUCCESS wins.

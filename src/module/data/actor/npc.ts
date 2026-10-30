@@ -414,7 +414,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 initial: 5,
                 min: 1,
                 // Greater daemons print threat far above the player-facing 1–30 band
-                // ladder (e.g. Bloodthirster THREAT 98, EB p110). The threat-band
+                // ladder (e.g. Bloodthirster THREAT 98). The threat-band
                 // table's top band is open-ended (Number.POSITIVE_INFINITY), so the
                 // ceiling here only guards against OCR misreads, not RAW values.
                 max: 100,

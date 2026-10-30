@@ -1,5 +1,5 @@
 /**
- * Hit and Run resolver — Rogue Trader (#188 — RT core rules, Hit and Run
+ * Hit and Run resolver — Rogue Trader (#188 — RT rules, Hit and Run
  * and the turret penalty).
  *
  * RAW shape:

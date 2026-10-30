@@ -1,12 +1,12 @@
 /**
- * Deathwatch Requisition action handlers (#165 — core.md §"REQUISITION").
+ * Deathwatch Requisition action handlers (#165 — the DW Requisition rules).
  *
  * Two `data-action="…"` entries are registered by the character sheet and
  * delegated here:
  *
  *   - `dwRequisitionItem` → single-Battle-Brother requisition. Opens a
  *     DialogV2 prompt collecting the item name, base RP cost, the
- *     craftsmanship tier (TABLE 5-3 multiplier), and the item's required
+ *     craftsmanship tier (its cost multiplier), and the item's required
  *     Renown rank. Runs `canActorRequisition` to gate the spend, then
  *     decrements `system.requisitionPoints` and emits a chat card.
  *   - `dwRequisitionPool` → multi-Brother pooled requisition. Opens a

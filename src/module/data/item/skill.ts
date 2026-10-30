@@ -58,7 +58,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // Alternate characteristics permitted by the skill descriptor's
             // "Special Uses" sub-section. The roll dialog surfaces these as a
             // dropdown so the player can pick the most suitable characteristic
-            // for the test at hand (core.md §"Untrained Skill Use" and #61).
+            // for the test at hand (the "Untrained Skill Use" rules and #61).
             altCharacteristics: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
 
             // Skill type. `specialist` is a SEPARATE axis (below) — this field

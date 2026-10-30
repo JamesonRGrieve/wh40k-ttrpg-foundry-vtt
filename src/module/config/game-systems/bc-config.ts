@@ -5,8 +5,7 @@
  * is a flat True / Allied / Opposed × tier matrix (the characteristic, skill
  * and talent cost tables) over 4 characteristic tiers, 4 skill ranks, and 3 talent tiers. Alignment
  * is derived from the actor's `chaosAdvancements` log via
- * `bc-alignment-derivation.ts`, re-evaluated at every 10-CP threshold
- * (BC core).
+ * `bc-alignment-derivation.ts`, re-evaluated at every 10-CP threshold.
  *
  * BC remains an `AptitudeBasedSystemConfig` subclass so that the shared
  * skill-bonus formula in `creature.ts` (which switches on `usesAptitudes`)
@@ -84,18 +83,18 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      */
     readonly inquestRules = null;
     readonly itemRepair = null;
-    /** BC core: upgrades are "applied by characters with the Tech Skill", with no test printed (#136). */
+    /** BC: upgrades are "applied by characters with the Tech Skill", with no test printed (#136). */
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * BC core: "The number of extra hits scored in this manner cannot exceed the
+     * BC: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
      * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
      * Full Automatic rate of fire" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**
-     * BC core, Combat Actions: Semi-Auto Burst (Type: Half Action) "with a +0
+     * BC, Combat Actions: Semi-Auto Burst (Type: Half Action) "with a +0
      * bonus"; Full Auto Burst (Type: Half Action) "with a −10 bonus to his
      * attack" — #607.
      */
@@ -136,7 +135,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
             unique: -70,
         },
         craftsmanship: { poor: 10, common: 0, good: -10, best: -20 },
-        // BC core: "If he fails, he does not" obtain it — no Infamy is lost.
+        // BC: "If he fails, he does not" obtain it — no Infamy is lost.
         failureLoss: null,
     };
 
@@ -155,7 +154,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return 1000;
     }
 
-    /** BC Dispositions are the seven-step ladder; a success gains one step per degree (BC core) — #73. */
+    /** BC Dispositions are the seven-step ladder; a success gains one step per degree (BC rules) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderDegrees;
     }
@@ -179,7 +178,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * BC uses a 4-tier characteristic ladder
-     * (Simple / Intermediate / Trained / Expert — BC core).
+     * (Simple / Intermediate / Trained / Expert — BC rules).
      * The aptitude-based default ladder is 5-tier (DH2-style); BC overrides.
      */
     override getCharacteristicTiers(): CharacteristicTierDef[] {
@@ -191,14 +190,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * BC uses a 4-rank skill ladder (Known / Trained / Experienced / Veteran
-     * — BC core) with DH2-style schema slot keys and RAW labels that
+     * — BC rules) with DH2-style schema slot keys and RAW labels that
      * match DH2 byte-for-byte, so `getSkillRanks` is inherited unchanged from
      * `AptitudeBasedSystemConfig`.
      *
      * BC psykers are an archetype; the compendium document flagged
      * `grantsPsychicPowers` names which (#681). Aligned-to-Khorne characters
      * lose Psyker Trait counts even while owning the archetype
-     * (BC core).
+     * (BC rules).
      */
     override readonly psykerUnlock = { step: 'archetype' };
 
@@ -220,14 +219,14 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /**
      * BC has no aptitudes, so it has no universal one either (#631). Advance cost
      * is set by the advance's Chaos alignment against the character's — True,
-     * Allied or Opposed (BC core) — and an adversary profile
+     * Allied or Opposed (BC rules) — and an adversary profile
      * lists characteristics, skills, talents, traits and weapons with no
      * aptitudes. The inherited `['General']` would put a lone
      * "General" pill on every BC sheet's Aptitudes panel.
      */
     override readonly universalAptitudes: readonly string[] = [];
 
-    /** BC core, Craftsmanship: Poor −10 Agility; Good a social bonus (no AP); Best that, half weight and +1 AP. */
+    /** BC, Craftsmanship: Poor −10 Agility; Good a social bonus (no AP); Best that, half weight and +1 AP. */
     override readonly armourCraftsmanship = BC_ARMOUR_CRAFTSMANSHIP;
 
     // Characteristic + skill aptitude pairs are inherited from AptitudeBasedSystemConfig (#298).
@@ -290,7 +289,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * Resolve the alignment of a characteristic for cost purposes.
-     * Per BC core, only Str/Tou/Fel/WP have non-Unaligned
+     * Per the BC rules, only Str/Tou/Fel/WP have non-Unaligned
      * affiliations.
      */
     getCharacteristicAlignment(charKey: string): ChaosAlignment {
@@ -342,7 +341,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     /**
      * Infamy advance cost. Returns null when Infamy is at or above 40
-     * (BC core). Independent of Alignment — Infamy is unaligned.
+     * (BC rules). Independent of Alignment — Infamy is unaligned.
      */
     getInfamyAdvanceCost(actor: SystemConfigActor): number | null {
         return infamyAdvanceCost(readBcSystem(actor).infamy ?? 0);

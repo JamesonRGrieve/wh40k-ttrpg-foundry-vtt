@@ -126,7 +126,7 @@ const MEDICAE_TARGETED: ReadonlySet<MedicaeActionKind> = new Set<MedicaeActionKi
 /**
  * RAW per-target cooldowns on Medicae uses (#458): First Aid can be given to the
  * same patient at most once per 24 hours, and never while that patient is under
- * Extended Care (DH2 core rules). Extended Care runs on the same 24-hour
+ * Extended Care (DH2 rules). Extended Care runs on the same 24-hour
  * cycle and is the state that blocks First Aid.
  */
 const MEDICAE_TIME_GATES: Partial<Record<MedicaeActionKind, NonNullable<SkillUseDef['timeGate']>>> = {
@@ -466,7 +466,7 @@ function objectStateMatches(kind: SkillUseKind, item: SkillUseCandidate): boolea
     if (!item.isWeapon && !item.isArmour && !item.isGear) return false;
     const sys = candidateSystem(item);
     const broken = (sys.state?.broken ?? false) || sys.jammed === true;
-    // A destroyed item can never be repaired (DH2 core rules, #444).
+    // A destroyed item can never be repaired (DH2 rules, #444).
     if (kind === 'repair') return broken && sys.state?.destroyed !== true;
     if (kind === 'bypassLock') return sys.state?.locked ?? false;
     return !broken;
@@ -636,7 +636,7 @@ export function resolveFirstAid(kind: SkillUseKind, vitals: FirstAidTargetVitals
     const clampWounds = (n: number): number => Math.max(0, Math.min(n, headroom));
 
     if (kind === 'firstAid') {
-        // RAW (DH2 core rules): on success remove (Intelligence Bonus + one per
+        // RAW (DH2 rules): on success remove (Intelligence Bonus + one per
         // degree of success) damage, taking Critical damage before normal wounds.
         const total = Math.max(0, vitals.intelligenceBonus) + Math.max(0, degrees);
         const criticalResolved = Math.min(total, Math.max(0, vitals.criticalDamage));

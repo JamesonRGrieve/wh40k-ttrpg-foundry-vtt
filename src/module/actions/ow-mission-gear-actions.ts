@@ -1,6 +1,6 @@
 /**
  * @file Action handlers for the Only War Mission Assignment Gear panel
- * (#155 — OW core.md §"MISSION ASSIGNMENT GEAR", line 7156).
+ * (#155 — the OW Mission Assignment Gear rules).
  *
  * Exports a single static function whose name matches the `data-action`
  * string in `src/templates/actor/panel/ow-mission-gear-panel.hbs`. The
@@ -8,11 +8,11 @@
  * so the ApplicationV2 action dispatcher binds `this` to the sheet — the
  * function therefore reads `this.actor` to access the live actor.
  *
- *   - `owRequestGear`   Open a DialogV2 prompting for Table 6-3
- *                       modifiers, compose the d100 target via
+ *   - `owRequestGear`   Open a DialogV2 prompting for gear
+ *                       modifier table modifiers, compose the d100 target via
  *                       `applyTable63Modifiers`, roll, resolve the
  *                       outcome via `resolveGearOutcome`, optionally
- *                       `rollRandomIssueGear` for the Table 6-5 bonus
+ *                       `rollRandomIssueGear` for the Random Issue Gear bonus
  *                       item, persist `lastGearOutcome` back to the
  *                       actor, and emit a chat card.
  *
@@ -39,7 +39,7 @@ interface OwLogisticsSlot {
     readonly situational?: number;
 }
 
-/** Discriminated union of i18n keys covering each Table 6-4 tier. */
+/** Discriminated union of i18n keys covering each Mission Assignment Gear Results tier. */
 const OUTCOME_LABEL_KEYS: Record<GearOutcome, string> = {
     'surrender-kit': 'WH40K.OW.MissionGear.Outcome.SurrenderKit',
     'minimum-kit': 'WH40K.OW.MissionGear.Outcome.MinimumKit',
@@ -55,7 +55,7 @@ const CUSTOM_LABEL_KEY = 'WH40K.OW.MissionGear.Modifier.Title';
  * Compose the base Logistics target from the actor's persisted scalars.
  * Mission Assignment Gear is built ON TOP of the Logistics Rating —
  * `applyTable63Modifiers` then stacks the +10 Ordinary bonus and the
- * Table 6-3 situational deltas.
+ * gear modifier table's situational deltas.
  *
  * The Logistics scalars are owned by `ow-logistics-template.ts`; this
  * action only reads them, never writes them.
@@ -71,13 +71,13 @@ function readBaseLogisticsTarget(actor: WH40KBaseActor): number {
 
 /**
  * Parse the form HTMLElement returned by DialogV2's ok-callback for the
- * Table 6-3 modifier-input dialog. Each input has `name="<descriptor>"`
+ * gear modifier-input dialog. Each input has `name="<descriptor>"`
  * with a numeric value; we collect every named input into a modifier
  * list. Empty / non-finite entries are skipped so the GM can leave
  * unused rows blank.
  *
  * Includes the "rollBonusItem" checkbox so a successful roll knows
- * whether to also roll on Table 6-5 even when the tier didn't earn a
+ * whether to also roll on the Random Issue Gear table even when the tier didn't earn a
  * bonus item by default (RAW: only `bonus-items` earns one, but GM
  * discretion is allowed for narrative beats).
  */
@@ -106,7 +106,7 @@ function parseModifierDialogForm(form: HTMLFormElement | null): ModifierDialogRe
     };
 }
 
-/** Pass/fail and Table 6-4 degrees derived from the underlying Logistics roll. */
+/** Pass/fail and gear-result degrees derived from the underlying Logistics roll. */
 export interface GearDegrees {
     /** True when the Logistics Test succeeds per the shared d100 rule. */
     readonly passed: boolean;
@@ -122,7 +122,7 @@ export interface GearDegrees {
  * SSOTs instead of re-inlining them.
  *
  * Pass/fail is `isD100Success`, so a natural 01 ALWAYS succeeds and a natural
- * 100 ALWAYS fails — even when Table 6-3 modifiers push the effective target
+ * 100 ALWAYS fails — even when gear modifiers push the effective target
  * to ≥100, where the old hand-rolled `margin >= 0` wrongly passed a natural
  * 100. Degrees follow the canonical `1 + extra` idiom shared with the roll
  * engine (`WH40K.calculateDegrees`): a bare pass/fail scores one degree and
@@ -140,14 +140,14 @@ export function deriveGearDegrees(rollTotal: number, target: number): GearDegree
 }
 
 /**
- * Open a DialogV2 prompting the GM for Table 6-3 modifiers, then resolve
+ * Open a DialogV2 prompting the GM for gear modifiers, then resolve
  * the gear roll (`data-action="owRequestGear"`).
  *
- * Per OW core.md, Table 6-3 modifiers are situational deltas the GM
+ * Per the OW rules, gear modifiers are situational deltas the GM
  * applies based on mission context (warzone, request unusualness, etc.).
  * The dialog accepts a free-form list of named rows — three by default
  * covering the most common cases — plus an optional "roll bonus item"
- * checkbox the GM can flip to also roll on Table 6-5 even when the
+ * checkbox the GM can flip to also roll on the Random Issue Gear table even when the
  * outcome tier didn't earn one.
  */
 export async function owRequestGear(this: MissionGearActionHost, event: Event, _target: HTMLElement): Promise<void> {
@@ -214,12 +214,12 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
 
     // Pass/fail and degrees route through the shared d100 SSOTs so the
     // natural-01-always-succeeds / natural-100-always-fails rule holds even
-    // when Table 6-3 modifiers push the effective target to ≥100.
+    // when gear modifiers push the effective target to ≥100.
     const { passed: success, degreesOfSuccess, degreesOfFailure } = deriveGearDegrees(rollTotal, composed.target);
 
     const resolution = resolveGearOutcome({ degreesOfSuccess, degreesOfFailure });
 
-    // Optionally roll on Table 6-5 (Random Issue Gear) for the bonus
+    // Optionally roll on the Random Issue Gear table for the bonus
     // item — automatic for the `bonus-items` tier, GM-opt-in otherwise.
     const earnsBonus = resolution.bonusItemCount > 0;
     const shouldRollBonus = earnsBonus || (rollBonusItem && success);
@@ -232,7 +232,7 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
     await this.actor.update({ 'system.lastGearOutcome': resolution.outcome });
 
     // Build the chat card breakdown — the first row is always the
-    // Ordinary +10 bonus, then one row per Table 6-3 modifier in the
+    // Ordinary +10 bonus, then one row per gear modifier in the
     // order the GM entered them.
     const breakdownRows = composed.breakdown.map((row, index) => {
         if (index === 0 && row.description === ORDINARY_BONUS_KEY) {

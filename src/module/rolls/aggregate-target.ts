@@ -3,14 +3,14 @@
  *
  * The displayed roll-test target and the committed roll must use the SAME
  * value: base characteristic (WS / BS / …) plus every active modifier, with
- * the ±60 accumulation cap applied to the modifier sum (DH2 core.md L1050).
+ * the ±60 accumulation cap applied to the modifier sum (DH2 rules).
  * These functions are content-agnostic pure math — modifier VALUES are sourced
  * upstream (range / attack-mode / RoF / cover rule modules) and merged into the
  * record passed in here; nothing in this module hardcodes a modifier table.
  */
 
 /** Maximum total bonus / penalty allowed on a single test target.
- *  Per DH2 core.md L1050: "no accumulated bonus exceeds +60 and no
+ *  Per DH2 RAW: "no accumulated bonus exceeds +60 and no
  *  accumulated penalty exceeds -60". */
 export const ROLL_MODIFIER_CAP = 60;
 

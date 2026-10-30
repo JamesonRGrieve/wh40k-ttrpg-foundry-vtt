@@ -381,7 +381,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
 
     /**
      * Apply direct Crew Population / Morale damage (a boarding party cutting
-     * through the crew, RT core). RT only; records the losses in the
+     * through the crew, RT rules). RT only; records the losses in the
      * prior-turn snapshot so Hold Fast! / Triage can cancel them next turn.
      * Returns the losses actually applied.
      */
@@ -409,7 +409,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Overload up to `count` raised void shields (#184 — RT Core, "Damage and
+     * Overload up to `count` raised void shields (#184 — RT, "Damage and
      * Defences"): each cancelled one incoming hit and is down until restored.
      * Returns the number of shields that went down.
      */
@@ -455,7 +455,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * A Crippled ship takes damage past its Armour (RT Core "Crippled Ships",
+     * A Crippled ship takes damage past its Armour (RT "Crippled Ships",
      * #187): "Compare the value of the damage that exceeded the Armour to the
      * Critical Hit chart." Recorded and posted like any other Critical Hit.
      */
@@ -510,7 +510,7 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * Hold Fast! / Triage (RT core, #189): reduce one pool of the
+     * Hold Fast! / Triage (RT, #189): reduce one pool of the
      * previous turn's damage — Morale or Crew Population — by `amount`, never
      * by more than that pool lost. RT only. Returns the amount restored (0 when
      * nothing was recorded for the previous turn).

@@ -19,7 +19,7 @@ import {
 } from './hit-locations';
 
 /**
- * Hit location resolution per core.md L10372-10390 (Table 7-3, #107).
+ * Hit location resolution per the hit locations table (#107).
  *
  * The DH2 hit-location convention reverses the digits of the d100
  * attack roll: 23 → 32 → Body, 47 → 74 → Right Leg, etc. The integration
@@ -61,7 +61,7 @@ function installLangpack(): void {
     vi.stubGlobal('game', { i18n: buildLangStub(), wh40k: { log: (): void => {} } });
 }
 
-describe('creatureHitLocations() — Table 7-3 location bands', () => {
+describe('creatureHitLocations() — hit locations table bands', () => {
     const locations = creatureHitLocations();
     const byId = Object.fromEntries(locations.map((l) => [l.id, l]));
 
@@ -102,7 +102,7 @@ describe('single hit-location id source', () => {
         expect([...HIT_LOCATION_IDS].sort()).toEqual([...BODY_LOCATIONS].sort());
     });
 
-    it('lists the ids in Table 7-3 (d100) order', () => {
+    it('lists the ids in hit locations table (d100) order', () => {
         expect(HIT_LOCATION_IDS).toEqual(['head', 'rightArm', 'leftArm', 'body', 'rightLeg', 'leftLeg']);
     });
 
@@ -193,7 +193,7 @@ describe('getHitLocationForRoll', () => {
     });
 });
 
-describe('additionalHitLocations — Table 7-2 multi-hit follow-up locations', () => {
+describe('additionalHitLocations — Multiple Hits follow-up locations', () => {
     const followups = additionalHitLocations();
 
     it('exposes a six-entry array per starting location', () => {

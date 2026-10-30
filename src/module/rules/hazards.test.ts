@@ -33,7 +33,7 @@ describe('Falling (#118)', () => {
         expect(getFallingDamageFormula(-3, 'rt')).toBe('');
     });
 
-    it('dh1: reads Table 7-27 by bracket', () => {
+    it('dh1: reads the Falling Damage table by bracket', () => {
         expect(getFallingDamageFormula(2, 'dh1')).toBe('');
         expect(getFallingDamageFormula(3, 'dh1')).toBe('1d10+3');
         expect(getFallingDamageFormula(5, 'dh1')).toBe('1d10+3');

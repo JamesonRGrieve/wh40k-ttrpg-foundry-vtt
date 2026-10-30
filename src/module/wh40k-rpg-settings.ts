@@ -150,7 +150,7 @@ export class WH40KSettings {
 
     /**
      * Default Infamy a Black Crusade champion needs for apotheosis rather than
-     * spawndom when Corruption reaches 100 (BC Core p267). The book leaves the
+     * spawndom when Corruption reaches 100 (BC rules). The book leaves the
      * threshold to the GM (suggesting 75, 90 or 100); 100 is the default.
      */
     static APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT = 100;
@@ -361,8 +361,8 @@ export class WH40KSettings {
     }
 
     /**
-     * The GM-set Infamy a Black Crusade champion needs for apotheosis (BC Core
-     * p267). Non-negative integer; a non-numeric stored value, or a call before
+     * The GM-set Infamy a Black Crusade champion needs for apotheosis (BC
+     * rules). Non-negative integer; a non-numeric stored value, or a call before
      * registration, falls back to {@link APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT}.
      */
     static getApotheosisInfamyThreshold(): number {
@@ -1142,7 +1142,7 @@ export class WH40KSettings {
                 type: String,
             },
             {
-                // Black Crusade apotheosis (BC Core p267): the Infamy the GM sets for
+                // Black Crusade apotheosis: the Infamy the GM sets for
                 // a champion claimed at 100 Corruption to become a Daemon Prince
                 // rather than a Chaos Spawn.
                 key: S.apotheosisInfamyThreshold,

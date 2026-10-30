@@ -4,8 +4,8 @@
  * Persists the minimum state the pure resolver in
  * `src/module/rules/bc-psychic-strength.ts` reads:
  *
- *   - `psykerClass`         — one of 'bound' | 'unbound' | 'daemonic' (BC
- *                             Table 6-1). Drives the per-class push
+ *   - `psykerClass`         — one of 'bound' | 'unbound' | 'daemonic' (the BC
+ *                             psyker classes). Drives the per-class push
  *                             ceiling consumed by {@link maxPushLevel}.
  *   - `psyRating`           — base PR from the actor's profile.
  *   - `sustainedPowerCount` — total powers currently being sustained.
@@ -40,7 +40,7 @@ const PSYKER_CLASS_CHOICES: readonly PsykerClass[] = ['bound', 'unbound', 'daemo
  * compiler narrows `actor.system.psyRating` etc. without casts.
  */
 export interface BcPsychicDeclarations {
-    /** BC Psyker Class (Table 6-1) — drives push ceiling. */
+    /** BC Psyker Class — drives push ceiling. */
     psykerClass: PsykerClass;
     /** Base Psy Rating from the actor's profile (non-negative integer). */
     psyRating: number;

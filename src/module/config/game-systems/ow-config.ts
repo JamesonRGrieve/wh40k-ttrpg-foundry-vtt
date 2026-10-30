@@ -41,7 +41,7 @@ export const OW_ACQUISITION_LADDER = {
         unique: 'discretion',
     },
     craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
-    // OW core: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
+    // OW: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
     failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
@@ -56,7 +56,7 @@ const COMRADE_MOVE_KEYS = {
     'tactical-advance': 'TacticalAdvance',
 } as const;
 
-/** A Comrade move Order (OW core): it moves the Comrade and grants the PC nothing. */
+/** A Comrade move Order (OW rules): it moves the Comrade and grants the PC nothing. */
 function comradeMoveOrder(id: keyof typeof COMRADE_MOVE_KEYS, actionCost: ComradeActionCost, cohesion: ComradeOrderCohesion = 'none'): ComradeOrderDef {
     const segment = COMRADE_MOVE_KEYS[id];
     return {
@@ -142,21 +142,21 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly inquestRules = null;
     readonly itemRepair = null;
     /**
-     * OW core Weapon Upgrades: an acquired upgrade is integrated by a successful
+     * OW Weapon Upgrades: an acquired upgrade is integrated by a successful
      * Trade (Armourer) test (#136). The separate Weapon Customisations (Routine
      * (+20)) have no pack items yet, so they are not distinguished here.
      */
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * OW core: "The number of extra hits scored in this manner cannot exceed the
+     * OW: "The number of extra hits scored in this manner cannot exceed the
      * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
      * hits scored may not exceed …"; Storm: "up to the weapon's firing rate, as
      * normal" — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
     /**
-     * OW core: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
+     * OW: Semi-Auto Burst (Type: Half Action) is "a Challenging (+0)
      * Ballistic Skill Test"; Full Auto Burst (Type: Half Action) is made
      * "with a −10 penalty" — #607.
      */
@@ -175,16 +175,16 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly grappleRules: GrappleRules = printedGrappleRules('acrobatics', 10);
 
     /**
-     * OW core: the vehicle hit-location table, a Vehicle Critical Hit chart per location,
+     * OW: the vehicle hit-location table, a Vehicle Critical Hit chart per location,
      * and Righteous Fury only when "this attack must actually Damage the vehicle".
      */
     override readonly vehicleCombat: VehicleCombatRules = locatedVehicleCombat(true);
 
-    /** OW core, Armour Craftsmanship: Poor −10 Agility; Good +1 AP against the first attack in any Round; Best half weight and +1 AP. */
+    /** OW, Armour Craftsmanship: Poor −10 Agility; Good +1 AP against the first attack in any Round; Best half weight and +1 AP. */
     override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     /**
-     * OW core, Comrades in Combat: Cohesion is "within 5 metres of his
+     * OW, Comrades in Combat: Cohesion is "within 5 metres of his
      * controlling Player Character"; a Comrade "is limited to two Half Actions or one
      * Full Action per Turn"; it dies when it "would suffer 10 Insanity or 10
      * Corruption in a single Round".
@@ -283,7 +283,7 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     /** OW psykers are a speciality; the compendium document flagged `grantsPsychicPowers` names which (#681). */
     override readonly psykerUnlock = { step: 'speciality' };
 
-    /** OW Dispositions are the seven-step ladder; a success gains one step per degree (OW core) — #73. */
+    /** OW Dispositions are the seven-step ladder; a success gains one step per degree (OW rules) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderDegrees;
     }

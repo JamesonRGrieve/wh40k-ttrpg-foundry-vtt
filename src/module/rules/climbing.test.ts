@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EASY_SURFACE_CLIMB_MODIFIER, SHEER_SURFACE_CLIMB_MODIFIER, STANDARD_SURFACE_CLIMB_MODIFIER, getClimbingModifier } from './climbing';
 
-describe('climbing surface modifiers (errata L113 — Sheer Surfaces)', () => {
+describe('climbing surface modifiers (errata — Sheer Surfaces)', () => {
     it('pins the sheer-surface modifier at Hard (-20)', () => {
         expect(SHEER_SURFACE_CLIMB_MODIFIER).toBe(-20);
         expect(getClimbingModifier({ surfaceType: 'sheer' })).toBe(-20);

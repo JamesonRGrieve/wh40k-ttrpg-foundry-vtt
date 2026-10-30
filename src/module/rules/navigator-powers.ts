@@ -1,13 +1,13 @@
 /**
- * Navigator Powers — RT-only engine (#194 — Rogue Trader core.md
- * §"Using Navigator Powers", L8358–L8466).
+ * Navigator Powers — RT-only engine (#194 — Rogue Trader's "Using
+ * Navigator Powers" rules).
  *
  * Rules-as-written shape (engine only — per-power content lives in the
  * `rt-*-items-navigator-powers` compendium packs):
  *
  *   1. **Level / mastery bonus.** A Navigator's mastery of a power runs
  *      Novice → Adept → Master, applying a +0 / +10 / +20 modifier to
- *      the underlying characteristic test (core.md L8366–L8370).
+ *      the underlying characteristic test.
  *   2. **Test characteristic.** Each power names the characteristic
  *      tested (Perception or Willpower for almost every entry in the
  *      core list); the engine accepts the chosen characteristic value
@@ -20,7 +20,7 @@
  *      sourced from the compendium document (Direction #7); the engine
  *      sums it in.
  *   4. **Opposed branch.** Several powers (Held in my Gaze, The Lidless
- *      Stare) are Opposed Tests. Per core.md L7505–L7520 (an opposed
+ *      Stare) are Opposed Tests. Per the RT rules (an opposed
  *      Focus Power only activates if the user passes and also out-scores
  *      at least one opponent on successes) the resolver requires BOTH
  *      sides to pass AND the Navigator to beat the opponent's net DoS;
@@ -44,7 +44,7 @@
 import { clampRoll, degreesOfFailure, degreesOfSuccess, isD100Success } from './_dice.ts';
 
 /**
- * Three canonical Navigator-power mastery tiers (core.md L8366–L8370).
+ * Three canonical Navigator-power mastery tiers.
  * Stored on the compendium document under `system.levels.<tier>`.
  */
 export type NavigatorPowerLevel = 'novice' | 'adept' | 'master';
@@ -115,7 +115,7 @@ export interface NavigatorOpposedInput {
 
 /**
  * Result of an opposed Navigator-power test.
- * Per core.md L7505–L7520: the Navigator must pass AND outscore the
+ * Per the RT opposed-test rules: the Navigator must pass AND outscore the
  * opponent in DoS to manifest the power; tie or higher DoS for the
  * opponent → the Navigator fails to manifest.
  */
@@ -134,7 +134,7 @@ export interface NavigatorOpposedResult {
  * `target = characteristic + levelBonus + difficultyModifier + situationalModifier`
  *
  * Clamped to `[0, 100]` so a deeply-modified test still has a defined
- * pass/fail boundary against a d100 (core.md does not codify a ceiling
+ * pass/fail boundary against a d100 (the rules do not codify a ceiling
  * directly but a target >100 is degenerate — every roll passes — and a
  * target <0 is unmakeable).
  */
@@ -173,7 +173,7 @@ export function navigatorPowerTargetComponents(input: Omit<NavigatorTestInput, '
  * Resolve a non-opposed Navigator-power test against a target number.
  * Pure: caller pre-rolls the d100.
  *
- * RAW DoS / DoF math (core.md §"Degrees of Success"): full tens of the
+ * RAW DoS / DoF math ("Degrees of Success"): full tens of the
  * gap, +1 (a bare pass is 1 DoS; a bare fail is 1 DoF).
  */
 export function resolveNavigatorPower(input: NavigatorTestInput): NavigatorTestResult {

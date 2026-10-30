@@ -5,12 +5,12 @@
  * `src/module/rules/bc-chaos-ritual.ts` consume from the actor:
  *
  *   - `ritualMastery` — the ritualist's Daemonic Mastery rating
- *     (core.md §"Daemonic Mastery"). Surfaces directly on the panel as
+ *     (the Daemonic Mastery rules). Surfaces directly on the panel as
  *     the running tally and contributes to {@link resolveBreakingMastery}
  *     when this Heretic contests another's binding.
  *
  * Per-ritual selections — the chosen template, the operator-stacked
- * Table 6-7 modifiers, the rolled d100 result — are dialog-scoped and
+ * Ritual Modifiers, the rolled d100 result — are dialog-scoped and
  * never persisted to the DataModel; they live on the action-handler
  * path and the resulting chat card.
  *

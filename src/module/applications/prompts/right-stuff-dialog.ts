@@ -1,6 +1,6 @@
 /**
  * @file RightStuffDialog — surfaces the Ace role's "Right Stuff" Fate
- * spend (without.md L948-L980, #100): choose Operate or Survival, spend
+ * spend (a DH2 supplement, #100): choose Operate or Survival, spend
  * one Fate, auto-succeed with DoS = Agility bonus.
  *
  * The dialog is a thin UI shell over `spendRightStuff()` in

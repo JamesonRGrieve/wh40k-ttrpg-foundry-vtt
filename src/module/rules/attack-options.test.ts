@@ -102,8 +102,8 @@ function shownRanged(key: string, line: string | undefined): { modifier: number;
 }
 
 describe('ranged Rate-of-Fire to-hit modifiers (#231, #607)', () => {
-    // Standard Attack has no inherent to-hit bonus (#383). DH2 core "a Challenging
-    // (+0) Ballistic Skill test" / "with a −10 penalty"; DH1 core
+    // Standard Attack has no inherent to-hit bonus (#383). DH2 "a Challenging
+    // (+0) Ballistic Skill test" / "with a −10 penalty"; DH1
     // "+10" / "+20", and DW and RT print the same.
     it.each([
         ['dh2', 0, -10],
@@ -118,7 +118,7 @@ describe('ranged Rate-of-Fire to-hit modifiers (#231, #607)', () => {
         expect(shownRanged('fullAuto', line)?.modifier).toBe(full);
     });
 
-    // DH1 core "(Full Action)", DW / RT "Type: Full Action"; DH2 / BC / OW "Type: Half Action".
+    // DH1 "(Full Action)", DW / RT "Type: Full Action"; DH2 / BC / OW "Type: Half Action".
     it.each([
         ['dh1', 'Full'],
         ['dw', 'Full'],

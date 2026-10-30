@@ -169,16 +169,16 @@ describe('resolveBurst — ammunition vs hit ceiling', () => {
  */
 describe('resolveBurst — the per-line ceiling (#607)', () => {
     const cases: readonly { line: GameSystemId; semi: number; full: number; storm: number }[] = [
-        // DH2 core: total hits ≤ RoF; Storm "up to the weapon's firing rate, as normal".
+        // DH2: total hits ≤ RoF; Storm "up to the weapon's firing rate, as normal".
         { line: 'dh2', semi: 3, full: 6, storm: 4 },
         // RT 1.4 errata: total hits ≤ RoF; FAQ: Storm caps at "Double the Rate of Fire".
         { line: 'rt', semi: 3, full: 6, storm: 8 },
         // BC / DW: extra hits ≤ RoF; Storm "to a maximum of twice the … rate of fire".
         { line: 'bc', semi: 4, full: 7, storm: 9 },
         { line: 'dw', semi: 4, full: 7, storm: 9 },
-        // DH1 core: extra hits ≤ RoF; Ascension's Storm doubles every hit up to the RoF.
+        // DH1: extra hits ≤ RoF; a DH1 supplement's Storm doubles every hit up to the RoF.
         { line: 'dh1', semi: 4, full: 7, storm: 9 },
-        // OW core: extra hits ≤ RoF; Storm "up to the weapon's firing rate, as normal".
+        // OW: extra hits ≤ RoF; Storm "up to the weapon's firing rate, as normal".
         { line: 'ow', semi: 4, full: 7, storm: 5 },
         // IM prints no burst rules: the conservative total cap.
         { line: 'im', semi: 3, full: 6, storm: 4 },

@@ -37,7 +37,7 @@ describe('malignancyThresholdsCrossed', () => {
     });
 });
 
-describe('corruptionTrackModifier (Table 8-14)', () => {
+describe('corruptionTrackModifier (the Corruption Track)', () => {
     it('is +0 while Tainted (up to 30)', () => {
         expect(corruptionTrackModifier(0)).toBe(0);
         expect(corruptionTrackModifier(10)).toBe(0);

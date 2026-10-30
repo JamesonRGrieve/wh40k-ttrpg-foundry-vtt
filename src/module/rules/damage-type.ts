@@ -1,6 +1,6 @@
 /**
- * The four canonical DH2 damage types (core.md §"Critical Damage",
- * Tables 7–7 … 7–22). The type of damage selects which Critical Effects
+ * The four canonical DH2 damage types (the "Critical Damage" rules and
+ * their Critical Effects tables). The type of damage selects which Critical Effects
  * table a Critical-damage overflow is resolved on.
  */
 export type CanonicalDamageType = 'Energy' | 'Explosive' | 'Impact' | 'Rending';
@@ -18,7 +18,7 @@ const CANONICAL_DAMAGE_TYPES: ReadonlyArray<CanonicalDamageType> = ['Energy', 'E
  * Normalise a free-form damage-type string (any casing, possibly an
  * abbreviation) to one of the four canonical types. Returns null when
  * the input does not resolve — callers fall back to Impact, the
- * default for untyped damage (core.md L10646).
+ * default for untyped damage.
  */
 export function normalizeDamageType(value: string | null | undefined): CanonicalDamageType | null {
     if (typeof value !== 'string' || value === '') return null;

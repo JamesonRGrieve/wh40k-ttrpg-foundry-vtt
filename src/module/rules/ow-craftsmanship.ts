@@ -1,6 +1,6 @@
 /**
- * Only War · Craftsmanship effects (#158 — OW core.md §"WEAPON AND
- * ARMOUR CRAFTSMANSHIP" lines 7258-7288).
+ * Only War · Craftsmanship effects (#158 — the OW Weapon and Armour
+ * Craftsmanship rules).
  *
  * Pure rules / math layer. The four Craftsmanship tiers (Poor, Common,
  * Good, Best) modify ranged-weapon reliability, melee-weapon test and
@@ -81,7 +81,7 @@ export interface MeleeCraftsmanshipEffect {
 /* -------------------------------------------------------------------- */
 
 /**
- * Ranged-weapon Craftsmanship table (OW core.md §"Weapon and Armour
+ * Ranged-weapon Craftsmanship table (OW "Weapon and Armour
  * Craftsmanship", ranged column).
  */
 export const OW_RANGED_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, RangedCraftsmanshipEffect>> = Object.freeze({
@@ -92,7 +92,7 @@ export const OW_RANGED_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, RangedCraft
 });
 
 /**
- * Melee-weapon Craftsmanship table (OW core.md §"Weapon and Armour
+ * Melee-weapon Craftsmanship table (OW "Weapon and Armour
  * Craftsmanship", melee column).
  */
 export const OW_MELEE_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, MeleeCraftsmanshipEffect>> = Object.freeze({
@@ -103,7 +103,7 @@ export const OW_MELEE_CRAFTSMANSHIP: Readonly<Record<Craftsmanship, MeleeCraftsm
 });
 
 /**
- * Armour Craftsmanship table (OW core.md §"Weapon and Armour
+ * Armour Craftsmanship table (OW "Weapon and Armour
  * Craftsmanship", armour column). It is the same table OW's line config
  * hands the armour soak (#679), so the panel and the damage roll cannot
  * disagree.

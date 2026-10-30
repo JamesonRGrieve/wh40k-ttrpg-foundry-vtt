@@ -120,7 +120,7 @@ function makeCtx(overrides: Partial<TalentCtx> = {}): TalentCtx {
             rank: 1,
             cost: 200,
             aptitudes: ['Ballistic Skill', 'Offence'],
-            source: { book: 'Dark Heresy 2e Core', page: '123' },
+            source: { book: 'Sample Book', page: '123' },
             notes: '',
             benefit: 'Add half BS bonus to ranged damage.',
             description: { value: '<p>Your mastery of ranged combat allows for more powerful shots.</p>' },

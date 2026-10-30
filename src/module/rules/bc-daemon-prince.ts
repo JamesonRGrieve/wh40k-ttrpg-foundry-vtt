@@ -1,5 +1,5 @@
 /**
- * Black Crusade apotheosis resolver (#182 — BC Core p267).
+ * Black Crusade apotheosis resolver (#182).
  *
  * When a champion's Corruption reaches 100 the Ruinous Powers claim them.
  * If they have reached the Infamy threshold the GM sets (a world setting;
@@ -12,7 +12,7 @@
  * (sheet, action, chat card) reads the live values and the GM's threshold.
  */
 
-/** Corruption at which a champion is claimed (BC Core p267). */
+/** Corruption at which a champion is claimed (BC rules). */
 export const APOTHEOSIS_CORRUPTION = 100;
 
 /** Chaos alignment identifiers used to tag an apotheosis record. */

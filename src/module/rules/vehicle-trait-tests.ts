@@ -65,7 +65,7 @@ export function vehicleTestSkill(category: VehicleTestCategory, locomotion: Loco
 /**
  * The seats asked to make the category's test, in order. The driver drives and,
  * with no commander seat in the occupancy model, commands ("the Commander, or the
- * Driver if there is no Commander", OW core rules); crew make repairs.
+ * Driver if there is no Commander", OW rules); crew make repairs.
  */
 const CATEGORY_SEATS: Readonly<Record<VehicleTestCategory, readonly VehicleRole[]>> = {
     repair: ['crew', 'driver', 'gunner'],

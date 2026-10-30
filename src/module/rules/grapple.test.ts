@@ -58,7 +58,7 @@ function rulesOf(line: string): GrappleRules {
 const ids = (rules: GrappleRules, role: GrappleRole): GrappleOptionId[] => grappleOptionsFor(rules, role).map((option) => option.id);
 
 /**
- * Grapple state-machine resolver pins (#120 — the DH2 core Grapple rules).
+ * Grapple state-machine resolver pins (#120 — the DH2 Grapple rules).
  *
  * The five exported resolvers all share the same opposed-Strength engine,
  * so the tests pin: (a) the DoS math, (b) the action-tag round-trip, and

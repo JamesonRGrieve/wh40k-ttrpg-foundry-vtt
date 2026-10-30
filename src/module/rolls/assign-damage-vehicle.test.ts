@@ -5,7 +5,7 @@ import { type ActorLike, AssignDamageData } from './assign-damage-data.ts';
 import type { VehicleCritLookupFn } from './vehicle-critical-tables.ts';
 import type { VehicleStrike } from './vehicle-strike.ts';
 
-/** A Chimera (DH2 Core: Front 30 / Side 22 / Rear 16, Structural Integrity 35) with the given traits. */
+/** A Chimera (DH2: Front 30 / Side 22 / Rear 16, Structural Integrity 35) with the given traits. */
 function chimera(integrity: { value: number; critical: number }, traits: Partial<VehicleTraitEffects>[] = [], line = 'dh2'): ActorLike {
     const named = traits.map((over, index) => ({
         name: index === 0 ? 'Reinforced Armour' : `Trait ${index}`,

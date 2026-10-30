@@ -1,6 +1,6 @@
 /**
- * Deathwatch · Special-Issue Ammunition (#172 — DW core.md §"WEAPONS"
- * / Special Issue Ammunition, line ~6006).
+ * Deathwatch · Special-Issue Ammunition (#172 — the DW Special Issue
+ * Ammunition rules).
  *
  * Pure rules / math layer. Deathwatch Astartes draw on the Adeptus
  * Mechanicus' specialist armouries to fit their bolters with one of
@@ -96,7 +96,7 @@ export interface AmmoEffect {
 
 /**
  * RAW values for every Deathwatch Special-Issue ammunition type
- * (DW core.md §"WEAPONS", line ~6006). Frozen singletons; callers
+ * (the DW Special Issue Ammunition rules). Frozen singletons; callers
  * must not mutate.
  */
 export const DW_SPECIAL_AMMO_EFFECTS: Readonly<Record<DwSpecialAmmoId, AmmoEffect>> = Object.freeze({

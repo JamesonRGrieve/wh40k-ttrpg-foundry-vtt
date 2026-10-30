@@ -1,5 +1,5 @@
 /**
- * Only War · Orders persistence slot (#153 — core.md §"ORDERS" line 12183).
+ * Only War · Orders persistence slot (#153 — the OW Orders rules).
  *
  * The engine (`src/module/rules/ow-orders.ts`) is RNG-free and actor-
  * decoupled. The only state that must persist on an OW character is the

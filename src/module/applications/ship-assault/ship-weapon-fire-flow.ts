@@ -1,5 +1,5 @@
 /**
- * Ship weapon fire flow (#184 — RT core, 1.4 errata).
+ * Ship weapon fire flow (#184 — RT, 1.4 errata).
  *
  * Fired from a Weapon Component's row on the voidcraft sheet, through the
  * shared ship dialog: pick the target ship, enter the gunner's Ballistic Skill,

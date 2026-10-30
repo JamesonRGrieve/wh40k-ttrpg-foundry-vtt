@@ -3,7 +3,7 @@ import type { VehicleHitLocationBand } from '../rules/vehicle-damage.ts';
 import { Hit } from './damage-data.ts';
 import type { VehicleTargetProfile } from './vehicle-strike.ts';
 
-/** Table 7-29 as DH2 prints it. */
+/** The Vehicle Hit Locations table as DH2 prints it. */
 const BANDS: VehicleHitLocationBand[] = [
     { max: 20, location: 'motive' },
     { max: 60, location: 'hull' },

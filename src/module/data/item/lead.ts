@@ -5,7 +5,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 /**
  * Data model for Investigation Lead items.
  *
- * Per dh/core/core.md §"INVESTIGATION" (Leads framework), a lead has a type
+ * Per the "Investigation" rules (Leads framework), a lead has a type
  * (witness/document/location/other), a source clue that produced it, and a
  * state that resolves through pursued → dead-end / active. Pure data shape —
  * no automation; resolution mechanics live on the actor / GM workflow.

@@ -1,8 +1,8 @@
 /**
- * Daemonic trait detection (#143 — DH2 core rules, errata).
+ * Daemonic trait detection (#143 — DH2 rules, errata).
  *
  * The Daemonic (X) trait makes its bearer immune to disease and poison and
- * grants the Undying trait. Undying (DH2 core rules) is immunity to disease,
+ * grants the Undying trait. Undying (DH2 rules) is immunity to disease,
  * poison and toxins plus no need to breathe — it has no revival rider. The
  * immunities themselves are content carried by the trait documents; this
  * module only answers "does this actor carry Daemonic?" for the sheet badge.

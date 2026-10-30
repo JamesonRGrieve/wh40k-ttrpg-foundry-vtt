@@ -24,7 +24,7 @@
 import type { DispositionModelDef } from '../config/game-systems/types.ts';
 import { nonNegInt } from './_num.ts';
 
-/** The 0–100 characteristic scale (DH2 core rules). */
+/** The 0–100 characteristic scale (DH2 rules). */
 const CHARACTERISTIC_SCALE = { min: 0, max: 100 } as const;
 
 /**
@@ -122,7 +122,7 @@ export function ladderShift(def: DispositionModelDef, success: boolean, dos: num
 /*  Personality (DH2)                           */
 /* -------------------------------------------- */
 
-/** The Interaction skills a Personality table lists (DH2 Tables 8–5 to 8–9). */
+/** The Interaction skills a Personality table lists (the DH2 Personality tables). */
 export const PERSONALITY_SKILLS = ['charm', 'command', 'deceive', 'inquiry', 'intimidate', 'scrutiny'] as const;
 
 export type PersonalitySkill = (typeof PERSONALITY_SKILLS)[number];

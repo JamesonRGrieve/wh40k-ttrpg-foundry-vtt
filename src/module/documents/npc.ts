@@ -183,7 +183,7 @@ export class WH40KNPC extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /**
-     * Test this NPC's Disposition (DH2 core): a d100 against the value,
+     * Test this NPC's Disposition (DH2): a d100 against the value,
      * "just as with other characteristics", through the standard roll dialog.
      * Success means the NPC decides in the Acolytes' favour. Only a line whose
      * Disposition is a characteristic tests it.

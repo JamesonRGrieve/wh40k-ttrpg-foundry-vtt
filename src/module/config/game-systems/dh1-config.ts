@@ -133,7 +133,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return FATIGUE_MODES.halving;
     }
 
-    /** DH1 Dispositions are the seven-step ladder; a success gains one step plus one per degree (DH1 core) — #73. */
+    /** DH1 Dispositions are the seven-step ladder; a success gains one step plus one per degree (DH1 rules) — #73. */
     override getDispositionModel(): DispositionModelDef {
         return DISPOSITION_MODELS.ladderStepPlusDegrees;
     }
