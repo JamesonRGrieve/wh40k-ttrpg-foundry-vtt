@@ -3,8 +3,9 @@
  * powers chapter (content#39).
  *
  * Endurance cited the page of the Athletics skill, and seventeen other powers
- * cited a page in the armoury chapter. The page constants below are the printed
- * span of the psychic powers chapter and the page each corrected power starts on.
+ * cited a page in the armoury chapter. The expected pages — the chapter's printed
+ * span and the page each corrected power starts on — are content, so they live in
+ * the private content repo (`checks/ow-psychic-power-pages.json`), not here.
  *
  * The OW core book is not named here: it is the book most of the OW branches'
  * raw psychic-power citations name.
@@ -21,8 +22,13 @@ import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = resolve(__dirname, '../src/packs-private');
 
-/** The OW core rules' psychic powers chapter: printed pages, inclusive. */
-const PSYCHIC_CHAPTER = { first: 221, last: 238 } as const;
+/** The expected pages, as the private content authors them. */
+interface PageChecks {
+    /** The psychic powers chapter's printed span, inclusive. */
+    chapter: { first: number; last: number };
+    /** Each corrected power's name and the page it starts on. */
+    powers: Record<string, string>;
+}
 
 interface OwSource {
     provenance?: string;
@@ -67,41 +73,32 @@ function owCorePowers(): Array<{ file: string; name: string; page: string }> {
     return core;
 }
 
-/** Whether a cited page is a whole number inside the chapter. */
-function inChapter(page: string): boolean {
-    const n = Number(page);
-    return /^\d+$/.test(page) && n >= PSYCHIC_CHAPTER.first && n <= PSYCHIC_CHAPTER.last;
-}
-
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Only War psychic powers cite the OW core psychic powers chapter (content#39)', () => {
     // Read in beforeAll: a skipped describe's body still runs to collect its tests.
     let powers: Array<{ file: string; name: string; page: string }> = [];
+    let checks: PageChecks = { chapter: { first: 0, last: 0 }, powers: {} };
     beforeAll(() => {
         powers = owCorePowers();
+        checks = JSON.parse(readFileSync(resolve(ROOT, 'checks/ow-psychic-power-pages.json'), 'utf8')) as PageChecks;
     });
 
-    it('finds the OW core powers, so the guard is not vacuous', () => {
+    it('finds the OW core powers and the expected pages, so the guard is not vacuous', () => {
         expect(powers.length).toBeGreaterThanOrEqual(30);
+        expect(checks.chapter.first).toBeGreaterThan(0);
+        expect(checks.chapter.last).toBeGreaterThanOrEqual(checks.chapter.first);
+        expect(Object.keys(checks.powers).length).toBeGreaterThan(0);
     });
 
-    it(`every OW core psychic power cites a page in pp.${PSYCHIC_CHAPTER.first}–${PSYCHIC_CHAPTER.last}`, () => {
-        const offenders = powers.filter((power) => !inChapter(power.page)).map((power) => `${power.name} (${power.file}): p.${power.page}`);
+    it('every OW core psychic power cites a page inside the psychic powers chapter', () => {
+        const { first, last } = checks.chapter;
+        const inChapter = (page: string): boolean => /^\d+$/.test(page) && Number(page) >= first && Number(page) <= last;
+        const offenders = powers.filter((power) => !inChapter(power.page)).map((power) => `${power.name} (${power.file}): ${power.page}`);
         expect(offenders).toEqual([]);
     });
 
     it('cites the page each corrected power starts on', () => {
         const pageOf = new Map(powers.map((power) => [power.name, power.page]));
-        expect(
-            ['Endurance', 'Smite', 'Prescience', 'Flame Breath', 'Assail', 'Telekine Dome', 'Dominate', 'Terrify'].map((name) => [name, pageOf.get(name)]),
-        ).toEqual([
-            ['Endurance', '230'],
-            ['Smite', '230'],
-            ['Prescience', '231'],
-            ['Flame Breath', '233'],
-            ['Assail', '234'],
-            ['Telekine Dome', '235'],
-            ['Dominate', '237'],
-            ['Terrify', '238'],
-        ]);
+        const expected = Object.entries(checks.powers);
+        expect(expected.map(([name]) => [name, pageOf.get(name)])).toEqual(expected);
     });
 });
