@@ -14,6 +14,7 @@ import { SYSTEM_ID } from '../../constants.ts';
 import { isBasicSkill } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import { aggregateModifierTotal } from '../../rolls/aggregate-target.ts';
+import { cueAttackResolved } from '../../rolls/attack-cue-trigger.ts';
 import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
 import { advanceExtendedTest } from '../../rolls/extended-test-data.ts';
 import {
@@ -2732,7 +2733,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             await this.rollData.calculateTotalModifiers();
             await this.actionData.calculateSuccessOrFailure();
             await this._resolveSimpleActionHooks();
-            await sendActionDataToChat(this.actionData);
+            await this.#postSimpleAction();
         }
         await this.#stampRoundLimitedRows();
 
@@ -2824,7 +2825,18 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this.rollData['isTargetOnly'] = true;
         }
 
+        await this.#postSimpleAction();
+    }
+
+    /**
+     * Post a skill or characteristic test's card, then play its cue (#594). A plain
+     * test cues nothing, but a successful Dodge or Parry plays on the defender. These
+     * tests never pass through `performActionAndSendToChat`, the attack path that cues
+     * weapons and powers, so they are cued here.
+     */
+    async #postSimpleAction(): Promise<void> {
         await sendActionDataToChat(this.actionData);
+        cueAttackResolved(this.actionData);
     }
 
     /**

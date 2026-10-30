@@ -149,7 +149,10 @@ describe('broadcast', () => {
         const play = vi.fn().mockResolvedValue(undefined);
         vi.stubGlobal('foundry', { audio: { AudioHelper: { play } } });
         vi.stubGlobal('canvas', { ready: true, scene: { id: 'scene1', templates: new Map() }, tokens: { get: (): undefined => undefined } });
+        const callAll = vi.fn();
+        vi.stubGlobal('Hooks', { callAll });
         cueAttackResolved(action());
+        expect(callAll, 'each played step is announced on this client').toHaveBeenCalled();
         const [channel, message] = emit.mock.calls[0] ?? [];
         expect(channel).toBe('system.wh40k-rpg');
         expect(message).toMatchObject({ type: 'attackCue', plan: { sceneId: 'scene1' } });

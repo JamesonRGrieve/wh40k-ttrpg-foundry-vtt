@@ -326,6 +326,22 @@ function playSequencer(ctor: SequenceConstructor, step: CueStep): void {
     void sequence.play();
 }
 
+/**
+ * The hook fired on each client as it plays a cue step: modules can follow the cues,
+ * and Tier B reads which outcome played, and how, on each client.
+ */
+export const ATTACK_CUE_PLAYED_HOOK = 'wh40k-rpg.attackCuePlayed';
+
+/** What {@link ATTACK_CUE_PLAYED_HOOK} carries. */
+export interface AttackCuePlayed {
+    readonly event: CueEvent;
+    readonly preset: CuePreset;
+    /** How this client showed it: an animation file, the procedural preset, or nothing (another scene, reduced motion, animations off). */
+    readonly renderer: CueRenderer;
+    /** The sound file played, '' when the step has none or sounds are off. */
+    readonly sound: string;
+}
+
 /** Play one step's visual and sound on this client. */
 function playStep(
     step: CueStep,
@@ -336,7 +352,10 @@ function playStep(
     const chosen = renderer(step);
     if (chosen === 'sequencer' && sequencer !== null) playSequencer(sequencer, step);
     else if (chosen === 'canvas') drawProcedural(step);
-    playCueSound(step.sound, volumeFor(step.sound));
+    const volume = volumeFor(step.sound);
+    playCueSound(step.sound, volume);
+    const played: AttackCuePlayed = { event: step.event, preset: step.preset, renderer: chosen, sound: volume === null ? '' : step.sound };
+    Hooks.callAll(ATTACK_CUE_PLAYED_HOOK, played);
 }
 
 /**

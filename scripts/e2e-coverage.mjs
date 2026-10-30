@@ -794,6 +794,27 @@ recordDimension('damage-profile.flow', covered['damage-profile.flow'], DAMAGE_PR
 // Keep in sync with ATTACK_CUE_FLOWS there.
 const ATTACK_CUE_FLOWS = ['hit-draws-cue', 'miss-draws-cue', 'world-switch-off-draws-nothing', 'settings-listed'];
 recordDimension('attack-cue.flow', covered['attack-cue.flow'], ATTACK_CUE_FLOWS);
+// tests/e2e/attack-cue-outcomes.spec.ts — ATTACK_CUE_OUTCOMES: every cue event drawn on the GM's and a player's client (#594).
+const ATTACK_CUE_OUTCOMES = [
+    'fire',
+    'hit',
+    'miss',
+    'critical',
+    'jam',
+    'overheat',
+    'explode',
+    'scatter',
+    'blast',
+    'spray',
+    'melee-hit',
+    'melee-miss',
+    'parry',
+    'dodge',
+    'manifest',
+    'phenomena',
+    'perils',
+];
+recordDimension('attack-cue.outcome', covered['attack-cue.outcome'], ATTACK_CUE_OUTCOMES);
 
 // The move mode cleared at turn end and encounter end (#610), tests/e2e/move-mode-turn-end.spec.ts.
 // Keep in sync with MOVE_MODE_FLOWS there.

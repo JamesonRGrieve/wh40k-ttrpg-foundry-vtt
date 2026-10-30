@@ -781,6 +781,13 @@ declare module 'fvtt-types/configuration' {
                 attitude: string,
                 context: import('./src/module/managers/event-tracker.ts').EventTrackerChangeContext,
             ) => void;
+
+            /**
+             * wh40k-rpg attack cues (#594): this client played one cue step — its
+             * event, preset, how it was shown here, and the sound played. Fires on
+             * every client that plays the plan.
+             */
+            'wh40k-rpg.attackCuePlayed': (played: import('./src/module/canvas/attack-cue-canvas.ts').AttackCuePlayed) => void;
         }
     }
 }

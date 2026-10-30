@@ -353,7 +353,7 @@ describe('Talent test hooks reach the roll flow (#101)', () => {
         expect(dialog).toContain('isRowSpent(row, uses, now)');
         expect(dialog).toMatch(/#onToggleSituational[\s\S]{0,400}mod\.spent === true/);
         expect(dialog).toMatch(/if \(manualTotal !== null\) await this\.#stampRoundLimitedRows\(\);/);
-        expect(dialog).toMatch(/sendActionDataToChat\(this\.actionData\);\s*\}\s*await this\.#stampRoundLimitedRows\(\);/);
+        expect(dialog).toMatch(/await this\.#postSimpleAction\(\);\s*\}\s*await this\.#stampRoundLimitedRows\(\);/);
     });
 
     it('the attack card prints the substituted base label', () => {

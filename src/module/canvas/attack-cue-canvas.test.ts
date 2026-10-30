@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CUE_EVENTS, type CueAnchor, type CueEvent, type CueStep } from '../rules/attack-cue.ts';
-import { playCuePlan } from './attack-cue-canvas.ts';
+import { ATTACK_CUE_PLAYED_HOOK, type AttackCuePlayed, playCuePlan } from './attack-cue-canvas.ts';
 
 /**
  * Playback of an attack cue plan on this client (#594): every cue event draws on the
@@ -111,6 +111,7 @@ const TEMPLATES = new Map([
 const addChild = vi.fn();
 const removeChild = vi.fn();
 const audioPlay = vi.fn().mockResolvedValue(undefined);
+const hookCalls = vi.fn();
 let settings = new Map<string, boolean | number>();
 let sequencerActive = false;
 let reducedMotion = false;
@@ -143,6 +144,7 @@ function stubWorld(sceneId = 'scene1'): void {
         return 0;
     });
     vi.stubGlobal('matchMedia', (query: string) => ({ matches: reducedMotion && query.includes('reduced-motion') }));
+    vi.stubGlobal('Hooks', { callAll: hookCalls });
 }
 
 const token = (tokenId: string): CueAnchor => ({ kind: 'token', tokenId });
@@ -268,5 +270,31 @@ describe('playCuePlan — settings and reduced motion', () => {
     it('skips a step whose token is not on the scene', () => {
         playCuePlan({ sceneId: 'scene1', steps: [step('hit', { from: token('gone') })] });
         expect(addChild).not.toHaveBeenCalled();
+    });
+});
+
+describe('playCuePlan — the played hook', () => {
+    it('announces each step with its event, preset, renderer and the sound it played', () => {
+        settings = new Map([['attack-cue-volume', 0.5]]);
+        playCuePlan({ sceneId: 'scene1', steps: [stepFor('fire'), step('jam', { sound: 'click.ogg', preset: 'solid' })] });
+        const fire: AttackCuePlayed = { event: 'fire', preset: 'tracer', renderer: 'canvas', sound: '' };
+        const jam: AttackCuePlayed = { event: 'jam', preset: 'solid', renderer: 'canvas', sound: 'click.ogg' };
+        expect(hookCalls.mock.calls).toEqual([
+            [ATTACK_CUE_PLAYED_HOOK, fire],
+            [ATTACK_CUE_PLAYED_HOOK, jam],
+        ]);
+    });
+
+    it('reports nothing drawn on a client viewing another scene, and no sound with sounds off', () => {
+        stubWorld('elsewhere');
+        settings = new Map([['attack-cue-sounds', false]]);
+        playCuePlan({ sceneId: 'scene1', steps: [step('explode', { sound: 'boom.ogg' })] });
+        expect(hookCalls).toHaveBeenCalledWith(ATTACK_CUE_PLAYED_HOOK, { event: 'explode', preset: 'tracer', renderer: 'none', sound: '' });
+    });
+
+    it('stays silent when the GM has turned attack cues off', () => {
+        settings = new Map([['attack-cues', false]]);
+        playCuePlan({ sceneId: 'scene1', steps: [step('explode')] });
+        expect(hookCalls).not.toHaveBeenCalled();
     });
 });

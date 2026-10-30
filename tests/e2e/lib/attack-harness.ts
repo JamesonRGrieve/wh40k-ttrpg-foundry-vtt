@@ -63,7 +63,8 @@ interface HarnessApi {
     /**
      * Attack with `weaponName` from the `firer` token at the `target` token (or none),
      * rolling the dialog with Foundry's dice fed `faces` in order (each `[face, faces]`;
-     * later draws roll the middle face). Returns the posted messages.
+     * later draws roll the middle face). Returns the posted messages. A psychic power
+     * named `weaponName` is cast the same way, through the psychic cast path.
      */
     attack: (args: {
         firer: string;
@@ -75,6 +76,11 @@ interface HarnessApi {
     }) => Promise<HarnessAttack>;
     /** Click `buttonSelector` inside a rendered chat card, rolling `faces` as above; returns the messages it posted. */
     clickInMessage: (args: { messageId: string; buttonSelector: string; faces: Array<[number, number]>; expectMessages: number }) => Promise<string[]>;
+    /**
+     * Click a control that opens the Roll Test dialog (an evasion's Dodge / Parry), then
+     * roll that dialog with `faces` as above; returns the messages the roll posted.
+     */
+    clickAndRoll: (args: { messageId: string; buttonSelector: string; faces: Array<[number, number]> }) => Promise<string[]>;
     /** Delete everything {@link setup} and the attacks created, and restore the settings it changed. */
     teardown: () => Promise<void>;
 }
@@ -91,6 +97,7 @@ export async function installAttackHarness(page: Page): Promise<void> {
         interface DocLike {
             id: string;
             name: string;
+            type?: string;
             delete: () => Promise<object | undefined>;
         }
         interface ActorLike extends DocLike {
@@ -107,7 +114,9 @@ export async function installAttackHarness(page: Page): Promise<void> {
         }
         interface DialogLike {
             rendered: boolean;
-            actionData?: { rollData?: { weapons?: DocLike[]; weapon?: DocLike | null; update?: () => Promise<void> } };
+            actionData?: {
+                rollData?: { weapons?: DocLike[]; weapon?: DocLike | null; psychicPowers?: DocLike[]; power?: DocLike | null; update?: () => Promise<void> };
+            };
             _systemRoll: () => Promise<void>;
             close: () => Promise<void>;
         }
@@ -128,7 +137,10 @@ export async function installAttackHarness(page: Page): Promise<void> {
             ui: { notifications: { notify: (message: string, type?: string, options?: object) => object } };
         }
         interface TargetedModule {
-            DHTargetedActionManager: { performWeaponAttack: (source: TokenLike, target: TokenLike | null, weapon: DocLike) => void };
+            DHTargetedActionManager: {
+                performWeaponAttack: (source: TokenLike, target: TokenLike | null, weapon: DocLike) => void;
+                performPsychicCast: (source: TokenLike, target: TokenLike | null, power: DocLike) => void;
+            };
         }
         interface BasicModule {
             DHBasicActionManager: { storedRolls: Record<string, object> };
@@ -227,7 +239,8 @@ export async function installAttackHarness(page: Page): Promise<void> {
                         if (!(app instanceof dialogModule.default)) continue;
                         const candidate = app as DialogLike;
                         const rd = candidate.actionData?.rollData;
-                        if (rd?.weapon?.id === weapon.id || rd?.weapons?.some((w) => w.id === weapon.id) === true) return candidate;
+                        const rolled = [rd?.weapon, rd?.power, ...(rd?.weapons ?? []), ...(rd?.psychicPowers ?? [])];
+                        if (rolled.some((doc) => doc?.id === weapon.id)) return candidate;
                     }
                     return null;
                 };
@@ -247,7 +260,8 @@ export async function installAttackHarness(page: Page): Promise<void> {
                 };
                 window.addEventListener('unhandledrejection', onRejection);
                 try {
-                    targeted.DHTargetedActionManager.performWeaponAttack(firerToken, targetToken, weapon);
+                    if (weapon.type === 'psychicPower') targeted.DHTargetedActionManager.performPsychicCast(firerToken, targetToken, weapon);
+                    else targeted.DHTargetedActionManager.performWeaponAttack(firerToken, targetToken, weapon);
                     const opened = await helpers.pollUntil(() => findDialog()?.rendered === true, helpers.scaledMs(15_000));
                     const dialog = findDialog();
                     if (!opened || dialog === null) throw new Error(`no roll dialog for ${weaponName}; notices: ${notices.join(' | ') || 'none'}`);
@@ -284,6 +298,36 @@ export async function installAttackHarness(page: Page): Promise<void> {
                     document.querySelector<HTMLButtonElement>(selector)?.click();
                     await helpers.pollUntil(() => newMessagesSince(before).length >= expectMessages, helpers.scaledMs(15_000));
                 });
+                return newMessagesSince(before);
+            },
+
+            clickAndRoll: async ({ messageId, buttonSelector, faces }) => {
+                const dialogModule = (await import(/* @vite-ignore */ `${moduleRoot}/applications/prompts/unified-roll-dialog.js`)) as DialogModule;
+                const selector = `#sidebar .chat-log .message[data-message-id="${messageId}"] ${buttonSelector}`;
+                await helpers.waitFor(
+                    () => document.querySelector(selector) !== null,
+                    `button ${buttonSelector} on message ${messageId}`,
+                    helpers.scaledMs(10_000),
+                );
+                const openDialogs = (): DialogLike[] =>
+                    [...g.foundry.applications.instances.values()].filter(
+                        (app): app is DialogLike => app instanceof dialogModule.default && (app as DialogLike).rendered,
+                    );
+                const already = new Set(openDialogs());
+                const before = new Set(g.game.messages.contents.map((m) => m.id));
+                document.querySelector<HTMLButtonElement>(selector)?.click();
+                const opened = (): DialogLike | undefined => openDialogs().find((candidate) => !already.has(candidate));
+                if (!(await helpers.pollUntil(() => opened() !== undefined, helpers.scaledMs(15_000))))
+                    throw new Error(`${buttonSelector} opened no roll dialog`);
+                const dialog = opened();
+                try {
+                    await withFaces(faces, async () =>
+                        helpers.withTimeout(dialog?._systemRoll() ?? Promise.resolve(), `roll ${buttonSelector}`, helpers.scaledMs(30_000)),
+                    );
+                } finally {
+                    await dialog?.close().catch(() => undefined);
+                }
+                await helpers.pollUntil(() => newMessagesSince(before).length > 0, helpers.scaledMs(15_000));
                 return newMessagesSince(before);
             },
 

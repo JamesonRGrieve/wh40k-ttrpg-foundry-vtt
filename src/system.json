@@ -36,6 +36,7 @@
         "css/entry.css"
     ],
     "scripts": [],
+    "socket": true,
     "documentTypes": {
         "Actor": {
             "dh2-character": {
