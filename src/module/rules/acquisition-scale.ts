@@ -43,8 +43,7 @@ export type ScaleKey = 'negligible' | 'trivial' | 'minor' | 'standard' | 'major'
 
 /**
  * Acquisition Modifiers Scale column. Default for personal items is Negligible
- * (+30) — this is the modifier Herodor uses for a single pistol in the
- * rules' worked example.
+ * (+30) — the modifier the rules' worked example uses for a single pistol.
  */
 export const ACQUISITION_SCALE_MODIFIERS: Record<ScaleKey, number> = {
     negligible: 30,
@@ -181,7 +180,7 @@ const SIX_DIGIT_TRUNC = (n: number): number => Math.trunc(n);
 /**
  * Pure resolver. No I/O, no actor reads, no random.
  *
- * Composition order matches the RT worked example (Herodor / Lady Fane):
+ * Composition order matches the RT rules' worked example:
  *   PF + Availability (or combined Availability) + Craftsmanship + Scale + extra.
  *
  * Auto-success / auto-fail are evaluated against the **adjusted** PF

@@ -7,7 +7,7 @@
  *
  * Verified against the rules of every FFG-family line: Ganging Up grants +10
  * per attacker beyond the first, to a maximum of +30 (four or more attackers).
- * Cubicle 7's Imperium Maledictum has no equivalent Ganging Up rule, so it
+ * Imperium Maledictum has no equivalent Ganging Up rule, so it
  * resolves to a no-op config (`perAllyBonus: 0`). The mode/cap is transcribed
  * game mechanics (a fixed mapping over the seven GameSystemId values), not
  * compendium content — Direction #7.

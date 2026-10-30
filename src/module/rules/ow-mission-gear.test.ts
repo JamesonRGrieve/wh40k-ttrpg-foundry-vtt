@@ -3,7 +3,7 @@ import {
     GEAR_RESULT_LADDER,
     ORDINARY_BONUS_KEY,
     ORDINARY_DIFFICULTY_BONUS,
-    applyTable63Modifiers,
+    applyMissionGearModifiers,
     resolveGearOutcome,
     rollRandomIssueGear,
 } from './ow-mission-gear';
@@ -76,16 +76,16 @@ describe('OW Mission Gear · resolveGearOutcome (Mission Assignment Gear Results
     });
 });
 
-describe('OW Mission Gear · applyTable63Modifiers', () => {
+describe('OW Mission Gear · applyMissionGearModifiers', () => {
     it('prefixes the Ordinary (+10) bonus to the breakdown', () => {
-        const { target, breakdown } = applyTable63Modifiers(40, []);
+        const { target, breakdown } = applyMissionGearModifiers(40, []);
         expect(target).toBe(50);
         expect(breakdown).toHaveLength(1);
         expect(breakdown[0]).toEqual({ description: ORDINARY_BONUS_KEY, value: 10 });
     });
 
     it('sums gear modifier rows on top of the base + Ordinary bonus', () => {
-        const { target, breakdown } = applyTable63Modifiers(40, [
+        const { target, breakdown } = applyMissionGearModifiers(40, [
             { description: 'short-notice', value: -10 },
             { description: 'specialist-mission', value: 20 },
         ]);
@@ -98,7 +98,7 @@ describe('OW Mission Gear · applyTable63Modifiers', () => {
     });
 
     it('preserves the caller-provided order of modifier rows', () => {
-        const { breakdown } = applyTable63Modifiers(0, [
+        const { breakdown } = applyMissionGearModifiers(0, [
             { description: 'first', value: 5 },
             { description: 'second', value: 5 },
             { description: 'third', value: 5 },

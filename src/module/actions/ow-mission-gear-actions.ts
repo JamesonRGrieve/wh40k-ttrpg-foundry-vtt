@@ -10,7 +10,7 @@
  *
  *   - `owRequestGear`   Open a DialogV2 prompting for gear
  *                       modifier table modifiers, compose the d100 target via
- *                       `applyTable63Modifiers`, roll, resolve the
+ *                       `applyMissionGearModifiers`, roll, resolve the
  *                       outcome via `resolveGearOutcome`, optionally
  *                       `rollRandomIssueGear` for the Random Issue Gear bonus
  *                       item, persist `lastGearOutcome` back to the
@@ -23,7 +23,7 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { emitChatFromTemplate, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import { degreesOfFailure as diceDegreesOfFailure, degreesOfSuccess as diceDegreesOfSuccess } from '../rules/_dice.ts';
-import { type GearOutcome, ORDINARY_BONUS_KEY, applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
+import { type GearOutcome, ORDINARY_BONUS_KEY, applyMissionGearModifiers, resolveGearOutcome, rollRandomIssueGear } from '../rules/ow-mission-gear.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
 import { isActorOfSystem } from './action-host.ts';
 
@@ -54,7 +54,7 @@ const CUSTOM_LABEL_KEY = 'WH40K.OW.MissionGear.Modifier.Title';
 /**
  * Compose the base Logistics target from the actor's persisted scalars.
  * Mission Assignment Gear is built ON TOP of the Logistics Rating —
- * `applyTable63Modifiers` then stacks the +10 Ordinary bonus and the
+ * `applyMissionGearModifiers` then stacks the +10 Ordinary bonus and the
  * gear modifier table's situational deltas.
  *
  * The Logistics scalars are owned by `ow-logistics-template.ts`; this
@@ -202,7 +202,7 @@ export async function owRequestGear(this: MissionGearActionHost, event: Event, _
     // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2.prompt resolves to unknown; the ok callback narrows to ModifierDialogResult
     const { modifiers, rollBonusItem } = dialogResult as unknown as ModifierDialogResult;
 
-    const composed = applyTable63Modifiers(
+    const composed = applyMissionGearModifiers(
         baseTarget,
         modifiers.map(({ description, value }) => ({ description, value })),
     );

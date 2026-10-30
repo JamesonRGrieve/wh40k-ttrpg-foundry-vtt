@@ -19,7 +19,7 @@
  * Mission Assignment Gear test, so the availability and front-condition rows
  * don't apply. Callers pass the squad's Logistics Rating
  * (with Munitorum Influence and the GM's situational modifier) as the base
- * target, and `applyTable63Modifiers` stacks the +10 Ordinary bonus and the
+ * target, and `applyMissionGearModifiers` stacks the +10 Ordinary bonus and the
  * gear modifier table deltas before the d100 is resolved.
  */
 
@@ -64,7 +64,7 @@ export interface MissionGearTarget {
  * those are content-specific and discovered at the consumer (compendium-
  * driven mission documents, GM dialog inputs, etc.).
  */
-export function applyTable63Modifiers(baseTarget: number, modifiers: ReadonlyArray<MissionGearModifier>): MissionGearTarget {
+export function applyMissionGearModifiers(baseTarget: number, modifiers: ReadonlyArray<MissionGearModifier>): MissionGearTarget {
     const breakdown: MissionGearModifier[] = [{ description: ORDINARY_BONUS_KEY, value: ORDINARY_DIFFICULTY_BONUS }, ...modifiers];
     const sum = breakdown.reduce((acc, row) => acc + row.value, 0);
     return { target: baseTarget + sum, breakdown };

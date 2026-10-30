@@ -6,7 +6,7 @@ import { expect, test } from './lib/test';
  * Tier B coverage of the OW Mission Assignment Gear engine (#155).
  *
  * Verifies that the engine module deploys to its expected URL and that
- * its public API (`applyTable63Modifiers`, `resolveGearOutcome`,
+ * its public API (`applyMissionGearModifiers`, `resolveGearOutcome`,
  * `rollRandomIssueGear`, `ORDINARY_DIFFICULTY_BONUS`,
  * `GEAR_RESULT_LADDER`) is reachable from a live Foundry session. The
  * spec exercises a representative roll end-to-end inside the browser
@@ -22,7 +22,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
         const result = await page.evaluate(async () => {
             const moduleUrl = '/systems/wh40k-rpg/module/rules/ow-mission-gear.js';
             let error: string | null = null;
-            let hasApplyTable63Modifiers = false;
+            let hasApplyMissionGearModifiers = false;
             let hasResolveGearOutcome = false;
             let hasRollRandomIssueGear = false;
             let hasOrdinaryBonus = false;
@@ -36,7 +36,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
 
             try {
                 const mod = (await import(moduleUrl)) as {
-                    applyTable63Modifiers?: (
+                    applyMissionGearModifiers?: (
                         base: number,
                         mods: ReadonlyArray<{ description: string; value: number }>,
                     ) => { target: number; breakdown: ReadonlyArray<{ description: string; value: number }> };
@@ -49,14 +49,14 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
                     GEAR_RESULT_LADDER?: ReadonlyArray<object>;
                 };
 
-                hasApplyTable63Modifiers = typeof mod.applyTable63Modifiers === 'function';
+                hasApplyMissionGearModifiers = typeof mod.applyMissionGearModifiers === 'function';
                 hasResolveGearOutcome = typeof mod.resolveGearOutcome === 'function';
                 hasRollRandomIssueGear = typeof mod.rollRandomIssueGear === 'function';
                 hasOrdinaryBonus = mod.ORDINARY_DIFFICULTY_BONUS === 10;
                 hasGearResultLadder = Array.isArray(mod.GEAR_RESULT_LADDER) && mod.GEAR_RESULT_LADDER.length >= 4;
 
-                if (mod.applyTable63Modifiers !== undefined) {
-                    const composed = mod.applyTable63Modifiers(50, [{ description: 'remote-warzone', value: -10 }]);
+                if (mod.applyMissionGearModifiers !== undefined) {
+                    const composed = mod.applyMissionGearModifiers(50, [{ description: 'remote-warzone', value: -10 }]);
                     composedTarget = composed.target;
                     ordinaryRowValue = composed.breakdown[0]?.value ?? -1;
                 }
@@ -78,7 +78,7 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
 
             return {
                 error,
-                hasApplyTable63Modifiers,
+                hasApplyMissionGearModifiers,
                 hasResolveGearOutcome,
                 hasRollRandomIssueGear,
                 hasOrdinaryBonus,
@@ -93,13 +93,13 @@ test.describe.serial('OW Mission Assignment Gear engine (Tier B)', () => {
         });
 
         expect(result.error, `engine probe error: ${result.error ?? ''}`).toBeNull();
-        expect(result.hasApplyTable63Modifiers, 'applyTable63Modifiers must be exported').toBe(true);
+        expect(result.hasApplyMissionGearModifiers, 'applyMissionGearModifiers must be exported').toBe(true);
         expect(result.hasResolveGearOutcome, 'resolveGearOutcome must be exported').toBe(true);
         expect(result.hasRollRandomIssueGear, 'rollRandomIssueGear must be exported').toBe(true);
         expect(result.hasOrdinaryBonus, 'ORDINARY_DIFFICULTY_BONUS must equal 10').toBe(true);
         expect(result.hasGearResultLadder, 'GEAR_RESULT_LADDER must hold all four tiers').toBe(true);
         // Base 50 + Ordinary +10 + remote-warzone -10 = 50.
-        expect(result.composedTarget, 'applyTable63Modifiers should compose target correctly').toBe(50);
+        expect(result.composedTarget, 'applyMissionGearModifiers should compose target correctly').toBe(50);
         expect(result.ordinaryRowValue, 'first breakdown row must be the Ordinary +10 bonus').toBe(10);
         expect(result.surrenderKitResolved, '4 DoF must resolve to surrender-kit').toBe(true);
         expect(result.bonusItemsResolved, '4 DoS must resolve to bonus-items').toBe(true);

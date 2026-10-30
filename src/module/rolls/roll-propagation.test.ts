@@ -550,7 +550,7 @@ describe.each(SYSTEMS)('a contextual damage profile on the hit (%s)', (gameSyste
     });
 
     describe('table damage', () => {
-        const TABLE_UUID = 'Compendium.wh40k-rpg.dh1-radical-rolltables.RollTable.15df0cf72c366222';
+        const TABLE_UUID = 'Compendium.wh40k-rpg.dh1-sample-rolltables.RollTable.15df0cf72c366222';
         const discharge = {
             name: 'Discharge',
             formula: '1d100',

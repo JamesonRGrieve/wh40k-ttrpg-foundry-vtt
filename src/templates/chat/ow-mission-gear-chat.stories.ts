@@ -1,15 +1,15 @@
 /**
  * Storybook stories for the Only War Mission Assignment Gear chat card
  * (#155). Exercises three outcomes (surrender-kit, standard-kit, bonus-
- * items with a Table 6-5 random issue roll) so review can verify the
- * breakdown layout against `applyTable63Modifiers` / `resolveGearOutcome`
+ * items with a Random Issue Gear roll) so review can verify the
+ * breakdown layout against `applyMissionGearModifiers` / `resolveGearOutcome`
  * in `src/module/rules/ow-mission-gear.ts`.
  */
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
-import { applyTable63Modifiers, resolveGearOutcome, rollRandomIssueGear } from '../../module/rules/ow-mission-gear.ts';
+import { applyMissionGearModifiers, resolveGearOutcome, rollRandomIssueGear } from '../../module/rules/ow-mission-gear.ts';
 import chatSrc from './ow-mission-gear-chat.hbs?raw';
 
 initializeStoryHandlebars();
@@ -51,7 +51,7 @@ function breakdownFromTarget(modifierLabels: ReadonlyArray<{ description: string
     target: number;
     breakdown: ReadonlyArray<BreakdownRow>;
 } {
-    const composed = applyTable63Modifiers(
+    const composed = applyMissionGearModifiers(
         50,
         modifierLabels.map(({ description, value }) => ({ description, value })),
     );
