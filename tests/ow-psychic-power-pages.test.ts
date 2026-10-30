@@ -1,17 +1,17 @@
 /**
- * Guard: every Only War psychic power cites a page in the OW core rules' psychic
- * powers chapter (content#39).
+ * Guard: every Only War psychic power cites a page in its book's psychic powers
+ * chapter (content#39).
  *
  * Endurance cited the page of the Athletics skill, and seventeen other powers
  * cited a page in the armoury chapter. The expected pages — the chapter's printed
  * span and the page each corrected power starts on — are content, so they live in
  * the private content repo (`checks/ow-psychic-power-pages.json`), not here.
  *
- * The OW core book is not named here: it is the book most of the OW branches'
- * raw psychic-power citations name.
+ * The book is not named here: it is the one most of the OW branches' raw
+ * psychic-power citations name (the "main book" below).
  *
- * The OW branch of a power can live on a canonical in another line's pack (the
- * DH2 core powers carry `source.ow`, and the OW pack stubs them), so every
+ * The OW branch of a power can live on a canonical in another line's pack (some
+ * DH2 powers carry `source.ow`, and the OW pack stubs them), so every
  * `psychicPower` source document is read, whatever its group.
  */
 
@@ -55,10 +55,10 @@ function sourceFiles(dir: string): string[] {
 }
 
 /**
- * Every psychic power with a raw citation of the OW core book: its file, name and
- * cited page. The core book is the one most raw OW psychic-power citations name.
+ * Every psychic power with a raw citation of the main OW book: its file, name and
+ * cited page. The main book is the one most raw OW psychic-power citations name.
  */
-function owCorePowers(): Array<{ file: string; name: string; page: string }> {
+function owMainBookPowers(): Array<{ file: string; name: string; page: string }> {
     const byBook = new Map<string, Array<{ file: string; name: string; page: string }>>();
     for (const path of sourceFiles(ROOT)) {
         const doc = JSON.parse(readFileSync(path, 'utf8')) as PackDoc;
@@ -68,28 +68,28 @@ function owCorePowers(): Array<{ file: string; name: string; page: string }> {
         powers.push({ file: relative(ROOT, path), name: doc.name ?? '', page: ow.page ?? '' });
         byBook.set(ow.book, powers);
     }
-    let core: Array<{ file: string; name: string; page: string }> = [];
-    for (const powers of byBook.values()) if (powers.length > core.length) core = powers;
-    return core;
+    let main: Array<{ file: string; name: string; page: string }> = [];
+    for (const powers of byBook.values()) if (powers.length > main.length) main = powers;
+    return main;
 }
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('Only War psychic powers cite the OW core psychic powers chapter (content#39)', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)("Only War psychic powers cite their book's psychic powers chapter (content#39)", () => {
     // Read in beforeAll: a skipped describe's body still runs to collect its tests.
     let powers: Array<{ file: string; name: string; page: string }> = [];
     let checks: PageChecks = { chapter: { first: 0, last: 0 }, powers: {} };
     beforeAll(() => {
-        powers = owCorePowers();
+        powers = owMainBookPowers();
         checks = JSON.parse(readFileSync(resolve(ROOT, 'checks/ow-psychic-power-pages.json'), 'utf8')) as PageChecks;
     });
 
-    it('finds the OW core powers and the expected pages, so the guard is not vacuous', () => {
+    it("finds the main book's powers and the expected pages, so the guard is not vacuous", () => {
         expect(powers.length).toBeGreaterThanOrEqual(30);
         expect(checks.chapter.first).toBeGreaterThan(0);
         expect(checks.chapter.last).toBeGreaterThanOrEqual(checks.chapter.first);
         expect(Object.keys(checks.powers).length).toBeGreaterThan(0);
     });
 
-    it('every OW core psychic power cites a page inside the psychic powers chapter', () => {
+    it('every main-book psychic power cites a page inside the psychic powers chapter', () => {
         const { first, last } = checks.chapter;
         const inChapter = (page: string): boolean => /^\d+$/.test(page) && Number(page) >= first && Number(page) <= last;
         const offenders = powers.filter((power) => !inChapter(power.page)).map((power) => `${power.name} (${power.file}): ${power.page}`);
