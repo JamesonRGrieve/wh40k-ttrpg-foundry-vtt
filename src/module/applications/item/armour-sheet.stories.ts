@@ -58,6 +58,24 @@ export const EditMode: Story = {
     },
 };
 
+/** Special property chips show their labels and each remove button names its property (#702). */
+export const SpecialPropertyChips: Story = {
+    args: {
+        overrides: { inEditMode: true },
+    },
+    play: async ({ canvasElement }) => {
+        const removes = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="removeProperty"]')];
+        await expect(removes.map((b) => b.dataset['property'])).toEqual(['sealed', 'reinforced']);
+        await expect(removes.map((b) => b.parentElement?.textContent.trim())).toEqual(['Sealed', 'Reinforced']);
+        // After the placeholder, one option per property still to add, by id and label.
+        const options = [...canvasElement.querySelectorAll<HTMLOptionElement>('select[data-sheet-local="new-property"] option')].slice(1);
+        await expect(options.map((o) => [o.value, o.textContent.trim()])).toEqual([
+            ['blessed', 'Blessed'],
+            ['camouflage', 'Camouflage'],
+        ]);
+    },
+};
+
 /**
  * The header's name input shows the armour's name. Its type select reads
  * "Carapace Armour" too (the localised type label), so the name input is

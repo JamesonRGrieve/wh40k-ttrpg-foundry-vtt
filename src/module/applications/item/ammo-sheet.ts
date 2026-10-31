@@ -96,16 +96,13 @@ export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet<AmmoIt
      */
     static async #addQuality(this: AmmoSheet, _event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset['type']; // 'added' or 'removed'
-        const input = this.element.querySelector<HTMLInputElement>(`[name="new-${type}-quality"]`);
-        const quality = input?.value.trim() ?? '';
-
+        const key = `new-${type}-quality`;
+        const quality = this.sheetLocalValue(key);
         if (quality === '') return;
 
         const field = type === 'added' ? 'addedQualities' : 'removedQualities';
         await this.addToSetField(field, quality);
-
-        // Clear input
-        if (input !== null) input.value = '';
+        this.clearSheetLocal(key);
     }
 
     /**

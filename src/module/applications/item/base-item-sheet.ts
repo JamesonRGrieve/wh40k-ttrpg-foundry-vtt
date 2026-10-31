@@ -318,6 +318,30 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     /* -------------------------------------------- */
 
     /**
+     * A sheet-local control (`data-sheet-local`: the picker or text box an Add button
+     * reads) holds no document data, so changing it does not submit the sheet. The
+     * submit re-rendered the sheet and cleared the choice before Add was clicked, so
+     * Add read an empty value and did nothing (#702).
+     */
+    override _onChangeForm(formConfig: foundry.applications.api.ApplicationV2.FormConfiguration, event: Event): void {
+        if (event.target instanceof HTMLElement && event.target.closest('[data-sheet-local]') !== null) return;
+        super._onChangeForm(formConfig, event);
+    }
+
+    /** The value of the sheet-local control `key` (see {@link _onChangeForm}), trimmed; `''` when absent. */
+    sheetLocalValue(key: string): string {
+        return this.element.querySelector<HTMLInputElement | HTMLSelectElement>(`[data-sheet-local="${key}"]`)?.value.trim() ?? '';
+    }
+
+    /** Clear the sheet-local control `key` after its value is used. */
+    clearSheetLocal(key: string): void {
+        const control = this.element.querySelector<HTMLInputElement | HTMLSelectElement>(`[data-sheet-local="${key}"]`);
+        if (control !== null) control.value = '';
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Prepare form data for submission.
      * Override to clean img field before validation (V13 strictness).
      * @override

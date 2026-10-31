@@ -4,7 +4,6 @@
 
 import type ArmourData from '../../data/item/armour.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
-import { capitalize } from '../../utils/format.ts';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
@@ -91,8 +90,9 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
         // Convert coverage Set to array for template
         context['coverageArray'] = Array.from(sys.coverage);
 
-        // Add propertiesArray for safe template access
-        context['propertiesArray'] = Array.from(sys.properties);
+        // Each property as `{ id, label, description }` — the chips and the remove buttons
+        // read those fields; bare ids rendered blank chips that removed nothing (#702).
+        context['propertiesArray'] = sys.propertiesArray;
 
         // Add modifications array for safe template access
         context['modificationsArray'] = sys.modifications;
@@ -104,21 +104,9 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
      * Get available properties with localized labels.
      */
     _getAvailableProperties(): Record<string, { label: string }> {
-        const available = ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
-        // #429: build the option map, then project it through the shared mixin helper
-        // (excluding already-added properties) rather than hand-rolling the loop. The
-        // record shape the template consumes is preserved by re-collecting the rows.
-        const options: Record<string, { label: string }> = {};
-        for (const id of available) {
-            const pascalCase = id
-                .split('-')
-                .map((s) => capitalize(s))
-                .join('');
-            options[id] = { label: `WH40K.ArmourProperty.${pascalCase}` };
-        }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system is the DataModel union; `properties` is the armour Set field
-        const selected = (this.item.system as { properties: Set<string> }).properties;
-        const rows = this.projectSetOptions(options, { exclude: selected });
+        // #429: the configured properties, less those already added, projected through the
+        // shared mixin helper; the record shape the template consumes is re-collected.
+        const rows = this.projectSetOptions(CONFIG.wh40k.armourProperties, { exclude: this.item.system.properties });
         return Object.fromEntries(rows.map((r) => [r.key, { label: r.label }]));
     }
 
@@ -182,14 +170,10 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
      * @param {HTMLElement} target
      */
     static async #addProperty(this: ArmourSheet, _event: PointerEvent, _target: HTMLElement): Promise<void> {
-        const select = this.element.querySelector<HTMLSelectElement>("[name='new-property']");
-        const property = select?.value ?? '';
+        const property = this.sheetLocalValue('new-property');
         if (property === '') return;
-
         await this.addToSetField('properties', property);
-
-        // Reset select
-        if (select !== null) select.value = '';
+        this.clearSheetLocal('new-property');
     }
 
     /**

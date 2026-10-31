@@ -673,13 +673,15 @@ export function mockArmourSheetContext(overrides?: DeepPartial<MockObjectMap>): 
             inEditMode: false,
             editable: true,
             hideThroneGelt: false,
+            // The shapes `ArmourSheet#_prepareContext` builds: `ArmourData#propertiesArray`
+            // rows and the `{ id: { label } }` add-property options (#702).
             propertiesArray: [
-                { label: 'Sealed', description: 'Can operate in hostile atmospheres.' },
-                { label: 'Bulky', description: 'Counts as cumbersome in confined spaces.' },
+                { id: 'sealed', label: 'Sealed', description: 'Can operate in hostile atmospheres.' },
+                { id: 'reinforced', label: 'Reinforced', description: 'Extra structural support.' },
             ],
             availableProperties: {
-                sealed: 'Sealed',
-                bulky: 'Bulky',
+                blessed: { label: 'Blessed' },
+                camouflage: { label: 'Camouflage' },
             },
             modificationsArray: [{ name: 'Ceramite Plating', summary: '+2 vs flame', description: 'Extra protection against flame weapons.' }],
             effects: [mockActiveEffect({ name: 'Blessing of Saint Drusus' })],

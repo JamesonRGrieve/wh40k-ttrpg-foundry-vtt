@@ -313,7 +313,7 @@
             {{#if inEditMode}}
             {{#if availableProperties}}
             <div class="tw-flex tw-gap-2 tw-mt-2">
-              <select class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.15)] tw-text-white focus:tw-outline-none focus:tw-border-gold" name="new-property">
+              <select class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[rgba(255,255,255,0.15)] tw-text-white focus:tw-outline-none focus:tw-border-gold" data-sheet-local="new-property">
                 <option value="">{{localize "WH40K.ItemSheet.Armour.AddPropertyOption"}}</option>
                 {{#each availableProperties as |prop key|}}
                 <option value="{{key}}">{{prop.label}}</option>

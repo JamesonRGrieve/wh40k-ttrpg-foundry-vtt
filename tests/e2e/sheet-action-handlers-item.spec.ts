@@ -519,11 +519,12 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                         notes['armour-sheet::toggleCoverage'] = `flow threw: ${err instanceof Error ? err.message : String(err)}`;
                     }
 
-                    // addProperty — reads "new-property" select; we inject a hidden input with the same name so the handler picks it up.
+                    // addProperty — reads the sheet-local "new-property" select (not rendered on a closed
+                    // owned sheet); we inject one under the same key so the handler picks it up.
                     try {
                         const root = sheet.element ?? null;
                         const injected = document.createElement('select');
-                        injected.name = 'new-property';
+                        injected.dataset['sheetLocal'] = 'new-property';
                         const opt = document.createElement('option');
                         opt.value = 'blessed';
                         opt.selected = true;
@@ -707,9 +708,9 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                     // the handler read the template's empty input and bailed.
                     try {
                         const root = sheet.element ?? null;
-                        const field = root?.querySelector<HTMLInputElement>('[name="new-added-quality"]') ?? null;
+                        const field = root?.querySelector<HTMLInputElement>('[data-sheet-local="new-added-quality"]') ?? null;
                         if (field === null) {
-                            notes['ammo-sheet::addQuality'] = 'sheet has no [name="new-added-quality"] input';
+                            notes['ammo-sheet::addQuality'] = 'sheet has no sheet-local new-added-quality input';
                         } else {
                             field.value = 'powerful';
                             const res = await runHandler(sheet, 'addQuality', makeTarget({ type: 'added' }));
