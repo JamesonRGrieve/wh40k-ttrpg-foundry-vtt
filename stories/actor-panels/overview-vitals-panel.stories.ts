@@ -206,3 +206,29 @@ function criticallyWounded(systemId: GameSystemId): Story {
 
 export const CriticallyWoundedDH2: Story = criticallyWounded('dh2');
 export const CriticallyWoundedRT: Story = criticallyWounded('rt');
+
+/** The hearts' right edge may sit this far inside the row's (sub-pixel rounding). */
+const EDGE_TOLERANCE_PX = 2;
+
+/**
+ * Wounds row: the value/max total sits beside the Wounds label and the hearts keep to
+ * the row's right margin. A second auto-margin on the total used to split the free
+ * space and centre the hearts.
+ */
+export const WoundsRowLayout: Story = {
+    args: { wounds: { value: 13, max: 13, critical: 0 } },
+    play: async ({ canvasElement }) => {
+        const total = canvasElement.querySelector<HTMLElement>('[data-wh40k-hook="wounds-total"]');
+        await expect(total?.textContent.trim()).toBe('13/13');
+        const row = total?.parentElement;
+        const label = total?.previousElementSibling;
+        await expect(label?.textContent.trim()).toBe('Wounds');
+        const hearts = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="setWoundPip"]')];
+        await expect(hearts.length).toBe(13);
+        const rowRight = row?.getBoundingClientRect().right ?? 0;
+        const heartsRight = Math.max(...hearts.map((h) => h.getBoundingClientRect().right));
+        await expect(rowRight - heartsRight).toBeLessThanOrEqual(EDGE_TOLERANCE_PX);
+        // The total follows the label, not the hearts.
+        await expect((total?.getBoundingClientRect().left ?? 0) < Math.min(...hearts.map((h) => h.getBoundingClientRect().left))).toBe(true);
+    },
+};

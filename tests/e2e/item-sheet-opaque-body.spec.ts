@@ -33,7 +33,7 @@ interface SheetWindow {
         actors: {
             get: (id: string) =>
                 | {
-                      createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string }>>;
+                      createEmbeddedDocuments: (type: string, data: object[]) => Promise<Array<{ id: string; type: string }>>;
                       items: { get: (id: string) => { sheet: { id: string; render: (o: { force: boolean }) => Promise<object> } } | undefined };
                   }
                 | undefined;
@@ -107,9 +107,14 @@ test.describe.serial('item sheet bodies are opaque (Tier B, #694)', () => {
                 { name: 'Unwritten Pact', type: 'darkPact' },
                 { name: 'Auspex', type: 'gear' },
             ]);
-            return items.map((item) => item.id);
+            // By type, not position: under load the created documents can come back in
+            // another order, and the gear sheet was then read as the pact's.
+            return {
+                bareId: items.find((item) => item.type === 'darkPact')?.id ?? '',
+                gearId: items.find((item) => item.type === 'gear')?.id ?? '',
+            };
         }, actorId);
-        const [bareId = '', gearId = ''] = created;
+        const { bareId, gearId } = created;
         const sheets: Array<[string, string, string | null]> = [
             // The book's pact grants 2d10+10 Corruption; a pact with no formula reads 0.
             ['dark-pact', pactId, '2d10+10'],

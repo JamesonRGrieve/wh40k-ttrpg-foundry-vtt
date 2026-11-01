@@ -24,10 +24,12 @@
                 {{/unless}}
                 <div class="tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{!-- Wounds — heart pip strip (#315), consistent with Fatigue/Fate.
-                         Filled hearts = current wounds out of max; the value/max
-                         readout stays for an at-a-glance number. --}}
+                         Filled hearts = current wounds out of max. The value/max
+                         readout sits beside the label and the hearts keep to the
+                         right margin; a second trailing auto-margin centred them. --}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
                         icon="fa-heart" label=(localize "WH40K.Status.Wounds.Label")}}
+                        <span data-wh40k-hook="wounds-total" class="tw-text-[0.7rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-secondary)] tw-whitespace-nowrap">{{system.wounds.value}}/{{system.wounds.max}}</span>
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
                             count=system.wounds.max
                             current=system.wounds.value
@@ -35,7 +37,6 @@
                             dataAttr="wound-index"
                             iconClass="fa-heart"
                             titlePrefix=(localize "WH40K.Wounds")}}
-                        <span class="tw-ml-auto tw-text-[0.7rem] tw-font-bold tw-font-alt tw-text-[color:var(--color-text-secondary)]">{{system.wounds.value}}/{{system.wounds.max}}</span>
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
 
                     {{!-- Critical Wounds --}}

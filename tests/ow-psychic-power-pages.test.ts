@@ -22,6 +22,13 @@ import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = resolve(__dirname, '../src/packs-private');
 
+/**
+ * The setup walks the private pack sources synchronously. Alone it takes well under a
+ * second; inside the pre-commit hook, competing for disk with the ratchets and the other
+ * workers, it has run past vitest's 10 s default.
+ */
+const PACK_SCAN_TIMEOUT_MS = 60_000;
+
 /** The expected pages, as the private content authors them. */
 interface PageChecks {
     /** The psychic powers chapter's printed span, inclusive. */
@@ -80,7 +87,7 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)("Only War psychic powers cite their book's
     beforeAll(() => {
         powers = owMainBookPowers();
         checks = JSON.parse(readFileSync(resolve(ROOT, 'checks/ow-psychic-power-pages.json'), 'utf8')) as PageChecks;
-    });
+    }, PACK_SCAN_TIMEOUT_MS);
 
     it("finds the main book's powers and the expected pages, so the guard is not vacuous", () => {
         expect(powers.length).toBeGreaterThanOrEqual(30);
