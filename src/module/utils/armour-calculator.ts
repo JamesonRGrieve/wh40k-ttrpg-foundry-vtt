@@ -57,7 +57,7 @@ export interface ComputeArmourOptions {
  * stack; DH1, RT and DW print nothing on it, so the higher one counts in every
  * line.
  */
-const ARMOUR_TRAIT_IDENTIFIERS: ReadonlySet<string> = new Set(['machine', 'naturalArmour']);
+const ARMOUR_TRAIT_IDENTIFIERS: ReadonlySet<string> = new Set(['machine', 'natural-armour']);
 
 /** The first integer in a string, or `null` when there is none. */
 function firstInteger(text: string | null | undefined): number | null {

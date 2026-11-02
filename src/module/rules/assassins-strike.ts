@@ -13,6 +13,7 @@
  */
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import { itemIdentifier } from '../utils/item-identifier.ts';
 
 /**
  * The talent's stable `system.identifier`. Matching on this instead of the
@@ -20,7 +21,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
  * name-list and routes through the same identifier key the rest of the system
  * uses (item.ts §"Items are matched by system.identifier"). Direction #7.
  */
-const ASSASSINS_STRIKE_IDENTIFIER = 'assassinStrike';
+const ASSASSINS_STRIKE_IDENTIFIER = 'assassin-strike';
 
 /** The post-attack test the talent's document authors in `system.rollConfig`. */
 interface AssassinsStrikeTest {
@@ -54,8 +55,8 @@ export function assassinsStrikeTest(actor: WH40KBaseActor | ActorWithItems | nul
     if (actor == null) return null;
     if (!hasItemsLookup(actor)) return null;
     for (const item of actor.items) {
-        if (item.type !== 'talent' || item.system?.identifier !== ASSASSINS_STRIKE_IDENTIFIER) continue;
-        const config = item.system.rollConfig;
+        if (item.type !== 'talent' || itemIdentifier(item) !== ASSASSINS_STRIKE_IDENTIFIER) continue;
+        const config = item.system?.rollConfig;
         const skill = config?.skill ?? '';
         if (skill === '') return null;
         return { skill, modifier: config?.modifier ?? 0 };

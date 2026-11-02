@@ -5,6 +5,7 @@
  * never from its name.
  */
 
+import { canonicalIdentifier } from './item-identifier.ts';
 import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
 
 /** The pack metadata the query helpers read: its id and label, and the flags that place it. */
@@ -118,8 +119,10 @@ export interface OwnedItemLinkQuery {
 export function pickUniqueLinkCandidate(candidates: readonly LinkCandidate[], query: OwnedItemLinkQuery): string | null {
     const onLine = candidates.filter((c) => c.type === query.type && isLineOrHomebrewPack(c.pack, query.linePrefix));
     let matches: LinkCandidate[] = [];
-    if (query.identifier !== '') matches = onLine.filter((c) => c.identifier === query.identifier);
-    else if (query.name !== '') matches = onLine.filter((c) => c.name === query.name);
+    if (query.identifier !== '') {
+        const wanted = canonicalIdentifier(query.identifier);
+        matches = onLine.filter((c) => canonicalIdentifier(c.identifier) === wanted);
+    } else if (query.name !== '') matches = onLine.filter((c) => c.name === query.name);
     return matches.length === 1 ? matches[0]?.uuid ?? null : null;
 }
 
@@ -143,14 +146,23 @@ export async function recoverOwnedItemLink(query: OwnedItemLinkQuery): Promise<s
 /**
  * UUID of the system compendium Item of `type` whose `system.identifier` is
  * `identifier`, preferring the given line's packs — so a mechanic can reach a
- * content document by its stable identifier instead of its name. The line's own
- * packs are searched first; every line's index is loaded only when they miss.
+ * content document by its stable identifier instead of its name (in either
+ * identifier form). The line's own packs are searched first; every line's index
+ * is loaded only when they miss.
  */
 export async function findItemUuidByIdentifier(type: string, identifier: string, linePrefix: string): Promise<string | null> {
+    const wanted = canonicalIdentifier(identifier);
     const collect = (entry: CompendiumIndexEntry, pack: { readonly metadata: PackMetadataLike }): IdentifiedPackEntry | undefined => {
         const system = entry['system'];
         if (entry.type !== type || typeof system !== 'object' || system === null) return undefined;
-        if (!('identifier' in system) || system.identifier !== identifier || entry.uuid === undefined) return undefined;
+        if (
+            !('identifier' in system) ||
+            typeof system.identifier !== 'string' ||
+            canonicalIdentifier(system.identifier) !== wanted ||
+            entry.uuid === undefined
+        ) {
+            return undefined;
+        }
         return { uuid: entry.uuid, pack: pack.metadata };
     };
     const onLine = (await queryItemIndex(['system.identifier'], collect, true, (metadata) => isLinePack(metadata, linePrefix))).at(0);

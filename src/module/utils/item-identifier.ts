@@ -11,17 +11,29 @@ export interface IdentifiableItem {
     system?: object | undefined;
 }
 
-/** The item's `system.identifier`, or `''` when it carries none. */
+/**
+ * An identifier in its canonical kebab-case form. Identifiers are generated
+ * kebab-case from the name (`adamantium-faith`); documents authored earlier, and
+ * owned items copied from them, may still carry the legacy camelCase form
+ * (`adamantiumFaith`). Folding camelCase here lets both forms match, so a world
+ * whose stored items predate the kebab-case packs needs no migration.
+ */
+export function canonicalIdentifier(identifier: string): string {
+    return identifier.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+/** The item's `system.identifier` in canonical form, or `''` when it carries none. */
 export function itemIdentifier(item: IdentifiableItem): string {
     const system = item.system;
     if (system === undefined || !('identifier' in system)) return '';
-    return typeof system.identifier === 'string' ? system.identifier : '';
+    return typeof system.identifier === 'string' ? canonicalIdentifier(system.identifier) : '';
 }
 
-/** Whether `items` holds an item of `type` whose `system.identifier` is `identifier`. */
+/** Whether `items` holds an item of `type` whose `system.identifier` is `identifier` (in either form). */
 export function hasItemWithIdentifier(items: Iterable<IdentifiableItem>, type: string, identifier: string): boolean {
+    const wanted = canonicalIdentifier(identifier);
     for (const item of items) {
-        if (item.type === type && itemIdentifier(item) === identifier) return true;
+        if (item.type === type && itemIdentifier(item) === wanted) return true;
     }
     return false;
 }

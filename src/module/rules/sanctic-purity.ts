@@ -23,7 +23,7 @@ import { hasItemWithIdentifier, type IdentifiableItem } from '../utils/item-iden
 export const SANCTIC_PURITY_FATE_COST = 1 as const;
 
 /** The Sanctic Purity talent document's `system.identifier`. */
-const SANCTIC_PURITY_IDENTIFIER = 'sancticPurity';
+const SANCTIC_PURITY_IDENTIFIER = 'sanctic-purity';
 
 /** Minimal duck-type for an actor that exposes its owned `items`. */
 interface ActorWithItems {

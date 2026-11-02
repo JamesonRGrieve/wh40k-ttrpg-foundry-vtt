@@ -9,10 +9,13 @@
  *    (cumulative with Wielder/Master).
  *
  * The talents are read from the fighter's owned talents by their
- * `system.identifier` (`twoWeaponWielder` / `twoWeaponMaster` /
- * `ambidextrous`) and, for Wielder and Master, the `system.specialization`
- * the character picked (Melee / Ranged) — never by display name.
+ * `system.identifier` (`two-weapon-wielder` / `two-weapon-master` /
+ * `ambidextrous`, or the legacy camelCase form) and, for Wielder and Master,
+ * the `system.specialization` the character picked (Melee / Ranged) — never by
+ * display name.
  */
+
+import { canonicalIdentifier } from '../utils/item-identifier.ts';
 
 export interface TwoWeaponPenalties {
     /** Modifier applied to the main-hand attack test. Always ≤ 0. */
@@ -34,9 +37,14 @@ export interface TwoWeaponContext {
     talents: readonly TwoWeaponTalent[];
 }
 
-const WIELDER_IDENTIFIER = 'twoWeaponWielder';
-const MASTER_IDENTIFIER = 'twoWeaponMaster';
+const WIELDER_IDENTIFIER = 'two-weapon-wielder';
+const MASTER_IDENTIFIER = 'two-weapon-master';
 const AMBIDEXTROUS_IDENTIFIER = 'ambidextrous';
+
+/** Whether a talent carries `identifier`, in either identifier form. */
+function isTalent(talent: TwoWeaponTalent, identifier: string): boolean {
+    return canonicalIdentifier(talent.identifier) === identifier;
+}
 
 /**
  * Whether a Wielder / Master talent's picked specialisation covers this attack's
@@ -51,7 +59,7 @@ function coversFlavour(specialization: string, isMelee: boolean): boolean {
 
 /** Whether the fighter owns the talent `identifier` for this attack's flavour. */
 function hasFlavourTalent(ctx: TwoWeaponContext, identifier: string): boolean {
-    return ctx.talents.some((talent) => talent.identifier === identifier && coversFlavour(talent.specialization, ctx.isMelee));
+    return ctx.talents.some((talent) => isTalent(talent, identifier) && coversFlavour(talent.specialization, ctx.isMelee));
 }
 
 /** Whether the fighter has the matching-flavour Wielder (or Master, which includes it). */
@@ -66,7 +74,7 @@ function hasWielderFor(ctx: TwoWeaponContext): boolean {
 export function resolveTwoWeaponPenalties(ctx: TwoWeaponContext): TwoWeaponPenalties {
     const hasMaster = hasFlavourTalent(ctx, MASTER_IDENTIFIER);
     const hasWielder = hasWielderFor(ctx);
-    const hasAmbidextrous = ctx.talents.some((talent) => talent.identifier === AMBIDEXTROUS_IDENTIFIER);
+    const hasAmbidextrous = ctx.talents.some((talent) => isTalent(talent, AMBIDEXTROUS_IDENTIFIER));
 
     // Baseline −20 / −20. Wielder zeroes main-hand. Master zeroes both.
     // Ambidextrous reduces the off-hand penalty by 10 (never raises above 0).

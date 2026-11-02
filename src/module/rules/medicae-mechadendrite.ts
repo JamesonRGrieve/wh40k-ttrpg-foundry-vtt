@@ -29,6 +29,7 @@
 import type { WH40KItem } from '../documents/item.ts';
 import { emitChatFromTemplate, getDegreeForMode, isD100Success, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument, WH40KSkill } from '../types/global.d.ts';
+import { canonicalIdentifier } from '../utils/item-identifier.ts';
 import { type Rng, rollD100 } from './_dice.ts';
 import { removeEffects } from './active-effects.ts';
 
@@ -44,13 +45,8 @@ export const MEDICAE_MECHADENDRITE = {
     staunchActionKind: 'half' as const,
 } as const;
 
-/** The Medicae Mechadendrite document's `system.identifier` (camelCase form). */
-const MEDICAE_MECHADENDRITE_IDENTIFIER = 'medicaeMechadendrite';
-
-/** Normalise a kebab-case identifier to camelCase, so `medicae-mechadendrite` and `medicaeMechadendrite` compare equal. */
-function camelIdentifier(identifier: string): string {
-    return identifier.replace(/-([a-z0-9])/g, (_match, char: string) => char.toUpperCase());
-}
+/** The Medicae Mechadendrite document's `system.identifier`, in canonical form. */
+const MEDICAE_MECHADENDRITE_IDENTIFIER = 'medicae-mechadendrite';
 
 /** The owned-item surface the mechadendrite readers need. */
 interface MechadendriteItemLike {
@@ -64,7 +60,7 @@ interface MechadendriteItemLike {
  */
 export function isMedicaeMechadendrite(item: MechadendriteItemLike): boolean {
     if (item.isCybernetic !== true) return false;
-    return camelIdentifier(item.system?.identifier ?? '') === MEDICAE_MECHADENDRITE_IDENTIFIER;
+    return canonicalIdentifier(item.system?.identifier ?? '') === MEDICAE_MECHADENDRITE_IDENTIFIER;
 }
 
 /**
