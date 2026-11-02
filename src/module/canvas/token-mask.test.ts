@@ -3,6 +3,7 @@ import {
     type BustPlan,
     computeFrameTransform,
     type FrameFlagSource,
+    isPlaceholderArt,
     isPortraitActorType,
     parseTokenFrameFlag,
     resolveBustContent,
@@ -91,21 +92,21 @@ describe('parseTokenFrameFlag', () => {
         expect(parseTokenFrameFlag(false)).toBeNull();
     });
 
-    it('fills head-biased defaults for a bare enable', () => {
-        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
-        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1.67 });
+    it('fills head-biased defaults for a bare enable, with the whole crop (zoom 1)', () => {
+        expect(parseTokenFrameFlag(true)).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
+        expect(parseTokenFrameFlag({})).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
     });
 
     it('keeps explicit coordinates and clamps out-of-range values', () => {
-        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8, zoom: 1.67 });
-        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0, zoom: 1.67 });
+        expect(parseTokenFrameFlag({ cx: 0.7, cy: 0.2, content: 0.8 })).toEqual({ cx: 0.7, cy: 0.2, content: 0.8, zoom: 1 });
+        expect(parseTokenFrameFlag({ cx: 4, cy: -1 })).toEqual({ cx: 1, cy: 0, content: 0, zoom: 1 });
     });
 
     it('keeps an explicit zoom and clamps it to [0.25, 4]', () => {
         expect(parseTokenFrameFlag({ zoom: 1.8 })?.zoom).toBe(1.8);
         expect(parseTokenFrameFlag({ zoom: 10 })?.zoom).toBe(4);
         expect(parseTokenFrameFlag({ zoom: 0 })?.zoom).toBe(0.25);
-        expect(parseTokenFrameFlag({ zoom: Number.NaN })?.zoom).toBe(1.67);
+        expect(parseTokenFrameFlag({ zoom: Number.NaN })?.zoom).toBe(1);
     });
 
     it('takes caller defaults for the absent fields only', () => {
@@ -119,8 +120,21 @@ describe('parseTokenFrameFlag', () => {
             cx: 0.5,
             cy: 0.3,
             content: 0,
-            zoom: 1.67,
+            zoom: 1,
         });
+    });
+});
+
+describe('isPlaceholderArt', () => {
+    it('flags core SVG icons and missing art', () => {
+        for (const src of ['icons/svg/mystery-man.svg', 'icons/svg/MYSTERY-MAN.SVG', 'a.svg?v=2', '', null, undefined]) {
+            expect(isPlaceholderArt(src)).toBe(true);
+        }
+    });
+
+    it('passes raster portraits, local or hotlinked', () => {
+        for (const src of ['systems/wh40k-rpg/packs/images/bestiary/dh2/pdf-officer.jpeg', 'https://wiki.example/storage/a.webp', 'x.png'])
+            expect(isPlaceholderArt(src)).toBe(false);
     });
 });
 
@@ -191,10 +205,15 @@ describe('isPortraitActorType', () => {
 });
 
 describe('resolveBustPlan (#501)', () => {
-    const plan = (flag: object | boolean | undefined | null, ringEnabled: boolean, actorType: string | null): BustPlan | null =>
-        resolveBustPlan({ flag, ringEnabled, actorType });
+    const PORTRAIT = 'https://wiki.example/storage/portrait.webp';
+    const plan = (
+        flag: object | boolean | undefined | null,
+        ringEnabled: boolean,
+        actorType: string | null,
+        textureSrc: string | null = PORTRAIT,
+    ): BustPlan | null => resolveBustPlan({ flag, ringEnabled, actorType, textureSrc });
 
-    it('bakes a ringless, unframed NPC (the mystery-man Citizen) and a ringed, framed PC at the same content', () => {
+    it('bakes a ringless, unframed NPC portrait and a ringed, framed PC at the same content', () => {
         const citizen = requirePlan(plan(null, false, 'dh2-npc'));
         const pc = requirePlan(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character'));
         expect(citizen.content).toBeCloseTo(0.75, 6);
@@ -207,9 +226,17 @@ describe('resolveBustPlan (#501)', () => {
     });
 
     it('keeps authored frame values and defaults only the missing ones', () => {
-        // the live PC frame: centre authored, zoom missing
-        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character')?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1.67 });
+        // the live PC frame: centre authored, zoom missing → the whole crop, never the head zoom
+        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character')?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1 });
+        expect(plan({}, true, 'dh2-character')?.frame).toEqual({ cx: 0.5, cy: 0.3, content: 0, zoom: 1 });
         expect(plan({ cx: 0.51, cy: 0.27, zoom: 1.55 }, true, 'dh2-npc')?.frame).toEqual({ cx: 0.51, cy: 0.27, content: 0, zoom: 1.55 });
+    });
+
+    it('never head-zooms placeholder art (the mystery-man Citizen)', () => {
+        const svg = 'icons/svg/mystery-man.svg';
+        expect(plan(null, false, 'dh2-npc', svg)).toBeNull();
+        expect(plan(undefined, false, 'dh2-npc', null)).toBeNull();
+        expect(plan(undefined, true, 'dh2-npc', svg)?.frame).toEqual({ cx: 0.5, cy: 0.5, content: 0, zoom: 1 });
     });
 
     it('leaves loot, containers and frameless vehicles on their raw art', () => {

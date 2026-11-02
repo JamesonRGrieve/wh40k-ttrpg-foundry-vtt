@@ -28,7 +28,8 @@ import { isCharacterActorType, isNpcActorType } from '../documents/actor-types.t
  *   flags.wh40k-rpg.tokenFrame = {
  *     cx?: number,       // centre of the bust in the source image, 0-1 (default 0.5)
  *     cy?: number,       // (default 0.3 — head-biased for portrait art)
- *     zoom?: number,     // subject zoom inside the circle (default DEFAULT_BUST_ZOOM)
+ *     zoom?: number,     // subject zoom inside the circle (default 1; an unframed
+ *                        //  portrait's synthesized bust uses DEFAULT_BUST_ZOOM)
  *     content?: number,  // content-circle fraction override (default: normalised
  *   }                    //  so the final bust is ENFORCED_BUST_FRACTION)
  */
@@ -77,8 +78,28 @@ export interface TokenFrameDefaults {
     zoom: number;
 }
 
-/** Head-biased bust defaults for actor portraits. */
-const BUST_FRAME_DEFAULTS: TokenFrameDefaults = { cx: DEFAULT_BUST_CX, cy: DEFAULT_BUST_CY, zoom: DEFAULT_BUST_ZOOM };
+/**
+ * Defaults for the absent fields of an AUTHORED frame. An authored frame that
+ * omits `zoom` shows its whole crop (zoom 1): a square PC portrait framed
+ * `{cx: 0.5, cy: 0.5}` masks whole, as the vault's token_frame contract says.
+ */
+const BUST_FRAME_DEFAULTS: TokenFrameDefaults = { cx: DEFAULT_BUST_CX, cy: DEFAULT_BUST_CY, zoom: 1 };
+
+/** The bust synthesized for an actor portrait that carries no frame at all. */
+const SYNTHESIZED_BUST_DEFAULTS: TokenFrameDefaults = { cx: DEFAULT_BUST_CX, cy: DEFAULT_BUST_CY, zoom: DEFAULT_BUST_ZOOM };
+
+/** Placeholder art centred whole inside a ring: no head bias, no zoom. */
+const PLACEHOLDER_FRAME_DEFAULTS: TokenFrameDefaults = { cx: 0.5, cy: 0.5, zoom: 1 };
+
+/**
+ * Is this token texture placeholder art rather than a portrait? Foundry's core
+ * icons (the `mystery-man.svg` every actor starts with) are vector silhouettes;
+ * a head-zoomed bust of one is an unreadable white smear. Pure, so it is unit-tested.
+ */
+export function isPlaceholderArt(src: string | null | undefined): boolean {
+    if (typeof src !== 'string' || src === '') return true;
+    return /\.svg(?:[?#].*)?$/i.test(src);
+}
 
 /**
  * Pure geometry: place a `srcWidth`x`srcHeight` portrait into a `size`-px
@@ -242,6 +263,8 @@ export interface BustPlanInput {
     ringEnabled: boolean;
     /** The owning actor's type, or null for an actorless token. */
     actorType: string | null | undefined;
+    /** The token's texture source, to tell a portrait from placeholder art. */
+    textureSrc: string | null;
 }
 
 /** The frame and content circle to bake, from {@link resolveBustPlan}. */
@@ -260,11 +283,17 @@ export interface BustPlan {
  *   Citizen and a ringed PC draw the same diameter (#501). An explicit `false`
  *   frame opts a ringless token out.
  * - Anything else (loot, containers, vehicles without a frame) keeps its raw art.
+ * - An authored frame without `zoom` shows its whole crop; only a synthesized
+ *   bust takes the head zoom.
+ * - Placeholder art (a core `.svg` icon) never gets the synthesized head bust:
+ *   ringless it keeps its raw icon, ringed it is centred whole.
  */
 export function resolveBustPlan(input: BustPlanInput): BustPlan | null {
     const authored = parseTokenFrameFlag(input.flag);
-    const wantsDefault = input.ringEnabled || (input.flag !== false && isPortraitActorType(input.actorType));
-    const frame = authored ?? (wantsDefault ? parseTokenFrameFlag(true) : null);
+    const placeholder = isPlaceholderArt(input.textureSrc);
+    const wantsDefault = input.ringEnabled || (!placeholder && input.flag !== false && isPortraitActorType(input.actorType));
+    const synthesized = placeholder ? PLACEHOLDER_FRAME_DEFAULTS : SYNTHESIZED_BUST_DEFAULTS;
+    const frame = authored ?? (wantsDefault ? parseTokenFrameFlag(true, synthesized) : null);
     if (frame === null) return null;
     return { frame, content: resolveBustContent(frame.content) };
 }
@@ -280,6 +309,7 @@ export function onRefreshToken(token: MaskableToken): void {
         flag: resolveTokenFrameFlag(token),
         ringEnabled: token.document.ring.enabled,
         actorType: token.actor?.type,
+        textureSrc: token.document.texture.src,
     });
     if (plan === null) return;
     const { frame, content } = plan;
