@@ -10,6 +10,8 @@ import { cleanupProbes, openProbeSheet, snapElement } from './occult-sheet-flow'
  *     to the row's right margin. A second auto-margin on the total centred them.
  *   - Origin badges: an origin whose image is missing shows its step icon, not the
  *     origin's name clipped by the circle ("Quarant… World").
+ *   - Active effect chips show their whole name ("Quarantine Wo…" was cut at a fixed
+ *     80 px with the row empty).
  */
 
 /**
@@ -32,6 +34,11 @@ const ACOLYTE = {
     // A name the compendium join cannot match, so the item keeps its own (missing) image.
     items: [{ name: ORIGIN_NAME, type: 'originPath', img: MISSING_IMG, system: { gameSystem: 'dh2', step: 'homeWorld', stepIndex: 1 } }],
 };
+
+/** The browser-side surface the effect step reaches into. */
+interface EffectsWindow {
+    game: { actors: { get: (id: string) => { createEmbeddedDocuments: (type: string, data: object[]) => Promise<object[]> } | undefined } };
+}
 
 const VITALS = 'section.tab[data-tab="overview"] [data-wh40k-hook="overview-vitals"]';
 
@@ -82,5 +89,20 @@ test.describe.serial('Overview vitals and origin badges layout (Tier B)', () => 
         expect((await badge.innerText()).trim()).toBe('');
         await snapElement(page, 'origin-badge-missing-image', `#${sheetId} .window-content`, sheetId);
         recordCoverage('sheet.section', 'sidebar.origin-badges');
+    });
+
+    test('an active effect chip shows its whole name when the row has room', async ({ page }) => {
+        const { actorId, sheetId } = await openProbeSheet(page, ACOLYTE);
+        await page.evaluate(async (id) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+            const w = globalThis as unknown as EffectsWindow;
+            await w.game.actors.get(id)?.createEmbeddedDocuments('ActiveEffect', [{ name: 'Quarantine World', img: 'icons/svg/aura.svg' }]);
+        }, actorId);
+        const name = page.locator(`#${sheetId} [data-wh40k-hook="effect-chip-name"]`, { hasText: 'Quarantine World' }).first();
+        await expect(name).toBeVisible();
+        // Not cut short: the whole name fits its box.
+        expect(await name.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+        await snapElement(page, 'overview-effect-chip-whole-name', `#${sheetId} .window-content`, sheetId);
+        recordCoverage('sheet.section', 'overview.effect-chips');
     });
 });

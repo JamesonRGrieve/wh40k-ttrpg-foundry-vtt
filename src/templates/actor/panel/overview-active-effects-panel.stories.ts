@@ -75,6 +75,38 @@ export const Empty: Story = {
     },
 };
 
+/** A name wider than the whole panel, which alone may be cut short. */
+const OVERLONG_NAME = 'Litany of the Unbroken Aegis of Saint Drusus the Unyielding Warden';
+
+/**
+ * Chip names show whole when the row has room ("Quarantine World" was cut at a fixed
+ * 80 px with the row empty); only a name wider than the panel is ellipsised, inside it,
+ * and keeps its toggle and delete controls.
+ */
+export const LongNamesShowWhole: Story = {
+    args: {
+        effects: [chip('e1', 'Quarantine World', 'icons/svg/aura.svg', false), chip('e2', OVERLONG_NAME, 'icons/svg/upgrade.svg', false)],
+        gameSystem: 'dh2',
+    },
+    render: (args) => {
+        const el = renderPanel(args);
+        el.style.width = '360px';
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const names = [...canvasElement.querySelectorAll<HTMLElement>('[data-wh40k-hook="effect-chip-name"]')];
+        const whole = names.at(0);
+        const overlong = names.at(1);
+        await expect(whole?.textContent).toBe('Quarantine World');
+        await expect((whole?.scrollWidth ?? 0) <= (whole?.clientWidth ?? 0)).toBe(true);
+        await expect((overlong?.scrollWidth ?? 0) > (overlong?.clientWidth ?? 0)).toBe(true);
+        const panelRight = canvasElement.getBoundingClientRect().left + 360;
+        const chipEl = overlong?.closest<HTMLElement>('[data-effect-id]');
+        await expect((chipEl?.getBoundingClientRect().right ?? Infinity) <= panelRight).toBe(true);
+        await expect(chipEl?.querySelectorAll('[data-action="toggleEffect"], [data-action="deleteEffect"]').length).toBe(2);
+    },
+};
+
 const SYSTEMS: SystemId[] = ['dh2', 'dh1', 'rt', 'bc', 'ow', 'dw', 'im'];
 
 export const PerSystem: Story = {
