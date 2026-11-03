@@ -233,3 +233,15 @@ describe('experience.used has exactly one writer (#509)', () => {
         expect(readRepoFile('src/module/applications/dialogs/advancement-dialog.ts')).toMatch(/assertWithinBudget\(/);
     });
 });
+
+/**
+ * A Divination stored as the whole rich-text table result (HTML tags, maxim and
+ * effect) is migrated to the maxim alone on load, so the sheet shows plain text.
+ */
+describe('character DataModel divination migration', () => {
+    it('_migrateData strips a stored divination to its maxim', () => {
+        const m = charSrc.match(/static override _migrateData\(source[^)]*\):\s*void\s*\{([\s\S]*?)\n {4}\}/);
+        expect(m?.[1] ?? '', '_migrateData runs the divination migration').toMatch(/CharacterData\.#migrateDivination\(source\)/);
+        expect(charSrc, 'the migration uses the shared maxim reader').toMatch(/originPath\.divination\s*=\s*divinationMaxim\(originPath\.divination\)/);
+    });
+});

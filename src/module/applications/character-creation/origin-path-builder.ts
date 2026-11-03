@@ -31,9 +31,11 @@ import {
 } from '../../origin-grant-ledger.ts';
 import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
 import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../../rules/chaos-backgrounds.ts';
+import { divinationMaxim } from '../../rules/divination.ts';
 import { eliteCharge, grantedEliteSources } from '../../rules/elite-advances.ts';
 import { originFateContribution } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
+import type { I18nKey } from '../../types/i18n-keys';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
 import { builderPacks, lineCategoryPack, packLineFlags } from '../../utils/line-packs.ts';
@@ -611,7 +613,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charGenMode = 'roll-pool-hb';
         this._charDragData = null;
         const actorSys = this._actorSys();
-        this._divination = actorSys.originPath?.divination ?? '';
+        // A divination stored before #rollDivination kept only the maxim still holds the table's HTML.
+        this._divination = divinationMaxim(actorSys.originPath?.divination ?? '');
         this._divinationSelection = null;
         const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
@@ -1622,6 +1625,68 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * The throne gelt formula a selection rolls, or '' when it rolls none. Throne gelt is
+     * homebrew-only and rolls once, on the Home World step (#204); a formula authored on
+     * any other step stays narrative.
+     */
+    _thronesRollFormula(selection: NormalizedOrigin): string {
+        const formula = this._getSelectionThronesFormula(selection);
+        const { step } = this._getSelectionSystem(selection);
+        const homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
+        return formula !== '' && step === 'homeWorld' && homebrew ? formula : '';
+    }
+
+    /** Whether the step `stepKey` rolls Influence: the Background step, except under DH2 homebrew (Influence is not rolled there). */
+    _rollsInfluence(stepKey: string | undefined): boolean {
+        return stepKey === 'background' && !(this.gameSystem === 'dh2' && WH40KSettings.isHomebrew());
+    }
+
+    /**
+     * The rolls a selection still needs before its step counts as done: wounds and fate
+     * where it carries a formula, throne gelt where it rolls one, and Influence on the
+     * step that rolls it. The roll panel offers exactly these (`_prepareSelectedOrigin`),
+     * so the stepper, step access, auto-advance and commit all gate on the same list.
+     */
+    _pendingRolls(selection: NormalizedOrigin): string[] {
+        const system = this._getSelectionSystem(selection);
+        const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
+        const rolled: Record<string, { rolled?: number } | undefined> = system.rollResults ?? {};
+        const pending: string[] = [];
+        if (grants.woundsFormula !== undefined && grants.woundsFormula !== '' && rolled['wounds']?.rolled === undefined) pending.push('wounds');
+        if (grants.fateFormula !== undefined && grants.fateFormula !== '' && rolled['fate']?.rolled === undefined) pending.push('fate');
+        if (this._thronesRollFormula(selection) !== '' && rolled['thrones']?.rolled === undefined) pending.push('thrones');
+        if (this._rollsInfluence(system.step) && this._influenceRolled <= 0) pending.push('influence');
+        return pending;
+    }
+
+    /** Whether the step `step` has a confirmed selection with every roll made. */
+    _isStepDone(step: string): boolean {
+        const selection = this.selections.get(step);
+        return selection !== undefined && this._pendingRolls(selection).length === 0;
+    }
+
+    /** The localized names of pending rolls (`_pendingRolls`), joined for a notification. */
+    _rollLabels(rolls: readonly string[]): string {
+        const keys = new Map<string, I18nKey>([
+            ['wounds', 'WH40K.OriginPath.RollName.wounds'],
+            ['fate', 'WH40K.OriginPath.RollName.fate'],
+            ['thrones', 'WH40K.OriginPath.RollName.thrones'],
+            ['influence', 'WH40K.OriginPath.RollName.influence'],
+        ]);
+        return rolls
+            .map((roll) => {
+                const key = keys.get(roll);
+                return key === undefined ? roll : game.i18n.localize(key);
+            })
+            .join(', ');
+    }
+
+    /** Whether every core step (Home World, Background, Role …) is picked and rolled. */
+    _coreStepsDone(): boolean {
+        return this.systemConfig.coreSteps.every((step) => this._isStepDone(step.step));
+    }
+
+    /**
      * Sum per-origin throne gelt rolls (homeworld + background, each with its own formula, results ADDED).
      * @private
      */
@@ -2188,7 +2253,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 shortLabel: this._getShortLabel(step.key),
                 icon: step.icon,
                 isActive: !this.showLineage && index === this.currentStepIndex,
-                isComplete: hasSelection,
+                // Picked AND rolled: an origin whose wounds / fate / Influence are unrolled is not done.
+                isComplete: this._isStepDone(step.step),
                 isDisabled: this.guidedMode && !isAccessible,
                 selection: selection
                     ? {
@@ -2209,7 +2275,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 icon: this.systemConfig.optionalStep.icon,
                 isActive: this.showLineage,
                 isComplete: !!this.lineageSelection,
-                isDisabled: this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length,
+                isDisabled: this.guidedMode && !this._coreStepsDone(),
                 selection: this.lineageSelection
                     ? {
                           name: this.lineageSelection.name,
@@ -2228,7 +2294,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             icon: 'fa-dice-d20',
             isActive: this.showCharacteristics,
             isComplete: this._hasAssignedCharacteristics(),
-            isDisabled: this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length,
+            isDisabled: this.guidedMode && !this._coreStepsDone(),
             selection: null,
         });
 
@@ -2476,7 +2542,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const prevStep = orderedSteps[stepIndex - 1];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: orderedSteps is an array; index may be out of bounds
         if (prevStep === undefined) return false;
-        return this.selections.has(prevStep.step);
+        // The previous step must be picked AND rolled before the next opens.
+        return this._isStepDone(prevStep.step);
     }
 
     /**
@@ -2636,11 +2703,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // throne gelt. Restrict the rollable widget to the Home World step only; any
         // formula authored on a Background entry is ignored at the UI layer (its data
         // remains in the compendium for narrative reference but no separate roll fires).
-        const thronesFormulaForItem = this._getSelectionThronesFormula(item);
-        const itemSys = item.system as OriginPathSystemData;
-        const thronesEligibleStep = itemSys.step === 'homeWorld';
-        const thronesAllowedByRuleset = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
-        if (thronesFormulaForItem !== '' && thronesEligibleStep && thronesAllowedByRuleset) {
+        const thronesFormulaForItem = this._thronesRollFormula(item);
+        if (thronesFormulaForItem !== '') {
             const thronesResult = rollResults['thrones'];
             const hasRolled = thronesResult?.rolled !== undefined;
             rolls['thrones'] = {
@@ -2685,9 +2749,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = selection?.id === itemId;
         }
 
-        const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
         // Influence is RAW-only: in homebrew it's not rolled at creation, so hide the block entirely.
-        const showInfluence = currentStep.key === 'background' && !isDH2Homebrew;
+        const showInfluence = this._rollsInfluence(currentStep.key);
         const influenceMod = this._getContextualInfluenceMod();
 
         return {
@@ -3533,7 +3596,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const system = this._getSelectionSystem(selection);
             const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
             const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
-            const rollResults: Record<string, { rolled?: number; breakdown?: string } | undefined> = system.rollResults ?? {};
 
             // Count pending choices (deduplicate labels to match dialog keys)
             if ((grants.choices?.length ?? 0) > 0) {
@@ -3550,13 +3612,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            // Count pending rolls
-            if (grants.woundsFormula !== undefined && grants.woundsFormula !== '' && rollResults['wounds']?.rolled === undefined) {
-                pendingRolls++;
-            }
-            if (grants.fateFormula !== undefined && grants.fateFormula !== '' && rollResults['fate']?.rolled === undefined) {
-                pendingRolls++;
-            }
+            // Count pending rolls (wounds, fate, throne gelt, Influence) — the same list the stepper gates on.
+            pendingRolls += this._pendingRolls(selection).length;
         }
 
         return {
@@ -3571,7 +3628,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             equipmentMaxPicks,
             pendingChoices: pendingChoices,
             pendingRolls: pendingRolls,
-            canCommit: coreStepsComplete && pendingChoices === 0 && equipmentComplete,
+            rollsComplete: pendingRolls === 0,
+            canCommit: coreStepsComplete && pendingChoices === 0 && pendingRolls === 0 && equipmentComplete,
         };
     }
 
@@ -3819,7 +3877,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if ((stepKey === undefined || stepKey === '') && Number.isNaN(stepIndex)) return;
 
         if (stepKey === 'characteristics') {
-            if (this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length) {
+            if (this.guidedMode && !this._coreStepsDone()) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
                 return;
             }
@@ -3846,7 +3904,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         if (stepKey === this.systemConfig.optionalStep?.key) {
-            if (this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length) {
+            if (this.guidedMode && !this._coreStepsDone()) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
                 return;
             }
@@ -4078,8 +4136,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Store selection as plain data object
             this.selections.set(currentStep.step, originData);
 
-            // Auto-advance to next step if in guided mode
-            if (this.guidedMode && this.currentStepIndex < this.systemConfig.coreSteps.length - 1) {
+            // Auto-advance to next step if in guided mode — but only once this origin's
+            // rolls are made; otherwise stay so the player rolls them here.
+            const pending = this._pendingRolls(originData);
+            if (pending.length > 0) {
+                ui.notifications.info(game.i18n.format('WH40K.OriginPath.RollsRequired', { rolls: this._rollLabels(pending) }));
+            } else if (this.guidedMode && this.currentStepIndex < this.systemConfig.coreSteps.length - 1) {
                 this.currentStepIndex++;
             }
         }
@@ -4342,6 +4404,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Go to lineage selection
      */
     static #goToLineage(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
+        if (this.guidedMode && !this._coreStepsDone()) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+            return;
+        }
         this.showLineage = true;
         this.showCharacteristics = false;
         this.showEquipment = false;
@@ -4365,6 +4431,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Navigate to the characteristics step.
      */
     static #goToCharacteristics(this: OriginPathBuilder, _event: Event, _target: HTMLElement): void {
+        if (this.guidedMode && !this._coreStepsDone()) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+            return;
+        }
         this.showLineage = false;
         this.showCharacteristics = true;
         this.showEquipment = false;
@@ -4542,7 +4612,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: array destructure is T|undefined under main tsconfig; ESLint uses tsconfig.test.json where it's always T
                     resultRecord !== undefined && typeof resultRecord.text === 'string' ? resultRecord.text : null;
                 if (resultText !== null) {
-                    this._divination = resultText;
+                    // The result is rich text (bold maxim + effect); the character keeps the maxim.
+                    this._divination = divinationMaxim(resultText);
                     this._saveScrollPosition();
                     void this.render();
                     return;
@@ -4611,7 +4682,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             type: 'text',
         });
         if (text !== null && text !== '') {
-            this._divination = text;
+            this._divination = divinationMaxim(text);
             this._saveScrollPosition();
             void this.render();
         }
@@ -4774,6 +4845,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
             } else if (status['choicesComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
+            } else if (status['rollsComplete'] !== true) {
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllRolls'));
             } else if (status['equipmentComplete'] !== true) {
                 ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.StepInProgressEquipment'));
                 OriginPathBuilder.#goToEquipment.call(this, _event, _target);

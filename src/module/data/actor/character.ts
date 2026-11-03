@@ -1,5 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { adjustPactDisposition, type PactRecord } from '../../rules/dark-pact.ts';
+import { divinationMaxim } from '../../rules/divination.ts';
 import { eliteCharge, grantedEliteSources, isEliteStep, originSource } from '../../rules/elite-advances.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
 import { originStepLabel } from '../../rules/origin-steps.ts';
@@ -689,6 +690,19 @@ export default class CharacterData extends CreatureTemplate {
     static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData(source);
         CharacterData.#migratePacts(source);
+        CharacterData.#migrateDivination(source);
+    }
+
+    /**
+     * The origin-path builder once stored the whole Divination table result — its HTML,
+     * the bold maxim and the effect — so the sheet showed the tags. A character keeps
+     * the maxim alone, as plain text (`divinationMaxim`).
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: source is raw Foundry DataModel source data at the migration boundary
+    static #migrateDivination(source: Record<string, unknown>): void {
+        const originPath = source['originPath'];
+        if (typeof originPath !== 'object' || originPath === null || !('divination' in originPath) || typeof originPath.divination !== 'string') return;
+        originPath.divination = divinationMaxim(originPath.divination);
     }
 
     /**

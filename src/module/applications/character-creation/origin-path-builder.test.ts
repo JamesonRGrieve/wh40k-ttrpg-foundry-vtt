@@ -1,6 +1,7 @@
-import { afterAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
 import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime
@@ -280,8 +281,10 @@ type TestOriginSystem = {
     /** An Elite Advance's cost and structured prerequisites. */
     xpCost?: number;
     prerequisites?: Array<{ type: string; key: string; value?: number }>;
-    /** The Elite Advances an origin grants free (`grants.elites`). */
-    grants?: { elites?: string[] };
+    /** The Elite Advances an origin grants free (`grants.elites`), and the rolls it carries. */
+    grants?: { elites?: string[]; woundsFormula?: string; fateFormula?: string };
+    /** A homebrew throne gelt formula (rolled on the Home World step under homebrew). */
+    homebrew?: { throneGelt?: string };
 };
 
 type TestOrigin = {
@@ -709,6 +712,19 @@ describe('OriginPathBuilder rollDivination (issue #199)', () => {
         expect(draw).toHaveBeenCalledTimes(1);
         expect(host._divination).toBe('Trust in your fear.');
     });
+
+    it("keeps only the maxim of a rich-text result, never the table's HTML or the effect", async () => {
+        const html = '<p><b>Trust in your fear.</b></p><p>Increase this character’s Perception by 5.</p>';
+        const draw = vi.fn().mockResolvedValue({ results: [{ text: html }] });
+        const g = mutableGame();
+        g.tables = { getName: () => ({ results: { size: 100 }, draw }) };
+        g.packs = emptyPacks();
+
+        const host = makeDivinationHost();
+        await rollDivination(host, new Event('click'), document.createElement('button'));
+
+        expect(host._divination).toBe('Trust in your fear.');
+    });
 });
 
 describe('OriginPathBuilder commit (issue #206)', () => {
@@ -716,6 +732,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         canCommit: boolean;
         stepsComplete: boolean;
         choicesComplete: boolean;
+        rollsComplete: boolean;
         equipmentComplete: boolean;
     }
     interface EquipmentStep {
@@ -755,7 +772,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         const dialogPrompt = installDialogPrompt();
 
         const host: CommitHost = {
-            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true, equipmentComplete: true }),
+            _calculateStatus: () => ({ canCommit: true, stepsComplete: true, choicesComplete: true, rollsComplete: true, equipmentComplete: true }),
             _hasAssignedCharacteristics: vi.fn().mockReturnValue(false),
             _clearPreviewedOrigin: vi.fn(),
             render: vi.fn().mockResolvedValue(undefined),
@@ -780,7 +797,7 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         const dialogPrompt = installDialogPrompt();
 
         const host: CommitHost = {
-            _calculateStatus: () => ({ canCommit: false, stepsComplete: true, choicesComplete: true, equipmentComplete: false }),
+            _calculateStatus: () => ({ canCommit: false, stepsComplete: true, choicesComplete: true, rollsComplete: true, equipmentComplete: false }),
             _hasAssignedCharacteristics: vi.fn().mockReturnValue(true),
             _clearPreviewedOrigin: vi.fn(),
             render: vi.fn().mockResolvedValue(undefined),
@@ -798,9 +815,34 @@ describe('OriginPathBuilder commit (issue #206)', () => {
         await commit(host, new Event('click'), document.createElement('button'));
 
         expect(mutableUi().notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.StepInProgressEquipment');
+        expect(mutableUi().notifications.warn).not.toHaveBeenCalledWith('WH40K.OriginPath.CompleteAllRolls');
         expect(host.showEquipment).toBe(true);
         expect(host.showCharacteristics).toBe(false);
         expect(host.showLineage).toBe(false);
+        expect(dialogPrompt).not.toHaveBeenCalled();
+    });
+
+    it('blocks commit while an origin still has rolls to make', async () => {
+        const dialogPrompt = installDialogPrompt();
+        mutableUi().notifications.warn.mockClear();
+
+        const host: CommitHost = {
+            _calculateStatus: () => ({ canCommit: false, stepsComplete: true, choicesComplete: true, rollsComplete: false, equipmentComplete: true }),
+            _hasAssignedCharacteristics: vi.fn().mockReturnValue(true),
+            _clearPreviewedOrigin: vi.fn(),
+            render: vi.fn().mockResolvedValue(undefined),
+            showLineage: false,
+            showCharacteristics: false,
+            showEquipment: false,
+            guidedMode: true,
+            systemConfig: { equipmentStep: null },
+            equipmentSelections: new Map<string, string>(),
+            gameSystem: 'dh2',
+        };
+
+        await commit(host, new Event('click'), document.createElement('button'));
+
+        expect(mutableUi().notifications.warn).toHaveBeenCalledWith('WH40K.OriginPath.CompleteAllRolls');
         expect(dialogPrompt).not.toHaveBeenCalled();
     });
 });
@@ -1882,5 +1924,91 @@ describe('OriginPathBuilder._eliteUnmet', () => {
         const mystic = origin('Compendium.wh40k-rpg.roles.Item.mystic', 'Mystic', { step: 'role', grants: { elites: [PSYKER] } });
         const untouchable = origin(UNTOUCHABLE, 'Untouchable', { step: 'background' });
         expect(unmet(host({ influence: 0, selections: [mystic, untouchable] }), psyker)).toEqual([]);
+    });
+});
+
+/**
+ * An origin's rolls (wounds, fate, throne gelt, Influence) must be made before its
+ * step counts as done: the next step stays closed in guided mode, auto-advance waits,
+ * and commit is refused. `_pendingRolls` is the one list every gate reads.
+ */
+describe('OriginPathBuilder rolls gate', () => {
+    const CORE = [
+        { key: 'homeWorld', step: 'homeWorld' },
+        { key: 'background', step: 'background' },
+        { key: 'role', step: 'role' },
+    ];
+    const homeWorld = (rolls: TestOriginSystem['rollResults'] = {}, extra: TestOriginSystem = {}): TestOrigin =>
+        makeOrigin({
+            step: 'homeWorld',
+            system: { step: 'homeWorld', grants: { woundsFormula: '2xTB+1d5', fateFormula: '(1-5|=2),(6-10|=3)' }, rollResults: rolls, ...extra },
+        });
+    const background = (): TestOrigin => makeOrigin({ id: 'bg', step: 'background', system: { step: 'background', rollResults: {} } });
+
+    function host(opts: { selections: TestOrigin[]; influence?: number }): object {
+        const h = {
+            gameSystem: 'dh2',
+            guidedMode: true,
+            _influenceRolled: opts.influence ?? 0,
+            systemConfig: { coreSteps: CORE },
+            orderedSteps: CORE,
+            selections: new Map(opts.selections.map((sel) => [sel.step, sel])),
+            _getSelectionSystem: (selection: TestOrigin): TestOriginSystem => selection.system,
+            _getSelectionThronesFormula(selection: TestOrigin): string {
+                return proto._getSelectionThronesFormula.call(this, selection);
+            },
+            _thronesRollFormula(selection: TestOrigin): string {
+                return proto._thronesRollFormula.call(this, selection);
+            },
+            _rollsInfluence(stepKey: string | undefined): boolean {
+                return proto._rollsInfluence.call(this, stepKey);
+            },
+            _pendingRolls(selection: TestOrigin): string[] {
+                return proto._pendingRolls.call(this, selection);
+            },
+            _isStepDone(step: string): boolean {
+                return proto._isStepDone.call(this, step);
+            },
+        };
+        return h;
+    }
+    const pending = (h: object, selection: TestOrigin): string[] => proto._pendingRolls.call(h, selection);
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it("lists a home world's unrolled wounds and fate, and nothing once rolled", () => {
+        expect(pending(host({ selections: [] }), homeWorld())).toEqual(['wounds', 'fate']);
+        const rolled = homeWorld({ wounds: { rolled: 11 }, fate: { rolled: 3 } });
+        expect(pending(host({ selections: [] }), rolled)).toEqual([]);
+    });
+
+    it('requires the Influence roll on the Background step under RAW, not under homebrew', () => {
+        expect(pending(host({ selections: [], influence: 0 }), background())).toEqual(['influence']);
+        expect(pending(host({ selections: [], influence: 31 }), background())).toEqual([]);
+        vi.spyOn(WH40KSettings, 'isHomebrew').mockReturnValue(true);
+        expect(pending(host({ selections: [], influence: 0 }), background())).toEqual([]);
+    });
+
+    it('requires the throne gelt roll on the Home World step only under homebrew', () => {
+        const withThrones = homeWorld({ wounds: { rolled: 11 }, fate: { rolled: 3 } }, { homebrew: { throneGelt: '2d10x10' } });
+        expect(pending(host({ selections: [] }), withThrones)).toEqual([]);
+        vi.spyOn(WH40KSettings, 'isHomebrew').mockReturnValue(true);
+        expect(pending(host({ selections: [] }), withThrones)).toEqual(['thrones']);
+    });
+
+    it('keeps the next step closed in guided mode until the previous origin is rolled', () => {
+        const unrolled = host({ selections: [homeWorld()] });
+        expect(proto._isStepAccessible.call(unrolled, 1)).toBe(false);
+        const rolled = host({ selections: [homeWorld({ wounds: { rolled: 11 }, fate: { rolled: 3 } })] });
+        expect(proto._isStepAccessible.call(rolled, 1)).toBe(true);
+    });
+
+    it('counts the core steps done only when every one is picked and rolled', () => {
+        const rolledHome = homeWorld({ wounds: { rolled: 11 }, fate: { rolled: 3 } });
+        const role = makeOrigin({ id: 'role', step: 'role', system: { step: 'role', rollResults: {} } });
+        expect(proto._coreStepsDone.call(host({ selections: [rolledHome, background(), role], influence: 0 }))).toBe(false);
+        expect(proto._coreStepsDone.call(host({ selections: [rolledHome, background(), role], influence: 31 }))).toBe(true);
     });
 });
