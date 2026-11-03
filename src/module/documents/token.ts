@@ -426,6 +426,10 @@ export class TokenDocumentWH40K extends TokenDocument {
             if (speed === undefined) continue;
 
             const btn = document.createElement('button');
+            // The Token HUD is a <form>: an untyped button is a submit button, so pressing
+            // Enter in the HUD's Elevation field "clicked" this one instead of submitting
+            // the form, and the elevation was never saved.
+            btn.type = 'button';
             btn.classList.add('wh40k-token-movement__btn');
             if (type === activeType) btn.classList.add('active');
             btn.dataset['movementType'] = type;

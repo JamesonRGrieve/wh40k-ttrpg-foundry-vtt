@@ -54,6 +54,40 @@ describe('TokenDocumentWH40K', () => {
         }
     });
 
+    it('adds movement buttons that never submit the HUD form (Enter in Elevation must save it)', async () => {
+        const mod = await importModelOrSkip(import('./token.ts'));
+        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+        if (mod === undefined) return;
+
+        // The Token HUD is a <form> holding the Elevation input. An untyped <button> in it
+        // is a submit button, and pressing Enter in Elevation "clicks" the form's first one.
+        const form = document.createElement('form');
+        const elevation = document.createElement('input');
+        elevation.name = 'elevation';
+        form.appendChild(elevation);
+        const fakeApp = {
+            object: { document: { actor: { system: { movement: { half: 3, full: 6 } } }, getFlag: (): undefined => undefined } },
+        };
+
+        // eslint-disable-next-line no-restricted-syntax -- test boundary: globalThis is untyped at the engine boundary
+        const g = globalThis as unknown as Record<string, unknown>;
+        const originals = { CONFIG: g['CONFIG'], game: g['game'] };
+        g['CONFIG'] = { wh40k: { movementTypes: { half: { label: 'Half', icon: 'fas fa-walking' }, full: { label: 'Full', icon: 'fas fa-running' } } } };
+        g['game'] = { i18n: { localize: (key: string): string => key, format: (key: string): string => key } };
+        try {
+            mod.TokenDocumentWH40K.onTokenHUDRender(fakeApp as never, form as never);
+        } finally {
+            g['CONFIG'] = originals.CONFIG;
+            g['game'] = originals.game;
+        }
+
+        const added = [...form.querySelectorAll<HTMLButtonElement>('.wh40k-token-movement__btn')];
+        expect(added).toHaveLength(2);
+        expect(added.map((button) => button.type)).toEqual(['button', 'button']);
+        // No submit button of ours stands between the Elevation field and the form's own submit.
+        expect(form.querySelector('button:not([type="button"])')).toBeNull();
+    });
+
     describe('onVehicleInteriorHUDRender (#508)', () => {
         /** A HUD root shaped like Foundry's, with the left control column. */
         function hudRoot(): HTMLElement {
