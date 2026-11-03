@@ -1,9 +1,11 @@
 /**
- * Stories for the Statistics tab's skill rows at a narrow panel width (#267).
+ * Stories for the Statistics tab's skill rows at the narrowest column (#267).
  *
- * A row is its own size container: narrower than 22rem, the rank pips and value
- * left the name too little room and clipped it ("Acrobatic", "Awarene"). The name
- * now takes the whole first line and the pips and value drop to a second.
+ * Every skill row is one thin strip — icon, name, roll, favourite, rank pips and
+ * value on a single line (operator's call). Rows used to wrap to two lines below
+ * 22rem, which at the usual two-column width put each name on its own centred line
+ * above its pips. The skills grid's column floor is 22rem, so the narrowest column
+ * still holds the longest name whole.
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsLib from 'handlebars';
@@ -17,8 +19,8 @@ initializeStoryHandlebars();
 // The live helper resolves a skill's icon from the system's icon registry; a story only needs a URL.
 HbsLib.registerHelper('skillIcon', () => 'icons/svg/d20-black.svg');
 
-/** A panel width at which a two-tier skill row clipped its name. */
-const NARROW_PX = 300;
+/** A panel just wide enough for one 22rem column (the grid floor) inside the panels' padding and borders. */
+const NARROW_PX = 410;
 
 const GAME_LINES = ['dh1', 'dh2', 'rt', 'bc', 'dw', 'ow'] as const;
 
@@ -82,7 +84,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Every skill and specialisation name shows in full at 300px, under each line's theme. */
-export const NoNameClippedAtNarrowWidth: Story = {
+export const SingleStripAtNarrowestColumn: Story = {
     render: () => {
         const host = document.createElement('div');
         host.className = 'tw-flex tw-flex-col tw-gap-4';
@@ -101,9 +103,13 @@ export const NoNameClippedAtNarrowWidth: Story = {
         await expect(names.length).toBe(GAME_LINES.length * 5);
         const clipped = names.filter((name) => name.scrollWidth > name.clientWidth + 1).map((name) => name.textContent.trim());
         await expect(clipped).toEqual([]);
-        // The name cell takes the row's whole first line.
-        const cell = canvasElement.querySelector<HTMLElement>('[data-testid="skill-name-cell"]');
-        const row = cell?.parentElement;
-        await expect((cell?.getBoundingClientRect().width ?? 0) > (row?.getBoundingClientRect().width ?? 0) * 0.8).toBe(true);
+        // Each row is one strip: the name cell, the pips and the value share one line.
+        const cells = [...canvasElement.querySelectorAll<HTMLElement>('[data-testid="skill-name-cell"]')];
+        const twoLine = cells.filter((cell) => {
+            const row = cell.parentElement;
+            const cellTop = cell.getBoundingClientRect().top;
+            return [...(row?.children ?? [])].some((child) => Math.abs(child.getBoundingClientRect().top - cellTop) > 12);
+        });
+        await expect(twoLine.length).toBe(0);
     },
 };

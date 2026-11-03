@@ -5,24 +5,24 @@
     Hash params:
         entry — [skillKey, skillData] tuple from skillLists.standard
 --}}
-<div class="tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#unless (gt entry.[1].trainingLevel 0)}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}" style="container-type: inline-size;">
-    {{!-- The row is its own size container (#267): narrower than 22rem, the rank pips
-         and value no longer leave the name room, so the name takes the whole first line
-         and the pips and value drop to a second line, instead of clipping the name
-         ("Acrobatic", "Awarene"). --}}
-    <div class="tw-flex tw-items-center tw-gap-1.5 tw-min-w-0 [@container(max-width:22rem)]:tw-col-span-full" data-testid="skill-name-cell">
+<div class="tw-grid tw-grid-cols-skill-row tw-gap-1.5 tw-items-center tw-py-0.5 tw-px-2 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md hover:tw-bg-[var(--color-bg-tertiary)] hover:tw-border-[var(--color-border-highlight)]{{#unless (gt entry.[1].trainingLevel 0)}} tw-opacity-50 hover:tw-opacity-65{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}" style="container-type: inline-size;">
+    {{!-- Each skill is one thin strip — icon, name, roll, favourite, rank pips, value —
+         at every width. Rows used to wrap to two lines below 22rem (#267), which at the
+         usual two-column width put every name on its own centred line above its pips.
+         A name that cannot fit ends in an ellipsis; the full name and value are in the
+         row's tooltip and aria-label. --}}
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-min-w-0" data-testid="skill-name-cell">
         <span class="tw-block tw-w-4 tw-h-4 tw-shrink-0 tw-opacity-90 tw-bg-contain tw-bg-no-repeat tw-bg-center" style="--icon-url: url('{{skillIcon entry.[0]}}'); background-image: var(--icon-url);" data-testid="skill-icon"></span>
         <div class="tw-flex tw-items-center tw-gap-1 tw-flex-1 tw-min-w-0">
-            <button type="button" class="tw-bg-transparent tw-border-none tw-p-0 tw-text-[color:var(--color-text-primary)] tw-font-[var(--wh40k-font-body)] tw-text-[0.95rem] tw-leading-none tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-flex-1 tw-min-w-0 hover:tw-text-accent-skills hover:tw-drop-shadow-[0_0_8px_rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.3)]"
+            <button type="button" class="tw-bg-transparent tw-border-none tw-p-0 tw-text-[color:var(--color-text-primary)] tw-font-[var(--wh40k-font-body)] tw-text-[0.85rem] tw-leading-none tw-text-left tw-cursor-pointer tw-inline-flex tw-items-center tw-justify-start tw-flex-1 tw-min-w-0 hover:tw-text-accent-skills hover:tw-drop-shadow-[0_0_8px_rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.3)]"
                     data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                     data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                     data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}">
-                {{!-- A long name ("Interrogation", "Sleight of Hand") keeps its words whole:
-                     the characteristic suffix wraps under the name first, multi-word names
-                     wrap at spaces, and only a single word wider than the whole cell is clipped.
-                     Never break inside a word — browser hyphenation is unavailable in
-                     Foundry's Electron on Windows/Linux, so `break-words` split "Interrogati|on". --}}
-                <span class="tw-inline-flex tw-flex-wrap tw-items-baseline tw-gap-x-[var(--wh40k-space-xs)] tw-gap-y-0.5 tw-leading-tight tw-font-[var(--wh40k-font-body)] tw-min-w-0"><span class="tw-min-w-0 tw-max-w-full tw-overflow-hidden" data-testid="skill-name">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.75rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
+                {{!-- One line: the name never wraps, and never breaks inside a word (browser
+                     hyphenation is unavailable in Foundry's Electron, so `break-words` split
+                     "Interrogati|on"); a name too long for the strip ends in an ellipsis and
+                     the characteristic suffix stays whole beside it. --}}
+                <span class="tw-inline-flex tw-flex-nowrap tw-items-baseline tw-gap-x-[var(--wh40k-space-xs)] tw-leading-tight tw-font-[var(--wh40k-font-body)] tw-min-w-0 tw-overflow-hidden"><span class="tw-min-w-0 tw-truncate" data-testid="skill-name">{{entry.[1].label}}</span> <span class="tw-shrink-0 tw-text-[0.7rem] tw-text-[color:var(--wh40k-text-muted)] tw-font-[var(--wh40k-font-ui)]">({{entry.[1].charShort}})</span></span>
             </button>
             {{!-- tw-shrink-0 (#267): this and the favourite star below are flex children
                  of a `tw-flex-1 tw-min-w-0` box, so without it THEY absorb the squeeze
@@ -40,12 +40,12 @@
             </button>
         </div>
     </div>
-    <div class="tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)] tw-shrink-0 [@container(max-width:22rem)]:tw-col-start-2">
+    <div class="tw-flex tw-gap-0.5 tw-p-0.5 tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--color-border-tertiary)] tw-shrink-0">
         {{#each entry.[1].trainingIndicators as |ind|}}
-        <span class="tw-shrink-0 tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.65rem] tw-font-semibold tw-px-1 tw-py-0.5 tw-min-w-[24px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-transparent tw-border-[var(--color-border-secondary)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+        <span class="tw-shrink-0 tw-border tw-border-solid tw-rounded-[3px] tw-text-[0.6rem] tw-leading-[1.1rem] tw-font-semibold tw-px-0 tw-py-0 tw-w-[18px] tw-text-center {{#if ind.active}}active tw-bg-[rgb(from_var(--wh40k-accent-skills)_r_g_b_/_0.25)] tw-border-accent-skills tw-text-[color:var(--color-text-primary)] tw-opacity-100 tw-font-bold{{else}}tw-bg-transparent tw-border-[var(--color-border-secondary)] tw-text-[color:var(--wh40k-text-muted)]{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
         {{/each}}
     </div>
-    <div class="tw-shrink-0 tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border {{themeClassFor 'border'}} tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
-        <span class="tw-font-alt tw-text-[1.05rem] tw-font-bold tw-text-[color:var(--color-text-primary)]">{{entry.[1].current}}</span>
+    <div class="tw-shrink-0 tw-min-w-8 tw-h-[22px] tw-px-1 tw-py-0 tw-inline-flex tw-items-center tw-justify-center tw-border {{themeClassFor 'border'}} tw-rounded-md tw-bg-[var(--color-bg-option)] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.15)]" title="{{entry.[1].breakdown}}">
+        <span class="tw-font-alt tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--color-text-primary)]">{{entry.[1].current}}</span>
     </div>
 </div>

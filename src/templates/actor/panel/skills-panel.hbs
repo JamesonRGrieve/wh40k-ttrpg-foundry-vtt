@@ -5,20 +5,22 @@
          at three via the max(min-col, container/3) idiom (gap = 0.5rem ⇒ two
          gaps subtracted at the 3-column breakpoint).
 
-         Floor is 20rem, DERIVED rather than tuned (#267). The floor had been
-         ping-ponged 14rem → 10rem chasing symptoms, but a skill row's fixed chrome
-         alone is ~252px on the 4-pip lines (DH2e/BC/OW): 16px row padding + 2px
-         border + 16px grid gaps + 40px score track + 108px indicator strip
-         (4 × 24px pips + gaps/padding/border) + 16px icon + 14px inner gaps +
-         ~40px for the dice and favourite buttons. Both previous floors sat BELOW
-         that, so the floor never bound: auto-fit always fitted three columns and
-         the name cell was allocated less than zero space, which is why names
-         clipped and the row never reflowed. 20rem (320px) = that chrome plus
-         ~68px of readable name, so auto-fit now genuinely drops 3 → 2 → 1 as the
-         panel narrows. Pairs with tw-shrink-0 on the row's trailing buttons.
+         Floor is 22rem, DERIVED rather than tuned (#267). Every skill row is one
+         thin strip (it no longer wraps to a second line), so the floor is that
+         strip's fixed chrome plus the longest name: ~226px of chrome on the 4-pip
+         lines (DH2e/BC/OW) — 16px row padding + 2px border + 12px grid gaps + 40px
+         score track + 92px indicator strip (4 × 20px pips + gaps/padding/border) +
+         16px icon + 10px inner gaps + ~44px for the dice and favourite buttons —
+         plus ~126px for the longest name and its suffix ("Sleight of Hand (Ag)" at
+         0.85rem). 22rem (352px) holds both, so auto-fit drops 3 → 2 → 1 before any
+         name would have to end in an ellipsis. The earlier 14rem / 10rem / 20rem
+         floors sat below a whole strip, which is why names clipped or rows wrapped.
+         `min(22rem, 100%)` keeps a single column inside a panel narrower than one
+         strip (it would otherwise overflow); there the name, in a minmax(0, 1fr)
+         track, ends in an ellipsis. Pairs with tw-shrink-0 on the row's trailing buttons.
          Skills render from the flat `standard` list in row-major order rather
          than the old fixed two-array column split. --}}
-    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(20rem, calc((100% - 1rem) / 3)), 1fr));" data-testid="skills-responsive-grid">
+    <div class="tw-grid tw-gap-2 tw-relative" style="grid-template-columns: repeat(auto-fit, minmax(max(min(22rem, 100%), calc((100% - 1rem) / 3)), 1fr));" data-testid="skills-responsive-grid">
         {{#each skillLists.standard as |entry|}}
             {{> systems/wh40k-rpg/templates/actor/partial/skill-row.hbs entry=entry}}
         {{/each}}

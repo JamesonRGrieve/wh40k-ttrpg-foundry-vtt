@@ -1,14 +1,17 @@
 /**
- * Regression guard: a long skill name wraps between words, never inside one.
+ * Regression guard: a skill row is one thin strip, and its name never breaks
+ * inside a word.
  *
  * History: the name span used `tw-truncate`, so in the two-column skills grid
- * (NPC sheets, ~1000px windows) "Interrogation", "Psyniscience" and "Sleight of
- * Hand" rendered as "Interroga…" / "Psynisci…" / "Sleight of…". Switching to
- * `break-words` then split words mid-syllable ("Interrogati|on"), and browser
- * hyphenation can't fix that: Foundry's Electron on Windows/Linux ships no
- * hyphenation dictionaries. The name and its characteristic suffix now sit in a
- * wrapping flex row, so the suffix drops under the name first and multi-word
- * names wrap at spaces.
+ * "Interrogation", "Psyniscience" and "Sleight of Hand" rendered as "Interroga…".
+ * Switching to `break-words` then split words mid-syllable ("Interrogati|on"), and
+ * browser hyphenation can't fix that: Foundry's Electron on Windows/Linux ships no
+ * hyphenation dictionaries. The row then wrapped to two lines below 22rem (#267),
+ * which at the usual two-column width put every name on its own centred line above
+ * its pips — the operator's "jumbled" rows. The operator's call: every row is a
+ * single thin strip. The name and the pips are sized so the longest names fit a
+ * two-column row; only in a narrower strip does a name end in an ellipsis, never
+ * mid-word, and the characteristic suffix always stays whole beside it.
  *
  * Source-text idiom, like the other template guards in tests/.
  */
@@ -27,13 +30,19 @@ describe('skill-row name', () => {
         expect(nameMatch).not.toBeNull();
     });
 
-    it('lets the characteristic suffix wrap under the name', () => {
-        expect(rowClasses).toEqual(expect.arrayContaining(['tw-inline-flex', 'tw-flex-wrap']));
+    it('keeps the name and its characteristic suffix on one line', () => {
+        expect(rowClasses).toEqual(expect.arrayContaining(['tw-inline-flex', 'tw-flex-nowrap']));
+        expect(rowClasses).not.toContain('tw-flex-wrap');
     });
 
-    it('never truncates the name or breaks inside a word', () => {
-        for (const forbidden of ['tw-truncate', 'tw-break-words', 'tw-break-all', 'tw-whitespace-nowrap']) {
+    it('never breaks the name inside a word; a name too long for the strip ends in an ellipsis', () => {
+        for (const forbidden of ['tw-break-words', 'tw-break-all']) {
             expect(nameClasses).not.toContain(forbidden);
         }
+        expect(nameClasses).toContain('tw-truncate');
+    });
+
+    it('does not drop any cell to a second line at a narrow width', () => {
+        expect(SKILL_ROW).not.toMatch(/@container\(max-width:[^)]*\)\]:tw-col-(span-full|start-2)/);
     });
 });

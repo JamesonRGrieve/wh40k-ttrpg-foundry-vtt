@@ -267,7 +267,9 @@ module.exports = {
         lg: '8px',
       },
       gridTemplateColumns: {
-        'skill-row': '1fr auto 40px',
+        // minmax(0, 1fr): the name track may shrink below the name's width (ellipsis)
+        // so a strip never overflows a panel narrower than it; plain 1fr cannot.
+        'skill-row': 'minmax(0, 1fr) auto auto',
         'skill-row-compact': '1fr 28px',
         'content-auto-auto': '1fr auto auto',
         'header-main': 'minmax(280px, 1fr) auto',

@@ -37,9 +37,9 @@ interface ResponsiveResult {
     error: string | null;
 }
 
-// Sheet widths chosen around the 20rem (320px) per-column floor. The sheet chrome
-// eats ~290px, so the grid CONTAINER is ~sheet−290: 1200→~910 (2–3 tracks),
-// 860→~570 (2 tracks), 520→~230 (1 track). All ≤ 1200 so the sheet, anchored at
+// Sheet widths chosen around the 22rem (352px) per-column floor. The sheet chrome
+// eats ~290px, so the grid CONTAINER is ~sheet−290: 1200→~910 (2 tracks),
+// 860→~570 (1 track), 520→~230 (1 track, narrower than one skill strip). All ≤ 1200 so the sheet, anchored at
 // left:20 in the 1440px viewport, is never width-clamped. Wide/narrow endpoints +
 // monotonicity are what the assertions pin — the exact wide count depends on chrome.
 const WIDTHS = [1200, 860, 520] as const;
@@ -177,7 +177,11 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
     // width — the name span (tw-truncate) absorbs the width change instead.
     for (const probe of result.probes) {
         expect(probe.iconWidth, `skill icon stays 16px at width ${probe.width} (got ${probe.iconWidth})`).toBe(16);
-        // A narrow row drops its pips and value to a second line rather than clip the name.
+    }
+    // Every row is one thin strip (operator's call). The 22rem column floor holds the
+    // longest name whole, so no name is clipped wherever a column is at least that wide.
+    // Only a grid narrower than one strip (the 520px sheet) may end a name in an ellipsis.
+    for (const probe of [wide, mid]) {
         expect(probe.clippedNames, `no skill name is clipped at width ${probe.width}`).toEqual([]);
     }
     // Talents & Traits sit side by side when wide and stack when narrow (was a fixed 2fr/1fr).
