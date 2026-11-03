@@ -5,15 +5,24 @@
  * Returns validation results with human-readable failure reasons.
  */
 
+import type { Prerequisite } from '../config/game-systems/types.ts';
 import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
+import { originSource } from '../rules/elite-advances.ts';
 import type { WH40KSkill, WH40KSkillEntry } from '../types/global.d.ts';
 import { getCharacteristicDisplayInfo } from './origin-ui-labels.ts';
+import { uuidNameCache } from './uuid-name-cache.ts';
 
-type Prerequisite = {
-    type: 'characteristic' | 'skill' | 'talent';
-    key: string;
-    value?: number;
-};
+/**
+ * An owned item as the prerequisite checks read it: its type and name, and for an
+ * origin-path item the compendium document it was created from — `_stats.compendiumSource`,
+ * or the older `flags.core.sourceId` stamp.
+ */
+export interface PrereqItemView {
+    type: string;
+    name: string;
+    _stats?: { compendiumSource?: string | null | undefined } | null | undefined;
+    flags?: object | undefined;
+}
 
 /**
  * Minimal actor surface the prerequisite checks read — a structural view of the
@@ -23,8 +32,10 @@ export interface PrereqActorView {
     system: {
         characteristics: Record<string, { total: number } | undefined>;
         skills: Record<string, WH40KSkill | undefined>;
+        /** The character's Influence; absent on an actor that has none. */
+        influence?: number | undefined;
     };
-    items: { some: (predicate: (item: { type: string; name: string }) => boolean) => boolean };
+    items: { some: (predicate: (item: PrereqItemView) => boolean) => boolean };
 }
 
 type ValidationResult = {
@@ -40,10 +51,10 @@ type SinglePrerequisiteResult = {
 type SkillLike = WH40KSkill | WH40KSkillEntry;
 
 /**
- * @typedef {Object} Prerequisite
- * @property {'characteristic'|'skill'|'talent'} type - Type of prerequisite
- * @property {string} key - Characteristic key, skill name, or talent name
- * @property {number} [value] - Required value (for characteristics)
+ * @typedef {Object} Prerequisite  (see `Prerequisite` in config/game-systems/types.ts)
+ * @property {'characteristic'|'skill'|'talent'|'influence'|'origin'|'notOrigin'} type - Type of prerequisite
+ * @property {string} key - Characteristic key, skill or talent name, or an origin's compendium UUID
+ * @property {number} [value] - Required value (characteristic total, Influence)
  */
 
 /**
@@ -87,7 +98,36 @@ export function checkPrerequisites(actor: PrereqActorView, prerequisites: Prereq
 function checkSinglePrerequisite(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
     if (prereq.type === 'characteristic') return checkCharacteristicPrereq(actor, prereq);
     if (prereq.type === 'skill') return checkSkillPrereq(actor, prereq);
+    if (prereq.type === 'influence') return checkInfluencePrereq(actor, prereq);
+    if (prereq.type === 'origin' || prereq.type === 'notOrigin') return checkOriginPrereq(actor, prereq);
     return checkTalentPrereq(actor, prereq);
+}
+
+/** Influence prerequisite: the character's Influence is at least `value`. */
+function checkInfluencePrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
+    const required = prereq.value ?? 0;
+    // An actor type with no Influence field (an NPC) has none.
+    const current = typeof actor.system.influence === 'number' && Number.isFinite(actor.system.influence) ? actor.system.influence : 0;
+    if (current >= required) return { valid: true };
+    return {
+        valid: false,
+        reason: game.i18n.format('WH40K.Advancement.Prereq.Influence', { required: String(required), current: String(current) }),
+    };
+}
+
+/**
+ * Origin prerequisite: the character owns (`origin`) or does not own (`notOrigin`) an
+ * origin-path item created from the compendium document `key` names.
+ */
+function checkOriginPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
+    const owned = actor.items.some((item) => item.type === 'originPath' && originSource(item) === prereq.key);
+    const wanted = prereq.type === 'origin';
+    if (owned === wanted) return { valid: true };
+    const origin = uuidNameCache.getName(prereq.key);
+    return {
+        valid: false,
+        reason: game.i18n.format(wanted ? 'WH40K.Advancement.Prereq.OriginMissing' : 'WH40K.Advancement.Prereq.OriginExcluded', { origin }),
+    };
 }
 
 /**

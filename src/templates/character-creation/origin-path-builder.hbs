@@ -308,6 +308,7 @@
  {{#each currentStep.origins as |origin|}}
  <div class="tw-group tw-flex tw-flex-col tw-bg-[var(--wh40k-panel-bg-solid)] tw-border-2 tw-rounded-[var(--wh40k-radius-md)] tw-p-[var(--wh40k-space-xs)] tw-cursor-pointer tw-relative tw-transition-all {{#if origin.isSelected}}tw-border-[var(--wh40k-gold)] tw-bg-[linear-gradient(135deg,rgba(var(--wh40k-gold-rgb),0.1),rgba(var(--wh40k-gold-rgb),0.05))] tw-shadow-[0_0_15px_rgba(var(--wh40k-gold-rgb),0.3)]{{else if origin.isDisabled}}tw-border-[var(--wh40k-bronze)] tw-opacity-40 tw-cursor-not-allowed tw-grayscale-[0.5]{{else if origin.isValidNext}}tw-border-[#4caf50]{{else}}tw-border-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw--translate-y-[2px] hover:tw-shadow-[0_4px_12px_rgba(0,0,0,0.4)]{{/if}}"
  data-action="selectOriginCard"
+ {{#if origin.isDisabled}}data-disabled="true" aria-disabled="true"{{/if}}
  data-origin-id="{{origin.id}}"
  data-origin-uuid="{{origin.uuid}}"
  data-tooltip="{{origin.shortDescription}}">
@@ -387,6 +388,11 @@
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-bronze)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-text-light)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-bronze)] hover:tw-border-[var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
  <i class="fa-solid fa-eye"></i>
  </button>
+ {{#if (and selectedOrigin.isConfirmed @root.showLineage)}}
+ <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(0,0,0,0.4)] tw-border tw-border-[var(--wh40k-crimson)] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[color:var(--wh40k-crimson)] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[var(--wh40k-crimson)] hover:tw-text-white" data-action="clearOrigin" data-tooltip="{{localize 'WH40K.OriginPath.RemoveElite'}}" aria-label="{{localize 'WH40K.OriginPath.RemoveElite'}}">
+ <i class="fa-solid fa-xmark"></i>
+ </button>
+ {{/if}}
  {{#unless selectedOrigin.isConfirmed}}
  <button type="button" class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-py-[var(--wh40k-space-xs)] tw-px-[var(--wh40k-space-sm)] tw-bg-[rgba(76,175,80,0.2)] tw-border tw-border-[#4caf50] tw-rounded-[var(--wh40k-radius-sm)] tw-text-[#4caf50] tw-text-[0.8rem] tw-cursor-pointer hover:tw-bg-[#4caf50] hover:tw-border-[#4caf50] hover:tw-text-white" data-action="confirmSelection" data-tooltip="{{localize 'WH40K.OriginPath.ConfirmSelection'}}">
  <i class="fa-solid fa-check"></i>

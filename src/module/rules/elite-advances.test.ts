@@ -3,7 +3,17 @@ import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../testing/private-content.ts';
 import { isLineOriginPack, type PackMetadataLike } from '../utils/line-packs.ts';
-import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from './elite-advances.ts';
+import {
+    eliteCharge,
+    eliteEntries,
+    eliteXpCost,
+    grantedEliteSources,
+    isEliteStep,
+    type LineOriginEntry,
+    lineHasEliteAdvances,
+    originSource,
+    ownedEliteSources,
+} from './elite-advances.ts';
 
 /**
  * The advancement dialog's Elite Advances tab (#684). It showed on every aptitude
@@ -62,6 +72,30 @@ describe('elite advances', () => {
         expect([...owned]).toEqual([PSYKER]);
         expect(eliteEntries(DH2_ORIGINS, 'dh2').map((entry) => owned.has(entry.uuid))).toEqual([false, true]);
     });
+
+    it('recognises an elite the origin-path builder created, stamped only with the legacy core.sourceId', () => {
+        const builderItem = { name: 'Psyker', isOriginPath: true, system: { step: 'elite' }, _stats: null, flags: { core: { sourceId: PSYKER } } };
+        expect(originSource(builderItem)).toBe(PSYKER);
+        expect([...ownedEliteSources([builderItem])]).toEqual([PSYKER]);
+        // compendiumSource wins over the legacy stamp.
+        expect(originSource({ _stats: { compendiumSource: INQUISITOR }, flags: { core: { sourceId: PSYKER } } })).toBe(INQUISITOR);
+        expect(originSource({ _stats: null, flags: {} })).toBe('');
+    });
+
+    it('charges an elite its authored xpCost, and nothing when another origin grants it', () => {
+        const mystic = { system: { step: 'role', grants: { elites: [PSYKER] } } };
+        const hiveWorld = { system: { step: 'homeWorld', grants: {} } };
+        const granted = grantedEliteSources([hiveWorld, mystic]);
+        expect([...granted]).toEqual([PSYKER]);
+        expect(eliteCharge({ step: 'elite', xpCost: 300 }, PSYKER, granted)).toBe(0);
+        expect(eliteCharge({ step: 'elite', xpCost: 1000 }, INQUISITOR, granted)).toBe(1000);
+        expect(eliteCharge({ step: 'elite', xpCost: 300 }, PSYKER, new Set())).toBe(300);
+        // An unknown source is never treated as granted, and a missing cost is 0.
+        expect(eliteCharge({ step: 'elite', xpCost: 300 }, '', new Set(['']))).toBe(300);
+        expect(eliteXpCost({ step: 'elite' })).toBe(0);
+        expect(isEliteStep({ step: 'elite' })).toBe(true);
+        expect(isEliteStep({ step: 'role' })).toBe(false);
+    });
 });
 
 const PRIVATE_ROOT = resolve(__dirname, '../../../src/packs-private');
@@ -112,6 +146,29 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('elite advances in each line’s real orig
 
     it.each(['ow', 'bc'])('%s has no Elite Advances tab', (line) => {
         expect(lineHasEliteAdvances(privateLineOrigins(line), line)).toBe(false);
+    });
+
+    it("DH2's elites carry their printed Experience Cost and prerequisites, and the Mystic grants the Psyker", () => {
+        const elites = new Map(
+            eliteEntries(privateLineOrigins('dh2'), 'dh2').map((entry) => [
+                entry.name,
+                entry.system as { xpCost?: number; prerequisites?: Array<{ type: string; key: string; value?: number }> },
+            ]),
+        );
+        const cost = (name: string): number | undefined => elites.get(name)?.xpCost;
+        expect([cost('Inquisitor'), cost('Psyker'), cost('Untouchable'), cost('Sister of Battle'), cost('Astropath')]).toEqual([1000, 300, 300, 750, 300]);
+        // An origin gate names its document by UUID; compare by document id, so no pack id is spelled here.
+        const docId = (uuid: string): string => uuid.split('.').pop() ?? '';
+        const idOf = (name: string): string => eliteEntries(privateLineOrigins('dh2'), 'dh2').find((entry) => entry.name === name)?.uuid ?? '';
+        const gates = (name: string): string[] =>
+            (elites.get(name)?.prerequisites ?? []).map(
+                (p) => `${p.type}:${p.type === 'influence' || p.type === 'characteristic' ? `${p.key} ${String(p.value)}` : docId(p.key)}`,
+            );
+        expect(gates('Inquisitor')).toEqual(['influence:influence 75']);
+        expect(gates('Psyker')).toEqual(['characteristic:willpower 40', `notOrigin:${idOf('Untouchable')}`]);
+        expect(gates('Untouchable')).toEqual([`notOrigin:${idOf('Psyker')}`]);
+        const mystic = privateLineOrigins('dh2').find((entry) => entry.name === 'Mystic');
+        expect([...grantedEliteSources(mystic === undefined ? [] : [mystic])].map(docId)).toEqual([idOf('Psyker')]);
     });
 
     it('BC lists no elite advance of its own', () => {

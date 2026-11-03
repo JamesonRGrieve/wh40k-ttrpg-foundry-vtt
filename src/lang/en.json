@@ -2033,7 +2033,8 @@
             "CatSkill": "Skill",
             "CatTalent": "Talent",
             "CatPsychicPower": "Psyker",
-            "CatPsyRating": "Psy"
+            "CatPsyRating": "Psy",
+            "CatElite": "Elite"
         },
         "Advancement": {
             "ConfirmPurchase": "Spend {cost} XP on {name}?",
@@ -2090,6 +2091,10 @@
                 "SkillMissing": "Requires {skill} skill",
                 "SkillLevel": "Requires {skill} at {level}",
                 "TalentMissing": "Requires {talent} talent",
+                "Influence": "Requires Influence {required}+ (current: {current})",
+                "OriginMissing": "Requires {origin}",
+                "OriginExcluded": "Not available with {origin}",
+                "XpCost": "Costs {cost} xp ({available} available)",
                 "Chip": {
                     "Minimum": "{label} {min}+",
                     "AnySpecialisation": "{talent} (any)",
@@ -4164,6 +4169,9 @@
             "NoOriginsAvailable": "No origins available for this step",
             "CompletePreviousStep": "Complete the previous step first",
             "OriginNotAvailable": "This origin is not available in guided mode",
+            "EliteNotAvailable": "This character cannot take this elite advance: {reasons}",
+            "EliteCharacteristicsUnmet": "{elite} needs {reasons}. Raise the characteristics or remove the elite advance.",
+            "RemoveElite": "Remove this elite advance",
             "CompleteAllSteps": "Complete all 6 steps before committing",
             "CompleteAllChoices": "Complete all required choices before committing",
             "CharacteristicsRequiredBeforeCommit": "Roll or assign your characteristics before completing character creation.",

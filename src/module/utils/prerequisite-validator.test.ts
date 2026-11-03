@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WH40K } from '../config.ts';
 import { buildLangStub } from '../testing/lang-stub.ts';
 import type { WH40KSkill } from '../types/global.d.ts';
-import { checkPrerequisites, parsePrerequisiteString, type PrereqActorView } from './prerequisite-validator.ts';
+import { checkPrerequisites, parsePrerequisiteString, type PrereqActorView, type PrereqItemView } from './prerequisite-validator.ts';
 
 /**
  * Coverage for the prerequisite validator. parsePrerequisiteString is pure;
@@ -100,5 +100,46 @@ describe('checkPrerequisites', () => {
 
     it('fails when the skill is below the required +20 level', () => {
         expect(checkPrerequisites(actorView({ skills: { dodge: skill({ trained: true }) } }), [{ type: 'skill', key: 'Dodge', value: 20 }]).valid).toBe(false);
+    });
+
+    it('gates on Influence (an Inquisitor needs 75)', () => {
+        const view = (influence: number | undefined): PrereqActorView => ({
+            system: { characteristics: {}, skills: {}, influence },
+            items: { some: () => false },
+        });
+        const gate = [{ type: 'influence' as const, key: 'influence', value: 75 }];
+        expect(checkPrerequisites(view(75), gate).valid).toBe(true);
+        expect(checkPrerequisites(view(42), gate).unmet).toEqual(['Requires Influence 75+ (current: 42)']);
+        // An actor with no Influence at all has none.
+        expect(checkPrerequisites(view(undefined), gate).unmet).toEqual(['Requires Influence 75+ (current: 0)']);
+    });
+
+    describe('origin prerequisites (an elite that needs, or rules out, another origin)', () => {
+        const PSYKER = 'Compendium.wh40k-rpg.elites.Item.psyker';
+        const UNTOUCHABLE = 'Compendium.wh40k-rpg.elites.Item.untouchable';
+        const owning = (items: PrereqItemView[]): PrereqActorView => ({
+            system: { characteristics: {}, skills: {} },
+            items: { some: (predicate) => items.some(predicate) },
+        });
+
+        it('passes an origin the character owns, by compendium source or the legacy builder stamp', () => {
+            const viaStats = owning([{ type: 'originPath', name: 'Psyker', _stats: { compendiumSource: PSYKER } }]);
+            const viaFlag = owning([{ type: 'originPath', name: 'Psyker', flags: { core: { sourceId: PSYKER } } }]);
+            expect(checkPrerequisites(viaStats, [{ type: 'origin', key: PSYKER }]).valid).toBe(true);
+            expect(checkPrerequisites(viaFlag, [{ type: 'origin', key: PSYKER }]).valid).toBe(true);
+        });
+
+        it('fails a missing origin, and one held only as a same-named non-origin item', () => {
+            expect(checkPrerequisites(owning([]), [{ type: 'origin', key: PSYKER }]).valid).toBe(false);
+            expect(
+                checkPrerequisites(owning([{ type: 'talent', name: 'Psyker', _stats: { compendiumSource: PSYKER } }]), [{ type: 'origin', key: PSYKER }]).valid,
+            ).toBe(false);
+        });
+
+        it('rules out an origin the character owns (a Psyker cannot become Untouchable)', () => {
+            const psyker = owning([{ type: 'originPath', name: 'Psyker', _stats: { compendiumSource: PSYKER } }]);
+            expect(checkPrerequisites(psyker, [{ type: 'notOrigin', key: PSYKER }]).valid).toBe(false);
+            expect(checkPrerequisites(psyker, [{ type: 'notOrigin', key: UNTOUCHABLE }]).valid).toBe(true);
+        });
     });
 });

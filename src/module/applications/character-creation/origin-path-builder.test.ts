@@ -277,6 +277,11 @@ type TestOriginSystem = {
     identifier?: string;
     selectedChoices?: Record<string, string[]>;
     rollResults?: Record<string, { rolled?: number; breakdown?: string }>;
+    /** An Elite Advance's cost and structured prerequisites. */
+    xpCost?: number;
+    prerequisites?: Array<{ type: string; key: string; value?: number }>;
+    /** The Elite Advances an origin grants free (`grants.elites`). */
+    grants?: { elites?: string[] };
 };
 
 type TestOrigin = {
@@ -1810,5 +1815,72 @@ describe('filterOriginsByProvenance (#295)', () => {
 
     it('shows only adapted origins when only adapted is enabled', () => {
         expect(apply({ raw: false, adapted: true, homebrew: false })).toEqual([adapted]);
+    });
+});
+
+/**
+ * The Elite Advance step: a card the character cannot take (an elite costing more
+ * than the starting XP, or one whose Influence / origin prerequisites it misses) is
+ * disabled with its reasons, and an elite another chosen origin grants (the Mystic
+ * role's Psyker) is free and ungated.
+ */
+describe('OriginPathBuilder._eliteUnmet', () => {
+    type EliteArg = TestOrigin;
+    const PSYKER = 'Compendium.wh40k-rpg.elites.Item.psyker';
+    const UNTOUCHABLE = 'Compendium.wh40k-rpg.elites.Item.untouchable';
+    const origin = (uuid: string, name: string, system: TestOriginSystem): EliteArg =>
+        makeOrigin({ id: name, uuid, name, step: system.step ?? 'elite', identifier: name.toLowerCase(), system });
+    const elite = (uuid: string, name: string, system: TestOriginSystem): EliteArg => origin(uuid, name, { step: 'elite', ...system });
+    const inquisitor = elite('Compendium.wh40k-rpg.elites.Item.inquisitor', 'Inquisitor', {
+        xpCost: 1000,
+        prerequisites: [{ type: 'influence', key: 'influence', value: 75 }],
+    });
+    const psyker = elite(PSYKER, 'Psyker', {
+        xpCost: 300,
+        prerequisites: [
+            { type: 'characteristic', key: 'willpower', value: 40 },
+            { type: 'notOrigin', key: UNTOUCHABLE },
+        ],
+    });
+    const costly = elite('Compendium.x.y.Item.costly', 'Costly', { xpCost: 3000, prerequisites: [] });
+
+    function host(opts: { influence: number; selections?: EliteArg[] }): object {
+        const selections = new Map((opts.selections ?? []).map((sel) => [sel.step, sel]));
+        return {
+            selections,
+            registryConfig: { startingXP: 1000 },
+            _influenceRolled: opts.influence,
+            _actorSys: () => ({ influence: 0, skills: {} }),
+            actor: { items: { filter: () => [] } },
+            _builderInfluence(): number {
+                return proto._builderInfluence.call(this);
+            },
+            _eliteCandidateView(): ReturnType<typeof proto._eliteCandidateView> {
+                return proto._eliteCandidateView.call(this);
+            },
+        };
+    }
+    const unmet = (h: object, candidate: EliteArg): string[] => proto._eliteUnmet.call(h, candidate);
+
+    it('refuses an Inquisitor to a new character without Influence 75', () => {
+        expect(unmet(host({ influence: 42 }), inquisitor)).toEqual(['WH40K.Advancement.Prereq.Influence']);
+        expect(unmet(host({ influence: 75 }), inquisitor)).toEqual([]);
+    });
+
+    it('refuses an elite costing more than the starting XP', () => {
+        expect(unmet(host({ influence: 80 }), costly)).toEqual(['WH40K.Advancement.Prereq.XpCost']);
+    });
+
+    it('leaves characteristic gates to commit, but applies origin exclusions now', () => {
+        // Willpower is not generated yet at the elite step.
+        expect(unmet(host({ influence: 30 }), psyker)).toEqual([]);
+        const untouchable = origin(UNTOUCHABLE, 'Untouchable', { step: 'background' });
+        expect(unmet(host({ influence: 30, selections: [untouchable] }), psyker)).toEqual(['WH40K.Advancement.Prereq.OriginExcluded']);
+    });
+
+    it("makes an elite another chosen origin grants free and ungated (the Mystic's Psyker)", () => {
+        const mystic = origin('Compendium.wh40k-rpg.roles.Item.mystic', 'Mystic', { step: 'role', grants: { elites: [PSYKER] } });
+        const untouchable = origin(UNTOUCHABLE, 'Untouchable', { step: 'background' });
+        expect(unmet(host({ influence: 0, selections: [mystic, untouchable] }), psyker)).toEqual([]);
     });
 });

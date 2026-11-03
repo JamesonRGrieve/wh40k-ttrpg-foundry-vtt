@@ -15,7 +15,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { t as localizeKey } from '../../i18n/t.ts';
-import { eliteEntries, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from '../../rules/elite-advances.ts';
+import { eliteCharge, eliteEntries, grantedEliteSources, type LineOriginEntry, lineHasEliteAdvances, ownedEliteSources } from '../../rules/elite-advances.ts';
 import {
     type PrerequisiteActorView,
     type PrerequisiteLabels,
@@ -1291,25 +1291,23 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // name where a book reprints one, keeping the copy the character owns.
         const available = getAvailableXP(this.actor);
         const ownedSources = ownedEliteSources(actor.items);
+        // Elites another owned origin grants (the Mystic role's Psyker) cost nothing.
+        const granted = grantedEliteSources(actor.items.filter((item) => item.isOriginPath));
         const elites = uniqueByName(eliteEntries(this.#lineOrigins, this.#getGameSystemId()), (candidate) => ownedSources.has(candidate.uuid)).map(
             (entry): PreparedEliteAdvance => {
                 // Index fields not every elite carries yet, so each is optional.
                 const eliteSys = entry.system as { xpCost?: number; prerequisites?: Prerequisite[]; description?: { value?: string } };
                 const owned = ownedSources.has(entry.uuid);
                 const descHtml = eliteSys.description?.value ?? '';
-                // The authored `system.xpCost` is authoritative. It previously was not
-                // read at all: the cost was SCRAPED out of the description HTML, and
-                // since no elite item carried a matching string, every one of them fell
-                // through to the hardcoded 1000 — pricing Inquisitor at a third of RAW
-                // (3000), Untouchable at half (2000), and overcharging Sister of Battle
-                // (750). Rewording a description could also silently change a price.
-                // The scrape is kept only as a fallback for content that has not been
-                // authored yet, and it must stay below the authored value.
-                const authored = eliteSys.xpCost;
+                // The authored `system.xpCost` (the book's Experience Cost) is authoritative,
+                // and it is the same figure the XP derivation charges for an owned elite. An
+                // elite another owned origin grants costs nothing. The description scrape is
+                // only a fallback for content whose cost is not authored yet.
+                const authored = eliteCharge(entry.system, entry.uuid, granted);
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsc types the capture group `string | undefined`
                 const scraped = xpMatch ? parseInt((xpMatch[1] ?? '0').replace(/,/g, ''), 10) : 1000;
-                const cost = typeof authored === 'number' && authored > 0 ? authored : scraped;
+                const cost = granted.has(entry.uuid) || (typeof eliteSys.xpCost === 'number' && eliteSys.xpCost > 0) ? authored : scraped;
                 // Short blurb: first <p> after <h2>
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
                 /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: regex capture groups may be undefined */

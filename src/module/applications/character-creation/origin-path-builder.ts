@@ -11,7 +11,7 @@
 
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { GameSystemId, OriginStepConfig, OriginStepDef } from '../../config/game-systems/types.ts';
+import type { GameSystemId, OriginStepConfig, OriginStepDef, Prerequisite } from '../../config/game-systems/types.ts';
 import type { AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
@@ -31,6 +31,7 @@ import {
 } from '../../origin-grant-ledger.ts';
 import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
 import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../../rules/chaos-backgrounds.ts';
+import { eliteCharge, grantedEliteSources } from '../../rules/elite-advances.ts';
 import { originFateContribution } from '../../rules/fate.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import { resolvePack } from '../../utils/compendium-query.ts';
@@ -39,6 +40,7 @@ import { builderPacks, lineCategoryPack, packLineFlags } from '../../utils/line-
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import { getAllCharacteristicDisplayInfo, getCharacteristicDisplayInfo, getChoiceTypeLabel, getTrainingLabel } from '../../utils/origin-ui-labels.ts';
+import { checkPrerequisites, type PrereqItemView } from '../../utils/prerequisite-validator.ts';
 import { RollTableUtils } from '../../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -165,6 +167,25 @@ type NormalizedOriginWithMeta = NormalizedOrigin & {
     _sourceUuid?: string | null;
     _actorItemId?: string | null;
 };
+
+/** A generated characteristic row of the char-gen context (`_prepareCharGenContext`): its key and total. */
+interface GeneratedCharacteristic {
+    key: string;
+    total: number | null;
+}
+
+/** Whether a char-gen context row carries a characteristic key and total. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: a type guard over the untyped char-gen context row it narrows
+function isGeneratedCharacteristic(row: unknown): row is GeneratedCharacteristic {
+    return (
+        row !== null &&
+        typeof row === 'object' &&
+        'key' in row &&
+        typeof row.key === 'string' &&
+        'total' in row &&
+        (row.total === null || typeof row.total === 'number')
+    );
+}
 
 function hasToObject(item: WH40KItem | NormalizedOrigin): item is WH40KItem {
     // Compendium index entries and normalized origin POJOs have no
@@ -1776,6 +1797,98 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return values;
     }
 
+    /** An elite's structured prerequisites (`system.prerequisites`), the well-formed entries only. */
+    static _elitePrerequisites(origin: NormalizedOrigin): Prerequisite[] {
+        const raw = origin.system['prerequisites'];
+        if (!Array.isArray(raw)) return [];
+        const types: ReadonlySet<string> = new Set(['characteristic', 'skill', 'talent', 'influence', 'origin', 'notOrigin']);
+        return raw.filter(
+            (entry): entry is Prerequisite =>
+                entry !== null &&
+                typeof entry === 'object' &&
+                'type' in entry &&
+                typeof entry.type === 'string' &&
+                types.has(entry.type) &&
+                'key' in entry &&
+                typeof entry.key === 'string',
+        );
+    }
+
+    /** The Influence the character has in the builder: the rolled value, else the stored one. */
+    _builderInfluence(): number {
+        return this._influenceRolled > 0 ? this._influenceRolled : Number(this._actorSys().influence ?? 0);
+    }
+
+    /** The compendium document a selection came from ('' when unknown). */
+    static _selectionSource(selection: NormalizedOrigin): string {
+        return (selection as NormalizedOriginWithMeta)._sourceUuid ?? selection.uuid ?? '';
+    }
+
+    /**
+     * What the character would hold if it took an elite now, as the prerequisite
+     * validator reads it: the origins confirmed at the other steps (not the elite step,
+     * whose pick this elite replaces), the actor's talents, and the builder's Influence.
+     * Characteristics are left empty — they are set at a later step and checked at commit.
+     */
+    _eliteCandidateView(): {
+        system: { characteristics: Record<string, { total: number }>; skills: object; influence: number };
+        items: { some: (predicate: (item: PrereqItemView) => boolean) => boolean };
+    } {
+        const origins: PrereqItemView[] = [...this.selections.values()].map((selection) => ({
+            type: 'originPath',
+            name: selection.name,
+            _stats: { compendiumSource: OriginPathBuilder._selectionSource(selection) },
+        }));
+        const talents: PrereqItemView[] = this.actor.items.filter((item) => item.type === 'talent').map((item) => ({ type: item.type, name: item.name }));
+        const items = [...origins, ...talents];
+        return {
+            system: { characteristics: {}, skills: this._actorSys().skills ?? {}, influence: this._builderInfluence() },
+            items: { some: (predicate) => items.some(predicate) },
+        };
+    }
+
+    /**
+     * Why the character cannot take `origin` at the Elite Advance step, or [] when it can:
+     * its XP cost beyond the starting XP (no cost when another chosen origin grants it, as
+     * the Mystic role grants the Psyker elite), and its Influence / origin / skill / talent
+     * prerequisites. Characteristic prerequisites wait for the characteristics step and are
+     * checked at commit (`_eliteCharacteristicShortfall`).
+     */
+    _eliteUnmet(origin: NormalizedOrigin): string[] {
+        const reasons: string[] = [];
+        const source = OriginPathBuilder._selectionSource(origin);
+        const granted = grantedEliteSources(this.selections.values());
+        // An elite another chosen origin grants is the character's outright: no cost, no gates.
+        if (source !== '' && granted.has(source)) return reasons;
+        const cost = eliteCharge(origin.system, source, granted);
+        const budget = this.registryConfig.startingXP;
+        if (cost > budget) reasons.push(game.i18n.format('WH40K.Advancement.Prereq.XpCost', { cost: String(cost), available: String(budget) }));
+        const gates = OriginPathBuilder._elitePrerequisites(origin).filter((p) => p.type !== 'characteristic');
+        if (gates.length > 0) {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the candidate view's skills are the actor's raw skill map, which the validator reads as WH40KSkill records
+            reasons.push(...checkPrerequisites(this._eliteCandidateView() as Parameters<typeof checkPrerequisites>[0], gates).unmet);
+        }
+        return reasons;
+    }
+
+    /**
+     * The chosen elite's characteristic prerequisites the generated characteristics miss,
+     * or [] — checked at commit, once the characteristics step has set them.
+     */
+    _eliteCharacteristicShortfall(): string[] {
+        if (this.lineageSelection === null) return [];
+        const source = OriginPathBuilder._selectionSource(this.lineageSelection);
+        if (source !== '' && grantedEliteSources(this.selections.values()).has(source)) return [];
+        const gates = OriginPathBuilder._elitePrerequisites(this.lineageSelection).filter((p) => p.type === 'characteristic');
+        if (gates.length === 0) return [];
+        const context = this._prepareCharGenContext();
+        const rows = context['isModePointBuy'] === true ? context['pointBuyCharacteristics'] : context['characteristics'];
+        const generated = Array.isArray(rows) ? rows.filter(isGeneratedCharacteristic) : [];
+        const characteristics = Object.fromEntries(generated.map((row) => [row.key, { total: row.total ?? 0 }]));
+        const view = { system: { characteristics, skills: {} }, items: { some: (): boolean => false } };
+        return checkPrerequisites(view, gates).unmet;
+    }
+
     /**
      * Prepare lineage origins (no position restrictions)
      * @returns {Array}
@@ -1798,18 +1911,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             ].filter((v): v is string => typeof v === 'string' && v !== ''),
         );
         return this._applyProvenanceFilter(this._dedupeOriginsByIdentity(this.lineageOrigins)).map((origin) => {
+            const unmet = this._eliteUnmet(origin);
             return {
                 id: origin.id,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,
-                shortDescription: origin.shortDescription,
+                // A card the character cannot take says why on hover.
+                shortDescription: unmet.length > 0 ? unmet.join(' · ') : origin.shortDescription,
                 fullDescription: this._stripHtml(typeof origin.description === 'string' ? origin.description : ''),
                 isSelected:
                     activeLineageIds.has(origin.id) ||
                     (origin.uuid !== null && activeLineageIds.has(origin.uuid)) ||
                     activeLineageIds.has(typeof origin.system['identifier'] === 'string' ? origin.system['identifier'] : ''),
-                isDisabled: false,
+                isDisabled: unmet.length > 0,
                 isValidNext: true,
                 hasChoices: origin.hasChoices,
                 isAdvanced: origin.isAdvanced,
@@ -3770,7 +3885,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if ((originId === undefined || originId === '') && (originUuid === undefined || originUuid === '')) return;
 
-        // Check if disabled
+        // A card the character cannot take carries data-disabled (an elite it cannot
+        // afford or whose prerequisites it misses); its tooltip already says why.
+        if (target.dataset['disabled'] === 'true') {
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EliteNotAvailable', { reasons: target.dataset['tooltip'] ?? '' }));
+            return;
+        }
         if (target.classList.contains('disabled')) {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.OriginNotAvailable'));
             return;
@@ -3933,7 +4053,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 : foundry.utils.deepClone(origin as NormalizedOrigin);
 
         if (this.showLineage) {
-            // Lineage selection
+            // An elite the character cannot take is never confirmed, however it was previewed.
+            const unmet = this._eliteUnmet(originData);
+            if (unmet.length > 0) {
+                ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EliteNotAvailable', { reasons: unmet.join(' · ') }));
+                return;
+            }
             this.lineageSelection = originData;
         } else {
             const currentIndex = this.orderedSteps.findIndex((s) => s.key === currentStep.key);
@@ -4665,6 +4790,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
+        // An elite whose characteristic prerequisites the generated characteristics miss
+        // (Psyker needs Willpower 40) is not committed: those are only known now.
+        const shortfall = this._eliteCharacteristicShortfall();
+        if (shortfall.length > 0 && this.lineageSelection !== null) {
+            ui.notifications.warn(
+                game.i18n.format('WH40K.OriginPath.EliteCharacteristicsUnmet', { elite: this.lineageSelection.name, reasons: shortfall.join(', ') }),
+            );
+            return;
+        }
+
         // Soft-warn (do not block) on aptitude collisions that the player has
         // not yet resolved via the chooser dialog. This covers both intra-
         // selection duplicates AND collisions against aptitudes the character
@@ -4816,6 +4951,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     core.sourceId = sourceUuid;
                     flags.core = core;
                     itemData.flags = flags;
+                    // The advancement dialog and the XP derivation identify an owned
+                    // origin (an elite above all) by `_stats.compendiumSource`.
+                    itemData._stats = { ...itemData._stats, compendiumSource: sourceUuid };
                 }
                 cleanOriginItems.push(itemData);
             }

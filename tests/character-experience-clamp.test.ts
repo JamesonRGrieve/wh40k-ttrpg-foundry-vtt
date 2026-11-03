@@ -74,7 +74,7 @@ function methodSource(src: string, name: string): string {
  * @returns {string}  Concatenated source of the derivation cluster.
  */
 function spendDerivationSource(src: string): string {
-    const parts = ['_computeExperienceSpent', '#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend', '#infamySpend'];
+    const parts = ['_computeExperienceSpent', '#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend', '#infamySpend', '#eliteSpend'];
     return parts.map((name) => methodSource(src, name)).join('\n');
 }
 
@@ -147,6 +147,12 @@ describe('character DataModel experience derivation (#240)', () => {
         // …and each helper's subtotal must actually reach the totals it feeds.
         expect(body, 'psy rating + owned powers share the psychic bucket').toMatch(/spentPsychicPowers\s*=\s*ratingSpend\s*\+/);
         expect(body, 'infamy subtotal assigned').toMatch(/spentInfamy\s*=\s*this\.#infamySpend\(\)/);
+        // An owned Elite Advance costs its authored xpCost, free where another origin
+        // grants it, through the same charge the advancement dialog shows.
+        expect(cluster, 'elites use the shared charge').toMatch(/eliteCharge\(/);
+        expect(cluster, 'granted elites come from the owned origins').toMatch(/grantedEliteSources\(/);
+        expect(body, 'elite subtotal assigned').toMatch(/spentElites\s*=\s*this\.#eliteSpend\(purchases\)/);
+        expect(body, 'elite subtotal reaches calculatedTotal').toMatch(/\+\s*this\.experience\.spentElites;/);
     });
 });
 
@@ -169,7 +175,7 @@ describe('character DataModel experience purchase breakdown', () => {
         // Each category's push lives in the helper that owns that category, so the
         // guard reads the whole derivation cluster rather than one method body.
         const cluster = spendDerivationSource(charSrc);
-        for (const category of ['characteristic', 'skill', 'talent', 'psychicPower', 'psyRating']) {
+        for (const category of ['characteristic', 'skill', 'talent', 'psychicPower', 'psyRating', 'elite']) {
             expect(cluster, `pushes a ${category} entry`).toMatch(new RegExp(`category:\\s*'${category}'`));
         }
     });
@@ -177,7 +183,7 @@ describe('character DataModel experience purchase breakdown', () => {
     it('every helper that records purchases is handed the shared list', () => {
         // The list reconciles with calculatedTotal only because all five helpers
         // append to the SAME array rather than building their own.
-        for (const helper of ['#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend']) {
+        for (const helper of ['#psyRatingSpend', '#characteristicSpend', '#skillSpend', '#itemSpend', '#eliteSpend']) {
             expect(body, `${helper} receives the shared purchases list`).toMatch(new RegExp(`this\\.${helper}\\(purchases\\)`));
         }
     });

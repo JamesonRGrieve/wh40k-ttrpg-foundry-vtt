@@ -90,6 +90,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         aptitudes: string[];
         equipment: Array<{ name: string; quantity: number; uuid: string }>;
         specialAbilities: Array<{ name: string; description: string }>;
+        /** Compendium UUIDs of the Elite Advances this origin grants at no XP cost. */
+        elites: string[];
         choices: Array<{ type: string; label: string; name?: string; options: OriginChoiceOption[]; count: number; xpCost: number }>;
     };
     // Career advancement tables (RT careers only; null on every other origin step).
@@ -214,7 +216,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             /**
              * Structured gates a character must meet to take this step, in the shape
              * `utils/prerequisite-validator.ts` consumes: `{type, key, value}` where
-             * `type` is `characteristic` | `skill` | `talent`.
+             * `type` is `characteristic` | `skill` | `talent` | `influence` | `origin`
+             * | `notOrigin` (the last two name another origin document by UUID).
              *
              * Elite Advances are the motivating case (#514): RAW gates each behind
              * characteristic / skill / talent minimums, the definitions lived in a
@@ -338,6 +341,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     }),
                     { required: true, initial: [] },
                 ),
+
+                // Elite Advances this origin grants at no XP cost, by the compendium UUID
+                // of the elite's origin-path document (DH2's Mystic role starts with the
+                // Psyker elite advance). The character still takes the elite at its step;
+                // owning this origin makes that elite free in the builder and in spent XP.
+                elites: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
 
                 // Choices the player must make
                 choices: new fields.ArrayField(

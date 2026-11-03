@@ -1,5 +1,6 @@
 import type { WH40KItem } from '../../documents/item.ts';
 import { adjustPactDisposition, type PactRecord } from '../../rules/dark-pact.ts';
+import { eliteCharge, grantedEliteSources, isEliteStep, originSource } from '../../rules/elite-advances.ts';
 import { parseImperialDate } from '../../rules/imperial-date.ts';
 import { originStepLabel } from '../../rules/origin-steps.ts';
 import { psyRatingTotalCost, psychicPowerCharge } from '../../rules/xp-costs.ts';
@@ -103,7 +104,7 @@ interface BackgroundAbility {
  * One itemised advancement purchase on the derived XP display list.
  *
  * `category` is a stable key (`characteristic` | `skill` | `talent` |
- * `psychicPower` | `psyRating`) the template localises; `name` is the entity's
+ * `psychicPower` | `psyRating` | `elite`) the template localises; `name` is the entity's
  * display name; `cost` is the same value summed into the spent totals, so the
  * list always reconciles with `calculatedTotal`.
  */
@@ -202,6 +203,8 @@ export default class CharacterData extends CreatureTemplate {
         spentTalents?: number;
         spentPsychicPowers?: number;
         spentInfamy?: number;
+        /** XP spent on Elite Advances (each owned elite's `xpCost`, 0 where an origin grants it). */
+        spentElites?: number;
         calculatedTotal?: number;
         /**
          * Itemised advancement purchases — a derived display list (NOT persisted)
@@ -209,7 +212,7 @@ export default class CharacterData extends CreatureTemplate {
          * went. Each entry's `cost` is the same value summed into the totals above,
          * so the list always reconciles with `calculatedTotal`. `category` is a
          * stable key (`characteristic` | `skill` | `talent` | `psychicPower` |
-         * `psyRating`) the template localises; `name` is the entity's display name.
+         * `psyRating` | `elite`) the template localises; `name` is the entity's display name.
          */
         purchases?: XpPurchase[];
     };
@@ -1109,6 +1112,28 @@ export default class CharacterData extends CreatureTemplate {
     }
 
     /**
+     * XP spent on owned Elite Advances: each elite's authored `xpCost`, except one
+     * another owned origin grants (`grants.elites`, e.g. DH2's Mystic role and the
+     * Psyker elite), which is free. An elite carries its cost on its own document, so
+     * it counts here whichever path added it — the origin-path builder or the
+     * advancement dialog.
+     * @param {XpPurchase[]} purchases  Display list to append each elite to.
+     * @returns {number}  Summed elite cost.
+     */
+    #eliteSpend(purchases: XpPurchase[]): number {
+        const origins = this._originPathItems();
+        const granted = grantedEliteSources(origins);
+        let spent = 0;
+        for (const item of origins) {
+            if (!isEliteStep(item.system)) continue;
+            const cost = eliteCharge(item.system, originSource(item), granted);
+            spent += cost;
+            purchases.push({ name: item.name, cost, category: 'elite' });
+        }
+        return spent;
+    }
+
+    /**
      * XP spent on BC Infamy advances.
      *
      * These are recorded only in the chaosAdvancements ledger, not in the
@@ -1145,13 +1170,15 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentTalents = items.talents;
         this.experience.spentPsychicPowers = ratingSpend + items.psychicPowers;
         this.experience.spentInfamy = this.#infamySpend();
+        this.experience.spentElites = this.#eliteSpend(purchases);
 
         this.experience.calculatedTotal =
             this.experience.spentCharacteristics +
             this.experience.spentSkills +
             this.experience.spentTalents +
             this.experience.spentPsychicPowers +
-            this.experience.spentInfamy;
+            this.experience.spentInfamy +
+            this.experience.spentElites;
 
         // Experience spent is fully derived from purchased advancements (#240): mirror it
         // onto `used` (the field the sheet and affordability checks read) and recompute

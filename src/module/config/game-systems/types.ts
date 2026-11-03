@@ -91,9 +91,16 @@ export interface AdvanceOption {
     prerequisites?: Prerequisite[];
 }
 
-/** Prerequisite structure */
+/**
+ * Prerequisite structure.
+ * - `characteristic`: `key` a characteristic, `value` its minimum total.
+ * - `skill` / `talent`: `key` the skill or talent name.
+ * - `influence`: `value` the minimum Influence (`key` unused).
+ * - `origin` / `notOrigin`: `key` the compendium UUID of an origin-path document
+ *   (an elite advance, a background) the character must, or must not, own.
+ */
 export interface Prerequisite {
-    type: 'characteristic' | 'skill' | 'talent';
+    type: 'characteristic' | 'skill' | 'talent' | 'influence' | 'origin' | 'notOrigin';
     key: string;
     value?: number;
 }

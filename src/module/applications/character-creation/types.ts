@@ -93,6 +93,8 @@ export interface ItemDataLike {
     type?: string;
     img?: string;
     flags?: { core?: CoreFlags } & Record<string, CoreFlags | undefined>;
+    /** Document stats; the builder stamps `compendiumSource` on the origins it creates. */
+    _stats?: { compendiumSource?: string | null };
     system?: ItemSystemLike;
 }
 
