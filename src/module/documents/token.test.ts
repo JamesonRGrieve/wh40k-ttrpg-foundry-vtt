@@ -1,5 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { importModelOrSkip } from '../testing/model-import.ts';
+
+// token.ts declares `class TokenDocumentWH40K extends TokenDocument`. Without that
+// Foundry global the import throws, importModelOrSkip returns undefined and every
+// test below returned early without asserting anything. The static HUD handlers
+// under test never touch the base class, so an empty one is enough.
+vi.stubGlobal('TokenDocument', class {});
 
 describe('TokenDocumentWH40K', () => {
     it('exports TokenDocumentWH40K class', async () => {
