@@ -18,6 +18,7 @@
  */
 
 import { alignmentLabelKey } from '../config/game-systems/bc-advancement-config.ts';
+import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
 /** The Chaos alignments a prerequisite can require; '' requires none. */
@@ -97,6 +98,23 @@ function numberRecord(value: unknown, allowed?: readonly string[]): Record<strin
     return out;
 }
 
+/**
+ * Characteristic minimums keyed by the actor's full characteristic key. Content
+ * authors both spellings (`willpower` and `wp`, `Fel`), but the check compares
+ * against the actor's full keys, so a short key could never be met in play. An
+ * unknown key is kept as written (it then reads as unmet, which surfaces it); two
+ * spellings of one characteristic keep the higher minimum.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: value is the raw source record numberRecord narrows
+function characteristicMinimums(value: unknown): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const [key, min] of Object.entries(numberRecord(value))) {
+        const full = normalizeCharacteristicKey(key) ?? key;
+        out[full] = Math.max(out[full] ?? min, min);
+    }
+    return out;
+}
+
 function isAlignment(value: string): value is PrerequisiteAlignment {
     return (PREREQUISITE_ALIGNMENTS as readonly string[]).includes(value);
 }
@@ -117,7 +135,7 @@ export function toStructuredPrerequisites(raw: unknown): StructuredPrerequisites
     const alignment = typeof source.alignment === 'string' && isAlignment(source.alignment) ? source.alignment : '';
     return {
         text: typeof source.text === 'string' ? source.text : '',
-        characteristics: numberRecord(source.characteristics),
+        characteristics: characteristicMinimums(source.characteristics),
         skills: stringList(source.skills),
         talents: stringList(source.talents),
         talentsAny: stringList(source.talentsAny),

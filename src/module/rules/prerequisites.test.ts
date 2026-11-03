@@ -62,6 +62,22 @@ describe('toStructuredPrerequisites (#673, #675)', () => {
         });
     });
 
+    it('keys characteristic minimums by the full key, whatever spelling the content used', () => {
+        // Content stores short keys (`wp`, `Fel`) as well as full ones; the check reads the
+        // actor's full keys, so a short-keyed prerequisite could never be met.
+        const raw = { characteristics: { wp: 40, Fel: 30, ballisticSkill: 35, zzz: 10 } };
+        expect(toStructuredPrerequisites(raw).characteristics).toEqual({ willpower: 40, fellowship: 30, ballisticSkill: 35, zzz: 10 });
+        // Two spellings of one characteristic keep the higher minimum.
+        expect(toStructuredPrerequisites({ characteristics: { wp: 35, willpower: 40 } }).characteristics).toEqual({ willpower: 40 });
+    });
+
+    it('a short-keyed minimum is met by the actor’s characteristic of that name', () => {
+        const prereqs = toStructuredPrerequisites({ characteristics: { wp: 40 } });
+        const view: PrerequisiteActorView = { characteristics: { willpower: 45 }, skillRanks: {}, talents: [], alignment: '', thresholds: {} };
+        expect(unmetPrerequisites(prereqs, view)).toEqual([]);
+        expect(unmetPrerequisites(prereqs, { ...view, characteristics: { willpower: 35 } })).toEqual(['Willpower 40+']);
+    });
+
     it('keeps a known alignment and thresholds on known stats, and drops the rest', () => {
         const raw = { alignment: 'nurgle', thresholds: { corruption: 30, infamy: 40, wealth: 9 }, talentsAny: ['Hatred'] };
         expect(toStructuredPrerequisites(raw)).toEqual({ ...NONE, alignment: 'nurgle', thresholds: { corruption: 30, infamy: 40 }, talentsAny: ['Hatred'] });
