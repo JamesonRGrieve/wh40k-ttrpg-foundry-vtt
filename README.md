@@ -184,6 +184,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 
 - **System code** (TypeScript, Handlebars templates, CSS) — original work under the project license.
 - **Icon references** — the system uses [game-icons.net](https://game-icons.net/) icons (CC BY 3.0), loaded from a CDN rather than bundled. A small set of [Font Awesome Free](https://fontawesome.com/license/free) icons (CC BY 4.0) and [Lucide](https://lucide.dev/license) icons (ISC License) is inlined as SVG into `src/module/icons/registry.generated.ts`. See `src/icons/ATTRIBUTION.md`. No other image assets are bundled — UI chrome is styled with CSS/Tailwind.
+- **Sounds** — the attack-cue and status sounds in `src/packs/sounds/` are CC0 sound effects by [Kenney](https://kenney.nl) and rubberduck ([OpenGameArt.org](https://opengameart.org)). See `src/packs/sounds/ATTRIBUTION.md`.
 
 ### What this repository does NOT contain
 

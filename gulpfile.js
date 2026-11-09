@@ -62,6 +62,9 @@ const STATIC_FILES = [
   // by buildSystem — build-compendium.sh stages it beside the compiled packs, so
   // it only ships via the private deploy, never the public release.)
   "src/packs/images/**/*",
+  // CC0 cue and status sounds (#609), referenced as `systems/wh40k-rpg/packs/sounds/...`
+  // and credited in src/packs/sounds/ATTRIBUTION.md, which ships beside them.
+  "src/packs/sounds/**/*",
   "src/lang/**/*",
   "src/*.json"
 ];

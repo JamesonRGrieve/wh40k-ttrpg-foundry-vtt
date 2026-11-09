@@ -1221,8 +1221,7 @@ resolved roll outcome onto it; nothing in `src/` names a weapon.
   Sequencer module when it is active. Without one (or without Sequencer) the preset
   is drawn.
 - **`sounds`** — optional sound files per cue event. Several for one event are
-  picked from at random per shot. **Empty by default: an event with no sound plays
-  silently.**
+  picked from at random per shot. An event with no sound plays silently.
 
 Cue events (one vocabulary for all six lines): `fire`, `hit`, `miss`, `critical`
 (the line's Righteous Fury), `jam`, `overheat`, `explode` (a weapon destroyed on an
@@ -1231,8 +1230,20 @@ unmodified 00), `scatter`, `blast`, `spray` (area templates, #599), `melee-hit`,
 
 **Licensing.** Only CC0, CC-BY (credited the way the inlined icons are) or
 AGPL-compatible art and audio may be referenced. Nothing from unlicensed packs (see
-the removed GameDevMarket and GW assets). The system ships no cue art or audio of its
-own: every preset is drawn procedurally.
+the removed GameDevMarket and GW assets). The system ships no cue art of its own:
+every preset is drawn procedurally.
+
+**Shipped sounds (#609).** The system ships a CC0 sound set in `src/packs/sounds/`
+(copied to `dist/packs/sounds/`, referenced as `systems/wh40k-rpg/packs/sounds/…`),
+credited file by file in `src/packs/sounds/ATTRIBUTION.md`. Sounds are chosen **per
+preset, never per weapon**: every weapon, psychic power and condition carries the set
+for the preset it plays, and one with no preset carries its attack kind's default
+(`tracer`, `blade`, `warp`). The private content's
+`tools/author_cue_sounds.py` holds the preset → file table and writes it; it only
+rewrites a sound list that is empty or points wholly into `packs/sounds/`, so a
+hand-authored list is kept. To change a preset's sound, edit that table and re-run the
+tool, rather than editing documents one by one. A new file goes into
+`src/packs/sounds/<source>/` with its credit row.
 
 ### Status visuals (condition token effects)
 
@@ -1264,7 +1275,9 @@ condition. A condition with no `visual` (or an empty one) shows nothing.
 - **`intensity`** — `perStack` is added for each stack past the first (several
   effects conferring the status, or a stackable condition item's `stacks`), up to
   `max` (1–3). `perStack: 0` means stacking does not change the look.
-- **`sounds`** — optional one-shot sounds on `apply` / `remove`. **Empty by default.**
+- **`sounds`** — optional one-shot sounds on `apply` / `remove`. Every condition
+  with a preset or filter carries the shipped set for it (see *Shipped sounds* under
+  attack cues); one with no visual has none.
 
 Presets are assigned from what the condition's own rules text and structured fields
 say it is (a per-round fire tick → `burning`, `actionLimit: halfActionOnly` from
