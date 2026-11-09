@@ -36,7 +36,7 @@ concurrency:
 jobs:
   check:
     name: Lint · typecheck · tests (no e2e)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,7 +57,7 @@ jobs:
 
   ratchets:
     name: Coverage ratchets (no regressions)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:

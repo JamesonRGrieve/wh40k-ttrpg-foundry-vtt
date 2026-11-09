@@ -43,7 +43,7 @@ concurrency:
 jobs:
   publish:
     name: Build + publish (${{ startsWith(github.ref, 'refs/tags/v') && 'release' || 'nightly' }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # A tagged release runs in the `release` environment, which requires the
     # maintainer's approval in GitHub before any step (and its secrets) runs, and
     # which only `v*` tags may deploy to. Nightly builds use no environment.
