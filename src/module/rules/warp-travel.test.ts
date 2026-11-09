@@ -207,15 +207,15 @@ describe('resolveLeaveWarp (#193)', () => {
 
 describe('parsePerilText (#193)', () => {
     it('splits a bold-led entry (the authored `<b>name</b>: effect` form) into name and effect', () => {
-        const r = parsePerilText('<p><b>The Gibbering</b>: Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.</p>');
+        const r = parsePerilText('<p><b>The Gibbering</b>: Sample effect text, 1d5+1 rounds.</p>');
         expect(r.name).toBe('The Gibbering');
-        expect(r.effect).toBe('Challenging Willpower test or 1d5+1 Insanity and Stunned 1d5 rounds.');
+        expect(r.effect).toBe('Sample effect text, 1d5+1 rounds.');
     });
 
     it('accepts <strong> as the name delimiter and an em-dash separator', () => {
-        const r = parsePerilText('<p><strong>Destruction</strong> — Irrevocably destroyed; 50% chance a daemonic entity takes his place.</p>');
+        const r = parsePerilText('<p><strong>Destruction</strong> — Sample result text for the parser.</p>');
         expect(r.name).toBe('Destruction');
-        expect(r.effect).toBe('Irrevocably destroyed; 50% chance a daemonic entity takes his place.');
+        expect(r.effect).toBe('Sample result text for the parser.');
     });
 
     it('strips inline markup inside the effect prose', () => {

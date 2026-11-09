@@ -111,14 +111,18 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('compendium image paths (#239)', () => {
 
         const broken = new Map<string, number>();
         for (const [ref, count] of refCounts) {
-            // Pack-bundled art (`packs/...`) lives in the private content root
-            // (src/packs-private); other bundled assets (`icons/...`, `ui/...`)
-            // are public under src/.
+            // `packs/...` is served from two roots merged into dist/packs: the
+            // public generic tree (src/packs, e.g. the CC0 cue sounds of #609,
+            // copied by the gulp static glob) and the private content root
+            // (src/packs-private, its staged art). Other bundled assets
+            // (`icons/...`, `ui/...`) are public under src/.
             const rest = ref.slice(PREFIX.length);
-            const onDisk = rest.startsWith('packs/') ? resolve(SRC_ROOT, 'packs-private', rest.slice('packs/'.length)) : resolve(SRC_ROOT, rest);
+            const candidates = rest.startsWith('packs/')
+                ? [resolve(SRC_ROOT, rest), resolve(SRC_ROOT, 'packs-private', rest.slice('packs/'.length))]
+                : [resolve(SRC_ROOT, rest)];
             // existsSync is case-sensitive on Linux, which is the property
             // that makes the `.png` vs `.PNG` class of bug detectable here.
-            if (!existsSync(onDisk)) broken.set(ref, count);
+            if (!candidates.some((onDisk) => existsSync(onDisk))) broken.set(ref, count);
         }
 
         const total = [...broken.values()].reduce((a, b) => a + b, 0);

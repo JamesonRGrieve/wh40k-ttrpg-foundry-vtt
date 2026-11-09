@@ -47,7 +47,7 @@ export const COMMAND_BASE_DIFFICULTY = 10;
 /** Hull Integrity damage per degree the raider wins by. */
 export const HIT_AND_RUN_HULL_DAMAGE_PER_DOS = 1;
 
-/** RAW: roll 1d5 on the Critical Hit chart twice and select one. */
+/** RAW: two 1d5 rolls on the Critical Hit chart; the raider keeps one. */
 export const HIT_AND_RUN_CRIT_PICKS = 2;
 
 /** Langpack keys for the Hit and Run components. */

@@ -27,10 +27,9 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = DRIVE_PILOT_VEHICLE_DRIVING;
     /**
-     * DW: "The number of extra hits scored in this manner cannot exceed the
-     * weapon's … Rate of Fire" (both bursts); Suppressing Fire: "The number of
-     * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
-     * Full Automatic rate of fire" — #607.
+     * DW: a burst's extra hits are capped at the weapon's rate of fire (both
+     * bursts), Suppressing Fire's total hits likewise, and Storm's at double the
+     * full-auto rate — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**

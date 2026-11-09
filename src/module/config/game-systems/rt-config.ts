@@ -69,7 +69,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         semi: { attackModifier: 10, actionCost: 'full' },
         full: { attackModifier: 20, actionCost: 'full' },
     };
-    /** RT: "When Dodging Fully-Automatic or Semi-Automatic Bursts, each degree of success on the Dodge Test negates one additional hit." — #414. */
+    /** RT: dodging a semi- or full-auto burst cancels one more hit for every degree of success — #414. */
     /**
      * RT, Grapple: Slip Free is "a Challenging (+0) Contortionist Skill Test".
      * Throw Down only makes the opponent Prone: RT prints no further bonus.

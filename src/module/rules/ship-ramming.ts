@@ -3,10 +3,9 @@
  * Boarding Actions).
  *
  * RAW shape:
- *   - A ship that ends its Manoeuvre Action within one VU of an enemy, bow
- *     facing it, may give up its Shooting Action to ram. The helmsman makes a
- *     **Hard (−20) Pilot (Space Craft) + Manoeuvrability Test** — an ordinary
- *     test, not an opposed one.
+ *   - Ending its Manoeuvre Action within one VU of an enemy with its bow
+ *     towards it, a ship can trade its Shooting Action for a ram: a Hard (−20)
+ *     Pilot (Space Craft) + Manoeuvrability Test by the helmsman, unopposed.
  *   - On a success the rammer deals a die set by its hull size **plus its prow
  *     armour**, ignoring void shields. The defender's armour does not reduce
  *     it.

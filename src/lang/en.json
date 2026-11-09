@@ -7325,7 +7325,7 @@
             "Snare": "Snare (X)",
             "SnareDesc": "Target must make Agility test at -10×X or be immobilised.",
             "Shocking": "Shocking",
-            "ShockingDesc": "Target must make Toughness test or be stunned for 1 round.",
+            "ShockingDesc": "The target tests Toughness; on a failure it is Stunned for 1 round.",
             "Shock": "Shock",
             "ShockDesc": "Electrical damage that can arc to nearby targets in water.",
             "Bolt": "Bolt",

@@ -217,9 +217,9 @@ export async function owComradeHeal(this: Host, event: Event, _target: HTMLEleme
 /* -------------------------------------------- */
 
 /**
- * The Comrade receives an Order that lets it recover from Fear and Pinning (OW
- * core: it stays affected "until they receive an order that allows them to
- * recover"; the Sergeant's is one). Clears both, and states it on a card.
+ * The Comrade receives an Order that lets it recover from Fear and Pinning (OW:
+ * it stays affected until it gets such an Order; the Sergeant's is one). Clears
+ * both, and states it on a card.
  *
  * Wired to `data-action="owComradeRecover"`; the panel enables it only while the
  * Comrade is fleeing or pinned.
@@ -333,8 +333,8 @@ async function applyComradeHitTo(strike: ComradeHitStrike): Promise<void> {
 /* -------------------------------------------- */
 
 /**
- * A combat ended: a Comrade that fled stops fleeing (OW: "They remain
- * affected until the end of combat, or until they receive an order"). Pinning does
+ * A combat ended: a Comrade that fled stops fleeing (OW: fleeing lasts until the
+ * combat ends or an Order ends it first). Pinning does
  * not end with the combat. Run by the active GM only, so it happens once.
  */
 export async function clearComradeFearAtCombatEnd(actors: Iterable<Actor.Implementation | null>): Promise<void> {

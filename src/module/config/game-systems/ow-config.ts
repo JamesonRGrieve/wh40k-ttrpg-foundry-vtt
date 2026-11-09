@@ -41,7 +41,7 @@ export const OW_ACQUISITION_LADDER = {
         unique: 'discretion',
     },
     craftsmanship: { poor: 20, common: 0, good: -30, best: -50 },
-    // OW: "failure means the Guardsmen could not locate or obtain the item" — no Logistics Rating is lost.
+    // OW: a failed test just means the item was not found — no Logistics Rating is lost.
     failureLoss: null,
 } as const satisfies AcquisitionLadder;
 
@@ -149,10 +149,9 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification: WeaponModificationRules = TRADE_ARMOURER_FITTING_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * OW: "The number of extra hits scored in this manner cannot exceed the
-     * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
-     * hits scored may not exceed …"; Storm: "up to the weapon's firing rate, as
-     * normal" — #607.
+     * OW: a burst's extra hits are capped at the weapon's rate of fire (both
+     * bursts), Suppressing Fire's total hits likewise, and Storm's at the plain
+     * rate of fire — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'rof' };
     /**
@@ -184,10 +183,9 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
     override readonly armourCraftsmanship = PRINTED_ARMOUR_CRAFTSMANSHIP;
 
     /**
-     * OW, Comrades in Combat: Cohesion is "within 5 metres of his
-     * controlling Player Character"; a Comrade "is limited to two Half Actions or one
-     * Full Action per Turn"; it dies when it "would suffer 10 Insanity or 10
-     * Corruption in a single Round".
+     * OW, Comrades in Combat: Cohesion means staying within 5 metres of the
+     * controlling PC; a Comrade gets two Half Actions or one Full Action a Turn;
+     * it dies on taking 10 Insanity or 10 Corruption in one Round.
      */
     override readonly comradeRules: ComradeRules = { cohesionRangeM: 5, actionBudget: 2, mentalDeathThreshold: 10 };
 

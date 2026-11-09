@@ -553,9 +553,8 @@ WH40K.armourProperties = {
         label: 'WH40K.ArmourProperty.AutoStabilized',
         description: 'WH40K.ArmourProperty.AutoStabilizedDesc',
     },
-    // A Warp Weapon ignores armour "unless the armour is created from psychoactive
-    // materials or is somehow warded against the Warp" (DH2, OW) / "carries the holy
-    // quality" (DH1, DW, RT) / is "specially warded" (BC) — #414.
+    // A Warp Weapon ignores armour unless the armour is warded against the Warp:
+    // psychoactive or warded (DH2, OW), Holy (DH1, DW, RT), warded (BC) — #414.
     'hexagrammic': {
         label: 'WH40K.ArmourProperty.Hexagrammic',
         description: 'WH40K.ArmourProperty.HexagrammicDesc',

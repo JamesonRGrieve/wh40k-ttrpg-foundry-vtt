@@ -1,11 +1,10 @@
 /**
  * @file Evasion (#414): a Dodge or Parry resolved against the attack it answers.
  *
- * DH2, Evasion: "If he succeeds on the test … the hit is negated
- * and the attack is considered to have missed." Against an attack that
- * inflicts several hits, "each degree of success on the Evasion test negates
- * one additional hit" — and against Storm, "each degree of success on the test
- * negates two hits". Which attacks count as multi-hit differs per line, so that
+ * DH2, Evasion: a passed test cancels the hit, and the attack counts as a
+ * miss. Against an attack that lands several hits, every degree of success
+ * cancels one more hit — and against Storm, two more per degree. Which attacks
+ * count as multi-hit differs per line, so that
  * part is data on each game-system config ({@link EvasionRules}):
  *
  *   - DH2: Swift / Lightning Attacks, Semi- / Full Auto Bursts, Twin-Linked,

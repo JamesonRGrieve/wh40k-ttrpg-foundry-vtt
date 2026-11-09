@@ -3,10 +3,10 @@
  * Ramming and Boarding Actions and the turret bonus).
  *
  * RAW shape:
- *   1. **Lock on.** A ship that ends its Manoeuvre Action within 1 VU of its
- *      target may give up its Shooting Action to board. The helmsman makes a
- *      **Hard (−20) Pilot (Space Craft) + Manoeuvrability Test**; on a success
- *      the two ships crash together and the boarding action begins.
+ *   1. **Lock on.** Ending its Manoeuvre Action within 1 VU of its target, a
+ *      ship can trade its Shooting Action for a boarding attempt: a Hard (−20)
+ *      Pilot (Space Craft) + Manoeuvrability Test by the helmsman. Success
+ *      brings the hulls together and starts the boarding action.
  *   2. **Boarding round.** Each Strategic Turn while locked, the leader of each
  *      ship's warriors makes an **opposed Command Test**:
  *        • the ship with the larger Crew Population gains +10 per full 10

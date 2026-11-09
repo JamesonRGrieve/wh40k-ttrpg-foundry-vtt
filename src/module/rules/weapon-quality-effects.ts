@@ -467,10 +467,10 @@ export function warpWardingProperties(properties: Readonly<Record<string, { read
 /**
  * Whether a weapon ignores the armour (and cover) at the struck location (#414).
  *
- * Warp Weapon, every line: the attack is "able to ignore such mundane things as
- * armour or cover … unless the armour is created from psychoactive materials or
- * is somehow warded against the Warp" (DH2, OW; DH1 / DW / RT: "carries the holy
- * quality"; BC: "armour specially warded work[s] normally"). So the armour holds
+ * Warp Weapon, every line: the attack passes through ordinary armour and cover,
+ * but not armour that is warded against the Warp (DH2, OW: psychoactive or
+ * warded armour; DH1 / DW / RT: armour with the Holy quality; BC: warded
+ * armour). So the armour holds
  * when ANY piece covering the location carries a warding property; with no
  * warded piece (or no armour at all) the hit ignores it.
  * @param {QualityItem | null | undefined} weapon  The attacking weapon.

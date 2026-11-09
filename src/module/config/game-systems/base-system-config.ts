@@ -76,10 +76,9 @@ export function printedGrappleRules(slipFreeSkill: string, thrownDownBonus: numb
 }
 
 /**
- * The fitting rule DH1, RT and OW print word for word: "A character with the
- * Trade (Armourer) skill may upgrade weapons by making a successful test" (DH1
- * Weapon Upgrades; RT; OW Weapon Upgrades). No modifier,
- * no failure consequence, no removal test (#136).
+ * The fitting rule DH1, RT and OW share: one successful Trade (Armourer) test
+ * fits an upgrade to a weapon. No modifier, no failure consequence, no removal
+ * test (#136).
  */
 export const TRADE_ARMOURER_FITTING_RULES: WeaponModificationRules = {
     fitSkill: { skill: 'trade', specialisation: 'Armourer' },

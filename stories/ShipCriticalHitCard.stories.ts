@@ -66,7 +66,7 @@ type Story = StoryObj<CardArgs>;
 
 /** Rolled a 1. */
 export const Holed: Story = {
-    args: result(1, 'Holed', "A lucky hit has wrenched open the ship's hull, exposing it to space."),
+    args: result(1, 'Holed', 'Sample text: a breach opens a compartment to the void.'),
 };
 
 /** Rolled a 2. */
@@ -76,20 +76,20 @@ export const InternalDamage: Story = {
 
 /** Rolled a 3. */
 export const SensorsDamaged: Story = {
-    args: result(3, 'Sensors Damaged', "The ship's auspex arrays have been knocked out, leaving the vessel blind."),
+    args: result(3, 'Sensors Damaged', 'Sample text: the ship cannot see past its own hull.'),
 };
 
 /** Rolled a 4. */
 export const ThrustersDamaged: Story = {
-    args: result(4, 'Thrusters Damaged', "The ship's manoeuvring thrusters are smashed, venting randomly and leaking fuel."),
+    args: result(4, 'Thrusters Damaged', 'Sample text: the ship turns sluggishly.'),
 };
 
 /** Rolled a 5. */
 export const Fire: Story = {
-    args: { ...result(5, 'Fire!', 'Alarms scream through the hull as hungry flames roar through passageways and compartments.'), image: 'icons/svg/fire.svg' },
+    args: { ...result(5, 'Fire!', 'Sample text: a blaze takes hold below decks.'), image: 'icons/svg/fire.svg' },
 };
 
-const CATASTROPHIC = 'A succession of powerful blows and explosions rip through the ship, causing horrendous damage.';
+const CATASTROPHIC = 'Sample text: the ship is torn apart.';
 
 /**
  * A Crippled ship takes 14 damage past its Armour (#187): the value runs past

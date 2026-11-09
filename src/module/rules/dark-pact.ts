@@ -12,8 +12,8 @@
  * - "A Daemon's Disposition begins at 15+ the character's Corruption total".
  *   Disposition is the core NPC characteristic on a 0–100 scale. The 15 and
  *   the Corruption term are each pact's `negotiation` data.
- * - "a character who makes a Dark Pact gains 2d10+10 Corruption points":
- *   each pact's `corruptionFormula`.
+ * - The Corruption a pact costs its maker (2d10+10): each pact's
+ *   `corruptionFormula`.
  * - The GM chooses which Boons and Banes a bargain carries. A taken
  *   entry with mechanics (`modifiers`, `grants`) is applied to the actor through
  *   the central paths: an ActiveEffect built by `modifiersToEffectChanges` and

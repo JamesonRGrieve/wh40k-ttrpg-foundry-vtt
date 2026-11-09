@@ -450,8 +450,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
     /**
      * Roll one owed Malignancy Test. No-op when no test is owed. A Twisted Flesh
-     * Mutant is first offered RAW's choice to fail it ("can
-     * always choose to fail any test associated with resisting malignancy").
+     * Mutant is first offered RAW's choice to fail it on purpose (it may always
+     * fail a test to resist Malignancy).
      */
     rollMalignancyTest(): void {
         if (!this.usesMalignancyTest || this.system.malignancyTestsPending <= 0) return;

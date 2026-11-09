@@ -259,8 +259,8 @@ function sameRound(record: { combatId: string; round: number }, now: CombatRound
 }
 
 /**
- * The Comrade's Half Actions left this Turn ("limited to two Half Actions
- * or one Full Action per Turn"). A record from an earlier Round is spent no more.
+ * The Comrade's Half Actions left this Turn (two Half Actions, or one Full
+ * Action, a Turn). A record from an earlier Round is spent no more.
  * Out of combat there is no Turn to spend, so the whole budget is there.
  */
 export function comradeActionsLeft(turn: ComradeTurnRecord, now: CombatRoundStamp | null, rules: ComradeRules): number {
@@ -301,12 +301,11 @@ export interface HitTransferResult {
 /**
  * Whether a hit aimed at the PC strikes its Comrade ("Comrades Being
  * Attacked"):
- *   - Doubles: "as long as his Comrade is in Cohesion … If a successful to hit roll
- *     against a Player Character also result in doubles … the hit strikes the
- *     Comrade instead." Only one hit of a multi-hit attack.
- *   - Blast and Spray "automatically hit any targets in their area of affect. This
- *     includes Comrades."
- * Whether a hit really can transfer "relies a bit on common sense" (the Comrade
+ *   - Doubles: while the Comrade is in Cohesion, a successful hit roll on the
+ *     PC that comes up doubles lands on the Comrade instead. Only one hit of a
+ *     multi-hit attack.
+ *   - Blast and Spray hit everything in their area, Comrades included.
+ * Whether a hit really can transfer is left to the GM's judgement (the Comrade
  * behind a metre-thick wall), which stays the GM's call.
  */
 export function transfersToComrade(ctx: HitTransferContext): HitTransferResult {

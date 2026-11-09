@@ -3,6 +3,7 @@ import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B: every NPC generator creates a real NPC (#644).
@@ -25,6 +26,7 @@ interface ProbeActor {
 interface ProbeWindow {
     game: {
         actors: { filter: (fn: (a: ProbeActor) => boolean) => ProbeActor[] };
+        settings: { get: (scope: string, key: string) => string };
         wh40k: {
             quickCreateNPC: (config?: object) => Promise<object | null>;
             batchCreateNPCs: (config?: object) => Promise<object[]>;
@@ -53,6 +55,52 @@ async function openGenerator(
         },
         { method: api, ctor: className, config: arg },
     );
+}
+
+/**
+ * What the world holds when an import's actor is not the expected type: every
+ * actor carrying this spec's prefix with its type, and the primary line the
+ * import falls back to. A full-suite run once timed out waiting on the bare
+ * import while the same spec passed alone, so a failure must name the state.
+ */
+async function importState(page: Page): Promise<string> {
+    return page.evaluate((prefix) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        const actors = w.game.actors.filter((a) => a.name.startsWith(prefix)).map((a) => `${a.name} (${a.type})`);
+        return `actors: [${actors.join(', ')}]; primary line: ${w.game.settings.get('wh40k-rpg', 'primary-game-system')}`;
+    }, PREFIX);
+}
+
+/**
+ * The page's JavaScript call stack right now, through the DevTools protocol. A
+ * page whose main thread never yields answers no `page.evaluate`, but the
+ * debugger can still pause it and read where it is stuck.
+ */
+async function pausedStack(page: Page): Promise<string> {
+    const cdp = await page.context().newCDPSession(page);
+    try {
+        await cdp.send('Debugger.enable');
+        const paused = new Promise<string>((resolve) => {
+            cdp.once('Debugger.paused', (event) => {
+                resolve(
+                    event.callFrames
+                        .slice(0, 12)
+                        .map((f) => `${f.functionName || '(anonymous)'} ${f.url.split('/').slice(-2).join('/')}:${f.location.lineNumber + 1}`)
+                        .join(' <- '),
+                );
+            });
+        });
+        await cdp.send('Debugger.pause');
+        const timeout = new Promise<string>((resolve) => {
+            setTimeout(() => resolve('the page did not pause (no JavaScript running)'), 5_000);
+        });
+        const stack = await Promise.race([paused, timeout]);
+        await cdp.send('Debugger.resume').catch(() => undefined);
+        return stack;
+    } finally {
+        await cdp.detach().catch(() => undefined);
+    }
 }
 
 async function createdTypes(page: Page, name: string): Promise<string[]> {
@@ -156,7 +204,19 @@ test.describe.serial('NPC generators create registered NPCs (Tier B, #644)', () 
         await parser.locator('textarea[name="rawInput"]').fill(bare);
         await parser.locator('[data-action="parse"]').first().click();
         await parser.locator('button[type="submit"]').click();
-        await expect.poll(async () => createdTypes(page, `${PREFIX} Imported Bare`)).toEqual(['dh2-npc']);
+        try {
+            await expect.poll(async () => createdTypes(page, `${PREFIX} Imported Bare`), { timeout: scaledMs(60_000) }).toEqual(['dh2-npc']);
+        } catch (error) {
+            // Read the stack first: a frozen page answers no evaluate, so importState would hang.
+            const stack = await pausedStack(page);
+            const state = await Promise.race([
+                importState(page),
+                new Promise<string>((resolve) => {
+                    setTimeout(() => resolve('world state unreadable (page unresponsive)'), scaledMs(10_000));
+                }),
+            ]);
+            throw new Error(`the bare import did not make one dh2-npc; ${state}; page stack: ${stack}`, { cause: error });
+        }
         recordCoverage('dialog.action', 'StatBlockParser.import');
     });
 });

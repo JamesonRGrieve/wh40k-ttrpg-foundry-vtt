@@ -18,7 +18,7 @@ const FIXTURE_GRANTS = {
         { name: 'Peer', specialization: 'Adepta Sororitas', uuid: 'Compendium.wh40k-rpg.dh2-talents.Item.DH2aTlnt00000018' },
         { name: 'Weapon Training', specialization: 'Bolt', uuid: 'Compendium.wh40k-rpg.dh2-talent-specializations.Item.DH2aTlnt00000026' },
     ],
-    specialAbilities: [{ name: 'Unlocked Advances', description: '<p>The character gains access to the Sister of Battle talent suite.</p>' }],
+    specialAbilities: [{ name: 'Unlocked Advances', description: '<p>Sample text: unlocks the talents of this advance.</p>' }],
 };
 
 const meta = {

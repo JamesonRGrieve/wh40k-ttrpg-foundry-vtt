@@ -17,8 +17,10 @@ import { scaledMs } from './lib/timing';
  * location — the live symptom (Wulf Tavik, built on the PDF Breacher).
  *
  * Real cases: the PDF Breacher (stat block AP 5), and the DH2 Arbitrator
- * (stat block AP 9, carrying an Enforcer Light Carapace, AP 5) before and after
- * equipping the carapace. Each NPC's sheet is captured on its Combat tab.
+ * (stat block AP 5, carrying an Enforcer Light Carapace, AP 5) before and after
+ * equipping the carapace. The Arbitrator's stat block held its soak (9) until
+ * the content was corrected to Armour Points, so its two values now coincide.
+ * Each NPC's sheet is captured on its Combat tab.
  *
  * Each flow records under `npc-armour.flow`. Keys MUST match NPC_ARMOUR_FLOWS
  * in scripts/e2e-coverage.mjs.
@@ -39,6 +41,8 @@ const HB_BESTIARY = 'wh40k-rpg.hb-dh2-actors-bestiary';
 const CARAPACE_UUID = compendiumUuid({ line: 'dh2', category: 'armour' }, 'Hm7xRcF2jNq4Wd9K');
 const CARAPACE_NAME = 'Enforcer Light Carapace';
 const CARAPACE_AP = 5;
+/** The DH2 Arbitrator's stat-block body AP (Armour Points, not soak). */
+const ARBITRATOR_STAT_BLOCK_AP = 5;
 const LINES = ['bc', 'dh1', 'dh2', 'dw', 'ow', 'rt'] as const;
 
 interface FlowResult {
@@ -163,13 +167,13 @@ test.describe.serial('worn armour sets an NPC’s AP (Tier B, #611)', () => {
                 record('breacher-stat-block-shows', ok, ok ? null : `body AP ${breacher.body}, silhouette shows "${shown}" (TB ${breacher.tb})`);
             }
 
-            // 2–3. The Arbitrator: stat block AP 9 while the carapace is carried; AP 5 once it is worn.
+            // 2–3. The Arbitrator: stat block AP 5 while the carapace is carried; the carapace's AP 5 once it is worn.
             const arbitrator = await importNpc(page, DH2_BESTIARY, 'Adeptus Arbites Arbitrator');
             if (arbitrator === null) record('arbitrator-before-equipping', false, `the Arbitrator could not be imported from ${DH2_BESTIARY}`);
             else {
                 created.push(arbitrator.id);
                 const before = await captureSheet(page, arbitrator.id, 'npc-armour-arbitrator-before-equip');
-                const beforeOk = arbitrator.body === 9 && before === String(9 + arbitrator.tb);
+                const beforeOk = arbitrator.body === ARBITRATOR_STAT_BLOCK_AP && before === String(ARBITRATOR_STAT_BLOCK_AP + arbitrator.tb);
                 record(
                     'arbitrator-before-equipping',
                     beforeOk,

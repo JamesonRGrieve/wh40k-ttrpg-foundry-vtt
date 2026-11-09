@@ -50,7 +50,7 @@ export const DISPOSITION_MODELS = {
         successBaseSteps: 0,
         testable: true,
     },
-    /** DH1, RT, DW: "improves by one step, plus one step per degree of success". */
+    /** DH1, RT, DW: one step better, and one more for each degree of success. */
     ladderStepPlusDegrees: {
         model: 'ladder',
         min: LADDER_STEPS.min,

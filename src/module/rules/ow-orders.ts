@@ -12,9 +12,8 @@
  *   - Cohesion: following the PC is only possible in Cohesion; out of it the
  *     Comrade moves only by the move Orders. An Order benefits the PC only while
  *     the Comrade is in Cohesion, unless the Order says otherwise.
- *   - A wounded Comrade "cannot Run"; a pinned one "may not take Actions
- *     until they receive an order that allows them to recover"; a fleeing one flees
- *     "as quickly as possible".
+ *   - A wounded Comrade cannot Run; a pinned one acts only once an Order lets
+ *     it recover; a fleeing one runs from the fight at full speed.
  *   - A benefit that lasts "this Turn" (Ranged Volley: "+5 to all Ballistics Skill
  *     Tests this Turn") is recorded with the Round it was given in, and reaches
  *     tests through {@link comradeOrderTestComponents}, a Path B collector.

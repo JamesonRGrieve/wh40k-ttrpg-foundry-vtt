@@ -317,7 +317,7 @@ const RECORDED_CRITICALS = [
         label: 'Sensors Damaged',
         rolled: 3,
         rollLabel: storyLocalize('WH40K.Voidcraft.Critical.RollLabel', { rolled: 3 }),
-        text: "<p><b>Sensors Damaged</b>: The ship's auspex arrays have been knocked out, leaving the vessel blind.</p>",
+        text: '<p><b>Sensors Damaged</b>: Sample text: the ship cannot see past its own hull.</p>',
     },
     {
         // #187: a Crippled ship's critical, read at its damage past Armour rather than rolled on 1d5.
@@ -325,7 +325,7 @@ const RECORDED_CRITICALS = [
         label: 'Holed',
         rolled: 1,
         rollLabel: storyLocalize('WH40K.Voidcraft.Critical.CrippledRollLabel', { rolled: 1 }),
-        text: "<p><b>Holed</b>: A lucky hit has wrenched open the ship's hull, exposing it to space.</p>",
+        text: '<p><b>Holed</b>: Sample text: a breach opens a compartment to the void.</p>',
     },
 ];
 

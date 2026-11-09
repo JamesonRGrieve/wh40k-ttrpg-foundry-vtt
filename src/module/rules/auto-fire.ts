@@ -33,9 +33,8 @@ export type BurstCapBasis = 'total' | 'extra';
 
 /**
  * Whether Storm lifts the ceiling (#607, #511).
- *   - `rof` — "up to the weapon's firing rate, as normal" (DH2, OW).
- *   - `double-rof` — "to a maximum of twice the weapon's Full Automatic rate of
- *     fire" (BC, DW); RT's 1.4 errata FAQ answers "Double the Rate of Fire"; DH1's
+ *   - `rof` — capped at the plain rate of fire (DH2, OW).
+ *   - `double-rof` — capped at double the full-auto rate of fire (BC, DW); RT's 1.4 errata FAQ answers "Double the Rate of Fire"; DH1's
  *     supplement Storm doubles every hit "up to
  *     the weapon's listed rate of fire".
  */

@@ -119,7 +119,7 @@ export const TableDraw: Story = {
                         effects: [
                             {
                                 name: 'Callophean Psy-Engine Discharge',
-                                effect: 'One target suffers 3d10+10 Energy damage as warp-lightning arcs from the director wand.',
+                                effect: 'Lightning leaps from the wand into one target: 3d10+10 Energy damage.',
                             },
                         ],
                     }),

@@ -47,8 +47,8 @@ const CHARGE_ACTION = 'Charge';
 
 /**
  * Whether an attack action is a Charge — the one attack action the zero-gravity
- * rule names ("making a Charge or Run action requires a Hard (−20) Agility
- * test"; Run is a movement action, not an attack). Whether the test is actually
+ * rule names (Charge and Run each need a Hard (−20) Agility test there; Run is
+ * a movement action, not an attack). Whether the test is actually
  * due is the scene environment's call (`rollZeroGravityManoeuvreTest`).
  */
 export function isChargeAction(action: string): boolean {

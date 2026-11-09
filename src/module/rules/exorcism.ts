@@ -5,8 +5,8 @@
  *      degree of success adds +5 to the later Mastery tests.
  *   2. The exorcism is an Extended Daemonic Mastery test (Very Hard −30 base,
  *      Exorcism Modifiers), each test taking 1d5 hours. The Daemon is cast out
- *      once the total degrees of success EXCEED the Daemon's Willpower bonus plus
- *      the possessed individual's Corruption bonus.
+ *      once the summed degrees of success EXCEED its Willpower bonus added to the
+ *      host's Corruption bonus.
  *   3. Every failed test inflicts 1 Fatigue per degree of failure. If that
  *      knocks the exorcist unconscious he gains 1d10 Corruption and the
  *      exorcism fails.

@@ -87,10 +87,9 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification = null;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * BC: "The number of extra hits scored in this manner cannot exceed the
-     * weapon's … rate of fire" (both bursts); Suppressing Fire: "The number of
-     * hits scored may not exceed …"; Storm: "to a maximum of twice the weapon's
-     * Full Automatic rate of fire" — #607.
+     * BC: a burst's extra hits are capped at the weapon's rate of fire (both
+     * bursts), Suppressing Fire's total hits likewise, and Storm's at double the
+     * full-auto rate — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'extra', suppressingCap: 'total', stormCap: 'double-rof' };
     /**

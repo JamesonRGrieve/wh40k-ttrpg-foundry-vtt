@@ -98,7 +98,7 @@ const PSYCHOTROKE = riderFixture({
 const RAD = riderFixture({
     test: { characteristic: 'toughness', modifier: -20 },
     characteristicDamage: { characteristic: 'toughness', formula: '2d10', perDegree: 0 },
-    effect: 'All living creatures caught in the blast must pass a Hard (–20) Toughness test or suffer 2d10 Toughness damage.',
+    effect: 'Each creature in the area tests Toughness at Hard (–20); on a failure it takes 2d10 Toughness damage.',
 });
 
 const RT_RAD = riderFixture({

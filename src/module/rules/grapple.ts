@@ -438,8 +438,8 @@ export function grappleSideModifiers(role: GrappleRole, thrownDown: boolean, rul
 /**
  * The grapple flag writes a won option makes, or null when it changes no state:
  * - Break Free and Slip Free end the grapple for both.
- * - Take Control swaps the roles: "he becomes the controller of the Grapple and his
- *   opponent becomes the Grappled target".
+ * - Take Control swaps the roles: the Grappled character takes control, and the
+ *   former controller is now the one held.
  * - Throw Down, in a line with a thrown-down bonus, marks the opponent thrown down.
  * - Stand puts both back on their feet, which ends that bonus.
  * Damage, Push, Ready and Use Item change no grapple state: Damage posts its hit,

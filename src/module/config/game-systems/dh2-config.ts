@@ -111,9 +111,8 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly weaponModification: WeaponModificationRules = DH2_WEAPON_MODIFICATION_RULES;
     readonly vehicleDriving: VehicleDrivingRules = OPERATE_VEHICLE_DRIVING;
     /**
-     * DH2: "The number of total hits scored in this manner cannot
-     * exceed the weapon's … rate of fire" (both bursts and Suppressing Fire);
-     * Storm: "up to the weapon's firing rate, as normal" — #607.
+     * DH2: the total hits are capped at the weapon's rate of fire (both bursts
+     * and Suppressing Fire), and Storm's at the plain rate of fire — #607.
      */
     readonly burstRules: BurstCapRules = { burstCap: 'total', suppressingCap: 'total', stormCap: 'rof' };
     /**

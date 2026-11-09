@@ -1,8 +1,8 @@
 /**
  * Daemonic Mastery test framework (a DH2 supplement).
  *
- * A Daemonic Mastery test is an opposed Willpower test against the Daemon at a
- * Very Hard (−30) base difficulty. Printed modifiers: +10 when the summoner
+ * Daemonic Mastery pits the summoner's Willpower against the Daemon's in an
+ * opposed test, Very Hard (−30) at base. Printed modifiers: +10 when the summoner
  * serves the Daemon's patron Chaos God, +30 when the Daemon's True Name is
  * known, and −30 for a further test made because the Daemon is ordered to act
  * against its nature. Anything else is a GM circumstance factor. Used by

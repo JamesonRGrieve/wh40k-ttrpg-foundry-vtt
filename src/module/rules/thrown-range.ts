@@ -3,9 +3,9 @@
  *
  * Every line's weapon tables print a muscle-powered weapon's Range as a multiple
  * of the wielder's Strength Bonus — `SBx3` for knives, axes, spears and grenades
- * — and every line defines Range as "how far the weapon can be accurately fired
- * in metres". DH1's core rules state it outright: "ranges for these weapons are
- * determined by your modified Strength Bonus". The multiple is pack content (the
+ * — and every line measures Range in metres of accurate fire. DH1's rules say
+ * so outright: a thrown weapon's range follows the thrower's modified Strength
+ * Bonus. The multiple is pack content (the
  * weapon's `attack.range.special`, or an NPC weapon's printed `range` string);
  * this module only reads the printed `SBx<N>` form and multiplies.
  *
