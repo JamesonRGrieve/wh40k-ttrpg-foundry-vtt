@@ -4,27 +4,23 @@ The canonical schema and naming reference for wh40k-rpg compendium content packs
 — the shape every `_source/*.json` document is authored in, and the conventions
 the build validator (`src/packs/validate-schema.cjs`) checks.
 
-**Two pack roots.** `src/packs` holds the public, hand-authored **generic**
-content packs plus the pack tooling (validators, templates, this doc's subject
-matter). The copyrighted book content lives in the private `src/packs-private`
-submodule and is compiled only when a build points `WH40K_PACKS_SRC` at it (the
-campaign deploy does this — see `deploy.sh`). Both roots share the identical
-schema, tooling, and this document; the split is purely which content ships
-publicly. Nothing in this file is source-book text — author generic, non-
-copyrighted content in `src/packs`.
+**Pack roots.** `src/packs` holds the public, hand-authored **generic** content
+packs plus the pack tooling (validators, this doc's subject matter). A build can
+compile another content root of the same shape by pointing `WH40K_PACKS_SRC` at
+it. Every root shares the same schema, tooling and this document. Nothing in this
+file is source-book text: author generic, non-copyrighted content in `src/packs`.
 
 **Six game lines.** The schema keys off six system ids — `dh1`, `dh2`, `rt`,
 `dw`, `bc`, `ow`. Dark Heresy 2e (`dh2`) is the canonical default line.
 
-**Frontmatter templates** for each item type live in the private content repo
-(`src/packs-private/_templates/*.yml`) — copy the matching template when
-authoring a new document. They are worked examples built on real book items, so
-they stay with the copyrighted content rather than in this public repo.
+**No frontmatter templates ship here.** Per-type worked examples are built on
+real book items, so they stay out of this public repo. Author from the schema
+below.
 
 **Pack declarations.** The public `src/system.json` declares only packs built
-from `src/packs`. The copyrighted content's `packs[]` and `packFolders` live in
-`src/packs-private/system.packs.json`; the campaign deploy merges them into the
-built `dist/system.json` (`scripts/merge-private-manifest.mjs`), and
+from `src/packs`. Another content root declares its own `packs[]` and `packFolders` in its
+`system.packs.json`; a build that uses that root merges them into the built
+`dist/system.json` (`scripts/merge-private-manifest.mjs`), and
 `pnpm packs:folders` regenerates that fragment's folder tree.
 
 ---
@@ -152,7 +148,7 @@ disposition, *not* species, and *not* whether the class reads as a "person" or a
   allied or summonable NPCs the party fields (e.g. currency-costed pre-made
   characters).
 - `actors-mounts` — ridden/beast companions.
-- `actors-ships` — ship-scale Actors (`*-starship`).
+- `actors-ships` — ship-scale Actors (`*-voidcraft`; the older `*-starship` type is legacy, converted by the GM).
 - `actors-vehicles` — vehicle Actors.
 
 `bestiary`, `npcs`, `reinforcements`, and `mounts` are all the same `*-npc`
@@ -263,7 +259,7 @@ the resolved document's type.
 ### Document type vs. pack prefix
 
 The Foundry document **`type`** field is the bare content type with **no system
-prefix** (`npc`, `character`, `vehicle`, `starship`, `weapon`, `talent`,
+prefix** (`npc`, `character`, `vehicle`, `voidcraft`, `weapon`, `talent`,
 `originPath`, …) — the schema is homologated and the owning line is carried in a
 data field. This de-prefixing applies **only to the `type` field**; **pack names
 keep their `<line>-` prefix**.
@@ -275,8 +271,8 @@ source book, used identically across every category pack of that book. The
 registry is the authoritative slug ↔ title map and **must mirror the standardized
 `source.<line>.book` string** the book's content carries. One book = one slug; do
 not coin a new slug for a book that already has one, and do not reuse a slug for
-two books. The concrete per-line registry lives with the content (the private
-submodule's `book-labels.json` holds the real book titles, read by
+two books. The concrete per-line registry lives with the content (the content
+root's `book-labels.json` holds the real book titles, read by
 `scripts/gen-pack-folders.mjs`); public generic content uses `core` for its
 single implied book. `errata` is **not** a book slug — errata is an entity flag
 (see *Migration debt*), not a pack/book.
@@ -617,8 +613,8 @@ Reference rules:
   alias).
 - the target may be **relative** to the referencing file, or rooted at the active
   pack tree with `packs/<group>/<pack>/…` or `src/packs/<group>/<pack>/…` (both
-  resolve within the pack root currently being built — `src/packs` or
-  `src/packs-private`).
+  resolve within the pack root currently being built: `src/packs`, or the root
+  `WH40K_PACKS_SRC` names).
 - the referenced file may itself be another reference stub; circular references are
   invalid.
 
@@ -910,8 +906,8 @@ while legacy-shaped files keep building.
 - run standalone: `pnpm packs:validate` (add `--verbose` for the per-file list;
   default output is a grouped summary by rule).
 - it also runs automatically during `gulp packs` / `pnpm packs` in warn-only mode.
-- to validate the private content root, point the validator at it, e.g.
-  `WH40K_PACKS_SRC=src/packs-private pnpm packs:validate`.
+- to validate another content root, point the validator at it:
+  `WH40K_PACKS_SRC=<root> pnpm packs:validate`.
 
 What it checks (each a separate warning rule):
 
@@ -1238,8 +1234,8 @@ every preset is drawn procedurally.
 credited file by file in `src/packs/sounds/ATTRIBUTION.md`. Sounds are chosen **per
 preset, never per weapon**: every weapon, psychic power and condition carries the set
 for the preset it plays, and one with no preset carries its attack kind's default
-(`tracer`, `blade`, `warp`). The private content's
-`tools/author_cue_sounds.py` holds the preset → file table and writes it; it only
+(`tracer`, `blade`, `warp`). The content root's
+authoring tool holds the preset → file table and writes it; it only
 rewrites a sound list that is empty or points wholly into `packs/sounds/`, so a
 hand-authored list is kept. To change a preset's sound, edit that table and re-run the
 tool, rather than editing documents one by one. A new file goes into

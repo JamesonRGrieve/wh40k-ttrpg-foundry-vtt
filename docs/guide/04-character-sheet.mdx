@@ -12,22 +12,25 @@ Every line's sheet has a sidebar and tabs. Hover a tab for a description. The he
 - **d20 icon**: opens the Origin Path Builder (**Setup Origin Path**). See [Creating a Character](?path=/docs/guide-creating-a-character--docs).
 - **Generate portrait (AI)**: GM only. Uses the image service in [Game Settings](?path=/docs/guide-game-settings--docs).
 - **Re-roll portrait** / **Pin this portrait**: GM only, when the actor has a pool of portraits.
+- **Open journal entry**: the book icon on the portrait, shown when the actor has a journal entry you can see. An owner links one by dropping a journal entry on the portrait.
 - **Name** and **player** fields.
 
 ## Overview
 
-- **Active Effects**: remaining duration per effect; enable, disable or delete.
+- **Active Effects**: remaining duration per effect; enable, disable or delete. **Create Effect** opens a dialog for a condition, or a characteristic, skill or combat modifier lasting a number of rounds.
 - **Resources**: the line's currencies, each with a stepper. Dark Heresy 2e shows **Influence**, **Requisition** and **Throne Gelt** according to **DH2e Economy Ruleset**. In Homebrew mode Influence has a roll button.
-- **Party Overview** (Dark Heresy 2e): the shared warband **Subtlety** pool. A change on one sheet updates every open sheet.
+- **Party Overview** (Dark Heresy 2e): the shared warband **Subtlety** pool and the warband's **Inquests**. A change on one sheet updates every open sheet. The GM's **Inquest tracker** adds clues, records lead tests, sets Revelation thresholds and resolves an Inquest; a Revelation and the Influence outcome post to chat.
+- **Malignancy Tests due**: shown after Corruption crosses a threshold that calls for one. **Roll Malignancy Test** rolls it; a failure draws from the line's Malignancies table. A Mutant with Twisted Flesh may choose to fail, and may take a roll on the Mutations table instead of a Malignancy.
 - **Favourites**: skills and talents you starred on the Statistics tab.
 - **Experience**: total, spent and available XP, rank, and **XP Purchases**. **Advance** buys advances. The GM also sees **Add XP**.
 - **Fate Points**: click the icon or label for **Uses of Fate Points**.
 
 Line-specific panels:
 
-- **Black Crusade**: Chaos Alignment, Psychic Strength, Chaos Ritual, Gifts of the Gods, Supplement Mechanics, Apotheosis.
-- **Deathwatch**: Adeptus Astartes, Distinctions, Special-Issue Ammunition, Cohesion, Combat Mode, Renown, Requisition, Mission Oath, Mission, Vehicle.
-- **Only War**: Regiment, Craftsmanship, Regimental Drawback, Comrade, Squad Logistics, Orders, Mission Assignment Gear, Vehicle Movement, Comrade Healing, Mount, Battlefield Awareness.
+- **Dark Heresy 2e**: **Daemonology** (for a character with Forbidden Lore (Daemonology)): **Summon Daemon** and **Perform Exorcism** open a ritual dialog against the targeted token and post every test with its modifiers. **Dark Pacts**: **Add Pact** or drop a pact to strike it; the GM chooses Boons and Banes and steps the Daemon's Disposition.
+- **Black Crusade**: Chaos Alignment, Psychic Strength, Chaos Ritual, Gifts of the Gods, Supplement Mechanics, Apotheosis. Gifts of the Gods lists each Gift you own with its effect for your alignment; a Gift with a rolled characteristic loss has a roll button.
+- **Deathwatch**: Adeptus Astartes, Distinctions, Special-Issue Ammunition, Cohesion, Combat Mode, Renown, Requisition, Mission Oath, Mission, Vehicle. Drop a Distinction, Mark of Distinction or Advanced Special Ability on the character to confer it: one above the character's Renown rank is refused, and its Renown reward is paid.
+- **Only War**: Regiment, Craftsmanship, Regimental Drawback, Comrade, Squad Logistics, Orders, Mission Assignment Gear, Vehicle Movement, Comrade Healing, Mount, Battlefield Awareness. **Add Drawback** adds a Regimental Drawback and refunds its Regiment Creation Points. The Battlefield panel confers medals (**Confer a Medal**, or drop one). The Comrade panel tracks Cohesion, and the Comrade shares the Guardsman's Fear and Pinning.
 
 Some panels appear only when relevant, such as **Possession** and **Grapple**.
 
@@ -47,7 +50,7 @@ Characteristics, aptitudes, skills, specialist skills, talents and traits.
 - **Weapons**: **Draw Weapon** / **Holster Weapon** on the hand button. A hand budget shows hands in use.
 - **Movement**: Half, Full, Charge and Run distances, lift and push/drag capacity, and movement left this turn during combat.
 - **Combat Actions**: Half, Full and Reaction actions, plus **Dodge**, **Parry**, initiative and **Assign Damage**. Click an action for its description; Shift+Click posts it to chat.
-- **Psychic Powers**: invoke or attack with a power; shows Psy Rating.
+- **Psychic Powers**: invoke or attack with a power; shows Psy Rating, plus **Psychic Phenomena** and **Perils of the Warp** buttons. Navigator powers, rituals and ship orders also sit on this tab.
 
 See [Combat](?path=/docs/guide-combat--docs).
 
@@ -61,9 +64,9 @@ Identity and appearance, notes (background, personality, superstitions, treasure
 
 ## Other actor sheets
 
-- **NPC**: tabs **Skills** (opens first), **Combat**, **Inventory**, **Biography** and **NPC** (GM controls such as hordes). An NPC is a flat stat block unless **NPCs advance like characters** is on.
+- **NPC**: tabs **Skills** (opens first), **Combat**, **Inventory**, **Biography** and **NPC** (GM controls such as hordes). An NPC is a flat stat block unless **NPCs advance like characters** is on. An NPC made from an **NPC Template** receives the template's equipment. A Dark Heresy 2e Reinforcement Character shows a GM-only **Reinforcement Character** panel: **Call a Reinforcement Character** checks the caller's Influence Minimum, splits the Influence Cost with the warband and lowers Subtlety.
 - **Vehicle** (land vehicles, aircraft): **Overview**, **Combat**, **Crew**, **Components**, **Notes**.
-- **Voidcraft** (Rogue Trader): **Stats**, **Components**, **Weapons**, **Crew**, **History**, **Actions**, **Manoeuvres**.
+- **Voidcraft** (Rogue Trader): **Stats**, **Components**, **Weapons**, **Crew**, **History**, **Actions**, **Manoeuvres**. The two action tabs list **Ship Actions in Effect**. A starship actor from before 0.2.0 opens as a legacy sheet; the GM converts it with **Convert to Voidcraft** in the window's header menu. See [Combat](?path=/docs/guide-combat--docs).
 - **Loot pile**: created when an item is dropped on the ground. Right-click its token and use **Pick Up**, or open it to take single items. Players cannot move loot piles.
 
 ## Hotbar macros

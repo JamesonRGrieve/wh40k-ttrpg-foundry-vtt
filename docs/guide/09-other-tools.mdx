@@ -9,8 +9,22 @@ import { Meta } from '@storybook/addon-docs/blocks';
 The system adds a **WH40K RPG** group (skull icon) to Foundry's scene controls:
 
 - **In-Universe Time** (everyone): opens the world-time widget.
-- **Event Tracker** (GM): for worlds with a campaign event graph. Otherwise it reports that no graph is loaded.
+- **Event Tracker** (GM): the campaign dashboard. See below.
 - **Award XP** (GM): opens **Award XP to Characters**. Tick characters (or **Toggle All**), enter **XP to Award** and confirm. A negative amount removes XP.
+- **Environmental Hazards** (GM): resolves falling, suffocation and vacuum for the selected tokens, each by its own line's rules. See below.
+- **Environment** (everyone): reopens the scene environment widget.
+
+## Event Tracker
+
+The Event Tracker runs a campaign event graph: events that unlock in order as their requirements are met. It loads the world's campaign graph and the event graph of any imported Adventure that carries one. Without either, it reports that no graph is loaded.
+
+The GM dashboard has **Timeline**, **Location** and **Relations** tabs, a campaign-day bar, and filter chips for the campaign and each adventure.
+
+- **Timeline**: each event with its requirements. Resolve events by hand, or let them resolve themselves.
+- **Location**: events by place, with **Go to Scene** and **Spawn Scene** for the location's scene.
+- **Relations**: each NPC's attitude to the party, which shifts as events resolve. The GM edits PC attitudes here.
+
+An event can resolve itself from play: an item acquired, an actor killed or gaining a condition, a token entering a scene, or another event resolving. The GM gets a whispered card when that happens. Sources, places, quests and characters on the dashboard link to their journal entries.
 
 ## World time
 
@@ -20,6 +34,8 @@ The widget opens at world load and from the scene controls. It shows:
 - **Standard Date**, the Imperial date (hover for the format);
 - **Time Elapsed (Terran)**;
 - local day and time on any planet or moon you have set up.
+
+Under the local time it names the phase of the day: Night, Dawn, Morning, Midday, Afternoon, Dusk or Evening, scaled to that body's day length.
 
 The GM's **GM Time Controls** offer **+1 Hour**, **+1 Day** and **Advance** by a number of hours or days. Advancing time counts down timed effects, recovers fatigue, and updates lighting on scenes linked to a celestial body.
 
@@ -35,6 +51,26 @@ The system adds two GM-only fields to **Scene Configuration**:
 
 - **Celestial Body**: scene darkness follows that body's local time and weather. Keep **Not driven (manual lighting)** for interiors, voidships and hand-lit maps.
 - **Warp Weakness**: Focus Power tests get easier, and Psychic Phenomena become more frequent and severe.
+
+## Scene environment
+
+The GM sets a scene's environment in the **Scene Environment** window (**Set Environment** on the widget). Everyone sees it in a widget beside the world-time widget. Every effect follows each actor's own line:
+
+- **Gravity**: Standard, Low, High or Zero. Low and high gravity change movement, Initiative, carrying capacity and jumps. Zero gravity halves movement, and a Charge or Run calls for a Hard (−20) Agility test.
+- **Harsh weather or unnatural conditions**: −20 to Weapon Skill and Ballistic Skill attack tests, shown as its own row on the card.
+- **Atmosphere**: Breathable, Vacuum or Venting atmosphere. In vacuum the widget reminds the GM to resolve exposure with **Environmental Hazards**.
+
+## Environmental hazards
+
+**Environmental Hazards** in the scene controls works on the selected tokens:
+
+- **Falling**: damage by distance, ignoring armour, on a random location. The card shows the dice; its apply button deals the damage.
+- **Suffocation**: how long the character holds out, the Toughness tests and Fatigue, then unconsciousness and the line's endgame. It applies the line's Suffocating condition where the content has one.
+- **Vacuum**: the line's vacuum damage and cold, with suffocation.
+
+## Inquisition Armoury
+
+In Dark Heresy 2e with **DH2e Economy Ruleset** on Homebrew and the Item Piles module active, the system creates an **Inquisition Armoury** merchant for the GM. Taking an item from it runs the requisition test: the card shows the target with each availability and craftsmanship modifier, and the trade goes through only when every item is granted. The GM can rename it.
 
 ## Compendium Browser
 
@@ -76,6 +112,7 @@ game.wh40k.openCogitator({ folderId: '...' });
 game.wh40k.openEncounterBuilder();
 game.wh40k.showRollTableDialog();
 game.wh40k.prompts.openFearTestDialog();
+game.wh40k.prompts.openHomeworldInfoDialog();
 ```
 
-`game.wh40k.prompts` has more GM dialogs, such as `openWarpTravelDialog()`, `openMutationRollDialog()` and `openDisorderRollDialog()`.
+`game.wh40k.prompts` has more GM dialogs, such as `openWarpTravelDialog()`, `openMutationRollDialog()` and `openDisorderRollDialog()`. NPCs can be made with `game.wh40k.quickCreateNPC()`, `game.wh40k.batchCreateNPCs()` and `game.wh40k.importStatBlock()`.

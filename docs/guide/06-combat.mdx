@@ -39,11 +39,28 @@ A jammed, empty or recharging weapon does not fire. Use **Reload** or **Clear Ja
 
 **Cover** adds armour at the hit location instead of penalising the roll. **Auto Line of Sight & Cover** pre-selects cover from scene walls. **Higher Ground elevation band** sets the height needed for the High Ground bonus.
 
-### Hit location and reactions
+### Hit location
 
 On a hit, the attack roll's digits are reversed (23 becomes 32) to find the hit location, shown on the card.
 
-The card offers the defender **Dodge**, and **Parry** against melee. Either rolls the defender's test and spends their Reaction. A defender who has already reacted, or whose condition prevents it, cannot react.
+### Dodge and Parry
+
+When an attack hits a target, the defender's owners and the GM get a whispered **Evasion** prompt: **Dodge**, **Parry** or **Take the hit**. Nobody else can answer it. Damage waits until the defender answers.
+
+- The test is the defender's own skill test, with every modifier listed. It spends their Reaction.
+- A success negates the hit. Against a burst or other multi-hit attack, each extra degree negates one more hit, as the line prints. Negated hits are shown on the attack card, and a fully evaded attack has no damage to roll.
+- **Parry** is closed against ranged attacks, Flexible weapons, and a defender holding only Unwieldy weapons. The parrying weapon's Balanced, Defensive or Unbalanced quality modifies the test, and a Fast attacking weapon adds its penalty.
+- A defender with no Reaction left, a condition that removes it, or in a grapple cannot react.
+- **Counter Attack**: after a successful Parry, a character with the Counter Attack talent gets **Counter attack** on the card. It attacks with the parrying weapon at the talent's penalty. In Dark Heresy 2e it is once per turn.
+
+### Grapples
+
+An unarmed **Charge** or **Standard Attack** can **Begin Grapple**. While grappled, a **Grapple** panel on the Combat tab gives each side its line's own options, such as **Damage Opponent**, **Throw Down Opponent**, **Push Opponent** (the GM moves the tokens), **Take Control**, **Ready** or **Use Item** (pick the item), **Stand**, **Slip Free** and **Break Free**. Break Free ends the grapple for both. Grapple participants cannot use Reactions.
+
+### Spray, Blast and grenades
+
+- A **Spray** or **Blast** attack places a template: a cone from the firer, or a circle on the target that scatters on a miss. Drag or rotate it, then press **Resolve Template Targets** on the attack card. Spray makes no attack roll: everyone in the cone tests Agility (Dodge with the Leaping Dodge talent), and each failure is a Body hit. Blast hits everyone inside. Each hit goes to the damage card for its own target.
+- A grenade with a rider (smoke, stun, gas and similar) opens **Throw Grenade**. Place its area, then press **Resolve Rider**: everyone caught makes the rider's test and failures gain its condition. A rider grenade that also deals damage rolls it through the normal weapon roll.
 
 ## Damage
 
@@ -57,6 +74,8 @@ Each hit shows:
 - **Effective** damage after armour (less penetration) and Toughness Bonus, when a target is selected;
 - weapon effects and Righteous Fury results;
 - **Replace die with DoS**: swap one damage die for the attack's Degrees of Success. Unavailable after a page reload.
+
+A weapon that deals no damage (stun, smoke, webbers and similar) shows **No Damage** instead of a damage button; its qualities still apply. Some weapons take their damage from the range band, a roll table or another weapon; the card names the source. A Warp Weapon ignores armour and cover unless warded or holy armour covers the location.
 
 ### Righteous Fury
 
@@ -75,6 +94,13 @@ Click **Assign Damage** on the damage card. The system:
 - With **Auto-apply Damage to Target**, GM-rolled damage against a selected target applies automatically ("Damage applied automatically"). Player-rolled damage still uses the button.
 - A Deathwatch horde loses Magnitude instead of wounds.
 
+## Vehicles and ships
+
+- **Vehicles**: hits use the facing armour the attack strikes, then Structural Integrity, and critical damage rolls on the vehicle critical charts. Crew tests take the vehicle's trait modifiers.
+- **Rogue Trader voidcraft**: fire from the **Weapons** tab; firing a macrobattery offers the ship's other macrobatteries to combine into one salvo. Actions with an authored effect have a **Roll** button: the card shows the test and, on a success, applies the effect, which then appears under **Ship Actions in Effect**.
+- **Ship Assault Actions** (Rogue Trader): **Ram**, **Board** and **Boarding Round** on **Manoeuvres**, **Hit and Run** on **Actions**. One dialog picks the target ship, rolls each test with its modifiers, asks the winner to choose, and applies the result when you own the target ship. Otherwise the card tells the GM.
+- A ship at 0 Hull Integrity is **Crippled**: −10 Manoeuvrability and Detection, its weapons' Strength is halved, and damage past its Armour becomes a Critical Hit. It is **Destroyed** only by a Critical Hit result. The sheet shows the state under Hull Integrity.
+
 ## Psychic powers
 
 Use **Invoke Power** or **Attack Power** in the Psychic Powers panel. Choose the power and level:
@@ -85,6 +111,9 @@ Use **Invoke Power** or **Attack Power** in the Psychic Powers panel. Choose the
 
 With **Auto-roll Psychic Phenomena** (default on), phenomena draw from the Psychic Phenomena table, and severe results continue to Perils of the Warp. Both tables come from your content packs.
 
+- **Sanctic Purity**: when Phenomena triggers on a Sanctic Daemonology power, a psyker with the talent may spend a Fate Point to negate it.
+- **Malefic Daemonology** (Dark Heresy 2e): a successful cast costs Corruption equal to the Psy Rating used, shown on the card. Gaining Corruption can queue a Malignancy Test.
+
 For thin-veiled scenes, see **Warp Weakness** in [Other Tools](?path=/docs/guide-other-tools--docs).
 
 ## Conditions and effects
@@ -93,3 +122,8 @@ For thin-veiled scenes, see **Warp Weakness** in [Other Tools](?path=/docs/guide
 - With **Active Effect Processing** (default on), ongoing effects such as burning or blood loss resolve when the turn changes.
 - **Fatigue** follows each line's rules unless the GM sets **Fatigue Model**.
 - With **Dead tokens become lootable piles** and the Item Piles module, a creature marked **Dead** drops its carried gear as a pile.
+- Conditions such as burning, bleeding or stunned are drawn on the tokens that bear them.
+
+## Animations and sounds
+
+Attacks play on the canvas the way they resolved: shots and impacts per hit, misses, jams, overheats, area templates, melee swings, Dodges and Parries, psychic powers, Phenomena, Perils and criticals. Weapons, powers and conditions play the sounds their content carries; the system ships a set of CC0 sounds for them to use. The GM turns all of this off for everyone with **Canvas animations and sounds**. Each player has their own animation, sound, volume and condition settings. Reduced-motion systems get no attack animations, and conditions are shown still.

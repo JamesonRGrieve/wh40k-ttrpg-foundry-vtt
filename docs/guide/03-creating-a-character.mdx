@@ -60,6 +60,12 @@ In Rogue Trader you can build **Home World → Career** or **Career → Home Wor
 
 In Dark Heresy 2e, an origin that grants an aptitude you already have shows **Duplicate aptitude detected**. Use **Pick replacement** to choose another.
 
+An origin's rolls must be made before the next step unlocks. An Elite Advance the character does not qualify for is refused.
+
+The builder also lists origins from other lines' packs that carry a conversion for your line. They are marked **Adapted**.
+
+The GM can open **Home Worlds (GM Reference)**, which lists every home world in the line's packs with its bonuses, with the macro `game.wh40k.prompts.openHomeworldInfoDialog()`.
+
 ## Characteristics
 
 Each characteristic starts at a base of 25 plus the GM's **Characteristic Offset**. Origin bonuses are added on top. **Advanced Mode** sets custom base values for non-human characters.
@@ -80,5 +86,6 @@ Click **Apply to Character**. The builder lists anything outstanding, such as pe
 
 Click **Advance** in the Overview tab's **Experience** panel to open **Character Advancement**, where you buy characteristic advances, skills, talents and psychic powers. It needs a career from the origin path; without one it shows **No Career Selected**.
 
+- Talents and advances check their prerequisites, including characteristics, skills, other talents ("Hatred (any)" accepts any specialisation), Chaos alignment, Corruption, Infamy, Insanity and rank. One that is not met cannot be bought.
 - Dropping a talent on a character opens Character Advancement, because talents cost XP. **Freeform Talent and Trait Creation** shows a drop-to-add zone on the Talents and Traits panels.
 - Dropping an origin path item on a character is refused unless **Freeform Character Editing** is on.

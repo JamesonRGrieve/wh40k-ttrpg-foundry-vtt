@@ -4,7 +4,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 # Items, equipment and effects
 
-Weapons, armour, gear, ammunition, cybernetics, force fields, talents, traits, skills, psychic powers, conditions, critical injuries and origin paths are all items. Each type has its own sheet.
+Weapons, armour, gear, ammunition, cybernetics, force fields, talents, traits, skills, psychic powers, conditions, critical injuries, origin paths, Dark Pacts and medals are all items. Each type has its own sheet.
 
 ## Editing items
 
@@ -45,13 +45,21 @@ The sheet shows class, damage, penetration, range, rate of fire, clip, reload an
 - **Clear Jam**: shown when jammed. Reload afterwards.
 - **Build Clip**: load several ammunition types in firing order, for example 3 AP then 2 Hot-shot. Requires **Enable Magazine Building**.
 - **Ammunition**: load or eject special ammunition by dragging it onto the weapon.
-- **Modifications**: drag modifications onto the weapon; toggle each on or off.
+- **Modifications**: toggle each fitted modification on or off. On a character's own weapon, **Fit a modification** fits one the character carries, with the line's test: in Dark Heresy 2e a Trade (Armourer) test at the modification's Availability, where failure loses the parts and 2+ degrees of failure make the weapon Unreliable. **Remove and keep the parts (test)** takes it off again. Lines with no printed test fit it freely.
+- **Repair**: the Tech-Use Repair use fixes a broken item. In Dark Heresy 2e it takes the item's craftsmanship modifier, and failure by 4+ degrees destroys the item. Xenos gear needs a Forbidden Lore test first, if the GM rules the maker is known.
 - **Qualities**: click a quality to open it.
 - Start an attack or damage roll from the sheet.
 
 **Unidentified weapons**: in edit mode the GM can untick **Identified**. Players then see **???** in place of stats; the GM sees the real values.
 
 **Bound items** cannot be dropped or traded.
+
+## Mutations, Gifts and special abilities
+
+- A Black Crusade **Gift of the Gods** is a mutation with the Gift category. Its sheet holds the base effect, a rider per Chaos alignment, granted traits and talents, a sub-table and any rolled characteristic loss.
+- A Deathwatch **Distinction**, **Mark of Distinction** or **Advanced Special Ability** is a special ability with that category. Its sheet holds the Renown rank it needs, its Renown reward and XP cost, a Distinction's Marks, and a Mark's grant.
+- A **Dark Pact** holds the Daemon's terms, the Corruption it costs, and its Boons and Banes.
+- A **medal** (Only War) holds what it is awarded for and its Squad Bonus.
 
 ### Weapon qualities
 

@@ -53,8 +53,8 @@ Compendium content in this public repo lives under `src/packs/` and must be
 **clean, original, and trademark-free** — authored per
 [`docs/pack-authoring.md`](docs/pack-authoring.md) and validated by
 `pnpm packs:validate`, `pnpm packs:validate:actors`, and
-`pnpm packs:validate:images`. Book-sourced (copyrighted) content is kept in a
-separate private submodule and is **never** accepted into `src/packs/`.
+`pnpm packs:validate:images`. Book-sourced (copyrighted) content is **never**
+accepted into `src/packs/`.
 
 ## Homebrew content requirements
 

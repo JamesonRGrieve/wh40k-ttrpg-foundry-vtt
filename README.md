@@ -37,11 +37,11 @@ The codebase currently includes concrete actor/data model wiring for:
 - Only War
 - Deathwatch
 
-The sheet architecture uses explicit per-system actor types such as `dh2-character`, `rt-starship`, and `dh1-npc` rather than relying on one generic sheet path.
+The sheet architecture uses explicit per-system actor types such as `dh2-character`, `rt-voidcraft`, and `dh1-npc` rather than relying on one generic sheet path.
 
 ## Requirements
 
-- Node.js 20+ recommended
+- Node.js 22 (the version CI uses)
 - `pnpm` `10.32.1` via Corepack or standalone install
 - Foundry VTT 14 for active development testing
 
@@ -95,10 +95,13 @@ pnpm check
 
 - lang JSON validation
 - ESLint
+- Biome
 - Prettier
 - Stylelint
-- TypeScript
+- TypeScript (the main project, then tests and stories)
 - Vitest
+
+CI checks out the repo without any external content root, so a test that reads pack content must skip when none is present (`HAS_PRIVATE_CONTENT` in `src/module/testing/private-content.ts`). Before tagging a release, run `pnpm check` in a clean export of the commit (`git archive <sha>`) to see what CI sees.
 
 ### Storybook
 
@@ -139,7 +142,6 @@ src/
   lang/          Localization files
   module/        TypeScript application, document, data model, rules, and hook code
   packs/         Public generic compendium source + pack tooling
-  packs-private/ Copyrighted book content (private submodule; never shipped publicly)
   scripts/       Runtime scripts shipped with the system
   templates/     Handlebars templates and partials
 stories/         Storybook stories, mocks, and rendering helpers
@@ -153,7 +155,7 @@ tailwind/        Legacy Tailwind plugin/component bridge during migration
 
 Releases are built and published by `.github/workflows/release.yml`:
 
-- **Official release** — bump `version` in `src/system.json`, commit, then push a matching `v<version>` tag (e.g. `v1.0.0`). The workflow runs `pnpm check`, builds, and publishes a GitHub release whose manifest URL is `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json` and whose download URL is pinned to the tag. A tag with a prerelease label (`v1.1.0-rc.1`) publishes as a prerelease.
+- **Official release** — bump `version` in `src/system.json`, commit, then push a matching `v<version>` tag (e.g. `v1.0.0`). The workflow waits for a maintainer to approve the `release` environment deployment in GitHub, then runs `pnpm check`, builds, and publishes a GitHub release whose manifest URL is `https://github.com/JamesonRGrieve/wh40k-ttrpg-foundry-vtt/releases/latest/download/system.json` and whose download URL is pinned to the tag. A tag with a prerelease label (`v1.1.0-rc.1`) publishes as a prerelease. A non-prerelease version is also registered on the foundryvtt.com package listing, using the `FOUNDRY_RELEASE_TOKEN` secret.
 - **Nightly** — every push to `main` republishes the rolling `nightly` prerelease (`…/releases/download/nightly/system.json`).
 
 Both channels ship system code, `LICENSE`, and the public generic packs only; the release manifest declares exactly the packs present in the zip. `./build-system.sh release` stages the same bundle locally under `archive/release/`.
@@ -189,7 +191,7 @@ This is an unofficial, fan-made game system for Foundry VTT. It is not affiliate
 ### What this repository does NOT contain
 
 - **No copyrighted game text.** No rules text, item descriptions, talent descriptions, or stat blocks are included in the public repository. Combat-action labels and modifier values in `src/module/rules/` are original functional paraphrases, not quotations.
-- **No copyrighted compendium content.** Book content lives in the private `src/packs-private` submodule and is not included in public clones or releases. Users must supply their own content packs or use the system as a bare framework.
+- **No copyrighted compendium content.** Releases ship the system and its public generic packs only. Users must supply their own content packs or use the system as a bare framework.
 - **No copyrighted artwork.** The system does not bundle artwork from any Games Workshop, FFG, or Cubicle 7 publication.
 
 ### License
