@@ -4,12 +4,14 @@
  * may name a file that is gone), and every pack document that points a cue or
  * status sound into `systems/wh40k-rpg/packs/sounds/` must name a file that
  * exists, or the sound 404s on every client. The private content is optional
- * here: without `src/packs-private` only the attribution half runs.
+ * here: without it (CI checks the submodule out as an empty folder) only the
+ * attribution half runs.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = path.resolve(__dirname, '..');
 const SOUNDS = path.join(ROOT, 'src/packs/sounds');
@@ -64,7 +66,7 @@ describe('shipped cue sounds', () => {
         for (const folder of kenney) expect(fs.existsSync(path.join(SOUNDS, folder, 'License.txt'))).toBe(true);
     });
 
-    it.skipIf(!fs.existsSync(PRIVATE))('resolves every sound a pack document references to a shipped file', () => {
+    it.skipIf(!HAS_PRIVATE_CONTENT)('resolves every sound a pack document references to a shipped file', () => {
         const referenced = referencedSounds();
         expect(referenced.size).toBeGreaterThan(0);
         expect([...referenced].filter((file) => !shipped.includes(file))).toEqual([]);
