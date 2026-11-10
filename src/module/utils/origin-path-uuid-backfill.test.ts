@@ -27,8 +27,8 @@ function namedOrigin(type: string): ActorStub {
 }
 
 function stubGame(actors: ActorStub[], isWorldWriter = true): void {
-    const game: GameStub = { users: { activeGM: { isSelf: isWorldWriter } }, actors };
-    vi.stubGlobal('game', game);
+    const gameStub: GameStub = { users: { activeGM: { isSelf: isWorldWriter } }, actors };
+    vi.stubGlobal('game', gameStub);
 }
 
 describe('backfillOriginPathUuids', () => {

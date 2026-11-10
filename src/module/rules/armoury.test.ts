@@ -117,7 +117,7 @@ describe('ensureInquisitionArmoury on a world with two GMs connected (#713)', ()
     /** Stub one client's globals; returns the `Actor.create` spy. */
     function stubClient(opts: { isGM: boolean; isWorldWriter: boolean }): ReturnType<typeof vi.fn> {
         const create = vi.fn().mockResolvedValue({});
-        const game: ArmouryGameStub = {
+        const gameStub: ArmouryGameStub = {
             user: { isGM: opts.isGM },
             users: { activeGM: { isSelf: opts.isWorldWriter } },
             settings: { get: () => 'homebrew' },
@@ -125,7 +125,7 @@ describe('ensureInquisitionArmoury on a world with two GMs connected (#713)', ()
             modules: { get: () => ({ active: true }) },
             i18n: { localize: (key) => key, format: (key) => key },
         };
-        vi.stubGlobal('game', game);
+        vi.stubGlobal('game', gameStub);
         vi.stubGlobal('Actor', { create, deleteDocuments: vi.fn().mockResolvedValue([]) });
         vi.stubGlobal('ui', { notifications: { info: vi.fn(), warn: vi.fn() } });
         return create;
