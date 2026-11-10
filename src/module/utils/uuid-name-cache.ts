@@ -34,16 +34,19 @@ type PackLike = {
 type IndexEntry = { _id: string; name: string; type?: string };
 
 const BROKEN = '[broken link]';
+/** The reverse-index scope of a homebrew pack's entries: no line, so every line reads them. */
+const HOMEBREW_SCOPE = '';
 const TOKEN_RE = /\{\{(Compendium\.[A-Za-z0-9_.-]+)\}\}/g;
 
 class UuidNameCache {
     /** uuid → display name */
     readonly #cache = new Map<string, string>();
     /**
-     * Reverse index: `${line}|${normalized-name}` → uuid. Used by the
-     * Phase F originPath backfill where we have a legacy name string and need
-     * to find the matching compendium UUID. Scoping by the pack's line keeps the
-     * lookup per-game-system; see `findByName()` for the resolution order.
+     * Reverse index: `${line}|${normalized-name}` → uuid, with an empty line for
+     * a homebrew pack's entries. Used by the Phase F originPath backfill where
+     * we have a legacy name string and need to find the matching compendium
+     * UUID. Scoping by the pack's line keeps the lookup per-game-system; see
+     * `findByName()` for the resolution order.
      */
     readonly #byName = new Map<string, string>();
     /** uuids we've already logged a "broken" warning for, to avoid log spam */
@@ -76,7 +79,7 @@ class UuidNameCache {
                 const docKey = packDocumentType(pack.metadata.type);
                 // A book pack's declared line scopes its reverse entries; a homebrew pack's are unscoped.
                 const flags = packLineFlags(pack.metadata);
-                const packPrefix = flags === null || flags.homebrew ? '' : flags.line;
+                const packPrefix = flags === null || flags.homebrew ? HOMEBREW_SCOPE : flags.line;
                 for (const raw of index) {
                     if (!isIndexEntry(raw)) continue;
                     const uuid = `Compendium.${pack.metadata.id}.${docKey}.${raw._id}`;
@@ -134,19 +137,25 @@ class UuidNameCache {
     }
 
     /**
-     * Reverse lookup: find a UUID by display name, scoped to the given game
-     * line (`dh1`, `dh2`, `bc`, `dw`, `ow`, `rt`). Falls back to a
-     * specialization-stripped match. Returns null on miss — callers should
-     * treat that as "leave the legacy name alone" rather than a hard error.
+     * Reverse lookup: find a UUID by display name for a document on the given
+     * game line (`dh1`, `dh2`, `bc`, `dw`, `ow`, `rt`).
+     *
+     * The line's book packs are read first, by the exact name and then by the
+     * name with a trailing specialisation stripped. Homebrew packs carry no line
+     * scope, so they are read second, the same two ways: a book entry wins over
+     * a homebrew entry of the same name, and a homebrew entry is found from any
+     * line. Returns null on miss — callers should treat that as "leave the
+     * legacy name alone" rather than a hard error.
      */
-    findByName(packPrefix: string, name: string): string | null {
+    findByName(line: string, name: string): string | null {
         const normalized = name.trim().toLowerCase();
-        const exact = this.#byName.get(`${packPrefix}|${normalized}`);
-        if (exact != null) return exact;
         const stripped = normalized.replace(/\s*\([^)]*\)\s*$/u, '').trim();
-        if (stripped !== normalized) {
-            const fallback = this.#byName.get(`${packPrefix}|${stripped}`);
-            if (fallback != null) return fallback;
+        const names = stripped === normalized ? [normalized] : [normalized, stripped];
+        for (const scope of [line, HOMEBREW_SCOPE]) {
+            for (const candidate of names) {
+                const hit = this.#byName.get(`${scope}|${candidate}`);
+                if (hit !== undefined) return hit;
+            }
         }
         return null;
     }
