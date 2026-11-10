@@ -4030,6 +4030,7 @@
             "ToggleEditMode": "Toggle edit mode",
             "UseBuilderOnDrop": "Origin paths are applied through the Origin Path Builder, not by dragging them onto a character. Open the builder from the d20 on the portrait. (A GM can enable freeform building in system settings.)",
             "WorldSourcedWarning": "Authored in this world, not in a compendium",
+            "EquipmentGrantMissing": "Starting equipment not found in the compendiums, so it was not added: {items}. Add it by hand.",
             "HomebrewContent": "Homebrew content — no official source in any line",
             "AdaptedHomebrew": "Homebrew conversion — official in:",
             "ProvenanceFilterLabel": "Show:",

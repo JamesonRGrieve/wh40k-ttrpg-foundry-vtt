@@ -49,6 +49,7 @@ import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import { openMutantBackgroundDialog } from '../prompts/mutant-background-dialog.ts';
+import { collectEquipmentGrantPlans, type EquipmentGrantPlan, matchEquipmentEntry } from './equipment-grants.ts';
 import { cloneGrantedItemData } from './grant-materialize.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
@@ -5044,6 +5045,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // malignancies, mutations, mental disorders) that carry no UUID.
             await this._applyContentItemGrantsFromOrigins();
 
+            // Create each origin's starting kit and the equipment the player
+            // picked in its equipment choices (they were shown but never given).
+            await this._applyEquipmentGrantsFromOrigins();
+
             // Apply characteristic rolls if any are assigned
             const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
             const charRolls = this._charRolls;
@@ -5707,6 +5712,71 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (toCreate.length > 0) {
             await this.actor.createEmbeddedDocuments('Item', toCreate as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+        }
+    }
+
+    /**
+     * Create every committed origin's starting equipment on the actor: the fixed
+     * `grants.equipment` kit plus the options picked in its `equipment` / `gear`
+     * choices. An entry with a UUID resolves by it; a name-only entry (most
+     * authored kits) resolves against the line's starting-equipment packs, by
+     * exact name and then by a unique loose match (see `matchEquipmentEntry`).
+     * An item the actor already holds by name is skipped, so a re-commit doesn't
+     * duplicate the kit; an entry no pack carries is reported to the GM.
+     * @private
+     */
+    async _applyEquipmentGrantsFromOrigins(): Promise<void> {
+        const plans: EquipmentGrantPlan[] = [];
+        for (const [, selection] of this.selections) {
+            plans.push(...collectEquipmentGrantPlans(this._getSelectionSystem(selection)));
+        }
+        if (plans.length === 0) return;
+
+        const catalog: Array<{ name: string; uuid: string }> = [];
+        if (plans.some((plan) => plan.uuid === undefined)) {
+            for (const pack of builderPacks(game.packs, this.gameSystem, 'startingEquipment')) {
+                // eslint-disable-next-line no-await-in-loop -- sequential: packs are read in priority order so the first exact name wins
+                const index = await pack.getIndex({ fields: ['name'] });
+                for (const entry of index) {
+                    if (typeof entry.name === 'string') catalog.push({ name: entry.name, uuid: `Compendium.${pack.metadata.id}.Item.${entry._id}` });
+                }
+            }
+        }
+
+        const norm = (s: string): string => s.toLowerCase().trim();
+        const toCreate: ItemDataLike[] = [];
+        const seen = new Set<string>();
+        const missing: string[] = [];
+        for (const plan of plans) {
+            const uuid = plan.uuid ?? matchEquipmentEntry(catalog, plan.name)?.uuid;
+            if (uuid === undefined) {
+                missing.push(plan.name);
+                continue;
+            }
+            if (seen.has(uuid)) continue;
+            seen.add(uuid);
+            // eslint-disable-next-line no-await-in-loop -- sequential: each grant resolves to its own compendium document
+            const source = await fromUuid(uuid);
+            if (!source) {
+                missing.push(plan.name);
+                continue;
+            }
+            const itemData = cloneGrantedItemData(source, { sourceId: uuid, originPathGranted: true });
+            const name = typeof itemData.name === 'string' ? itemData.name : plan.name;
+            if (this.actor.items.some((i) => norm(i.name) === norm(name))) continue;
+            if (plan.quantity > 1) {
+                /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- noUncheckedIndexedAccess: ??= is banned by no-restricted-syntax; explicit undefined check used instead */
+                if (itemData.system === undefined) itemData.system = {};
+                itemData.system.quantity = plan.quantity;
+            }
+            toCreate.push(itemData);
+        }
+
+        if (toCreate.length > 0) {
+            await this.actor.createEmbeddedDocuments('Item', toCreate as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+        }
+        if (missing.length > 0) {
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EquipmentGrantMissing', { items: missing.join(', ') }));
         }
     }
 

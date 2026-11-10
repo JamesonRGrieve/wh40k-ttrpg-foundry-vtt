@@ -4405,6 +4405,7 @@ export type I18nKey =
     | 'WH40K.OriginPath.EquipmentColThroneGelt'
     | 'WH40K.OriginPath.EquipmentColType'
     | 'WH40K.OriginPath.EquipmentDesc'
+    | 'WH40K.OriginPath.EquipmentGrantMissing'
     | 'WH40K.OriginPath.EquipmentLimitReached'
     | 'WH40K.OriginPath.EquipmentNeedsCharacteristics'
     | 'WH40K.OriginPath.EquipmentNoInfluence'
