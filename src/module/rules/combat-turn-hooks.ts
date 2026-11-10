@@ -22,6 +22,8 @@
  * (#414, seen with a second player connected).
  */
 
+import { isWorldWriter } from '../utils/world-writer.ts';
+
 /** Minimal Combatant view a turn subscriber receives. Kept structural so the
  * concrete Foundry Combatant (with its narrowly-typed getFlag/setFlag) is
  * assignable to it. */
@@ -112,7 +114,7 @@ function safeInvoke(callback: TurnCallback, combatant: TurnCombatant | null, com
 
 /** updateCombat handler: derive the boundary and fan out to subscribers. */
 function onUpdateCombat(combat: TurnCombat, changes: { turn?: number | null | undefined; round?: number | null | undefined }): void {
-    if (game.users.activeGM?.isSelf !== true) return;
+    if (!isWorldWriter()) return;
     try {
         const boundary = deriveTurnBoundary({
             turnChanged: 'turn' in changes || 'round' in changes,

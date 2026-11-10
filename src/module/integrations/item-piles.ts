@@ -1,6 +1,7 @@
 import { type CurrencyConfig, WH40K } from '../config.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { NON_DROPPABLE_TYPES } from '../managers/non-droppable-types.ts';
+import { isWorldWriter } from '../utils/world-writer.ts';
 
 /**
  * Item Piles (and basic economy plugin) integration.
@@ -165,12 +166,12 @@ export function shouldSeedPileActorType(current: unknown): boolean {
 /**
  * Seed Item Piles' `actorClassType` world setting to our `loot` pile type when
  * Item Piles left it empty, so `PrivateAPI._createItemPile` types the pile Actor
- * validly instead of `undefined` (#402). Only the GM may write a world setting,
- * and seeding it once is enough for every client; guarded on the setting being
+ * validly instead of `undefined` (#402). Only a GM may write a world setting,
+ * and seeding it once is enough for every client, so the active GM alone does it (#713); guarded on the setting being
  * registered so an Item Piles key rename degrades to a no-op.
  */
 async function ensurePileActorType(): Promise<void> {
-    if (!game.user.isGM) return;
+    if (!isWorldWriter()) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: item-piles is a third-party module; its settings namespace/keys are outside fvtt-types' ClientSettings registry.
     const settings = game.settings as unknown as {
         settings: { has: (key: string) => boolean };

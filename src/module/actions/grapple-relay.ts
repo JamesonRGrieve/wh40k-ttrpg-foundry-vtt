@@ -11,6 +11,7 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { GRAPPLE_FLAG, GRAPPLE_UPDATE_FLAG, type GrappleFlagWrite, grappleFlagValue, grappleStartWrites, readGrappleWrites } from '../rules/grapple.ts';
+import { isWorldWriter } from '../utils/world-writer.ts';
 
 const GRAPPLE_START_TEMPLATE = 'systems/wh40k-rpg/templates/chat/grapple-start-chat.hbs';
 
@@ -49,7 +50,7 @@ export async function applyGrappleWrites(writes: readonly GrappleFlagWrite[]): P
 
 /** On a created chat message: the active GM applies the grapple flag writes it carries. */
 export function applyGrappleWritesFromMessage(message: ChatMessage): void {
-    if (game.users.activeGM?.isSelf !== true) return;
+    if (!isWorldWriter()) return;
     const writes = readGrappleWrites(message.getFlag(SYSTEM_ID, GRAPPLE_UPDATE_FLAG));
     if (writes.length > 0) void applyGrappleWrites(writes);
 }

@@ -1,11 +1,12 @@
 import { SYSTEM_ID } from './constants.ts';
 import type { WH40KItem } from './documents/item.ts';
+import { isWorldWriter } from './utils/world-writer.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 /**
  * Boot-time origin-grant reconciliation.
  *
- * A GM-only pass run on every world `ready` (sibling to the
+ * An active-GM-only pass (one client, #713) run on every world `ready` (sibling to the
  * in-memory inventory hydration in `compendium-hydrate.ts`). For each world actor
  * it re-applies every embedded origin-path item through the now-idempotent
  * {@link WH40KItem.applyOriginToActor}. Because that applier reconciles
@@ -34,13 +35,13 @@ type ReconcileActorLike = {
 
 /**
  * Re-apply every embedded origin path on every world actor idempotently, then
- * reconcile every actor's item resource ledger. GM-only. The origin pass is
+ * reconcile every actor's item resource ledger. Active GM only (#713). The origin pass is
  * gated by the `reconcileOriginGrantsOnReady` setting; the item ledger pass is
  * not, because an actor's first pass only seeds its ledger and never moves a
  * total (#691).
  */
 export async function reconcileWorldOriginGrants(): Promise<void> {
-    if (!game.user.isGM) return;
+    if (!isWorldWriter()) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is typed loosely; we narrow to the surface we touch
     const actors = game.actors.contents as unknown as ReconcileActorLike[];
     const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady) as boolean | undefined;

@@ -25,6 +25,7 @@ interface FakeActor {
 }
 interface GameStub {
     user: { isGM: boolean };
+    users: { activeGM: { isSelf: boolean } };
     settings: { get: (scope: string, key: string) => boolean | undefined };
     actors: { contents: FakeActor[] };
 }
@@ -47,9 +48,12 @@ function fakeActor(name: string, contents: FakeOrigin[]): FakeActor {
     return { name, items: { contents }, syncItemResourceDeltas: vi.fn().mockResolvedValue(undefined) };
 }
 
-function setGame(opts: { isGM?: boolean; enabled?: boolean | undefined; actors?: FakeActor[] }): void {
+/** `isWorldWriter` defaults to `isGM`: a lone GM is the active GM, a player never is (#713). */
+function setGame(opts: { isGM?: boolean; isWorldWriter?: boolean; enabled?: boolean | undefined; actors?: FakeActor[] }): void {
+    const isGM = opts.isGM ?? true;
     G.game = {
-        user: { isGM: opts.isGM ?? true },
+        user: { isGM },
+        users: { activeGM: { isSelf: opts.isWorldWriter ?? isGM } },
         settings: { get: (): boolean | undefined => opts.enabled },
         actors: { contents: opts.actors ?? [] },
     };
@@ -75,6 +79,17 @@ describe('reconcileWorldOriginGrants', () => {
         const o = origin('Hive World');
         const pc = fakeActor('PC', [o]);
         setGame({ isGM: false, enabled: true, actors: [pc] });
+
+        await reconcileWorldOriginGrants();
+
+        expect(o.applyOriginToActor).not.toHaveBeenCalled();
+        expect(pc.syncItemResourceDeltas).not.toHaveBeenCalled();
+    });
+
+    it('is a no-op for a second GM who is not the active GM, so two GM clients never reconcile together (#713)', async () => {
+        const o = origin('Hive World');
+        const pc = fakeActor('PC', [o]);
+        setGame({ isGM: true, isWorldWriter: false, enabled: true, actors: [pc] });
 
         await reconcileWorldOriginGrants();
 

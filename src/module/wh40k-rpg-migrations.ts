@@ -1,10 +1,11 @@
 import { SYSTEM_ID } from './constants.ts';
 import { type ClipMaxResolver, canonicalClipMax, fullMagazineFor, loadableFromSource } from './utils/magazine-load.ts';
 import { type GridScale, legacyFootprintUpgrade, type PhysicalDimensions } from './utils/token-footprint.ts';
+import { isWorldWriter } from './utils/world-writer.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 /**
- * One-time world migrations, run by a GM on `ready`.
+ * One-time world migrations, run by the active GM on `ready` (one client, #713).
  *
  * Each step is gated on the world's stored `world-version` being below the step's
  * version, so it runs once per world; the version is persisted afterwards so it
@@ -164,7 +165,7 @@ async function migrateEmptyMagazines(actors: Iterable<MagazineActor>, scenes: It
 }
 
 export async function checkAndMigrateWorld(): Promise<void> {
-    if (!game.user.isGM) return;
+    if (!isWorldWriter()) return;
     const currentVersion = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion));
     if (currentVersion >= WORLD_VERSION) return;
 

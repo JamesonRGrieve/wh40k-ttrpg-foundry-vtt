@@ -176,6 +176,7 @@ import { inferActiveGameLine } from './utils/item-variant-utils.ts';
 import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { uuidNameCache } from './utils/uuid-name-cache.ts';
+import { isWorldWriter } from './utils/world-writer.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
@@ -677,7 +678,7 @@ export class HooksManager {
      * same scene update.
      */
     static async syncSceneLighting(): Promise<void> {
-        if (game.users.activeGM?.isSelf !== true) return;
+        if (!isWorldWriter()) return;
         const bodies = WH40KSettings.getCelestialBodies();
         if (Object.keys(bodies).length === 0) return;
         const elapsed = game.time.worldTime - WH40KSettings.getWorldTimeInception();
@@ -702,7 +703,7 @@ export class HooksManager {
         const hours = forward ? dt / HOUR_SECONDS : 0;
         // Only the active GM writes actor state and the undo record, so clients
         // (and a second GM) never race the same update.
-        const isActiveGm = game.users.activeGM?.isSelf === true;
+        const isActiveGm = isWorldWriter();
         const fatigue: FatigueChange[] = [];
         for (const actor of actors) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface this touches (sheet + fatigue recovery)
@@ -966,7 +967,7 @@ export class HooksManager {
 
     static init(): void {
         // eslint-disable-next-line no-console -- system bootstrap log before game.wh40k.log is defined
-        console.log('Loading WH40K RPG System v1.0.0');
+        console.log(`Loading WH40K RPG System v${game.system.version}`);
 
         // Install the roll-prompt openers (#516). This is the composition root
         // for the `rolls/roll-prompt.ts` port: `documents/*` calls

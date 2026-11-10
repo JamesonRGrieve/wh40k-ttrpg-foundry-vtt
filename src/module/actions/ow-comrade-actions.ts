@@ -51,6 +51,7 @@ import {
     replaceComrade,
 } from '../rules/ow-comrade.ts';
 import { firstSystemId } from '../utils/chat-system-id.ts';
+import { isWorldWriter } from '../utils/world-writer.ts';
 
 /**
  * Structural type the OW Comrade handlers expect: the character sheet's
@@ -295,7 +296,7 @@ function readComradeHitFlag(value: unknown): ComradeHitStrike | null {
  * applies it when the card is created.
  */
 export function applyComradeHitFromMessage(message: ChatMessage): void {
-    if (game.users.activeGM?.isSelf !== true) return;
+    if (!isWorldWriter()) return;
     const strike = readComradeHitFlag(message.getFlag(SYSTEM_ID, COMRADE_HIT_FLAG));
     if (strike !== null) void applyComradeHitTo(strike);
 }
@@ -338,7 +339,7 @@ async function applyComradeHitTo(strike: ComradeHitStrike): Promise<void> {
  * not end with the combat. Run by the active GM only, so it happens once.
  */
 export async function clearComradeFearAtCombatEnd(actors: Iterable<Actor.Implementation | null>): Promise<void> {
-    if (game.users.activeGM?.isSelf !== true) return;
+    if (!isWorldWriter()) return;
     const fled = Array.from(actors).filter((actor): actor is Actor.Implementation => {
         const comrade = actor === null ? null : readComradeRecord(actor.system);
         return comrade !== null && comradeFearEndsWithCombat(comrade);

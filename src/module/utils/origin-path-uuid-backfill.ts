@@ -1,9 +1,11 @@
+import { isCharacterActorType } from '../documents/actor-types.ts';
 import { uuidNameCache } from './uuid-name-cache.ts';
+import { isWorldWriter } from './world-writer.ts';
 
 /**
  * Phase F runtime backfill — populate `system.originPath.<step>Uuid` for
- * existing character actors whose origin steps are stored only as legacy
- * name strings.
+ * existing character actors (every `<line>-character` type and the legacy bare
+ * `character`, #721) whose origin steps are stored only as legacy name strings.
  *
  * Resolves each name against the per-game-system reverse index built by
  * `uuidNameCache`, scoped to the actor's own `system.gameSystem`.
@@ -12,6 +14,10 @@ import { uuidNameCache } from './uuid-name-cache.ts';
  * the display-name field; only fires when the UUID slot is empty AND a
  * resolution succeeds. Unresolvable names are left untouched so a future
  * data fix-up can populate them.
+ *
+ * Runs on the active GM's client only (#713): a player cannot update actors it
+ * does not own, and a second GM writing the same slots at the same time races
+ * the first.
  */
 
 const ORIGIN_PATH_STEPS = [
@@ -41,19 +47,20 @@ interface OriginPathLike {
 }
 
 interface ActorLike {
-    type?: string;
+    type: string;
     system?: { gameSystem?: string; originPath?: OriginPathLike };
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Actor.update accepts open-ended Record<string,unknown>
     update?: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
 export async function backfillOriginPathUuids(): Promise<void> {
+    if (!isWorldWriter()) return;
     if (!uuidNameCache.isReady()) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors is a Foundry WorldCollection typed loosely by fvtt-types; narrowing to ActorLike shapes the surface we read on the next pass
     const actors = Array.from(game.actors as unknown as Iterable<ActorLike>);
 
     for (const actor of actors) {
-        if (actor.type !== 'character') continue;
+        if (!isCharacterActorType(actor.type)) continue;
         const sys = actor.system;
         const origin = sys?.originPath;
         if (origin == null) continue;

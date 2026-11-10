@@ -185,8 +185,13 @@ describe('registerItemPilesValuation — system integration payload', () => {
                 if (event === 'item-piles-ready') readyCb = cb;
             },
         });
-        // isGM:false → the async seed step returns early, so this test isolates the payload.
-        vi.stubGlobal('game', { modules: { get: () => ({ active: true }) }, itempiles: { API: { addSystemIntegration } }, user: { isGM: false } });
+        // Not the world writer → the async seed step returns early, so this test isolates the payload.
+        vi.stubGlobal('game', {
+            modules: { get: () => ({ active: true }) },
+            itempiles: { API: { addSystemIntegration } },
+            user: { isGM: false },
+            users: { activeGM: null },
+        });
 
         registerItemPilesValuation();
         expect(readyCb).toBeTypeOf('function');
@@ -213,8 +218,9 @@ describe('registerItemPilesValuation — system integration payload', () => {
     });
 
     /** Stub Item Piles as active with a GM user and a settings store seeded with
-     *  the given actorClassType, capturing the ready callback and the set spy. */
-    function stubItemPilesWithSetting(current: string): { readyCb: (() => void) | undefined; set: ReturnType<typeof vi.fn> } {
+     *  the given actorClassType, capturing the ready callback and the set spy.
+     *  `isWorldWriter` false makes this GM a second GM, not the active one (#713). */
+    function stubItemPilesWithSetting(current: string, isWorldWriter = true): { readyCb: (() => void) | undefined; set: ReturnType<typeof vi.fn> } {
         const store = new Map<string, string>([['item-piles.actorClassType', current]]);
         const set = vi.fn().mockResolvedValue(undefined);
         const ref: { readyCb: (() => void) | undefined; set: ReturnType<typeof vi.fn> } = { readyCb: undefined, set };
@@ -227,6 +233,7 @@ describe('registerItemPilesValuation — system integration payload', () => {
             modules: { get: () => ({ active: true }) },
             itempiles: { API: { addSystemIntegration: vi.fn() } },
             user: { isGM: true },
+            users: { activeGM: { isSelf: isWorldWriter } },
             settings: { settings: store, get: (namespace: string, key: string) => store.get(`${namespace}.${key}`), set },
         });
         return ref;
@@ -241,6 +248,15 @@ describe('registerItemPilesValuation — system integration payload', () => {
         await Promise.resolve();
         await Promise.resolve();
         expect(stub.set).toHaveBeenCalledWith('item-piles', 'actorClassType', 'loot');
+    });
+
+    it('leaves the seed to the active GM: a second GM client does not write the setting (#713)', async () => {
+        const stub = stubItemPilesWithSetting('', false);
+        registerItemPilesValuation();
+        stub.readyCb?.();
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(stub.set).not.toHaveBeenCalled();
     });
 
     it('does not overwrite an actorClassType a GM has already set (#402)', async () => {

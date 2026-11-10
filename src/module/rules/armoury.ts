@@ -17,6 +17,7 @@
  */
 
 import { SYSTEM_ID } from '../constants.ts';
+import { isWorldWriter } from '../utils/world-writer.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 /** Flag marking an actor as THE Inquisition Armoury. Identity lives here, not in the name. */
@@ -91,8 +92,11 @@ export function armouryActorData(name: string): Record<string, unknown> {
 export interface ArmourySpawnContext {
     /** Active DH2 ruleset — the operator's gate. */
     ruleset: string | undefined;
-    /** Only the GM may create world documents. */
-    isGM: boolean;
+    /**
+     * Whether this client is the active GM. Only a GM may create world documents,
+     * and only one GM client may, or two GMs at `ready` spawn two armouries (#713).
+     */
+    isWorldWriter: boolean;
     /** Whether an armoury already exists in this world. */
     exists: boolean;
     /** Whether Item Piles is active — without it a merchant actor is inert. */
@@ -104,13 +108,14 @@ export interface ArmourySpawnContext {
  *
  * Pure, so the gate is testable without a world. Every clause is a real refusal
  * seen in practice: a player client must not create world documents, a second
- * boot must not produce a second armoury, and spawning a merchant with Item
+ * GM client must not create one alongside the active GM, a second boot must
+ * not produce a second armoury, and spawning a merchant with Item
  * Piles absent leaves a `loot` actor nobody can open.
  * @param {ArmourySpawnContext} context  The world state.
  * @returns {boolean}  True when the armoury should be created.
  */
 export function shouldSpawnArmoury(context: ArmourySpawnContext): boolean {
-    if (!context.isGM) return false;
+    if (!context.isWorldWriter) return false;
     if (context.exists) return false;
     if (!context.itemPilesActive) return false;
     return context.ruleset === 'homebrew';
@@ -141,7 +146,7 @@ export function findArmoury<T extends FlaggedActorLike>(actors: Iterable<T>): T 
 /**
  * Create the Inquisition Armoury if this world should have one and does not.
  *
- * Called once at `ready`. Idempotent by the flag lookup above, GM-only, and a
+ * Called once at `ready`. Idempotent by the flag lookup above, active-GM-only, and a
  * no-op in every other line or ruleset. A failure is reported to the GM rather
  * than thrown: a missing armoury degrades requisition to the pre-#496 state,
  * which must not also take the ready hook down with it.
@@ -151,12 +156,12 @@ export async function ensureInquisitionArmoury(): Promise<void> {
     try {
         const context: ArmourySpawnContext = {
             ruleset: WH40KSettings.getRuleset(),
-            isGM: game.user.isGM,
+            isWorldWriter: isWorldWriter(),
             exists: findArmoury(game.actors) !== undefined,
             itemPilesActive: game.modules.get('item-piles')?.active === true,
         };
 
-        if (context.exists && context.isGM) {
+        if (context.exists && context.isWorldWriter) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is Foundry's Actor collection
             const allArmouries = (game.actors.contents as unknown as FlaggedActorLike[]).filter((a) => a.flags?.[SYSTEM_ID]?.[ARMOURY_FLAG] === true);
             const keeper = allArmouries[0];

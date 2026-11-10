@@ -262,6 +262,6 @@ describe('fatigue automation wiring (#431)', () => {
         expect(baseActor).toContain('recoverFatigueOverTime');
         expect(hooks).toContain('recoverFatigueOverTime');
         // One GM writes, so a second GM's client never recovers the same fatigue twice.
-        expect(hooks).toContain('game.users.activeGM?.isSelf === true');
+        expect(hooks).toContain('const isActiveGm = isWorldWriter();');
     });
 });

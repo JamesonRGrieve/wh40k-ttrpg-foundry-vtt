@@ -46,6 +46,7 @@ interface SceneStub {
 
 interface GameStub {
     user: { isGM: boolean };
+    users: { activeGM: { isSelf: boolean } };
     settings: { get: () => number; set: ReturnType<typeof vi.fn> };
     actors: ActorStub[];
     scenes: SceneStub[];
@@ -80,11 +81,15 @@ function makeScene(tokens: TokenStub[]): SceneStub {
     return { grid: { distance: 1, units: 'm' }, tokens, updateEmbeddedDocuments: vi.fn().mockResolvedValue([]) };
 }
 
-/** A stub whose stored version follows `settings.set`, so a second run sees the persisted version. */
-function installGame(opts: { isGM: boolean; storedVersion: number; actors: ActorStub[]; scenes: SceneStub[] }): GameStub {
+/**
+ * A stub whose stored version follows `settings.set`, so a second run sees the persisted version.
+ * `isWorldWriter` defaults to `isGM`: a lone GM is the active GM, a player never is (#713).
+ */
+function installGame(opts: { isGM: boolean; isWorldWriter?: boolean; storedVersion: number; actors: ActorStub[]; scenes: SceneStub[] }): GameStub {
     let stored = opts.storedVersion;
     const stub: GameStub = {
         user: { isGM: opts.isGM },
+        users: { activeGM: { isSelf: opts.isWorldWriter ?? opts.isGM } },
         settings: {
             get: (): number => stored,
             set: vi.fn((_scope: string, _key: string, value: number): void => {
@@ -175,6 +180,16 @@ describe('checkAndMigrateWorld — v4 token footprints (#501)', () => {
     it('is a no-op for a non-GM', async () => {
         const primus = makeActor(5);
         const stub = installGame({ isGM: false, storedVersion: 1, actors: [primus], scenes: [] });
+
+        await checkAndMigrateWorld();
+
+        expect(primus.update).not.toHaveBeenCalled();
+        expect(stub.settings.set).not.toHaveBeenCalled();
+    });
+
+    it('is a no-op for a second GM who is not the active GM, so two GM clients never migrate together (#713)', async () => {
+        const primus = makeActor(5);
+        const stub = installGame({ isGM: true, isWorldWriter: false, storedVersion: 1, actors: [primus], scenes: [] });
 
         await checkAndMigrateWorld();
 

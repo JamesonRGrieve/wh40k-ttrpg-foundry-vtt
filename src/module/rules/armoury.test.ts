@@ -1,18 +1,26 @@
-import { describe, expect, it } from 'vitest';
-import { ARMOURY_FLAG, type ArmourySpawnContext, armouryActorData, armouryPileFlags, findArmoury, shouldSpawnArmoury } from './armoury.ts';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    ARMOURY_FLAG,
+    type ArmourySpawnContext,
+    armouryActorData,
+    armouryPileFlags,
+    ensureInquisitionArmoury,
+    findArmoury,
+    shouldSpawnArmoury,
+} from './armoury.ts';
 
 const SYSTEM_ID = 'wh40k-rpg';
 
 /** A context where every gate passes, so each test negates exactly one clause. */
-const spawnable: ArmourySpawnContext = { ruleset: 'homebrew', isGM: true, exists: false, itemPilesActive: true };
+const spawnable: ArmourySpawnContext = { ruleset: 'homebrew', isWorldWriter: true, exists: false, itemPilesActive: true };
 
 describe('shouldSpawnArmoury (#496)', () => {
-    it('spawns for a GM in a homebrew DH2 world with Item Piles active', () => {
+    it('spawns for the active GM in a homebrew DH2 world with Item Piles active', () => {
         expect(shouldSpawnArmoury(spawnable)).toBe(true);
     });
 
-    it('never spawns on a player client — world documents are the GM to create', () => {
-        expect(shouldSpawnArmoury({ ...spawnable, isGM: false })).toBe(false);
+    it('never spawns on a client that is not the world writer — a player, or a second GM beside the active one (#713)', () => {
+        expect(shouldSpawnArmoury({ ...spawnable, isWorldWriter: false })).toBe(false);
     });
 
     it('does not spawn a second armoury on the next boot', () => {
@@ -88,5 +96,60 @@ describe('findArmoury', () => {
 
     it('returns undefined for an empty world', () => {
         expect(findArmoury([])).toBeUndefined();
+    });
+});
+
+/** The `game` surface `ensureInquisitionArmoury` reads, for one client of a homebrew DH2 world with Item Piles on and no armoury yet. */
+interface ArmouryGameStub {
+    user: { isGM: boolean };
+    users: { activeGM: { isSelf: boolean } | null };
+    settings: { get: () => string };
+    actors: FlaggedActorStub[];
+    modules: { get: (id: string) => { active: boolean } | undefined };
+    i18n: { localize: (key: string) => string; format: (key: string) => string };
+}
+
+interface FlaggedActorStub {
+    flags: Record<string, Record<string, boolean>>;
+}
+
+describe('ensureInquisitionArmoury on a world with two GMs connected (#713)', () => {
+    /** Stub one client's globals; returns the `Actor.create` spy. */
+    function stubClient(opts: { isGM: boolean; isWorldWriter: boolean }): ReturnType<typeof vi.fn> {
+        const create = vi.fn().mockResolvedValue({});
+        const game: ArmouryGameStub = {
+            user: { isGM: opts.isGM },
+            users: { activeGM: { isSelf: opts.isWorldWriter } },
+            settings: { get: () => 'homebrew' },
+            actors: [],
+            modules: { get: () => ({ active: true }) },
+            i18n: { localize: (key) => key, format: (key) => key },
+        };
+        vi.stubGlobal('game', game);
+        vi.stubGlobal('Actor', { create, deleteDocuments: vi.fn().mockResolvedValue([]) });
+        vi.stubGlobal('ui', { notifications: { info: vi.fn(), warn: vi.fn() } });
+        return create;
+    }
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it('the active GM spawns the armoury', async () => {
+        const create = stubClient({ isGM: true, isWorldWriter: true });
+        await ensureInquisitionArmoury();
+        expect(create).toHaveBeenCalledOnce();
+    });
+
+    it('a second GM who is not the active GM does not spawn one too', async () => {
+        const create = stubClient({ isGM: true, isWorldWriter: false });
+        await ensureInquisitionArmoury();
+        expect(create).not.toHaveBeenCalled();
+    });
+
+    it('a player client does not spawn one', async () => {
+        const create = stubClient({ isGM: false, isWorldWriter: false });
+        await ensureInquisitionArmoury();
+        expect(create).not.toHaveBeenCalled();
     });
 });

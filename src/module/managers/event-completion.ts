@@ -24,6 +24,7 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { hooksOn } from '../utils/hooks-on.ts';
+import { isWorldWriter } from '../utils/world-writer.ts';
 import {
     type AutoResolution,
     autoResolutions,
@@ -230,7 +231,7 @@ async function announce(eventId: string, detail: string): Promise<void> {
 
 /** The live environment: the active GM, the tracker's graph and state, the world's documents. */
 const liveEnvironment: CompletionEnvironment = {
-    isActiveGM: () => game.users.activeGM?.isSelf === true,
+    isActiveGM: isWorldWriter,
     graph: () => EventTracker.graph,
     resolved: () => EventTracker.getResolved(),
     suppressed: () => new Set(EventTracker.getAutoSuppressed()),
