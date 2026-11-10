@@ -8,6 +8,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { hitLocationLabel } from '../../rules/hit-locations.ts';
+import { untrainedSkillBase } from '../../rules/untrained-skill.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
 import { skillReferencePack } from '../../utils/line-packs.ts';
@@ -30,6 +31,17 @@ interface SkillRank {
 
 function localize(key: string): string {
     return game.i18n.localize(key);
+}
+
+/**
+ * Whether a line's untrained tests take the flat penalty rather than halving the
+ * characteristic: the line config's `usesAptitudes`, the same flag the data
+ * models read (#710). A line that cannot be resolved (no actor, no id on the
+ * payload) reads as the DH2 family default, the flat penalty.
+ */
+function usesAptitudesFor(gameSystem: string | null | undefined): boolean {
+    if (gameSystem == null) return true;
+    return SystemConfigRegistry.getOrNull(gameSystem)?.usesAptitudes ?? true;
 }
 
 /**
@@ -138,7 +150,7 @@ interface CharacteristicTooltipPayload {
 interface SkillTooltipPayload {
     name?: string | undefined;
     label?: string | undefined;
-    /** Owning actor's game-system id, used to pick the untrained-base rule (aptitude −20 vs RT ÷2). */
+    /** Owning actor's game-system id, used to pick the untrained-base rule (aptitude lines −20, career lines ÷2). */
     gameSystem?: string | undefined;
     baseValue?: number | undefined;
     basic?: boolean | undefined;
@@ -502,13 +514,10 @@ export class TooltipsWH40K {
         const actorGameSystem = (actor?.system as { gameSystem?: string } | undefined)?.gameSystem;
         const gameSystem = actorGameSystem ?? data.gameSystem ?? null;
         const systemConfig = gameSystem !== null ? SystemConfigRegistry.getOrNull(gameSystem) : null;
-        // Aptitude/career systems (DH2 + DH1e/BC/DW/OW/IM) apply a flat −20
-        // untrained penalty; FFG Rogue Trader halves the characteristic. Mirror
-        // creature.ts:prepareDerivedData (`usesAptitudes === true ? char − 20 : ⌊char/2⌋`).
-        // When the system config can't be resolved, fall back to the DH2 family
-        // default (the canonical FFG default) — everything except RT halves, so
-        // anything not explicitly RT is treated as aptitude (−20).
-        const usesAptitudes = systemConfig !== null ? systemConfig.usesAptitudes : gameSystem !== 'rt';
+        // The untrained base follows the line config's `usesAptitudes`, as the
+        // data models do: a flat −20 on aptitude lines, half the characteristic
+        // on career lines.
+        const usesAptitudes = usesAptitudesFor(gameSystem);
         // When the actor's game system can't be resolved the prior fallback
         // showed a truncated, hardcoded-English "Trained(0) → +10 → +20"
         // ladder (issue #26). Fall back to the localized DH2-family 4-tier
@@ -536,7 +545,7 @@ export class TooltipsWH40K {
             trainingBonus = dataTB ?? rank.bonus;
         }
 
-        const calculatedBase = baseValue ?? (level > 0 ? charValue : usesAptitudes ? charValue - 20 : Math.floor(charValue / 2));
+        const calculatedBase = baseValue ?? (level > 0 ? charValue : untrainedSkillBase(charValue, usesAptitudes));
         const bonus = dataBonus ?? 0;
         const tooltipSystem = getSkillDescriptionLookup();
         const skillInfo = tooltipSystem?.getSkillDescription?.(name) ?? null;
@@ -898,12 +907,7 @@ export function prepareSkillTooltipData(
     const plus30 = skill.plus30 ?? false;
     const basic = skill.basic ?? false;
     const level = plus30 ? 4 : plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-    // Aptitude/career systems (DH2 + DH1e/BC/DW/OW/IM) apply a flat −20 untrained
-    // penalty; FFG Rogue Trader halves the characteristic. Mirror creature.ts.
-    // Unresolved config falls back to the DH2 family default (−20, i.e. not RT).
-    const skillSystemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
-    const usesAptitudes = skillSystemConfig !== null ? skillSystemConfig.usesAptitudes : gameSystem !== 'rt';
-    const baseValue = level > 0 ? charTotal : usesAptitudes ? charTotal - 20 : Math.floor(charTotal / 2);
+    const baseValue = level > 0 ? charTotal : untrainedSkillBase(charTotal, usesAptitudesFor(gameSystem));
     const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
     const bonus = skill.bonus;
     const data: SkillTooltipPayload = {

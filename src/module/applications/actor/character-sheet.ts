@@ -301,8 +301,6 @@ type CharacterSheetContextDeclaredFields = {
     combatTalents?: unknown[];
     woundsPercent?: number;
     fatiguePercent?: number;
-    dodgeTarget?: number;
-    parryTarget?: number;
     criticalInjuries?: unknown[];
     forceField?: unknown;
     hasForceField?: boolean;
@@ -2708,47 +2706,6 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /** Calculate dodge and parry reaction targets from skills and characteristics. */
-    #prepareCombatReactionTargets(sheetContext: CharacterSheetContext): void {
-        // NPCs don't carry the skills/characteristics shape that drives dodge
-        // and parry targets — bail rather than dereferencing undefined.
-        if (!('skills' in this.actor) || !('characteristics' in this.actor)) return;
-        const skills = this.actor.skills;
-        const chars = this.actor.characteristics;
-
-        type SkillBits = { plus10?: boolean; plus20?: boolean; trained?: boolean; basic?: boolean };
-
-        // Untrained-skill rules diverge by system. The aptitude/career family
-        // (DH2 + BC/DW/OW/IM, and DH1 Errata which extended aptitudes) applies
-        // a flat -20 penalty (DH2 "Untrained Skill Use"). FFG
-        // Rogue Trader is the halving outlier and lives on its own sheet class.
-        // See wh40k-tooltip.ts for the same gate around the untrained-target
-        // display.
-        const systemId = this._resolveGameSystemId();
-        const isAptitudeSystem = systemId === 'dh2' || systemId === 'dh1' || systemId === 'bc' || systemId === 'dw' || systemId === 'ow' || systemId === 'im';
-        const adjustUntrained = (base: number): number => (isAptitudeSystem ? base - 20 : Math.floor(base / 2));
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
-        const dodgeSkill = skills['dodge'] as unknown as SkillBits | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        let dodgeBase = chars['agility']?.total ?? 0;
-        if (dodgeSkill?.plus20 === true) dodgeBase += 20;
-        else if (dodgeSkill?.plus10 === true) dodgeBase += 10;
-        else if (dodgeSkill?.trained !== true && dodgeSkill?.basic !== true) dodgeBase = adjustUntrained(dodgeBase);
-        sheetContext.dodgeTarget = dodgeBase;
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; double-cast to SkillBits to access computed fields not on the schema
-        const parrySkill = skills['parry'] as unknown as SkillBits | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        let parryBase = chars['weaponSkill']?.total ?? 0;
-        if (parrySkill?.plus20 === true) parryBase += 20;
-        else if (parrySkill?.plus10 === true) parryBase += 10;
-        else if (parrySkill?.trained !== true && parrySkill?.basic !== true) parryBase = adjustUntrained(parryBase);
-        sheetContext.parryTarget = parryBase;
-    }
-
-    /* -------------------------------------------- */
-
     /** The actor's ActiveEffects in the one view shape the chips, rows and dashboard all render. */
     #effectViews(): EffectView<WH40KActiveEffect>[] {
         return this.actor.effects.map((effect) =>
@@ -2864,7 +2821,6 @@ export default class CharacterSheet extends BaseActorSheet {
         const system = sheetContext.system ?? this.actor.system;
 
         this.#prepareCombatVitals(sheetContext, system);
-        this.#prepareCombatReactionTargets(sheetContext);
         sheetContext.combatMovement = this.#computeCombatMovement();
         // Per-turn action economy (#264) — null when this actor isn't in combat.
         const actorId = this.actor.id;
@@ -3220,7 +3176,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Add Active Effects data for dashboard preview
         ctx.effects = this.#effectViews();
 
-        // Ensure combat data is available (for primaryWeapon, dodgeTarget, parryTarget)
+        // Ensure combat data is available (for primaryWeapon)
         // This is already prepared in _prepareContext via _prepareCombatData
 
         // Ensure characteristics data is available in the format expected by dashboard

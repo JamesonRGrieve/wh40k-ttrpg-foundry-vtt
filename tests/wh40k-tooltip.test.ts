@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { TooltipsWH40K, prepareSkillTooltipData } from '../src/module/applications/components/wh40k-tooltip.ts';
+import { SystemConfigRegistry } from '../src/module/config/game-systems/index.ts';
+import { computeSkillTarget } from '../src/module/data/shared/skill-math.ts';
 import type { WH40KBaseActor } from '../src/module/documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../src/module/types/global.d.ts';
 import { localizeKey } from '../stories/mocks/lang-localize.ts';
@@ -243,6 +245,36 @@ describe('skill tooltip regressions', () => {
 
         const unknown = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock', 'made-up')) as { baseValue?: number };
         expect(unknown.baseValue).toBe(17);
+    });
+
+    it('agrees with the data model on the untrained base for every line (#710)', () => {
+        const skill = {
+            label: 'Awareness',
+            characteristic: 'perception',
+            trained: false,
+            plus10: false,
+            plus20: false,
+            plus30: false,
+            current: 0,
+            bonus: 0,
+        } as WH40KSkill;
+        const characteristics: Record<string, WH40KCharacteristic> = {
+            perception: makeCharacteristic('Perception', 37),
+        };
+
+        // The data model's untrained target is computeSkillTarget at rank 0 with
+        // the line config's usesAptitudes; the tooltip must print the same number.
+        const byLine = Object.fromEntries(
+            SystemConfigRegistry.getAll().map((config) => {
+                const payload = JSON.parse(prepareSkillTooltipData('awareness', skill, characteristics, 'Actor.mock', config.id)) as { baseValue?: number };
+                expect(payload.baseValue).toBe(computeSkillTarget(37, 0, 0, config.usesAptitudes).current);
+                return [config.id, payload.baseValue];
+            }),
+        );
+
+        // Aptitude lines take the flat −20; career lines halve. DH1 and DW are
+        // career lines: a hand-kept list of line ids once had them at −20.
+        expect(byLine).toEqual({ dh2: 17, bc: 17, ow: 17, im: 17, dh1: 18, dw: 18, rt: 18 });
     });
 
     it('uses per-system rank labels when the favourite-skill payload carries actorUuid (issue #36)', async () => {

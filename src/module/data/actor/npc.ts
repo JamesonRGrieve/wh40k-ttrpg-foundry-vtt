@@ -18,6 +18,7 @@ import {
     splitCharacteristic,
 } from '../../rules/npc-advancement.ts';
 import { actorEnvironmentContext, environmentAgilityBonus, environmentNpcMovementRates } from '../../rules/scene-environment.ts';
+import { untrainedSkillBase } from '../../rules/untrained-skill.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
@@ -28,7 +29,7 @@ import { fatigueModelForLine } from '../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { type LiftingCapacity, liftingCapacity } from '../shared/movement-math.ts';
 import { skillCharacteristicMap, skillLabel, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
-import { computeSkillTarget, untrainedSkillBase } from '../shared/skill-math.ts';
+import { computeSkillTarget } from '../shared/skill-math.ts';
 import { characteristicField, fatigueField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 import { owVehicleMovementSchemaFields, type OwVehicleMovementDeclarations } from './mixins/ow-vehicle-movement-template.ts';

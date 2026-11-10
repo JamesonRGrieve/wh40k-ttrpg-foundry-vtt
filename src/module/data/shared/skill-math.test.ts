@@ -1,20 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeSkillTarget, untrainedSkillBase } from './skill-math.ts';
-
-describe('untrainedSkillBase (#423)', () => {
-    it('aptitude systems (DH2e) subtract a flat 20', () => {
-        expect(untrainedSkillBase(40, true)).toBe(20);
-        expect(untrainedSkillBase(35, true)).toBe(15);
-        expect(untrainedSkillBase(0, true)).toBe(-20);
-    });
-
-    it('career systems halve the characteristic, rounded down', () => {
-        expect(untrainedSkillBase(40, false)).toBe(20);
-        expect(untrainedSkillBase(35, false)).toBe(17); // Math.floor(17.5)
-        expect(untrainedSkillBase(41, false)).toBe(20); // Math.floor(20.5)
-        expect(untrainedSkillBase(0, false)).toBe(0);
-    });
-});
+import { computeSkillTarget } from './skill-math.ts';
 
 describe('computeSkillTarget flags per rank threshold (#423)', () => {
     // rank -> [trained, plus10, plus20, plus30]

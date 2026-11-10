@@ -4,17 +4,13 @@
  * three times (creature skill body, creature specialist entry, NPC
  * `getSkillTarget`). System-agnostic across all 7 lines: the only branch is the
  * `usesAptitudes` flag (DH2e-style flat −20 vs. career half-characteristic).
+ *
+ * The untrained-base rule itself is `untrainedSkillBase` in
+ * `rules/untrained-skill.ts`, where the sheets and tooltips can reach it too
+ * (#710): UI code may not import from `data/`.
  */
 
-/**
- * Untrained-skill base value. In systems that use aptitudes (DH2e's
- * Known/Trained/Experienced/Veteran ladder) an untrained test is the full
- * characteristic minus a flat 20; career-based systems use half the
- * characteristic (rounded down). Pure.
- */
-export function untrainedSkillBase(charTotal: number, usesAptitudes: boolean): number {
-    return usesAptitudes ? charTotal - 20 : Math.floor(charTotal / 2);
-}
+import { untrainedSkillBase } from '../../rules/untrained-skill.ts';
 
 /** The rank-derived display flags and computed target for a skill. */
 export interface SkillTarget {

@@ -19,6 +19,16 @@
  *   as an override dropdown.
  */
 
+/**
+ * Untrained-skill base value: the one place this rule is written (#710). In
+ * lines that use aptitudes an untrained test is the full characteristic minus a
+ * flat 20; career-based lines use half the characteristic, rounded down. The
+ * flag is the game-system config's `usesAptitudes`. Pure.
+ */
+export function untrainedSkillBase(charTotal: number, usesAptitudes: boolean): number {
+    return usesAptitudes ? charTotal - 20 : Math.floor(charTotal / 2);
+}
+
 export interface UntrainedTestInput {
     /** Skill rank advance: 0 = untrained, >0 = trained at some tier. */
     advance: number;

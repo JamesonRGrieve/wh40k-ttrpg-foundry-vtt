@@ -1,6 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { resolveUntrainedTarget } from './untrained-skill';
+import { resolveUntrainedTarget, untrainedSkillBase } from './untrained-skill';
+
+describe('untrainedSkillBase (#423, #710)', () => {
+    it('aptitude systems (DH2e) subtract a flat 20', () => {
+        expect(untrainedSkillBase(40, true)).toBe(20);
+        expect(untrainedSkillBase(35, true)).toBe(15);
+        expect(untrainedSkillBase(0, true)).toBe(-20);
+    });
+
+    it('career systems halve the characteristic, rounded down', () => {
+        expect(untrainedSkillBase(40, false)).toBe(20);
+        expect(untrainedSkillBase(35, false)).toBe(17); // Math.floor(17.5)
+        expect(untrainedSkillBase(41, false)).toBe(20); // Math.floor(20.5)
+        expect(untrainedSkillBase(0, false)).toBe(0);
+    });
+});
 
 describe('resolveUntrainedTarget', () => {
     it('rolls against the characteristic when trained', () => {
