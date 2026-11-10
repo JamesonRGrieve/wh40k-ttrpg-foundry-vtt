@@ -9,7 +9,7 @@
  * reads the flag and the names read like the book.
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
@@ -60,6 +60,12 @@ interface AmmoDoc {
 /** Ammunition items live only in each book's `*-items-ammo` pack. */
 const AMMO_PACK_SUFFIX = '-items-ammo';
 
+/** The content root's directory of homebrew packs, beside the per-line book directories. */
+const HOMEBREW_DIR = 'homebrew-generic';
+
+/** Whether a pack document sits in a homebrew pack and not in a book's. */
+const isHomebrewPack = (path: string): boolean => relative(PRIVATE_ROOT, path).split(sep)[0] === HOMEBREW_DIR;
+
 /** Every `_source` directory of an ammunition pack, at `<line>/<pack>/_source`. */
 function ammoSourceDirs(): string[] {
     return readdirSync(PRIVATE_ROOT)
@@ -94,12 +100,20 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('standard ammunition in the packs (#699)',
         expect(prefixed).toEqual([]);
     });
 
-    it('every formerly prefixed item is flagged standard', () => {
-        const standard = ammo
-            .filter(({ doc }) => doc.system?.standard === true)
+    /** The sorted names of the standard ammunition in the book packs, or in the homebrew packs. */
+    const standardNames = (homebrew: boolean): string[] =>
+        ammo
+            .filter(({ path, doc }) => doc.system?.standard === true && isHomebrewPack(path) === homebrew)
             .map(({ doc }) => doc.name)
             .sort();
-        expect(standard).toEqual(
+
+    it('reads both the book packs and the homebrew packs', () => {
+        expect(ammo.some(({ path }) => isHomebrewPack(path))).toBe(true);
+        expect(ammo.some(({ path }) => !isHomebrewPack(path))).toBe(true);
+    });
+
+    it('every formerly prefixed item is flagged standard', () => {
+        expect(standardNames(false)).toEqual(
             [
                 'Arrows/Quarrels',
                 'Backpack Ammo/Power Pack',
@@ -115,6 +129,23 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('standard ammunition in the packs (#699)',
                 'Plasma Flasks (Heavy)',
                 'Plasma Flasks (pistol/basic)',
                 'Shot',
+            ].sort(),
+        );
+    });
+
+    // The standard-ammo-tracking setting hands these out as a weapon's loaded clip,
+    // and the origin-path builder keeps them out of its equipment choices by the flag.
+    it('every homebrew clip is flagged standard', () => {
+        expect(standardNames(true)).toEqual(
+            [
+                'Autogun Magazine',
+                'Autopistol Magazine',
+                'Bolt Shells',
+                'Combat Shotgun Magazine',
+                'Laspistol Charge Pack',
+                'Melta Canister',
+                'Plasma Flask',
+                'Promethium Fuel',
             ].sort(),
         );
     });

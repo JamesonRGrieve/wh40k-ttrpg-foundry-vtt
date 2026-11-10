@@ -157,6 +157,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
             {
               "choices": undefined,
               "config": true,
+              "default": "false",
+              "key": "standard-ammo-tracking",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "Boolean",
+            },
+            {
+              "choices": undefined,
+              "config": true,
               "default": "true",
               "key": "require-combat-to-attack",
               "requiresReload": undefined,
@@ -429,6 +438,15 @@ describe('WH40KSettings.registerSettings — structural-shape guard (#299)', () 
               "requiresReload": undefined,
               "scope": "world",
               "type": "Number",
+            },
+            {
+              "choices": undefined,
+              "config": false,
+              "default": """",
+              "key": "world-time-last-advance",
+              "requiresReload": undefined,
+              "scope": "world",
+              "type": "String",
             },
             {
               "choices": undefined,
