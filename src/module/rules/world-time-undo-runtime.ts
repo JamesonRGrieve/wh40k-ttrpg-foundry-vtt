@@ -39,11 +39,16 @@ function unlinkedTokenActors(): UndoActor[] {
     return tokens.flatMap((token) => (!token.actorLink && token.actor !== null ? [token.actor] : []));
 }
 
+/** The duration units Foundry counts in world time, as opposed to combat rounds and turns. */
+function timeDurationUnits(): readonly string[] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONST.ACTIVE_EFFECT_TIME_DURATION_UNITS (V14 common/constants.mjs) is not in the shipped typings
+    return (CONST as unknown as { ACTIVE_EFFECT_TIME_DURATION_UNITS: readonly string[] }).ACTIVE_EFFECT_TIME_DURATION_UNITS;
+}
+
 function timedState(effect: UndoEffect): TimedEffectState {
     return {
         expired: effect._source.duration.expired,
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONST.ACTIVE_EFFECT_TIME_DURATION_UNITS is Foundry's frozen list of time units
-        timeBased: (CONST.ACTIVE_EFFECT_TIME_DURATION_UNITS as readonly string[]).includes(effect.duration.units),
+        timeBased: timeDurationUnits().includes(effect.duration.units),
         startTime: effect.start?.time ?? null,
         seconds: effect.duration.seconds,
     };

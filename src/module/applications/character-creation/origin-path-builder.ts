@@ -5808,8 +5808,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * standard ammunition for its type.
      * @private
      */
-    async _standardClipsFor(weapon: StandardClipWeapon): Promise<ItemDataLike | null> {
+    async _standardClipsFor(granted: object): Promise<ItemDataLike | null> {
         if (!WH40KSettings.isStandardAmmoTrackingEnabled()) return null;
+        const weapon: StandardClipWeapon = granted;
         const weaponType = weapon.system?.type ?? '';
         const identifier = weapon.system?.identifier ?? '';
         const clipMax = weapon.system?.clip?.max ?? 0;
