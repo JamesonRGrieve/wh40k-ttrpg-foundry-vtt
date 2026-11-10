@@ -2,8 +2,9 @@
  * Guard for the shipped CC0 cue and status sounds (#609). Every file under
  * `src/packs/sounds/` must carry a credit row in its ATTRIBUTION.md (and no row
  * may name a file that is gone), and every pack document that points a cue or
- * status sound into `systems/wh40k-rpg/packs/sounds/` must name a file that
- * exists, or the sound 404s on every client. The private content is optional
+ * status sound into `systems/wh40k-rpg/packs/sounds/`, and every file the
+ * system's default table plays, must name a file that exists, or the sound 404s
+ * on every client. The private content is optional
  * here: without it (CI checks the submodule out as an empty folder) only the
  * attribution half runs.
  */
@@ -11,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { allDefaultSoundFiles } from '../src/module/rules/cue-default-sounds.ts';
 import { HAS_PRIVATE_CONTENT } from '../src/module/testing/private-content.ts';
 
 const ROOT = path.resolve(__dirname, '..');
@@ -66,9 +68,15 @@ describe('shipped cue sounds', () => {
         for (const folder of kenney) expect(fs.existsSync(path.join(SOUNDS, folder, 'License.txt'))).toBe(true);
     });
 
+    it('credits every file the default sound table plays', () => {
+        const fromTable = [...allDefaultSoundFiles()].map((src) => src.slice(SERVED.length));
+        expect(fromTable.length).toBeGreaterThan(0);
+        expect(fromTable.filter((file) => !shipped.includes(file))).toEqual([]);
+    });
+
+    // Packs no longer carry the defaults (the system plays them), but a hand-authored
+    // list may still point into the shipped set; each such file must exist.
     it.skipIf(!HAS_PRIVATE_CONTENT)('resolves every sound a pack document references to a shipped file', () => {
-        const referenced = referencedSounds();
-        expect(referenced.size).toBeGreaterThan(0);
-        expect([...referenced].filter((file) => !shipped.includes(file))).toEqual([]);
+        expect([...referencedSounds()].filter((file) => !shipped.includes(file))).toEqual([]);
     });
 });

@@ -20,6 +20,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { cueSoundVolume } from '../rules/attack-cue-playback.ts';
 import { bearerLine, resolveCondition } from '../rules/condition-registry.ts';
 import { pickCueAsset } from '../rules/cue-common.ts';
+import { defaultStatusSounds, pickDefaultSound } from '../rules/cue-default-sounds.ts';
 import {
     desiredStatusVisuals,
     diffStatusVisuals,
@@ -307,7 +308,9 @@ function playStatusSound(statuses: Iterable<string>, event: StatusSoundEvent, to
     const settings = WH40KSettings.getStatusVisualSettings();
     const visualFor = catalogVisualFor(actor);
     for (const id of statuses) {
-        const src = pickCueAsset(visualFor(id).sounds, event, Math.random);
+        const visual = visualFor(id);
+        // An authored sound wins; otherwise the look's shipped default (#609).
+        const src = pickCueAsset(visual.sounds, event, Math.random) || pickDefaultSound(defaultStatusSounds(visual.preset, visual.filter, event), Math.random);
         playCueSound(src, cueSoundVolume({ worldEnabled: settings.worldEnabled, soundsEnabled: settings.soundsEnabled, volume: settings.volume, src }));
     }
 }

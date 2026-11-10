@@ -1896,7 +1896,7 @@
             },
             "AttackCueSounds": {
                 "Name": "Play attack and condition sounds",
-                "Hint": "Play the sounds weapons and powers carry when they attack, and the sounds conditions carry when they are applied or removed. Most carry none until they are given one."
+                "Hint": "Play attack sounds when weapons and powers resolve, and condition sounds when conditions are applied or removed. Each look plays the shipped sound for its preset unless the item names its own."
             },
             "AttackCueVolume": {
                 "Name": "Attack and condition sound volume",

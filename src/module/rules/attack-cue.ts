@@ -17,6 +17,7 @@
  */
 
 import { type CueAssetOf, type CueAssetSource, cueAssetSources, pickCueAsset, readCueAssets, readHexTint } from './cue-common.ts';
+import { defaultCueSounds, pickDefaultSound } from './cue-default-sounds.ts';
 
 /** Every outcome a cue can be played for. One vocabulary for all six lines. */
 export const CUE_EVENTS = [
@@ -76,7 +77,7 @@ export interface CueProfile {
     tint: string;
     /** Animation files (Sequencer) per event; empty plays the procedural preset. */
     animations: readonly CueAsset[];
-    /** Sound files per event; an event without one plays no sound. */
+    /** Sound files per event; an event without one plays the preset's default (see cue-default-sounds.ts). */
     sounds: readonly CueAsset[];
 }
 
@@ -231,7 +232,12 @@ export function cueProfileOf(system: object | null | undefined): CueProfile {
 class StepBuilder {
     readonly steps: CueStep[] = [];
 
-    constructor(private readonly profile: CueProfile, private readonly preset: CuePreset, private readonly rng: () => number) {}
+    constructor(
+        private readonly profile: CueProfile,
+        private readonly preset: CuePreset,
+        private readonly kind: CueAttackKind,
+        private readonly rng: () => number,
+    ) {}
 
     add(event: CueEvent, from: CueAnchor, to: CueAnchor | null, delayMs: number): void {
         this.steps.push({
@@ -242,13 +248,14 @@ class StepBuilder {
             preset: this.preset,
             tint: this.profile.tint,
             animation: pickCueAsset(this.profile.animations, event, this.rng),
-            sound: pickCueAsset(this.profile.sounds, event, this.rng),
+            // An authored sound for the event wins; otherwise the preset's shipped default (#609).
+            sound: pickCueAsset(this.profile.sounds, event, this.rng) || pickDefaultSound(defaultCueSounds(this.preset, this.kind, event), this.rng),
         });
     }
 }
 
 function builderFor(profile: CueProfile, kind: CueAttackKind, rng: () => number): StepBuilder {
-    return new StepBuilder(profile, profile.preset === '' ? defaultCuePreset(kind) : profile.preset, rng);
+    return new StepBuilder(profile, profile.preset === '' ? defaultCuePreset(kind) : profile.preset, kind, rng);
 }
 
 /** Shots to draw for a hit count: at least one, at most {@link MAX_SHOTS}. */

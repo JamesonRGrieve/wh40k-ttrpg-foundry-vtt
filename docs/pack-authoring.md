@@ -1232,13 +1232,12 @@ every preset is drawn procedurally.
 **Shipped sounds (#609).** The system ships a CC0 sound set in `src/packs/sounds/`
 (copied to `dist/packs/sounds/`, referenced as `systems/wh40k-rpg/packs/sounds/…`),
 credited file by file in `src/packs/sounds/ATTRIBUTION.md`. Sounds are chosen **per
-preset, never per weapon**: every weapon, psychic power and condition carries the set
-for the preset it plays, and one with no preset carries its attack kind's default
-(`tracer`, `blade`, `warp`). The content root's
-authoring tool holds the preset → file table and writes it; it only
-rewrites a sound list that is empty or points wholly into `packs/sounds/`, so a
-hand-authored list is kept. To change a preset's sound, edit that table and re-run the
-tool, rather than editing documents one by one. A new file goes into
+preset, never per weapon**, and the system owns that table
+(`src/module/rules/cue-default-sounds.ts`): a weapon, psychic power or condition plays
+its preset's default for any event its own `sounds` list doesn't cover (a weapon or
+power with no preset uses its attack kind's: `tracer`, `blade`, `warp`). So documents
+leave `sounds` empty. Author a sound only to override the default for that one
+document. To change a preset's sound, edit the table. A new file goes into
 `src/packs/sounds/<source>/` with its credit row.
 
 ### Status visuals (condition token effects)

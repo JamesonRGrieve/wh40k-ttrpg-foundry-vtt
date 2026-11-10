@@ -226,7 +226,8 @@ describe('profile → steps', () => {
         };
         const [fire, hit, overheat] = planAttackCues(outcome({ overheated: true }), profile, first);
         expect(fire).toMatchObject({ preset: 'plasma', tint: '#00ffaa', animation: 'plasma-bolt.webm', sound: 'plasma.ogg' });
-        expect(hit).toMatchObject({ animation: '', sound: '' });
+        // No authored hit sound: the plasma preset's shipped default plays (#609).
+        expect(hit).toMatchObject({ animation: '', sound: 'systems/wh40k-rpg/packs/sounds/kenney-sci-fi/impactMetal_000.ogg' });
         expect(overheat).toMatchObject({ sound: 'vent.ogg' });
     });
 });
