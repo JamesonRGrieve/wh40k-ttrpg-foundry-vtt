@@ -24,7 +24,7 @@ import {
     unmetPrerequisites,
 } from '../../rules/prerequisites.ts';
 import { grantsPsychicPowers, psykerUnlockHint } from '../../rules/psyker-unlock.ts';
-import { getSpecializationsForSkill } from '../../rules/skill-specialization-index.ts';
+import { getSpecializationsForSkill } from '../../rules/skill-pack-index.ts';
 import { psychicPowerCharge, psychicPowerXpCost, psyRatingStepCost } from '../../rules/xp-costs.ts';
 import { capitalize } from '../../utils/format.ts';
 import { normalizeGameLineKey, systemForLine } from '../../utils/item-variant-utils.ts';
@@ -1731,7 +1731,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * Choose a specialisation for a specialist skill (#498).
      *
      * Offers the RULEBOOK'S list for this skill — indexed from the skill
-     * compendium documents by `skill-specialization-index.ts` — instead of the
+     * compendium documents by `skill-pack-index.ts` — instead of the
      * bare text box this used to be. Nothing validated the typed string, so a
      * near-miss spelling ("Imperial" for "Imperium") created a new paid track the
      * roll engine could not match: XP spent on a skill that rolls untrained

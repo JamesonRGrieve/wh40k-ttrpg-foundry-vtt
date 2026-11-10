@@ -162,8 +162,7 @@ import {
     type PortraitTokenLike,
 } from './rules/portrait-spawn.ts';
 import { buildCelestialBodyField, buildLatitudeField, sceneBodyKey, sceneLatitude, syncSceneLighting } from './rules/scene-lighting.ts';
-import { buildSkillSpecializationIndex } from './rules/skill-specialization-index.ts';
-import { buildSkillVariantIndex } from './rules/skill-variant-index.ts';
+import { buildSkillPackIndex } from './rules/skill-pack-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
 import { runTokenImageGeneration, type TokenImageActor } from './rules/token-image-gen-runtime.ts';
 import { buildWarpWeaknessField, isWarpWeak, WARP_WEAKNESS_INPUT_NAME, type WarpWeaknessScene } from './rules/warp-weakness.ts';
@@ -1450,8 +1449,7 @@ export class HooksManager {
         await uuidNameCache.build();
         await HooksManager.loadConditionStatusEffects();
         await buildWeaponQualityPayloadIndex();
-        await buildSkillVariantIndex();
-        await buildSkillSpecializationIndex();
+        await buildSkillPackIndex();
         await buildCareerAdvancementIndex();
         await backfillOriginPathUuids();
         await reconcileWorldOriginGrants();

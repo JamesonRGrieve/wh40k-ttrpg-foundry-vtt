@@ -58,8 +58,8 @@ import {
     type SituationalFailureConsequence,
     stampRoundUses,
 } from '../../rules/situational-limits.ts';
+import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-pack-index.ts';
 import { isSkillUseItemSlotKey, type SkillUseItemSlotKey } from '../../rules/skill-uses.ts';
-import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-variant-index.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
 import {
     shouldSkipSelfTargetDefenderMods,
