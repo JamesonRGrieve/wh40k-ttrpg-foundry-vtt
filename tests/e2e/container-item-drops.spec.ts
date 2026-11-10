@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { clearScreenOverlays, snap } from './lib/screenshot';
+import { createProbeActor, deleteProbeActors } from './lib/sheet-probe';
 import { expect, test } from './lib/test';
 
 /**
@@ -10,6 +11,9 @@ import { expect, test } from './lib/test';
  * A storage location accepts a dropped gear item as a nested item: the sheet reads
  * the types it accepts from the DataModel class, where StorageLocationData declares
  * them. It read them off the instance and refused every drop.
+ *
+ * An item dragged from a character moves into the container (#722): it once stayed
+ * on every `<line>-character`, so the drag left a copy behind.
  */
 
 const PREFIX = 'e2e-697';
@@ -27,9 +31,15 @@ interface ProbeItem {
     effects: { contents: Array<{ name: string; uuid: string }> };
     delete: () => Promise<void>;
 }
+interface ProbeActor {
+    items: { contents: Array<{ name: string; uuid: string }> };
+}
 interface ProbeWindow {
     Item: { create: (data: object) => Promise<ProbeItem | null> };
-    game: { items: { filter: (fn: (i: { name: string }) => boolean) => ProbeItem[]; getName: (name: string) => ProbeItem | undefined } };
+    game: {
+        items: { filter: (fn: (i: { name: string }) => boolean) => ProbeItem[]; getName: (name: string) => ProbeItem | undefined };
+        actors: { get: (id: string) => ProbeActor | undefined };
+    };
 }
 
 /** Create a world item; open its sheet when `open` is set. Returns its uuid and, if opened, the sheet id. */
@@ -72,6 +82,15 @@ async function nestedNames(page: Page, name: string): Promise<string[]> {
         const w = globalThis as unknown as ProbeWindow;
         return w.game.items.getName(itemName)?.items.contents.map((i) => i.name) ?? [];
     }, name);
+}
+
+/** The items an actor owns, by name and uuid. */
+async function ownedItems(page: Page, actorId: string): Promise<Array<{ name: string; uuid: string }>> {
+    return page.evaluate((id) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        return w.game.actors.get(id)?.items.contents.map((i) => ({ name: i.name, uuid: i.uuid })) ?? [];
+    }, actorId);
 }
 
 /** The names of an item's Active Effects. */
@@ -131,6 +150,34 @@ test.describe.serial('drops onto container item sheets (Tier B, #697)', () => {
         await expect.poll(async () => nestedNames(page, `${PREFIX} footlocker`)).toEqual([]);
         await expect(sheet.locator('[data-nested-item-id]')).toHaveCount(0);
         recordCoverage('sheet.drop', 'storageLocation.nested-item');
+    });
+
+    // The drag carries the owned item's uuid, as a drag from the character's
+    // inventory does. The item is nested, and it is gone from the character.
+    test('an item dragged from a character moves into the storage location', async ({ page }) => {
+        await joinOrSkip(page);
+        const itemName = `${PREFIX} glow-globe`;
+        const actorId = await createProbeActor(page, { name: `${PREFIX} owner`, type: 'dh2-character', items: [{ name: itemName, type: 'gear' }] });
+        if (actorId === null) throw new Error('probe actor was not created');
+        try {
+            const owned = (await ownedItems(page, actorId)).find((i) => i.name === itemName);
+            if (owned === undefined) throw new Error('the probe character does not own the item');
+            expect(owned.uuid.startsWith('Actor.')).toBe(true);
+
+            const store = await createItem(page, { name: `${PREFIX} footlocker`, type: 'storageLocation' }, true);
+            const sheet = page.locator(`#${store.appId}`);
+            await expect(sheet).toBeVisible();
+            await clearScreenOverlays(page, store.appId);
+
+            await dropOnSheet(page, store.appId, { type: 'Item', uuid: owned.uuid });
+            await expect.poll(async () => nestedNames(page, `${PREFIX} footlocker`)).toEqual([itemName]);
+            await expect.poll(async () => (await ownedItems(page, actorId)).map((i) => i.name)).not.toContain(itemName);
+            await expect(sheet.locator('[data-nested-item-id]').filter({ hasText: itemName })).toBeVisible();
+            await snap(page, 'storage-location-item-moved-from-character', { selector: `#${store.appId}` });
+            recordCoverage('sheet.drop', 'storageLocation.moved-from-character');
+        } finally {
+            await deleteProbeActors(page, [actorId]);
+        }
     });
 
     // A container sheet passes a drop that is not an Item to ItemSheetV2's own

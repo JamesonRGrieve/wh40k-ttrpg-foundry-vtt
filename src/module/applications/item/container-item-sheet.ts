@@ -3,6 +3,7 @@
  * Handles weapons with mods, armour with upgrades, etc.
  */
 
+import { isCharacterActorType } from '../../documents/actor-types.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { capitalize } from '../../utils/format.ts';
@@ -175,8 +176,9 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
         // Add the item to the container
         await this.item.createNestedDocuments([droppedItem.toObject()]);
 
-        // Remove from source actor if applicable
-        if (sourceActor !== null && ['acolyte', 'character'].includes(sourceActor.type)) {
+        // A character's item MOVES into the container: take it off the character,
+        // whichever line's `<line>-character` type it is (#722).
+        if (sourceActor !== null && isCharacterActorType(sourceActor.type)) {
             const itemId = droppedItem._id;
             if (itemId !== null && itemId !== '') await sourceActor.deleteEmbeddedDocuments('Item', [itemId]);
         }
