@@ -192,16 +192,4 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            restrictions: this.restrictionsLabel,
-        };
-    }
 }

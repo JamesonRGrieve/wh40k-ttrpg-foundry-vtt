@@ -225,20 +225,6 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            protection: `${this.protectionRating}%`,
-            overload: this.overloadRangeLabel,
-            status: this.statusLabel,
-        };
-    }
-
-    /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */
 

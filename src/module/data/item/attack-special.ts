@@ -34,16 +34,6 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
         return props;
     }
 
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        const labels = [];
-        if (this.hasLevel && this.level > 0) {
-            labels.push({ label: this.level.toString(), icon: 'fa-solid fa-layer-group' });
-        }
-        return labels;
-    }
-
     /**
      * Get the display name including level if applicable.
      * @returns {string}

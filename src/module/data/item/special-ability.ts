@@ -52,13 +52,4 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
     get chatProperties(): string[] {
         return [];
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {};
-    }
 }

@@ -98,16 +98,4 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
         }
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            level: this.hasLevel ? this.level : '-',
-        };
-    }
 }

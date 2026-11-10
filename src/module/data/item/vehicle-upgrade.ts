@@ -172,17 +172,4 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            availability: this.availability,
-            type: this.upgradeTypeLabel,
-        };
-    }
 }

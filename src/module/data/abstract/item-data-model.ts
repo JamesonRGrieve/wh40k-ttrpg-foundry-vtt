@@ -7,14 +7,20 @@
  * unknown>` / `unknown` casts are permitted here. New non-boundary helpers MUST be
  * typed normally.
  */
-/* eslint-disable no-restricted-syntax -- migration / cleaning operate on raw Foundry V14 source payloads (true framework boundary) */
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { formatSourceLabel } from '../../handlebars/source-label.ts';
-import { inferActiveGameLine, materializeItemVariants } from '../../utils/item-variant-utils.ts';
+import { flattenSourceLineVariants, isPlainObject } from '../../utils/item-variant-utils.ts';
 import SystemDataModel from './system-data-model.ts';
 
 const { NumberField } = foundry.data.fields;
+
+/** The source Foundry hands a DataModel's migration and cleaning steps, before any schema applies. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's DataModel.migrateData / DataModel.cleanData source payload is untyped until the schema validates it
+type RawSource = Record<string, unknown>;
+
+/** The declared fields of a schema, as Foundry types `SchemaField#fields`. */
+type SchemaFields = foundry.data.fields.DataSchema;
 
 /**
  * Base data model for all Item types in WH40K RPG.
@@ -70,22 +76,19 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} [options={}]   Additional options
      * @protected
      */
-    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
+    static override _cleanData(source?: RawSource, options?: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
-        ItemDataModel.#cleanNumericFields(source, this.schema.fields as Record<string, foundry.data.fields.DataField.Any>);
+        // `DataModel.schema` is typed `SchemaField.Any`, so its `fields` arrive untyped.
+        ItemDataModel.#cleanNumericFields(source, this.schema.fields as SchemaFields);
     }
 
     /**
      * Recursively clean numeric fields in source data.
      * Coerces numeric string values to proper numbers for NumberFields.
      * @param {object} source - The source data object
-     * @param {Record<string, foundry.data.fields.DataField.Any>} fields - The schema fields to check
+     * @param {SchemaFields} fields - The schema fields to check
      */
-    static #cleanNumericFields(
-        source: Record<string, unknown> | undefined,
-        fields: Record<string, foundry.data.fields.DataField.Any>,
-        processed = new Set<object>(),
-    ): void {
+    static #cleanNumericFields(source: RawSource | undefined, fields: SchemaFields, processed = new Set<object>()): void {
         if (!source || typeof source !== 'object' || processed.has(source)) return;
         processed.add(source);
 
@@ -104,12 +107,8 @@ export default class ItemDataModel extends SystemDataModel {
                 }
             }
             // Handle SchemaField - recurse into nested fields
-            else if (field instanceof foundry.data.fields.SchemaField && typeof value === 'object' && value !== null) {
-                ItemDataModel.#cleanNumericFields(
-                    value as Record<string, unknown>,
-                    field.fields as Record<string, foundry.data.fields.DataField.Any>,
-                    processed,
-                );
+            else if (field instanceof foundry.data.fields.SchemaField && isPlainObject(value)) {
+                ItemDataModel.#cleanNumericFields(value, field.fields as SchemaFields, processed);
             }
         }
     }
@@ -125,48 +124,29 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static override _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: RawSource): void {
         super._migrateData(source);
         ItemDataModel.#migrateImg(source);
         ItemDataModel.#migrateCollections(source);
-        ItemDataModel.#flattenLineVariants(source);
-    }
-
-    /**
-     * Flatten per-game-line variant containers (e.g. `modifiers: { dh2: {...}, rt: {...} }`)
-     * down to the active line's branch (e.g. `modifiers: {...}`) so that schema validation
-     * sees a payload matching the flat field shape declared in `defineSchema()`. Without
-     * this step, Foundry's validator strips the unknown `dh1/dh2/rt/...` keys and falls
-     * back to schema initials (typically 0 / empty Set), surfacing as "all zeros" in
-     * compendium item sheets for ammunition, weapons, armour, etc.
-     *
-     * The raw on-disk JSON is unaffected; only the in-memory document source is flattened.
-     * @param {object} source  The source data
-     */
-    static #flattenLineVariants(source: Record<string, unknown>): void {
-        const systemContainer = source['system'];
-        // Foundry passes the inner `system` payload directly in most paths; some legacy
-        // call sites pass the whole document. Materialize whichever shape we received.
-        if (systemContainer !== null && typeof systemContainer === 'object' && !Array.isArray(systemContainer)) {
-            const systemSource = systemContainer as Record<string, unknown>;
-            // No parent/actor at migration time; resolves to the world primary line.
-            // Owned items reach here already resolved to their OWNER's line (no
-            // containers left): `WH40KBaseActor.migrateData` on load,
-            // `WH40KItem.createDocuments` on create, and the hydrate join re-points
-            // compendium-copied content via `resolveOwnedLineContent`.
-            const lineKey = inferActiveGameLine();
-            materializeItemVariants(systemSource, lineKey);
-            return;
-        }
-        const rootLineKey = inferActiveGameLine();
-        materializeItemVariants(source, rootLineKey);
+        // Flatten per-game-line variant containers (e.g. `modifiers: { dh2: {...}, rt: {...} }`)
+        // down to the active line's branch so schema validation sees the flat shape
+        // `defineSchema()` declares. Without it Foundry's validator strips the unknown
+        // line keys and falls back to schema initials: "all zeros" on compendium item
+        // sheets for ammunition, weapons, armour and the rest.
+        //
+        // There is no parent or actor at migration time, so this resolves to the world's
+        // primary line. Owned items reach here already resolved to their OWNER's line (no
+        // containers left): `WH40KBaseActor.migrateData` on load,
+        // `WH40KItem.createDocuments` on create, and the hydrate join re-points
+        // compendium-copied content via `resolveOwnedLineContent`.
+        flattenSourceLineVariants(source);
     }
 
     /**
      * Validate and fix img field - ensure valid file extension.
      * @param {object} source  The source data
      */
-    static #migrateImg(source: Record<string, unknown>): void {
+    static #migrateImg(source: RawSource): void {
         if (typeof source['img'] !== 'string' || source['img'] === '') return;
 
         const img = source['img'];
@@ -191,7 +171,7 @@ export default class ItemDataModel extends SystemDataModel {
      * Migrate Array fields to Set (V13 requirement).
      * @param {object} source  The source data
      */
-    static #migrateCollections(source: Record<string, unknown>): void {
+    static #migrateCollections(source: RawSource): void {
         if (Array.isArray(source['coverage'])) {
             source['coverage'] = new Set(source['coverage']);
         }
@@ -226,8 +206,7 @@ export default class ItemDataModel extends SystemDataModel {
      */
     get typeLabel(): string {
         const item = this.parent as WH40KItem;
-        const labels = CONFIG.Item.typeLabels as Record<string, string>;
-        return game.i18n.localize(labels[item.type] ?? item.type);
+        return game.i18n.localize(CONFIG.Item.typeLabels[item.type] ?? item.type);
     }
 
     /**
@@ -268,16 +247,13 @@ export default class ItemDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /**
-     * Prepare a data object for dice roll formulas.
-     * @param {object} [options]
-     * @param {boolean} [options.deterministic]  Force deterministic values for die terms.
+     * Prepare a data object for dice roll formulas: the owning actor's roll data
+     * (none for an unowned item) with this item's own data under `item`.
      * @returns {object}
      */
-    getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        type RollDataActor = { getRollData: (opts: { deterministic: boolean }) => Record<string, unknown> };
-        const actor = this.item.actor as unknown as RollDataActor | null;
-        const actorRollData = actor?.getRollData({ deterministic }) ?? {};
-        return { ...actorRollData, item: this.toObject() };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.getRollData returns the untyped Roll formula scope this extends
+    getRollData(): Record<string, unknown> {
+        return { ...this.actor?.getRollData(), item: this.toObject() };
     }
 
     /* -------------------------------------------- */
@@ -319,12 +295,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} htmlOptions   Options passed to enrichHTML.
      * @returns {Promise<object>}
      */
-    /**
-     * Generate chat data for this item.
-     * @param {object} htmlOptions   Options passed to enrichHTML.
-     * @returns {Promise<object>}
-     */
-    async getChatData(htmlOptions: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
+    async getChatData(htmlOptions: foundry.applications.ux.TextEditor.EnrichmentOptions = {}): Promise<{ description: string; properties: string[] }> {
         const description = this.description;
         const descValue = typeof description === 'string' ? description : description.value;
         const data = {
@@ -335,13 +306,5 @@ export default class ItemDataModel extends SystemDataModel {
             properties: this.chatProperties,
         };
         return data;
-    }
-
-    /**
-     * Get labels for the item sheet header.
-     * @type {object}
-     */
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {};
     }
 }

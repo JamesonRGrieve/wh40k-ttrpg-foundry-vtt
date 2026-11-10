@@ -234,18 +234,4 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            nature: this.natureLabel,
-            stacks: this.stackable ? this.stacks : '-',
-            duration: this.durationDisplay,
-        };
-    }
 }

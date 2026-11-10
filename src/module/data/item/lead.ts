@@ -123,17 +123,4 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
         }
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            state: this.stateLabel,
-            leadType: this.leadTypeLabel,
-        };
-    }
 }

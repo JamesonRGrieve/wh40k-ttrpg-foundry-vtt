@@ -12,7 +12,7 @@ import { expect, test } from './lib/test';
  *   - mutation.ts        (category, visible, categoryLabel, chatProperties)
  *   - mental-disorder.ts (severity, severityLabel, chatProperties)
  *   - critical-injury.ts (effects map indexed by severity, currentEffect,
- *                         isPermanent, severityClass, headerLabels)
+ *                         isPermanent, severityClass)
  *   - malignancy.ts      (round-trip, body-content effects)
  *   - gear.ts            ('drug' type → GearData; duration, grants.activeEffects)
  *   - peer-enemy.ts      ('peer' type → PeerEnemyData; modifier sign branches)
@@ -247,8 +247,8 @@ async function probeMentalDisorder(page: Page, actorId: string): Promise<FlowRes
 
 /**
  * Critical injury — populate effects map indexed by severity number, verify
- * currentEffect lookup, severityClass branch (severity 8 → 'severity-severe'),
- * isPermanent flag, and headerLabels derivation.
+ * currentEffect lookup, severityClass branch (severity 8 → 'severity-severe')
+ * and the isPermanent flag.
  */
 async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowResult> {
     const ids = await createItems(page, actorId, [
@@ -274,15 +274,12 @@ async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowRes
         const currentEffect = await readItemPath(page, actorId, itemId, 'system.currentEffect');
         const isPermanent = await readItemPath(page, actorId, itemId, 'system.isPermanent');
         const severityClass = await readItemPath(page, actorId, itemId, 'system.severityClass');
-        const headerLabels = await readItemPath(page, actorId, itemId, 'system.headerLabels');
         if (typeof currentEffect !== 'string' || !currentEffect.includes('Charred')) {
             return { ok: false, error: `currentEffect: expected severity-8 text, got ${JSON.stringify(currentEffect)}` };
         }
         if (isPermanent !== true) return { ok: false, error: `isPermanent: expected true, got ${JSON.stringify(isPermanent)}` };
         if (severityClass !== 'severity-severe')
             return { ok: false, error: `severityClass: expected 'severity-severe' (sev 8), got ${JSON.stringify(severityClass)}` };
-        if (typeof headerLabels !== 'object' || headerLabels === null)
-            return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
         // Confirm the actor was created with non-zero critical wounds so the
         // critical-injury sits in context where the system would track it.
         const critWounds = await readActorPath(page, actorId, 'system.wounds.critical');
@@ -295,7 +292,7 @@ async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowRes
 
 /**
  * Malignancy — round-trip identifier/effect/notes. MalignancyData has no
- * derived getters beyond the empty chatProperties / headerLabels; this flow
+ * derived getters beyond the empty chatProperties; this flow
  * exercises the defineSchema path + DescriptionTemplate+ModifiersTemplate
  * mixin assembly. The "corruption link" is narrative (no schema field
  * touches corruption directly) so we verify the baseline that malignancy
@@ -318,12 +315,9 @@ async function probeMalignancy(page: Page, actorId: string): Promise<FlowResult>
     try {
         const identifier = await readItemPath(page, actorId, itemId, 'system.identifier');
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
-        const headerLabels = await readItemPath(page, actorId, itemId, 'system.headerLabels');
         const corruption = await readActorPath(page, actorId, 'system.corruption');
         if (identifier !== 'probe-malig') return { ok: false, error: `identifier round-trip: expected 'probe-malig', got ${JSON.stringify(identifier)}` };
         if (!Array.isArray(chatProps)) return { ok: false, error: `chatProperties: expected array, got ${JSON.stringify(chatProps)}` };
-        if (typeof headerLabels !== 'object' || headerLabels === null)
-            return { ok: false, error: `headerLabels: expected object, got ${JSON.stringify(headerLabels)}` };
         if (corruption === null) return { ok: false, error: 'actor.corruption track missing — malignancy context not viable' };
         return { ok: true, error: null };
     } finally {
@@ -397,7 +391,6 @@ async function probePeer(page: Page, actorId: string): Promise<FlowResult> {
         const isPeer = await readItemPath(page, actorId, itemId, 'system.isPeer');
         const isEnemy = await readItemPath(page, actorId, itemId, 'system.isEnemy');
         const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
-        const headerLabels = await readItemPath(page, actorId, itemId, 'system.headerLabels');
         if (group !== 'Mechanicus') return { ok: false, error: `group round-trip: expected 'Mechanicus', got ${JSON.stringify(group)}` };
         if (modifier !== 10) return { ok: false, error: `modifier round-trip: expected 10, got ${JSON.stringify(modifier)}` };
         if (isPeer !== true) return { ok: false, error: `isPeer: expected true (mod >= 0), got ${JSON.stringify(isPeer)}` };
@@ -405,8 +398,6 @@ async function probePeer(page: Page, actorId: string): Promise<FlowResult> {
         if (!Array.isArray(chatProps) || !chatProps.includes('Mechanicus') || !chatProps.some((p) => typeof p === 'string' && p.startsWith('+'))) {
             return { ok: false, error: `chatProperties: expected ['Mechanicus', '+10'], got ${JSON.stringify(chatProps)}` };
         }
-        if (!Array.isArray(headerLabels) || headerLabels.length === 0)
-            return { ok: false, error: `headerLabels: expected non-empty array, got ${JSON.stringify(headerLabels)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);

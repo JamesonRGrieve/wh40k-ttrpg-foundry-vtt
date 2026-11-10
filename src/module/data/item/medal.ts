@@ -42,9 +42,4 @@ export default class MedalData extends ItemDataModel.mixin(DescriptionTemplate) 
     get chatProperties(): string[] {
         return [];
     }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {};
-    }
 }

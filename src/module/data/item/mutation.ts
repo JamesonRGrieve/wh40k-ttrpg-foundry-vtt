@@ -114,15 +114,4 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
         if (this.visible) props.push(game.i18n.localize('WH40K.Mutation.Visible'));
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            category: this.categoryLabel,
-        };
-    }
 }

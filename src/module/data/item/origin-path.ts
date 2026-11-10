@@ -741,18 +741,4 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     get chatProperties(): string[] {
         return [this.stepLabel, ...this.grantsSummary];
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            step: this.stepLabel,
-            // `stepIndex` is already the 1-based builder order the line config uses (#687).
-            stepIndex: this.stepIndex,
-        };
-    }
 }

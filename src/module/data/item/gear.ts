@@ -328,35 +328,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     }
 
     /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        const labels = [];
-
-        // Category badge
-        labels.push({
-            label: this.categoryLabel,
-            icon: `fa-solid ${this.categoryIcon}`,
-            tooltip: game.i18n.localize('WH40K.Gear.Category'),
-        });
-
-        // Uses indicator (if limited)
-        if (this.hasLimitedUses) {
-            labels.push({
-                label: this.usesDisplay,
-                icon: 'fa-solid fa-battery-three-quarters',
-                tooltip: game.i18n.localize('WH40K.Gear.Uses'),
-                cssClass: this.usesExhausted ? 'exhausted' : '',
-            });
-        }
-
-        return labels;
-    }
-
-    /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */
 

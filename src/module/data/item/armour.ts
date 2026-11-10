@@ -768,20 +768,4 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels override must match base class return type Record<string, unknown>; maxAgility is intentionally nullable in schema
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            type: this.typeLabel,
-            ap: this.apSummary,
-            coverage: this.coverageLabel,
-            // eslint-disable-next-line no-restricted-syntax -- schema field is nullable: true by design; null → '-' display fallback is valid
-            maxAg: this.maxAgility ?? '-',
-        };
-    }
 }

@@ -1693,22 +1693,6 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get headerLabels(): { class: string; type: string; damage: string; pen: number; range: string; rof: string } {
-        return {
-            class: this.classLabel,
-            type: this.typeLabel,
-            damage: this.damageLabel,
-            pen: this.damage.penetration,
-            range: this.rangeLabel,
-            rof: this.rateOfFireLabel,
-        };
-    }
-
-    /* -------------------------------------------- */
     /*  Display Properties                          */
     /* -------------------------------------------- */
 

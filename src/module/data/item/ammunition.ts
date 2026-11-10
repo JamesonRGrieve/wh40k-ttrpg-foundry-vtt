@@ -225,16 +225,4 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type is dictated by ItemDataModel base class; cannot be narrowed without breaking the override contract
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            weaponTypes: this.weaponTypesLabel,
-        };
-    }
 }

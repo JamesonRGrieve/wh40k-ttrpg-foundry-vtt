@@ -37,10 +37,4 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
         if (this.availability !== '') props.push(this.availabilityLabel);
         return props;
     }
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return [{ label: `${this.capacity} kg`, icon: 'fa-solid fa-weight-hanging' }];
-    }
 }

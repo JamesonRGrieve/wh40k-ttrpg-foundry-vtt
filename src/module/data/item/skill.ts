@@ -237,18 +237,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     }
 
     /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get headerLabels(): Record<string, string> | Array<Record<string, string>> {
-        return {
-            characteristic: this.characteristicAbbr,
-            type: this.skillTypeLabel,
-        };
-    }
-
-    /* -------------------------------------------- */
     /*  Methods                                     */
     /* -------------------------------------------- */
 

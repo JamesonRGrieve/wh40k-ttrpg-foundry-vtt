@@ -403,20 +403,6 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            category: this.categoryLabel,
-            tier: this.tierLabel,
-            cost: `${this.cost} XP`,
-        };
-    }
-
-    /* -------------------------------------------- */
     /*  Vocalization                                */
     /* -------------------------------------------- */
 

@@ -143,18 +143,6 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return props;
     }
 
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel.headerLabels typed loosely across item types
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            level: this.hasLevel ? this.level : '-',
-        };
-    }
-
     /**
      * Get category label.
      * @type {string}

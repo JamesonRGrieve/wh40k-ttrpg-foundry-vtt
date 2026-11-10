@@ -76,16 +76,4 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
         }
         return props;
     }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        const labels = [];
-        if (this.time) {
-            labels.push({ label: this.time, icon: 'fa-solid fa-clock' });
-        }
-        if (this.place) {
-            labels.push({ label: this.place, icon: 'fa-solid fa-location-dot' });
-        }
-        return labels;
-    }
 }

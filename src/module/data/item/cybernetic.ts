@@ -241,16 +241,4 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get headerLabels(): Record<string, string> {
-        return {
-            type: this.typeLabel,
-            location: this.locationsLabel,
-        };
-    }
 }

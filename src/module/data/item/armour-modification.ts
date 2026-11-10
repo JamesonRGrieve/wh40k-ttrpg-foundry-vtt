@@ -406,18 +406,4 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels override must match base class return type Record<string, unknown>
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            restrictions: this.restrictionsLabelEnhanced,
-            modifiers: this.modifierSummary,
-            properties: this.propertiesSummary,
-        };
-    }
 }

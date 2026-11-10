@@ -166,16 +166,4 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels is a free-form record consumed by sheet templates
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            test: this.testLabel,
-            action: this.activationLabel,
-        };
-    }
 }

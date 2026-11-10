@@ -99,16 +99,4 @@ export default class EndeavourData extends ItemDataModel.mixin(DescriptionTempla
         }
         return props;
     }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type mirrors base ItemDataModel schema
-    get headerLabels(): Record<string, unknown> | Array<{ label: string; icon: string }> {
-        const labels: Array<{ label: string; icon: string }> = [];
-        if (this.apRequired > 0) {
-            labels.push({ label: `${this.apEarned}/${this.apRequired} AP`, icon: 'fa-solid fa-trophy' });
-        }
-        if (this.reward.profitFactor > 0) {
-            labels.push({ label: `+${this.reward.profitFactor} PF`, icon: 'fa-solid fa-coins' });
-        }
-        return labels;
-    }
 }

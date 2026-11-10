@@ -146,18 +146,4 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
 
         return props;
     }
-
-    /* -------------------------------------------- */
-    /*  Header Labels                               */
-    /* -------------------------------------------- */
-
-    /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: headerLabels return type is defined in ItemDataModel base class; values are primitive strings/numbers consumed by the sheet template
-    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
-        return {
-            power: this.powerLabel,
-            space: this.space,
-            sp: this.shipPoints,
-        };
-    }
 }
