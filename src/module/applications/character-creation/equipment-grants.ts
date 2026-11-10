@@ -100,3 +100,42 @@ export function matchEquipmentEntry<T extends { name: string }>(entries: readonl
     const loose = entries.filter((entry) => equipmentNameKey(entry.name) === key);
     return loose.length === 1 ? loose[0] : undefined;
 }
+
+/** An ammunition document's authored `weaponTypes`: a flat list, or a per-line map (`{ dh2: [...] }`). */
+export type AmmoWeaponTypes = readonly string[] | Readonly<Partial<Record<string, readonly string[]>>>;
+
+/** A compendium index entry for an ammunition document, as the clip lookup reads it. */
+export interface AmmoIndexEntry {
+    uuid: string;
+    name: string;
+    identifier: string;
+    standard: boolean;
+    weaponTypes: AmmoWeaponTypes | undefined;
+}
+
+/** An ammunition entry's weapon types for `line`, from either authored shape. */
+export function ammoWeaponTypesFor(weaponTypes: AmmoWeaponTypes | undefined, line: string): readonly string[] {
+    if (weaponTypes === undefined) return [];
+    if (isWeaponTypeList(weaponTypes)) return weaponTypes;
+    return weaponTypes[line] ?? [];
+}
+
+/** Narrow the flat-list form of {@link AmmoWeaponTypes}. */
+function isWeaponTypeList(weaponTypes: AmmoWeaponTypes): weaponTypes is readonly string[] {
+    return Array.isArray(weaponTypes);
+}
+
+/**
+ * The standard ammunition (`system.standard`) a weapon of `weaponType` loads: one
+ * whose identifier starts with the weapon's own (Laspistol → Laspistol Charge Pack)
+ * when the line has one, else the first standard entry for that type.
+ */
+export function pickStandardAmmo(entries: readonly AmmoIndexEntry[], weaponType: string, weaponIdentifier: string, line: string): AmmoIndexEntry | undefined {
+    if (weaponType === '') return undefined;
+    const fits = entries.filter((entry) => entry.standard && ammoWeaponTypesFor(entry.weaponTypes, line).includes(weaponType));
+    const own = weaponIdentifier === '' ? undefined : fits.find((entry) => entry.identifier.startsWith(`${weaponIdentifier}-`));
+    return own ?? fits[0];
+}
+
+/** Clips of standard ammunition each starting ranged weapon comes with when standard ammo is tracked. */
+export const STARTING_CLIPS = 2;

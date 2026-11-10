@@ -14,6 +14,7 @@ import type { WH40KItem } from '../documents/item.ts';
 import { emitChatFromTemplate } from '../rolls/roll-helpers.ts';
 import { isActorInActiveCombat } from '../rules/combat-state.ts';
 import type { MagazineSegment } from '../rules/magazine.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 interface AmmunitionDataWithQuantity extends AmmunitionData {
     quantity?: number;
@@ -142,15 +143,17 @@ export class ReloadActionManager {
             };
         }
 
-        // Check that actor has spare ammunition
-        if (actor !== null) {
-            if (!this.hasSpareAmmunition(actor, weapon)) {
-                return {
-                    success: false,
-                    message: game.i18n.format('WH40K.Reload.NoCompatibleAmmo', { name: weapon.name }),
-                    actionsSpent: { half: 0, full: 0, label: '' },
-                };
-            }
+        // Check that actor has spare ammunition. With standard ammunition untracked
+        // (the homebrew setting off), a weapon holding no special rounds tops up from
+        // uncounted standard ammo instead, so no ammunition item is needed.
+        const hasSpare = actor === null || this.hasSpareAmmunition(actor, weapon);
+        const untrackedReload = !hasSpare && !system.hasLoadedAmmo && !WH40KSettings.isStandardAmmoTrackingEnabled();
+        if (!hasSpare && !untrackedReload) {
+            return {
+                success: false,
+                message: game.i18n.format('WH40K.Reload.NoCompatibleAmmo', { name: weapon.name }),
+                actionsSpent: { half: 0, full: 0, label: '' },
+            };
         }
 
         // Calculate effective reload time (accounting for Customised quality)
@@ -191,7 +194,7 @@ export class ReloadActionManager {
         const previousValue = system.clip.value;
         const currentLoadedAmmo = system.loadedAmmo;
 
-        if (actor !== null) {
+        if (actor !== null && !untrackedReload) {
             // Step 1: Return remaining rounds to inventory
             if (previousValue > 0 && system.hasLoadedAmmo) {
                 await system._returnRoundsToInventory(actor as Parameters<WeaponData['_returnRoundsToInventory']>[0], previousValue);
@@ -280,8 +283,8 @@ export class ReloadActionManager {
             };
         }
 
-        // Fallback for unowned weapons (no actor) — simple reload to full with a
-        // generic (ammo-item-less) magazine (#ammo-system).
+        // Unowned weapons (no actor), and untracked standard ammunition: reload to
+        // full with a generic (ammo-item-less) magazine (#ammo-system).
         await weapon.update({ 'system.clip.value': effectiveMax, 'system.clip.magazine': [], 'system.secondaryUsed': false });
 
         return {

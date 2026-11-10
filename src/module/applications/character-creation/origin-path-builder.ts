@@ -49,7 +49,15 @@ import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import { openMutantBackgroundDialog } from '../prompts/mutant-background-dialog.ts';
-import { collectEquipmentGrantPlans, type EquipmentGrantPlan, matchEquipmentEntry } from './equipment-grants.ts';
+import {
+    type AmmoIndexEntry,
+    type AmmoWeaponTypes,
+    collectEquipmentGrantPlans,
+    type EquipmentGrantPlan,
+    matchEquipmentEntry,
+    pickStandardAmmo,
+    STARTING_CLIPS,
+} from './equipment-grants.ts';
 import { cloneGrantedItemData } from './grant-materialize.ts';
 import { type NormalizedChoice, type NormalizedChoiceOption, type NormalizedOrigin, normalizeOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
@@ -254,6 +262,19 @@ interface ContentItemPlan {
     type: string;
     name: string;
     description: string;
+}
+
+/** The slice of a weapon document the starting-clip lookup reads. */
+interface StandardClipWeapon {
+    system?: { type?: string; identifier?: string; clip?: { max?: number } };
+}
+
+/** An ammunition row of a compendium index read with the clip lookup's fields. */
+interface AmmoIndexRow {
+    _id: string;
+    name?: string;
+    type?: string;
+    system?: { standard?: boolean; weaponTypes?: AmmoWeaponTypes; identifier?: string };
 }
 
 /** Item types instantiated from freeform name+description origin-path grants. */
@@ -5568,15 +5589,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             creations.push(itemData);
 
             if (equipEntry.type === 'weapon') {
-                // eslint-disable-next-line no-await-in-loop -- sequential: ammo lookup depends on the same weapon's identifier
-                const ammoData = await this._resolveStandardAmmoItem(source as WH40KItem);
-                if (ammoData) {
-                    const cloneA = foundry.utils.deepClone(ammoData);
-                    const cloneB = foundry.utils.deepClone(ammoData);
-                    delete cloneA._id;
-                    delete cloneB._id;
-                    creations.push(cloneA, cloneB);
-                }
+                // eslint-disable-next-line no-await-in-loop -- sequential: the clip lookup depends on the same weapon's type
+                const clips = await this._standardClipsFor(source);
+                if (clips !== null) creations.push(clips);
             }
         }
 
@@ -5770,6 +5785,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 itemData.system.quantity = plan.quantity;
             }
             toCreate.push(itemData);
+            if (itemData.type === 'weapon') {
+                // eslint-disable-next-line no-await-in-loop -- sequential: the clip lookup depends on the same weapon's type
+                const clips = await this._standardClipsFor(source);
+                if (clips !== null && !this.actor.items.some((i) => norm(i.name) === norm(clips.name ?? ''))) toCreate.push(clips);
+            }
         }
 
         if (toCreate.length > 0) {
@@ -5781,37 +5801,46 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Resolve a standard ammunition item for a given weapon, matching by weaponTypes.
+     * The starting clips for a ranged weapon when standard ammunition is tracked
+     * (homebrew setting): one stack of the line's standard ammunition for the
+     * weapon's type, holding {@link STARTING_CLIPS} full clips of rounds. Null when
+     * the setting is off, the weapon takes no ammunition, or the line has no
+     * standard ammunition for its type.
      * @private
      */
-    async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<ItemDataLike | null> {
-        const weaponIdentifier = (weapon.system as OriginPathSystemData).identifier;
-        if (weaponIdentifier === undefined || weaponIdentifier === '') return null;
+    async _standardClipsFor(weapon: StandardClipWeapon): Promise<ItemDataLike | null> {
+        if (!WH40KSettings.isStandardAmmoTrackingEnabled()) return null;
+        const weaponType = weapon.system?.type ?? '';
+        const identifier = weapon.system?.identifier ?? '';
+        const clipMax = weapon.system?.clip?.max ?? 0;
+        if (weaponType === '' || clipMax <= 0) return null;
 
-        for (const pack of builderPacks(game.packs, this.gameSystem, 'startingEquipment')) {
-            if (packLineFlags(pack.metadata)?.category !== 'ammo') continue;
-
-            // eslint-disable-next-line no-await-in-loop -- sequential: search packs in priority order, stop at first match
-            const index = await pack.getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
-            const match = index.find((rawEntry) => {
-                const entry = rawEntry as { type?: string; system?: OriginPathSystemData };
-                if (entry.type !== 'ammunition') return false;
-                const types = entry.system?.weaponTypes ?? [];
-                return Array.isArray(types) && types.includes(weaponIdentifier);
-            });
-            if (!match) continue;
-            // eslint-disable-next-line no-await-in-loop -- sequential: doc lookup only runs once after a match is found
-            const doc = await pack.getDocument(match._id);
-            if (!doc) continue;
-            const docWithToObject = doc as { toObject?: () => ItemDataLike };
-            const data: ItemDataLike = docWithToObject.toObject ? docWithToObject.toObject() : (foundry.utils.deepClone(doc) as ItemDataLike);
-            const flags: { core?: CoreFlags } & Record<string, CoreFlags | undefined> = data.flags ?? {};
-            const core: CoreFlags = flags.core ?? {};
-            core.sourceId = `Compendium.${pack.metadata.id}.${match._id}`;
-            flags.core = core;
-            data.flags = flags;
-            return data;
+        const entries: AmmoIndexEntry[] = [];
+        for (const pack of game.packs) {
+            const flags = packLineFlags(pack.metadata);
+            if (pack.documentName !== 'Item' || flags?.line !== this.gameSystem || flags.category !== 'ammo') continue;
+            // eslint-disable-next-line no-await-in-loop -- sequential: packs are read in manifest order so the first standard match wins
+            const index = await pack.getIndex({ fields: ['type', 'system.standard', 'system.weaponTypes', 'system.identifier'] });
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getIndex entries carry only the requested fields, untyped by Foundry
+            for (const entry of index as unknown as AmmoIndexRow[]) {
+                if (entry.type !== 'ammunition') continue;
+                entries.push({
+                    uuid: `Compendium.${pack.metadata.id}.Item.${entry._id}`,
+                    name: entry.name ?? '',
+                    identifier: entry.system?.identifier ?? '',
+                    standard: entry.system?.standard === true,
+                    weaponTypes: entry.system?.weaponTypes,
+                });
+            }
         }
-        return null;
+        const pick = pickStandardAmmo(entries, weaponType, identifier, this.gameSystem);
+        if (pick === undefined) return null;
+        const source = await fromUuid(pick.uuid);
+        if (!source) return null;
+        const data = cloneGrantedItemData(source, { sourceId: pick.uuid, originPathGranted: true });
+        /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- noUncheckedIndexedAccess: ??= is banned by no-restricted-syntax; explicit undefined check used instead */
+        if (data.system === undefined) data.system = {};
+        data.system.quantity = STARTING_CLIPS * clipMax;
+        return data;
     }
 }

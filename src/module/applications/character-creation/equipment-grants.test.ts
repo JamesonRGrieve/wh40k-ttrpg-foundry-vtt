@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { collectEquipmentGrantPlans, equipmentNameKey, matchEquipmentEntry } from './equipment-grants.ts';
+import {
+    type AmmoIndexEntry,
+    ammoWeaponTypesFor,
+    collectEquipmentGrantPlans,
+    equipmentNameKey,
+    matchEquipmentEntry,
+    pickStandardAmmo,
+} from './equipment-grants.ts';
 
 describe('collectEquipmentGrantPlans', () => {
     it('lists the fixed kit with its quantities and any UUID', () => {
@@ -85,5 +92,35 @@ describe('equipmentNameKey', () => {
     it('keeps letters only, lower case, without a plural s', () => {
         expect(equipmentNameKey('Sacred Unguents')).toBe('sacredunguent');
         expect(equipmentNameKey('Micro-Bead')).toBe('microbead');
+    });
+});
+
+describe('pickStandardAmmo', () => {
+    const entries: AmmoIndexEntry[] = [
+        { uuid: 'hot', name: 'Hot-Shot Charge Packs', identifier: 'hot-shot-charge-packs', standard: false, weaponTypes: { dh2: ['las'] } },
+        { uuid: 'ap', name: 'Autopistol Magazine', identifier: 'autopistol-magazine', standard: true, weaponTypes: { dh2: ['solid-projectile'] } },
+        { uuid: 'ag', name: 'Autogun Magazine', identifier: 'autogun-magazine', standard: true, weaponTypes: { dh2: ['solid-projectile'] } },
+        { uuid: 'lp', name: 'Laspistol Charge Pack', identifier: 'laspistol-charge-pack', standard: true, weaponTypes: { dh2: ['las'] } },
+        { uuid: 'rt', name: 'Bolt Shells', identifier: 'bolt-shells', standard: true, weaponTypes: ['bolt'] },
+    ];
+
+    it('prefers the standard ammunition named for the weapon', () => {
+        expect(pickStandardAmmo(entries, 'solid-projectile', 'autogun', 'dh2')?.uuid).toBe('ag');
+        expect(pickStandardAmmo(entries, 'las', 'laspistol', 'dh2')?.uuid).toBe('lp');
+    });
+
+    it('falls back to the first standard entry for the type, never a special round', () => {
+        expect(pickStandardAmmo(entries, 'solid-projectile', 'hand-cannon', 'dh2')?.uuid).toBe('ap');
+        expect(pickStandardAmmo(entries, 'las', 'lasgun', 'dh2')?.uuid).toBe('lp');
+    });
+
+    it('reads a flat weaponTypes list as well as a per-line map', () => {
+        expect(pickStandardAmmo(entries, 'bolt', 'boltgun', 'dh2')?.uuid).toBe('rt');
+        expect(ammoWeaponTypesFor({ rt: ['las'] }, 'dh2')).toEqual([]);
+    });
+
+    it('finds nothing for a type with no standard ammunition, or no type', () => {
+        expect(pickStandardAmmo(entries, 'melta', 'meltagun', 'dh2')).toBeUndefined();
+        expect(pickStandardAmmo(entries, '', 'autogun', 'dh2')).toBeUndefined();
     });
 });

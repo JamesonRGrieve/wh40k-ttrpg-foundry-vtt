@@ -5280,6 +5280,8 @@ export type I18nKey =
     | 'WH40K.SETTINGS.SimpleAttackRolls.Name'
     | 'WH40K.SETTINGS.SimplePsychicRolls.Hint'
     | 'WH40K.SETTINGS.SimplePsychicRolls.Name'
+    | 'WH40K.SETTINGS.StandardAmmoTracking.Hint'
+    | 'WH40K.SETTINGS.StandardAmmoTracking.Name'
     | 'WH40K.SETTINGS.StatusVisualIntensity.Hint'
     | 'WH40K.SETTINGS.StatusVisualIntensity.Name'
     | 'WH40K.SETTINGS.StatusVisuals.Hint'

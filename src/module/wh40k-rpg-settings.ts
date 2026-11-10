@@ -73,6 +73,7 @@ export class WH40KSettings {
         fatigueMode: 'fatigue-mode',
         awarenessSenseSplit: 'awareness-sense-split',
         magazineBuilding: 'magazine-building',
+        standardAmmoTracking: 'standard-ammo-tracking',
         worldTimeInception: 'world-time-inception',
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
@@ -460,6 +461,18 @@ export class WH40KSettings {
         }
     }
 
+    /** Homebrew: track standard ammunition as inventory items. On, a starting
+     *  ranged weapon comes with two clips of the line's standard ammunition and
+     *  Reload uses them up; off, Reload tops a weapon up without an ammunition
+     *  item (standard ammo goes uncounted). Off by default; safe before registration. */
+    static isStandardAmmoTrackingEnabled(): boolean {
+        try {
+            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.standardAmmoTracking) === true;
+        } catch {
+            return false;
+        }
+    }
+
     /** When true, NPCs are treated as buildable characters (#503): their stat block is
      *  split into purchasable advances, aptitudes are derived from it, and XP at spawn
      *  equals the exact cost of those advances — so a GM can keep advancing them through
@@ -747,6 +760,15 @@ export class WH40KSettings {
                 key: S.magazineBuilding,
                 name: 'WH40K.SETTINGS.MagazineBuilding.Name',
                 hint: 'WH40K.SETTINGS.MagazineBuilding.Hint',
+                scope: 'world',
+                config: true,
+                default: false,
+                type: Boolean,
+            },
+            {
+                key: S.standardAmmoTracking,
+                name: 'WH40K.SETTINGS.StandardAmmoTracking.Name',
+                hint: 'WH40K.SETTINGS.StandardAmmoTracking.Hint',
                 scope: 'world',
                 config: true,
                 default: false,
