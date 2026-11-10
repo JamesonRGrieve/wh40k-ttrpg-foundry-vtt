@@ -1768,6 +1768,10 @@
                 "Name": "Warband Inquests",
                 "Hint": "The warband's Inquests (DH2), stored as data. Edited from the GM Inquest tracker on any acolyte's Party Overview rather than this menu."
             },
+            "WorldTimeLastAdvance": {
+                "Name": "Last World-Time Advance",
+                "Hint": "The last forward advance of the world clock, kept so the GM can undo it from the world-time widget."
+            },
             "WorldTimeInception": {
                 "Name": "Campaign Inception (World Time)",
                 "Hint": "The world-time stamp, in seconds, treated as Day 0 for the day-since-inception counter. Day 0 is the campaign/mission inception and is fixed once at campaign start — it is not re-anchorable from the world-time widget."
@@ -7914,6 +7918,11 @@
             "UnitHours": "Hours",
             "UnitDays": "Days",
             "GmOnly": "Only the GM can advance world time.",
+            "Undo": "Undo +{amount}",
+            "UndoNone": "Nothing to undo",
+            "UndoHint": "Winds the clock back to before the last advance. Fatigue that advance recovered is taken back, and timed effects that ran out during it return. Anything changed since the advance is kept.",
+            "UndoStale": "The clock has moved since the last advance, so it can't be undone.",
+            "Undone": "Undid the last advance: the clock is back {amount}.",
             "TerranStandard": "Terran Standard",
             "Phase": {
                 "Night": "Night",

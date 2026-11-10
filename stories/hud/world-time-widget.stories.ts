@@ -7,6 +7,8 @@
  *   1. GmView     — GM sees the advance controls (+1 Hour / +1 Day / advance N)
  *                   and the "Set Day 0 here" inception control.
  *   2. PlayerView — the same readout, with the GM controls entirely absent.
+ *   3. Undo (#703) — the GM's Undo button names the last advance, explains what
+ *      else it takes back, and is disabled when there is nothing to undo.
  *
  * The widget is a floating ApplicationV2 whose root carries `wh40k-rpg` (from
  * DEFAULT_OPTIONS.classes); the stories wrap the template in that ancestor so
@@ -42,6 +44,9 @@ interface WorldTimeContext {
     localDayPhaseLabel: string;
     /** Localised weather of the viewed scene's body ('' when no body is configured). */
     localWeather: string;
+    /** Whether the last advance can be undone, and the Undo button's label (#703). */
+    canUndo: boolean;
+    undoLabel: string;
 }
 
 /** Wrap the widget template in the `.wh40k-rpg` ancestor the live floating panel
@@ -72,6 +77,8 @@ const BASE: WorldTimeContext = {
     localDayPhase: 'morning',
     localDayPhaseLabel: 'Morning',
     localWeather: 'Smog',
+    canUndo: true,
+    undoLabel: 'Undo +1d',
 };
 
 export const GmView: Story = {
@@ -119,6 +126,32 @@ export const PlayerView: Story = {
         void expect(canvasElement.querySelector('[data-action="advanceDay"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="advanceCustom"]')).toBeNull();
         void expect(canvasElement.querySelector('[data-action="editBodies"]')).toBeNull();
+        void expect(canvasElement.querySelector('[data-action="undoAdvance"]')).toBeNull();
+    },
+};
+
+/** #703: the GM can take back the last advance; the tooltip says what comes back with the clock. */
+export const UndoLastAdvance: Story = {
+    name: 'GM view — Undo the last advance',
+    args: { ...BASE, isGM: true },
+    render: (args) => renderWidget(args),
+    play: async ({ canvasElement }) => {
+        const undo = canvasElement.querySelector<HTMLButtonElement>('[data-action="undoAdvance"]');
+        await expect(undo?.disabled).toBe(false);
+        await expect(undo?.textContent.trim()).toBe('Undo +1d');
+        await expect(undo?.dataset['tooltip']).toContain('Fatigue that advance recovered is taken back');
+    },
+};
+
+/** #703: with no advance to take back (or the clock moved since), Undo is shown but disabled. */
+export const UndoUnavailable: Story = {
+    name: 'GM view — nothing to undo',
+    args: { ...BASE, isGM: true, canUndo: false, undoLabel: 'Nothing to undo' },
+    render: (args) => renderWidget(args),
+    play: async ({ canvasElement }) => {
+        const undo = canvasElement.querySelector<HTMLButtonElement>('[data-action="undoAdvance"]');
+        await expect(undo?.disabled).toBe(true);
+        await expect(undo?.textContent.trim()).toBe('Nothing to undo');
     },
 };
 

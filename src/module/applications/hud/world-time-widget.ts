@@ -20,7 +20,9 @@
  *     on the viewed body's local day, from the same sun curve that darkens the
  *     scene (`rules/scene-lighting.ts` `dayPhase`).
  *   - **GM-only advance controls** — +1 hour / +1 day / advance N, wrapping
- *     `game.time.advance()`; hidden for players.
+ *     `game.time.advance()`, and Undo for the last advance (#703, which also
+ *     takes back the fatigue it recovered and the effects it ran out; see
+ *     `rules/world-time-undo.ts`); hidden for players.
  *
  * Which date a campaign began on is **world data**, set per world by its GM — the
  * system ships only the format and a neutral placeholder default.
@@ -40,6 +42,8 @@ import { t } from '../../i18n/t.ts';
 import { addSecondsToImperialDate, formatImperialDate } from '../../rules/imperial-date.ts';
 import { type CelestialBody, localDayNumber, localHourOfDay, localSeason, localTimeOfDay, TERRAN_ROTATION_HOURS } from '../../rules/planetary-calendar.ts';
 import { DAY_PHASE_LABEL_KEYS, dayPhase, sceneBodyKey, type WeatherKind, weatherLabelKey } from '../../rules/scene-lighting.ts';
+import { undoLastWorldTimeAdvance } from '../../rules/world-time-undo-runtime.ts';
+import { canUndoAdvance } from '../../rules/world-time-undo.ts';
 import { advanceSeconds, dayNumberSince, displayDayNumber, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
@@ -140,6 +144,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
             // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceCustom: WorldTimeWidget.#advanceCustom as ActionHandler,
             // eslint-disable-next-line @typescript-eslint/unbound-method
+            undoAdvance: WorldTimeWidget.#undoAdvance as ActionHandler,
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             editBodies: WorldTimeWidget.#editBodies,
         },
     };
@@ -187,6 +193,8 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
             const watchedKeys = new Set([
                 `${SYSTEM_ID}.${WH40KSettings.SETTINGS.worldTimeInception}`,
                 `${SYSTEM_ID}.${WH40KSettings.SETTINGS.celestialBodies}`,
+                // The Undo button follows the last-advance record (#703).
+                `${SYSTEM_ID}.${WH40KSettings.SETTINGS.worldTimeLastAdvance}`,
             ]);
             Hooks.on('updateSetting', (setting: { key?: string }) => {
                 if (setting.key !== undefined && watchedKeys.has(setting.key)) WorldTimeWidget.refresh();
@@ -274,6 +282,14 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
         if (seasonName !== '') lines.push(t('WH40K.WorldTime.Tooltip.Season', { season: seasonName }));
         context['localBodyTooltip'] = lines.join('\n');
 
+        // #703: Undo names the step it takes back, and is disabled when there is none.
+        const lastAdvance = WH40KSettings.getLastWorldTimeAdvance();
+        const undoable = canUndoAdvance(lastAdvance, now);
+        context['canUndo'] = undoable;
+        context['undoLabel'] = undoable
+            ? t('WH40K.WorldTime.Undo', { amount: formatRemaining(lastAdvance.to - lastAdvance.from) })
+            : t('WH40K.WorldTime.UndoNone');
+
         return context;
     }
 
@@ -303,6 +319,19 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
     static async #advanceDay(this: WorldTimeWidget, _event: Event, _target: HTMLElement): Promise<void> {
         await WorldTimeWidget.#advance(advanceSeconds(1, 'day'));
+    }
+
+    /* -------------------------------------------- */
+
+    /** Undo the last advance (#703), GM-gated: the clock goes back, with the fatigue and effects it changed. */
+    static async #undoAdvance(this: WorldTimeWidget, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!game.user.isGM) {
+            ui.notifications.warn(t('WH40K.WorldTime.GmOnly'));
+            return;
+        }
+        const outcome = await undoLastWorldTimeAdvance();
+        if (outcome.kind === 'stale') ui.notifications.warn(t('WH40K.WorldTime.UndoStale'));
+        else if (outcome.kind === 'undone') ui.notifications.info(t('WH40K.WorldTime.Undone', { amount: formatRemaining(outcome.seconds) }));
     }
 
     /* -------------------------------------------- */

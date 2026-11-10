@@ -651,6 +651,11 @@ recordDimension('status-visual.flow', covered['status-visual.flow'], STATUS_VISU
 const WORLD_TIME_FLOWS = ['phase-label-renders', 'phase-follows-clock'];
 recordDimension('world-time.flow', covered['world-time.flow'], WORLD_TIME_FLOWS);
 
+// The world-time widget's Undo (#703), tests/e2e/world-time-undo.spec.ts.
+// Keep in sync with WORLD_TIME_UNDO_FLOWS there.
+const WORLD_TIME_UNDO_FLOWS = ['undo-restores-clock', 'undo-restores-fatigue', 'undo-restores-effects', 'undo-single-level'];
+recordDimension('world-time-undo.flow', covered['world-time-undo.flow'], WORLD_TIME_UNDO_FLOWS);
+
 // The compendium join of lean owned weapons (#574, #598), tests/e2e/lean-weapon-hydrate.spec.ts.
 // Keep in sync with LEAN_WEAPON_HYDRATE_FLOWS there.
 const LEAN_WEAPON_HYDRATE_FLOWS = ['lean-weapon-joins-canonical', 'instance-state-kept', 'optional-field-writable'];

@@ -168,6 +168,7 @@ import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
 import { runTokenImageGeneration, type TokenImageActor } from './rules/token-image-gen-runtime.ts';
 import { buildWarpWeaknessField, isWarpWeak, WARP_WEAKNESS_INPUT_NAME, type WarpWeaknessScene } from './rules/warp-weakness.ts';
 import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.ts';
+import type { FatigueChange } from './rules/world-time-undo.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 import { hooksOn } from './utils/hooks-on.ts';
@@ -224,8 +225,8 @@ export class HooksManager {
         // effect's remaining duration — re-render open actor sheets so the effects
         // panel counts down live instead of going stale until the next open.
         // #431: the elapsed time also recovers fatigue (rest), so pass the delta.
-        hooksOn('updateWorldTime', (_worldTime: number, dt: number) => {
-            void HooksManager.onUpdateWorldTime(dt);
+        hooksOn('updateWorldTime', (worldTime: number, dt: number) => {
+            void HooksManager.onUpdateWorldTime(dt, worldTime);
         });
         // eslint-disable-next-line no-restricted-syntax -- boundary: hotbarDrop hook payload is an untyped Record from Foundry
         hooksOn('hotbarDrop', (bar: unknown, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
@@ -685,7 +686,7 @@ export class HooksManager {
         await syncSceneSuns(game.scenes, bodies, elapsed);
     }
 
-    static async onUpdateWorldTime(dt: number): Promise<void> {
+    static async onUpdateWorldTime(dt: number, worldTime: number = game.time.worldTime): Promise<void> {
         // #487: keep the world-time counter widget live as the clock advances.
         WorldTimeWidget.refresh();
         // #588: the clock moved, so the sun did too.
@@ -697,22 +698,33 @@ export class HooksManager {
         const actors = (globalThis as { game?: { actors?: { contents?: unknown[] } } }).game?.actors?.contents;
         if (!Array.isArray(actors)) return;
         const HOUR_SECONDS = 3600;
-        const hours = Number.isFinite(dt) && dt > 0 ? dt / HOUR_SECONDS : 0;
-        // Only the GM writes actor state, so gate the recovery on the primary GM to
-        // avoid every client racing the same update.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.user.isGM is the Foundry permission flag, untyped here
-        const isPrimaryGm = (globalThis as { game?: { user?: { isGM?: boolean } } }).game?.user?.isGM === true;
+        const forward = Number.isFinite(dt) && dt > 0;
+        const hours = forward ? dt / HOUR_SECONDS : 0;
+        // Only the active GM writes actor state and the undo record, so clients
+        // (and a second GM) never race the same update.
+        const isActiveGm = game.users.activeGM?.isSelf === true;
+        const fatigue: FatigueChange[] = [];
         for (const actor of actors) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: narrow the Foundry actor surface this touches (sheet + fatigue recovery)
-            const a = actor as { sheet?: { rendered?: boolean; render?: (force?: boolean) => unknown }; recoverFatigueOverTime?: (h: number) => Promise<void> };
+            const a = actor as {
+                id?: string | null;
+                sheet?: { rendered?: boolean; render?: (force?: boolean) => Promise<object> };
+                recoverFatigueOverTime?: (h: number) => Promise<{ before: number; after: number } | null>;
+            };
             // #431: recover fatigue over the elapsed rest time (GM only).
-            if (isPrimaryGm && hours > 0 && typeof a.recoverFatigueOverTime === 'function') {
+            if (isActiveGm && hours > 0 && typeof a.recoverFatigueOverTime === 'function') {
                 // eslint-disable-next-line no-await-in-loop -- sequential per-actor updates; the actor count is small and this is a rare GM clock event
-                await a.recoverFatigueOverTime(hours);
+                const change = await a.recoverFatigueOverTime(hours);
+                if (change !== null && typeof a.id === 'string') fatigue.push({ actorId: a.id, ...change });
             }
             // #456: re-render open sheets so the effect countdowns refresh.
             if (a.sheet?.rendered === true) void a.sheet.render?.();
         }
+        // #703: a forward advance becomes the one undoable step; any other move
+        // (an undo, or a rewind from elsewhere) leaves nothing to undo.
+        if (!isActiveGm) return;
+        if (forward) await WH40KSettings.setLastWorldTimeAdvance({ from: worldTime - dt, to: worldTime, fatigue });
+        else if (WH40KSettings.getLastWorldTimeAdvance() !== null) await WH40KSettings.setLastWorldTimeAdvance(null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-deprecated, no-restricted-syntax -- boundary: ActorDirectory is the V14 hook global; Record<string, unknown> is the Foundry hook payload type; migration tracked separately

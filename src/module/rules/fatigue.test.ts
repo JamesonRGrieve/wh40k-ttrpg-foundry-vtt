@@ -257,10 +257,11 @@ describe('fatigue automation wiring (#431)', () => {
         expect(baseActor).toContain('fatigueUnconscious');
     });
 
-    it('world-time advance recovers fatigue over the elapsed rest hours (GM only)', () => {
+    it('world-time advance recovers fatigue over the elapsed rest hours (active GM only)', () => {
         expect(baseActor).toContain('getFatigueAfterRest(');
         expect(baseActor).toContain('recoverFatigueOverTime');
         expect(hooks).toContain('recoverFatigueOverTime');
-        expect(hooks).toContain('isPrimaryGm');
+        // One GM writes, so a second GM's client never recovers the same fatigue twice.
+        expect(hooks).toContain('game.users.activeGM?.isSelf === true');
     });
 });

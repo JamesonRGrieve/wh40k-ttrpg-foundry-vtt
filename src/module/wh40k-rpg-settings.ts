@@ -5,6 +5,7 @@ import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
 import { type InquestState, parseInquests } from './rules/inquest.ts';
 import { type CelestialBodies, parseCelestialBodies } from './rules/scene-lighting.ts';
 import { coerceTokenImageGenMode, type TokenImageGenConfig, type TokenImageGenMode } from './rules/token-image-gen.ts';
+import { type LastAdvance, parseLastAdvance } from './rules/world-time-undo.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
 
@@ -75,6 +76,7 @@ export class WH40KSettings {
         magazineBuilding: 'magazine-building',
         standardAmmoTracking: 'standard-ammo-tracking',
         worldTimeInception: 'world-time-inception',
+        worldTimeLastAdvance: 'world-time-last-advance',
         campaignInceptionDate: 'campaign-inception-date',
         npcAdvancement: 'npc-advancement',
         compendiumDropImportsActor: 'compendium-drop-imports-actor',
@@ -521,6 +523,28 @@ export class WH40KSettings {
     /** Persist the celestial bodies (#588); world-scoped, so every client sees it. */
     static async setCelestialBodies(bodies: CelestialBodies): Promise<void> {
         await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies, JSON.stringify(bodies));
+    }
+
+    /** The last forward advance of the world clock (#703), for the widget's undo; null when there is none to undo. Safe before registration. */
+    static getLastWorldTimeAdvance(): LastAdvance | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
+        let raw: unknown;
+        try {
+            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeLastAdvance);
+        } catch {
+            return null;
+        }
+        if (typeof raw !== 'string' || raw.trim() === '') return null;
+        try {
+            return parseLastAdvance(JSON.parse(raw));
+        } catch {
+            return null;
+        }
+    }
+
+    /** Store (or, with null, drop) the last world-time advance (#703). World-scoped, so every GM's widget offers the same undo. */
+    static async setLastWorldTimeAdvance(record: LastAdvance | null): Promise<void> {
+        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeLastAdvance, record === null ? '' : JSON.stringify(record));
     }
 
     /** The warband's Inquests (#90): a world-scoped list stored as JSON and
@@ -1094,6 +1118,17 @@ export class WH40KSettings {
                 config: false,
                 default: WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT,
                 type: Number,
+            },
+            {
+                // The last forward advance of the world clock (#703): JSON, written by
+                // the active GM on each advance and read by the widget's Undo button.
+                key: S.worldTimeLastAdvance,
+                name: 'WH40K.SETTINGS.WorldTimeLastAdvance.Name',
+                hint: 'WH40K.SETTINGS.WorldTimeLastAdvance.Hint',
+                scope: 'world',
+                config: false,
+                default: '',
+                type: String,
             },
             {
                 // The campaign's inception date as a canonical Imperial timestamp

@@ -346,14 +346,31 @@ export class WH40KBaseActor extends Actor {
      * removes fatigue per the active model (`getFatigueAfterRest`), then re-checks the
      * thresholds (waking from fatigue-unconsciousness). Driven by the GM clock, so
      * advancing world time lets fatigue recover. No-op with no fatigue model / no rest.
+     * Returns the levels before and after when fatigue changed (the world-time undo
+     * records them, #703), else null.
      */
-    async recoverFatigueOverTime(hours: number): Promise<void> {
-        if (!(hours > 0)) return;
+    async recoverFatigueOverTime(hours: number): Promise<{ before: number; after: number } | null> {
+        if (!(hours > 0)) return null;
         const state = this.#fatigueState();
-        if (state === null || state.level <= 0) return;
+        if (state === null || state.level <= 0) return null;
         const next = getFatigueAfterRest(state.level, hours, state.def);
-        if (next === state.level) return;
+        if (next === state.level) return null;
         await this.update({ 'system.fatigue.value': next });
+        await this.checkFatigueThresholds();
+        return { before: state.level, after: next };
+    }
+
+    /** This actor's current fatigue level, or null when its line has no fatigue model (#703). */
+    get fatigueLevel(): number | null {
+        return this.#fatigueState()?.level ?? null;
+    }
+
+    /**
+     * Put fatigue back to `level` (the world-time undo, #703) and re-check the
+     * thresholds, so Unconscious returns if the restored level calls for it.
+     */
+    async restoreFatigueLevel(level: number): Promise<void> {
+        await this.update({ 'system.fatigue.value': level });
         await this.checkFatigueThresholds();
     }
 
