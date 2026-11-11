@@ -296,7 +296,9 @@ export function parseSkillEntries(raw: string): ParsedSkillEntry[] {
 
             // The same stat blocks fold the advance INSIDE the specialisation
             // ("Scholastic Lore (Imperial Creed +10)"); lift it out so the ladder sees it.
-            name = name.replace(/\(([^)]*?)\s*(\+\d+)\s*\)\s*$/, '($1) $2');
+            // A bracket holding only the advance ("Command (+20)") has no
+            // specialisation to keep, so the bracket goes with it (#726).
+            name = name.replace(/\(([^)]*?)\s*(\+\d+)\s*\)\s*$/, (_group: string, inner: string, rank: string) => (inner === '' ? rank : `(${inner}) ${rank}`));
 
             // A printed entry can carry several trailing groups in either order —
             // "Athletics (S) +30 (Ag) +20", "Operate (Surface) (Ag) +20". Peel them
@@ -327,6 +329,22 @@ export function parseSkillEntries(raw: string): ParsedSkillEntry[] {
                 }
                 break;
             }
+
+            // A characteristic tag can also sit BEFORE the specialisation
+            // ("Linguistics (Int) (Low Gothic)"), where the trailing peel stops at
+            // the specialisation and never reaches it. Take the tag out wherever it
+            // sits; the leftmost one wins, as it does in the peel (#726).
+            const interiorTags: string[] = [];
+            name = name
+                .replace(/\s*\(([^)]*)\)/g, (group: string, inner: string) => {
+                    const tagged = shortToFull.get(inner.trim().toLowerCase());
+                    if (tagged === undefined) return group;
+                    interiorTags.push(tagged);
+                    return '';
+                })
+                .trim();
+            const interiorTag = interiorTags.at(0);
+            if (interiorTag !== undefined) characteristic = interiorTag;
 
             // Explicit "this creature has no skills" markers. Beasts and constructs
             // print these; they are an absence of data, not a skill named "None".

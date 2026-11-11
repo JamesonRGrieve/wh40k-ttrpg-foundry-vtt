@@ -25,6 +25,7 @@ import {
     migrateCharacteristics,
     migrateMove,
     migrateSkills,
+    type ParsedSkillEntry,
     parseSkillEntries,
     migrateWeapons,
     toInt,
@@ -608,5 +609,152 @@ describe('parseSkillEntries overflow (#503)', () => {
             expect(entries[0]?.advance).toBe(advance);
             expect(entries[0]?.bonus).toBe(0);
         }
+    });
+});
+
+/**
+ * Bracket shapes (#726). Two printed shapes left a wrong `name` behind, and the
+ * name is what the NPC sheet prints on the skill row: a bracket holding only the
+ * advance kept its empty brackets, and a characteristic tag printed before the
+ * specialisation stayed in the name while the catalog characteristic was used.
+ */
+describe('parseSkillEntries bracket shapes (#726)', () => {
+    const only = (prose: string): ParsedSkillEntry | undefined => {
+        const entries = parseSkillEntries(prose);
+        expect(entries).toHaveLength(1);
+        return entries.at(0);
+    };
+
+    it('reads a bracket holding only the advance as the bare skill at that rank', () => {
+        expect(only('Command (+20)')).toEqual({ key: 'command', name: 'Command', specialization: '', characteristic: 'fellowship', advance: 3, bonus: 0 });
+        expect(only('Dodge ( +30 )')).toEqual({ key: 'dodge', name: 'Dodge', specialization: '', characteristic: 'agility', advance: 4, bonus: 0 });
+    });
+
+    it('reads an advance-only bracket after a characteristic tag', () => {
+        expect(only('Deceive (Fel) (+20)')).toEqual({
+            key: 'deceive',
+            name: 'Deceive',
+            specialization: '',
+            characteristic: 'fellowship',
+            advance: 3,
+            bonus: 0,
+        });
+        // The tag differs from the catalog's Strength: the printed one is kept.
+        expect(only('Intimidate (WP) (+10)')).toEqual({
+            key: 'intimidate',
+            name: 'Intimidate',
+            specialization: '',
+            characteristic: 'willpower',
+            advance: 2,
+            bonus: 0,
+        });
+        expect(only('Intimidate (S) (+10)')).toEqual({
+            key: 'intimidate',
+            name: 'Intimidate',
+            specialization: '',
+            characteristic: 'strength',
+            advance: 2,
+            bonus: 0,
+        });
+    });
+
+    it('peels a characteristic tag printed before the specialisation', () => {
+        expect(only('Linguistics (Int) (Low Gothic) +20')).toEqual({
+            key: 'linguistics',
+            name: 'Linguistics (Low Gothic)',
+            specialization: 'Low Gothic',
+            characteristic: 'intelligence',
+            advance: 3,
+            bonus: 0,
+        });
+        expect(only('Scholastic Lore (Int) (Legend, Occult, Philosophy)')).toEqual({
+            key: 'scholasticLore',
+            name: 'Scholastic Lore (Legend, Occult, Philosophy)',
+            specialization: 'Legend, Occult, Philosophy',
+            characteristic: 'intelligence',
+            advance: 1,
+            bonus: 0,
+        });
+    });
+
+    it('keeps an interior tag that differs from the catalog characteristic', () => {
+        // The catalog rolls Intimidate on Strength; this entry prints Willpower.
+        expect(only('Intimidate (WP) (Coerce)')).toEqual({
+            key: 'intimidate',
+            name: 'Intimidate (Coerce)',
+            specialization: 'Coerce',
+            characteristic: 'willpower',
+            advance: 1,
+            bonus: 0,
+        });
+    });
+
+    it('lets an interior tag override a line prefix, as a trailing tag does', () => {
+        expect(only('S: Intimidate (WP) (Coerce) +10')).toMatchObject({ name: 'Intimidate (Coerce)', characteristic: 'willpower', advance: 2 });
+    });
+
+    it('leaves the shapes that already parsed unchanged', () => {
+        expect(only('Common Lore (Imperium) (Int) +10')).toEqual({
+            key: 'commonLore',
+            name: 'Common Lore (Imperium)',
+            specialization: 'Imperium',
+            characteristic: 'intelligence',
+            advance: 2,
+            bonus: 0,
+        });
+        expect(only('Dodge (Ag) +10')).toEqual({ key: 'dodge', name: 'Dodge', specialization: '', characteristic: 'agility', advance: 2, bonus: 0 });
+        expect(only('Command +20')).toEqual({ key: 'command', name: 'Command', specialization: '', characteristic: 'fellowship', advance: 3, bonus: 0 });
+        expect(only('Scholastic Lore (Imperial Creed +10)')).toEqual({
+            key: 'scholasticLore',
+            name: 'Scholastic Lore (Imperial Creed)',
+            specialization: 'Imperial Creed',
+            characteristic: 'intelligence',
+            advance: 2,
+            bonus: 0,
+        });
+        expect(only('Athletics (S) +30 (Ag) +20')).toEqual({
+            key: 'athletics',
+            name: 'Athletics',
+            specialization: '',
+            characteristic: 'strength',
+            advance: 4,
+            bonus: 0,
+        });
+        expect(only('Common Lore (Underworld)')).toEqual({
+            key: 'commonLore',
+            name: 'Common Lore (Underworld)',
+            specialization: 'Underworld',
+            characteristic: 'intelligence',
+            advance: 1,
+            bonus: 0,
+        });
+    });
+
+    it('stores the cleaned name and the printed characteristic through migrateSkills', () => {
+        const source: JsonObject = { skills: 'Command (+20), Linguistics (Int) (Low Gothic), Intimidate (WP) (Coerce) +10' };
+        migrateSkills(source);
+        expect(source['trainedSkills']).toEqual({
+            command: { name: 'Command', characteristic: 'fellowship', advance: 3, trained: true, plus10: true, plus20: true, plus30: false, bonus: 0 },
+            linguistics: {
+                name: 'Linguistics (Low Gothic)',
+                characteristic: 'intelligence',
+                advance: 1,
+                trained: true,
+                plus10: false,
+                plus20: false,
+                plus30: false,
+                bonus: 0,
+            },
+            intimidate: {
+                name: 'Intimidate (Coerce)',
+                characteristic: 'willpower',
+                advance: 2,
+                trained: true,
+                plus10: true,
+                plus20: false,
+                plus30: false,
+                bonus: 0,
+            },
+        });
     });
 });
