@@ -677,6 +677,11 @@ const NPC_ARMOUR_FLOWS = [
 ];
 recordDimension('npc-armour.flow', covered['npc-armour.flow'], NPC_ARMOUR_FLOWS);
 
+// An NPC skill row labels and rolls one characteristic (#725), tests/e2e/npc-skill-characteristic.spec.ts.
+// Keep in sync with NPC_SKILL_CHARACTERISTIC_FLOWS there.
+const NPC_SKILL_CHARACTERISTIC_FLOWS = ['blank-skill-labelled-from-catalog', 'blank-skill-target-on-its-label', 'stored-characteristic-wins'];
+recordDimension('npc-skill-characteristic.flow', covered['npc-skill-characteristic.flow'], NPC_SKILL_CHARACTERISTIC_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];
