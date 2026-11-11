@@ -41,6 +41,14 @@ interface NPCV2TrainedSkillData {
     bonus?: number;
 }
 
+/** One group of the specialist panel (#725): a skill's heading and its specialisation rows. */
+interface NpcSpecialistGroupView {
+    label: string;
+    charShort: string | undefined;
+    advanced: boolean;
+    entries: SkillLike[];
+}
+
 /** NPC RAW tier dropdown options — single source for the context key + sidebar field (#257). */
 const npcTierOptions = (): Record<string, string> => ({
     troop: game.i18n.localize('WH40K.NPCType.Troop'),
@@ -1658,16 +1666,58 @@ export default class NPCSheet extends CharacterSheet {
         // Sort alphabetically by label — matches PC behavior.
         standard.sort((a, b) => (a[1].label ?? '').localeCompare(b[1].label ?? '', game.i18n.lang));
 
+        const specialist = this._prepareSpecialistSkills();
+
         context['skillLists'] = {
             standard,
             trainedStandard: standard, // NPCs don't have the trained/untrained-advanced split
             advancedUntrained: [],
-            specialist: [],
-            hasSpecialistEntries: false,
+            specialist,
+            hasSpecialistEntries: specialist.length > 0,
         };
         // Back-compat for any older code paths that read these.
         context['skills'] = Object.fromEntries(standard);
         context['trainedSkillsList'] = standard.filter(([, d]) => (d.trainingLevel ?? 0) > 0);
+    }
+
+    /**
+     * The specialist panel's groups (#725): every stored skill the basic grid does
+     * not list, with a row per specialisation. Names, ranks and targets are the
+     * DataModel's `specialistSkillGroups`; this only attaches the display fields
+     * the shared panel reads. A row's `entryIndex` is its stored position, which is
+     * what its roll button sends; the skill's own row sends none and rolls the skill.
+     */
+    _prepareSpecialistSkills(): Array<[string, NpcSpecialistGroupView]> {
+        const actor = this.npcActor;
+        const characteristics = actor.system.characteristics;
+        const favourites = (actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
+
+        return actor.system.specialistSkillGroups.map((group) => {
+            const parent: SkillLike = { label: group.label, characteristic: group.characteristic, advanced: false };
+            this._augmentSkillData(group.key, parent, characteristics);
+
+            const entries = group.rows.map((row) => {
+                const entryIndex = row.index === null ? '' : String(row.index);
+                const entry: SkillLike = {
+                    name: row.name,
+                    skillKey: group.key,
+                    entryIndex,
+                    characteristic: row.characteristic,
+                    trained: row.trained,
+                    plus10: row.plus10,
+                    plus20: row.plus20,
+                    plus30: row.plus30,
+                    bonus: row.bonus,
+                    advanced: false,
+                    current: row.target,
+                };
+                this._augmentSkillData(group.key, entry, characteristics, parent);
+                entry.isFavorite = row.index !== null && favourites.includes(`${group.key}:${entryIndex}`);
+                return entry;
+            });
+
+            return [group.key, { label: group.label, charShort: parent.charShort, advanced: false, entries }];
+        });
     }
 
     /**

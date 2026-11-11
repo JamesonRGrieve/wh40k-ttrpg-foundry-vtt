@@ -7,6 +7,7 @@ import type { EvasionPromptContext } from '../rolls/evasion-flow.ts';
 import { openRollPrompt } from '../rolls/roll-prompt.ts';
 import { DISPOSITION_ROLL_KEY, type DispositionState } from '../rules/disposition.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
+import { printedSpecialisationTest } from '../rules/specialist-skill-test.ts';
 import { testedSkillBaseLabel, testedSkillLabel } from '../rules/tested-skill-label.ts';
 import { hasAuthoredFootprint, prototypeTokenFootprintUpdate } from '../utils/token-footprint.ts';
 import { WH40KBaseActor } from './base-actor.ts';
@@ -272,26 +273,33 @@ export class WH40KNPC extends WH40KBaseActor {
     /**
      * Roll a skill test for this NPC.
      * @param {string} skillName - The skill key (e.g., "awareness", "dodge").
-     * @param {string} [flavor] - Optional flavor text.
+     * @param {string | number} [speciality] - A specialisation: its stored position (what a
+     *   specialist row's roll button sends) or its name. One the NPC has rolls that entry's
+     *   target and rank (#725); a name it lacks rolls the skill and titles the test.
      * @param {SkillRollOptions} [options] - Route the test through an action subclass (an evasion, #414).
      * @returns {Promise<Roll>}
      */
-    rollSkill(skillName: string, flavor?: string, options: SkillRollOptions = {}): void {
-        const target = this.system.getSkillTarget(skillName);
+    rollSkill(skillName: string, speciality?: string | number, options: SkillRollOptions = {}): void {
         const skill = this.system.trainedSkills[skillName];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- skill may be undefined per noUncheckedIndexedAccess; optional chain is intentional
         const skillLabel = skill?.name !== undefined && skill.name !== '' ? skill.name : skillName;
+        const skillTarget = this.system.getSkillTarget(skillName);
+
+        const entry = this.system.skillEntryTest(skillName, options.specialisation ?? speciality);
+        const test = entry === undefined ? undefined : printedSpecialisationTest(skillLabel, skillTarget, entry, entry.name);
+        const title = typeof speciality === 'string' && speciality !== '' ? speciality : undefined;
 
         const simpleSkillData = this._buildSimpleSkillRoll({
             key: skillName,
             type: 'skill',
-            label: options.label ?? game.i18n.format('WH40K.Roll.TestLabel', { name: skillLabel }),
-            target,
-            nameOverride: flavor !== undefined && flavor !== '' ? flavor : undefined,
+            label: options.label ?? game.i18n.format('WH40K.Roll.TestLabel', { name: test?.label ?? skillLabel }),
+            target: test?.target ?? skillTarget,
+            // The entry's own rank, so the dialog does not read the skill's and halve a trained row (#225).
+            ...(test === undefined ? { nameOverride: title } : { skillRank: test.skillRank }),
             instance: options.instance,
             sourcedModifiers: options.sourcedModifiers,
             // A test titled after something else (a vehicle's trait test) names the skill it rolled (#677).
-            tested: options.label === undefined ? undefined : this.#testedSkill(skillName, skillLabel, options.specialisation ?? null),
+            tested: options.label === undefined ? undefined : this.#testedSkill(skillName, skillLabel, options.specialisation ?? null, entry),
         });
         openRollPrompt(simpleSkillData);
     }
@@ -302,15 +310,20 @@ export class WH40KNPC extends WH40KBaseActor {
      * @param key  The skill key.
      * @param skillLabel  Its display name.
      * @param specialisation  The specialisation the rule names, or null.
+     * @param entry  The NPC's entry for that specialisation, when it has one and rolled it.
      */
-    #testedSkill(key: string, skillLabel: string, specialisation: string | null): { skill: string; baseLabel: string } {
+    #testedSkill(
+        key: string,
+        skillLabel: string,
+        specialisation: string | null,
+        entry: { rank: number; characteristic: string } | undefined,
+    ): { skill: string; baseLabel: string } {
         const format = (k: string, data: Record<string, string>): string => game.i18n.format(k, data);
-        // Partial: an NPC lists only the skills it has, so a rule's skill may be missing (untrained).
-        const skills: Partial<Record<string, { trained: boolean; characteristic: string }>> = this.system.trainedSkills;
-        const skill = skills[key];
-        const untrained = skill?.trained !== true;
+        // An NPC lists only the skills it has, so a rule's skill may be missing (rank 0, untrained).
+        const untrained = (entry?.rank ?? this.system.skillDisplay(key).rank) === 0;
         const tested = testedSkillLabel({ skill: skillLabel, specialisation, untrained }, format);
-        const characteristicKey = skill?.characteristic ?? '';
+        // The characteristic the target was computed on, never a blank stored one (#725).
+        const characteristicKey = entry?.characteristic ?? this.system.skillRowCharacteristic(key);
         const characteristic = characteristicLabel(characteristicFromAbbrev(characteristicKey) ?? characteristicKey);
         return { skill: tested, baseLabel: testedSkillBaseLabel(characteristic, tested, format) };
     }

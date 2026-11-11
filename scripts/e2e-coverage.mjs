@@ -682,6 +682,17 @@ recordDimension('npc-armour.flow', covered['npc-armour.flow'], NPC_ARMOUR_FLOWS)
 const NPC_SKILL_CHARACTERISTIC_FLOWS = ['blank-skill-labelled-from-catalog', 'blank-skill-target-on-its-label', 'stored-characteristic-wins'];
 recordDimension('npc-skill-characteristic.flow', covered['npc-skill-characteristic.flow'], NPC_SKILL_CHARACTERISTIC_FLOWS);
 
+// An NPC's specialisation rows show, roll and export (#725), tests/e2e/npc-specialist-skills.spec.ts.
+// Keep in sync with NPC_SPECIALIST_SKILLS_FLOWS there.
+const NPC_SPECIALIST_SKILLS_FLOWS = [
+    'specialisation-rows-listed',
+    'row-prints-entry-target',
+    'roll-button-carries-position',
+    'entry-roll-opens-on-entry-target',
+    'stat-block-lists-specialisations',
+];
+recordDimension('npc-specialist-skills.flow', covered['npc-specialist-skills.flow'], NPC_SPECIALIST_SKILLS_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

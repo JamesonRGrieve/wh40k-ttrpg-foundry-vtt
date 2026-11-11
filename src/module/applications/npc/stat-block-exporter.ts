@@ -18,7 +18,8 @@ interface NpcSystemExport {
         total?: number;
         locations?: { head?: number; body?: number; leftArm?: number; rightArm?: number; leftLeg?: number; rightLeg?: number };
     };
-    trainedSkills?: Record<string, { name?: string; plus20?: boolean; plus10?: boolean; bonus?: number }>;
+    /** The model's printed skill list: one string per skill or specialisation row. */
+    statBlockSkills?: string[];
     weapons?: { simple?: Array<{ name?: string; damage?: string; pen?: string; range?: string; rof?: string; special?: string }> };
     specialAbilities?: string;
     quickNotes?: string;
@@ -205,19 +206,13 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /** @private */
     private static _appendSkills(lines: string[], sys: NpcSystemExport): void {
-        if (sys.trainedSkills === undefined || Object.keys(sys.trainedSkills).length === 0) return;
+        // The model owns the list, so a specialisation and the fourth rank print as the sheet shows them (#725).
+        const skills = sys.statBlockSkills ?? [];
+        if (skills.length === 0) return;
         lines.push('─'.repeat(50));
         lines.push('SKILLS');
         lines.push('─'.repeat(50));
-        const skillLines: string[] = [];
-        for (const [key, skill] of Object.entries(sys.trainedSkills)) {
-            let level = '';
-            if (skill.plus20 === true) level = '+20';
-            else if (skill.plus10 === true) level = '+10';
-            const bonus = skill.bonus !== undefined ? ` (+${skill.bonus})` : '';
-            skillLines.push(`${skill.name ?? key}${level}${bonus}`);
-        }
-        lines.push(skillLines.join(', '));
+        lines.push(skills.join(', '));
         lines.push('');
     }
 

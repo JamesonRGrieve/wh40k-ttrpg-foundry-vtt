@@ -118,6 +118,46 @@ interface NPCTrainedSkillRow {
     target: number;
 }
 
+/** What {@link NPCData.skillEntryTest} resolves for one specialisation entry. */
+interface NPCSkillEntryTest {
+    name: string;
+    /** The entry's target number. */
+    current: number;
+    /** Its rank, 0–4. */
+    rank: number;
+    /** The characteristic key the target is on. */
+    characteristic: string;
+}
+
+/** One row of {@link NPCData.specialistSkillGroups}: a specialisation entry, or the skill's own stored row. */
+interface NPCSpecialistSkillRow {
+    /** Position in the skill's stored `entries`, or `null` for the skill's own row. */
+    index: number | null;
+    name: string;
+    /** Short code of the characteristic the row rolls against. */
+    characteristic: string;
+    /** Effective rank 0–4. */
+    rank: number;
+    trained: boolean;
+    plus10: boolean;
+    plus20: boolean;
+    plus30: boolean;
+    bonus: number;
+    target: number;
+}
+
+/** One stored skill the basic-skill grid does not list, with its rows (#725). */
+interface NPCSpecialistSkillGroup {
+    key: string;
+    label: string;
+    /** Short code of the characteristic the skill itself rolls against. */
+    characteristic: string;
+    rows: NPCSpecialistSkillRow[];
+}
+
+/** A trailing bracket on a stored skill name: `Common Lore (Imperium)` → ` (Imperium)`. */
+const TRAILING_BRACKET = /\s*\(([^)]*)\)\s*$/;
+
 /**
  * The advancement-pricing capability {@link NPCData._prepareAdvancement} needs.
  *
@@ -809,13 +849,15 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 });
             }
 
+            const baseName = skill.name !== '' ? skill.name : key;
             for (const entry of entries) {
-                const specialization = entry.specialization ?? entry.name;
+                const specialization = NPCData.skillEntryName(entry);
                 if (specialization === '') continue;
                 const entryRank = NPCData.skillRankOf(entry);
                 list.push({
                     key: `${key}:${specialization.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-                    name: `${skill.name !== '' ? skill.name : key} (${specialization})`,
+                    // An entry printed without a specialisation carries the skill's own name.
+                    name: specialization.toLowerCase() === baseName.toLowerCase() ? baseName : `${baseName} (${specialization})`,
                     characteristic: this.skillRowCharacteristic(key, entry),
                     rank: entryRank,
                     ...rankFlags(entryRank),
@@ -825,6 +867,21 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
             }
         }
         return list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    /**
+     * What a text stat block prints for the NPC's skills (#725): every row of
+     * {@link trainedSkillsList}, specialisations included, each followed by what
+     * its training and bonus add to the characteristic. A row that adds nothing
+     * prints its name alone.
+     */
+    get statBlockSkills(): string[] {
+        return this.trainedSkillsList.map((row) => {
+            // The ladder over a characteristic of 0 leaves only what rank and bonus add; an unranked row adds its bonus alone.
+            const modifier = computeSkillTarget(0, row.rank, row.bonus, false).current;
+            if (modifier === 0) return row.name;
+            return `${row.name} ${modifier > 0 ? '+' : '-'}${Math.abs(modifier)}`;
+        });
     }
 
     /**
@@ -933,6 +990,110 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const rank = NPCData.skillRankOf(entry);
         return computeSkillTarget(char.total, rank, entry.bonus ?? 0, systemConfig?.usesAptitudes === true).current;
+    }
+
+    /**
+     * What a specialisation entry is called: its specialisation, or its name when
+     * the specialisation is blank (the shape the authoring tool writes for a skill
+     * printed once bare and once with a specialisation).
+     */
+    static skillEntryName(entry: NPCV2SkillEntry): string {
+        const specialization = entry.specialization ?? '';
+        return specialization !== '' ? specialization : entry.name;
+    }
+
+    /**
+     * The entry a roll names (#725): its position in the skill's stored `entries`
+     * (a number, or the digits the sheet's roll button carries), or its name
+     * without regard to case. `undefined` when the skill has no such entry.
+     */
+    findSkillEntry(skillKey: string, speciality: string | number | undefined): NPCV2SkillEntry | undefined {
+        const stored = this.trainedSkills[skillKey]?.entries;
+        const entries = Array.isArray(stored) ? stored : [];
+        if (speciality === undefined || speciality === '') return undefined;
+        if (typeof speciality === 'number') return Number.isInteger(speciality) ? entries[speciality] : undefined;
+        if (/^\d+$/.test(speciality)) return entries[Number.parseInt(speciality, 10)];
+        const wanted = speciality.toLowerCase();
+        return entries.find((entry) => NPCData.skillEntryName(entry).toLowerCase() === wanted);
+    }
+
+    /**
+     * What rolling a specialisation entry tests (#725): its name, the target and
+     * rank its row shows, and the characteristic that target is on. `undefined`
+     * when {@link findSkillEntry} finds none, or the entry has no name (it is not
+     * a row, so it is not a test).
+     */
+    skillEntryTest(skillKey: string, speciality: string | number | undefined): NPCSkillEntryTest | undefined {
+        const entry = this.findSkillEntry(skillKey, speciality);
+        if (entry === undefined) return undefined;
+        const name = NPCData.skillEntryName(entry);
+        if (name === '') return undefined;
+        return {
+            name,
+            current: this.skillEntryTarget(skillKey, entry),
+            rank: NPCData.skillRankOf(entry),
+            characteristic: this.skillRowCharacteristic(skillKey, entry),
+        };
+    }
+
+    /**
+     * Every stored skill the basic-skill grid does not list (#725), with its rows:
+     * a skill that carries specialisation entries, and a skill this line's standard
+     * catalog has no row for (a specialist skill stored flat as `Common Lore
+     * (Imperium)`, or a GM's own). The sheet's specialist panel and its roll
+     * buttons render from here, so a stored row is never invisible.
+     *
+     * A row's `index` is its position in the stored `entries`, which is what
+     * {@link findSkillEntry} reads back; the skill's own row has `null`.
+     */
+    get specialistSkillGroups(): NPCSpecialistSkillGroup[] {
+        const standard = new Set(this.standardSkills.map((skill) => skill.key));
+        const groups: NPCSpecialistSkillGroup[] = [];
+        for (const [key, skill] of Object.entries(this.trainedSkills)) {
+            if (skill === undefined) continue;
+            const entries = Array.isArray(skill.entries) ? skill.entries : [];
+            const isStandard = standard.has(key);
+
+            const bracket = TRAILING_BRACKET.exec(skill.name);
+            const bareName = skill.name.replace(TRAILING_BRACKET, '').trim();
+            const catalogLabel = skillLabel(key);
+            const label = catalogLabel !== key ? catalogLabel : bareName !== '' ? bareName : key;
+            const rows: NPCSpecialistSkillRow[] = [];
+
+            // The skill's own row: a standard skill's is already in the basic grid, and
+            // a skill whose ranks all live on its entries has none (as in trainedSkillsList).
+            const rank = NPCData.skillRankOf(skill);
+            if (!isStandard && (rank > 0 || entries.length === 0)) {
+                const specialisation = bracket?.[1]?.trim() ?? '';
+                rows.push({
+                    index: null,
+                    name: specialisation !== '' ? specialisation : skill.name !== '' ? skill.name : label,
+                    characteristic: this.skillRowCharacteristicShort(key),
+                    rank,
+                    ...rankFlags(rank),
+                    bonus: skill.bonus,
+                    target: this.getSkillTarget(key),
+                });
+            }
+
+            entries.forEach((entry, index) => {
+                const name = NPCData.skillEntryName(entry);
+                if (name === '') return;
+                const entryRank = NPCData.skillRankOf(entry);
+                rows.push({
+                    index,
+                    name,
+                    characteristic: this.skillRowCharacteristicShort(key, entry),
+                    rank: entryRank,
+                    ...rankFlags(entryRank),
+                    bonus: entry.bonus ?? 0,
+                    target: this.skillEntryTarget(key, entry),
+                });
+            });
+
+            if (rows.length > 0) groups.push({ key, label, characteristic: this.skillRowCharacteristicShort(key), rows });
+        }
+        return groups.sort((a, b) => a.label.localeCompare(b.label));
     }
 
     /* -------------------------------------------- */
