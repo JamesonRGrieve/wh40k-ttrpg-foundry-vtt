@@ -15,7 +15,7 @@
 import { type ChoiceLike, iterateResolvedChoices, type SelectedChoices } from '../../utils/origin-choices.ts';
 
 /** Choice types whose options are pieces of starting equipment. */
-export const EQUIPMENT_CHOICE_TYPES: ReadonlySet<string> = new Set(['equipment', 'gear']);
+const EQUIPMENT_CHOICE_TYPES: ReadonlySet<string> = new Set(['equipment', 'gear']);
 
 /** One starting-equipment item an origin grants. */
 export interface EquipmentGrantPlan {
