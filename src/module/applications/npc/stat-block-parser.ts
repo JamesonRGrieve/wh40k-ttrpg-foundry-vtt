@@ -846,7 +846,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             const key = specialization ? `${baseKey}${this._toSkillKey(specialization, true)}` : baseKey;
             trainedSkills[key] = {
                 name: specialization ? `${name} (${specialization})` : name,
-                characteristic: characteristic || this._characteristicKeyFromShort(SkillKeyHelper.getCharacteristic(baseKey) ?? '') || 'perception',
+                characteristic: SkillKeyHelper.resolveCharacteristic(baseKey, characteristic),
                 trained: true,
                 plus10: level === 'plus10' || level === 'plus20',
                 plus20: level === 'plus20',

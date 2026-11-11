@@ -158,16 +158,6 @@ describe('NPCData', () => {
         expect(NPCData.CHARACTERISTIC_MAP['Ag']).toBe('agility');
     });
 
-    it('SKILL_CHARACTERISTIC_MAP maps skill keys to their governing characteristic', async () => {
-        const mod = await importModelOrSkip(import('./npc.ts'));
-        // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
-        if (mod === undefined) return;
-        const NPCData = mod.default;
-        expect(NPCData.SKILL_CHARACTERISTIC_MAP['dodge']).toBe('agility');
-        expect(NPCData.SKILL_CHARACTERISTIC_MAP['parry']).toBe('weaponSkill');
-        expect(NPCData.SKILL_CHARACTERISTIC_MAP['medicae']).toBe('intelligence');
-    });
-
     it('_migrateData remaps abbreviated string characteristics into the structured full-name shape', async () => {
         const mod = await importModelOrSkip(import('./npc.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch

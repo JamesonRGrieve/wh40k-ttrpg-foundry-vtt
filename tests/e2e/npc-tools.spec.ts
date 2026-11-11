@@ -84,6 +84,7 @@ interface ParsedNPC {
     system?: {
         threatLevel?: number;
         characteristics?: Record<string, { base?: number } | undefined>;
+        trainedSkills?: Record<string, { characteristic?: string } | undefined>;
     };
 }
 
@@ -134,6 +135,13 @@ const SAMPLE_STAT_BLOCK_TEXT = [
     '',
     'Armour: Flak Jacket (Body 3)',
 ].join('\n');
+
+/** The characteristic each skill of {@link SAMPLE_STAT_BLOCK_TEXT} rolls on: none is printed, so the catalog's. */
+const SAMPLE_SKILL_CHARACTERISTICS: Record<string, string> = {
+    awareness: 'perception',
+    dodge: 'agility',
+    stealth: 'agility',
+};
 
 /**
  * Register the `combatPresets` setting alias if missing. The
@@ -189,7 +197,7 @@ async function ensurePresetSetting(page: Page): Promise<void> {
  */
 async function probeParser(page: Page): Promise<FlowResult> {
     return page.evaluate(
-        async ({ moduleUrl, text }): Promise<FlowResult> => {
+        async ({ moduleUrl, text, skillCharacteristics }): Promise<FlowResult> => {
             try {
                 const mod = (await import(moduleUrl)) as {
                     default?: {
@@ -218,6 +226,16 @@ async function probeParser(page: Page): Promise<FlowResult> {
                     return { ok: false, error: 'parsed characteristics empty' };
                 }
 
+                // A skill printed without a characteristic takes its catalog one (#725):
+                // Dodge and Stealth roll on Agility, not on a blanket Perception.
+                const parsedSkills = textResult.data.system?.trainedSkills ?? {};
+                for (const [skillKey, expected] of Object.entries(skillCharacteristics)) {
+                    const got = parsedSkills[skillKey]?.characteristic;
+                    if (got !== expected) {
+                        return { ok: false, error: `parsed skill ${skillKey} rolls on ${got ?? 'nothing'}, expected ${expected}` };
+                    }
+                }
+
                 // JSON path — minimal valid system-data shape.
                 const jsonInput = JSON.stringify({ characteristics: { weaponSkill: { base: 30 } }, threatLevel: 4 });
                 const jsonResult = Parser.parseJSON(jsonInput);
@@ -236,7 +254,7 @@ async function probeParser(page: Page): Promise<FlowResult> {
                 return { ok: false, error: `parser probe threw: ${String(err instanceof Error ? err.message : String(err))}` };
             }
         },
-        { moduleUrl: PARSER_URL, text: SAMPLE_STAT_BLOCK_TEXT },
+        { moduleUrl: PARSER_URL, text: SAMPLE_STAT_BLOCK_TEXT, skillCharacteristics: SAMPLE_SKILL_CHARACTERISTICS },
     );
 }
 

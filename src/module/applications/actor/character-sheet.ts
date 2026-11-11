@@ -3135,27 +3135,6 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /**
-     * Prepare overview tab context.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {object}
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
-    _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown>): Record<string, unknown> {
-        const ctx = context as CharacterSheetContext;
-        // Add Active Effects data
-        ctx.effects = this.#effectViews();
-
-        // Add favorite talents for display
-        ctx.favoriteTalents = this._prepareFavoriteTalents();
-
-        return context;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
      * Prepare overview dashboard context for the new ultra-dense dashboard.
      * @param {object} context  Context being prepared.
      * @param {object} options  Render options.

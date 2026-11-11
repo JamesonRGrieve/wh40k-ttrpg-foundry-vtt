@@ -10,6 +10,7 @@
  */
 
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { tierBandFor } from '../../utils/threat-bands.ts';
 
 /* -------------------------------------------- */
@@ -531,41 +532,9 @@ export default class ThreatCalculator {
             if (threatLevel >= 11) level = 'plus10';
             if (threatLevel >= 21) level = 'plus20';
 
-            const charMap: Record<string, string> = {
-                acrobatics: 'agility',
-                athletics: 'strength',
-                awareness: 'perception',
-                charm: 'fellowship',
-                command: 'fellowship',
-                commerce: 'fellowship',
-                commonLore: 'intelligence',
-                deceive: 'fellowship',
-                dodge: 'agility',
-                evaluate: 'intelligence',
-                forbiddenLore: 'intelligence',
-                inquiry: 'fellowship',
-                interrogation: 'willpower',
-                intimidate: 'strength',
-                linguistics: 'intelligence',
-                logic: 'intelligence',
-                medicae: 'intelligence',
-                navigate: 'intelligence',
-                operate: 'agility',
-                parry: 'weaponSkill',
-                psyniscience: 'perception',
-                scholasticLore: 'intelligence',
-                scrutiny: 'perception',
-                security: 'intelligence',
-                sleightOfHand: 'agility',
-                stealth: 'agility',
-                survival: 'perception',
-                techUse: 'intelligence',
-                trade: 'intelligence',
-            };
-
             skills[skillName] = {
                 name: skillName,
-                characteristic: charMap[skillName] ?? 'perception',
+                characteristic: SkillKeyHelper.resolveCharacteristic(skillName),
                 trained: true,
                 plus10: level === 'plus10' || level === 'plus20',
                 plus20: level === 'plus20',
@@ -578,7 +547,7 @@ export default class ThreatCalculator {
         if (!skills['dodge']) {
             skills['dodge'] = {
                 name: 'dodge',
-                characteristic: 'agility',
+                characteristic: SkillKeyHelper.resolveCharacteristic('dodge'),
                 trained: threatLevel >= 6,
                 plus10: threatLevel >= 16,
                 plus20: threatLevel >= 26,
@@ -591,7 +560,7 @@ export default class ThreatCalculator {
         if (!skills['awareness']) {
             skills['awareness'] = {
                 name: 'awareness',
-                characteristic: 'perception',
+                characteristic: SkillKeyHelper.resolveCharacteristic('awareness'),
                 trained: true,
                 plus10: threatLevel >= 11,
                 plus20: threatLevel >= 21,

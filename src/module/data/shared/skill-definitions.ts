@@ -162,6 +162,28 @@ export function skillCharacteristicMap(): Record<string, string> {
     return Object.fromEntries(Object.entries(SKILL_DEFINITIONS).map(([key, d]) => [key, CHARACTERISTIC_SHORT_TO_FULL[d.char] ?? d.char]));
 }
 
+const SKILL_CHARACTERISTICS: ReadonlyMap<string, string> = new Map(Object.entries(skillCharacteristicMap()));
+
+/** The characteristic a skill rolls against when neither its row nor the catalog names one. */
+const DEFAULT_SKILL_CHARACTERISTIC = 'perception';
+
+/**
+ * The characteristic a skill row rolls against: the first non-blank of the row's
+ * own values (a specialisation entry's, then its skill's), then the catalog's
+ * for the skill key, then {@link DEFAULT_SKILL_CHARACTERISTIC}. A blank string is
+ * an unset value, never a characteristic.
+ *
+ * The single resolution every skill row, target and stat-block reader shares
+ * (#725): the label beside a skill and the number it rolls against come from
+ * the same call, so they cannot name different characteristics.
+ */
+export function resolveSkillCharacteristic(skillKey: string, ...own: Array<string | null | undefined>): string {
+    for (const candidate of own) {
+        if (candidate !== undefined && candidate !== null && candidate !== '') return candidate;
+    }
+    return SKILL_CHARACTERISTICS.get(skillKey) ?? DEFAULT_SKILL_CHARACTERISTIC;
+}
+
 /**
  * Derive the display-label → key map from {@link SKILL_DEFINITIONS}
  * (e.g. `'Common Lore' → 'commonLore'`). Single source for SkillKeyHelper's

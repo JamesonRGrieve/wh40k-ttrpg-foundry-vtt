@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { CHARACTERISTIC_SHORT_TO_FULL } from './characteristics.ts';
-import { formatTestLabel, SKILL_DEFINITIONS, skillCharacteristicMap, skillLabel, standardSkillsForSystem } from './skill-definitions.ts';
+import {
+    formatTestLabel,
+    resolveSkillCharacteristic,
+    SKILL_DEFINITIONS,
+    skillCharacteristicMap,
+    skillLabel,
+    standardSkillsForSystem,
+} from './skill-definitions.ts';
 
 /**
  * The skill keys + their order are schema-significant: CreatureTemplate builds its
@@ -115,6 +122,45 @@ describe('skillCharacteristicMap', () => {
         for (const [key, d] of Object.entries(SKILL_DEFINITIONS)) {
             expect(map[key]).toBe(CHARACTERISTIC_SHORT_TO_FULL[d.char]);
         }
+    });
+});
+
+// One resolution for every skill row (#725). Six readers each held a copy of this
+// chain and disagreed on a blank value: an NPC's Dodge with no stored
+// characteristic was labelled Perception and rolled on Agility.
+describe('resolveSkillCharacteristic (#725)', () => {
+    it("gives the catalog's characteristic when the row names none", () => {
+        expect(resolveSkillCharacteristic('dodge')).toBe('agility');
+        expect(resolveSkillCharacteristic('parry')).toBe('weaponSkill');
+        expect(resolveSkillCharacteristic('intimidate')).toBe('strength');
+    });
+
+    it('agrees with the catalog for every skill', () => {
+        const catalog = skillCharacteristicMap();
+        expect(Object.keys(SKILL_DEFINITIONS).filter((key) => resolveSkillCharacteristic(key) !== catalog[key])).toEqual([]);
+    });
+
+    it('treats a blank, null or absent stored value as unset', () => {
+        expect(resolveSkillCharacteristic('dodge', '')).toBe('agility');
+        expect(resolveSkillCharacteristic('dodge', null)).toBe('agility');
+        expect(resolveSkillCharacteristic('dodge', undefined)).toBe('agility');
+        expect(resolveSkillCharacteristic('dodge', '', null, undefined)).toBe('agility');
+    });
+
+    it('lets a stored characteristic win over the catalog', () => {
+        expect(resolveSkillCharacteristic('dodge', 'strength')).toBe('strength');
+    });
+
+    it('takes the first stored value that is not blank: the entry, then its skill', () => {
+        expect(resolveSkillCharacteristic('commonLore', 'fellowship', 'willpower')).toBe('fellowship');
+        expect(resolveSkillCharacteristic('commonLore', '', 'willpower')).toBe('willpower');
+        expect(resolveSkillCharacteristic('commonLore', undefined, 'willpower')).toBe('willpower');
+    });
+
+    it('falls to the one named default for a skill the catalog does not list', () => {
+        expect(resolveSkillCharacteristic('notASkill')).toBe('perception');
+        expect(resolveSkillCharacteristic('notASkill', '')).toBe('perception');
+        expect(resolveSkillCharacteristic('notASkill', 'willpower')).toBe('willpower');
     });
 });
 

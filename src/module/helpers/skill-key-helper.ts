@@ -11,7 +11,13 @@
  * and cannot drift between this helper and the schema.
  */
 
-import { skillAdvancedMap, skillCharacteristicShortMap, skillNameToKeyMap, specialistSkillKeys } from '../data/shared/skill-definitions.ts';
+import {
+    resolveSkillCharacteristic,
+    skillAdvancedMap,
+    skillCharacteristicShortMap,
+    skillNameToKeyMap,
+    specialistSkillKeys,
+} from '../data/shared/skill-definitions.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with many callers across the codebase
@@ -142,6 +148,21 @@ export class SkillKeyHelper {
     static getCharacteristic(keyOrName: string): string | null {
         const key = this.#lookupKey(keyOrName);
         return this.SKILL_CHARACTERISTICS[key] ?? null;
+    }
+
+    /**
+     * The full characteristic key a skill row rolls against: the first non-blank
+     * of the row's own values, then the catalog's for the skill key, then the
+     * shared default. The UI layer's door onto the one resolution every skill
+     * row shares (#725); it holds no table or fallback of its own.
+     *
+     * @example
+     * SkillKeyHelper.resolveCharacteristic("dodge")              // → "agility"
+     * SkillKeyHelper.resolveCharacteristic("dodge", "strength")  // → "strength"
+     * SkillKeyHelper.resolveCharacteristic("dodge", "")          // → "agility"
+     */
+    static resolveCharacteristic(skillKey: string, ...own: Array<string | null | undefined>): string {
+        return resolveSkillCharacteristic(skillKey, ...own);
     }
 
     /**

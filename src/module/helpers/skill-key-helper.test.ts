@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SKILL_DEFINITIONS, skillAdvancedMap, skillCharacteristicShortMap, skillNameToKeyMap, specialistSkillKeys } from '../data/shared/skill-definitions.ts';
+import {
+    resolveSkillCharacteristic,
+    SKILL_DEFINITIONS,
+    skillAdvancedMap,
+    skillCharacteristicShortMap,
+    skillNameToKeyMap,
+    specialistSkillKeys,
+} from '../data/shared/skill-definitions.ts';
 import { SkillKeyHelper } from './skill-key-helper.ts';
 
 /**
@@ -115,6 +122,27 @@ describe('getSkillMetadata', () => {
 
     it('returns null for an unknown skill', () => {
         expect(SkillKeyHelper.getSkillMetadata('nonsense')).toBeNull();
+    });
+});
+
+// The NPC generator and the stat-block reader each kept a skill table of their
+// own; they now ask this, which holds none (#725).
+describe('resolveCharacteristic (#725)', () => {
+    it('gives the shared resolution for every catalog skill', () => {
+        expect(Object.keys(SKILL_DEFINITIONS).filter((key) => SkillKeyHelper.resolveCharacteristic(key) !== resolveSkillCharacteristic(key))).toEqual([]);
+        expect(SkillKeyHelper.resolveCharacteristic('dodge')).toBe('agility');
+    });
+
+    it('passes the stored values through: a named one wins, a blank or null one is unset', () => {
+        expect(SkillKeyHelper.resolveCharacteristic('dodge', 'strength')).toBe('strength');
+        expect(SkillKeyHelper.resolveCharacteristic('dodge', '')).toBe('agility');
+        expect(SkillKeyHelper.resolveCharacteristic('dodge', null)).toBe('agility');
+        expect(SkillKeyHelper.resolveCharacteristic('commonLore', '', 'willpower')).toBe('willpower');
+    });
+
+    it('falls to the shared default for an unknown skill', () => {
+        expect(SkillKeyHelper.resolveCharacteristic('notASkill')).toBe(resolveSkillCharacteristic('notASkill'));
+        expect(SkillKeyHelper.resolveCharacteristic('notASkill')).toBe('perception');
     });
 });
 

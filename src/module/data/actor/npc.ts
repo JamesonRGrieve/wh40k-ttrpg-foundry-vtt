@@ -28,7 +28,7 @@ import { buildCharacteristicFields } from '../shared/characteristics.ts';
 import { fatigueModelForLine } from '../shared/fatigue-model.ts';
 import { clampSize, coerceIntFields } from '../shared/field-coercion.ts';
 import { type LiftingCapacity, liftingCapacity } from '../shared/movement-math.ts';
-import { skillCharacteristicMap, skillLabel, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
+import { resolveSkillCharacteristic, skillLabel, standardSkillsForSystem, type StandardSkillEntry } from '../shared/skill-definitions.ts';
 import { computeSkillTarget } from '../shared/skill-math.ts';
 import { characteristicField, fatigueField, initiativeField, movementField, sizeField, woundsField } from '../shared/stat-fields.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
@@ -791,7 +791,6 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         const list: NPCTrainedSkillRow[] = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
             if (skill === undefined) continue;
-            const characteristic = skill.characteristic !== '' ? skill.characteristic : 'Per';
             const entries = Array.isArray(skill.entries) ? skill.entries : [];
             const rank = NPCData.skillRankOf(skill);
 
@@ -802,7 +801,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 list.push({
                     key,
                     name: skill.name !== '' ? skill.name : key,
-                    characteristic,
+                    characteristic: this.skillRowCharacteristic(key),
                     rank,
                     ...rankFlags(rank),
                     bonus: skill.bonus,
@@ -817,11 +816,11 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
                 list.push({
                     key: `${key}:${specialization.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
                     name: `${skill.name !== '' ? skill.name : key} (${specialization})`,
-                    characteristic: entry.characteristic ?? characteristic,
+                    characteristic: this.skillRowCharacteristic(key, entry),
                     rank: entryRank,
                     ...rankFlags(entryRank),
                     bonus: entry.bonus ?? 0,
-                    target: this.skillEntryTarget(entry, characteristic),
+                    target: this.skillEntryTarget(key, entry),
                 });
             }
         }
@@ -898,18 +897,37 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         return standardSkillsForSystem(gameSystem ?? DEFAULT_SKILL_CATALOG_SYSTEM);
     }
 
-    /** The full characteristic key a catalog skill rolls against (`dodge` → `agility`), or null outside the catalog. */
-    skillCharacteristic(skillKey: string): string | null {
-        return NPCData.SKILL_CHARACTERISTIC_MAP[skillKey] ?? null;
+    /**
+     * The characteristic one of this NPC's skill rows rolls against (#725): the
+     * specialisation entry's own, then its skill's stored one, then the catalog's
+     * for the skill key (`dodge` → `agility`). A blank stored value is unset.
+     *
+     * Every reader goes through here — the row label, the row target and the
+     * sheet's rank toggles — so a label and its target cannot disagree.
+     */
+    skillRowCharacteristic(skillKey: string, entry?: NPCV2SkillEntry): string {
+        return resolveSkillCharacteristic(skillKey, entry?.characteristic, this.trainedSkills[skillKey]?.characteristic);
+    }
+
+    /**
+     * The short code (`Ag`, `WS`) of the characteristic a skill row rolls against —
+     * what the sheet prints beside the skill, read off the same characteristic the
+     * target is computed on (#725). A stored value naming no characteristic of this
+     * NPC is returned as stored, beside the target of 0 it produces.
+     */
+    skillRowCharacteristicShort(skillKey: string, entry?: NPCV2SkillEntry): string {
+        const key = this.skillRowCharacteristic(skillKey, entry);
+        const short = this.getCharacteristic(key)?.short;
+        return short !== undefined && short !== '' ? short : key;
     }
 
     /**
      * Target number for one specialization row. Mirrors {@link getSkillTarget} but
-     * reads the entry's own rank / characteristic / bonus, falling back to the base
-     * skill's characteristic when the row does not override it.
+     * reads the entry's own rank / bonus, and the characteristic
+     * {@link skillRowCharacteristic} resolves for it.
      */
-    skillEntryTarget(entry: NPCV2SkillEntry, fallbackCharacteristic: string): number {
-        const char = this.getCharacteristic(entry.characteristic ?? fallbackCharacteristic);
+    skillEntryTarget(skillKey: string, entry: NPCV2SkillEntry): number {
+        const char = this.getCharacteristic(this.skillRowCharacteristic(skillKey, entry));
         if (char === null) return 0;
         const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
         const systemConfig = gameSystem !== undefined ? SystemConfigRegistry.getOrNull(gameSystem) : null;
@@ -949,15 +967,6 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     /* -------------------------------------------- */
 
     /**
-     * Default skill-to-characteristic fallback mapping, derived from the single
-     * source SKILL_DEFINITIONS catalog (#273) so it can no longer drift from the
-     * CreatureTemplate skill schema. Used by getSkillTarget() only when an
-     * individual skill carries no `characteristic` of its own.
-     * @type {Object<string, string>}
-     */
-    static SKILL_CHARACTERISTIC_MAP: Partial<Record<string, string>> = skillCharacteristicMap();
-
-    /**
      * Effective rank of a trained-skill entry (#503).
      *
      * `advance` is the authored source of truth. Legacy entries (and anything the
@@ -981,11 +990,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
      */
     getSkillTarget(skillName: string): number {
         const skill = this.trainedSkills[skillName];
-        const charKey =
-            (skill?.characteristic !== undefined && skill.characteristic !== '' ? skill.characteristic : null) ??
-            (skillName in NPCData.SKILL_CHARACTERISTIC_MAP ? NPCData.SKILL_CHARACTERISTIC_MAP[skillName] : null) ??
-            'perception';
-        const char = this.getCharacteristic(charKey);
+        const char = this.getCharacteristic(this.skillRowCharacteristic(skillName));
         if (char === null) return 0;
 
         const gameSystem = (this.constructor as { gameSystem?: string }).gameSystem;
@@ -1022,12 +1027,9 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record index access may be undefined at runtime
-        const charKey = characteristic ?? NPCData.SKILL_CHARACTERISTIC_MAP[name] ?? 'perception';
-
         skills[name] = {
             name: name,
-            characteristic: charKey,
+            characteristic: resolveSkillCharacteristic(name, characteristic),
             trained: true,
             // `level` is a rank key from the line's ladder (trained / plus10 / plus20 / plus30).
             plus10: level === 'plus10' || level === 'plus20' || level === 'plus30',

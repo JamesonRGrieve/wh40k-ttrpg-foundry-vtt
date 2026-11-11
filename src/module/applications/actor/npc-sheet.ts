@@ -41,7 +41,6 @@ interface NPCV2TrainedSkillData {
     bonus?: number;
 }
 
-/** Mapping from WH40K skill key to its governing characteristic key. */
 /** NPC RAW tier dropdown options — single source for the context key + sidebar field (#257). */
 const npcTierOptions = (): Record<string, string> => ({
     troop: game.i18n.localize('WH40K.NPCType.Troop'),
@@ -59,37 +58,25 @@ const npcNatureOptions = (): Record<string, string> => ({
     xenos: game.i18n.localize('WH40K.NPCType.Xenos'),
 });
 
-/**
- * Pick characteristic from existing state, else the catalog characteristic the
- * DataModel resolves for the skill (`NPCData.skillCharacteristic`). Falls back to
- * `perception` for keys outside the catalog (unchanged behaviour).
- */
-function resolveSkillChar(existing: NPCV2TrainedSkillData | undefined, catalogCharacteristic: string | null): string {
-    const fromState = existing?.characteristic;
-    if (fromState !== undefined && fromState !== '') return fromState;
-    return catalogCharacteristic ?? 'perception';
-}
-
 /** Ranks in the DH2 ladder above untrained: Known, +10, +20, +30 (#503). */
 const MAX_SKILL_RANK = 4;
 
 /**
- * Build a trained-skill entry at the requested rank, preserving characteristic and
- * bonus from the prior state.
+ * Build a trained-skill entry at the requested rank, preserving name and bonus
+ * from the prior state.
+ *
+ * `characteristic` is the one the DataModel resolves for the row
+ * (`NPCData.skillRowCharacteristic`, #725), so the stored value is the one the
+ * row already shows and rolls on.
  *
  * Writes `advance` — the authored source of truth (#503) — alongside the derived
  * cumulative flags, so a skill the GM cycles on the sheet lands in exactly the shape
  * the packs author. The flags are cumulative: +20 sets both `plus10` and `plus20`.
  */
-function buildSkillEntry(
-    skillKey: string,
-    rank: number,
-    prior: NPCV2TrainedSkillData | undefined,
-    catalogCharacteristic: string | null,
-): NPCV2TrainedSkillData {
+function buildSkillEntry(skillKey: string, rank: number, prior: NPCV2TrainedSkillData | undefined, characteristic: string): NPCV2TrainedSkillData {
     return {
         name: prior?.name !== undefined && prior.name !== '' ? prior.name : skillKey,
-        characteristic: resolveSkillChar(prior, catalogCharacteristic),
+        characteristic,
         advance: rank,
         trained: rank >= 1,
         plus10: rank >= 2,
@@ -685,10 +672,6 @@ export default class NPCSheet extends CharacterSheet {
 
         // NPC-flavoured data prep (sparse skills, simple weapons, horde, notes).
         const partPreparers: Record<string, () => void> = {
-            overview: () => {
-                this._prepareOverviewContext(partContext);
-                this._prepareAbilitiesContext(partContext);
-            },
             combat: () => {
                 this._prepareCombatContext(partContext);
             },
@@ -707,116 +690,6 @@ export default class NPCSheet extends CharacterSheet {
         partPreparers[partId]?.();
 
         return partContext;
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare overview tab context.
-     * @param {object} context - The render context.
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context and return value are the mixin-erased sheet→template payload Record<string,unknown>.
-    override _prepareOverviewContext(context: Record<string, unknown>, _options: Record<string, unknown> = {}): Record<string, unknown> {
-        const sys = context['system'] as NPCSystemContext;
-
-        // Ensure items array exists
-        if (context['items'] === undefined) {
-            context['items'] = Array.from(this.actor.items);
-        }
-        const items = context['items'] as NPCItemContext[];
-
-        // Pinned abilities for overview
-        const pinnedIds = sys.pinnedAbilities ?? [];
-        context['pinnedAbilities'] = items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
-
-        // Favorite Skills
-        const favoriteSkillKeys = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-        context['favoriteSkills'] = favoriteSkillKeys
-            .map((key: string) => {
-                // sys.trainedSkills is a sparse map; lookup is genuinely optional at runtime
-                const skillData = sys.trainedSkills[key];
-                if (skillData === undefined) return null;
-
-                // Get characteristic for this skill
-                const charMap: Record<string, string> = {
-                    acrobatics: 'agility',
-                    athletics: 'strength',
-                    awareness: 'perception',
-                    charm: 'fellowship',
-                    command: 'fellowship',
-                    commerce: 'fellowship',
-                    deceive: 'fellowship',
-                    dodge: 'agility',
-                    inquiry: 'fellowship',
-                    interrogation: 'willpower',
-                    intimidate: 'strength',
-                    logic: 'intelligence',
-                    medicae: 'intelligence',
-                    parry: 'weaponSkill',
-                    psyniscience: 'perception',
-                    scrutiny: 'perception',
-                    security: 'intelligence',
-                    sleightOfHand: 'agility',
-                    stealth: 'agility',
-                    survival: 'perception',
-                    techUse: 'intelligence',
-                };
-                const charKey = charMap[key] ?? 'intelligence';
-                const char = sys.characteristics[charKey];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed so entries may be absent at runtime
-                if (char === undefined) return null;
-                const target = sys.getSkillTarget ? sys.getSkillTarget(key) : char.total;
-
-                return {
-                    key,
-                    label: key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'),
-                    charShort: char.short,
-                    target,
-                    isFavorite: true,
-                };
-            })
-            .filter((s) => s !== null);
-
-        // Favorite Talents
-        const favoriteTalentIds = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        context['favoriteTalents'] = items.filter((i) => favoriteTalentIds.includes(i.id) && i.type === 'talent');
-
-        // Armour data
-        context['armour'] = {
-            mode: sys.armour.mode,
-            isSimple: sys.armour.mode === 'simple',
-            isLocations: sys.armour.mode === 'locations',
-            total: sys.armour.total,
-            locations: sys.armour.locations,
-        };
-
-        // Hit locations for location-based armour
-        context['hitLocations'] = [
-            { key: 'head', label: game.i18n.localize('WH40K.BodyLocation.Head'), value: sys.armour.locations?.head ?? 0 },
-            { key: 'body', label: game.i18n.localize('WH40K.BodyLocation.Body'), value: sys.armour.locations?.body ?? 0 },
-            { key: 'leftArm', label: game.i18n.localize('WH40K.BodyLocation.LeftArm'), value: sys.armour.locations?.leftArm ?? 0 },
-            { key: 'rightArm', label: game.i18n.localize('WH40K.BodyLocation.RightArm'), value: sys.armour.locations?.rightArm ?? 0 },
-            { key: 'leftLeg', label: game.i18n.localize('WH40K.BodyLocation.LeftLeg'), value: sys.armour.locations?.leftLeg ?? 0 },
-            { key: 'rightLeg', label: game.i18n.localize('WH40K.BodyLocation.RightLeg'), value: sys.armour.locations?.rightLeg ?? 0 },
-        ];
-
-        // Combat summary
-        context['combatSummary'] = {
-            initiative: sys.initiative,
-            dodge: sys.getSkillTarget ? sys.getSkillTarget('dodge') : '—',
-            parry: sys.getSkillTarget ? sys.getSkillTarget('parry') : '—',
-            armour: sys.armour.mode === 'simple' ? sys.armour.total : 'By Location',
-        };
-
-        // Toughness bonus for armor display
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: characteristics is Record-indexed
-        context['toughnessBonus'] = sys.characteristics['toughness']?.bonus ?? 0;
-
-        // Threat tier
-        context['threatTier'] = sys.threatTier;
-
-        return context;
     }
 
     /* -------------------------------------------- */
@@ -1203,7 +1076,7 @@ export default class NPCSheet extends CharacterSheet {
         const currentSkills: Record<string, NPCV2TrainedSkillData> = foundry.utils.deepClone(this.npcActor.system.trainedSkills);
         const prior = currentSkills[skillKey];
 
-        currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior, this.npcActor.system.skillCharacteristic(skillKey));
+        currentSkills[skillKey] = NPCSheet.#resolveSkillLevelToggle(skillKey, level, prior, this.npcActor.system.skillRowCharacteristic(skillKey));
         await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
@@ -1216,12 +1089,7 @@ export default class NPCSheet extends CharacterSheet {
      * Clicking the level the skill is already at drops it one rank (the toggle-off
      * gesture); clicking any other level sets it there outright.
      */
-    static #resolveSkillLevelToggle(
-        skillKey: string,
-        level: string,
-        prior: NPCV2TrainedSkillData | undefined,
-        catalogCharacteristic: string | null,
-    ): NPCV2TrainedSkillData {
+    static #resolveSkillLevelToggle(skillKey: string, level: string, prior: NPCV2TrainedSkillData | undefined, characteristic: string): NPCV2TrainedSkillData {
         const target = NPCSheet.#SKILL_LEVEL_RANKS[level];
         if (target === undefined) return prior ?? { name: skillKey };
 
@@ -1234,7 +1102,7 @@ export default class NPCSheet extends CharacterSheet {
                 ? prior.advance
                 : (prior.trained === true ? 1 : 0) + (prior.plus10 === true ? 1 : 0) + (prior.plus20 === true ? 1 : 0) + (prior.plus30 === true ? 1 : 0);
 
-        return buildSkillEntry(skillKey, priorRank === target ? target - 1 : target, prior, catalogCharacteristic);
+        return buildSkillEntry(skillKey, priorRank === target ? target - 1 : target, prior, characteristic);
     }
 
     /* -------------------------------------------- */
@@ -1262,7 +1130,7 @@ export default class NPCSheet extends CharacterSheet {
             await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
             return;
         }
-        currentSkills[skillKey] = buildSkillEntry(skillKey, next, currentSkills[skillKey], this.npcActor.system.skillCharacteristic(skillKey));
+        currentSkills[skillKey] = buildSkillEntry(skillKey, next, currentSkills[skillKey], this.npcActor.system.skillRowCharacteristic(skillKey));
         await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
@@ -1764,12 +1632,14 @@ export default class NPCSheet extends CharacterSheet {
         // The active line's own non-specialist skills (DH1/RT list Concealment and
         // Silent Move, DH2-family lines Parry and Stealth, …). Rank flags and the
         // target number come from the DataModel's skillDisplay — the single source
-        // that also pays Veteran (+30) and each line's untrained rule.
+        // that also pays Veteran (+30) and each line's untrained rule. The label's
+        // characteristic is the one that target was computed on (#725): the stored
+        // one when the NPC has it, the catalog's otherwise.
         const standard: Array<[string, SkillLike]> = actor.system.standardSkills.map((entry) => {
             const display = actor.system.skillDisplay(entry.key);
             const skill: SkillLike = {
                 label: entry.label,
-                characteristic: entry.char,
+                characteristic: actor.system.skillRowCharacteristicShort(entry.key),
                 trained: display.trained,
                 plus10: display.plus10,
                 plus20: display.plus20,
