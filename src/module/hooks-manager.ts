@@ -1454,12 +1454,17 @@ export class HooksManager {
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();
-        await uuidNameCache.build();
-        await HooksManager.loadConditionStatusEffects();
-        await buildWeaponQualityPayloadIndex();
-        await buildSkillPackIndex();
-        await buildCareerAdvancementIndex();
-        await backfillOriginPathUuids();
+        // The pack readers are independent, so they run together (#706). Each reads
+        // pack indexes, never whole documents, through one shared request per pack
+        // (utils/pack-index.ts). The origin-path backfill needs the name cache, and
+        // reapplying origins (reconcile) may read any of the indexes, so it waits.
+        await Promise.all([
+            uuidNameCache.build().then(async () => backfillOriginPathUuids()),
+            HooksManager.loadConditionStatusEffects(),
+            buildWeaponQualityPayloadIndex(),
+            buildSkillPackIndex(),
+            buildCareerAdvancementIndex(),
+        ]);
         await reconcileWorldOriginGrants();
         // #33: the campaign event graph now lives in a GM-only JournalEntry in the
         // world (it used to be fetched from `systems/wh40k-rpg/events.json`, which

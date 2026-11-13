@@ -1,16 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { type LoadablePack, loadLinePackDocs } from './line-pack-docs.ts';
+import { loadLinePackIndex } from './line-pack-docs.ts';
+import type { IndexablePack } from './pack-index.ts';
 
-/** A pack of `line` and `category` holding `docs`. */
-function pack(line: string, category: string, docs: string[], homebrew = false): LoadablePack<string> {
+interface Row {
+    name: string;
+}
+
+/** A pack of `line` and `category` whose index holds `names`. */
+function pack(line: string, category: string, names: string[], homebrew = false): IndexablePack<Row> {
     return {
         metadata: { name: `${line}-${category}`, flags: { 'wh40k-rpg': { line, category, homebrew } } },
-        getDocuments: async () => Promise.resolve(docs),
+        getIndex: async () => Promise.resolve(names.map((name) => ({ name }))),
     };
 }
 
-describe('loadLinePackDocs', () => {
-    it("loads each line's book packs of exactly the category, tagged with the line, in pack order", async () => {
+describe('loadLinePackIndex', () => {
+    it("reads each line's book packs of exactly the category, tagged with the line, in pack order", async () => {
         const packs = [
             pack('dh2', 'skills', ['Awareness']),
             pack('dh2', 'talents', ['Ambidextrous']),
@@ -18,17 +23,14 @@ describe('loadLinePackDocs', () => {
             pack('dh2', 'skills', ['Homebrew Skill'], true),
             pack('ow', 'skills-extra', ['Other']),
         ];
-        expect(await loadLinePackDocs(packs, 'skills')).toEqual([
-            { line: 'dh2', docs: ['Awareness'] },
-            { line: 'rt', docs: ['Navigation'] },
+        expect(await loadLinePackIndex(packs, 'skills')).toEqual([
+            { line: 'dh2', entries: [{ name: 'Awareness' }] },
+            { line: 'rt', entries: [{ name: 'Navigation' }] },
         ]);
     });
 
-    it('skips a pack that declares no flags or cannot load documents', async () => {
-        const packs: Array<LoadablePack<string>> = [
-            { metadata: { name: 'undeclared' }, getDocuments: async () => Promise.resolve(['x']) },
-            { ...pack('dh2', 'skills', []), getDocuments: undefined },
-        ];
-        expect(await loadLinePackDocs(packs, 'skills')).toEqual([]);
+    it('skips a pack that declares no flags', async () => {
+        const undeclared: IndexablePack<Row> = { metadata: { name: 'undeclared' }, getIndex: async () => Promise.resolve([{ name: 'x' }]) };
+        expect(await loadLinePackIndex([undeclared], 'skills')).toEqual([]);
     });
 });

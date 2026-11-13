@@ -70,8 +70,8 @@ describe('hydration wiring (source pins)', () => {
     const sheet = readFileSync(resolve(__dirname, '../src/module/applications/actor/base-actor-sheet.ts'), 'utf8');
 
     it('world boot hydrates every actor in memory in the ready chain', () => {
-        // ready() calls the boot-hydration helper as a plain awaited function.
-        const ready = hooks.match(/static async ready\(\):[\s\S]*?await uuidNameCache\.build\(\);/);
+        // ready() awaits the boot hydration before the pack readers (#706 runs those together).
+        const ready = hooks.match(/static async ready\(\):[\s\S]*?uuidNameCache\.build\(\)/);
         expect(ready).not.toBeNull();
         expect(ready?.[0], 'ready() invokes the boot hydration').toMatch(/await HooksManager\.hydrateWorldActorsOnReady\(\)/);
 

@@ -1,39 +1,34 @@
 /**
- * Load every game line's book-pack documents of one category, grouped by line.
+ * Read every game line's book-pack index rows of one category, grouped by line.
  *
- * The per-line indexes built on `ready` (skill variants, skill specialisations)
- * each need "the documents of every line's skills packs, tagged with the line".
- * Packs are selected by their manifest flags (`line-packs.ts`), never by a name.
+ * The per-line indexes built on `ready` (skill variants and specialisations,
+ * weapon-quality mechanics) each need "the entries of every line's packs of one
+ * category, tagged with the line". Packs are selected by their manifest flags
+ * (`line-packs.ts`), never by a name. Rows come from the shared index request
+ * (`pack-index.ts`), never from constructing whole documents (#706).
  */
 
-import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
+import { packLineFlags } from './line-packs.ts';
+import { type IndexablePack, readPackIndex } from './pack-index.ts';
 
-/** The part of a Foundry compendium pack this loader reads. */
-export interface LoadablePack<D> {
-    readonly metadata: PackMetadataLike;
-    getDocuments?: (() => Promise<D[]>) | undefined;
-}
-
-/** One pack's documents and the line it belongs to. */
-export interface LinePackDocs<D> {
+/** One pack's index rows and the line it belongs to. */
+export interface LinePackEntries<E> {
     readonly line: string;
-    readonly docs: D[];
+    readonly entries: E[];
 }
 
 /**
- * The documents of every non-homebrew pack of exactly `category`, each tagged with
- * its pack's line, in pack order.
+ * The index rows of every non-homebrew pack of exactly `category`, each tagged
+ * with its pack's line, in pack order.
  * @param packs     The installed packs (`game.packs`).
- * @param category  The pack category to load (`skills`).
+ * @param category  The pack category to read (`skills`).
  */
-export async function loadLinePackDocs<D>(packs: Iterable<LoadablePack<D>>, category: string): Promise<Array<LinePackDocs<D>>> {
-    const sources: Array<{ line: string; getDocuments: () => Promise<D[]> }> = [];
+export async function loadLinePackIndex<E extends object>(packs: Iterable<IndexablePack<E>>, category: string): Promise<Array<LinePackEntries<E>>> {
+    const sources: Array<{ line: string; pack: IndexablePack<E> }> = [];
     for (const pack of packs) {
         const flags = packLineFlags(pack.metadata);
-        if (flags === null || flags.homebrew || flags.category !== category || pack.getDocuments === undefined) continue;
-        // Bind to the owning pack — `getDocuments` reads `this.documentClass`
-        // internally, so a detached reference would run with the wrong `this`.
-        sources.push({ line: flags.line, getDocuments: pack.getDocuments.bind(pack) });
+        if (flags === null || flags.homebrew || flags.category !== category) continue;
+        sources.push({ line: flags.line, pack });
     }
-    return Promise.all(sources.map(async (source) => ({ line: source.line, docs: await source.getDocuments() })));
+    return Promise.all(sources.map(async (source) => ({ line: source.line, entries: [...(await readPackIndex(source.pack))] })));
 }

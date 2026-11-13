@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PackMetadataLike } from '../../utils/line-packs.ts';
+import { CAREER_INDEX_FIELDS } from '../../utils/pack-index.ts';
 import {
     buildCareerAdvancementIndex,
     getCareerAdvancementRegistry,
@@ -35,14 +36,17 @@ interface StubDoc {
     };
 }
 
-/** A career-origins pack of `line`, by its manifest flags, holding `docs`. */
-function packWith(docs: StubDoc[], line = 'rt'): { metadata: PackMetadataLike; getDocuments: () => Promise<StubDoc[]> } {
+/** A career-origins pack of `line`, by its manifest flags, whose index rows are `docs` (#706). */
+function packWith(
+    docs: StubDoc[],
+    line = 'rt',
+): { metadata: PackMetadataLike; getIndex: ReturnType<typeof vi.fn<(options: { fields: string[] }) => Promise<StubDoc[]>>> } {
     return {
         metadata: { name: `${line}-careers`, flags: { 'wh40k-rpg': { line, category: 'origins-careers', homebrew: false } } },
-        getDocuments: async () => {
+        getIndex: vi.fn<(options: { fields: string[] }) => Promise<StubDoc[]>>(async () => {
             await Promise.resolve();
             return docs;
-        },
+        }),
     };
 }
 
@@ -93,6 +97,14 @@ afterEach(() => {
 });
 
 describe('buildCareerAdvancementIndex', () => {
+    it('reads the career packs as one index request with the career fields, not whole documents (#706)', async () => {
+        const pack = packWith([]);
+        vi.stubGlobal('game', { packs: [pack] });
+        await buildCareerAdvancementIndex();
+        expect(pack.getIndex).toHaveBeenCalledTimes(1);
+        expect(pack.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', ...CAREER_INDEX_FIELDS] });
+    });
+
     it('maps kebab identifiers to camelCase registry keys', async () => {
         stubPack([ROGUE_TRADER_DOC, ARCH_MILITANT_DOC]);
         await buildCareerAdvancementIndex();

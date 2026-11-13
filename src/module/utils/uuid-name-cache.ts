@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
+import { readPackIndex } from './pack-index.ts';
 
 /**
  * Synchronous UUID → display-name cache.
@@ -24,11 +25,10 @@ import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
  * empty string.
  */
 
-// eslint-disable-next-line no-restricted-syntax -- boundary: Pack.getIndex returns a Foundry Collection whose entries are typed loosely as `unknown` by fvtt-types; we narrow via isIndexEntry on the next pass
+/** The compendium surface the cache reads; index rows are narrowed by `isIndexEntry`. */
 type PackLike = {
     metadata: PackMetadataLike & { id: string; type: string };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: see above
-    getIndex: (options?: { fields?: string[] }) => Promise<Iterable<unknown>>;
+    getIndex: (options: { fields: string[] }) => Promise<Iterable<object>>;
 };
 
 type IndexEntry = { _id: string; name: string; type?: string };
@@ -68,10 +68,10 @@ class UuidNameCache {
 
         await Promise.all(
             ourPacks.map(async (pack) => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: pack.getIndex result is unknown-typed by fvtt-types; narrowed via isIndexEntry
-                let index: Iterable<unknown>;
+                let index: Iterable<object>;
                 try {
-                    index = await pack.getIndex({ fields: ['name', 'type'] });
+                    // The shared ready request (#706): the other ready readers reuse it.
+                    index = await readPackIndex(pack);
                 } catch (err) {
                     console.warn(`[wh40k-rpg] uuid-name-cache: failed to read index for ${pack.metadata.id}`, err);
                     return;

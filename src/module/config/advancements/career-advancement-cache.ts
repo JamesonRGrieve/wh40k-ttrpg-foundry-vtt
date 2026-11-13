@@ -17,7 +17,8 @@
  * value lives in this file.
  */
 
-import { lineBookPacks, type PackMetadataLike } from '../../utils/line-packs.ts';
+import { lineBookPacks } from '../../utils/line-packs.ts';
+import { type IndexablePack, readPackIndex } from '../../utils/pack-index.ts';
 import type { Prerequisite } from '../game-systems/types.ts';
 
 /* -------------------------------------------- */
@@ -100,16 +101,13 @@ interface RawCareerAdvancement {
     rank1Advances?: Array<{ name?: string; cost?: number; type?: string; specialization?: string; multiplier?: number; prerequisites?: Prerequisite[] }>;
 }
 
+/** The index row of a career this module reads (stored source, `pack-index.ts`). */
 interface CareerPackDoc {
     name?: string;
-    system?: { identifier?: string; careerAdvancement?: RawCareerAdvancement | null };
-}
-interface CareerPack {
-    readonly metadata: PackMetadataLike;
-    getDocuments?: () => Promise<CareerPackDoc[]>;
+    system?: { identifier?: string | null; careerAdvancement?: RawCareerAdvancement | null };
 }
 interface PackGameLike {
-    packs?: Iterable<CareerPack>;
+    packs?: Iterable<IndexablePack<CareerPackDoc>>;
 }
 
 /* -------------------------------------------- */
@@ -180,14 +178,8 @@ export async function buildCareerAdvancementIndex(): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
     const packs = lineBookPacks(packGame?.packs ?? [], CAREERS_LINE, 'origins-careers');
-    const loaded = await Promise.all(
-        packs.map(async (pack) => {
-            if (pack.getDocuments === undefined) return [];
-            // Bind to the owning pack — `getDocuments` reads `this.documentClass` internally.
-            const getDocuments = pack.getDocuments.bind(pack);
-            return getDocuments();
-        }),
-    );
+    // Index rows, not documents (#706): the shared request carries `system.careerAdvancement`.
+    const loaded = await Promise.all(packs.map(async (pack) => [...(await readPackIndex(pack))]));
     for (const doc of loaded.flat()) {
         const identifier = doc.system?.identifier;
         if (typeof identifier !== 'string') continue;

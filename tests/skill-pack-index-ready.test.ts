@@ -24,8 +24,8 @@ function count(source: string, needle: string): number {
 }
 
 describe('skill pack index on ready (#707)', () => {
-    it('awaits the build exactly once', () => {
-        expect(count(SRC, 'await buildSkillPackIndex()')).toBe(1);
+    it('runs the build exactly once', () => {
+        expect(count(SRC, 'buildSkillPackIndex(),')).toBe(1);
     });
 
     it('calls the build nowhere else in the composition root', () => {
@@ -40,6 +40,6 @@ describe('skill pack index on ready (#707)', () => {
     });
 
     it('loads the skills packs in one place in the index module', () => {
-        expect(count(INDEX_SRC, 'loadLinePackDocs(')).toBe(1);
+        expect(count(INDEX_SRC, 'loadLinePackIndex(')).toBe(1);
     });
 });

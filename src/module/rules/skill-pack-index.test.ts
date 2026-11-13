@@ -17,6 +17,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { packMetadata } from '../testing/pack-metadata.ts';
+import { SKILL_INDEX_FIELDS } from '../utils/pack-index.ts';
 import {
     buildSkillPackIndex,
     getSkillVariantsForKey,
@@ -163,23 +164,23 @@ describe('the two lists are separate', () => {
     });
 });
 
-/** A skill pack document as the build reads it. */
+/** A skill pack index row as the build reads it. */
 interface SkillDocStub {
     name?: string;
     system?: { identifier?: string; variants?: SkillVariant[]; specializations?: string[] };
 }
 
-/** An installed pack whose `getDocuments` counts its reads. */
+/** An installed pack whose `getIndex` counts its reads and records the fields asked for. */
 interface PackStub {
     metadata: ReturnType<typeof packMetadata>;
-    getDocuments: ReturnType<typeof vi.fn<() => Promise<SkillDocStub[]>>>;
+    getIndex: ReturnType<typeof vi.fn<(options: { fields: string[] }) => Promise<SkillDocStub[]>>>;
 }
 
-/** An installed pack of `line` and `category` holding `docs`. */
+/** An installed pack of `line` and `category` whose index holds `docs`. */
 function pack(name: string, line: string, docs: SkillDocStub[], category = 'skills', homebrew = false): PackStub {
     return {
         metadata: packMetadata(name, line, category, homebrew),
-        getDocuments: vi.fn<() => Promise<SkillDocStub[]>>(async () => Promise.resolve(docs)),
+        getIndex: vi.fn<(options: { fields: string[] }) => Promise<SkillDocStub[]>>(async () => Promise.resolve(docs)),
     };
 }
 
@@ -207,8 +208,10 @@ describe('buildSkillPackIndex (#707)', () => {
 
         await buildFrom([dh2, rt]);
 
-        expect(dh2.getDocuments).toHaveBeenCalledTimes(1);
-        expect(rt.getDocuments).toHaveBeenCalledTimes(1);
+        expect(dh2.getIndex).toHaveBeenCalledTimes(1);
+        expect(rt.getIndex).toHaveBeenCalledTimes(1);
+        // An index read with the skill fields, never whole documents (#706).
+        expect(dh2.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', ...SKILL_INDEX_FIELDS] });
         expect(getSkillVariantsForKey('awareness', 'dh2')).toEqual(AWARENESS);
         expect(getSpecializationsForSkill('commonLore', 'dh2')).toEqual(DH2_LORE);
         expect(getSpecializationsForSkill('commonLore', 'rt')).toEqual(RT_LORE);
@@ -226,7 +229,7 @@ describe('buildSkillPackIndex (#707)', () => {
 
         await buildFrom([talents]);
 
-        expect(talents.getDocuments).not.toHaveBeenCalled();
+        expect(talents.getIndex).not.toHaveBeenCalled();
         expect(getSkillVariantsForKey('awareness', 'dh2')).toEqual([]);
     });
 
@@ -235,7 +238,7 @@ describe('buildSkillPackIndex (#707)', () => {
 
         await buildFrom([brew]);
 
-        expect(brew.getDocuments).not.toHaveBeenCalled();
+        expect(brew.getIndex).not.toHaveBeenCalled();
         expect(getSpecializationsForSkill('commonLore', 'dh2')).toEqual([]);
     });
 

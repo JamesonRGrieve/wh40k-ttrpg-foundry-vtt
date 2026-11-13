@@ -20,9 +20,10 @@ interface PackDoc {
     uuid: string;
     system?: { identifier?: string; hasLevel?: boolean; mechanics?: object; mechanicsRef?: string };
 }
+/** A weapon-qualities pack whose index rows are its `_source` JSON, as Foundry's index returns them (#706). */
 interface PackStub {
     metadata: PackMetadataLike;
-    getDocuments: () => Promise<PackDoc[]>;
+    getIndex: (options: { fields: string[] }) => Promise<PackDoc[]>;
 }
 
 /** Every line that ships a weapon-qualities pack; RT's docs carry the shared values. */
@@ -53,7 +54,7 @@ function loadDocs(line: string): PackDoc[] {
 beforeAll(async () => {
     const packStubs: PackStub[] = qualityPacks().map((pack) => ({
         metadata: pack,
-        getDocuments: async () => {
+        getIndex: async () => {
             await Promise.resolve();
             return loadDocs(pack.flags?.['wh40k-rpg']?.line ?? '');
         },

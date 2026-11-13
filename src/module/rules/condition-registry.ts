@@ -34,6 +34,7 @@ import { DEAD_STATUS_ID, SYSTEM_ID } from '../constants.ts';
 import { normalizeCharacteristicKey } from '../data/shared/characteristics.ts';
 import { inferActiveGameLine, materializeItemVariants, normalizeGameLineKey, type SupportedLineKey } from '../utils/item-variant-utils.ts';
 import { packLineFlags, type PackMetadataLike } from '../utils/line-packs.ts';
+import { CONDITION_INDEX_FIELDS, readPackIndex } from '../utils/pack-index.ts';
 import {
     type ConditionMechanics,
     type ConditionMechanicsInput,
@@ -174,21 +175,6 @@ export type ConditionIndexRow = {
     type?: string | undefined;
     system?: RawRecord | undefined;
 };
-
-/** The index fields the catalog needs beyond Foundry's defaults (name / img / type). */
-const CONDITION_INDEX_FIELDS: readonly string[] = [
-    'system.identifier',
-    'system.nature',
-    'system.modifiers',
-    'system.targeted',
-    'system.helplessTarget',
-    'system.actionLimit',
-    'system.autoFail',
-    'system.tick',
-    'system.removal',
-    'system.source',
-    'system.visual',
-];
 
 /** The game line of a book pack, from its declared flags; null for a homebrew pack or one declaring no line. */
 export function packLine(metadata: PackMetadataLike): SupportedLineKey | null {
@@ -494,15 +480,15 @@ export function activeConditionMechanics(actor: ConditionBearer | null | undefin
 type ConditionPack = {
     documentName?: string | undefined;
     metadata: PackMetadataLike & { packageName?: string | undefined };
-    index: { size: number; values: () => Iterable<ConditionIndexRow> };
-    getIndex: (options?: { fields?: string[] }) => Promise<{ values: () => Iterable<ConditionIndexRow> }>;
+    getIndex: (options: { fields: string[] }) => Promise<Iterable<ConditionIndexRow>>;
 };
 
 /**
- * Load the condition catalog from this system's Item packs. A pack is read with the
- * condition fields only when its default index shows a `condition` document, so
- * the cost is one small index request per condition pack. Call once on `ready`;
- * idempotent (rebuilds the catalog). A pack that fails to index is skipped.
+ * Load the condition catalog from this system's Item packs. Each pack's index comes
+ * from the shared `ready` request (`pack-index.ts`, #706), which already carries the
+ * condition fields for a `conditions` pack. A pack of another category that still
+ * holds a `condition` document is asked for those fields separately. Call once on
+ * `ready`; idempotent (rebuilds the catalog). A pack that fails to index is skipped.
  * @param {Iterable<ConditionPack>} packs  The world's compendium packs (`game.packs`).
  */
 export async function loadConditionCatalog(packs: Iterable<ConditionPack>): Promise<void> {
@@ -510,10 +496,11 @@ export async function loadConditionCatalog(packs: Iterable<ConditionPack>): Prom
     const indexed = await Promise.all(
         candidates.map(async (pack) => {
             try {
-                const base = pack.index.size > 0 ? pack.index : await pack.getIndex();
-                if (![...base.values()].some((row) => row.type === 'condition')) return null;
-                const full = await pack.getIndex({ fields: [...CONDITION_INDEX_FIELDS] });
-                return { pack: pack.metadata, rows: [...full.values()] };
+                const rows = [...(await readPackIndex(pack))];
+                if (!rows.some((row) => row.type === 'condition')) return null;
+                if (packLineFlags(pack.metadata)?.category === 'conditions') return { pack: pack.metadata, rows };
+                const full = await pack.getIndex({ fields: ['name', 'type', ...CONDITION_INDEX_FIELDS] });
+                return { pack: pack.metadata, rows: [...full] };
             } catch (error) {
                 console.error(`${SYSTEM_ID} | condition catalog: failed indexing ${pack.metadata.name}`, error);
                 return null;

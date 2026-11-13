@@ -12,7 +12,8 @@
  */
 
 import type { WeaponQualityDieOp, WeaponQualityMechanics, WeaponQualityTemplate } from '../data/item/weapon-quality-mechanics.ts';
-import { type LoadablePack, loadLinePackDocs } from '../utils/line-pack-docs.ts';
+import { loadLinePackIndex } from '../utils/line-pack-docs.ts';
+import type { IndexablePack } from '../utils/pack-index.ts';
 import { buildQualityLabel, parseQualityLevel } from '../utils/quality-id.ts';
 
 /** All-absent payload: scalars `null`, flags `false`, strings `''`. */
@@ -126,17 +127,17 @@ export function weaponQualityMechanicsFromRaw(raw: unknown): WeaponQualityMechan
 /* -------------------------------------------- */
 
 /**
- * Minimal Foundry-pack surface the index reads — the docs carry our WeaponQualityData
- * system shape. A canonical doc carries its own `mechanics` and a blank `mechanicsRef`;
- * a per-system stub leaves `mechanics` at the schema default and points `mechanicsRef`
- * at the canonical doc's UUID.
+ * The index row of a weapon quality this module reads. A canonical doc carries its own
+ * `mechanics` and a blank (or null) `mechanicsRef`; a per-system stub leaves `mechanics`
+ * unset and points `mechanicsRef` at the canonical doc's UUID.
  */
 interface WeaponQualityPackDoc {
     uuid?: string;
-    system?: { identifier?: string; mechanics?: WeaponQualityMechanics; mechanicsRef?: string };
+    // An index row is the stored source (#706): `mechanics` is null on a stub that borrows them.
+    system?: { identifier?: string | null; mechanics?: WeaponQualityMechanics | null; mechanicsRef?: string | null };
 }
 interface PackGameLike {
-    packs?: Iterable<LoadablePack<WeaponQualityPackDoc>>;
+    packs?: Iterable<IndexablePack<WeaponQualityPackDoc>>;
 }
 
 /** Per-system map (systemId → identifier → mechanics) plus a cross-system flat fallback. */
@@ -162,15 +163,15 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
     // Read every pack concurrently, then gather all docs up front so refs resolve
     // regardless of pack order.
-    const perPack = await loadLinePackDocs(packGame?.packs ?? [], 'weapon-qualities');
+    const perPack = await loadLinePackIndex(packGame?.packs ?? [], 'weapon-qualities');
 
     const docs: Array<{ systemId: string; doc: WeaponQualityPackDoc }> = [];
     const canonicalByUuid = new Map<string, WeaponQualityMechanics>();
-    for (const { line: systemId, docs: packDocs } of perPack) {
+    for (const { line: systemId, entries: packDocs } of perPack) {
         for (const doc of packDocs) {
             docs.push({ systemId, doc });
             const ref = doc.system?.mechanicsRef;
-            if ((ref === undefined || ref === '') && doc.uuid !== undefined) {
+            if ((ref == null || ref === '') && doc.uuid !== undefined) {
                 canonicalByUuid.set(doc.uuid, weaponQualityMechanicsFromRaw(doc.system?.mechanics));
             }
         }
@@ -181,9 +182,7 @@ export async function buildWeaponQualityPayloadIndex(): Promise<void> {
         if (typeof identifier !== 'string' || identifier === '') continue;
         const ref = doc.system?.mechanicsRef;
         const mechanics =
-            ref !== undefined && ref !== ''
-                ? canonicalByUuid.get(ref) ?? defaultWeaponQualityMechanics()
-                : weaponQualityMechanicsFromRaw(doc.system?.mechanics);
+            ref != null && ref !== '' ? canonicalByUuid.get(ref) ?? defaultWeaponQualityMechanics() : weaponQualityMechanicsFromRaw(doc.system?.mechanics);
         const key = identifier.toLowerCase();
         let systemMap = bySystem.get(systemId);
         if (systemMap === undefined) {

@@ -26,15 +26,16 @@
  * docs carry no `identifier` of their own, so the display name is the real key.
  */
 
-import { type LoadablePack, loadLinePackDocs } from '../utils/line-pack-docs.ts';
+import { loadLinePackIndex } from '../utils/line-pack-docs.ts';
+import type { IndexablePack } from '../utils/pack-index.ts';
 import type { SkillVariant } from './skill-variants.ts';
 
-/** Minimal shape of a skill pack document this module reads. */
+/** The index row of a skill pack entry this module reads (stored source: `identifier` may be null). */
 interface SkillPackDoc {
     name?: string | undefined;
     system?:
         | {
-              identifier?: string | undefined;
+              identifier?: string | null | undefined;
               variants?: SkillVariant[] | undefined;
               specializations?: string[] | undefined;
           }
@@ -42,7 +43,7 @@ interface SkillPackDoc {
 }
 
 interface PackGameLike {
-    packs?: Iterable<LoadablePack<SkillPackDoc>> | undefined;
+    packs?: Iterable<IndexablePack<SkillPackDoc>> | undefined;
 }
 
 /**
@@ -129,11 +130,11 @@ const specializationIndex = new SkillListIndex<string>();
 export async function buildSkillPackIndex(): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `game` is a runtime global with no shipped type at this seam
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
-    const perPack = await loadLinePackDocs(packGame?.packs ?? [], 'skills');
+    const perPack = await loadLinePackIndex(packGame?.packs ?? [], 'skills');
 
     variantIndex.clear();
     specializationIndex.clear();
-    for (const { line, docs } of perPack) {
+    for (const { line, entries: docs } of perPack) {
         for (const doc of docs) {
             // Index under both the display name and any authored identifier; both
             // normalise to the same key today, but an authored identifier that

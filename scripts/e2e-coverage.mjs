@@ -721,6 +721,10 @@ recordDimension('settings-table.flow', covered['settings-table.flow'], SETTINGS_
 const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances'];
 recordDimension('boot-bundle.flow', covered['boot-bundle.flow'], BOOT_BUNDLE_FLOWS);
 
+// Compendium reads on ready (#706), tests/e2e/ready-pack-reads.spec.ts. Keep in sync with READY_PACK_READS_FLOWS there.
+const READY_PACK_READS_FLOWS = ['ready-indexes-each-pack-once', 'ready-reads-no-pack-documents', 'skill-tooltips-from-index'];
+recordDimension('ready-pack-reads.flow', covered['ready-pack-reads.flow'], READY_PACK_READS_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

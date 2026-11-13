@@ -11,9 +11,26 @@ import { hitLocationLabel } from '../../rules/hit-locations.ts';
 import { untrainedSkillBase } from '../../rules/untrained-skill.ts';
 import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
-import { skillReferencePack } from '../../utils/line-packs.ts';
+import { inferActiveGameLine, materializeItemVariants, normalizeGameLineKey } from '../../utils/item-variant-utils.ts';
+import { packLineFlags, skillReferencePack } from '../../utils/line-packs.ts';
+import { readPackIndex } from '../../utils/pack-index.ts';
 import { parseQualityLevel } from '../../utils/quality-id.ts';
 import { type ActivatableTooltipManager, activateRichTooltips, makeRichTooltipsFocusable } from './tooltip-activation.ts';
+
+/** A reference skills pack's index row, as the tooltip cache reads it (`pack-index.ts`). */
+interface SkillIndexRow {
+    name?: string;
+    system?: Record<string, string | boolean | string[] | object | null>;
+}
+
+/** The tooltip fields of a skill, after its per-line values resolve. */
+interface SkillTooltipSource {
+    descriptor?: string;
+    uses?: string;
+    useTime?: string;
+    isBasic?: boolean;
+    aptitudes?: string[];
+}
 
 /** Minimal typed interface for the Foundry tooltip manager. */
 interface TooltipManager extends ActivatableTooltipManager {
@@ -296,6 +313,13 @@ export class TooltipsWH40K {
         await this._loadSkillDescriptions();
     }
 
+    /**
+     * Cache the reference skills pack's descriptions for the skill tooltips. Read
+     * from the pack's index, the shared `ready` request (#706), not one document
+     * at a time. Index rows are the stored source, so per-line values (`uses` is
+     * authored `{ dh2: … }`) resolve to the pack's line here, as the document's
+     * own migration would.
+     */
     async _loadSkillDescriptions(): Promise<void> {
         try {
             const pack = skillReferencePack(game.packs);
@@ -304,30 +328,18 @@ export class TooltipsWH40K {
                 return;
             }
 
-            const index = await pack.getIndex();
-            for (const entry of index) {
-                // eslint-disable-next-line no-await-in-loop
-                const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
-                if (item !== null) {
-                    const entryName = entry.name ?? '';
-                    const key = normalizeSkillCacheKey(entryName);
-                    const system = item.system as {
-                        descriptor?: string;
-                        uses?: string;
-                        useTime?: string;
-                        isBasic?: boolean;
-                        aptitudes?: string[];
-                    };
-
-                    this.#skillDescriptions.set(key, {
-                        name: entry.name,
-                        descriptor: system.descriptor ?? '',
-                        uses: system.uses ?? '',
-                        useTime: system.useTime ?? '',
-                        isBasic: system.isBasic ?? true,
-                        aptitudes: system.aptitudes ?? [],
-                    });
-                }
+            const line = normalizeGameLineKey(packLineFlags(pack.metadata)?.line) ?? inferActiveGameLine();
+            for (const row of await readPackIndex<SkillIndexRow>(pack)) {
+                const name = row.name ?? '';
+                const system = materializeItemVariants({ ...row.system }, line) as SkillTooltipSource;
+                this.#skillDescriptions.set(normalizeSkillCacheKey(name), {
+                    name,
+                    descriptor: system.descriptor ?? '',
+                    uses: system.uses ?? '',
+                    useTime: system.useTime ?? '',
+                    isBasic: system.isBasic ?? true,
+                    aptitudes: system.aptitudes ?? [],
+                });
             }
         } catch (err) {
             console.warn('WH40K Tooltips | Failed to load skill descriptions:', err);
