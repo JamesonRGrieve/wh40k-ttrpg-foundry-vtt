@@ -1,18 +1,17 @@
 /**
  * Build gate: the system's runtime JavaScript must not import npm packages.
  *
- * The system ships unbundled — tsc output loaded by the browser as native ES
- * modules. A bare specifier (`import { z } from 'zod'`) cannot resolve there, and
- * one unresolvable import fails the WHOLE module graph: the system never
- * initialises, every document falls back to Foundry's default sheet, and nothing
- * useful reaches the console. That shipped once (#588's scene-lighting imported
- * zod). This scans the COMPILED runtime modules — after tsc has erased type-only
- * imports, so only what the browser will actually request is checked — and fails
+ * The browser loads the system as native ES modules. A bare specifier
+ * (`import { z } from 'zod'`) cannot resolve there, and one unresolvable import
+ * fails the WHOLE module graph: the system never initialises, every document
+ * falls back to Foundry's default sheet, and nothing useful reaches the console.
+ * That shipped once (#588's scene-lighting imported zod, when the system shipped
+ * unbundled tsc output). Since #705 esbuild bundles npm imports into
+ * `wh40k-rpg.js`, so this guards the bundle against one left external. It fails
  * the build on any import whose specifier is not a relative/absolute path.
  *
  * Test code (`*.test.js`, `*.stories.js`, `testing/`) is never loaded by Foundry,
- * so it is exempt. The build (tsconfig.build.json) no longer emits it, but a dist
- * left over from an older build may still hold it.
+ * so it is exempt, should a dist left over from an older build still hold it.
  *
  * Usage: node scripts/check-runtime-imports.cjs [dist/module]
  */

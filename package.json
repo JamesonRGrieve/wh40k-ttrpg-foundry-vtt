@@ -179,6 +179,7 @@
     "classic-level": "^1.4.1",
     "cssnano": "^7.1.5",
     "dependency-cruiser": "^17.4.0",
+    "esbuild": "0.27.7",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "^2.32.0",

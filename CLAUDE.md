@@ -690,7 +690,7 @@ Deploy is via `deploy.sh` in the parent vault directory — **never run it witho
 | System ID | `wh40k-rpg`                                    |
 | Foundry   | V14                                            |
 | Language  | TypeScript (`.ts`)                             |
-| Build     | Gulp + PostCSS + Tailwind                      |
+| Build     | Gulp; esbuild bundles one minified `module/wh40k-rpg.js` (tsc type-checks only); PostCSS + Tailwind |
 | Tests     | Vitest + happy-dom                             |
 | Stories   | Storybook 10 (HTML + Vite)                     |
 | Style     | DataModel-heavy, slim Documents, ApplicationV2 |

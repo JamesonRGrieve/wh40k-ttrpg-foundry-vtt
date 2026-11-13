@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { expect, type Page, test as playwrightTest } from '@playwright/test';
 import { installInPageHelpers } from './lib/in-page-helpers';
 import { joinAsGM } from './lib/join';
+import { installModuleShims } from './lib/module-shim';
 import { scaledMs } from './lib/timing';
 
 /**
@@ -1188,12 +1189,14 @@ async function deleteSeededActors(page: Page): Promise<void> {
 /* -------------------------------------------- */
 
 /**
- * Plain Playwright `test` with the in-page timing helpers, but without the
- * global browser-error guard (see the file header).
+ * Plain Playwright `test` with the in-page timing helpers and the per-file
+ * module shims (#705), but without the global browser-error guard (see the file
+ * header).
  */
 const test = playwrightTest.extend({
     page: async ({ page }, use) => {
         await installInPageHelpers(page);
+        await installModuleShims(page);
         await use(page);
     },
 });

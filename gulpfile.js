@@ -48,10 +48,8 @@ const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
 const SYSTEM_CSS = ["src/css/entry.css"];
 const STATIC_FILES = [
   "src/icons/**/*",
-  "src/module/**/*",
-  "!src/module/**/*.ts",
-  "!src/module/foundry-core/**",
-  "!src/module/testing{,/**}",
+  // Nothing under src/module is copied: it holds only .ts, which esbuild bundles
+  // into module/wh40k-rpg.js (#705).
   "src/templates/**/*",
   // Public pack art lives in src/packs/images beside the generic pack sources,
   // and pack documents reference it as `systems/wh40k-rpg/packs/images/...`.
@@ -360,16 +358,15 @@ const FATAL_TS_CODES = new Set([
   'TS2664', // invalid module name in augmentation
 ]);
 
-// The program outgrows node's default heap: tsc then aborts part-way through
-// emitting, leaving dist/module without files it never reached (the system's
-// entry script among them), so it runs with the shared heap (scripts/lib/tsc-heap.cjs).
+// The program outgrows node's default heap, and tsc then stops part-way through
+// checking, so it runs with the shared heap (scripts/lib/tsc-heap.cjs).
 const { tscEnv } = require('./scripts/lib/tsc-heap.cjs');
 // Room for every diagnostic tsc prints; exec kills the process when its output outgrows this.
 const TSC_OUTPUT_LIMIT_BYTES = 64 * 1024 * 1024;
 
-// The browser loads dist/module as unbundled ES modules, so a runtime import of an
-// npm package fails the whole module graph (the system silently never loads).
-// Checked on the compiled output, after tsc has erased type-only imports.
+// The browser loads dist/module/wh40k-rpg.js as a native ES module, so an import
+// esbuild left unresolved would fail the whole system (it silently never loads).
+// Checked on the bundled output.
 const { findBareRuntimeImports } = require('./scripts/check-runtime-imports.cjs');
 function checkRuntimeImports(done) {
   const problems = findBareRuntimeImports(path.join(BUILD_DIR, 'module'));
@@ -378,18 +375,19 @@ function checkRuntimeImports(done) {
   return done(new Error(`unloadable import(s) in shipped runtime modules — the browser cannot resolve these, so the system would not load:\n${list}`));
 }
 
+// tsc is the type gate only; esbuild writes the shipped bundle (bundleClientModule).
 function compileTypeScript(done) {
   const env = tscEnv();
   // tsconfig.build.json drops co-located *.test.ts and src/module/testing/ —
   // Foundry never loads them, so they have no place in the shipped system.
-  exec('pnpm exec tsc --pretty false -p tsconfig.build.json', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
+  exec('pnpm exec tsc --pretty false --noEmit -p tsconfig.build.json', { env, maxBuffer: TSC_OUTPUT_LIMIT_BYTES }, (err, stdout, stderr) => {
     const out = (stdout || '') + (stderr || '');
     const diags = out.split('\n').filter((l) => /error TS\d+/.test(l));
     // tsc exits non-zero on type errors, which are reported (and filtered below). A non-zero exit with none
     // reported is a crash (out of memory, a signal): what it emitted is partial, and must never ship.
     if (err && diags.length === 0) {
       console.error(out.split('\n').slice(0, 20).join('\n'));
-      return done(new Error(`tsc stopped without finishing (${err.signal ?? `exit ${err.code}`}); dist/module is incomplete`));
+      return done(new Error(`tsc stopped without finishing (${err.signal ?? `exit ${err.code}`}); the type gate did not run`));
     }
     const fatal = diags.filter((l) => {
       const m = l.match(/error (TS\d+)/);
@@ -413,6 +411,13 @@ function compileTypeScript(done) {
     }
     done();
   });
+}
+
+// One minified ES module, dist/module/wh40k-rpg.js, with a linked source map (#705).
+// See scripts/bundle-module.cjs.
+const { bundleModule } = require('./scripts/bundle-module.cjs');
+function bundleClientModule() {
+  return bundleModule({ outdir: path.join(BUILD_DIR, 'module') });
 }
 
 /* ----------------------------------------- */
@@ -465,7 +470,7 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
-  gulp.watch('src/module/**/*.ts', gulp.series(compileTypeScript));
+  gulp.watch('src/module/**/*.ts', gulp.series(bundleClientModule));
   gulp.watch('src/css/**/*.css', gulp.series(compileCssWatch));
   return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileCssWatch, compilePacks, copyFiles));
 }
@@ -474,8 +479,9 @@ function watchCopy() {
   return gulp.watch(STATIC_FILES, gulp.series(copyFiles));
 }
 
+// Source maps stay out of the release archive (#705); they exist for devtools and Tier B coverage.
 function createArchive() {
-  return gulp.src(`${BUILD_DIR}/**`)
+  return gulp.src([`${BUILD_DIR}/**`, `!${BUILD_DIR}/**/*.map`])
       .pipe(zip(`wh40k-rpg-${SYSTEM.version}.zip`))
       .pipe(gulp.dest('./archive'));
 }
@@ -485,10 +491,11 @@ function createArchive() {
 /* ----------------------------------------- */
 
 // After clean + icon codegen (the icon registry is a TS/CSS input), the
-// remaining steps write disjoint outputs — css/, module/*.js (src/module holds
-// only .ts, allowJs is off, so copyFiles never touches tsc's output), static
-// copies, and per-pack LevelDB dirs — so they run concurrently.
-const compileModule = gulp.series(compileTypeScript, checkRuntimeImports);
+// remaining steps write disjoint outputs — css/, module/wh40k-rpg.js (copyFiles
+// copies nothing from src/module), static copies, and
+// per-pack LevelDB dirs — so they run concurrently. tsc type-checks; esbuild
+// writes the one bundled module, which checkRuntimeImports still scans.
+const compileModule = gulp.series(compileTypeScript, bundleClientModule, checkRuntimeImports);
 const buildSystem = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, copyRootDocs));
 const buildAll = gulp.series(cleanBuild, generateIcons, gulp.parallel(compileCss, compileModule, copyFiles, copyRootDocs, compilePacks));
 const build = gulp.series(buildAll, createArchive);

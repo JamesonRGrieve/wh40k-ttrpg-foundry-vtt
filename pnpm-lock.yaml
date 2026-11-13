@@ -72,6 +72,9 @@ importers:
       dependency-cruiser:
         specifier: ^17.4.0
         version: 17.4.0
+      esbuild:
+        specifier: 0.27.7
+        version: 0.27.7
       eslint:
         specifier: ^8.57.1
         version: 8.57.1

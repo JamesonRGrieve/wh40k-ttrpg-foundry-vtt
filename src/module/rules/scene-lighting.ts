@@ -66,9 +66,9 @@ export type CelestialBodies = Record<string, CelestialBodyRecord>;
 const BODY_KEY = /^[a-z0-9][a-z0-9-]*$/;
 
 /*
- * Validation is hand-written, not Zod: this module is runtime code, and the system
- * ships unbundled tsc output, so a bare `import … from 'zod'` fails to resolve in
- * the browser and takes the whole system's module graph down with it.
+ * Validation is hand-written. Since #705 the client is bundled by esbuild, so a
+ * runtime `import … from 'zod'` would now resolve, but it would add the library
+ * to the shipped bundle for three small checks.
  */
 
 function isWeatherKind(value: string): value is WeatherKind {

@@ -81,7 +81,8 @@ jobs:
           test -f dist/system.json
           test -f dist/LICENSE
           cd dist
-          zip -r -9 ../wh40k-rpg.zip .
+          # Source maps are for devtools and Tier B coverage only (#705).
+          zip -r -9 ../wh40k-rpg.zip . -x '*.map'
 
       - name: Publish rolling `nightly` prerelease
         if: env.CHANNEL == 'nightly'

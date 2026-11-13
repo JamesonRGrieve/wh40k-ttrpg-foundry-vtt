@@ -4,6 +4,7 @@ import { test as base, type Page, type TestInfo } from '@playwright/test';
 import { type CapturedError, formatCapturedError, unexpectedErrors } from './console-guard';
 import { installDialogOpener } from './dialog-opener';
 import { installInPageHelpers } from './in-page-helpers';
+import { installModuleShims } from './module-shim';
 
 /**
  * Playwright `test` extended with the things every Tier B spec gets for free by
@@ -11,7 +12,7 @@ import { installInPageHelpers } from './in-page-helpers';
  *
  *  1. Per-page V8 JS coverage capture. Entries are dumped to `.e2e-raw-coverage/`;
  *     `scripts/e2e-coverage.mjs` converts them (via `v8-to-istanbul`, consuming
- *     the dist/*.js.map source maps) into a report against `src/module/**\/*.ts`.
+ *     the bundle's source map, dist/module/wh40k-rpg.js.map) into a report against `src/module/**\/*.ts`.
  *     Coverage is only collected for URLs under /systems/wh40k-rpg/module/ —
  *     Foundry's own client code is intentionally excluded.
  *
@@ -27,7 +28,10 @@ import { installInPageHelpers } from './in-page-helpers';
  *     (scaled `withTimeout` / `waitFor` / `settle`, see in-page-helpers.ts) and
  *     `globalThis.wh40kOpenDialog` (see dialog-opener.ts).
  *
- *  4. `openClient()`: a second (third, …) browser client in its own context — a
+ *  4. Per-file module URLs (`/systems/wh40k-rpg/module/<path>.js`) served as
+ *     re-exports of the bundle's live modules (see module-shim.ts, #705).
+ *
+ *  5. `openClient()`: a second (third, …) browser client in its own context — a
  *     separate Foundry session that joins as another user — with the same coverage,
  *     error guard and in-page helpers as `page`. For the specs that need a player
  *     and the GM at the table together.
@@ -67,6 +71,7 @@ async function instrumentPage(page: Page, testInfo: TestInfo, clientLabel: strin
     }
     await installInPageHelpers(page);
     await installDialogOpener(page);
+    await installModuleShims(page);
 
     return async (): Promise<void> => {
         try {

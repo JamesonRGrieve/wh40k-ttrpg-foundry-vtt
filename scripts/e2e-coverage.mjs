@@ -717,6 +717,10 @@ recordDimension('bc-power-armour.flow', covered['bc-power-armour.flow'], BC_POWE
 const SETTINGS_TABLE_FLOWS = ['table-keys-registered', 'accessor-reads-stored-value', 'movement-automation-off-plain-cost'];
 recordDimension('settings-table.flow', covered['settings-table.flow'], SETTINGS_TABLE_FLOWS);
 
+// The bundled client build (#705), tests/e2e/boot-bundle.spec.ts. Keep in sync with BOOT_BUNDLE_FLOWS there.
+const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances'];
+recordDimension('boot-bundle.flow', covered['boot-bundle.flow'], BOOT_BUNDLE_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];
