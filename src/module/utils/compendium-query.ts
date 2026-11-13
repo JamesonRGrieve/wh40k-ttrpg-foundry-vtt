@@ -7,6 +7,7 @@
 
 import { canonicalIdentifier } from './item-identifier.ts';
 import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
+import { type IndexablePack, packIndexFields, readPackIndex } from './pack-index.ts';
 
 /** The pack metadata the query helpers read: its id and label, and the flags that place it. */
 export interface QueriedPackMetadata extends PackMetadataLike {
@@ -47,7 +48,7 @@ export async function queryItemIndex<T>(
     );
     const perPack = await Promise.all(
         packs.map(async (pack) => {
-            const index = await pack.getIndex({ fields });
+            const index = await indexWith(pack, fields);
             const out: T[] = [];
             for (const entry of index) {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry getIndex() yields minimally-typed index entries; CompendiumIndexEntry is the narrowed surface consumers expect
@@ -58,6 +59,18 @@ export async function queryItemIndex<T>(
         }),
     );
     return perPack.flat();
+}
+
+/**
+ * A pack's index carrying `fields`, sharing the `ready` request (`pack-index.ts`,
+ * #706). When the shared field list already covers `fields`, the shared read is
+ * used, in flight or cached. Otherwise the request asks for both, so a later
+ * shared read still finds every field indexed instead of refetching the pack.
+ */
+async function indexWith(pack: IndexablePack<object>, fields: readonly string[]): Promise<Iterable<object>> {
+    const shared = packIndexFields(pack.metadata);
+    if (fields.every((field) => shared.includes(field))) return readPackIndex(pack);
+    return pack.getIndex({ fields: [...new Set([...shared, ...fields])] });
 }
 
 /** One compendium Item matching a lookup, with the metadata of the pack it came from. */

@@ -10,6 +10,7 @@ import {
     resolvePack,
 } from './compendium-query.ts';
 import type { PackMetadataLike } from './line-packs.ts';
+import { SKILL_INDEX_FIELDS } from './pack-index.ts';
 
 /**
  * Coverage for the shared compendium pack-resolution helpers (#289) that #307's
@@ -111,7 +112,8 @@ describe('queryItemIndex', () => {
         const names = await queryItemIndex(['name'], (entry) => (entry as IndexEntry).name);
 
         expect(names).toEqual(['Dodge', 'Hardy', 'Catfall']);
-        expect(corePack.getIndex).toHaveBeenCalledWith({ fields: ['name'] });
+        // `name` is in every pack's shared ready field list, so the shared read serves it (#706).
+        expect(corePack.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', 'system.identifier'] });
     });
 
     it('skips entries where collect returns undefined', async () => {
@@ -172,6 +174,23 @@ describe('queryItemIndex', () => {
 
         expect(names).toEqual(['kept']);
         expect(skipped.getIndex).not.toHaveBeenCalled();
+    });
+});
+
+describe('queryItemIndex shares the ready index request (#706)', () => {
+    it("asks once for the pack's shared fields, so a later shared read does not refetch it", async () => {
+        const skills = { ...pack({ id: 'wh40k-rpg.dh2-core-items-skills', name: 'dh2-core-items-skills' }) };
+        skills.metadata.flags = packMetadata('dh2-core-items-skills', 'dh2', 'skills').flags;
+        setPacks([skills]);
+        await queryItemIndex(['system.identifier'], () => undefined);
+        expect(skills.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', ...SKILL_INDEX_FIELDS] });
+    });
+
+    it('asks for the shared fields and its own when it needs a field outside them', async () => {
+        const talents = pack({ id: 'wh40k-rpg.dh2-talents', name: 'dh2-talents', line: 'dh2' });
+        setPacks([talents]);
+        await queryItemIndex(['system.step'], () => undefined);
+        expect(talents.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', 'system.identifier', 'system.step'] });
     });
 });
 
@@ -333,6 +352,6 @@ describe('recoverOwnedItemLink', () => {
             'Compendium.dh2.b',
         );
         expect(dh1Pack.getIndex).not.toHaveBeenCalled();
-        expect(dh2Pack.getIndex).toHaveBeenCalledWith({ fields: ['system.identifier'] });
+        expect(dh2Pack.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', 'system.identifier'] });
     });
 });
