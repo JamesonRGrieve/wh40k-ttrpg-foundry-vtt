@@ -169,6 +169,9 @@ async function probeBackToBust(page: Page, state: ProbeState): Promise<FlowResul
             const actor = actorId === null ? undefined : g.game.actors.get(actorId);
             const placeable = (): TokenPlaceableLike | undefined => g.canvas.tokens?.placeables.find((t) => t.id === tokenId);
             if (actor === undefined) return { name: 'switch-restores-bust', ok: false, detail: 'the probe actor is gone' };
+            // The token capture closed the sheet: open it again to reach the switch.
+            await actor.sheet.render({ force: true });
+            await pollUntil(() => actor.sheet.rendered, scale(10_000));
             document.getElementById(actor.sheet.id)?.querySelector<HTMLElement>('[data-action="toggleTokenArt"]')?.click();
             const back = await pollUntil(
                 () => placeable()?.document.getFlag('wh40k-rpg', 'tokenArt') === 'bust' && placeable()?.mesh?.texture instanceof g.PIXI.RenderTexture,
@@ -188,25 +191,33 @@ async function probeBackToBust(page: Page, state: ProbeState): Promise<FlowResul
     );
 }
 
-/** The token's on-screen box, padded, for the capture. */
+/**
+ * Centre the view on the token at a readable zoom, then return its on-screen
+ * box, padded, for the capture. Canvas coordinates go through Foundry's own
+ * `clientCoordinatesFromCanvas`, which accounts for the pan and zoom.
+ */
 async function tokenClip(page: Page, tokenId: string): Promise<{ x: number; y: number; width: number; height: number } | null> {
-    return page.evaluate((id: string) => {
+    return page.evaluate(async (id: string) => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as {
             canvas: {
-                app: { view: HTMLCanvasElement };
-                tokens?: { get: (i: string) => { getBounds: () => { x: number; y: number; width: number; height: number } } | undefined };
+                stage: { scale: { x: number } };
+                animatePan: (o: { x: number; y: number; scale: number; duration: number }) => Promise<void>;
+                clientCoordinatesFromCanvas: (p: { x: number; y: number }) => { x: number; y: number };
+                tokens?: { get: (i: string) => { x: number; y: number; w: number; h: number } | undefined };
             };
         };
-        const bounds = g.canvas.tokens?.get(id)?.getBounds();
-        if (bounds === undefined) return null;
-        const view = g.canvas.app.view.getBoundingClientRect();
+        const token = g.canvas.tokens?.get(id);
+        if (token === undefined) return null;
+        await g.canvas.animatePan({ x: token.x + token.w / 2, y: token.y + token.h / 2, scale: 2, duration: 0 });
+        const topLeft = g.canvas.clientCoordinatesFromCanvas({ x: token.x, y: token.y });
+        const scale = g.canvas.stage.scale.x;
         const pad = 30;
         return {
-            x: Math.max(0, view.left + bounds.x - pad),
-            y: Math.max(0, view.top + bounds.y - pad),
-            width: bounds.width + pad * 2,
-            height: bounds.height + pad * 2,
+            x: Math.max(0, topLeft.x - pad),
+            y: Math.max(0, topLeft.y - pad),
+            width: token.w * scale + pad * 2,
+            height: token.h * scale + pad * 2,
         };
     }, tokenId);
 }
@@ -214,7 +225,8 @@ async function tokenClip(page: Page, tokenId: string): Promise<{ x: number; y: n
 async function captureToken(page: Page, tokenId: string | null, label: string): Promise<void> {
     if (tokenId === null) return;
     const clip = await tokenClip(page, tokenId);
-    if (clip !== null) await snap(page, label, { clip });
+    // Close the sheet first: it sits over the token on the canvas.
+    if (clip !== null) await snap(page, label, { clip, closeWindows: true });
 }
 
 async function cleanupProbe(page: Page, state: ProbeState): Promise<void> {
