@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { collectItemGrantPlans, type GrantSourceSystem, resolveCreationOverrides } from './origin-grant-plans.ts';
 
-const TALENT = 'Compendium.wh40k-rpg.bc-core-items-talents.Item.U43HnUrxpnfMQ0A1';
-const UNNATURAL = 'Compendium.wh40k-rpg.bc-core-items-traits.Item.aJsI80r35DGRtJBD';
-const AMPHIBIOUS = 'Compendium.wh40k-rpg.bc-core-items-traits.Item.Kx4mT9vRb2WqLn7P';
+// Opaque UUIDs: the plans only compare them, so the pack names are placeholders.
+const TALENT = 'Compendium.wh40k-rpg.probe-talents.Item.U43HnUrxpnfMQ0A1';
+const UNNATURAL = 'Compendium.wh40k-rpg.probe-traits.Item.aJsI80r35DGRtJBD';
+const AMPHIBIOUS = 'Compendium.wh40k-rpg.probe-traits.Item.Kx4mT9vRb2WqLn7P';
 
 /** The BC Chaos Space Marine race as the builder sees it after the UUID migration (#727). */
 const CHAOS_SPACE_MARINE: GrantSourceSystem = {

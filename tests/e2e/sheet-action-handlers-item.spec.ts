@@ -483,7 +483,8 @@ async function probeItemSheetActionHandlers(page: Page): Promise<ProbeResult> {
                                 uuid: 'Compendium.wh40k-rpg.bogus.Item.mod-x',
                                 name: 'Probe Mod',
                                 active: true,
-                                category: 'accessory',
+                                // A fitted mod's category is upgrade | subsystem | customisation (#730).
+                                category: 'upgrade',
                                 cachedModifiers: { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 },
                             },
                         ],

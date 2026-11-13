@@ -23,14 +23,18 @@ import { scaledMs } from './lib/timing';
 const BC_POWER_ARMOUR_FLOWS = ['three-subsystems-fit', 'fourth-subsystem-refused', 'ceramite-raises-body-ap', 'careful-maintenance-adds-slots'] as const;
 type FlowName = (typeof BC_POWER_ARMOUR_FLOWS)[number];
 
-const PACK = 'Compendium.wh40k-rpg.bc-core-items-armor-mods.Item';
-const ARMOUR_UUID = 'Compendium.wh40k-rpg.bc-core-items-armour.Item.N3zPRPfbjrBSZvON';
+/**
+ * The compendium documents the probe uses, found by name in the Black Crusade
+ * Item packs at run time (pack ids are not named in the public tree).
+ */
+const ARMOUR = { line: 'bc', documentName: 'Item', type: 'armour', name: 'Legion Power Armour' };
+const mod = (name: string): typeof ARMOUR => ({ line: 'bc', documentName: 'Item', type: 'armourModification', name });
 const MODS = {
-    ceramite: `${PACK}.fLP7rbh3csSxUrEL`,
-    vox: `${PACK}.5R3gkOsvjFScQo0m`,
-    autoSenses: `${PACK}.Otb9fKYDjzQTJDFP`,
-    boots: `${PACK}.vkOmZ69HhXjvIADl`,
-    maintenance: `${PACK}.dz5TesCtsEQt40hp`,
+    ceramite: mod('Subsystem (SM): Enhanced Ceramite Plating'),
+    vox: mod('Subsystem: Vox Link'),
+    autoSenses: mod('Subsystem: Auto-Senses'),
+    boots: mod('Subsystem: Magnetised Boot Soles'),
+    maintenance: mod('Customisation: Careful Maintenance'),
 };
 
 interface FlowResult {
@@ -63,7 +67,7 @@ interface ArmourItemLike {
 
 async function probeSubsystems(page: Page): Promise<ProbeState> {
     return page.evaluate(
-        async ({ armourUuid, mods }): Promise<ProbeState> => {
+        async ({ armourRef, modRefs }): Promise<ProbeState> => {
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -73,10 +77,17 @@ async function probeSubsystems(page: Page): Promise<ProbeState> {
                 Item: { create: (data: object) => Promise<ArmourItemLike | null> };
                 fromUuid: (u: string) => Promise<{ toObject: () => object } | null>;
             };
-            const { waitFor, scaledMs: scale } = globalThis.wh40kE2E;
+            const { waitFor, scaledMs: scale, compendiumUuid } = globalThis.wh40kE2E;
             const state: ProbeState = { results: out, itemId: null, sheetId: null };
             try {
-                const source = await g.fromUuid(armourUuid);
+                const mods = {
+                    ceramite: await compendiumUuid(modRefs.ceramite),
+                    vox: await compendiumUuid(modRefs.vox),
+                    autoSenses: await compendiumUuid(modRefs.autoSenses),
+                    boots: await compendiumUuid(modRefs.boots),
+                    maintenance: await compendiumUuid(modRefs.maintenance),
+                };
+                const source = await g.fromUuid(await compendiumUuid(armourRef));
                 const armour = source === null ? null : await g.Item.create(source.toObject());
                 if (armour === null) {
                     record('three-subsystems-fit', false, 'the Legion Power Armour could not be created from the compendium');
@@ -123,7 +134,7 @@ async function probeSubsystems(page: Page): Promise<ProbeState> {
             }
             return state;
         },
-        { armourUuid: ARMOUR_UUID, mods: MODS },
+        { armourRef: ARMOUR, modRefs: MODS },
     );
 }
 

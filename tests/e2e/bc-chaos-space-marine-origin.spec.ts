@@ -23,7 +23,8 @@ import { scaledMs } from './lib/timing';
 const BC_CSM_ORIGIN_FLOWS = ['csm-talents-granted', 'csm-traits-granted', 'csm-starting-xp', 'csm-characteristic-base', 'sidebar-shows-race'] as const;
 type FlowName = (typeof BC_CSM_ORIGIN_FLOWS)[number];
 
-const CSM_UUID = 'Compendium.wh40k-rpg.bc-core-origins-races.Item.fd8c1b616bc5983c';
+// Found by name at run time; the public tree names no pack id.
+const CSM = { line: 'bc', documentName: 'Item', type: 'originPath', name: 'Chaos Space Marine' };
 const BUILDER_URL = '/systems/wh40k-rpg/module/applications/character-creation/origin-path-builder.js';
 
 interface FlowResult {
@@ -62,7 +63,7 @@ interface BuilderLike {
 
 async function probeChaosSpaceMarine(page: Page): Promise<ProbeState> {
     return page.evaluate(
-        async ({ csmUuid, builderUrl }): Promise<ProbeState> => {
+        async ({ csmRef, builderUrl }): Promise<ProbeState> => {
             const out: FlowResult[] = [];
             const record = (name: FlowName, ok: boolean, detail: string | null = null): void => {
                 out.push({ name, ok, detail });
@@ -76,7 +77,7 @@ async function probeChaosSpaceMarine(page: Page): Promise<ProbeState> {
             const { waitFor, scaledMs: scale } = globalThis.wh40kE2E;
             const state: ProbeState = { results: out, actorId: null, sheetId: null };
             try {
-                const race = await g.fromUuid(csmUuid);
+                const race = await g.fromUuid(await globalThis.wh40kE2E.compendiumUuid(csmRef));
                 const actor = await g.Actor.create({ name: 'e2e-727-chaos-space-marine', type: 'bc-character' });
                 if (race === null || actor === null) {
                     record('csm-talents-granted', false, `race ${race === null ? 'missing' : 'found'}, actor ${actor === null ? 'not created' : 'created'}`);
@@ -134,7 +135,7 @@ async function probeChaosSpaceMarine(page: Page): Promise<ProbeState> {
             }
             return state;
         },
-        { csmUuid: CSM_UUID, builderUrl: BUILDER_URL },
+        { csmRef: CSM, builderUrl: BUILDER_URL },
     );
 }
 

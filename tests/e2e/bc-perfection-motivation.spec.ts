@@ -22,7 +22,8 @@ import { scaledMs } from './lib/timing';
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'] as const;
 type FlowName = (typeof BC_PERFECTION_FLOWS)[number];
 
-const PERFECTION_UUID = 'Compendium.wh40k-rpg.bc-core-origins-motivations.Item.421f4ccc90bc7b62';
+// Found by name at run time; the public tree names no pack id.
+const PERFECTION = { line: 'bc', documentName: 'Item', type: 'originPath', name: 'Perfection' };
 const BUILDER_URL = '/systems/wh40k-rpg/module/applications/character-creation/origin-path-builder.js';
 const PLUS = 'Choose one Characteristic to gain +5';
 const MINUS = 'Choose two Characteristics to suffer -3';
@@ -52,7 +53,7 @@ interface BuilderLike {
 
 async function probePerfection(page: Page): Promise<FlowResult[]> {
     return page.evaluate(
-        async ({ uuid, builderUrl, plus, minus }): Promise<FlowResult[]> => {
+        async ({ ref, builderUrl, plus, minus }): Promise<FlowResult[]> => {
             const out: FlowResult[] = [];
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
@@ -62,7 +63,7 @@ async function probePerfection(page: Page): Promise<FlowResult[]> {
             };
             const trash: Array<{ delete: () => Promise<void> }> = [];
             try {
-                const source = await g.fromUuid(uuid);
+                const source = await g.fromUuid(await globalThis.wh40kE2E.compendiumUuid(ref));
                 if (source === null) {
                     out.push({ name: 'picks-become-modifiers', ok: false, detail: 'Perfection not found in the compendium' });
                     return out;
@@ -103,7 +104,7 @@ async function probePerfection(page: Page): Promise<FlowResult[]> {
             }
             return out;
         },
-        { uuid: PERFECTION_UUID, builderUrl: BUILDER_URL, plus: PLUS, minus: MINUS },
+        { ref: PERFECTION, builderUrl: BUILDER_URL, plus: PLUS, minus: MINUS },
     );
 }
 

@@ -53,6 +53,28 @@ interface E2EPageHelpers {
      * With `id`, an existing host of that id is reused.
      */
     readonly panelHost: (opts: PanelHostOptions) => HTMLElement;
+    /**
+     * The UUID of the one compendium document of `type` named `name` in a game
+     * line's packs (`wh40k-rpg.<line>-…`) for `documentName`. Specs find content
+     * this way instead of naming a pack id, which the public tree must not carry.
+     * Rejects when there is no such document.
+     */
+    readonly compendiumUuid: (ref: CompendiumRef) => Promise<string>;
+}
+
+/** A compendium document named by game line, document class, type and name. */
+interface CompendiumRef {
+    readonly line: string;
+    readonly documentName: string;
+    readonly type: string;
+    readonly name: string;
+}
+
+/** The slice of a Foundry compendium pack {@link E2EPageHelpers.compendiumUuid} reads. */
+interface PackLike {
+    readonly documentName: string;
+    readonly metadata: { readonly id: string };
+    readonly getIndex: (options: { fields: string[] }) => Promise<Iterable<{ name: string; type?: string; uuid: string }>>;
 }
 
 /** Placement and markup for {@link E2EPageHelpers.panelHost}. */
@@ -171,6 +193,18 @@ export async function installInPageHelpers(page: Page): Promise<void> {
                     host.innerHTML = opts.html;
                     if (existing === null) document.body.appendChild(host);
                     return host;
+                },
+                compendiumUuid: async (ref: CompendiumRef): Promise<string> => {
+                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's `game.packs` is injected by the licensed app; no shipped types
+                    const packs = (globalThis as unknown as { game: { packs: Iterable<PackLike> } }).game.packs;
+                    const prefix = `wh40k-rpg.${ref.line}-`;
+                    for (const pack of packs) {
+                        if (pack.documentName !== ref.documentName || !pack.metadata.id.startsWith(prefix)) continue;
+                        // eslint-disable-next-line no-await-in-loop -- stop at the first pack that holds the document
+                        const index = await pack.getIndex({ fields: ['name', 'type'] });
+                        for (const entry of index) if (entry.name === ref.name && entry.type === ref.type) return entry.uuid;
+                    }
+                    throw new Error(`no ${ref.documentName} ${ref.type} named "${ref.name}" in the ${ref.line} packs`);
                 },
             };
         },
