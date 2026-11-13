@@ -80,7 +80,7 @@ async function installRecorder(page: Page): Promise<void> {
                             pack: operation.pack,
                             index: operation.index === true,
                             ids: operation.query?._id?.$in?.length ?? -1,
-                            stack: (new Error().stack ?? '').split('\n').slice(2, 7).join(' | '),
+                            stack: (new Error().stack ?? '').split('\n').slice(2, 12).join(' | '),
                         });
                     }
                     return original(cls, operation, user);

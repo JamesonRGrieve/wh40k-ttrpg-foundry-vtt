@@ -44,8 +44,10 @@ afterEach(() => {
 });
 
 describe('packIndexFields', () => {
-    it("asks every pack for name and type, plus its category's readers' fields", () => {
-        expect(packIndexFields(packMetadata('dh2-talents', 'dh2', 'talents'))).toEqual(['name', 'type']);
+    it("asks every pack for name, type and identifier, plus its category's readers' fields", () => {
+        // `system.identifier` for every pack: identifier lookups while origins are reapplied
+        // on ready would otherwise refetch each pack's index with one more field.
+        expect(packIndexFields(packMetadata('dh2-talents', 'dh2', 'talents'))).toEqual(['name', 'type', 'system.identifier']);
         expect(packIndexFields(packMetadata('dh2-skills', 'dh2', 'skills'))).toEqual(['name', 'type', ...SKILL_INDEX_FIELDS]);
         expect(packIndexFields(packMetadata('rt-wq', 'rt', 'weapon-qualities'))).toEqual(['name', 'type', ...WEAPON_QUALITY_INDEX_FIELDS]);
         expect(packIndexFields(packMetadata('rt-careers', 'rt', 'origins-careers'))).toEqual(['name', 'type', ...CAREER_INDEX_FIELDS]);
@@ -53,7 +55,7 @@ describe('packIndexFields', () => {
     });
 
     it('asks a pack with no declared category for the base fields only', () => {
-        expect(packIndexFields({ name: 'loose' })).toEqual(['name', 'type']);
+        expect(packIndexFields({ name: 'loose' })).toEqual(['name', 'type', 'system.identifier']);
     });
 });
 

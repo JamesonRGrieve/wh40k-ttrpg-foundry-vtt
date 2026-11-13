@@ -18,8 +18,14 @@
 
 import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
 
-/** Asked of every pack: the UUID name cache reads them (Foundry adds `img` itself). */
-const BASE_INDEX_FIELDS: readonly string[] = ['name', 'type'];
+/**
+ * Asked of every pack: the UUID name cache reads `name` and `type` (Foundry adds
+ * `img` itself), and identifier lookups (`compendium-query.ts`, run while origins
+ * are reapplied on `ready`) read `system.identifier`. Asking for it up front lets
+ * those lookups reuse the index instead of refetching every pack with one more
+ * field.
+ */
+const BASE_INDEX_FIELDS: readonly string[] = ['name', 'type', 'system.identifier'];
 
 /**
  * A skill's test variants and canonical specialisations (`rules/skill-pack-index.ts`),
