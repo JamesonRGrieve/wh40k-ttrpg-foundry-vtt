@@ -698,6 +698,16 @@ recordDimension('npc-specialist-skills.flow', covered['npc-specialist-skills.flo
 const PORTRAIT_TOKEN_ART_FLOWS = ['switch-starts-on-bust', 'switch-writes-full', 'token-draws-whole-art', 'switch-restores-bust'];
 recordDimension('portrait-token-art.flow', covered['portrait-token-art.flow'], PORTRAIT_TOKEN_ART_FLOWS);
 
+// The BC Chaos Space Marine race's talents, traits, XP and base (#727), tests/e2e/bc-chaos-space-marine-origin.spec.ts.
+// Keep in sync with BC_CSM_ORIGIN_FLOWS there.
+const BC_CSM_ORIGIN_FLOWS = ['csm-talents-granted', 'csm-traits-granted', 'csm-starting-xp', 'csm-characteristic-base', 'sidebar-shows-race'];
+recordDimension('bc-csm-origin.flow', covered['bc-csm-origin.flow'], BC_CSM_ORIGIN_FLOWS);
+
+// A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
+// Keep in sync with BC_PERFECTION_FLOWS there.
+const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];
+recordDimension('bc-perfection.flow', covered['bc-perfection.flow'], BC_PERFECTION_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

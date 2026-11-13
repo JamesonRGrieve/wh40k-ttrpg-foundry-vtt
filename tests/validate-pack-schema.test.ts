@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { readDeclaredPacks } from '../scripts/lib/pack-manifest.mjs';
 import {
+    characteristicChoiceIssues,
     DAMAGE_SOURCE,
     DAMAGE_TYPE,
     type DocumentTypes,
@@ -263,6 +264,56 @@ describe('unlicensed art gate (#625)', () => {
  * without an IMAGE_FILE_EXTENSIONS extension, so the Fandom
  * `…/revision/latest?cb=…` form loaded as a validation warning and no art.
  */
+describe('characteristic choice gate (#729)', () => {
+    const origin = (grants: object): object => ({ _id: 'aaaaaaaaaaaaaaaa', name: 'Perfection', type: 'originPath', system: { grants } });
+    const perfection = (values: [number | null, number | null]): object => ({
+        choices: [
+            {
+                type: 'characteristic',
+                label: 'Choose one Characteristic to gain +5',
+                count: 1,
+                options: [{ name: 'Strength', value: 'Strength', ...(values[0] === null ? {} : { grants: { characteristics: { strength: values[0] } } }) }],
+            },
+            {
+                type: 'characteristic',
+                label: 'Choose two Characteristics to suffer -3',
+                count: 2,
+                options: [{ name: 'Agility', value: 'Agility', ...(values[1] === null ? {} : { grants: { characteristics: { agility: values[1] } } }) }],
+            },
+        ],
+    });
+
+    it('passes a characteristic choice whose every option grants a value', () => {
+        expect(characteristicChoiceIssues({ grants: perfection([5, -3]) })).toEqual([]);
+        expect(validateDoc(origin(perfection([5, -3])))).toEqual([]);
+    });
+
+    it('rejects a characteristic choice whose options grant nothing, naming the choice and options', () => {
+        const issues = characteristicChoiceIssues({ grants: perfection([null, -3]) });
+        expect(issues).toHaveLength(1);
+        expect(issues[0]).toContain('system.grants.choices.0');
+        expect(issues[0]).toContain('Choose one Characteristic to gain +5');
+        expect(validateDoc(origin(perfection([5, null])))).toEqual([expect.stringContaining('system.grants.choices.1')]);
+    });
+
+    it('rejects a zero value and a value stored on the option instead of its grants', () => {
+        expect(characteristicChoiceIssues({ grants: perfection([0, -3]) })).toHaveLength(1);
+        const numericValue = { choices: [{ type: 'characteristic', label: 'Bonus', count: 1, options: [{ name: 'Strength', value: 3 }] }] };
+        expect(characteristicChoiceIssues({ grants: numericValue })).toHaveLength(1);
+    });
+
+    it('checks each line of a per-line grants container', () => {
+        const container = { dh2: perfection([5, -3]), ow: perfection([3, null]) };
+        expect(characteristicChoiceIssues({ grants: container })).toEqual([expect.stringContaining('system.grants.ow.choices.1')]);
+    });
+
+    it('ignores choices of other types and origins with no choices', () => {
+        expect(characteristicChoiceIssues({ grants: { choices: [{ type: 'skill', label: 'Pick', count: 1, options: [{ name: 'Dodge' }] }] } })).toEqual([]);
+        expect(characteristicChoiceIssues({ grants: {} })).toEqual([]);
+        expect(characteristicChoiceIssues({})).toEqual([]);
+    });
+});
+
 describe('image extension gate (#626)', () => {
     const FANDOM_REVISION = 'https://static.wikia.nocookie.net/warhammer40k/images/1/1f/Kroot2.jpg/revision/latest?cb=20100706070107';
     const FANDOM_FILE = 'https://static.wikia.nocookie.net/warhammer40k/images/1/1f/Kroot2.jpg';

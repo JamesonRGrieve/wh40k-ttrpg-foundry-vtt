@@ -30,6 +30,9 @@ export declare const vehicleTraitSystemSchema: ZodTypeAny;
 export declare const SYSTEM_SCHEMAS: Record<string, ZodTypeAny>;
 export declare const documentEnvelope: ZodTypeAny;
 
+/** An origin's characteristic choices whose options grant no value (#729), as issue strings. */
+export declare function characteristicChoiceIssues(system: unknown): string[];
+
 /** Paths to the unlicensed, unserved icon packs (`_vendored-ui`, #625). */
 export declare const UNLICENSED_ART: RegExp;
 

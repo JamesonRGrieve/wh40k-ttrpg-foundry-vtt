@@ -275,6 +275,39 @@ function coherenceIssue(system) {
 }
 
 /**
+ * An origin's characteristic choice (`grants.choices[]` of type `characteristic`)
+ * must say what each option does: every option carries `grants.characteristics`
+ * with a non-zero value. The builder applies only those values, so a choice
+ * without them prompts for nothing and changes nothing (#729: Perfection's
+ * +5 / -3 and sixteen other choices did exactly that). `grants` may be a
+ * per-line container; each line's branch is checked.
+ */
+export function characteristicChoiceIssues(system) {
+    const grants = system !== null && typeof system === 'object' ? system.grants : undefined;
+    if (grants === null || typeof grants !== 'object') return [];
+    const branches = Array.isArray(grants.choices)
+        ? [['grants', grants]]
+        : LINES.filter((line) => grants[line] !== null && typeof grants[line] === 'object').map((line) => [`grants.${line}`, grants[line]]);
+    const issues = [];
+    for (const [at, branch] of branches) {
+        const choices = Array.isArray(branch.choices) ? branch.choices : [];
+        choices.forEach((choice, index) => {
+            if (choice?.type !== 'characteristic') return;
+            const options = Array.isArray(choice.options) ? choice.options : [];
+            const valueless = options.filter((option) => {
+                const chars = option?.grants?.characteristics;
+                return chars === null || typeof chars !== 'object' || !Object.values(chars).some((v) => typeof v === 'number' && v !== 0);
+            });
+            if (valueless.length > 0) {
+                const names = valueless.map((option) => option?.label ?? option?.name ?? '?').join(', ');
+                issues.push(`system.${at}.choices.${index}: characteristic choice "${choice.label ?? ''}" has options with no grants.characteristics value (${names})`);
+            }
+        });
+    }
+    return issues;
+}
+
+/**
  * Art the system holds no licence for: the GameDevMarket icon packs, parked
  * unserved in the private submodule's `_vendored-ui/`, and the old served
  * location they were pulled from (#625). Every match renders a broken icon and
@@ -412,6 +445,7 @@ export function validateDoc(doc, context = {}) {
     }
     const { type, system } = env.data;
     if (Array.isArray(doc.results)) errors.push(...tableResultIssues(doc.results));
+    if (type === 'originPath') errors.push(...characteristicChoiceIssues(system));
     const schema = SYSTEM_SCHEMAS[type];
     if (schema !== undefined && system !== undefined) {
         const res = schema.safeParse(system);
