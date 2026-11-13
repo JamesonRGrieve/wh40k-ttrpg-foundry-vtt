@@ -18,6 +18,16 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import {
+    arraySetting,
+    numberSetting,
+    objectSetting,
+    readSetting,
+    registerSettingTable,
+    settingKeys,
+    type SettingValueTypes,
+    writeSetting,
+} from '../utils/setting-table.ts';
+import {
     CAMPAIGN_GRAPH_ID,
     type DocLookup,
     type GraphSource,
@@ -61,17 +71,57 @@ interface EventDataFile {
     characters?: Record<string, CharacterState> | null;
 }
 
-/** World-setting keys (scope `wh40k-rpg`) that hold the tracker's state. */
-export const EVENT_TRACKER_SETTINGS = {
+/**
+ * The world settings (scope `wh40k-rpg`) that hold the tracker's state, in
+ * registration order (#712). All world-scoped and hidden from the settings menu.
+ */
+const EVENT_TRACKER_TABLE = {
     /** `{ [eventId]: { resolvedAt: ISO string } }` */
-    resolved: 'event-tracker-state',
+    resolved: objectSetting({
+        key: 'event-tracker-state',
+        name: 'WH40K.Notify.EventTracker.SettingName',
+        hint: 'WH40K.Notify.EventTracker.SettingHint',
+        scope: 'world',
+        config: false,
+        default: {},
+        accept: isResolvedState,
+    }),
     /** Non-negative integer campaign day (`>= 100` reads as `Day M<n-100>`). */
-    campaignDay: 'event-tracker-campaign-day',
-    /** `{ [npcName]: { [pcName]: attitude } }` */
-    pcAttitudes: 'event-tracker-pc-attitudes',
+    campaignDay: numberSetting({
+        key: 'event-tracker-campaign-day',
+        name: 'WH40K.EventTracker.Setting.CampaignDayName',
+        hint: 'WH40K.EventTracker.Setting.CampaignDayHint',
+        scope: 'world',
+        config: false,
+        default: 0,
+    }),
     /** Event ids the GM un-resolved after an automatic resolution; never auto-resolved again (#591). */
-    autoSuppressed: 'event-tracker-auto-suppressed',
-} as const;
+    autoSuppressed: arraySetting({
+        key: 'event-tracker-auto-suppressed',
+        name: 'WH40K.EventTracker.Setting.AutoSuppressedName',
+        hint: 'WH40K.EventTracker.Setting.AutoSuppressedHint',
+        scope: 'world',
+        config: false,
+        default: [] as string[],
+        accept: isEventIdList,
+    }),
+    /** `{ [npcName]: { [pcName]: attitude } }` */
+    pcAttitudes: objectSetting({
+        key: 'event-tracker-pc-attitudes',
+        name: 'WH40K.EventTracker.Setting.PcAttitudesName',
+        hint: 'WH40K.EventTracker.Setting.PcAttitudesHint',
+        scope: 'world',
+        config: false,
+        default: {},
+        accept: isPcAttitudeMap,
+    }),
+};
+
+/** The types `game.settings.get` returns for the tracker's settings (augmented in `wh40k-rpg-settings.ts`, #712). */
+export type EventTrackerSettingTypes = SettingValueTypes<typeof EVENT_TRACKER_TABLE>;
+
+/** World-setting keys (scope `wh40k-rpg`) that hold the tracker's state. */
+export const EVENT_TRACKER_SETTINGS = settingKeys(EVENT_TRACKER_TABLE);
 
 /** The hooks fired after each Event Tracker state change. Payloads are typed in `foundry-v14-overrides.d.ts`. */
 export const EVENT_TRACKER_HOOKS = {
@@ -177,17 +227,6 @@ function isEventDataFile(value: unknown): value is EventDataFile {
     return events !== null && typeof events === 'object' && !Array.isArray(events);
 }
 
-/** A narrowing guard over a stored setting value. */
-// eslint-disable-next-line no-restricted-syntax -- boundary: the guard's input is Foundry's untyped `game.settings.get` value
-type SettingGuard<T> = (value: unknown) => value is T;
-
-/** Read one of the tracker's world settings through its guard; a malformed stored value reads as `fallback`. */
-function readSetting<T>(key: string, guard: SettingGuard<T>, fallback: T): T {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped stored value; `guard` narrows it on the next line
-    const stored: unknown = game.settings.get(SYSTEM_ID, key);
-    return guard(stored) ? stored : fallback;
-}
-
 function changeContext(options: EventTrackerChangeOptions): EventTrackerChangeContext {
     return { origin: options.origin ?? 'manual', ...(options.detail !== undefined ? { detail: options.detail } : {}) };
 }
@@ -234,38 +273,7 @@ export class EventTracker {
      * Call during system init.
      */
     static registerSettings(): void {
-        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.resolved, {
-            name: 'WH40K.Notify.EventTracker.SettingName',
-            hint: 'WH40K.Notify.EventTracker.SettingHint',
-            scope: 'world',
-            config: false,
-            type: Object,
-            default: {},
-        });
-        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.campaignDay, {
-            name: 'WH40K.EventTracker.Setting.CampaignDayName',
-            hint: 'WH40K.EventTracker.Setting.CampaignDayHint',
-            scope: 'world',
-            config: false,
-            type: Number,
-            default: 0,
-        });
-        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.autoSuppressed, {
-            name: 'WH40K.EventTracker.Setting.AutoSuppressedName',
-            hint: 'WH40K.EventTracker.Setting.AutoSuppressedHint',
-            scope: 'world',
-            config: false,
-            type: Array,
-            default: [],
-        });
-        game.settings.register(SYSTEM_ID, EVENT_TRACKER_SETTINGS.pcAttitudes, {
-            name: 'WH40K.EventTracker.Setting.PcAttitudesName',
-            hint: 'WH40K.EventTracker.Setting.PcAttitudesHint',
-            scope: 'world',
-            config: false,
-            type: Object,
-            default: {},
-        });
+        registerSettingTable(EVENT_TRACKER_TABLE);
     }
 
     /** The loaded event graph, or null when no GM-only graph document was found. */
@@ -397,7 +405,7 @@ export class EventTracker {
 
     /** Resolved events keyed by event id. A malformed stored value reads as none resolved. */
     static getResolved(): ResolvedState {
-        return readSetting(EVENT_TRACKER_SETTINGS.resolved, isResolvedState, {});
+        return readSetting(EVENT_TRACKER_TABLE.resolved);
     }
 
     /**
@@ -406,7 +414,7 @@ export class EventTracker {
      * the GM resolves the event by hand.
      */
     static getAutoSuppressed(): string[] {
-        return readSetting(EVENT_TRACKER_SETTINGS.autoSuppressed, isEventIdList, []);
+        return readSetting(EVENT_TRACKER_TABLE.autoSuppressed);
     }
 
     /**
@@ -424,10 +432,10 @@ export class EventTracker {
         const context = changeContext(options);
         const suppressed = EventTracker.getAutoSuppressed();
         const nextSuppressed = nextAutoSuppressed(suppressed, eventId, resolved, context.origin, state);
-        if (nextSuppressed.length !== suppressed.length) await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.autoSuppressed, nextSuppressed);
+        if (nextSuppressed.length !== suppressed.length) await writeSetting(EVENT_TRACKER_TABLE.autoSuppressed, nextSuppressed);
         if (isResolved(state, eventId) === resolved) return;
         const next = resolved ? { ...state, [eventId]: { resolvedAt: new Date().toISOString(), ...context } } : omitKey(state, eventId);
-        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.resolved, next);
+        await writeSetting(EVENT_TRACKER_TABLE.resolved, next);
         Hooks.callAll(EVENT_TRACKER_HOOKS.eventResolved, eventId, resolved, context);
     }
 
@@ -443,7 +451,8 @@ export class EventTracker {
 
     /** The current campaign day (0 when unset or malformed). */
     static getCampaignDay(): number {
-        return readSetting(EVENT_TRACKER_SETTINGS.campaignDay, isStoredCampaignDay, 0);
+        const day = readSetting(EVENT_TRACKER_TABLE.campaignDay);
+        return isStoredCampaignDay(day) ? day : 0;
     }
 
     /**
@@ -454,7 +463,7 @@ export class EventTracker {
         EventTracker.#assertGM('setCampaignDay');
         if (!isValidCampaignDay(day)) throw new Error(`EventTracker.setCampaignDay: ${day} is not a non-negative integer`);
         if (EventTracker.getCampaignDay() === day) return;
-        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.campaignDay, day);
+        await writeSetting(EVENT_TRACKER_TABLE.campaignDay, day);
         Hooks.callAll(EVENT_TRACKER_HOOKS.campaignDayChanged, day, changeContext(options));
     }
 
@@ -464,7 +473,7 @@ export class EventTracker {
 
     /** Every stored per-PC attitude: `{ [npcName]: { [pcName]: attitude } }`. */
     static getAllPcAttitudes(): PcAttitudeMap {
-        return readSetting(EVENT_TRACKER_SETTINGS.pcAttitudes, isPcAttitudeMap, {});
+        return readSetting(EVENT_TRACKER_TABLE.pcAttitudes);
     }
 
     /** Each PC's attitude toward one NPC: `{ [pcName]: attitude }`. A PC with no entry has not met them. */
@@ -483,7 +492,7 @@ export class EventTracker {
         const map = EventTracker.getAllPcAttitudes();
         const value = attitude.trim();
         if ((lookup(lookup(map, npc) ?? {}, pc) ?? '') === value) return;
-        await game.settings.set(SYSTEM_ID, EVENT_TRACKER_SETTINGS.pcAttitudes, withPcAttitude(map, npc, pc, value));
+        await writeSetting(EVENT_TRACKER_TABLE.pcAttitudes, withPcAttitude(map, npc, pc, value));
         Hooks.callAll(EVENT_TRACKER_HOOKS.pcAttitudeChanged, npc, pc, value, changeContext(options));
     }
 

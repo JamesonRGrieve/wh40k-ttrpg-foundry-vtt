@@ -1563,7 +1563,7 @@ export class WH40KBaseActor extends Actor {
                 ui.notifications.warn(game.i18n.localize('WH40K.Warning.WeaponEmpty'));
                 return;
             }
-            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls) === true) {
+            if (WH40KSettings.isSimpleAttackRolls()) {
                 this.rollCharacteristic(item.isRanged ? 'ballisticSkill' : 'weaponSkill', item.name);
             } else {
                 documentActions().performWeaponAttack(this, item);
@@ -1571,7 +1571,7 @@ export class WH40KBaseActor extends Actor {
             return;
         }
         if (item.type === 'psychicPower') {
-            if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls) === true) {
+            if (WH40KSettings.isSimplePsychicRolls()) {
                 this.rollCharacteristic('willpower', item.name);
             } else {
                 documentActions().performPsychicCast(this, item);

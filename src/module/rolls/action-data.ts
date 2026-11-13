@@ -301,13 +301,8 @@ export class ActionData {
         this.addEffect(t(EFFECT_TITLE.psychicPhenomena), t('WH40K.ActionEffect.PsychicPhenomena'));
         this.effects.push(CUE_EFFECT.phenomena);
 
-        let autoRoll = true;
-        try {
-            autoRoll = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoPsychicPhenomena) === true;
-        } catch {
-            // Setting may not be registered yet during early-boot rolls; default to on.
-        }
-        if (!autoRoll) return;
+        // Defaults to on, also before the setting is registered (early-boot rolls).
+        if (!WH40KSettings.isAutoPsychicPhenomenaEnabled()) return;
 
         await RollTableUtils.rollPsychicPhenomena(sourceActor, outcome.modifier, outcome.ladderStep, () => {
             this.effects.push(CUE_EFFECT.perils);

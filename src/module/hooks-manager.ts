@@ -459,7 +459,7 @@ export class HooksManager {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect#parent is a Document union; narrowed structurally above to the LootableActor surface
             const lootable = actor as Parameters<typeof convertDeadActorToPile>[0];
             const token = canvas.tokens?.placeables.find((t) => t.actor?.id === lootable.id)?.document ?? null;
-            const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.deathLootPiles) === true;
+            const enabled = WH40KSettings.isDeathLootPilesEnabled();
             void convertDeadActorToPile(lootable, token, enabled);
         };
         // eslint-disable-next-line no-restricted-syntax -- boundary: ActiveEffect hook payloads are framework-typed; narrowed inside the handler
@@ -1417,7 +1417,7 @@ export class HooksManager {
      * spuriously trips `require-atomic-updates` on the later `game.wh40k.*` writes.
      */
     static async hydrateWorldActorsOnReady(): Promise<void> {
-        if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.resyncOnReady) === false) return;
+        if (!WH40KSettings.isResyncOnReadyEnabled()) return;
         await Promise.all(
             game.actors.contents.map(async (actor) => {
                 // One actor's failed join is logged, never allowed to abort `ready`.
@@ -1482,7 +1482,7 @@ export class HooksManager {
         wh40k.tooltips = tooltips;
         await tooltips.initialize();
 
-        if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat) === false) {
+        if (!WH40KSettings.isActiveEffectsDuringCombatEnabled()) {
             DHCombatActionManager.disableHooks();
         }
 

@@ -1,31 +1,12 @@
 import type { WH40KNPC } from '../../documents/npc.ts';
+import type { CombatPreset } from '../../rules/combat-presets.ts';
 import { splitNpcType } from '../../utils/npc-type-axes.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
 
-interface Preset {
-    id: string;
-    name: string;
-    description: string;
-    createdAt: number;
-    faction: string;
-    type: string;
-    role: string;
-    threatLevel: number;
-    /* eslint-disable no-restricted-syntax -- boundary: persisted preset blob preserves arbitrary game-system fields */
-    characteristics: Record<string, unknown>;
-    wounds: Record<string, unknown>;
-    movement: Record<string, unknown>;
-    size: string;
-    initiative: Record<string, unknown>;
-    trainedSkills: Record<string, unknown>;
-    weapons: Record<string, unknown>;
-    armour: Record<string, unknown>;
-    horde: Record<string, unknown>;
-    /* eslint-enable no-restricted-syntax */
-    tags: string[];
-}
+/** A saved preset, as the `combat-presets` world setting stores it (#712). */
+type Preset = CombatPreset;
 
 /** The NPC surface a preset is read from: its prepared system, and the stored source movement is read from. */
 interface PresetSourceNpc {
@@ -93,12 +74,6 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    /**
-     * Setting key for storing presets.
-     * @type {string}
-     */
-    static SETTING_KEY = WH40KSettings.SETTINGS.combatPresets;
-
     /* -------------------------------------------- */
     /*  Constructor                                 */
     /* -------------------------------------------- */
@@ -161,7 +136,7 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
      * @returns {Preset[]} Array of preset objects.
      */
     static getPresets(): Preset[] {
-        return (game.settings.get('wh40k-rpg', this.SETTING_KEY) as Preset[] | undefined) ?? [];
+        return WH40KSettings.getCombatPresets();
     }
 
     /**
@@ -176,7 +151,7 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
             id: foundry.utils.randomID(),
             createdAt: Date.now(),
         });
-        await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+        await WH40KSettings.setCombatPresets(presets);
     }
 
     /**
@@ -191,7 +166,7 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
         const existing = index >= 0 ? presets[index] : undefined;
         if (existing !== undefined) {
             presets[index] = { ...existing, ...updates };
-            await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+            await WH40KSettings.setCombatPresets(presets);
         }
     }
 
@@ -203,7 +178,7 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
     static async deletePresetById(id: string): Promise<void> {
         const presets = this.getPresets();
         const filtered = presets.filter((p: Preset) => p.id !== id);
-        await game.settings.set('wh40k-rpg', this.SETTING_KEY, filtered);
+        await WH40KSettings.setCombatPresets(filtered);
     }
 
     /**

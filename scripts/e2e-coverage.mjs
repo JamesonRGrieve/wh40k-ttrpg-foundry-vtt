@@ -713,6 +713,10 @@ recordDimension('bc-perfection.flow', covered['bc-perfection.flow'], BC_PERFECTI
 const BC_POWER_ARMOUR_FLOWS = ['three-subsystems-fit', 'fourth-subsystem-refused', 'ceramite-raises-body-ap', 'careful-maintenance-adds-slots'];
 recordDimension('bc-power-armour.flow', covered['bc-power-armour.flow'], BC_POWER_ARMOUR_FLOWS);
 
+// The typed settings table (#712), tests/e2e/settings-table.spec.ts. Keep in sync with SETTINGS_TABLE_FLOWS there.
+const SETTINGS_TABLE_FLOWS = ['table-keys-registered', 'accessor-reads-stored-value', 'movement-automation-off-plain-cost'];
+recordDimension('settings-table.flow', covered['settings-table.flow'], SETTINGS_TABLE_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

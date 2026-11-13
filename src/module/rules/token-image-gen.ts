@@ -12,16 +12,9 @@
  * generates one on demand when there is no suitable art.
  */
 
-/** When the generator fires, relative to a compendium / world spawn. */
+/** When the generator fires, relative to a compendium / world spawn. The setting's
+ *  choices (`token-image-gen-mode`) hold the valid modes and fall back to `never` (#712). */
 export type TokenImageGenMode = 'never' | 'if-no-image' | 'ask' | 'always';
-
-/** The valid modes in menu order — the single source of truth for the coercion. */
-const TOKEN_IMAGE_GEN_MODES: readonly TokenImageGenMode[] = ['never', 'if-no-image', 'ask', 'always'];
-
-/** Coerce a stored setting string to a valid mode, defaulting to `never`. */
-export function coerceTokenImageGenMode(value: string | undefined): TokenImageGenMode {
-    return TOKEN_IMAGE_GEN_MODES.find((m) => m === value) ?? 'never';
-}
 
 /** Paths that count as a placeholder rather than real art: a spawn on one of these
  *  has "no image" for the `if-no-image` mode. Real art lives under

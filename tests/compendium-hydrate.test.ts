@@ -78,7 +78,7 @@ describe('hydration wiring (source pins)', () => {
         // The helper gates on the toggle and joins every world actor in memory.
         const helper = hooks.match(/static async hydrateWorldActorsOnReady\(\):[\s\S]*?\n {4}\}/);
         expect(helper).not.toBeNull();
-        expect(helper?.[0], 'gated by the resync-on-ready toggle').toMatch(/SETTINGS\.resyncOnReady/);
+        expect(helper?.[0], 'gated by the resync-on-ready toggle').toMatch(/WH40KSettings\.isResyncOnReadyEnabled\(\)/);
         expect(helper?.[0], 'iterates world actors').toMatch(/game\.actors\.contents\.map\(async \(actor\) =>/);
         expect(helper?.[0], 'joins each via hydrateActorInMemory').toMatch(/await hydrateActorInMemory\(actor\)/);
     });

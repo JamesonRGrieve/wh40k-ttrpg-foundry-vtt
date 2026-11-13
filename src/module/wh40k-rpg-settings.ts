@@ -1,136 +1,646 @@
 import { ALL_SYSTEM_IDS, type GameSystemId } from './config/game-systems/types.ts';
-import { SYSTEM_ID } from './constants.ts';
+import type { EventTrackerSettingTypes } from './managers/event-tracker.ts';
+import { type CombatPreset, isCombatPresetList } from './rules/combat-presets.ts';
 import type { FatigueMode } from './rules/fatigue.ts';
 import { type ImperialDate, parseImperialDate } from './rules/imperial-date.ts';
 import { type InquestState, parseInquests } from './rules/inquest.ts';
 import { type CelestialBodies, parseCelestialBodies } from './rules/scene-lighting.ts';
-import { coerceTokenImageGenMode, type TokenImageGenConfig, type TokenImageGenMode } from './rules/token-image-gen.ts';
+import type { TokenImageGenConfig, TokenImageGenMode } from './rules/token-image-gen.ts';
 import { type LastAdvance, parseLastAdvance } from './rules/world-time-undo.ts';
+import type { I18nKey } from './types/i18n-keys';
+import {
+    booleanSetting,
+    choiceSetting,
+    jsonSetting,
+    numberSetting,
+    readJsonSetting,
+    readSetting,
+    registerSettingTable,
+    settingKeys,
+    type SettingValueTypes,
+    stringSetting,
+    arraySetting,
+    writeSetting,
+} from './utils/setting-table.ts';
 
 export type DH2Ruleset = 'raw' | 'homebrew';
-
-/** JSON-serialisable setting default — a primitive or an array thereof. */
-type SettingDefault = number | boolean | string | readonly SettingDefault[];
-
-/**
- * Declarative descriptor for one registered world/client setting (#299). The
- * registration order of the descriptor array, plus each entry's key/scope/config/
- * requiresReload/default/type/choice-keys, is load-bearing for migrations and is
- * pinned by the structural-shape snapshot in `wh40k-rpg-settings.test.ts`.
- * `name` / `hint` (and choice values) are WH40K.SETTINGS.* langpack keys —
- * Foundry localizes them at render time.
- */
-interface SettingDescriptor {
-    key: string;
-    name: string;
-    hint: string;
-    scope: 'world' | 'client';
-    config: boolean;
-    requiresReload?: boolean;
-    default: SettingDefault;
-    type: NumberConstructor | BooleanConstructor | StringConstructor | ArrayConstructor;
-    choices?: Record<string, string>;
-    /** Slider bounds for a Number setting. */
-    range?: { min: number; max: number; step: number };
-    /** Foundry fires this on every client when the (world) value changes. Not
-     *  part of the structural-shape snapshot — it is behaviour, not migration shape. */
-    onChange?: (value: SettingDefault) => void;
-}
 
 /** Degrees-of-success calculation mode. `raw` resolves per game system; the
  * other two force one method across all systems. */
 export type DegreesMode = 'raw' | 'gen1' | 'gen2';
 
+/** Default attack-cue volume (#594), 0–1. */
+const ATTACK_CUE_VOLUME_DEFAULT = 0.8;
+
+/** Default status-visual intensity scale (#595), 0–1. */
+const STATUS_VISUAL_INTENSITY_DEFAULT = 1;
+
+/**
+ * Default Infamy a Black Crusade champion needs for apotheosis rather than
+ * spawndom when Corruption reaches 100 (BC rules). The book leaves the
+ * threshold to the GM (suggesting 75, 90 or 100); 100 is the default.
+ */
+const APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT = 100;
+
+/** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
+const WARBAND_SUBTLETY_MAX = 100;
+const WARBAND_SUBTLETY_DEFAULT = 60;
+
+/** Default campaign-inception world-time stamp (#487): 0 = the world's own
+ *  epoch. Day 0 is the campaign/mission inception and is fixed, not
+ *  re-anchorable from the widget. */
+const WORLD_TIME_INCEPTION_DEFAULT = 0;
+
+/**
+ * Neutral placeholder for the campaign-inception Imperial timestamp (#487).
+ *
+ * Deliberately NOT any real campaign's date: which date a campaign began on is
+ * **world data**, set per world by its GM, not something the system ships. This
+ * default exists only so an unconfigured world renders a well-formed stamp
+ * instead of blank.
+ */
+const CAMPAIGN_INCEPTION_DATE_DEFAULT = '0.000.001.M41';
+
+/** The primary game line's choice labels, in `ALL_SYSTEM_IDS` order. */
+const PRIMARY_GAME_SYSTEM_CHOICES: Readonly<Record<GameSystemId, I18nKey>> = {
+    rt: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.rt',
+    dh1: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh1',
+    dh2: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dh2',
+    bc: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.bc',
+    ow: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.ow',
+    dw: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.dw',
+    im: 'WH40K.SETTINGS.PrimaryGameSystem.Choices.im',
+};
+
+/** Re-render the sheets that show the warband Subtlety pool and Inquests (#64, #90). */
+function rerenderSubtletyDependentSheets(): void {
+    WH40KSettings.rerenderSubtletyDependentSheets();
+}
+
+/**
+ * Every system setting, in registration order (#299, #712). The order, and each
+ * entry's key / scope / config / requiresReload / default / type / choice keys,
+ * is load-bearing for migrations and pinned by the structural-shape snapshot in
+ * `wh40k-rpg-settings.test.ts`. `name` / `hint` (and choice values) are
+ * WH40K.SETTINGS.* langpack keys Foundry localizes at render time.
+ */
+const SETTINGS_TABLE = {
+    worldVersion: numberSetting({
+        key: 'world-version',
+        name: 'WH40K.SETTINGS.WorldVersion.Name',
+        hint: 'WH40K.SETTINGS.WorldVersion.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: true,
+        default: 1,
+    }),
+    processActiveEffectsDuringCombat: booleanSetting({
+        key: 'active-effects-during-combat',
+        name: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Name',
+        hint: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: true,
+        default: true,
+    }),
+    simpleAttackRolls: booleanSetting({
+        key: 'simple-attack-rolls',
+        name: 'WH40K.SETTINGS.SimpleAttackRolls.Name',
+        hint: 'WH40K.SETTINGS.SimpleAttackRolls.Hint',
+        scope: 'client',
+        config: true,
+        requiresReload: true,
+        default: false,
+    }),
+    simplePsychicRolls: booleanSetting({
+        key: 'simple-psychic-rolls',
+        name: 'WH40K.SETTINGS.SimplePsychicRolls.Name',
+        hint: 'WH40K.SETTINGS.SimplePsychicRolls.Hint',
+        scope: 'client',
+        config: true,
+        requiresReload: true,
+        default: false,
+    }),
+    autoPsychicPhenomena: booleanSetting({
+        key: 'auto-psychic-phenomena',
+        name: 'WH40K.SETTINGS.AutoPsychicPhenomena.Name',
+        hint: 'WH40K.SETTINGS.AutoPsychicPhenomena.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    autoRollDamage: booleanSetting({
+        key: 'auto-roll-damage',
+        name: 'WH40K.SETTINGS.AutoRollDamage.Name',
+        hint: 'WH40K.SETTINGS.AutoRollDamage.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    autoApplyDamage: booleanSetting({
+        key: 'auto-apply-damage',
+        name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
+        hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    magazineBuilding: booleanSetting({
+        key: 'magazine-building',
+        name: 'WH40K.SETTINGS.MagazineBuilding.Name',
+        hint: 'WH40K.SETTINGS.MagazineBuilding.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    standardAmmoTracking: booleanSetting({
+        key: 'standard-ammo-tracking',
+        name: 'WH40K.SETTINGS.StandardAmmoTracking.Name',
+        hint: 'WH40K.SETTINGS.StandardAmmoTracking.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    requireCombatToAttack: booleanSetting({
+        key: 'require-combat-to-attack',
+        name: 'WH40K.SETTINGS.RequireCombatToAttack.Name',
+        hint: 'WH40K.SETTINGS.RequireCombatToAttack.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    combatPresets: arraySetting({
+        key: 'combat-presets',
+        name: 'WH40K.SETTINGS.CombatPresets.Name',
+        hint: 'WH40K.SETTINGS.CombatPresets.Hint',
+        scope: 'world',
+        config: false,
+        default: [] as CombatPreset[],
+        accept: isCombatPresetList,
+    }),
+    primaryGameSystem: choiceSetting({
+        key: 'primary-game-system',
+        name: 'WH40K.SETTINGS.PrimaryGameSystem.Name',
+        hint: 'WH40K.SETTINGS.PrimaryGameSystem.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: true,
+        default: 'dh2',
+        choices: PRIMARY_GAME_SYSTEM_CHOICES,
+    }),
+    dh2Ruleset: choiceSetting({
+        key: 'dh2-ruleset',
+        name: 'WH40K.SETTINGS.DH2Ruleset.Name',
+        hint: 'WH40K.SETTINGS.DH2Ruleset.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: true,
+        default: 'homebrew',
+        choices: {
+            homebrew: 'WH40K.SETTINGS.DH2Ruleset.Choices.Homebrew',
+            raw: 'WH40K.SETTINGS.DH2Ruleset.Choices.Raw',
+        },
+    }),
+    degreesMode: choiceSetting({
+        key: 'degrees-mode',
+        name: 'WH40K.SETTINGS.DegreesMode.Name',
+        hint: 'WH40K.SETTINGS.DegreesMode.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: 'raw',
+        choices: {
+            raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
+            gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
+            gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
+        },
+    }),
+    fatigueMode: choiceSetting({
+        key: 'fatigue-mode',
+        name: 'WH40K.SETTINGS.FatigueMode.Name',
+        hint: 'WH40K.SETTINGS.FatigueMode.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: 'auto',
+        choices: {
+            auto: 'WH40K.SETTINGS.FatigueMode.Choices.Auto',
+            halving: 'WH40K.SETTINGS.FatigueMode.Choices.Halving',
+            flat: 'WH40K.SETTINGS.FatigueMode.Choices.Flat',
+            condition: 'WH40K.SETTINGS.FatigueMode.Choices.Condition',
+        },
+    }),
+    promptIncompleteOriginPath: booleanSetting({
+        key: 'prompt-incomplete-origin-path',
+        name: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Name',
+        hint: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: true,
+    }),
+    freeformCharacters: booleanSetting({
+        key: 'freeform-characters',
+        name: 'WH40K.SETTINGS.FreeformCharacters.Name',
+        hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    // Gates the "Drop to Add" dropzone on the Talents and Traits panels
+    // (#396). When disabled (default) those panels hide the dropzone so
+    // talents/traits go through the structured advancement/XP flow rather
+    // than being added by free drag-and-drop.
+    freeformCreation: booleanSetting({
+        key: 'freeform-creation',
+        name: 'WH40K.SETTINGS.FreeformCreation.Name',
+        hint: 'WH40K.SETTINGS.FreeformCreation.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    // Homebrew self-target treatment (#393): point-blank range + skip
+    // enemy-defence situationals (size/cover/target-state) when you target
+    // yourself. Off = RAW self-targeting.
+    homebrewSelfTargeting: booleanSetting({
+        key: 'homebrew-self-targeting',
+        name: 'WH40K.SETTINGS.HomebrewSelfTargeting.Name',
+        hint: 'WH40K.SETTINGS.HomebrewSelfTargeting.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    // Homebrew roll-twice-keep-one modes on d100 tests. Off = RAW.
+    rollKeepModes: booleanSetting({
+        key: 'roll-keep-modes',
+        name: 'WH40K.SETTINGS.RollKeepModes.Name',
+        hint: 'WH40K.SETTINGS.RollKeepModes.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    // Minimum elevation delta before RAW Higher Ground applies
+    // (#407). Default 0 = RAW: strictly above is higher ground.
+    // Raising it stops a crate or a half-step of rubble from
+    // granting the +10, and on a Levels map a band below the floor
+    // height still lets a genuine storey qualify.
+    highGroundBand: numberSetting({
+        key: 'high-ground-band',
+        name: 'WH40K.SETTINGS.HighGroundBand.Name',
+        hint: 'WH40K.SETTINGS.HighGroundBand.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: 0,
+    }),
+    // Auto line-of-sight + full/half cover from scene walls (#406).
+    // Off by default until the canvas geometry is verified on real scenes.
+    autoCoverLos: booleanSetting({
+        key: 'auto-cover-los',
+        name: 'WH40K.SETTINGS.AutoCoverLos.Name',
+        hint: 'WH40K.SETTINGS.AutoCoverLos.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    // Homebrew Awareness sense-split (#440): resolve Awareness per sense
+    // channel and re-scope the auspex bonus to Visual only. Off = RAW.
+    awarenessSenseSplit: booleanSetting({
+        key: 'awareness-sense-split',
+        name: 'WH40K.SETTINGS.AwarenessSenseSplit.Name',
+        hint: 'WH40K.SETTINGS.AwarenessSenseSplit.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: false,
+    }),
+    characteristicOffset: numberSetting({
+        key: 'characteristic-offset',
+        name: 'WH40K.SETTINGS.CharacteristicOffset.Name',
+        hint: 'WH40K.SETTINGS.CharacteristicOffset.Hint',
+        scope: 'world',
+        config: true,
+        default: 0,
+    }),
+    pointBuyPool: numberSetting({
+        key: 'point-buy-pool',
+        name: 'WH40K.SETTINGS.PointBuyPool.Name',
+        hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
+        scope: 'world',
+        config: true,
+        // DH2e point-buy allocates 60 points over the base values (#223).
+        default: 60,
+    }),
+    movementAutomation: choiceSetting({
+        key: 'movement-automation',
+        name: 'WH40K.SETTINGS.MovementAutomation.Name',
+        hint: 'WH40K.SETTINGS.MovementAutomation.Hint',
+        scope: 'world',
+        config: true,
+        default: 'full',
+        choices: {
+            full: 'WH40K.SETTINGS.MovementAutomation.Full',
+            display: 'WH40K.SETTINGS.MovementAutomation.Display',
+            none: 'WH40K.SETTINGS.MovementAutomation.None',
+        },
+    }),
+    multipleFateBurnPerRoll: booleanSetting({
+        key: 'multiple-fate-burn-per-roll',
+        name: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Name',
+        hint: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    resyncOnReady: booleanSetting({
+        key: 'resync-on-ready',
+        name: 'WH40K.SETTINGS.ResyncOnReady.Name',
+        hint: 'WH40K.SETTINGS.ResyncOnReady.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    deathLootPiles: booleanSetting({
+        key: 'death-loot-piles',
+        name: 'WH40K.SETTINGS.DeathLootPiles.Name',
+        hint: 'WH40K.SETTINGS.DeathLootPiles.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    npcAdvancement: booleanSetting({
+        key: 'npc-advancement',
+        name: 'WH40K.SETTINGS.NpcAdvancement.Name',
+        hint: 'WH40K.SETTINGS.NpcAdvancement.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: true,
+        default: false,
+    }),
+    compendiumDropImportsActor: booleanSetting({
+        key: 'compendium-drop-imports-actor',
+        name: 'WH40K.SETTINGS.CompendiumDropImportsActor.Name',
+        hint: 'WH40K.SETTINGS.CompendiumDropImportsActor.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    celestialBodies: jsonSetting({
+        key: 'celestial-bodies',
+        name: 'WH40K.SETTINGS.CelestialBodies.Name',
+        hint: 'WH40K.SETTINGS.CelestialBodies.Hint',
+        scope: 'world',
+        config: false,
+        default: '{}',
+        parse: parseCelestialBodies,
+        empty: {},
+    }),
+    allowManualRoll: booleanSetting({
+        key: 'allow-manual-roll',
+        name: 'WH40K.SETTINGS.AllowManualRoll.Name',
+        hint: 'WH40K.SETTINGS.AllowManualRoll.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
+    reconcileOriginGrantsOnReady: booleanSetting({
+        key: 'reconcile-origin-grants-on-ready',
+        name: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Name',
+        hint: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    // Warband Subtlety pool (#64): a single world-scoped value shared by
+    // every DH2 acolyte. Sheet-driven (config: false — set via the
+    // Subtlety stepper, not the settings menu); its onChange re-renders
+    // open sheets so the shared value stays in sync across clients.
+    warbandSubtlety: numberSetting({
+        key: 'warband-subtlety',
+        name: 'WH40K.SETTINGS.WarbandSubtlety.Name',
+        hint: 'WH40K.SETTINGS.WarbandSubtlety.Hint',
+        scope: 'world',
+        config: false,
+        default: WARBAND_SUBTLETY_DEFAULT,
+        onChange: rerenderSubtletyDependentSheets,
+    }),
+    // Warband Inquests (#90): world-scoped JSON list, edited through the
+    // GM Inquest tracker (config: false). Shown in the same DH2 Party
+    // Overview as Subtlety, so the same sheets re-render on change.
+    warbandInquests: jsonSetting({
+        key: 'warband-inquests',
+        name: 'WH40K.SETTINGS.WarbandInquests.Name',
+        hint: 'WH40K.SETTINGS.WarbandInquests.Hint',
+        scope: 'world',
+        config: false,
+        default: '[]',
+        parse: parseInquests,
+        empty: [] as InquestState[],
+        onChange: rerenderSubtletyDependentSheets,
+    }),
+    // Campaign-inception world-time stamp (#487): the game.time.worldTime
+    // value treated as "Day 0" for the day-since-inception counter.
+    // config: false — Day 0 is the campaign/mission inception and is not
+    // re-anchorable from the widget; it is captured once at campaign start.
+    worldTimeInception: numberSetting({
+        key: 'world-time-inception',
+        name: 'WH40K.SETTINGS.WorldTimeInception.Name',
+        hint: 'WH40K.SETTINGS.WorldTimeInception.Hint',
+        scope: 'world',
+        config: false,
+        default: WORLD_TIME_INCEPTION_DEFAULT,
+    }),
+    // The last forward advance of the world clock (#703): JSON, written by
+    // the active GM on each advance and read by the widget's Undo button.
+    worldTimeLastAdvance: jsonSetting({
+        key: 'world-time-last-advance',
+        name: 'WH40K.SETTINGS.WorldTimeLastAdvance.Name',
+        hint: 'WH40K.SETTINGS.WorldTimeLastAdvance.Hint',
+        scope: 'world',
+        config: false,
+        default: '',
+        parse: parseLastAdvance,
+        empty: null as LastAdvance | null,
+    }),
+    // The campaign's inception date as a canonical Imperial timestamp
+    // (#487). Day 0 IS this date; the widget renders inception + elapsed
+    // world time. Exposed in the settings menu because it is campaign
+    // configuration a GM sets once, not a one-click control beside the
+    // advance buttons.
+    campaignInceptionDate: stringSetting({
+        key: 'campaign-inception-date',
+        name: 'WH40K.SETTINGS.CampaignInceptionDate.Name',
+        hint: 'WH40K.SETTINGS.CampaignInceptionDate.Hint',
+        scope: 'world',
+        config: true,
+        default: CAMPAIGN_INCEPTION_DATE_DEFAULT,
+    }),
+    // Auto-generate an actor image on compendium drop via an OpenAI-
+    // compatible image endpoint (#576). Default `never` (off).
+    tokenImageGenMode: choiceSetting<'token-image-gen-mode', TokenImageGenMode>({
+        key: 'token-image-gen-mode',
+        name: 'WH40K.SETTINGS.TokenImageGenMode.Name',
+        hint: 'WH40K.SETTINGS.TokenImageGenMode.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: 'never',
+        choices: {
+            'never': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Never',
+            'if-no-image': 'WH40K.SETTINGS.TokenImageGenMode.Choices.IfNoImage',
+            'ask': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Ask',
+            'always': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Always',
+        },
+    }),
+    tokenImageGenEndpoint: stringSetting({
+        key: 'token-image-gen-endpoint',
+        name: 'WH40K.SETTINGS.TokenImageGenEndpoint.Name',
+        hint: 'WH40K.SETTINGS.TokenImageGenEndpoint.Hint',
+        scope: 'world',
+        config: true,
+        default: '',
+    }),
+    tokenImageGenModel: stringSetting({
+        key: 'token-image-gen-model',
+        name: 'WH40K.SETTINGS.TokenImageGenModel.Name',
+        hint: 'WH40K.SETTINGS.TokenImageGenModel.Hint',
+        scope: 'world',
+        config: true,
+        default: '',
+    }),
+    tokenImageGenApiKey: stringSetting({
+        key: 'token-image-gen-api-key',
+        name: 'WH40K.SETTINGS.TokenImageGenApiKey.Name',
+        hint: 'WH40K.SETTINGS.TokenImageGenApiKey.Hint',
+        scope: 'world',
+        config: true,
+        default: '',
+    }),
+    tokenImageGenSize: stringSetting({
+        key: 'token-image-gen-size',
+        name: 'WH40K.SETTINGS.TokenImageGenSize.Name',
+        hint: 'WH40K.SETTINGS.TokenImageGenSize.Hint',
+        scope: 'world',
+        config: true,
+        default: '1024x1024',
+    }),
+    // Black Crusade apotheosis: the Infamy the GM sets for
+    // a champion claimed at 100 Corruption to become a Daemon Prince
+    // rather than a Chaos Spawn.
+    apotheosisInfamyThreshold: numberSetting({
+        key: 'apotheosis-infamy-threshold',
+        name: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Name',
+        hint: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Hint',
+        scope: 'world',
+        config: true,
+        requiresReload: false,
+        default: APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT,
+    }),
+    // Attack cues (#594): the GM's switch for the whole table. Off, no
+    // client plays an attack animation or sound.
+    attackCues: booleanSetting({
+        key: 'attack-cues',
+        name: 'WH40K.SETTINGS.AttackCues.Name',
+        hint: 'WH40K.SETTINGS.AttackCues.Hint',
+        scope: 'world',
+        config: true,
+        default: true,
+    }),
+    attackCueAnimations: booleanSetting({
+        key: 'attack-cue-animations',
+        name: 'WH40K.SETTINGS.AttackCueAnimations.Name',
+        hint: 'WH40K.SETTINGS.AttackCueAnimations.Hint',
+        scope: 'client',
+        config: true,
+        default: true,
+    }),
+    attackCueSounds: booleanSetting({
+        key: 'attack-cue-sounds',
+        name: 'WH40K.SETTINGS.AttackCueSounds.Name',
+        hint: 'WH40K.SETTINGS.AttackCueSounds.Hint',
+        scope: 'client',
+        config: true,
+        default: true,
+    }),
+    attackCueVolume: numberSetting({
+        key: 'attack-cue-volume',
+        name: 'WH40K.SETTINGS.AttackCueVolume.Name',
+        hint: 'WH40K.SETTINGS.AttackCueVolume.Hint',
+        scope: 'client',
+        config: true,
+        default: ATTACK_CUE_VOLUME_DEFAULT,
+        range: { min: 0, max: 1, step: 0.05 },
+    }),
+    // Status-effect visuals (#595): under the same GM switch as attack cues.
+    statusVisuals: booleanSetting({
+        key: 'status-visuals',
+        name: 'WH40K.SETTINGS.StatusVisuals.Name',
+        hint: 'WH40K.SETTINGS.StatusVisuals.Hint',
+        scope: 'client',
+        config: true,
+        default: true,
+    }),
+    statusVisualIntensity: numberSetting({
+        key: 'status-visual-intensity',
+        name: 'WH40K.SETTINGS.StatusVisualIntensity.Name',
+        hint: 'WH40K.SETTINGS.StatusVisualIntensity.Hint',
+        scope: 'client',
+        config: true,
+        default: STATUS_VISUAL_INTENSITY_DEFAULT,
+        range: { min: 0, max: 1, step: 0.05 },
+    }),
+};
+
+type SystemSettingTypes = SettingValueTypes<typeof SETTINGS_TABLE>;
+
+// Every system setting, typed per key from this table and the Event Tracker's
+// (#712): an unregistered key no longer compiles, and `game.settings.get`
+// returns the setting's own type.
+declare module 'fvtt-types/configuration' {
+    interface SettingConfig extends SystemSettingTypes, EventTrackerSettingTypes {}
+}
+
+const T = SETTINGS_TABLE;
+
 // biome-ignore lint/complexity/noStaticOnlyClass: stable API surface with static SETTINGS constants and many callers
 export class WH40KSettings {
-    static SETTINGS = {
-        worldVersion: 'world-version',
-        primaryGameSystem: 'primary-game-system',
-        simpleAttackRolls: 'simple-attack-rolls',
-        simplePsychicRolls: 'simple-psychic-rolls',
-        processActiveEffectsDuringCombat: 'active-effects-during-combat',
-        combatPresets: 'combat-presets',
-        movementAutomation: 'movement-automation',
-        dh2Ruleset: 'dh2-ruleset',
-        degreesMode: 'degrees-mode',
-        promptIncompleteOriginPath: 'prompt-incomplete-origin-path',
-        freeformCharacters: 'freeform-characters',
-        freeformCreation: 'freeform-creation',
-        characteristicOffset: 'characteristic-offset',
-        pointBuyPool: 'point-buy-pool',
-        resyncOnReady: 'resync-on-ready',
-        deathLootPiles: 'death-loot-piles',
-        reconcileOriginGrantsOnReady: 'reconcile-origin-grants-on-ready',
-        multipleFateBurnPerRoll: 'multiple-fate-burn-per-roll',
-        autoPsychicPhenomena: 'auto-psychic-phenomena',
-        autoRollDamage: 'auto-roll-damage',
-        autoApplyDamage: 'auto-apply-damage',
-        requireCombatToAttack: 'require-combat-to-attack',
-        warbandSubtlety: 'warband-subtlety',
-        homebrewSelfTargeting: 'homebrew-self-targeting',
-        rollKeepModes: 'roll-keep-modes',
-        highGroundBand: 'high-ground-band',
-        autoCoverLos: 'auto-cover-los',
-        fatigueMode: 'fatigue-mode',
-        awarenessSenseSplit: 'awareness-sense-split',
-        magazineBuilding: 'magazine-building',
-        standardAmmoTracking: 'standard-ammo-tracking',
-        worldTimeInception: 'world-time-inception',
-        worldTimeLastAdvance: 'world-time-last-advance',
-        campaignInceptionDate: 'campaign-inception-date',
-        npcAdvancement: 'npc-advancement',
-        compendiumDropImportsActor: 'compendium-drop-imports-actor',
-        celestialBodies: 'celestial-bodies',
-        allowManualRoll: 'allow-manual-roll',
-        tokenImageGenMode: 'token-image-gen-mode',
-        tokenImageGenEndpoint: 'token-image-gen-endpoint',
-        tokenImageGenModel: 'token-image-gen-model',
-        tokenImageGenApiKey: 'token-image-gen-api-key',
-        tokenImageGenSize: 'token-image-gen-size',
-        apotheosisInfamyThreshold: 'apotheosis-infamy-threshold',
-        warbandInquests: 'warband-inquests',
-        attackCues: 'attack-cues',
-        attackCueAnimations: 'attack-cue-animations',
-        attackCueSounds: 'attack-cue-sounds',
-        attackCueVolume: 'attack-cue-volume',
-        statusVisuals: 'status-visuals',
-        statusVisualIntensity: 'status-visual-intensity',
-    };
+    /** Every system setting, in registration order (#712). */
+    static readonly TABLE = SETTINGS_TABLE;
+
+    /** Property name → setting key, derived from the table. */
+    static readonly SETTINGS = settingKeys(SETTINGS_TABLE);
 
     /** Default attack-cue volume (#594), 0–1. */
-    static ATTACK_CUE_VOLUME_DEFAULT = 0.8;
+    static ATTACK_CUE_VOLUME_DEFAULT = ATTACK_CUE_VOLUME_DEFAULT;
 
     /** Default status-visual intensity scale (#595), 0–1. */
-    static STATUS_VISUAL_INTENSITY_DEFAULT = 1;
+    static STATUS_VISUAL_INTENSITY_DEFAULT = STATUS_VISUAL_INTENSITY_DEFAULT;
 
-    /** A boolean cue setting; unregistered (tests, early boot) reads as on. */
-    private static cueFlag(key: string): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, key) !== false;
-        } catch {
-            return true;
-        }
-    }
+    /** Default BC apotheosis Infamy threshold (BC rules). */
+    static APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT = APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT;
 
-    /** A numeric cue setting; unregistered or not a number reads as `fallback`. */
-    private static cueNumber(key: string, fallback: number): number {
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-            const value: unknown = game.settings.get(SYSTEM_ID, key);
-            return typeof value === 'number' ? value : fallback;
-        } catch {
-            return fallback;
-        }
-    }
+    /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
+    static WARBAND_SUBTLETY_MAX = WARBAND_SUBTLETY_MAX;
+    static WARBAND_SUBTLETY_DEFAULT = WARBAND_SUBTLETY_DEFAULT;
+
+    /** Default campaign-inception world-time stamp (#487). */
+    static WORLD_TIME_INCEPTION_DEFAULT = WORLD_TIME_INCEPTION_DEFAULT;
+
+    /** Neutral placeholder for the campaign-inception Imperial timestamp (#487). */
+    static CAMPAIGN_INCEPTION_DATE_DEFAULT = CAMPAIGN_INCEPTION_DATE_DEFAULT;
 
     /** The settings that decide how this client plays attack cues (#594). Safe before registration (all on, default volume). */
     static getAttackCueSettings(): { worldEnabled: boolean; animationsEnabled: boolean; soundsEnabled: boolean; volume: number } {
-        const S = WH40KSettings.SETTINGS;
         return {
-            worldEnabled: WH40KSettings.cueFlag(S.attackCues),
-            animationsEnabled: WH40KSettings.cueFlag(S.attackCueAnimations),
-            soundsEnabled: WH40KSettings.cueFlag(S.attackCueSounds),
-            volume: WH40KSettings.cueNumber(S.attackCueVolume, WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT),
+            worldEnabled: readSetting(T.attackCues),
+            animationsEnabled: readSetting(T.attackCueAnimations),
+            soundsEnabled: readSetting(T.attackCueSounds),
+            volume: readSetting(T.attackCueVolume),
         };
     }
 
@@ -140,42 +650,15 @@ export class WH40KSettings {
      * toggle and intensity scale. Safe before registration (all on, full intensity).
      */
     static getStatusVisualSettings(): { worldEnabled: boolean; enabled: boolean; intensity: number; soundsEnabled: boolean; volume: number } {
-        const S = WH40KSettings.SETTINGS;
         const cues = WH40KSettings.getAttackCueSettings();
         return {
             worldEnabled: cues.worldEnabled,
-            enabled: WH40KSettings.cueFlag(S.statusVisuals),
-            intensity: WH40KSettings.cueNumber(S.statusVisualIntensity, WH40KSettings.STATUS_VISUAL_INTENSITY_DEFAULT),
+            enabled: readSetting(T.statusVisuals),
+            intensity: readSetting(T.statusVisualIntensity),
             soundsEnabled: cues.soundsEnabled,
             volume: cues.volume,
         };
     }
-
-    /**
-     * Default Infamy a Black Crusade champion needs for apotheosis rather than
-     * spawndom when Corruption reaches 100 (BC rules). The book leaves the
-     * threshold to the GM (suggesting 75, 90 or 100); 100 is the default.
-     */
-    static APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT = 100;
-
-    /** Floor/ceiling of the warband Subtlety pool (#64). RAW DH2: 0–100. */
-    static WARBAND_SUBTLETY_MAX = 100;
-    static WARBAND_SUBTLETY_DEFAULT = 60;
-
-    /** Default campaign-inception world-time stamp (#487): 0 = the world's own
-     *  epoch. Day 0 is the campaign/mission inception and is fixed, not
-     *  re-anchorable from the widget. */
-    static WORLD_TIME_INCEPTION_DEFAULT = 0;
-
-    /**
-     * Neutral placeholder for the campaign-inception Imperial timestamp (#487).
-     *
-     * Deliberately NOT any real campaign's date: which date a campaign began on is
-     * **world data**, set per world by its GM, not something the system ships. This
-     * default exists only so an unconfigured world renders a well-formed stamp
-     * instead of blank.
-     */
-    static CAMPAIGN_INCEPTION_DATE_DEFAULT = '0.000.001.M41';
 
     /**
      * Read the campaign-inception Imperial date (#487), falling back to the
@@ -183,15 +666,7 @@ export class WH40KSettings {
      * value must not take the world-time widget down.
      */
     static getCampaignInceptionDate(): ImperialDate {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed below by parseImperialDate
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.campaignInceptionDate);
-        } catch {
-            raw = undefined;
-        }
-        const parsed = typeof raw === 'string' ? parseImperialDate(raw) : null;
-        return parsed ?? (parseImperialDate(WH40KSettings.CAMPAIGN_INCEPTION_DATE_DEFAULT) as ImperialDate);
+        return parseImperialDate(readSetting(T.campaignInceptionDate)) ?? (parseImperialDate(CAMPAIGN_INCEPTION_DATE_DEFAULT) as ImperialDate);
     }
 
     /**
@@ -203,14 +678,7 @@ export class WH40KSettings {
      * can read it during early boot without throwing.
      */
     static getWorldTimeInception(): number {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeInception);
-        } catch {
-            return WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
-        }
-        return typeof raw === 'number' && Number.isFinite(raw) ? Math.trunc(raw) : WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
+        return Math.trunc(readSetting(T.worldTimeInception));
     }
 
     /**
@@ -220,8 +688,7 @@ export class WH40KSettings {
      * practice — a world setting write is rejected for non-GM users by Foundry.
      */
     static async setWorldTimeInception(stamp: number): Promise<void> {
-        const value = Number.isFinite(stamp) ? Math.trunc(stamp) : WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT;
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeInception, value);
+        await writeSetting(T.worldTimeInception, Number.isFinite(stamp) ? Math.trunc(stamp) : WORLD_TIME_INCEPTION_DEFAULT);
     }
 
     /**
@@ -231,15 +698,7 @@ export class WH40KSettings {
      * during early boot without throwing.
      */
     static getWarbandSubtlety(): number {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.warbandSubtlety);
-        } catch {
-            return WH40KSettings.WARBAND_SUBTLETY_DEFAULT;
-        }
-        const n = typeof raw === 'number' && Number.isFinite(raw) ? Math.trunc(raw) : WH40KSettings.WARBAND_SUBTLETY_DEFAULT;
-        return Math.max(0, Math.min(WH40KSettings.WARBAND_SUBTLETY_MAX, n));
+        return Math.max(0, Math.min(WARBAND_SUBTLETY_MAX, Math.trunc(readSetting(T.warbandSubtlety))));
     }
 
     /**
@@ -248,8 +707,7 @@ export class WH40KSettings {
      * re-renders open sheets (see {@link rerenderSubtletyDependentSheets}).
      */
     static async setWarbandSubtlety(value: number): Promise<void> {
-        const clamped = Math.max(0, Math.min(WH40KSettings.WARBAND_SUBTLETY_MAX, Math.trunc(value)));
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.warbandSubtlety, clamped);
+        await writeSetting(T.warbandSubtlety, Math.max(0, Math.min(WARBAND_SUBTLETY_MAX, Math.trunc(value))));
     }
 
     /**
@@ -271,16 +729,67 @@ export class WH40KSettings {
         }
     }
 
+    /** The world's migration version (`wh40k-rpg-migrations.ts`). */
+    static getWorldVersion(): number {
+        return readSetting(T.worldVersion);
+    }
+
+    /** Record the world's migration version. */
+    static async setWorldVersion(version: number): Promise<void> {
+        await writeSetting(T.worldVersion, version);
+    }
+
+    /** When true (default), Active Effects are processed during combat turns. Read at turn change. */
+    static isActiveEffectsDuringCombatEnabled(): boolean {
+        return readSetting(T.processActiveEffectsDuringCombat);
+    }
+
+    /** Client preference: attack rolls skip the full roll dialog. Off by default. */
+    static isSimpleAttackRolls(): boolean {
+        return readSetting(T.simpleAttackRolls);
+    }
+
+    /** Client preference: psychic power rolls skip the full roll dialog. Off by default. */
+    static isSimplePsychicRolls(): boolean {
+        return readSetting(T.simplePsychicRolls);
+    }
+
+    /** When true (default), Psychic Phenomena are rolled automatically when a power triggers them. */
+    static isAutoPsychicPhenomenaEnabled(): boolean {
+        return readSetting(T.autoPsychicPhenomena);
+    }
+
+    /** When true (default), the world re-syncs compendium-backed actors on `ready`. */
+    static isResyncOnReadyEnabled(): boolean {
+        return readSetting(T.resyncOnReady);
+    }
+
+    /** When true, a dead NPC becomes a loot pile. Off by default. */
+    static isDeathLootPilesEnabled(): boolean {
+        return readSetting(T.deathLootPiles);
+    }
+
+    /** When true (default), origin-path grants are reconciled on `ready`. */
+    static isOriginGrantReconcileEnabled(): boolean {
+        return readSetting(T.reconcileOriginGrantsOnReady);
+    }
+
+    /** The saved combat presets (#712). A copy: callers may change it before writing it back. */
+    static getCombatPresets(): CombatPreset[] {
+        return [...readSetting(T.combatPresets)];
+    }
+
+    /** Store the combat presets. */
+    static async setCombatPresets(presets: CombatPreset[]): Promise<void> {
+        await writeSetting(T.combatPresets, presets);
+    }
+
     /** When true, a successful weapon/psychic attack rolls its damage automatically
      *  and posts the damage card, rather than waiting for the chat "Roll Damage"
      *  button. Defaults to true. Safe to call before the setting is registered
      *  (returns true). */
     static isAutoRollDamageEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoRollDamage) !== false;
-        } catch {
-            return true;
-        }
+        return readSetting(T.autoRollDamage);
     }
 
     /** When true, a damage roll resolved on a GM client against a selected target
@@ -289,11 +798,7 @@ export class WH40KSettings {
      *  overflow — instead of waiting for the chat "Assign Damage" button. Opt-in;
      *  defaults to false. Safe before registration (returns false). */
     static isAutoApplyDamageEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoApplyDamage) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.autoApplyDamage);
     }
 
     /** When true, weapon attacks may only be initiated during an active combat
@@ -301,11 +806,7 @@ export class WH40KSettings {
      *  disable it for out-of-combat / narrative attacks. Safe before
      *  registration (returns true). */
     static isCombatRequiredToAttack(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.requireCombatToAttack) !== false;
-        } catch {
-            return true;
-        }
+        return readSetting(T.requireCombatToAttack);
     }
 
     /**
@@ -314,31 +815,17 @@ export class WH40KSettings {
      * `full`. Safe before registration (returns `full`).
      */
     static getMovementAutomation(): 'full' | 'display' | 'none' {
-        try {
-            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation));
-            return value === 'display' || value === 'none' ? value : 'full';
-        } catch {
-            return 'full';
-        }
+        return readSetting(T.movementAutomation);
     }
 
     /** Homebrew: allow more than one Fate Point spend on the same roll. RAW permits only one. */
     static isMultipleFateBurnAllowed(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.multipleFateBurnPerRoll) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.multipleFateBurnPerRoll);
     }
 
     /** Integer offset added to the characteristic base (25) during character generation. Defaults to 0. */
     static getCharacteristicOffset(): number {
-        try {
-            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset));
-            return Number.isFinite(n) ? Math.trunc(n) : 0;
-        } catch {
-            return 0;
-        }
+        return Math.trunc(readSetting(T.characteristicOffset));
     }
 
     /** Effective base characteristic value used by character generation: 25 + offset. */
@@ -355,12 +842,7 @@ export class WH40KSettings {
      * lookup is involved. Defaults to 60 (DH2e). Clamped to a non-negative integer.
      */
     static getCharacteristicPointBuyPool(): number {
-        try {
-            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.pointBuyPool));
-            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : 60;
-        } catch {
-            return 60;
-        }
+        return Math.max(0, Math.trunc(readSetting(T.pointBuyPool)));
     }
 
     /**
@@ -369,25 +851,13 @@ export class WH40KSettings {
      * registration, falls back to {@link APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT}.
      */
     static getApotheosisInfamyThreshold(): number {
-        const fallback = WH40KSettings.APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT;
-        try {
-            const n = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.apotheosisInfamyThreshold));
-            return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : fallback;
-        } catch {
-            return fallback;
-        }
+        return Math.max(0, Math.trunc(readSetting(T.apotheosisInfamyThreshold)));
     }
 
-    /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
     /** The configured degrees-of-success mode (defaults to `raw`, which
      *  resolves per game system at the call site). Safe before registration. */
     static getDegreesMode(): DegreesMode {
-        try {
-            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.degreesMode));
-            return value === 'gen1' || value === 'gen2' ? value : 'raw';
-        } catch {
-            return 'raw';
-        }
+        return readSetting(T.degreesMode);
     }
 
     /** Active fatigue-model override (#114). `auto` = each game line's RAW default
@@ -395,22 +865,13 @@ export class WH40KSettings {
      *  chosen model is forced for every actor. Safe before registration (returns
      *  `auto`). */
     static getFatigueMode(): FatigueMode {
-        try {
-            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.fatigueMode));
-            return value === 'halving' || value === 'flat' || value === 'condition' ? value : 'auto';
-        } catch {
-            return 'auto';
-        }
+        return readSetting(T.fatigueMode);
     }
 
     /** When true (default), opening an unbuilt character/NPC sheet prompts to
      *  run the origin-path builder. Safe before registration (returns true). */
     static isOriginPathPromptEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.promptIncompleteOriginPath) !== false;
-        } catch {
-            return true;
-        }
+        return readSetting(T.promptIncompleteOriginPath);
     }
 
     /** When true, building a character by dragging items (e.g. an origin path)
@@ -418,11 +879,7 @@ export class WH40KSettings {
      *  Origin Path Builder. Defaults to false. Safe before registration. See
      *  issue #219. */
     static isFreeformCharactersEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCharacters) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.freeformCharacters);
     }
 
     /** When true, the "Drop to Add" dropzone on the Talents and Traits panels is
@@ -431,11 +888,7 @@ export class WH40KSettings {
      *  by default and talents/traits go through the structured advancement path.
      *  Safe to call before the setting is registered (returns false). */
     static isFreeformCreation(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.freeformCreation) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.freeformCreation);
     }
 
     /**
@@ -456,11 +909,7 @@ export class WH40KSettings {
      *  enabling this exposes the mixed-loadout builder. Safe to call before the
      *  setting is registered (returns false). */
     static isMagazineBuildingEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.magazineBuilding) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.magazineBuilding);
     }
 
     /** Homebrew: track standard ammunition as inventory items. On, a starting
@@ -468,11 +917,7 @@ export class WH40KSettings {
      *  Reload uses them up; off, Reload tops a weapon up without an ammunition
      *  item (standard ammo goes uncounted). Off by default; safe before registration. */
     static isStandardAmmoTrackingEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.standardAmmoTracking) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.standardAmmoTracking);
     }
 
     /** When true, NPCs are treated as buildable characters (#503): their stat block is
@@ -481,11 +926,7 @@ export class WH40KSettings {
      *  the Advancement Dialog. Off by default: NPCs stay flat stat blocks, and none of the
      *  derivation runs. Safe to call before the setting is registered (returns false). */
     static isNpcAdvancementEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.npcAdvancement) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.npcAdvancement);
     }
 
     /** When true, dropping a compendium actor onto a scene imports a world Actor
@@ -493,11 +934,7 @@ export class WH40KSettings {
      *  token-only, compendium-backed unlinked tokens (#586). Safe to call before the
      *  setting is registered (returns false). */
     static isCompendiumDropImportEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.compendiumDropImportsActor) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.compendiumDropImportsActor);
     }
 
     /** The campaign's celestial bodies (#588) — name, rotation, orbit, tilt and
@@ -505,121 +942,64 @@ export class WH40KSettings {
      *  JSON and validated on read; anything unparseable reads as no bodies, so
      *  scene lighting simply stays manual. Safe before registration (returns {}). */
     static getCelestialBodies(): CelestialBodies {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies);
-        } catch {
-            return {};
-        }
-        if (typeof raw !== 'string' || raw.trim() === '') return {};
-        try {
-            return parseCelestialBodies(JSON.parse(raw));
-        } catch {
-            return {};
-        }
+        return readJsonSetting(T.celestialBodies);
     }
 
     /** Persist the celestial bodies (#588); world-scoped, so every client sees it. */
     static async setCelestialBodies(bodies: CelestialBodies): Promise<void> {
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.celestialBodies, JSON.stringify(bodies));
+        await writeSetting(T.celestialBodies, JSON.stringify(bodies));
     }
 
     /** The last forward advance of the world clock (#703), for the widget's undo; null when there is none to undo. Safe before registration. */
     static getLastWorldTimeAdvance(): LastAdvance | null {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeLastAdvance);
-        } catch {
-            return null;
-        }
-        if (typeof raw !== 'string' || raw.trim() === '') return null;
-        try {
-            return parseLastAdvance(JSON.parse(raw));
-        } catch {
-            return null;
-        }
+        return readJsonSetting(T.worldTimeLastAdvance);
     }
 
     /** Store (or, with null, drop) the last world-time advance (#703). World-scoped, so every GM's widget offers the same undo. */
     static async setLastWorldTimeAdvance(record: LastAdvance | null): Promise<void> {
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldTimeLastAdvance, record === null ? '' : JSON.stringify(record));
+        await writeSetting(T.worldTimeLastAdvance, record === null ? '' : JSON.stringify(record));
     }
 
     /** The warband's Inquests (#90): a world-scoped list stored as JSON and
      *  validated on read. Anything unparseable reads as no Inquests. Safe
      *  before registration (returns []). */
     static getWarbandInquests(): InquestState[] {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.warbandInquests);
-        } catch {
-            return [];
-        }
-        if (typeof raw !== 'string' || raw.trim() === '') return [];
-        try {
-            return parseInquests(JSON.parse(raw));
-        } catch {
-            return [];
-        }
+        return readJsonSetting(T.warbandInquests);
     }
 
     /** Persist the warband's Inquests (#90). World-scoped, so only a GM can write it. */
     static async setWarbandInquests(inquests: readonly InquestState[]): Promise<void> {
-        await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.warbandInquests, JSON.stringify(inquests));
+        await writeSetting(T.warbandInquests, JSON.stringify(inquests));
     }
 
     /** When true, the manual roll input (physical dice entry) is shown in the
      *  roll dialog. Off by default — most tables use digital dice exclusively.
      *  Safe to call before the setting is registered (returns false). */
     static isManualRollEnabled(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.allowManualRoll) === true;
-        } catch {
-            return false;
-        }
-    }
-
-    /** A world setting read as a plain string, with a fallback when unregistered
-     *  or non-string (#576). */
-    private static readStringSetting(key: string, fallback: string): string {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, key);
-        } catch {
-            return fallback;
-        }
-        return typeof raw === 'string' ? raw : fallback;
+        return readSetting(T.allowManualRoll);
     }
 
     /** When/whether to auto-generate an actor image on compendium drop (#576).
      *  Defaults to `never`. Safe to call before the setting is registered. */
     static getTokenImageGenMode(): TokenImageGenMode {
-        return coerceTokenImageGenMode(WH40KSettings.readStringSetting(WH40KSettings.SETTINGS.tokenImageGenMode, 'never'));
+        return readSetting(T.tokenImageGenMode);
     }
 
     /** The resolved token-image-generation config (#576) — mode + endpoint + model +
      *  API key + size, each with a safe fallback. */
     static getTokenImageGenConfig(): TokenImageGenConfig {
-        const S = WH40KSettings.SETTINGS;
         return {
             mode: WH40KSettings.getTokenImageGenMode(),
-            endpoint: WH40KSettings.readStringSetting(S.tokenImageGenEndpoint, ''),
-            model: WH40KSettings.readStringSetting(S.tokenImageGenModel, ''),
-            apiKey: WH40KSettings.readStringSetting(S.tokenImageGenApiKey, ''),
-            size: WH40KSettings.readStringSetting(S.tokenImageGenSize, '1024x1024'),
+            endpoint: readSetting(T.tokenImageGenEndpoint),
+            model: readSetting(T.tokenImageGenModel),
+            apiKey: readSetting(T.tokenImageGenApiKey),
+            size: readSetting(T.tokenImageGenSize),
         };
     }
 
+    /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
     static getRuleset(): DH2Ruleset {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset) === 'raw' ? 'raw' : 'homebrew';
-        } catch {
-            return 'homebrew';
-        }
+        return readSetting(T.dh2Ruleset);
     }
 
     static isHomebrew(): boolean {
@@ -632,11 +1012,7 @@ export class WH40KSettings {
      *  apply to oneself (#393). When false, self-targeting is left to RAW. Defaults
      *  to false. Safe to call before the setting is registered (returns false). */
     static isHomebrewSelfTargeting(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.homebrewSelfTargeting) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.homebrewSelfTargeting);
     }
 
     /** Homebrew: when true, the roll dialog offers Advantage / Disadvantage /
@@ -644,11 +1020,7 @@ export class WH40KSettings {
      *  `rolls/roll-keep.ts`). Off by default (RAW: one d100). Safe to call before
      *  the setting is registered (returns false). */
     static isRollKeepModes(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.rollKeepModes) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.rollKeepModes);
     }
 
     /** Homebrew (#440): when true, Awareness resolves per sense channel (Visual /
@@ -658,11 +1030,7 @@ export class WH40KSettings {
      *  auto-fails Visual) apply. Off by default; when off, Awareness rolls exactly
      *  as RAW. Safe to call before the setting is registered (returns false). */
     static isAwarenessSenseSplit(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.awarenessSenseSplit) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.awarenessSenseSplit);
     }
 
     /**
@@ -677,14 +1045,8 @@ export class WH40KSettings {
      * @returns {number}  The configured band, or 0.
      */
     static getHighGroundBand(): number {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.settings.get returns Foundry's untyped setting value; narrowed by the typeof guard below
-        let raw: unknown;
-        try {
-            raw = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.highGroundBand);
-        } catch {
-            return 0;
-        }
-        return typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? raw : 0;
+        const band = readSetting(T.highGroundBand);
+        return band > 0 ? band : 0;
     }
 
     /** When true, the attack dialog auto-detects line of sight + full/half cover
@@ -693,597 +1055,17 @@ export class WH40KSettings {
      *  geometry needs verification on real scenes before it should drive rolls.
      *  Safe to call before the setting is registered (returns false). */
     static isAutoCoverLos(): boolean {
-        try {
-            return game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.autoCoverLos) === true;
-        } catch {
-            return false;
-        }
+        return readSetting(T.autoCoverLos);
     }
 
     /** The world's primary 40K RPG line; default dh2. Safe to call before settings init. */
     static getPrimaryGameSystem(): GameSystemId {
-        try {
-            const value = String(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.primaryGameSystem));
-            return ALL_SYSTEM_IDS.find((id) => id === value) ?? 'dh2';
-        } catch {
-            return 'dh2';
-        }
+        const id = readSetting(T.primaryGameSystem);
+        return ALL_SYSTEM_IDS.find((known) => known === id) ?? 'dh2';
     }
 
+    /** Register every system setting, in table order (#299, #712). */
     static registerSettings(): void {
-        const S = WH40KSettings.SETTINGS;
-        const descriptors: readonly SettingDescriptor[] = [
-            {
-                key: S.worldVersion,
-                name: 'WH40K.SETTINGS.WorldVersion.Name',
-                hint: 'WH40K.SETTINGS.WorldVersion.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: true,
-                default: 1,
-                type: Number,
-            },
-            {
-                key: S.processActiveEffectsDuringCombat,
-                name: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Name',
-                hint: 'WH40K.SETTINGS.ProcessActiveEffectsDuringCombat.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.simpleAttackRolls,
-                name: 'WH40K.SETTINGS.SimpleAttackRolls.Name',
-                hint: 'WH40K.SETTINGS.SimpleAttackRolls.Hint',
-                scope: 'client',
-                config: true,
-                requiresReload: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.simplePsychicRolls,
-                name: 'WH40K.SETTINGS.SimplePsychicRolls.Name',
-                hint: 'WH40K.SETTINGS.SimplePsychicRolls.Hint',
-                scope: 'client',
-                config: true,
-                requiresReload: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.autoPsychicPhenomena,
-                name: 'WH40K.SETTINGS.AutoPsychicPhenomena.Name',
-                hint: 'WH40K.SETTINGS.AutoPsychicPhenomena.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.autoRollDamage,
-                name: 'WH40K.SETTINGS.AutoRollDamage.Name',
-                hint: 'WH40K.SETTINGS.AutoRollDamage.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.autoApplyDamage,
-                name: 'WH40K.SETTINGS.AutoApplyDamage.Name',
-                hint: 'WH40K.SETTINGS.AutoApplyDamage.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.magazineBuilding,
-                name: 'WH40K.SETTINGS.MagazineBuilding.Name',
-                hint: 'WH40K.SETTINGS.MagazineBuilding.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.standardAmmoTracking,
-                name: 'WH40K.SETTINGS.StandardAmmoTracking.Name',
-                hint: 'WH40K.SETTINGS.StandardAmmoTracking.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.requireCombatToAttack,
-                name: 'WH40K.SETTINGS.RequireCombatToAttack.Name',
-                hint: 'WH40K.SETTINGS.RequireCombatToAttack.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.combatPresets,
-                name: 'WH40K.SETTINGS.CombatPresets.Name',
-                hint: 'WH40K.SETTINGS.CombatPresets.Hint',
-                scope: 'world',
-                config: false,
-                default: [],
-                type: Array,
-            },
-            {
-                key: S.primaryGameSystem,
-                name: 'WH40K.SETTINGS.PrimaryGameSystem.Name',
-                hint: 'WH40K.SETTINGS.PrimaryGameSystem.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: true,
-                default: 'dh2',
-                type: String,
-                choices: Object.fromEntries(ALL_SYSTEM_IDS.map((id) => [id, `WH40K.SETTINGS.PrimaryGameSystem.Choices.${id}`])),
-            },
-            {
-                key: S.dh2Ruleset,
-                name: 'WH40K.SETTINGS.DH2Ruleset.Name',
-                hint: 'WH40K.SETTINGS.DH2Ruleset.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: true,
-                default: 'homebrew',
-                type: String,
-                choices: {
-                    homebrew: 'WH40K.SETTINGS.DH2Ruleset.Choices.Homebrew',
-                    raw: 'WH40K.SETTINGS.DH2Ruleset.Choices.Raw',
-                },
-            },
-            {
-                key: S.degreesMode,
-                name: 'WH40K.SETTINGS.DegreesMode.Name',
-                hint: 'WH40K.SETTINGS.DegreesMode.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: 'raw',
-                type: String,
-                choices: {
-                    raw: 'WH40K.SETTINGS.DegreesMode.Choices.Raw',
-                    gen1: 'WH40K.SETTINGS.DegreesMode.Choices.Gen1',
-                    gen2: 'WH40K.SETTINGS.DegreesMode.Choices.Gen2',
-                },
-            },
-            {
-                key: S.fatigueMode,
-                name: 'WH40K.SETTINGS.FatigueMode.Name',
-                hint: 'WH40K.SETTINGS.FatigueMode.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: 'auto',
-                type: String,
-                choices: {
-                    auto: 'WH40K.SETTINGS.FatigueMode.Choices.Auto',
-                    halving: 'WH40K.SETTINGS.FatigueMode.Choices.Halving',
-                    flat: 'WH40K.SETTINGS.FatigueMode.Choices.Flat',
-                    condition: 'WH40K.SETTINGS.FatigueMode.Choices.Condition',
-                },
-            },
-            {
-                key: S.promptIncompleteOriginPath,
-                name: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Name',
-                hint: 'WH40K.SETTINGS.PromptIncompleteOriginPath.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.freeformCharacters,
-                name: 'WH40K.SETTINGS.FreeformCharacters.Name',
-                hint: 'WH40K.SETTINGS.FreeformCharacters.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                // Gates the "Drop to Add" dropzone on the Talents and Traits panels
-                // (#396). When disabled (default) those panels hide the dropzone so
-                // talents/traits go through the structured advancement/XP flow rather
-                // than being added by free drag-and-drop.
-                key: S.freeformCreation,
-                name: 'WH40K.SETTINGS.FreeformCreation.Name',
-                hint: 'WH40K.SETTINGS.FreeformCreation.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                // Homebrew self-target treatment (#393): point-blank range + skip
-                // enemy-defence situationals (size/cover/target-state) when you target
-                // yourself. Off = RAW self-targeting.
-                key: S.homebrewSelfTargeting,
-                name: 'WH40K.SETTINGS.HomebrewSelfTargeting.Name',
-                hint: 'WH40K.SETTINGS.HomebrewSelfTargeting.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                // Homebrew roll-twice-keep-one modes on d100 tests. Off = RAW.
-                key: S.rollKeepModes,
-                name: 'WH40K.SETTINGS.RollKeepModes.Name',
-                hint: 'WH40K.SETTINGS.RollKeepModes.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                // Minimum elevation delta before RAW Higher Ground applies
-                // (#407). Default 0 = RAW: strictly above is higher ground.
-                // Raising it stops a crate or a half-step of rubble from
-                // granting the +10, and on a Levels map a band below the floor
-                // height still lets a genuine storey qualify.
-                key: S.highGroundBand,
-                name: 'WH40K.SETTINGS.HighGroundBand.Name',
-                hint: 'WH40K.SETTINGS.HighGroundBand.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: 0,
-                type: Number,
-            },
-            {
-                // Auto line-of-sight + full/half cover from scene walls (#406).
-                // Off by default until the canvas geometry is verified on real scenes.
-                key: S.autoCoverLos,
-                name: 'WH40K.SETTINGS.AutoCoverLos.Name',
-                hint: 'WH40K.SETTINGS.AutoCoverLos.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                // Homebrew Awareness sense-split (#440): resolve Awareness per sense
-                // channel and re-scope the auspex bonus to Visual only. Off = RAW.
-                key: S.awarenessSenseSplit,
-                name: 'WH40K.SETTINGS.AwarenessSenseSplit.Name',
-                hint: 'WH40K.SETTINGS.AwarenessSenseSplit.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.characteristicOffset,
-                name: 'WH40K.SETTINGS.CharacteristicOffset.Name',
-                hint: 'WH40K.SETTINGS.CharacteristicOffset.Hint',
-                scope: 'world',
-                config: true,
-                default: 0,
-                type: Number,
-            },
-            {
-                key: S.pointBuyPool,
-                name: 'WH40K.SETTINGS.PointBuyPool.Name',
-                hint: 'WH40K.SETTINGS.PointBuyPool.Hint',
-                scope: 'world',
-                config: true,
-                // DH2e point-buy allocates 60 points over the base values (#223).
-                default: 60,
-                type: Number,
-            },
-            {
-                key: S.movementAutomation,
-                name: 'WH40K.SETTINGS.MovementAutomation.Name',
-                hint: 'WH40K.SETTINGS.MovementAutomation.Hint',
-                scope: 'world',
-                config: true,
-                default: 'full',
-                type: String,
-                choices: {
-                    full: 'WH40K.SETTINGS.MovementAutomation.Full',
-                    display: 'WH40K.SETTINGS.MovementAutomation.Display',
-                    none: 'WH40K.SETTINGS.MovementAutomation.None',
-                },
-            },
-            {
-                key: S.multipleFateBurnPerRoll,
-                name: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Name',
-                hint: 'WH40K.SETTINGS.MultipleFateBurnPerRoll.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.resyncOnReady,
-                name: 'WH40K.SETTINGS.ResyncOnReady.Name',
-                hint: 'WH40K.SETTINGS.ResyncOnReady.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.deathLootPiles,
-                name: 'WH40K.SETTINGS.DeathLootPiles.Name',
-                hint: 'WH40K.SETTINGS.DeathLootPiles.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.npcAdvancement,
-                name: 'WH40K.SETTINGS.NpcAdvancement.Name',
-                hint: 'WH40K.SETTINGS.NpcAdvancement.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.compendiumDropImportsActor,
-                name: 'WH40K.SETTINGS.CompendiumDropImportsActor.Name',
-                hint: 'WH40K.SETTINGS.CompendiumDropImportsActor.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.celestialBodies,
-                name: 'WH40K.SETTINGS.CelestialBodies.Name',
-                hint: 'WH40K.SETTINGS.CelestialBodies.Hint',
-                scope: 'world',
-                config: false,
-                default: '{}',
-                type: String,
-            },
-            {
-                key: S.allowManualRoll,
-                name: 'WH40K.SETTINGS.AllowManualRoll.Name',
-                hint: 'WH40K.SETTINGS.AllowManualRoll.Hint',
-                scope: 'world',
-                config: true,
-                default: false,
-                type: Boolean,
-            },
-            {
-                key: S.reconcileOriginGrantsOnReady,
-                name: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Name',
-                hint: 'WH40K.SETTINGS.ReconcileOriginGrantsOnReady.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                // Warband Subtlety pool (#64): a single world-scoped value shared by
-                // every DH2 acolyte. Sheet-driven (config: false — set via the
-                // Subtlety stepper, not the settings menu); its onChange re-renders
-                // open sheets so the shared value stays in sync across clients.
-                key: S.warbandSubtlety,
-                name: 'WH40K.SETTINGS.WarbandSubtlety.Name',
-                hint: 'WH40K.SETTINGS.WarbandSubtlety.Hint',
-                scope: 'world',
-                config: false,
-                default: WH40KSettings.WARBAND_SUBTLETY_DEFAULT,
-                type: Number,
-                onChange: () => {
-                    WH40KSettings.rerenderSubtletyDependentSheets();
-                },
-            },
-            {
-                // Warband Inquests (#90): world-scoped JSON list, edited through the
-                // GM Inquest tracker (config: false). Shown in the same DH2 Party
-                // Overview as Subtlety, so the same sheets re-render on change.
-                key: S.warbandInquests,
-                name: 'WH40K.SETTINGS.WarbandInquests.Name',
-                hint: 'WH40K.SETTINGS.WarbandInquests.Hint',
-                scope: 'world',
-                config: false,
-                default: '[]',
-                type: String,
-                onChange: () => {
-                    WH40KSettings.rerenderSubtletyDependentSheets();
-                },
-            },
-            {
-                // Campaign-inception world-time stamp (#487): the game.time.worldTime
-                // value treated as "Day 0" for the day-since-inception counter.
-                // config: false — Day 0 is the campaign/mission inception and is not
-                // re-anchorable from the widget; it is captured once at campaign start.
-                key: S.worldTimeInception,
-                name: 'WH40K.SETTINGS.WorldTimeInception.Name',
-                hint: 'WH40K.SETTINGS.WorldTimeInception.Hint',
-                scope: 'world',
-                config: false,
-                default: WH40KSettings.WORLD_TIME_INCEPTION_DEFAULT,
-                type: Number,
-            },
-            {
-                // The last forward advance of the world clock (#703): JSON, written by
-                // the active GM on each advance and read by the widget's Undo button.
-                key: S.worldTimeLastAdvance,
-                name: 'WH40K.SETTINGS.WorldTimeLastAdvance.Name',
-                hint: 'WH40K.SETTINGS.WorldTimeLastAdvance.Hint',
-                scope: 'world',
-                config: false,
-                default: '',
-                type: String,
-            },
-            {
-                // The campaign's inception date as a canonical Imperial timestamp
-                // (#487). Day 0 IS this date; the widget renders inception + elapsed
-                // world time. Exposed in the settings menu because it is campaign
-                // configuration a GM sets once, not a one-click control beside the
-                // advance buttons.
-                key: S.campaignInceptionDate,
-                name: 'WH40K.SETTINGS.CampaignInceptionDate.Name',
-                hint: 'WH40K.SETTINGS.CampaignInceptionDate.Hint',
-                scope: 'world',
-                config: true,
-                default: WH40KSettings.CAMPAIGN_INCEPTION_DATE_DEFAULT,
-                type: String,
-            },
-            {
-                // Auto-generate an actor image on compendium drop via an OpenAI-
-                // compatible image endpoint (#576). Default `never` (off).
-                key: S.tokenImageGenMode,
-                name: 'WH40K.SETTINGS.TokenImageGenMode.Name',
-                hint: 'WH40K.SETTINGS.TokenImageGenMode.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: 'never',
-                type: String,
-                choices: {
-                    'never': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Never',
-                    'if-no-image': 'WH40K.SETTINGS.TokenImageGenMode.Choices.IfNoImage',
-                    'ask': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Ask',
-                    'always': 'WH40K.SETTINGS.TokenImageGenMode.Choices.Always',
-                },
-            },
-            {
-                key: S.tokenImageGenEndpoint,
-                name: 'WH40K.SETTINGS.TokenImageGenEndpoint.Name',
-                hint: 'WH40K.SETTINGS.TokenImageGenEndpoint.Hint',
-                scope: 'world',
-                config: true,
-                default: '',
-                type: String,
-            },
-            {
-                key: S.tokenImageGenModel,
-                name: 'WH40K.SETTINGS.TokenImageGenModel.Name',
-                hint: 'WH40K.SETTINGS.TokenImageGenModel.Hint',
-                scope: 'world',
-                config: true,
-                default: '',
-                type: String,
-            },
-            {
-                key: S.tokenImageGenApiKey,
-                name: 'WH40K.SETTINGS.TokenImageGenApiKey.Name',
-                hint: 'WH40K.SETTINGS.TokenImageGenApiKey.Hint',
-                scope: 'world',
-                config: true,
-                default: '',
-                type: String,
-            },
-            {
-                key: S.tokenImageGenSize,
-                name: 'WH40K.SETTINGS.TokenImageGenSize.Name',
-                hint: 'WH40K.SETTINGS.TokenImageGenSize.Hint',
-                scope: 'world',
-                config: true,
-                default: '1024x1024',
-                type: String,
-            },
-            {
-                // Black Crusade apotheosis: the Infamy the GM sets for
-                // a champion claimed at 100 Corruption to become a Daemon Prince
-                // rather than a Chaos Spawn.
-                key: S.apotheosisInfamyThreshold,
-                name: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Name',
-                hint: 'WH40K.SETTINGS.ApotheosisInfamyThreshold.Hint',
-                scope: 'world',
-                config: true,
-                requiresReload: false,
-                default: WH40KSettings.APOTHEOSIS_INFAMY_THRESHOLD_DEFAULT,
-                type: Number,
-            },
-            {
-                // Attack cues (#594): the GM's switch for the whole table. Off, no
-                // client plays an attack animation or sound.
-                key: S.attackCues,
-                name: 'WH40K.SETTINGS.AttackCues.Name',
-                hint: 'WH40K.SETTINGS.AttackCues.Hint',
-                scope: 'world',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.attackCueAnimations,
-                name: 'WH40K.SETTINGS.AttackCueAnimations.Name',
-                hint: 'WH40K.SETTINGS.AttackCueAnimations.Hint',
-                scope: 'client',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.attackCueSounds,
-                name: 'WH40K.SETTINGS.AttackCueSounds.Name',
-                hint: 'WH40K.SETTINGS.AttackCueSounds.Hint',
-                scope: 'client',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.attackCueVolume,
-                name: 'WH40K.SETTINGS.AttackCueVolume.Name',
-                hint: 'WH40K.SETTINGS.AttackCueVolume.Hint',
-                scope: 'client',
-                config: true,
-                default: WH40KSettings.ATTACK_CUE_VOLUME_DEFAULT,
-                type: Number,
-                range: { min: 0, max: 1, step: 0.05 },
-            },
-            {
-                // Status-effect visuals (#595): under the same GM switch as attack cues.
-                key: S.statusVisuals,
-                name: 'WH40K.SETTINGS.StatusVisuals.Name',
-                hint: 'WH40K.SETTINGS.StatusVisuals.Hint',
-                scope: 'client',
-                config: true,
-                default: true,
-                type: Boolean,
-            },
-            {
-                key: S.statusVisualIntensity,
-                name: 'WH40K.SETTINGS.StatusVisualIntensity.Name',
-                hint: 'WH40K.SETTINGS.StatusVisualIntensity.Hint',
-                scope: 'client',
-                config: true,
-                default: WH40KSettings.STATUS_VISUAL_INTENSITY_DEFAULT,
-                type: Number,
-                range: { min: 0, max: 1, step: 0.05 },
-            },
-        ];
-        for (const d of descriptors) {
-            game.settings.register(SYSTEM_ID, d.key, {
-                name: d.name,
-                hint: d.hint,
-                scope: d.scope,
-                config: d.config,
-                default: d.default,
-                type: d.type,
-                ...(d.requiresReload !== undefined ? { requiresReload: d.requiresReload } : {}),
-                ...(d.choices !== undefined ? { choices: d.choices } : {}),
-                ...(d.range !== undefined ? { range: d.range } : {}),
-                ...(d.onChange !== undefined ? { onChange: d.onChange } : {}),
-            });
-        }
+        registerSettingTable(SETTINGS_TABLE);
     }
 }

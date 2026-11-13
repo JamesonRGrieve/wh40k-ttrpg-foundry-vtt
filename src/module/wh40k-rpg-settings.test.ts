@@ -934,3 +934,83 @@ describe('WH40KSettings — system-parameter value spaces (parameterized)', () =
         });
     });
 });
+
+describe('WH40KSettings — token image generation mode is a choice setting (#712)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it.each(['never', 'if-no-image', 'ask', 'always'] as const)('stored %p reads as itself', (mode) => {
+        vi.stubGlobal('game', { settings: { get: () => mode } });
+        expect(WH40KSettings.getTokenImageGenMode()).toBe(mode);
+    });
+
+    it('an unknown or missing mode reads as never', () => {
+        vi.stubGlobal('game', { settings: { get: () => 'nonsense' } });
+        expect(WH40KSettings.getTokenImageGenMode()).toBe('never');
+        vi.unstubAllGlobals();
+        expect(WH40KSettings.getTokenImageGenMode()).toBe('never');
+    });
+});
+
+describe('WH40KSettings — accessors for the former direct callers (#712)', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    /** Stub one stored value per key; any other key throws like an unregistered setting. */
+    function stub(stored: Record<string, boolean | number | object>): void {
+        vi.stubGlobal('game', {
+            settings: {
+                get: (_ns: string, key: string): boolean | number | object => {
+                    const value = new Map(Object.entries(stored)).get(key);
+                    if (value === undefined) throw new Error(`"wh40k-rpg.${key}" is not a registered game setting`);
+                    return value;
+                },
+            },
+        });
+    }
+
+    it('each reads its own key', () => {
+        stub({
+            'death-loot-piles': true,
+            'resync-on-ready': false,
+            'active-effects-during-combat': false,
+            'simple-attack-rolls': true,
+            'simple-psychic-rolls': true,
+            'auto-psychic-phenomena': false,
+            'reconcile-origin-grants-on-ready': false,
+            'world-version': 7,
+        });
+        expect(WH40KSettings.isDeathLootPilesEnabled()).toBe(true);
+        expect(WH40KSettings.isResyncOnReadyEnabled()).toBe(false);
+        expect(WH40KSettings.isActiveEffectsDuringCombatEnabled()).toBe(false);
+        expect(WH40KSettings.isSimpleAttackRolls()).toBe(true);
+        expect(WH40KSettings.isSimplePsychicRolls()).toBe(true);
+        expect(WH40KSettings.isAutoPsychicPhenomenaEnabled()).toBe(false);
+        expect(WH40KSettings.isOriginGrantReconcileEnabled()).toBe(false);
+        expect(WH40KSettings.getWorldVersion()).toBe(7);
+    });
+
+    it('fall back to their defaults before registration', () => {
+        expect(WH40KSettings.isDeathLootPilesEnabled()).toBe(false);
+        expect(WH40KSettings.isResyncOnReadyEnabled()).toBe(true);
+        expect(WH40KSettings.isActiveEffectsDuringCombatEnabled()).toBe(true);
+        expect(WH40KSettings.isAutoPsychicPhenomenaEnabled()).toBe(true);
+        expect(WH40KSettings.isOriginGrantReconcileEnabled()).toBe(true);
+        expect(WH40KSettings.getWorldVersion()).toBe(1);
+        expect(WH40KSettings.getCombatPresets()).toEqual([]);
+    });
+
+    it('getCombatPresets returns a copy, and rejects a stored list that is not presets', () => {
+        const presets = [{ id: 'p1', name: 'Hive Ganger' }];
+        stub({ 'combat-presets': presets });
+        const read = WH40KSettings.getCombatPresets();
+        expect(read).toEqual(presets);
+        // Emptying the returned list leaves the stored one intact.
+        read.splice(0);
+        expect(WH40KSettings.getCombatPresets()).toHaveLength(1);
+        stub({ 'combat-presets': [{ name: 'no id' }] });
+        expect(WH40KSettings.getCombatPresets()).toEqual([]);
+    });
+});

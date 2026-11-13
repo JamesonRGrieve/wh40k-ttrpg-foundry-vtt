@@ -199,8 +199,50 @@ describe('TokenDocumentWH40K', () => {
         });
     });
 
+    describe('movement cost function and the movement-automation setting (#712)', () => {
+        /** Register the movement actions against stub CONFIG and return the Half action's cost function for a token. */
+        async function costFunctionFor(
+            stored: Record<string, string>,
+            movement: Record<string, number>,
+        ): Promise<((cost: number, from?: object, to?: object, distance?: number) => number) | null> {
+            const mod = await importModelOrSkip(import('./token.ts'));
+            // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+            if (mod === undefined) return null;
+            const actions: Record<string, { getCostFunction?: (token: object) => (cost: number, from?: object, to?: object, distance?: number) => number }> =
+                {};
+            vi.stubGlobal('CONFIG', {
+                Token: { movement: { actions, defaultSpeed: 6 } },
+                wh40k: { movementTypes: { half: { label: 'Half', icon: 'fa-person-walking', order: 1 } } },
+            });
+            // Like Foundry: an unregistered key throws.
+            vi.stubGlobal('game', {
+                settings: {
+                    get: (_ns: string, key: string): string => {
+                        if (!Object.hasOwn(stored, key)) throw new Error(`"wh40k-rpg.${key}" is not a registered game setting`);
+                        return String(stored[key]);
+                    },
+                },
+            });
+            mod.TokenDocumentWH40K.registerMovementActions();
+            const half = Object.hasOwn(actions, 'half') ? actions['half'] : undefined;
+            return half?.getCostFunction?.({ actor: { system: { movement } } }) ?? null;
+        }
+
+        it('switching movement automation off (stored under movement-automation) uses the plain cost', async () => {
+            const cost = await costFunctionFor({ 'movement-automation': 'none' }, {});
+            // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+            if (cost === null) return;
+            expect(cost(5, undefined, undefined, 3)).toBe(5);
+        });
+
+        it('with automation on, an actor with no speed for the action has its distance tracked', async () => {
+            const cost = await costFunctionFor({ 'movement-automation': 'full' }, {});
+            // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
+            if (cost === null) return;
+            expect(cost(5, undefined, undefined, 3)).toBe(8);
+        });
+    });
+
     // TODO: as Foundry test infrastructure expands, add assertions for:
-    //   - movement cost function returns default cost fn when automation is disabled
-    //   - movement cost function returns tracking fn when actor has no speed for the type
     //   - HUD render inserts movement buttons for each movement type with a speed value
 });

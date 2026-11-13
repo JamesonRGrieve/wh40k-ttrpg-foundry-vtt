@@ -7,6 +7,7 @@ import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rul
 import { readAboard } from '../rules/vehicle-occupancy.ts';
 import { type PhysicalDimensions, tokenPresetFromActor } from '../utils/token-footprint.ts';
 import { hasInteriorScene, isVehicleActor, openInteriorScene, type SceneLookup } from '../vehicle/vehicle-interior.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 type MovementTypeConfig = {
     label: string;
@@ -229,7 +230,9 @@ export class TokenDocumentWH40K extends TokenDocument {
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: _options shape is dictated by Foundry's movement API; content is not used by this implementation
     static #getMovementCostFunction(type: string, token: TokenDocument, _options?: Record<string, unknown>): MovementCostFunction {
-        const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
+        // The registered key is `movement-automation`; reading `movementAutomation`
+        // threw in Foundry, so movement automation could never be switched off (#712).
+        const noAutomation = WH40KSettings.getMovementAutomation() === 'none';
         const { actor } = token;
         const movement = actor?.system.movement as Record<string, number> | undefined;
         const hasMovement = movement !== undefined;

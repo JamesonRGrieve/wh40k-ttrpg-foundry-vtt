@@ -1,4 +1,3 @@
-import { SYSTEM_ID } from './constants.ts';
 import { type ClipMaxResolver, canonicalClipMax, fullMagazineFor, loadableFromSource } from './utils/magazine-load.ts';
 import { type GridScale, legacyFootprintUpgrade, type PhysicalDimensions } from './utils/token-footprint.ts';
 import { isWorldWriter } from './utils/world-writer.ts';
@@ -166,11 +165,11 @@ async function migrateEmptyMagazines(actors: Iterable<MagazineActor>, scenes: It
 
 export async function checkAndMigrateWorld(): Promise<void> {
     if (!isWorldWriter()) return;
-    const currentVersion = Number(game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion));
+    const currentVersion = WH40KSettings.getWorldVersion();
     if (currentVersion >= WORLD_VERSION) return;
 
     if (currentVersion < TOKEN_FOOTPRINT_VERSION) await migrateTokenFootprints(game.actors, game.scenes);
     if (currentVersion < MAGAZINE_LOAD_VERSION) await migrateEmptyMagazines(game.actors, game.scenes, canonicalClipMax);
 
-    await game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
+    await WH40KSettings.setWorldVersion(WORLD_VERSION);
 }

@@ -105,10 +105,6 @@ declare module 'fvtt-types/configuration' {
         name: 'wh40k-rpg';
     }
 
-    interface SettingConfig {
-        [key: `wh40k-rpg.${string}`]: foundry.helpers.ClientSettings.Type;
-    }
-
     /* eslint-disable no-restricted-syntax -- boundary: Foundry FlagConfig requires Record<string,unknown> shapes per fvtt-types interface */
     interface FlagConfig {
         // `journalLink` is the explicit portrait journal link (#590): a JournalEntry /

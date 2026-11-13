@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import {
     buildGenerationRequest,
     buildImagePrompt,
-    coerceTokenImageGenMode,
     generateActorImage,
     isDefaultImage,
     parseImageResponse,
@@ -10,18 +9,6 @@ import {
     type TokenImageGenConfig,
     type TokenImageGenDeps,
 } from './token-image-gen.ts';
-
-describe('coerceTokenImageGenMode', () => {
-    it('passes valid modes through', () => {
-        for (const m of ['never', 'if-no-image', 'ask', 'always'] as const) {
-            expect(coerceTokenImageGenMode(m)).toBe(m);
-        }
-    });
-    it('defaults unrecognised / undefined values to never', () => {
-        expect(coerceTokenImageGenMode('nonsense')).toBe('never');
-        expect(coerceTokenImageGenMode(undefined)).toBe('never');
-    });
-});
 
 describe('isDefaultImage', () => {
     it('treats empty and framework/system placeholders as default', () => {

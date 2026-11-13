@@ -1,4 +1,3 @@
-import { SYSTEM_ID } from './constants.ts';
 import type { WH40KItem } from './documents/item.ts';
 import { isWorldWriter } from './utils/world-writer.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
@@ -44,8 +43,7 @@ export async function reconcileWorldOriginGrants(): Promise<void> {
     if (!isWorldWriter()) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors.contents is typed loosely; we narrow to the surface we touch
     const actors = game.actors.contents as unknown as ReconcileActorLike[];
-    const enabled = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.reconcileOriginGrantsOnReady) as boolean | undefined;
-    if (enabled !== false) await reapplyOrigins(actors);
+    if (WH40KSettings.isOriginGrantReconcileEnabled()) await reapplyOrigins(actors);
 
     // Every other owned item's resources go through the item resource ledger the
     // same way (#691). Each actor queues its own runs, so actors reconcile side by side.
