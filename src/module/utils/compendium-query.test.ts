@@ -179,8 +179,8 @@ describe('queryItemIndex', () => {
 
 describe('queryItemIndex shares the ready index request (#706)', () => {
     it("asks once for the pack's shared fields, so a later shared read does not refetch it", async () => {
-        const skills = { ...pack({ id: 'wh40k-rpg.dh2-core-items-skills', name: 'dh2-core-items-skills' }) };
-        skills.metadata.flags = packMetadata('dh2-core-items-skills', 'dh2', 'skills').flags;
+        const skills = { ...pack({ id: 'wh40k-rpg.dh2-probe-skills', name: 'dh2-probe-skills' }) };
+        skills.metadata.flags = packMetadata('dh2-probe-skills', 'dh2', 'skills').flags;
         setPacks([skills]);
         await queryItemIndex(['system.identifier'], () => undefined);
         expect(skills.getIndex).toHaveBeenCalledWith({ fields: ['name', 'type', ...SKILL_INDEX_FIELDS] });
