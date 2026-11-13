@@ -136,16 +136,19 @@ describe('mockPlayerSheetContext — per-system parity', () => {
         }
     });
 
-    it('every system (except DH2, where origin steps render as bubbles — #226) passes the homeWorld value through to its sidebar row', () => {
+    it('every system (except DH2, where origin steps render as bubbles — #226) passes its first origin step through to its sidebar row', () => {
         // DH2 drops the Home World / Background / Role text rows in favour of the
-        // origin-path bubbles, so it has no homeWorld header row to populate.
+        // origin-path bubbles. Every other line's first row reads its first origin
+        // step's own slot (homeWorld; BC race, DW chapter — #728).
         for (const id of ALL_SYSTEMS.filter((s) => s !== 'dh2')) {
+            const slot = mockPlayerSheetContext({ systemId: id }).headerFields[0]?.name ?? '';
+            const key = slot.replace('system.originPath.', '');
             const ctx = mockPlayerSheetContext({
                 systemId: id,
-                actorOverrides: { system: { originPath: { homeWorld: 'Cadia' } } },
+                actorOverrides: { system: { originPath: { [key]: 'Cadia' } } },
             });
-            const hw = ctx.headerFields.find((f) => f.name === 'system.originPath.homeWorld');
-            expect(hw?.value, `system ${id}`).toBe('Cadia');
+            const row = ctx.headerFields.find((f) => f.name === slot);
+            expect(row?.value, `system ${id}`).toBe('Cadia');
         }
     });
 

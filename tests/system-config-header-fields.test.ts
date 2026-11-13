@@ -99,42 +99,89 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         expect(rankField?.name).toBe('system.originPath.role');
     });
 
-    it('bc returns Race(homeWorld slot) + Archetype(role) + Pride(background) + Disgrace(trialsAndTravails) + Motivation', () => {
+    it('bc reads its own steps: Race + Archetype + Pride + Disgrace + Motivation (#728)', () => {
         const fields = SystemConfigRegistry.get('bc').getHeaderFields(makeActor());
         expect(names(fields)).toEqual([
-            'system.originPath.homeWorld',
-            'system.originPath.role',
-            'system.originPath.background',
-            'system.originPath.trialsAndTravails',
+            'system.originPath.race',
+            'system.originPath.archetype',
+            'system.originPath.pride',
+            'system.originPath.disgrace',
             'system.originPath.motivation',
         ]);
-        // Regression: the first field read "Home World"; Black Crusade has no home
-        // worlds — its first origin step is Race, held in the shared homeWorld slot.
-        expect(fields.find((f) => f.label === 'Race')?.name).toBe('system.originPath.homeWorld');
+        // The first field once read "Home World"; Black Crusade has no home worlds.
         expect(fields.some((f) => f.label === 'Home World')).toBe(false);
-        expect(fields.find((f) => f.label === 'Archetype')?.name).toBe('system.originPath.role');
-        expect(fields.find((f) => f.label === 'Pride')?.name).toBe('system.originPath.background');
-        expect(fields.find((f) => f.label === 'Disgrace')?.name).toBe('system.originPath.trialsAndTravails');
     });
 
-    it('ow returns HomeWorld + Regiment(background) + Speciality(role) + Demeanour(motivation)', () => {
+    it('bc rows show the names of the origins the Black Crusade builder committed (#728)', () => {
+        // `system.originPath` is derived from each owned origin item's `step`, so a
+        // BC character's committed origins land under race / archetype / pride / disgrace.
+        const actor = makeActor({
+            system: {
+                originPath: { race: 'Chaos Space Marine', archetype: 'Chosen', pride: 'Unbroken', disgrace: 'Failure', motivation: 'Perfection' },
+            },
+        });
+        const fields = SystemConfigRegistry.get('bc').getHeaderFields(actor);
+        expect(fields.map((f) => [f.label, f.value])).toEqual([
+            ['Race', 'Chaos Space Marine'],
+            ['Archetype', 'Chosen'],
+            ['Pride', 'Unbroken'],
+            ['Disgrace', 'Failure'],
+            ['Motivation', 'Perfection'],
+        ]);
+    });
+
+    it('ow returns HomeWorld + Regiment(background) + Speciality + Demeanour(motivation)', () => {
         const fields = SystemConfigRegistry.get('ow').getHeaderFields(makeActor());
         expect(names(fields)).toEqual([
             'system.originPath.homeWorld',
             'system.originPath.background',
-            'system.originPath.role',
+            'system.originPath.speciality',
             'system.originPath.motivation',
         ]);
         expect(fields.find((f) => f.label === 'Regiment')?.name).toBe('system.originPath.background');
-        expect(fields.find((f) => f.label === 'Speciality')?.name).toBe('system.originPath.role');
+        expect(fields.find((f) => f.label === 'Speciality')?.name).toBe('system.originPath.speciality');
         expect(fields.find((f) => f.label === 'Demeanour')?.name).toBe('system.originPath.motivation');
     });
 
-    it('dw returns Chapter(homeWorld) + Speciality(role) + Rank(career) + Demeanour(motivation)', () => {
+    it('dw returns Chapter + Speciality + Rank(career) + Demeanour(motivation)', () => {
         const fields = SystemConfigRegistry.get('dw').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.role', 'system.originPath.career', 'system.originPath.motivation']);
-        expect(fields.find((f) => f.label === 'Chapter')?.name).toBe('system.originPath.homeWorld');
+        expect(names(fields)).toEqual([
+            'system.originPath.chapter',
+            'system.originPath.speciality',
+            'system.originPath.career',
+            'system.originPath.motivation',
+        ]);
+        expect(fields.find((f) => f.label === 'Chapter')?.name).toBe('system.originPath.chapter');
         expect(fields.find((f) => f.label === 'Rank')?.name).toBe('system.originPath.career');
+    });
+
+    /**
+     * Rows that read an origin slot no origin document of the line fills: they are
+     * not origin steps of that line (Rank, Demeanour, Endeavour) or are built from
+     * several steps (Only War's Regiment). `system.originPath` is derived from the
+     * owned origin items, so these rows always read blank. Recorded on #728; every
+     * other origin row must read one of its line's own steps.
+     */
+    const NON_STEP_ROWS: ReadonlyArray<readonly [GameSystemId, string]> = [
+        ['dh1', 'role'],
+        ['ow', 'background'],
+        ['ow', 'motivation'],
+        ['dw', 'career'],
+        ['dw', 'motivation'],
+        ['im', 'motivation'],
+    ];
+
+    it.each(ALL_SYSTEM_IDS)('%s: every origin row reads a step its own origin documents carry (#728)', (id) => {
+        const config = SystemConfigRegistry.get(id);
+        const steps = new Set(config.getOriginPathStepKeys());
+        const prefix = 'system.originPath.';
+        const offStep = config
+            .getHeaderFields(makeActor())
+            .map((f) => f.name)
+            .filter((name) => name.startsWith(prefix))
+            .map((name) => name.slice(prefix.length))
+            .filter((key) => !steps.has(key) && !NON_STEP_ROWS.some(([line, row]) => line === id && row === key));
+        expect(offStep).toEqual([]);
     });
 
     it('im returns Patron(homeWorld) + Faction(background) + Role + Endeavour(motivation)', () => {
@@ -173,21 +220,20 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         }
     });
 
-    it('values flow through from the actor — homeWorld value populates the matching row (DH2 excepted, #226)', () => {
-        // DH2 drops the origin-step text rows (shown as bubbles instead), so it has no
-        // homeWorld header row; every other system still surfaces one. Derived from the
-        // canonical list (#312) so a newly-added system is covered automatically.
+    it('values flow through from the actor — each origin row shows the value at its own slot (DH2 excepted, #226)', () => {
+        // DH2 drops the origin-step text rows (shown as bubbles instead). Every other
+        // system's first row is an origin step; its value comes from the slot it names.
+        // Derived from the canonical list (#312) so a newly-added system is covered.
         const ids: readonly GameSystemId[] = ALL_SYSTEM_IDS.filter((s) => s !== 'dh2');
-        const actor = makeActor({
-            system: {
-                bio: { playerName: 'Mona' },
-                originPath: { homeWorld: 'Hive World' },
-            },
-        });
         for (const id of ids) {
-            const fields = SystemConfigRegistry.get(id).getHeaderFields(actor);
-            const hw = fields.find((f) => f.name === 'system.originPath.homeWorld');
-            expect(hw?.value, `system ${id}`).toBe('Hive World');
+            const first = SystemConfigRegistry.get(id).getHeaderFields(makeActor()).at(0);
+            if (first === undefined) throw new Error(`system ${id} has no header rows`);
+            const key = first.name.replace('system.originPath.', '');
+            const actor = makeActor({ system: { bio: { playerName: 'Mona' }, originPath: { [key]: 'Origin Name' } } });
+            const row = SystemConfigRegistry.get(id)
+                .getHeaderFields(actor)
+                .find((f) => f.name === first.name);
+            expect(row?.value, `system ${id}`).toBe('Origin Name');
         }
     });
 });

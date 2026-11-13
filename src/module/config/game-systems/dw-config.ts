@@ -115,8 +115,10 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
 
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
-            this.makeOriginField(actor, 'WH40K.OriginPath.Chapter', 'homeWorld'),
-            this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'role'),
+            // Chapter and Speciality read DW's own step keys: `system.originPath.<step>`
+            // is derived from each owned origin item's `step` (#728).
+            this.makeOriginField(actor, 'WH40K.OriginPath.Chapter', 'chapter'),
+            this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'speciality'),
             this.makeOriginField(actor, 'WH40K.Character.Rank', 'career'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Demeanour', 'motivation'),
         ];

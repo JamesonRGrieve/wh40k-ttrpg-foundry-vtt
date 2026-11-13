@@ -273,7 +273,8 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Regiment', 'background'),
-            this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'role'),
+            // OW's speciality documents carry `step: 'speciality'` (#728).
+            this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'speciality'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Demeanour', 'motivation'),
         ];
     }
