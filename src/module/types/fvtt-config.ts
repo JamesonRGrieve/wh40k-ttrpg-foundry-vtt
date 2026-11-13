@@ -98,6 +98,7 @@ import type { ChatMessageWH40K } from '../documents/chat-message.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { TokenDocumentWH40K } from '../documents/token.ts';
 import type { VaultJournalIdentity } from '../managers/event-graph.ts';
+import type { TokenArtMode } from '../rules/token-art.ts';
 
 declare module 'fvtt-types/configuration' {
     interface SystemNameConfig {
@@ -142,9 +143,10 @@ declare module 'fvtt-types/configuration' {
             'wh40k-rpg': Record<string, unknown>;
         };
         // Token-scoped state (the rounded-rect ring mode, #587; the bust frame)
-        // written through TokenDocument#updateSource.
+        // written through TokenDocument#updateSource. `tokenArt` is the portrait's
+        // bust / whole-art switch (rules/token-art.ts).
         Token: {
-            'wh40k-rpg': Record<string, unknown>;
+            'wh40k-rpg': { tokenArt?: TokenArtMode; [key: string]: unknown };
         };
         // Scene-scoped state (Warp weakness, #137; celestial-body binding and latitude, #588), and
         // the Zephyr Cartography module's own scene flags, whose `sun` the sun sync reads back.

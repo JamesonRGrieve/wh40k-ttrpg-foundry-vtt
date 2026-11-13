@@ -101,7 +101,7 @@ import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
-import { onRefreshToken } from './canvas/token-mask.ts';
+import { onRefreshToken, onTokenArtActorUpdate, onTokenArtTokenUpdate } from './canvas/token-mask.ts';
 import { onRefreshRoundedToken } from './canvas/token-rounded-ring.ts';
 import { hydrateActorInMemory, hydrateCreatedItemInMemory } from './compendium-hydrate.ts';
 import { buildCareerAdvancementIndex } from './config/advancements/career-advancement-cache.ts';
@@ -255,6 +255,14 @@ export class HooksManager {
         hooksOn('refreshToken', (token: Parameters<typeof onRefreshRoundedToken>[0] & Parameters<typeof onRefreshToken>[0]) => {
             if (!onRefreshRoundedToken(token)) onRefreshToken(token);
         });
+        // The portrait's art toggle (flags.wh40k-rpg.tokenArt) changes only a flag,
+        // which core never redraws for: redraw the affected tokens.
+        hooksOn('updateToken', (token: Parameters<typeof onTokenArtTokenUpdate>[0], changed: Parameters<typeof onTokenArtTokenUpdate>[1]) =>
+            onTokenArtTokenUpdate(token, changed),
+        );
+        hooksOn('updateActor', (actor: Parameters<typeof onTokenArtActorUpdate>[0], changed: Parameters<typeof onTokenArtActorUpdate>[1]) =>
+            onTokenArtActorUpdate(actor, changed),
+        );
         // Token-only compendium drops (#586): an NPC/vehicle dragged from a
         // compendium becomes a compendium-backed unlinked token, not a world Actor.
         // Every client caches the compendium actors behind such tokens — at world

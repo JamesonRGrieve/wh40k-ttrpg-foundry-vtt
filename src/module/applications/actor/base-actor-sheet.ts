@@ -20,6 +20,7 @@ import {
 } from '../../managers/actor-journal-link.ts';
 import { ItemDropManager } from '../../managers/item-drop-manager.ts';
 import { effectivePoolSize, type PortraitActorLike } from '../../rules/portrait-spawn.ts';
+import { nextTokenArtMode } from '../../rules/token-art.ts';
 import { generateActorImageOnDemand, type TokenImageActor } from '../../rules/token-image-gen-runtime.ts';
 import type {
     WH40KBaseActorDocument,
@@ -337,6 +338,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             generatePortrait: BaseActorSheet.#onGeneratePortrait,
             openPortraitJournal: BaseActorSheet.#onOpenPortraitJournal,
             clearPortraitJournal: BaseActorSheet.#onClearPortraitJournal,
+            toggleTokenArt: BaseActorSheet.#onToggleTokenArt,
             roll: BaseActorSheet.#roll,
             itemRoll: BaseActorSheet.#itemRoll,
             itemEdit: BaseActorSheet.#itemEdit,
@@ -517,6 +519,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // resolves to an entry this user may view; an owner may clear an explicit one.
         const journalUuid = portraitJournalLink(this.actor);
         context['portraitJournal'] = journalUuid === null ? null : { uuid: journalUuid, canClear: this.actor.isOwner && hasExplicitJournalLink(this.actor) };
+        // Token art toggle: an owner switches this actor's tokens between the
+        // circular bust and the whole image (rules/token-art.ts).
+        context['portraitTokenArt'] = this.actor.isOwner ? { full: this.actor.tokenArtMode === 'full' } : null;
         // The Fate total's breakdown (#689): hovering the Fate label lists each source.
         context['fateBreakdownTooltip'] = this.#statBreakdownTooltip('fate');
     }
@@ -1983,6 +1988,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /** Clear the explicit portrait journal link (#590), falling back to name resolution. Owners only. */
     static async #onClearPortraitJournal(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await clearActorJournalLink(this.actor);
+    }
+
+    /** Switch this actor's tokens between the circular bust and the whole image. Owners only. */
+    static async #onToggleTokenArt(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        if (!this.actor.isOwner) return;
+        await this.actor.setTokenArtMode(nextTokenArtMode(this.actor.tokenArtMode));
+        await this.render();
     }
 
     /**

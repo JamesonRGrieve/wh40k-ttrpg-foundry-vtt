@@ -1072,6 +1072,11 @@
             "Pin": "Pin this portrait (spawns stop rolling)",
             "Unpin": "Unpin portrait (resume random)",
             "Generate": "Generate portrait (AI)",
+            "TokenArt": {
+                "Label": "Token art: circular bust or whole image",
+                "Bust": "Tokens show a circular bust. Click to show the whole art.",
+                "Full": "Tokens show the whole art. Click to show a circular bust."
+            },
             "Journal": {
                 "Open": "Open journal entry",
                 "Clear": "Unlink journal entry (drop a journal on the portrait to link one)",

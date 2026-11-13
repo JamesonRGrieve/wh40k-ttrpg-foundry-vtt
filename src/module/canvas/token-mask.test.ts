@@ -1,15 +1,58 @@
 import { describe, expect, it } from 'vitest';
+import type { TokenArtMode } from '../rules/token-art.ts';
 import {
     type BustPlan,
     computeFrameTransform,
     type FrameFlagSource,
     isPlaceholderArt,
     isPortraitActorType,
+    onTokenArtActorUpdate,
+    onTokenArtTokenUpdate,
     parseTokenFrameFlag,
+    type RedrawableToken,
     resolveBustContent,
     resolveBustPlan,
     resolveTokenFrameFlag,
 } from './token-mask.ts';
+
+/** A placed token that records each redraw request. */
+function redrawSpy(): RedrawableToken & { redraws: number } {
+    const spy = {
+        redraws: 0,
+        renderFlags: {
+            set: (flags: { redraw: boolean }): void => {
+                if (flags.redraw) spy.redraws += 1;
+            },
+        },
+    };
+    return spy;
+}
+
+describe('token art redraw hooks', () => {
+    it('updateToken redraws a token when its own art flag changes, and only then', () => {
+        const token = redrawSpy();
+        onTokenArtTokenUpdate({ object: token }, { flags: { 'wh40k-rpg': { tokenArt: 'full' } } });
+        onTokenArtTokenUpdate({ object: token }, { flags: { 'wh40k-rpg': { '-=tokenArt': null } } });
+        expect(token.redraws).toBe(2);
+        onTokenArtTokenUpdate({ object: token }, { flags: { 'wh40k-rpg': { tokenFrame: { cx: 0.5 } } } });
+        onTokenArtTokenUpdate({ object: token }, {});
+        expect(token.redraws).toBe(2);
+    });
+
+    it('updateToken tolerates a token with no placeable (not on the viewed scene)', () => {
+        expect(() => onTokenArtTokenUpdate({ object: null }, { flags: { 'wh40k-rpg': { tokenArt: 'full' } } })).not.toThrow();
+    });
+
+    it('updateActor redraws every placed token when the prototype art flag changes, and only then', () => {
+        const tokens = [redrawSpy(), redrawSpy()];
+        const actor = { getActiveTokens: (): RedrawableToken[] => tokens };
+        onTokenArtActorUpdate(actor, { prototypeToken: { flags: { 'wh40k-rpg': { tokenArt: 'bust' } } } });
+        expect(tokens.map((t) => t.redraws)).toEqual([1, 1]);
+        onTokenArtActorUpdate(actor, { prototypeToken: { flags: { 'wh40k-rpg': { tokenFrame: { cy: 0.3 } } } } });
+        onTokenArtActorUpdate(actor, {});
+        expect(tokens.map((t) => t.redraws)).toEqual([1, 1]);
+    });
+});
 
 describe('computeFrameTransform', () => {
     it('spans the content circle with the short side of portrait art', () => {
@@ -211,7 +254,17 @@ describe('resolveBustPlan (#501)', () => {
         ringEnabled: boolean,
         actorType: string | null,
         textureSrc: string | null = PORTRAIT,
-    ): BustPlan | null => resolveBustPlan({ flag, ringEnabled, actorType, textureSrc });
+        artMode: TokenArtMode = 'bust',
+    ): BustPlan | null => resolveBustPlan({ flag, ringEnabled, actorType, textureSrc, artMode });
+
+    it('draws no bust on a token switched to whole art, ringed or not, framed or not', () => {
+        expect(plan(null, false, 'dh2-npc', PORTRAIT, 'full')).toBeNull();
+        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', PORTRAIT, 'full')).toBeNull();
+        expect(plan(undefined, true, 'dh2-npc', PORTRAIT, 'full')).toBeNull();
+        // the same tokens in bust mode still bake one
+        expect(plan(null, false, 'dh2-npc', PORTRAIT, 'bust')).not.toBeNull();
+        expect(plan({ cx: 0.5, cy: 0.5 }, true, 'dh2-character', PORTRAIT, 'bust')).not.toBeNull();
+    });
 
     it('bakes a ringless, unframed NPC portrait and a ringed, framed PC at the same content', () => {
         const citizen = requirePlan(plan(null, false, 'dh2-npc'));

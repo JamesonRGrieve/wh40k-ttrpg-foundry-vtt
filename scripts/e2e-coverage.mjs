@@ -693,6 +693,11 @@ const NPC_SPECIALIST_SKILLS_FLOWS = [
 ];
 recordDimension('npc-specialist-skills.flow', covered['npc-specialist-skills.flow'], NPC_SPECIALIST_SKILLS_FLOWS);
 
+// The portrait's token art switch (circular bust or whole art), tests/e2e/portrait-token-art-toggle.spec.ts.
+// Keep in sync with PORTRAIT_TOKEN_ART_FLOWS there.
+const PORTRAIT_TOKEN_ART_FLOWS = ['switch-starts-on-bust', 'switch-writes-full', 'token-draws-whole-art', 'switch-restores-bust'];
+recordDimension('portrait-token-art.flow', covered['portrait-token-art.flow'], PORTRAIT_TOKEN_ART_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

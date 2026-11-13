@@ -47,6 +47,7 @@ import {
     type SubtletyAdjusterEffectPlan,
 } from '../rules/subtlety-adjuster-effects.ts';
 import { type CollectedAdjuster, clampSubtletyLoss, isSubtletyPrimitive, type SubtletySourceRef } from '../rules/subtlety-adjusters.ts';
+import { parseTokenArtMode, TOKEN_ART_FLAG, type TokenArtMode, tokenArtWrites } from '../rules/token-art.ts';
 import { weaponFireBlockReason } from '../rules/weapon-jam.ts';
 import { isRecharging, type RechargeMark } from '../rules/weapon-recharge.ts';
 import type { WH40KActorSystemData, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KStatBreakdown } from '../types/global.d.ts';
@@ -238,6 +239,44 @@ export class WH40KBaseActor extends Actor {
         if (next === undefined) return false;
         await this.update({ 'system.portraits.pinned': next });
         return true;
+    }
+
+    /**
+     * How this actor's tokens draw its art: the circular bust or the whole
+     * image (`rules/token-art.ts`). A token's sheet reads its own token first,
+     * then the prototype; a world actor reads its prototype token.
+     */
+    get tokenArtMode(): TokenArtMode {
+        const own = this.isToken ? this.token?.getFlag(SYSTEM_ID, TOKEN_ART_FLAG) : undefined;
+        return parseTokenArtMode(own ?? this.prototypeToken.getFlag(SYSTEM_ID, TOKEN_ART_FLAG));
+    }
+
+    /**
+     * Switch this actor's tokens between the circular bust and the whole image.
+     * A token's sheet switches that one token. A world actor switches its
+     * prototype token (tokens placed later) and every placed token of it this
+     * user may update; the `updateToken` hook redraws each.
+     */
+    async setTokenArtMode(mode: TokenArtMode): Promise<void> {
+        if (this.isToken) {
+            await this.token?.setFlag(SYSTEM_ID, TOKEN_ART_FLAG, mode);
+            return;
+        }
+        await this.update({ 'prototypeToken.flags.wh40k-rpg.tokenArt': mode });
+        const actorId = this.id;
+        if (actorId === null) return;
+        await Promise.all(
+            Array.from(game.scenes).flatMap((scene) => {
+                const placed = Array.from(scene.tokens, (token) => ({
+                    id: token.id,
+                    actorId: token.actorId,
+                    isOwner: token.isOwner,
+                    art: token.getFlag(SYSTEM_ID, TOKEN_ART_FLAG),
+                }));
+                const writes = tokenArtWrites(placed, actorId, mode);
+                return writes.length > 0 ? [scene.updateEmbeddedDocuments('Token', writes)] : [];
+            }),
+        );
     }
 
     /**

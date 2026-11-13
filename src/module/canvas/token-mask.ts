@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { isCharacterActorType, isNpcActorType } from '../documents/actor-types.ts';
+import { prototypeTokenArtChanged, resolveTokenArtMode, tokenArtChanged, type TokenArtMode } from '../rules/token-art.ts';
 
 /**
  * Runtime circular token masks — tokens from plain rectangular portraits,
@@ -265,6 +266,8 @@ export interface BustPlanInput {
     actorType: string | null | undefined;
     /** The token's texture source, to tell a portrait from placeholder art. */
     textureSrc: string | null;
+    /** Whole art or the circular bust, from the portrait toggle (`rules/token-art.ts`). */
+    artMode: TokenArtMode;
 }
 
 /** The frame and content circle to bake, from {@link resolveBustPlan}. */
@@ -287,8 +290,11 @@ export interface BustPlan {
  *   bust takes the head zoom.
  * - Placeholder art (a core `.svg` icon) never gets the synthesized head bust:
  *   ringless it keeps its raw icon, ringed it is centred whole.
+ * - A token switched to whole art (`artMode: 'full'`) gets no bust at all, ring
+ *   or not: the owner asked for the uncropped image.
  */
 export function resolveBustPlan(input: BustPlanInput): BustPlan | null {
+    if (input.artMode === 'full') return null;
     const authored = parseTokenFrameFlag(input.flag);
     const placeholder = isPlaceholderArt(input.textureSrc);
     const wantsDefault = input.ringEnabled || (!placeholder && input.flag !== false && isPortraitActorType(input.actorType));
@@ -310,6 +316,7 @@ export function onRefreshToken(token: MaskableToken): void {
         ringEnabled: token.document.ring.enabled,
         actorType: token.actor?.type,
         textureSrc: token.document.texture.src,
+        artMode: resolveTokenArtMode(token),
     });
     if (plan === null) return;
     const { frame, content } = plan;
@@ -333,4 +340,25 @@ export function onRefreshToken(token: MaskableToken): void {
     // re-derive it from the (square) bust or the disc renders as an ellipse.
     // Resize-only — no texture reassignment, so no refresh re-entry.
     token._refreshMeshSizeAndScale();
+}
+
+/** A placed token that can be told to redraw. */
+export interface RedrawableToken {
+    renderFlags: { set: (flags: { redraw: boolean }) => void };
+}
+
+/**
+ * `updateToken` hook: redraw a token whose art flag changed. Core redraws a
+ * token only for texture, ring or actor changes, never for a flag; a redraw
+ * reloads the source texture, so the next refresh draws whole art or bakes the
+ * bust again.
+ */
+export function onTokenArtTokenUpdate(token: { object: RedrawableToken | null }, changed: Parameters<typeof tokenArtChanged>[0]): void {
+    if (tokenArtChanged(changed)) token.object?.renderFlags.set({ redraw: true });
+}
+
+/** `updateActor` hook: redraw an actor's placed tokens when its prototype token's art flag changed. */
+export function onTokenArtActorUpdate(actor: { getActiveTokens: () => RedrawableToken[] }, changed: Parameters<typeof prototypeTokenArtChanged>[0]): void {
+    if (!prototypeTokenArtChanged(changed)) return;
+    for (const token of actor.getActiveTokens()) token.renderFlags.set({ redraw: true });
 }

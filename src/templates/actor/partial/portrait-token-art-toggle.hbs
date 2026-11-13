@@ -1,0 +1,25 @@
+{{!-- Token art toggle: a small switch above the portrait's top-left corner
+     that sets how this actor's tokens draw its art — the circular bust the
+     system crops from the portrait, or the whole image (rules/token-art.ts).
+     It lays out in normal flow; the including template places it above the
+     portrait (the corner itself holds the origin-builder and generate icons).
+
+     Context: `portraitTokenArt` = { full } | null, set for every actor sheet by
+     BaseActorSheet._prepareCommonContext; null for a viewer who does not own
+     the actor, so only an owner sees the switch.
+
+     A native <button role="switch">: keyboard-focusable, Enter / Space toggle
+     it, and `aria-checked` is true when the token shows the whole art. --}}
+{{#if portraitTokenArt}}
+<button type="button"
+        role="switch"
+        aria-checked="{{#if portraitTokenArt.full}}true{{else}}false{{/if}}"
+        class="tw-relative tw-m-0 tw-flex tw-shrink-0tw-h-5 tw-w-9 tw-items-center tw-p-0 tw-cursor-pointer tw-rounded-full tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] {{#if portraitTokenArt.full}}tw-bg-[rgba(212,175,55,0.35)]{{else}}tw-bg-black/60{{/if}} tw-opacity-80 tw-transition-all hover:tw-opacity-100 focus-visible:tw-opacity-100 focus-visible:tw-outline focus-visible:tw-outline-2 focus-visible:tw-outline-[#f0d060]"
+        data-action="toggleTokenArt"
+        data-tooltip="{{#if portraitTokenArt.full}}{{localize 'WH40K.Portrait.TokenArt.Full'}}{{else}}{{localize 'WH40K.Portrait.TokenArt.Bust'}}{{/if}}"
+        aria-label="{{localize 'WH40K.Portrait.TokenArt.Label'}}">
+    <span class="tw-pointer-events-none tw-absolute tw-top-px {{#if portraitTokenArt.full}}tw-left-[17px]{{else}}tw-left-px{{/if}} tw-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-rounded-full tw-bg-[#d4af37] tw-text-[0.55rem] tw-text-black tw-transition-all" aria-hidden="true">
+        <i class="fa-solid {{#if portraitTokenArt.full}}fa-image{{else}}fa-circle-user{{/if}}"></i>
+    </span>
+</button>
+{{/if}}

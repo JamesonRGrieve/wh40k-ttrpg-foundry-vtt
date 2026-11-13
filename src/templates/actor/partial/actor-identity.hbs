@@ -51,6 +51,12 @@
     {{/if}}
     {{/unless}}
 
+    {{!-- Token art switch, above the portrait's top-left corner (owners only). --}}
+    {{#if portraitTokenArt}}
+    <div class="tw-flex tw-justify-start tw-self-center {{#if portraitWidthClass}}{{portraitWidthClass}}{{else}}tw-w-full tw-max-w-[160px]{{/if}}">
+        {{> systems/wh40k-rpg/templates/actor/partial/portrait-token-art-toggle.hbs}}
+    </div>
+    {{/if}}
     {{!-- `data-wh40k-hook="actor-portrait"` marks the drop target that links a
          dropped journal entry to this actor (#590). --}}
     <div data-wh40k-hook="actor-portrait" class="tw-relative tw-aspect-[11/15] {{#if portraitWidthClass}}{{portraitWidthClass}}{{else}}tw-w-full tw-max-w-[160px]{{/if}} tw-self-center tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
