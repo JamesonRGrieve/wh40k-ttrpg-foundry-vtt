@@ -15,6 +15,7 @@ import type { GameSystemId, OriginStepConfig, OriginStepDef, Prerequisite } from
 import type { AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import { t } from '../../i18n/t.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import {
     BUILDER_ORIGIN_RESOURCE_PATHS,
@@ -69,6 +70,7 @@ import {
     isDiscoveryIndexEntry,
     otherLineOriginPacks,
 } from './origin-discovery.ts';
+import { collectItemGrantPlans, type GrantedItemKind, resolveCreationOverrides } from './origin-grant-plans.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 import { stepProgress } from './origin-step-progress.ts';
@@ -999,6 +1001,26 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         });
     }
 
+    /** Every committed origin's merged system, in step order. */
+    _selectionSystems(): OriginPathSystemData[] {
+        return Array.from(this.selections.values(), (selection) => this._getSelectionSystem(selection));
+    }
+
+    /**
+     * The base added to each characteristic roll: the chosen race's (BC Chaos
+     * Space Marine: 30, #727) plus the world's offset, else the world setting
+     * (25 + offset).
+     */
+    _characteristicBase(): number {
+        const raceBase = resolveCreationOverrides(this._selectionSystems()).characteristicBase;
+        return raceBase === null ? WH40KSettings.getCharacteristicBase() : raceBase + WH40KSettings.getCharacteristicOffset();
+    }
+
+    /** Starting XP: the chosen race's (BC Chaos Space Marine: 500, #727), else the line's. */
+    _startingXP(): number {
+        return resolveCreationOverrides(this._selectionSystems()).startingXP ?? this.registryConfig.startingXP;
+    }
+
     /**
      * Resolve a compendium/source origin for a persisted selection.
      * @private
@@ -1286,7 +1308,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _prepareCharGenContext(): Record<string, unknown> {
         const ctor = this.constructor as typeof OriginPathBuilder;
         const CHARS = ctor.GENERATION_CHARACTERISTICS;
-        const DEFAULT_BASE = WH40KSettings.getCharacteristicBase();
+        const DEFAULT_BASE = this._characteristicBase();
         const originBonuses = this._getOriginCharacteristicBonuses();
 
         const rollsBank = this._charRolls.map((value, index) => ({
@@ -1824,7 +1846,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * race baseline in advanced mode, otherwise the world's setting default.
      */
     _pointBuyBaseFor(key: string): number {
-        const defaultBase = WH40KSettings.getCharacteristicBase();
+        const defaultBase = this._characteristicBase();
         return this._charAdvancedMode ? this._charCustomBases[key] || defaultBase : defaultBase;
     }
 
@@ -1948,7 +1970,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // An elite another chosen origin grants is the character's outright: no cost, no gates.
         if (source !== '' && granted.has(source)) return reasons;
         const cost = eliteCharge(origin.system, source, granted);
-        const budget = this.registryConfig.startingXP;
+        const budget = this._startingXP();
         if (cost > budget) reasons.push(game.i18n.format('WH40K.Advancement.Prereq.XpCost', { cost: String(cost), available: String(budget) }));
         const gates = OriginPathBuilder._elitePrerequisites(origin).filter((p) => p.type !== 'characteristic');
         if (gates.length > 0) {
@@ -2137,7 +2159,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // got persisted into customBases and re-loaded as 0, which
                 // made every committed characteristic equal just its rolled
                 // value (8/13/15…) — the "stats all <20" regression.
-                if (Number.isNaN(value) || value <= 0) value = WH40KSettings.getCharacteristicBase();
+                if (Number.isNaN(value) || value <= 0) value = this._characteristicBase();
                 this._charCustomBases[key] = value;
                 void this.render();
             });
@@ -3348,7 +3370,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Exclude taken aptitudes by canonical identity so a "willpower"
         // candidate is not offered when "Willpower" is already taken (#205).
         const takenKeys = new Set<string>();
-        for (const t of taken) takenKeys.add(this._aptitudeKey(t));
+        for (const takenApt of taken) takenKeys.add(this._aptitudeKey(takenApt));
         const seenKeys = new Set<string>();
         const result: string[] = [];
         for (const apt of pool) {
@@ -5059,8 +5081,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // chosen specialization stamped onto the item — instead of the
             // generic "Weapon Training (any)" the source compendium entry
             // carries. Choice-driven grants resolve through activeModifiers
-            // (see OriginPathData._calculateActiveModifiers).
-            await this._applyTalentGrantsFromOrigins();
+            // (see OriginPathData._calculateActiveModifiers). Traits too (#727).
+            await this._applyItemGrantsFromOrigins();
 
             // Materialize freeform content-item grants (special abilities,
             // malignancies, mutations, mental disorders) that carry no UUID.
@@ -5088,7 +5110,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // stacking. Always runs (even with 0 points spent) so an origin
                 // bonus still lands on a characteristic the player left at base.
                 const originModSums = this._collectOriginCharacteristicBonuses();
-                const settingDefaultBase = WH40KSettings.getCharacteristicBase();
+                const settingDefaultBase = this._characteristicBase();
                 // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
                 const charUpdate: Record<string, unknown> = {
                     'system.characterGeneration.customBases.enabled': this._charAdvancedMode,
@@ -5124,7 +5146,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // Rolls and origin bonuses are ALWAYS applied on origin commit (no override
                 // checkbox), so a re-commit must rewrite each characteristic even if the
                 // assignment or origin selection moved off of it.
-                const settingDefaultBase = WH40KSettings.getCharacteristicBase();
+                const settingDefaultBase = this._characteristicBase();
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
                     // `||` (not `??`) so a stored custom base of 0 (legacy
@@ -5497,8 +5519,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // startingXP lives on the full system config (registryConfig), not the
         // OriginStepConfig slice stored in systemConfig. Reading from
         // systemConfig here always resolved to `undefined`, which silently
-        // zeroed the reset.
-        const startingXP = this.registryConfig.startingXP;
+        // zeroed the reset. A race may set its own (BC Chaos Space Marine: 500, #727).
+        const startingXP = this._startingXP();
 
         // Step 1 — experience totals, committed on their own so a validation
         // failure on the advance/entry sweep below can never leave `used`
@@ -5601,79 +5623,69 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Walk every committed origin's fixed talent grants AND its resolved
-     * choice-driven activeModifiers, fetch the source talent compendium item
-     * by UUID, stamp the player's chosen specialization onto the clone, and
-     * create it on the actor. Duplicates (same name + same specialization,
-     * case-insensitive) are skipped so a re-commit doesn't pile up identical
-     * talents.
+     * Create the talents and traits the committed origins grant, then tell the
+     * GM about any grant that could not be created. Before #727 trait grants
+     * were never created at all, and a talent grant with no UUID vanished
+     * silently (a Chaos Space Marine got none of its eleven talents).
      * @private
      */
-    async _applyTalentGrantsFromOrigins(): Promise<void> {
-        interface TalentPlan {
-            uuid: string;
-            specialization?: string;
-        }
-        const plans: TalentPlan[] = [];
+    async _applyItemGrantsFromOrigins(): Promise<void> {
+        const missing = [...(await this._applyGrantedItems('talent')), ...(await this._applyGrantedItems('trait'))];
+        if (missing.length > 0) ui.notifications.warn(t('WH40K.OriginPath.UnresolvedGrants', { names: missing.join(', ') }));
+    }
 
-        const pushPlan = (uuid: string | null | undefined, specialization: string | undefined): void => {
-            if (typeof uuid !== 'string' || uuid === '') return;
-            const cleanSpec = specialization === '' ? undefined : specialization;
-            plans.push(cleanSpec === undefined ? { uuid } : { uuid, specialization: cleanSpec });
-        };
-
-        for (const [, selection] of this.selections) {
-            const system = this._getSelectionSystem(selection);
-            // Fixed talents written into grants.talents
-            const fixedTalents = system.grants?.talents ?? [];
-            for (const t of fixedTalents) {
-                pushPlan(t.uuid, t.specialization);
-            }
-            // Choice-resolved talents in activeModifiers (type === 'talent')
-            const activeMods = system.activeModifiers;
-            if (Array.isArray(activeMods)) {
-                for (const mod of activeMods) {
-                    if (mod.type !== 'talent') continue;
-                    pushPlan(
-                        typeof mod['itemUuid'] === 'string' ? mod['itemUuid'] : null,
-                        typeof mod['specialization'] === 'string' ? mod['specialization'] : undefined,
-                    );
-                }
-            }
-        }
-
-        if (plans.length === 0) return;
-
+    /**
+     * Walk every committed origin's fixed `kind` grants AND its resolved
+     * choice-driven activeModifiers, fetch each source compendium item by UUID,
+     * stamp the specialisation (and a trait's level) onto the clone, and create
+     * it on the actor. Duplicates (same name, specialisation and level,
+     * case-insensitive) are skipped so a re-commit doesn't pile up copies.
+     * @returns the names of the grants that could not be created.
+     * @private
+     */
+    async _applyGrantedItems(kind: GrantedItemKind): Promise<string[]> {
+        const { plans, unresolved } = collectItemGrantPlans(this._selectionSystems(), kind);
+        const missing = [...unresolved];
         const toCreate: ItemDataLike[] = [];
         const seenKeys = new Set<string>();
 
         const normSpec = (s: string | undefined): string => (s ?? '').toLowerCase().trim();
-        const actorHasTalent = (name: string, specialization: string | undefined): boolean =>
-            this.actor.items.some((i) => {
-                if (i.type !== 'talent' || i.name !== name) return false;
-                const actorSpec = normSpec((i.system as { specialization?: string } | undefined)?.specialization);
-                return actorSpec === normSpec(specialization);
-            });
+        const keyOf = (name: string, specialization: string | undefined, level: number | undefined): string =>
+            `${name.toLowerCase()}::${normSpec(specialization)}::${level ?? ''}`;
+        const owned = new Set(
+            this.actor.items
+                .filter((i) => i.type === kind)
+                .map((i) => {
+                    const sys = i.system as { specialization?: string; level?: number } | undefined;
+                    return keyOf(i.name, sys?.specialization, kind === 'trait' && (sys?.level ?? 0) > 0 ? sys?.level : undefined);
+                }),
+        );
 
         for (const plan of plans) {
             // eslint-disable-next-line no-await-in-loop -- sequential: each UUID resolves to a distinct source item before we can stamp specialization and dedupe
             const source = await fromUuid(plan.uuid);
-            if (!source) continue;
-            const sourceDoc = source as { name?: string; type?: string; toObject?: () => ItemDataLike };
-            if (sourceDoc.type !== 'talent') continue;
-            const itemData = cloneGrantedItemData(source, { sourceId: plan.uuid, originPathGranted: true, specialization: plan.specialization });
+            const sourceDoc = source as { name?: string; type?: string } | null;
+            if (sourceDoc?.type !== kind) {
+                missing.push(sourceDoc?.name ?? plan.uuid);
+                continue;
+            }
+            const itemData = cloneGrantedItemData(sourceDoc, {
+                sourceId: plan.uuid,
+                originPathGranted: true,
+                specialization: plan.specialization,
+                level: plan.level,
+            });
             const name = typeof itemData.name === 'string' ? itemData.name : sourceDoc.name ?? '';
-            const dedupKey = `${name}::${normSpec(plan.specialization)}`;
-            if (seenKeys.has(dedupKey)) continue;
-            seenKeys.add(dedupKey);
-            if (actorHasTalent(name, plan.specialization)) continue;
-
+            const key = keyOf(name, plan.specialization, plan.level);
+            if (seenKeys.has(key) || owned.has(key)) continue;
+            seenKeys.add(key);
             toCreate.push(itemData);
         }
 
         if (toCreate.length > 0) {
             await this.actor.createEmbeddedDocuments('Item', toCreate as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
         }
+        return missing;
     }
 
     /**
@@ -5686,7 +5698,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * world item of the matching type, built from the option's name and
      * description (written into `system.description.value`).
      *
-     * Two sources are walked, mirroring {@link _applyTalentGrantsFromOrigins}:
+     * Two sources are walked, mirroring {@link _applyGrantedItems}:
      *   1. Fixed grants in `grants.specialAbilities` (always specialAbility).
      *   2. Choice-resolved options whose choice `type` is one of the content
      *      types, located via the same `selectedChoices` key logic as

@@ -27,6 +27,16 @@ describe('cloneGrantedItemData (#306)', () => {
         expect((out.flags as Flags).core?.sourceId).toBe('Compendium.wh40k-rpg.dh2.Item.abc');
     });
 
+    it("stamps a trait's specialisation and level onto the copy, keeping its other system fields (#727)", () => {
+        const out = cloneGrantedItemData(source({ type: 'trait', system: { level: 0, benefit: '<p>…</p>' } }), { specialization: 'Strength', level: 4 });
+        expect(out.system).toEqual({ level: 4, benefit: '<p>…</p>', specialization: 'Strength' });
+    });
+
+    it('leaves the level alone when none is stamped', () => {
+        const out = cloneGrantedItemData(source({ type: 'trait', system: { level: 2 } }), { specialization: 'Toughness' });
+        expect(out.system).toEqual({ level: 2, specialization: 'Toughness' });
+    });
+
     it('stamps wh40k-rpg.originPathGranted when requested', () => {
         const out = cloneGrantedItemData(source(), { originPathGranted: true });
         expect((out.flags as Flags)['wh40k-rpg']?.originPathGranted).toBe(true);

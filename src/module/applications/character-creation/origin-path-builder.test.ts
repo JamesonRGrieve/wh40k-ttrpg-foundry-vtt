@@ -2,6 +2,7 @@ import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
 import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import type { GrantSourceSystem } from './origin-grant-plans.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime
@@ -128,6 +129,7 @@ vi.mock('../../wh40k-rpg-settings.ts', () => ({
         // Base = 20 (offset 0); pool = 100. These mirror the production
         // defaults so the pure-logic assertions read in real units.
         getCharacteristicBase: () => 20,
+        getCharacteristicOffset: () => 0,
         getCharacteristicPointBuyPool: () => 100,
     },
 }));
@@ -1409,6 +1411,8 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         actor: { system: FakeSystem; update: ReturnType<typeof vi.fn> };
         registryConfig: { startingXP: number };
         _actorSys: () => FakeSystem;
+        _selectionSystems: () => GrantSourceSystem[];
+        _startingXP: () => number;
     }
 
     /** The leaf values the reset writes through `actor.update(...)`. */
@@ -1482,11 +1486,14 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
             await Promise.resolve();
             return actor;
         });
-        return {
+        const host: ResetHost = {
             actor,
             registryConfig: { startingXP: 1000 },
             _actorSys: () => system,
+            _selectionSystems: () => [],
+            _startingXP: (): number => proto._startingXP.call(host),
         };
+        return host;
     }
 
     /** Invoke `_resetExperienceAndAdvancements` against a duck-typed host. */
@@ -1521,6 +1528,16 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
             },
         };
     }
+
+    it("resets to the chosen race's starting XP: a BC Chaos Space Marine starts with 500, not 1,000 (#727)", async () => {
+        const system = generatedCharacter();
+        const host = makeResetHost(system);
+        host._selectionSystems = () => [{ characterCreation: { characteristicBase: 30, startingXP: 500 } }];
+
+        await resetExperienceAndAdvancements(host);
+
+        expect(system.experience.total).toBe(500);
+    });
 
     it('reproduces the pre-fix scenario: reset clears advances AND their paired costs', async () => {
         const system = generatedCharacter();
@@ -1633,6 +1650,8 @@ interface PointBuyHost {
     _pointBuySpent: () => number;
     _pointBuyRemaining: () => number;
     _pointBuyBaseFor: (key: string) => number;
+    _selectionSystems: () => GrantSourceSystem[];
+    _characteristicBase: () => number;
 }
 
 function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
@@ -1646,6 +1665,8 @@ function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
         _pointBuySpent: (): number => proto._pointBuySpent.call(host),
         _pointBuyRemaining: (): number => proto._pointBuyRemaining.call(host),
         _pointBuyBaseFor: (key: string): number => proto._pointBuyBaseFor.call(host, key),
+        _selectionSystems: () => [],
+        _characteristicBase: (): number => proto._characteristicBase.call(host),
         ...overrides,
     };
     return host;
@@ -1658,6 +1679,14 @@ const pbSet = (host: PointBuyHost, key: string, value: number): number => proto.
 const hasAssigned = (host: PointBuyHost): boolean => proto._hasAssignedCharacteristics.call(host);
 
 describe('OriginPathBuilder point-buy pure logic', () => {
+    it("bases every characteristic on the chosen race's base: 30 for a BC Chaos Space Marine, else the world setting (#727)", () => {
+        const human = makePointBuyHost();
+        expect(proto._pointBuyBaseFor.call(human, 'strength')).toBe(20);
+        const marine = makePointBuyHost({ _selectionSystems: () => [{ characterCreation: { characteristicBase: 30, startingXP: 500 } }] });
+        expect(proto._pointBuyBaseFor.call(marine, 'strength')).toBe(30);
+        expect(proto._characteristicBase.call(marine)).toBe(30);
+    });
+
     it('sums allocations across characteristics, clamping negatives to 0', () => {
         const host = makePointBuyHost();
         host._charPointBuy['weaponSkill'] = 10;
@@ -1891,6 +1920,10 @@ describe('OriginPathBuilder._eliteUnmet', () => {
         return {
             selections,
             registryConfig: { startingXP: 1000 },
+            _selectionSystems: () => [],
+            _startingXP(): number {
+                return proto._startingXP.call(this);
+            },
             _influenceRolled: opts.influence,
             _actorSys: () => ({ influence: 0, skills: {} }),
             actor: { items: { filter: () => [] } },

@@ -26,12 +26,14 @@ const require = createRequire(import.meta.url);
 const { iterPackJson } = require('./lib/iter-pack-json.cjs');
 // The build's stub resolution (overrides + `system` overlay), so the index sees
 // the same compiled document the pack does.
-const { isReferenceStub, applyReferenceOverrides } = require('./lib/pack-reference.cjs');
+const { isReferenceStub, applyReferenceOverrides, resolveReferencePath } = require('./lib/pack-reference.cjs');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, '..');
-const PACK_SRC = path.join(REPO_ROOT, 'src', 'packs');
+// The content root: the public packs by default; deploy and private-content
+// work point WH40K_PACKS_SRC at src/packs-private (as validate-pack-schema does).
+const PACK_SRC = path.resolve(REPO_ROOT, process.env.WH40K_PACKS_SRC || path.join('src', 'packs'));
 const OUT_FILE = path.join(REPO_ROOT, '.compendium-uuid-index.json');
 const SYSTEM_ID = 'wh40k-rpg';
 
@@ -74,12 +76,8 @@ function detectCollectionType(folder) {
   return 'Item';
 }
 
-function resolveReferencePath(reference, fromFile) {
-  if (path.isAbsolute(reference)) return reference;
-  if (reference.startsWith('src/')) return path.resolve(REPO_ROOT, reference);
-  if (reference.startsWith('packs/')) return path.resolve(REPO_ROOT, 'src', reference);
-  return path.resolve(path.dirname(fromFile), reference);
-}
+/** Stub paths ("packs/<group>/…") resolve against the content root in use, as the build does. */
+const REFERENCE_ROOTS = { packRoot: PACK_SRC, repoRoot: REPO_ROOT };
 
 function readResolvedDoc(filePath, seen = new Set()) {
   const normalized = path.resolve(filePath);
@@ -91,7 +89,7 @@ function readResolvedDoc(filePath, seen = new Set()) {
   if (!isReferenceStub(doc)) return doc;
 
   seen.add(normalized);
-  const targetPath = resolveReferencePath(doc.reference, normalized);
+  const targetPath = resolveReferencePath(doc.reference, normalized, REFERENCE_ROOTS);
   if (!fs.existsSync(targetPath)) {
     throw new Error(`Reference target not found: ${doc.reference} (from ${normalized})`);
   }

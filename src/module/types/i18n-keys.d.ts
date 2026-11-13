@@ -4588,6 +4588,7 @@ export type I18nKey =
     | 'WH40K.OriginPath.TraitLevelPlaceholder'
     | 'WH40K.OriginPath.TrialsAndTravails'
     | 'WH40K.OriginPath.TrialsDesc'
+    | 'WH40K.OriginPath.UnresolvedGrants'
     | 'WH40K.OriginPath.UnsavedChanges'
     | 'WH40K.OriginPath.UseBuilderOnDrop'
     | 'WH40K.OriginPath.ViewDetails'

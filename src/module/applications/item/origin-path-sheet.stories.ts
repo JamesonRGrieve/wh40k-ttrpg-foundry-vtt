@@ -422,3 +422,46 @@ export const ImOrigin: Story = {
     render: () => renderPerSystem('im'),
     play: makePerSystemPlay('im'),
 };
+
+/**
+ * A Black Crusade race sets its own characteristic base and starting XP (#727):
+ * the Chaos Space Marine adds 30 to each roll and starts with 500 XP. Its
+ * Unnatural Strength grant is the line's one Unnatural Characteristic trait,
+ * specialised to Strength at level 4, so the trait row edits a specialisation.
+ */
+export const BcRaceCreationValues: Story = {
+    name: 'Black Crusade race — characteristic base, starting XP and a specialised trait grant (#727)',
+    render: () => {
+        const ctx = makeCtx({ inEditMode: true, ...lineContext('bc', 'race') });
+        ctx.item.name = 'Chaos Space Marine';
+        Object.assign(ctx.item.system, {
+            step: 'race',
+            characterCreation: { characteristicBase: 30, startingXP: 500 },
+            grants: {
+                skills: [],
+                talents: [],
+                traits: [{ name: 'Unnatural Strength (+4)', specialization: 'Strength', level: 4, uuid: '' }],
+                equipment: [],
+                choices: [],
+            },
+        });
+        const el = renderSheet(templateSrc, ctx);
+        el.setAttribute('data-wh40k-system', 'bc');
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const input = (name: string): HTMLInputElement | null => canvasElement.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        const base = input('system.characterCreation.characteristicBase');
+        const xp = input('system.characterCreation.startingXP');
+        await expect(base?.type).toBe('number');
+        await expect(base?.value).toBe('30');
+        await expect(xp?.value).toBe('500');
+        // Each input has a visible label tied to it, and a blank value means the line default.
+        await expect(base === null ? null : canvasElement.querySelector(`label[for="${base.id}"]`)?.textContent.trim()).toBe('Characteristic Base');
+        await expect(xp === null ? null : canvasElement.querySelector(`label[for="${xp.id}"]`)?.textContent.trim()).toBe('Starting XP');
+        await expect(base?.placeholder).toBe('Default');
+        // The trait grant row edits its specialisation and level.
+        await expect(input('system.grants.traits.0.specialization')?.value).toBe('Strength');
+        await expect(input('system.grants.traits.0.level')?.value).toBe('4');
+    },
+};

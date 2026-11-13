@@ -42,6 +42,7 @@ const CASES: Array<[string, () => Promise<void>]> = [
     ['critical-injury-sheet › RendersHeader', async () => runStory(criticalInjurySheet.default, criticalInjurySheet.RendersHeader)],
     ['cybernetic-sheet › RendersTypeLabel', async () => runStory(cyberneticSheet.default, cyberneticSheet.RendersTypeLabel)],
     ['origin-path-sheet › RendersStepBadge', async () => runStory(originPathSheet.default, originPathSheet.RendersStepBadge)],
+    ['origin-path-sheet › BcRaceCreationValues', async () => runStory(originPathSheet.default, originPathSheet.BcRaceCreationValues)],
     ['skill-sheet › RendersSelectAndName', async () => runStory(skillSheet.default, skillSheet.RendersSelectAndName)],
     ['mutation-sheet › GiftEditMode', async () => runStory(mutationSheet.default, mutationSheet.GiftEditMode)],
     ['special-ability-sheet › DistinctionEditMode', async () => runStory(specialAbilitySheet.default, specialAbilitySheet.DistinctionEditMode)],

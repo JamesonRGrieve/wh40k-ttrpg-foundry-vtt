@@ -46,7 +46,9 @@ const { isReferenceStub } = require('./lib/pack-reference.cjs');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, '..');
-const PACK_SRC = path.join(REPO_ROOT, 'src', 'packs');
+// The content root: the public packs by default; WH40K_PACKS_SRC=src/packs-private
+// migrates the private content (build the index from the same root first).
+const PACK_SRC = path.resolve(REPO_ROOT, process.env.WH40K_PACKS_SRC || path.join('src', 'packs'));
 const INDEX_FILE = path.join(REPO_ROOT, '.compendium-uuid-index.json');
 const MANIFEST_FILE = path.join(REPO_ROOT, '.compendium-uuid-migration.json');
 
@@ -85,6 +87,18 @@ function stripSpecialization(name) {
   return name.replace(/\s*\([^)]*\)\s*$/u, '').trim();
 }
 
+/** "Unnatural <Characteristic> (+N | xN | N)": the characteristic and N. */
+const UNNATURAL_RE =
+  /^Unnatural (Weapon Skill|Ballistic Skill|Strength|Toughness|Agility|Intelligence|Perception|Willpower|Fellowship)\s*\(\s*[+x×]?\s*(\d+)\s*\)$/u;
+/** The names a line gives its single Unnatural Characteristic trait. */
+const UNNATURAL_BASES = ['Unnatural Characteristic (X)', 'Unnatural Characteristic (+X)', 'Unnatural Characteristic'];
+
+/** The trailing bracket of `Foo (Bar)`, or '' when there is none. */
+function specializationOf(name) {
+  const m = String(name).match(/\(([^)]*)\)\s*$/u);
+  return m ? m[1].trim() : '';
+}
+
 /**
  * Detect the indentation unit of an existing JSON file so we can preserve
  * it on rewrite. Looks at the first non-zero-depth line. Defaults to 2 if
@@ -119,7 +133,7 @@ class Resolver {
    * Resolve a name to a UUID, scoped first to `gameSystem`, then to
    * `homebrew`, with specialization-suffix fallback at each level.
    */
-  resolve(gameSystem, typeKey, name, sourcePath) {
+  resolve(gameSystem, typeKey, name, sourcePath, { quiet = false } = {}) {
     const normalized = normalizeName(name);
     const tries = [
       { system: gameSystem, name: normalized, kind: 'exact' },
@@ -131,9 +145,11 @@ class Resolver {
       const bucket = this.canonical[t.system]?.[typeKey];
       if (bucket?.[t.name]) {
         this.stats[t.kind] = (this.stats[t.kind] ?? 0) + 1;
+        this.lastStripped = t.name !== normalized;
         return bucket[t.name];
       }
     }
+    if (quiet) return null;
     this.stats.unresolved += 1;
     this.unresolved.push({ system: gameSystem, type: typeKey, name, sourcePath });
     return null;
@@ -163,6 +179,11 @@ function visitGrants(grants, resolver, gameSystem, sourcePath) {
       const uuid = resolver.resolve(gameSystem, 'talent', g.name, sourcePath);
       if (uuid) {
         g.uuid = uuid;
+        // "Heightened Senses (Hearing)" resolved to the generic talent: the
+        // bracket is the specialisation the builder stamps on the granted copy.
+        if (resolver.lastStripped && (typeof g.specialization !== 'string' || g.specialization === '')) {
+          g.specialization = specializationOf(g.name);
+        }
         changed += 1;
       }
     }
@@ -172,9 +193,31 @@ function visitGrants(grants, resolver, gameSystem, sourcePath) {
     for (const g of grants.traits) {
       if (!g || typeof g !== 'object' || typeof g.name !== 'string') continue;
       if (typeof g.uuid === 'string' && g.uuid.length > 0) continue;
+      // "Unnatural Strength (+4)" is the line's one Unnatural Characteristic
+      // trait, specialised to Strength, at level 4 (the SPEC model, #261).
+      const unnatural = UNNATURAL_RE.exec(g.name);
+      if (unnatural) {
+        const uuid = UNNATURAL_BASES.map((base) => resolver.resolve(gameSystem, 'trait', base, sourcePath, { quiet: true })).find(Boolean);
+        if (uuid) {
+          g.uuid = uuid;
+          if (typeof g.specialization !== 'string' || g.specialization === '') g.specialization = unnatural[1];
+          if (typeof g.level !== 'number') g.level = Number(unnatural[2]);
+          resolver.stats.exact += 1;
+          changed += 1;
+          continue;
+        }
+      }
       const uuid = resolver.resolve(gameSystem, 'trait', g.name, sourcePath);
       if (uuid) {
         g.uuid = uuid;
+        // "Fear (2)" resolved to Fear: a numeric bracket is the trait's level;
+        // any other bracket is its specialisation.
+        if (resolver.lastStripped) {
+          const bracket = specializationOf(g.name);
+          const level = /^[+x×]?(\d+)$/u.exec(bracket);
+          if (level && typeof g.level !== 'number') g.level = Number(level[1]);
+          else if (!level && (typeof g.specialization !== 'string' || g.specialization === '')) g.specialization = bracket;
+        }
         changed += 1;
       }
     }

@@ -72,6 +72,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare xpCost: number;
     /** Owning this origin unlocks psychic-power purchases (#681). */
     declare grantsPsychicPowers: boolean;
+    /** Character-creation values this origin sets; null keeps the line's default (#727). */
+    declare characterCreation: { characteristicBase: number | null; startingXP: number | null };
     declare prerequisites: Array<{ type: string; key: string; value?: number }>;
     declare source: { book: string; page: string; custom: string };
     declare isAdvancedOrigin: boolean;
@@ -86,7 +88,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         startingMutationFormula: string;
         skills: Array<{ name: string; specialization: string; level: string }>;
         talents: Array<{ name: string; specialization: string; uuid: string }>;
-        traits: Array<{ name: string; level: number; uuid: string }>;
+        traits: Array<{ name: string; level: number | null; specialization?: string; uuid: string }>;
         aptitudes: string[];
         equipment: Array<{ name: string; quantity: number; uuid: string }>;
         specialAbilities: Array<{ name: string; description: string }>;
@@ -207,6 +209,15 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             // so the unlock is discovered from data rather than by name.
             grantsPsychicPowers: new fields.BooleanField({ required: true, initial: false }),
 
+            // Character-creation values this origin sets (#727), null where the line's
+            // default applies: BC's Chaos Space Marine race adds 30 to each 2d10
+            // characteristic roll (humans 25) and starts with 500 XP (humans 1,000).
+            // Content data, read by the Origin Path Builder; never a name match.
+            characterCreation: new fields.SchemaField({
+                characteristicBase: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
+                startingXP: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
+            }),
+
             // Only War Regiment Creation Points this option carries (OW rules):
             // what a regiment choice costs from the 12-point budget, or what a Regimental
             // Drawback returns to it. The book prints both as positive numbers. Null when
@@ -315,6 +326,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     new fields.SchemaField({
                         name: new fields.StringField({ required: true }),
                         level: new fields.NumberField({ required: false, initial: null }),
+                        // The SPEC carrier (#261): "Strength" for Unnatural Characteristic (X).
+                        specialization: new fields.StringField({ required: false, blank: true }),
                         uuid: new fields.StringField({ required: false, blank: true }),
                     }),
                     { required: true, initial: [] },

@@ -15,6 +15,13 @@
  * cycle.
  */
 
+/** The `system` slice a grant stamp writes. */
+interface GrantItemSystem {
+    specialization?: string;
+    quantity?: number;
+    level?: number;
+}
+
 /** Cloned item-data this helper produces — structurally compatible with the builder's ItemDataLike. */
 interface GrantItemData {
     _id?: string | null;
@@ -22,7 +29,7 @@ interface GrantItemData {
     type?: string;
     img?: string;
     uuid?: string;
-    system?: { specialization?: string; quantity?: number };
+    system?: GrantItemSystem;
     flags?: { core?: { sourceId?: string } } & Record<string, { sourceId?: string } | undefined>;
 }
 
@@ -32,8 +39,10 @@ interface GrantStamp {
     sourceId?: string;
     /** Mark the item as origin-path-granted — sets `flags.wh40k-rpg.originPathGranted`. */
     originPathGranted?: boolean;
-    /** Specialization to stamp onto `system.specialization` (talents). */
+    /** Specialization to stamp onto `system.specialization` (talents, traits). */
     specialization?: string | undefined;
+    /** Level to stamp onto `system.level` (a trait's rating: Unnatural Characteristic at 4). */
+    level?: number | undefined;
 }
 
 /**
@@ -47,10 +56,12 @@ export function cloneGrantedItemData(source: object, stamp: GrantStamp = {}): Gr
     const itemData: GrantItemData = sourceDoc.toObject ? sourceDoc.toObject() : foundry.utils.deepClone(source);
     delete itemData._id;
 
-    if (stamp.specialization !== undefined && stamp.specialization !== '') {
+    const specialization = stamp.specialization === '' ? undefined : stamp.specialization;
+    if (specialization !== undefined || stamp.level !== undefined) {
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- `.system ?? {}` is banned by no-restricted-syntax for DataModel-backed fields; explicit undefined check instead
-        const system: { specialization?: string; quantity?: number } = itemData.system === undefined ? {} : itemData.system;
-        system.specialization = stamp.specialization;
+        const system: GrantItemSystem = itemData.system === undefined ? {} : itemData.system;
+        if (specialization !== undefined) system.specialization = specialization;
+        if (stamp.level !== undefined) system.level = stamp.level;
         itemData.system = system;
     }
 
