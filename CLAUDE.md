@@ -34,7 +34,7 @@ These are not aspirational. Code without these is incomplete.
 - **Storybook stories for every component.** Sheets, dialogs, partials, chat cards, HUD widgets, prompts — each gets a `*.stories.ts`. Stories use the factories in `stories/mocks/` (and the additions in `stories/mocks/extended.ts` for NPC / Vehicle / Starship and per-system variants) to produce realistic mock data; do not hand-author 200-field mock objects per story. Use `pnpm scaffold:story <path-to-source.ts>` to generate a skeleton, and the helpers in `stories/test-helpers.ts` (`renderSheet`, `renderSheetParts`, `clickAction`, `submitForm`, `assertActiveTab`, `assertField`) instead of hand-wiring Handlebars compilation per story.
 - **Interactive unit testing in stories.** Stories with behavior use Storybook's `play` function (or Vitest + happy-dom against the rendered output) to assert on clicks, form submission, action dispatch, and drag/drop where applicable. A "renders without throwing" story is not enough for a component with interactivity.
 - **CSS composition testing.** Full-sheet stories render multiple partials together (header + tabs + panels) so layout regressions, theme cascade breaks, and Tailwind class conflicts show up in visual review. Single-partial stories alone do not satisfy this. Use `renderSheetParts(...)` from `stories/test-helpers.ts` for the composed-tree pattern.
-- **Live partials must be preloaded.** If a sheet or dialog references a new Handlebars partial at runtime, also add it to `HandlebarManager.preloadHandlebarsTemplates()` in `src/module/handlebars/handlebars-manager.ts`. Storybook's glob-based partial registration can hide this mistake; Foundry runtime will not. The `preload-drift` gate (run pre-commit) catches the omission for you — if it fails, fix the preload list, do not silence the gate.
+- **Every template ships in the bundle; references must resolve.** `scripts/bundle-module.cjs` carries the source of every file under `src/templates/` and registers each as a partial before `init` (`src/module/handlebars/template-sources.ts`, #708), under its path with and without `.hbs`. There is no preload list to maintain. What can still break is a reference to a template that does not exist: the `preload-drift` gate (pre-commit) fails on any `{{> …}}` partial or TypeScript template path with no file behind it. Storybook's glob-based partial registration can hide that mistake; Foundry runtime will not. Fix the path or add the template, do not silence the gate.
 - **Per-system homologation in stories.** When a story exercises actor or item data, run it through `withSystem(actor, 'rt')` (and the other five system IDs) at least once so DH2-only assumptions surface. Without per-system mocks, "works in DH2 but not the other five" regressions are invisible.
 - **Seeded RNG in stories and tests.** Replace `Math.random()` calls in stories/mocks with `randomId(prefix, rng)` from `stories/mocks/extended.ts`, seeded via `seedRandom(seed)`. Determinism makes screenshot diffs and `play`-function assertions stable across runs.
 
@@ -74,7 +74,7 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Biome diagnostics (errors + warnings) | (built into ratchet) | `pnpm biome:ratchet` | `.biome-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
-| Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
+| Template references resolve to files (partials + TS template paths) | `pnpm preload:drift` | hard gate (no ratchet) | — |
 | Orphaned `data-wh40k-hook` selectors (selector with no producing element) | `pnpm hooks:orphan-audit` | hard gate (no ratchet) | — |
 | Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
 | i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
@@ -348,7 +348,7 @@ A mode distinct from the cheap-LLM `ai` grinder above: the Claude Code orchestra
 
 1. **Sync first.** Merge `origin/main` into the working branch before spawning anything, so every worktree branches from current HEAD.
 2. **Partition into disjoint file sets.** Scope each subagent so no two touch the same file — partition by file type or directory (e.g. item-sheet `.hbs` vs item-sheet `.ts` vs `config/` vs an actor panel). This is what makes the worktree branches merge cleanly without conflicts.
-3. **Single-owner shared files.** Any file multiple tasks might edit — the Handlebars preload list (`handlebars-manager.ts`), `tailwind.config.js`, a barrel `index.ts` — is assigned to **exactly one** subagent, and every other brief explicitly forbids touching it.
+3. **Single-owner shared files.** Any file multiple tasks might edit — `tailwind.config.js`, a barrel `index.ts` — is assigned to **exactly one** subagent, and every other brief explicitly forbids touching it.
 4. **Worktree isolation, background.** Launch each subagent with `isolation: "worktree"` and `run_in_background: true`. One worktree branch per task; the orchestrator owns the merge-back.
 5. **The brief is a contract.** Each subagent prompt MUST: enumerate precise in-scope files and explicit out-of-scope files; require behavior-preserving edits that stay homologation-safe across all 6 systems; **forbid running any verification** (`pnpm check`/`test`/`typecheck`/`lint`/`build`/`storybook`, any `*:coverage`/`*:ratchet`, `preload:drift`, `i18n`) and the pre-commit hooks; require `git commit --no-verify`, **no push, no PR**; and require a closing report of files changed, net LOC delta (`git diff --stat`), commit hash, and worktree branch.
 6. **Deferred batched verification — the point of this mode.** Per-agent verification burns context and wall-clock re-validating overlapping surfaces that one batched pass would cover anyway. So subagents skip it and the **orchestrator** merges all worktree branches into the working branch, resolves any conflict, then runs **one** full `pnpm check` + ratchet pass and fixes the fallout — once — before the final pre-PR commit (that last commit IS verified normally). The safety invariant from the cheap-LLM section still holds where it matters: **nothing reaches a PR or the remote default branch unverified**. Verification is deferred and batched in this mode, never skipped.
@@ -415,7 +415,7 @@ Per-file logs land in `.auto-fix/file-logs/<sanitized-path>.attempt<N>.<runner>-
 18. `lockfile:validate` — every resolution URL in `pnpm-lock.yaml` must point at an allow-listed host (hard gate).
 18a. `copyright:audit` — no page citations, book titles, `<line> core` shorthand, references into the transcribed books, printed table/chapter numbers or book-named pack ids anywhere in the tracked public tree (hard gate). Name a table by its title, a line by its id; content lives outside the public tree. Book titles and pack ids come from the content root (`book-labels.json`, the pack manifest), so without it only the generic rules run.
 19. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
-20. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+20. `preload:drift` — every `{{> ... }}` partial reference and every template path in `src/module` TypeScript must name an existing file under `src/templates/` (the bundle registers every one, #708).
 21. `hooks:orphan-audit` — every `[data-wh40k-hook="X"]` selector must have an element that actually carries that hook (hard gate).
 22. `unconsumed:ratchet` — the count of `src/module/` modules with no production importer cannot rise; auto-flips to strict at 0.
 23. Pack validation if `gulpfile.js` or `src/packs/` changed — schema (`packs`), the actor-completeness ratchet (`actors:ratchet`), and the image-coverage ratchet (`images:ratchet`, real-art count per document class must not fall).
@@ -641,7 +641,7 @@ pnpm type-coverage                    # inferred type-coverage % under --strict
 pnpm knip                             # unused files/exports/types/deps
 pnpm deps:check                       # dependency-cruiser architectural rules
 pnpm symmetry                         # sheets without stories, data/documents without tests
-pnpm preload:drift                    # Handlebars partial references vs preload list
+pnpm preload:drift                    # every template reference resolves to a file
 pnpm lockfile:validate                # pnpm-lock.yaml resolution-host allow-list
 
 # Ratchet baselines (run after a metric drops, in the same commit)

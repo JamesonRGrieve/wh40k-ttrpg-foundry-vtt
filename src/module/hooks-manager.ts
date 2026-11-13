@@ -116,7 +116,6 @@ import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import { isCharacterActorType, WH40KBaseActor } from './documents/base-actor.ts';
 import { registerDocumentActionHandlers } from './documents/document-actions.ts';
 import { WH40KItem } from './documents/item.ts';
-import { HandlebarManager } from './handlebars/handlebars-manager.ts';
 import { registerArmouryRequisitionGate } from './integrations/armoury-requisition.ts';
 import { type FlaggableActor, isItemPilesPile, registerItemPilesValuation } from './integrations/item-piles.ts';
 import { syncSceneSuns } from './integrations/zephyr-cartography.ts';
@@ -1391,7 +1390,7 @@ export class HooksManager {
 
         WH40KSettings.registerSettings();
         EventTracker.registerSettings();
-        void HandlebarManager.loadTemplates();
+        // Templates need no loading: the bundle registered every one before init (#708).
 
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();

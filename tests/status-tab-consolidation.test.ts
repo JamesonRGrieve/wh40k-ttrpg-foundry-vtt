@@ -4,7 +4,7 @@
  * fate) were already on Overview, and movement moved to Combat (#266). Every
  * Status-only panel must now appear on the Overview tab so nothing is silently
  * lost, and the Status tab plumbing (PART, TABS entry, part-context branch,
- * template, preload entry) must be gone.
+ * template) must be gone.
  */
 
 import { existsSync } from 'node:fs';
@@ -13,7 +13,6 @@ import { describe, expect, it } from 'vitest';
 import { readRepoFile } from './lib/repo-file.ts';
 
 const CHAR_SHEET = readRepoFile('src/module/applications/actor/character-sheet.ts');
-const PRELOAD = readRepoFile('src/module/handlebars/handlebars-manager.ts');
 
 /**
  * Overview's markup, with its `{{> … }}` includes inlined one level deep.
@@ -54,10 +53,6 @@ describe('Status tab removal (#263)', () => {
         expect(CHAR_SHEET).not.toContain('tab-status.hbs');
         expect(CHAR_SHEET).not.toContain("tab: 'status'");
         expect(CHAR_SHEET).not.toContain("partId === 'status'");
-    });
-
-    it('drops the status template from the Handlebars preload list', () => {
-        expect(PRELOAD).not.toContain('tab-status.hbs');
     });
 });
 

@@ -294,7 +294,6 @@ export function replaceDamageDieWithDoS(
 }
 
 class DamageData {
-    template = '';
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor types are opaque Foundry documents; kept unknown to avoid circular imports
     sourceActor: unknown = undefined;
     // eslint-disable-next-line no-restricted-syntax -- boundary: actor types are opaque Foundry documents; kept unknown to avoid circular imports
@@ -1028,16 +1027,8 @@ export class Hit {
     }
 }
 
-export class WeaponDamageData extends DamageData {
-    constructor() {
-        super();
-        this.template = 'systems/wh40k-rpg/templates/chat/weapon-roll-chat.hbs';
-    }
-}
+/** A weapon attack's damage. The card renders from the action's template, not this. */
+export class WeaponDamageData extends DamageData {}
 
-export class PsychicDamageData extends DamageData {
-    constructor() {
-        super();
-        this.template = 'systems/wh40k-rpg/templates/chat/weapon-roll-chat.hbs';
-    }
-}
+/** A psychic power's damage. The card renders from the action's template, not this. */
+export class PsychicDamageData extends DamageData {}

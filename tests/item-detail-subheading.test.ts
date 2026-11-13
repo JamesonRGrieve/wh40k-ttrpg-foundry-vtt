@@ -39,7 +39,7 @@ describe('item-detail sub-headings (#699)', () => {
         expect(PARTIAL).not.toMatch(/\{\{#if icon\}\}|\{\{icon\}\}|\{\{extraClass\}\}/u);
     });
 
-    it('the partial is preloaded', () => {
-        expect(readRepoFile('src/module/handlebars/handlebars-manager.ts')).toContain(`'${PARTIAL_PATH}'`);
+    it('the partial ships as a template file, which the bundle registers (#708)', () => {
+        expect(readRepoFile(PARTIAL_PATH.replace('systems/wh40k-rpg/', 'src/'))).toContain('{{#if subheadingIcon}}');
     });
 });

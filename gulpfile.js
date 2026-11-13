@@ -470,7 +470,8 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
-  gulp.watch('src/module/**/*.ts', gulp.series(bundleClientModule));
+  // The bundle carries every template's source (#708), so a template edit rebuilds it too.
+  gulp.watch(['src/module/**/*.ts', 'src/templates/**/*.hbs'], gulp.series(bundleClientModule));
   gulp.watch('src/css/**/*.css', gulp.series(compileCssWatch));
   return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileCssWatch, compilePacks, copyFiles));
 }

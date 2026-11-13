@@ -45,9 +45,10 @@ describe('the client bundle (#705)', () => {
     it('leaves no import for the browser to fetch, and is minified', () => {
         expect(bundle).not.toMatch(/(?:^|[;}\n])\s*import\s*(?:[\w{*][^;]*from\s*)?["']/);
         expect(bundle).not.toMatch(/\bimport\(\s*["']/);
-        // Minified: line breaks survive only inside template literals, so lines run
-        // to thousands of characters instead of one statement each.
-        expect(bundle.length / bundle.split('\n').length).toBeGreaterThan(1000);
+        // Minified: parameter names are shortened. (Line length is no measure: the
+        // bundled template sources become multi-line template literals, #708.)
+        expect(bundle).not.toContain('function lazyTemplate(source, handlebars)');
+        expect(bundle).not.toContain('(source, handlebars)');
     });
 
     it('keeps class names, which Foundry turns into the sheet ids worlds store', () => {
@@ -61,6 +62,24 @@ describe('the client bundle (#705)', () => {
         expect(bundle).toMatch(/"wh40k-rpg-settings":[\w$]+[,}]/);
         // Reached only through `import()` in hooks-manager, so it stays lazy.
         expect(bundle).toMatch(/"applications\/prompts\/batch-xp-dialog":[\w$]*\(?\(\)=>/);
+    });
+});
+
+describe('templates ride in the bundle (#708)', () => {
+    it('carries every template under src/templates, keyed by the path Foundry uses', () => {
+        const { templateFiles } = requireCjs(resolve(ROOT, 'scripts/bundle-module.cjs')) as { templateFiles: () => string[] };
+        const files = templateFiles();
+        expect(files.length).toBeGreaterThan(400);
+        const missing = files
+            .map((file) => `systems/wh40k-rpg/templates/${file.slice(resolve(ROOT, 'src/templates').length + 1)}`)
+            .filter((key) => !bundle.includes(JSON.stringify(key)));
+        expect(missing).toEqual([]);
+    });
+
+    it('registers them as partials before init', () => {
+        // The sources are set on the global ahead of the system entry, which registers them.
+        expect(bundle.indexOf('globalThis.wh40kTemplateSources=')).toBeGreaterThan(-1);
+        expect(bundle.indexOf('globalThis.wh40kTemplateSources=')).toBeLessThan(bundle.indexOf('"registerBundledTemplates"'));
     });
 });
 

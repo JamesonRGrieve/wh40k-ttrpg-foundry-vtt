@@ -12,10 +12,9 @@ const ROOT = resolve(__dirname, '..');
 const read = (rel: string): string => readFileSync(resolve(ROOT, rel), 'utf8');
 
 describe('one Fate control', () => {
-    it('the unused fate panel, its preload entry and its story are gone', () => {
+    it('the unused fate panel and its story are gone', () => {
         expect(existsSync(resolve(ROOT, 'src/templates/actor/panel/fate-panel.hbs'))).toBe(false);
         expect(existsSync(resolve(ROOT, 'src/templates/actor/panel/fate-panel.stories.ts'))).toBe(false);
-        expect(read('src/module/handlebars/handlebars-manager.ts')).not.toContain('actor/panel/fate-panel.hbs');
     });
 
     it('the Overview vitals Fate row spends, restores and burns Fate', () => {

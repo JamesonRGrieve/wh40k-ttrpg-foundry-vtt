@@ -14,13 +14,11 @@ import { readRepoFile } from './lib/repo-file.ts';
 
 const OVERVIEW = readRepoFile('src/templates/actor/player/tab-overview.hbs');
 const COMBAT = readRepoFile('src/templates/actor/panel/combat-station-panel.hbs');
-const PRELOAD = readRepoFile('src/module/handlebars/handlebars-manager.ts');
 const ARMOUR_ZONE = readRepoFile('src/templates/actor/partial/armour-zone.hbs');
 
 describe('shared armour-zone (#234)', () => {
-    it('ships the shared armour-zone partial and preloads it', () => {
+    it('ships the shared armour-zone partial (the bundle registers every template, #708)', () => {
         expect(existsSync(resolve(__dirname, '../src/templates/actor/partial/armour-zone.hbs'))).toBe(true);
-        expect(PRELOAD).toContain('armour-zone.hbs');
     });
 
     it('renders armour-zone on the Combat tab; removed from the Overview (#318)', () => {
@@ -32,7 +30,6 @@ describe('shared armour-zone (#234)', () => {
     it('removes the old combat-only armour-display-panel', () => {
         expect(existsSync(resolve(__dirname, '../src/templates/actor/panel/armour-display-panel.hbs'))).toBe(false);
         expect(COMBAT).not.toContain('armour-display-panel');
-        expect(PRELOAD).not.toContain('armour-display-panel');
     });
 
     it('wraps the armour zone in the standard .wh40k-panel chrome, not dashboard-zone (#486)', () => {

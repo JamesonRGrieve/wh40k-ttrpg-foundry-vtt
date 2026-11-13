@@ -718,7 +718,7 @@ const SETTINGS_TABLE_FLOWS = ['table-keys-registered', 'accessor-reads-stored-va
 recordDimension('settings-table.flow', covered['settings-table.flow'], SETTINGS_TABLE_FLOWS);
 
 // The bundled client build (#705), tests/e2e/boot-bundle.spec.ts. Keep in sync with BOOT_BUNDLE_FLOWS there.
-const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances'];
+const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances', 'templates-load-without-requests'];
 recordDimension('boot-bundle.flow', covered['boot-bundle.flow'], BOOT_BUNDLE_FLOWS);
 
 // Compendium reads on ready (#706), tests/e2e/ready-pack-reads.spec.ts. Keep in sync with READY_PACK_READS_FLOWS there.

@@ -17,13 +17,17 @@
  *   code still runs only when something asks for it. Tier B specs reach the
  *   live instances through it; the e2e fixture serves the old per-file URLs as
  *   shims over this map (tests/e2e/lib/module-shim.ts).
+ * - The bundle carries the source of every template under src/templates on
+ *   `globalThis.wh40kTemplateSources`, which the system entry registers as
+ *   partials before `init`, so boot fetches no template over the socket; each
+ *   compiles on first use (#708, src/module/handlebars/template-sources.ts).
  * - A linked source map sits next to the bundle. Browsers fetch it only with
  *   devtools open, and Tier B source coverage maps through it. The release zip
  *   leaves it out.
  *
  * Usage: node scripts/bundle-module.cjs [outdir]   (default dist/module)
  */
-const { readdirSync } = require('node:fs');
+const { readFileSync, readdirSync } = require('node:fs');
 const { join, relative, resolve } = require('node:path');
 const esbuild = require('esbuild');
 
@@ -31,6 +35,10 @@ const ROOT = resolve(__dirname, '..');
 const SOURCE_DIR = join(ROOT, 'src', 'module');
 const ENTRY = join(SOURCE_DIR, 'wh40k-rpg.ts');
 const VIRTUAL_ENTRY = 'wh40k-rpg-bundle-entry';
+const TEMPLATE_DIR = join(ROOT, 'src', 'templates');
+const TEMPLATE_SOURCES = 'wh40k-template-sources';
+/** The path Foundry and the source use for a template (`systems/wh40k-rpg/templates/…`). */
+const TEMPLATE_URL_PREFIX = 'systems/wh40k-rpg/templates/';
 
 /** Shared esbuild options for both passes. */
 const BASE_OPTIONS = {
@@ -50,6 +58,28 @@ function runtimeModules(dir = SOURCE_DIR) {
         if (entry.isDirectory()) return entry.name === 'testing' ? [] : runtimeModules(path);
         return /\.ts$/.test(entry.name) && !/\.(?:test|stories|d)\.ts$/.test(entry.name) ? [path] : [];
     });
+}
+
+/** Every template file under src/templates, `.hbs`. */
+function templateFiles(dir = TEMPLATE_DIR) {
+    return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+        const path = join(dir, entry.name);
+        if (entry.isDirectory()) return templateFiles(path);
+        return entry.name.endsWith('.hbs') ? [path] : [];
+    });
+}
+
+/**
+ * Source of the side-effect module that sets `globalThis.wh40kTemplateSources`
+ * (`{ "systems/wh40k-rpg/templates/…hbs": "<source>" }`). The entry imports it
+ * first, so the sources exist before the system entry registers them.
+ */
+function templateSourcesModule() {
+    const sources = {};
+    for (const file of templateFiles()) {
+        sources[TEMPLATE_URL_PREFIX + relative(TEMPLATE_DIR, file).split('\\').join('/')] = readFileSync(file, 'utf8');
+    }
+    return `globalThis.wh40kTemplateSources = ${JSON.stringify(sources)};`;
 }
 
 /** The modules the entry loads through static imports (its boot graph), as absolute paths. */
@@ -74,7 +104,8 @@ async function staticGraph() {
 function entrySource(modules, eager) {
     const key = (file) => relative(SOURCE_DIR, file).replace(/\.ts$/, '').split('\\').join('/');
     const spec = (file) => `./${relative(SOURCE_DIR, file).split('\\').join('/')}`;
-    const lines = [`export * from ${JSON.stringify(spec(ENTRY))};`];
+    // The template sources first: wh40k-rpg.ts registers them as it evaluates (#708).
+    const lines = [`import ${JSON.stringify(TEMPLATE_SOURCES)};`, `export * from ${JSON.stringify(spec(ENTRY))};`];
     const entries = [];
     modules.forEach((file, index) => {
         if (eager.has(file)) {
@@ -105,6 +136,8 @@ async function bundleModule({ outdir = join(ROOT, 'dist', 'module'), minify = tr
                 setup(build) {
                     build.onResolve({ filter: new RegExp(`^${VIRTUAL_ENTRY}$`) }, () => ({ path: VIRTUAL_ENTRY, namespace: 'wh40k-entry' }));
                     build.onLoad({ filter: /.*/, namespace: 'wh40k-entry' }, () => ({ contents, loader: 'ts', resolveDir: SOURCE_DIR }));
+                    build.onResolve({ filter: new RegExp(`^${TEMPLATE_SOURCES}$`) }, () => ({ path: TEMPLATE_SOURCES, namespace: 'wh40k-templates' }));
+                    build.onLoad({ filter: /.*/, namespace: 'wh40k-templates' }, () => ({ contents: templateSourcesModule(), loader: 'js' }));
                 },
             },
         ],
@@ -119,7 +152,7 @@ async function bundleModule({ outdir = join(ROOT, 'dist', 'module'), minify = tr
     return result.metafile;
 }
 
-module.exports = { bundleModule, runtimeModules };
+module.exports = { bundleModule, runtimeModules, templateFiles };
 
 if (require.main === module) {
     bundleModule({ outdir: process.argv[2] ? resolve(process.argv[2]) : undefined }).catch((err) => {

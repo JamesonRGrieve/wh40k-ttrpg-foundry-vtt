@@ -117,8 +117,8 @@ describe('no item sheet binds an input to the structured system.source (#229)', 
         expect(readRepoFile(path)).toMatch(/value="\{\{sourceLabel source\.source\}\}"/);
     });
 
-    it('the partial is preloaded for the Foundry runtime', () => {
-        expect(readRepoFile('src/module/handlebars/handlebars-manager.ts')).toContain('item/partial/source-reference-field.hbs');
+    it('the partial ships as a template file, which the bundle registers for the Foundry runtime (#708)', () => {
+        expect(walkFiles('src/templates', { ext: '.hbs' }).some((f: string) => f.endsWith('item/partial/source-reference-field.hbs'))).toBe(true);
     });
 
     it('the origin detail dialog formats its reference through sourceLabel', () => {

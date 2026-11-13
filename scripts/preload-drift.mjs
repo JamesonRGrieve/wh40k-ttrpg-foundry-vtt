@@ -1,111 +1,73 @@
 #!/usr/bin/env node
 /**
- * Preload-list drift detector.
+ * Template-reference gate (`pnpm preload:drift`).
  *
- * Cross-references the partial paths referenced at runtime in `.hbs` templates
- * (via Handlebars `{{> systems/wh40k-rpg/templates/...}}` calls) against the
- * preload list in `src/module/handlebars/handlebars-manager.ts`. Reports:
+ * Since #708 the bundle carries every file under `src/templates/` and registers
+ * each as a partial before `init` (src/module/handlebars/template-sources.ts),
+ * so the registry IS the template tree. What can still break at runtime is a
+ * reference to a template that does not exist: Foundry then asks the server for
+ * it, gets an error, and the sheet or partial fails to render. Storybook's
+ * glob-based partial registration can hide that; this gate does not.
  *
- *   - Partials referenced in templates but missing from preload list (drift).
- *     This is a real bug — Foundry will fail to render them at runtime even
- *     though Storybook's glob-based registration may hide the problem.
- *
- *   - Partials in the preload list but no longer referenced anywhere (dead).
- *     Cosmetic but worth removing.
- *
- *   - Preload-list entries pointing to non-existent files (rotted). Hard fail.
+ * It fails on any reference whose file is missing:
+ *   - a partial in a `.hbs` template, `{{> path}}` or `{{#> path}}`, quoted or
+ *     not, with or without the `.hbs` suffix;
+ *   - a template path named in TypeScript under src/module (PARTS, renderTemplate,
+ *     getTemplate), always written with `.hbs`.
  *
  * Pre-commit + CI gate.
  *
  * Usage:
- *   node scripts/preload-drift.mjs            # check, exit non-zero on drift
+ *   node scripts/preload-drift.mjs            # check, exit non-zero on a missing template
  *   node scripts/preload-drift.mjs --json     # JSON report on stdout
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { relative, resolve } from 'node:path';
 import { walkFiles } from './lib/walk.mjs';
 
-const TEMPLATES_ROOT = resolve(process.cwd(), 'src/templates');
-const MANAGER = resolve(process.cwd(), 'src/module/handlebars/handlebars-manager.ts');
-const args = new Set(process.argv.slice(2));
-const jsonMode = args.has('--json');
+const ROOT = process.cwd();
+const TEMPLATES_ROOT = resolve(ROOT, 'src/templates');
+const MODULE_ROOT = resolve(ROOT, 'src/module');
+const jsonMode = process.argv.includes('--json');
 
-const PARTIAL_PREFIX = 'systems/wh40k-rpg/templates/';
-// Matches both `{{> path}}` (inline partial) and `{{#> path ...}}` (block partial).
-const PARTIAL_RE = /\{\{#?>\s*(systems\/wh40k-rpg\/templates\/[^\s}]+\.hbs)\b/g;
-const PRELOAD_RE = /['"](systems\/wh40k-rpg\/templates\/[^'"]+\.hbs)['"]/g;
+const PREFIX = 'systems/wh40k-rpg/templates/';
+// `{{> path}}`, `{{#> path}}`, `{{> "path"}}`; the path runs to whitespace, a quote or `}`.
+const PARTIAL_RE = /\{\{#?>\s*"?(systems\/wh40k-rpg\/templates\/[^\s"}]+)/g;
+// A template path string in TypeScript.
+const TS_TEMPLATE_RE = /['"`](systems\/wh40k-rpg\/templates\/[^'"`$]+\.hbs)['"`]/g;
 
-const walkHbs = (dir) => walkFiles(dir, { ext: '.hbs' });
-
-function templatePathToFs(p) {
-    // systems/wh40k-rpg/templates/foo/bar.hbs → src/templates/foo/bar.hbs
-    return resolve(process.cwd(), 'src/templates', p.slice(PARTIAL_PREFIX.length));
+/** The file a template id names: `systems/wh40k-rpg/templates/a/b(.hbs)` → src/templates/a/b.hbs. */
+function templateFile(id) {
+    const rel = id.slice(PREFIX.length);
+    return resolve(TEMPLATES_ROOT, rel.endsWith('.hbs') ? rel : `${rel}.hbs`);
 }
 
-const referenced = new Set();
-for (const f of walkHbs(TEMPLATES_ROOT)) {
-    const src = readFileSync(f, 'utf8');
-    let m;
-    while ((m = PARTIAL_RE.exec(src)) !== null) {
-        referenced.add(m[1]);
+/** Every match of `re` in each file, as `{ id, where }`. */
+function references(files, re) {
+    const found = [];
+    for (const file of files) {
+        const lines = readFileSync(file, 'utf8').split('\n');
+        lines.forEach((line, index) => {
+            for (const m of line.matchAll(re)) found.push({ id: m[1], where: `${relative(ROOT, file)}:${index + 1}` });
+        });
     }
+    return found;
 }
 
-const managerSrc = readFileSync(MANAGER, 'utf8');
-const preload = new Set();
-let m2;
-while ((m2 = PRELOAD_RE.exec(managerSrc)) !== null) {
-    preload.add(m2[1]);
-}
+const tsFiles = walkFiles(MODULE_ROOT, { ext: '.ts' }).filter((f) => !/\.(?:test|stories)\.ts$/.test(f) && !f.endsWith('.d.ts'));
+const all = [...references(walkFiles(TEMPLATES_ROOT, { ext: '.hbs' }), PARTIAL_RE), ...references(tsFiles, TS_TEMPLATE_RE)];
+const missing = all.filter((ref) => !existsSync(templateFile(ref.id)));
 
-const referencedNotInPreload = [...referenced].filter((p) => !preload.has(p)).sort();
-const preloadNotReferenced = [...preload].filter((p) => !referenced.has(p)).sort();
-const preloadRotted = [...preload].filter((p) => !existsSync(templatePathToFs(p))).sort();
-
-const report = {
-    referencedNotInPreload,
-    preloadNotReferenced,
-    preloadRotted,
-    counts: {
-        templates: referenced.size,
-        preload: preload.size,
-        referencedNotInPreload: referencedNotInPreload.length,
-        preloadNotReferenced: preloadNotReferenced.length,
-        preloadRotted: preloadRotted.length,
-    },
-};
-
+const report = { references: all.length, missing };
 if (jsonMode) {
-    process.stdout.write(JSON.stringify(report, null, 2) + '\n');
-    const fail = referencedNotInPreload.length > 0 || preloadRotted.length > 0;
-    process.exit(fail ? 1 : 0);
+    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    process.exit(missing.length > 0 ? 1 : 0);
 }
 
-const fail = referencedNotInPreload.length > 0 || preloadRotted.length > 0;
-
-if (referencedNotInPreload.length) {
-    console.error(
-        `[preload-drift] FAIL: ${referencedNotInPreload.length} partial(s) referenced in .hbs but missing from preloadHandlebarsTemplates():`,
-    );
-    for (const p of referencedNotInPreload) console.error(`  ${p}`);
-    console.error('  Add these paths to src/module/handlebars/handlebars-manager.ts.');
+if (missing.length > 0) {
+    console.error(`[preload-drift] FAIL: ${missing.length} reference(s) to a template that does not exist:`);
+    for (const ref of missing) console.error(`  ${ref.where}: ${ref.id}`);
+    console.error('  Every file under src/templates is registered by the bundle (#708); fix the path or add the template.');
+    process.exit(1);
 }
-if (preloadRotted.length) {
-    console.error(
-        `\n[preload-drift] FAIL: ${preloadRotted.length} preload entrie(s) point to non-existent files:`,
-    );
-    for (const p of preloadRotted) console.error(`  ${p}`);
-    console.error('  Remove these from preloadHandlebarsTemplates().');
-}
-if (preloadNotReferenced.length) {
-    // Warning, not failure. A preloaded partial may be referenced from .ts
-    // (e.g. renderTemplate(...) calls) instead of `{{> ... }}`.
-    console.warn(
-        `\n[preload-drift] WARN: ${preloadNotReferenced.length} preload entrie(s) have no {{> ... }} reference:`,
-    );
-    for (const p of preloadNotReferenced) console.warn(`  ${p}`);
-    console.warn('  These may be referenced from .ts code (renderTemplate, etc.). Verify before removing.');
-}
-
-if (!fail) console.log('[preload-drift] OK');
-process.exit(fail ? 1 : 0);
+console.log(`[preload-drift] OK: ${all.length} template references, every one resolves to a file`);

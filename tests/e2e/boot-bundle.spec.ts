@@ -19,11 +19,16 @@ import { scaledMs } from './lib/timing';
  *   per-file URLs the fixture serves as shims over it, return the live
  *   instances the system booted with.
  *
+ * - `templates-load-without-requests` (#708): the bundle registers every template
+ *   before `init`, so neither boot nor opening a character sheet asks the server
+ *   for one of the system's templates (Foundry's `template` socket request;
+ *   Foundry's own core UI templates still load that way).
+ *
  * Each flow records under `boot-bundle.flow`. Keys MUST match BOOT_BUNDLE_FLOWS
  * in scripts/e2e-coverage.mjs.
  */
 
-const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances'] as const;
+const BOOT_BUNDLE_FLOWS = ['boot-fetches-one-module', 'class-names-survive-minify', 'module-map-shares-instances', 'templates-load-without-requests'] as const;
 type FlowName = (typeof BOOT_BUNDLE_FLOWS)[number];
 
 const MODULE_PATH = '/systems/wh40k-rpg/module/';
@@ -104,6 +109,48 @@ async function probeBundle(page: Page): Promise<FlowResult[]> {
     }, MODULE_PATH);
 }
 
+/** Foundry logs this for every template it fetches over the socket and compiles (`getTemplate`). */
+const FETCHED_TEMPLATE = /Retrieved and compiled template (systems\/wh40k-rpg\/\S+)/;
+
+/** Record the system templates Foundry fetches from now on (its own core UI templates still load that way). */
+function watchTemplateFetches(page: Page): string[] {
+    const fetched: string[] = [];
+    page.on('console', (message) => {
+        const match = FETCHED_TEMPLATE.exec(message.text());
+        if (match?.[1] !== undefined) fetched.push(match[1]);
+    });
+    return fetched;
+}
+
+/** No system template fetched during boot, nor while a fresh DH2 character sheet renders its parts. */
+async function probeTemplateRequests(page: Page, fetched: readonly string[]): Promise<FlowResult> {
+    const atBoot = fetched.length;
+    const parts = await page.evaluate(async (): Promise<number> => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+        const g = globalThis as unknown as {
+            Actor: {
+                create: (
+                    data: object,
+                ) => Promise<{ delete: () => Promise<void>; sheet: { rendered: boolean; render: (o: object) => Promise<void>; element: HTMLElement } } | null>;
+            };
+        };
+        const actor = await g.Actor.create({ name: 'probe-template-requests', type: 'dh2-character', system: { gameSystem: 'dh2' } });
+        if (actor === null) return -1;
+        try {
+            await actor.sheet.render({ force: true });
+            await globalThis.wh40kE2E.waitFor(() => actor.sheet.rendered, 'character sheet render', globalThis.wh40kE2E.scaledMs(15_000));
+            return actor.sheet.element.querySelectorAll('[data-application-part]').length;
+        } finally {
+            await actor.delete();
+        }
+    });
+    return {
+        name: 'templates-load-without-requests',
+        ok: fetched.length === 0 && parts > 0,
+        detail: `${atBoot} system templates fetched at boot, ${fetched.length - atBoot} opening a sheet (${parts} parts): ${fetched.slice(0, 5).join(', ')}`,
+    };
+}
+
 test.describe.serial('the bundled client build (Tier B, #705)', () => {
     test.setTimeout(scaledMs(180_000));
     test('boot loads one minified module that keeps class names and shares its instances', async ({ page }, testInfo) => {
@@ -120,6 +167,7 @@ test.describe.serial('the bundled client build (Tier B, #705)', () => {
             }, 10);
         });
         const watch = watchModuleRequests(page);
+        const fetchedTemplates = watchTemplateFetches(page);
         await joinOrSkip(page);
         await watch.stop();
 
@@ -141,6 +189,7 @@ test.describe.serial('the bundled client build (Tier B, #705)', () => {
                     .join(', ')}`,
             },
             ...(await probeBundle(page)),
+            await probeTemplateRequests(page, fetchedTemplates),
         ];
 
         const fired = new Map(results.map((r) => [r.name, r]));

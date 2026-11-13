@@ -51,12 +51,6 @@ export default class BasicRollWH40K extends Roll {
      */
     static chatTemplate = 'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs';
 
-    /**
-     * V13: Define EVALUATION_TEMPLATE for dice tooltip
-     * @type {string}
-     */
-    static EVALUATION_TEMPLATE = 'systems/wh40k-rpg/templates/chat/roll-tooltip.hbs';
-
     /* -------------------------------------------- */
     /*  Instance Properties                         */
     /* -------------------------------------------- */
