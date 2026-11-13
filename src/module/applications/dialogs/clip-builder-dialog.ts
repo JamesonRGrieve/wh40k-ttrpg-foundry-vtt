@@ -46,9 +46,7 @@ export default class ClipBuilderDialog extends HandlebarsApplicationMixin(Applic
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             confirm: ClipBuilderDialog.#onConfirm,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: ClipBuilderDialog.#onCancel,
         },
     };

@@ -52,7 +52,6 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** Per-dialog action + form-handler deltas; merged with the shared base options. */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 form/action handlers accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         form: {
             handler: NPCThreatScalerDialog.#onSubmit,
@@ -64,7 +63,6 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
             updatePreview: NPCThreatScalerDialog.#onUpdatePreview,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Properties                                  */

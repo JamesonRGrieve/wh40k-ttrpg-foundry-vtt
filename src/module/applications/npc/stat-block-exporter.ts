@@ -50,14 +50,12 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             width: 700,
             height: 600,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             copyToClipboard: StatBlockExporter.#onCopyToClipboard,
             exportJson: StatBlockExporter.#onExportJson,
             exportText: StatBlockExporter.#onExportText,
             close: StatBlockExporter.#onClose,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

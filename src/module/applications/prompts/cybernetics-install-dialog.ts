@@ -107,13 +107,9 @@ class CyberneticsInstallDialog extends ApplicationV2Mixin(ApplicationV2 as unkno
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'cybernetics-install-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectCraftsmanship: CyberneticsInstallDialog.#onSelectCraftsmanship,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectSite: CyberneticsInstallDialog.#onSelectSite,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollInstall: CyberneticsInstallDialog.#onRollInstall,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: CyberneticsInstallDialog.#onCancel,
         },
         position: { width: 540 },

@@ -330,7 +330,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
-        /* eslint-disable @typescript-eslint/unbound-method -- Foundry's action dispatcher binds `this` to the sheet instance at invocation time. */
         actions: {
             editImage: BaseActorSheet.#onEditImage,
             rerollPortrait: BaseActorSheet.#onRerollPortrait,
@@ -363,7 +362,6 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             toggleEditMode: BaseActorSheet.#toggleEditMode,
             openVehicleInterior: BaseActorSheet.#openVehicleInterior,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor'],
         tag: 'form',
         form: {

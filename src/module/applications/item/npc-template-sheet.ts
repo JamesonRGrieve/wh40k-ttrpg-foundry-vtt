@@ -34,7 +34,6 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['sheet', 'wh40k-rpg', 'npc-template-sheet'],
@@ -69,7 +68,6 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
             createFromTemplate: NPCTemplateSheet.#createFromTemplate,
         },
     } satisfies typeof BaseItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

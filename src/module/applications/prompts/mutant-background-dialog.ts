@@ -73,9 +73,7 @@ class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'mutant-background-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             apply: MutantBackgroundDialog.#onApply,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: MutantBackgroundDialog.#onCancel,
         },
         position: {

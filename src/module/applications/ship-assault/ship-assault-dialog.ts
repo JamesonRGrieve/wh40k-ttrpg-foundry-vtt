@@ -102,11 +102,8 @@ class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as A
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'ship-assault-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 binds `this` at click time
             rollAssault: ShipAssaultDialog.#onRoll,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 binds `this` at click time
             applyAssault: ShipAssaultDialog.#onApply,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 binds `this` at click time
             backAssault: ShipAssaultDialog.#onBack,
         },
         position: { width: 520 },

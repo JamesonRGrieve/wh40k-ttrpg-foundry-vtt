@@ -778,7 +778,6 @@ export default class CharacterSheet extends BaseActorSheet {
     /** @override */
     static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.actions ?? {}),
             'viewFateUses': CharacterSheet.#viewFateUses,
@@ -1012,7 +1011,6 @@ export default class CharacterSheet extends BaseActorSheet {
             // Misc actions
             'bonusVocalize': CharacterSheet.#bonusVocalize,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor', 'player'],
         position: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.position ?? {}),

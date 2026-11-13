@@ -31,12 +31,10 @@ export function ItemPreviewMixin<TBase extends ActorSheetCtor>(Base: TBase): TBa
         /** @override */
         static DEFAULT_OPTIONS = {
             ...baseOptions,
-            /* eslint-disable @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time */
             actions: {
                 ...(baseOptions?.actions ?? {}),
                 toggleItemPreview: ItemPreviewMixinClass.toggleItemPreview,
             },
-            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /**

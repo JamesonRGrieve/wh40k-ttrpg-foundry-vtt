@@ -75,13 +75,11 @@ export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...FreeformGatedItemSheet.DEFAULT_OPTIONS,
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...FreeformGatedItemSheet.DEFAULT_OPTIONS.actions,
             viewReference: ReferenceListItemSheet.#viewReference,
             removeEntry: ReferenceListItemSheet.#removeEntry,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

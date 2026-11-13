@@ -131,13 +131,9 @@ export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'logistics-test-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             owSetAxis: LogisticsTestDialog.#onSetAxis,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             owToggleStandardKit: LogisticsTestDialog.#onToggleStandardKit,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             owRollLogistics: LogisticsTestDialog.#onRoll,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             owCancelLogistics: LogisticsTestDialog.#onCancel,
         },
         position: { width: 600 },

@@ -50,11 +50,8 @@ class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as 
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'mutation-roll-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectTrack: MutationRollDialog.#onSelectTrack,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollMutation: MutationRollDialog.#onRollMutation,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: MutationRollDialog.#onCancel,
         },
         position: { width: 520 },

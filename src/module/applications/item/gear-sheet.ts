@@ -21,7 +21,6 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
 // @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet<GearItem> {
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],
         actions: {
@@ -33,7 +32,6 @@ export default class GearSheet extends BaseItemSheet<GearItem> {
             height: 700,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

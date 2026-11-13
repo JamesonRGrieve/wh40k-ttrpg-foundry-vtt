@@ -104,19 +104,12 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
         },
         position: { width: WINDOW_WIDTH, height: WINDOW_HEIGHT },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectTab: EventTrackerDialog.#onSelectTab,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectGraph: EventTrackerDialog.#onSelectGraph,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             stepDay: EventTrackerDialog.#onStepDay,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleResolved: EventTrackerDialog.#onToggleResolved,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             jumpToGroup: EventTrackerDialog.#onJumpToGroup,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             viewScene: EventTrackerDialog.#onViewScene,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             spawnScene: EventTrackerDialog.#onSpawnScene,
         },
     };

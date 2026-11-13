@@ -46,13 +46,11 @@ export default class SceneEnvironmentDialog extends HandlebarsApplicationMixin(A
             height: 'auto' as unknown as number,
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             handler: SceneEnvironmentDialog.#onFormChange,
             submitOnChange: true,
             closeOnSubmit: false,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             save: SceneEnvironmentDialog.#onSave,
         },
     };

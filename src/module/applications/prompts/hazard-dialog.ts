@@ -207,13 +207,10 @@ export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as un
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'hazard-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             resolve: HazardDialog.#onResolve,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: HazardDialog.#onCancel,
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             handler: HazardDialog.#onFormChange,
             submitOnChange: true,
             closeOnSubmit: false,

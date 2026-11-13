@@ -220,7 +220,6 @@ export default class CraftActorSheet extends BaseActorSheet {
             height: 800,
         },
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             rollCharacteristic: CraftActorSheet.#rollCharacteristic,
@@ -236,7 +235,6 @@ export default class CraftActorSheet extends BaseActorSheet {
             embarkSelected: CraftActorSheet.#embarkSelected,
             rollVehicleTest: CraftActorSheet.#rollVehicleTest,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

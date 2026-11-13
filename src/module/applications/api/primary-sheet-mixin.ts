@@ -47,11 +47,9 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
-                /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers are dispatched with the sheet as `this` by Foundry's action system */
                 editDocument: PrimarySheetWH40K.#showDocument,
                 deleteDocument: PrimarySheetWH40K.#deleteDocument,
                 showDocument: PrimarySheetWH40K.#showDocument,
-                /* eslint-enable @typescript-eslint/unbound-method */
             },
         };
 

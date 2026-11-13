@@ -544,7 +544,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             width: 1100,
             height: 800,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             randomize: OriginPathBuilder.#randomize,
             reset: OriginPathBuilder.#reset,
@@ -584,7 +583,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             clearEquipment: OriginPathBuilder.#clearEquipment,
             resolveAptitudeDouble: OriginPathBuilder.#resolveAptitudeDouble,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */

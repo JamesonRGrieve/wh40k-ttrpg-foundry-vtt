@@ -10,7 +10,6 @@ import { collectViewOnlyActions, enableViewOnlyControls } from './view-only-acti
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped; cast required to reach api surface
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
-// eslint-disable-next-line @typescript-eslint/unbound-method -- destructured from framework API object; used as a mixin factory, not as a method call
 const { HandlebarsApplicationMixin } = applicationAPI;
 
 /**
@@ -35,7 +34,6 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
-                // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static methods are safe here
                 toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed,
             },
             classes: ['wh40k-rpg'],

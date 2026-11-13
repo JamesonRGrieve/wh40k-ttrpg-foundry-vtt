@@ -57,7 +57,6 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** Per-dialog action deltas; merged with the shared base options. */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         actions: {
             saveNew: CombatPresetDialog.#saveNew,
@@ -68,7 +67,6 @@ export default class CombatPresetDialog extends makeNpcFormDialog({
             selectPreset: CombatPresetDialog.#selectPreset,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Static Properties                           */

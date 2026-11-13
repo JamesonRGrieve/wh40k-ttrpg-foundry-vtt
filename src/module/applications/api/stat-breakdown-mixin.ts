@@ -64,14 +64,12 @@ export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T)
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 base class DEFAULT_OPTIONS not on shipped types
             ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
-            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
             actions: {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 base class DEFAULT_OPTIONS.actions not on shipped types
                 ...((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions ?? {}),
                 showStatBreakdown: StatBreakdownApplication.#showStatBreakdown,
                 viewBreakdownSource: StatBreakdownApplication.#viewBreakdownSource,
             },
-            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /* -------------------------------------------- */

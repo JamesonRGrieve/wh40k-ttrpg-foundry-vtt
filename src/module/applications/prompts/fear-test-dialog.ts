@@ -96,13 +96,9 @@ class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as Appl
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'fear-test-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectObserver: FearTestDialog.#onSelectObserver,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             updateInputs: FearTestDialog.#onUpdateInputs,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollTest: FearTestDialog.#onRollTest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: FearTestDialog.#onCancel,
         },
         position: { width: 520 },

@@ -47,9 +47,7 @@ export default class SceneEnvironmentWidget extends HandlebarsApplicationMixin(A
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             editEnvironment: SceneEnvironmentWidget.#editEnvironment,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollZeroGravity: SceneEnvironmentWidget.#rollZeroGravity,
         },
     };

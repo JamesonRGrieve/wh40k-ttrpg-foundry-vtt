@@ -45,11 +45,8 @@ export default class CelestialBodiesDialog extends HandlebarsApplicationMixin(Ap
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             addBody: CelestialBodiesDialog.#onAddBody,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             removeBody: CelestialBodiesDialog.#onRemoveBody,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             save: CelestialBodiesDialog.#onSave,
         },
     };

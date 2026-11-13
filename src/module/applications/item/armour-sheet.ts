@@ -39,7 +39,6 @@ const INSTALL_REFUSED: Record<Exclude<InstallVerdict, 'ok'>, I18nKey> = {
  */
 export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet<ArmourItem>) {
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
@@ -57,7 +56,6 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
             removeMod: ArmourSheet.#removeMod,
         },
     } satisfies typeof ContainerItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

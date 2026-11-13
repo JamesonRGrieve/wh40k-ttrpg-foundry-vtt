@@ -22,7 +22,6 @@ const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
  */
 export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet<AmmoItem>) {
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
@@ -37,7 +36,6 @@ export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet<AmmoIt
             removeRemovedQuality: AmmoSheet.#removeRemovedQuality,
         },
     } satisfies typeof BaseItemSheet.DEFAULT_OPTIONS & Partial<ApplicationV2Config.DefaultOptions>;
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

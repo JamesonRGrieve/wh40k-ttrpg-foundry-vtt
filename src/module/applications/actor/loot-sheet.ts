@@ -39,12 +39,10 @@ export default class LootActorSheet extends BaseActorSheet {
         ...BaseActorSheet.DEFAULT_OPTIONS,
         classes: ['wh40k-rpg', 'sheet', 'actor', 'loot'],
         position: { width: 480, height: 560 },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             pickupAll: LootActorSheet.#pickupAll,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */

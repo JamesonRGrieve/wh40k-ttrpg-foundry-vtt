@@ -36,13 +36,9 @@ export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSh
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
         actions: {
             ...ContainerItemSheet.DEFAULT_OPTIONS.actions,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             adjustModifier: ArmourModSheet.#onAdjustModifier,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             addProperty: ArmourModSheet.#onAddProperty,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             removeProperty: ArmourModSheet.#onRemoveProperty,
         },
         position: {

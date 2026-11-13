@@ -59,10 +59,8 @@ export default function SetFieldActionsMixin<T extends ApplicationV2Ctor>(Base: 
             actions: {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 base DEFAULT_OPTIONS.actions not on shipped types
                 ...((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions ?? {}),
-                /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
                 setFieldAdd: SetFieldActionsApplication.#setFieldAdd,
                 setFieldRemove: SetFieldActionsApplication.#setFieldRemove,
-                /* eslint-enable @typescript-eslint/unbound-method */
             },
         };
 

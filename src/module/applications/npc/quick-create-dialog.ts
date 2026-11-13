@@ -35,7 +35,6 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** Per-dialog action + form-handler deltas; merged with the shared base options. */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action/form handlers: framework binds `this` at call time */
     static override DEFAULT_OPTIONS = {
         form: {
             handler: NPCQuickCreateDialog.#onSubmit,
@@ -45,7 +44,6 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
             updatePreview: NPCQuickCreateDialog.#onUpdatePreview,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

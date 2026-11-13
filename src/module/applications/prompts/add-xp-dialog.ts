@@ -46,13 +46,10 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unk
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             apply: AddXPDialog.#onApply as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: AddXPDialog.#onCancel as ActionHandler,
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             handler: AddXPDialog.#onFormChange,
             submitOnChange: true,
             closeOnSubmit: false,

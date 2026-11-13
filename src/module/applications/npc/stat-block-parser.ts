@@ -135,18 +135,16 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             height: 700,
         },
         form: {
-            /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; double cast required to bypass strict type checking */
+            /* eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: Foundry V14 FormConfiguration handler signature is too narrow; double cast required to bypass strict type checking */
             handler: StatBlockParser._onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 invokes action handlers with the instance as `this`; each handler declares `this: StatBlockParser` */
         actions: {
             parse: StatBlockParser._onParse,
             cancel: StatBlockParser._onCancel,
             clearInput: StatBlockParser._onClearInput,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

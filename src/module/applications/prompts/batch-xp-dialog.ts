@@ -45,15 +45,11 @@ export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as u
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'batch-xp-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             apply: BatchXPDialog.#onApply as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: BatchXPDialog.#onCancel as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleAll: BatchXPDialog.#onToggleAll,
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             handler: BatchXPDialog.#onFormChange,
             submitOnChange: true,
             closeOnSubmit: false,

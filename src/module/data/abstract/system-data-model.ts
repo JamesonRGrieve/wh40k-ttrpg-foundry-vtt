@@ -142,7 +142,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry TypeDataModel override; return type mirrors parent cleanData signature
     ): Record<string, unknown> {
         this._cleanData(source, options);
-        // eslint-disable-next-line @typescript-eslint/unbound-method, @typescript-eslint/no-unnecessary-type-assertion -- super.cleanData must be extracted and called with explicit `this` for V14 compat; cast to V14 signature is required
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- super.cleanData must be extracted and called with explicit `this` for V14 compat; cast to V14 signature is required
         const superClean = super.cleanData as DataModelV14.CleanDataSignature;
         return superClean.call(this, source, options, _state);
     }

@@ -60,9 +60,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectAmmo: AmmoPickerDialog.#onSelect,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: AmmoPickerDialog.#onCancel,
         },
     };

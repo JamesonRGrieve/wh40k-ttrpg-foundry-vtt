@@ -260,7 +260,6 @@ export default class NPCSheet extends CharacterSheet {
             width: 1050,
             height: 800,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...(CharacterSheet.DEFAULT_OPTIONS.actions ?? {}),
             // NPC-specific actions (later keys override parent where they collide)
@@ -316,7 +315,6 @@ export default class NPCSheet extends CharacterSheet {
             // Disposition test (DH2, #73)
             rollDisposition: NPCSheet.#rollDisposition,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

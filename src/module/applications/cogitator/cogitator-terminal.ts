@@ -88,7 +88,6 @@ export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unkno
         classes: ['wh40k-rpg', 'wh40k-cogitator'],
         tag: 'div',
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             selectRecord: CogitatorTerminal.#onSelectRecord,
         },
         position: { width: 820, height: 640 },

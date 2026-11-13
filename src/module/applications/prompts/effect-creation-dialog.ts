@@ -97,16 +97,14 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
         },
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- boundary: exactOptionalPropertyTypes TS2375: cast required because FormConfiguration has optional booleans that conflict with literal false/true under exactOptionalPropertyTypes
         form: {
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method -- boundary: handler cast required for FormConfiguration type; unbound-method fires on static method reference
+            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-type-assertion -- boundary: handler cast required for FormConfiguration type
             handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         } as ApplicationV2Config.FormConfiguration,
         actions: {
-            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
-            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
 

@@ -365,7 +365,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     static override DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'unified-roll-dialog', 'standard-form'],
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             toggleDifficultyPicker: UnifiedRollDialog.#onToggleDifficultyPicker,
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
@@ -411,7 +410,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             submitOnChange: true,
             closeOnSubmit: false,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 460,
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height accepts 'auto' at runtime but is typed as number

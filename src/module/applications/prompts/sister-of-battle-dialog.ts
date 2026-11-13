@@ -73,9 +73,7 @@ class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown a
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'sister-of-battle-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             apply: SisterOfBattleDialog.#onApply,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: SisterOfBattleDialog.#onCancel,
         },
         position: {

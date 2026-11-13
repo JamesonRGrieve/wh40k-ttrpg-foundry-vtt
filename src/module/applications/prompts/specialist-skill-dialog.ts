@@ -46,9 +46,9 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'specialist-skill', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             add: SpecialistSkillDialog.#onAdd as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/unbound-method
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             cancel: SpecialistSkillDialog.#onCancel as ActionHandler,
         },
         position: {

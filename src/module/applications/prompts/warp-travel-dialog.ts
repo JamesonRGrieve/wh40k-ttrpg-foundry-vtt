@@ -108,13 +108,9 @@ class WarpTravelDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as Ap
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'warp-travel-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             resolveJourney: WarpTravelDialog.#onResolveJourney,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             postChat: WarpTravelDialog.#onPostChat,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollPeril: WarpTravelDialog.#onRollPeril,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: WarpTravelDialog.#onCancel,
         },
         position: { width: 560 },

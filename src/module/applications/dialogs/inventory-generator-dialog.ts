@@ -63,7 +63,6 @@ export default class InventoryGeneratorDialog extends HandlebarsApplicationMixin
             resizable: true,
         },
         position: { width: 720, height: 680 },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             switchTab: InventoryGeneratorDialog.#onSwitchTab,
             generate: InventoryGeneratorDialog.#onGenerate,
@@ -74,7 +73,6 @@ export default class InventoryGeneratorDialog extends HandlebarsApplicationMixin
             apply: InventoryGeneratorDialog.#onApply,
             cancel: InventoryGeneratorDialog.#onCancel,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     static PARTS = {

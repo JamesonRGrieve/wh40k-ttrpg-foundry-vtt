@@ -147,11 +147,8 @@ export default class RegimentBuilderDialog extends ApplicationV2Mixin(Applicatio
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'regiment-builder-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleOption: RegimentBuilderDialog.#onToggleOption,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             commitRegiment: RegimentBuilderDialog.#onCommit,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancelRegiment: RegimentBuilderDialog.#onCancel,
         },
         position: { width: 560 },

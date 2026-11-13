@@ -194,7 +194,6 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
     static override VIEW_ONLY_ACTIONS: readonly string[] = ['switchTab', 'viewGrantedItem'];
 
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet'],
         actions: {
@@ -215,7 +214,6 @@ export default class TalentSheet extends BaseItemSheet<TalentItem> {
             icon: 'fa-solid fa-star',
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

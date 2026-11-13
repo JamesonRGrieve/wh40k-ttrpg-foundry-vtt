@@ -175,12 +175,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             height: 'auto' as unknown as number,
         },
         form: {
-            // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- ApplicationV2 form handler signature differs from shipped typings
+            // eslint-disable-next-line no-restricted-syntax -- ApplicationV2 form handler signature differs from shipped typings
             handler: AcquisitionDialog.#onSubmit as unknown as NonNullable<ApplicationV2Config.FormConfiguration['handler']>,
             submitOnChange: false,
             closeOnSubmit: true,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             toggleModifier: AcquisitionDialog.#toggleModifier,
             selectAvailability: AcquisitionDialog.#selectAvailability,
@@ -188,7 +187,6 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             selectScale: AcquisitionDialog.#selectScale,
             roll: AcquisitionDialog.#roll,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

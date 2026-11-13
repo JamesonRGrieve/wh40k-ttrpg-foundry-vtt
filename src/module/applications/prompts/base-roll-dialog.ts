@@ -44,7 +44,6 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time */
         actions: {
             roll: BaseRollDialog.#onRoll,
             cancel: BaseRollDialog.#onCancel,
@@ -54,7 +53,6 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
             submitOnChange: true,
             closeOnSubmit: false,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 500,
         },

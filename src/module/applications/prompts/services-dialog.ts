@@ -84,11 +84,8 @@ class ServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as Appl
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'services-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectService: ServicesDialog.#onSelectService,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             attemptRequisition: ServicesDialog.#onAttemptRequisition as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: ServicesDialog.#onCancel as ActionHandler,
         },
         position: { width: 560 },

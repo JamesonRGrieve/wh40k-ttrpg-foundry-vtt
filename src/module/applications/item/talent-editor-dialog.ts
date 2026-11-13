@@ -16,7 +16,6 @@ import { formatSkillLabel, prepareTalentModifierRows, prepareTalentSituationalRo
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's applications namespace is not natively typed; narrow to the API surface we need
 const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike & { ApplicationV2: ApplicationV2Ctor } }).api;
-// eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 and HandlebarsApplicationMixin are constructors/mixins, not bound methods
 const { ApplicationV2, HandlebarsApplicationMixin } = applicationAPI;
 
 /** Dialog window title localization key, hoisted so the DEFAULT_OPTIONS entry references an identifier. */
@@ -153,7 +152,6 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions/form handlers accept method references and bind `this` itself */
     static DEFAULT_OPTIONS = {
         id: 'talent-editor-dialog',
         classes: ['wh40k-rpg', 'dialog', 'talent-editor-dialog'],
@@ -177,7 +175,6 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             resizable: true,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

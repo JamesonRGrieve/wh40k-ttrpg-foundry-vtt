@@ -47,13 +47,11 @@ export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(Appl
     static override DEFAULT_OPTIONS = {
         tag: 'div',
         classes: ['wh40k-rpg', 'dialog', 'daemon-weapon-attribute', 'standard-form'],
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             roll: DaemonWeaponAttributeDialog.#onRoll,
             post: DaemonWeaponAttributeDialog.#onPost,
             close: DaemonWeaponAttributeDialog.#onClose,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         position: { width: 480 },
         window: {
             title: 'WH40K.DaemonWeaponAttribute.DialogTitle',

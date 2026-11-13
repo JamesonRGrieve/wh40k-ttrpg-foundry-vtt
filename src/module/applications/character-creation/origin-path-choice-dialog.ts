@@ -105,16 +105,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             height: 'auto' as const,
         },
         actions: {
-            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             toggleOption: OriginPathChoiceDialog.#toggleOption,
             selectSpecialization: OriginPathChoiceDialog.#selectSpecialization,
             confirm: OriginPathChoiceDialog.#confirm,
             cancel: OriginPathChoiceDialog.#cancel,
             viewItem: OriginPathChoiceDialog.#viewItem,
-            /* eslint-enable @typescript-eslint/unbound-method */
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 form handler binds this at submit-time
             handler: OriginPathChoiceDialog.#onSubmit,
             submitOnChange: false,
             closeOnSubmit: true,

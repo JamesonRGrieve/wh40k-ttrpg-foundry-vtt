@@ -49,7 +49,6 @@ class ShipActionDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as Ap
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'ship-action-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 binds `this` at click time
             rollShipAction: ShipActionDialog.#onRoll,
         },
         position: { width: 460 },

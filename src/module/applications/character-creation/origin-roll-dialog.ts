@@ -119,7 +119,6 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             width: 600,
             height: 'auto' as const,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             roll: OriginRollDialog.#roll,
             accept: OriginRollDialog.#accept,
@@ -132,7 +131,6 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             submitOnChange: false,
             closeOnSubmit: false,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */

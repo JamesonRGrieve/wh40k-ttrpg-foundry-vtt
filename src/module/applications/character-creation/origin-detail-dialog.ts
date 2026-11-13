@@ -31,12 +31,10 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             height: 600,
         },
         actions: {
-            /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds this at click-time */
             confirm: OriginDetailDialog.#confirm,
             cancel: OriginDetailDialog.#cancel,
             openItem: OriginDetailDialog.#openItem,
             switchOriginTab: OriginDetailDialog.#switchOriginTab,
-            /* eslint-enable @typescript-eslint/unbound-method */
         },
     };
 

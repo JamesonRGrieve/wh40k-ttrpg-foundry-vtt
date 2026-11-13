@@ -65,13 +65,11 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             width: 700,
             height: 'auto' as const,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             apply: CharacteristicSetupDialog.#onApply,
             reset: CharacteristicSetupDialog.#onReset,
             toggleAdvanced: CharacteristicSetupDialog.#onToggleAdvanced,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 DEFAULT_OPTIONS shape combines DefaultOptions + actions; cast at definition
     } as unknown as ApplicationV2Config.DefaultOptions;
 

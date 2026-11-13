@@ -117,15 +117,12 @@ export default class ReinforcementCallDialog extends HandlebarsApplicationMixin(
             height: 'auto' as unknown as number,
         },
         form: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             handler: ReinforcementCallDialog.#onFormChange,
             submitOnChange: true,
             closeOnSubmit: false,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             callReinforcement: ReinforcementCallDialog.#onCall,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: ReinforcementCallDialog.#onCancel,
         },
     };

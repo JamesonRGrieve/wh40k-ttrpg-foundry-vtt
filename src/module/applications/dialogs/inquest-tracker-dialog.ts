@@ -77,19 +77,12 @@ export default class InquestTrackerDialog extends HandlebarsApplicationMixin(App
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             addInquest: InquestTrackerDialog.#onAddInquest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             removeInquest: InquestTrackerDialog.#onRemoveInquest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             addClue: InquestTrackerDialog.#onAddClue,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             leadTest: InquestTrackerDialog.#onLeadTest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             resolveInquest: InquestTrackerDialog.#onResolveInquest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             reopenInquest: InquestTrackerDialog.#onReopenInquest,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             save: InquestTrackerDialog.#onSave,
         },
     };

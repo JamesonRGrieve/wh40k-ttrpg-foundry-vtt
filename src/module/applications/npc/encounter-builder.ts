@@ -52,7 +52,6 @@ export default class EncounterBuilder extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** Per-dialog action deltas; merged with the shared base options. */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action map binds `this` at click-time; private static method references are safe here */
     static override DEFAULT_OPTIONS = {
         actions: {
             addNPC: EncounterBuilder.#addNPC,
@@ -65,7 +64,6 @@ export default class EncounterBuilder extends makeNpcFormDialog({
             openNPC: EncounterBuilder.#openNPC,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
     /*  Properties                                  */

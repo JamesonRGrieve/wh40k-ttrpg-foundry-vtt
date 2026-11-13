@@ -51,7 +51,6 @@ export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base
             ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
             actions: {
                 ...((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions ?? {}),
-                // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time
                 toggleExpandable: ExpandableTooltipApplication.#toggleExpandable,
             },
         };

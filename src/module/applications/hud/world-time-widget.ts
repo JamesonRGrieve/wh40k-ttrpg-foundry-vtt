@@ -137,15 +137,10 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
             height: 'auto' as unknown as number,
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceHour: WorldTimeWidget.#advanceHour as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceDay: WorldTimeWidget.#advanceDay as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             advanceCustom: WorldTimeWidget.#advanceCustom as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             undoAdvance: WorldTimeWidget.#undoAdvance as ActionHandler,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             editBodies: WorldTimeWidget.#editBodies,
         },
     };

@@ -91,7 +91,6 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleSection'];
 
     /** @override */
-    /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
     static override DEFAULT_OPTIONS = {
         tag: 'form',
         actions: {
@@ -116,7 +115,6 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
             resizable: true,
         },
     };
-    /* eslint-enable @typescript-eslint/unbound-method */
 
     /* -------------------------------------------- */
 

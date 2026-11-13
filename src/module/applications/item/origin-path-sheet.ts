@@ -71,9 +71,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             icon: 'fa-solid fa-route',
         },
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             addGrant: OriginPathSheet.#addGrant,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry V2 actions table receives method references and rebinds `this` to the sheet instance at dispatch time
             removeGrant: OriginPathSheet.#removeGrant,
         },
     };

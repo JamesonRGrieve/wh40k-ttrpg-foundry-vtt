@@ -71,11 +71,8 @@ class DaemonhostBindingDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'daemonhost-binding-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectTier: DaemonhostBindingDialog.#onSelectTier,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             bind: DaemonhostBindingDialog.#onBind,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: DaemonhostBindingDialog.#onCancel,
         },
         position: {

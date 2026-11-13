@@ -72,11 +72,8 @@ export default class RightStuffDialog extends ApplicationV2Mixin(ApplicationV2 a
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'right-stuff-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectSkill: RightStuffDialog.#onSelectSkill,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             spendRightStuff: RightStuffDialog.#onSpend,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: RightStuffDialog.#onCancel,
         },
         position: { width: 480 },

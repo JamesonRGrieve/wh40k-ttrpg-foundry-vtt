@@ -23,7 +23,6 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseItemSheet.DEFAULT_OPTIONS.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
@@ -31,7 +30,6 @@ export default class ContainerItemSheet<TItem extends WH40KItemDocument = WH40KI
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,
             nestedItemRoll: ContainerItemSheet.#nestedItemRoll,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

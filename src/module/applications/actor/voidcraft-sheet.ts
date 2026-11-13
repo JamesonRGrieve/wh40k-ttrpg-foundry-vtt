@@ -151,7 +151,6 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
     /** @override */
     static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
             fireShipWeapon: VoidcraftActorSheet.#fireShipWeapon,
@@ -170,7 +169,6 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             assignShipOfficer: VoidcraftActorSheet.#assignShipOfficer,
             convertToVoidcraft: VoidcraftActorSheet.#convertToVoidcraft,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
         // `player` opts into the shared sidebar + body grid (dark window body) the
         // character and craft sheets use; without it the canvas showed through.
         classes: ['wh40k-rpg', 'sheet', 'actor', 'player', 'voidcraft'],

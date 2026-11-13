@@ -81,11 +81,8 @@ export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'disorder-roll-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectSeverity: DisorderRollDialog.#onSelectSeverity,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollDisorder: DisorderRollDialog.#onRollDisorder,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: DisorderRollDialog.#onCancel,
         },
         position: { width: 480 },

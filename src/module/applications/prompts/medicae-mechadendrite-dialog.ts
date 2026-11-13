@@ -39,9 +39,7 @@ class MedicaeMechadendriteDialog extends ApplicationV2Mixin(ApplicationV2 as unk
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'medicae-mechadendrite-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             staunchBloodLoss: MedicaeMechadendriteDialog.#onStaunch,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: MedicaeMechadendriteDialog.#onCancel,
         },
         position: { width: 460 },

@@ -108,17 +108,11 @@ export default class ColonyGrowthDialog extends ApplicationV2Mixin(ApplicationV2
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'colony-growth-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             adjustStat: ColonyGrowthDialog.#onAdjustStat,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             adjustModifier: ColonyGrowthDialog.#onAdjustModifier,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleAgricultural: ColonyGrowthDialog.#onToggleAgricultural,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             toggleEcclesiastical: ColonyGrowthDialog.#onToggleEcclesiastical,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             rollGrowth: ColonyGrowthDialog.#onRollGrowth,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: ColonyGrowthDialog.#onCancel,
         },
         position: { width: 520 },

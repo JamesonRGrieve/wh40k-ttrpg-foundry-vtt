@@ -64,11 +64,8 @@ export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'grenade-throw-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             selectGrenade: GrenadeThrowDialog.#onSelectGrenade,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             throw: GrenadeThrowDialog.#onThrow,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: GrenadeThrowDialog.#onCancel,
         },
         position: { width: 560 },

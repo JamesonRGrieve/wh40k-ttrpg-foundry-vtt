@@ -326,7 +326,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             width: 700,
             height: 650,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself */
         actions: {
             purchaseCharacteristic: AdvancementDialog.#purchaseCharacteristic,
             purchaseAdvance: AdvancementDialog.#purchaseAdvance,
@@ -336,7 +335,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             toggleAvailableOnly: AdvancementDialog.#toggleAvailableOnly,
             openCompendiumItem: AdvancementDialog.#openCompendiumItem,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

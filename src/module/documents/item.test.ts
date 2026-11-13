@@ -21,7 +21,6 @@ type ApplyOriginFn = (this: unknown, actor: unknown, options?: { silent?: boolea
 
 /** Extract the prototype method as a plain callable so it can run against a structural `this` stub. */
 function getApply(mod: { WH40KItem: { prototype: { applyOriginToActor: unknown } } }): ApplyOriginFn {
-    // eslint-disable-next-line @typescript-eslint/unbound-method -- test: deliberately extracting the prototype method to invoke via .call() on a structural stub
     return mod.WH40KItem.prototype.applyOriginToActor as ApplyOriginFn;
 }
 

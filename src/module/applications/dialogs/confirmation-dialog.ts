@@ -51,12 +51,10 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 position.height typed as number but 'auto' is a valid runtime value that Foundry handles
             height: 'auto' as unknown as number,
         },
-        /* eslint-disable @typescript-eslint/unbound-method -- ApplicationV2 action handlers: framework binds `this` at call time */
         actions: {
             confirm: ConfirmationDialog.#onConfirm,
             cancel: ConfirmationDialog.#onCancel,
         },
-        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

@@ -133,9 +133,7 @@ class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknow
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'daemonology-ritual-dialog', 'standard-form'],
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             perform: DaemonologyRitualDialog.#onPerform,
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             cancel: DaemonologyRitualDialog.#onCancel,
         },
         position: { width: 520 },

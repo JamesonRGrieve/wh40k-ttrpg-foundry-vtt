@@ -103,9 +103,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
         classes: ['wh40k-rpg', 'wh40k-compendium-browser', 'standard-form'],
         tag: 'div',
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             clearFilters: RTCompendiumBrowser.#clearFilters,
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- ApplicationV2 actions accept method references and bind `this` itself
             openItem: RTCompendiumBrowser.#openItem,
         },
         position: {

@@ -63,7 +63,6 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
     /** Per-dialog action deltas; merged with the shared base options. */
     static override DEFAULT_OPTIONS = {
         actions: {
-            // eslint-disable-next-line @typescript-eslint/unbound-method -- Foundry action handlers are invoked with the application as `this`
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
         },
     };
