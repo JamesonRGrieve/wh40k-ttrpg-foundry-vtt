@@ -87,16 +87,4 @@ export default class EndeavourData extends ItemDataModel.mixin(DescriptionTempla
         const raw = (this.apEarned / this.apRequired) * 100;
         return Math.max(0, Math.min(100, Math.round(raw)));
     }
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.apRequired > 0) {
-            props.push(`${this.apEarned}/${this.apRequired} AP`);
-        }
-        if (this.reward.profitFactor > 0) {
-            props.push(`+${this.reward.profitFactor} PF`);
-        }
-        return props;
-    }
 }

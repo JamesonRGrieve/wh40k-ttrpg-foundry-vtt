@@ -80,22 +80,4 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
         }
         return name;
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.hasLevel && this.level !== null) {
-            props.push(`Level: ${this.level}`);
-        }
-        if (this.hasModifiers) {
-            for (const mod of this.modifiersList) {
-                props.push(`${mod.label}: ${mod.formatted}`);
-            }
-        }
-        return props;
-    }
 }

@@ -194,7 +194,6 @@ export interface WH40KSystemConfig {
     vehicleTypes: Record<string, VehicleTypeConfig>;
     vehicleClasses: Record<string, LabelConfig>;
     vehicleSizes: Record<number, VehicleSizeConfig>;
-    vehicleUpgradeTypes: Record<string, LabelConfig>;
     vehicleStats: Record<string, LabelAbbreviationConfig>;
     difficulties: Record<string, LabelModifierConfig>;
     calculateDegrees: (roll: number, target: number) => DegreesResult;
@@ -823,20 +822,6 @@ WH40K.vehicleSizes = {
     8: { label: 'WH40K.Size.Immense', modifier: 40, descriptor: '~31-50m' },
     9: { label: 'WH40K.Size.Monumental', modifier: 50, descriptor: '~51-100m' },
     10: { label: 'WH40K.Size.Titanic', modifier: 60, descriptor: '100m+' },
-};
-
-/* -------------------------------------------- */
-/*  Vehicle Upgrade Types                       */
-/* -------------------------------------------- */
-
-/**
- * Vehicle upgrade type classifications.
- * @type {Object<string, {label: string}>}
- */
-WH40K.vehicleUpgradeTypes = {
-    standard: { label: 'WH40K.VehicleUpgradeType.Standard' },
-    integral: { label: 'WH40K.VehicleUpgradeType.Integral' },
-    custom: { label: 'WH40K.VehicleUpgradeType.Custom' },
 };
 
 /* -------------------------------------------- */

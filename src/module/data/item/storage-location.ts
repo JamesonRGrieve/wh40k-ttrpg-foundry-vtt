@@ -20,15 +20,6 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
         };
     }
 
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.location) {
-            props.push(this.location);
-        }
-        return props;
-    }
-
     /**
      * Container types this storage location accepts.
      * @returns {string[]}

@@ -37,9 +37,4 @@ export default class MedalData extends ItemDataModel.mixin(DescriptionTemplate) 
             squadBonus: new fields.HTMLField({ required: true, blank: true, initial: '' }),
         };
     }
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [];
-    }
 }

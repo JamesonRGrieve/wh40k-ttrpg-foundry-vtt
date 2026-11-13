@@ -179,15 +179,4 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
         return bonuses;
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [`Rank: ${this.rank}`, `Careers: ${this.careerPreferencesLabel}`, `Skills: ${this.importantSkillsLabel}`];
-
-        return props;
-    }
 }

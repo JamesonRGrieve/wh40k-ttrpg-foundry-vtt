@@ -281,21 +281,18 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT ship orders through the schema (#186)'
     });
 });
 
-describe('OrderData.testLabel and its chat line (#648)', () => {
+describe('OrderData.testLabel (#648)', () => {
     interface OrderLike {
         category: string;
         actionType: string;
         test: { skill: string; modifier: number };
         readonly testLabel: string;
-        readonly chatProperties: string[];
     }
     const order = (skill: string, modifier: number): OrderLike => {
         const instance = Object.create(OrderData.prototype) as OrderLike;
         instance.category = 'movement';
         instance.actionType = 'extended';
         instance.test = { skill, modifier };
-        // The other chat-line labels lean on Foundry's String#capitalize; they are not under test here.
-        Object.defineProperties(instance, { categoryLabel: { value: 'Movement' }, actionTypeLabel: { value: 'Extended Action' } });
         return instance;
     };
 
@@ -303,7 +300,6 @@ describe('OrderData.testLabel and its chat line (#648)', () => {
         vi.stubGlobal('game', {
             i18n: {
                 localize: (key: string): string => key,
-                format: (key: string, data: Record<string, string>): string => (key === 'WH40K.Chat.TestProperty' ? `Test: ${data['test'] ?? ''}` : key),
             },
         });
     });
@@ -320,10 +316,5 @@ describe('OrderData.testLabel and its chat line (#648)', () => {
     it('keeps skill text the content authored as display text', () => {
         expect(order('Pilot (Spacecraft)', 0).testLabel).toBe('Pilot (Spacecraft)');
         expect(order('Tech-Use', 10).testLabel).toBe('Tech-Use +10');
-    });
-
-    it('takes the chat line from the langpack, not a hard-coded "Test:"', () => {
-        expect(order('command', 10).chatProperties).toContain('Test: Command +10');
-        expect(readRepoFile('src/module/data/item/order.ts')).not.toContain('`Test: ');
     });
 });

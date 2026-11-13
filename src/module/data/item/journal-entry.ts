@@ -64,16 +64,4 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
         }
         return out;
     }
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.time) {
-            props.push(this.time);
-        }
-        if (this.place) {
-            props.push(this.place);
-        }
-        return props;
-    }
 }

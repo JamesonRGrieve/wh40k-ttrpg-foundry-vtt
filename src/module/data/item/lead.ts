@@ -108,19 +108,4 @@ export default class LeadData extends ItemDataModel.mixin(DescriptionTemplate) {
     get isResolved(): boolean {
         return isTerminalLeadStatus(this.state);
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.leadTypeLabel, this.stateLabel];
-        if (this.sourceClue) {
-            const labelKey = 'WH40K.Lead.SourceClue.Label';
-            const label = game.i18n.has(labelKey) ? game.i18n.localize(labelKey) : 'Source';
-            props.push(`${label}: ${this.sourceClue}`);
-        }
-        return props;
-    }
 }

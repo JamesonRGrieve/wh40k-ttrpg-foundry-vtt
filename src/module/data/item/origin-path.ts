@@ -1,5 +1,4 @@
 import { originStepLabel } from '../../rules/origin-steps.ts';
-import { formatSigned } from '../../utils/format.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -544,41 +543,6 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return this.activeModifiers;
     }
 
-    /**
-     * Get a summary of grants.
-     * @type {object}
-     */
-    get grantsSummary(): string[] {
-        const grants = this.grants;
-        const summary: string[] = [];
-
-        // Characteristics from modifiers
-        const charMods = this.modifiers.characteristics;
-        for (const [char, numVal] of Object.entries(charMods)) {
-            if (numVal !== 0) {
-                summary.push(`${char}: ${formatSigned(numVal)}`);
-            }
-        }
-
-        if (grants.skills.length > 0) {
-            summary.push(`Skills: ${grants.skills.map((s) => s.name).join(', ')}`);
-        }
-
-        if (grants.talents.length > 0) {
-            summary.push(`Talents: ${grants.talents.map((t) => t.name).join(', ')}`);
-        }
-
-        if (grants.traits.length > 0) {
-            summary.push(`Traits: ${grants.traits.map((t) => t.name).join(', ')}`);
-        }
-
-        if (grants.aptitudes.length > 0) {
-            summary.push(`Aptitudes: ${grants.aptitudes.join(', ')}`);
-        }
-
-        return summary;
-    }
-
     /* -------------------------------------------- */
     /*  Data Preparation                            */
     /* -------------------------------------------- */
@@ -744,14 +708,5 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry _cleanData receives untyped legacy source
     static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData(source, options);
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [this.stepLabel, ...this.grantsSummary];
     }
 }

@@ -24,5 +24,4 @@ describe('LocationData', () => {
     //   - schema includes the description + source per-line variant template
     //   - _migrateData drops the legacy `gameSystems` array
     //   - locationTypeLabel / locationTypeIcon fall back safely
-    //   - chatProperties surface type / faction / sector
 });

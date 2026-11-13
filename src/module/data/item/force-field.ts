@@ -196,34 +196,6 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return roll >= range.min && roll <= range.max;
     }
 
-    /**
-     * Get overload range label for display.
-     * @type {string}
-     */
-    get overloadRangeLabel(): string {
-        const range = this.effectiveOverloadRange;
-        if (range.min === range.max) {
-            return `${String(range.min).padStart(2, '0')}`;
-        }
-        return `${String(range.min).padStart(2, '0')}-${String(range.max).padStart(2, '0')}`;
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [
-            ...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate),
-            `Protection: ${this.protectionRating}%`,
-            `Overload: ${this.overloadRangeLabel}`,
-            this.statusLabel,
-        ];
-
-        return props;
-    }
-
     /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */

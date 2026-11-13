@@ -221,24 +221,4 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
             extraModifier,
         });
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), this.typeLabel, `Location: ${this.locationsLabel}`];
-
-        if (this.hasArmourPoints) {
-            const apValues = Object.entries(this.armourPoints)
-                .filter(([_, v]) => v > 0)
-                .map(([k, v]) => `${k}: ${v}`);
-            if (apValues.length) {
-                props.push(`AP: ${apValues.join(', ')}`);
-            }
-        }
-
-        return props;
-    }
 }

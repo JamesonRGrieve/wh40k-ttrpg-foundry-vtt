@@ -233,28 +233,4 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     get causesPhenomena(): boolean {
         return true; // All psychic powers can cause phenomena
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [
-            this.disciplineLabel,
-            `PR Cost: ${this.prCost}`,
-            `Focus: ${this.focusTestLabel}`,
-            ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate),
-        ];
-
-        if (this.isAttack) {
-            props.push(...ItemDataModel.inheritedChatProperties(this, DamageTemplate));
-        }
-
-        if (this.sustained) {
-            props.push(game.i18n.localize('WH40K.PsychicPower.Sustained'));
-        }
-
-        return props;
-    }
 }

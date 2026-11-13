@@ -1,4 +1,3 @@
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -113,22 +112,6 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /**
-     * Get restrictions label.
-     * @type {string}
-     */
-    get restrictionsLabel(): string {
-        const parts: string[] = [];
-        if (this.restrictions.weaponClasses.size > 0) {
-            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses).join(', ')}`);
-        }
-        if (this.restrictions.weaponTypes.size > 0) {
-            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(', ')}`);
-        }
-        const joined = parts.join('; ');
-        return joined !== '' ? joined : game.i18n.localize('WH40K.Modification.NoRestrictions');
-    }
-
-    /**
      * Get category icon class.
      * @type {string}
      */
@@ -167,29 +150,5 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         if (mods.weight !== 0) return true;
         if (Object.values(mods.rateOfFire).some((v) => v !== 0)) return true;
         return false;
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), this.restrictionsLabel];
-
-        const mods = this.modifiers;
-        if (mods.damage !== 0) props.push(`Damage: ${formatSigned(mods.damage)}`);
-        if (mods.penetration !== 0) props.push(`Pen: ${formatSigned(mods.penetration)}`);
-        if (mods.toHit !== 0) props.push(`To Hit: ${formatSigned(mods.toHit)}`);
-        if (mods.range !== 0) props.push(`Range: ${formatSigned(mods.range)}`);
-
-        if (this.addedQualities.size > 0) {
-            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
-        }
-        if (this.removedQualities.size > 0) {
-            props.push(`Removes: ${Array.from(this.removedQualities).join(', ')}`);
-        }
-
-        return props;
     }
 }

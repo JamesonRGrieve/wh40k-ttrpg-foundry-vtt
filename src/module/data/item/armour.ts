@@ -773,27 +773,4 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     get weightLabel(): string {
         return this.weight ? `${this.effectiveWeight} kg` : '-';
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate)];
-
-        props.unshift(this.typeLabel);
-        props.push(`AP: ${this.apSummary}`);
-        props.push(`Coverage: ${this.coverageLabel}`);
-
-        if (this.maxAgility !== null) {
-            props.push(`Max Ag: ${this.maxAgility}`);
-        }
-
-        if (this.properties.size > 0) {
-            props.push(`Properties: ${this.propertyLabels.join(', ')}`);
-        }
-
-        return props;
-    }
 }

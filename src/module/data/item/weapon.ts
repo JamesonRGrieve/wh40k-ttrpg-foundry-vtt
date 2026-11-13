@@ -1652,47 +1652,6 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [
-            ...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate),
-            ...ItemDataModel.inheritedChatProperties(this, AttackTemplate),
-            ...ItemDataModel.inheritedChatProperties(this, DamageTemplate),
-        ];
-
-        props.unshift(`${this.classLabel} (${this.typeLabel})`);
-
-        if (this.usesAmmo) {
-            props.push(`Clip: ${this.clip.value}/${this.effectiveClipMax}`);
-            props.push(`Reload: ${this.reloadLabel}`);
-        }
-
-        // Surface the jam state (#411) so the weapon card shows it needs clearing.
-        if (this.isJammed) {
-            props.push(game.i18n.localize('WH40K.Weapon.Jammed'));
-        }
-
-        // Show effective qualities (including craftsmanship)
-        if (this.effectiveSpecial.size > 0) {
-            props.push(`Qualities: ${Array.from(this.effectiveSpecial).join(', ')}`);
-        }
-
-        // Show craftsmanship modifiers if any
-        const craftMods = this.craftsmanshipModifiers;
-        if (craftMods.toHit !== 0 || craftMods.damage !== 0) {
-            const modParts: string[] = [];
-            if (craftMods.toHit !== 0) modParts.push(`${craftMods.toHit > 0 ? '+' : ''}${craftMods.toHit} Hit`);
-            if (craftMods.damage !== 0) modParts.push(`+${craftMods.damage} Dmg`);
-            props.push(`Craftsmanship: ${modParts.join(', ')}`);
-        }
-
-        return props;
-    }
-
-    /* -------------------------------------------- */
     /*  Display Properties                          */
     /* -------------------------------------------- */
 

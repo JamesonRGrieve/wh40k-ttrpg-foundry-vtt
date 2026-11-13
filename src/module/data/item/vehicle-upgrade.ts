@@ -1,4 +1,3 @@
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -126,50 +125,5 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                 return `<span class="${tone} tw-text-xs">${mod.label}: ${mod.formatted}</span>`;
             })
             .join('');
-    }
-
-    /**
-     * Get upgrade type label from config.
-     * @type {string}
-     */
-    get upgradeTypeLabel(): string {
-        const wh40kCfg = CONFIG.wh40k as { vehicleUpgradeTypes?: Record<string, { label: string } | undefined> } | undefined;
-        const types = wh40kCfg?.vehicleUpgradeTypes ?? {};
-        const typeData = types[this.upgradeType];
-        if (typeData !== undefined) {
-            return game.i18n.localize(typeData.label);
-        }
-        return this.upgradeType;
-    }
-
-    /**
-     * Get difficulty formatted with sign.
-     * @type {string}
-     */
-    get difficultyFormatted(): string {
-        return formatSigned(this.difficulty);
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [
-            game.i18n.localize(`WH40K.Availability.${this.availability.charAt(0).toUpperCase()}${this.availability.slice(1)}`),
-            `Type: ${this.upgradeTypeLabel}`,
-            `Difficulty: ${this.difficultyFormatted}`,
-        ];
-
-        if (this.installCost > 0) {
-            props.push(`Cost: ${this.installCost}`);
-        }
-
-        for (const mod of this.modifiersList) {
-            props.push(`${mod.label}: ${mod.formatted}`);
-        }
-
-        return props;
     }
 }

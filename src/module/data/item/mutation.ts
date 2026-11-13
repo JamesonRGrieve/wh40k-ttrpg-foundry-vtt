@@ -103,15 +103,4 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
     get categoryLabel(): string {
         return game.i18n.localize(`WH40K.MutationCategory.${this.category.capitalize()}`);
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.categoryLabel];
-        if (this.visible) props.push(game.i18n.localize('WH40K.Mutation.Visible'));
-        return props;
-    }
 }

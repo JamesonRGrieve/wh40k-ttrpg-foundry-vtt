@@ -117,19 +117,4 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
             this.test.skill !== '' ? skillLabel(this.test.skill) : game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
         return formatTestLabel(tested, this.test.modifier);
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [
-            this.typeLabel,
-            game.i18n.format('WH40K.Chat.TestProperty', { test: this.testLabel }),
-            ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate),
-        ];
-
-        return props;
-    }
 }

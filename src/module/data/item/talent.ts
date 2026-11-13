@@ -347,61 +347,6 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         return false;
     }
 
-    /**
-     * Get a summary of what this talent grants.
-     * @type {string[]}
-     */
-    get grantsSummary(): string[] {
-        const grants = this.grants;
-        const summary: string[] = [];
-
-        if (grants.skills.length) {
-            summary.push(`Skills: ${grants.skills.map((s) => s.name + (s.specialization ? ` (${s.specialization})` : '')).join(', ')}`);
-        }
-
-        if (grants.talents.length) {
-            summary.push(`Talents: ${grants.talents.map((t) => t.name + (t.specialization ? ` (${t.specialization})` : '')).join(', ')}`);
-        }
-
-        if (grants.traits.length) {
-            summary.push(`Traits: ${grants.traits.map((t) => t.name).join(', ')}`);
-        }
-
-        if (grants.specialAbilities.length) {
-            summary.push(`Special Abilities: ${grants.specialAbilities.map((a) => a.name).join(', ')}`);
-        }
-
-        return summary;
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.categoryLabel, this.tierLabel];
-
-        if (this.aptitudes.length) {
-            props.push(`Aptitudes: ${this.aptitudes.join(', ')}`);
-        }
-
-        if (this.hasPrerequisites) {
-            props.push(`Prerequisites: ${this.prerequisitesLabel}`);
-        }
-
-        if (this.cost) {
-            props.push(`Cost: ${this.cost} XP`);
-        }
-
-        // Add grants summary
-        if (this.hasGrants) {
-            props.push(...this.grantsSummary);
-        }
-
-        return props;
-    }
-
     /* -------------------------------------------- */
     /*  Vocalization                                */
     /* -------------------------------------------- */

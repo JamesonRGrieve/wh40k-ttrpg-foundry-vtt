@@ -128,21 +128,6 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return name;
     }
 
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-
-        if (this.hasLevel) {
-            props.push(`Level: ${this.level}`);
-        }
-
-        return props;
-    }
-
     /**
      * Get category label.
      * @type {string}

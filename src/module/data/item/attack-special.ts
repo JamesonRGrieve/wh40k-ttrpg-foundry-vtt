@@ -22,18 +22,6 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
         };
     }
 
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.hasLevel && this.level > 0) {
-            props.push(`Level ${this.level}`);
-        }
-        if (!this.enabled) {
-            props.push('Disabled');
-        }
-        return props;
-    }
-
     /**
      * Get the display name including level if applicable.
      * @returns {string}

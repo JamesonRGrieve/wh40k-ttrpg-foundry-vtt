@@ -316,17 +316,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /**
-     * Get restrictions label.
-     * @type {string}
-     */
-    get restrictionsLabel(): string {
-        if (this.restrictions.armourTypes.size > 0) {
-            return `Types: ${Array.from(this.restrictions.armourTypes).join(', ')}`;
-        }
-        return game.i18n.localize('WH40K.Modification.NoRestrictions');
-    }
-
-    /**
      * Get formatted restrictions label with localized type names.
      * @type {string}
      */
@@ -404,29 +393,5 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         if (this.addedProperties.has('sealed')) return 'fa-shield-virus';
         if (this.addedProperties.has('hexagrammic')) return 'fa-star-of-david';
         return 'fa-wrench';
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate)];
-
-        // Restrictions
-        props.push(this.restrictionsLabelEnhanced);
-
-        // Modifiers
-        if (this.hasModifiers) {
-            props.push(this.modifierSummary);
-        }
-
-        // Properties
-        if (this.propertiesSummary !== '') {
-            props.push(this.propertiesSummary);
-        }
-
-        return props;
     }
 }

@@ -215,23 +215,4 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     get isTemporary(): boolean {
         return this.duration.units !== 'permanent';
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.natureLabel, this.appliesToLabel];
-
-        if (this.stackable) {
-            props.push(`${game.i18n.localize('WH40K.Condition.Stacks.Label')}: ${this.stacks}`);
-        }
-
-        if (this.isTemporary) {
-            props.push(`${game.i18n.localize('WH40K.Condition.Duration.Label')}: ${this.durationDisplay}`);
-        }
-
-        return props;
-    }
 }

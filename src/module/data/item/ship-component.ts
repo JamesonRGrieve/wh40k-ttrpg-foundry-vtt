@@ -1,4 +1,3 @@
-import { formatSigned } from '../../utils/format.ts';
 import { shipComponentTypeLabelKey } from '../../utils/ship-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -217,20 +216,5 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     /** Non-zero ship-stat modifiers as a localized display list. */
     get modifiersList(): ShipModifierEntry[] {
         return shipModifiersList(this.modifiers);
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.componentTypeLabel, `Hull: ${this.hullTypeLabel}`, `Power: ${this.powerLabel}`, `Space: ${this.space}`, `SP: ${this.shipPoints}`];
-
-        for (const mod of this.modifiersList) {
-            props.push(`${mod.label}: ${formatSigned(mod.value)}`);
-        }
-
-        return props;
     }
 }

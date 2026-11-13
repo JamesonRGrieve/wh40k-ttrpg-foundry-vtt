@@ -13,9 +13,4 @@ export default class AptitudeData extends ItemDataModel.mixin(DescriptionTemplat
             // No additional fields - aptitudes are just named references
         };
     }
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [];
-    }
 }

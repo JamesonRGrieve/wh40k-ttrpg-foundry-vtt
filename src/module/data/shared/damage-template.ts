@@ -203,22 +203,6 @@ export default class DamageTemplate extends SystemDataModel {
 
     /* -------------------------------------------- */
 
-    /**
-     * Properties for chat display.
-     * @type {string[]}
-     */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.damage.formula !== '') {
-            props.push(`Damage: ${this.damageLabel}`);
-            props.push(`Pen: ${this.damage.penetration}`);
-        }
-        if (this.special.size > 0) {
-            props.push(`Special: ${Array.from(this.special).join(', ')}`);
-        }
-        return props;
-    }
-
     /* -------------------------------------------- */
 
     /**

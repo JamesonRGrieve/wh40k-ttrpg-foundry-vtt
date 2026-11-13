@@ -170,16 +170,4 @@ export default class LocationData extends ItemDataModel.mixin(DescriptionTemplat
         };
         return icons[this.locationType] ?? 'fa-location-pin';
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props: string[] = [this.locationTypeLabel];
-        if (this.controllingFaction) props.push(this.controllingFaction);
-        if (this.sector) props.push(this.sector);
-        return props;
-    }
 }

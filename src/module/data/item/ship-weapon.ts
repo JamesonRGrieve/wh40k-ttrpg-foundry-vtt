@@ -234,29 +234,4 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
             range: this.range,
         };
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const prop = (key: string, value: string | number): string => game.i18n.format(key, { value: String(value) });
-        const props = [
-            this.weaponTypeLabel,
-            prop('WH40K.ShipWeapon.Property.Location', this.locationLabel),
-            prop('WH40K.ShipWeapon.Property.Strength', this.strength),
-            prop('WH40K.ShipWeapon.Property.Damage', this.damageLabel),
-            prop('WH40K.ShipWeapon.Property.Range', this.rangeLabel),
-            prop('WH40K.ShipWeapon.Property.Power', this.power),
-            prop('WH40K.ShipWeapon.Property.Space', this.space),
-            prop('WH40K.ShipWeapon.Property.ShipPoints', this.shipPoints),
-        ];
-
-        if (this.special.size) {
-            props.push(prop('WH40K.ShipWeapon.Property.Special', Array.from(this.special).join(', ')));
-        }
-
-        return props;
-    }
 }

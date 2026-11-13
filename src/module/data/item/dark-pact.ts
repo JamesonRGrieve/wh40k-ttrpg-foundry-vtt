@@ -65,9 +65,4 @@ export default class DarkPactData extends ItemDataModel.mixin(DescriptionTemplat
             banes: entry(),
         };
     }
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [];
-    }
 }

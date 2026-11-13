@@ -28,13 +28,4 @@ export default class MalignancyData extends ItemDataModel.mixin(DescriptionTempl
             ...simpleEffectItemSchema('effect'),
         };
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [];
-    }
 }

@@ -165,20 +165,4 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
         }
         return desc;
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.damageTypeLabel, this.bodyPartLabel, this.severityLabel];
-
-        if (this.isPermanent) {
-            const key = 'WH40K.CriticalInjury.Permanent';
-            props.push(game.i18n.has(key) ? game.i18n.localize(key) : 'Permanent');
-        }
-
-        return props;
-    }
 }

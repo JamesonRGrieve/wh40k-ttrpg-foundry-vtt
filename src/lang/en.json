@@ -114,9 +114,7 @@
             "Encumbered": "Encumbered!",
             "GiveSelected": "Give selected items to another character",
             "NoItemsCarried": "No items carried",
-            "NoItemsElsewhere": "No items stored elsewhere",
-            "CapacityProperty": "Capacity: {capacity} kg",
-            "CombatVestProperty": "Combat Vest"
+            "NoItemsElsewhere": "No items stored elsewhere"
         },
         "Bonuses": "Bonuses",
         "ContextMenu": {
@@ -617,7 +615,6 @@
             "Label": "Vitals"
         },
         "PsychicPower": {
-            "Sustained": "Sustained",
             "PrCost": "PR {cost}",
             "Overbleed": "Overbleed",
             "DropOrCreate": "Drop Psychic Power or Click to Create"
@@ -692,7 +689,6 @@
         "Yes": "Yes",
         "No": "No",
         "Ammunition": {
-            "AllWeapons": "All Weapons",
             "TypeLabel": "Ammunition",
             "ModifiersBadge": "Modifiers",
             "HasModifiers": "Has Stat Modifiers",
@@ -2363,15 +2359,11 @@
                 "Apply": "Apply"
             },
             "Duration": {
-                "Label": "Duration",
                 "Permanent": "Permanent",
                 "Rounds": "rounds",
                 "Minutes": "minutes",
                 "Hours": "hours",
                 "Days": "days"
-            },
-            "Stacks": {
-                "Label": "Stacks"
             },
             "Manacles": {
                 "Name": "Manacled",
@@ -5411,17 +5403,7 @@
                 "AttackCraft": "Attack Craft"
             },
             "DamageWithCrit": "{damage} (Crit {crit}+)",
-            "RangeVU": "{range} VU",
-            "Property": {
-                "Location": "Location: {value}",
-                "Strength": "Strength: {value}",
-                "Damage": "Damage: {value}",
-                "Range": "Range: {value}",
-                "Power": "Power: {value}",
-                "Space": "Space: {value}",
-                "ShipPoints": "SP: {value}",
-                "Special": "Special: {value}"
-            }
+            "RangeVU": "{range} VU"
         },
         "ShipLocation": {
             "Prow": "Prow",
@@ -5458,8 +5440,7 @@
             "ExtremelyRare": "Extremely Rare",
             "NearUnique": "Near Unique",
             "Unique": "Unique",
-            "Uncommon": "Uncommon",
-            "AtPlace": "{availability} ({place})"
+            "Uncommon": "Uncommon"
         },
         "Currency": {
             "ThroneGelt": "Throne Gelt",
@@ -6183,7 +6164,6 @@
             "NoItemFound": "No item found on this chat card.",
             "ItemNotFound": "The item could not be found. It may have been deleted.",
             "NoTokensTargeted": "No tokens are currently targeted. Target one or more tokens to apply damage.",
-            "TestProperty": "Test: {test}",
             "Label": {
                 "Effect": "Effect:",
                 "Notes": "Notes:",
@@ -7234,13 +7214,11 @@
             "Effect": "Effect",
             "EffectHint": "Describe what this item does when used (rules text, mechanical effects, etc.)",
             "Duration": "Duration",
-            "DurationValue": "Duration: {duration}",
             "DurationPlaceholder": "e.g., 1d10 hours, 1 round, permanent",
             "DurationHint": "How long the effect lasts (for drugs, consumables, etc.)",
             "Uses": "Uses",
             "CurrentUses": "Current Uses",
             "MaxUses": "Maximum Uses",
-            "UsesRemaining": "{uses} uses remaining",
             "Consume": "Consume",
             "ConsumedUse": "{name} consumed (remaining: {remaining})",
             "ResetUses": "Reset to Maximum",
@@ -7600,11 +7578,6 @@
             "Water": "Water Vehicle",
             "Space": "Space Vehicle",
             "Walker": "Walker"
-        },
-        "VehicleUpgradeType": {
-            "Standard": "Standard",
-            "Integral": "Integral",
-            "Custom": "Custom"
         },
         "VehicleStat": {
             "Speed": "Speed",

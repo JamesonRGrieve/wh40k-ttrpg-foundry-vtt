@@ -1,4 +1,3 @@
-import { formatSigned } from '../../utils/format.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -171,22 +170,6 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /**
-     * Get the weapon types label.
-     * @type {string}
-     */
-    get weaponTypesLabel(): string {
-        if (!this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
-        return Array.from(this.weaponTypes)
-            .map((t) => {
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: CONFIG.wh40k is populated at Foundry runtime; optional chaining guards against missing registry during early init or tests
-                const label = CONFIG.wh40k?.weaponTypes?.[t]?.label;
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- label type may appear non-nullable after the optional chain but can be undefined at runtime
-                return label !== undefined ? game.i18n.localize(label) : t;
-            })
-            .join(', ');
-    }
-
-    /**
      * Does this ammo modify weapon stats?
      * @type {boolean}
      */
@@ -198,31 +181,5 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         if (mods.attack !== 0) return true;
         if (Object.values(mods.rateOfFire).some((v) => v !== 0)) return true;
         return false;
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), `For: ${this.weaponTypesLabel}`];
-
-        const mods = this.modifiers;
-        if (mods.damage !== 0) {
-            props.push(`Damage: ${formatSigned(mods.damage)}`);
-        }
-        if (mods.penetration !== 0) {
-            props.push(`Pen: ${formatSigned(mods.penetration)}`);
-        }
-        if (mods.attack !== 0) {
-            props.push(`To-Hit: ${formatSigned(mods.attack)}`);
-        }
-
-        if (this.addedQualities.size) {
-            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
-        }
-
-        return props;
     }
 }

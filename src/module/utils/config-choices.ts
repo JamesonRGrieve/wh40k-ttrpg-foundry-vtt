@@ -64,8 +64,3 @@ export interface PlaceRating {
     place: string;
     availability: string;
 }
-
-/** Label each place-qualified rating as "<localized rating> (<place>)", in printed order. */
-export function placeRatingLabels(map: Record<string, LabelledConfigEntry>, entries: readonly PlaceRating[]): string[] {
-    return entries.map(({ place, availability }) => game.i18n.format('WH40K.Availability.AtPlace', { availability: labelFor(map, availability), place }));
-}

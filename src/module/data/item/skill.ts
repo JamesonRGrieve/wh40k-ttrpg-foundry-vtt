@@ -214,29 +214,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     }
 
     /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [`${this.characteristicLabel} (${this.characteristicAbbr})`, this.skillTypeLabel];
-
-        if (this.isBasic) {
-            props.push(game.i18n.localize('WH40K.Skills.Basic'));
-        }
-
-        if (this.aptitudes.length) {
-            props.push(`Aptitudes: ${this.aptitudes.join(', ')}`);
-        }
-
-        if (this.useTime) {
-            props.push(`Time: ${this.useTime}`);
-        }
-
-        return props;
-    }
-
-    /* -------------------------------------------- */
     /*  Methods                                     */
     /* -------------------------------------------- */
 

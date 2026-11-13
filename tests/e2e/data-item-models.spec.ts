@@ -24,13 +24,12 @@ import { scaledMs } from './lib/timing';
  *     usesExhausted / usesDisplay (non-drug gear; the drug→GearData path is
  *     covered by dh-special-items.spec.ts)
  *   - src/module/data/item/talent.ts — hasPrerequisites / prerequisitesLabel
- *     (structured characteristics + skills), hasGrants / grantsSummary,
+ *     (structured characteristics + skills), hasGrants,
  *     fullName (specialization + stackable rank), prepareDerivedData "(X)"
  *     name → hasSpecialization auto-infer, isRollable
- *   - src/module/data/item/ammunition.ts — hasModifiers branch, weaponTypesLabel,
- *     chatProperties damage / penetration sign prefixes, prepareBaseData merge
+ *   - src/module/data/item/ammunition.ts — hasModifiers branch, prepareBaseData merge
  *   - src/module/data/item/force-field.ts — effectiveOverloadRange /
- *     checksOverload / overloadRangeLabel / isProtecting, craftsmanshipModifiers
+ *     checksOverload / isProtecting, craftsmanshipModifiers
  *     (best → 01 only)
  *   - src/module/data/item/trait.ts — hasLevel / fullName / isVariable /
  *     categoryLabel
@@ -38,7 +37,7 @@ import { scaledMs } from './lib/timing';
  *     hasSpecializations
  *   - src/module/data/item/condition.ts — durationDisplay / isTemporary /
  *     fullName (stacks) / natureClass / appliesToLabel
- *   - src/module/data/item/weapon-modification.ts — restrictionsLabel /
+ *   - src/module/data/item/weapon-modification.ts — restrictions /
  *     hasModifiers / categoryIcon, _cleanData Set→Array round-trip
  *
  * Strategy mirrors weapon-attack.spec.ts: every flow probe runs in a single
@@ -113,16 +112,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             hasPrerequisites?: boolean;
             prerequisitesLabel?: string;
             hasGrants?: boolean;
-            grantsSummary?: string[];
+            grants?: { skills?: Array<{ name: string }>; talents?: Array<{ name: string }>; traits?: Array<{ name: string }> };
             hasSpecialization?: boolean;
             fullName?: string;
             isRollable?: boolean;
             hasModifiers?: boolean;
-            weaponTypesLabel?: string;
-            chatProperties?: string[];
+            weaponTypes?: Iterable<string>;
+            modifiers?: { damage?: number; penetration?: number };
             effectiveOverloadRange?: { min?: number; max?: number };
             checksOverload?: (roll: number) => boolean;
-            overloadRangeLabel?: string;
             isProtecting?: boolean;
             hasLevel?: boolean;
             isVariable?: boolean;
@@ -133,7 +131,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             isTemporary?: boolean;
             durationDisplay?: string;
             natureClass?: string;
-            restrictionsLabel?: string;
+            restrictions?: { weaponClasses?: Iterable<string>; weaponTypes?: Iterable<string> };
             categoryIcon?: string;
             // psychicPower / ritual / order shared
             prCost?: number;
@@ -553,8 +551,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             /* ============================================================
              * Flow 8: talent-grants-summary
              * grants.skills + grants.talents + grants.traits populated →
-             * hasGrants true, grantsSummary has a "Skills:"/"Talents:"/
-             * "Traits:" entry each.
+             * hasGrants true, and each grant round-trips by name.
              * ============================================================ */
             try {
                 const talent = await embed('talent-grants-summary', {
@@ -575,16 +572,15 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     notes['talent-grants-summary'] = 'failed to create talent';
                 } else {
                     const has = talent.system?.hasGrants;
-                    const arr = talent.system?.grantsSummary ?? [];
-                    const hasSkills = arr.some((s) => s.startsWith('Skills:') && s.includes('Awareness'));
-                    const hasTalents = arr.some((s) => s.startsWith('Talents:') && s.includes('Quick Draw'));
-                    const hasTraits = arr.some((s) => s.startsWith('Traits:') && s.includes('Unnatural Strength'));
-                    if (has === true && hasSkills && hasTalents && hasTraits) {
+                    const grants = talent.system?.grants;
+                    const names = [...(grants?.skills ?? []), ...(grants?.talents ?? []), ...(grants?.traits ?? [])].map((grant) => grant.name);
+                    const expected = ['Awareness', 'Quick Draw', 'Unnatural Strength'];
+                    if (has === true && expected.every((n) => names.includes(n))) {
                         fired['talent-grants-summary'] = true;
-                        notes['talent-grants-summary'] = `hasGrants=true grantsSummary covers skills+talents+traits: ${JSON.stringify(arr)}`;
+                        notes['talent-grants-summary'] = `hasGrants=true grants cover skills+talents+traits: ${JSON.stringify(names)}`;
                     } else {
-                        notes['talent-grants-summary'] = `expected has=true and skills/talents/traits entries, got has=${String(has)} summary=${JSON.stringify(
-                            arr,
+                        notes['talent-grants-summary'] = `expected has=true and skills/talents/traits grants, got has=${String(has)} names=${JSON.stringify(
+                            names,
                         )}`;
                     }
                 }
@@ -643,8 +639,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             /* ============================================================
              * Flow 10: ammunition-modifiers
              * Ammo with damage +2 / penetration +3 → hasModifiers true;
-             * chatProperties surfaces "Damage: +2" and "Pen: +3" (sign
-             * prefix branch). weaponTypes set → weaponTypesLabel non-empty.
+             * both modifiers and the weaponTypes set round-trip.
              * ============================================================ */
             try {
                 const ammo = await embed('ammunition-modifiers', {
@@ -661,17 +656,16 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     notes['ammunition-modifiers'] = 'failed to create ammunition';
                 } else {
                     const hasMods = ammo.system?.hasModifiers;
-                    const typesLabel = ammo.system?.weaponTypesLabel;
-                    const arr = ammo.system?.chatProperties ?? [];
-                    const hasDmg = arr.some((p) => p === 'Damage: +2');
-                    const hasPen = arr.some((p) => p === 'Pen: +3');
-                    if (hasMods === true && typeof typesLabel === 'string' && typesLabel.length > 0 && hasDmg && hasPen) {
+                    const types = [...(ammo.system?.weaponTypes ?? [])];
+                    const dmg = ammo.system?.modifiers?.damage;
+                    const pen = ammo.system?.modifiers?.penetration;
+                    if (hasMods === true && types.includes('pistol') && types.includes('basic') && dmg === 2 && pen === 3) {
                         fired['ammunition-modifiers'] = true;
-                        notes['ammunition-modifiers'] = `hasModifiers=true weaponTypesLabel="${typesLabel}" chatProperties has "Damage: +2","Pen: +3"`;
+                        notes['ammunition-modifiers'] = `hasModifiers=true weaponTypes=${JSON.stringify(types)} damage=+2 penetration=+3`;
                     } else {
-                        notes['ammunition-modifiers'] = `expected hasMods=true label!="" Damage:+2 Pen:+3, got hasMods=${String(
+                        notes['ammunition-modifiers'] = `expected hasMods=true types⊇pistol,basic damage=2 pen=3, got hasMods=${String(
                             hasMods,
-                        )} label=${JSON.stringify(typesLabel)} props=${JSON.stringify(arr)}`;
+                        )} types=${JSON.stringify(types)} damage=${String(dmg)} pen=${String(pen)}`;
                     }
                 }
             } catch (err) {
@@ -683,8 +677,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
              * Explicit overloadMin 1 / overloadMax 15 (≠ default 1/10) →
              * effectiveOverloadRange uses the explicit values;
              * checksOverload(10)=true, checksOverload(16)=false;
-             * overloadRangeLabel "01-15"; activated+!overloaded →
-             * isProtecting true.
+             * activated+!overloaded → isProtecting true.
              * ============================================================ */
             try {
                 const ff = await embed('force-field-overload', {
@@ -706,19 +699,14 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     const range = ff.system?.effectiveOverloadRange;
                     const checks10 = ff.system?.checksOverload?.(10);
                     const checks16 = ff.system?.checksOverload?.(16);
-                    const label = ff.system?.overloadRangeLabel;
                     const protecting = ff.system?.isProtecting;
-                    if (range?.min === 1 && range.max === 15 && checks10 === true && checks16 === false && label === '01-15' && protecting === true) {
+                    if (range?.min === 1 && range.max === 15 && checks10 === true && checks16 === false && protecting === true) {
                         fired['force-field-overload'] = true;
-                        notes[
-                            'force-field-overload'
-                        ] = `effectiveOverloadRange={1,15} checksOverload(10)=true checksOverload(16)=false label="01-15" isProtecting=true`;
+                        notes['force-field-overload'] = `effectiveOverloadRange={1,15} checksOverload(10)=true checksOverload(16)=false isProtecting=true`;
                     } else {
-                        notes[
-                            'force-field-overload'
-                        ] = `expected range{1,15} checks10=true checks16=false label="01-15" protecting=true, got range=${JSON.stringify(range)} c10=${String(
-                            checks10,
-                        )} c16=${String(checks16)} label=${JSON.stringify(label)} protecting=${String(protecting)}`;
+                        notes['force-field-overload'] = `expected range{1,15} checks10=true checks16=false protecting=true, got range=${JSON.stringify(
+                            range,
+                        )} c10=${String(checks10)} c16=${String(checks16)} protecting=${String(protecting)}`;
                     }
                 }
             } catch (err) {
@@ -729,7 +717,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
              * Flow 12: force-field-craftsmanship
              * Default overloadMin/Max (1/10) but craftsmanship 'best' →
              * effectiveOverloadRange falls back to craftsmanshipModifiers
-             * (best → max 1), overloadRangeLabel "01", checksOverload(1)
+             * (best → max 1), checksOverload(1)
              * true, checksOverload(2) false.
              * ============================================================ */
             try {
@@ -750,19 +738,18 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     notes['force-field-craftsmanship'] = 'failed to create force field';
                 } else {
                     const range = ff.system?.effectiveOverloadRange;
-                    const label = ff.system?.overloadRangeLabel;
                     const checks1 = ff.system?.checksOverload?.(1);
                     const checks2 = ff.system?.checksOverload?.(2);
                     const protecting = ff.system?.isProtecting;
-                    if (range?.min === 1 && range.max === 1 && label === '01' && checks1 === true && checks2 === false && protecting === false) {
+                    if (range?.min === 1 && range.max === 1 && checks1 === true && checks2 === false && protecting === false) {
                         fired['force-field-craftsmanship'] = true;
                         notes[
                             'force-field-craftsmanship'
-                        ] = `best craft → effectiveOverloadRange={1,1} label="01" checksOverload(1)=true (2)=false; isProtecting=false (inactive)`;
+                        ] = `best craft → effectiveOverloadRange={1,1} checksOverload(1)=true (2)=false; isProtecting=false (inactive)`;
                     } else {
-                        notes['force-field-craftsmanship'] = `expected range{1,1} label="01" c1=true c2=false protecting=false, got range=${JSON.stringify(
+                        notes['force-field-craftsmanship'] = `expected range{1,1} c1=true c2=false protecting=false, got range=${JSON.stringify(
                             range,
-                        )} label=${JSON.stringify(label)} c1=${String(checks1)} c2=${String(checks2)} protecting=${String(protecting)}`;
+                        )} c1=${String(checks1)} c2=${String(checks2)} protecting=${String(protecting)}`;
                     }
                 }
             } catch (err) {
@@ -904,7 +891,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
              * Flow 16: weapon-modification-restrictions
              * Modification with restrictions + non-zero modifiers. The
              * _cleanData Set→Array round-trip must survive persistence;
-             * restrictionsLabel includes "Classes:"/"Types:", hasModifiers
+             * restrictions keep their classes and types, hasModifiers
              * true, categoryIcon resolves for the 'sight' category.
              * ============================================================ */
             try {
@@ -931,23 +918,20 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                 if (mod == null) {
                     notes['weapon-modification-restrictions'] = 'failed to create weapon modification';
                 } else {
-                    const restrictionsLabel = mod.system?.restrictionsLabel;
+                    const classes = [...(mod.system?.restrictions?.weaponClasses ?? [])];
+                    const types = [...(mod.system?.restrictions?.weaponTypes ?? [])];
                     const hasMods = mod.system?.hasModifiers;
                     const icon = mod.system?.categoryIcon;
-                    if (
-                        typeof restrictionsLabel === 'string' &&
-                        restrictionsLabel.includes('Classes:') &&
-                        restrictionsLabel.includes('Types:') &&
-                        hasMods === true &&
-                        icon === 'fa-crosshairs'
-                    ) {
+                    if (classes.includes('basic') && types.includes('las') && hasMods === true && icon === 'fa-crosshairs') {
                         fired['weapon-modification-restrictions'] = true;
+                        notes['weapon-modification-restrictions'] = `restrictions classes=${JSON.stringify(classes)} types=${JSON.stringify(
+                            types,
+                        )} hasModifiers=true categoryIcon="fa-crosshairs" (Set→Array clean round-trip ok)`;
+                    } else {
                         notes[
                             'weapon-modification-restrictions'
-                        ] = `restrictionsLabel="${restrictionsLabel}" hasModifiers=true categoryIcon="fa-crosshairs" (Set→Array clean round-trip ok)`;
-                    } else {
-                        notes['weapon-modification-restrictions'] = `expected label⊇Classes:/Types: hasMods=true icon=fa-crosshairs, got label=${JSON.stringify(
-                            restrictionsLabel,
+                        ] = `expected classes⊇basic types⊇las hasMods=true icon=fa-crosshairs, got classes=${JSON.stringify(classes)} types=${JSON.stringify(
+                            types,
                         )} hasMods=${String(hasMods)} icon=${JSON.stringify(icon)}`;
                     }
                 }
@@ -1143,8 +1127,7 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
             /* ============================================================
              * Flow 21: mutation-shape
              * category + visible schema fields round-trip; categoryLabel
-             * derives non-empty; chatProperties surfaces the localized
-             * "Visible" entry when visible === true.
+             * derives non-empty.
              * ============================================================ */
             try {
                 const mutation = await embed('mutation-shape', {
@@ -1163,15 +1146,13 @@ async function probeDataItemModelFlows(page: Page): Promise<ProbeResult> {
                     const category = mutation.system?.category;
                     const visible = mutation.system?.visible;
                     const catLabel = mutation.system?.categoryLabel;
-                    const props = mutation.system?.chatProperties ?? [];
-                    const hasVisibleProp = props.length >= 2 && props[0] === catLabel;
-                    if (category === 'major' && visible === true && typeof catLabel === 'string' && catLabel.length > 0 && hasVisibleProp) {
+                    if (category === 'major' && visible === true && typeof catLabel === 'string' && catLabel.length > 0) {
                         fired['mutation-shape'] = true;
-                        notes['mutation-shape'] = `category=major visible=true categoryLabel="${catLabel}" chatProperties=${JSON.stringify(props)}`;
+                        notes['mutation-shape'] = `category=major visible=true categoryLabel="${catLabel}"`;
                     } else {
-                        notes['mutation-shape'] = `expected category=major visible=true label!="" chatProps with visible entry, got category=${JSON.stringify(
-                            category,
-                        )} visible=${String(visible)} catLabel=${JSON.stringify(catLabel)} props=${JSON.stringify(props)}`;
+                        notes['mutation-shape'] = `expected category=major visible=true label!="", got category=${JSON.stringify(category)} visible=${String(
+                            visible,
+                        )} catLabel=${JSON.stringify(catLabel)}`;
                     }
                 }
             } catch (err) {

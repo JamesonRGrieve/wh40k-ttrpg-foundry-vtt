@@ -100,12 +100,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
         }
 
         // ---- per-template instance shapes (the surfaces each flow probes) ----
-        // A chat-property entry is a free-form label token (string in the
-        // common case, occasionally a richer descriptor object). Flows only
-        // assert array-ness / length and narrow strings via `typeof`, so the
-        // element stays opaque.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: chatProperties entries are content-derived label tokens with no shipped element type; narrowed via typeof at use sites
-        type ChatProperty = unknown;
         interface ActivationInstance {
             activation: { type: string };
             target: { value: number };
@@ -114,7 +108,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             activationLabel: string;
             targetLabel: string;
             durationLabel: string;
-            chatProperties: ChatProperty[];
             hasLimitedUses: boolean;
             usesExhausted: boolean;
             consumeUse: () => void;
@@ -131,7 +124,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             isPsychic: boolean;
             rangeLabel: string;
             rateOfFireLabel: string;
-            chatProperties: ChatProperty[];
             prepareBaseData: () => void;
         }
         interface DamageInstance {
@@ -141,7 +133,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             damageTypeAbbr: string;
             damageTypeLabel: string;
             hasSpecial: (name: string) => boolean;
-            chatProperties: ChatProperty[];
         }
         interface DescriptionInstance {
             description: { value: string };
@@ -165,7 +156,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
             totalWeight: number;
             availabilityLabel: string;
             craftsmanshipLabel: string;
-            chatProperties: ChatProperty[];
         }
 
         const out: FlowResult[] = [];
@@ -419,8 +409,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 if (typeof selfInstance.activationLabel !== 'string') return 'activationLabel non-string';
                 if (typeof selfInstance.targetLabel !== 'string') return 'targetLabel non-string';
                 if (typeof selfInstance.durationLabel !== 'string') return 'durationLabel non-string';
-                const props = selfInstance.chatProperties;
-                if (!Array.isArray(props)) return 'chatProperties non-array';
 
                 const richInstance = new T(
                     {
@@ -431,8 +419,7 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     },
                     { parent: makeParent() },
                 ) as ActivationInstance;
-                const richProps = richInstance.chatProperties;
-                if (!Array.isArray(richProps) || richProps.length < 3) return `rich chatProperties length ${richProps.length}`;
+                if (richInstance.targetLabel === selfInstance.targetLabel) return `rich targetLabel unchanged: ${richInstance.targetLabel}`;
 
                 const sustainedInstance = new T(
                     {
@@ -571,8 +558,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 if (!melee.isMelee || melee.isRanged || melee.isPsychic) return 'melee flags wrong';
                 if (melee.rangeLabel !== '-') return `melee rangeLabel ${melee.rangeLabel}`;
                 if (melee.rateOfFireLabel !== 'S/-/-') return `melee rofLabel ${melee.rateOfFireLabel}`;
-                const meleeProps = melee.chatProperties;
-                if (!Array.isArray(meleeProps) || meleeProps.length !== 0) return `melee chatProperties length ${meleeProps.length}`;
 
                 const thrown = new T(
                     {
@@ -603,8 +588,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 ) as AttackInstance;
                 if (specialRange.rangeLabel !== 'line-of-sight') return `special rangeLabel ${specialRange.rangeLabel}`;
                 if (specialRange.rateOfFireLabel !== '-/2/4') return `mixed rofLabel ${specialRange.rateOfFireLabel}`;
-                const props = specialRange.chatProperties;
-                if (!Array.isArray(props) || props.length !== 2) return `ranged chatProperties length ${props.length}`;
 
                 const psychic = new T(
                     {
@@ -669,8 +652,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 ) as DamageInstance;
                 if (blank.damageLabel !== '-') return `blank damageLabel ${blank.damageLabel}`;
                 if (blank.hasSpecial('tearing')) return 'blank hasSpecial wrongly true';
-                const blankProps = blank.chatProperties;
-                if (!Array.isArray(blankProps) || blankProps.length !== 0) return `blank chatProperties length ${blankProps.length}`;
 
                 const positive = new T(
                     {
@@ -683,8 +664,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 if (positive.damageTypeAbbr !== 'R') return `positive abbr ${positive.damageTypeAbbr}`;
                 if (typeof positive.damageTypeLabel !== 'string') return 'damageTypeLabel non-string';
                 if (!positive.hasSpecial('Tearing')) return 'positive hasSpecial case-insensitive failed';
-                const posProps = positive.chatProperties;
-                if (!Array.isArray(posProps) || posProps.length !== 3) return `positive chatProperties length ${posProps.length}`;
 
                 const negative = new T(
                     {
@@ -957,8 +936,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                 if (heavy.totalWeight !== 10) return `totalWeight ${heavy.totalWeight}`;
                 if (typeof heavy.availabilityLabel !== 'string') return 'availabilityLabel non-string';
                 if (typeof heavy.craftsmanshipLabel !== 'string') return 'craftsmanshipLabel non-string';
-                const heavyProps = heavy.chatProperties;
-                if (!Array.isArray(heavyProps) || heavyProps.length < 3) return `heavy chatProperties length ${heavyProps.length}`;
 
                 // Quantity 0 -> totalWeight falls back to weight * 1.
                 const zeroQty = new T(
@@ -980,14 +957,6 @@ async function probeSharedTemplates(page: Page): Promise<{ results: FlowResult[]
                     { parent: makeParent() },
                 ) as PhysicalInstance;
                 if (zeroQty.totalWeight !== 2) return `zero-qty totalWeight ${zeroQty.totalWeight}`;
-                const commonProps = zeroQty.chatProperties;
-                if (!Array.isArray(commonProps)) return 'common chatProperties non-array';
-                // craftsmanship 'common' should not be listed in chatProperties.
-                for (const p of commonProps) {
-                    if (typeof p === 'string' && p.includes('Common') && p !== zeroQty.availabilityLabel) {
-                        return `common craftsmanship leaked into chatProperties: ${p}`;
-                    }
-                }
                 return true;
             });
         }

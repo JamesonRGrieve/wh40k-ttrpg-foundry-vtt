@@ -1,4 +1,3 @@
-import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -112,16 +111,6 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /**
-     * Net power usage.
-     * @type {string}
-     */
-    get powerLabel(): string {
-        if (this.power > 0) return `-${this.power}`;
-        if (this.power < 0) return `+${Math.abs(this.power)}`;
-        return '0';
-    }
-
     /** Has any non-zero ship-stat modifier? */
     get hasModifiers(): boolean {
         return shipHasModifiers(this.modifiers);
@@ -130,20 +119,5 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /** Non-zero ship-stat modifiers as a localized display list. */
     get modifiersList(): ShipModifierEntry[] {
         return shipModifiersList(this.modifiers);
-    }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [`Power: ${this.powerLabel}`, `Space: ${this.space}`, `SP: ${this.shipPoints}`];
-
-        for (const mod of this.modifiersList) {
-            props.push(`${mod.label}: ${formatSigned(mod.value)}`);
-        }
-
-        return props;
     }
 }

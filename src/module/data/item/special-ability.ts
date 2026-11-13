@@ -43,13 +43,4 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
             ...specialAbilityDistinctionSchema(),
         };
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [];
-    }
 }

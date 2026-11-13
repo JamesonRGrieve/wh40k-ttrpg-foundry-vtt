@@ -9,8 +9,8 @@ import { expect, test } from './lib/test';
  * resulting derived state. Targets source-code coverage on the
  * per-type DataModels under src/module/data/item/*.ts that the basic
  * item-types.spec.ts create+render sweep doesn't drive deeply:
- *   - mutation.ts        (category, visible, categoryLabel, chatProperties)
- *   - mental-disorder.ts (severity, severityLabel, chatProperties)
+ *   - mutation.ts        (category, visible)
+ *   - mental-disorder.ts (severity)
  *   - critical-injury.ts (effects map indexed by severity, currentEffect,
  *                         isPermanent, severityClass)
  *   - malignancy.ts      (round-trip, body-content effects)
@@ -179,8 +179,7 @@ async function readActorPath(page: Page, actorId: string, path: string): Promise
 }
 
 /**
- * Mutation — round-trip category + visible, verify derived chatProperties
- * runs (categoryLabel branch via `category.capitalize()`).
+ * Mutation — round-trip category + visible.
  */
 async function probeMutation(page: Page, actorId: string): Promise<FlowResult> {
     const ids = await createItems(page, actorId, [
@@ -202,12 +201,8 @@ async function probeMutation(page: Page, actorId: string): Promise<FlowResult> {
     try {
         const category = await readItemPath(page, actorId, itemId, 'system.category');
         const visible = await readItemPath(page, actorId, itemId, 'system.visible');
-        // Drive chatProperties getter (categoryLabel + visible branches).
-        const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (category !== 'major') return { ok: false, error: `category round-trip: expected 'major', got ${JSON.stringify(category)}` };
         if (visible !== true) return { ok: false, error: `visible round-trip: expected true, got ${JSON.stringify(visible)}` };
-        if (!Array.isArray(chatProps) || chatProps.length < 1)
-            return { ok: false, error: `chatProperties: expected array with ≥1 entry, got ${JSON.stringify(chatProps)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -215,7 +210,7 @@ async function probeMutation(page: Page, actorId: string): Promise<FlowResult> {
 }
 
 /**
- * Mental disorder — round-trip severity, drive severityLabel + chatProperties.
+ * Mental disorder — round-trip severity.
  */
 async function probeMentalDisorder(page: Page, actorId: string): Promise<FlowResult> {
     const ids = await createItems(page, actorId, [
@@ -235,10 +230,7 @@ async function probeMentalDisorder(page: Page, actorId: string): Promise<FlowRes
     const itemId = ids[0];
     try {
         const severity = await readItemPath(page, actorId, itemId, 'system.severity');
-        const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (severity !== 'acute') return { ok: false, error: `severity round-trip: expected 'acute', got ${JSON.stringify(severity)}` };
-        if (!Array.isArray(chatProps) || chatProps.length === 0)
-            return { ok: false, error: `chatProperties: expected non-empty array, got ${JSON.stringify(chatProps)}` };
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -292,7 +284,7 @@ async function probeCriticalInjury(page: Page, actorId: string): Promise<FlowRes
 
 /**
  * Malignancy — round-trip identifier/effect/notes. MalignancyData has no
- * derived getters beyond the empty chatProperties; this flow
+ * derived getters; this flow
  * exercises the defineSchema path + DescriptionTemplate+ModifiersTemplate
  * mixin assembly. The "corruption link" is narrative (no schema field
  * touches corruption directly) so we verify the baseline that malignancy
@@ -314,10 +306,8 @@ async function probeMalignancy(page: Page, actorId: string): Promise<FlowResult>
     const itemId = ids[0];
     try {
         const identifier = await readItemPath(page, actorId, itemId, 'system.identifier');
-        const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         const corruption = await readActorPath(page, actorId, 'system.corruption');
         if (identifier !== 'probe-malig') return { ok: false, error: `identifier round-trip: expected 'probe-malig', got ${JSON.stringify(identifier)}` };
-        if (!Array.isArray(chatProps)) return { ok: false, error: `chatProperties: expected array, got ${JSON.stringify(chatProps)}` };
         if (corruption === null) return { ok: false, error: 'actor.corruption track missing — malignancy context not viable' };
         return { ok: true, error: null };
     } finally {
@@ -328,8 +318,7 @@ async function probeMalignancy(page: Page, actorId: string): Promise<FlowResult>
 /**
  * Drug — there is no standalone DrugData; the system maps `drug` → GearData
  * (hooks-manager.ts:406). Populate duration + grants.activeEffects so the
- * temporary-effect schema is exercised, then verify chatProperties surfaces
- * the duration string via the `WH40K.Gear.Duration` format branch.
+ * temporary-effect schema is exercised.
  */
 async function probeDrug(page: Page, actorId: string): Promise<FlowResult> {
     const ids = await createItems(page, actorId, [
@@ -354,12 +343,8 @@ async function probeDrug(page: Page, actorId: string): Promise<FlowResult> {
     try {
         const duration = await readItemPath(page, actorId, itemId, 'system.duration');
         const grants = await readItemPath(page, actorId, itemId, 'system.grants.activeEffects');
-        const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (duration !== '1 hour') return { ok: false, error: `duration round-trip: expected '1 hour', got ${JSON.stringify(duration)}` };
         if (!Array.isArray(grants) || grants.length !== 1) return { ok: false, error: `grants.activeEffects: expected 1 entry, got ${JSON.stringify(grants)}` };
-        if (!Array.isArray(chatProps) || !chatProps.some((p) => typeof p === 'string' && p.includes('1 hour'))) {
-            return { ok: false, error: `chatProperties: expected duration string presence, got ${JSON.stringify(chatProps)}` };
-        }
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);
@@ -367,8 +352,7 @@ async function probeDrug(page: Page, actorId: string): Promise<FlowResult> {
 }
 
 /**
- * Peer — modifier+group round-trip exercises PeerEnemyData.defineSchema +
- * chatProperties (modifier !== 0 branch with positive-sign prefix) + the
+ * Peer — modifier+group round-trip exercises PeerEnemyData.defineSchema + the
  * `isPeer` getter branch. Test bonus is narrative — the modifier value lives
  * in `system.modifier` and is what callers consult for Influence checks.
  */
@@ -390,14 +374,10 @@ async function probePeer(page: Page, actorId: string): Promise<FlowResult> {
         const modifier = await readItemPath(page, actorId, itemId, 'system.modifier');
         const isPeer = await readItemPath(page, actorId, itemId, 'system.isPeer');
         const isEnemy = await readItemPath(page, actorId, itemId, 'system.isEnemy');
-        const chatProps = await readItemPath(page, actorId, itemId, 'system.chatProperties');
         if (group !== 'Mechanicus') return { ok: false, error: `group round-trip: expected 'Mechanicus', got ${JSON.stringify(group)}` };
         if (modifier !== 10) return { ok: false, error: `modifier round-trip: expected 10, got ${JSON.stringify(modifier)}` };
         if (isPeer !== true) return { ok: false, error: `isPeer: expected true (mod >= 0), got ${JSON.stringify(isPeer)}` };
         if (isEnemy !== false) return { ok: false, error: `isEnemy: expected false (mod >= 0), got ${JSON.stringify(isEnemy)}` };
-        if (!Array.isArray(chatProps) || !chatProps.includes('Mechanicus') || !chatProps.some((p) => typeof p === 'string' && p.startsWith('+'))) {
-            return { ok: false, error: `chatProperties: expected ['Mechanicus', '+10'], got ${JSON.stringify(chatProps)}` };
-        }
         return { ok: true, error: null };
     } finally {
         await deleteItems(page, actorId, ids);

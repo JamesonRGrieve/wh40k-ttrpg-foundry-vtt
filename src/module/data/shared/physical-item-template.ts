@@ -1,5 +1,5 @@
 import { RENOWN_RANK_ORDER, type RenownRank } from '../../rules/dw-renown.ts';
-import { availabilityDisplayLabel, type PlaceRating, placeRatingLabels } from '../../utils/config-choices.ts';
+import { availabilityDisplayLabel, type PlaceRating } from '../../utils/config-choices.ts';
 import { inferActiveGameLine } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import SystemDataModel from '../abstract/system-data-model.ts';
@@ -365,14 +365,6 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         return availabilityDisplayLabel(CONFIG.wh40k.availabilities, this.availability, this.availabilityRestriction);
     }
 
-    /**
-     * Localized place-qualified ratings, e.g. "Scarce (Volg)".
-     * @type {string[]}
-     */
-    get availabilityByPlaceLabels(): string[] {
-        return placeRatingLabels(CONFIG.wh40k.availabilities, this.availabilityByPlace);
-    }
-
     /* -------------------------------------------- */
 
     /**
@@ -384,21 +376,6 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Properties for chat display.
-     * @type {string[]}
-     */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.weight) props.push(`${this.weight} kg`);
-        if (this.availability) props.push(this.availabilityLabel);
-        props.push(...this.availabilityByPlaceLabels);
-        if (this.craftsmanship && this.craftsmanship !== 'common') {
-            props.push(this.craftsmanshipLabel);
-        }
-        return props;
-    }
 
     /* -------------------------------------------- */
 

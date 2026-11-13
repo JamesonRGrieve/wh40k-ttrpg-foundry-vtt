@@ -216,15 +216,4 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
         // The skill's display label, not its key: the Ship Orders panel showed "TEST command" (#648).
         return formatTestLabel(skillLabel(this.test.skill), this.test.modifier);
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [this.categoryLabel, this.actionTypeLabel, game.i18n.format('WH40K.Chat.TestProperty', { test: this.testLabel })];
-
-        return props;
-    }
 }

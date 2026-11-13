@@ -309,25 +309,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     }
 
     /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [...ItemDataModel.inheritedChatProperties(this, PhysicalItemTemplate), this.categoryLabel];
-
-        if (this.hasLimitedUses) {
-            props.push(game.i18n.format('WH40K.Gear.UsesRemaining', { uses: this.usesDisplay }));
-        }
-
-        if (this.duration) {
-            props.push(game.i18n.format('WH40K.Gear.DurationValue', { duration: this.duration }));
-        }
-
-        return props;
-    }
-
-    /* -------------------------------------------- */
     /*  Actions                                     */
     /* -------------------------------------------- */
 

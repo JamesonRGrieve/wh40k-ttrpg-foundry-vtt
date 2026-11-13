@@ -168,17 +168,4 @@ export default class AttackTemplate extends SystemDataModel {
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Properties for chat display.
-     * @type {string[]}
-     */
-    get chatProperties(): string[] {
-        const props: string[] = [];
-        if (this.isRanged) {
-            props.push(`Range: ${this.rangeLabel}`);
-            props.push(`RoF: ${this.rateOfFireLabel}`);
-        }
-        return props;
-    }
 }

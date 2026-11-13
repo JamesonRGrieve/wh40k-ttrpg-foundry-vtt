@@ -40,7 +40,6 @@ export default class ItemDataModel extends SystemDataModel {
     /** Declare dynamic properties used by subclasses */
     declare description: { value: string; chat: string; summary: string } | string;
     declare source: { book: string; page: string; custom: string } | string;
-    declare chatProperties: string[];
 
     /**
      * Metadata describing this item data model.
@@ -243,20 +242,6 @@ export default class ItemDataModel extends SystemDataModel {
     prepareEmbeddedData(): void {}
 
     /* -------------------------------------------- */
-    /*  Roll Data                                   */
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare a data object for dice roll formulas: the owning actor's roll data
-     * (none for an unowned item) with this item's own data under `item`.
-     * @returns {object}
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Actor.getRollData returns the untyped Roll formula scope this extends
-    getRollData(): Record<string, unknown> {
-        return { ...this.actor?.getRollData(), item: this.toObject() };
-    }
-
-    /* -------------------------------------------- */
     /*  Helpers                                     */
     /* -------------------------------------------- */
 
@@ -266,45 +251,5 @@ export default class ItemDataModel extends SystemDataModel {
      */
     get sourceReference(): string {
         return formatSourceLabel(this.source);
-    }
-
-    /**
-     * Invoke a mixin template's `chatProperties` getter against `self` and
-     * return its result (or an empty array when the template doesn't define
-     * one). DataModels assembled via `ItemDataModel.mixin(...)` lose normal
-     * `super` access to a mixin's getter, so the only way to reach a template's
-     * `chatProperties` is to pull the getter off its prototype and `.call` it
-     * with the live `this`. Centralizing that descriptor walk here makes the
-     * `?? []` fallback uniform — previously `ritual.ts` and `navigator-power.ts`
-     * omitted it, a latent crash when the template's getter is absent.
-     *
-     * @param instance  The DataModel instance whose state the getter reads.
-     * @param template  The mixin template class whose `chatProperties` to invoke.
-     * @returns The template's chat properties, or `[]` when undefined.
-     */
-    static inheritedChatProperties(instance: object, template: { prototype: object }): string[] {
-        // `Reflect.get(proto, key, instance)` invokes the prototype's `chatProperties`
-        // getter (if any) with `instance` as the receiver, returning `undefined` when
-        // the template defines no such getter — the uniform `?? []` fallback.
-        const chatProperties = Reflect.get(template.prototype, 'chatProperties', instance) as string[] | undefined;
-        return chatProperties ?? [];
-    }
-
-    /**
-     * Generate chat data for this item.
-     * @param {object} htmlOptions   Options passed to enrichHTML.
-     * @returns {Promise<object>}
-     */
-    async getChatData(htmlOptions: foundry.applications.ux.TextEditor.EnrichmentOptions = {}): Promise<{ description: string; properties: string[] }> {
-        const description = this.description;
-        const descValue = typeof description === 'string' ? description : description.value;
-        const data = {
-            description: await foundry.applications.ux.TextEditor.implementation.enrichHTML(descValue, {
-                ...htmlOptions,
-                rollData: this.getRollData(),
-            }),
-            properties: this.chatProperties,
-        };
-        return data;
     }
 }

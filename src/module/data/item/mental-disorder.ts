@@ -59,13 +59,4 @@ export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionT
     get severityLabel(): string {
         return game.i18n.localize(`WH40K.MentalDisorder.${this.severity.capitalize()}`);
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        return [this.severityLabel];
-    }
 }

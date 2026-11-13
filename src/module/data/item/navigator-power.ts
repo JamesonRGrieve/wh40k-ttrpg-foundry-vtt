@@ -155,15 +155,4 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         }
         return pills;
     }
-
-    /* -------------------------------------------- */
-    /*  Chat Properties                             */
-    /* -------------------------------------------- */
-
-    /** @override */
-    get chatProperties(): string[] {
-        const props = [`Test: ${this.testLabel}`, ...ItemDataModel.inheritedChatProperties(this, ActivationTemplate)];
-
-        return props;
-    }
 }
