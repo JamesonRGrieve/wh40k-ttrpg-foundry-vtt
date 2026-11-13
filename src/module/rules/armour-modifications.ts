@@ -34,7 +34,7 @@ export const ARMOUR_MOD_LOCATIONS = ['head', 'body', 'leftArm', 'rightArm', 'lef
 export type ArmourModLocation = (typeof ARMOUR_MOD_LOCATIONS)[number];
 
 /** A location → AP bonus map; a missing or null location adds nothing. */
-export type LocationArmourPoints = Partial<Record<ArmourModLocation, number | null>>;
+type LocationArmourPoints = Partial<Record<ArmourModLocation, number | null>>;
 
 /** What an installed modification keeps on the armour (`system.modifications[]`). */
 export interface InstalledArmourMod {
