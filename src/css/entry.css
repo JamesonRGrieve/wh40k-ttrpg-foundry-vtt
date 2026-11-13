@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400|Lusitana:400:700|Cinzel:400:700|Roboto:400,500,700&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+/* Fonts ship in dist/fonts; their @font-face rules come from tailwind/fonts.js (#709). */
 
 /* Tailwind layers — base holds design tokens (`tailwind/design-tokens.js`)
    plus all legacy gothic-theme components (panels, tooltips, NPC sheet,

@@ -725,6 +725,10 @@ recordDimension('boot-bundle.flow', covered['boot-bundle.flow'], BOOT_BUNDLE_FLO
 const READY_PACK_READS_FLOWS = ['ready-indexes-each-pack-once', 'ready-reads-no-pack-documents', 'skill-tooltips-from-index'];
 recordDimension('ready-pack-reads.flow', covered['ready-pack-reads.flow'], READY_PACK_READS_FLOWS);
 
+// Self-hosted fonts (#709), tests/e2e/self-hosted-fonts.spec.ts. Keep in sync with SELF_HOSTED_FONTS_FLOWS there.
+const SELF_HOSTED_FONTS_FLOWS = ['no-google-font-requests', 'system-faces-load', 'material-icons-render-as-glyphs'];
+recordDimension('self-hosted-fonts.flow', covered['self-hosted-fonts.flow'], SELF_HOSTED_FONTS_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

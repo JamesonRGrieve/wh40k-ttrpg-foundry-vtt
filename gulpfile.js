@@ -48,6 +48,8 @@ const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
 const SYSTEM_CSS = ["src/css/entry.css"];
 const STATIC_FILES = [
   "src/icons/**/*",
+  // Vendored fonts and their licences (#709), referenced from dist/css as ../fonts/….
+  "src/fonts/**/*",
   // Nothing under src/module is copied: it holds only .ts, which esbuild bundles
   // into module/wh40k-rpg.js (#705).
   "src/templates/**/*",

@@ -24,6 +24,7 @@ const legacyComponents = [
   require('./tailwind/foundry-chrome.js'),
 ];
 const designTokens = require('./tailwind/design-tokens.js');
+const { fontStacks, fontFaces, materialIcons } = require('./tailwind/fonts.js');
 
 module.exports = {
   content: [
@@ -142,12 +143,13 @@ module.exports = {
         '6.5': '26px',
         '8.5': '34px',
       },
+      // One definition of the stacks, shared with the --wh40k-font-* tokens (tailwind/fonts.js, #709).
       fontFamily: {
-        display: ['Cinzel', 'serif'],
-        heading: ["'IM Fell DW Pica'", 'serif'],
-        body: ['Lusitana', 'serif'],
-        ui: ['Roboto', 'sans-serif'],
-        alt: ["'Modesto Condensed'", "'Palatino Linotype'", 'serif'],
+        display: fontStacks.display,
+        heading: fontStacks.heading,
+        body: fontStacks.body,
+        ui: fontStacks.ui,
+        alt: fontStacks.alt,
       },
       colors: {
         // Imperial Gold palette
@@ -1388,6 +1390,12 @@ module.exports = {
     // so all `var(--wh40k-foo)` consumers across templates and legacy CSS resolve.
     plugin(function ({ addBase }) {
       addBase(designTokens);
+    }),
+    // The vendored fonts (dist/fonts) and the Material Icons class, in place of
+    // Google's stylesheets (tailwind/fonts.js, #709).
+    plugin(function ({ addBase }) {
+      addBase({ '@font-face': fontFaces });
+      addBase(materialIcons);
     }),
     // The one piece of preflight the system needs. `tw-border-solid` sets the style
     // on all four sides, so with preflight off a side-only width (`tw-border-l-2`)

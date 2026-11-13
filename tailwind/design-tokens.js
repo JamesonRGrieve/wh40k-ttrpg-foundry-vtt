@@ -1,3 +1,5 @@
+const { fontStacks, stack } = require('./fonts.js');
+
 // Gothic 40K design tokens — `:root` and theme-scoped CSS custom properties
 // emitted via Tailwind's `addBase` plugin. Ports the legacy
 // `src/css/abstracts/_gothic-theme.css` data block into Tailwind configuration
@@ -56,13 +58,15 @@ const palette = {
     '--wh40k-border-medium': 'rgba(120, 100, 80, 0.6)',
 };
 
+// Built from the one set of stacks the Tailwind theme reads (tailwind/fonts.js, #709).
+// Display and heading put Foundry's own Modesto Condensed first.
 const typography = {
-    '--wh40k-font-header': "'Caslon Antique', 'Trajan Pro', serif",
-    '--wh40k-font-display': "'Modesto Condensed', 'Cinzel', serif",
-    '--wh40k-font-heading': "'Modesto Condensed', 'IM Fell DW Pica', serif",
-    '--wh40k-font-body': "'Lusitana', serif",
-    '--wh40k-font-ui': "'Roboto', sans-serif",
-    '--wh40k-font-alt': "'Modesto Condensed', 'Palatino Linotype', serif",
+    '--wh40k-font-header': stack(fontStacks.header),
+    '--wh40k-font-display': stack(["'Modesto Condensed'", ...fontStacks.display]),
+    '--wh40k-font-heading': stack(["'Modesto Condensed'", ...fontStacks.heading]),
+    '--wh40k-font-body': stack(fontStacks.body),
+    '--wh40k-font-ui': stack(fontStacks.ui),
+    '--wh40k-font-alt': stack(fontStacks.alt),
     '--wh40k-font-size-xs': '0.7rem',
     '--wh40k-font-size-sm': '0.8rem',
     '--wh40k-font-size-base': '0.9rem',
