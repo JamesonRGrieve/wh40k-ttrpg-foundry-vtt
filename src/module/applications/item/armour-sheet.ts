@@ -2,8 +2,18 @@
  * @file ArmourSheet - ApplicationV2 sheet for armour items
  */
 
+import type ArmourModificationData from '../../data/item/armour-modification.ts';
 import type ArmourData from '../../data/item/armour.ts';
+import {
+    ARMOUR_MOD_CATEGORY_LABELS,
+    ARMOUR_MOD_LOCATIONS,
+    armourModCategory,
+    type InstallVerdict,
+    installedEntry,
+    installVerdict,
+} from '../../rules/armour-modifications.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
+import type { I18nKey } from '../../types/i18n-keys';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 
@@ -15,6 +25,14 @@ const TAB_LABEL_PROTECTION = 'WH40K.Tabs.Protection';
 const TAB_LABEL_MODIFICATIONS = 'WH40K.Tabs.Modifications';
 const TAB_LABEL_DESCRIPTION = 'WH40K.Tabs.Description';
 const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
+
+/** Why a dropped modification was not fitted (#730). */
+const INSTALL_REFUSED: Record<Exclude<InstallVerdict, 'ok'>, I18nKey> = {
+    'duplicate': 'WH40K.Armour.ModAlreadyFitted',
+    'wrong-armour-type': 'WH40K.Armour.ModWrongType',
+    'no-upgrade-slot': 'WH40K.Armour.NoSlotsAvailable',
+    'no-subsystem-slot': 'WH40K.Armour.NoSubsystemSlots',
+};
 
 /**
  * Sheet for armour items with support for armour modifications.
@@ -94,10 +112,41 @@ export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet
         // read those fields; bare ids rendered blank chips that removed nothing (#702).
         context['propertiesArray'] = sys.propertiesArray;
 
-        // Add modifications array for safe template access
-        context['modificationsArray'] = sys.modifications;
+        // Add modifications array for safe template access, each with its category's label (#730)
+        context['subsystemsFitted'] = sys.modifications.filter((mod) => armourModCategory(mod.category) === 'subsystem').length;
+        context['upgradesFitted'] = sys.modifications.filter((mod) => armourModCategory(mod.category) === 'upgrade').length;
+        // The header's per-location AP, with craftsmanship and fitted modifications (#730).
+        context['effectiveAP'] = Object.fromEntries(ARMOUR_MOD_LOCATIONS.map((location) => [location, sys.getEffectiveAPForLocation(location)]));
+        context['modificationsArray'] = sys.modifications.map((mod) => ({
+            ...mod,
+            categoryLabel: game.i18n.localize(ARMOUR_MOD_CATEGORY_LABELS[armourModCategory(mod.category)]),
+        }));
 
         return context;
+    }
+
+    /**
+     * Dropping an armour modification fits it to the suit (#730): it lands in
+     * `system.modifications` when the suit's type and free slots allow it, and
+     * the GM is told why when they do not. Any other drop is a container drop.
+     */
+    override async _onDrop(event: DragEvent): Promise<boolean> {
+        const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event) as { type?: string; uuid?: string };
+        const uuid = data.type === 'Item' ? data.uuid ?? '' : '';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns Foundry's untyped document; narrowed by the type check below
+        const dropped = uuid === '' ? null : ((await fromUuid(uuid)) as unknown as { type?: string; name?: string; system?: ArmourModificationData } | null);
+        if (dropped?.type !== 'armourModification' || dropped.system === undefined) return super._onDrop(event);
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.isEditable) return false;
+        const sys = this.item.system;
+        const verdict = installVerdict(sys, uuid, dropped.system);
+        if (verdict !== 'ok') {
+            ui.notifications.warn(game.i18n.format(INSTALL_REFUSED[verdict], { mod: dropped.name ?? '', armour: this.item.name }));
+            return false;
+        }
+        await this.item.update({ 'system.modifications': [...sys.modifications, installedEntry(uuid, dropped.name ?? '', dropped.system)] });
+        return true;
     }
 
     /**

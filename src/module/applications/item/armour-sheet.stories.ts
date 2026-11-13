@@ -144,3 +144,51 @@ export const HomologationBC: Story = systemStory('bc');
 export const HomologationOW: Story = systemStory('ow');
 export const HomologationDW: Story = systemStory('dw');
 export const HomologationIM: Story = systemStory('im');
+
+/**
+ * Black Crusade Legion power armour with sub-systems fitted (#730): the Mods
+ * tab counts sub-systems against their own slots (3, beside the 2 upgrade
+ * slots), tags each fitted modification with its kind, and edits the
+ * sub-system slot count.
+ */
+export const LegionPowerArmourSubsystems: Story = {
+    name: 'BC Legion power armour — sub-systems fitted (#730)',
+    render: (args: Args) => {
+        const el = activateTab(
+            renderSheet(
+                templateSrc,
+                mockArmourSheetContext({
+                    ...args.overrides,
+                    inEditMode: true,
+                    source: { modificationSlots: 2, subsystemSlots: 3 },
+                    system: { type: 'power', modificationSlots: 2, subsystemSlots: 3, subsystemCapacity: 3, availableModSlots: 2 },
+                    subsystemsFitted: 2,
+                    upgradesFitted: 0,
+                    effectiveAP: { head: 8, body: 10, leftArm: 8, rightArm: 8, leftLeg: 8, rightLeg: 8 },
+                    modificationsArray: [
+                        { uuid: 'a', name: 'Subsystem: Vox Link', active: true, category: 'subsystem', categoryLabel: 'Sub-system' },
+                        { uuid: 'b', name: 'Subsystem (SM): Enhanced Ceramite Plating', active: true, category: 'subsystem', categoryLabel: 'Sub-system' },
+                        { uuid: 'c', name: 'Customisation: Horns', active: true, category: 'customisation', categoryLabel: 'Customisation' },
+                    ],
+                }),
+            ),
+            'mods',
+        );
+        el.dataset['wh40kSystem'] = 'bc';
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const slots = canvasElement.querySelector<HTMLInputElement>('input[name="system.subsystemSlots"]');
+        await expect(slots?.value).toBe('3');
+        await expect(slots === null ? null : canvasElement.querySelector(`label[for="${slots.id}"]`)?.textContent.trim()).toBe('Sub-system Slots');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="armour-subsystem-count"]')?.textContent.trim()).toBe('2 / 3 sub-systems');
+        // The header shows the effective AP (Enhanced Ceramite: Body 10), and the slot badge counts upgrades only.
+        const text = canvasElement.textContent.replace(/\s+/g, ' ');
+        await expect(text).toContain('Body 10');
+        await expect(text).toContain('0 / 2');
+        const kinds = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-category]')).map(
+            (el) => `${el.dataset['category']}:${el.textContent.trim()}`,
+        );
+        await expect(kinds).toEqual(['subsystem:Sub-system', 'subsystem:Sub-system', 'customisation:Customisation']);
+    },
+};

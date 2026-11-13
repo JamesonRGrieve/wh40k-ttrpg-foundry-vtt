@@ -112,5 +112,30 @@
                     </button>
                 </div>
             </div>
+
+            {{!-- Kind, sub-system slots and per-location armour points (#730) --}}
+            <div class="tw-flex tw-flex-wrap tw-items-end tw-gap-4 tw-mb-4">
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-xs tw-opacity-70" for="{{item.id}}-mod-category">{{localize "WH40K.ItemSheet.ArmourMod.Category.Label"}}</label>
+                    <select id="{{item.id}}-mod-category" name="system.category" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{disabled (not isEditable)}}>
+                        {{#each categoryOptions as |option|}}
+                        <option value="{{option.key}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="tw-flex tw-flex-col tw-gap-1">
+                    <label class="tw-text-xs tw-opacity-70" for="{{item.id}}-mod-subsystem-slots">{{localize "WH40K.ItemSheet.ArmourMod.SubsystemSlots"}}</label>
+                    <input type="number" id="{{item.id}}-mod-subsystem-slots" name="system.modifiers.subsystemSlots" value="{{modifiers.subsystemSlots}}" step="1" class="tw-w-20 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{disabled (not isEditable)}} />
+                </div>
+            </div>
+            <fieldset class="tw-flex tw-flex-wrap tw-gap-3 tw-m-0 tw-p-3 tw-border tw-border-solid tw-border-[rgba(212,197,166,0.15)] tw-rounded-lg">
+                <legend class="tw-text-xs tw-opacity-70 tw-px-1">{{localize "WH40K.ItemSheet.ArmourMod.LocationArmourPoints"}}</legend>
+                {{#each locationRows as |row|}}
+                <label class="tw-flex tw-flex-col tw-gap-1 tw-text-xs">
+                    <span class="tw-opacity-70">{{row.label}}</span>
+                    <input type="number" name="system.modifiers.locations.{{row.key}}" value="{{row.value}}" step="1" class="tw-w-16 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{disabled (not @root.isEditable)}} />
+                </label>
+                {{/each}}
+            </fieldset>
     {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 </div>

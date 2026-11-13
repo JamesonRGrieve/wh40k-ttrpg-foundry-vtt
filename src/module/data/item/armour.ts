@@ -1,4 +1,13 @@
 import { armourCraftsmanshipFor } from '../../config/game-systems/index.ts';
+import {
+    ARMOUR_MOD_CATEGORIES,
+    ARMOUR_MOD_LOCATIONS,
+    freeSubsystemSlots,
+    freeUpgradeSlots,
+    type InstalledArmourMod,
+    modArmourBonus,
+    subsystemCapacity,
+} from '../../rules/armour-modifications.ts';
 import { hitLocationAbbreviation, hitLocationLabel } from '../../rules/hit-locations.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
@@ -73,13 +82,9 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     declare properties: Set<string>;
     declare primitive: boolean;
     declare notes: string;
-    declare modifications: Array<{
-        uuid: string;
-        name: string;
-        active: boolean;
-        cachedModifiers: { armourPoints: number; maxAgility: number };
-    }>;
+    declare modifications: InstalledArmourMod[];
     declare modificationSlots: number;
+    declare subsystemSlots: number;
 
     // Properties from PhysicalItemTemplate
     declare craftsmanship: string;
@@ -266,16 +271,28 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                     uuid: new fields.StringField({ required: true }),
                     name: new fields.StringField({ required: true }),
                     active: new fields.BooleanField({ required: true, initial: true }),
+                    // upgrade | subsystem | customisation, copied from the fitted item (#730).
+                    category: new fields.StringField({ required: true, initial: 'upgrade', choices: [...ARMOUR_MOD_CATEGORIES] }),
                     cachedModifiers: new fields.SchemaField({
                         armourPoints: new fields.NumberField({ required: false, integer: true }),
                         maxAgility: new fields.NumberField({ required: false, integer: true }),
+                        subsystemSlots: new fields.NumberField({ required: false, integer: true }),
+                        locations: new fields.SchemaField(
+                            Object.fromEntries(
+                                ARMOUR_MOD_LOCATIONS.map((location) => [location, new fields.NumberField({ required: false, nullable: true, integer: true })]),
+                            ),
+                        ),
                     }),
                 }),
                 { required: true, initial: [] },
             ),
 
-            // Number of modification slots
+            // Number of upgrade slots
             modificationSlots: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
+
+            // Power-armour sub-systems that still work (#730): Black Crusade power
+            // armour holds three, chosen when the suit is acquired. Content data.
+            subsystemSlots: new fields.NumberField({ required: true, initial: 0, min: 0, max: 10, integer: true }),
         };
     }
 
@@ -470,7 +487,17 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {number}
      */
     get availableModSlots(): number {
-        return this.modificationSlots - this.modifications.length;
+        return freeUpgradeSlots(this);
+    }
+
+    /** How many sub-systems the suit holds, counting slots its fitted modifications add (#730). */
+    get subsystemCapacity(): number {
+        return subsystemCapacity(this);
+    }
+
+    /** Sub-system slots still free (#730). */
+    get availableSubsystemSlots(): number {
+        return freeSubsystemSlots(this);
     }
 
     /* -------------------------------------------- */
@@ -666,7 +693,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     getEffectiveAPForLocation(location: string): number {
         const baseAP = this.getAPForLocation(location);
-        return baseAP > 0 ? baseAP + this.craftsmanshipModifiers.armourBonus : baseAP;
+        // Fitted modifications add only where the suit covers the location (#730).
+        return baseAP > 0 ? baseAP + this.craftsmanshipModifiers.armourBonus + modArmourBonus(this.modifications, location) : baseAP;
     }
 
     /**

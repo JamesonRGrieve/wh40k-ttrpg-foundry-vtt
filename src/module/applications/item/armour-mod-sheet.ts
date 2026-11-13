@@ -2,8 +2,15 @@
  * @file ArmourModSheet - ApplicationV2 sheet for armour modification items
  */
 
+import type ArmourModificationData from '../../data/item/armour-modification.ts';
+import { ARMOUR_MOD_CATEGORIES, ARMOUR_MOD_CATEGORY_LABELS, ARMOUR_MOD_LOCATIONS } from '../../rules/armour-modifications.ts';
+import { hitLocationLabel } from '../../rules/hit-locations.ts';
+import type { WH40KItemDocument } from '../../types/global.d.ts';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+
+/** Armour modification item with its system typed to its DataModel. */
+type ArmourModItem = WH40KItemDocument & { system: ArmourModificationData };
 
 interface ArmourModSystem {
     restrictions: { armourTypes: Set<string> };
@@ -22,7 +29,7 @@ interface ArmourModSystem {
  * Sheet for armour modification items.
  * Extends ContainerItemSheet to support embedded mods (if needed).
  */
-export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSheet) {
+export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSheet<ArmourModItem>) {
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,
@@ -145,6 +152,18 @@ export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSh
             partContext['modifiersSummary'] = system.modifierSummary;
         } else if (partId === 'modifiers') {
             partContext['modifiers'] = system.modifiers;
+            // Kind, sub-system slots and per-location armour points (#730).
+            partContext['category'] = this.item.system.category;
+            partContext['categoryOptions'] = ARMOUR_MOD_CATEGORIES.map((key) => ({
+                key,
+                label: game.i18n.localize(ARMOUR_MOD_CATEGORY_LABELS[key]),
+                selected: key === this.item.system.category,
+            }));
+            partContext['locationRows'] = ARMOUR_MOD_LOCATIONS.map((key) => ({
+                key,
+                label: hitLocationLabel(key),
+                value: this.item.system.modifiers.locations[key],
+            }));
         } else if (partId === 'effect') {
             partContext['effect'] = system.effect;
             partContext['notes'] = system.notes;

@@ -1,3 +1,4 @@
+import { ARMOUR_MOD_CATEGORIES, ARMOUR_MOD_LOCATIONS, type ArmourModCategory, type ArmourModLocation } from '../../rules/armour-modifications.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
@@ -15,7 +16,17 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare restrictions: { armourTypes: Set<string> };
-    declare modifiers: { armourPoints: number; maxAgility: number; weight: number };
+    /** Upgrade, power-armour sub-system or customisation (#730; rules/armour-modifications.ts). */
+    declare category: ArmourModCategory;
+    declare modifiers: {
+        armourPoints: number;
+        maxAgility: number;
+        weight: number;
+        /** Sub-system slots this modification adds to the suit (Careful Maintenance: 2). */
+        subsystemSlots: number;
+        /** Armour points it adds at one location only (Enhanced Ceramite Plating: Body +2). */
+        locations: Record<ArmourModLocation, number | null>;
+    };
     declare addedProperties: Set<string>;
     declare removedProperties: Set<string>;
     declare effect: string;
@@ -35,6 +46,9 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
                 armourTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
             }),
 
+            // Which slot rule it follows when fitted (#730).
+            category: new fields.StringField({ required: true, initial: 'upgrade', choices: [...ARMOUR_MOD_CATEGORIES] }),
+
             // Stat modifiers — allow null for items whose homologated source
             // data has no modifier set yet (would otherwise fail validation
             // on actor load and invalidate the parent actor).
@@ -42,6 +56,15 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
                 armourPoints: new fields.NumberField({ required: false, initial: 0, nullable: true, integer: true }),
                 maxAgility: new fields.NumberField({ required: false, initial: 0, nullable: true, integer: true }),
                 weight: new fields.NumberField({ required: false, initial: 0, nullable: true }),
+                subsystemSlots: new fields.NumberField({ required: false, initial: 0, nullable: true, integer: true }),
+                locations: new fields.SchemaField(
+                    Object.fromEntries(
+                        ARMOUR_MOD_LOCATIONS.map((location) => [
+                            location,
+                            new fields.NumberField({ required: false, initial: null, nullable: true, integer: true }),
+                        ]),
+                    ),
+                ),
             }),
 
             // Properties added

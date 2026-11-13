@@ -708,6 +708,11 @@ recordDimension('bc-csm-origin.flow', covered['bc-csm-origin.flow'], BC_CSM_ORIG
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];
 recordDimension('bc-perfection.flow', covered['bc-perfection.flow'], BC_PERFECTION_FLOWS);
 
+// Power-armour sub-systems fit, cap and change AP (#730), tests/e2e/bc-power-armour-subsystems.spec.ts.
+// Keep in sync with BC_POWER_ARMOUR_FLOWS there.
+const BC_POWER_ARMOUR_FLOWS = ['three-subsystems-fit', 'fourth-subsystem-refused', 'ceramite-raises-body-ap', 'careful-maintenance-adds-slots'];
+recordDimension('bc-power-armour.flow', covered['bc-power-armour.flow'], BC_POWER_ARMOUR_FLOWS);
+
 // The origin-path prompt skips authored-build pregens (#541), tests/e2e/pregen-origin-prompt.spec.ts.
 // Keep in sync with ORIGIN_PROMPT_FLOWS there.
 const ORIGIN_PROMPT_FLOWS = ['pregen-opens-without-prompt', 'unbuilt-character-prompted'];

@@ -684,6 +684,9 @@ export function mockArmourSheetContext(overrides?: DeepPartial<MockObjectMap>): 
                 camouflage: { label: 'Camouflage' },
             },
             modificationsArray: [{ name: 'Ceramite Plating', summary: '+2 vs flame', description: 'Extra protection against flame weapons.' }],
+            // `ArmourSheet#_prepareContext`'s header AP (craftsmanship and fitted mods, #730) and fitted-upgrade count.
+            effectiveAP: { head: 4, body: 6, leftArm: 5, rightArm: 5, leftLeg: 5, rightLeg: 5 },
+            upgradesFitted: 1,
             effects: [mockActiveEffect({ name: 'Blessing of Saint Drusus' })],
         },
         overrides,

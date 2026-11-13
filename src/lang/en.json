@@ -1646,6 +1646,12 @@
             "MaxAgility": "Max Agility",
             "NoSlotsAvailable": "No modification slots available",
             "DragModification": "Drag an armour modification here to install it",
+            "NoSubsystemSlots": "{armour} already has all the sub-systems it can hold, so {mod} was not fitted.",
+            "ModAlreadyFitted": "{mod} is already fitted to {armour}.",
+            "ModWrongType": "{mod} cannot be fitted to this type of armour.",
+            "SubsystemSlots": "Sub-system Slots",
+            "SubsystemSlotsHint": "Power-armour sub-systems that still work, chosen when the suit is acquired. Fitted modifications can add more.",
+            "SubsystemsFitted": "{count} / {capacity} sub-systems",
             "Worn": "Worn",
             "Stowed": "Stowed",
             "ProtectionLevel": {
@@ -6833,6 +6839,14 @@
                 "DamagePen": "{damage} Pen {pen}"
             },
             "ArmourMod": {
+                "Category": {
+                    "Label": "Kind",
+                    "Upgrade": "Upgrade",
+                    "Subsystem": "Sub-system",
+                    "Customisation": "Customisation"
+                },
+                "SubsystemSlots": "Adds Sub-system Slots",
+                "LocationArmourPoints": "Armour Points by Location",
                 "EffectHelp": "Describe the special effects of this modification. Use rich text for formatting.",
                 "NotesPlaceholder": "Additional notes or clarifications...",
                 "ArmourPointsHint": "Bonus or penalty to Armour Points",

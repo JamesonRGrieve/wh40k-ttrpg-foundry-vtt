@@ -87,7 +87,7 @@
             </div>
             <div class="tw-flex tw-flex-col">
               <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Head"}}</span>
-              <span class="tw-font-semibold">{{system.armourPoints.head}}</span>
+              <span class="tw-font-semibold">{{effectiveAP.head}}</span>
             </div>
           </div>
 
@@ -98,7 +98,7 @@
             </div>
             <div class="tw-flex tw-flex-col">
               <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Body"}}</span>
-              <span class="tw-font-semibold">{{system.armourPoints.body}}</span>
+              <span class="tw-font-semibold">{{effectiveAP.body}}</span>
             </div>
           </div>
 
@@ -109,7 +109,7 @@
             </div>
             <div class="tw-flex tw-flex-col">
               <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Arms"}}</span>
-              <span class="tw-font-semibold">{{system.armourPoints.leftArm}}/{{system.armourPoints.rightArm}}</span>
+              <span class="tw-font-semibold">{{effectiveAP.leftArm}}/{{effectiveAP.rightArm}}</span>
             </div>
           </div>
 
@@ -120,7 +120,7 @@
             </div>
             <div class="tw-flex tw-flex-col">
               <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">{{localize "WH40K.Coverage.Legs"}}</span>
-              <span class="tw-font-semibold">{{system.armourPoints.leftLeg}}/{{system.armourPoints.rightLeg}}</span>
+              <span class="tw-font-semibold">{{effectiveAP.leftLeg}}/{{effectiveAP.rightLeg}}</span>
             </div>
           </div>
         </div>
@@ -333,7 +333,7 @@
       {{!-- MODIFICATIONS TAB --}}
       <div class="tab" data-tab="mods" data-group="primary">
 
-        {{#*inline "armourModSlotCount"}}<span class="tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{modificationsArray.length}} / {{system.modificationSlots}}</span>{{/inline}}
+        {{#*inline "armourModSlotCount"}}<span class="tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{upgradesFitted}} / {{system.modificationSlots}}</span>{{/inline}}
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-wrench" labelKey="WH40K.ItemSheet.Armour.ModificationSlots" actions="armourModSlotCount"}}
           <div>
             <div class="tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-pb-3 tw-border-b tw-border-[rgba(255,255,255,0.1)]">
@@ -345,6 +345,17 @@
               </span>
             </div>
 
+            {{!-- Power-armour sub-systems (#730): their own count, beside the upgrade slots. --}}
+            <div class="tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-pb-3 tw-border-b tw-border-[rgba(255,255,255,0.1)]">
+              <label class="tw-text-sm" for="{{item.id}}-subsystem-slots">{{localize "WH40K.Armour.SubsystemSlots"}}</label>
+              <input type="number" id="{{item.id}}-subsystem-slots" name="system.subsystemSlots" value="{{source.subsystemSlots}}"
+                     data-dtype="Number" min="0" max="10" class="tw-w-16 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
+                     data-tooltip="{{localize 'WH40K.Armour.SubsystemSlotsHint'}}" />
+              <span class="tw-text-xs tw-opacity-70 tw-ml-auto" data-wh40k-hook="armour-subsystem-count">
+                {{localize "WH40K.Armour.SubsystemsFitted" count=subsystemsFitted capacity=system.subsystemCapacity}}
+              </span>
+            </div>
+
             {{#if modificationsArray.length}}
             <div class="tw-flex tw-flex-col tw-gap-1 tw-mb-3">
               {{#each modificationsArray as |mod idx|}}
@@ -352,6 +363,7 @@
                 <div class="tw-flex tw-items-center tw-gap-2 tw-flex-1">
                   <i class="fas fa-wrench tw-opacity-70"></i>
                   <span class="tw-text-sm tw-font-semibold tw-text-white">{{mod.name}}</span>
+                  <span class="tw-text-[0.65rem] tw-uppercase tw-tracking-wide tw-opacity-70" data-category="{{mod.category}}">{{mod.categoryLabel}}</span>
                 </div>
                 <div class="tw-flex tw-gap-1">
                   <button type="button" class="tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-md tw-cursor-pointer"
