@@ -1,0 +1,49 @@
+{{!--
+  One row of a schema item sheet (#731), from `buildSectionRows`
+  (applications/item/schema-sheet-layout.ts).
+
+  - input: Foundry's `{{formInput}}` renders the stored field's own input
+    (text, number, checkbox, select from `choices`); rich text uses `{{editor}}`.
+  - list:  one line per stored entry (its inputs plus a remove button) and an
+    Add button. BaseItemSheet folds the index-keyed fields back onto the stored
+    array on submit; add / remove rewrite the array through `updateSystemPath`.
+
+  Hash arguments: row — the row object.
+--}}
+{{#if (eq row.kind "list")}}
+<div class="tw-flex tw-flex-col tw-gap-1 tw-mb-2" data-schema-list="{{row.name}}">
+    <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize row.labelKey}}</span>
+    {{#each row.entries as |entry|}}
+    <div class="tw-flex tw-items-end tw-gap-2">
+        {{#each entry.rows as |sub|}}
+        <label class="tw-flex tw-flex-1 tw-flex-col tw-gap-0.5 tw-min-w-0">
+            {{#if (gt entry.rows.length 1)}}<span class="tw-text-xs">{{localize sub.labelKey}}</span>{{/if}}
+            {{#if sub.html}}
+            {{editor sub.value target=sub.name button=true editable=@root.inEditMode engine="prosemirror"}}
+            {{else}}
+            {{formInput sub.field name=sub.name value=sub.value choices=sub.choices localize=true disabled=(not @root.inEditMode)}}
+            {{/if}}
+        </label>
+        {{/each}}
+        {{#if @root.inEditMode}}
+        {{> systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs path=../row.name index=entry.index}}
+        {{/if}}
+    </div>
+    {{/each}}
+    {{#if @root.inEditMode}}
+    <button type="button" class="tw-self-start tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-px-2 tw-py-0.5 tw-text-xs tw-cursor-pointer"
+            data-action="addEntry" data-path="{{row.name}}">
+        <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.Common.Add"}}
+    </button>
+    {{/if}}
+</div>
+{{else}}
+<div class="form-group">
+    <label>{{localize row.labelKey}}</label>
+    {{#if row.html}}
+    {{editor row.value target=row.name button=true editable=@root.inEditMode engine="prosemirror"}}
+    {{else}}
+    {{formInput row.field name=row.name value=row.value choices=row.choices localize=true disabled=(not @root.inEditMode)}}
+    {{/if}}
+</div>
+{{/if}}

@@ -78,7 +78,7 @@ export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH
         actions: {
             ...FreeformGatedItemSheet.DEFAULT_OPTIONS.actions,
             viewReference: ReferenceListItemSheet.#viewReference,
-            removeEntry: ReferenceListItemSheet.#removeEntry,
+            removeEntry: removeEntryAction,
         },
     };
 
@@ -122,14 +122,15 @@ export default class ReferenceListItemSheet<TItem extends WH40KItemDocument = WH
         if (uuid === undefined) return;
         await this.viewItemByUuid(uuid, game.i18n.format('WH40K.ItemSheet.Reference.NotFound', { uuid }));
     }
+}
 
-    /**
-     * Remove a list element (`data-index` set) or clear a single reference
-     * (no `data-index`) at `data-path`.
-     */
-    static async #removeEntry(this: ReferenceListItemSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const { path, index } = target.dataset;
-        if (path === undefined || !this.inEditMode) return;
-        await updateSystemPath(this, path, (current) => (index === undefined ? '' : removeIndex(current, Number(index))));
-    }
+/**
+ * The shared `removeEntry` action (`templates/item/partial/remove-entry-button.hbs`):
+ * remove a list element (`data-index` set) or clear a single reference (no
+ * `data-index`) at `data-path`. Bound by every sheet that edits arrays in place.
+ */
+export async function removeEntryAction(this: BaseItemSheet, _event: Event, target: HTMLElement): Promise<void> {
+    const { path, index } = target.dataset;
+    if (path === undefined || !this.inEditMode) return;
+    await updateSystemPath(this, path, (current) => (index === undefined ? '' : removeIndex(current, Number(index))));
 }

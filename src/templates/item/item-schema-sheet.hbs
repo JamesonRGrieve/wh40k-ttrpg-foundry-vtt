@@ -1,0 +1,35 @@
+{{!-- Schema item sheet (#731): the details tab lists the type's layout
+     (applications/item/schema-sheet-layouts.ts), section by section; the
+     description and effects tabs are the shared panels. A div, not a form: the
+     sheet root is already the form element (#194). --}}
+<div class="wh40k-item-sheet wh40k-{{item.type}}-sheet tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
+    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
+        {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs}}
+
+        {{> systems/wh40k-rpg/templates/item/partial/item-tab-strip.hbs tabs=(array
+            (object tab="details"     label=(localize "WH40K.Tabs.Details")     icon="fa-info-circle" active=true)
+            (object tab="description" label=(localize "WH40K.Description")      icon="fa-scroll"     )
+            (object tab="effects"     label=(localize "WH40K.Effects.Label")    icon="fa-magic"      ))}}
+
+        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
+            <div class="tab active" data-tab="details" data-group="primary">
+                {{#each schemaSections as |section|}}
+                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon=section.icon labelKey=section.labelKey}}
+                    {{#each section.rows as |row|}}
+                    {{> systems/wh40k-rpg/templates/item/partial/schema-field-row.hbs row=row}}
+                    {{/each}}
+                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+                {{/each}}
+            </div>
+
+            <div class="tab" data-tab="description" data-group="primary">
+                {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
+            </div>
+
+            <div class="tab" data-tab="effects" data-group="primary">
+                {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
+            </div>
+        </section>
+    </div>
+</div>

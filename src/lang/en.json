@@ -2479,7 +2479,15 @@
             "DeathwatchVehicle": "Deathwatch Vehicle",
             "ImperiumMaledictumVehicle": "Imperium Maledictum Vehicle",
             "RogueTraderStarship": "Rogue Trader Starship",
-            "Location": "Location"
+            "Location": "Location",
+            "Backpack": "Backpack",
+            "NavigatorPower": "Navigator Power",
+            "Oath": "Oath",
+            "Order": "Order",
+            "Ritual": "Ritual",
+            "ShipRole": "Ship Role",
+            "VehicleTrait": "Vehicle Trait",
+            "VehicleUpgrade": "Vehicle Upgrade"
         },
         "TYPES": {
             "Actor": {
@@ -8960,6 +8968,836 @@
             "Latitude": {
                 "Label": "Latitude",
                 "Hint": "Where on its celestial body this scene lies, from −90 (south pole) to 90 (north pole). With a body bound, the sun's place in the sky follows the body's hour, season and axial tilt, and drop shadows fall away from it. Leave empty to keep the map's own sun."
+            }
+        },
+        "ItemFields": {
+            "Backpack": {
+                "FIELDS": {
+                    "availability": {
+                        "label": "Availability"
+                    },
+                    "availabilityByPlace": {
+                        "availability": {
+                            "label": "Availability"
+                        },
+                        "label": "Availability by Place",
+                        "place": {
+                            "label": "Place"
+                        }
+                    },
+                    "availabilityRestriction": {
+                        "label": "Availability Restriction"
+                    },
+                    "bound": {
+                        "label": "Bound"
+                    },
+                    "capacity": {
+                        "label": "Capacity"
+                    },
+                    "cost": {
+                        "bc": {
+                            "homebrew": {
+                                "throneGelt": {
+                                    "label": "BC Homebrew Throne Gelt"
+                                }
+                            },
+                            "infamy": {
+                                "label": "BC Infamy"
+                            }
+                        },
+                        "dh1": {
+                            "throneGelt": {
+                                "label": "DH1 Throne Gelt"
+                            }
+                        },
+                        "dh2": {
+                            "homebrew": {
+                                "requisition": {
+                                    "label": "DH2 Homebrew Requisition"
+                                },
+                                "throneGelt": {
+                                    "label": "DH2 Homebrew Throne Gelt"
+                                }
+                            },
+                            "influence": {
+                                "label": "DH2 Influence"
+                            }
+                        },
+                        "dw": {
+                            "homebrew": {
+                                "throneGelt": {
+                                    "label": "DW Homebrew Throne Gelt"
+                                }
+                            },
+                            "requisition": {
+                                "label": "DW Requisition"
+                            }
+                        },
+                        "ow": {
+                            "homebrew": {
+                                "throneGelt": {
+                                    "label": "OW Homebrew Throne Gelt"
+                                }
+                            },
+                            "logistics": {
+                                "label": "OW Logistics"
+                            }
+                        },
+                        "rt": {
+                            "homebrew": {
+                                "throneGelt": {
+                                    "label": "RT Homebrew Throne Gelt"
+                                }
+                            },
+                            "profitFactor": {
+                                "label": "RT Profit Factor"
+                            }
+                        }
+                    },
+                    "craftsmanship": {
+                        "label": "Craftsmanship"
+                    },
+                    "isCombatVest": {
+                        "label": "Combat Vest"
+                    },
+                    "quantity": {
+                        "label": "Quantity"
+                    },
+                    "renown": {
+                        "label": "Renown",
+                        "choices": {
+                            "Distinguished": "Distinguished",
+                            "Famed": "Famed",
+                            "Hero": "Hero",
+                            "Initiated": "Initiated",
+                            "Respected": "Respected"
+                        }
+                    },
+                    "state": {
+                        "activated": {
+                            "label": "Activated"
+                        },
+                        "armed": {
+                            "active": {
+                                "label": "Armed"
+                            },
+                            "setterDegrees": {
+                                "label": "Armed Setter Degrees of Success"
+                            },
+                            "trigger": {
+                                "label": "Armed Trigger"
+                            }
+                        },
+                        "broken": {
+                            "label": "Broken"
+                        },
+                        "coating": {
+                            "charges": {
+                                "label": "Coating Charges"
+                            },
+                            "name": {
+                                "label": "Coating Name"
+                            }
+                        },
+                        "container": {
+                            "label": "Container"
+                        },
+                        "destroyed": {
+                            "label": "Destroyed"
+                        },
+                        "equipped": {
+                            "label": "Equipped"
+                        },
+                        "identified": {
+                            "label": "Identified"
+                        },
+                        "inBackpack": {
+                            "label": "In Backpack"
+                        },
+                        "inShipStorage": {
+                            "label": "In Ship Storage"
+                        },
+                        "locked": {
+                            "label": "Locked"
+                        },
+                        "overloaded": {
+                            "label": "Overloaded"
+                        }
+                    },
+                    "weight": {
+                        "label": "Weight"
+                    }
+                },
+                "Sections": {
+                    "acquisition": "Acquisition",
+                    "carrying": "Carrying",
+                    "cost": "Cost",
+                    "state": "State"
+                }
+            },
+            "NavigatorPower": {
+                "FIELDS": {
+                    "levels": {
+                        "adept": {
+                            "effect": {
+                                "label": "Adept Effect"
+                            },
+                            "prerequisite": {
+                                "label": "Adept Prerequisite"
+                            }
+                        },
+                        "master": {
+                            "effect": {
+                                "label": "Master Effect"
+                            },
+                            "prerequisite": {
+                                "label": "Master Prerequisite"
+                            }
+                        },
+                        "novice": {
+                            "effect": {
+                                "label": "Novice Effect"
+                            },
+                            "prerequisite": {
+                                "label": "Novice Prerequisite"
+                            }
+                        }
+                    },
+                    "mastery": {
+                        "label": "Mastery"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "sideEffects": {
+                        "label": "Side Effects"
+                    },
+                    "sustain": {
+                        "label": "Sustain"
+                    },
+                    "test": {
+                        "characteristic": {
+                            "label": "Characteristic"
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "opposed": {
+                            "label": "Opposed"
+                        },
+                        "opposedCharacteristic": {
+                            "label": "Opposed Characteristic"
+                        }
+                    }
+                },
+                "Sections": {
+                    "levels": "Levels",
+                    "notes": "Notes",
+                    "power": "Power"
+                }
+            },
+            "Oath": {
+                "FIELDS": {
+                    "effect": {
+                        "label": "Effect"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "requirement": {
+                        "label": "Requirement"
+                    }
+                },
+                "Sections": {
+                    "oath": "Oath"
+                }
+            },
+            "Order": {
+                "FIELDS": {
+                    "actionType": {
+                        "label": "Action Type",
+                        "choices": {
+                            "ExtendedAction": "Extended Action",
+                            "ManeuverAction": "Maneuver Action",
+                            "Reaction": "Reaction",
+                            "ShootingAction": "Shooting Action"
+                        }
+                    },
+                    "category": {
+                        "label": "Category",
+                        "choices": {
+                            "Combat": "Combat",
+                            "Command": "Command",
+                            "Maneuver": "Maneuver",
+                            "Special": "Special",
+                            "Support": "Support"
+                        }
+                    },
+                    "duration": {
+                        "label": "Duration"
+                    },
+                    "effect": {
+                        "label": "Effect"
+                    },
+                    "failure": {
+                        "label": "Failure"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "ramming": {
+                        "damage": {
+                            "formula": {
+                                "label": "Damage Formula"
+                            },
+                            "hullType": {
+                                "label": "Hull Type"
+                            },
+                            "label": "Ramming Damage"
+                        },
+                        "reboundDamage": {
+                            "label": "Rebound Damage"
+                        }
+                    },
+                    "requirements": {
+                        "label": "Requirements"
+                    },
+                    "shipActionEffect": {
+                        "label": "Ship Action",
+                        "choices": {
+                            "ReplenishMorale": "Replenish Morale"
+                        }
+                    },
+                    "shipEffect": {
+                        "base": {
+                            "label": "Base"
+                        },
+                        "expiry": {
+                            "label": "Expiry",
+                            "choices": {
+                                "TurnEnd": "Turn End",
+                                "TurnStart": "Turn Start"
+                            }
+                        },
+                        "kind": {
+                            "label": "Kind",
+                            "choices": {
+                                "ReducePriorTurnDamage": "Reduce Prior Turn Damage",
+                                "ShipModifier": "Ship Modifier"
+                            }
+                        },
+                        "per": {
+                            "label": "Per"
+                        },
+                        "rounds": {
+                            "label": "Rounds"
+                        },
+                        "step": {
+                            "label": "Step"
+                        },
+                        "targets": {
+                            "label": "Targets",
+                            "choices": {
+                                "BallisticSkill": "Ballistic Skill",
+                                "CrewPopulation": "Crew Population",
+                                "Detection": "Detection",
+                                "Manoeuvrability": "Manoeuvrability",
+                                "Morale": "Morale",
+                                "Speed": "Speed",
+                                "WeaponBallisticSkill": "Weapon Ballistic Skill"
+                            }
+                        }
+                    },
+                    "test": {
+                        "characteristic": {
+                            "label": "Characteristic"
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "shipStat": {
+                            "label": "Ship Stat",
+                            "choices": {
+                                "Detection": "Detection",
+                                "Manoeuvrability": "Manoeuvrability"
+                            }
+                        },
+                        "skill": {
+                            "label": "Skill"
+                        }
+                    },
+                    "typeAndAction": {
+                        "label": "Type and Action"
+                    }
+                },
+                "Sections": {
+                    "order": "Order",
+                    "ramming": "Ramming",
+                    "shipEffect": "Ship Effect",
+                    "test": "Test",
+                    "text": "Text"
+                }
+            },
+            "Power": {
+                "FIELDS": {
+                    "activation": {
+                        "condition": {
+                            "label": "Condition"
+                        },
+                        "cost": {
+                            "label": "Cost"
+                        },
+                        "type": {
+                            "label": "Type"
+                        }
+                    },
+                    "duration": {
+                        "sustained": {
+                            "label": "Sustained"
+                        },
+                        "units": {
+                            "label": "Units"
+                        },
+                        "value": {
+                            "label": "Value"
+                        }
+                    },
+                    "target": {
+                        "length": {
+                            "label": "Length"
+                        },
+                        "type": {
+                            "label": "Type"
+                        },
+                        "units": {
+                            "label": "Units"
+                        },
+                        "value": {
+                            "label": "Value"
+                        },
+                        "width": {
+                            "label": "Width"
+                        }
+                    },
+                    "uses": {
+                        "max": {
+                            "label": "Max"
+                        },
+                        "per": {
+                            "label": "Per",
+                            "choices": {
+                                "Day": "Day",
+                                "Encounter": "Encounter",
+                                "LongRest": "Long Rest",
+                                "Round": "Round",
+                                "ShortRest": "Short Rest",
+                                "Turn": "Turn"
+                            }
+                        },
+                        "recovery": {
+                            "label": "Recovery"
+                        },
+                        "value": {
+                            "label": "Value"
+                        }
+                    }
+                },
+                "Sections": {
+                    "activation": "Activation",
+                    "duration": "Duration",
+                    "target": "Target",
+                    "uses": "Uses"
+                }
+            },
+            "Ritual": {
+                "FIELDS": {
+                    "costs": {
+                        "label": "Costs"
+                    },
+                    "effect": {
+                        "label": "Effect"
+                    },
+                    "failure": {
+                        "label": "Failure"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "requirements": {
+                        "label": "Requirements"
+                    },
+                    "test": {
+                        "characteristic": {
+                            "label": "Characteristic"
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "skill": {
+                            "label": "Skill"
+                        },
+                        "threshold": {
+                            "label": "Threshold"
+                        }
+                    },
+                    "type": {
+                        "label": "Type"
+                    }
+                },
+                "Sections": {
+                    "ritual": "Ritual",
+                    "text": "Text"
+                }
+            },
+            "ShipRole": {
+                "FIELDS": {
+                    "abilities": {
+                        "action": {
+                            "label": "Action"
+                        },
+                        "actionType": {
+                            "label": "Action Type",
+                            "choices": {
+                                "Extended": "Extended",
+                                "Free": "Free",
+                                "Passive": "Passive",
+                                "Reaction": "Reaction",
+                                "Special": "Special",
+                                "Standard": "Standard"
+                            }
+                        },
+                        "bonus": {
+                            "label": "Bonus"
+                        },
+                        "description": {
+                            "label": "Description"
+                        },
+                        "label": "Abilities",
+                        "name": {
+                            "label": "Name"
+                        },
+                        "skill": {
+                            "label": "Skill"
+                        }
+                    },
+                    "careerNote": {
+                        "label": "Career Note"
+                    },
+                    "careerPreferences": {
+                        "label": "Career Preferences"
+                    },
+                    "effect": {
+                        "label": "Effect"
+                    },
+                    "importantSkills": {
+                        "label": "Important Skills",
+                        "name": {
+                            "label": "Skill"
+                        },
+                        "specialization": {
+                            "label": "Specialisation"
+                        }
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "purpose": {
+                        "label": "Purpose"
+                    },
+                    "rank": {
+                        "label": "Rank"
+                    },
+                    "shipBonuses": {
+                        "ballisticSkill": {
+                            "label": "Ballistic Skill"
+                        },
+                        "crewRating": {
+                            "label": "Crew Rating"
+                        },
+                        "detection": {
+                            "label": "Detection"
+                        },
+                        "manoeuvrability": {
+                            "label": "Manoeuvrability"
+                        }
+                    },
+                    "state": {
+                        "officer": {
+                            "label": "Officer"
+                        }
+                    },
+                    "subordinates": {
+                        "label": "Subordinates"
+                    }
+                },
+                "Sections": {
+                    "abilities": "Abilities",
+                    "role": "Role",
+                    "shipBonuses": "Ship Bonuses",
+                    "skills": "Skills"
+                }
+            },
+            "VehicleModifiers": {
+                "FIELDS": {
+                    "modifiers": {
+                        "armour": {
+                            "label": "Armour"
+                        },
+                        "integrity": {
+                            "label": "Integrity"
+                        },
+                        "manoeuvrability": {
+                            "label": "Manoeuvrability"
+                        },
+                        "speed": {
+                            "label": "Speed"
+                        }
+                    }
+                },
+                "Sections": {
+                    "modifiers": "Modifiers"
+                }
+            },
+            "VehicleTrait": {
+                "FIELDS": {
+                    "descriptionText": {
+                        "label": "Short Description"
+                    },
+                    "effects": {
+                        "alwaysLightlyDamaged": {
+                            "label": "Always Lightly Damaged"
+                        },
+                        "amphibious": {
+                            "label": "Amphibious"
+                        },
+                        "antiAir": {
+                            "label": "Anti-Air",
+                            "choices": {
+                                "Advanced": "Advanced",
+                                "Rudimentary": "Rudimentary"
+                            }
+                        },
+                        "canParryWithMelee": {
+                            "label": "Can Parry with Melee Weapons"
+                        },
+                        "cannotRam": {
+                            "label": "Cannot Ram"
+                        },
+                        "commandUnitsByFellowship": {
+                            "label": "Command Units by Fellowship"
+                        },
+                        "crashesOnFailedRam": {
+                            "label": "Crashes On Failed Ram"
+                        },
+                        "crewExposure": {
+                            "label": "Crew Exposure",
+                            "choices": {
+                                "Enclosed": "Enclosed",
+                                "Open": "Open"
+                            }
+                        },
+                        "critDamageMultiplier": {
+                            "label": "Critical Damage Multiplier"
+                        },
+                        "critExcludesRighteousFury": {
+                            "label": "Critical Excludes Righteous Fury"
+                        },
+                        "deploymentIncomingToHitModifier": {
+                            "label": "Incoming To-Hit Modifier on Deployment"
+                        },
+                        "enhancedMovement": {
+                            "label": "Enhanced Movement"
+                        },
+                        "environmentallySealed": {
+                            "label": "Environmentally Sealed"
+                        },
+                        "explosionChanceMultiplier": {
+                            "label": "Explosion Chance Multiplier"
+                        },
+                        "explosionIgnitionTestModifier": {
+                            "label": "Explosion Ignition Test Modifier"
+                        },
+                        "extinguishAsFreeAction": {
+                            "label": "Extinguish as a Free Action"
+                        },
+                        "flyer": {
+                            "label": "Flyer"
+                        },
+                        "forceFieldBypassQualities": {
+                            "label": "Qualities That Bypass the Field"
+                        },
+                        "forceFieldCraftsmanship": {
+                            "label": "Force Field Craftsmanship"
+                        },
+                        "forceFieldNeverOverloads": {
+                            "label": "Never Overloads"
+                        },
+                        "forceFieldOverload": {
+                            "best": {
+                                "label": "Overload (Best)"
+                            },
+                            "common": {
+                                "label": "Overload (Common)"
+                            },
+                            "good": {
+                                "label": "Overload (Good)"
+                            },
+                            "poor": {
+                                "label": "Overload (Poor)"
+                            }
+                        },
+                        "forceFieldRating": {
+                            "label": "Force Field Rating"
+                        },
+                        "freeTurn": {
+                            "label": "Free Turn"
+                        },
+                        "hitAndRun": {
+                            "label": "Hit and Run"
+                        },
+                        "hoverer": {
+                            "label": "Hoverer"
+                        },
+                        "ignoresBestialFlee": {
+                            "label": "Ignores Bestial Flee"
+                        },
+                        "ignoresCrewCritDamage": {
+                            "label": "Ignores Crew Critical Damage"
+                        },
+                        "ignoresDifficultTerrain": {
+                            "label": "Ignores Difficult Terrain"
+                        },
+                        "immobile": {
+                            "label": "Immobile"
+                        },
+                        "incomingMeleeToHitModifier": {
+                            "label": "Incoming Melee To-Hit Modifier"
+                        },
+                        "incomingRangedCondition": {
+                            "label": "Incoming Ranged Condition",
+                            "choices": {
+                                "Airborne": "Airborne",
+                                "Mobile": "Mobile",
+                                "Moving": "Moving"
+                            }
+                        },
+                        "incomingRangedToHitModifier": {
+                            "label": "Incoming Ranged To-Hit Modifier"
+                        },
+                        "living": {
+                            "label": "Living"
+                        },
+                        "mitigatesMotiveCrit": {
+                            "label": "Mitigates Motive Critical"
+                        },
+                        "motiveRepairTimeMultiplier": {
+                            "label": "Motive Repair Time Multiplier"
+                        },
+                        "orbitalDeployment": {
+                            "label": "Orbital Deployment"
+                        },
+                        "ponderous": {
+                            "label": "Ponderous"
+                        },
+                        "postLandingDelayRounds": {
+                            "label": "Rounds Before Acting After Landing"
+                        },
+                        "ramSelfDamageMultiplier": {
+                            "label": "Ram Self-Damage Multiplier"
+                        },
+                        "repairTimeMultiplier": {
+                            "label": "Repair Time Multiplier"
+                        },
+                        "rerollFailedCommand": {
+                            "label": "Re-roll Failed Command"
+                        },
+                        "rerollRighteousFuryCrit": {
+                            "label": "Re-roll Righteous Fury Critical"
+                        },
+                        "riderTargetableInMelee": {
+                            "label": "Rider Targetable in Melee"
+                        },
+                        "righteousFuryCritDie": {
+                            "label": "Righteous Fury Critical Die"
+                        },
+                        "selfCrewed": {
+                            "label": "Self Crewed"
+                        },
+                        "sentry": {
+                            "label": "Sentry"
+                        },
+                        "spacecraft": {
+                            "label": "Spacecraft"
+                        },
+                        "structuralRegeneration": {
+                            "label": "Structural Regeneration"
+                        },
+                        "testModifiers": {
+                            "label": "Test Modifiers",
+                            "test": {
+                                "label": "Test"
+                            },
+                            "value": {
+                                "label": "Modifier"
+                            }
+                        }
+                    },
+                    "hasLevel": {
+                        "label": "Has Level"
+                    },
+                    "level": {
+                        "label": "Level"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    }
+                },
+                "Sections": {
+                    "combat": "Combat",
+                    "crew": "Crew",
+                    "damage": "Damage",
+                    "deployment": "Deployment",
+                    "forceField": "Force Field",
+                    "movement": "Movement",
+                    "tests": "Tests",
+                    "trait": "Trait"
+                }
+            },
+            "VehicleUpgrade": {
+                "FIELDS": {
+                    "allowedVehicles": {
+                        "label": "Allowed Vehicles"
+                    },
+                    "availability": {
+                        "label": "Availability"
+                    },
+                    "descriptionText": {
+                        "label": "Short Description"
+                    },
+                    "difficulty": {
+                        "label": "Difficulty"
+                    },
+                    "installCost": {
+                        "label": "Install Cost"
+                    },
+                    "notes": {
+                        "label": "Notes"
+                    },
+                    "source": {
+                        "label": "Source"
+                    },
+                    "upgradeType": {
+                        "label": "Upgrade Type",
+                        "choices": {
+                            "Custom": "Custom",
+                            "Integral": "Integral",
+                            "Standard": "Standard"
+                        }
+                    }
+                },
+                "Sections": {
+                    "upgrade": "Upgrade"
+                }
             }
         }
     }

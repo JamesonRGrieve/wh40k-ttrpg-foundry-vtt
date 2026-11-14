@@ -47,42 +47,7 @@ import { TooltipsWH40K } from './applications/components/_module.ts';
 import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
 import { registerSceneEnvironment } from './applications/hud/scene-environment-hooks.ts';
 import WorldTimeWidget from './applications/hud/world-time-widget.ts';
-import {
-    BaseItemSheet,
-    WeaponSheet,
-    ArmourSheet,
-    ArmourModSheet,
-    TalentSheet,
-    TraitSheet,
-    GearSheet,
-    AmmoSheet,
-    PsychicPowerSheet,
-    SkillSheet,
-    CyberneticSheet,
-    ForceFieldSheet,
-    CriticalInjurySheet,
-    ConditionSheet,
-    DarkPactSheet,
-    MedalSheet,
-    SpecialAbilitySheet,
-    MalignancySheet,
-    MutationSheet,
-    MentalDisorderSheet,
-    StorageLocationSheet,
-    LocationSheet,
-    PeerEnemySheet,
-    JournalEntryItemSheet,
-    EndeavourSheet,
-    LeadSheet,
-    OriginPathSheet,
-    WeaponModSheet,
-    WeaponQualitySheet,
-    AttackSpecialSheet,
-    ShipComponentSheet,
-    ShipWeaponSheet,
-    ShipUpgradeSheet,
-    NPCTemplateSheet,
-} from './applications/item/_module.ts';
+import { ITEM_SHEETS } from './applications/item/item-sheet-registry.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import { openCyberneticsInstallDialog } from './applications/prompts/cybernetics-install-dialog.ts';
 import { promptDaemonWeaponAttributes } from './applications/prompts/daemon-weapon-attribute-dialog.ts';
@@ -1347,43 +1312,6 @@ export class HooksManager {
         // Unregister core V1 item sheet and register V2 item sheets
         DocumentSheetConfig.unregisterSheet(Item, 'core', foundry.appv1.sheets.ItemSheet);
 
-        const ITEM_SHEETS: SheetReg[] = [
-            { sheet: BaseItemSheet, label: 'WH40K.Sheet.Item' }, // default for unspecified types
-            { sheet: WeaponSheet, types: ['weapon'], label: 'WH40K.Sheet.Weapon' },
-            { sheet: ArmourSheet, types: ['armour'], label: 'WH40K.Sheet.Armour' },
-            { sheet: TalentSheet, types: ['talent'], label: 'WH40K.Sheet.Talent' },
-            { sheet: TraitSheet, types: ['trait'], label: 'WH40K.Sheet.Trait' },
-            { sheet: GearSheet, types: ['gear', 'consumable', 'drug', 'tool', 'miscellaneous'], label: 'WH40K.Sheet.Gear' },
-            { sheet: AmmoSheet, types: ['ammunition'], label: 'WH40K.Sheet.Ammunition' },
-            { sheet: PsychicPowerSheet, types: ['psychicPower'], label: 'WH40K.Sheet.PsychicPower' },
-            { sheet: SkillSheet, types: ['skill'], label: 'WH40K.Sheet.Skill' },
-            { sheet: CyberneticSheet, types: ['cybernetic'], label: 'WH40K.Sheet.Cybernetic' },
-            { sheet: ForceFieldSheet, types: ['forceField'], label: 'WH40K.Sheet.ForceField' },
-            { sheet: CriticalInjurySheet, types: ['criticalInjury'], label: 'WH40K.Sheet.CriticalInjury' },
-            { sheet: DarkPactSheet, types: ['darkPact'], label: 'WH40K.Sheet.DarkPact' },
-            { sheet: MedalSheet, types: ['medal'], label: 'WH40K.Sheet.Medal' },
-            { sheet: ConditionSheet, types: ['condition'], label: 'WH40K.Sheet.Condition' },
-            // Content-block sheets (freeform-gated)
-            { sheet: SpecialAbilitySheet, types: ['specialAbility'], label: 'WH40K.Sheet.SpecialAbility' },
-            { sheet: MalignancySheet, types: ['malignancy'], label: 'WH40K.Sheet.Malignancy' },
-            { sheet: MutationSheet, types: ['mutation'], label: 'WH40K.Sheet.Mutation' },
-            { sheet: MentalDisorderSheet, types: ['mentalDisorder'], label: 'WH40K.Sheet.MentalDisorder' },
-            { sheet: StorageLocationSheet, types: ['storageLocation'], label: 'WH40K.Sheet.StorageLocation' },
-            { sheet: LocationSheet, types: ['location'], label: 'WH40K.Sheet.Location' },
-            { sheet: PeerEnemySheet, types: ['peer', 'enemy'], label: 'WH40K.Sheet.PeerEnemy' },
-            { sheet: JournalEntryItemSheet, types: ['journalEntry'], label: 'WH40K.Sheet.JournalEntry' },
-            { sheet: EndeavourSheet, types: ['endeavour'], label: 'WH40K.Sheet.Endeavour' },
-            { sheet: LeadSheet, types: ['lead'], label: 'WH40K.Sheet.Lead' },
-            { sheet: OriginPathSheet, types: ['originPath'], label: 'WH40K.Sheet.OriginPath' },
-            { sheet: WeaponModSheet, types: ['weaponModification'], label: 'WH40K.Sheet.WeaponModification' },
-            { sheet: ArmourModSheet, types: ['armourModification'], label: 'WH40K.Sheet.ArmourModification' },
-            { sheet: AttackSpecialSheet, types: ['attackSpecial'], label: 'WH40K.Sheet.AttackSpecial' },
-            { sheet: WeaponQualitySheet, types: ['weaponQuality'], label: 'WH40K.Sheet.WeaponQuality' },
-            { sheet: ShipComponentSheet, types: ['shipComponent'], label: 'WH40K.Sheet.ShipComponent' },
-            { sheet: ShipWeaponSheet, types: ['shipWeapon'], label: 'WH40K.Sheet.ShipWeapon' },
-            { sheet: ShipUpgradeSheet, types: ['shipUpgrade'], label: 'WH40K.Sheet.ShipUpgrade' },
-            { sheet: NPCTemplateSheet, types: ['npcTemplate'], label: 'WH40K.Sheet.NPCTemplate' },
-        ];
         for (const { sheet, types, label } of ITEM_SHEETS) {
             DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, sheet, { ...(types !== undefined ? { types } : {}), makeDefault: true, label });
         }

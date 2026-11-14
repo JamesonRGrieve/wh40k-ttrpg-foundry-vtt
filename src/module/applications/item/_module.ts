@@ -28,6 +28,16 @@ export { default as PsychicPowerSheet } from './psychic-power-sheet.ts';
 export { default as ShipComponentSheet } from './ship-component-sheet.ts';
 export { default as ShipWeaponSheet } from './ship-weapon-sheet.ts';
 export { default as ShipUpgradeSheet } from './ship-upgrade-sheet.ts';
+export {
+    BackpackSheet,
+    NavigatorPowerSheet,
+    OathSheet,
+    OrderSheet,
+    RitualSheet,
+    ShipRoleSheet,
+    VehicleTraitSheet,
+    VehicleUpgradeSheet,
+} from './schema-item-sheets.ts';
 export { default as SkillSheet } from './skill-sheet.ts';
 export { default as SpecialAbilitySheet } from './special-ability-sheet.ts';
 export { default as StorageLocationSheet } from './storage-location-sheet.ts';

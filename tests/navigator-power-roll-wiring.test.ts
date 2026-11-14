@@ -13,10 +13,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { NAVIGATOR_POWER_LAYOUT } from '../src/module/applications/item/schema-sheet-layouts.ts';
 
 const itemSrc = readFileSync(resolve(__dirname, '../src/module/documents/item.ts'), 'utf8');
 const cardSrc = readFileSync(resolve(__dirname, '../src/templates/chat/navigator-power-chat.hbs'), 'utf8');
-const sheetSrc = readFileSync(resolve(__dirname, '../src/templates/item/item-sheet.hbs'), 'utf8');
 
 function methodBody(name: string): string {
     const start = itemSrc.indexOf(`async ${name}(`);
@@ -46,8 +46,8 @@ describe('rollNavigatorPower wiring', () => {
         expect(cardSrc).toContain('modifier-breakdown.hbs');
     });
 
-    it('lets the player set mastery on the item sheet', () => {
-        expect(sheetSrc).toContain('name="system.mastery"');
+    it('lets the player set mastery on the item sheet (#731: the navigator power schema sheet)', () => {
+        expect(NAVIGATOR_POWER_LAYOUT.sections.flatMap((section) => section.paths)).toContain('mastery');
     });
 });
 
