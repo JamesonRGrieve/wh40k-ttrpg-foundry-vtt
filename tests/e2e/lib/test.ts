@@ -35,6 +35,10 @@ import { installModuleShims } from './module-shim';
  *     separate Foundry session that joins as another user — with the same coverage,
  *     error guard and in-page helpers as `page`. For the specs that need a player
  *     and the GM at the table together.
+ *
+ *  6. A failure trace (#741): a failing test's browser console, page errors and
+ *     navigations, timestamped, printed as `[browser-trace]` and attached to the
+ *     report.
  */
 
 const RAW_DIR = resolve(__dirname, '..', '..', '..', '.e2e-raw-coverage');
@@ -42,6 +46,9 @@ const REPORT_PATH = resolve(__dirname, '..', '..', '..', '.e2e-console-report.js
 mkdirSync(RAW_DIR, { recursive: true });
 
 const GUARD_MODE = process.env['E2E_CONSOLE_GUARD'] ?? 'on';
+
+/** Lines of browser activity kept per page for a failing test's trace (#741). */
+const TRACE_LINES = 300;
 
 let runCounter = 0;
 
@@ -64,6 +71,31 @@ async function instrumentPage(page: Page, testInfo: TestInfo, clientLabel: strin
         page.on('console', onConsole);
     }
 
+    // ── Failure trace (#741): every console line, page error and navigation of
+    // this page, timestamped and bounded. Printed and attached only when the test
+    // fails, so a failure that depends on run order or machine load can be read
+    // from the gate's log instead of being reproduced (a socket reconnect, a
+    // reload, a write that threw).
+    const trace: string[] = [];
+    const started = Date.now();
+    const note = (line: string): void => {
+        trace.push(`+${String(Date.now() - started).padStart(6)}ms ${line}`);
+        if (trace.length > TRACE_LINES) trace.shift();
+    };
+    page.on('console', (msg) => {
+        // Core logs one line per compendium index built at boot (~800); they would push everything else out.
+        if (!msg.text().includes('Constructed index of')) note(`${msg.type()}: ${msg.text().slice(0, 400)}`);
+    });
+    page.on('pageerror', (err) => {
+        note(`pageerror: ${err.message.slice(0, 400)}`);
+    });
+    page.on('framenavigated', (frame) => {
+        if (frame === page.mainFrame()) note(`navigated: ${frame.url()}`);
+    });
+    page.on('close', () => {
+        note('page closed');
+    });
+
     try {
         await page.coverage.startJSCoverage({ resetOnNavigation: false });
     } catch {
@@ -74,6 +106,11 @@ async function instrumentPage(page: Page, testInfo: TestInfo, clientLabel: strin
     await installModuleShims(page);
 
     return async (): Promise<void> => {
+        if (testInfo.status !== testInfo.expectedStatus && trace.length > 0) {
+            const body = trace.join('\n');
+            await testInfo.attach(`${clientLabel}browser-trace`, { body, contentType: 'text/plain' });
+            process.stdout.write(`[browser-trace] ${clientLabel}${testInfo.title}\n${body}\n[/browser-trace]\n`);
+        }
         try {
             const entries = await page.coverage.stopJSCoverage();
             const filtered = entries.filter((e) => e.url.includes('/systems/wh40k-rpg/module/') && e.url.endsWith('.js'));

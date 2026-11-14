@@ -5,9 +5,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-weapon-mod-sheet.hbs?raw';
+import { WEAPON_MODIFICATION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0xba55d);
@@ -164,5 +166,33 @@ export const HomologationIM: Story = {
     render: () => renderForSystem(makeCtx(), 'im'),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).toBeTruthy();
+    },
+};
+
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = { ...makeCtx({ inEditMode: true, editable: true }), schemaSections: mockSchemaSections(WEAPON_MODIFICATION_EXTRA_LAYOUT, {}) };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: every stat modifier, the clip and rate-of-fire changes included, submits under its `system.` path on every line (#740). */
+export const SchemaFields: Story = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.modifiers.damage',
+                'system.modifiers.penetration',
+                'system.modifiers.toHit',
+                'system.modifiers.range',
+                'system.modifiers.rangeMultiplier',
+                'system.modifiers.clip',
+                'system.modifiers.rateOfFire.single',
+                'system.modifiers.rateOfFire.semi',
+                'system.modifiers.rateOfFire.full',
+                'system.modifiers.weight',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

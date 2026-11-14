@@ -7,9 +7,13 @@ import {
     fittingOutcome,
     modificationAvailabilityModifier,
     modificationBlocker,
+    modificationEffectLines,
     modificationEntry,
+    modifiedRange,
+    modifiedRateOfFire,
     type ModificationSource,
     partsSourceUuid,
+    sumModificationModifiers,
 } from './weapon-modification';
 
 const dh2 = DH2_WEAPON_MODIFICATION_RULES;
@@ -87,7 +91,16 @@ describe('modificationEntry', () => {
             name: 'Custom Grip',
             active: true,
             category: 'stock',
-            cachedModifiers: { damage: 0, penetration: 0, toHit: 5, range: 0, weight: 0 },
+            cachedModifiers: {
+                damage: 0,
+                penetration: 0,
+                toHit: 5,
+                range: 0,
+                weight: 0,
+                clip: 0,
+                rangeMultiplier: 1,
+                rateOfFire: { single: 0, semi: 0, full: 0 },
+            },
         });
     });
     it('defaults a blank category to accessory', () => {
@@ -119,5 +132,55 @@ describe('weaponModificationRulesFor — per-line gating (#136)', () => {
     it('DW, BC and IM print no fitting test', () => {
         for (const line of ['dw', 'bc', 'im']) expect(weaponModificationRulesFor(line)).toBeNull();
         expect(weaponModificationRulesFor(undefined)).toBeNull();
+    });
+});
+
+describe('a modification changes clip, range and rate of fire (#740)', () => {
+    const capacitor = mod({ category: 'magazine', modifiers: { clip: 10 } }, 'Item.capacitor');
+    const scope = mod({ category: 'sight', modifiers: { rangeMultiplier: 1.5, range: 10 } }, 'Item.scope');
+    const burst = mod({ category: 'barrel', modifiers: { rateOfFire: { semi: 1, full: -2, single: -1 } } }, 'Item.burst');
+
+    it('caches the clip, range multiplier and rate of fire with the rest', () => {
+        expect(modificationEntry(capacitor).cachedModifiers.clip).toBe(10);
+        expect(modificationEntry(scope).cachedModifiers.rangeMultiplier).toBe(1.5);
+        expect(modificationEntry(burst).cachedModifiers.rateOfFire).toEqual({ single: -1, semi: 1, full: -2 });
+    });
+
+    it('sums the active modifications: deltas add, multipliers multiply', () => {
+        const switchedOff = { ...modificationEntry(mod({ modifiers: { clip: 5, rangeMultiplier: 2 } }, 'Item.off')), active: false };
+        const total = sumModificationModifiers([...[capacitor, scope, burst].map((m) => modificationEntry(m)), switchedOff]);
+        expect(total.clip).toBe(10);
+        expect(total.range).toBe(10);
+        expect(total.rangeMultiplier).toBe(1.5);
+        expect(total.rateOfFire).toEqual({ single: -1, semi: 1, full: -2 });
+    });
+
+    it('reads a loaded modification live, so an edit after fitting applies; the cache answers otherwise', () => {
+        const entries = [modificationEntry(capacitor), modificationEntry(scope)];
+        const live = (uuid: string): { clip: number } | null => (uuid === 'Item.capacitor' ? { clip: 25 } : null);
+        const total = sumModificationModifiers(entries, live);
+        expect(total.clip).toBe(25);
+        expect(total.rangeMultiplier).toBe(1.5);
+    });
+
+    it('applies range deltas, then multipliers, rounding down and never below 0', () => {
+        expect(modifiedRange(100, { range: 10, rangeMultiplier: 1.5 })).toBe(165);
+        expect(modifiedRange(35, { range: 0, rangeMultiplier: 0.66 })).toBe(23);
+        expect(modifiedRange(10, { range: -30, rangeMultiplier: 1 })).toBe(0);
+    });
+
+    it('grows or shrinks a firing mode the weapon has, never below 1, and gives or takes single shot', () => {
+        expect(modifiedRateOfFire({ single: true, semi: 3, full: 0 }, { single: -1, semi: 1, full: 2 })).toEqual({ single: false, semi: 4, full: 0 });
+        expect(modifiedRateOfFire({ single: false, semi: 2, full: 4 }, { single: 1, semi: -5, full: 0 })).toEqual({ single: true, semi: 1, full: 4 });
+    });
+
+    it('lists each effect for the weapon sheet, and none for a neutral block', () => {
+        expect(modificationEffectLines({ clip: 10, rangeMultiplier: 1.5, rateOfFire: { single: 1, semi: -1 } })).toEqual([
+            { key: 'WH40K.WeaponSheet.EffectRangeMultiplier', value: '1.5' },
+            { key: 'WH40K.WeaponSheet.EffectClip', value: '+10' },
+            { key: 'WH40K.WeaponSheet.EffectSingleShotGained', value: '' },
+            { key: 'WH40K.WeaponSheet.EffectRateOfFireSemi', value: '-1' },
+        ]);
+        expect(modificationEffectLines({})).toEqual([]);
     });
 });

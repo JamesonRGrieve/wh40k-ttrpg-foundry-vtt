@@ -15,9 +15,10 @@ import { scaledMs } from './lib/timing';
  *   for every field the pack's readers need and shares a request in flight.
  * - `ready-reads-no-pack-documents`: the index builders and the skill tooltips
  *   read pack indexes, not whole documents. In a world whose actors own
- *   compendium items, the hydration join and origin reapplication do read whole
- *   documents; the seed world has none, so any document read here is a reader
- *   that should be using the index.
+ *   compendium items, the hydration join reads whole documents; such an actor can
+ *   be left in the shared world by an earlier spec, so reads from the join
+ *   (`hydrateActorInMemory` on the stack) are exempt. Any other document read is
+ *   a reader that should be using the index.
  * - `skill-tooltips-from-index`: the skill tooltip cache, now filled from the DH2
  *   skills pack's index rows, holds every skill with its per-line `uses` resolved
  *   to a string (the pack authors it as `{ dh2: … }`).
@@ -145,12 +146,17 @@ test.describe.serial('compendium reads on ready (Tier B, #706)', () => {
         const repeatedPacks = new Set([...perPack].filter(([, n]) => n > 1).map(([pack]) => pack));
         for (const read of indexReads.filter((r) => repeatedPacks.has(r.pack))) process.stdout.write(`[ready-pack-reads] index ${read.pack} ${read.stack}\n`);
 
+        // The hydration join reads the whole documents an actor's owned compendium items
+        // point at: legitimate (see the header), and present whenever an earlier spec left
+        // such an actor in the shared world. Every other document read is a reader that
+        // should be using the index.
+        const indexerDocReads = docReads.filter((r) => !r.stack.includes('hydrateActorInMemory'));
         const results: Array<{ name: FlowName; ok: boolean; detail: string }> = [
             { name: 'ready-indexes-each-pack-once', ok: repeated.length === 0, detail: `re-indexed: ${repeated.slice(0, 10).join(', ')}` },
             {
                 name: 'ready-reads-no-pack-documents',
-                ok: docReads.length === 0,
-                detail: `document reads: ${docReads
+                ok: indexerDocReads.length === 0,
+                detail: `document reads outside the hydration join: ${indexerDocReads
                     .slice(0, 10)
                     .map((r) => r.pack)
                     .join(', ')}`,

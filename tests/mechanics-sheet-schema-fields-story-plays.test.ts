@@ -12,6 +12,7 @@ const FILES = [
     '../src/module/applications/item/trait-sheet.stories.ts',
     '../src/module/applications/item/skill-sheet.stories.ts',
     '../src/module/applications/item/dark-pact-sheet.stories.ts',
+    '../src/module/applications/item/weapon-mod-sheet.stories.ts',
 ];
 const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(
     [
@@ -20,6 +21,7 @@ const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(
         '../src/module/applications/item/trait-sheet.stories.ts',
         '../src/module/applications/item/skill-sheet.stories.ts',
         '../src/module/applications/item/dark-pact-sheet.stories.ts',
+        '../src/module/applications/item/weapon-mod-sheet.stories.ts',
     ],
     { eager: true },
 );

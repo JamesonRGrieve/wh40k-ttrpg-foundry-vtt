@@ -10,6 +10,7 @@
  */
 
 import { afterAll, describe, expect, it } from 'vitest';
+import { cacheModificationModifiers, type WeaponModificationEntry } from '../src/module/rules/weapon-modification.ts';
 import { buildApplicationV2Api, type ApplicationV2Api } from '../src/module/testing/app-v2-stub.ts';
 
 interface FoundryStub {
@@ -63,16 +64,10 @@ afterAll(() => {
     Object.assign(stubs, ORIGINAL);
 });
 
-type Entry = {
-    uuid: string;
-    name: string;
-    active: boolean;
-    category: string;
-    cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
-};
+type Entry = WeaponModificationEntry;
 
 function entry(uuid: string, name: string): Entry {
-    return { uuid, name, active: true, category: 'accessory', cachedModifiers: { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 } };
+    return { uuid, name, active: true, category: 'accessory', cachedModifiers: cacheModificationModifiers(undefined) };
 }
 
 /** A weapon standing in for a real Foundry Item: only the surface the actions read and write. */

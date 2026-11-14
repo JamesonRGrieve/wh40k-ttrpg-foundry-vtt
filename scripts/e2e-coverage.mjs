@@ -1521,9 +1521,9 @@ recordDimension('inquest.flow', covered['inquest.flow'], INQUEST_FLOWS);
 const REINFORCEMENT_FLOWS = ['daemonhost-caller-terms', 'enemies-without-peer-contribution'];
 recordDimension('reinforcement.flow', covered['reinforcement.flow'], REINFORCEMENT_FLOWS);
 
-// tests/e2e/weapon-modification.spec.ts — fitting and removing a weapon
+// tests/e2e/weapon-modification.spec.ts (+ weapon-modification-clip.spec.ts, #740) — fitting and removing a weapon
 // modification personally from the weapon sheet (#136).
-const WEAPON_MODIFICATION_FLOWS = ['dh2-fit-and-remove', 'dh2-xenos-lore-then-fit', 'absent-on-dw'];
+const WEAPON_MODIFICATION_FLOWS = ['dh2-fit-and-remove', 'dh2-xenos-lore-then-fit', 'absent-on-dw', 'modification-clip'];
 recordDimension('weapon-modification.flow', covered['weapon-modification.flow'], WEAPON_MODIFICATION_FLOWS);
 
 // tests/e2e/handlebars-helpers-extra.spec.ts — src/module/handlebars/* +

@@ -107,13 +107,112 @@ export function damagedWeaponQualities(special: Iterable<string>): string[] {
     return [...qualities];
 }
 
-/** The modifier block a fitted modification caches on the weapon. */
-interface CachedModificationModifiers {
+/** A modification's rate-of-fire deltas: semi / full add to a mode the weapon has; single > 0 gives single shot, < 0 takes it away. */
+export interface ModificationRateOfFire {
+    single: number;
+    semi: number;
+    full: number;
+}
+
+/** The modifier block a fitted modification caches on the weapon (#740: clip, range multiplier and rate of fire too). */
+export interface CachedModificationModifiers {
     damage: number;
     penetration: number;
     toHit: number;
     range: number;
     weight: number;
+    clip: number;
+    rangeMultiplier: number;
+    rateOfFire: ModificationRateOfFire;
+}
+
+/** The modifier block of a modification document, as authored (every field optional). */
+export type ModificationModifiersSource = Partial<Omit<CachedModificationModifiers, 'rateOfFire'>> & {
+    rateOfFire?: Partial<ModificationRateOfFire> | undefined;
+};
+
+/** The cached block for an authored one: absent fields take their neutral value. */
+export function cacheModificationModifiers(mods: ModificationModifiersSource | undefined): CachedModificationModifiers {
+    return {
+        damage: mods?.damage ?? 0,
+        penetration: mods?.penetration ?? 0,
+        toHit: mods?.toHit ?? 0,
+        range: mods?.range ?? 0,
+        weight: mods?.weight ?? 0,
+        clip: mods?.clip ?? 0,
+        rangeMultiplier: mods?.rangeMultiplier ?? 1,
+        rateOfFire: { single: mods?.rateOfFire?.single ?? 0, semi: mods?.rateOfFire?.semi ?? 0, full: mods?.rateOfFire?.full ?? 0 },
+    };
+}
+
+/**
+ * The summed modifiers of a weapon's active modifications. Deltas add, range
+ * multipliers multiply. `live` returns a fitted modification's current authored
+ * block when its document is loaded, so an edit made after fitting applies; the
+ * cache fitted with it answers otherwise (a compendium source).
+ */
+export function sumModificationModifiers(
+    entries: readonly { readonly uuid: string; readonly active: boolean; readonly cachedModifiers: ModificationModifiersSource }[],
+    live: (uuid: string) => ModificationModifiersSource | null = () => null,
+): CachedModificationModifiers {
+    const total = cacheModificationModifiers(undefined);
+    for (const entry of entries) {
+        if (!entry.active) continue;
+        const mods = cacheModificationModifiers(live(entry.uuid) ?? entry.cachedModifiers);
+        total.damage += mods.damage;
+        total.penetration += mods.penetration;
+        total.toHit += mods.toHit;
+        total.range += mods.range;
+        total.weight += mods.weight;
+        total.clip += mods.clip;
+        total.rangeMultiplier *= mods.rangeMultiplier;
+        total.rateOfFire.single += mods.rateOfFire.single;
+        total.rateOfFire.semi += mods.rateOfFire.semi;
+        total.rateOfFire.full += mods.rateOfFire.full;
+    }
+    return total;
+}
+
+/** One line of a fitted modification's effects: its langpack key and the `{value}` it formats. */
+export interface ModificationEffectLine {
+    readonly key: string;
+    readonly value: string;
+}
+
+/** The effects a modification block has, in sheet order; a neutral field has no line. */
+export function modificationEffectLines(source: ModificationModifiersSource): ModificationEffectLine[] {
+    const m = cacheModificationModifiers(source);
+    const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
+    const lines: ModificationEffectLine[] = [];
+    const delta = (key: string, value: number): void => {
+        if (value !== 0) lines.push({ key, value: signed(value) });
+    };
+    delta('WH40K.WeaponSheet.EffectDamage', m.damage);
+    delta('WH40K.WeaponSheet.EffectPenetration', m.penetration);
+    delta('WH40K.WeaponSheet.EffectToHit', m.toHit);
+    delta('WH40K.WeaponSheet.EffectRange', m.range);
+    if (m.rangeMultiplier !== 1) lines.push({ key: 'WH40K.WeaponSheet.EffectRangeMultiplier', value: String(m.rangeMultiplier) });
+    delta('WH40K.WeaponSheet.EffectClip', m.clip);
+    if (m.rateOfFire.single > 0) lines.push({ key: 'WH40K.WeaponSheet.EffectSingleShotGained', value: '' });
+    if (m.rateOfFire.single < 0) lines.push({ key: 'WH40K.WeaponSheet.EffectSingleShotLost', value: '' });
+    delta('WH40K.WeaponSheet.EffectRateOfFireSemi', m.rateOfFire.semi);
+    delta('WH40K.WeaponSheet.EffectRateOfFireFull', m.rateOfFire.full);
+    delta('WH40K.WeaponSheet.EffectWeight', m.weight);
+    return lines;
+}
+
+/** A range with its modifications applied: the deltas, then the multipliers, rounded down and never below 0. */
+export function modifiedRange(base: number, mods: Pick<CachedModificationModifiers, 'range' | 'rangeMultiplier'>): number {
+    return Math.max(0, Math.floor((base + mods.range) * mods.rangeMultiplier));
+}
+
+/** A weapon's rate of fire with its modifications' deltas: a semi / full mode it has grows or shrinks (never below 1), single shot is given or taken. */
+export function modifiedRateOfFire(
+    rof: { readonly single: boolean; readonly semi: number; readonly full: number },
+    mods: ModificationRateOfFire,
+): { single: boolean; semi: number; full: number } {
+    const step = (value: number, delta: number): number => (value > 0 ? Math.max(1, value + delta) : value);
+    return { single: mods.single > 0 ? true : mods.single < 0 ? false : rof.single, semi: step(rof.semi, mods.semi), full: step(rof.full, mods.full) };
 }
 
 /** One entry of `WeaponData.modifications`. */
@@ -131,7 +230,7 @@ export interface ModificationSource {
     readonly name: string;
     readonly system: {
         readonly category: string;
-        readonly modifiers?: Partial<CachedModificationModifiers> | undefined;
+        readonly modifiers?: ModificationModifiersSource | undefined;
         readonly restrictions?:
             | { readonly weaponClasses?: ReadonlySet<string> | undefined; readonly weaponTypes?: ReadonlySet<string> | undefined }
             | undefined;
@@ -194,12 +293,6 @@ export function modificationEntry(mod: ModificationSource, sourceUuid: string = 
         name: mod.name,
         active: true,
         category: mod.system.category !== '' ? mod.system.category : 'accessory',
-        cachedModifiers: {
-            damage: mods?.damage ?? 0,
-            penetration: mods?.penetration ?? 0,
-            toHit: mods?.toHit ?? 0,
-            range: mods?.range ?? 0,
-            weight: mods?.weight ?? 0,
-        },
+        cachedModifiers: cacheModificationModifiers(mods),
     };
 }

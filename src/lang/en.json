@@ -8271,6 +8271,12 @@
             "EffectToHit": "To Hit {value}",
             "EffectRange": "Range {value}m",
             "EffectWeight": "Weight {value}kg",
+            "EffectClip": "Clip {value}",
+            "EffectRangeMultiplier": "Range ×{value}",
+            "EffectRateOfFireSemi": "Semi-auto {value}",
+            "EffectRateOfFireFull": "Full auto {value}",
+            "EffectSingleShotGained": "Gains single shot",
+            "EffectSingleShotLost": "Loses single shot",
             "OnlyOneOfItem": "Weapon can only hold one {name}",
             "OnlyOneAmmoType": "Only one type of ammunition can be loaded.",
             "MustBeOnActor": "This weapon must be on an actor to roll.",
@@ -9943,9 +9949,44 @@
             },
             "WeaponModification": {
                 "Sections": {
-                    "restrictions": "Restrictions"
+                    "restrictions": "Restrictions",
+                    "modifiers": "Modifiers"
                 },
                 "FIELDS": {
+                    "modifiers": {
+                        "damage": {
+                            "label": "Damage"
+                        },
+                        "penetration": {
+                            "label": "Penetration"
+                        },
+                        "toHit": {
+                            "label": "To Hit"
+                        },
+                        "range": {
+                            "label": "Range (m)"
+                        },
+                        "rangeMultiplier": {
+                            "label": "Range Multiplier"
+                        },
+                        "clip": {
+                            "label": "Clip Size"
+                        },
+                        "weight": {
+                            "label": "Weight (kg)"
+                        },
+                        "rateOfFire": {
+                            "single": {
+                                "label": "Rate of Fire: Single"
+                            },
+                            "semi": {
+                                "label": "Rate of Fire: Semi-Auto"
+                            },
+                            "full": {
+                                "label": "Rate of Fire: Full Auto"
+                            }
+                        }
+                    },
                     "restrictions": {
                         "weaponClasses": {
                             "label": "Weapon Classes"

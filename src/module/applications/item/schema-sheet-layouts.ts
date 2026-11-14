@@ -387,6 +387,22 @@ export const WEAPON_MODIFICATION_EXTRA_LAYOUT: SchemaSheetLayout = {
     type: 'weaponModification',
     labelPrefix: 'WH40K.ItemFields.WeaponModification',
     sections: [
+        {
+            key: 'modifiers',
+            icon: 'fa-sliders-h',
+            paths: [
+                'modifiers.damage',
+                'modifiers.penetration',
+                'modifiers.toHit',
+                'modifiers.range',
+                'modifiers.rangeMultiplier',
+                'modifiers.clip',
+                'modifiers.rateOfFire.single',
+                'modifiers.rateOfFire.semi',
+                'modifiers.rateOfFire.full',
+                'modifiers.weight',
+            ],
+        },
         { key: 'restrictions', icon: 'fa-ban', paths: ['restrictions.weaponClasses', 'restrictions.weaponTypes', 'addedQualities', 'removedQualities'] },
         PHYSICAL_AVAILABILITY,
     ],

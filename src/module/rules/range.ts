@@ -5,6 +5,7 @@ import { calculateRangeModifier } from '../utils/range-calculator.ts';
 import { parsePsychicRange } from './psychic-range.ts';
 import { actorEnvironmentContext, environmentThrowStrengthBonus } from './scene-environment.ts';
 import { characteristicBonusRange, thrownRangeMetres } from './thrown-range.ts';
+import { type CachedModificationModifiers, modifiedRange } from './weapon-modification.ts';
 import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
 type RangeAnnotatedRollData = RollData & {
@@ -15,6 +16,8 @@ type RangeAnnotatedRollData = RollData & {
 
 type WeaponRangeSystem = {
     range?: string | number;
+    /** The fitted modifications' summed modifiers (#740): their range change and multiplier. */
+    _modificationModifiers?: Pick<CachedModificationModifiers, 'range' | 'rangeMultiplier'>;
     attack?: {
         range?: {
             value?: string | number;
@@ -83,6 +86,9 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
             range = 0;
         }
     }
+
+    // The fitted modifications' range change and multiplier (#740).
+    if (weaponSystem._modificationModifiers !== undefined) range = modifiedRange(range, weaponSystem._modificationModifiers);
 
     // A chosen firing option's range bonus (Maximal: +10 m), authored on the quality.
     range += chosenQualityEffects(rollData.chosenQualities, rollData.gameSystemId).rangeBonus;

@@ -12,7 +12,14 @@ import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { promptItemChoice } from '../../rolls/skill-use-picker.ts';
 import { DEFAULT_HIT_LOCATION } from '../../rules/hit-locations.ts';
 import { consumeRounds } from '../../rules/magazine.ts';
-import { MODIFICATION_BLOCKER_KEYS, modificationBlocker, modificationEntry, type ModificationSource } from '../../rules/weapon-modification.ts';
+import {
+    MODIFICATION_BLOCKER_KEYS,
+    modificationBlocker,
+    modificationEffectLines,
+    modificationEntry,
+    type ModificationModifiersSource,
+    type ModificationSource,
+} from '../../rules/weapon-modification.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { lineCategoryPack } from '../../utils/line-packs.ts';
@@ -441,18 +448,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      * @returns {string[]} - Array of effect descriptions
      * @private
      */
-    _getModificationEffects(mod: { cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number } }): string[] {
-        const effects: string[] = [];
-        const m = mod.cachedModifiers;
-
-        const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
-        if (m.damage !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectDamage', { value: signed(m.damage) }));
-        if (m.penetration !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectPenetration', { value: signed(m.penetration) }));
-        if (m.toHit !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectToHit', { value: signed(m.toHit) }));
-        if (m.range !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectRange', { value: signed(m.range) }));
-        if (m.weight !== 0) effects.push(game.i18n.format('WH40K.WeaponSheet.EffectWeight', { value: signed(m.weight) }));
-
-        return effects;
+    _getModificationEffects(mod: { cachedModifiers: ModificationModifiersSource }): string[] {
+        return modificationEffectLines(mod.cachedModifiers).map((line) => game.i18n.format(line.key, { value: line.value }));
     }
 
     /* -------------------------------------------- */
@@ -463,9 +460,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
      * @returns {boolean}
      * @private
      */
-    _hasModificationEffects(mod: { cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number } }): boolean {
-        const m = mod.cachedModifiers;
-        return m.damage !== 0 || m.penetration !== 0 || m.toHit !== 0 || m.range !== 0 || m.weight !== 0;
+    _hasModificationEffects(mod: { cachedModifiers: ModificationModifiersSource }): boolean {
+        return modificationEffectLines(mod.cachedModifiers).length > 0;
     }
 
     /**

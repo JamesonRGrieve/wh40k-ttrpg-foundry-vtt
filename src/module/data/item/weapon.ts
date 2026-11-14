@@ -43,6 +43,13 @@ import {
     modeWeaponClass,
     type WeaponFiringMode,
 } from '../../rules/weapon-modes.ts';
+import {
+    type CachedModificationModifiers,
+    type ModificationModifiersSource,
+    modifiedRange,
+    modifiedRateOfFire,
+    sumModificationModifiers,
+} from '../../rules/weapon-modification.ts';
 import type { RechargeMark } from '../../rules/weapon-recharge.ts';
 import {
     inferActiveGameLine,
@@ -105,6 +112,20 @@ function resolveFlagVariant(value: unknown, lineKey: SupportedLineKey, parent: u
     return false;
 }
 /** Weapons whose missing damage profile was already reported this session. */
+/**
+ * A fitted modification's current modifier block, when its document is loaded (a
+ * world or owned item): so a GM's edit after fitting applies (#740). A compendium
+ * source resolves to an index entry with no `system`, and answers null; the
+ * weapon then uses the block cached when the modification was fitted.
+ */
+function liveModificationModifiers(uuid: string): ModificationModifiersSource | null {
+    if (typeof fromUuidSync !== 'function' || uuid === '') return null;
+    const doc = fromUuidSync(uuid, { strict: false });
+    if (doc === null || !(doc instanceof Item) || doc.type !== 'weaponModification') return null;
+    // A weaponModification's schema requires its modifiers block.
+    return (doc.system as { modifiers: ModificationModifiersSource }).modifiers;
+}
+
 const reportedMissingDamageProfiles = new Set<string>();
 
 /**
@@ -335,7 +356,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         name: string;
         active: boolean;
         category: string;
-        cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
+        cachedModifiers: CachedModificationModifiers;
     }>;
     // `required: false` schema field — absent on weapons authored without an
     // activation block, so optional at runtime. The live on/off toggle is
@@ -345,7 +366,7 @@ export default class WeaponData extends ItemDataModel.mixin(
     declare notes: string;
 
     // Derived in prepareDerivedData()
-    declare _modificationModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
+    declare _modificationModifiers: CachedModificationModifiers;
 
     // Properties from PhysicalItemTemplate
     declare craftsmanship: string;
@@ -596,6 +617,17 @@ export default class WeaponData extends ItemDataModel.mixin(
                             toHit: new fields.NumberField({ required: true, initial: 0, integer: true }),
                             range: new fields.NumberField({ required: true, initial: 0, integer: true }),
                             weight: new fields.NumberField({ required: true, initial: 0 }),
+                            // #740: the clip, range-multiplier and rate-of-fire deltas reach the weapon too.
+                            clip: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                            rangeMultiplier: new fields.NumberField({ required: true, initial: 1, min: 0 }),
+                            rateOfFire: new fields.SchemaField(
+                                {
+                                    single: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                                    semi: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                                    full: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                                },
+                                { required: true },
+                            ),
                         },
                         { required: true },
                     ),
@@ -853,25 +885,10 @@ export default class WeaponData extends ItemDataModel.mixin(
      * @private
      */
     _aggregateModificationModifiers(): void {
-        // Initialize aggregated modifiers
-        this._modificationModifiers = {
-            damage: 0,
-            penetration: 0,
-            toHit: 0,
-            range: 0,
-            weight: 0,
-        };
-
-        // Sum up all active modification modifiers
-        for (const mod of this.modifications) {
-            if (mod.active) {
-                this._modificationModifiers.damage += mod.cachedModifiers.damage;
-                this._modificationModifiers.penetration += mod.cachedModifiers.penetration;
-                this._modificationModifiers.toHit += mod.cachedModifiers.toHit;
-                this._modificationModifiers.range += mod.cachedModifiers.range;
-                this._modificationModifiers.weight += mod.cachedModifiers.weight;
-            }
-        }
+        // Sum the active modifications (#740). A fitted modification whose document is
+        // loaded (a world item) is read live, so an edit after fitting applies; a
+        // compendium source answers with the block cached when it was fitted.
+        this._modificationModifiers = sumModificationModifiers(this.modifications, liveModificationModifiers);
 
         // Add loaded ammunition modifiers (loadedAmmo may be undefined if the
         // schema failed to initialize due to upstream validation errors). A
@@ -920,7 +937,7 @@ export default class WeaponData extends ItemDataModel.mixin(
 
     /** The active firing mode's rate of fire, else the base attack rate of fire. */
     get effectiveRateOfFire(): { single: boolean; semi: number; full: number } {
-        return modeRateOfFire(this.activeFiringModeProfile, this.attack.rateOfFire);
+        return modifiedRateOfFire(modeRateOfFire(this.activeFiringModeProfile, this.attack.rateOfFire), this._modificationModifiers.rateOfFire);
     }
 
     /**
@@ -1448,10 +1465,8 @@ export default class WeaponData extends ItemDataModel.mixin(
      */
     get effectiveRange(): { value: number; units: string; special: string } {
         const baseRange = modeRange(this.activeFiringModeProfile, this.attack.range.value || 0);
-        const rangeModifier = this._modificationModifiers.range;
-
         return {
-            value: baseRange + rangeModifier,
+            value: modifiedRange(baseRange, this._modificationModifiers),
             units: this.attack.range.units || 'm',
             special: this.attack.range.special || '',
         };
@@ -1696,6 +1711,11 @@ export default class WeaponData extends ItemDataModel.mixin(
         return icons[this.type] ?? 'fa-crosshairs';
     }
 
+    /** The clip a full load holds: the weapon's clip and its fitted modifications' clip change (#740). A weapon with no clip gains none. */
+    get clipCapacity(): number {
+        return this.clip.max > 0 ? Math.max(1, this.clip.max + this._modificationModifiers.clip) : this.clip.max;
+    }
+
     /**
      * Get effective clip max, accounting for loaded ammo's clip modifier.
      * @type {number}
@@ -1706,9 +1726,8 @@ export default class WeaponData extends ItemDataModel.mixin(
             const mode = this.activeFiringModeProfile;
             return mode !== null && mode.clipMax > 0 ? mode.clipMax : 1;
         }
-        const base = this.clip.max;
         const ammoMod = this.loadedAmmo?.clipModifier ?? 0;
-        return Math.max(1, base + ammoMod);
+        return Math.max(1, this.clipCapacity + ammoMod);
     }
 
     /** The clip count for display — the active single-use secondary's remaining shots
@@ -2013,7 +2032,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         // extractor, so the sync effective-stat getters read them without an async lookup.
         const effects = ammoSegmentEffects(ammoItem.system);
         const quantity = ammoItem.system.quantity;
-        const effectiveMax = Math.max(1, this.clip.max + effects.clipModifier);
+        const effectiveMax = Math.max(1, this.clipCapacity + effects.clipModifier);
 
         // Deduct rounds from inventory
         const availableQuantity = quantity ?? effectiveMax;
@@ -2085,7 +2104,7 @@ export default class WeaponData extends ItemDataModel.mixin(
             await this._returnRoundsToInventory(actor, this.clip.value);
         }
 
-        const max = this.clip.max;
+        const max = this.clipCapacity;
         const magazine: MagazineSegment[] = [];
         let loaded = 0;
         for (const { ammoUuid, count } of segments) {

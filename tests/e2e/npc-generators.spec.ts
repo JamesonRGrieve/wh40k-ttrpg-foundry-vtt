@@ -200,6 +200,10 @@ test.describe.serial('NPC generators create registered NPCs (Tier B, #644)', () 
         // Bare system data names no line: the primary line's NPC.
         const bare = JSON.stringify({ name: `${PREFIX} Imported Bare`, threatLevel: 4 });
         const second = await openGenerator(page, 'importStatBlock', 'StatBlockParser', bare);
+        // The first import opened its NPC's sheet. Wherever that window lands it can
+        // cover this parser's buttons and swallow every click (#741: the gate timed out
+        // after 10 minutes of a click retried against the sheet's header).
+        await clearScreenOverlays(page, second);
         const parser = page.locator(`#${second}`);
         await parser.locator('textarea[name="rawInput"]').fill(bare);
         await parser.locator('[data-action="parse"]').first().click();

@@ -132,7 +132,10 @@ export async function joinAsUser(page: Page, userName: string): Promise<boolean>
     if (!populated) return false;
     await page.fill('input[name="username"]', userName);
     await page.click('button[name="join"]');
-    await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS });
+    // Only the move to /game is waited for here: the full `load` event can lag well past
+    // it on a loaded machine (#741: /game reached and network idle, `load` still pending
+    // at 30 s), and readiness is the `game.ready` wait below, which retries with reloads.
+    await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS, waitUntil: 'commit' });
     let ready = false;
     for (let attempt = 0; attempt < READY_ATTEMPTS; attempt++) {
         try {
