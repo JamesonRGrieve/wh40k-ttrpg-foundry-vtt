@@ -7,11 +7,13 @@
 import { describe, expect, it } from 'vitest';
 import { playStory, type ViteGlobMeta } from './lib/play-story.ts';
 
+const CHARACTER = '../src/module/applications/actor/character-sheet.stories.ts';
 const NPC = '../src/module/applications/actor/npc-sheet.stories.ts';
 const CRAFT = '../src/module/applications/actor/craft-sheet.stories.ts';
 const VOIDCRAFT = '../src/module/applications/actor/voidcraft-sheet.stories.ts';
 const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(
     [
+        '../src/module/applications/actor/character-sheet.stories.ts',
         '../src/module/applications/actor/npc-sheet.stories.ts',
         '../src/module/applications/actor/craft-sheet.stories.ts',
         '../src/module/applications/actor/voidcraft-sheet.stories.ts',
@@ -21,6 +23,7 @@ const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(
 
 describe('actor sheets edit the fields their templates lacked (#735, #736)', () => {
     it.each([
+        [CHARACTER, 'SchemaFields'],
         [NPC, 'SchemaFields'],
         [NPC, 'ImSchemaFields'],
         [CRAFT, 'SchemaFields'],

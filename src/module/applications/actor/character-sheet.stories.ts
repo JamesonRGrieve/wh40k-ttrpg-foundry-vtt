@@ -7,7 +7,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import HbsLib from 'handlebars';
 import { expect, within } from 'storybook/test';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { mockPlayerSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
@@ -16,6 +17,7 @@ import headerSrc from '../../../templates/actor/player/header-dh.hbs?raw';
 import biographyTabSrc from '../../../templates/actor/player/tab-biography.hbs?raw';
 import equipmentTabSrc from '../../../templates/actor/player/tab-equipment.hbs?raw';
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
+import { CHARACTER_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import { encumbranceDisplay } from './encumbrance-display.ts';
 
 initializeStoryHandlebars();
@@ -363,5 +365,24 @@ export const Issue245ReactionsOnlyDodgeParry: Story = {
         });
         await expect(rows).toEqual(REACTION_LINES.map((line) => ({ line, actions: ['dodge', 'parry'] })));
         await expect(canvasElement.textContent).not.toContain('Lasgun');
+    },
+};
+
+/** The biography tab with the elective aptitudes and mutations note (#738), rendered through the shared schema rows. */
+function renderCharacterWithSchemaFields(systemId: SystemId = 'dh2'): HTMLFormElement {
+    const ctx = {
+        ...mockPlayerSheetContext({ systemId }),
+        inEditMode: true,
+        editable: true,
+        schemaSections: mockSchemaSections(CHARACTER_EXTRA_LAYOUT, { electiveAptitudes: ['Strength'] }),
+    };
+    return inForm(renderCharacterSheet(ctx), systemId);
+}
+
+/** Edit mode, every line: each elective aptitude and the mutations note submit (#738). */
+export const SchemaFields: Story = {
+    render: () => renderCharacterWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(canvasElement, ['system.electiveAptitudes.0', 'system.mutations'], renderCharacterWithSchemaFields);
     },
 };

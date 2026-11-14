@@ -54,6 +54,8 @@ import * as StatActions from '../api/stat-adjustment-actions.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
 import { inquestPanelRows } from '../dialogs/inquest-view.ts';
+import type { SchemaSheetLayout } from '../item/schema-sheet-layout.ts';
+import { CHARACTER_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
 import * as AcquisitionActions from './character/acquisition-actions.ts';
 import * as ActiveEffectActions from './character/active-effect-actions.ts';
@@ -88,6 +90,9 @@ import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
  * Actor sheet for Acolyte/Character type actors.
  */
 export default class CharacterSheet extends BaseActorSheet {
+    /** The elective aptitudes and mutations note the templates lack, edited through the shared schema rows (#738). */
+    static override SCHEMA_LAYOUT: SchemaSheetLayout | null = CHARACTER_EXTRA_LAYOUT;
+
     declare actor: WH40KAcolyte;
     declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;

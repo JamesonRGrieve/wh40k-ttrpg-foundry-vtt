@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildLangStub } from '../../testing/lang-stub.ts';
-import { CRAFT_EXTRA_LAYOUT, NPC_EXTRA_LAYOUT, VOIDCRAFT_EXTRA_LAYOUT } from '../actor/actor-schema-layouts.ts';
+import { CHARACTER_EXTRA_LAYOUT, CRAFT_EXTRA_LAYOUT, NPC_EXTRA_LAYOUT, VOIDCRAFT_EXTRA_LAYOUT } from '../actor/actor-schema-layouts.ts';
 import {
     buildSectionRows,
     choiceLabelKey,
@@ -115,6 +115,7 @@ describe('the shipped schema-sheet layouts (#731)', () => {
             ...SCHEMA_SHEET_LAYOUTS,
             ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS)),
             ITEM_COMMON_LAYOUT,
+            CHARACTER_EXTRA_LAYOUT,
             NPC_EXTRA_LAYOUT,
             CRAFT_EXTRA_LAYOUT,
             VOIDCRAFT_EXTRA_LAYOUT,

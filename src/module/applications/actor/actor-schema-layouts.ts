@@ -7,6 +7,17 @@
  */
 import type { SchemaSheetLayout } from '../item/schema-sheet-layout.ts';
 
+/**
+ * A character's elective aptitudes (the swaps for doubled origin aptitudes,
+ * #381) and its mutations note (#738). The Origin Path Builder writes the
+ * electives; the sheet lets a GM correct them.
+ */
+export const CHARACTER_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'character',
+    labelPrefix: 'WH40K.ActorFields.Character',
+    sections: [{ key: 'record', icon: 'fa-dna', paths: ['electiveAptitudes[]', 'mutations'] }],
+};
+
 export const NPC_EXTRA_LAYOUT: SchemaSheetLayout = {
     type: 'npc',
     labelPrefix: 'WH40K.ActorFields.Npc',

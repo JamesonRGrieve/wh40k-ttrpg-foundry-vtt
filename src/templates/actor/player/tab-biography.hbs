@@ -129,5 +129,11 @@
             </div>
         </div>
     </div>
+    {{!-- An NPC shows its schema rows on the NPC tab; rendering them twice would submit each field twice. --}}
+    {{#unless isNPC}}
+    <div class="tw-col-span-2">
+        {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+    </div>
+    {{/unless}}
 </div>
 </section>

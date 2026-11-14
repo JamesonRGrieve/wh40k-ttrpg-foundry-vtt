@@ -10435,6 +10435,19 @@
                         }
                     }
                 }
+            },
+            "Character": {
+                "Sections": {
+                    "record": "Character Record"
+                },
+                "FIELDS": {
+                    "electiveAptitudes": {
+                        "label": "Elective Aptitudes"
+                    },
+                    "mutations": {
+                        "label": "Mutations (Notes)"
+                    }
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import InventoryGeneratorDialog from '../dialogs/inventory-generator-dialog.ts';
 import ReinforcementCallDialog from '../dialogs/reinforcement-call-dialog.ts';
 import { callerRequirementView, requiredSkillLabel } from '../dialogs/reinforcement-call-view.ts';
+import type { SchemaSheetLayout } from '../item/schema-sheet-layout.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
@@ -211,7 +212,7 @@ type NPCSystemContext = {
  */
 export default class NPCSheet extends CharacterSheet {
     /** Stored fields this sheet's templates lack, edited through the shared schema rows (#735, #736). */
-    static override SCHEMA_LAYOUT = NPC_EXTRA_LAYOUT;
+    static override SCHEMA_LAYOUT: SchemaSheetLayout | null = NPC_EXTRA_LAYOUT;
 
     /** A per-skill override is labelled with the skill's name from the line's catalog. */
     override schemaMapLabel(mapPath: string, key: string): string | null {

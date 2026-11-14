@@ -132,3 +132,12 @@ export function aptitudeCollisions(
     }
     return collisions.sort((a, b) => a.original.localeCompare(b.original));
 }
+
+/**
+ * The elective picks a set of resolved collisions stores (#738): each chosen
+ * replacement once, in the order chosen. A skipped collision (an empty pick)
+ * stores nothing.
+ */
+export function electivePicks(overrides: ReadonlyMap<string, string>): string[] {
+    return [...new Set([...overrides.values()].filter((pick) => pick !== ''))];
+}

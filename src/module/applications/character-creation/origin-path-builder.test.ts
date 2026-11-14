@@ -2,6 +2,7 @@ import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
 import { asOriginPathBuilder } from '../../testing/builder-stub.ts';
 import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
+import { readRepoFile } from '../../testing/repo-file.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { GrantSourceSystem } from './origin-grant-plans.ts';
 import type { PointBuyRules } from './point-buy.ts';
@@ -2051,5 +2052,28 @@ describe('OriginPathBuilder rolls gate', () => {
         const role = makeOrigin({ id: 'role', step: 'role', system: { step: 'role', rollResults: {} } });
         expect(proto._coreStepsDone.call(host({ selections: [rolledHome, background(), role], influence: 0 }))).toBe(false);
         expect(proto._coreStepsDone.call(host({ selections: [rolledHome, background(), role], influence: 31 }))).toBe(true);
+    });
+});
+
+describe('committing the path saves the doubled-aptitude swaps (#738)', () => {
+    it('writes each chosen replacement to electiveAptitudes', async () => {
+        const update = vi.fn().mockResolvedValue(undefined);
+        const host = {
+            actor: { update },
+            aptitudeOverrides: new Map([
+                ['Willpower', 'Strength'],
+                ['Tech', ''],
+            ]),
+        };
+        await CommitPath.saveElectiveAptitudes.call(asOriginPathBuilder(host));
+        expect(update).toHaveBeenCalledWith({ 'system.electiveAptitudes': ['Strength'] });
+    });
+
+    it('runs as part of the commit, after the origin items are created', () => {
+        const source = readRepoFile('src/module/applications/character-creation/origin-path/commit.ts');
+        const body = source.slice(source.indexOf('export async function commit('));
+        const created = body.indexOf("createEmbeddedDocuments('Item', cleanOriginItems");
+        expect(created).toBeGreaterThan(0);
+        expect(body.indexOf('await saveElectiveAptitudes.call(this);')).toBeGreaterThan(created);
     });
 });

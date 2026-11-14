@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     aptitudeCollisions,
+    electivePicks,
     aptitudeGrantCounts,
     findAptitudeOverride,
     grantedAptitudes,
@@ -72,5 +73,15 @@ describe('aptitude pool (#717)', () => {
             { original: 'Offence', replacement: '' },
             { original: 'Willpower', replacement: null },
         ]);
+    });
+
+    it('stores each chosen replacement once, and nothing for a skipped collision (#738)', () => {
+        const overrides = new Map([
+            ['Willpower', 'Strength'],
+            ['Tech', ''],
+            ['Offence', 'Strength'],
+            ['Defence', 'Agility'],
+        ]);
+        expect(electivePicks(overrides)).toEqual(['Strength', 'Agility']);
     });
 });

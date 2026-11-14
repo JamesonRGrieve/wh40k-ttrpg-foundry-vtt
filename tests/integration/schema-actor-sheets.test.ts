@@ -9,7 +9,7 @@
  *   - every choice option has a langpack label.
  */
 import { describe, expect, it } from 'vitest';
-import { CRAFT_EXTRA_LAYOUT, NPC_EXTRA_LAYOUT, VOIDCRAFT_EXTRA_LAYOUT } from '../../src/module/applications/actor/actor-schema-layouts';
+import { CHARACTER_EXTRA_LAYOUT, CRAFT_EXTRA_LAYOUT, NPC_EXTRA_LAYOUT, VOIDCRAFT_EXTRA_LAYOUT } from '../../src/module/applications/actor/actor-schema-layouts';
 import { choiceLabelKey, choiceValues, type SchemaNode, type SchemaSheetLayout } from '../../src/module/applications/item/schema-sheet-layout';
 import { buildLangStub } from '../../src/module/testing/lang-stub';
 import { bootFoundryOnce, type FoundryRuntime } from './lib/boot';
@@ -32,6 +32,7 @@ interface SheetStatics {
 
 /** Each sheet, its layout, and the actor types it opens (by type-name suffix). */
 const SHEETS: ReadonlyArray<readonly [string, () => Promise<SheetStatics>, SchemaSheetLayout, RegExp]> = [
+    ['character', async () => (await import('../../src/module/applications/actor/character-sheet')).default, CHARACTER_EXTRA_LAYOUT, /-character$/],
     ['NPC', async () => (await import('../../src/module/applications/actor/npc-sheet')).default, NPC_EXTRA_LAYOUT, /-npc$/],
     [
         'craft',

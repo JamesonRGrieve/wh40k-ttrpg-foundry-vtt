@@ -28,11 +28,6 @@ const ALLOWED: ReadonlyArray<{ readonly types: RegExp; readonly fields: readonly
     { types: /-character$/, fields: ['cohesionLostThisTurn'], why: 'per-turn counter that applying Cohesion damage bumps' },
     { types: /-character$/, fields: ['regimentKit'], why: "the Only War regiment builder's chosen Standard Kit" },
     { types: /-character$/, fields: ['logisticsFront'], why: "the Logistics test dialog saves the squad's front (#496)" },
-    {
-        types: /-character$/,
-        fields: ['electiveAptitudes', 'mutations'],
-        why: 'known gap, reported to the operator (2026-11-14): no writer found; not filed',
-    },
     { types: /-npc$/, fields: ['customStats.skills'], why: 'one input per trained skill; a fresh NPC has none' },
     { types: /^loot$/, fields: ['droppedAt'], why: 'stamped by the item-drop manager when the pile is made' },
     { types: /^originPath$/, fields: ['homebrew.throneGelt', 'homebrew.thrones'], why: 'Origin Path Builder state (#734)' },

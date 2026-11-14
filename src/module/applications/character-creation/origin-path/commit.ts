@@ -29,6 +29,7 @@ import { WH40KSettings } from '../../../wh40k-rpg-settings.ts';
 import AdvancementDialog from '../../dialogs/advancement-dialog.ts';
 import ConfirmationDialog from '../../dialogs/confirmation-dialog.ts';
 import { openMutantBackgroundDialog } from '../../prompts/mutant-background-dialog.ts';
+import { electivePicks } from '../aptitude-pool.ts';
 import {
     type AmmoIndexEntry,
     collectEquipmentGrantPlans,
@@ -193,6 +194,16 @@ async function resolveDivinationSelection(this: OriginPathBuilder): Promise<void
     if (!match) return;
     // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally (mirrors _loadOrigins)
     this._divinationSelection = normalizeOrigin(match as unknown as Record<string, unknown>);
+}
+
+/**
+ * Store the doubled-aptitude swaps the player chose as the character's elective
+ * picks; the aptitude derivation (#381) folds the valid ones into its aptitude
+ * set. Written on every commit, so a re-commit drops swaps the new path no
+ * longer needs (#738).
+ */
+export async function saveElectiveAptitudes(this: OriginPathBuilder): Promise<void> {
+    await this.actor.update({ 'system.electiveAptitudes': electivePicks(this.aptitudeOverrides) });
 }
 
 /**
@@ -834,6 +845,8 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             cleanOriginItems.push(itemData);
         }
         await this.actor.createEmbeddedDocuments('Item', cleanOriginItems as Parameters<typeof this.actor.createEmbeddedDocuments>[1]);
+
+        await saveElectiveAptitudes.call(this);
 
         // Materialize granted talents on the actor so picks like
         // "Weapon Training (Chain)" appear in the Talents tab with the
