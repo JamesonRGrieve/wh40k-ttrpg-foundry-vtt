@@ -202,6 +202,12 @@ export interface MockActor {
             motivation: string;
             career: string;
             divination: string;
+            /** Black Crusade's and Deathwatch's own step keys (#728). */
+            race?: string;
+            archetype?: string;
+            pride?: string;
+            chapter?: string;
+            speciality?: string;
         };
         wounds: { value: number; max: number };
         fate: { value: number; max: number };

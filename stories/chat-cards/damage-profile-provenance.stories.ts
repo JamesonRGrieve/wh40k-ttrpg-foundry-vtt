@@ -129,7 +129,7 @@ export const TableDraw: Story = {
     play: async ({ canvasElement }) => {
         await expect(profileRow(canvasElement)?.getAttribute('data-damage-profile')).toBe('table');
         await expect(profileRow(canvasElement)?.textContent).toContain('rolled 55');
-        await expect(canvasElement.textContent).toContain('warp-lightning arcs from the director wand');
+        await expect(canvasElement.textContent).toContain('Lightning leaps from the wand into one target');
     },
 };
 

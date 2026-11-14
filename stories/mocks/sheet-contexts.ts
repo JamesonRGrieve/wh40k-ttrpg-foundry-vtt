@@ -242,6 +242,13 @@ function defaultSystemActorOverrides(systemId: GameSystemId): MockActorInput {
                 trialsAndTravails: '',
                 career: 'Adept',
                 divination: 'A clean lasgun outlasts a clever plan.',
+                // Each line's own step keys (#728): Black Crusade's and Deathwatch's
+                // sidebars read these, not the DH2 home world / background.
+                race: 'Human',
+                archetype: 'Renegade',
+                pride: 'Determination',
+                chapter: 'Iron Vigil',
+                speciality: 'Tactical Marine',
             },
         },
     };

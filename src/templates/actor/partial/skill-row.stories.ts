@@ -110,6 +110,8 @@ export const SingleStripAtNarrowestColumn: Story = {
             const cellTop = cell.getBoundingClientRect().top;
             return [...(row?.children ?? [])].some((child) => Math.abs(child.getBoundingClientRect().top - cellTop) > 12);
         });
-        await expect(twoLine.length).toBe(0);
+        await expect(
+            twoLine.map((cell) => `${cell.closest<HTMLElement>('[data-wh40k-system]')?.dataset['wh40kSystem'] ?? '?'}: ${cell.textContent.trim()}`),
+        ).toEqual([]);
     },
 };

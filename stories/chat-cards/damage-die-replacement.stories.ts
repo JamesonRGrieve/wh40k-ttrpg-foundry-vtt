@@ -9,7 +9,8 @@ import { renderSheet } from '../test-helpers';
  * Chat-card story for the "Replace damage die with DoS" action (#129, DH2).
  * Verifies that the amber accent button renders
  * alongside the standard damage card when the parent context exposes
- * `canReplaceDie: true` and the hit carries a positive `dos` value.
+ * `canReplaceDie: true` and the hit's `dosDieGain` is positive: the DoS would
+ * raise its lowest die (#737).
  */
 initializeStoryHandlebars();
 
@@ -41,6 +42,7 @@ export const ReplaceDieAvailable: Story = {
                         effects: [],
                         righteousFury: [],
                         dos: 4,
+                        dosDieGain: 3,
                     },
                 ],
             }),
@@ -67,6 +69,7 @@ export const ReplaceDieHiddenWhenZeroDoS: Story = {
                         effects: [],
                         righteousFury: [],
                         dos: 0,
+                        dosDieGain: 0,
                     },
                 ],
             }),
@@ -106,6 +109,7 @@ export const ActionButtonsFitSidebar: Story = {
                             effects: [],
                             righteousFury: [],
                             dos: 10,
+                            dosDieGain: 9,
                         },
                     ],
                 }),
@@ -154,6 +158,7 @@ export const ReplaceDieHiddenWhenFlagFalse: Story = {
                         effects: [],
                         righteousFury: [],
                         dos: 4,
+                        dosDieGain: 3,
                     },
                 ],
             }),
