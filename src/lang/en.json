@@ -1580,7 +1580,8 @@
         "DamageDieReplacement": {
             "ButtonLabel": "Replace die with DoS",
             "ButtonTooltip": "Replace one damage die with the attack's Degrees of Success ({dos}).",
-            "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}."
+            "ReplacedDieMessage": "<strong>{weapon}</strong> replaced a damage die ({previous}) with {dos} DoS — new total: {total}.",
+            "AlreadyUsed": "This attack has already put its Degrees of Success on a damage die."
         },
         "AssassinsStrike": {
             "ButtonLabel": "Assassin's Strike: Acrobatics + Half Move",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { DynamicModifierEntry } from '../data/shared/modifiers-template.ts';
 import type { DynamicModifierItemLike } from '../rules/dynamic-modifiers.ts';
-import { type AttackDataLike, Hit, replaceDamageDieWithDoS, type DamageDieResult } from './damage-data.ts';
+import { type AttackDataLike, dosDieGain, Hit, replaceDamageDieWithDoS, type DamageDieResult } from './damage-data.ts';
 
 describe('replaceDamageDieWithDoS (#129)', () => {
     it('replaces the lowest active die by default', () => {
@@ -20,9 +20,9 @@ describe('replaceDamageDieWithDoS (#129)', () => {
 
     it('considers only active, non-discarded dice', () => {
         const dice: DamageDieResult[] = [{ result: 1, discarded: true }, { result: 6, active: false }, { result: 5 }];
-        const outcome = replaceDamageDieWithDoS(dice, 3);
+        const outcome = replaceDamageDieWithDoS(dice, 8);
         expect(outcome?.replacedIndex).toBe(0);
-        expect(dice[2]?.result).toBe(3);
+        expect(dice[2]?.result).toBe(8);
     });
 
     it('returns null when there is no eligible die or DoS is negative', () => {
@@ -31,15 +31,24 @@ describe('replaceDamageDieWithDoS (#129)', () => {
         expect(replaceDamageDieWithDoS([{ result: 2 }], 4, 5)).toBeNull();
     });
 
-    it('still mutates when DoS equals or is below the lowest die (negative delta is on the caller)', () => {
-        // Per RAW the replacement is the attacker's choice;
-        // the rules engine does not gate on profitability. The mutation
-        // applies and the delta is reported so callers can decide whether
-        // to commit.
+    it('never lowers a die: refuses when the DoS does not beat it (#737)', () => {
         const dice: DamageDieResult[] = [{ result: 7 }, { result: 5 }, { result: 9 }];
-        const outcome = replaceDamageDieWithDoS(dice, 3);
-        expect(outcome).toEqual({ replacedIndex: 1, previous: 5, delta: -2 });
-        expect(dice[1]?.result).toBe(3);
+        expect(replaceDamageDieWithDoS(dice, 3)).toBeNull();
+        expect(replaceDamageDieWithDoS(dice, 5)).toBeNull();
+        expect(replaceDamageDieWithDoS(dice, 6, 0)).toBeNull();
+        expect(dice.map((d) => d.result)).toEqual([7, 5, 9]);
+    });
+});
+
+describe('dosDieGain (#737)', () => {
+    it('is what the DoS adds over the lowest active die', () => {
+        expect(dosDieGain([{ result: 7 }, { result: 2, discarded: true }, { result: 4 }], 6)).toBe(2);
+    });
+
+    it('is 0 when the DoS does not beat the lowest die, or there is none', () => {
+        expect(dosDieGain([{ result: 7 }, { result: 4 }], 4)).toBe(0);
+        expect(dosDieGain([{ result: 7 }, { result: 4 }], 2)).toBe(0);
+        expect(dosDieGain([{ result: 1, active: false }], 6)).toBe(0);
     });
 });
 

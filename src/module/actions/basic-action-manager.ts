@@ -15,6 +15,7 @@ import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
 import { COUNTER_ATTACK_FLAG, currentCombatRound } from '../rolls/counter-attack-flow.ts';
 import { Hit } from '../rolls/damage-data.ts';
+import { dosDamageDieOffered } from '../rolls/dos-damage-die.ts';
 import {
     closeEvasionPrompt,
     defenderWeaponsCanParry,
@@ -567,10 +568,10 @@ export class BasicActionManager {
             targetName,
             autoApplied,
             rollId: actionData.id,
-            // The replacement option is offered while the original ActionData is still
-            // resident in `storedRolls` — once it expires (page reload, etc.) the
-            // button is omitted from re-rendered cards.
-            canReplaceDie: true,
+            // The DoS damage die (#737): offered while the original ActionData is still
+            // resident in `storedRolls` (once it expires the button is omitted from
+            // re-rendered cards), only on a line with the rule, and once per attack.
+            canReplaceDie: dosDamageDieOffered(firstSystemId(actionData.rollData.sourceActor), actionData.damageData?.dosDieUsed ?? false),
             // eslint-disable-next-line no-restricted-syntax -- boundary: psychicEffect is a system extension not declared in ActionData type
             psychicEffect: (actionData as unknown as { psychicEffect?: unknown }).psychicEffect ?? null,
             // A rider grenade that deals damage (#622): its rider follows the damage onto
@@ -627,9 +628,15 @@ export class BasicActionManager {
 
         const hitIndex = hitIndexRaw !== undefined && hitIndexRaw !== '' ? Number.parseInt(hitIndexRaw, 10) : 0;
         const dos = dosRaw !== undefined && dosRaw !== '' ? Number.parseInt(dosRaw, 10) : actionData.rollData.dos;
-        const hit = actionData.damageData?.hits[hitIndex];
-        if (hit === undefined || dos <= 0) {
+        const damageData = actionData.damageData;
+        const hit = damageData?.hits[hitIndex];
+        if (damageData === undefined || hit === undefined || dos <= 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.FateAddDoSNotSuccess'));
+            return;
+        }
+        // One die per attack, however many hits it inflicts (#737).
+        if (damageData.dosDieUsed) {
+            ui.notifications.warn(game.i18n.localize('WH40K.DamageDieReplacement.AlreadyUsed'));
             return;
         }
 
@@ -641,7 +648,8 @@ export class BasicActionManager {
             return;
         }
 
-        // Disable the button so the player cannot double-spend on the same Hit.
+        // The attack's DoS die is spent; the re-posted card offers it on no hit.
+        damageData.dosDieUsed = true;
         btn.disabled = true;
 
         // Re-emit the damage card with the updated hit totals.

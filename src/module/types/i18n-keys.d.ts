@@ -1755,6 +1755,7 @@ export type I18nKey =
     | 'WH40K.Daemonology.Summoning.RitualTest'
     | 'WH40K.Daemonology.Summoning.Stalemate'
     | 'WH40K.Daemonology.Summoning.TrueNameBoth'
+    | 'WH40K.DamageDieReplacement.AlreadyUsed'
     | 'WH40K.DamageDieReplacement.ButtonLabel'
     | 'WH40K.DamageDieReplacement.ButtonTooltip'
     | 'WH40K.DamageDieReplacement.ReplacedDieMessage'

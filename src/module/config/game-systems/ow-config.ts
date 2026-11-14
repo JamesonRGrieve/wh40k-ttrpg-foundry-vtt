@@ -136,6 +136,7 @@ export const OW_LOGISTICS_FRONT_CONDITIONS = {
 
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;
+    override readonly dosDamageDie = true;
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,

@@ -249,13 +249,14 @@ export interface DamageDieResult {
 }
 
 /**
- * DH2: the attacker may replace ONE damage
- * die with the attack roll's Degrees of Success. Mutates the chosen
- * active die in place — the lowest by default, or the attacker-selected
- * index into the active-die list — and reports the swapped-out value plus
- * the delta so callers can adjust the running damage total without
- * re-evaluating the Roll. Returns null when no eligible die exists or the
- * supplied index is out of range.
+ * The attacker may replace ONE damage die with the attack roll's Degrees of
+ * Success (DH2 / RT / BC / OW "replace"; DW states the DoS as that die's
+ * minimum). Mutates the chosen active die in place — the lowest by default, or
+ * the attacker-selected index into the active-die list — and reports the
+ * swapped-out value plus the delta so callers can adjust the running damage
+ * total without re-evaluating the Roll. Returns null when no eligible die
+ * exists, the index is out of range, or the swap would not raise the die: the
+ * exchange never lowers damage (#737).
  */
 export function replaceDamageDieWithDoS(
     dice: DamageDieResult[],
@@ -287,10 +288,23 @@ export function replaceDamageDieWithDoS(
         replacedIndex = dieIndex;
     }
 
-    if (target === undefined) return null;
+    if (target === undefined || dos <= target.result) return null;
     const previous = target.result;
     target.result = dos;
     return { replacedIndex, previous, delta: dos - previous };
+}
+
+/**
+ * How much replacing the lowest active damage die with `dos` would add; 0 when
+ * there is no active die or the DoS does not beat it (#737).
+ */
+export function dosDieGain(dice: readonly DamageDieResult[], dos: number): number {
+    let lowest: number | undefined;
+    for (const die of dice) {
+        if (die.discarded === true || die.active === false) continue;
+        if (lowest === undefined || die.result < lowest) lowest = die.result;
+    }
+    return lowest === undefined ? 0 : Math.max(0, dos - lowest);
 }
 
 class DamageData {
@@ -302,9 +316,16 @@ class DamageData {
     additionalHits = 0;
     hits: Hit[] = [];
 
+    /**
+     * Whether this attack has spent its Degrees-of-Success damage die. The rule
+     * grants one die for the whole attack, however many hits it inflicts (#737).
+     */
+    dosDieUsed = false;
+
     reset(): void {
         this.hits = [];
         this.additionalHits = 0;
+        this.dosDieUsed = false;
     }
 }
 
@@ -590,18 +611,28 @@ export class Hit {
      * true when a die was replaced. (#129)
      */
     replaceDamageDieWithDoS(dos: number, dieIndex?: number): boolean {
-        if (this.damageRoll === undefined) return false;
+        const outcome = replaceDamageDieWithDoS(this._damageDice(), dos, dieIndex);
+        if (outcome === null) return false;
+        this.damage += outcome.delta;
+        this._totalDamage();
+        return true;
+    }
+
+    /** What spending the attack's DoS on this hit's lowest die would add; 0 when it would not raise it (#737). */
+    get dosDieGain(): number {
+        return dosDieGain(this._damageDice(), this.dos);
+    }
+
+    /** The result objects of this hit's damage dice, live: replacing one mutates the Roll. */
+    _damageDice(): DamageDieResult[] {
         const dice: DamageDieResult[] = [];
+        if (this.damageRoll === undefined) return dice;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Roll.terms is untyped at runtime; narrowing term shape manually
         for (const term of this.damageRoll.terms as unknown[]) {
             const termResults = (term as { results?: DamageDieResult[] }).results;
             if (Array.isArray(termResults)) dice.push(...termResults);
         }
-        const outcome = replaceDamageDieWithDoS(dice, dos, dieIndex);
-        if (outcome === null) return false;
-        this.damage += outcome.delta;
-        this._totalDamage();
-        return true;
+        return dice;
     }
 
     _totalPenetration(): void {

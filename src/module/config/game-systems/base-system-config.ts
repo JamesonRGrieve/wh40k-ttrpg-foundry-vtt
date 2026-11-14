@@ -301,6 +301,14 @@ export abstract class BaseSystemConfig {
      */
     readonly rulesetVariants: boolean = false;
 
+    /**
+     * Whether an attack may put its Degrees of Success on one damage die (#737).
+     * DH2, RT, BC and OW let the attacker replace one die's result with the DoS;
+     * DW makes the DoS that die's minimum. Offered only when it raises the die,
+     * so the two read the same. DH1 and IM have no such rule.
+     */
+    readonly dosDamageDie: boolean = false;
+
     /** What the line's character creation offers beyond the shared flow (#715). */
     readonly creation: CreationCapabilities = { directionToggle: false };
 

@@ -17,6 +17,7 @@ import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, 
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
+    override readonly dosDamageDie = true;
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,

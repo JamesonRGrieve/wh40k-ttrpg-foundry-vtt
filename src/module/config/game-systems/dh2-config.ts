@@ -104,6 +104,7 @@ export const DH2_INQUEST_RULES: InquestRules = {
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
     /** DH2 ships RAW and homebrew variants (`dh2-ruleset`), which character creation and the sheet follow. */
+    override readonly dosDamageDie = true;
     override readonly rulesetVariants = true;
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: true,

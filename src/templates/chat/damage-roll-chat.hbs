@@ -131,9 +131,9 @@
                         {{/unless}}
                     {{/each}}
 
-                    {{! Replace Damage Die With DoS (#129 — DH2) }}
+                    {{! Degrees-of-Success damage die (#129, #737): once per attack, only where it raises a die }}
                     {{#if @root.canReplaceDie}}
-                        {{#if (gt hit.dos 0)}}
+                        {{#if (gt hit.dosDieGain 0)}}
                             <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                                 <button
                                     class="roll-control__replace-damage-die tw-flex-1 {{chatActionButton 'amber'}}"

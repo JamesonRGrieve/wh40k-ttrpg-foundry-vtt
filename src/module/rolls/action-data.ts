@@ -158,7 +158,7 @@ export class ActionData {
     template: string = '';
     hasDamage: boolean = false;
     rollData: RollData;
-    damageData: { hits: Hit[]; additionalHits: number; reset: () => void } | undefined;
+    damageData: { hits: Hit[]; additionalHits: number; dosDieUsed: boolean; reset: () => void } | undefined;
     effects: string[] = [];
     effectOutput: { name: string; effect: string }[] = [];
     // Tracks Fate Point spends across the lifetime of this roll-chain. Survives reset()

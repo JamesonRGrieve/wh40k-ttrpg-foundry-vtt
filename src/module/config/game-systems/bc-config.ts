@@ -74,6 +74,7 @@ function readBcSystem(actor: SystemConfigActor): BcCharacterSystem {
 
 export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
+    override readonly dosDamageDie = true;
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,
