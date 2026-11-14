@@ -1,0 +1,14 @@
+{{!--
+  The stored fields a sheet edits through the shared schema rows (#731, #732):
+  `schemaSections` from BaseItemSheet (its `SCHEMA_LAYOUT`), one titled detail
+  section per layout section, one schema-field-row per field.
+
+  Hash arguments: sections — the `schemaSections` context array.
+--}}
+{{#each sections as |section|}}
+{{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon=section.icon labelKey=section.labelKey}}
+    {{#each section.rows as |row|}}
+    {{> systems/wh40k-rpg/templates/item/partial/schema-field-row.hbs row=row}}
+    {{/each}}
+{{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
+{{/each}}

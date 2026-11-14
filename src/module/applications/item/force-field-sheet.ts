@@ -3,10 +3,12 @@
  */
 
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { FORCE_FIELD_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Sheet for force field items. */
 const ForceFieldSheet = defineSimpleItemSheet({
     className: 'ForceFieldSheet',
+    schemaLayout: FORCE_FIELD_EXTRA_LAYOUT,
     classes: ['wh40k-rpg', 'sheet', 'item', 'force-field'],
     template: 'systems/wh40k-rpg/templates/item/item-force-field-sheet.hbs',
     width: 540,

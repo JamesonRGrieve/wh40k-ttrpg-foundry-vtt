@@ -10,7 +10,7 @@ import {
     type SchemaSheetLayout,
     type SchemaSheetSection,
 } from './schema-sheet-layout.ts';
-import { SCHEMA_SHEET_LAYOUTS } from './schema-sheet-layouts.ts';
+import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS } from './schema-sheet-layouts.ts';
 
 /** A structural stand-in for a Foundry DataField of the named class. */
 function field(name: string, extra: Partial<SchemaNode> = {}): SchemaNode {
@@ -109,7 +109,10 @@ describe('the shipped schema-sheet layouts (#731)', () => {
         ]);
     });
 
-    it.each(SCHEMA_SHEET_LAYOUTS.map((entry) => [entry.type, entry] as const))('%s has a langpack label for every section and field', (_type, schemaLayout) => {
-        expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
-    });
+    it.each([...SCHEMA_SHEET_LAYOUTS, ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS))].map((entry) => [entry.labelPrefix, entry] as const))(
+        '%s has a langpack label for every section and field',
+        (_type, schemaLayout) => {
+            expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
+        },
+    );
 });

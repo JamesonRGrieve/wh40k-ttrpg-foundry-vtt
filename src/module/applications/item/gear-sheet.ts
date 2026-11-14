@@ -5,6 +5,7 @@
 import type GearData from '../../data/item/gear.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { GEAR_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Gear item with its system data typed to the GearData DataModel. */
 type GearItem = WH40KItemDocument & { system: GearData };
@@ -20,6 +21,9 @@ const TAB_LABEL_EFFECTS = 'WH40K.Tabs.Effects';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet<GearItem> {
+    /** Stored fields the template lacks, edited through the shared schema rows (#732). */
+    static override SCHEMA_LAYOUT = GEAR_EXTRA_LAYOUT;
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],

@@ -10,9 +10,10 @@
  *     (`item-sheet-registry.ts`), not left on the BaseItemSheet fallback.
  */
 import { describe, expect, it } from 'vitest';
-import { choiceLabelKey, choiceValues, schemaNodeAt, type SchemaNode } from '../../src/module/applications/item/schema-sheet-layout';
-import { SCHEMA_SHEET_LAYOUTS } from '../../src/module/applications/item/schema-sheet-layouts';
+import { choiceLabelKey, choiceValues, schemaNodeAt, type SchemaNode, type SchemaSheetLayout } from '../../src/module/applications/item/schema-sheet-layout';
+import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS } from '../../src/module/applications/item/schema-sheet-layouts';
 import { buildLangStub } from '../../src/module/testing/lang-stub';
+import { readRepoFile } from '../lib/repo-file';
 import { bootFoundryOnce, type FoundryRuntime } from './lib/boot';
 import { requireOrSkip } from './lib/has-foundry';
 
@@ -99,5 +100,48 @@ describe.skipIf(skipAll)('item types have sheets that edit their own fields (Tie
             .map(([type]) => type)
             .filter((type) => !ownSheet.has(type));
         expect(fallback).toEqual([]);
+    });
+
+    /** Each item type a hand-built sheet opens, with the supplementary layout it carries (#732). */
+    const supplementary = Object.entries(SUPPLEMENTARY_LAYOUTS);
+
+    it.each(supplementary)('%s: its sheet carries the supplementary layout, and every path a type lacks is one another type has', async (type, layout) => {
+        const { ITEM_SHEETS } = await import('../../src/module/applications/item/item-sheet-registry');
+        const registration = ITEM_SHEETS.find((entry) => entry.types?.includes(type) === true);
+        expect((registration?.sheet as { SCHEMA_LAYOUT?: SchemaSheetLayout | null } | undefined)?.SCHEMA_LAYOUT).toBe(layout);
+        const users = supplementary.filter(([, other]) => other === layout).map(([user]) => schemaOf(user));
+        const paths = layout.sections.flatMap((section) => section.paths);
+        expect(paths.filter((path) => users.every((schema) => nodeAtLayoutPath(schema, path) === undefined))).toEqual([]);
+    });
+
+    it.each(supplementary)('%s: every supplementary choice option has a label', (type, layout) => {
+        const schema = schemaOf(type);
+        const missing = layout.sections.flatMap((section) =>
+            section.paths.flatMap((path) => {
+                const node = nodeAtLayoutPath(schema, path);
+                return node === undefined
+                    ? []
+                    : choiceValues(node)
+                          .map((value) => choiceLabelKey(layout, section, path, value))
+                          .filter((key) => !has(key));
+            }),
+        );
+        expect(missing).toEqual([]);
+    });
+
+    it('every sheet with a schema layout renders the schema sections in one of its templates', async () => {
+        const { ITEM_SHEETS } = await import('../../src/module/applications/item/item-sheet-registry');
+        const missing = ITEM_SHEETS.filter((entry) => {
+            const sheet = entry.sheet as { SCHEMA_LAYOUT?: SchemaSheetLayout | null; PARTS?: Record<string, { template: string }> };
+            if (sheet.SCHEMA_LAYOUT == null) return false;
+            const templates = Object.values(sheet.PARTS ?? {})
+                .map((part) => part.template)
+                .filter((path) => path.startsWith('systems/wh40k-rpg/'))
+                .map((path) => readRepoFile(path.replace('systems/wh40k-rpg/', 'src/')));
+            return !templates.some(
+                (source) => source.includes('templates/item/partial/schema-sections.hbs') || source.includes('templates/item/item-schema-sheet.hbs'),
+            );
+        });
+        expect(missing.map((entry) => entry.label)).toEqual([]);
     });
 });

@@ -9,9 +9,8 @@
  */
 import type BaseItemSheet from './base-item-sheet.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
-import { isFormValue } from './reference-list-edits.ts';
 import { removeEntryAction, updateSystemPath } from './reference-list-item-sheet.ts';
-import { buildSectionRows, schemaNodeAt, sectionLabelKey, type SchemaNode, type SchemaSheetLayout } from './schema-sheet-layout.ts';
+import { schemaNodeAt, type SchemaNode, type SchemaSheetLayout } from './schema-sheet-layout.ts';
 
 /** The template every schema sheet renders. */
 const SCHEMA_SHEET_TEMPLATE = 'systems/wh40k-rpg/templates/item/item-schema-sheet.hbs';
@@ -46,15 +45,6 @@ export default function defineSchemaItemSheet(layout: SchemaSheetLayout, classNa
         ],
         defaultTab: 'details',
         actions: { addEntry, removeEntry: removeEntryAction },
-        prepareContext(sheet, context) {
-            const schema = itemSchema(sheet);
-            const raw = context['source'];
-            const source = isFormValue(raw) ? raw : undefined;
-            context['schemaSections'] = layout.sections.map((section) => ({
-                labelKey: sectionLabelKey(layout, section),
-                icon: section.icon,
-                rows: buildSectionRows(layout, section, schema, source),
-            }));
-        },
+        schemaLayout: layout,
     });
 }

@@ -8976,18 +8976,6 @@
                     "availability": {
                         "label": "Availability"
                     },
-                    "availabilityByPlace": {
-                        "availability": {
-                            "label": "Availability"
-                        },
-                        "label": "Availability by Place",
-                        "place": {
-                            "label": "Place"
-                        }
-                    },
-                    "availabilityRestriction": {
-                        "label": "Availability Restriction"
-                    },
                     "bound": {
                         "label": "Bound"
                     },
@@ -9797,6 +9785,180 @@
                 },
                 "Sections": {
                     "upgrade": "Upgrade"
+                }
+            },
+            "Ammunition": {
+                "Sections": {
+                    "ammunition": "Ammunition"
+                },
+                "FIELDS": {
+                    "addedQualities": {
+                        "label": "Added Qualities"
+                    },
+                    "removedQualities": {
+                        "label": "Removed Qualities"
+                    },
+                    "fireRateOverride": {
+                        "label": "Rate of Fire Override"
+                    },
+                    "costMultiplier": {
+                        "label": "Cost Multiplier"
+                    },
+                    "hitEffect": {
+                        "label": "Effect on a Hit"
+                    }
+                }
+            },
+            "Armour": {
+                "Sections": {
+                    "armour": "Armour"
+                },
+                "FIELDS": {
+                    "primitive": {
+                        "label": "Primitive"
+                    },
+                    "forceField": {
+                        "protectionDice": {
+                            "label": "Field Protection Dice"
+                        },
+                        "overloadRange": {
+                            "label": "Field Overload Range"
+                        }
+                    }
+                }
+            },
+            "ForceField": {
+                "Sections": {
+                    "overload": "Overload"
+                },
+                "FIELDS": {
+                    "overloadMin": {
+                        "label": "Overload Minimum"
+                    },
+                    "overloadMax": {
+                        "label": "Overload Maximum"
+                    }
+                }
+            },
+            "Gear": {
+                "Sections": {
+                    "gear": "Gear"
+                },
+                "FIELDS": {
+                    "addictive": {
+                        "label": "Addictive"
+                    }
+                }
+            },
+            "Physical": {
+                "Sections": {
+                    "availability": "Availability by Place"
+                },
+                "FIELDS": {
+                    "availabilityRestriction": {
+                        "label": "Availability Restriction"
+                    },
+                    "availabilityByPlace": {
+                        "label": "Availability by Place",
+                        "place": {
+                            "label": "Place"
+                        },
+                        "availability": {
+                            "label": "Availability"
+                        }
+                    }
+                }
+            },
+            "Weapon": {
+                "Sections": {
+                    "attack": "Attack",
+                    "mounting": "Vehicle Mounting"
+                },
+                "FIELDS": {
+                    "attack": {
+                        "type": {
+                            "label": "Attack Type",
+                            "choices": {
+                                "Melee": "Melee",
+                                "Ranged": "Ranged",
+                                "Thrown": "Thrown",
+                                "Psychic": "Psychic"
+                            }
+                        },
+                        "characteristic": {
+                            "label": "Attack Characteristic"
+                        },
+                        "modifier": {
+                            "label": "Attack Modifier"
+                        },
+                        "range": {
+                            "units": {
+                                "label": "Range Units"
+                            }
+                        }
+                    },
+                    "secondaryClass": {
+                        "label": "Secondary Class"
+                    },
+                    "clip": {
+                        "type": {
+                            "label": "Clip Type"
+                        }
+                    },
+                    "requiredTraining": {
+                        "label": "Required Training"
+                    },
+                    "unarmed": {
+                        "label": "Unarmed"
+                    },
+                    "innate": {
+                        "label": "Innate"
+                    },
+                    "mounting": {
+                        "label": "Mounting",
+                        "choices": {
+                            "Fixed": "Fixed",
+                            "Hull": "Hull",
+                            "Turret": "Turret",
+                            "Sponson": "Sponson",
+                            "Coaxial": "Coaxial",
+                            "Pintle": "Pintle"
+                        }
+                    },
+                    "facing": {
+                        "label": "Facing",
+                        "choices": {
+                            "Front": "Front",
+                            "Rear": "Rear",
+                            "Left": "Left",
+                            "Right": "Right",
+                            "All": "All"
+                        }
+                    },
+                    "mountCategory": {
+                        "label": "Mount Category"
+                    }
+                }
+            },
+            "WeaponModification": {
+                "Sections": {
+                    "restrictions": "Restrictions"
+                },
+                "FIELDS": {
+                    "restrictions": {
+                        "weaponClasses": {
+                            "label": "Weapon Classes"
+                        },
+                        "weaponTypes": {
+                            "label": "Weapon Types"
+                        }
+                    },
+                    "addedQualities": {
+                        "label": "Added Qualities"
+                    },
+                    "removedQualities": {
+                        "label": "Removed Qualities"
+                    }
                 }
             }
         }

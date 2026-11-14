@@ -16,6 +16,7 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+import { ARMOUR_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Armour item with its system data typed to the ArmourData DataModel. */
 type ArmourItem = WH40KItemDocument & { system: ArmourData };
@@ -38,6 +39,9 @@ const INSTALL_REFUSED: Record<Exclude<InstallVerdict, 'ok'>, I18nKey> = {
  * Sheet for armour items with support for armour modifications.
  */
 export default class ArmourSheet extends SetFieldActionsMixin(ContainerItemSheet<ArmourItem>) {
+    /** Stored fields the template lacks, edited through the shared schema rows (#732). */
+    static override SCHEMA_LAYOUT = ARMOUR_EXTRA_LAYOUT;
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,

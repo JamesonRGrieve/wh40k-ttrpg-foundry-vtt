@@ -18,6 +18,7 @@
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
+import type { SchemaSheetLayout } from './schema-sheet-layout.ts';
 
 /* -------------------------------------------- */
 /*  Types                                       */
@@ -82,6 +83,8 @@ export interface DefineSimpleItemSheetOptions<TBase extends BaseItemSheetCtor = 
     /** Optional async hook to extend the rendered context. Called after the base class's `_prepareContext`. */
     // eslint-disable-next-line no-restricted-syntax -- boundary: template context is free-form; Record<string, unknown> is the required shape
     prepareContext?: (sheet: BaseItemSheet, context: Record<string, unknown>) => void | Promise<void>;
+    /** Stored fields the sheet edits through the shared schema rows; see `BaseItemSheet.SCHEMA_LAYOUT`. */
+    schemaLayout?: SchemaSheetLayout;
     /** Optional async hook called after the base class's `_onRender`. */
     // eslint-disable-next-line no-restricted-syntax -- boundary: template context and render options are free-form Foundry payloads
     onRender?: (sheet: BaseItemSheet, context: Record<string, unknown>, options: Record<string, unknown>) => void | Promise<void>;
@@ -129,6 +132,8 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
         };
 
         static override TABS = tabs;
+
+        static override SCHEMA_LAYOUT = opts.schemaLayout ?? null;
 
         override tabGroups: Record<string, string> = hasTabs ? { primary: opts.defaultTab as string } : {};
 

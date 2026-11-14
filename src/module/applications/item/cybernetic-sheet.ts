@@ -3,10 +3,12 @@
  */
 
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { PHYSICAL_ONLY_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Sheet for cybernetic/augmetic items. */
 const CyberneticSheet = defineSimpleItemSheet({
     className: 'CyberneticSheet',
+    schemaLayout: PHYSICAL_ONLY_LAYOUT,
     classes: ['wh40k-rpg', 'sheet', 'item', 'cybernetic'],
     template: 'systems/wh40k-rpg/templates/item/item-cybernetic-sheet.hbs',
     width: 600,

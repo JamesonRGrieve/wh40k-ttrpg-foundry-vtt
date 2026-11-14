@@ -22,6 +22,7 @@ import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+import { WEAPON_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
@@ -85,6 +86,9 @@ interface WeaponSheetContext extends Record<string, unknown> {
  * Redesigned as a single-page layout with FAB action buttons.
  */
 export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
+    /** Stored fields the template lacks, edited through the shared schema rows (#732). */
+    static override SCHEMA_LAYOUT = WEAPON_EXTRA_LAYOUT;
+
     /**
      * Editing a weapon **owned by a character** is a direct-edit bypass of the
      * sanctioned path (compendium import), so it requires the "Freeform

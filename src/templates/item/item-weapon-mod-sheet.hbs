@@ -46,6 +46,8 @@
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
         {{! Description Panel }}
+        {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-align-left" labelKey="WH40K.Tabs.Description"}}
         <textarea
             class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-2 tw-text-sm tw-font-body tw-resize-y tw-min-h-[80px]"

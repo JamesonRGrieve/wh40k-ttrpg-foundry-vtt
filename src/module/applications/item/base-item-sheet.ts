@@ -17,6 +17,7 @@ import { ITEM_SHEET_TABS } from '../api/sheet-tabs.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { type FormObject, isFormObject, isFormValue, mergeIndexedArrays } from './reference-list-edits.ts';
+import { buildSchemaSections, type SchemaSheetLayout } from './schema-sheet-layout.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -91,6 +92,14 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     static override VIEW_ONLY_ACTIONS: readonly string[] = ['toggleSection'];
 
     /** @override */
+    /**
+     * Stored fields this sheet edits through the shared schema rows
+     * (`templates/item/partial/schema-sections.hbs`), on top of its own template:
+     * the whole sheet for a schema sheet (#731), the fields its template lacks for
+     * the others (#732). Null when the template edits everything itself.
+     */
+    static SCHEMA_LAYOUT: SchemaSheetLayout | null = null;
+
     static override DEFAULT_OPTIONS = {
         tag: 'form',
         actions: {
@@ -248,6 +257,13 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
         }
         if (dh.craftsmanships === undefined) {
             dh.craftsmanships = cfgWh?.craftsmanships ?? WH40K.craftsmanships;
+        }
+
+        // The stored fields this sheet edits through the shared schema rows (#731, #732).
+        const layout = (this.constructor as typeof BaseItemSheet).SCHEMA_LAYOUT;
+        if (layout !== null) {
+            const source = context['source'];
+            context['schemaSections'] = buildSchemaSections(layout, this.item.system.schema, isFormValue(source) ? source : undefined);
         }
 
         // Merge contexts: parent provides base, our values override

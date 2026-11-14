@@ -2,8 +2,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-ammo-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { AMMUNITION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 // The harness supplies AmmoSheet's setIncludes / setToArray context functions (#613).
 initializeStoryHandlebars();
@@ -164,5 +166,23 @@ export const PerSystemIM: Story = {
     play: async ({ canvasElement }) => {
         const el = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
         await expect(el?.dataset['wh40kSystem']).toBe('im');
+    },
+};
+
+/** The ammunition sheet with the fields its template lacks, rendered through the shared schema rows (#732). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = { ...meta.args, inEditMode: true, editable: true, schemaSections: mockSchemaSections(AMMUNITION_EXTRA_LAYOUT) };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: quality overrides, fire-rate override, cost multiplier and per-place availability submit on every line (#732). */
+export const SchemaFields: Story = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            ['system.addedQualities', 'system.fireRateOverride', 'system.costMultiplier', 'system.availabilityRestriction'],
+            renderWithSchemaFields,
+        );
     },
 };

@@ -8,6 +8,7 @@ import { hitLocationLabel } from '../../rules/hit-locations.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+import { PHYSICAL_ONLY_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Armour modification item with its system typed to its DataModel. */
 type ArmourModItem = WH40KItemDocument & { system: ArmourModificationData };
@@ -30,6 +31,9 @@ interface ArmourModSystem {
  * Extends ContainerItemSheet to support embedded mods (if needed).
  */
 export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSheet<ArmourModItem>) {
+    /** Stored fields the template lacks, edited through the shared schema rows (#732). */
+    static override SCHEMA_LAYOUT = PHYSICAL_ONLY_LAYOUT;
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...ContainerItemSheet.DEFAULT_OPTIONS,

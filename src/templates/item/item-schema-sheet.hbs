@@ -14,13 +14,7 @@
 
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
             <div class="tab active" data-tab="details" data-group="primary">
-                {{#each schemaSections as |section|}}
-                {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon=section.icon labelKey=section.labelKey}}
-                    {{#each section.rows as |row|}}
-                    {{> systems/wh40k-rpg/templates/item/partial/schema-field-row.hbs row=row}}
-                    {{/each}}
-                {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
-                {{/each}}
+                {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
             </div>
 
             <div class="tab" data-tab="description" data-group="primary">

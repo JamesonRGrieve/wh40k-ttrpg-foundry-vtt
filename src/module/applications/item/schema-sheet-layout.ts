@@ -94,7 +94,7 @@ function prefixOf(layout: SchemaSheetLayout, section: SchemaSheetSection): strin
 }
 
 /** The heading key for a section. */
-export function sectionLabelKey(layout: SchemaSheetLayout, section: SchemaSheetSection): string {
+function sectionLabelKey(layout: SchemaSheetLayout, section: SchemaSheetSection): string {
     return `${prefixOf(layout, section)}.Sections.${section.key}`;
 }
 
@@ -234,4 +234,20 @@ export function buildSectionRows(layout: SchemaSheetLayout, section: SchemaSheet
         rows.push({ kind: 'list', name: `system.${item.path}`, labelKey: fieldLabelKey(layout, section, item.path), entries });
     }
     return rows;
+}
+
+/** One section of a schema sheet, ready for `templates/item/partial/schema-sections.hbs`. */
+export interface SchemaSectionView {
+    readonly labelKey: string;
+    readonly icon: string;
+    readonly rows: readonly SchemaRow[];
+}
+
+/** Every section of a layout as rows against the item's schema and stored source. */
+export function buildSchemaSections(layout: SchemaSheetLayout, schema: SchemaNode, source: FormValue): SchemaSectionView[] {
+    return layout.sections.map((section) => ({
+        labelKey: sectionLabelKey(layout, section),
+        icon: section.icon,
+        rows: buildSectionRows(layout, section, schema, source),
+    }));
 }

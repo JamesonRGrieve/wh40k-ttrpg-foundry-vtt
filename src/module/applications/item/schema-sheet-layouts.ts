@@ -43,6 +43,18 @@ const VEHICLE_MODIFIERS: SchemaSheetSection = {
     paths: ['modifiers.speed', 'modifiers.manoeuvrability', 'modifiers.armour', 'modifiers.integrity'],
 };
 
+/**
+ * A physical item's per-place availability and the words a book prints in place
+ * of a rarity ("Inquisition only"): every physical item stores both (#732).
+ */
+const PHYSICAL_AVAILABILITY: SchemaSheetSection = {
+    key: 'availability',
+    icon: 'fa-map-marked-alt',
+    labelPrefix: 'WH40K.ItemFields.Physical',
+    paths: ['availabilityRestriction', 'availabilityByPlace[].place', 'availabilityByPlace[].availability'],
+    choiceLabels: { 'availabilityByPlace.availability': 'WH40K.Availability' },
+};
+
 const COST_PATHS = [
     'cost.dh1.throneGelt',
     'cost.dh2.influence',
@@ -84,13 +96,10 @@ export const BACKPACK_LAYOUT: SchemaSheetLayout = {
         {
             key: 'acquisition',
             icon: 'fa-coins',
-            paths: ['availability', 'availabilityRestriction', 'availabilityByPlace[].place', 'availabilityByPlace[].availability', 'craftsmanship', 'renown'],
-            choiceLabels: {
-                'availability': 'WH40K.Availability',
-                'availabilityByPlace.availability': 'WH40K.Availability',
-                'craftsmanship': 'WH40K.Craftsmanship',
-            },
+            paths: ['availability', 'craftsmanship', 'renown'],
+            choiceLabels: { availability: 'WH40K.Availability', craftsmanship: 'WH40K.Craftsmanship' },
         },
+        PHYSICAL_AVAILABILITY,
         { key: 'cost', icon: 'fa-money-bill', paths: COST_PATHS },
         { key: 'state', icon: 'fa-toggle-on', paths: STATE_PATHS },
     ],
@@ -306,3 +315,92 @@ export const SCHEMA_SHEET_LAYOUTS: readonly SchemaSheetLayout[] = [
     VEHICLE_TRAIT_LAYOUT,
     VEHICLE_UPGRADE_LAYOUT,
 ];
+
+/* -------------------------------------------- */
+/*  Fields the hand-built sheets lack (#732)    */
+/* -------------------------------------------- */
+
+export const WEAPON_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'weapon',
+    labelPrefix: 'WH40K.ItemFields.Weapon',
+    sections: [
+        {
+            key: 'attack',
+            icon: 'fa-crosshairs',
+            paths: [
+                'attack.type',
+                'attack.characteristic',
+                'attack.modifier',
+                'attack.range.units',
+                'secondaryClass',
+                'clip.type',
+                'requiredTraining',
+                'unarmed',
+                'innate',
+            ],
+            choiceLabels: { 'attack.characteristic': 'WH40K.Characteristic', 'secondaryClass': 'WH40K.WeaponClass' },
+        },
+        { key: 'mounting', icon: 'fa-truck-moving', paths: ['mounting', 'facing', 'mountCategory'] },
+        PHYSICAL_AVAILABILITY,
+    ],
+};
+
+export const AMMUNITION_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'ammunition',
+    labelPrefix: 'WH40K.ItemFields.Ammunition',
+    sections: [
+        { key: 'ammunition', icon: 'fa-shapes', paths: ['addedQualities', 'removedQualities', 'fireRateOverride', 'costMultiplier', 'hitEffect'] },
+        PHYSICAL_AVAILABILITY,
+    ],
+};
+
+export const ARMOUR_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'armour',
+    labelPrefix: 'WH40K.ItemFields.Armour',
+    sections: [{ key: 'armour', icon: 'fa-shield-alt', paths: ['primitive', 'forceField.protectionDice', 'forceField.overloadRange'] }, PHYSICAL_AVAILABILITY],
+};
+
+export const FORCE_FIELD_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'forceField',
+    labelPrefix: 'WH40K.ItemFields.ForceField',
+    sections: [{ key: 'overload', icon: 'fa-bolt', paths: ['overloadMin', 'overloadMax'] }, PHYSICAL_AVAILABILITY],
+};
+
+/** Gear, consumables, drugs, tools and miscellanea share the gear sheet; a field a type lacks is skipped. */
+export const GEAR_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'gear',
+    labelPrefix: 'WH40K.ItemFields.Gear',
+    sections: [{ key: 'gear', icon: 'fa-flask', paths: ['addictive'] }, PHYSICAL_AVAILABILITY],
+};
+
+export const WEAPON_MODIFICATION_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'weaponModification',
+    labelPrefix: 'WH40K.ItemFields.WeaponModification',
+    sections: [
+        { key: 'restrictions', icon: 'fa-ban', paths: ['restrictions.weaponClasses', 'restrictions.weaponTypes', 'addedQualities', 'removedQualities'] },
+        PHYSICAL_AVAILABILITY,
+    ],
+};
+
+/** Physical items whose sheets lack only the availability pair. */
+export const PHYSICAL_ONLY_LAYOUT: SchemaSheetLayout = {
+    type: 'cybernetic',
+    labelPrefix: 'WH40K.ItemFields.Physical',
+    sections: [PHYSICAL_AVAILABILITY],
+};
+
+/** The hand-built sheets' supplementary layouts, by the item types each sheet opens. */
+export const SUPPLEMENTARY_LAYOUTS: Readonly<Record<string, SchemaSheetLayout>> = {
+    weapon: WEAPON_EXTRA_LAYOUT,
+    ammunition: AMMUNITION_EXTRA_LAYOUT,
+    armour: ARMOUR_EXTRA_LAYOUT,
+    forceField: FORCE_FIELD_EXTRA_LAYOUT,
+    gear: GEAR_EXTRA_LAYOUT,
+    consumable: GEAR_EXTRA_LAYOUT,
+    drug: GEAR_EXTRA_LAYOUT,
+    tool: GEAR_EXTRA_LAYOUT,
+    miscellaneous: GEAR_EXTRA_LAYOUT,
+    weaponModification: WEAPON_MODIFICATION_EXTRA_LAYOUT,
+    cybernetic: PHYSICAL_ONLY_LAYOUT,
+    armourModification: PHYSICAL_ONLY_LAYOUT,
+};

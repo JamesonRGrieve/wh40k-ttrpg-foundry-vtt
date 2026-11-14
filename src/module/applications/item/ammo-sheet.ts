@@ -6,6 +6,7 @@ import type AmmunitionData from '../../data/item/ammunition.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { AMMUNITION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Ammunition item with its system data typed to the AmmunitionData DataModel. */
 type AmmoItem = WH40KItemDocument & { system: AmmunitionData };
@@ -21,6 +22,9 @@ const TAB_LABEL_DETAILS = 'WH40K.Tabs.Details';
  * Displays modifiers with stat bar and weapon compatibility.
  */
 export default class AmmoSheet extends SetFieldActionsMixin(BaseItemSheet<AmmoItem>) {
+    /** Stored fields the template lacks, edited through the shared schema rows (#732). */
+    static override SCHEMA_LAYOUT = AMMUNITION_EXTRA_LAYOUT;
+
     /** @override */
     static override DEFAULT_OPTIONS = {
         ...BaseItemSheet.DEFAULT_OPTIONS,
