@@ -465,8 +465,7 @@ export function aggregateVehicleTraitEffects(traits: readonly NamedVehicleTraitE
         if (out.righteousFuryCritDie === '') out.righteousFuryCritDie = e.righteousFuryCritDie;
         if (out.structuralRegeneration === '') out.structuralRegeneration = e.structuralRegeneration;
     }
-    // "If a vehicle has both the Enhanced Motive Systems Vehicle Trait and the Ponderous
-    // Vehicle Trait, then these two Traits cancel each other out" (OW).
+    // OW: Enhanced Motive Systems and Ponderous on the same vehicle cancel out; neither applies.
     if (out.enhancedMovement && out.ponderous) {
         out.enhancedMovement = false;
         out.ponderous = false;

@@ -312,7 +312,7 @@ const RECORDED_CRITICALS = [
         label: 'Fire!',
         rolled: 5,
         rollLabel: storyLocalize('WH40K.Voidcraft.Critical.RollLabel', { rolled: 5 }),
-        text: '<p><b>Fire!</b>: Alarms scream through the hull as hungry flames roar through passageways and compartments.</p>',
+        text: '<p><b>Fire!</b>: A fire breaks out aboard; it burns until the crew put it out.</p>',
     },
     {
         index: 1,

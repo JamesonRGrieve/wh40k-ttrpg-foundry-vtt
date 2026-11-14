@@ -16,6 +16,12 @@
  * A "Book, p.N" source-label sample (`Sample Book, p.12`) is a format fixture,
  * not a citation, and passes.
  *
+ * Verbatim book text: when `WH40K_BOOK_CORPUS` names a directory of transcribed
+ * books (their `*.Final.md` pages), any run of VERBATIM_WORDS or more words that
+ * a scanned file shares with them is copied text and fails. The public tree may
+ * say what a rule does in its own words, never in the book's. Without the
+ * corpus this check does not run.
+ *
  * Run via `pnpm copyright:audit`. Exit 1 on any violation.
  */
 import { execFileSync } from 'node:child_process';
@@ -23,6 +29,8 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readPrivatePackManifest } from './lib/pack-manifest.mjs';
+import { shingles, verbatimRuns } from './lib/verbatim-text.mjs';
+import { readdirSync } from 'node:fs';
 
 const LINE_NAMES = 'DH1|DH2e?|RT|BC|DW|OW|IM|Dark Heresy(?: 2e)?|Rogue Trader|Black Crusade|Deathwatch|Only War|Imperium Maledictum';
 
@@ -104,6 +112,44 @@ function readContent(root) {
     return { titles, packIds };
 }
 
+/**
+ * Word runs the books share that are facts, not expression: a list of
+ * characteristic abbreviations, a power's printed prerequisites. Each entry is
+ * the run's normalised words.
+ */
+const VERBATIM_ALLOWED = new Set([
+    'bs strength s toughness t agility ag intelligence int perception per willpower wp fellowship fel',
+    'rating 7 infamy 70 forbidden lore the warp 30 scholastic lore occult 30 child of the',
+]);
+
+/** Every `*.Final.md` page under the corpus directory. */
+function* corpusPages(dir) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const path = resolve(dir, entry.name);
+        if (entry.isDirectory()) yield* corpusPages(path);
+        else if (entry.name.endsWith('.Final.md')) yield path;
+    }
+}
+
+/** `path:line: verbatim-book-text: …` for every copied run in the scanned files. */
+function verbatimViolations(root, files, corpus) {
+    const owned = new Set();
+    for (const path of files) {
+        for (const shingle of shingles(readFileSync(resolve(root, path), 'utf8'))) owned.add(shingle);
+    }
+    const shared = new Set();
+    for (const page of corpusPages(corpus)) {
+        for (const shingle of shingles(readFileSync(page, 'utf8'))) if (owned.has(shingle)) shared.add(shingle);
+    }
+    const out = [];
+    for (const path of files) {
+        for (const run of verbatimRuns(readFileSync(resolve(root, path), 'utf8'), (shingle) => shared.has(shingle))) {
+            if (!VERBATIM_ALLOWED.has(run.phrase)) out.push(`${path}:${run.line}: verbatim-book-text: ${run.words} words: ${run.excerpt}`);
+        }
+    }
+    return out;
+}
+
 function main() {
     const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
     const content = readContent(root);
@@ -118,6 +164,17 @@ function main() {
         const file = resolve(root, path);
         if (!existsSync(file) || !statSync(file).isFile()) continue;
         for (const hit of findViolations(readFileSync(file, 'utf8'), rules, repoDocs)) violations.push(`${path}:${hit.line}: ${hit.rule}: ${hit.match}`);
+    }
+
+    const corpus = process.env['WH40K_BOOK_CORPUS'];
+    if (corpus !== undefined && corpus !== '' && existsSync(corpus)) {
+        // The gate spells its own allowed runs, so it is not scanned for them.
+        const scanned = tracked.filter(
+            (path) => isScanned(path) && path !== 'scripts/copyright-audit.mjs' && existsSync(resolve(root, path)) && statSync(resolve(root, path)).isFile(),
+        );
+        violations.push(...verbatimViolations(root, scanned, corpus));
+    } else {
+        console.log('[copyright-audit] WH40K_BOOK_CORPUS unset: verbatim book text not checked');
     }
 
     if (content === null) console.log('[copyright-audit] private content absent: book titles and pack ids not checked');

@@ -265,7 +265,7 @@ best: { label: 'RT.Craftsmanship.Best', modifier: 10 },
     - Is "never-jam" a custom quality, or should it be "reliable"?
 
 4. **Best Ranged Weapons:**
-    - Rulebook: "Never jam or overheat" (counts as miss)
+    - Rulebook: best-craftsmanship ranged weapons cannot jam or overheat (a would-be jam is a miss)
     - Should this be:
         - A) Add "reliable" quality (existing quality)
         - B) Add custom "never-jam" quality

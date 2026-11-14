@@ -251,15 +251,12 @@ export function damagePastArmour(weaponClass: ShipWeaponClass, damage: readonly 
 /* -------------------------------------------- */
 
 /*
- * RT rules with the 1.4 errata, "Starship Weapons": "If a ship fires multiple
- * macrobatteries at a single target, before rolling to hit … the character
- * directing the firing has the option of adding the totals together and
- * applying the new, larger total to the target ship once … he can only
- * inflict a maximum of one Critical Hit." Each battery still makes its own
- * Ballistic Skill Test ("Even if all of the macrobatteries cause Critical Hits
- * on their Ballistic Skill Tests, only one Critical Hit is applied"), and
- * "Damage and Defences": "the attacker chooses which hits are
- * discarded by the void shields." Lances are never combined.
+ * RT starship weapons (with the 1.4 errata): when several macrobatteries fire
+ * on the same target, whoever directs the fire may pool their damage into one
+ * combined salvo, applied to the target once. Each battery still rolls its own
+ * Ballistic Skill Test, but the salvo inflicts at most one Critical Hit however
+ * many of those tests would have caused one. The attacker picks which hits the
+ * void shields absorb. Lances are never pooled.
  */
 
 /** One macrobattery's part in a salvo: its own test and the hits it scored. */

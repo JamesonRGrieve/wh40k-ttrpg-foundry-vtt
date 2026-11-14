@@ -105,8 +105,8 @@ export function healComrade(state: ComradeState): ComradeStateTransition {
 
 /**
  * Replace a dead Comrade with a fresh one: only a dead Comrade, and only when a
- * replacement is available ("the Squad will have to wait until they have
- * downtime at an Imperial Guard base"). The new Comrade enters play unharmed.
+ * replacement is available (the squad gets one during downtime back at a
+ * Guard base, not in the field). The new Comrade enters play unharmed.
  */
 export function replaceComrade(state: ComradeState, replacementAvailable: boolean): ComradeReplaceResult {
     if (state === 'dead' && replacementAvailable) {
@@ -453,9 +453,9 @@ export interface ComradeMentalDamageResult {
 }
 
 /**
- * Insanity or Corruption a Comrade suffers: "Comrades do not track
- * Insanity or Corruption … unless they would suffer 10 Insanity or 10 Corruption in
- * a single Round. If this occurs, the Comrade dies." The two kinds count separately,
+ * Insanity or Corruption a Comrade suffers. A Comrade keeps no running total of
+ * either; it dies only if a single Round would deal it 10 or more Insanity, or 10
+ * or more Corruption. The two kinds count separately,
  * and only within one Round; out of combat each amount stands alone. Negative or
  * non-finite amounts count as 0, fractions round down.
  */

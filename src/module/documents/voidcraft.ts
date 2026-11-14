@@ -455,9 +455,9 @@ export class WH40KVoidcraft extends WH40KBaseActor {
     }
 
     /**
-     * A Crippled ship takes damage past its Armour (RT "Crippled Ships",
-     * #187): "Compare the value of the damage that exceeded the Armour to the
-     * Critical Hit chart." Recorded and posted like any other Critical Hit.
+     * A Crippled ship takes damage past its Armour (RT Crippled Ships, #187):
+     * the amount that got through is rolled on the Critical Hit chart, and the
+     * result is recorded and posted like any other Critical Hit.
      */
     async takeCrippledCriticalHit(damagePastArmour: number): Promise<void> {
         await this._recordCriticalHit(String(damagePastArmour), true);

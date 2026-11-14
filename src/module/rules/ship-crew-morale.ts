@@ -218,9 +218,9 @@ export function replenishBetweenCombat(state: ShipCombatState): ShipCombatState 
 }
 
 /**
- * Is the ship Crippled? RT 1.4 errata, "Crippled Ships": "When a ship
- * reaches 0 Hull Integrity, it becomes Crippled … A ship will remain Crippled
- * … until it has regained at least 1 Hull Integrity." The single definition
+ * Is the ship Crippled? RT 1.4 errata, Crippled Ships: a ship is Crippled from
+ * the moment its Hull Integrity hits 0 until repairs bring it back to at least
+ * 1. The single definition
  * the voidcraft DataModel and Document getters and the fire path read. A hull
  * with no maximum is unconfigured, not Crippled.
  */

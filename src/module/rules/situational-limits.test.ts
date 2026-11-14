@@ -86,10 +86,10 @@ describe('failure consequences on situational rows (#101)', () => {
 });
 
 /**
- * Push the Limit (a DH2 supplement): once per round, the character may add +20 to
- * an Operate test (or Survival test in the case of living steeds); failing it by 4
- * or more degrees of failure rolls 1d5 on the Motive Systems Critical Hit Effects
- * table, or, riding a living mount, on the Impact Critical Effects – Leg table.
+ * Push the Limit (a DH2 supplement): once a round a driver can take +20 on an
+ * Operate test (a rider on a living mount uses Survival). Failing by 4 or more
+ * degrees costs a 1d5 roll on the Motive Systems Critical Hit Effects table, or,
+ * on a living mount, on the Impact Critical Effects – Leg table.
  */
 describe.skipIf(!HAS_PRIVATE_CONTENT)('Push the Limit pack data (#101)', () => {
     const REPO_ROOT = resolve(__dirname, '../../..');

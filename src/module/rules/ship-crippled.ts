@@ -2,16 +2,14 @@
  * Crippled and destroyed starships — Rogue Trader (#187 — RT rules with
  * the 1.4 errata, "Crippled Ships", "Destroying Ships" and the Critical Hit chart).
  *
- * "When a ship reaches 0 Hull Integrity, it becomes Crippled. Apply a -10
- * penalty to its Manoeuvrability and Detection, and reduce its Speed to half.
- * In addition, reduce the strength of all weapon Components by half (round
- * up). A ship will remain Crippled … until it has regained at least 1 Hull
- * Integrity. When a Crippled ship takes damage past its Armour, it takes a
- * Critical Hit. Compare the value of the damage that exceeded the Armour to
- * the Critical Hit chart."
+ * A ship at 0 Hull Integrity is Crippled until it is repaired back to at least
+ * 1: its Manoeuvrability and Detection take a -10 penalty, its Speed halves,
+ * and every weapon Component fires at half strength, rounded up. Any damage
+ * that gets past a Crippled ship's Armour becomes a Critical Hit, rolled on the
+ * Critical Hit chart against the amount that got through.
  *
- * 0 Hull Integrity never destroys a Rogue Trader ship: "Most of the Critical
- * Hit results will not destroy a ship outright". A ship is destroyed
+ * 0 Hull Integrity never destroys a Rogue Trader ship, and most Critical Hit
+ * results leave it afloat. A ship is destroyed
  * only by a Critical Hit result the chart marks as destroying it (the chart's
  * Catastrophic Damage: hulked, or a plasma or warp drive explosion). Which
  * result does that is content — authored on the compendium table result as
