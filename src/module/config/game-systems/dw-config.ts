@@ -3,6 +3,7 @@
  * Career/specialty-based advancement with 3 skill ranks.
  */
 
+import { identifierFromName } from '../../data/fields/identifier-utils.ts';
 import { DW_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
@@ -11,6 +12,7 @@ import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
+import { getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { printedGrappleRules, singleChartVehicleCombat, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
@@ -115,13 +117,13 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: matches abstract CareerBasedSystemConfig.getCareerRegistry() return type
     getCareerRegistry(): Record<string, unknown> {
-        // DW specialty advance tables TBD
-        return {};
+        return getCareerAdvancementRegistry('dw');
     }
 
+    /** The career's registry key: its identifier, from the name the origin path records. */
     resolveCareerKey(actor: SystemConfigActor): string | null {
         const speciality = actor.system.originPath?.['speciality'];
-        return typeof speciality === 'string' ? speciality : null;
+        return typeof speciality === 'string' && speciality !== '' ? identifierFromName(speciality) : null;
     }
 
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {

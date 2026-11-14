@@ -26,6 +26,7 @@ const ROGUE_TRADER: CareerTable = {
         { name: 'Awareness', cost: 100, type: 'skill', prerequisites: [] },
         { name: 'Air of Authority', cost: 100, type: 'talent', prerequisites: [{ type: 'characteristic', key: 'fellowship', value: 30 }] },
     ],
+    RANKS: [],
     TIER_ORDER: ['simple', 'intermediate', 'trained', 'expert'],
 };
 
@@ -33,6 +34,7 @@ const ARCH_MILITANT: CareerTable = {
     CAREER_INFO: { key: 'archMilitant', name: 'Arch-Militant', description: '', ranks: ['Rank 1'] },
     CHARACTERISTIC_COSTS: { weaponSkill: { simple: 250, intermediate: 500, trained: 750, expert: 1000 } },
     RANK_1_ADVANCES: [{ name: 'Sound Constitution', cost: 200, type: 'talent', prerequisites: [] }],
+    RANKS: [],
     TIER_ORDER: ['simple', 'intermediate', 'trained', 'expert'],
 };
 

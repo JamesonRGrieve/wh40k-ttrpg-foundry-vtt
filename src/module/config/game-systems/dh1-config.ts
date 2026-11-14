@@ -3,6 +3,7 @@
  * Career-based advancement with 3 skill ranks.
  */
 
+import { identifierFromName } from '../../data/fields/identifier-utils.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
@@ -12,6 +13,7 @@ import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
+import { getCareerAdvancementRegistry } from '../advancements/career-advancement-cache.ts';
 import { TRADE_ARMOURER_FITTING_RULES } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
@@ -167,13 +169,13 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: matches abstract CareerBasedSystemConfig.getCareerRegistry() return type
     getCareerRegistry(): Record<string, unknown> {
-        // DH1e career tables TBD
-        return {};
+        return getCareerAdvancementRegistry('dh1');
     }
 
+    /** The career's registry key: its identifier, from the name the origin path records. */
     resolveCareerKey(actor: SystemConfigActor): string | null {
         const career = actor.system.originPath?.['career'];
-        return typeof career === 'string' ? career : null;
+        return typeof career === 'string' && career !== '' ? identifierFromName(career) : null;
     }
 
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {

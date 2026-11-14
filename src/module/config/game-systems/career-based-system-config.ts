@@ -14,6 +14,14 @@ import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOpt
 interface CareerEntry {
     CHARACTERISTIC_COSTS?: { [charKey: string]: { [tier: string]: number | undefined } };
     RANK_1_ADVANCES?: AdvanceOption[];
+    /** Every authored rank's advances (operator ruling 2026-11-14: every rank). */
+    RANKS?: ReadonlyArray<{ rank: number; advances: AdvanceOption[] }>;
+}
+
+/** The actor's career rank: its stored rank, or 1 when it has none. */
+function actorRank(actor: SystemConfigActor): number {
+    const rank = actor.system.rank;
+    return typeof rank === 'number' && Number.isInteger(rank) && rank >= 1 ? rank : 1;
 }
 
 export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
@@ -86,7 +94,12 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         if (careerKey === null || careerKey === '') return [];
 
         const career = this.getCareerRegistry()[careerKey] as CareerEntry | undefined;
-        return career?.RANK_1_ADVANCES ?? [];
+        const ranks = career?.RANKS ?? [];
+        // A career with authored ranks offers every advance up to the actor's rank;
+        // one with only a rank-1 list offers that.
+        if (ranks.length === 0) return career?.RANK_1_ADVANCES ?? [];
+        const rank = actorRank(actor);
+        return ranks.filter((entry) => entry.rank <= rank).flatMap((entry) => entry.advances);
     }
 
     // ── RT/DH1e/DW Skill Visibility ─────────────────────────────

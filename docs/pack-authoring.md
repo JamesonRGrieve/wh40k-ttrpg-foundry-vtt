@@ -793,6 +793,42 @@ rollable `system.specialUses`). Each row is `{ name, description }` (HTML string
 Leave a line's branch `null` until that line's content is authored; do not copy one
 line's values into another.
 
+### Career Advancement Tables
+
+A career origin (`type: "originPath"`, a career step) on a **career-based line**
+(RT, DH1, DW) carries the career's advancement table as
+`system.careerAdvancement`; every other origin step leaves it `null`. The career
+advancement cache indexes each line's career packs at `ready`, keyed by the
+career's `identifier` (RT keeps its legacy camelCase keys), and the advancement
+dialog offers every advance up to the character's `system.rank`.
+
+```json
+system.careerAdvancement = {
+  "characteristicCosts": {
+    "weaponSkill": { "simple": 100, "intermediate": 250, "trained": 500, "expert": 750 }
+  },
+  "rank1Advances": [],
+  "ranks": [
+    { "rank": 1, "title": "<printed rank title>", "minXp": 0,
+      "advances": [
+        { "name": "Literacy", "cost": 100, "type": "skill", "specialization": "", "prerequisites": [] },
+        { "name": "Sound Constitution", "cost": 100, "type": "talent", "multiplier": 2,
+          "prerequisites": [{ "type": "characteristic", "key": "toughness", "value": 30 }] }
+      ] },
+    { "rank": 2, "title": "<printed rank title>", "minXp": 500, "advances": [] }
+  ]
+}
+```
+
+- **`ranks`** holds one entry per printed rank: its number (a whole number of at
+  least 1), printed `title`, the XP the rank starts at (`minXp`, `null` when the
+  book prints none) and its `advances`. Author every rank the book prints.
+- **`rank1Advances`** is the original rank-1-only shape some RT careers still use.
+  A `ranks` entry for rank 1 adds to it; new content goes in `ranks`.
+- An advance's `type` is `skill` or `talent`; `multiplier` is how many times the
+  advance may be taken; `prerequisites` uses the same shape as talent
+  prerequisites.
+
 ---
 
 ## Source & Provenance

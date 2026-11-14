@@ -51,6 +51,28 @@ interface CareerAdvancePrerequisite {
     value?: number;
 }
 
+/** One skill or talent advance a career rank offers. */
+interface CareerAdvanceEntry {
+    name: string;
+    cost: number;
+    type: string;
+    specialization?: string;
+    multiplier?: number;
+    prerequisites: CareerAdvancePrerequisite[];
+}
+
+/** The schema of one career advance, shared by `rank1Advances` and each rank's `advances`. */
+function careerAdvanceField(fields: typeof foundry.data.fields): foundry.data.fields.SchemaField.Any {
+    return new fields.SchemaField({
+        name: new fields.StringField({ required: true }),
+        cost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        type: new fields.StringField({ required: true, choices: ['skill', 'talent'] }),
+        specialization: new fields.StringField({ required: false, blank: true }),
+        multiplier: new fields.NumberField({ required: false, initial: null, min: 1, integer: true }),
+        prerequisites: new fields.ArrayField(new fields.ObjectField({ required: true }), { required: false, initial: [] }),
+    });
+}
+
 /**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
  * @extends ItemDataModel
@@ -95,19 +117,13 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         elites: string[];
         choices: Array<{ type: string; label: string; name?: string; options: OriginChoiceOption[]; count: number; xpCost: number }>;
     };
-    // Career advancement tables (RT careers only; null on every other origin step).
+    // Career advancement tables (career-based lines; null on every other origin step).
     // Content lives here on the compendium doc, indexed at `ready` by the career
     // advancement boot cache — see `config/advancements/career-advancement-cache.ts`.
     declare careerAdvancement: {
         characteristicCosts: Record<string, { simple: number; intermediate: number; trained: number; expert: number }>;
-        rank1Advances: Array<{
-            name: string;
-            cost: number;
-            type: string;
-            specialization?: string;
-            multiplier?: number;
-            prerequisites: CareerAdvancePrerequisite[];
-        }>;
+        rank1Advances: CareerAdvanceEntry[];
+        ranks: Array<{ rank: number; title: string; minXp: number | null; advances: CareerAdvanceEntry[] }>;
     } | null;
     declare effectText: string;
     declare notes: string;
@@ -372,22 +388,23 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 ),
             }),
 
-            // Career advancement tables (RT careers only). Content authored on the
-            // compendium doc; the career advancement boot cache reads it at `ready`.
-            // Null on every non-career origin step (only careers populate it).
+            // Career advancement tables (the career-based lines: RT, DH1, DW). Content
+            // authored on the compendium doc; the career advancement boot cache reads
+            // it at `ready`. Null on every non-career origin step.
             careerAdvancement: new fields.SchemaField(
                 {
                     // characteristic key → { simple, intermediate, trained, expert } cost tiers.
                     characteristicCosts: new fields.ObjectField({ required: false, initial: {} }),
-                    // Rank 1 skill/talent advance options.
-                    rank1Advances: new fields.ArrayField(
+                    // Rank 1 skill/talent advance options (the original RT shape).
+                    rank1Advances: new fields.ArrayField(careerAdvanceField(fields), { required: false, initial: [] }),
+                    // Every rank's table (operator ruling 2026-11-14): its number, printed
+                    // title, starting XP and advance options. A rank-1 entry adds to rank1Advances.
+                    ranks: new fields.ArrayField(
                         new fields.SchemaField({
-                            name: new fields.StringField({ required: true }),
-                            cost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                            type: new fields.StringField({ required: true, choices: ['skill', 'talent'] }),
-                            specialization: new fields.StringField({ required: false, blank: true }),
-                            multiplier: new fields.NumberField({ required: false, initial: null, min: 1, integer: true }),
-                            prerequisites: new fields.ArrayField(new fields.ObjectField({ required: true }), { required: false, initial: [] }),
+                            rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
+                            title: new fields.StringField({ required: false, blank: true }),
+                            minXp: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
+                            advances: new fields.ArrayField(careerAdvanceField(fields), { required: false, initial: [] }),
                         }),
                         { required: false, initial: [] },
                     ),

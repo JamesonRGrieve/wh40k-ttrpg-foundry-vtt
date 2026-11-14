@@ -18,20 +18,23 @@ import {
  * rather than read from `_source`.
  */
 
+interface StubAdvance {
+    name: string;
+    cost: number;
+    type: string;
+    specialization?: string;
+    multiplier?: number;
+    prerequisites: Array<{ type: string; key: string; value?: number }>;
+}
+
 interface StubDoc {
     name?: string;
     system?: {
         identifier?: string;
         careerAdvancement?: {
             characteristicCosts?: Record<string, { simple: number; intermediate: number; trained: number; expert: number }>;
-            rank1Advances?: Array<{
-                name: string;
-                cost: number;
-                type: string;
-                specialization?: string;
-                multiplier?: number;
-                prerequisites: Array<{ type: string; key: string; value?: number }>;
-            }>;
+            rank1Advances?: StubAdvance[];
+            ranks?: Array<{ rank: number; title?: string; minXp?: number | null; advances?: StubAdvance[] }>;
         } | null;
     };
 }
@@ -55,8 +58,8 @@ function stubPack(docs: StubDoc[] | null): void {
 }
 
 /** Fetch a built career, asserting presence — narrows the record access once so callers avoid per-site guards. */
-function careerOf(key: string): CareerTable {
-    const table = getCareerAdvancementRegistry()[key];
+function careerOf(key: string, line = 'rt'): CareerTable {
+    const table = getCareerAdvancementRegistry(line)[key];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess (tsconfig with the flag on) types this record access as CareerTable|undefined; the ESLint parser config has the flag off and sees the guard as redundant
     if (table === undefined) throw new Error(`career '${key}' not in registry`);
     return table;
@@ -166,10 +169,49 @@ describe('registry state helpers', () => {
             CAREER_INFO: { key: 'navigator', name: 'Navigator', description: '', ranks: ['Rank 1'] },
             CHARACTERISTIC_COSTS: { agility: { simple: 500, intermediate: 750, trained: 1000, expert: 2500 } },
             RANK_1_ADVANCES: [{ name: 'Navigation', cost: 100, type: 'skill', prerequisites: [] }],
+            RANKS: [],
             TIER_ORDER: ['simple', 'intermediate', 'trained', 'expert'],
         };
         setCareerAdvancementsForTesting({ navigator: table });
         expect(isCareerAdvancementIndexReady()).toBe(true);
         expect(getCareerAdvancementRegistry()['navigator']).toBe(table);
+    });
+});
+
+/** A DH1 career with a rank-1 list and rank tables, as the parser authors them (operator ruling 2026-11-14). */
+const ADEPT_DOC: StubDoc = {
+    name: 'Adept',
+    system: {
+        identifier: 'adept',
+        careerAdvancement: {
+            characteristicCosts: {},
+            rank1Advances: [{ name: 'Literacy', cost: 100, type: 'skill', prerequisites: [] }],
+            ranks: [
+                { rank: 2, title: 'Archivist', minXp: 500, advances: [{ name: 'Inquiry', cost: 200, type: 'skill', prerequisites: [] }] },
+                { rank: 1, title: 'Initiate', minXp: 0, advances: [{ name: 'Scrutiny', cost: 100, type: 'skill', prerequisites: [] }] },
+                { rank: 0, advances: [{ name: 'Ignored', cost: 1, type: 'skill', prerequisites: [] }] },
+            ],
+        },
+    },
+};
+
+describe('every career line, every rank (operator ruling 2026-11-14)', () => {
+    it("indexes a non-RT line's careers by identifier, in its own registry", async () => {
+        vi.stubGlobal('game', { packs: [packWith([ROGUE_TRADER_DOC]), packWith([ADEPT_DOC], 'dh1')] });
+        await buildCareerAdvancementIndex();
+        expect(Object.keys(getCareerAdvancementRegistry('dh1'))).toEqual(['adept']);
+        expect(Object.keys(getCareerAdvancementRegistry())).toEqual(['rogueTrader']);
+    });
+
+    it('orders the ranks, merges rank 1 with rank1Advances, and drops a rank below 1', async () => {
+        vi.stubGlobal('game', { packs: [packWith([ADEPT_DOC], 'dh1')] });
+        await buildCareerAdvancementIndex();
+        const adept = careerOf('adept', 'dh1');
+        expect(adept.RANKS.map((rank) => [rank.rank, rank.title, rank.minXp, rank.advances.map((a) => a.name)])).toEqual([
+            [1, 'Initiate', 0, ['Literacy', 'Scrutiny']],
+            [2, 'Archivist', 500, ['Inquiry']],
+        ]);
+        expect(adept.RANK_1_ADVANCES.map((a) => a.name)).toEqual(['Literacy', 'Scrutiny']);
+        expect(adept.CAREER_INFO.ranks).toEqual(['Initiate', 'Archivist']);
     });
 });
