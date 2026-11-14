@@ -1,23 +1,32 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateWeaponRange } from './range.ts';
-import { strengthBonusRangeFactor, thrownRangeMetres } from './thrown-range.ts';
+import { characteristicBonusRange, thrownRangeMetres } from './thrown-range.ts';
 
-describe('strengthBonusRangeFactor — the printed SBx<N> range (#604)', () => {
+describe('characteristicBonusRange — the printed <X>Bx<N> range (#604)', () => {
+    const factor = (printed: string | number | undefined): number | null => characteristicBonusRange(printed)?.factor ?? null;
+
     it('reads every printed Strength-Bonus form in the packs', () => {
-        expect(strengthBonusRangeFactor('SBx3')).toBe(3);
-        expect(strengthBonusRangeFactor('SBx4')).toBe(4);
-        expect(strengthBonusRangeFactor('SBx8')).toBe(8);
-        expect(strengthBonusRangeFactor('SB x 2')).toBe(2);
-        expect(strengthBonusRangeFactor('SB×3')).toBe(3);
-        expect(strengthBonusRangeFactor('SBx1m (when thrown)')).toBe(1);
+        expect(factor('SBx3')).toBe(3);
+        expect(factor('SBx4')).toBe(4);
+        expect(factor('SBx8')).toBe(8);
+        expect(factor('SB x 2')).toBe(2);
+        expect(factor('SB×3')).toBe(3);
+        expect(factor('SBx1m (when thrown)')).toBe(1);
+        expect(characteristicBonusRange('SBx3')?.characteristic).toBe('strength');
     });
 
-    it('is null for a range that is not Strength-Bonus based', () => {
-        for (const printed of ['', 'Thrown 3m', 'Short', '50-300m', 'WPBx5m', '3d10m', 'also thrown 10m']) expect(strengthBonusRangeFactor(printed)).toBeNull();
-        expect(strengthBonusRangeFactor(30)).toBeNull();
-        expect(strengthBonusRangeFactor(undefined)).toBeNull();
-        expect(strengthBonusRangeFactor('SBx0')).toBeNull();
+    it("reads any characteristic's bonus, by its short code (operator ruling 2026-11-14)", () => {
+        expect(characteristicBonusRange('WPBx5m')).toEqual({ characteristic: 'willpower', factor: 5 });
+        expect(characteristicBonusRange('TB x 2')).toEqual({ characteristic: 'toughness', factor: 2 });
+        expect(characteristicBonusRange('AgBx3')).toEqual({ characteristic: 'agility', factor: 3 });
+    });
+
+    it('is null for a range that is not bonus-based, or names no characteristic', () => {
+        for (const printed of ['', 'Thrown 3m', 'Short', '50-300m', '3d10m', 'also thrown 10m', 'QBx3']) expect(characteristicBonusRange(printed)).toBeNull();
+        expect(characteristicBonusRange(30)).toBeNull();
+        expect(characteristicBonusRange(undefined)).toBeNull();
+        expect(characteristicBonusRange('SBx0')).toBeNull();
     });
 });
 
@@ -33,12 +42,15 @@ describe('thrownRangeMetres (#604)', () => {
     });
 });
 
-/** A thrower with Strength Bonus `sb` in a `line` scene whose environment flag is `environment`. */
-function thrower(line: string, sb: number, environment: object): WeaponRollData['sourceActor'] {
+/** A thrower with Strength Bonus `sb` (and Willpower Bonus `wpb`) in a `line` scene whose environment flag is `environment`. */
+function thrower(line: string, sb: number, environment: object, wpb = 0): WeaponRollData['sourceActor'] {
     const actor = {
         type: `${line}-character`,
         token: { parent: { getFlag: () => environment } },
-        getCharacteristicFuzzy: (key: string) => (key === 'strength' ? { bonus: sb, effectiveBonus: sb } : undefined),
+        getCharacteristicFuzzy: (key: string) => {
+            if (key === 'strength') return { bonus: sb, effectiveBonus: sb };
+            return key === 'willpower' ? { bonus: wpb, effectiveBonus: wpb } : undefined;
+        },
     };
     // eslint-disable-next-line no-restricted-syntax -- test: a synthetic token actor reduced to the surface the range calculation reads (type, token scene flag, Strength)
     return actor as unknown as WeaponRollData['sourceActor'];
@@ -84,6 +96,12 @@ describe('calculateWeaponRange — a thrown weapon ranges off the thrower’s St
         const weak = throwRoll({ value: 0, special: 'SBx3' }, thrower('ow', 1, { gravity: 'high' }));
         calculateWeaponRange(weak);
         expect(weak.maxRange).toBe(0);
+    });
+
+    it("ranges off another characteristic's bonus, which gravity leaves alone", () => {
+        const rd = throwRoll({ value: 0, special: 'WPBx5' }, thrower('dh2', 4, { gravity: 'low' }, 3));
+        calculateWeaponRange(rd);
+        expect(rd.maxRange).toBe(15);
     });
 
     it('an unmodelled line takes no gravity change', () => {

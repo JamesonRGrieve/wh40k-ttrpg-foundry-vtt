@@ -4,7 +4,7 @@ import type { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-da
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
 import { parsePsychicRange } from './psychic-range.ts';
 import { actorEnvironmentContext, environmentThrowStrengthBonus } from './scene-environment.ts';
-import { strengthBonusRangeFactor, thrownRangeMetres } from './thrown-range.ts';
+import { characteristicBonusRange, thrownRangeMetres } from './thrown-range.ts';
 import { chosenQualityEffects } from './weapon-quality-payloads.ts';
 
 type RangeAnnotatedRollData = RollData & {
@@ -26,15 +26,17 @@ type WeaponRangeSystem = {
 };
 
 /**
- * The Strength Bonus the attacker throws with: the effective (modified) bonus,
- * shifted by the scene's gravity in the attacker's own line (#604). Zero with no
- * attacker or no Strength characteristic.
+ * The bonus the attacker throws with: the named characteristic's effective
+ * (modified) bonus. Strength's is shifted by the scene's gravity in the
+ * attacker's own line (#604). Zero with no attacker or no such characteristic.
  */
-function throwingStrengthBonus(rollData: WeaponRollData): number {
-    const strength = rollData.sourceActor?.getCharacteristicFuzzy('strength');
-    if (strength === undefined) return 0;
+function throwingBonus(rollData: WeaponRollData, characteristic: string): number {
+    const stat = rollData.sourceActor?.getCharacteristicFuzzy(characteristic);
+    if (stat === undefined) return 0;
+    const bonus = stat.effectiveBonus ?? stat.bonus;
+    if (characteristic !== 'strength') return bonus;
     const { env, line } = actorEnvironmentContext(rollData.sourceActor);
-    return environmentThrowStrengthBonus(strength.effectiveBonus ?? strength.bonus, env, line);
+    return environmentThrowStrengthBonus(bonus, env, line);
 }
 
 type PsychicPowerRangeSystem = {
@@ -61,11 +63,11 @@ function calculateWeaponMaxRange(rollData: WeaponRollData): void {
     let range = 0;
     const weaponSystem = weapon.system as WeaponRangeSystem;
     const weaponRange = weaponSystem.attack?.range?.value ?? weaponSystem.range;
-    // A muscle-powered weapon prints its range as a multiple of the thrower's SB.
-    const sbFactor = strengthBonusRangeFactor(weaponSystem.attack?.range?.special) ?? strengthBonusRangeFactor(weaponSystem.range);
+    // A muscle-powered weapon prints its range as a multiple of a bonus of the thrower (SBx3).
+    const bonusRange = characteristicBonusRange(weaponSystem.attack?.range?.special) ?? characteristicBonusRange(weaponSystem.range);
 
-    if (sbFactor !== null) {
-        range = thrownRangeMetres(sbFactor, throwingStrengthBonus(rollData));
+    if (bonusRange !== null) {
+        range = thrownRangeMetres(bonusRange.factor, throwingBonus(rollData, bonusRange.characteristic));
     } else if (Number.isInteger(weaponRange)) {
         range = Number(weaponRange);
     } else if (weaponRange === '' || weaponRange === 'N/A') {
