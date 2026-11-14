@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-skill-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { SKILL_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 interface SkillSystem {
     skillType: 'basic' | 'advanced' | 'specialist';
@@ -103,5 +106,35 @@ export const SpecialistDifficultyTables: Story = {
         const view = within(canvasElement);
         await expect(view.getAllByText('Surface').length).toBeGreaterThan(0);
         await expect(view.getAllByText('Stellar').length).toBeGreaterThan(0);
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#733). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: mockSchemaSections(SKILL_EXTRA_LAYOUT, { altCharacteristics: ['agility'], exampleDifficulties: [{ difficulty: 'easy' }] }),
+    };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: basic / specialist flags, descriptor, alternative characteristics and example difficulties submit under their `system.` paths on every line (#733). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.isBasic',
+                'system.specialist',
+                'system.descriptor',
+                'system.altCharacteristics.0',
+                'system.exampleDifficulties.0.difficulty',
+                'system.exampleDifficulties.0.modifier',
+                'system.exampleDifficulties.0.example',
+                'system.exampleDifficulties.0.specialization',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

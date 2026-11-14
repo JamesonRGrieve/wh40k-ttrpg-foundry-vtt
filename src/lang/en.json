@@ -9960,6 +9960,200 @@
                         "label": "Removed Qualities"
                     }
                 }
+            },
+            "DarkPact": {
+                "Sections": {
+                    "terms": "Pact Terms",
+                    "boons": "Boons",
+                    "banes": "Banes"
+                },
+                "FIELDS": {
+                    "corruptionFormula": {
+                        "label": "Corruption Formula"
+                    },
+                    "negotiation": {
+                        "dispositionBase": {
+                            "label": "Base Disposition"
+                        },
+                        "addsCorruption": {
+                            "label": "Adds Corruption to Disposition"
+                        },
+                        "testModifier": {
+                            "label": "Bargaining Test Modifier"
+                        }
+                    },
+                    "boons": {
+                        "label": "Boons",
+                        "identifier": {
+                            "label": "Identifier"
+                        },
+                        "name": {
+                            "label": "Name"
+                        },
+                        "description": {
+                            "label": "Description"
+                        }
+                    },
+                    "banes": {
+                        "label": "Banes",
+                        "identifier": {
+                            "label": "Identifier"
+                        },
+                        "name": {
+                            "label": "Name"
+                        },
+                        "description": {
+                            "label": "Description"
+                        }
+                    }
+                }
+            },
+            "PsychicPower": {
+                "Sections": {
+                    "focusPower": "Focus Power Test",
+                    "effects": "Power Effects"
+                },
+                "FIELDS": {
+                    "focusPower": {
+                        "characteristic": {
+                            "label": "Characteristic"
+                        },
+                        "skill": {
+                            "label": "Skill"
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "threshold": {
+                            "label": "Threshold"
+                        },
+                        "opposed": {
+                            "label": "Opposed"
+                        },
+                        "opposedCharacteristic": {
+                            "label": "Opposed Characteristic"
+                        }
+                    },
+                    "rangePerPR": {
+                        "label": "Range per Psy Rating"
+                    },
+                    "phenomenaModifier": {
+                        "label": "Psychic Phenomena Modifier"
+                    },
+                    "narrativeEffect": {
+                        "label": "Narrative Effect"
+                    },
+                    "overbleed": {
+                        "label": "Overbleed"
+                    }
+                }
+            },
+            "Reroll": {
+                "Sections": {
+                    "reroll": "Re-roll"
+                },
+                "FIELDS": {
+                    "reroll": {
+                        "enabled": {
+                            "label": "Grants a Re-roll"
+                        },
+                        "label": {
+                            "label": "Label"
+                        },
+                        "condition": {
+                            "label": "Re-roll When",
+                            "choices": {
+                                "Failed": "Failed",
+                                "Success": "Succeeded",
+                                "Any": "Any"
+                            }
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "frequency": {
+                            "label": "Frequency",
+                            "choices": {
+                                "AtWill": "At Will",
+                                "PerRound": "Once per Round",
+                                "PerEncounter": "Once per Encounter",
+                                "PerSession": "Once per Session"
+                            }
+                        },
+                        "uses": {
+                            "label": "Uses"
+                        },
+                        "appliesTo": {
+                            "mode": {
+                                "label": "Applies To",
+                                "choices": {
+                                    "Any": "Any Test",
+                                    "Types": "Test Types",
+                                    "Keys": "Test Keys"
+                                }
+                            },
+                            "combatMode": {
+                                "label": "Combat Mode",
+                                "choices": {
+                                    "Any": "Any",
+                                    "Melee": "Melee",
+                                    "Ranged": "Ranged"
+                                }
+                            },
+                            "types": {
+                                "label": "Test Types"
+                            },
+                            "keys": {
+                                "label": "Test Keys"
+                            }
+                        }
+                    }
+                }
+            },
+            "Skill": {
+                "Sections": {
+                    "skill": "Skill",
+                    "difficulties": "Example Difficulties"
+                },
+                "FIELDS": {
+                    "isBasic": {
+                        "label": "Basic"
+                    },
+                    "specialist": {
+                        "label": "Specialist"
+                    },
+                    "descriptor": {
+                        "label": "Descriptor"
+                    },
+                    "altCharacteristics": {
+                        "label": "Alternative Characteristics"
+                    },
+                    "exampleDifficulties": {
+                        "label": "Example Difficulties",
+                        "difficulty": {
+                            "label": "Difficulty"
+                        },
+                        "modifier": {
+                            "label": "Modifier"
+                        },
+                        "example": {
+                            "label": "Example"
+                        },
+                        "specialization": {
+                            "label": "Specialisation"
+                        }
+                    }
+                }
+            },
+            "Trait": {
+                "Sections": {
+                    "critical": "Critical Damage"
+                },
+                "FIELDS": {
+                    "criticalChart": {
+                        "label": "Critical Chart"
+                    }
+                }
             }
         }
     }

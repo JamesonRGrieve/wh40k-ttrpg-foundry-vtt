@@ -6,9 +6,11 @@ import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/talent-sheet.hbs?raw';
+import { TALENT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 
@@ -313,3 +315,35 @@ export const PerSystemBc: Story = perSystemStory('bc');
 export const PerSystemOw: Story = perSystemStory('ow');
 export const PerSystemDw: Story = perSystemStory('dw');
 export const PerSystemIm: Story = perSystemStory('im');
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#733). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = {
+        ...{ ...makeCtx({ inEditMode: true }), editable: true },
+        schemaSections: mockSchemaSections(TALENT_EXTRA_LAYOUT, { reroll: { appliesTo: { types: ['skill'], keys: ['dodge'] } } }),
+    };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: the whole re-roll block submit under their `system.` paths on every line (#733). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.reroll.enabled',
+                'system.reroll.label',
+                'system.reroll.condition',
+                'system.reroll.modifier',
+                'system.reroll.frequency',
+                'system.reroll.uses',
+                'system.reroll.appliesTo.mode',
+                'system.reroll.appliesTo.combatMode',
+                'system.reroll.appliesTo.types.0',
+                'system.reroll.appliesTo.keys.0',
+            ],
+            renderWithSchemaFields,
+        );
+    },
+};

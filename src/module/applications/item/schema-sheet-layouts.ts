@@ -10,7 +10,16 @@ import type { SchemaSheetLayout, SchemaSheetSection } from './schema-sheet-layou
 
 const POWER = 'WH40K.ItemFields.Power';
 
-/** Activation, target, duration and uses: the shape psychic, navigator and ritual powers share. */
+/** A power's target: psychic powers carry it on their own sheet's layout, navigator powers and rituals with the rest of the power sections. */
+const POWER_TARGET: SchemaSheetSection = {
+    key: 'target',
+    icon: 'fa-crosshairs',
+    labelPrefix: POWER,
+    paths: ['target.type', 'target.value', 'target.units', 'target.width', 'target.length'],
+    choiceLabels: { 'target.type': 'WH40K.Target' },
+};
+
+/** Activation, target, duration and uses: the shape navigator powers and rituals share. */
 const POWER_SECTIONS: readonly SchemaSheetSection[] = [
     {
         key: 'activation',
@@ -19,13 +28,7 @@ const POWER_SECTIONS: readonly SchemaSheetSection[] = [
         paths: ['activation.type', 'activation.cost', 'activation.condition'],
         choiceLabels: { 'activation.type': 'WH40K.ActionType' },
     },
-    {
-        key: 'target',
-        icon: 'fa-crosshairs',
-        labelPrefix: POWER,
-        paths: ['target.type', 'target.value', 'target.units', 'target.width', 'target.length'],
-        choiceLabels: { 'target.type': 'WH40K.Target' },
-    },
+    POWER_TARGET,
     {
         key: 'duration',
         icon: 'fa-hourglass-half',
@@ -389,6 +392,94 @@ export const PHYSICAL_ONLY_LAYOUT: SchemaSheetLayout = {
     sections: [PHYSICAL_AVAILABILITY],
 };
 
+/* -------------------------------------------- */
+/*  Structured mechanics the sheets lacked (#733) */
+/* -------------------------------------------- */
+
+/** The reroll a talent or trait grants: one section both sheets carry. */
+const REROLL: SchemaSheetSection = {
+    key: 'reroll',
+    icon: 'fa-redo-alt',
+    labelPrefix: 'WH40K.ItemFields.Reroll',
+    paths: [
+        'reroll.enabled',
+        'reroll.label',
+        'reroll.condition',
+        'reroll.modifier',
+        'reroll.frequency',
+        'reroll.uses',
+        'reroll.appliesTo.mode',
+        'reroll.appliesTo.combatMode',
+        'reroll.appliesTo.types[]',
+        'reroll.appliesTo.keys[]',
+    ],
+};
+
+export const PSYCHIC_POWER_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'psychicPower',
+    labelPrefix: 'WH40K.ItemFields.PsychicPower',
+    sections: [
+        POWER_TARGET,
+        {
+            key: 'focusPower',
+            icon: 'fa-brain',
+            paths: [
+                'focusPower.characteristic',
+                'focusPower.skill',
+                'focusPower.modifier',
+                'focusPower.threshold',
+                'focusPower.opposed',
+                'focusPower.opposedCharacteristic',
+            ],
+        },
+        { key: 'effects', icon: 'fa-bolt', paths: ['rangePerPR', 'phenomenaModifier', 'narrativeEffect', 'overbleed'] },
+    ],
+};
+
+export const TALENT_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'talent',
+    labelPrefix: 'WH40K.ItemFields.Reroll',
+    sections: [REROLL],
+};
+
+export const TRAIT_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'trait',
+    labelPrefix: 'WH40K.ItemFields.Trait',
+    sections: [REROLL, { key: 'critical', icon: 'fa-skull-crossbones', paths: ['criticalChart'] }],
+};
+
+export const SKILL_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'skill',
+    labelPrefix: 'WH40K.ItemFields.Skill',
+    sections: [
+        { key: 'skill', icon: 'fa-graduation-cap', paths: ['isBasic', 'specialist', 'descriptor', 'altCharacteristics[]'] },
+        {
+            key: 'difficulties',
+            icon: 'fa-list-ol',
+            paths: [
+                'exampleDifficulties[].difficulty',
+                'exampleDifficulties[].modifier',
+                'exampleDifficulties[].example',
+                'exampleDifficulties[].specialization',
+            ],
+        },
+    ],
+};
+
+export const DARK_PACT_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'darkPact',
+    labelPrefix: 'WH40K.ItemFields.DarkPact',
+    sections: [
+        {
+            key: 'terms',
+            icon: 'fa-file-signature',
+            paths: ['corruptionFormula', 'negotiation.dispositionBase', 'negotiation.addsCorruption', 'negotiation.testModifier'],
+        },
+        { key: 'boons', icon: 'fa-gift', paths: ['boons[].identifier', 'boons[].name', 'boons[].description'] },
+        { key: 'banes', icon: 'fa-skull', paths: ['banes[].identifier', 'banes[].name', 'banes[].description'] },
+    ],
+};
+
 /** The hand-built sheets' supplementary layouts, by the item types each sheet opens. */
 export const SUPPLEMENTARY_LAYOUTS: Readonly<Record<string, SchemaSheetLayout>> = {
     weapon: WEAPON_EXTRA_LAYOUT,
@@ -403,4 +494,9 @@ export const SUPPLEMENTARY_LAYOUTS: Readonly<Record<string, SchemaSheetLayout>> 
     weaponModification: WEAPON_MODIFICATION_EXTRA_LAYOUT,
     cybernetic: PHYSICAL_ONLY_LAYOUT,
     armourModification: PHYSICAL_ONLY_LAYOUT,
+    psychicPower: PSYCHIC_POWER_EXTRA_LAYOUT,
+    talent: TALENT_EXTRA_LAYOUT,
+    trait: TRAIT_EXTRA_LAYOUT,
+    skill: SKILL_EXTRA_LAYOUT,
+    darkPact: DARK_PACT_EXTRA_LAYOUT,
 };

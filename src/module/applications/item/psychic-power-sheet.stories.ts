@@ -5,11 +5,13 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { captureActionClicks, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-psychic-power-sheet.hbs?raw';
 import { PSYCHIC_DISCIPLINE_CHOICES, psychicDisciplineOptions } from '../../data/item/psychic-discipline';
 import { attackSpecialItemFromQuality } from '../../rules/attack-specials';
+import { PSYCHIC_POWER_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x5a1e71);
@@ -358,5 +360,32 @@ export const PerSystemIM: Story = {
     play: ({ canvasElement }) => {
         const el = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
         void expect(el?.dataset['wh40kSystem']).toBe('im');
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#733). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = { ...{ ...makeCtx({ inEditMode: true }), editable: true }, schemaSections: mockSchemaSections(PSYCHIC_POWER_EXTRA_LAYOUT, {}) };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: target, Focus Power test and power effects submit under their `system.` paths on every line (#733). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.target.type',
+                'system.target.value',
+                'system.focusPower.characteristic',
+                'system.focusPower.threshold',
+                'system.focusPower.opposed',
+                'system.rangePerPR',
+                'system.phenomenaModifier',
+                'system.narrativeEffect',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

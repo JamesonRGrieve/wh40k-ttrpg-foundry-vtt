@@ -10,8 +10,10 @@ import { expect } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-dark-pact-sheet.hbs?raw';
 import { BOOK_TERMS, CORRUPTION_FORMULA, KNOWLEDGE, MIGHT, registerPactNames } from '../../../../stories/mocks/dark-pacts';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { renderSheet, storyRoot } from '../../../../stories/test-helpers';
 import { type DarkPactSheetView, darkPactSheetView, type PactDefinitionView } from './dark-pact-view';
+import { DARK_PACT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 registerPactNames();
 
@@ -180,5 +182,35 @@ export const OpaqueWindowBody: Story = {
             themes.remove('theme-dark', 'theme-light');
             themes.add(...original);
         }
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#733). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: mockSchemaSections(DARK_PACT_EXTRA_LAYOUT, { boons: [{ identifier: 'might' }], banes: [{ identifier: 'hunger' }] }),
+    };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: pact terms and each boon and bane submit under their `system.` paths on every line (#733). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.corruptionFormula',
+                'system.negotiation.dispositionBase',
+                'system.negotiation.addsCorruption',
+                'system.negotiation.testModifier',
+                'system.boons.0.identifier',
+                'system.boons.0.name',
+                'system.banes.0.identifier',
+                'system.banes.0.name',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

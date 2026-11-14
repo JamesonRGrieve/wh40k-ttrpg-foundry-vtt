@@ -10,7 +10,7 @@ import {
     type SchemaSheetLayout,
     type SchemaSheetSection,
 } from './schema-sheet-layout.ts';
-import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS } from './schema-sheet-layouts.ts';
+import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS, TALENT_EXTRA_LAYOUT, TRAIT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** A structural stand-in for a Foundry DataField of the named class. */
 function field(name: string, extra: Partial<SchemaNode> = {}): SchemaNode {
@@ -115,4 +115,10 @@ describe('the shipped schema-sheet layouts (#731)', () => {
             expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
         },
     );
+
+    it('gives talents and traits the one re-roll section, not two copies (#733)', () => {
+        const reroll = TALENT_EXTRA_LAYOUT.sections.find((entry) => entry.key === 'reroll');
+        expect(reroll).toBeDefined();
+        expect(TRAIT_EXTRA_LAYOUT.sections).toContain(reroll);
+    });
 });

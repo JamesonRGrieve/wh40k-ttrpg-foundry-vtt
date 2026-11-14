@@ -4,6 +4,7 @@
 
 import type BaseItemSheet from './base-item-sheet.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { SKILL_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /**
  * Narrow the document.system shape we touch in the sheet actions to the
@@ -123,6 +124,7 @@ async function additionalUseDelete(this: BaseItemSheet, _event: Event, target: H
  */
 const SkillSheet = defineSimpleItemSheet({
     className: 'SkillSheet',
+    schemaLayout: SKILL_EXTRA_LAYOUT,
     classes: ['wh40k-rpg', 'sheet', 'item', 'skill'],
     template: 'systems/wh40k-rpg/templates/item/item-skill-sheet.hbs',
     width: 600,

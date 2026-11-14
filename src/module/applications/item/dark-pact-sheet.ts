@@ -10,10 +10,12 @@ import { isDarkPactItem } from '../../documents/dark-pacts.ts';
 import { darkPactSheetView } from './dark-pact-view.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 import FreeformGatedItemSheet from './freeform-gated-item-sheet.ts';
+import { DARK_PACT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Sheet for darkPact items. */
 const DarkPactSheet = defineSimpleItemSheet({
     className: 'DarkPactSheet',
+    schemaLayout: DARK_PACT_EXTRA_LAYOUT,
     baseClass: FreeformGatedItemSheet,
     classes: ['wh40k-rpg', 'sheet', 'item', 'dark-pact'],
     template: 'systems/wh40k-rpg/templates/item/item-dark-pact-sheet.hbs',

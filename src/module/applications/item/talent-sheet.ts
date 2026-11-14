@@ -15,6 +15,7 @@ import type ModifiersTemplate from '../../data/shared/modifiers-template.ts';
 import { characteristicAbbrev, characteristicLabel } from '../../helpers/characteristic-labels.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { TALENT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 import { formatSkillLabel, prepareTalentModifierRows, prepareTalentSituationalRows } from './talent-display-data.ts';
 
 /** Tab label localization keys, hoisted so the static TABS entries reference identifiers. */
@@ -186,6 +187,9 @@ type RollSkillFn = (key: string) => Promise<void>;
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class TalentSheet extends BaseItemSheet<TalentItem> {
+    /** The reroll block the template lacks, edited through the shared schema rows (#733). */
+    static override SCHEMA_LAYOUT = TALENT_EXTRA_LAYOUT;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

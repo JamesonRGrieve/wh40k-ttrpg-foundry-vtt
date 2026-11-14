@@ -7,6 +7,7 @@ import { attackSpecialItemFromQuality } from '../../rules/attack-specials.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 import { itemUuidFromDropData } from './reference-list-edits.ts';
+import { PSYCHIC_POWER_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** A dropped weapon quality's fields the attack-special conversion reads. */
 interface DroppedQuality {
@@ -26,6 +27,7 @@ function isDroppedQuality(doc: Awaited<ReturnType<typeof fromUuid>>): doc is Awa
  */
 const PsychicPowerSheetBase = defineSimpleItemSheet({
     className: 'PsychicPowerSheetBase',
+    schemaLayout: PSYCHIC_POWER_EXTRA_LAYOUT,
     baseClass: ContainerItemSheet,
     classes: ['wh40k-rpg', 'sheet', 'item', 'psychic-power'],
     template: 'systems/wh40k-rpg/templates/item/item-psychic-power-sheet.hbs',

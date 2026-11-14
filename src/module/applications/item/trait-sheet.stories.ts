@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-trait-sheet.hbs?raw';
+import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { clickEachTab, renderSheet } from '../../../../stories/test-helpers';
+import { TRAIT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 interface TraitSystem {
     categoryLabel: string;
@@ -104,5 +107,38 @@ export const TabsSwitch: Story = {
         await expect(results.map((r) => r.tab)).toEqual(['properties', 'effects', 'description']);
         await expect(results.map((r) => r.active)).toEqual(results.map((r) => [r.tab]));
         await expect(results.flatMap((r) => r.forcedHidden)).toEqual([]);
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#733). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const context = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: mockSchemaSections(TRAIT_EXTRA_LAYOUT, { reroll: { appliesTo: { types: ['skill'], keys: ['dodge'] } } }),
+    };
+    return inForm(renderSheet(templateSrc, context), systemId);
+}
+
+/** Edit mode: the re-roll block and critical chart submit under their `system.` paths on every line (#733). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.reroll.enabled',
+                'system.reroll.label',
+                'system.reroll.condition',
+                'system.reroll.modifier',
+                'system.reroll.frequency',
+                'system.reroll.uses',
+                'system.reroll.appliesTo.mode',
+                'system.reroll.appliesTo.combatMode',
+                'system.reroll.appliesTo.types.0',
+                'system.reroll.appliesTo.keys.0',
+                'system.criticalChart',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

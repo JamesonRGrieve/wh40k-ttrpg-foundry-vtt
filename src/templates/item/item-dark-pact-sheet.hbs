@@ -60,6 +60,9 @@
         {{> systems/wh40k-rpg/templates/item/partial/dark-pact-entries.hbs entries=pact.banes kind="banes"}}
       {{/systems/wh40k-rpg/templates/item/partial/content-block-section.hbs}}
 
+      {{#if inEditMode}}
+      {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+      {{/if}}
     </section>
   </div>
 </div>
