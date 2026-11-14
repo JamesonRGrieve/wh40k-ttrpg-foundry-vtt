@@ -291,16 +291,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     static async #openVehicleInterior(this: BaseActorSheet, _event: Event, _target: HTMLElement): Promise<void> {
         await openInteriorScene(this.actor, game.scenes as SceneLookup);
     }
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onFirstRender signature uses Record<string,unknown> for context/options per Foundry's mixin-erased contract.
-    override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onFirstRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
             // eslint-disable-next-line no-restricted-syntax -- boundary: same mixin-erased proto shape
             _onFirstRender?: (this: BaseActorSheet, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
         };
         await proto._onFirstRender?.call(this, context, options);
     }
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._preparePartContext signature uses Record<string,unknown> per Foundry's mixin-erased contract.
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _preparePartContext(partId: string, context: HandlebarsContext, options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
             _preparePartContext?: (
                 this: BaseActorSheet,
@@ -434,8 +432,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext returns Record<string,unknown>; concrete fields declared below in the intersection type.
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // Items ship LEAN (compendiumSource / variantOf join keys — see
         // docs/pack-authoring.md). Join the canonical body IN MEMORY before rendering
         // (updateSource + reset; no database write, packs stay locked). Covers pack
@@ -597,8 +594,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onClose signature uses Record<string,unknown> per Foundry's mixin-erased contract.
-    override _onClose(options: Record<string, unknown>): void {
+    override _onClose(options: ApplicationRenderOptions): void {
         // Save state before closing
         this._saveSheetState();
 
@@ -1553,8 +1549,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender signature uses Record<string,unknown> per Foundry's mixin-erased contract.
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Restore sheet state on first render

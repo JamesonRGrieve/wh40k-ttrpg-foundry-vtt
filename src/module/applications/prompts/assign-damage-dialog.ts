@@ -45,8 +45,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // The location dropdown labels are localized at render time, not baked into the damage data.
         // A vehicle (content#28) takes its own locations, and shows Structural Integrity in place of wounds.
         const context = await super._prepareContext(options);

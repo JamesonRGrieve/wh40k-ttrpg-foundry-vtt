@@ -26,7 +26,7 @@ const STAT_ANIMATION_CLASSES = [
     'pulse-glow',
 ] as const;
 
-interface AnimationSnapshot {
+export interface AnimationSnapshot {
     wounds?: number;
     woundsMax?: number;
     characteristics?: Record<string, { total?: number; bonus?: number }>;
@@ -94,8 +94,7 @@ export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Bas
         /* -------------------------------------------- */
 
         /** @override */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is untyped record
-        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Capture flat values for change tracking

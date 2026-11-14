@@ -102,8 +102,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // Initialize roll data on first render
         if (!this.initialized && typeof this.rollData['initialize'] === 'function') {
             (this.rollData['initialize'] as () => void)();
@@ -145,8 +144,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context is untyped framework parameter
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
     }

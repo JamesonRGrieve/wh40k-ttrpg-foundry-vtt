@@ -6,19 +6,32 @@
  * capture the public/protected API added by each mixin so that BaseActorSheet and its
  * subclasses can declare typed properties instead of `any`.
  *
- * BOUNDARY FILE: this file describes Foundry V14's untyped ApplicationV2 / mixin API
- * surface. Per CLAUDE.md, framework boundaries (Foundry hook payloads, untyped V14
- * APIs with no shipped types) are permitted to use `Record<string, unknown>` and
- * `unknown` parameter types. We disable `no-restricted-syntax` at the file level here
- * — every member is, by definition, the boundary point itself. New non-boundary code
- * MUST NOT live in this file.
+ * Members carry the concrete types their implementations use. Render options and
+ * template context use the named boundaries `ApplicationRenderOptions` and
+ * `HandlebarsContext` from `foundry-v14-overrides.d.ts`; the few members that mirror
+ * an untyped Foundry API carry a single-line suppression naming it (#719).
  */
-/* eslint-disable no-restricted-syntax -- file is a Foundry V14 framework-boundary type surface; see header */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import type { WH40KArmourLocation } from '../../types/global.d.ts';
+import type { WH40KArmourLocation, WH40KBaseActorDocument, WH40KCharacteristic, WH40KModifierEntry, WH40KSkill } from '../../types/global.d.ts';
+import type { ModifierTooltipSource } from '../../utils/modifier-tooltip.ts';
 import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
+import type { ContextMenuEntryLike } from './application-types.ts';
+import type { AnimationSnapshot } from './enhanced-animations-mixin.ts';
+
+/** One impact line the what-if preview reports. */
+interface WhatIfImpact {
+    type: string;
+    message: string;
+}
+
+/**
+ * Pending what-if edits, keyed by document update path (`system.characteristics.strength.advance`).
+ * They become the payload of `actor.update(...)`, so they carry its untyped value shape.
+ */
+// eslint-disable-next-line no-restricted-syntax -- boundary: Document.update payload (Foundry's untyped update data), keyed by dotted path
+type WhatIfChanges = Record<string, unknown>;
 
 /* -------------------------------------------- */
 /*  Individual Mixin Interfaces                 */
@@ -32,14 +45,14 @@ interface ApplicationV2MixinAPI {
     readonly subtitle: string;
 
     // Protected rendering helpers
-    _configureRenderOptions: (options: Record<string, unknown>) => void;
-    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
-    _prepareContext: (options: Record<string, unknown>) => Promise<Record<string, unknown>>;
-    _preparePartContext: (partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
-    _renderContainers: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
-    _replaceHTML: (result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>) => void;
-    _updateFrame: (options: Record<string, unknown>) => void;
-    _onRender: (context: Record<string, unknown>, options: Record<string, unknown>) => void;
+    _configureRenderOptions: (options: ApplicationRenderOptions) => void;
+    _onFirstRender: (context: HandlebarsContext, options: ApplicationRenderOptions) => void;
+    _prepareContext: (options: ApplicationRenderOptions) => Promise<HandlebarsContext>;
+    _preparePartContext: (partId: string, context: HandlebarsContext, options: ApplicationRenderOptions) => Promise<HandlebarsContext>;
+    _renderContainers: (context: HandlebarsContext, options: ApplicationRenderOptions) => void;
+    _replaceHTML: (result: Record<string, HTMLElement>, content: HTMLElement, options: ApplicationRenderOptions) => void;
+    _updateFrame: (options: ApplicationRenderOptions) => void;
+    _onRender: (context: HandlebarsContext, options: ApplicationRenderOptions) => void;
     _disableFields: () => void;
 }
 
@@ -47,7 +60,9 @@ interface ApplicationV2MixinAPI {
 
 /** API surface added by DragDropMixin (drag-drop-api-mixin) */
 export interface DragDropMixinAPI {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry drag payload (TextEditor.getDragEventData) is untyped JSON
     _allowedDropBehaviors: (event: DragEvent, data: Record<string, unknown>) => Set<string>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry drag payload (TextEditor.getDragEventData) is untyped JSON
     _defaultDropBehavior: (event: DragEvent, data: Record<string, unknown>) => string;
     _dropBehavior: (event: DragEvent) => string;
     _onDragStart: (event: DragEvent) => Promise<void>;
@@ -58,30 +73,36 @@ export interface DragDropMixinAPI {
 /** API surface added by PrimarySheetMixin */
 export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
     /** Filters for applied inventory sections. */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: per-sheet filter state mirrors DocumentSheetV2's untyped _filters
     _filters: Record<string, Record<string, unknown>>;
     /** The current sheet mode (PLAY=1, EDIT=2). */
     _mode: number | null;
 
-    _configureRenderOptions: (options: Record<string, unknown>) => void;
-    _configureRenderParts: (options: Record<string, unknown>) => Record<string, unknown>;
-    _renderFrame: (options: Record<string, unknown>) => Promise<HTMLElement>;
+    _configureRenderOptions: (options: ApplicationRenderOptions) => void;
+    _configureRenderParts: (options: ApplicationRenderOptions) => Record<string, ApplicationV2Config.PartConfiguration>;
+    _renderFrame: (options: ApplicationRenderOptions) => Promise<HTMLElement>;
     _renderModeToggle: () => void;
-    _prepareContext: (options: Record<string, unknown>) => Promise<Record<string, unknown>>;
-    _preparePartContext: (partId: string, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    _prepareContext: (options: ApplicationRenderOptions) => Promise<HandlebarsContext>;
+    _preparePartContext: (partId: string, context: HandlebarsContext, options: ApplicationRenderOptions) => Promise<HandlebarsContext>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._getTabs returns Foundry's untyped tab configuration
     _getTabs: () => Record<string, Record<string, unknown>>;
-    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
-    _onRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
+    _onFirstRender: (context: HandlebarsContext, options: ApplicationRenderOptions) => Promise<void>;
+    _onRender: (context: HandlebarsContext, options: ApplicationRenderOptions) => Promise<void>;
     _activateTabs: () => void;
     _activateTab: (tab: string, group: string, nav: HTMLElement, content: HTMLElement) => void;
     animateStatChange: (element: HTMLElement, type?: string) => void;
     animateValueChange: (element: HTMLElement, oldValue: number, newValue: number) => void;
     _addDocument: (event: Event, target: HTMLElement) => void;
-    changeTab: (tab: string, group: string, options: Record<string, unknown>) => void;
+    changeTab: (tab: string, group: string, options: ApplicationRenderOptions) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors DocumentSheetV2._deleteDocument, which resolves to Foundry's untyped Document.delete result
     _deleteDocument: (event: Event, target: HTMLElement) => Promise<unknown>;
     _onChangeSheetMode: (event: Event) => Promise<void>;
     _onClickAction: (event: Event, target: HTMLElement) => void;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors DocumentSheetV2._showDocument, which resolves to Foundry's untyped sheet render result
     _showDocument: (event: Event, target: HTMLElement) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors DocumentSheetV2._sortChildren over Foundry's untyped embedded collections
     _sortChildren: (collection: string, mode: string) => unknown[];
+    // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors DocumentSheetV2._sortItems over Foundry's untyped embedded collections
     _sortItems: (items: unknown[], mode: string) => unknown[];
 }
 
@@ -89,11 +110,11 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
 
 /** API surface added by TooltipMixin */
 interface TooltipMixinAPI {
-    prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
-    prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
+    prepareCharacteristicTooltip: (key: string, characteristic: WH40KCharacteristic, modifierSources?: Record<string, WH40KModifierEntry[]>) => string;
+    prepareSkillTooltip: (key: string, skill: WH40KSkill, characteristics: Record<string, WH40KCharacteristic>) => string;
     prepareArmorTooltip: (location: string, armorData: WH40KArmourLocation, equipped?: ArmorTooltipEquippedPiece[]) => string;
-    prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
-    prepareModifierTooltip: (title: string, sources: unknown[]) => string;
+    prepareWeaponTooltip: (weapon: WH40KItem) => string;
+    prepareModifierTooltip: (title: string, sources: ModifierTooltipSource[]) => string;
     prepareQualityTooltip: (identifier: string, level?: number | null) => string;
 }
 
@@ -120,7 +141,7 @@ export interface EnhancedAnimationsMixinAPI {
     /** Track currently running animations. */
     _runningAnimations: Map<string, number>;
     /** Previous animation state snapshot. */
-    _previousState: unknown;
+    _previousState: AnimationSnapshot | null;
     /** MutationObserver for dynamic content. */
     _mutationObserver: MutationObserver | null;
     /** Flat previous document values for change tracking (absorbed VisualFeedback API). */
@@ -128,7 +149,7 @@ export interface EnhancedAnimationsMixinAPI {
 
     _captureAnimationState: () => void;
     _setupMutationObserver: () => void;
-    animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, unknown>) => void;
+    animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: ApplicationRenderOptions) => void;
     animateWoundsChange: (oldValue: number, newValue: number) => void;
     _animateWoundsBar: (barElement: HTMLElement, fromPercent: number, toPercent: number) => void;
     animateCharacteristicChange: (charKey: string, oldValue: number, newValue: number) => void;
@@ -137,7 +158,8 @@ export interface EnhancedAnimationsMixinAPI {
     _animateProgressBar: (barElement: HTMLElement) => void;
     _flashElement: (element: HTMLElement, animClass: string, duration?: number) => void;
     _shouldSkipAnimation: () => boolean;
-    close: (options: Record<string, unknown>) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close resolves to Foundry's untyped close result
+    close: (options: ApplicationRenderOptions) => Promise<unknown>;
 
     // ---- Absorbed VisualFeedback change-tracking / stat-flash surface (#276) ----
     _captureCurrentValues: () => void;
@@ -149,7 +171,7 @@ export interface EnhancedAnimationsMixinAPI {
     _animateCounter: (element: HTMLElement, fromValue: number, toValue: number, duration?: number) => void;
     _showBriefNotification: (element: HTMLElement, message: string, type?: string) => void;
     animateStatChange: (fieldName: string, animationType?: string) => void;
-    visualizeChanges: (changes: Record<string, unknown>) => void;
+    visualizeChanges: (changes: WhatIfChanges) => void;
 }
 
 /* -------------------------------------------- */
@@ -176,20 +198,20 @@ interface CollapsiblePanelMixinAPI {
 interface ContextMenuMixinAPI {
     _createContextMenus: () => void;
     _createCustomContextMenus: () => void;
-    _getCharacteristicContextOptions: (target: HTMLElement) => Record<string, unknown>[];
-    _getSkillContextOptions: (target: HTMLElement) => Record<string, unknown>[];
-    _getItemContextOptions: (target: HTMLElement) => Record<string, unknown>[];
-    _getFatePointContextOptions: () => Record<string, unknown>[];
+    _getCharacteristicContextOptions: (target: HTMLElement) => ContextMenuEntryLike[];
+    _getSkillContextOptions: (target: HTMLElement) => ContextMenuEntryLike[];
+    _getItemContextOptions: (target: HTMLElement) => ContextMenuEntryLike[];
+    _getFatePointContextOptions: () => ContextMenuEntryLike[];
     _onCharacteristicRoll: (charKey: string) => Promise<void>;
     _onCharacteristicRollWithModifier: (charKey: string) => Promise<void>;
     _showModifierSources: (charKey: string) => Promise<void>;
     _onAdvanceCharacteristic: (charKey: string) => Promise<void>;
-    _postCharacteristicToChat: (charKey: string, char: Record<string, unknown>) => Promise<void>;
+    _postCharacteristicToChat: (charKey: string, char: WH40KCharacteristic) => Promise<void>;
     _onEditCharacteristic: (charKey: string) => Promise<void>;
     _onSkillRoll: (skillKey: string) => Promise<void>;
     _onSkillRollWithModifier: (skillKey: string) => Promise<void>;
     _toggleSkillTraining: (skillKey: string, level: string) => Promise<void>;
-    _showGoverningCharacteristic: (skillKey: string, skill: Record<string, unknown>) => void;
+    _showGoverningCharacteristic: (skillKey: string, skill: WH40KSkill) => void;
     _addSkillSpecialization: (skillKey: string) => Promise<void>;
     _duplicateItem: (item: WH40KItem) => Promise<void>;
     _deleteItem: (item: WH40KItem) => Promise<void>;
@@ -204,7 +226,7 @@ interface ContextMenuMixinAPI {
 
 /** API surface added by EnhancedDragDropMixin (drag-drop-visual-mixin) */
 export interface EnhancedDragDropMixinAPI {
-    _draggedItem: Record<string, unknown> | null;
+    _draggedItem: { id: string; item: WH40KItem; element: HTMLElement } | null;
     _dragStartPos: { x: number; y: number } | null;
     _splitResult: { quantity: number } | null;
 
@@ -234,6 +256,7 @@ export interface EnhancedDragDropMixinAPI {
     _animateSnapToSlot: (item: WH40KItem) => void;
     removeFromFavorites: (itemId: string) => Promise<void>;
     clearFavorites: () => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Item.Implementation values read back from the actor's untyped favorites flag (Document.getFlag)
     getFavoriteItems: () => unknown[];
 }
 
@@ -242,26 +265,28 @@ export interface EnhancedDragDropMixinAPI {
 /** API surface added by WhatIfMixin */
 interface WhatIfMixinAPI {
     _whatIfActive: boolean;
-    _whatIfChanges: Record<string, unknown>;
-    _whatIfPreview: unknown;
-    _whatIfImpacts: unknown[] | Record<string, unknown>;
+    _whatIfChanges: WhatIfChanges;
+    _whatIfPreview: WH40KBaseActorDocument | null;
+    _whatIfImpacts: WhatIfImpact[];
 
     enterWhatIfMode: () => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: value is a Document.update payload value (Foundry's untyped update data)
     previewChange: (path: string, value: unknown) => Promise<void>;
     _updatePreview: () => void;
     _calculateImpacts: () => void;
     commitWhatIfChanges: () => Promise<void>;
     cancelWhatIfChanges: () => Promise<void>;
     exitWhatIfMode: () => Promise<void>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: value is a Document.update payload value (Foundry's untyped update data)
     _applyChange: (path: string, value: unknown) => Promise<void>;
-    getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
+    getWhatIfState: () => { active: boolean; changes: WhatIfChanges; impacts: WhatIfImpact[]; changeCount: number };
     isWhatIfActive: () => boolean;
     _renderWhatIfOverlay: () => void;
     _createWhatIfToolbar: () => HTMLElement;
     _updateComparisonDisplays: () => void;
-    _compareCharacteristics: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
-    _compareSkills: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
-    _compareDerivedStats: (current: Record<string, unknown>, preview: Record<string, unknown>) => void;
+    _compareCharacteristics: (current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument) => void;
+    _compareSkills: (current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument) => void;
+    _compareDerivedStats: (current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument) => void;
     _showComparison: (selector: string, data: { current: number; preview: number; type: string }) => void;
 }
 
@@ -269,7 +294,7 @@ interface WhatIfMixinAPI {
 
 /** API surface added by StatBreakdownMixin */
 interface StatBreakdownMixinAPI {
-    close: (options?: Record<string, unknown>) => Promise<void>;
+    close: (options?: ApplicationRenderOptions) => Promise<void>;
 }
 
 /* -------------------------------------------- */
@@ -350,10 +375,11 @@ export interface BaseActorSheetMixins
     /** Tab group tracking (group name -> active tab ID). */
     tabGroups: Record<string, string>;
     /** The application's options. */
-    options: Record<string, unknown>;
+    options: ApplicationRenderOptions;
 
     /** Render the application. */
-    render: (options?: Record<string, unknown> | boolean) => Promise<unknown>;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.render resolves to Foundry's untyped render result
+    render: (options?: ApplicationRenderOptions | boolean) => Promise<unknown>;
     /** Submit the application's form. */
     submit: () => Promise<void>;
     /** Set the rendered position. */
@@ -373,5 +399,5 @@ export interface BaseActorSheetMixins
      * Lifecycle hook called after the application is first rendered.
      * Protected; declared here so subclasses can override and call super.
      */
-    _onFirstRender: (context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
+    _onFirstRender: (context: HandlebarsContext, options: ApplicationRenderOptions) => Promise<void>;
 }

@@ -201,8 +201,7 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // Get parent context first
         const parentContext = await super._prepareContext(options);
 
@@ -371,8 +370,7 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Handle delta inputs for numeric fields

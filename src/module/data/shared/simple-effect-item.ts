@@ -11,7 +11,7 @@
  * @see {@link ../item/malignancy.ts}
  * @see {@link ../item/special-ability.ts}
  */
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 
 /**
  * Build the per-model schema fragment for a simple effect item.
@@ -26,8 +26,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 export function simpleEffectItemSchema(htmlFieldName: string): Record<string, foundry.data.fields.DataField.Any> {
     const fields = foundry.data.fields;
     return {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown chain satisfies DataField.Any brand without runtime effect
-        identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+        identifier: identifierField({ required: true, blank: true }),
 
         // Effect / benefit description (HTML)
         [htmlFieldName]: new fields.HTMLField({ required: true, blank: true }),

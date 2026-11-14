@@ -15,6 +15,29 @@
 
 declare global {
     // =========================================================================
+    // Named boundaries (#719)
+    // =========================================================================
+
+    /**
+     * The options object Foundry V14 passes through the ApplicationV2 render
+     * lifecycle (`render`, `_prepareContext`, `_onRender`, `_configureRenderOptions`,
+     * `close`). Untyped upstream; one name here instead of a suppression at
+     * every override.
+     */
+    type ApplicationRenderOptions = Record<string, unknown>;
+
+    /**
+     * The context an ApplicationV2 builds in `_prepareContext` /
+     * `_preparePartContext` and hands to its Handlebars templates. Handlebars
+     * reads it by path, so no concrete shape propagates; one name here instead
+     * of a suppression at every sheet.
+     */
+    type HandlebarsContext = Record<string, HandlebarsValue>;
+
+    /** One value in a {@link HandlebarsContext}: whatever a template reads at a path. */
+    type HandlebarsValue = unknown;
+
+    // =========================================================================
     // DataModel V14 Changes
     // =========================================================================
 

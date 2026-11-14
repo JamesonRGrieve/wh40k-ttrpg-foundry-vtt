@@ -230,8 +230,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext returns Record<string,unknown>; cast adapts the untyped return
         const context = (await super._prepareContext(options as unknown as never)) as Record<string, unknown>;
 
@@ -460,8 +459,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.

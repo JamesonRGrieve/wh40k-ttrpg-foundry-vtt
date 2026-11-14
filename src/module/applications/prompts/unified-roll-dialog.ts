@@ -917,8 +917,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender has a loose Foundry signature with unknown options bag
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Keep the auto-range/situational preview live as the target changes (#233).
@@ -1042,8 +1041,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onClose has a loose Foundry options signature
-    override _onClose(options: Record<string, unknown>): void {
+    override _onClose(options: ApplicationRenderOptions): void {
         // Release the live target-tracking hook (#233) so it does not fire (and
         // render) against a closed dialog.
         if (this._targetHookId !== null) {

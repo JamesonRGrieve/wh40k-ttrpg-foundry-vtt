@@ -74,6 +74,7 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Biome diagnostics (errors + warnings) | (built into ratchet) | `pnpm biome:ratchet` | `.biome-warning-baseline` |
 | Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
 | `!important` in `tailwind/*.js` | `pnpm important:coverage` | `pnpm important:ratchet` | `.important-baseline` |
+| Lines inside block `/* eslint-disable */` … `/* eslint-enable */` (lint surface) — a block with no `eslint-enable` (runs to end of file) is a **hard fail** | `pnpm eslint-block:coverage` | `pnpm eslint-block:ratchet` | `.eslint-block-baseline` |
 | Template references resolve to files (partials + TS template paths) | `pnpm preload:drift` | hard gate (no ratchet) | — |
 | Orphaned `data-wh40k-hook` selectors (selector with no producing element) | `pnpm hooks:orphan-audit` | hard gate (no ratchet) | — |
 | Dead `tailwind/*.js` rules (no live `wh40k-*` consumer) | `pnpm css:plugin-audit` | hard gate (no ratchet) | — |
@@ -273,7 +274,7 @@ The auto-fix tooling (`.auto-fix/run.py`) prompt encodes the same policy — che
 
 ### No `eslint-disable` cop-outs
 
-**File-level `/* eslint-disable <rule> */` blocks are forbidden anywhere in the codebase.** No exemptions, no "boundary file" rationale, no exception for storybook helpers or test harnesses. A file-level disable buries dozens of warnings in one stroke and disables enforcement on every future edit to that file. If a file would surface many warnings without the block, fix the warnings properly or drop the file from the current batch — never paper-over with a block disable.
+**File-level `/* eslint-disable <rule> */` blocks are forbidden anywhere in the codebase.** `eslint-block:ratchet` (pre-commit) fails on any block that never re-enables and ratchets the lines remaining blocks cover. Repeated Foundry boundaries get a name once in `foundry-v14-overrides.d.ts` (`ApplicationRenderOptions`, `HandlebarsContext`, `HandlebarsValue`) or one typed factory (`identifierField()`), never a suppression at every call site. No exemptions, no "boundary file" rationale, no exception for storybook helpers or test harnesses. A file-level disable buries dozens of warnings in one stroke and disables enforcement on every future edit to that file. If a file would surface many warnings without the block, fix the warnings properly or drop the file from the current batch — never paper-over with a block disable.
 
 **Inline `// eslint-disable-next-line` is only acceptable for these three categories. Anything else is a regression.**
 

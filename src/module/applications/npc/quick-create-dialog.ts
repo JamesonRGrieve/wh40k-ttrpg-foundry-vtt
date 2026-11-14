@@ -98,8 +98,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext must return Record<string,unknown> per framework contract
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         // Get available options. `roles` is a generation archetype (shapes the
@@ -202,8 +201,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onRender context is an untyped framework parameter
-    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Add live update listeners

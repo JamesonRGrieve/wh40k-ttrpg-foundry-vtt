@@ -131,8 +131,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are loose records
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
@@ -235,8 +234,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are loose records
-    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): void {
         void super._onRender(context, options);
 
         // Add live update for custom modifier

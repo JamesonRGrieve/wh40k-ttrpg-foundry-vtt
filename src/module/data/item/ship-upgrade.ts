@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import {
     shipHasModifiers,
@@ -32,8 +32,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField is a DataField.Any at runtime but TypeScript can't verify the cast
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Resource requirements
             power: new fields.NumberField({ required: true, initial: 0, integer: true }),

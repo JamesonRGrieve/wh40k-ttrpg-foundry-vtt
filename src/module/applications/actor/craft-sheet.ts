@@ -296,8 +296,7 @@ export default class CraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // Coarse craft class is the actor `type` suffix (`*-terracraft` /
         // `*-aircraft` / `*-watercraft`); legacy `*-vehicle` renders as land.
         // (The `locomotion` field is the fine propulsion adjective, not this.)
@@ -562,8 +561,7 @@ export default class CraftActorSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._preparePartContext signature contract
-    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: HandlebarsContext, options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const partContext = await super._preparePartContext(partId, context, options);
 
         // Add tab metadata for all tab parts

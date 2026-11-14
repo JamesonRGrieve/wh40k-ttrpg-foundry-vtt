@@ -1,6 +1,6 @@
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
@@ -34,8 +34,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TypeScript cannot verify the constructor shape; cast required for Foundry field registration
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // What weapon types can use this ammo
             weaponTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),

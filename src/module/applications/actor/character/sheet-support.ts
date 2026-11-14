@@ -74,17 +74,16 @@ export type SheetTabConfig = {
     tooltip?: string;
 };
 
-/* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the types below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
-export type CharacterSheetContext = Record<string, unknown> & {
-    actor?: Record<string, unknown> & { characteristics?: Record<string, Record<string, unknown>> };
-    system?: Record<string, unknown> & {
-        rogueTrader?: Record<string, unknown>;
-        modifierSources?: { characteristics?: Record<string, unknown> };
+export type CharacterSheetContext = HandlebarsContext & {
+    actor?: HandlebarsContext & { characteristics?: Record<string, HandlebarsContext> };
+    system?: HandlebarsContext & {
+        rogueTrader?: HandlebarsContext;
+        modifierSources?: { characteristics?: HandlebarsContext };
         wounds?: { value?: number; max?: number };
         fatigue?: { value?: number; max?: number };
-        armour?: Record<string, unknown>;
+        armour?: HandlebarsContext;
     };
-    dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
+    dh?: HandlebarsContext & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
     /** Combat move-mode cluster state (#235) — drives the movement panel toggles. */
     combatMovement?: { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number };
     /** Per-turn action-economy readout (#264) — null when this actor is not in combat. */
@@ -96,12 +95,12 @@ export type CharacterSheetContext = Record<string, unknown> & {
         usedPoints: number;
     } | null;
     // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
-    // intersected Record<string, unknown> for all known sheet-context fields written by
+    // intersected HandlebarsContext for all known sheet-context fields written by
     // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
 } & CharacterSheetContextDeclaredFields;
 type CharacterSheetContextDeclaredFields = {
     inEditMode?: boolean;
-    ruleset?: unknown;
+    ruleset?: HandlebarsValue;
     /** The per-line sheet parts the active line shows (#715); templates gate on these, not the line id. */
     capabilities?: CharacterSheetCapabilities;
     isHomebrew?: boolean;
@@ -133,55 +132,55 @@ type CharacterSheetContextDeclaredFields = {
     comradeHealingPanel?: OwComradeHealingPanelContext;
     craftsmanshipPanel?: OwCraftsmanshipPanelContext;
     mountPanel?: OwMountPanelContext;
-    drawbackPanel?: Record<string, unknown>;
-    battlefieldPanel?: Record<string, unknown>;
+    drawbackPanel?: HandlebarsContext;
+    battlefieldPanel?: HandlebarsContext;
     hideThroneGelt?: boolean;
     resourceRows?: Array<ResourceRow & { value: number | undefined }>;
-    originPathSteps?: unknown;
-    originPathSummary?: unknown;
+    originPathSteps?: HandlebarsValue;
+    originPathSummary?: HandlebarsValue;
     originPathComplete?: boolean;
-    originOptions?: Record<string, unknown>;
-    headerFields?: unknown;
-    navigatorPowers?: unknown[];
-    shipRoles?: unknown[];
+    originOptions?: HandlebarsContext;
+    headerFields?: HandlebarsValue;
+    navigatorPowers?: HandlebarsValue[];
+    shipRoles?: HandlebarsValue[];
     talentsCount?: number;
     traitsCount?: number;
-    dynastyData?: Record<string, unknown>;
+    dynastyData?: HandlebarsContext;
     tab?: { id: string; group: string; cssClass: string; label: string; active: boolean };
-    tabs?: unknown;
-    skillsFilter?: unknown;
-    skillLists?: unknown;
-    biography?: unknown;
+    tabs?: HandlebarsValue;
+    skillsFilter?: HandlebarsValue;
+    skillLists?: HandlebarsValue;
+    biography?: HandlebarsValue;
     /** The owned journal-entry items the Biography tab's journal panel lists (#613). */
     journalEntries?: WH40KItem[];
-    aptitudePills?: unknown;
-    aptitudes?: unknown;
-    favoriteSkills?: unknown;
-    favoriteTalents?: unknown;
-    effects?: unknown[];
-    combatTalents?: unknown[];
+    aptitudePills?: HandlebarsValue;
+    aptitudes?: HandlebarsValue;
+    favoriteSkills?: HandlebarsValue;
+    favoriteTalents?: HandlebarsValue;
+    effects?: HandlebarsValue[];
+    combatTalents?: HandlebarsValue[];
     woundsPercent?: number;
     fatiguePercent?: number;
-    criticalInjuries?: unknown[];
-    forceField?: unknown;
+    criticalInjuries?: HandlebarsValue[];
+    forceField?: HandlebarsValue;
     hasForceField?: boolean;
-    armourDisplayLocations?: unknown;
-    armourDisplay?: Record<string, unknown>;
+    armourDisplayLocations?: HandlebarsValue;
+    armourDisplay?: HandlebarsContext;
     equippedGear?: Array<{ id: string | null; name: string; img: string | null }>;
-    equippedWeapons?: unknown[];
+    equippedWeapons?: HandlebarsValue[];
     handBudget?: HandBudget;
     psychicPowers?: PsychicPowerRow[];
     showPsychicPanel?: boolean;
     psyRating?: number;
-    primaryWeapon?: unknown;
-    secondaryWeapon?: unknown;
-    sidearm?: unknown;
-    grenades?: unknown[];
-    otherWeapons?: unknown[];
-    allItems?: unknown[];
-    allCarriedItems?: unknown[];
-    allShipItems?: unknown[];
-    storageLocations?: unknown[];
+    primaryWeapon?: HandlebarsValue;
+    secondaryWeapon?: HandlebarsValue;
+    sidearm?: HandlebarsValue;
+    grenades?: HandlebarsValue[];
+    otherWeapons?: HandlebarsValue[];
+    allItems?: HandlebarsValue[];
+    allCarriedItems?: HandlebarsValue[];
+    allShipItems?: HandlebarsValue[];
+    storageLocations?: HandlebarsValue[];
     armourCount?: number;
     forceFieldCount?: number;
     cyberneticCount?: number;
@@ -421,7 +420,7 @@ export type OwComradeHealingPanelContext = ComradeHealingPanelView;
 type OwCraftsmanshipPanelContext = ReturnType<typeof buildOwCraftsmanshipPanel>;
 
 export type OriginSummary = {
-    steps: Record<string, unknown>[];
+    steps: HandlebarsContext[];
     completedSteps: number;
     totalSteps: number;
     isComplete: boolean;
@@ -454,10 +453,10 @@ export type WeaponLike = WH40KItem & {
         ammoPercentage: number;
         effectiveClipMax: number;
         isTwoHanded: boolean;
-        [key: string]: unknown;
+        [key: string]: HandlebarsValue;
     };
     ammoPercent: number;
-    [key: string]: unknown;
+    [key: string]: HandlebarsValue;
 };
 
 /** One psychic-power row rendered on the combat-station panel (#412). */
@@ -476,9 +475,9 @@ export type TalentLike = WH40KItem & {
     system: WH40KItem['system'] & {
         tier: number | string;
         category: string;
-        [key: string]: unknown;
+        [key: string]: HandlebarsValue;
     };
-    [key: string]: unknown;
+    [key: string]: HandlebarsValue;
 };
 
 export type UtilityMenuOption = {
@@ -504,10 +503,10 @@ interface PanelBuilder {
 export type SystemPanels = Partial<Record<GameSystemId, readonly PanelBuilder[]>>;
 
 /** OW pass-through panels read `system.*` by string key (no dedicated _prepare method yet). */
-export function owSystemRecord(sheet: CharacterSheet): Record<string, unknown> {
+export function owSystemRecord(sheet: CharacterSheet): HandlebarsContext {
     return sheet.actor.system;
 }
 
 /** The render context and options ApplicationV2 hands a part's context builder. */
-// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2's part-context and render-options signatures use Record<string, unknown>
-export type PartContext = Record<string, unknown>;
+// eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2's part-context and render-options signatures use HandlebarsContext
+export type PartContext = HandlebarsContext;

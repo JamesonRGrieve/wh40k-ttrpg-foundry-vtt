@@ -65,8 +65,7 @@ export default class GearSheet extends BaseItemSheet<GearItem> {
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         // Add gear-specific computed properties to context

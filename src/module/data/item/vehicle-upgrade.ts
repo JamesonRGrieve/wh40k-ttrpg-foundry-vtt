@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import {
     vehicleHasModifiers,
@@ -34,8 +34,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField brand mismatch with DataField.Any
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Upgrade type (Standard, Integral, Custom)
             upgradeType: new fields.StringField({

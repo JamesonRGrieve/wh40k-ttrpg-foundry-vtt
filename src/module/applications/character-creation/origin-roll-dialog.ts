@@ -208,8 +208,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry `_prepareContext` returns Record<string, unknown> per its v2 ApplicationV2 type
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/unbound-method -- boundary: super._prepareContext is typed by Foundry as Record<string, unknown>
         const superCall = super._prepareContext as (o: ApplicationV2Config.RenderOptions) => Promise<Record<string, unknown>>;
         const superCtx = await superCall.call(this, options);
@@ -238,8 +237,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         return { ...superCtx, ...additions, _gameSystemId: firstSystemId(this.context.actor) };
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.
         applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);

@@ -1,7 +1,7 @@
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import RerollTemplate from '../shared/reroll-template.ts';
@@ -59,8 +59,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: false, blank: true }),
+            identifier: identifierField({ required: false, blank: true }),
 
             // Category/type of trait
             category: new fields.StringField({

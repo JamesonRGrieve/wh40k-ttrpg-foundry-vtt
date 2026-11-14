@@ -162,8 +162,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
         const sys = this.item.system;
 
@@ -272,8 +271,7 @@ export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is free-form template context passed by Foundry ApplicationV2
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Enter in the tag input adds the tag, rather than submitting the form.

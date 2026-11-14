@@ -233,8 +233,7 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context is the Foundry render object; Record<string,unknown> is the correct type at this API seam
-        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Surface the active game system on the app root so per-system Tailwind

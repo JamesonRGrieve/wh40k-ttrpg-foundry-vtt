@@ -1,6 +1,6 @@
 import { shipComponentTypeLabelKey } from '../../utils/ship-choices.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { normalizeToArray } from '../shared/normalize-to-array.ts';
 import {
@@ -38,8 +38,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Component type/category
             componentType: new fields.StringField({

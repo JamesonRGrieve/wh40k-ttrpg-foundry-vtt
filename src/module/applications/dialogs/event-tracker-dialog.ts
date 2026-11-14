@@ -191,8 +191,7 @@ export default class EventTrackerDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._onClose receives Foundry's untyped close-options bag
-    override _onClose(options: Record<string, unknown>): void {
+    override _onClose(options: ApplicationRenderOptions): void {
         super._onClose(options);
         for (const [hook, id] of this.#hookIds) Hooks.off(hook, id);
         this.#hookIds = [];

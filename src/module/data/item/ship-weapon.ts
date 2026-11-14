@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { renameKeys } from '../shared/migrate-rename.ts';
 import { normalizeToArray } from '../shared/normalize-to-array.ts';
@@ -42,8 +42,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField at runtime but TypeScript doesn't know; cast needed for Foundry field registration
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Weapon type
             weaponType: new fields.StringField({

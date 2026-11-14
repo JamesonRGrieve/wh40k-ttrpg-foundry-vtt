@@ -1,7 +1,7 @@
 import { GIFT_ALIGNMENTS, GIFT_ROLL_DIRECTIONS, GIFT_SUB_TABLES, type GiftData } from '../../rules/bc-gifts.ts';
 import { MUTATION_CATEGORIES, type MutationCategory } from '../../rules/mutation-categories.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 
@@ -65,8 +65,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown chain satisfies DataField.Any brand without runtime effect
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Mutation category (`gift` = a Black Crusade Gift of the Gods)
             category: new fields.StringField({

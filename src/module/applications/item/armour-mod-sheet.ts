@@ -97,8 +97,7 @@ export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSh
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext options/return are framework-defined free-form payloads
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
         const system = this.item.system as unknown as ArmourModSystem;

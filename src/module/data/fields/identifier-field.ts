@@ -58,3 +58,13 @@ export default class IdentifierField extends (foundry.data as any).fields.String
         return identifierFromName(name);
     }
 }
+
+/**
+ * A new {@link IdentifierField}, typed as the `StringField` it is at runtime.
+ * The class extends an untyped base (see above), so this is the one place its
+ * instances are cast for a schema; schemas call this instead (#719).
+ */
+export function identifierField(options: { required: boolean; blank: boolean }): foundry.data.fields.StringField {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField's base is fvtt-types' StringField reached untyped (brand mismatch); the instance is a StringField at runtime
+    return new IdentifierField(options) as unknown as foundry.data.fields.StringField;
+}

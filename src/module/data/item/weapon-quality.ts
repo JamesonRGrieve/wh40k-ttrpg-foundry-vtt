@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import {
     WEAPON_QUALITY_DIE_OP_KINDS,
@@ -31,8 +31,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Does this quality have a level/rating?
             hasLevel: new fields.BooleanField({ required: true, initial: false }),

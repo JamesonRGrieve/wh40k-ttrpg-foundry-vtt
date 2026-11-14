@@ -151,8 +151,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature returns Record<string,unknown>; Foundry framework type
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
@@ -202,8 +201,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unk
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature accepts Record<string,unknown>; Foundry framework type
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up event listeners. The controls are found by their hooks: the template's

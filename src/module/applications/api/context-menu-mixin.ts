@@ -90,8 +90,7 @@ export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T): 
         /* -------------------------------------------- */
 
         /** @override */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Setup context menus on first render

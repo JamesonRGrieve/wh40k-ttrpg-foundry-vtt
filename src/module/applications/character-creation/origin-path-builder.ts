@@ -747,8 +747,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature accepts and returns Record<string,unknown>; Foundry framework type
-    override async _prepareContext(_options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(_options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -1633,8 +1632,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature accepts Record<string,unknown>; Foundry framework types
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
 

@@ -72,8 +72,7 @@ export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(Appl
     result: DaemonWeaponAttributeRollResult | null;
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext is typed as Record<string, unknown> in Foundry's shipped typings
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
         return {
             ...context,

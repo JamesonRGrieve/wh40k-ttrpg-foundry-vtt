@@ -380,8 +380,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
-    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): void {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- super._onRender is synchronous in the base class; V14 type signature is async but implementation is not
         super._onRender(context, options);
         this.#applyActiveTab();

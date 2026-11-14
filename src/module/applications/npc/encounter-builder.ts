@@ -128,8 +128,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext/Record<string,unknown> is the ApplicationV2 override signature
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         // Calculate encounter metrics
@@ -191,8 +190,7 @@ export default class EncounterBuilder extends makeNpcFormDialog({
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender/Record<string,unknown> is the ApplicationV2 override signature
-    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): void {
         void super._onRender(context, options);
 
         // Party configuration inputs

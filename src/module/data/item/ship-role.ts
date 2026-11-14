@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
@@ -31,8 +31,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Role rank/priority
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),

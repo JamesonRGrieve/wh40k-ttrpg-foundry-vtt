@@ -386,8 +386,7 @@ export default class NPCSheet extends CharacterSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext signature contract
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         // Let CharacterSheet populate favoriteSkills, favoriteTalents,
         // equippedWeapons, loadout data, combat data, and the rest of the PC
         // fields the shared player/*.hbs templates read.
@@ -656,8 +655,7 @@ export default class NPCSheet extends CharacterSheet {
      * weapons, horde/threat/barter state for the npc tab).
      * @override
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._preparePartContext signature uses Record<string,unknown> per Foundry's mixin-erased contract.
-    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: HandlebarsContext, options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const partContext = await super._preparePartContext(partId, context, options);
 
         // The npc tab isn't in CharacterSheet's switch — set tab metadata by hand.

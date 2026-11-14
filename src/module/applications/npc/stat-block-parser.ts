@@ -348,8 +348,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 hook signature
-    override _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): void {
         void super._onRender(context, options);
 
         // Track input changes

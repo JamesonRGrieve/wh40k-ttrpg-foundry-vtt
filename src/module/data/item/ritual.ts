@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { formatTestLabel, skillLabel } from '../shared/skill-definitions.ts';
@@ -30,8 +30,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown cast satisfies StringField constructor typing without runtime effect
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Ritual type
             type: new fields.StringField({

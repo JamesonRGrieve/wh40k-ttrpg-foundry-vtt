@@ -74,8 +74,7 @@ export default class LootActorSheet extends BaseActorSheet {
     }
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2._prepareContext return contract
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context: LootSheetContext = {
             ...(await super._prepareContext(options)),
         };

@@ -1380,7 +1380,7 @@ export default class CharacterData extends CreatureTemplate {
  * `defineSchema()`) and the compile-time type (declared on the class)
  * in lock-step without per-field repetition.
  */
-/* eslint-disable @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging -- declaration-merging target: all members come from the extends list; intentional merge with the class above */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging -- declaration-merging target: all members come from the extends list; intentional merge with the class above
 export default interface CharacterData
     extends BcPsychicDeclarations,
         DwAstartesDeclarations,

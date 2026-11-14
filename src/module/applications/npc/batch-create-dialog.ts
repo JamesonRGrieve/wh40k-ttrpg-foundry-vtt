@@ -118,8 +118,7 @@ export default class BatchCreateDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         // Get options
@@ -170,8 +169,7 @@ export default class BatchCreateDialog extends makeNpcFormDialog({
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         const form = this.element;

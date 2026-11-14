@@ -138,8 +138,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns untyped record
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
@@ -212,8 +211,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender accepts untyped context record
-    override _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    override _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): void {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises -- ApplicationV2 _onRender base may return Promise<void> | void
         super._onRender(context, options);
         this.#activateListeners();

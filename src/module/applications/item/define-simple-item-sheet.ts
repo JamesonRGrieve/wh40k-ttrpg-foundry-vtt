@@ -150,8 +150,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
             return {};
         }
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: _prepareContext returns free-form template context; Record<string, unknown> is the required base shape
-        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
             /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-restricted-syntax -- boundary: super._prepareContext is not typed in the mixin chain */
             // biome-ignore lint/suspicious/noExplicitAny: boundary - super._prepareContext is not typed in the mixin chain
             const context = (await (super._prepareContext as any).call(this, options)) as Record<string, unknown>;
@@ -169,7 +168,7 @@ export default function defineSimpleItemSheet<TBase extends BaseItemSheetCtor = 
         }
 
         // eslint-disable-next-line no-restricted-syntax -- boundary: _onRender context/options are free-form Foundry payloads
-        override async _onRender(context: Record<string, unknown>, renderOptions: Record<string, unknown>): Promise<void> {
+        override async _onRender(context: HandlebarsContext, renderOptions: Record<string, unknown>): Promise<void> {
             /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- boundary: super._onRender is not typed in the mixin chain */
             // biome-ignore lint/suspicious/noExplicitAny: boundary - super._onRender is not typed in the mixin chain
             await (super._onRender as any).call(this, context, renderOptions);

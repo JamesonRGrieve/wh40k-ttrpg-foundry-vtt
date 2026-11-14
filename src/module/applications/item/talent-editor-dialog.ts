@@ -536,8 +536,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context/options are framework-defined free-form payloads
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up section tab handlers

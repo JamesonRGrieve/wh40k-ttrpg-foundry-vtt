@@ -116,8 +116,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         if (!this._compendiumLoaded) {
             await this._loadAllSpecializations();
         }
@@ -159,8 +158,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context type matches base class signature
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
 

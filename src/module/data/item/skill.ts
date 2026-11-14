@@ -1,6 +1,6 @@
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
@@ -45,8 +45,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but isn't statically typed as such; cast required for constructor call
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Linked characteristic
             characteristic: new fields.StringField({

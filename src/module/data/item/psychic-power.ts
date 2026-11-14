@@ -2,7 +2,7 @@ import { type StructuredPrerequisites, toStructuredPrerequisites } from '../../r
 import { psychicPowerXpCost } from '../../rules/xp-costs.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
 import { type AttackCueData, attackCueField } from '../shared/attack-cue-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
@@ -60,8 +60,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS can't verify the mixin constraint without casting
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // The discipline as the book prints it (content#35): content, so no fixed
             // choices. `disciplineTree` derives the tree the rules key on.

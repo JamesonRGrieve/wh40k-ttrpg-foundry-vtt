@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
@@ -23,8 +23,7 @@ export default class OathData extends ItemDataModel.mixin(DescriptionTemplate) {
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that; the as-unknown cast satisfies DataField.Any without runtime effect
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // When and how the oath is sworn, plus any conditions on it.
             requirement: new fields.HTMLField({ required: false, blank: true }),

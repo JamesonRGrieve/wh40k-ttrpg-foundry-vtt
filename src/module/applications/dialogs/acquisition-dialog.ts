@@ -348,8 +348,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /* -------------------------------------------- */
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature is framework-defined.
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         // #462: pair the context _gameSystemId with the ancestor stamp for per-system variants.
         applySystemDataset(this.element, typeof context['_gameSystemId'] === 'string' ? context['_gameSystemId'] : undefined);

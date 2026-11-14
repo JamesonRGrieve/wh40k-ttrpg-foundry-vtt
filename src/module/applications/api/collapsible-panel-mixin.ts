@@ -113,8 +113,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
         /* -------------------------------------------- */
 
         /** @override */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext is a framework-defined free-form payload
-        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
             // eslint-disable-next-line no-restricted-syntax -- boundary: super._prepareContext returns framework-defined free-form payload
             const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
@@ -131,8 +130,7 @@ export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base:
         /* -------------------------------------------- */
 
         /** @override */
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender context is a framework-defined free-form payload
-        override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
             // Apply saved panel states to DOM

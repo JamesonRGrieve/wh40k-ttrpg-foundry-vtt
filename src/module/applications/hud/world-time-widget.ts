@@ -232,8 +232,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext signature is framework-defined.
-    override async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         const clock = worldClock();

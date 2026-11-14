@@ -53,7 +53,7 @@ import {
 } from '../../utils/item-variant-utils.ts';
 import { buildQualityLabel, parseQualityLevel, withoutRatingPlaceholder } from '../../utils/quality-id.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import { type AttackCueData, attackCueField, migrateLegacyAttackSounds } from '../shared/attack-cue-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
 import DamageTemplate, { type DamageProfileData } from '../shared/damage-template.ts';
@@ -386,8 +386,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but isn't statically typed as such; cast required for schema registration
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.StringField,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Weapon classification (usage pattern only)
             class: new fields.StringField({

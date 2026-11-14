@@ -563,8 +563,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _prepareContext returns Record<string, unknown>; concrete sub-typing happens via CharacterSheetContext cast inside
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = (await super._prepareContext(options)) as CharacterSheetContext;
 
         // New render pass — drop the memoised combat-data diff (#507) so the
@@ -727,8 +726,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      * @protected
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _preparePartContext signature uses Record<string, unknown>; prototype must match
-    override async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    override async _preparePartContext(partId: string, context: HandlebarsContext, options: ApplicationRenderOptions): Promise<HandlebarsContext> {
         const prototype = Object.getPrototypeOf(CharacterSheet.prototype) as {
             _preparePartContext?: (
                 this: CharacterSheet,
@@ -874,8 +872,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _onFirstRender signature uses Record<string, unknown>
-    override async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onFirstRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onFirstRender(context, options);
 
         // Nudge the user to build an unfinished character via the origin-path
@@ -1351,8 +1348,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * `data-favourite-key` and lives inside a parent `[data-favourite-list="skills|talents"]`
      * container. On drop, splice the flag array and persist. See issue #6.
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 _onRender signature uses Record<string, unknown>
-    override async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationRenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         const lists = this.element.querySelectorAll('[data-favourite-list]');

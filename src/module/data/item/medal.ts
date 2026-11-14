@@ -1,6 +1,6 @@
 import { MEDAL_HONOUR_TYPES, type MedalHonourType } from '../../rules/ow-regimental-award.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
@@ -30,8 +30,7 @@ export default class MedalData extends ItemDataModel.mixin(DescriptionTemplate) 
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
             honourType: new fields.StringField({ required: true, blank: false, initial: 'regimental', choices: [...MEDAL_HONOUR_TYPES] }),
             awardedFor: new fields.HTMLField({ required: true, blank: true, initial: '' }),
             squadBonus: new fields.HTMLField({ required: true, blank: true, initial: '' }),

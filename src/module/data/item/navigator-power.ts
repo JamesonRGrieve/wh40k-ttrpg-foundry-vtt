@@ -1,7 +1,7 @@
 import { NAVIGATOR_LEVEL_LABEL_KEY, NAVIGATOR_LEVEL_ORDER, type NavigatorPowerLevel } from '../../rules/navigator-powers.ts';
 import { formatSigned } from '../../utils/format.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import ActivationTemplate from '../shared/activation-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 
@@ -35,8 +35,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown cast satisfies StringField constructor typing without runtime effect
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Power test configuration
             test: new fields.SchemaField({

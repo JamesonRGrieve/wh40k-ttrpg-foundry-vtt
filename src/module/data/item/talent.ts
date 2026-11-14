@@ -4,7 +4,7 @@ import { type StructuredPrerequisites, toStructuredPrerequisites } from '../../r
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { composeSpecializationName } from '../../utils/specialization-name.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import { prerequisitesField } from '../shared/prerequisites-field.ts';
@@ -62,8 +62,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but TS doesn't see it through Foundry's mixin
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Category/type of talent
             category: new fields.StringField({

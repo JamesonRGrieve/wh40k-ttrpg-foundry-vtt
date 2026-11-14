@@ -1,5 +1,5 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { normalizeNestedToArray, normalizeToArray } from '../shared/normalize-to-array.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
@@ -36,8 +36,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends StringField but Foundry types don't reflect that
-            identifier: new (IdentifierField as unknown as typeof foundry.data.fields.StringField)({ required: true, blank: true }),
+            identifier: identifierField({ required: true, blank: true }),
 
             // Modification category (for visual grouping and icons)
             category: new fields.StringField({

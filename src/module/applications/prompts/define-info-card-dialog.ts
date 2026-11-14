@@ -61,8 +61,7 @@ export function defineInfoCardDialog(config: InfoCardDialogConfig): ApplicationV
             cards: { template: config.template, classes: [], scrollable: config.scrollable ?? [`.${config.id}__scroll`] },
         };
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns a free-form Handlebars context bag
-        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
             const context = await super._prepareContext(options);
             return { ...context, ...config.context, [config.contextKey]: await config.cards() };
         }

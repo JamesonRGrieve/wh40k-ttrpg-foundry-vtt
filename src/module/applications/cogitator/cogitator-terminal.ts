@@ -162,8 +162,7 @@ export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unkno
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _prepareContext returns Record<string,unknown> per Foundry's framework type
-    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+    override async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<HandlebarsContext> {
         const context = await super._prepareContext(options);
 
         const records = (await this.#resolveRecordDocs()).map((doc) => this.#toRecordItem(doc));
@@ -194,8 +193,7 @@ export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unkno
     }
 
     /** @inheritDoc */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 _onRender signature uses Record<string,unknown> per Foundry's mixin-erased contract
-    override async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+    override async _onRender(context: HandlebarsContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         const root = this.element;
         // Surface the active game line so `<id>:tw-*` accent variants fire on the terminal.

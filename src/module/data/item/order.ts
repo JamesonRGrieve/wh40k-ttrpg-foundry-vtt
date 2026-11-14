@@ -10,7 +10,7 @@ import { migrateLegacyOrderTest, ORDER_ACTION_TYPES, type OrderActionType } from
 import { SHIP_ACTION_EFFECTS, type ShipActionEffect } from '../../rules/ship-crew-morale.ts';
 import type { RammingProfile } from '../../rules/ship-ramming.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import { formatTestLabel, skillLabel } from '../shared/skill-definitions.ts';
 
@@ -69,8 +69,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
         return {
             ...super.defineSchema(),
 
-            // eslint-disable-next-line no-restricted-syntax -- boundary: IdentifierField extends `any`; the as-unknown chain satisfies DataField.Any brand without runtime effect
-            identifier: new IdentifierField({ required: true, blank: true }) as unknown as foundry.data.fields.DataField.Any,
+            identifier: identifierField({ required: true, blank: true }),
 
             // Order category
             category: new fields.StringField({
