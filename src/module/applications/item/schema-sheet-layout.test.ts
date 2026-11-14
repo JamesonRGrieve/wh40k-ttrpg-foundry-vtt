@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildLangStub } from '../../testing/lang-stub.ts';
+import { CRAFT_EXTRA_LAYOUT, NPC_EXTRA_LAYOUT, VOIDCRAFT_EXTRA_LAYOUT } from '../actor/actor-schema-layouts.ts';
 import {
     buildSectionRows,
     choiceLabelKey,
@@ -110,7 +111,14 @@ describe('the shipped schema-sheet layouts (#731)', () => {
     });
 
     it.each(
-        [...SCHEMA_SHEET_LAYOUTS, ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS)), ITEM_COMMON_LAYOUT].map((entry) => [entry.labelPrefix, entry] as const),
+        [
+            ...SCHEMA_SHEET_LAYOUTS,
+            ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS)),
+            ITEM_COMMON_LAYOUT,
+            NPC_EXTRA_LAYOUT,
+            CRAFT_EXTRA_LAYOUT,
+            VOIDCRAFT_EXTRA_LAYOUT,
+        ].map((entry) => [entry.labelPrefix, entry] as const),
     )('%s has a langpack label for every section and field', (_type, schemaLayout) => {
         expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
     });
@@ -119,5 +127,39 @@ describe('the shipped schema-sheet layouts (#731)', () => {
         const reroll = TALENT_EXTRA_LAYOUT.sections.find((entry) => entry.key === 'reroll');
         expect(reroll).toBeDefined();
         expect(TRAIT_EXTRA_LAYOUT.sections).toContain(reroll);
+    });
+});
+
+describe('schema map rows (#735)', () => {
+    const mapSection: SchemaSheetSection = {
+        key: 'overrides',
+        icon: 'fa-sliders-h',
+        paths: ['overrides.characteristics{characteristics}', 'overrides.skills{trainedSkills}'],
+        choiceLabels: { 'overrides.characteristics': 'WH40K.Characteristic' },
+    };
+    const mapLayout: SchemaSheetLayout = { type: 'npc', labelPrefix: 'WH40K.ActorFields.Test', sections: [mapSection] };
+    const mapSchema = field('SchemaField', {
+        fields: { overrides: field('SchemaField', { fields: { characteristics: field('ObjectField'), skills: field('ObjectField') } }) },
+    });
+    const stored = {
+        characteristics: { weaponSkill: {}, willpower: {} },
+        trainedSkills: { dodge: {} },
+        overrides: { characteristics: { willpower: 45 }, skills: {} },
+    };
+    const rows = buildSectionRows(mapLayout, mapSection, mapSchema, stored, (mapPath, key) => (mapPath === 'overrides.skills' ? `Skill ${key}` : null));
+
+    it('renders one number input per key of the key source, carrying the stored override', () => {
+        const characteristics = rows.at(0);
+        expect(characteristics?.kind).toBe('map');
+        expect(characteristics?.kind === 'map' ? characteristics.entries.map((entry) => [entry.name, entry.value, entry.labelKey]) : []).toEqual([
+            ['system.overrides.characteristics.weaponSkill', undefined, 'WH40K.Characteristic.WeaponSkill'],
+            ['system.overrides.characteristics.willpower', 45, 'WH40K.Characteristic.Willpower'],
+        ]);
+    });
+
+    it('labels a key through the sheet when it resolves one (a skill from the catalog)', () => {
+        const skills = rows.at(1);
+        expect(skills?.kind === 'map' ? skills.entries.map((entry) => entry.label) : []).toEqual(['Skill dodge']);
+        expect(skills?.labelKey).toBe('WH40K.ActorFields.Test.FIELDS.overrides.skills.label');
     });
 });

@@ -6,13 +6,15 @@
 
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { seedRandom, randomId } from '../../../../stories/mocks/extended';
+import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { mockNpcSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickAction, renderSheetParts } from '../../../../stories/test-helpers';
 import npcTabSrc from '../../../templates/actor/npc/tab-npc.hbs?raw';
 import equipmentTabSrc from '../../../templates/actor/player/tab-equipment.hbs?raw';
 import { callerRequirementView } from '../dialogs/reinforcement-call-view.ts';
+import { NPC_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import { encumbranceDisplay } from './encumbrance-display.ts';
 
 initializeStoryHandlebars();
@@ -299,5 +301,77 @@ export const FatiguePanel: Story = {
         await expect(view.getByText('Rest (-1)')).toBeVisible();
         // Clear-All appears only while fatigue > 0 (value 3 here).
         await expect(view.getByText('Clear All')).toBeVisible();
+    },
+};
+
+/** The stored NPC fields the NPC tab's own markup lacks: one key each in the override maps, one IM attack (#735). */
+const NPC_SCHEMA_SOURCE = {
+    characteristics: { weaponSkill: {}, willpower: {} },
+    trainedSkills: { dodge: {} },
+    customStats: { characteristics: { willpower: 45 }, skills: {} },
+    attacks: [{ name: 'Claws' }],
+};
+
+/** The NPC tab with the fields its markup lacks, rendered through the shared schema rows (#735). */
+function renderNpcWithSchemaFields(systemId: SystemId = 'dh2'): HTMLFormElement {
+    const ctx = {
+        ...mockNpcSheetContext({ systemId }),
+        inEditMode: true,
+        editable: true,
+        schemaSections: mockSchemaSections(NPC_EXTRA_LAYOUT, NPC_SCHEMA_SOURCE),
+    };
+    return inForm(renderNPCSheet(ctx), systemId);
+}
+
+/** Edit mode, every line: personality, the custom stat overrides (per characteristic and per skill) and the NPC flags submit (#735). */
+export const SchemaFields: Story = {
+    render: () => renderNpcWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.personality.demeanor',
+                'system.personality.goals',
+                'system.personality.fears',
+                'system.personality.quirks',
+                'system.customStats.enabled',
+                'system.customStats.characteristics.weaponSkill',
+                'system.customStats.characteristics.willpower',
+                'system.customStats.skills.dodge',
+                'system.customStats.combat.initiative',
+                'system.customStats.combat.dodge',
+                'system.customStats.combat.parry',
+                'system.customStats.wounds',
+                'system.customStats.movement',
+                'system.isReinforcement',
+                'system.primaryUse',
+                'system.movementManual',
+                'system.template',
+            ],
+            renderNpcWithSchemaFields,
+        );
+    },
+};
+
+/** Edit mode, Imperium Maledictum NPC: species, encounter, Resolve, Critical Wounds, possessions and each attack submit (#735). */
+export const ImSchemaFields: Story = {
+    render: () => renderNpcWithSchemaFields('im'),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.species',
+                'system.encounter',
+                'system.resolve.value',
+                'system.resolve.max',
+                'system.criticalWounds.value',
+                'system.criticalWounds.max',
+                'system.possessions',
+                'system.attacks.0.name',
+                'system.attacks.0.damage',
+            ],
+            () => renderNpcWithSchemaFields('im'),
+            ['im'],
+        );
     },
 };

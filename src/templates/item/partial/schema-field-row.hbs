@@ -8,9 +8,25 @@
     Add button. BaseItemSheet folds the index-keyed fields back onto the stored
     array on submit; add / remove rewrite the array through `updateSystemPath`.
 
+  - map:   one number input per key (an ObjectField of numbers keyed by another
+    stored object's keys, such as an NPC's per-characteristic overrides). An
+    empty input submits null, which clears the override.
+
   Hash arguments: row — the row object.
 --}}
-{{#if (eq row.kind "list")}}
+{{#if (eq row.kind "map")}}
+<div class="tw-flex tw-flex-col tw-gap-1 tw-mb-2">
+    <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize row.labelKey}}</span>
+    <div class="tw-grid tw-grid-cols-2 tw-gap-x-3 tw-gap-y-1">
+        {{#each row.entries as |entry|}}
+        <label class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-sm">
+            <span>{{#if entry.label}}{{entry.label}}{{else}}{{localize entry.labelKey}}{{/if}}</span>
+            <input type="number" class="tw-w-20" name="{{entry.name}}" value="{{entry.value}}" data-dtype="Number" {{disabled (not @root.inEditMode)}} />
+        </label>
+        {{/each}}
+    </div>
+</div>
+{{else if (eq row.kind "list")}}
 <div class="tw-flex tw-flex-col tw-gap-1 tw-mb-2" data-schema-list="{{row.name}}">
     <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize row.labelKey}}</span>
     {{#each row.entries as |entry|}}

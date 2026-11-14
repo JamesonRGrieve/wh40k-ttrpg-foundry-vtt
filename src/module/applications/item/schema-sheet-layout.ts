@@ -87,7 +87,30 @@ export interface SchemaListRow {
     readonly entries: readonly SchemaListEntry[];
 }
 
-export type SchemaRow = SchemaInputRow | SchemaListRow;
+/** One key of a map row: a number input for the value stored under that key. */
+interface SchemaMapEntry {
+    readonly name: string;
+    /** The key's display label when the sheet resolves it (a skill's catalog name); else null. */
+    readonly label: string | null;
+    /** The key's langpack label, used when `label` is null. */
+    readonly labelKey: string;
+    readonly value: FormValue;
+}
+
+/**
+ * A keyed map of numbers (an ObjectField such as an NPC's per-characteristic
+ * overrides), one input per key of another stored object: `map{keySource}`.
+ */
+interface SchemaMapRow {
+    readonly kind: 'map';
+    readonly labelKey: string;
+    readonly entries: readonly SchemaMapEntry[];
+}
+
+/** Resolves a map key's display label (`(mapPath, key) => label`), or null to use the langpack key. */
+export type SchemaMapLabel = (mapPath: string, key: string) => string | null;
+
+export type SchemaRow = SchemaInputRow | SchemaListRow | SchemaMapRow;
 
 function prefixOf(layout: SchemaSheetLayout, section: SchemaSheetSection): string {
     return section.labelPrefix ?? layout.labelPrefix;
@@ -100,7 +123,7 @@ function sectionLabelKey(layout: SchemaSheetLayout, section: SchemaSheetSection)
 
 /** The label key for a section's path (`importantSkills[].name` → `….FIELDS.importantSkills.name.label`). */
 function fieldLabelKey(layout: SchemaSheetLayout, section: SchemaSheetSection, path: string): string {
-    return `${prefixOf(layout, section)}.FIELDS.${path.replaceAll('[]', '')}.label`;
+    return `${prefixOf(layout, section)}.FIELDS.${path.replaceAll('[]', '').replace(/\{[^}]*\}$/, '')}.label`;
 }
 
 /** The label key for one option of a choice field; the blank option is "None". */
@@ -135,6 +158,7 @@ export function layoutLabelKeys(layout: SchemaSheetLayout): string[] {
         keys.add(sectionLabelKey(layout, section));
         for (const path of section.paths) {
             keys.add(fieldLabelKey(layout, section, path));
+            if (path.includes('{')) continue;
             const list = path.indexOf('[]');
             if (list >= 0) keys.add(fieldLabelKey(layout, section, path.slice(0, list)));
         }
@@ -176,11 +200,22 @@ function asEntries(value: FormValue): readonly FormValue[] {
  * A path the schema does not have is skipped, so a layout shared across lines
  * shows only the fields the item's own schema stores.
  */
-export function buildSectionRows(layout: SchemaSheetLayout, section: SchemaSheetSection, schema: SchemaNode, source: FormValue): SchemaRow[] {
+export function buildSectionRows(
+    layout: SchemaSheetLayout,
+    section: SchemaSheetSection,
+    schema: SchemaNode,
+    source: FormValue,
+    mapLabel: SchemaMapLabel = () => null,
+): SchemaRow[] {
     const rows: SchemaRow[] = [];
     const lists = new Map<string, string[]>();
-    const order: Array<{ kind: 'input'; path: string } | { kind: 'list'; path: string }> = [];
+    const order: Array<{ kind: 'input' | 'list'; path: string } | { kind: 'map'; path: string; keySource: string }> = [];
     for (const path of section.paths) {
+        const brace = path.indexOf('{');
+        if (brace > 0 && path.endsWith('}')) {
+            order.push({ kind: 'map', path: path.slice(0, brace), keySource: path.slice(brace + 1, -1) });
+            continue;
+        }
         const marker = path.indexOf('[]');
         if (marker < 0) {
             order.push({ kind: 'input', path });
@@ -197,6 +232,21 @@ export function buildSectionRows(layout: SchemaSheetLayout, section: SchemaSheet
     for (const item of order) {
         const node = schemaNodeAt(schema, item.path);
         if (node === undefined) continue;
+        if (item.kind === 'map') {
+            const keySource = valueAt(source, item.keySource);
+            const keys = isFormObject(keySource) ? Object.keys(keySource) : [];
+            rows.push({
+                kind: 'map',
+                labelKey: fieldLabelKey(layout, section, item.path),
+                entries: keys.map((key) => ({
+                    name: `system.${item.path}.${key}`,
+                    label: mapLabel(item.path, key),
+                    labelKey: choiceLabelKey(layout, section, item.path, key),
+                    value: valueAt(source, `${item.path}.${key}`),
+                })),
+            });
+            continue;
+        }
         if (item.kind === 'input') {
             rows.push({
                 kind: 'input',
@@ -244,10 +294,10 @@ export interface SchemaSectionView {
 }
 
 /** Every section of a layout as rows against the item's schema and stored source. */
-export function buildSchemaSections(layout: SchemaSheetLayout, schema: SchemaNode, source: FormValue): SchemaSectionView[] {
+export function buildSchemaSections(layout: SchemaSheetLayout, schema: SchemaNode, source: FormValue, mapLabel?: SchemaMapLabel): SchemaSectionView[] {
     return layout.sections.map((section) => ({
         labelKey: sectionLabelKey(layout, section),
         icon: section.icon,
-        rows: buildSectionRows(layout, section, schema, source),
+        rows: buildSectionRows(layout, section, schema, source, mapLabel),
     }));
 }

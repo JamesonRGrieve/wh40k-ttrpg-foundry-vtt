@@ -17,6 +17,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { occupantCandidateActors, type TokenSortDoc } from '../../rules/vehicle-embark.ts';
 import { occupantsOf, unfilledCrew } from '../../rules/vehicle-occupancy.ts';
 import { isVehicleTestCategory, type VehicleTestCategory } from '../../rules/vehicle-trait-tests.ts';
+import { CRAFT_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
 import { buildVehicleTraitPanel, type VehicleTraitPanelContext } from './vehicle-trait-panel-context.ts';
@@ -205,6 +206,9 @@ interface CraftSheetContext extends Record<string, unknown> {
  * @extends {BaseActorSheet}
  */
 export default class CraftActorSheet extends BaseActorSheet {
+    /** Stored fields this sheet's templates lack, edited through the shared schema rows (#735, #736). */
+    static override SCHEMA_LAYOUT = CRAFT_EXTRA_LAYOUT;
+
     declare actor: CraftActor;
 
     /* -------------------------------------------- */

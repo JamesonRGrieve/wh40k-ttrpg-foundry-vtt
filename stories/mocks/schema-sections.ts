@@ -33,11 +33,16 @@ function insert(root: Record<string, SchemaNode>, path: string, leaf: SchemaNode
     root[head] = storyNode('SchemaField', { fields });
 }
 
-/** A story schema with a node for every path of `layout`: strings, and arrays for `[]` paths. */
+/** A story schema with a node for every path of `layout`: strings, arrays for `[]` paths, objects for `map{keys}` paths. */
 function storySchema(layout: SchemaSheetLayout): SchemaNode {
     const fields: Record<string, SchemaNode> = {};
     const elements = new Map<string, Record<string, SchemaNode>>();
     for (const path of layout.sections.flatMap((section) => section.paths)) {
+        const brace = path.indexOf('{');
+        if (brace > 0) {
+            insert(fields, path.slice(0, brace), storyNode('ObjectField'));
+            continue;
+        }
         const marker = path.indexOf('[]');
         if (marker < 0) {
             insert(fields, path, storyNode('StringField'));
@@ -68,9 +73,15 @@ export function inForm(sheet: HTMLElement, systemId?: SystemId): HTMLFormElement
 
 /**
  * The schema rows submit: each named field, edited, reaches the form data under
- * its `system.` path; and every line renders the sheet with those inputs.
+ * its `system.` path; and each line in `systems` (default: all seven) renders the
+ * sheet with those inputs.
  */
-export function playSchemaFields(canvasElement: HTMLElement, names: readonly string[], renderFor: (systemId: SystemId) => HTMLElement): void {
+export function playSchemaFields(
+    canvasElement: HTMLElement,
+    names: readonly string[],
+    renderFor: (systemId: SystemId) => HTMLElement,
+    systems: readonly SystemId[] = STORY_SYSTEMS,
+): void {
     const form = canvasElement.querySelector('form');
     void expect(form).not.toBeNull();
     if (form === null) return;
@@ -79,9 +90,13 @@ export function playSchemaFields(canvasElement: HTMLElement, names: readonly str
         event.preventDefault();
         submitted.push(new FormData(form));
     });
-    submitForm(form, Object.fromEntries(names.map((name) => [name, `edited ${name}`])));
-    for (const name of names) void expect(submitted.at(0)?.get(name)).toBe(`edited ${name}`);
-    for (const systemId of STORY_SYSTEMS) {
+    // A number input only holds a number; every other input takes a marker naming the field.
+    const values = Object.fromEntries(
+        names.map((name) => [name, form.querySelector(`input[type="number"][name="${name}"]`) === null ? `edited ${name}` : '7']),
+    );
+    submitForm(form, values);
+    for (const name of names) void expect(submitted.at(0)?.get(name)).toBe(values[name]);
+    for (const systemId of systems) {
         const rendered = renderFor(systemId);
         for (const name of names) void expect(rendered.querySelector(`[data-wh40k-system="${systemId}"] [name="${name}"]`)).not.toBeNull();
     }

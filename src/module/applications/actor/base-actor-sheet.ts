@@ -55,6 +55,9 @@ import WhatIfMixin from '../api/what-if-mixin.ts';
 import { ItemPreviewMixin } from '../components/item-preview-card.ts';
 import type { ArmorTooltipEquippedPiece } from '../components/wh40k-tooltip.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import { isFormValue } from '../item/reference-list-edits.ts';
+import { buildSchemaSections, type SchemaSheetLayout } from '../item/schema-sheet-layout.ts';
+import * as SchemaSectionActions from './schema-section-actions.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
 type AnyApplicationV2Ctor = ApplicationV2Ctor;
@@ -328,6 +331,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         actions: {
+            addEntry: SchemaSectionActions.addEntry,
+            removeEntry: SchemaSectionActions.removeEntry,
             editImage: BaseActorSheet.#onEditImage,
             rerollPortrait: BaseActorSheet.#onRerollPortrait,
             togglePortraitPin: BaseActorSheet.#onTogglePortraitPin,
@@ -463,6 +468,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Use raw source data for form fields. DocumentSheetV2 expects source context to reflect
         // persisted data, while `system` may contain derived/prepared values used only for display.
         context.source = this.isEditable ? this.actor.system._source : this.actor.system;
+        /* eslint-enable no-restricted-syntax */
 
         // Universal context flags every actor sheet wants (isGM, dh config). PC/NPC/ruleset
         // state lives on CharacterSheet because it's character-specific.
@@ -480,9 +486,32 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Prepare items by category
         this._prepareItems(context);
 
+        this._prepareSchemaSections(context);
+
         return context;
     }
-    /* eslint-enable no-restricted-syntax */
+
+    /**
+     * Stored fields this sheet edits through the shared schema rows
+     * (`templates/item/partial/schema-sections.hbs`) on top of its own templates;
+     * null when its templates edit everything themselves.
+     */
+    static SCHEMA_LAYOUT: SchemaSheetLayout | null = null;
+
+    /** The display label of a key in a map row (a skill's catalog name); null to use the langpack key. */
+    schemaMapLabel(_mapPath: string, _key: string): string | null {
+        return null;
+    }
+
+    /** The schema rows of this sheet's layout, as `schemaSections` (#735, #736). */
+    _prepareSchemaSections(context: HandlebarsContext): void {
+        const layout = (this.constructor as typeof BaseActorSheet).SCHEMA_LAYOUT;
+        if (layout === null) return;
+        const stored = this.actor.system._source;
+        context['schemaSections'] = buildSchemaSections(layout, this.actor.system.schema, isFormValue(stored) ? stored : undefined, (mapPath, key) =>
+            this.schemaMapLabel(mapPath, key),
+        );
+    }
 
     /* -------------------------------------------- */
 

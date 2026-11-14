@@ -10,6 +10,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
 import { seedRandom, randomId, withSystem, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { mockStarshipSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { storyLocalize } from '../../../../stories/mocks/ship-assault';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
@@ -25,6 +26,7 @@ import type { ShipEffectData } from '../../rules/ship-action-effects.ts';
 import { shipActionRows, type ShipActionOrderView } from '../../rules/ship-actions.ts';
 import { voidcraftHullTypeOptions } from '../../utils/ship-choices.ts';
 import { shipActionModifierRows } from '../ship-action/ship-action-flow.ts';
+import { VOIDCRAFT_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 
 initializeStoryHandlebars();
 
@@ -685,5 +687,37 @@ export const HullTypeOutsideTheEnum: Story = {
         await expect(select?.value).toBe('escort');
         await expect(select?.selectedOptions.item(0)?.textContent.trim()).toBe('escort');
         await expect(canvasElement.querySelector('[data-wh40k-hook="voidcraft-hull-type-label"]')?.textContent.trim()).toBe('escort');
+    },
+};
+
+/** The voidcraft stats tab with the fields its markup lacks, rendered through the shared schema rows (#736). */
+function renderVoidcraftWithSchemaFields(): HTMLFormElement {
+    const ctx = {
+        ...mockStarshipSheetContext({ systemId: 'rt' }),
+        inEditMode: true,
+        editable: true,
+        schemaSections: mockSchemaSections(VOIDCRAFT_EXTRA_LAYOUT, { components: [{ slot: 'bridge' }] }),
+    };
+    return inForm(renderVoidcraftSheet(ctx), 'rt');
+}
+
+/** Edit mode (Rogue Trader fields voidcraft): mass, acceleration, complement, printed traits and each component slot submit (#736). */
+export const SchemaFields: Story = {
+    render: () => renderVoidcraftWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.mass',
+                'system.acceleration',
+                'system.complement',
+                'system.traitsText',
+                'system.components.0.slot',
+                'system.components.0.itemUuid',
+                'system.components.0.sp',
+            ],
+            () => renderVoidcraftWithSchemaFields(),
+            ['rt'],
+        );
     },
 };

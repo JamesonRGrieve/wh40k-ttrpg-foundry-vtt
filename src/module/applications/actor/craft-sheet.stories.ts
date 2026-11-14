@@ -12,6 +12,7 @@ import { expect, within } from 'storybook/test';
 import { mockActor } from '../../../../stories/mocks';
 import { randomId, type SystemId, seedRandom, withSystem } from '../../../../stories/mocks/extended';
 import { formatKey, localizeKey } from '../../../../stories/mocks/lang-localize';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { mockVehicleSheetContext, type SheetContextLike } from '../../../../stories/mocks/sheet-contexts';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { assertField, renderSheetParts, submitForm } from '../../../../stories/test-helpers';
@@ -22,6 +23,7 @@ import overviewTabSrc from '../../../templates/actor/craft/tab-overview.hbs?raw'
 import tabsSrc from '../../../templates/actor/player/tabs.hbs?raw';
 import { emptyAggregatedVehicleTraitEffects } from '../../data/shared/vehicle-trait-effects-template.ts';
 import { nameFitClass } from '../../handlebars/name-fit.ts';
+import { CRAFT_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import { buildVehicleTraitPanel } from './vehicle-trait-panel-context.ts';
 
 initializeStoryHandlebars();
@@ -543,5 +545,19 @@ export const LongNamesFitSidebar: Story = {
             };
         });
         await expect(fields).toEqual(LONG_CRAFT_NAMES.map(({ systemId, name }) => ({ systemId, value: name, tooltip: name, fitted: true, ellipsis: true })));
+    },
+};
+
+/** The craft overview with the fields its markup lacks, rendered through the shared schema rows (#736). */
+function renderCraftWithSchemaFields(systemId: SystemId = 'dh2'): HTMLFormElement {
+    const ctx = { ...mockVehicleSheetContext({ systemId }), inEditMode: true, editable: true, schemaSections: mockSchemaSections(CRAFT_EXTRA_LAYOUT) };
+    return inForm(renderCraftSheet(ctx), systemId);
+}
+
+/** Edit mode, every line (terracraft and aircraft share the sheet): vehicle class and printed traits submit (#736). */
+export const SchemaFields: Story = {
+    render: () => renderCraftWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(canvasElement, ['system.vehicleClass', 'system.traitsText'], renderCraftWithSchemaFields);
     },
 };

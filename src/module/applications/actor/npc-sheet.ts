@@ -23,6 +23,7 @@ import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
+import { NPC_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import type { SkillLike } from './base-actor-sheet.ts';
 import type { SystemPanels } from './character/sheet-support.ts';
 import CharacterSheet from './character-sheet.ts';
@@ -209,6 +210,14 @@ type NPCSystemContext = {
  * @extends {CharacterSheet}
  */
 export default class NPCSheet extends CharacterSheet {
+    /** Stored fields this sheet's templates lack, edited through the shared schema rows (#735, #736). */
+    static override SCHEMA_LAYOUT = NPC_EXTRA_LAYOUT;
+
+    /** A per-skill override is labelled with the skill's name from the line's catalog. */
+    override schemaMapLabel(mapPath: string, key: string): string | null {
+        return mapPath === 'customStats.skills' ? this.npcActor.system.skillLabel(key) : null;
+    }
+
     declare isEditable: boolean;
     declare _notify: (message: string, type?: string) => void;
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.render options shape is mixin-erased to Record<string,unknown>.

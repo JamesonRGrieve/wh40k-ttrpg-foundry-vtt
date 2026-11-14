@@ -309,8 +309,10 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
     declare specialAbilities: string;
     declare customStats: {
         enabled: boolean;
-        characteristics: Record<string, number>;
-        skills: Record<string, number>;
+        /** Per-characteristic overrides; null (an emptied sheet input) means no override. */
+        characteristics: Record<string, number | null>;
+        /** Per-skill overrides; null (an emptied sheet input) means no override. */
+        skills: Record<string, number | null>;
         combat: {
             initiative: number | null;
             dodge: number | null;
@@ -792,13 +794,12 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
 
         // Apply custom overrides if enabled
         if (this.customStats.enabled) {
-            // Override characteristics (always number, no null check needed)
+            // Override characteristics and skills; null (an emptied sheet input) is no override.
             for (const [key, value] of Object.entries(this.customStats.characteristics)) {
-                stats.characteristics[key] = value;
+                if (value !== null) stats.characteristics[key] = value;
             }
-            // Override skills (always number, no null check needed)
             for (const [key, value] of Object.entries(this.customStats.skills)) {
-                stats.skills[key] = value;
+                if (value !== null) stats.skills[key] = value;
             }
             // Override combat stats (number | null — null means "use derived value")
             if (this.customStats.combat.initiative !== null) {
@@ -1168,10 +1169,8 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         }
 
         // Apply custom override if enabled
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: Record<string,number> index access may be undefined at runtime
-        if (this.customStats.enabled && this.customStats.skills[skillName] !== undefined) {
-            return this.customStats.skills[skillName];
-        }
+        const override = this.customStats.enabled ? this.customStats.skills[skillName] : undefined;
+        if (override != null) return override;
 
         return target;
     }

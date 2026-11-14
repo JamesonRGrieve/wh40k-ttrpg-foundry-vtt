@@ -10274,6 +10274,168 @@
                     }
                 }
             }
+        },
+        "ActorFields": {
+            "Craft": {
+                "Sections": {
+                    "craft": "Vehicle"
+                },
+                "FIELDS": {
+                    "vehicleClass": {
+                        "label": "Vehicle Class"
+                    },
+                    "traitsText": {
+                        "label": "Printed Traits"
+                    }
+                }
+            },
+            "Npc": {
+                "Sections": {
+                    "personality": "Personality",
+                    "imperiumMaledictum": "Stat Block",
+                    "customStats": "Custom Stat Overrides",
+                    "npc": "NPC"
+                },
+                "FIELDS": {
+                    "personality": {
+                        "demeanor": {
+                            "label": "Demeanour"
+                        },
+                        "goals": {
+                            "label": "Goals"
+                        },
+                        "fears": {
+                            "label": "Fears"
+                        },
+                        "quirks": {
+                            "label": "Quirks"
+                        }
+                    },
+                    "species": {
+                        "label": "Species"
+                    },
+                    "encounter": {
+                        "label": "Encounter"
+                    },
+                    "resolve": {
+                        "value": {
+                            "label": "Resolve"
+                        },
+                        "max": {
+                            "label": "Resolve Maximum"
+                        }
+                    },
+                    "criticalWounds": {
+                        "value": {
+                            "label": "Critical Wounds"
+                        },
+                        "max": {
+                            "label": "Critical Wounds Maximum"
+                        }
+                    },
+                    "possessions": {
+                        "label": "Possessions"
+                    },
+                    "attacks": {
+                        "label": "Attacks",
+                        "name": {
+                            "label": "Name"
+                        },
+                        "skill": {
+                            "label": "Skill"
+                        },
+                        "damage": {
+                            "label": "Damage"
+                        },
+                        "range": {
+                            "label": "Range"
+                        },
+                        "traits": {
+                            "label": "Traits"
+                        }
+                    },
+                    "customStats": {
+                        "enabled": {
+                            "label": "Use Custom Stats"
+                        },
+                        "characteristics": {
+                            "label": "Characteristic Overrides"
+                        },
+                        "skills": {
+                            "label": "Skill Overrides"
+                        },
+                        "combat": {
+                            "initiative": {
+                                "label": "Initiative Override"
+                            },
+                            "dodge": {
+                                "label": "Dodge Override"
+                            },
+                            "parry": {
+                                "label": "Parry Override"
+                            }
+                        },
+                        "wounds": {
+                            "label": "Wounds Override"
+                        },
+                        "movement": {
+                            "label": "Movement Override"
+                        }
+                    },
+                    "isReinforcement": {
+                        "label": "Reinforcement"
+                    },
+                    "primaryUse": {
+                        "label": "Primary Use",
+                        "choices": {
+                            "Npc": "NPC",
+                            "Vehicle": "Vehicle",
+                            "Ship": "Ship"
+                        }
+                    },
+                    "movementManual": {
+                        "label": "Set Movement by Hand"
+                    },
+                    "template": {
+                        "label": "Template"
+                    },
+                    "specialAbilities": {
+                        "label": "Special Abilities"
+                    }
+                }
+            },
+            "Voidcraft": {
+                "Sections": {
+                    "hull": "Hull",
+                    "components": "Component Slots"
+                },
+                "FIELDS": {
+                    "mass": {
+                        "label": "Mass"
+                    },
+                    "acceleration": {
+                        "label": "Acceleration"
+                    },
+                    "complement": {
+                        "label": "Crew Complement"
+                    },
+                    "traitsText": {
+                        "label": "Printed Traits"
+                    },
+                    "components": {
+                        "label": "Component Slots",
+                        "slot": {
+                            "label": "Slot"
+                        },
+                        "itemUuid": {
+                            "label": "Component (UUID)"
+                        },
+                        "sp": {
+                            "label": "Ship Points"
+                        }
+                    }
+                }
+            }
         }
     }
 }

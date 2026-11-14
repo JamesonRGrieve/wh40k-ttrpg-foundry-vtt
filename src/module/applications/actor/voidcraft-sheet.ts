@@ -38,6 +38,7 @@ import { openShipAssaultDialog } from '../ship-assault/ship-assault-dialog.ts';
 import { foundryLocalize, type ShipAssaultTab } from '../ship-assault/ship-assault-flow.ts';
 import { attachShipAssaults, findShipAssault, shipAssaultButtons, type ShipAssaultButton } from '../ship-assault/ship-assault-registry.ts';
 import { createShipWeaponFireFlow, type ShipWeaponFireCompanion } from '../ship-assault/ship-weapon-fire-flow.ts';
+import { VOIDCRAFT_EXTRA_LAYOUT } from './actor-schema-layouts.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 import { isShipRole, officerCandidates, shipOfficerRows } from './ship-officers.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
@@ -150,6 +151,9 @@ const BUILD_STAT_LABEL_KEY: Record<ShipModifierStatKey, string> = {
  * Uses V2 PARTS system for modular template rendering.
  */
 export default class VoidcraftActorSheet extends BaseActorSheet {
+    /** Stored fields this sheet's templates lack, edited through the shared schema rows (#735, #736). */
+    static override SCHEMA_LAYOUT = VOIDCRAFT_EXTRA_LAYOUT;
+
     /** @override */
     static override DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,

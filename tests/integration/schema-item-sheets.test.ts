@@ -10,12 +10,12 @@
  *     (`item-sheet-registry.ts`), not left on the BaseItemSheet fallback.
  */
 import { describe, expect, it } from 'vitest';
-import { choiceLabelKey, choiceValues, schemaNodeAt, type SchemaNode, type SchemaSheetLayout } from '../../src/module/applications/item/schema-sheet-layout';
+import { choiceLabelKey, choiceValues, type SchemaNode, type SchemaSheetLayout } from '../../src/module/applications/item/schema-sheet-layout';
 import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS } from '../../src/module/applications/item/schema-sheet-layouts';
 import { buildLangStub } from '../../src/module/testing/lang-stub';
-import { readRepoFile } from '../lib/repo-file';
 import { bootFoundryOnce, type FoundryRuntime } from './lib/boot';
 import { requireOrSkip } from './lib/has-foundry';
+import { nodeAtLayoutPath, rendersSchemaSections } from './lib/schema-paths';
 
 const ok = requireOrSkip('A');
 const bootResult = await bootFoundryOnce();
@@ -49,15 +49,6 @@ function leafPaths(node: SchemaNode, path: string, out: string[]): string[] {
     }
     out.push(path);
     return out;
-}
-
-/** The node a layout path names, through `[]` array elements. */
-function nodeAtLayoutPath(schema: SchemaNode, path: string): SchemaNode | undefined {
-    const marker = path.indexOf('[]');
-    if (marker < 0) return schemaNodeAt(schema, path);
-    const element = schemaNodeAt(schema, path.slice(0, marker))?.element;
-    const sub = path.slice(marker + 3);
-    return sub === '' || element === undefined ? element : schemaNodeAt(element, sub);
 }
 
 describe.skipIf(skipAll)('item types have sheets that edit their own fields (Tier A, #731)', () => {
@@ -133,13 +124,7 @@ describe.skipIf(skipAll)('item types have sheets that edit their own fields (Tie
         const { ITEM_SHEETS } = await import('../../src/module/applications/item/item-sheet-registry');
         const missing = ITEM_SHEETS.filter((entry) => {
             const sheet = entry.sheet as { SCHEMA_LAYOUT?: SchemaSheetLayout | null; PARTS?: Record<string, { template: string }> };
-            const templates = Object.values(sheet.PARTS ?? {})
-                .map((part) => part.template)
-                .filter((path) => path.startsWith('systems/wh40k-rpg/'))
-                .map((path) => readRepoFile(path.replace('systems/wh40k-rpg/', 'src/')));
-            return !templates.some(
-                (source) => source.includes('templates/item/partial/schema-sections.hbs') || source.includes('templates/item/item-schema-sheet.hbs'),
-            );
+            return !rendersSchemaSections(sheet.PARTS ?? {});
         });
         expect(missing.map((entry) => entry.label)).toEqual([]);
     });
