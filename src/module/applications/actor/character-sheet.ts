@@ -36,8 +36,6 @@ import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, inf
 import { comradeOrdersFor, comradeRulesFor, grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
-import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../data/actor/mixins/dw-ammo-template.ts';
-import { buildOwCraftsmanshipPanel } from '../../data/actor/mixins/ow-craftsmanship-template.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
 import { WH40KBaseActor } from '../../documents/base-actor.ts';
@@ -97,7 +95,7 @@ import {
 } from '../../rules/dw-distinction.ts';
 import { isOathActive } from '../../rules/dw-oath.ts';
 import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank, renownRankLabelKey } from '../../rules/dw-renown.ts';
-import { DW_SPECIAL_AMMO_EFFECTS, type AmmoEffect } from '../../rules/dw-special-ammo.ts';
+import { type AmmoEffect, DW_SELECTED_AMMO_CHOICES, DW_SPECIAL_AMMO_EFFECTS, type DwSelectedAmmoId } from '../../rules/dw-special-ammo.ts';
 import { getSupportRange } from '../../rules/dw-squad-mode.ts';
 import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
 import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
@@ -117,6 +115,7 @@ import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manac
 import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
 import { buildComradeHealingPanel, type ComradeHealingPanelView } from '../../rules/ow-comrade-healing.ts';
 import { buildComradePanel, type ComradePanelView, type ComradeRules } from '../../rules/ow-comrade.ts';
+import { buildOwCraftsmanshipPanel } from '../../rules/ow-craftsmanship-panel.ts';
 import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
 import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
 import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';

@@ -1,4 +1,3 @@
-import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
 import { activeTokenOf, placeAreaTemplate } from '../canvas/area-template-canvas.ts';
 import { comradeRulesFor } from '../config/game-systems/index.ts';
@@ -82,6 +81,7 @@ import { firstSystemId } from '../utils/chat-system-id.ts';
 import { formatSigned } from '../utils/format.ts';
 import { RollTableUtils } from '../utils/roll-table-utils.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { actionCardHandlers } from './action-card-handlers.ts';
 import { areaQualityLabel, localizeAreaStatement } from './area-statement.ts';
 import { CUE_EFFECT, cueAttackResolved, cueHitsResolved } from './attack-cue-trigger.ts';
 import { type AttackDataLike, Hit, PsychicDamageData, WeaponDamageData } from './damage-data.ts';
@@ -1085,7 +1085,7 @@ export class ActionData {
     }
 
     async performActionAndSendToChat(): Promise<void> {
-        DHBasicActionManager.storeActionData(this);
+        actionCardHandlers().storeActionData(this);
 
         await this.spendArmedTestHooks();
         await this.rollData.calculateTotalModifiers();
@@ -1170,7 +1170,7 @@ export class ActionData {
                 hit.dos = attackDoS;
             }
 
-            await DHBasicActionManager._postDamageCard(this);
+            await actionCardHandlers().postDamageCard(this);
         } catch (error) {
             // A silent abort here is the worst possible failure mode (#506): the
             // attack card has ALREADY posted, so the table sees the attack land

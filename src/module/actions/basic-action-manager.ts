@@ -9,6 +9,7 @@ import { activeTokenOf, tokensInAreaTemplate } from '../canvas/area-template-can
 import { WH40K } from '../config.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
+import { registerActionCardHandlers } from '../rolls/action-card-handlers.ts';
 import type { ActionData } from '../rolls/action-data.ts';
 import { areaResultRows } from '../rolls/area-statement.ts';
 import { AssignDamageData, type ActorLike } from '../rolls/assign-damage-data.ts';
@@ -1238,3 +1239,13 @@ export class BasicActionManager {
 }
 
 export const DHBasicActionManager = new BasicActionManager();
+
+// Actions post their cards through this slot instead of importing the manager,
+// which would close an import cycle back through the targeted-action manager (#714).
+// Each call reaches the manager when it is made, so a spy on it still sees the call.
+registerActionCardHandlers({
+    storeActionData: (action) => {
+        DHBasicActionManager.storeActionData(action);
+    },
+    postDamageCard: async (action) => DHBasicActionManager._postDamageCard(action),
+});

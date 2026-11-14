@@ -7,8 +7,8 @@
  * DataModel — fully unit-testable.
  */
 import { describe, expect, it } from 'vitest';
-import { getArmourCraftsmanshipEffect, getMeleeCraftsmanshipEffect, getRangedCraftsmanshipEffect } from '../../../rules/ow-craftsmanship.ts';
-import { buildOwCraftsmanshipPanel, owCraftsmanshipSchemaFields } from './ow-craftsmanship-template.ts';
+import { buildOwCraftsmanshipPanel } from './ow-craftsmanship-panel.ts';
+import { getArmourCraftsmanshipEffect, getMeleeCraftsmanshipEffect, getRangedCraftsmanshipEffect } from './ow-craftsmanship.ts';
 
 /** Minimal owned-item fixture shape accepted by `buildOwCraftsmanshipPanel`. */
 interface ItemFixture {
@@ -54,12 +54,6 @@ function armour(opts: { id?: string; name?: string; equipped?: boolean; craftsma
         },
     };
 }
-
-describe('owCraftsmanshipSchemaFields', () => {
-    it('exports no actor-level schema fields (engine is passive)', () => {
-        expect(owCraftsmanshipSchemaFields()).toEqual({});
-    });
-});
 
 describe('buildOwCraftsmanshipPanel', () => {
     it('returns an empty panel for no items', () => {

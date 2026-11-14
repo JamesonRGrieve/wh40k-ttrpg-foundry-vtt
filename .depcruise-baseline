@@ -1,13 +1,12 @@
 {
   "strict": [
     "documents-must-not-depend-on-applications",
-    "no-orphans"
+    "no-circular",
+    "no-orphans",
+    "sheets-must-not-import-data-models-directly"
   ],
   "totals": {
-    "totalViolations": 58
+    "totalViolations": 0
   },
-  "byRule": {
-    "no-circular": 54,
-    "sheets-must-not-import-data-models-directly": 4
-  }
+  "byRule": {}
 }

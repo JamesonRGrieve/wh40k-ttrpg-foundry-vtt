@@ -7,7 +7,6 @@ import { awardConferralRenown, refuseBelowRenownRank } from '../../actions/dw-di
 import { hydrateActorInMemory } from '../../compendium-hydrate.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { WH40K } from '../../config.ts';
-import { skillKeysForSystem } from '../../data/shared/skill-definitions.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
@@ -830,10 +829,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const filterSearch = typeof filters.search === 'string' ? filters.search : '';
         const filterCharacteristic = typeof filters.characteristic === 'string' ? filters.characteristic : '';
         const filterTraining = typeof filters.training === 'string' ? filters.training : '';
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies across actor types; gameSystem is only on creature subtypes
-        const actorSys = this.actor.system as { gameSystem?: string };
-        const actorGameSystem = typeof actorSys.gameSystem === 'string' ? actorSys.gameSystem : '';
-        const systemSkillKeys = actorGameSystem !== '' ? skillKeysForSystem(actorGameSystem) : null;
+        const systemSkillKeys = this.actor.systemSkillKeys();
         const visibleSkills = (Object.entries(skills) as Array<[string, SkillLike]>).filter(([key, data]) => {
             if (data.hidden === true) return false;
             if (systemSkillKeys !== null && !systemSkillKeys.has(key)) return false;

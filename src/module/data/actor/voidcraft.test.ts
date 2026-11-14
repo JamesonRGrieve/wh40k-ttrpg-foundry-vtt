@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
+import { CRIPPLED_SOURCE_TYPE, SHIP_MODIFIER_STAT_KEYS, type ShipAppliedModifier, type ShipModifierStatKey } from '../../rules/voidcraft-build.ts';
 import { importModelOrSkip } from '../../testing/model-import.ts';
-import type { ShipAppliedModifier, ShipModifierStatKey } from './voidcraft.ts';
 
 /**
  * Tests for StarshipData.
@@ -72,7 +72,7 @@ describe('StarshipData', () => {
         const mod = await importModelOrSkip(import('./voidcraft.ts'));
         // eslint-disable-next-line @vitest/no-conditional-in-test -- guard: skip when the model can't load under happy-dom, not an assertion branch
         if (mod === undefined) return;
-        const { default: StarshipData, SHIP_MODIFIER_STAT_KEYS } = mod;
+        const { default: StarshipData } = mod;
         const empty = StarshipData._emptyAppliedModifiers();
         for (const key of SHIP_MODIFIER_STAT_KEYS) {
             expect(empty[key]).toBeDefined();
@@ -278,7 +278,7 @@ describe('StarshipData', () => {
         const applied = mod.default._emptyAppliedModifiers();
         ship._applyCrippledStatChanges(applied);
         expect([ship.speed, ship.manoeuvrability, ship.detection]).toEqual([4, 5, 10]);
-        expect(applied.speed.sources).toEqual([{ name: '', type: mod.CRIPPLED_SOURCE_TYPE, uuid: '', sourceUuid: '', value: -3 }]);
+        expect(applied.speed.sources).toEqual([{ name: '', type: CRIPPLED_SOURCE_TYPE, uuid: '', sourceUuid: '', value: -3 }]);
         expect(applied.detection.total).toBe(-10);
 
         // Another line at 0 Hull, and an RT ship at 1 Hull, are left alone.

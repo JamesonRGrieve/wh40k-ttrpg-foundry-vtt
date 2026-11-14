@@ -6,15 +6,6 @@
  */
 
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import VoidcraftData, {
-    CRIPPLED_SOURCE_TYPE,
-    ESSENTIAL_SHIP_SLOTS,
-    SHIP_MODIFIER_STAT_KEYS,
-    type ShipAppliedModifier,
-    type ShipModifierStatKey,
-    type ShipStatModifierSource,
-    type VoidcraftBuildValidation,
-} from '../../data/actor/voidcraft.ts';
 import type OrderData from '../../data/item/order.ts';
 import type ShipWeaponData from '../../data/item/ship-weapon.ts';
 import type { WH40KItem } from '../../documents/item.ts';
@@ -26,6 +17,17 @@ import { shipActionRows, toShipActionRow, type ShipActionKind, type ShipActionOr
 import type { ShipTestComponent } from '../../rules/ship-assault.ts';
 import { criticalRollLabelKey, shipConditionView } from '../../rules/ship-crippled.ts';
 import { shipWeaponClass } from '../../rules/ship-weapon-fire.ts';
+import {
+    CRIPPLED_SOURCE_TYPE,
+    emptyAppliedModifiers,
+    ESSENTIAL_SHIP_SLOTS,
+    SHIP_MODIFIER_STAT_KEYS,
+    type ShipAppliedModifier,
+    type ShipModifierStatKey,
+    type ShipStatModifierSource,
+    type VoidcraftBuildValidation,
+    validateVoidcraftBuild,
+} from '../../rules/voidcraft-build.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { isLineOrHomebrewPack, queryItemIndex } from '../../utils/compendium-query.ts';
@@ -321,7 +323,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
                 type: it.type,
                 system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
             }));
-            buildValidation = VoidcraftData.validateBuild(budget, itemViews);
+            buildValidation = validateVoidcraftBuild(budget, itemViews);
         }
         context['buildValidation'] = buildValidation;
 
@@ -366,7 +368,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             appliedModifiers?: Record<ShipModifierStatKey, ShipAppliedModifier>;
             baseStatSnapshot?: Record<ShipModifierStatKey, number>;
         };
-        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> = sys.appliedModifiers ?? VoidcraftData._emptyAppliedModifiers();
+        const applied: Record<ShipModifierStatKey, ShipAppliedModifier> = sys.appliedModifiers ?? emptyAppliedModifiers();
 
         // Reconstruct a base snapshot from current stat values when the actor
         // is legacy. The displayed base will then equal the displayed total —
@@ -798,7 +800,7 @@ export default class VoidcraftActorSheet extends BaseActorSheet {
             type: it.type,
             system: it.system as { componentType?: string; condition?: string; shipPoints?: number; essential?: boolean },
         }));
-        return VoidcraftData.validateBuild(budget, itemViews);
+        return validateVoidcraftBuild(budget, itemViews);
     }
 
     /* -------------------------------------------- */

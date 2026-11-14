@@ -17,11 +17,16 @@ module.exports = {
     forbidden: [
         {
             name: 'no-circular',
-            severity: 'warn',
+            // Graduated at 0 (#714); a new occurrence fails dependency-cruiser itself.
+            severity: 'error',
             comment:
                 'Modules should not depend on themselves transitively. Type-only edges are excluded: `import type` is erased at compile time, so it cannot participate in the runtime initialisation cycle this rule exists to catch. Counting them reported ~99 phantom cycles routed through types/global.d.ts, whose every import is `import type`. Same treatment the layer rules below already give type-only edges.',
             from: {},
-            to: { circular: true, dependencyTypesNot: ['type-only'] },
+            // `viaOnly` applies the filter to EVERY edge of the cycle. A plain
+            // `dependencyTypesNot` on `to` only checked the edge closing it, so a cycle
+            // passing through any `import type` elsewhere was still reported: 48 of the
+            // 49 cycles counted in #714 were such phantoms, not runtime cycles.
+            to: { circular: true, viaOnly: { dependencyTypesNot: ['type-only'] } },
         },
         {
             name: 'no-orphans',
@@ -70,7 +75,8 @@ module.exports = {
         },
         {
             name: 'sheets-must-not-import-data-models-directly',
-            severity: 'warn',
+            // Graduated at 0 (#714); a new occurrence fails dependency-cruiser itself.
+            severity: 'error',
             comment:
                 "Sheets should consume data through Documents, not reach into DataModel classes. Pure type imports are still fine — go through `import type` if that's all you need.",
             from: { path: '^src/module/applications/' },

@@ -68,7 +68,6 @@ const { dwRequisitionSchemaFields } = await import('./dw-requisition-template.ts
 const { owBattlefieldSchemaFields } = await import('./ow-battlefield-template.ts');
 const { owComradeHealingSchemaFields } = await import('./ow-comrade-healing-template.ts');
 const { owComradeSchemaFields } = await import('./ow-comrade-template.ts');
-const { owCraftsmanshipSchemaFields } = await import('./ow-craftsmanship-template.ts');
 const { owDrawbackSchemaFields } = await import('./ow-drawback-template.ts');
 const { owLogisticsSchemaFields } = await import('./ow-logistics-template.ts');
 const { owMissionGearSchemaFields } = await import('./ow-mission-gear-template.ts');
@@ -95,7 +94,6 @@ const cases: Array<[name: string, fn: SchemaFieldsFn, keys: string[]]> = [
     ['owBattlefieldSchemaFields', owBattlefieldSchemaFields, ['supportCooldown', 'regimentalAwards']],
     ['owComradeHealingSchemaFields', owComradeHealingSchemaFields, ['comradeRecoveryDays', 'refitAvailable', 'comradeMedicaeUsed']],
     ['owComradeSchemaFields', owComradeSchemaFields, ['comrade']],
-    ['owCraftsmanshipSchemaFields', owCraftsmanshipSchemaFields, []],
     ['owDrawbackSchemaFields', owDrawbackSchemaFields, ['regimentDrawbacks', 'multiComradeRoster']],
     ['owLogisticsSchemaFields', owLogisticsSchemaFields, ['logisticsRating', 'munitorum', 'situational', 'logisticsFront']],
     ['owMissionGearSchemaFields', owMissionGearSchemaFields, ['lastGearOutcome']],

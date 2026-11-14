@@ -4,6 +4,7 @@ import { buildSpecialAbilityLookup, migrateLegacyDistinctionLists, specialAbilit
 import { applyEffectiveCharacteristicFields, computeCharacteristicTotals } from '../data/shared/characteristic-math.ts';
 import { isEffectSuppressedByEquipState, isWeaponAttackBlockedByEquip } from '../data/shared/equip-state.ts';
 import { computeMovement } from '../data/shared/movement-math.ts';
+import { skillKeysForSystem } from '../data/shared/skill-definitions.ts';
 import { type RawSubtletyAdjuster, subtletyAdjusterEffectOf } from '../data/shared/subtlety-adjuster.ts';
 import type D100Roll from '../dice/d100-roll.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
@@ -1056,6 +1057,17 @@ export class WH40KBaseActor extends Actor {
                 if (rounds !== null) item.updateSource({ system: { clip: { value: rounds } } });
             }),
         );
+    }
+
+    /**
+     * The skill keys this actor's game line uses, or null for an actor with no
+     * line (vehicles, craft). Sheets read it here rather than importing the skill
+     * catalog from the data layer (#714).
+     */
+    systemSkillKeys(): Set<string> | null {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: gameSystem lives on the creature DataModels only; vehicle and craft systems lack it
+        const gameSystem = (this.system as { gameSystem?: string }).gameSystem;
+        return typeof gameSystem === 'string' && gameSystem !== '' ? skillKeysForSystem(gameSystem) : null;
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {

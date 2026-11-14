@@ -1,31 +1,22 @@
 /**
- * Only War · Craftsmanship readout DataModel mixin (#158).
+ * Only War · Craftsmanship panel context (#158).
  *
- * The OW Craftsmanship engine in `src/module/rules/ow-craftsmanship.ts`
- * produces purely passive bonuses on owned weapon / armour items — the
- * actor itself holds NO state for this engine. We therefore export no
- * schema fields and no `declare` block; the orchestrator's manifest sets
- * `datamodel: null` and only wires up the panel + context builder.
+ * Walks an actor's owned items, picks out equipped weapons and armour,
+ * resolves their craftsmanship tier through the engine's
+ * `getRanged/Melee/ArmourCraftsmanshipEffect` lookups
+ * (`rules/ow-craftsmanship.ts`), and packs the result into the
+ * `craftsmanshipPanel` hash the character sheet's partial renders.
  *
- * What this module DOES provide is the typed `_prepareContext` payload
- * builder. It walks the actor's owned items, picks out equipped weapons
- * and armour, resolves their craftsmanship tier through the engine's
- * `getRanged/Melee/ArmourCraftsmanshipEffect` lookups, and packs the
- * result into a `craftsmanshipPanel` hash consumed by the corresponding
- * Handlebars partial.
+ * It lived beside the OW actor mixins in `data/`; the sheet reached into the
+ * data layer for it, which the architecture rules forbid (#714). It is a pure
+ * function of the actor's items, so it sits with the engine it reads.
  *
- * Per the brief / Direction #3, this lives next to the other OW actor
- * mixins so the orchestrator can register the panel + context builder
- * symmetrically with the rest of the OW engine batch (Regiment, Comrade,
- * Orders, Logistics, Mission Gear).
- *
- * Per Direction #7, the engine tables (`OW_RANGED/MELEE/ARMOUR_
- * CRAFTSMANSHIP`) are the single source of truth for the mechanical
- * effect of each tier; this builder does not duplicate those numbers, it
- * reads them.
+ * Per Direction #7, the engine tables (`OW_RANGED/MELEE/ARMOUR_CRAFTSMANSHIP`)
+ * are the single source of truth for each tier's effect; this builder reads
+ * them and duplicates no numbers.
  */
 
-import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier } from '../../../rules/armour-craftsmanship.ts';
+import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier } from './armour-craftsmanship.ts';
 import {
     CRAFTSMANSHIP_TIERS,
     type Craftsmanship,
@@ -34,24 +25,7 @@ import {
     getRangedCraftsmanshipEffect,
     type MeleeCraftsmanshipEffect,
     type RangedCraftsmanshipEffect,
-} from '../../../rules/ow-craftsmanship.ts';
-
-/* -------------------------------------------------------------------- */
-/*  No schema / no declarations                                         */
-/* -------------------------------------------------------------------- */
-
-/**
- * Stub export retained for orchestrator symmetry. Returns an empty
- * field record — there is nothing to persist on the actor.
- *
- * The manifest at `.integration-staging/158.json` sets `datamodel: null`
- * to tell the orchestrator NOT to spread this into the schema, but the
- * export is kept so future state (e.g. a tier override per slot) can be
- * added without changing the brief contract.
- */
-export function owCraftsmanshipSchemaFields(): Record<string, never> {
-    return {};
-}
+} from './ow-craftsmanship.ts';
 
 /* -------------------------------------------------------------------- */
 /*  Panel context shape                                                 */

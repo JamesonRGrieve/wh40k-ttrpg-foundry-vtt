@@ -257,3 +257,24 @@ export function applyAmmoEffect(input: ApplyAmmoEffectInput): AppliedAmmoEffect 
         fireDamage: effect.fireDamage,
     };
 }
+
+/* ------------------------------------------------------------------ */
+/*  Actor-level selection                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Stable identifier union for the actor-level ammo selection.
+ *
+ * Adds the sentinel `'standard'` to the engine's seven Special-Issue
+ * ids. `'standard'` is the default / "no special ammo loaded" state and
+ * yields no engine effect — the attack pipeline simply skips the
+ * `getAmmoEffect()` lookup when the loaded value is `'standard'`.
+ */
+export type DwSelectedAmmoId = DwSpecialAmmoId | 'standard';
+
+/**
+ * Closed choice list for the actor's `selectedAmmo` (data/actor/mixins/dw-ammo-template.ts). It lives here, with the ids it is built from, so the sheet reads it without importing the data layer (#714). Order matches RAW iteration in
+ * `DW_SPECIAL_AMMO_IDS`, with `'standard'` placed first as the
+ * sensible default selector.
+ */
+export const DW_SELECTED_AMMO_CHOICES: ReadonlyArray<DwSelectedAmmoId> = Object.freeze(['standard', ...DW_SPECIAL_AMMO_IDS]);

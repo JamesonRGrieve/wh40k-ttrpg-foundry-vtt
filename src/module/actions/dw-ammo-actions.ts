@@ -21,7 +21,7 @@
  * reaches persistence.
  */
 
-import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../data/actor/mixins/dw-ammo-template.ts';
+import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../rules/dw-special-ammo.ts';
 
 /**
  * Structural `this` shape for the ammo-select action handler.

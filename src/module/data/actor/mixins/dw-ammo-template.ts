@@ -26,28 +26,11 @@
  *   - apply `DwAmmoDeclarations` to the class with a `declare` block
  */
 
-import { DW_SPECIAL_AMMO_IDS, type DwSpecialAmmoId } from '../../../rules/dw-special-ammo.ts';
+import { DW_SELECTED_AMMO_CHOICES, type DwSelectedAmmoId } from '../../../rules/dw-special-ammo.ts';
 
 const { StringField } = foundry.data.fields;
 
 type DataField = foundry.data.fields.DataField.Any;
-
-/**
- * Stable identifier union for the actor-level ammo selection.
- *
- * Adds the sentinel `'standard'` to the engine's seven Special-Issue
- * ids. `'standard'` is the default / "no special ammo loaded" state and
- * yields no engine effect — the attack pipeline simply skips the
- * `getAmmoEffect()` lookup when the loaded value is `'standard'`.
- */
-export type DwSelectedAmmoId = DwSpecialAmmoId | 'standard';
-
-/**
- * Closed choice list for `selectedAmmo`. Order matches RAW iteration in
- * `DW_SPECIAL_AMMO_IDS`, with `'standard'` placed first as the
- * sensible default selector.
- */
-export const DW_SELECTED_AMMO_CHOICES: ReadonlyArray<DwSelectedAmmoId> = Object.freeze(['standard', ...DW_SPECIAL_AMMO_IDS]);
 
 /**
  * Schema fields produced by this mixin. Spread into `defineSchema()` on
