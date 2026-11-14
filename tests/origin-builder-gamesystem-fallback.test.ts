@@ -10,9 +10,9 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { readRepoFile } from './lib/repo-file.ts';
+import { originPathBuilderSource } from './lib/origin-path-builder-source.ts';
 
-const SRC = readRepoFile('src/module/applications/character-creation/origin-path-builder.ts');
+const SRC = originPathBuilderSource();
 
 describe('origin builder game-system resolution (#222)', () => {
     it('no longer throws when the game system is unresolved', () => {

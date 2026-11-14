@@ -21,6 +21,7 @@ import {
 } from '../src/module/origin-grant-ledger.ts';
 import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../src/module/rules/chaos-backgrounds.ts';
 import { isLineBookPack } from '../src/module/utils/line-packs.ts';
+import { originPathBuilderSource } from './lib/origin-path-builder-source.ts';
 
 const REPO_ROOT = resolve(__dirname, '..');
 const PACKS_ROOT = resolve(REPO_ROOT, 'src/packs-private');
@@ -157,7 +158,7 @@ describe.skipIf(ORIGINS.length === 0)('origin resources from the shipped origin 
 
     it('both appliers feed the whole resource block to the ledger (source guard: their documents do not load under happy-dom)', () => {
         const item = readFileSync(resolve(__dirname, '../src/module/documents/item.ts'), 'utf8');
-        const builder = readFileSync(resolve(__dirname, '../src/module/applications/character-creation/origin-path-builder.ts'), 'utf8');
+        const builder = originPathBuilderSource();
         expect(item).toContain('reconcileResourceDeltas(actor.system, originContribution(md), priorDelta, ORIGIN_RESOURCE_PATHS)');
         expect(item).toContain('startingCorruptionHoldsMalignancy(this.system, resourceUpdates, actor.system)');
         expect(builder).toContain('originContribution(delta), prior, BUILDER_ORIGIN_RESOURCE_PATHS)');

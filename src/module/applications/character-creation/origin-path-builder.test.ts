@@ -1,8 +1,10 @@
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
+import { asOriginPathBuilder } from '../../testing/builder-stub.ts';
 import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { GrantSourceSystem } from './origin-grant-plans.ts';
+import type { PointBuyRules } from './point-buy.ts';
 
 /**
  * Structural shape of every `globalThis` member this suite stubs. The runtime
@@ -217,7 +219,9 @@ afterAll(() => {
     });
 });
 
-const { default: OriginPathBuilder, originProvenanceFlags, filterOriginsByProvenance } = await import('./origin-path-builder.ts');
+const { default: OriginPathBuilder } = await import('./origin-path-builder.ts');
+const { originProvenanceFlags, filterOriginsByProvenance } = await import('./origin-path/builder-support.ts');
+const CommitPath = await import('./origin-path/commit.ts');
 
 const proto = OriginPathBuilder.prototype;
 
@@ -1498,9 +1502,9 @@ describe('OriginPathBuilder._resetExperienceAndAdvancements (issue #214)', () =>
         return host;
     }
 
-    /** Invoke `_resetExperienceAndAdvancements` against a duck-typed host. */
+    /** Invoke the commit step `resetExperienceAndAdvancements` (origin-path/commit.ts, #717) against a duck-typed host. */
     const resetExperienceAndAdvancements = async (host: ResetHost): Promise<void> => {
-        await proto._resetExperienceAndAdvancements.call(host);
+        await CommitPath.resetExperienceAndAdvancements.call(asOriginPathBuilder(host));
     };
 
     function generatedCharacter(): FakeSystem {
@@ -1652,6 +1656,7 @@ interface PointBuyHost {
     _pointBuySpent: () => number;
     _pointBuyRemaining: () => number;
     _pointBuyBaseFor: (key: string) => number;
+    _pointBuyRules: () => PointBuyRules;
     _selectionSystems: () => GrantSourceSystem[];
     _characteristicBase: () => number;
 }
@@ -1667,6 +1672,7 @@ function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
         _pointBuySpent: (): number => proto._pointBuySpent.call(host),
         _pointBuyRemaining: (): number => proto._pointBuyRemaining.call(host),
         _pointBuyBaseFor: (key: string): number => proto._pointBuyBaseFor.call(host, key),
+        _pointBuyRules: (): PointBuyRules => proto._pointBuyRules.call(host),
         _selectionSystems: () => [],
         _characteristicBase: (): number => proto._characteristicBase.call(host),
         ...overrides,

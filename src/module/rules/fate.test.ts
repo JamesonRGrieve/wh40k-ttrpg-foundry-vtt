@@ -95,7 +95,7 @@ describe('Fate is written to its schema fields (#42)', () => {
     });
 
     it('the origin builder writes the rolled Fate as the Fate total and full points', () => {
-        const builder = readRepoFile('src/module/applications/character-creation/origin-path-builder.ts');
+        const builder = readRepoFile('src/module/applications/character-creation/origin-path/commit.ts');
         expect(builder).toContain("resourceUpdate['system.fate.max'] = fateRolled;");
         expect(builder).toContain("resourceUpdate['system.fate.value'] = fateRolled;");
         // #63: each origin's fateThreshold grant feeds that total.
