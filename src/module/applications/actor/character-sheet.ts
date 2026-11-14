@@ -34,7 +34,7 @@ import { DHTargetedActionManager } from '../../actions/targeted-action-manager.t
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
 import { comradeOrdersFor, comradeRulesFor, grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import type { CharacterSheetCapabilities, ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
@@ -130,6 +130,7 @@ import {
     spendUnleashDaemon,
     type PossessionSlot,
 } from '../../rules/possession.ts';
+import { activeRulesetVariant } from '../../rules/ruleset-variant.ts';
 import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } from '../../types/global.d.ts';
 import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
 import { getArmourAPForLocation } from '../../utils/armour-calculator.ts';
@@ -237,11 +238,8 @@ type CharacterSheetContext = Record<string, unknown> & {
 type CharacterSheetContextDeclaredFields = {
     inEditMode?: boolean;
     ruleset?: unknown;
-    isDH2?: boolean;
-    isBC?: boolean;
-    isOW?: boolean;
-    isDW?: boolean;
-    isIM?: boolean;
+    /** The per-line sheet parts the active line shows (#715); templates gate on these, not the line id. */
+    capabilities?: CharacterSheetCapabilities;
     isHomebrew?: boolean;
     isRaw?: boolean;
     /** Malignancy Tests owed by Corruption gains; 0 on lines without a Corruption Track. */
@@ -628,7 +626,7 @@ type UtilityMenuOption = {
 
 /**
  * Per-system overview-panel registry (#282). Replaces the three copy-pasted
- * `if (isBC)/if (isDW)/if (isOW)` dispatch blocks with one table: the active
+ * per-line dispatch blocks with one table: the active
  * system's entries are looped and each `build` result written into the context
  * under its `key`. Adding a system's panel is now a one-row edit. The exact
  * context-key names the `.hbs` partials read are preserved verbatim.
@@ -1210,28 +1208,21 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
         const activeGameSystem = this._resolveGameSystemId();
-        const isDH2 = activeGameSystem === 'dh2';
-        const isBC = activeGameSystem === 'bc';
-        const isOW = activeGameSystem === 'ow';
-        const isDW = activeGameSystem === 'dw';
-        const isIM = activeGameSystem === 'im';
+        const capabilities = (activeGameSystem === null ? null : SystemConfigRegistry.getOrNull(activeGameSystem))?.characterSheet;
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
-        context.isDH2 = isDH2;
-        context.isBC = isBC;
-        context.isOW = isOW;
-        context.isDW = isDW;
-        context.isIM = isIM;
+        if (capabilities !== undefined) context.capabilities = capabilities;
+        const onlyWar = capabilities?.onlyWarPanels === true;
         context.malignancyTestsDue = this.actor.usesMalignancyTest ? this.actor.system.malignancyTestsPending : 0;
 
         // Per-system panels — table-driven (#282). The sheet class's SYSTEM_PANELS
         // entries for the active system are written into the context under their
         // exact partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no
-        // panels, and the `{{#if isBC}}`/etc. tab gates keep their include sites no-op.
+        // panels, and the `{{#if capabilities.…}}` tab gates keep their include sites no-op.
         // The drawback panel's refunds come from each drawback item's Regiment Creation Points (#160).
-        if (isOW) this.#drawbackDescriptors = await resolveDrawbackDescriptors(this.#regimentDrawbackIds());
+        if (onlyWar) this.#drawbackDescriptors = await resolveDrawbackDescriptors(this.#regimentDrawbackIds());
         // The Battlefield panel's awards come from each conferred medal item (#161, content#32).
-        if (isOW) this.#awardDescriptors = await resolveAwardDescriptors(this.#regimentalAwardIds());
+        if (onlyWar) this.#awardDescriptors = await resolveAwardDescriptors(this.#regimentalAwardIds());
 
         if (activeGameSystem !== null) {
             for (const { key, build } of (this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem] ?? []) {
@@ -1242,7 +1233,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Daemonology rituals (DH2) — shown to a DH2 character that
         // carries a Forbidden Lore (Daemonology) row, the test every ritual opens with.
-        if (isDH2 && findDaemonologyLore(this.actor.system) !== undefined) {
+        if (capabilities?.daemonologyRituals === true && findDaemonologyLore(this.actor.system) !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload written into the free-form CharacterSheetContext
             (context as Record<string, unknown>)['daemonologyPanel'] = { loreTotal: daemonologyLoreTotal(this.actor.system) };
         }
@@ -1251,7 +1242,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // (`src/templates/actor/panel/subtlety-panel.hbs`). Collected on the
         // active actor via `WH40KBaseActor.collectSubtletyAdjusters()`; safe to
         // compute on every render because it's a thin tree-walk of owned items.
-        if (isDH2) {
+        if (capabilities?.subtletyPool === true) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: sheet→template payload; the typed `CollectedAdjuster[]` is widened to fit the free-form CharacterSheetContext shape.
             (context as Record<string, unknown>)['subtletyAdjusters'] = this.actor.collectSubtletyAdjusters();
         }
@@ -1265,13 +1256,15 @@ export default class CharacterSheet extends BaseActorSheet {
                 rows: inquestPanelRows(inquestRules, WH40KSettings.getWarbandInquests()),
             };
         }
-        context.isHomebrew = isDH2 && ruleset === 'homebrew';
-        const isRaw = isDH2 && ruleset === 'raw';
+        // The line's RAW / homebrew variant, for a line that has one (#715).
+        const variant = activeRulesetVariant(activeGameSystem);
+        context.isHomebrew = variant === 'homebrew';
+        const isRaw = variant === 'raw';
         context.isRaw = isRaw;
         context.hideThroneGelt = isRaw;
-        // Non-DH2 lines show their own acquisition currency + the gelt baseline
-        // (DH2 keeps its ruleset-gated Influence/Requisition/Gelt trio in the template).
-        if (!isDH2 && activeGameSystem !== null) {
+        // A line without the ruleset-shaped Influence trio shows its own acquisition
+        // currency + the gelt baseline (the trio itself is in the template).
+        if (capabilities?.influenceResources !== true && activeGameSystem !== null) {
             context.resourceRows = lineResourceRows(activeGameSystem, CONFIG.wh40k.currencies, RESOURCE_WALLETS_EDITED_ELSEWHERE).map((row) => ({
                 ...row,
                 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown for a dynamic wallet path

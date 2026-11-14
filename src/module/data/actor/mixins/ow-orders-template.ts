@@ -67,7 +67,7 @@ export interface OwOrdersDeclarations {
  *
  * The initial value is the empty array so the slot stays safe for the
  * other six game systems — Foundry will instantiate it as `[]` and the
- * panel gate (`isOW`) keeps the surface invisible elsewhere.
+ * panel gate (`capabilities.onlyWarPanels`) keeps the surface invisible elsewhere.
  */
 export function owOrdersSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {
     return {

@@ -136,7 +136,6 @@ interface BuilderStoryArgs {
     showCharacteristics: boolean;
     showEquipment: boolean;
     hasEquipmentStep: boolean;
-    isDH2: boolean;
     isHomebrew: boolean;
     isRaw: boolean;
     hideThroneGelt: boolean;
@@ -256,7 +255,6 @@ function makeArgs(overrides: Partial<BuilderStoryArgs> = {}): BuilderStoryArgs {
         showCharacteristics: false,
         showEquipment: false,
         hasEquipmentStep: false,
-        isDH2: true,
         isHomebrew: false,
         isRaw: true,
         hideThroneGelt: true,
@@ -598,7 +596,6 @@ export const Issue206EquipmentStepReached: Story = {
 
 export const RogueTraderDirection: Story = {
     args: makeArgs({
-        isDH2: false,
         isRaw: false,
         hasDirectionToggle: true,
         isForward: false,
@@ -660,7 +657,6 @@ export const RogueTraderDirection: Story = {
  */
 export const Issue204HomeWorldThroneGelt: Story = {
     args: makeArgs({
-        isDH2: true,
         isHomebrew: true,
         isRaw: false,
         hideThroneGelt: false,
@@ -697,7 +693,6 @@ export const Issue204HomeWorldThroneGelt: Story = {
 
 export const Issue204BackgroundNoThroneGelt: Story = {
     args: makeArgs({
-        isDH2: true,
         isHomebrew: true,
         isRaw: false,
         hideThroneGelt: false,
@@ -757,7 +752,6 @@ export const Issue204BackgroundNoThroneGelt: Story = {
 
 export const Issue198VoidBornPreview: Story = {
     args: makeArgs({
-        isDH2: false,
         isRaw: false,
         journeyTitle: 'Dynasty Path',
         currentStep: {

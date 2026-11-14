@@ -9,7 +9,7 @@
     the implant id from `system.implants`.
 
     Context (built by the orchestrator-owned `_prepareContext` on the
-    Character sheet, gated on `isDW`):
+    Character sheet, gated on `capabilities.deathwatchPanels`):
 
       astartesPanel: {
         implants: Array<{
@@ -24,7 +24,7 @@
       }
 
     Rendered only for DW actors; the include in tab-overview.hbs gates
-    on `isDW`.
+    on `capabilities.deathwatchPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-astartes-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat-l30" icon="fa-shield-alt" label=(localize "WH40K.DW.Astartes.Label") rootAttrs=(safeAttrs "data-dw-has-black-carapace" astartesPanel.hasBlackCarapace) hasRightSlot=true}}
     {{!-- Header right slot: Unnatural Str/Tgh readouts --}}

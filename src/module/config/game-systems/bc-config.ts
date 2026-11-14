@@ -45,6 +45,7 @@ import {
     talentAdvanceCost,
 } from './bc-advancement-config.ts';
 import type {
+    CharacterSheetCapabilities,
     AdvanceCostResult,
     CharacteristicTierDef,
     ChaosAlignment,
@@ -73,6 +74,16 @@ function readBcSystem(actor: SystemConfigActor): BcCharacterSystem {
 
 export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
+    override readonly characterSheet: CharacterSheetCapabilities = {
+        influenceResources: false,
+        subtletyPool: false,
+        shockAndPinning: false,
+        daemonologyRituals: false,
+        blackCrusadePanels: true,
+        deathwatchPanels: false,
+        onlyWarPanels: false,
+        imperiumStatBlock: false,
+    };
     readonly usesMalignancyTest = false;
     readonly maleficCorruptionOnManifest = false;
 

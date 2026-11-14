@@ -27,7 +27,7 @@
  *
  * Fields stay safe to materialise on non-OW actors — they keep their
  * `initial` values (empty array / null) and never render because the
- * panel include is gated on `isOW`.
+ * panel include is gated on `capabilities.onlyWarPanels`.
  */
 
 const { ArrayField, SchemaField, StringField } = foundry.data.fields;
@@ -71,7 +71,7 @@ export interface OwDrawbackDeclarations {
  *     };
  *
  * Defaults: empty drawback list, no multi-Comrade roster. The panel
- * include is gated on `isOW`, so a non-OW actor never renders these
+ * include is gated on `capabilities.onlyWarPanels`, so a non-OW actor never renders these
  * values even though they are materialised on the schema.
  */
 export function owDrawbackSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {

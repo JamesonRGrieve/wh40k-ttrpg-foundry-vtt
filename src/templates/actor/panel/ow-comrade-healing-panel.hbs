@@ -31,7 +31,7 @@
       }
 
     Rendered only for OW actors; the include in tab-status.hbs gates on
-    `isOW`.
+    `capabilities.onlyWarPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-healing-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-staff-snake" label=(localize "WH40K.OW.ComradeHealing.Label") rootAttrs=(safeAttrs "data-ow-healing-state" comradeHealingPanel.comradeState "data-ow-healing-recovering" comradeHealingPanel.isRecovering) hasRightSlot=true}}
     {{!-- Header right slot: recovering / ready / dead badge --}}

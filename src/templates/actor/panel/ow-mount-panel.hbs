@@ -32,7 +32,7 @@
       }
 
     Gate matches `_gameSystemId === 'ow'` from CharacterSheet
-    (`isOW` flag + `mountPanel` context set in `_prepareContext`).
+    (`capabilities.onlyWarPanels` flag + `mountPanel` context set in `_prepareContext`).
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-mount-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-horse" label=(localize "WH40K.OW.Mount.Label") rootAttrs=(safeAttrs "data-mounted" (iff mountPanel.mount "true" "false"))}}
     {{!-- Current mount + trait badges --}}

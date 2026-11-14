@@ -5,7 +5,7 @@
  * — through the real `buildBcGiftsPanel` (and so `resolveGiftForAlignment` /
  * `mergeGiftDeltas` / `pendingGiftRolls`) — over structural fixture Gifts, so a
  * change to those rules shows up here without re-authoring. The panel is
- * rendered through the same `isBC` gate the overview tab uses, so the
+ * rendered through the same `capabilities.blackCrusadePanels` gate the overview tab uses, so the
  * other-line stories show it is absent off Black Crusade.
  *
  *   - Khorne / Tzeentch — the same Gifts resolved for two alignments.
@@ -31,7 +31,7 @@ import type { GiftData, GiftRider } from '../../../module/rules/bc-gifts';
 initializeStoryHandlebars();
 
 /** The include exactly as `tab-overview.hbs` gates it. */
-const GATED_PANEL = '{{#if isBC}}{{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}{{/if}}';
+const GATED_PANEL = '{{#if capabilities.blackCrusadePanels}}{{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}{{/if}}';
 
 const GRANT_UUID = 'Compendium.wh40k-rpg.story.Item.fixtureTrait01';
 /** Story-local stand-in for `uuidNameCache`. */
@@ -89,7 +89,7 @@ function renderPanel(args: StoryArgs): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = args.systemId;
-    wrapper.appendChild(renderSheet(GATED_PANEL, { isBC: args.isBC, giftsPanel: args.giftsPanel }));
+    wrapper.appendChild(renderSheet(GATED_PANEL, { capabilities: { blackCrusadePanels: args.isBC }, giftsPanel: args.giftsPanel }));
     return wrapper;
 }
 

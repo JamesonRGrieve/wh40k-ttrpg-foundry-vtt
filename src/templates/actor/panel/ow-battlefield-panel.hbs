@@ -34,7 +34,7 @@
       }
 
     Rendered only for OW actors; the include in tab-status.hbs gates
-    on `isOW`.
+    on `capabilities.onlyWarPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-battlefield-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-satellite-dish" label=(localize "WH40K.OW.Battlefield.Label") rootAttrs=(safeAttrs "data-ow-battlefield-cooldown" battlefieldPanel.supportCooldown "data-ow-battlefield-cooldown-active" battlefieldPanel.cooldownActive) hasRightSlot=true}}
     {{!-- Header right slot: cooldown badge --}}

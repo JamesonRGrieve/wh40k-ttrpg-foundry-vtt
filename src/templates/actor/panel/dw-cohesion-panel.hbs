@@ -22,7 +22,7 @@
       }
 
     Rendered only for DW actors; the include in the appropriate
-    tab-*.hbs gates on `isDW` from context.
+    tab-*.hbs gates on `capabilities.deathwatchPanels` from context.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-cohesion-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-shield-halved" label=(localize "WH40K.DW.Cohesion.Label") rootAttrs=(safeAttrs "data-dw-cohesion-current" cohesionPanel.current "data-dw-cohesion-max" cohesionPanel.max) hasRightSlot=true}}
     {{!-- Header right slot: pool readout --}}

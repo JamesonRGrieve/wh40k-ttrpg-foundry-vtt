@@ -23,7 +23,7 @@
       }
 
     Rendered only for DW actors; the include in tab-status.hbs gates on
-    `isDW` from the CharacterSheet `_prepareContext`.
+    `capabilities.deathwatchPanels` from the CharacterSheet `_prepareContext`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-mode-panel" accentBorderClass="dw:tw-border-accent-combat" accentIconClass="dw:tw-text-accent-combat-l30" icon="fa-shield-halved" label=(localize "WH40K.DW.Mode.Label") rootAttrs=(safeAttrs "data-dw-combat-mode" modePanel.mode "data-dw-renown-rank" modePanel.renownRank) hasRightSlot=true}}
     {{!-- Header right slot: current mode badge --}}

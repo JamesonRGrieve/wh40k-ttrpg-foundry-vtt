@@ -26,7 +26,7 @@
       }
 
     Gate matches `_gameSystemId === 'ow'` from CharacterSheet
-    (`isOW` flag + `vehicleMovementPanel` context set in `_prepareContext`).
+    (`capabilities.onlyWarPanels` flag + `vehicleMovementPanel` context set in `_prepareContext`).
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-vehicle-movement-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-truck-fast" label=(localize "WH40K.OW.VehicleMovement.Label")}}
     {{!-- Available vehicle actions --}}

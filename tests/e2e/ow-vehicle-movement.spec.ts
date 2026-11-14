@@ -18,7 +18,7 @@ import { expect, test } from './lib/test';
  * throw, and snapshots the rendered sheet.
  *
  * Panel visibility depends on the orchestrator wiring the include
- * into `tab-status.hbs` gated on `isOW` and the schema fields onto
+ * into `tab-status.hbs` gated on `capabilities.onlyWarPanels` and the schema fields onto
  * CharacterData. Pre-wire-up the presence assertions surface the
  * wiring gap; post-wire-up the spec exercises the full interaction.
  */

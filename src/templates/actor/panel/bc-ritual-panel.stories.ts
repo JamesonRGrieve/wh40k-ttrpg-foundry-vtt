@@ -8,10 +8,10 @@
  *                portfolio).
  *   3. Master  — late-arc Heretic with Mastery 7 (binding contests win
  *                outright against most rivals).
- *   4. OtherLine — a DH2 character: the overview's `isBC` gate renders no
+ *   4. OtherLine — a DH2 character: the overview's `capabilities.blackCrusadePanels` gate renders no
  *                panel, so no ritual is offered off Black Crusade (#596).
  *
- * The panel is rendered through the same `isBC` gate tab-overview.hbs uses.
+ * The panel is rendered through the same `capabilities.blackCrusadePanels` gate tab-overview.hbs uses.
  * Story factories use fixed inputs (no Math.random) per the "Seeded RNG
  * in stories" rule in CLAUDE.md — the only displayed value (Mastery
  * rating) is the literal input.
@@ -25,7 +25,7 @@ import panelSrc from './bc-ritual-panel.hbs?raw';
 initializeStoryHandlebars();
 
 /** The include exactly as `tab-overview.hbs` gates it. */
-const GATED_PANEL = `{{#if isBC}}${panelSrc}{{/if}}`;
+const GATED_PANEL = `{{#if capabilities.blackCrusadePanels}}${panelSrc}{{/if}}`;
 
 interface RitualPanelCtx {
     systemId: 'bc' | 'dh2';
@@ -39,7 +39,7 @@ function renderPanel(ctx: RitualPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = ctx.systemId;
-    wrapper.appendChild(renderSheet(GATED_PANEL, ctx));
+    wrapper.appendChild(renderSheet(GATED_PANEL, { ...ctx, capabilities: { blackCrusadePanels: ctx.isBC } }));
     return wrapper;
 }
 

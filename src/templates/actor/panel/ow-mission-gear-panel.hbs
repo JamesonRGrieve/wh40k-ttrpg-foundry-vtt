@@ -9,7 +9,7 @@
     label.
 
     Context (set up by the OW character sheet via `_prepareContext`,
-    gated on `isOW`):
+    gated on `capabilities.onlyWarPanels`):
 
       missionGearPanel: {
         hasOutcome:        boolean    // sys.lastGearOutcome !== null
@@ -18,7 +18,7 @@
       }
 
     Rendered only for OW actors; the include in tab-status.hbs gates on
-    `isOW`.
+    `capabilities.onlyWarPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-mission-gear-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-300" icon="fa-box-open" label=(localize "WH40K.OW.MissionGear.Label") rootAttrs=(safeAttrs "data-wh40k-system" "ow" "data-ow-last-outcome" (iff missionGearPanel.hasOutcome missionGearPanel.outcomeKey "none"))}}
     {{!-- Last outcome readout --}}

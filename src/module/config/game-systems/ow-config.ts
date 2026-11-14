@@ -17,7 +17,7 @@ import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { locatedVehicleCombat, printedGrappleRules, TRADE_ARMOURER_FITTING_RULES, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
-import type { DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { CharacterSheetCapabilities, DispositionModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * Logistics test — the core Availability by Front Conditions table, its
@@ -136,6 +136,16 @@ export const OW_LOGISTICS_FRONT_CONDITIONS = {
 
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;
+    override readonly characterSheet: CharacterSheetCapabilities = {
+        influenceResources: false,
+        subtletyPool: false,
+        shockAndPinning: false,
+        daemonologyRituals: false,
+        blackCrusadePanels: false,
+        deathwatchPanels: false,
+        onlyWarPanels: true,
+        imperiumStatBlock: false,
+    };
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = false;
     readonly acquisitionLadder: AcquisitionLadder = OW_ACQUISITION_LADDER;

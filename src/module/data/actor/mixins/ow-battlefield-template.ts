@@ -35,7 +35,7 @@
  *
  * Fields stay safe to materialise on non-OW actors — they keep their
  * `initial` values and never render because the panel include is gated
- * on `isOW`.
+ * on `capabilities.onlyWarPanels`.
  */
 
 const { NumberField, ArrayField, StringField } = foundry.data.fields;
@@ -61,7 +61,7 @@ export interface OwBattlefieldDeclarations {
  *     };
  *
  * Defaults: 0 cooldown turns (asset immediately requestable), empty
- * award roster. The panel include is gated on `isOW`, so a non-OW actor
+ * award roster. The panel include is gated on `capabilities.onlyWarPanels`, so a non-OW actor
  * never surfaces these values.
  */
 export function owBattlefieldSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {

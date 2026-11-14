@@ -18,7 +18,7 @@ import type { WeaponModificationRules } from '../../rules/weapon-modification.ts
 import type { XenosRepairRules } from '../../rules/xenos-equipment.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import { locatedVehicleCombat, printedGrappleRules, OPERATE_VEHICLE_DRIVING } from './base-system-config.ts';
-import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 /**
  * The core Craftsmanship, Requisition, and Repair table — one column
@@ -103,6 +103,18 @@ export const DH2_INQUEST_RULES: InquestRules = {
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2' as const;
+    /** DH2 ships RAW and homebrew variants (`dh2-ruleset`), which character creation and the sheet follow. */
+    override readonly rulesetVariants = true;
+    override readonly characterSheet: CharacterSheetCapabilities = {
+        influenceResources: true,
+        subtletyPool: true,
+        shockAndPinning: true,
+        daemonologyRituals: true,
+        blackCrusadePanels: false,
+        deathwatchPanels: false,
+        onlyWarPanels: false,
+        imperiumStatBlock: false,
+    };
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = true;
     readonly acquisitionLadder: AcquisitionLadder = DH2_ACQUISITION_LADDER;

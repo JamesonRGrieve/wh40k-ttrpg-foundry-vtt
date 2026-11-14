@@ -31,7 +31,7 @@
       }
 
     Rendered only for OW actors; the include in `tab-overview.hbs` gates
-    on `isOW`.
+    on `capabilities.onlyWarPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-craftsmanship-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-500" icon="fa-hammer" label=(localize "WH40K.OW.Craftsmanship.Label")}}
     {{#unless craftsmanshipPanel.hasEntries}}

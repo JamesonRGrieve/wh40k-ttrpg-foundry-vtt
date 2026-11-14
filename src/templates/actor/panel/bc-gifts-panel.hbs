@@ -11,7 +11,7 @@
     Context: `giftsPanel` — built by `buildBcGiftsPanel`
     (module/applications/actor/bc-gifts-panel-context.ts); the shape is its
     `BcGiftsPanelContext`. Rendered only for BC actors; the include in
-    tab-overview.hbs gates on `isBC`.
+    tab-overview.hbs gates on `capabilities.blackCrusadePanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-gifts-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-gift" label=(localize "WH40K.BC.Gifts.Label") rootAttrs=(safeAttrs "data-bc-current-alignment" giftsPanel.currentAlignment) hasRightSlot=true}}
     {{!-- Header right slot: gift count --}}

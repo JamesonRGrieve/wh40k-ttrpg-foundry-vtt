@@ -35,7 +35,7 @@
       }
 
     Rendered only for DW actors; the include in `tab-status.hbs` gates
-    on `isDW` from context.
+    on `capabilities.deathwatchPanels` from context.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-mission-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-scroll" label=(localize "WH40K.DW.Mission.Label") rootAttrs=(safeAttrs "data-dw-mission-active" missionPanel.hasMission) hasRightSlot=true}}
     {{!-- Header right slot: mission rating badge --}}

@@ -20,7 +20,7 @@
       }
 
     Rendered only for DW actors; the include in tab-status.hbs gates on
-    `isDW` from context.
+    `capabilities.deathwatchPanels` from context.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-dw-oath-panel" accentBorderClass="dw:tw-border-bronze" accentIconClass="dw:tw-text-bronze" icon="fa-scroll" label=(localize "WH40K.DW.Oath.Label") rootAttrs=(safeAttrs "data-dw-oath-active" oathPanel.active "data-dw-oath-id" oathPanel.activeOathId) hasRightSlot=true}}
     {{!-- Header right slot: current oath readout --}}

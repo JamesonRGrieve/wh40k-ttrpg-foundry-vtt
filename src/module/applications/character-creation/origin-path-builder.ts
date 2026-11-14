@@ -35,6 +35,7 @@ import { startingCorruptionHoldsMalignancy, startingMutationFormula } from '../.
 import { divinationMaxim } from '../../rules/divination.ts';
 import { eliteCharge, grantedEliteSources } from '../../rules/elite-advances.ts';
 import { originFateContribution } from '../../rules/fate.ts';
+import { activeRulesetVariant, isHomebrewVariant } from '../../rules/ruleset-variant.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 import { resolvePack } from '../../utils/compendium-query.ts';
@@ -638,9 +639,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // A divination stored before #rollDivination kept only the maxim still holds the table's HTML.
         this._divination = divinationMaxim(actorSys.originPath?.divination ?? '');
         this._divinationSelection = null;
-        const isDH2Homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
-        this._thronesRolled = isDH2Homebrew ? 0 : actorSys.throneGelt ?? 0;
-        this._influenceRolled = isDH2Homebrew ? 0 : actorSys.influence ?? 0;
+        const homebrew = isHomebrewVariant(this.gameSystem);
+        this._thronesRolled = homebrew ? 0 : actorSys.throneGelt ?? 0;
+        this._influenceRolled = homebrew ? 0 : actorSys.influence ?? 0;
         this._savedScrollTop = 0;
         this.aptitudeOverrides = new Map();
         this._initCharacteristicState();
@@ -1201,10 +1202,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepLabel = optionalStep ? this._getLocalizedStepLabel(optionalStep.key) : '';
         const optionalStepIcon = optionalStep?.icon ?? 'fa-crown';
 
-        const isDH2 = this.gameSystem === 'dh2';
-        const ruleset = WH40KSettings.getRuleset();
-        const isHomebrew = isDH2 && ruleset === 'homebrew';
-        const isRaw = isDH2 && ruleset === 'raw';
+        const variant = activeRulesetVariant(this.gameSystem);
+        const isHomebrew = variant === 'homebrew';
+        const isRaw = variant === 'raw';
         return {
             actor: this.actor,
             gameSystem: this.gameSystem,
@@ -1213,12 +1213,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             guidedMode: this.guidedMode,
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,
-            hasDirectionToggle: this.gameSystem === 'rt',
+            hasDirectionToggle: this.registryConfig.creation.directionToggle,
             showLineage: this.showLineage,
             showCharacteristics: this.showCharacteristics,
             showEquipment: this.showEquipment,
             hasEquipmentStep: !!this.systemConfig.equipmentStep,
-            isDH2,
             isHomebrew,
             isRaw,
             hideThroneGelt: isRaw,
@@ -1674,13 +1673,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _thronesRollFormula(selection: NormalizedOrigin): string {
         const formula = this._getSelectionThronesFormula(selection);
         const { step } = this._getSelectionSystem(selection);
-        const homebrew = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
-        return formula !== '' && step === 'homeWorld' && homebrew ? formula : '';
+        return formula !== '' && step === 'homeWorld' && isHomebrewVariant(this.gameSystem) ? formula : '';
     }
 
     /** Whether the step `stepKey` rolls Influence: the Background step, except under DH2 homebrew (Influence is not rolled there). */
     _rollsInfluence(stepKey: string | undefined): boolean {
-        return stepKey === 'background' && !(this.gameSystem === 'dh2' && WH40KSettings.isHomebrew());
+        return stepKey === 'background' && !isHomebrewVariant(this.gameSystem);
     }
 
     /**
@@ -2364,7 +2362,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getInfluenceBonus(): number {
         // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2 rule (floor(Influence/10)).
-        if (this.gameSystem === 'dh2' && WH40KSettings.isHomebrew()) return 3;
+        if (isHomebrewVariant(this.gameSystem)) return 3;
         const rolled = this._influenceRolled;
         const stored = Number(this._actorSys().influence ?? 0);
         const influence = rolled > 0 ? rolled : stored;
@@ -2566,7 +2564,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             items,
             selectedItems,
             totalAvailable: this.equipmentItems.length,
-            isHomebrew: WH40KSettings.isHomebrew(),
+            isHomebrew: isHomebrewVariant(this.gameSystem),
         };
     }
 
@@ -3628,7 +3626,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // _toggleEquipmentByUuid.
         const equipmentAvailable = this.systemConfig.equipmentStep != null;
         const equipmentMaxPicks = equipmentAvailable ? this._getInfluenceBonus() : 0;
-        const homebrewSkipsEquipment = this.gameSystem === 'dh2' && WH40KSettings.isHomebrew();
+        const homebrewSkipsEquipment = isHomebrewVariant(this.gameSystem);
         const equipmentRequired = equipmentAvailable && !homebrewSkipsEquipment;
         const equipmentComplete = !equipmentRequired || this.equipmentSelections.size > 0;
         let pendingChoices = 0;
@@ -4766,7 +4764,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll starting influence (1d5 + Fellowship Bonus + homeworld modifier).
      */
     static async #rollInfluence(this: OriginPathBuilder, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this.gameSystem === 'dh2' && WH40KSettings.isHomebrew()) {
+        if (isHomebrewVariant(this.gameSystem)) {
             ui.notifications.info(game.i18n.localize('WH40K.OriginPath.HomebrewInfluenceNoRoll'));
             this._influenceRolled = 0;
             this._saveScrollPosition();

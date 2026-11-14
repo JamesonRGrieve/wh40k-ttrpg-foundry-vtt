@@ -25,7 +25,7 @@ initializeStoryHandlebars();
 const STORY_INFAMY_THRESHOLD = 100;
 
 /** The include exactly as `tab-overview.hbs` gates it (#596: no apotheosis off Black Crusade). */
-const GATED_PANEL = `{{#if isBC}}${panelSrc}{{/if}}`;
+const GATED_PANEL = `{{#if capabilities.blackCrusadePanels}}${panelSrc}{{/if}}`;
 
 interface DaemonPrincePanelCtx {
     systemId: 'bc' | 'dh2';
@@ -47,7 +47,7 @@ function renderPanel(ctx: DaemonPrincePanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = ctx.systemId;
-    wrapper.appendChild(renderSheet(GATED_PANEL, ctx));
+    wrapper.appendChild(renderSheet(GATED_PANEL, { ...ctx, capabilities: { blackCrusadePanels: ctx.isBC } }));
     return wrapper;
 }
 

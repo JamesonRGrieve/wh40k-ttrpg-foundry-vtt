@@ -72,6 +72,35 @@ export interface OriginStepConfig {
     equipmentStep?: OriginStepDef | null;
 }
 
+/**
+ * The parts of the character (and NPC) sheet a line shows beyond the shared
+ * sheet (#715). Templates gate on `capabilities.<flag>`, never on the line's id.
+ */
+export interface CharacterSheetCapabilities {
+    /** The Influence / Requisition / Throne Gelt steppers, which the line's ruleset variant shapes. */
+    readonly influenceResources: boolean;
+    /** The party Subtlety pool and the subtlety adjusters behind it. */
+    readonly subtletyPool: boolean;
+    /** Shock and Pinning under Fatigue in the vitals. */
+    readonly shockAndPinning: boolean;
+    /** Daemonology rituals, for a character with Forbidden Lore (Daemonology). */
+    readonly daemonologyRituals: boolean;
+    /** Black Crusade's engine panels: psychic, rituals, gifts, supplements, Daemon Prince, alignment. */
+    readonly blackCrusadePanels: boolean;
+    /** Deathwatch's engine panels: Astartes, distinctions, ammo, cohesion, modes, renown, requisition, oaths, missions. */
+    readonly deathwatchPanels: boolean;
+    /** Only War's engine panels: regiment, craftsmanship, drawbacks, comrade, logistics, orders, mission gear, mounts. */
+    readonly onlyWarPanels: boolean;
+    /** Imperium Maledictum's NPC stat block. */
+    readonly imperiumStatBlock: boolean;
+}
+
+/** What a line's character creation offers beyond the shared builder flow (#715). */
+export interface CreationCapabilities {
+    /** The builder can walk the origin path backward as well as forward. */
+    readonly directionToggle: boolean;
+}
+
 /** Result of computing an advancement cost */
 export interface AdvanceCostResult {
     /** XP cost */

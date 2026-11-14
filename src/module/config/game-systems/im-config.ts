@@ -5,10 +5,20 @@
 
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { CharacterSheetCapabilities, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
+    override readonly characterSheet: CharacterSheetCapabilities = {
+        influenceResources: false,
+        subtletyPool: false,
+        shockAndPinning: false,
+        daemonologyRituals: false,
+        blackCrusadePanels: false,
+        deathwatchPanels: false,
+        onlyWarPanels: false,
+        imperiumStatBlock: true,
+    };
     readonly usesMalignancyTest = false;
     readonly maleficCorruptionOnManifest = false;
     /** IM has no availability-modified acquisition test. */

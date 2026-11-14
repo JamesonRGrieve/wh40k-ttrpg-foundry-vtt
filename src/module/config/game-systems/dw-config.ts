@@ -13,10 +13,20 @@ import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import { printedGrappleRules, singleChartVehicleCombat, DRIVE_PILOT_VEHICLE_DRIVING } from './base-system-config.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
+import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
+    override readonly characterSheet: CharacterSheetCapabilities = {
+        influenceResources: false,
+        subtletyPool: false,
+        shockAndPinning: false,
+        daemonologyRituals: false,
+        blackCrusadePanels: false,
+        deathwatchPanels: true,
+        onlyWarPanels: false,
+        imperiumStatBlock: false,
+    };
     readonly usesMalignancyTest = false;
     readonly maleficCorruptionOnManifest = false;
     /** DW spends Requisition points: availability sets an item's point cost, not a test modifier. */

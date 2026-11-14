@@ -14,7 +14,7 @@ import { expect, test } from './lib/test';
  * combat is `ow-comrade-combat.spec.ts`.
  *
  * Panel visibility depends on the orchestrator wiring the include
- * into `tab-status.hbs` gated on `isOW` and the schema fields onto
+ * into `tab-status.hbs` gated on `capabilities.onlyWarPanels` and the schema fields onto
  * CharacterData. Pre-wire-up the presence assertions surface the
  * wiring gap; post-wire-up the spec exercises the full interaction.
  */

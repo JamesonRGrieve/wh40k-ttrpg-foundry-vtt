@@ -1,6 +1,6 @@
 /**
  * Render tests for the Black Crusade Gifts of the Gods panel (#180), through the
- * same `isBC` include gate as the overview tab and a context built by the real
+ * same `capabilities.blackCrusadePanels` include gate as the overview tab and a context built by the real
  * `buildBcGiftsPanel`. Pins: the panel only renders for Black Crusade; each
  * Gift row shows its compendium HTML (not escaped), the applied rider, the
  * sub-table prompt and grant names; a pending acquisition roll renders a roll
@@ -15,7 +15,9 @@ import { initializeStoryHandlebars } from '../stories/template-support';
 
 initializeStoryHandlebars();
 
-const template = HbsStory.compile('{{#if isBC}}{{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}{{/if}}');
+const template = HbsStory.compile(
+    '{{#if capabilities.blackCrusadePanels}}{{> systems/wh40k-rpg/templates/actor/panel/bc-gifts-panel.hbs giftsPanel=giftsPanel}}{{/if}}',
+);
 
 const GIFT: GiftPanelItem = {
     id: 'g1',
@@ -42,7 +44,7 @@ function render(isBC: boolean, alignment: ChaosAlignment, items: GiftPanelItem[]
         grantName: (uuid) => `Trait<${uuid}>`,
     });
     const root = document.createElement('div');
-    root.innerHTML = template({ isBC, giftsPanel });
+    root.innerHTML = template({ capabilities: { blackCrusadePanels: isBC }, giftsPanel });
     return root;
 }
 

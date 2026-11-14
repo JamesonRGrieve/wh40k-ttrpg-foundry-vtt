@@ -8,7 +8,7 @@
     actor state.
 
     Context (set up by the OW character sheet via `_prepareContext`,
-    gated on `isOW`):
+    gated on `capabilities.onlyWarPanels`):
 
       logisticsPanel: {
         rating:       number   // sys.logisticsRating
@@ -17,7 +17,7 @@
       }
 
     Rendered only for OW actors; the include in tab-status.hbs gates on
-    `isOW` — the orchestrator wires that flag in `_prepareContext`.
+    `capabilities.onlyWarPanels` — the orchestrator wires that flag in `_prepareContext`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-logistics-panel" accentBorderClass="ow:tw-border-amber-700" accentIconClass="ow:tw-text-amber-300" icon="fa-truck-loading" label=(localize "WH40K.OW.Logistics.PanelHeader") rootAttrs=(safeAttrs "data-wh40k-system" "ow" "data-ow-rating" logisticsPanel.rating "data-ow-munitorum" (iff logisticsPanel.munitorum "on" "off") "data-ow-situational" logisticsPanel.situational) hasRightSlot=true}}
     {{!-- Header right slot: rating readout --}}

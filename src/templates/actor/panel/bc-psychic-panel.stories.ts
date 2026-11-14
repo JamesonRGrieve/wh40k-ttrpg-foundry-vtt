@@ -26,7 +26,7 @@ import panelSrc from './bc-psychic-panel.hbs?raw';
 initializeStoryHandlebars();
 
 /** The include exactly as `tab-overview.hbs` gates it (#596: no psychic test off Black Crusade). */
-const GATED_PANEL = `{{#if isBC}}${panelSrc}{{/if}}`;
+const GATED_PANEL = `{{#if capabilities.blackCrusadePanels}}${panelSrc}{{/if}}`;
 
 interface PsychicPanelCtx {
     systemId: 'bc' | 'dh2';
@@ -48,7 +48,7 @@ function renderPanel(ctx: PsychicPanelCtx): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.classList.add('wh40k-rpg');
     wrapper.dataset['wh40kSystem'] = ctx.systemId;
-    wrapper.appendChild(renderSheet(GATED_PANEL, ctx));
+    wrapper.appendChild(renderSheet(GATED_PANEL, { ...ctx, capabilities: { blackCrusadePanels: ctx.isBC } }));
     return wrapper;
 }
 

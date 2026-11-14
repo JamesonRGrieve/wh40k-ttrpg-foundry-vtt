@@ -81,6 +81,8 @@ vi.mock('../../config/game-systems/index.ts', () => ({
                 equipmentStep: null,
             }),
         }),
+        // Only DH2 declares a RAW / homebrew variant (rules/ruleset-variant.ts, #715).
+        getOrNull: (id: string) => (id === 'dh2' ? { rulesetVariants: true } : null),
     },
 }));
 
@@ -2020,14 +2022,14 @@ describe('OriginPathBuilder rolls gate', () => {
     it('requires the Influence roll on the Background step under RAW, not under homebrew', () => {
         expect(pending(host({ selections: [], influence: 0 }), background())).toEqual(['influence']);
         expect(pending(host({ selections: [], influence: 31 }), background())).toEqual([]);
-        vi.spyOn(WH40KSettings, 'isHomebrew').mockReturnValue(true);
+        vi.spyOn(WH40KSettings, 'getRuleset').mockReturnValue('homebrew');
         expect(pending(host({ selections: [], influence: 0 }), background())).toEqual([]);
     });
 
     it('requires the throne gelt roll on the Home World step only under homebrew', () => {
         const withThrones = homeWorld({ wounds: { rolled: 11 }, fate: { rolled: 3 } }, { homebrew: { throneGelt: '2d10x10' } });
         expect(pending(host({ selections: [] }), withThrones)).toEqual([]);
-        vi.spyOn(WH40KSettings, 'isHomebrew').mockReturnValue(true);
+        vi.spyOn(WH40KSettings, 'getRuleset').mockReturnValue('homebrew');
         expect(pending(host({ selections: [] }), withThrones)).toEqual(['thrones']);
     });
 

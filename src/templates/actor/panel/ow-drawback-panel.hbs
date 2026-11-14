@@ -53,7 +53,7 @@
       }
 
     Rendered only for OW actors; the include in tab-overview.hbs gates on
-    `isOW`.
+    `capabilities.onlyWarPanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-ow-drawback-panel" accentBorderClass="ow:tw-border-brass" accentIconClass="ow:tw-text-brass" icon="fa-triangle-exclamation" label=(localize "WH40K.OW.RegimentDrawback.Label") rootAttrs=(safeAttrs "data-ow-drawback-count" drawbackPanel.drawbacks.length "data-ow-roster-present" drawbackPanel.roster.present) hasRightSlot=true}}
     {{!-- Header right slot: applied-refund badge --}}

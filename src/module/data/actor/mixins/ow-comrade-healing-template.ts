@@ -26,7 +26,7 @@
  *
  * Fields stay safe to materialise on non-OW actors — they keep their
  * `initial` values and never render because the panel include is
- * gated on `isOW`.
+ * gated on `capabilities.onlyWarPanels`.
  */
 
 const { NumberField, BooleanField } = foundry.data.fields;
@@ -53,7 +53,7 @@ export interface OwComradeHealingDeclarations {
  *     };
  *
  * Defaults: 0 days outstanding (Comrade not currently injured), refit
- * not yet authorised. The panel include is gated on `isOW`, so a
+ * not yet authorised. The panel include is gated on `capabilities.onlyWarPanels`, so a
  * non-OW actor never sees these values.
  */
 export function owComradeHealingSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {

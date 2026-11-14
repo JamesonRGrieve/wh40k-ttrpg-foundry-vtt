@@ -19,6 +19,8 @@ import type { VehicleCombatRules, VehicleHitLocationBand } from '../../rules/veh
 import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
 import type {
+    CharacterSheetCapabilities,
+    CreationCapabilities,
     GameSystemId,
     SkillRankDef,
     CharacteristicTierDef,
@@ -169,6 +171,18 @@ export function singleChartVehicleCombat(righteousFuryNeedsDamage: boolean): Veh
     return { hitLocations: null, righteousFuryDie: '1d5', righteousFuryNeedsDamage };
 }
 
+/** A line showing none of the per-line sheet parts. */
+const NO_SHEET_CAPABILITIES: CharacterSheetCapabilities = Object.freeze({
+    influenceResources: false,
+    subtletyPool: false,
+    shockAndPinning: false,
+    daemonologyRituals: false,
+    blackCrusadePanels: false,
+    deathwatchPanels: false,
+    onlyWarPanels: false,
+    imperiumStatBlock: false,
+});
+
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
     abstract readonly id: GameSystemId;
@@ -279,6 +293,19 @@ export abstract class BaseSystemConfig {
      * line without Comrades (only Only War prints them).
      */
     readonly comradeRules: ComradeRules | null = null;
+
+    /**
+     * Whether the line has a RAW / homebrew ruleset switch (the `dh2-ruleset`
+     * setting). Character creation and the sheet read the active variant through
+     * `rules/ruleset-variant.ts`, never by comparing the line's id (#715).
+     */
+    readonly rulesetVariants: boolean = false;
+
+    /** What the line's character creation offers beyond the shared flow (#715). */
+    readonly creation: CreationCapabilities = { directionToggle: false };
+
+    /** The parts of the character sheet the line shows beyond the shared sheet (#715). */
+    readonly characterSheet: CharacterSheetCapabilities = NO_SHEET_CAPABILITIES;
 
     /** The Orders any PC can give its Comrade (#152); empty for a line without Comrades. */
     readonly comradeOrders: readonly ComradeOrderDef[] = [];

@@ -22,7 +22,7 @@
       }
 
     Rendered only for BC actors; the include in tab-overview.hbs gates on
-    `isBC`.
+    `capabilities.blackCrusadePanels`.
 --}}
 {{#> systems/wh40k-rpg/templates/actor/partial/system-card.hbs rootClass="wh40k-bc-psychic-panel" accentBorderClass="bc:tw-border-crimson" accentIconClass="bc:tw-text-crimson-l40" icon="fa-brain" label=(localize "WH40K.BC.Psychic.PanelHeader") rootAttrs=(safeAttrs "data-bc-psyker-class" psychicPanel.psykerClass "data-bc-psy-mode" psychicPanel.mode) hasRightSlot=true}}
     {{!-- Header right slot: psychic test button --}}

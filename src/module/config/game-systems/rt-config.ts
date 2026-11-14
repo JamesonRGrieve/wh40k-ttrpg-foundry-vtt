@@ -45,6 +45,8 @@ export const RT_ACQUISITION_LADDER = {
 
 export class RTSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'rt' as const;
+    /** Rogue Trader's origin path can be walked backward as well as forward. */
+    override readonly creation = { directionToggle: true };
     readonly usesMalignancyTest = true;
     readonly maleficCorruptionOnManifest = false;
     readonly acquisitionLadder: AcquisitionLadder = RT_ACQUISITION_LADDER;

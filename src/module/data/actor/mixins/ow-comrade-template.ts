@@ -24,7 +24,7 @@
  *
  * Fields stay safe to materialise on non-OW actors — they keep their
  * `initial` values and never render because the panel include is gated
- * on `isOW`.
+ * on `capabilities.onlyWarPanels`.
  */
 
 import type { ComradeRecord, ComradeState } from '../../../rules/ow-comrade.ts';
@@ -59,7 +59,7 @@ export interface OwComradeDeclarations {
  *     };
  *
  * Defaults: unnamed, unharmed, in support range (0 m), with visual line.
- * The panel include is gated on `isOW`, so a non-OW actor never sees
+ * The panel include is gated on `capabilities.onlyWarPanels`, so a non-OW actor never sees
  * these values.
  */
 export function owComradeSchemaFields(): Record<string, foundry.data.fields.DataField.Any> {
