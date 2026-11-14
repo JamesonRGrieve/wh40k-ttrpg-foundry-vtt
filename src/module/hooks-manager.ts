@@ -134,7 +134,7 @@ import { buildWeaponQualityPayloadIndex } from './rules/weapon-quality-payloads.
 import type { FatigueChange } from './rules/world-time-undo.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
-import { hooksOn } from './utils/hooks-on.ts';
+import { hooksOn, onWorldSettingChange } from './utils/hooks-on.ts';
 import { inferActiveGameLine } from './utils/item-variant-utils.ts';
 import { backfillOriginPathUuids } from './utils/origin-path-uuid-backfill.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
@@ -248,9 +248,7 @@ export class HooksManager {
             });
         };
         hooksOn('ready', resyncLighting);
-        hooksOn('updateSetting', (setting: { key?: string }) => {
-            if (setting.key === `${SYSTEM_ID}.${WH40KSettings.SETTINGS.celestialBodies}`) resyncLighting();
-        });
+        onWorldSettingChange(new Set([`${SYSTEM_ID}.${WH40KSettings.SETTINGS.celestialBodies}`]), resyncLighting);
         hooksOn('updateScene', (_scene: object, changed: { flags?: { [SYSTEM_ID]?: object } }) => {
             if (changed.flags?.[SYSTEM_ID] !== undefined) resyncLighting();
         });

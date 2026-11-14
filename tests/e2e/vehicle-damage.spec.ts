@@ -162,9 +162,10 @@ const DAMAGE_CARD_BUTTONS = '.roll-control__replace-damage-die, .roll-control__a
 /**
  * In the chat sidebar at its default width, the damage card's Replace Die and Assign
  * Damage buttons sit inside the card and their labels fit their buttons. Snaps the
- * button rows as `label`.
+ * button rows as `label`. `count` is how many render: Replace Die shows only when the
+ * shot's DoS would raise the lowest die (#737).
  */
-async function expectActionButtonsFit(page: Page, messageId: string, label: string): Promise<void> {
+async function expectActionButtonsFit(page: Page, messageId: string, label: string, count: 1 | 2): Promise<void> {
     const message = await showChatMessage(page, messageId);
     const escaped = await page.locator(message).evaluate((el, selector) => {
         const box = el.getBoundingClientRect();
@@ -173,11 +174,8 @@ async function expectActionButtonsFit(page: Page, messageId: string, label: stri
             return { inside: rect.left >= box.left - 0.5 && rect.right <= box.right + 0.5, fits: button.scrollWidth <= button.clientWidth + 1 };
         });
     }, DAMAGE_CARD_BUTTONS);
-    expect(escaped, 'the Replace Die and Assign Damage buttons render').toHaveLength(2);
-    expect(escaped, 'each button inside the card, its label inside the button').toEqual([
-        { inside: true, fits: true },
-        { inside: true, fits: true },
-    ]);
+    expect(escaped, 'the Replace Die and Assign Damage buttons render').toHaveLength(count);
+    expect(escaped, 'each button inside the card, its label inside the button').toEqual(Array.from({ length: count }, () => ({ inside: true, fits: true })));
     // Capture both button rows with the card's edges either side: the union of the rows' boxes, card-wide.
     // Centred in the log, clear of the chat input that overlays its foot.
     await page.locator(`${message} .roll-control__assign-damage`).evaluate((el) => {
@@ -533,7 +531,8 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect(rows['vehicle-armour'], 'Rear 16 less Pen 6').toBe('10');
             expect(fromBelow.html).toContain('Attacked from above or below');
             expect(await snapCard(page, 'vehicle-damage-from-below-rear-armour', fromBelow.id)).not.toBeNull();
-            await expectActionButtonsFit(page, fromBelow.id, 'vehicle-damage-from-below-buttons-in-sidebar');
+            // The damage die rolls 9, above the shot's DoS, so only Assign Damage renders (#737).
+            await expectActionButtonsFit(page, fromBelow.id, 'vehicle-damage-from-below-buttons-in-sidebar', 1);
 
             // --- Landed: no Flyer penalty, and the gunner's bearing reads Front ----
             const landed = await autocannonAttackCard(page, scene.tokens['Gunner Ahead'] ?? '', landedToken);
@@ -672,7 +671,7 @@ test.describe.serial('Vehicle damage and crits (Tier B, content#28)', () => {
             expect((await vehicleRows(page, overload.html))['vehicle-force-field']).toBe('Nullified');
             expect(overload.html, 'the field overloads on its Common chance').toContain('Overloaded (01–10, Common)');
             expect(await snapCard(page, 'vehicle-damage-shield-generator-overloads', overload.id)).not.toBeNull();
-            await expectActionButtonsFit(page, overload.id, 'vehicle-damage-shield-overload-buttons-in-sidebar');
+            await expectActionButtonsFit(page, overload.id, 'vehicle-damage-shield-overload-buttons-in-sidebar', 2);
 
             // --- A Force weapon passes the Daemon Engine's field unrolled ---
             const forced = await page.evaluate(async (a) => globalThis.wh40kAttack.attack(a), {

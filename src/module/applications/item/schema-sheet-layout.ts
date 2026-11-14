@@ -31,6 +31,12 @@ export interface SchemaSheetSection {
      * options are labelled under `<prefix>.FIELDS.<path>.choices`.
      */
     readonly choiceLabels?: Readonly<Record<string, string>>;
+    /**
+     * Play state rather than authoring: the rows stay live whenever the sheet is
+     * editable, not only in edit mode (a Navigator advances a power's mastery in
+     * play, as the generic sheet let them before #731).
+     */
+    readonly inPlay?: boolean;
 }
 
 /** The layout of one item type's schema sheet. */
@@ -291,6 +297,8 @@ export interface SchemaSectionView {
     readonly labelKey: string;
     readonly icon: string;
     readonly rows: readonly SchemaRow[];
+    /** Whether the rows are live outside edit mode (`SchemaSheetSection.inPlay`). */
+    readonly inPlay: boolean;
 }
 
 /** Every section of a layout as rows against the item's schema and stored source. */
@@ -299,5 +307,6 @@ export function buildSchemaSections(layout: SchemaSheetLayout, schema: SchemaNod
         labelKey: sectionLabelKey(layout, section),
         icon: section.icon,
         rows: buildSectionRows(layout, section, schema, source, mapLabel),
+        inPlay: section.inPlay === true,
     }));
 }

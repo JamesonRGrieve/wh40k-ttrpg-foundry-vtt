@@ -115,8 +115,15 @@ export const NAVIGATOR_POWER_LAYOUT: SchemaSheetLayout = {
         {
             key: 'power',
             icon: 'fa-eye',
-            paths: ['mastery', 'test.characteristic', 'test.modifier', 'test.opposed', 'test.opposedCharacteristic'],
-            choiceLabels: { 'mastery': 'WH40K.Chat.Item', 'test.characteristic': 'WH40K.Characteristic' },
+            paths: ['mastery'],
+            choiceLabels: { mastery: 'WH40K.Chat.Item' },
+            inPlay: true,
+        },
+        {
+            key: 'test',
+            icon: 'fa-dice-d20',
+            paths: ['test.characteristic', 'test.modifier', 'test.opposed', 'test.opposedCharacteristic'],
+            choiceLabels: { 'test.characteristic': 'WH40K.Characteristic' },
         },
         ...POWER_SECTIONS,
         {
@@ -542,7 +549,7 @@ export const NPC_TEMPLATE_EXTRA_LAYOUT: SchemaSheetLayout = {
         {
             key: 'template',
             icon: 'fa-users-cog',
-            paths: ['baseCharacteristics.influence', 'equipmentPreset', 'allowHorde', 'defaultMagnitude', 'tactics'],
+            paths: ['equipmentPreset', 'allowHorde', 'defaultMagnitude', 'tactics'],
         },
     ],
 };

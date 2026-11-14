@@ -7,7 +7,7 @@
 
 import { canonicalIdentifier } from './item-identifier.ts';
 import { packLineFlags, type PackMetadataLike } from './line-packs.ts';
-import { type IndexablePack, packIndexFields, readPackIndex } from './pack-index.ts';
+import { type IndexablePack, indexFieldsCover, mergeIndexFields, packIndexFields, readPackIndex } from './pack-index.ts';
 
 /** The pack metadata the query helpers read: its id and label, and the flags that place it. */
 export interface QueriedPackMetadata extends PackMetadataLike {
@@ -69,8 +69,8 @@ export async function queryItemIndex<T>(
  */
 async function indexWith(pack: IndexablePack<object>, fields: readonly string[]): Promise<Iterable<object>> {
     const shared = packIndexFields(pack.metadata);
-    if (fields.every((field) => shared.includes(field))) return readPackIndex(pack);
-    return pack.getIndex({ fields: [...new Set([...shared, ...fields])] });
+    if (indexFieldsCover(shared, fields)) return readPackIndex(pack);
+    return pack.getIndex({ fields: mergeIndexFields(shared, fields) });
 }
 
 /** One compendium Item matching a lookup, with the metadata of the pack it came from. */

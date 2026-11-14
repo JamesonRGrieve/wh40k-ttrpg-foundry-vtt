@@ -282,14 +282,15 @@ function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
     return inForm(renderTpl(basicsTpl, ctx), systemId);
 }
 
-/** Edit mode: base Influence, equipment preset, horde flag and default magnitude submit under their `system.` paths on every line (#734). */
+/**
+ * Edit mode: equipment preset, horde flag and default magnitude submit under their
+ * `system.` paths on every line (#734). An NPC has no Influence, so the template offers
+ * none (#701).
+ */
 export const SchemaFields: StoryObj = {
     render: () => renderWithSchemaFields(),
     play: ({ canvasElement }) => {
-        playSchemaFields(
-            canvasElement,
-            ['system.baseCharacteristics.influence', 'system.equipmentPreset', 'system.allowHorde', 'system.defaultMagnitude'],
-            renderWithSchemaFields,
-        );
+        playSchemaFields(canvasElement, ['system.equipmentPreset', 'system.allowHorde', 'system.defaultMagnitude'], renderWithSchemaFields);
+        void expect(canvasElement.querySelector('[name="system.baseCharacteristics.influence"]')).toBeNull();
     },
 };

@@ -25,7 +25,8 @@ interface WidthProbe {
     skillRows: number;
     /** The grid container's rendered width — ~0 means the Statistics tab is hidden. */
     gridWidth: number;
-    /** Skill and specialist names cut off by their cell ("Acrobatic", "Awarene"). */
+    /** Skill names cut off by their cell ("Acrobatic", "Awarene"); a long specialisation
+     *  carrying its full name in its tooltip may end in an ellipsis and is not counted. */
     clippedNames: string[];
     /** Columns of the Talents & Traits grid. */
     talentTraitColumns: number;
@@ -132,7 +133,7 @@ test('statistics skills grid reflows 3 → 2 → 1 columns by panel width (#267)
                 const skillRows = grid?.querySelectorAll('[data-testid="skill-icon"]').length ?? 0;
                 const gridWidth = grid !== null ? Math.round(grid.getBoundingClientRect().width) : 0;
                 const clippedNames = [...rootEl.querySelectorAll<HTMLElement>('[data-testid="skill-name"]')]
-                    .filter((name) => name.offsetParent !== null && name.scrollWidth > name.clientWidth + 1)
+                    .filter((name) => name.offsetParent !== null && name.scrollWidth > name.clientWidth + 1 && name.title !== name.textContent.trim())
                     .map((name) => name.textContent.trim());
                 const talentTraits = rootEl.querySelector('[data-testid="talents-traits-grid"]');
                 const ttTracks = talentTraits !== null ? getComputedStyle(talentTraits).gridTemplateColumns.trim() : '';

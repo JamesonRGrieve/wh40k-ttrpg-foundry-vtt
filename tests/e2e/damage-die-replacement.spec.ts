@@ -8,7 +8,7 @@ import { expect, test } from './lib/test';
  * successful attack carrying positive Degrees of Success, then asserts:
  *
  *   1. The amber replacement button appears when `canReplaceDie` is true
- *      AND `hit.dos > 0`.
+ *      AND the hit's `dosDieGain > 0` (#737: the DoS would raise a die).
  *   2. The button carries the data attributes the action manager reads
  *      (`data-roll-id`, `data-hit-index`, `data-dos`).
  *   3. The button is omitted when `hit.dos === 0` (a failed-ish attack
@@ -47,6 +47,7 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
                         effects: [],
                         righteousFury: [],
                         dos: 3,
+                        dosDieGain: 2,
                     },
                 ],
                 targetActor: null,
@@ -67,6 +68,7 @@ test.describe.serial('damage die replacement chat card (#129)', () => {
                         effects: [],
                         righteousFury: [],
                         dos: 0,
+                        dosDieGain: 0,
                     },
                 ],
                 targetActor: null,

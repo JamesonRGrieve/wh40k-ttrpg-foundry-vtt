@@ -224,8 +224,12 @@ function registerFoundryCoreHelpers(): void {
                 `<div class="editor-content" data-edit="${HandlebarsLib.escapeExpression(name)}">${unknownToStr(hash.enriched)}</div>`,
             );
         }
+        // `disabled` locks the input, as Foundry's own formInput does.
+        const disabled = hash.disabled === true ? ' disabled' : '';
         return new HandlebarsLib.SafeString(
-            `<input type="text" name="${HandlebarsLib.escapeExpression(name)}" value="${HandlebarsLib.escapeExpression(unknownToStr(hash.value))}" />`,
+            `<input type="text" name="${HandlebarsLib.escapeExpression(name)}" value="${HandlebarsLib.escapeExpression(
+                unknownToStr(hash.value),
+            )}"${disabled} />`,
         );
     });
 }

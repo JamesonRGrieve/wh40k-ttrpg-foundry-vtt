@@ -15,3 +15,17 @@ export function hooksOn<Handler extends (...args: never[]) => void>(event: strin
 interface NamedHookRegistry<Handler> {
     on: (event: string, fn: Handler) => number;
 }
+
+/**
+ * Call `callback` whenever a world setting whose full key (`wh40k-rpg.<key>`) is in
+ * `keys` changes. A world setting's first write CREATES its Setting document and
+ * fires `createSetting`; only later writes fire `updateSetting`. Listening to
+ * `updateSetting` alone misses that first change, so a fresh world's first Undo
+ * record (#703) or weather table never reached the screen.
+ */
+export function onWorldSettingChange(keys: ReadonlySet<string>, callback: () => void): void {
+    const handler = (setting: { key?: string }): void => {
+        if (setting.key !== undefined && keys.has(setting.key)) callback();
+    };
+    for (const event of ['createSetting', 'updateSetting']) hooksOn(event, handler);
+}

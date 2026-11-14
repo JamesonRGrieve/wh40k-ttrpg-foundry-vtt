@@ -137,7 +137,7 @@ function buildRolledValues(this: OriginPathBuilder): { wounds?: number; fate?: n
  *
  * @private
  */
-function collectOriginCharacteristicBonuses(this: OriginPathBuilder): Record<string, number> {
+export function collectOriginCharacteristicBonuses(this: OriginPathBuilder): Record<string, number> {
     const sums: Record<string, number> = {};
     const addToSum = (key: string, value: number | string | undefined | null): void => {
         const n = Number(value);
@@ -179,7 +179,7 @@ function collectOriginCharacteristicBonuses(this: OriginPathBuilder): Record<str
  * matching doc resolves to null (text-only, no grant) — the prior behaviour.
  * @private
  */
-async function resolveDivinationSelection(this: OriginPathBuilder): Promise<void> {
+export async function resolveDivinationSelection(this: OriginPathBuilder): Promise<void> {
     this._divinationSelection = null;
     const text = this._divination.trim();
     if (text === '') return;
@@ -422,7 +422,7 @@ async function applyEquipmentSelections(this: OriginPathBuilder): Promise<void> 
  * silently (a Chaos Space Marine got none of its eleven talents).
  * @private
  */
-async function applyItemGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
+export async function applyItemGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
     const missing = [...(await applyGrantedItems.call(this, 'talent')), ...(await applyGrantedItems.call(this, 'trait'))];
     if (missing.length > 0) ui.notifications.warn(t('WH40K.OriginPath.UnresolvedGrants', { names: missing.join(', ') }));
 }
@@ -501,7 +501,7 @@ async function applyGrantedItems(this: OriginPathBuilder, kind: GrantedItemKind)
  * already on the actor is skipped.
  * @private
  */
-async function applyContentItemGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
+export async function applyContentItemGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
     const plans: ContentItemPlan[] = [];
     for (const [, selection] of this.selections) {
         collectContentItemPlans(this._getSelectionSystem(selection), plans);
@@ -743,7 +743,7 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
         // characteristic modifiers + talent/skill grants apply through the
         // same commit machinery as the step selections (it stays out of
         // this.selections so size/completion logic is unaffected).
-        await resolveDivinationSelection.call(this);
+        await this._resolveDivinationSelection();
         const selectionsToApply: NormalizedOrigin[] = [...this.selections.values(), ...(this._divinationSelection !== null ? [this._divinationSelection] : [])];
 
         // Build array of origin items from selections
@@ -791,7 +791,7 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             await resetInjuriesAndEffects.call(this);
         }
         if (resetChoices.resetExperience) {
-            await resetExperienceAndAdvancements.call(this);
+            await this._resetExperienceAndAdvancements();
         }
         if (resetChoices.resetCurrency) {
             await resetCurrencyResources.call(this);
@@ -854,11 +854,11 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
         // generic "Weapon Training (any)" the source compendium entry
         // carries. Choice-driven grants resolve through activeModifiers
         // (see OriginPathData._calculateActiveModifiers). Traits too (#727).
-        await applyItemGrantsFromOrigins.call(this);
+        await this._applyItemGrantsFromOrigins();
 
         // Materialize freeform content-item grants (special abilities,
         // malignancies, mutations, mental disorders) that carry no UUID.
-        await applyContentItemGrantsFromOrigins.call(this);
+        await this._applyContentItemGrantsFromOrigins();
 
         // Create each origin's starting kit and the equipment the player
         // picked in its equipment choices (they were shown but never given).
@@ -881,7 +881,7 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             // so a re-commit re-derives every characteristic rather than
             // stacking. Always runs (even with 0 points spent) so an origin
             // bonus still lands on a characteristic the player left at base.
-            const originModSums = collectOriginCharacteristicBonuses.call(this);
+            const originModSums = this._collectOriginCharacteristicBonuses();
             const settingDefaultBase = this._characteristicBase();
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const charUpdate: Record<string, unknown> = {
@@ -905,7 +905,7 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             // Sum origin-path characteristic bonuses across every committed selection, so
             // baked-in bonuses like Imperial World's +5 Fellowship land directly in the
             // base characteristic instead of being re-computed at runtime every render.
-            const originModSums = collectOriginCharacteristicBonuses.call(this);
+            const originModSums = this._collectOriginCharacteristicBonuses();
 
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const charUpdate: Record<string, unknown> = {

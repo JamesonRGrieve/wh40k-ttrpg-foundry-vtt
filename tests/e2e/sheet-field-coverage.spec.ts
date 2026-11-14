@@ -31,6 +31,11 @@ const ALLOWED: ReadonlyArray<{ readonly types: RegExp; readonly fields: readonly
     { types: /-npc$/, fields: ['customStats.skills'], why: 'one input per trained skill; a fresh NPC has none' },
     { types: /^loot$/, fields: ['droppedAt'], why: 'stamped by the item-drop manager when the pile is made' },
     { types: /^originPath$/, fields: ['homebrew.throneGelt', 'homebrew.thrones'], why: 'Origin Path Builder state (#734)' },
+    {
+        types: /^npcTemplate$/,
+        fields: ['baseCharacteristics.influence'],
+        why: 'an NPC has no Influence; the template edits its nine characteristics only (#701)',
+    },
 ];
 
 interface FieldGap {

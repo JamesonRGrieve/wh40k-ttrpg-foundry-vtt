@@ -33,7 +33,7 @@ import {
     statusVisualOf,
     statusVisualSources,
 } from '../rules/status-visual.ts';
-import { hooksOn } from '../utils/hooks-on.ts';
+import { hooksOn, onWorldSettingChange } from '../utils/hooks-on.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { playCueSound, prefersReducedMotion } from './cue-media.ts';
 import { type StatusVisualHost, TokenStatusVisual } from './status-visual-canvas.ts';
@@ -364,9 +364,7 @@ export function registerStatusVisuals(): void {
     hooksOn('clientSettingChanged', (key: string) => {
         if (SETTING_KEYS.has(key)) refreshAllStatusVisuals();
     });
-    hooksOn('updateSetting', (setting: { key?: string }) => {
-        if (setting.key !== undefined && SETTING_KEYS.has(setting.key)) refreshAllStatusVisuals();
-    });
+    onWorldSettingChange(SETTING_KEYS, refreshAllStatusVisuals);
 }
 
 /** The registry's counters, for tests: nothing may be left running after a teardown. */

@@ -34,7 +34,7 @@
  *
  * The widget refreshes live: advancing the clock fires `updateWorldTime`
  * (re-render driven from `HooksManager.onUpdateWorldTime`), and a change to the
- * inception settings fires `updateSetting` (handled here) so every client stays
+ * inception settings fires a setting hook (handled here) so every client stays
  * current.
  */
 import { SYSTEM_ID } from '../../constants.ts';
@@ -45,6 +45,7 @@ import { DAY_PHASE_LABEL_KEYS, dayPhase, sceneBodyKey, type WeatherKind, weather
 import { undoLastWorldTimeAdvance } from '../../rules/world-time-undo-runtime.ts';
 import { canUndoAdvance } from '../../rules/world-time-undo.ts';
 import { advanceSeconds, dayNumberSince, displayDayNumber, formatClock, formatRemaining, type TimeAdvanceUnit } from '../../rules/world-time.ts';
+import { onWorldSettingChange } from '../../utils/hooks-on.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import CelestialBodiesDialog from '../dialogs/celestial-bodies-dialog.ts';
 import { pinToHudLayer } from './hud-layer.ts';
@@ -178,7 +179,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
 
     /**
      * Show the singleton widget, rendering it if not already open. Registers the
-     * `updateSetting` listener once so re-anchoring inception on any client keeps
+     * setting listener once so re-anchoring inception on any client keeps
      * every widget current (advance-driven refreshes come via `updateWorldTime`
      * in `HooksManager.onUpdateWorldTime`).
      */
@@ -191,9 +192,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
                 // The Undo button follows the last-advance record (#703).
                 `${SYSTEM_ID}.${WH40KSettings.SETTINGS.worldTimeLastAdvance}`,
             ]);
-            Hooks.on('updateSetting', (setting: { key?: string }) => {
-                if (setting.key !== undefined && watchedKeys.has(setting.key)) WorldTimeWidget.refresh();
-            });
+            onWorldSettingChange(watchedKeys, () => WorldTimeWidget.refresh());
             // The local clock follows the viewed scene's body (#588).
             Hooks.on('canvasReady', () => WorldTimeWidget.refresh());
         }
@@ -217,7 +216,7 @@ export default class WorldTimeWidget extends HandlebarsApplicationMixin(Applicat
      *
      * `show()` is singleton-safe, so re-invoking while open re-renders/focuses the
      * existing instance rather than stacking duplicates, and it re-establishes the
-     * `updateSetting` subscription.
+     * setting subscription.
      */
 
     /** Re-render the widget if it is open (no-op otherwise). Called when the world

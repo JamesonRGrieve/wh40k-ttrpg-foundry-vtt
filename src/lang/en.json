@@ -9181,7 +9181,8 @@
                 "Sections": {
                     "levels": "Levels",
                     "notes": "Notes",
-                    "power": "Power"
+                    "power": "Power",
+                    "test": "Test"
                 }
             },
             "Oath": {
@@ -10209,11 +10210,6 @@
                     "template": "Template Options"
                 },
                 "FIELDS": {
-                    "baseCharacteristics": {
-                        "influence": {
-                            "label": "Base Influence"
-                        }
-                    },
                     "equipmentPreset": {
                         "label": "Equipment Preset",
                         "choices": {

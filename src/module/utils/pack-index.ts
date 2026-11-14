@@ -82,6 +82,28 @@ export function packIndexFields(metadata: PackMetadataLike): string[] {
     return [...new Set([...BASE_INDEX_FIELDS, ...extra])];
 }
 
+/** Whether `field` is `other` or lies under it (`system.modifiers.armourPoints` under `system.modifiers`). Pure. */
+function isUnder(field: string, other: string): boolean {
+    return field === other || field.startsWith(`${other}.`);
+}
+
+/**
+ * The fields one index request needs to carry both `shared` and `fields`. A field
+ * that another one in the list already contains is dropped: the server writes
+ * each field into its projection in turn, and writing a child path into a parent
+ * it already copied whole throws on any document whose parent value is not an
+ * object, failing the pack's whole index. Pure.
+ */
+export function mergeIndexFields(shared: readonly string[], fields: readonly string[]): string[] {
+    const all = [...new Set([...shared, ...fields])];
+    return all.filter((field) => !all.some((other) => other !== field && isUnder(field, other)));
+}
+
+/** Whether `shared` already carries every one of `fields`, itself or through a parent field. Pure. */
+export function indexFieldsCover(shared: readonly string[], fields: readonly string[]): boolean {
+    return fields.every((field) => shared.some((other) => isUnder(field, other)));
+}
+
 /** The part of a compendium pack `readPackIndex` reads. */
 export interface IndexablePack<E extends object> {
     readonly metadata: PackMetadataLike;

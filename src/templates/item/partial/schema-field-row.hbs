@@ -12,7 +12,8 @@
     stored object's keys, such as an NPC's per-characteristic overrides). An
     empty input submits null, which clears the override.
 
-  Hash arguments: row — the row object.
+  Hash arguments: row — the row object; editing — whether its inputs are
+  live (edit mode, or an editable sheet for an in-play section).
 --}}
 {{#if (eq row.kind "map")}}
 <div class="tw-flex tw-flex-col tw-gap-1 tw-mb-2">
@@ -21,7 +22,7 @@
         {{#each row.entries as |entry|}}
         <label class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-text-sm">
             <span>{{#if entry.label}}{{entry.label}}{{else}}{{localize entry.labelKey}}{{/if}}</span>
-            <input type="number" class="tw-w-20" name="{{entry.name}}" value="{{entry.value}}" data-dtype="Number" {{disabled (not @root.inEditMode)}} />
+            <input type="number" class="tw-w-20" name="{{entry.name}}" value="{{entry.value}}" data-dtype="Number" {{disabled (not ../editing)}} />
         </label>
         {{/each}}
     </div>
@@ -35,18 +36,18 @@
         <label class="tw-flex tw-flex-1 tw-flex-col tw-gap-0.5 tw-min-w-0">
             {{#if (gt entry.rows.length 1)}}<span class="tw-text-xs">{{localize sub.labelKey}}</span>{{/if}}
             {{#if sub.html}}
-            {{editor sub.value target=sub.name button=true editable=@root.inEditMode engine="prosemirror"}}
+            {{editor sub.value target=sub.name button=true editable=../../editing engine="prosemirror"}}
             {{else}}
-            {{formInput sub.field name=sub.name value=sub.value choices=sub.choices localize=true disabled=(not @root.inEditMode)}}
+            {{formInput sub.field name=sub.name value=sub.value choices=sub.choices localize=true disabled=(not ../../editing)}}
             {{/if}}
         </label>
         {{/each}}
-        {{#if @root.inEditMode}}
+        {{#if ../editing}}
         {{> systems/wh40k-rpg/templates/item/partial/remove-entry-button.hbs path=../row.name index=entry.index}}
         {{/if}}
     </div>
     {{/each}}
-    {{#if @root.inEditMode}}
+    {{#if editing}}
     <button type="button" class="tw-self-start tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--color-border-secondary)] tw-bg-[var(--wh40k-btn-bg)] tw-px-2 tw-py-0.5 tw-text-xs tw-cursor-pointer"
             data-action="addEntry" data-path="{{row.name}}">
         <i class="fas fa-plus" aria-hidden="true"></i> {{localize "WH40K.Common.Add"}}
@@ -57,9 +58,9 @@
 <div class="form-group">
     <label>{{localize row.labelKey}}</label>
     {{#if row.html}}
-    {{editor row.value target=row.name button=true editable=@root.inEditMode engine="prosemirror"}}
+    {{editor row.value target=row.name button=true editable=editing engine="prosemirror"}}
     {{else}}
-    {{formInput row.field name=row.name value=row.value choices=row.choices localize=true disabled=(not @root.inEditMode)}}
+    {{formInput row.field name=row.name value=row.value choices=row.choices localize=true disabled=(not editing)}}
     {{/if}}
 </div>
 {{/if}}

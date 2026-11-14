@@ -1,7 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildSkillPackIndex, getSpecializationsForSkill } from '../rules/skill-pack-index.ts';
 import { packMetadata } from '../testing/pack-metadata.ts';
-import { CAREER_INDEX_FIELDS, CONDITION_INDEX_FIELDS, packIndexFields, readPackIndex, SKILL_INDEX_FIELDS, WEAPON_QUALITY_INDEX_FIELDS } from './pack-index.ts';
+import {
+    CAREER_INDEX_FIELDS,
+    CONDITION_INDEX_FIELDS,
+    indexFieldsCover,
+    mergeIndexFields,
+    packIndexFields,
+    readPackIndex,
+    SKILL_INDEX_FIELDS,
+    WEAPON_QUALITY_INDEX_FIELDS,
+} from './pack-index.ts';
 import { uuidNameCache } from './uuid-name-cache.ts';
 
 /**
@@ -56,6 +65,55 @@ describe('packIndexFields', () => {
 
     it('asks a pack with no declared category for the base fields only', () => {
         expect(packIndexFields({ name: 'loose' })).toEqual(['name', 'type', 'system.identifier']);
+    });
+});
+
+/**
+ * Foundry's server builds an index projection by writing `1` at each field path in
+ * turn, so `system.modifiers` then `system.modifiers.armourPoints` throws ("Cannot
+ * create property 'armourPoints' on number '1'") and the whole pack index fails.
+ * That broke the compendium browser on every conditions pack (#706).
+ */
+describe('mergeIndexFields and indexFieldsCover', () => {
+    /** A projection map as the server builds it: `1` at each requested path. */
+    interface Projection {
+        [key: string]: Projection | 1;
+    }
+
+    /** Foundry's own projection walk: it throws exactly where the server's `setProperty` does. */
+    const projection = (fields: readonly string[]): Projection => {
+        const map: Projection = {};
+        for (const field of fields) {
+            const parts = field.split('.');
+            const last = parts.pop() ?? '';
+            let target = map;
+            for (const part of parts) {
+                const next = target[part] ?? {};
+                if (next === 1) throw new TypeError(`Cannot create property '${last}' on number '1'`);
+                target[part] = next;
+                target = next;
+            }
+            target[last] = 1;
+        }
+        return map;
+    };
+
+    it('drops a field its parent already carries, so the projection never writes into a 1', () => {
+        const shared = packIndexFields(packMetadata('dh2-conditions', 'dh2', 'conditions'));
+        const merged = mergeIndexFields(shared, ['system.modifiers.armourPoints', 'system.armourPoints', 'system.source']);
+        expect(merged).toContain('system.modifiers');
+        expect(merged).not.toContain('system.modifiers.armourPoints');
+        expect(merged).toContain('system.armourPoints');
+        expect(() => projection(merged)).not.toThrow();
+    });
+
+    it('keeps the parent when the child is asked for first', () => {
+        expect(mergeIndexFields(['system.a.b'], ['system.a', 'name'])).toEqual(['system.a', 'name']);
+    });
+
+    it('treats a field as covered when a shared parent carries it', () => {
+        expect(indexFieldsCover(['name', 'system.modifiers'], ['system.modifiers.armourPoints', 'name'])).toBe(true);
+        expect(indexFieldsCover(['name', 'system.modifiers'], ['system.modifiersExtra'])).toBe(false);
     });
 });
 

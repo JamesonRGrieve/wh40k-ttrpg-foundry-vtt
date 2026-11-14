@@ -29,14 +29,14 @@ interface Args {
     layout: SchemaSheetLayout;
 }
 
-function context(layout: SchemaSheetLayout, source: FormObject = {}): object {
+function context(layout: SchemaSheetLayout, source: FormObject = {}, inEditMode = true): object {
     return {
         item: { name: `Story ${layout.type}`, img: 'icons/svg/item-bag.svg', type: layout.type },
         system: { description: { value: '' } },
         source: {},
         editable: true,
         isEditable: true,
-        inEditMode: true,
+        inEditMode,
         tabGroups: { primary: 'details' },
         effects: [],
         schemaSections: mockSchemaSections(layout, source),
@@ -81,6 +81,20 @@ export const Ritual: Story = storyFor(layoutFor('ritual'));
 export const ShipRole: Story = storyFor(layoutFor('shipRole'));
 export const VehicleTrait: Story = storyFor(layoutFor('vehicleTrait'));
 export const VehicleUpgrade: Story = storyFor(layoutFor('vehicleUpgrade'));
+
+/**
+ * Out of edit mode an owned power's mastery stays live, as a Navigator advances it in
+ * play; its authored test stays locked until the sheet enters edit mode.
+ */
+export const InPlayOutsideEditMode: Story = {
+    args: { layout: layoutFor('navigatorPower') },
+    render: (args) => inForm(renderSheet(templateSrc, context(args.layout, { mastery: 'novice' }, false))),
+    play: ({ canvasElement }) => {
+        const input = (name: string): HTMLInputElement | null => canvasElement.querySelector<HTMLInputElement>(`[name="${name}"]`);
+        void expect(input('system.mastery')?.disabled).toBe(false);
+        void expect(input('system.test.characteristic')?.disabled).toBe(true);
+    },
+};
 
 /** A list field renders an Add button, and an entry its inputs plus a remove button. */
 export const ListEditing: Story = {

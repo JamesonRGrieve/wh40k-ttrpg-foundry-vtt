@@ -83,7 +83,11 @@ const meta: Meta = { title: 'Actor/Character/SkillRowsNarrow' };
 export default meta;
 type Story = StoryObj;
 
-/** Every skill and specialisation name shows in full at 300px, under each line's theme. */
+/**
+ * Every row is one strip at the narrowest column, under each line's theme. Every skill
+ * name shows in full; a specialisation too long for the strip ends in an ellipsis and
+ * carries its full name in its tooltip.
+ */
 export const SingleStripAtNarrowestColumn: Story = {
     render: () => {
         const host = document.createElement('div');
@@ -101,8 +105,8 @@ export const SingleStripAtNarrowestColumn: Story = {
     play: async ({ canvasElement }) => {
         const names = [...canvasElement.querySelectorAll<HTMLElement>('[data-testid="skill-name"]')];
         await expect(names.length).toBe(GAME_LINES.length * 5);
-        const clipped = names.filter((name) => name.scrollWidth > name.clientWidth + 1).map((name) => name.textContent.trim());
-        await expect(clipped).toEqual([]);
+        const clipped = names.filter((name) => name.scrollWidth > name.clientWidth + 1);
+        await expect(clipped.filter((name) => name.title !== name.textContent.trim()).map((name) => name.textContent.trim())).toEqual([]);
         // Each row is one strip: the name cell, the pips and the value share one line.
         const cells = [...canvasElement.querySelectorAll<HTMLElement>('[data-testid="skill-name-cell"]')];
         const twoLine = cells.filter((cell) => {

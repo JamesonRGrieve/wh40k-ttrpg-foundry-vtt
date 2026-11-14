@@ -684,7 +684,7 @@ export class WH40KSettings {
     /**
      * Anchor "Day 0" to a world-time stamp (#487), truncated to a whole second.
      * World-scoped, so the change propagates to every connected client (the
-     * world-time widget refreshes on the `updateSetting` hook). GM-only in
+     * world-time widget refreshes on the setting's change hook). GM-only in
      * practice — a world setting write is rejected for non-GM users by Foundry.
      */
     static async setWorldTimeInception(stamp: number): Promise<void> {

@@ -10,7 +10,10 @@ const FILE = '../src/module/applications/item/define-schema-item-sheet.stories.t
 const MODULES = (import.meta as ImportMeta & ViteGlobMeta).glob(['../src/module/applications/item/define-schema-item-sheet.stories.ts'], { eager: true });
 
 describe('schema item sheet stories (#731)', () => {
-    it.each(['Backpack', 'NavigatorPower', 'Oath', 'Order', 'Ritual', 'ShipRole', 'VehicleTrait', 'VehicleUpgrade', 'ListEditing'])('%s', async (name) => {
-        await expect(playStory(MODULES, FILE, name)).resolves.toBeUndefined();
-    });
+    it.each(['Backpack', 'NavigatorPower', 'Oath', 'Order', 'Ritual', 'ShipRole', 'VehicleTrait', 'VehicleUpgrade', 'ListEditing', 'InPlayOutsideEditMode'])(
+        '%s',
+        async (name) => {
+            await expect(playStory(MODULES, FILE, name)).resolves.toBeUndefined();
+        },
+    );
 });

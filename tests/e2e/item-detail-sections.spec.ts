@@ -36,7 +36,19 @@ const CASES: readonly Case[] = [
         sections: ['WH40K.ItemSheet.Gear.MechanicalEffect', 'WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'],
     },
     { type: 'armour', tab: 'description', sections: ['WH40K.Tabs.Effect', 'WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'] },
-    { type: 'weapon', tab: null, sections: ['WH40K.Tabs.Description', NOTES_KEY] },
+    // The weapon also carries the schema rows its template lacks (#732) and every item's acquisition note (#734).
+    {
+        type: 'weapon',
+        tab: null,
+        sections: [
+            'WH40K.ItemFields.Weapon.Sections.attack',
+            'WH40K.ItemFields.Weapon.Sections.mounting',
+            'WH40K.ItemFields.Physical.Sections.availability',
+            'WH40K.ItemFields.Item.Sections.acquired',
+            'WH40K.Tabs.Description',
+            NOTES_KEY,
+        ],
+    },
     // Their Source panels were hand-built inputs until they moved onto the shared control (#229).
     { type: 'condition', tab: 'description', sections: ['WH40K.Tabs.Description', 'WH40K.Common.Source'] },
     { type: 'cybernetic', tab: 'description', sections: ['WH40K.Tabs.Description', NOTES_KEY, 'WH40K.Common.Source'] },

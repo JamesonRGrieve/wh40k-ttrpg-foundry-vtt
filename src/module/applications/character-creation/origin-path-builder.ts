@@ -620,6 +620,37 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return resolveCreationOverrides(this._selectionSystems()).startingXP ?? this.registryConfig.startingXP;
     }
 
+    /*
+     * The commit's steps, each in `origin-path/commit.ts` (#717). The commit runs
+     * them through these methods, so a step can be driven on its own (the Tier B
+     * origin specs apply one step against a real actor).
+     */
+
+    /** Sum of the committed origins' characteristic modifiers, by characteristic. */
+    _collectOriginCharacteristicBonuses(): Record<string, number> {
+        return CommitPath.collectOriginCharacteristicBonuses.call(this);
+    }
+
+    /** Apply the chosen divination's effects to the actor. */
+    async _resolveDivinationSelection(): Promise<void> {
+        return CommitPath.resolveDivinationSelection.call(this);
+    }
+
+    /** Grant the talents, traits, skills and equipment the committed origins name. */
+    async _applyItemGrantsFromOrigins(): Promise<void> {
+        return CommitPath.applyItemGrantsFromOrigins.call(this);
+    }
+
+    /** Create the special abilities and other content items the committed origins grant. */
+    async _applyContentItemGrantsFromOrigins(): Promise<void> {
+        return CommitPath.applyContentItemGrantsFromOrigins.call(this);
+    }
+
+    /** Reset the actor's XP to the starting total and clear its advancements. */
+    async _resetExperienceAndAdvancements(): Promise<void> {
+        return CommitPath.resetExperienceAndAdvancements.call(this);
+    }
+
     /**
      * Resolve a compendium/source origin for a persisted selection.
      * @private
