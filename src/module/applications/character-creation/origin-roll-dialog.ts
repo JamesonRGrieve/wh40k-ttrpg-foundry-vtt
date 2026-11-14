@@ -933,8 +933,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
-    override async close(options: Record<string, unknown> = {}): Promise<this> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<this> {
         // Resolve null if no explicit result fired (idempotent).
         this.#resolution.resolveDefault();
         return super.close(options);

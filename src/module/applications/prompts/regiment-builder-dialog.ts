@@ -26,10 +26,8 @@ import {
     computeRegimentBudget,
     emptyRegimentSelection,
 } from '../../rules/ow-regiment-creation.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Map RegimentCategory → i18n label key. */
 const CATEGORY_LABEL_KEYS: Readonly<Record<RegimentCategory, string>> = Object.freeze({
@@ -121,9 +119,7 @@ function selectionContainsForCategory(selection: RegimentSelection, category: Re
     const singleKey: SinglePickCategory = category;
     return selection[singleKey] === optionId;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern (matches colony-growth-dialog)
-export default class RegimentBuilderDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class RegimentBuilderDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare selection: RegimentSelection;
     declare catalog: ReadonlyArray<RegimentOption>;
     /** Owning actor whose `system.regimentSelection` is the source of truth. Null in story / probe contexts. */

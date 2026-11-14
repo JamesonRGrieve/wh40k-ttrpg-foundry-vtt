@@ -14,11 +14,9 @@ import {
     rollDaemonWeaponAttributes,
 } from '../../rules/daemon-weapon-attribute-tables.ts';
 import { BINDING_STRENGTH_PROFILES, type BindingStrength } from '../../rules/daemon-weapon.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { ALIGNMENT_ACCENT_CLASS } from './daemon-weapon-alignment-accent.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 const DIALOG_TEMPLATE = 'systems/wh40k-rpg/templates/prompt/daemon-weapon-attribute-dialog.hbs';
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/daemon-weapon-attribute-chat.hbs';
@@ -35,7 +33,7 @@ interface DialogOptions {
  * GM dialog: pick alignment + binding strength, roll Attributes, emit chat card.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires a constructor type; Foundry's ApplicationV2 class does not match the ctor constraint directly
-export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class DaemonWeaponAttributeDialog extends ApplicationV2Mixin(applicationV2Base()) {
     constructor(options: DialogOptions = {}) {
         super(options);
         this.alignment = options.alignment ?? 'unaligned';

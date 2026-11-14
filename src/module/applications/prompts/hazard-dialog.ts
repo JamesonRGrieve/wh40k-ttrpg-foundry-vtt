@@ -34,7 +34,7 @@ import {
 import { DEFAULT_HIT_LOCATION, getHitLocationForRoll, hitLocationLabel } from '../../rules/hit-locations.ts';
 import { exposureForAtmosphere, readSceneEnvironment, type VacuumExposure } from '../../rules/scene-environment.ts';
 import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { prepareModifierTooltipData } from '../components/wh40k-tooltip.ts';
 import {
@@ -46,8 +46,6 @@ import {
     type HazardSubjectView,
     isHazardKind,
 } from './hazard-view.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 const FALLING_CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/hazard-falling-chat.hbs';
 const SUFFOCATION_CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/hazard-suffocation-chat.hbs';
@@ -179,9 +177,7 @@ async function resolveSuffocationFor(actor: WH40KBaseActorDocument, view: Hazard
         appliedCondition,
     });
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class HazardDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class HazardDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare kind: HazardKind;
     declare metres: number;
     declare strenuous: boolean;

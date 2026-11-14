@@ -490,7 +490,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<unknown> {
         this.#resolution.resolveDefault();
         return super.close(options);
     }

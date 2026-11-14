@@ -168,7 +168,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2.close signature uses Record<string, unknown>
-    override async close(options?: Record<string, unknown>): Promise<unknown> {
+    override async close(options?: ApplicationRenderOptions): Promise<unknown> {
         this.#resolution.resolveDefault();
         return super.close(options);
     }

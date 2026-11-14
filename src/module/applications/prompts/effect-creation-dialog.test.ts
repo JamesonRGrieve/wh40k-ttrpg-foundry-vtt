@@ -249,8 +249,7 @@ function installResolutionGlobals(): void {
             // eslint-disable-next-line @typescript-eslint/no-this-alias -- intentional: capture the rendered dialog instance so the test can drive its form handler
             capturedDialog = this;
         }
-        // eslint-disable-next-line no-restricted-syntax -- boundary: stub of Foundry ApplicationV2.close()'s untyped options bag
-        async close(_options?: Record<string, unknown>): Promise<this> {
+        async close(_options?: ApplicationRenderOptions): Promise<this> {
             await Promise.resolve();
             return this;
         }

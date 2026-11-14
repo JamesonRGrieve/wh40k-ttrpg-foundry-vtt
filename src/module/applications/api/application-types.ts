@@ -36,3 +36,14 @@ export type ContextMenuEntryLike = {
     condition?: () => boolean;
     group?: string;
 };
+
+/**
+ * Foundry's ApplicationV2 class, typed as the constructor the mixins extend.
+ * fvtt-types' ApplicationV2 global does not satisfy the mixin constraint, so this
+ * is the one place it is cast (#719). Read when called, so a module that calls it
+ * at class definition reads `foundry` exactly when it did before.
+ */
+export function applicationV2Base(): ApplicationV2Ctor {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications.api.ApplicationV2 (fvtt-types) lacks the constructor signature TS mixins require
+    return foundry.applications.api.ApplicationV2 as unknown as ApplicationV2Ctor;
+}

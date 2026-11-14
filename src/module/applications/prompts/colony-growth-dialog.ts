@@ -28,7 +28,7 @@ import {
     tierForSize,
 } from '../../rules/rt-colony.ts';
 import { capitalize } from '../../utils/format.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 /**
@@ -41,8 +41,6 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 interface ColonyActorSlot {
     readonly characteristics: ColonyState;
 }
-
-const { ApplicationV2 } = foundry.applications.api;
 
 interface CharacteristicRow {
     readonly id: ColonyCharacteristicKey;
@@ -68,9 +66,7 @@ const INITIAL_STATE: ColonyState = {
     productivity: COLONY_CHARACTERISTICS.productivity.default,
     piety: COLONY_CHARACTERISTICS.piety.default,
 };
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class ColonyGrowthDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class ColonyGrowthDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare colonyState: ColonyState;
     declare growthModifier: number;
     declare agriculturalSoftener: boolean;

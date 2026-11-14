@@ -365,8 +365,7 @@ export default class NPCQuickCreateDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
-    override async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

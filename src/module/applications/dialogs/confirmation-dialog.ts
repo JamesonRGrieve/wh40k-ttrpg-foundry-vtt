@@ -131,7 +131,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
-    override async close(options?: Record<string, unknown>): Promise<unknown> {
+    override async close(options?: ApplicationRenderOptions): Promise<unknown> {
         this.#resolution.resolveDefault();
         return super.close(options);
     }

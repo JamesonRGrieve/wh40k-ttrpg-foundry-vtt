@@ -15,12 +15,10 @@ import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { resolveThrow } from '../../rules/combat-actions.ts';
 import { riderArea, riderRadiusMetres } from '../../rules/grenade-rider.ts';
 import { ownerGameLine } from '../../utils/item-variant-utils.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { GRENADE_LABELS } from './grenade-labels.ts';
 import { buildGrenadeThrowContext, type GrenadeItemView, type GrenadeThrowViewContext } from './grenade-throw-view.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** The thrower the dialog reads its grenades from, and places a rider's area from (#623). */
 export interface GrenadeThrower {
@@ -46,9 +44,7 @@ function riderGrenades(actor: GrenadeThrower): GrenadeItemView[] {
         item.id !== null && item.isThrown && resolveThrow(item.system).path === 'grenade-dialog' ? [{ id: item.id, name: item.name, system: item.system }] : [],
     );
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class GrenadeThrowDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class GrenadeThrowDialog extends ApplicationV2Mixin(applicationV2Base()) {
     readonly #actor: GrenadeThrower;
 
     #selectedId: string;

@@ -14,10 +14,8 @@
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import type { BindingStrength } from '../../rules/daemon-weapon.ts';
 import { DAEMONHOST_TIERS, type DaemonhostTier } from '../../rules/daemonhost.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Tier ids in display order — matches the brief's "five tier cards in a grid". */
 const TIER_ORDER: readonly BindingStrength[] = ['minor', 'lesser', 'normal', 'greater', 'major'] as const;
@@ -54,8 +52,7 @@ interface DaemonhostBindingContext extends Record<string, unknown> {
  * GM-only dialog: pick a Binding Strength tier, click Bind, post a chat
  * card. The chat card is system-themed via `data-wh40k-system="dh2"`.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class DaemonhostBindingDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class DaemonhostBindingDialog extends ApplicationV2Mixin(applicationV2Base()) {
     /** Currently selected tier id (defaults to the lowest tier). */
     declare selectedTier: BindingStrength;
 

@@ -238,7 +238,7 @@ export default class InventoryGeneratorDialog extends HandlebarsApplicationMixin
     }
 
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts/returns an arbitrary options record per shipped typings
-    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<unknown> {
         this.#resolution.resolveDefault();
         return super.close(options);
     }

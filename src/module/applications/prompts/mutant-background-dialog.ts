@@ -18,10 +18,8 @@ import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { originStartingCorruption, startingMutationFormula, startingMutationRow, TWISTED_FLESH_FLAG } from '../../rules/chaos-backgrounds.ts';
 import { loadMutationEntries } from '../../rules/mutation-roll.ts';
 import type { WH40KMutantBackgroundOrigin, WH40KMutantBackgroundTarget } from '../../types/global.d.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Minimal actor surface the dialog touches — kept narrow to avoid Document
@@ -56,8 +54,7 @@ function mutantOrigin(actor: MutantTargetActor | null): WH40KMutantBackgroundOri
  * origin, since the roll's formula and the starting Corruption are that
  * origin's content.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class MutantBackgroundDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class MutantBackgroundDialog extends ApplicationV2Mixin(applicationV2Base()) {
     /** Optional target actor; null when the GM opens the dialog without a selection. */
     declare actor: MutantTargetActor | null;
 

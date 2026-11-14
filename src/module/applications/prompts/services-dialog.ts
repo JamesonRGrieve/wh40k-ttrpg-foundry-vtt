@@ -15,10 +15,8 @@ import { availabilityLabelKey, requisitionProvenanceRows } from '../../integrati
 import { hireOutcome, type ServiceDocLike, type ServiceOffer, serviceOffers, serviceRequisition } from '../../rules/service-hire.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { lineBookPacks, type PackMetadataLike } from '../../utils/line-packs.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Threat-level → Tailwind background utility (1 = safe green, 4+ = danger red). */
 const THREAT_BADGE_CLASSES = ['tw-bg-emerald-400', 'tw-bg-yellow-400', 'tw-bg-orange-400', 'tw-bg-red-500'] as const;
@@ -65,8 +63,7 @@ type ActionHandler = (this: ServicesDialog, event: Event, target: HTMLElement) =
 /**
  * GM dialog for picking and rolling a service Requisition.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class ServicesDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class ServicesDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare actor: WH40KBaseActor;
     declare selectedServiceUuid: string | null;
     /** The services loaded on first render, kept for the roll. */

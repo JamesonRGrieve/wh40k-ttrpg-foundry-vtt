@@ -4,10 +4,8 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Precise type for ApplicationV2 action handlers bound with a `this` context. */
 type ActionHandler = (this: SpecialistSkillDialog, event: Event, target: HTMLElement) => Promise<void>;
@@ -20,8 +18,7 @@ interface SpecialistSkillDialogOptions extends ApplicationV2Config.DefaultOption
 /**
  * Dialog for adding specialist skill specializations.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class SpecialistSkillDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare actorDoc: WH40KBaseActor;
     declare preSelectedSkillKey: string;
     declare _specializationMap: Map<string, string[]>;

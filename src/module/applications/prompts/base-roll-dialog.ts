@@ -1,8 +1,6 @@
 import type { I18nKey } from '../../types/i18n-keys';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * The finalize/dispatch contract every roll dialog drives on the roll button.
@@ -26,7 +24,7 @@ export interface RollDialogFooterSubmit {
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2Mixin requires ApplicationV2Ctor; cast needed because Foundry's ApplicationV2 class shape doesn't match the constructor type exactly
-export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class BaseRollDialog extends ApplicationV2Mixin(applicationV2Base()) {
     /**
      * @param {Record<string, unknown>} rollData     The roll data to configure.
      * @param {ApplicationV2Config.DefaultOptions} [options={}] Dialog options.

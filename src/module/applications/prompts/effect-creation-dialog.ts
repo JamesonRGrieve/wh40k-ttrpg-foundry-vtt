@@ -266,8 +266,7 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
      * `DialogResolution` guards against a double-resolve after a submit.
      * @override
      */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2.close() accepts untyped options; signature must match the framework override
-    override async close(options: Record<string, unknown> = {}): Promise<this> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<this> {
         this.#resolution.resolveDefault();
         await super.close(options);
         return this;

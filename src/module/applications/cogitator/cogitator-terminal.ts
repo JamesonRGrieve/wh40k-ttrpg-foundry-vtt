@@ -22,7 +22,7 @@
 
 import { t } from '../../i18n/t.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import {
     buildTerminalIndex,
@@ -32,8 +32,6 @@ import {
     type CogitatorRecordItem,
     type TerminalIndexEntry,
 } from './cogitator-records.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Options accepted by the terminal beyond the base ApplicationV2 bag. */
 export interface CogitatorTerminalOptions {
@@ -64,7 +62,7 @@ interface LiveRecordDoc {
 }
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 lacks a typed constructor signature; cast required for the mixin pattern
-export class CogitatorTerminal extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export class CogitatorTerminal extends ApplicationV2Mixin(applicationV2Base()) {
     readonly #folderId: string | null;
     readonly #recordUuids: string[];
     readonly #customTitle: string | null;

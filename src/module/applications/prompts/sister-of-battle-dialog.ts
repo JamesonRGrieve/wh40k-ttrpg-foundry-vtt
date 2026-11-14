@@ -15,10 +15,8 @@
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { advanceGrantCards, SISTER_OF_BATTLE_ADVANCE_IDENTIFIER, type AdvanceGrantCard, type AdvanceGrantsLike } from '../../rules/sister-of-battle.ts';
 import { findItemUuidByIdentifier } from '../../utils/compendium-query.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** The game line whose packs hold the advance (a DH2 supplement advance). */
 const ADVANCE_LINE = 'dh2';
@@ -61,8 +59,7 @@ async function loadAdvanceView(): Promise<AdvanceView> {
  * Apply, post a chat card. The chat card is system-themed via
  * `data-wh40k-system="dh2"`.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class SisterOfBattleDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class SisterOfBattleDialog extends ApplicationV2Mixin(applicationV2Base()) {
     /** The advance's requirements and grant rows, loaded once on first render. */
     #view: AdvanceView | null = null;
 

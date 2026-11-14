@@ -411,7 +411,7 @@ export default class TemplateSelector extends makeNpcFormDialog({
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: close/Record<string,unknown> is the ApplicationV2 override signature
-    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         this.#resolution.resolveDefault();

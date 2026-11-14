@@ -371,8 +371,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close options is loose record
-    override async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<void> {
         // Idempotent: a submit already resolved the result, so this resolves null
         // only on a bare dismissal.
         this.#resolution.resolveDefault();

@@ -3,10 +3,8 @@
  */
 
 import { pluralKey } from '../../i18n/plural.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 type ActionHandler = (this: BatchXPDialog, event: Event, target: HTMLElement) => Promise<void>;
 
@@ -26,9 +24,7 @@ interface BatchXPContext extends Record<string, unknown> {
     absAmount: number;
     selectedCount: number;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs
-export default class BatchXPDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class BatchXPDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare xpAmount: number;
     declare selectedIds: Set<string>;
 

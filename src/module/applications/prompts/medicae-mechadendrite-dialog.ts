@@ -13,10 +13,8 @@
 
 import { actorHasMedicaeMechadendrite, findMedicaeMechadendrite, mechadendriteMedicaeBonus, staunchBloodLoss } from '../../rules/medicae-mechadendrite.ts';
 import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface MedicaeMechadendriteContext extends Record<string, unknown> {
@@ -24,9 +22,7 @@ interface MedicaeMechadendriteContext extends Record<string, unknown> {
     eligible: boolean;
     medicaeBonus: number;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class MedicaeMechadendriteDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class MedicaeMechadendriteDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare actor: WH40KBaseActorDocument | null;
 
     constructor(options: ApplicationV2Config.DefaultOptions & { actor?: WH40KBaseActorDocument } = {}) {

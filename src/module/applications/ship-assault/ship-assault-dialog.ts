@@ -11,7 +11,7 @@
 
 import { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { resolveDegreesMethod } from '../../rolls/roll-helpers.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { readAssaultForm } from './ship-assault-fields.ts';
 import {
@@ -22,8 +22,6 @@ import {
     type ShipAssaultEntry,
     type ShipAssaultSession,
 } from './ship-assault-flow.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * The ships an attacker can aim an assault action at: the user's targeted
@@ -75,9 +73,7 @@ interface ShipAssaultDialogOptions extends ApplicationV2Config.DefaultOptions {
     attacker: WH40KVoidcraft;
     entry: ShipAssaultEntry;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class ShipAssaultDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class ShipAssaultDialog extends ApplicationV2Mixin(applicationV2Base()) {
     readonly attacker: WH40KVoidcraft;
     readonly entry: ShipAssaultEntry;
     /** The ships this action can be aimed at; the first is the default target. */

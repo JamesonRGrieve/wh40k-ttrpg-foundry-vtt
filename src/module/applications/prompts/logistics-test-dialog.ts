@@ -35,11 +35,9 @@ import {
     WAR_CONDITION_KEYS,
     type WarCondition,
 } from '../../rules/ow-logistics.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { type LogisticsRow, logisticsOptions, logisticsRows } from './logistics-test-rows.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface LogisticsContextRow extends Record<string, unknown> {
@@ -79,9 +77,7 @@ const FRONT_AXES = ['troopCount', 'timeInFront', 'frontActive', 'warCondition'] 
 function oneOf<T extends string>(values: readonly T[], value: string): value is T {
     return (values as readonly string[]).includes(value);
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class LogisticsTestDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class LogisticsTestDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare baseRating: number;
     declare munitorum: boolean;
     declare situational: number;

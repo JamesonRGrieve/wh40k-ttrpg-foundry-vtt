@@ -32,10 +32,8 @@ import {
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { corruptionBonus, EXORCISM_MODIFIER_ORDER, EXORCISM_MODIFIERS } from '../../rules/exorcism.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 const CHAT_TEMPLATE = 'systems/wh40k-rpg/templates/chat/daemonology-ritual-chat.hbs';
 
@@ -115,9 +113,7 @@ interface RitualDialogContext extends Record<string, unknown> {
 function signed(value: number): string {
     return value > 0 ? `+${value}` : String(value);
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class DaemonologyRitualDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class DaemonologyRitualDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare performer: RitualPerformer;
     declare mode: RitualMode;
     declare target: TargetInfo | null;

@@ -13,10 +13,8 @@
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { type MutationEntry, type MutationTrack, loadMutationEntries, rollMutation, trackRange } from '../../rules/mutation-roll.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface MutationRollContext extends Record<string, unknown> {
@@ -31,9 +29,7 @@ interface AnyGame {
     user?: { id?: string; isGM?: boolean };
     i18n?: { localize?: (k: string) => string };
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class MutationRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class MutationRollDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare track: MutationTrack;
 
     /** Lazily-loaded Mutations table (compendium content); null until first render. */

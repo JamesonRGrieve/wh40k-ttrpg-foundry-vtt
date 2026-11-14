@@ -1321,7 +1321,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close hook signature
-    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<unknown> {
         this.#resolution.resolveDefault();
         return super.close(options);
     }

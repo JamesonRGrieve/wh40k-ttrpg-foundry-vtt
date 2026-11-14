@@ -24,10 +24,8 @@ import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { type CyberneticCraftsmanship, type CyberneticInstallSite, composeInstallTest, resolveInstall, rollRecoveryTime } from '../../rules/cybernetics.ts';
 import { rollDifficulties } from '../../rules/difficulties.ts';
 import { capitalize } from '../../utils/format.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 const CRAFTSMANSHIP_OPTIONS: ReadonlyArray<{ id: CyberneticCraftsmanship; labelKey: string }> = Object.freeze([
     { id: 'poor', labelKey: 'WH40K.Craftsmanship.Poor' },
@@ -79,9 +77,7 @@ interface InstallDialogOptions {
     /** Recipient Toughness Bonus — drives the 2d10−TB recovery roll. */
     toughnessBonus?: number;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class CyberneticsInstallDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class CyberneticsInstallDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare deviceName: string;
     declare baseDifficulty: number;
     declare craftsmanship: CyberneticCraftsmanship;

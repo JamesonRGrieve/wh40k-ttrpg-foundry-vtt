@@ -16,11 +16,9 @@
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { capitalize } from '../../utils/format.ts';
 import { RollTableUtils } from '../../utils/roll-table-utils.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { conciseEffect } from './disorder-text.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Three canonical severity tiers, mirroring `MentalDisorderData.severity`. */
 export type DisorderSeverity = 'minor' | 'severe' | 'acute';
@@ -65,9 +63,7 @@ interface ResolvedDisorderItem {
 function isValidSeverity(value: string): value is DisorderSeverity {
     return value === 'minor' || value === 'severe' || value === 'acute';
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class DisorderRollDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class DisorderRollDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare severity: DisorderSeverity;
 
     constructor(options: ApplicationV2Config.DefaultOptions & { severity?: DisorderSeverity } = {}) {

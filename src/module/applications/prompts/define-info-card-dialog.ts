@@ -9,10 +9,8 @@
  * the context key, extra classes, and scroll selector).
  */
 
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base, type ApplicationV2Ctor } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Configuration for an {@link defineInfoCardDialog} dialog. */
 export interface InfoCardDialogConfig {
@@ -45,7 +43,7 @@ export interface InfoCardDialogConfig {
  */
 export function defineInfoCardDialog(config: InfoCardDialogConfig): ApplicationV2Ctor {
     // eslint-disable-next-line no-restricted-syntax -- boundary: the ApplicationV2 global lacks the typed constructor the Mixin needs; cast through unknown is the established pattern
-    class InfoCardDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+    class InfoCardDialog extends ApplicationV2Mixin(applicationV2Base()) {
         static override DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
             tag: 'div',
             classes: ['wh40k-rpg', 'dialog', config.id, ...(config.extraClasses ?? [])],

@@ -10,13 +10,11 @@
 
 import type { WH40KVoidcraft } from '../../documents/voidcraft.ts';
 import { resolveDegreesMethod } from '../../rolls/roll-helpers.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import { readAssaultForm } from '../ship-assault/ship-assault-fields.ts';
 import { foundryLocalize, ShipAssaultInputError, type AssaultFieldGroup } from '../ship-assault/ship-assault-flow.ts';
 import { isRollableShipAction, rollShipAction, shipActionInputGroups, type ShipActionContext, type ShipActionOrder } from './ship-action-flow.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface ShipActionDialogContext extends Record<string, unknown> {
@@ -30,9 +28,7 @@ interface ShipActionDialogOptions extends ApplicationV2Config.DefaultOptions {
     order: ShipActionOrder;
     requirements: string;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class ShipActionDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class ShipActionDialog extends ApplicationV2Mixin(applicationV2Base()) {
     readonly ship: WH40KVoidcraft;
     readonly order: ShipActionOrder;
     readonly requirements: string;

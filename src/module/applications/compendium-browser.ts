@@ -8,7 +8,7 @@ import { queryItemIndex } from '../utils/compendium-query.ts';
 import { formatSigned } from '../utils/format.ts';
 import { indexEntrySourceBook, packLine } from '../utils/index-source.ts';
 import type { PackMetadataLike } from '../utils/line-packs.ts';
-import type { ApplicationV2Ctor } from './api/application-types.ts';
+import { applicationV2Base } from './api/application-types.ts';
 import ApplicationV2Mixin from './api/application-v2-mixin.ts';
 
 /* eslint-disable no-restricted-syntax -- boundary: BrowserResult is a structural interface for Foundry CompendiumIndex entries; system/flags/armourData are compendium payloads with no typed schema available */
@@ -31,8 +31,6 @@ interface BrowserResult extends CompendiumIndexEntry {
 interface FoundryDocWithSheet {
     sheet: { render: (force: boolean) => void };
 }
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Normalize an armour `system.coverage` payload to a string[]. The schema
@@ -68,7 +66,7 @@ function normalizeCoverage(raw: unknown): string[] {
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 lacks typed constructor signature; cast required for mixin pattern
-export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export class RTCompendiumBrowser extends ApplicationV2Mixin(applicationV2Base()) {
     declare _filters: {
         type: string;
         search: string;

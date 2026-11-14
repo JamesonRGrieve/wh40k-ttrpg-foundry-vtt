@@ -3,10 +3,8 @@
  */
 
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /** Precise type for ApplicationV2 action handlers bound with a `this` context. */
 type ActionHandler = (this: AddXPDialog, event: Event, target: HTMLElement) => Promise<void>;
@@ -24,8 +22,7 @@ interface AddXPContext extends Record<string, unknown> {
 /**
  * Dialog for adding or subtracting experience points.
  */
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+export default class AddXPDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare actor: WH40KAcolyte;
     declare xpAmount: number;
 

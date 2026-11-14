@@ -13,10 +13,8 @@
 
 import { emitChatFromTemplate } from '../../rolls/roll-helpers.ts';
 import { MAX_FEAR_RATING, getShockTableRollModifier, resolveFearTest } from '../../rules/fear.ts';
-import type { ApplicationV2Ctor } from '../api/application-types.ts';
+import { applicationV2Base } from '../api/application-types.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 interface ObserverOption {
     id: string;
@@ -76,9 +74,7 @@ function findObserver(id: string | null): ObserverOption | null {
     const opts = listObserverOptions();
     return opts.find((o) => o.id === id) ?? null;
 }
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 global lacks the typed constructor Mixin needs; cast through unknown is the established pattern
-class FearTestDialog extends ApplicationV2Mixin(ApplicationV2 as unknown as ApplicationV2Ctor) {
+class FearTestDialog extends ApplicationV2Mixin(applicationV2Base()) {
     declare selectedObserverId: string | null;
     declare willpower: number;
     declare fearRating: number;

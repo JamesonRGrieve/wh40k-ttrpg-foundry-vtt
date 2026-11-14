@@ -422,8 +422,7 @@ export default class NPCThreatScalerDialog extends makeNpcFormDialog({
     /* -------------------------------------------- */
 
     /** @override */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    override async close(options: Record<string, unknown> = {}): Promise<void> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

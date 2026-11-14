@@ -658,7 +658,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     // eslint-disable-next-line no-restricted-syntax -- boundary: ApplicationV2 close accepts arbitrary options record
-    override async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    override async close(options: ApplicationRenderOptions = {}): Promise<unknown> {
         // Idempotent: a completed test already resolved its result, so this resolves
         // null only on a bare dismissal.
         this.#resolution.resolveDefault();
