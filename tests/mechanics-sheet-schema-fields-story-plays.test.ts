@@ -28,4 +28,8 @@ describe('the mechanics sheets edit their structured fields (#733)', () => {
     it.each(FILES)('%s SchemaFields', async (file) => {
         await expect(playStory(MODULES, file, 'SchemaFields')).resolves.toBeUndefined();
     });
+
+    it('a skill with no descriptor still shows the schema rows (#734)', async () => {
+        await expect(playStory(MODULES, '../src/module/applications/item/skill-sheet.stories.ts', 'SchemaFieldsWithoutDescriptor')).resolves.toBeUndefined();
+    });
 });

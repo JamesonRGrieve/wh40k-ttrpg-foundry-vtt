@@ -4,7 +4,7 @@ import templateSrc from '../../../../src/templates/item/item-skill-sheet.hbs?raw
 import type { SystemId } from '../../../../stories/mocks/extended';
 import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { renderSheet } from '../../../../stories/test-helpers';
-import { SKILL_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
+import { ITEM_COMMON_LAYOUT, SKILL_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 interface SkillSystem {
     skillType: 'basic' | 'advanced' | 'specialist';
@@ -136,5 +136,23 @@ export const SchemaFields: StoryObj = {
             ],
             renderWithSchemaFields,
         );
+    },
+};
+
+/** A skill with no descriptor still shows the schema rows: the acquisition note and the skill flags (#734). */
+export const SchemaFieldsWithoutDescriptor: StoryObj = {
+    render: () => {
+        const ctx = {
+            ...meta.args,
+            item: { ...meta.args.item, system: { ...baseSystem(), descriptor: '' } },
+            inEditMode: true,
+            editable: true,
+            schemaSections: [...mockSchemaSections(SKILL_EXTRA_LAYOUT), ...mockSchemaSections(ITEM_COMMON_LAYOUT)],
+        };
+        return inForm(renderSheet(templateSrc, ctx));
+    },
+    play: ({ canvasElement }) => {
+        void expect(canvasElement.querySelector('[name="system.specialist"]')).not.toBeNull();
+        void expect(canvasElement.querySelector('[name="system.acquired"]')).not.toBeNull();
     },
 };

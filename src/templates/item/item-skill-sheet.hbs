@@ -110,10 +110,10 @@
                 {{/if}}
             {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
-            {{!-- Descriptor Panel --}}
-            {{#if item.system.descriptor}}
             {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
 
+            {{!-- Descriptor Panel --}}
+            {{#if item.system.descriptor}}
             {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-align-left" labelKey="WH40K.Tabs.Description"}}
                 <div class="tw-text-sm tw-italic tw-leading-relaxed">
                     {{item.system.descriptor}}
