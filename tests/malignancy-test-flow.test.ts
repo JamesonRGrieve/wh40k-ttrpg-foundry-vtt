@@ -236,7 +236,7 @@ describe('Malignancy Test wiring (source text)', () => {
     });
 
     it('surfaces owed tests on the sheet as a rollable button', () => {
-        expect(sheetSrc).toContain("'rollMalignancyTest': CharacterSheet.#rollMalignancyTest");
+        expect(sheetSrc).toContain("'rollMalignancyTest': BiographyActions.rollMalignancyTest");
         expect(sheetSrc).toContain('context.malignancyTestsDue');
         expect(vitalsSrc).toContain('data-action="rollMalignancyTest"');
     });

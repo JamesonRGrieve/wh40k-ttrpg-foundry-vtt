@@ -14,9 +14,10 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { characterSheetSource } from './lib/character-sheet-source.ts';
 import { readRepoFile } from './lib/repo-file.ts';
 
-const CHAR = readRepoFile('src/module/applications/actor/character-sheet.ts');
+const CHAR = characterSheetSource();
 const BASE = readRepoFile('src/module/applications/actor/base-actor-sheet.ts');
 const NPC = readRepoFile('src/module/applications/actor/npc-sheet.ts');
 

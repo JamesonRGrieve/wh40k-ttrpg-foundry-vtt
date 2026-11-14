@@ -20,13 +20,13 @@ const NPC_DATA = readRepoFile('src/module/data/actor/npc.ts');
 
 /** The character sheet's BC panel keys, read from its panel table. */
 function bcPanelKeys(): string[] {
-    const block = /\n {4}bc: \[([\s\S]*?)\n {4}\],/.exec(CHARACTER_SHEET)?.[1] ?? '';
+    const block = /\n {4}bc: \[([\s\S]*?)\n {4}\],/.exec(readRepoFile('src/module/applications/actor/character/line-panels.ts'))?.[1] ?? '';
     return [...block.matchAll(/key: '([A-Za-z]+)'/g)].map((m) => m[1]);
 }
 
 describe('per-sheet system panels (#628)', () => {
     it('builds the panels from the sheet class, not a module-level table', () => {
-        expect(CHARACTER_SHEET).toContain('static SYSTEM_PANELS: SystemPanels = PANEL_BUILDERS;');
+        expect(CHARACTER_SHEET).toContain('static SYSTEM_PANELS: SystemPanels = LinePanels.PANEL_BUILDERS;');
         expect(CHARACTER_SHEET).toContain('(this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem]');
         expect(CHARACTER_SHEET).not.toMatch(/of PANEL_BUILDERS\[/);
     });

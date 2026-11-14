@@ -11,6 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { moduleFunctionBody } from './lib/character-sheet-source.ts';
 import { readRepoFile } from './lib/repo-file.ts';
 
 const PANEL = readRepoFile('src/templates/actor/panel/overview-active-effects-panel.hbs');
@@ -32,11 +33,11 @@ describe('Actor sheet Create Effect → EffectCreationDialog', () => {
     });
 
     it('registers the createEffect action on the shared character/NPC sheet', () => {
-        expect(CHAR_SHEET).toContain("'createEffect': CharacterSheet.#createEffect");
+        expect(CHAR_SHEET).toContain("'createEffect': ActiveEffectActions.createEffect");
     });
 
     it('opens the dialog on the sheet effects owner instead of creating a blank effect', () => {
-        const handler = handlerBody(CHAR_SHEET, 'static async #createEffect(');
+        const handler = moduleFunctionBody(readRepoFile('src/module/applications/actor/character/active-effect-actions.ts'), 'createEffect');
         expect(handler).toContain('EffectCreationDialog.show(this.effectsOwner)');
         expect(handler).not.toContain('createEmbeddedDocuments');
     });

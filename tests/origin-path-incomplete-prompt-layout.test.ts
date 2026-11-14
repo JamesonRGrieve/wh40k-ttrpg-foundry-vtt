@@ -45,7 +45,7 @@ function extractMethodBody(src: string, methodName: string): string {
 }
 
 describe('origin-path-incomplete prompt layout', () => {
-    const body = extractMethodBody(sheetSrc, '#maybePromptOriginPathIncomplete');
+    const body = extractMethodBody(sheetSrc, '_maybePromptOriginPathIncomplete');
 
     it('opens the dialog as modal so it renders above the character sheet', () => {
         // `modal: true` => Foundry's DialogV2 calls element.showModal(), which

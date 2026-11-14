@@ -24,7 +24,8 @@ import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
 import type { SkillLike } from './base-actor-sheet.ts';
-import CharacterSheet, { type SystemPanels } from './character-sheet.ts';
+import type { SystemPanels } from './character/sheet-support.ts';
+import CharacterSheet from './character-sheet.ts';
 import { npcArmourAtLocation } from './npc-armour-display.ts';
 import { npcDispositionView } from './npc-disposition-view.ts';
 

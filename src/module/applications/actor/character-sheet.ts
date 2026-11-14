@@ -3,8 +3,6 @@
  * This is the main player character sheet for WH40K RPG
  */
 
-import { isActorOnLine } from '../../actions/actor-line-gate.ts';
-import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { bcAscend } from '../../actions/bc-daemon-prince-actions.ts';
 import { bcRollGiftCharacteristic } from '../../actions/bc-gift-actions.ts';
 import { bcPsychicTest } from '../../actions/bc-psychic-actions.ts';
@@ -13,13 +11,11 @@ import { daemonologyLoreTotal, findDaemonologyLore } from '../../actions/daemono
 import { dwSelectAmmo } from '../../actions/dw-ammo-actions.ts';
 import { dwAstartesToggleImplant } from '../../actions/dw-astartes-actions.ts';
 import { dwCohesionChallenge, dwCohesionRally, dwCohesionRecoverObjective } from '../../actions/dw-cohesion-actions.ts';
-import { readSpecialAbility } from '../../actions/dw-distinction-actions.ts';
 import { dwCompleteMission, dwToggleComplication, dwToggleObjective } from '../../actions/dw-mission-actions.ts';
 import { dwEnterSquadMode, dwLeaveSquadMode } from '../../actions/dw-mode-actions.ts';
 import { dwReleaseOath, dwSwearOath } from '../../actions/dw-oath-actions.ts';
 import { dwRenownAward, dwRenownLoss } from '../../actions/dw-renown-actions.ts';
 import { dwRequisitionItem, dwRequisitionPool } from '../../actions/dw-requisition-actions.ts';
-import { promptGrappleItem } from '../../actions/grapple-controls.ts';
 import { owRequestSupport, owToggleAward } from '../../actions/ow-battlefield-actions.ts';
 import { owComradeHeal, owComradeMental, owComradeRecover, owComradeReplace, owComradeWound } from '../../actions/ow-comrade-actions.ts';
 import { owComradeMedicae, owComradeReplace2, owComradeTickDay, owComradeToggleRefit } from '../../actions/ow-comrade-healing-actions.ts';
@@ -27,694 +23,66 @@ import { owAddComrade, owRemoveComrade, owToggleDrawback } from '../../actions/o
 import { owAdjustSituational, owLogisticsTest, owToggleMunitorum } from '../../actions/ow-logistics-actions.ts';
 import { owRequestGear } from '../../actions/ow-mission-gear-actions.ts';
 import { owMountedAction } from '../../actions/ow-mount-actions.ts';
-import { type OrderPanelRow, orderPanelRows, owIssueOrder } from '../../actions/ow-orders-actions.ts';
-import { owRegimentEdit, resolveRegimentCatalog } from '../../actions/ow-regiment-actions.ts';
+import { owIssueOrder } from '../../actions/ow-orders-actions.ts';
+import { owRegimentEdit } from '../../actions/ow-regiment-actions.ts';
 import { owVehicleAction } from '../../actions/ow-vehicle-actions.ts';
-import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
-import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
-import { BC_INFAMY_ADVANCE_CAP, BC_INFAMY_INCREMENT, chaosAlignmentLabelKey, infamyAdvanceCost } from '../../config/game-systems/bc-advancement-config.ts';
-import { comradeOrdersFor, comradeRulesFor, grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { CharacterSheetCapabilities, ChaosAlignment, GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
+import { grappleRulesFor, inquestRulesFor, SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { GameSystemId, SidebarHeaderField } from '../../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import type { WH40KActiveEffect } from '../../documents/active-effect.ts';
 import { WH40KBaseActor } from '../../documents/base-actor.ts';
-import {
-    chooseCompendiumDarkPact,
-    type DarkPactItem,
-    darkPactDefinitions,
-    isDarkPactItem,
-    removeDarkPact,
-    strikeDarkPact,
-    toggleDarkPactEntry,
-} from '../../documents/dark-pacts.ts';
+import { type DarkPactItem, isDarkPactItem, strikeDarkPact } from '../../documents/dark-pacts.ts';
 import type { WH40KItem } from '../../documents/item.ts';
-import { addRegimentalAward, chooseCompendiumAward, isMedal, resolveAwardDescriptors } from '../../documents/ow-awards.ts';
-import { addRegimentalDrawback, chooseCompendiumDrawback, isRegimentalDrawback, resolveDrawbackDescriptors } from '../../documents/ow-drawbacks.ts';
-import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../helpers/effects.ts';
-import { pluralKey } from '../../i18n/plural.ts';
-import type { SimpleSkillData } from '../../rolls/action-data.ts';
-import { AssignDamageData, type ActorLike } from '../../rolls/assign-damage-data.ts';
-import { currentCombatRound } from '../../rolls/counter-attack-flow.ts';
-import { Hit } from '../../rolls/damage-data.ts';
-import { dealGrappleDamage } from '../../rolls/grapple-damage.ts';
-import { performGrappleOption } from '../../rolls/grapple-flow.ts';
-import { lineResourceRows, type ResourceRow } from '../../rules/acquisition-resources.ts';
-import type { ActionKind } from '../../rules/action-budget.ts';
-import { actionBudgetForActor, resetActionsForActor, spendActionForActor } from '../../rules/action-economy.ts';
-import {
-    deriveAlignmentFromTally,
-    nextAlignmentCheckpoint,
-    psykerLockedByAlignment,
-    shouldRecheckAlignment,
-    tallyAdvancesByAlignment,
-    type ChaosAdvanceEntry,
-} from '../../rules/bc-alignment-derivation.ts';
-import { APOTHEOSIS_CORRUPTION, isAscended, resolveApotheosis, type DaemonPrinceAlignment } from '../../rules/bc-daemon-prince.ts';
-import { isGiftItem } from '../../rules/bc-gifts.ts';
-import { maxPushLevel, resolvePsychicTest, type PsyMode } from '../../rules/bc-psychic-strength.ts';
-import { daemonEngineRageBonus } from '../../rules/bc-supplement-mechanics.ts';
-import { configuredActionType } from '../../rules/combat-actions.ts';
-import { SMITE_THE_UNHOLY_FATE_COST, hasCrusaderRole, resolveSmiteTheUnholyDoS } from '../../rules/crusader.ts';
-import { adjustPactDisposition, PACT_ENTRY_KINDS, type PactEntryKind, type PactRecord } from '../../rules/dark-pact.ts';
-import {
-    ASTARTES_IMPLANTS,
-    astartesStrengthBonus,
-    astartesToughnessBonus,
-    hasBlackCarapace,
-    IMPLANT_EFFECTS,
-    type AstartesImplantId,
-} from '../../rules/dw-astartes.ts';
-import {
-    canGainSpecialAbility,
-    type MarkGrantSource,
-    mergeMarkGrants,
-    SPECIAL_ABILITY_CATEGORIES,
-    type SpecialAbilityCategory,
-    specialAbilityCategoryLabelKey,
-} from '../../rules/dw-distinction.ts';
-import { isOathActive } from '../../rules/dw-oath.ts';
-import { getRenownRank, RENOWN_RANK_ORDER, RENOWN_THRESHOLDS, type RenownRank, renownRankLabelKey } from '../../rules/dw-renown.ts';
-import { type AmmoEffect, DW_SELECTED_AMMO_CHOICES, DW_SPECIAL_AMMO_EFFECTS, type DwSelectedAmmoId } from '../../rules/dw-special-ammo.ts';
-import { getSupportRange } from '../../rules/dw-squad-mode.ts';
-import type { DynamicModifierItemLike } from '../../rules/dynamic-modifiers.ts';
-import { ENCOUNTER_GRANT_FLAG, HATRED_IDENTIFIER, hasFanaticRole, hatredAgainstFoe } from '../../rules/fanatic.ts';
-import {
-    type GrapplePanelSection,
-    grapplePanelSections,
-    grappleRoleOf,
-    type GrappleRole,
-    type GrappleState,
-    readGrappleOpponentUuid,
-    readGrappleState,
-} from '../../rules/grapple.ts';
-import { isGrenadeWeapon } from '../../rules/grenade-weapon.ts';
-import { canEquipWeapon, computeHandBudget, handsForWeapon, resolveAvailableHands, type HandBudget } from '../../rules/hand-budget.ts';
-import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../rules/hit-locations.ts';
-import { applyManaclesCondition, liftManaclesCondition } from '../../rules/manacles.ts';
-import { combatMovementView, MOVE_MODE_FLAG } from '../../rules/movement-budget.ts';
-import { buildComradeHealingPanel, type ComradeHealingPanelView } from '../../rules/ow-comrade-healing.ts';
-import { buildComradePanel, type ComradePanelView, type ComradeRules } from '../../rules/ow-comrade.ts';
-import { buildOwCraftsmanshipPanel } from '../../rules/ow-craftsmanship-panel.ts';
-import { OW_DEFAULT_LOGISTICS_RATING } from '../../rules/ow-logistics.ts';
-import { MOUNTED_ACTIONS } from '../../rules/ow-mount.ts';
-import { buildRegimentPanelSummary, REGIMENT_BUDGET, type RegimentPanelSummary } from '../../rules/ow-regiment-creation.ts';
-import { buildDrawbackPanel, type MultiComradeRoster, type RegimentDrawback } from '../../rules/ow-regiment-drawback.ts';
-import { buildBattlefieldPanel, type RegimentalAward } from '../../rules/ow-regimental-award.ts';
-import {
-    applyMismanifest,
-    canUnleashDaemon,
-    resetSessionUnleash,
-    resolveFrenzyTest,
-    resolveMismanifestPossession,
-    spendUnleashDaemon,
-    type PossessionSlot,
-} from '../../rules/possession.ts';
+import { isMedal, resolveAwardDescriptors } from '../../documents/ow-awards.ts';
+import { isRegimentalDrawback, resolveDrawbackDescriptors } from '../../documents/ow-drawbacks.ts';
+import { lineResourceRows } from '../../rules/acquisition-resources.ts';
+import type { PsyMode } from '../../rules/bc-psychic-strength.ts';
+import { hasCrusaderRole } from '../../rules/crusader.ts';
+import type { PactRecord } from '../../rules/dark-pact.ts';
+import { hasFanaticRole } from '../../rules/fanatic.ts';
+import { grapplePanelSections, readGrappleOpponentUuid, readGrappleState } from '../../rules/grapple.ts';
+import type { RegimentDrawback } from '../../rules/ow-regiment-drawback.ts';
+import type { RegimentalAward } from '../../rules/ow-regimental-award.ts';
+import type { PossessionSlot } from '../../rules/possession.ts';
 import { activeRulesetVariant } from '../../rules/ruleset-variant.ts';
-import type { WH40KActorSystemData, WH40KArmourLocation, WH40KItemSystemData } from '../../types/global.d.ts';
-import { orderAptitudesGeneralFirst } from '../../utils/aptitude-order.ts';
-import { getArmourAPForLocation } from '../../utils/armour-calculator.ts';
+import type { WH40KActorSystemData, WH40KArmourLocation } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
-import { findItemUuidByIdentifier, isLinePack } from '../../utils/compendium-query.ts';
-import { contentRefName, documentRefName } from '../../utils/content-ref-name.ts';
 import { errorMessage } from '../../utils/error-message.ts';
-import { capitalize, formatSigned } from '../../utils/format.ts';
 import { ORIGIN_PROMPT_DISMISSED_FLAG, originPathPromptContent, SHEET_SOURCE_FLAG, shouldPromptOriginPath } from '../../utils/origin-path-prompt.ts';
-import { uuidNameCache } from '../../utils/uuid-name-cache.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
-import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
-import * as EffectActions from '../api/effect-actions.ts';
 import * as StatActions from '../api/stat-adjustment-actions.ts';
-import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
-import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
-import FateUsesDialog from '../dialogs/fate-uses-dialog.ts';
-import InquestTrackerDialog from '../dialogs/inquest-tracker-dialog.ts';
 import { inquestPanelRows } from '../dialogs/inquest-view.ts';
-import { darkPactPanelView } from '../item/dark-pact-view.ts';
-import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
-import ColonyGrowthDialog from '../prompts/colony-growth-dialog.ts';
-import { openDaemonologyRitualDialog } from '../prompts/daemonology-ritual-dialog.ts';
-import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
-import { openRightStuffDialog } from '../prompts/right-stuff-dialog.ts';
-import BaseActorSheet, { ADVANCE_XP_COSTS, type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
-import { buildBcGiftsPanel, labelOf, type BcGiftsPanelContext, type GiftPanelItem } from './bc-gifts-panel-context.ts';
-import { encumbranceDisplay } from './encumbrance-display.ts';
+import BaseActorSheet, { type SkillLike, type CharacteristicLike } from './base-actor-sheet.ts';
+import * as AcquisitionActions from './character/acquisition-actions.ts';
+import * as ActiveEffectActions from './character/active-effect-actions.ts';
+import * as BiographyActions from './character/biography-actions.ts';
+import * as CombatActions from './character/combat-actions.ts';
+import * as CombatContext from './character/combat-context.ts';
+import * as DarkPactActions from './character/dark-pact-actions.ts';
+import * as EquipmentActions from './character/equipment-actions.ts';
+import * as EquipmentFilterActions from './character/equipment-filter-actions.ts';
+import * as ExperienceActions from './character/experience-actions.ts';
+import * as LinePanels from './character/line-panels.ts';
+import * as OriginContext from './character/origin-context.ts';
+import * as OverviewContext from './character/overview-context.ts';
+import * as PossessionActions from './character/possession-actions.ts';
+import * as PowerActions from './character/power-actions.ts';
+import {
+    dialogV2,
+    toast,
+    RESOURCE_WALLETS_EDITED_ELSEWHERE,
+    type SheetTabConfig,
+    type CharacterSheetContext,
+    type OriginSummary,
+    type UtilityMenuOption,
+    type SystemPanels,
+} from './character/sheet-support.ts';
+import * as SkillActions from './character/skill-actions.ts';
+import * as TalentActions from './character/talent-actions.ts';
+import * as TraitActions from './character/trait-actions.ts';
 import { SIDEBAR_CONTAINER } from './sidebar-container.ts';
-
-// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract the TextEditor implementation
-const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
-// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; double-cast is the only way to extract DialogV2
-const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
-// eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is untyped V14 API; Toast is an optional extension with no shipped types
-const toast = (foundry.applications as unknown as { api?: { Toast?: Record<string, (...args: unknown[]) => void> } }).api?.Toast;
-
-/**
- * Convert a kebab-case (or bare) id to PascalCase for building langpack keys —
- * e.g. `squad-mode` → `SquadMode`. Single source for the (formerly six)
- * identical inline definitions across the engine-panel context builders (#284).
- */
-/** An actor that opens its own skill tests (characters and NPCs). */
-interface SkillRoller {
-    rollSkill: (skill: string, speciality: undefined, options: { instance: SimpleSkillData }) => Promise<void> | void;
-}
-
-/** Whether an actor document opens its own skill tests. */
-function isSkillRoller(actor: object): actor is SkillRoller {
-    return 'rollSkill' in actor && typeof actor.rollSkill === 'function';
-}
-
-function titleCase(s: string): string {
-    return s.replace(/(^|-)([a-z])/g, (_m, _p, c: string) => c.toUpperCase());
-}
-
-/** The name to show for a stored content reference: a document UUID's name, or the value as stored (#160, #161). */
-function cachedRefName(ref: string): string {
-    return contentRefName(ref, (uuid) => uuidNameCache.getName(uuid));
-}
-
-/** The name to show for a conferred award: its medal's name, never a stored id (#699). */
-function awardRefName(ref: string): string {
-    return documentRefName(ref, (uuid) => uuidNameCache.getName(uuid), game.i18n.localize('WH40K.OW.RegimentalAward.Unknown'));
-}
-
-/** Currency wallets another sheet panel already edits (RT Dynasty tab, OW Logistics panel), so the Resources panel skips them. */
-const RESOURCE_WALLETS_EDITED_ELSEWHERE: ReadonlySet<string> = new Set(['system.rogueTrader.profitFactor.current', 'system.logisticsRating']);
-
-type SheetTabConfig = {
-    tab: string;
-    label: string;
-    group: string;
-    cssClass?: string;
-    tooltip?: string;
-};
-
-/* eslint-disable no-restricted-syntax -- boundary: sheet→template payload; the types below describe untyped values passed to Handlebars, where a concrete TS shape doesn't propagate. */
-type CharacterSheetContext = Record<string, unknown> & {
-    actor?: Record<string, unknown> & { characteristics?: Record<string, Record<string, unknown>> };
-    system?: Record<string, unknown> & {
-        rogueTrader?: Record<string, unknown>;
-        modifierSources?: { characteristics?: Record<string, unknown> };
-        wounds?: { value?: number; max?: number };
-        fatigue?: { value?: number; max?: number };
-        armour?: Record<string, unknown>;
-    };
-    dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
-    /** Combat move-mode cluster state (#235) — drives the movement panel toggles. */
-    combatMovement?: { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number };
-    /** Per-turn action-economy readout (#264) — null when this actor is not in combat. */
-    actionBudget?: {
-        fullAvailable: boolean;
-        halfRemaining: number;
-        reactionRemaining: number;
-        freeSpent: number;
-        usedPoints: number;
-    } | null;
-    // Explicit declarations to avoid TS4111 (noPropertyAccessFromIndexSignature) on the
-    // intersected Record<string, unknown> for all known sheet-context fields written by
-    // _prepareContext / _preparePartContext / _prepareCombatData / _prepareLoadoutData / ...
-} & CharacterSheetContextDeclaredFields;
-type CharacterSheetContextDeclaredFields = {
-    inEditMode?: boolean;
-    ruleset?: unknown;
-    /** The per-line sheet parts the active line shows (#715); templates gate on these, not the line id. */
-    capabilities?: CharacterSheetCapabilities;
-    isHomebrew?: boolean;
-    isRaw?: boolean;
-    /** Malignancy Tests owed by Corruption gains; 0 on lines without a Corruption Track. */
-    malignancyTestsDue?: number;
-    alignmentPanel?: BcAlignmentPanelContext;
-    psychicPanel?: BcPsychicPanelContext;
-    astartesPanel?: DwAstartesPanelContext;
-    cohesionPanel?: DwCohesionPanelContext;
-    modePanel?: DwModePanelContext;
-    renownPanel?: DwRenownPanelContext;
-    requisitionPanel?: DwRequisitionPanelContext;
-    regimentPanel?: OwRegimentPanelContext;
-    comradePanel?: OwComradePanelContext;
-    logisticsPanel?: OwLogisticsPanelContext;
-    ordersPanel?: OwOrdersPanelContext;
-    // Batch-2 panel contexts.
-    ritualPanel?: BcRitualPanelContext;
-    giftsPanel?: BcGiftsPanelContext;
-    supplementsPanel?: BcSupplementsPanelContext;
-    daemonPrincePanel?: BcDaemonPrincePanelContext;
-    distinctionPanel?: DwDistinctionPanelContext;
-    ammoPanel?: DwAmmoPanelContext;
-    oathPanel?: DwOathPanelContext;
-    missionPanel?: DwMissionPanelContext;
-    missionGearPanel?: OwMissionGearPanelContext;
-    vehicleMovementPanel?: OwVehicleMovementPanelContext;
-    comradeHealingPanel?: OwComradeHealingPanelContext;
-    craftsmanshipPanel?: OwCraftsmanshipPanelContext;
-    mountPanel?: OwMountPanelContext;
-    drawbackPanel?: Record<string, unknown>;
-    battlefieldPanel?: Record<string, unknown>;
-    hideThroneGelt?: boolean;
-    resourceRows?: Array<ResourceRow & { value: number | undefined }>;
-    originPathSteps?: unknown;
-    originPathSummary?: unknown;
-    originPathComplete?: boolean;
-    originOptions?: Record<string, unknown>;
-    headerFields?: unknown;
-    navigatorPowers?: unknown[];
-    shipRoles?: unknown[];
-    talentsCount?: number;
-    traitsCount?: number;
-    dynastyData?: Record<string, unknown>;
-    tab?: { id: string; group: string; cssClass: string; label: string; active: boolean };
-    tabs?: unknown;
-    skillsFilter?: unknown;
-    skillLists?: unknown;
-    biography?: unknown;
-    /** The owned journal-entry items the Biography tab's journal panel lists (#613). */
-    journalEntries?: WH40KItem[];
-    aptitudePills?: unknown;
-    aptitudes?: unknown;
-    favoriteSkills?: unknown;
-    favoriteTalents?: unknown;
-    effects?: unknown[];
-    combatTalents?: unknown[];
-    woundsPercent?: number;
-    fatiguePercent?: number;
-    criticalInjuries?: unknown[];
-    forceField?: unknown;
-    hasForceField?: boolean;
-    armourDisplayLocations?: unknown;
-    armourDisplay?: Record<string, unknown>;
-    equippedGear?: Array<{ id: string | null; name: string; img: string | null }>;
-    equippedWeapons?: unknown[];
-    handBudget?: HandBudget;
-    psychicPowers?: PsychicPowerRow[];
-    showPsychicPanel?: boolean;
-    psyRating?: number;
-    primaryWeapon?: unknown;
-    secondaryWeapon?: unknown;
-    sidearm?: unknown;
-    grenades?: unknown[];
-    otherWeapons?: unknown[];
-    allItems?: unknown[];
-    allCarriedItems?: unknown[];
-    allShipItems?: unknown[];
-    storageLocations?: unknown[];
-    armourCount?: number;
-    forceFieldCount?: number;
-    cyberneticCount?: number;
-    gearCount?: number;
-    equippedCount?: number;
-    tracksEncumbrance?: boolean;
-    encumbrancePercent?: number;
-    hasFanatic?: boolean;
-    hasCrusader?: boolean;
-    grappleState?: GrappleState;
-    grappleSections?: GrapplePanelSection[];
-};
-
-/**
- * Render payload for the BC Alignment / Infamy panel (#173). The fields
- * are read by `src/templates/actor/panel/bc-alignment-panel.hbs` and
- * documented in its header comment. Built by `_prepareBcAlignmentPanel`
- * only when the active game system is BC.
- */
-type BcAlignmentPanelContext = {
-    current: ChaosAlignment;
-    derived: ChaosAlignment;
-    tally: { khorne: number; nurgle: number; slaanesh: number; tzeentch: number };
-    pendingFlip: boolean;
-    checkpoint: number;
-    corruption: number;
-    nextCheckpoint: number;
-    recheckDue: boolean;
-    psykerLocked: boolean;
-    infamy: number;
-    infamyCost: number | null;
-    infamyCap: number;
-    infamyIncrement: number;
-};
-
-/* -------------------------------------------------------------------- */
-/*  Per-engine panel context shapes (batch-1 integration)               */
-/* -------------------------------------------------------------------- */
-
-/** BC Psychic Strength panel (#178). */
-type BcPsychicPanelContext = {
-    psykerClass: string;
-    psyRating: number;
-    sustainedPowerCount: number;
-    mode: PsyMode;
-    pushLevel: number;
-    maxPushLevel: number;
-    effectivePR: number;
-    sustainPenalty: number;
-    phenomenaRolls: number;
-};
-
-/** DW Astartes implants panel (#167). */
-type DwAstartesPanelContext = {
-    implants: Array<{ id: AstartesImplantId; nameKey: string; categoryKey: string; has: boolean }>;
-    strengthBonus: number;
-    toughnessBonus: number;
-    hasBlackCarapace: boolean;
-};
-
-/** DW Kill-team Cohesion panel (#162). */
-type DwCohesionPanelContext = {
-    current: number;
-    max: number;
-    lostThisTurn: number;
-    rallied: boolean;
-    canRally: boolean;
-    canRecover: boolean;
-};
-
-/** DW Squad Mode panel (#163). */
-type DwModePanelContext = {
-    mode: string;
-    renownRank: string;
-    renownRankKey: string;
-    supportRange: { visual: number; vocal: number };
-    sustainedAbilities: Array<{ id: string; label: string }>;
-};
-
-/** DW Renown panel (#164). */
-type DwRenownPanelContext = {
-    value: number;
-    rank: string;
-    rankLabel: string;
-    nextRank: string | null;
-    nextRankLabel: string | null;
-    rankMin: number;
-    nextRankMin: number | null;
-    progressPercent: number;
-};
-
-/** DW Requisition panel (#165). */
-type DwRequisitionPanelContext = {
-    rp: number;
-    missionRating: string;
-    renownRank: string;
-};
-
-/** OW Regiment panel (#151). */
-type OwRegimentPanelContext = RegimentPanelSummary;
-
-/** The OW "Comrade in Combat" panel context: the rules layer's view (#152). */
-type OwComradePanelContext = ComradePanelView;
-
-/** OW Logistics panel (#154). */
-type OwLogisticsPanelContext = {
-    rating: number;
-    munitorum: boolean;
-    situational: number;
-};
-
-/** OW Orders panel (#153). */
-type OwOrdersPanelContext = {
-    available: OrderPanelRow[];
-    sweepingActive: Array<{ orderId: string; appliedCount: number }>;
-};
-
-/* -------------------------------------------------------------------- */
-/*  Per-engine panel context shapes (batch-2 integration)               */
-/* -------------------------------------------------------------------- */
-
-/** BC Chaos Ritual panel (#179). */
-type BcRitualPanelContext = {
-    ritualMastery: number;
-};
-
-/** BC Supplement Mechanics panel (#181). */
-type BcSupplementsPanelContext = {
-    daemonEngineRating: number;
-    daemonEngineActive: boolean;
-    turnsSinceLastDamage: number;
-    daemonEngineRageBonus: number;
-};
-
-/** BC apotheosis panel (#182). */
-type BcDaemonPrincePanelContext = {
-    ascended: boolean;
-    ascendedAt: number | null;
-    alignmentAtAscension: DaemonPrinceAlignment;
-    infamy: number;
-    corruption: number;
-    infamyThreshold: number;
-    corruptionThreshold: number;
-    canAscend: boolean;
-    /** The recorded fate once claimed, else the fate the champion would meet now. */
-    isDaemonPrince: boolean;
-};
-
-/** DW Distinctions panel (#171): the actor's owned special-ability items with
- *  their category, Renown gate, Renown reward and XP cost, plus the merged
- *  grant of every Mark of Distinction they bear. */
-type DwDistinctionPanelContext = {
-    abilities: Array<{
-        id: string;
-        name: string;
-        category: SpecialAbilityCategory;
-        categoryLabel: string;
-        /** Localised required Renown rank; blank when the ability has none. */
-        renownRequired: string;
-        renownReward: number;
-        cost: number;
-        /** The bearer's Renown rank is now below the ability's requirement. */
-        rankTooLow: boolean;
-    }>;
-    merged: {
-        characteristicDelta: Array<{ key: string; value: number; displayValue: string }>;
-        traits: string[];
-    };
-};
-
-/** DW Special-Issue Ammo panel (#172). */
-type DwAmmoPanelContext = {
-    selected: DwSelectedAmmoId;
-    selectedLabel: string;
-    options: Array<{
-        id: DwSelectedAmmoId;
-        label: string;
-        selected: boolean;
-    }>;
-    effect: AmmoEffect | null;
-};
-
-/** DW Mission Oath panel (#168). */
-type DwOathPanelContext = {
-    isLeader: boolean;
-    active: boolean;
-    activeOathId: string | null;
-    activeLabel: string | null;
-    canSwear: boolean;
-    canRelease: boolean;
-};
-
-/** DW Mission framework panel (#169). */
-type DwMissionPanelContext = {
-    hasMission: boolean;
-    mission: {
-        id: string;
-        name: string;
-        rating: 'standard' | 'extended' | 'priority' | 'critical';
-        ratingLabel: string;
-        objectives: Array<{
-            id: string;
-            description: string;
-            renownReward: number;
-            xpReward: number;
-            status: 'pending' | 'complete' | 'failed';
-            statusLabel: string;
-        }>;
-        complications: Array<{
-            id: string;
-            description: string;
-            renownPenalty: number;
-            triggered: boolean;
-        }>;
-    } | null;
-};
-
-/** OW Mission Assignment Gear panel (#155). */
-type OwMissionGearPanelContext = {
-    hasOutcome: boolean;
-    outcomeKey: string | null;
-};
-
-type OwVehicleMovementPanelContext = {
-    actions: Array<{ actionId: string; timing: string; nameKey: string; timingKey: string; descriptionKey: string }>;
-    chaseState: { pursuerDistance: number; dangerZone: boolean; turnCount: number } | null;
-};
-
-type OwMountPanelContext = {
-    mount: { mountId: string; mountName: string; traits: Array<{ id: string; labelKey: string }> } | null;
-    actions: Array<{ actionId: string; timing: string; nameKey: string; descriptionKey: string; timingKey: string }>;
-};
-
-/** The OW "Healing Comrades" panel context: the rules layer's view (#157). */
-type OwComradeHealingPanelContext = ComradeHealingPanelView;
-
-type OwCraftsmanshipPanelContext = ReturnType<typeof buildOwCraftsmanshipPanel>;
-
-type OriginSummary = {
-    steps: Record<string, unknown>[];
-    completedSteps: number;
-    totalSteps: number;
-    isComplete: boolean;
-    characteristics: Array<{ key: string; short: string; value: number; positive: boolean }>;
-    skills: string[];
-    talents: string[];
-    traits: string[];
-};
-
-type CategorizedItems = {
-    all: WH40KItem[];
-    allCarried: WH40KItem[];
-    allShip: WH40KItem[];
-    weapons: WH40KItem[];
-    armour: WH40KItem[];
-    forceField: WH40KItem[];
-    cybernetic: WH40KItem[];
-    gear: WH40KItem[];
-    storageLocation: WH40KItem[];
-    criticalInjury: WH40KItem[];
-    equipped: WH40KItem[];
-};
-
-type WeaponLike = WH40KItem & {
-    system: WH40KItem['system'] & {
-        state: { equipped: boolean; activated: boolean };
-        class: string;
-        type: string;
-        clip: { max: number; value: number };
-        ammoPercentage: number;
-        effectiveClipMax: number;
-        isTwoHanded: boolean;
-        [key: string]: unknown;
-    };
-    ammoPercent: number;
-    [key: string]: unknown;
-};
-
-/** One psychic-power row rendered on the combat-station panel (#412). */
-type PsychicPowerRow = {
-    id: string | null;
-    name: string;
-    img: string | null;
-    disciplineLabel: string;
-    focusTestLabel: string;
-    prCost: number;
-    isAttack: boolean;
-    identified: boolean;
-};
-
-type TalentLike = WH40KItem & {
-    system: WH40KItem['system'] & {
-        tier: number | string;
-        category: string;
-        [key: string]: unknown;
-    };
-    [key: string]: unknown;
-};
-
-type UtilityMenuOption = {
-    name: string;
-    icon: string;
-    callback: () => void | Promise<void>;
-    condition?: () => boolean;
-};
-
-/**
- * Per-system overview-panel registry (#282). Replaces the three copy-pasted
- * per-line dispatch blocks with one table: the active
- * system's entries are looped and each `build` result written into the context
- * under its `key`. Adding a system's panel is now a one-row edit. The exact
- * context-key names the `.hbs` partials read are preserved verbatim.
- */
-interface PanelBuilder {
-    key: string;
-    build: (sheet: CharacterSheet) => object;
-}
-
-/** The per-system panels a sheet class builds into its render context. */
-export type SystemPanels = Partial<Record<GameSystemId, readonly PanelBuilder[]>>;
-
-/** OW pass-through panels read `system.*` by string key (no dedicated _prepare method yet). */
-function owSystemRecord(sheet: CharacterSheet): Record<string, unknown> {
-    return sheet.actor.system;
-}
-
-const PANEL_BUILDERS: SystemPanels = {
-    bc: [
-        { key: 'alignmentPanel', build: (s) => s._prepareBcAlignmentPanel() },
-        { key: 'psychicPanel', build: (s) => s._prepareBcPsychicPanel() },
-        { key: 'ritualPanel', build: (s) => s._prepareBcRitualPanel() },
-        { key: 'giftsPanel', build: (s) => s._prepareBcGiftsPanel() },
-        { key: 'supplementsPanel', build: (s) => s._prepareBcSupplementsPanel() },
-        { key: 'daemonPrincePanel', build: (s) => s._prepareBcDaemonPrincePanel() },
-    ],
-    dw: [
-        { key: 'cohesionPanel', build: (s) => s._prepareDwCohesionPanel() },
-        { key: 'modePanel', build: (s) => s._prepareDwModePanel() },
-        { key: 'renownPanel', build: (s) => s._prepareDwRenownPanel() },
-        { key: 'requisitionPanel', build: (s) => s._prepareDwRequisitionPanel() },
-        { key: 'astartesPanel', build: (s) => s._prepareDwAstartesPanel() },
-        { key: 'oathPanel', build: (s) => s._prepareDwOathPanel() },
-        { key: 'missionPanel', build: (s) => s._prepareDwMissionPanel() },
-        { key: 'distinctionPanel', build: (s) => s._prepareDwDistinctionPanel() },
-        { key: 'ammoPanel', build: (s) => s._prepareDwAmmoPanel() },
-    ],
-    ow: [
-        { key: 'regimentPanel', build: (s) => s._prepareOwRegimentPanel() },
-        { key: 'comradePanel', build: (s) => s._prepareOwComradePanel() },
-        { key: 'ordersPanel', build: (s) => s._prepareOwOrdersPanel() },
-        { key: 'logisticsPanel', build: (s) => s._prepareOwLogisticsPanel() },
-        { key: 'missionGearPanel', build: (s) => s._prepareOwMissionGearPanel() },
-        { key: 'vehicleMovementPanel', build: (s) => s._prepareOwVehicleMovementPanel() },
-        { key: 'comradeHealingPanel', build: (s) => s._prepareOwComradeHealingPanel() },
-        { key: 'craftsmanshipPanel', build: (s) => buildOwCraftsmanshipPanel(Array.from(s.actor.items.values())) },
-        { key: 'mountPanel', build: (s) => s._prepareOwMountPanel() },
-        {
-            key: 'drawbackPanel',
-            // The persisted slot holds bare ids; the panel template reads rows
-            // (`drawback.id` / `.description` / `.refund`). Handing it the raw
-            // string array rendered every row blank AND left the remove control's
-            // `data-drawback-id` empty, which `owToggleDrawback` no-ops on — so
-            // the control did nothing (#160). Project through the engine.
-            build: (s) => {
-                const record = owSystemRecord(s);
-                const ids = Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
-                const roster = (record['multiComradeRoster'] ?? null) as MultiComradeRoster | null;
-                // Each id is a drawback document UUID, shown by its name (#160). Its refund
-                // is the item's Regiment Creation Points, resolved before the panels build;
-                // a drawback that has not recorded them reads as unknown.
-                return buildDrawbackPanel(ids, roster, (id) => s._owDrawbackDescriptor(id), cachedRefName, REGIMENT_BUDGET);
-            },
-        },
-        {
-            key: 'battlefieldPanel',
-            // Same defect as drawbackPanel above: the persisted slots hold a bare id
-            // array and a cooldown number, but the template reads five fields —
-            // `availableAwards[]` rows, the `merged.*` readout, `cooldownActive` and
-            // `canRequestSupport`. Three were absent. Because the template gates the
-            // button on `{{#unless canRequestSupport}}` and undefined is falsy, the
-            // Request Support button was PERMANENTLY disabled — the feature could
-            // never be used — while the badge (`{{#if cooldownActive}}`, also always
-            // false) showed the green "ready" state beside it. Project through the
-            // engine.
-            build: (s) => {
-                const record = owSystemRecord(s);
-                const ids = Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
-                const cooldown = typeof record['supportCooldown'] === 'number' ? record['supportCooldown'] : 0;
-                // Award descriptors come from the conferred medal items (Direction #7),
-                // resolved before the panels build; an id that no longer resolves is
-                // still shown by its document's name (or "Unknown award", never the id),
-                // and keeps its id so it toggles off.
-                return buildBattlefieldPanel(ids, cooldown, (id) => s._owAwardDescriptor(id), awardRefName);
-            },
-        },
-    ],
-};
 
 /**
  * Actor sheet for Acolyte/Character type actors.
@@ -729,13 +97,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * call from `_prepareTabPartContext` so the preparation runs once, not twice.
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: holds a slice of Foundry's untyped sheet-context payload
-    #combatDataCache: Record<string, unknown> | null = null;
+    _combatDataCache: Record<string, unknown> | null = null;
     /** The ship-orders panel's active category filter (`''` = all). */
     _orderCategoryFilter = '';
     /** This render's Regimental Drawback descriptors, by drawback UUID (#160). */
-    #drawbackDescriptors = new Map<string, RegimentDrawback>();
+    _drawbackDescriptors = new Map<string, RegimentDrawback>();
     /** This render's conferred medal descriptors, by medal UUID (content#32). */
-    #awardDescriptors = new Map<string, RegimentalAward>();
+    _awardDescriptors = new Map<string, RegimentalAward>();
     /**
      * Ephemeral BC Psychic Strength selections (#178). Mode and push
      * level are render-only UI state — they are not persisted on the
@@ -757,7 +125,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare readonly _gameSystemId?: GameSystemId;
 
     /** Origin-path option cache keyed by game system id (packs don't change at runtime). */
-    readonly #originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();
+    readonly _originOptionsCache = new Map<GameSystemId, Record<string, string[]>>();
 
     /**
      * Resolve the active rules line for this sheet instance.
@@ -777,31 +145,31 @@ export default class CharacterSheet extends BaseActorSheet {
         ...BaseActorSheet.DEFAULT_OPTIONS,
         actions: {
             ...(BaseActorSheet.DEFAULT_OPTIONS.actions ?? {}),
-            'viewFateUses': CharacterSheet.#viewFateUses,
+            'viewFateUses': BiographyActions.viewFateUses,
             // Open a compendium/world document from a clicked reference (#389 —
             // divination line under the portrait; reusable for any data-uuid link).
-            'openUuid': CharacterSheet.#openUuid,
+            'openUuid': BiographyActions.openUuid,
             // Combat actions
-            'attack': CharacterSheet.#attack,
-            'dodge': CharacterSheet.#dodge,
-            'parry': CharacterSheet.#parry,
-            'initiative': CharacterSheet.#rollInitiative,
-            'assign-damage': CharacterSheet.#assignDamage,
-            'toggleFavoriteAction': CharacterSheet.#toggleFavoriteAction,
-            'combatAction': CharacterSheet.#combatAction,
-            'vocalizeCombatAction': CharacterSheet.#vocalizeCombatAction,
-            'combatTalentDescribe': CharacterSheet.#combatTalentDescribe,
-            'vocalizeMovement': CharacterSheet.#vocalizeMovement,
-            'setMovementMode': CharacterSheet.#setMovementMode,
+            'attack': CombatActions.attack,
+            'dodge': CombatActions.dodge,
+            'parry': CombatActions.parry,
+            'initiative': CombatActions.rollInitiative,
+            'assign-damage': CombatActions.assignDamage,
+            'toggleFavoriteAction': CombatActions.toggleFavoriteAction,
+            'combatAction': CombatActions.combatAction,
+            'vocalizeCombatAction': CombatActions.vocalizeCombatAction,
+            'combatTalentDescribe': CombatActions.combatTalentDescribe,
+            'vocalizeMovement': CombatActions.vocalizeMovement,
+            'setMovementMode': CombatActions.setMovementMode,
             // Per-turn action economy (#264) — spend/reset from the combat tab readout.
-            'spendAction': CharacterSheet.#spendAction,
-            'resetActions': CharacterSheet.#resetActions,
+            'spendAction': CombatActions.spendAction,
+            'resetActions': CombatActions.resetActions,
 
-            'toggleAgeMode': CharacterSheet.#toggleAgeMode,
+            'toggleAgeMode': BiographyActions.toggleAgeMode,
 
             // Stat adjustment actions — extracted to api/stat-adjustment-actions.ts
             'adjustStat': StatActions.adjustStat,
-            'applyCharacteristicDamage': CharacterSheet.#applyCharacteristicDamage,
+            'applyCharacteristicDamage': PossessionActions.applyCharacteristicDamage,
             'increment': StatActions.increment,
             'decrement': StatActions.decrement,
             'setCriticalPip': StatActions.setCriticalPip,
@@ -815,51 +183,51 @@ export default class CharacterSheet extends BaseActorSheet {
             'spendFate': StatActions.spendFate,
 
             // Possession track (#82)
-            'unleashDaemon': CharacterSheet.#unleashDaemon,
-            'resetPossessionSession': CharacterSheet.#resetPossessionSession,
-            'possessionFrenzyTest': CharacterSheet.#possessionFrenzyTest,
-            'possessionMismanifest': CharacterSheet.#possessionMismanifest,
+            'unleashDaemon': PossessionActions.unleashDaemon,
+            'resetPossessionSession': PossessionActions.resetPossessionSession,
+            'possessionFrenzyTest': PossessionActions.possessionFrenzyTest,
+            'possessionMismanifest': PossessionActions.possessionMismanifest,
             // Daemonology rituals (DH2) — Exorcism (#83).
-            'performExorcism': CharacterSheet.#performExorcism,
+            'performExorcism': PossessionActions.performExorcism,
             // Daemonology rituals — Summoning (#80).
-            'performSummoning': CharacterSheet.#performSummoning,
+            'performSummoning': PossessionActions.performSummoning,
 
             // Shock / Snap-Out-Of-It (#66 — "Shock And Snapping Out Of It")
-            'snapOutOfShock': CharacterSheet.#snapOutOfShock,
+            'snapOutOfShock': PossessionActions.snapOutOfShock,
 
             // Pinning resist / escape ("Pinning") — route through the unified
             // roll so Willpower talents/traits surface as situational modifiers.
-            'rollPinningTest': CharacterSheet.#rollPinningTest,
-            'escapePinning': CharacterSheet.#escapePinning,
+            'rollPinningTest': PossessionActions.rollPinningTest,
+            'escapePinning': PossessionActions.escapePinning,
 
             // Fanatic role: Death to All Who Oppose Me (#93)
-            'deathToAllWhoOpposeMe': CharacterSheet.#deathToAllWhoOpposeMe,
+            'deathToAllWhoOpposeMe': PossessionActions.deathToAllWhoOpposeMe,
 
             // Crusader role: Smite the Unholy (#141)
-            'smiteTheUnholy': CharacterSheet.#smiteTheUnholy,
+            'smiteTheUnholy': PossessionActions.smiteTheUnholy,
 
             // Manacles condition (#105 — errata)
-            'applyManacles': CharacterSheet.#applyManacles,
-            'liftManacles': CharacterSheet.#liftManacles,
+            'applyManacles': PossessionActions.applyManacles,
+            'liftManacles': PossessionActions.liftManacles,
 
             // Ace role: Right Stuff Fate-spend (#100)
-            'openRightStuff': CharacterSheet.#openRightStuff,
+            'openRightStuff': PossessionActions.openRightStuff,
 
             // Grapple options (#120): each line's printed options, by role
-            'grappleOption': CharacterSheet.#grappleOption,
+            'grappleOption': PossessionActions.grappleOption,
 
             // Subtlety panel (#87) — DH2 warband-subtlety stepper + breakdown popout.
-            'adjustSubtletyManually': CharacterSheet.#adjustSubtletyManually,
-            'viewSubtletyBreakdown': CharacterSheet.#viewSubtletyBreakdown,
+            'adjustSubtletyManually': BiographyActions.adjustSubtletyManually,
+            'viewSubtletyBreakdown': BiographyActions.viewSubtletyBreakdown,
             // Inquest panel (#90) — GM opens the warband Inquest tracker.
-            'openInquestTracker': CharacterSheet.#openInquestTracker,
+            'openInquestTracker': BiographyActions.openInquestTracker,
 
             // Malignancy Test owed by a Corruption gain (Corruption Track lines).
-            'rollMalignancyTest': CharacterSheet.#rollMalignancyTest,
+            'rollMalignancyTest': BiographyActions.rollMalignancyTest,
 
             // BC Alignment / Infamy advancement panel (#173).
-            'recheckBcAlignment': CharacterSheet.#recheckBcAlignment,
-            'buyBcInfamyAdvance': CharacterSheet.#buyBcInfamyAdvance,
+            'recheckBcAlignment': BiographyActions.recheckBcAlignment,
+            'buyBcInfamyAdvance': BiographyActions.buyBcInfamyAdvance,
 
             // BC Psychic Strength panel (#178).
             'bcPsychicTest': bcPsychicTest,
@@ -914,99 +282,99 @@ export default class CharacterSheet extends BaseActorSheet {
             // Batch-4 actions (#159, #160, #161)
             'owMountedAction': owMountedAction,
             'owToggleDrawback': owToggleDrawback,
-            'owAddDrawback': CharacterSheet.#owAddDrawback,
-            'owAddAward': CharacterSheet.#owAddAward,
+            'owAddDrawback': LinePanels.owAddDrawback,
+            'owAddAward': LinePanels.owAddAward,
             'owAddComrade': owAddComrade,
             'owRemoveComrade': owRemoveComrade,
             'owRequestSupport': owRequestSupport,
             'owToggleAward': owToggleAward,
 
             // Equipment actions
-            'toggleEquip': CharacterSheet.#toggleEquip,
-            'useItem': CharacterSheet.#useItem,
-            'stowItem': CharacterSheet.#stowItem,
-            'unstowItem': CharacterSheet.#unstowItem,
-            'stowToShip': CharacterSheet.#stowToShip,
-            'unstowFromShip': CharacterSheet.#unstowFromShip,
-            'swapCheckedItems': CharacterSheet.#swapCheckedItems,
-            'giveCheckedItems': CharacterSheet.#giveCheckedItems,
-            'toggleActivate': CharacterSheet.#toggleActivate,
-            'filterEquipment': CharacterSheet.#filterEquipment,
-            'clearEquipmentSearch': CharacterSheet.#clearEquipmentSearch,
-            'bulkEquip': CharacterSheet.#bulkEquip,
+            'toggleEquip': EquipmentActions.toggleEquip,
+            'useItem': EquipmentActions.useItem,
+            'stowItem': EquipmentActions.stowItem,
+            'unstowItem': EquipmentActions.unstowItem,
+            'stowToShip': EquipmentActions.stowToShip,
+            'unstowFromShip': EquipmentActions.unstowFromShip,
+            'swapCheckedItems': EquipmentActions.swapCheckedItems,
+            'giveCheckedItems': EquipmentActions.giveCheckedItems,
+            'toggleActivate': EquipmentActions.toggleActivate,
+            'filterEquipment': EquipmentFilterActions.filterEquipment,
+            'clearEquipmentSearch': EquipmentFilterActions.clearEquipmentSearch,
+            'bulkEquip': EquipmentActions.bulkEquip,
 
             // Skills actions
-            'filterSkills': CharacterSheet.#filterSkills,
-            'clearSkillsSearch': CharacterSheet.#clearSkillsSearch,
-            'toggleFavoriteSkill': CharacterSheet.#toggleFavoriteSkill,
-            'toggleFavoriteSpecialistSkill': CharacterSheet.#toggleFavoriteSpecialistSkill,
+            'filterSkills': SkillActions.filterSkills,
+            'clearSkillsSearch': SkillActions.clearSkillsSearch,
+            'toggleFavoriteSkill': SkillActions.toggleFavoriteSkill,
+            'toggleFavoriteSpecialistSkill': SkillActions.toggleFavoriteSpecialistSkill,
             // cycleSkillTraining/cycleSpecialistTraining removed — skill ranks are now
             // live-computed from origin path items + XP advances. Use Advancement Dialog.
 
             // Talents actions
-            'toggleFavoriteTalent': CharacterSheet.#toggleFavoriteTalent,
-            'filterTraits': CharacterSheet.#filterTraits,
-            'clearTraitsFilter': CharacterSheet.#clearTraitsFilter,
-            'adjustTraitLevel': CharacterSheet.#adjustTraitLevel,
-            'openAddSpecialistDialog': CharacterSheet.#openAddSpecialistDialog,
+            'toggleFavoriteTalent': TalentActions.toggleFavoriteTalent,
+            'filterTraits': TraitActions.filterTraits,
+            'clearTraitsFilter': TraitActions.clearTraitsFilter,
+            'adjustTraitLevel': TraitActions.adjustTraitLevel,
+            'openAddSpecialistDialog': SkillActions.openAddSpecialistDialog,
 
             // Powers actions
-            'rollPower': CharacterSheet.#rollPower,
-            'rollPowerDamage': CharacterSheet.#rollPowerDamage,
-            'vocalizePower': CharacterSheet.#vocalizePower,
-            'togglePowerDetails': CharacterSheet.#togglePowerDetails,
-            'rollRitual': CharacterSheet.#rollRitual,
-            'vocalizeRitual': CharacterSheet.#vocalizeRitual,
-            'rollOrder': CharacterSheet.#rollOrder,
-            'vocalizeOrder': CharacterSheet.#vocalizeOrder,
-            'rollPhenomena': CharacterSheet.#rollPhenomena,
-            'rollPerils': CharacterSheet.#rollPerils,
-            'filterOrders': CharacterSheet.#filterOrders,
+            'rollPower': PowerActions.rollPower,
+            'rollPowerDamage': PowerActions.rollPowerDamage,
+            'vocalizePower': PowerActions.vocalizePower,
+            'togglePowerDetails': PowerActions.togglePowerDetails,
+            'rollRitual': PowerActions.rollRitual,
+            'vocalizeRitual': PowerActions.vocalizeRitual,
+            'rollOrder': PowerActions.rollOrder,
+            'vocalizeOrder': PowerActions.vocalizeOrder,
+            'rollPhenomena': PowerActions.rollPhenomena,
+            'rollPerils': PowerActions.rollPerils,
+            'filterOrders': PowerActions.filterOrders,
 
             // Acquisition actions
-            'addAcquisition': CharacterSheet.#addAcquisition,
-            'openAcquisition': CharacterSheet.#openAcquisition,
-            'removeAcquisition': CharacterSheet.#removeAcquisition,
-            'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
+            'addAcquisition': AcquisitionActions.addAcquisition,
+            'openAcquisition': AcquisitionActions.openAcquisition,
+            'removeAcquisition': AcquisitionActions.removeAcquisition,
+            'openAcquisitionDialog': DarkPactActions.openAcquisitionDialog,
 
             // Dark Pact actions (#84)
-            'adjustPactDisposition': CharacterSheet.#adjustPactDisposition,
-            'togglePactDiscovered': CharacterSheet.#togglePactDiscovered,
-            'togglePactPayment': CharacterSheet.#togglePactPayment,
-            'togglePactEntry': CharacterSheet.#togglePactEntry,
-            'addDarkPact': CharacterSheet.#addDarkPact,
-            'removeDarkPact': CharacterSheet.#removeDarkPact,
+            'adjustPactDisposition': DarkPactActions.adjustPactDisposition,
+            'togglePactDiscovered': DarkPactActions.togglePactDiscovered,
+            'togglePactPayment': DarkPactActions.togglePactPayment,
+            'togglePactEntry': DarkPactActions.togglePactEntry,
+            'addDarkPact': DarkPactActions.addDarkPact,
+            'removeDarkPact': DarkPactActions.removeDarkPact,
 
             // Endeavour actions (Rogue Trader)
-            'completeObjective': CharacterSheet.#completeObjective,
-            'completeEndeavour': CharacterSheet.#completeEndeavour,
+            'completeObjective': DarkPactActions.completeObjective,
+            'completeEndeavour': DarkPactActions.completeEndeavour,
 
             // Colony actions (Rogue Trader, #195)
-            'openColonyGrowthDialog': CharacterSheet.#openColonyGrowthDialog,
+            'openColonyGrowthDialog': DarkPactActions.openColonyGrowthDialog,
 
             // Experience actions
-            'customXP': CharacterSheet.#customXP,
-            'openAdvancement': CharacterSheet.#openAdvancement,
+            'customXP': ExperienceActions.customXP,
+            'openAdvancement': ExperienceActions.openAdvancement,
 
             // Active Effect actions
-            'createEffect': CharacterSheet.#createEffect,
-            'toggleEffect': CharacterSheet.#toggleEffect,
-            'deleteEffect': CharacterSheet.#deleteEffect,
+            'createEffect': ActiveEffectActions.createEffect,
+            'toggleEffect': ActiveEffectActions.toggleEffect,
+            'deleteEffect': ActiveEffectActions.deleteEffect,
 
             // Biography actions
-            'openOriginPathBuilder': CharacterSheet.#openOriginPathBuilder,
+            'openOriginPathBuilder': BiographyActions.openOriginPathBuilder,
 
             // Characteristic setup
-            'openCharacteristicSetup': CharacterSheet.#openCharacteristicSetup,
+            'openCharacteristicSetup': BiographyActions.openCharacteristicSetup,
 
             // Utility menu
-            'showUtilityMenu': CharacterSheet.#showUtilityMenu,
+            'showUtilityMenu': BiographyActions.showUtilityMenu,
 
             // Window controls
-            'resetWindowSize': CharacterSheet.#resetWindowSize,
+            'resetWindowSize': BiographyActions.resetWindowSize,
 
             // Misc actions
-            'bonusVocalize': CharacterSheet.#bonusVocalize,
+            'bonusVocalize': ExperienceActions.bonusVocalize,
         },
         classes: ['wh40k-rpg', 'sheet', 'actor', 'player'],
         position: {
@@ -1045,7 +413,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * DataModel's advancement ledgers; a subclass whose actor type lacks those
      * fields declares its own set.
      */
-    static SYSTEM_PANELS: SystemPanels = PANEL_BUILDERS;
+    static SYSTEM_PANELS: SystemPanels = LinePanels.PANEL_BUILDERS;
 
     /* -------------------------------------------- */
 
@@ -1201,7 +569,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // New render pass — drop the memoised combat-data diff (#507) so the
         // next `_prepareCombatData` recomputes from current actor state.
-        this.#combatDataCache = null;
+        this._combatDataCache = null;
 
         // isGM / dh / inEditMode come from BaseActorSheet._prepareCommonContext (called by super).
         // Ruleset state is character-specific.
@@ -1220,9 +588,9 @@ export default class CharacterSheet extends BaseActorSheet {
         // exact partial-facing keys; non-listed systems (DH2/DH1/RT/IM) build no
         // panels, and the `{{#if capabilities.…}}` tab gates keep their include sites no-op.
         // The drawback panel's refunds come from each drawback item's Regiment Creation Points (#160).
-        if (onlyWar) this.#drawbackDescriptors = await resolveDrawbackDescriptors(this.#regimentDrawbackIds());
+        if (onlyWar) this._drawbackDescriptors = await resolveDrawbackDescriptors(LinePanels.regimentDrawbackIds.call(this));
         // The Battlefield panel's awards come from each conferred medal item (#161, content#32).
-        if (onlyWar) this.#awardDescriptors = await resolveAwardDescriptors(this.#regimentalAwardIds());
+        if (onlyWar) this._awardDescriptors = await resolveAwardDescriptors(LinePanels.regimentalAwardIds.call(this));
 
         if (activeGameSystem !== null) {
             for (const { key, build } of (this.constructor as typeof CharacterSheet).SYSTEM_PANELS[activeGameSystem] ?? []) {
@@ -1276,18 +644,18 @@ export default class CharacterSheet extends BaseActorSheet {
         // social, and Investigation rolls). Surface it on the characteristics map so the
         // Statistics panel iterates it alongside WS/BS/etc. without schema duplication.
         if (isRaw) {
-            this._injectInfluenceAsCharacteristic(context);
+            OverviewContext.injectInfluenceAsCharacteristic.call(this, context);
         }
 
         // Prepare characteristic HUD data
-        this._prepareCharacteristicHUD(context);
+        OverviewContext.prepareCharacteristicHUD.call(this, context);
 
         // Prepare origin path
-        context.originPathSteps = this._prepareOriginPathSteps();
-        context.originPathSummary = this._getOriginPathSummary();
+        context.originPathSteps = OriginContext.prepareOriginPathSteps.call(this);
+        context.originPathSummary = OriginContext.getOriginPathSummary.call(this);
 
         // Prepare navigator powers and ship roles (compute fresh)
-        const categorized = this._getCategorizedItems();
+        const categorized = OverviewContext.getCategorizedItems.call(this);
         context.navigatorPowers = this.actor.items.filter((item) => (item.type as string) === 'navigatorPower' || (item as WH40KItem).isNavigatorPower);
         context.shipRoles = this.actor.items.filter((item) => (item.type as string) === 'shipRole' || (item as WH40KItem).isShipRole);
 
@@ -1296,19 +664,19 @@ export default class CharacterSheet extends BaseActorSheet {
         context.traitsCount = this.actor.items.filter((item) => (item as WH40KItem).isTrait).length;
 
         // Prepare loadout/equipment data (uses cached categorized items)
-        this._prepareLoadoutData(context, categorized);
+        OverviewContext.prepareLoadoutData.call(this, context, categorized);
 
         // Prepare combat station data (uses cached categorized items)
-        this._prepareCombatData(context, categorized);
+        CombatContext.prepareCombatData.call(this, context, categorized);
 
         // Prepare WH40K RPG specific fields
         if (context.system) {
             // eslint-disable-next-line no-restricted-syntax -- rogueTrader is an untyped sub-object on the sheet context; ?? {} is necessary to ensure a defined object is passed
-            context.system.rogueTrader = this._prepareWH40KFields(context.system.rogueTrader ?? {});
+            context.system.rogueTrader = OverviewContext.prepareWH40KFields.call(this, context.system.rogueTrader ?? {});
         }
 
         // Prepare dynasty tab data
-        context.dynastyData = this._prepareDynastyData();
+        context.dynastyData = OverviewContext.prepareDynastyData.call(this);
 
         // Prepare Endeavours (Rogue Trader) — embedded `endeavour` items the
         // Dynasty is currently pursuing. The panel partial reads this hash.
@@ -1376,8 +744,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
         if (partId === 'header') return this._prepareHeaderContext(partContext, options);
         if (partId === 'tabs') return this._prepareTabsContext(partContext, options);
-        if (partId === 'biography') return this._prepareBiographyContext(partContext, options);
-        if (partId === 'overview') return this._prepareOverviewDashboardContext(partContext, options);
+        if (partId === 'biography') return OriginContext.prepareBiographyContext.call(this, partContext, options);
+        if (partId === 'overview') return OverviewContext.prepareOverviewDashboardContext.call(this, partContext, options);
         if (partId === 'combat' || partId === 'skills' || partId === 'equipment' || partId === 'dynasty') {
             // Provide tab object for the template
             return this._prepareTabPartContext(partId, partContext, options);
@@ -1426,12 +794,12 @@ export default class CharacterSheet extends BaseActorSheet {
             Object.assign(context, traitsData);
             // Aptitude pills (relocated here from the Overview dashboard) with
             // per-source attribution (DH2e/BC/OW). Empty on non-aptitude systems.
-            sheetContext.aptitudePills = this._prepareAptitudePills();
+            sheetContext.aptitudePills = OriginContext.prepareAptitudePills.call(this);
         }
 
         // Navigator powers, rituals and ship orders live on the Combat tab (#194).
         if (partId === 'combat') {
-            Object.assign(context, this._prepareCombatPowerPanelsContext());
+            Object.assign(context, CombatContext.prepareCombatPowerPanelsContext.call(this));
         }
 
         // Loadout/combat-station data does not survive into the isolated part
@@ -1440,51 +808,15 @@ export default class CharacterSheet extends BaseActorSheet {
         // the Equipment tab renders an empty inventory even though the actor
         // carries items.
         if (partId === 'equipment' || partId === 'combat') {
-            const categorized = this._getCategorizedItems();
-            this._prepareLoadoutData(context, categorized);
-            this._prepareCombatData(context, categorized);
+            const categorized = OverviewContext.getCategorizedItems.call(this);
+            OverviewContext.prepareLoadoutData.call(this, context, categorized);
+            CombatContext.prepareCombatData.call(this, context, categorized);
         }
 
         return context;
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Prepare biography tab context with ProseMirror enriched content.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {Promise<object>}
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
-    async _prepareBiographyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const ctx = context as CharacterSheetContext;
-        // First prepare the standard tab context
-        await this._prepareTabPartContext('biography', context, options);
-
-        // Prepare biography data with enriched HTML for ProseMirror
-        // eslint-disable-next-line no-restricted-syntax -- bio.notes may be undefined in migrated data; ?? '' is safe fallback until DataModel schema enforces the default
-        const rawNotes = this.actor.system.bio.notes ?? '';
-
-        const enrichedNotes = await TextEditor.enrichHTML(rawNotes, {
-            relativeTo: this.actor,
-            secrets: this.actor.isOwner,
-            rollData: this.actor.getRollData(),
-        });
-        ctx.biography = {
-            source: {
-                notes: rawNotes,
-            },
-            enriched: {
-                notes: enrichedNotes,
-            },
-        };
-        // The journal panel under the notes lists these; nothing supplied them, so it always showed "no entries" (#613).
-        ctx.journalEntries = this.actor.items.filter((item) => (item.type as string) === 'journalEntry');
-
-        return ctx;
-    }
 
     /* -------------------------------------------- */
 
@@ -1500,7 +832,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const ctx = context as CharacterSheetContext;
         // Build dynamic origin path select options from compendium packs
         const gameSystem = this._resolveGameSystemId();
-        const originOptions = gameSystem ? await this._getOriginPathOptions(gameSystem) : {};
+        const originOptions = gameSystem ? await OriginContext.getOriginPathOptions.call(this, gameSystem) : {};
         ctx.originOptions = originOptions;
         ctx.headerFields = this._getSidebarHeaderFields(gameSystem);
 
@@ -1514,55 +846,6 @@ export default class CharacterSheet extends BaseActorSheet {
     protected _getSidebarHeaderFields(gameSystem: GameSystemId | null): SidebarHeaderField[] {
         if (!gameSystem) return [];
         return SystemConfigRegistry.get(gameSystem).getHeaderFields(this.actor);
-    }
-
-    /**
-     * Fetch unique origin path names grouped by step from compendium packs.
-     * @param {string} gameSystem - The game system ID (e.g. 'dh2', 'rt')
-     * @returns {Promise<Record<string, string[]>>}
-     * @private
-     */
-    async _getOriginPathOptions(gameSystem: GameSystemId): Promise<Record<string, string[]>> {
-        // Use cached options if available (packs don't change at runtime)
-        const cached = this.#originOptionsCache.get(gameSystem);
-        if (cached !== undefined) return cached;
-
-        const stepNames: Record<string, Set<string>> = {};
-
-        const relevantPacks = [...game.packs].filter((pack) => pack.documentName === 'Item' && isLinePack(pack.metadata, gameSystem));
-
-        const indexes = await Promise.all(
-            relevantPacks.map(
-                async (pack) =>
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry pack.getIndex() returns Collection with no typed item shape; double-cast to concrete interface
-                    (await pack.getIndex({ fields: ['type', 'system.step'] })) as unknown as Array<{
-                        _id: string;
-                        name: string;
-                        type?: string;
-                        system?: { step?: string };
-                    }>,
-            ),
-        );
-
-        for (const index of indexes) {
-            for (const entry of index) {
-                if (entry.type !== 'originPath') continue;
-                const step = entry.system?.step;
-                if (step === undefined || step === '') continue;
-                // eslint-disable-next-line no-restricted-syntax -- ??= used to lazily initialize per-step Set; stepNames is a local accumulator not owned by any DataModel
-                stepNames[step] ??= new Set();
-                stepNames[step].add(entry.name);
-            }
-        }
-
-        // Convert Sets to sorted arrays
-        const result: Record<string, string[]> = {};
-        for (const [step, names] of Object.entries(stepNames)) {
-            result[step] = [...names].sort();
-        }
-
-        this.#originOptionsCache.set(gameSystem, result);
-        return result;
     }
 
     /* -------------------------------------------- */
@@ -1598,7 +881,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Nudge the user to build an unfinished character via the origin-path
         // builder (the d20 on the portrait isn't obvious enough). Fire-and-forget
         // so the dialog doesn't block the sheet's first render.
-        void this.#maybePromptOriginPathIncomplete();
+        void this._maybePromptOriginPathIncomplete();
 
         // Ensure initial tab is active
         const activeTab = this.tabGroups.primary;
@@ -1633,1308 +916,65 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare characteristic HUD data and tooltip data.
-     * @param {object} context  Context being prepared.
-     * @protected
-     */
-    /**
-     * Synthesize an `influence` entry on the characteristics map for DH2 RAW mode.
-     * Mirrors the CharacteristicField shape so the panel template and HUD prep treat
-     * it identically to WS/BS/etc. Influence has no `advance`/`unnatural`/`base`
-     * mechanics in the data model — it's a flat 0-100 value — so the derived fields
-     * are filled with zero/identity values that the template renders harmlessly.
-     */
-    _injectInfluenceAsCharacteristic(context: CharacterSheetContext): void {
-        const actor = context.actor;
-        if (!actor) return;
-        const value = Number(this.actor.system.influence);
-        const entry = {
-            label: game.i18n.localize('WH40K.Characteristic.Influence'),
-            short: game.i18n.localize('WH40K.Characteristic.Abbr.Influence'),
-            base: value,
-            advance: 0,
-            modifier: 0,
-            unnatural: 0,
-            bonus: Math.floor(value / 10),
-            total: value,
-        };
-        const characteristics = actor.characteristics ?? {};
-        characteristics['influence'] = entry;
-        actor.characteristics = characteristics;
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * Build the BC Alignment / Infamy panel context (#173).
-     *
-     * Tally + derived-alignment + recheck-due + psyker-lock all come from
-     * `bc-alignment-derivation.ts`; the Infamy cost / cap / increment come
-     * from `bc-advancement-config.ts`. The partial reads the returned
-     * object as `alignmentPanel.*`.
-     */
-    _prepareBcAlignmentPanel(): BcAlignmentPanelContext {
-        const system = this.actor.system;
-        const advances: ReadonlyArray<ChaosAdvanceEntry> = system.chaosAdvancements;
-        const tally = tallyAdvancesByAlignment(advances);
-        const derived = deriveAlignmentFromTally(tally);
-        const current = system.chaosAlignment;
-        const checkpoint = system.alignmentCheckpoint;
-        const corruption = system.corruption;
-        const infamy = system.infamy;
-        return {
-            current,
-            derived,
-            tally,
-            pendingFlip: current !== derived,
-            checkpoint,
-            corruption,
-            nextCheckpoint: nextAlignmentCheckpoint(corruption),
-            recheckDue: shouldRecheckAlignment(corruption, checkpoint),
-            psykerLocked: psykerLockedByAlignment(current),
-            infamy,
-            infamyCost: infamyAdvanceCost(infamy),
-            infamyCap: BC_INFAMY_ADVANCE_CAP,
-            infamyIncrement: BC_INFAMY_INCREMENT,
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * BC Psychic Strength panel (#178). Resolver inputs come from the
-     * persisted DataModel fields (psykerClass / psyRating / sustainedPowerCount);
-     * the panel's mode + push level are ephemeral UI state owned by the
-     * sheet instance (_bcPsyMode / _bcPsyPushLevel).
-     */
-    _prepareBcPsychicPanel(): BcPsychicPanelContext {
-        const sys = this.actor.system;
-        const psykerClass = sys.psykerClass;
-        const psyRating = sys.psyRating;
-        const sustainedPowerCount = sys.sustainedPowerCount;
-        const mode = this._bcPsyMode;
-        const pushLevel = this._bcPsyPushLevel;
-        const resolved = resolvePsychicTest({ psykerClass, basePR: psyRating, mode, pushLevel, sustainedPowerCount });
-        return {
-            psykerClass,
-            psyRating,
-            sustainedPowerCount,
-            mode,
-            pushLevel,
-            maxPushLevel: maxPushLevel(psykerClass),
-            effectivePR: resolved.effectivePR,
-            sustainPenalty: resolved.sustainPenalty,
-            phenomenaRolls: resolved.phenomenaRolls,
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * DW Astartes implants panel (#167). Iterates the canonical implant
-     * inventory and reports per-id presence + the derived Unnatural
-     * Strength/Toughness bonuses and Black-Carapace flag.
-     */
-    _prepareDwAstartesPanel(): DwAstartesPanelContext {
-        const sys = this.actor.system;
-        const implants = sys.implants;
-        const sb = sys.characteristics.strength.bonus;
-        const tb = sys.characteristics.toughness.bonus;
-        const implantSet = new Set<AstartesImplantId>(implants);
-        return {
-            implants: ASTARTES_IMPLANTS.map((id) => {
-                // The implant's `mechanic` (kebab-case) maps directly onto the
-                // `WH40K.DW.Astartes.Category.*` langpack keys (PascalCase).
-                // Implants with no discrete mechanic (Ossmodula, Biscopea,
-                // Haemastamen) feed the Unnatural Str/Tgh baselines → Baseline.
-                const mechanic = IMPLANT_EFFECTS[id].mechanic;
-                return {
-                    id,
-                    // The langpack name lives at `…Implant.<Id>.Name` — the
-                    // trailing `.Name` segment is required or `localize` falls
-                    // back to the raw key (the overflowing-text regression).
-                    nameKey: `WH40K.DW.Astartes.Implant.${titleCase(id)}.Name`,
-                    categoryKey: mechanic === undefined ? `WH40K.DW.Astartes.Category.Baseline` : `WH40K.DW.Astartes.Category.${titleCase(mechanic)}`,
-                    has: implantSet.has(id),
-                };
-            }),
-            strengthBonus: astartesStrengthBonus(sb),
-            toughnessBonus: astartesToughnessBonus(tb),
-            hasBlackCarapace: hasBlackCarapace(implants),
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * DW Kill-team Cohesion panel (#162). Reads the four schema slots
-     * (`cohesionCurrent`, `cohesionMax`, `cohesionLostThisTurn`,
-     * `rallied`) and computes the action-availability gates.
-     */
-    _prepareDwCohesionPanel(): DwCohesionPanelContext {
-        const sys = this.actor.system;
-        const current = sys.cohesionCurrent;
-        const max = sys.cohesionMax;
-        const rallied = sys.rallied;
-        return {
-            current,
-            max,
-            lostThisTurn: sys.cohesionLostThisTurn,
-            rallied,
-            canRally: !rallied,
-            canRecover: current < max && max > 0,
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * DW Squad Mode panel (#163). Surfaces the current combat mode,
-     * Renown-derived support range, and the labels of any
-     * currently-sustained Squad-mode abilities.
-     */
-    _prepareDwModePanel(): DwModePanelContext {
-        const sys = this.actor.system;
-        const mode = sys.combatMode;
-        const renownRank = getRenownRank(sys.renown);
-        const renownRankKey = capitalize(renownRank);
-        const supportRange = getSupportRange(renownRank);
-        const sustainedAbilities = sys.sustainedAbilities.map((id) => ({ id, label: id }));
-        return {
-            mode,
-            renownRank,
-            renownRankKey,
-            supportRange,
-            sustainedAbilities,
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * DW Renown panel (#164). Computes the current rank, the next rank's
-     * threshold (if any), and a 0-100% progress percentage.
-     */
-    _prepareDwRenownPanel(): DwRenownPanelContext {
-        const sys = this.actor.system;
-        const value = sys.renown;
-        const rank = getRenownRank(value);
-        const rankRange = RENOWN_THRESHOLDS[rank];
-        const rankIdx = RENOWN_RANK_ORDER.indexOf(rank);
-        const nextRank: RenownRank | null = RENOWN_RANK_ORDER[rankIdx + 1] ?? null;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
-        const nextRankMin = nextRank != null ? RENOWN_THRESHOLDS[nextRank].min : null;
-        const rankLabel = game.i18n.localize(renownRankLabelKey(rank));
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser narrows nextRank to RenownRank by missing the union; strict tsconfig retains the | null branch
-        const nextRankLabel = nextRank != null ? game.i18n.localize(renownRankLabelKey(nextRank)) : null;
-        const progressPercent =
-            nextRankMin === null ? 100 : Math.max(0, Math.min(100, Math.round(((value - rankRange.min) / (nextRankMin - rankRange.min)) * 100)));
-        return {
-            value,
-            rank,
-            rankLabel,
-            nextRank,
-            nextRankLabel,
-            rankMin: rankRange.min,
-            nextRankMin,
-            progressPercent,
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * DW Requisition panel (#165). Surfaces the RP balance, the current
-     * mission rating, and the Renown-derived rank gate the requisition
-     * dialog will enforce.
-     */
-    _prepareDwRequisitionPanel(): DwRequisitionPanelContext {
-        const sys = this.actor.system;
-        return {
-            rp: sys.requisitionPoints,
-            missionRating: sys.missionRating,
-            renownRank: getRenownRank(sys.renown),
-        };
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /** A recorded Regimental Drawback's descriptor, when its item records its Regiment Creation Points (#160). */
-    _owDrawbackDescriptor(id: string): RegimentDrawback | undefined {
-        return this.#drawbackDescriptors.get(id);
-    }
-
-    /** The Regimental Drawbacks the character's regiment took, as UUIDs; none off the OW line. */
-    #regimentDrawbackIds(): string[] {
-        const record = owSystemRecord(this);
-        return Array.isArray(record['regimentDrawbacks']) ? (record['regimentDrawbacks'] as string[]) : [];
-    }
-
-    /** Record a drawback the regiment took (a drop on the sheet, or the panel's Add Drawback). */
-    async #addRegimentalDrawback(uuid: string, name: string): Promise<void> {
-        const added = await addRegimentalDrawback(
-            { system: { regimentDrawbacks: this.#regimentDrawbackIds() }, update: async (data) => this.actor.update(data) },
-            uuid,
-        );
-        if (!added) this._notify('warning', game.i18n.format('WH40K.OW.RegimentDrawback.AlreadyTaken', { name }));
-    }
-
-    /** A conferred medal's descriptor (content#32). */
-    _owAwardDescriptor(id: string): RegimentalAward | undefined {
-        return this.#awardDescriptors.get(id);
-    }
-
-    /** The medals conferred on the character, as UUIDs; none off the OW line. */
-    #regimentalAwardIds(): string[] {
-        const record = owSystemRecord(this);
-        return Array.isArray(record['regimentalAwards']) ? (record['regimentalAwards'] as string[]) : [];
-    }
-
-    /** Confer a medal (a drop on the sheet, or the panel's Add Award). */
-    async #addRegimentalAward(uuid: string, name: string): Promise<void> {
-        const added = await addRegimentalAward(
-            { system: { regimentalAwards: this.#regimentalAwardIds() }, update: async (data) => this.actor.update(data) },
-            uuid,
-        );
-        if (!added) this._notify('warning', game.i18n.format('WH40K.OW.RegimentalAward.AlreadyConferred', { name }));
-    }
-
-    /** Confer a medal chosen from the compendiums (the Battlefield panel's Add Award). */
-    static async #owAddAward(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const uuid = await chooseCompendiumAward();
-        if (uuid === null) {
-            this._notify('warning', game.i18n.localize('WH40K.OW.RegimentalAward.NoneAvailable'));
-            return;
-        }
-        await this.#addRegimentalAward(uuid, cachedRefName(uuid));
-    }
-
-    /** Add a drawback chosen from the compendiums (the panel's Add Drawback). */
-    static async #owAddDrawback(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const uuid = await chooseCompendiumDrawback();
-        if (uuid === null) {
-            this._notify('warning', game.i18n.localize('WH40K.OW.RegimentDrawback.NoneAvailable'));
-            return;
-        }
-        await this.#addRegimentalDrawback(uuid, cachedRefName(uuid));
-    }
-
-    /**
-     * OW Regiment Creation panel (#151). Surfaces the persisted regiment
-     * selection + kit budget for the panel partial.
-     */
-    _prepareOwRegimentPanel(): OwRegimentPanelContext {
-        const sys = this.actor.system;
-        return buildRegimentPanelSummary(sys.regimentSelection, sys.regimentKit, resolveRegimentCatalog(this.actor));
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * OW Comrade panel (#152). The values come from the rules layer's
-     * `buildComradePanel`; the sheet only passes the Comrade record and the
-     * camp (refit) flag through.
-     */
-    _prepareOwComradePanel(): OwComradePanelContext {
-        const sys = this.actor.system;
-        return buildComradePanel(sys.comrade, sys.refitAvailable, this.#comradeRules(), currentCombatRound(game.combat));
-    }
-
-    /** The line's Comrade rules; the Comrade panels are built only for a line that prints them. */
-    #comradeRules(): ComradeRules {
-        const rules = comradeRulesFor(this._resolveGameSystemId() ?? undefined);
-        if (rules === null) throw new Error('The Comrade panels are built only for a line with Comrades.');
-        return rules;
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * OW Orders panel (#152, #153): the line's Orders, each resolved against the
-     * Comrade now (alive, pinned or fleeing, Cohesion, actions left this Turn), and
-     * any currently-active sweeping Orders with their applied-member counts.
-     */
-    _prepareOwOrdersPanel(): OwOrdersPanelContext {
-        const sys = this.actor.system;
-        const available = orderPanelRows(
-            comradeOrdersFor(this._resolveGameSystemId() ?? undefined),
-            sys.comrade,
-            this.#comradeRules(),
-            currentCombatRound(game.combat),
-        );
-        const sweepingActive = sys.activeOrders
-            .filter((o) => o.sweeping)
-            .map((o) => ({
-                orderId: o.orderId,
-                appliedCount: o.appliedToMemberIds.length,
-            }));
-        return { available, sweepingActive };
-    }
-
     /* -------------------------------------------- */
-
-    /**
-     * OW Logistics panel (#154). Surfaces the Squad Logistics Rating
-     * baseline + Munitorum flag + GM situational modifier.
-     */
-    _prepareOwLogisticsPanel(): OwLogisticsPanelContext {
-        const sys = this.actor.system;
-        return {
-            rating: sys.logisticsRating === 0 ? OW_DEFAULT_LOGISTICS_RATING : sys.logisticsRating,
-            munitorum: sys.munitorum,
-            situational: sys.situational,
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * BC Chaos Ritual panel (#179). The only persisted slot is the
-     * ritualist's Daemonic Mastery rating; per-ritual selections are
-     * dialog-scoped state and never leak to the panel.
-     */
-    _prepareBcRitualPanel(): BcRitualPanelContext {
-        return { ritualMastery: this.actor.system.ritualMastery };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * BC Gifts of the Gods panel (#180). The actor's Gifts are its owned
-     * mutation items with category `gift` (catalogue: compendium, Direction
-     * #7); each is resolved against the current Chaos Alignment by
-     * `buildBcGiftsPanel`. The characteristic / skill changes themselves are
-     * applied in data prep (`CreatureTemplate._computeItemModifiers`); this
-     * only lays them out.
-     */
-    _prepareBcGiftsPanel(): BcGiftsPanelContext {
-        const sys = this.actor.system;
-        const items: GiftPanelItem[] = [];
-        for (const item of this.actor.items.contents) {
-            if (isGiftItem(item)) items.push(item);
-        }
-        return buildBcGiftsPanel({
-            alignment: sys.chaosAlignment,
-            items,
-            characteristicLabel: (key) => labelOf(sys.characteristics, key),
-            skillLabel: (key) => labelOf(sys.skills, key),
-            grantName: (uuid) => uuidNameCache.getName(uuid),
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * BC Supplement Mechanics panel (#181). Surfaces the Daemon Engine
-     * rage bonus (computed against a conservative `turnsSinceLastDamage`
-     * baseline of 0 — the actual delta is dialog-scoped per encounter).
-     */
-    _prepareBcSupplementsPanel(): BcSupplementsPanelContext {
-        const rating = this.actor.system.daemonEngineRating;
-        const daemonEngineActive = rating > 0;
-        const turnsSinceLastDamage = 0;
-        const rageBonus = daemonEngineActive ? daemonEngineRageBonus({ rating, turnsSinceLastDamage }) : 0;
-        return {
-            daemonEngineRating: rating,
-            daemonEngineActive,
-            turnsSinceLastDamage,
-            daemonEngineRageBonus: rageBonus,
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * BC apotheosis panel (#182). Reads the persisted record off
-     * `system.daemonPrinceAscension` and reports the eligibility readout: the
-     * claim at 100 Corruption, the GM's Infamy threshold, and the fate (Daemon
-     * Prince or Chaos Spawn) met — or faced, before the claim.
-     */
-    _prepareBcDaemonPrincePanel(): BcDaemonPrincePanelContext {
-        const sys = this.actor.system;
-        const record = sys.daemonPrinceAscension;
-        const ascendedAt = record.ascendedAt;
-        const ascension = ascendedAt === null ? null : { ascendedAt, alignmentAtAscension: record.alignmentAtAscension, outcome: record.outcome };
-        const ascended = isAscended(ascension);
-        const infamy = sys.infamy;
-        const corruption = sys.corruption;
-        const infamyThreshold = WH40KSettings.getApotheosisInfamyThreshold();
-        const readout = resolveApotheosis({ corruption, infamy, infamyThreshold });
-        const outcome = ascension === null ? readout.outcome : ascension.outcome;
-        return {
-            ascended,
-            ascendedAt,
-            alignmentAtAscension: record.alignmentAtAscension,
-            infamy,
-            corruption,
-            infamyThreshold,
-            corruptionThreshold: APOTHEOSIS_CORRUPTION,
-            canAscend: !ascended && readout.claimed,
-            isDaemonPrince: outcome === 'daemonPrince',
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * DW Distinctions panel (#171). Lists every owned special-ability item —
-     * speciality, Advanced Special Ability, Distinction, Mark — with its
-     * category, required Renown rank, Renown reward and XP cost, ordered by
-     * category then name, and folds the borne Marks' grants through
-     * `mergeMarkGrants`. All values come from the items themselves.
-     */
-    _prepareDwDistinctionPanel(): DwDistinctionPanelContext {
-        const actorRenownRank = getRenownRank(this.actor.system.renown);
-        const abilities: DwDistinctionPanelContext['abilities'] = [];
-        const marks: MarkGrantSource[] = [];
-        for (const item of this.actor.items) {
-            const ability = readSpecialAbility(item);
-            if (ability === null) continue;
-            if (ability.category === 'mark') marks.push(ability.markGrant);
-            abilities.push({
-                id: item.id,
-                name: item.name,
-                category: ability.category,
-                categoryLabel: game.i18n.localize(specialAbilityCategoryLabelKey(ability.category)),
-                renownRequired: ability.renownRequired === null ? '' : game.i18n.localize(renownRankLabelKey(ability.renownRequired)),
-                renownReward: ability.renownReward,
-                cost: ability.cost,
-                rankTooLow: !canGainSpecialAbility({ ability, actorRenownRank }).allowed,
-            });
-        }
-        const categoryOrder = (category: SpecialAbilityCategory): number => SPECIAL_ABILITY_CATEGORIES.indexOf(category);
-        abilities.sort((a, b) => categoryOrder(a.category) - categoryOrder(b.category) || a.name.localeCompare(b.name, game.i18n.lang));
-
-        const merged = mergeMarkGrants(marks);
-        return {
-            abilities,
-            merged: {
-                characteristicDelta: Object.keys(merged.characteristicDelta)
-                    .sort()
-                    .map((key) => {
-                        const value = merged.characteristicDelta[key] ?? 0;
-                        return { key, value, displayValue: formatSigned(value) };
-                    }),
-                traits: merged.traits.map((uuid) => uuidNameCache.getName(uuid)),
-            },
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * DW Special-Issue Ammunition panel (#172). Reads the actor-level
-     * selected ammo id and builds the option list against the canonical
-     * `DW_SELECTED_AMMO_CHOICES`. The detail readout consumes
-     * `DW_SPECIAL_AMMO_EFFECTS` directly; `'standard'` yields `null`.
-     */
-    _prepareDwAmmoPanel(): DwAmmoPanelContext {
-        const sys = this.actor.system;
-        const selected: DwSelectedAmmoId = sys.selectedAmmo;
-        const labelFor = (id: DwSelectedAmmoId): string => game.i18n.localize(`WH40K.DW.SpecialAmmo.Ammo.${titleCase(id)}`);
-        const effect = selected === 'standard' ? null : DW_SPECIAL_AMMO_EFFECTS[selected];
-        return {
-            selected,
-            selectedLabel: labelFor(selected),
-            options: DW_SELECTED_AMMO_CHOICES.map((id) => ({
-                id,
-                label: labelFor(id),
-                selected: id === selected,
-            })),
-            effect,
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * DW Mission Oath panel (#168). Surfaces the leader marker, the
-     * active oath id (or null), and the swear/release gates. The active
-     * oath display label resolves from the compendium UUID cache at
-     * panel render time; without a sync lookup we fall back to the id
-     * string so the panel still renders a meaningful readout.
-     */
-    _prepareDwOathPanel(): DwOathPanelContext {
-        const sys = this.actor.system;
-        const activeOathId = sys.activeOathId;
-        const active = isOathActive(activeOathId);
-        return {
-            isLeader: sys.isLeader,
-            active,
-            activeOathId,
-            activeLabel: active && activeOathId !== null ? activeOathId : null,
-            canSwear: sys.isLeader && !active,
-            canRelease: active,
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * DW Mission framework panel (#169). When `activeMission === null`
-     * the panel renders the empty-state placeholder; otherwise we map
-     * the persisted record into the localized labels the template
-     * consumes.
-     */
-    _prepareDwMissionPanel(): DwMissionPanelContext {
-        const sys = this.actor.system;
-        const active = sys.activeMission;
-        if (active === null) {
-            return { hasMission: false, mission: null };
-        }
-        return {
-            hasMission: true,
-            mission: {
-                id: active.id,
-                name: active.name,
-                rating: active.rating,
-                ratingLabel: game.i18n.localize(`WH40K.DW.Mission.Rating.${titleCase(active.rating)}`),
-                objectives: active.objectives.map((o) => ({
-                    id: o.id,
-                    description: o.description,
-                    renownReward: o.renownReward,
-                    xpReward: o.xpReward,
-                    status: o.status,
-                    statusLabel: game.i18n.localize(`WH40K.DW.Mission.Objective.Status.${titleCase(o.status)}`),
-                })),
-                complications: active.complications.map((c) => ({
-                    id: c.id,
-                    description: c.description,
-                    renownPenalty: c.renownPenalty,
-                    triggered: c.triggered,
-                })),
-            },
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * OW Mission Assignment Gear panel (#155). Stateless apart from the
-     * "last outcome" readout; the request-gear action gathers the
-     * mission-gear modifiers at click time via a DialogV2 prompt.
-     */
-    _prepareOwMissionGearPanel(): OwMissionGearPanelContext {
-        const sys = this.actor.system;
-        const last = sys.lastGearOutcome;
-        if (last === null) {
-            return { hasOutcome: false, outcomeKey: null };
-        }
-        return {
-            hasOutcome: true,
-            outcomeKey: `WH40K.OW.MissionGear.Outcome.${titleCase(last)}`,
-        };
-    }
-
-    /* -------------------------------------------- */
-
-    /** OW Vehicle Movement panel (#156). */
-    _prepareOwVehicleMovementPanel(): OwVehicleMovementPanelContext {
-        const sys = this.actor.system;
-        const chase = sys.chaseState;
-        const actions = [
-            { id: 'evasive-manoeuvring', timing: 'half' },
-            { id: 'floor-it', timing: 'full' },
-            { id: 'hit-and-run', timing: 'full' },
-            { id: 'jink', timing: 'reaction' },
-            { id: 'tactical-manoeuvring', timing: 'half' },
-        ].map((a) => ({
-            actionId: a.id,
-            timing: a.timing,
-            nameKey: `WH40K.OW.VehicleMovement.Action.${titleCase(a.id)}`,
-            timingKey: `WH40K.OW.VehicleMovement.Timing.${capitalize(a.timing)}`,
-            descriptionKey: `WH40K.OW.VehicleMovement.Description.${titleCase(a.id)}`,
-        }));
-        return {
-            actions,
-            // Template gates the chase readout on `chaseState` being non-null and
-            // reads pursuerDistance/dangerZone/turnCount off it; pass the live
-            // tracker straight through (null when no chase is active).
-            chaseState: chase === null ? null : { pursuerDistance: chase.pursuerDistance, dangerZone: chase.dangerZone, turnCount: chase.turnCount },
-        };
-    }
 
     /** OW Mount panel (#155). Surfaces the rider's mount link (resolved name +
      *  trait badges) and the four RAW mounted special actions. The template gates
      *  the readout and the Issue buttons on `mount` being non-null. */
-    _prepareOwMountPanel(): OwMountPanelContext {
-        const mountedOn = owSystemRecord(this)['mountedOn'] as { mountId?: string; traits?: string[] } | null | undefined;
-        const mount =
-            mountedOn != null && typeof mountedOn.mountId === 'string' && mountedOn.mountId !== ''
-                ? {
-                      mountId: mountedOn.mountId,
-                      mountName: uuidNameCache.getName(mountedOn.mountId),
-                      traits: (mountedOn.traits ?? []).map((id) => ({ id, labelKey: `WH40K.OW.Mount.Trait.${titleCase(id)}` })),
-                  }
-                : null;
-        const actions = MOUNTED_ACTIONS.map((a) => ({
-            actionId: a.id,
-            timing: a.timing,
-            nameKey: `WH40K.OW.Mount.Action.${titleCase(a.id)}`,
-            descriptionKey: `WH40K.OW.Mount.Description.${titleCase(a.id)}`,
-            timingKey: `WH40K.OW.Mount.Timing.${titleCase(a.timing)}`,
-        }));
-        return { mount, actions };
-    }
-
-    /**
-     * OW Comrade Healing panel (#157). The values come from the rules layer's
-     * `buildComradeHealingPanel`; the sheet only passes the persisted state through.
-     */
-    _prepareOwComradeHealingPanel(): OwComradeHealingPanelContext {
-        const sys = this.actor.system;
-        return buildComradeHealingPanel({
-            state: sys.comrade.state,
-            recoveryDays: sys.comradeRecoveryDays,
-            refitAvailable: sys.refitAvailable,
-            medicaeUsed: sys.comradeMedicaeUsed,
-        });
-    }
 
     /* -------------------------------------------- */
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
-    _prepareCharacteristicHUD(context: Record<string, unknown>): void {
-        const sheetContext = context as CharacterSheetContext;
-        const hudCharacteristics = sheetContext.actor?.characteristics ?? {};
-        const modifierSources = sheetContext.system?.modifierSources?.characteristics ?? {};
-
-        // SVG circle parameters for progress ring
-        const radius = 52;
-        const circumference = 2 * Math.PI * radius; // ~326.7
-
-        /* eslint-disable no-restricted-syntax -- boundary: HUD characteristic shape mirrors Foundry's CharacteristicField runtime payload; concrete properties exist only to make property writes legal under noPropertyAccessFromIndexSignature. */
-        type CharHud = {
-            total?: unknown;
-            advance?: unknown;
-            bonus?: unknown;
-            hudMod?: unknown;
-            hudTotal?: unknown;
-            advanceProgress?: unknown;
-            progressCircumference?: unknown;
-            progressOffset?: unknown;
-            nextAdvanceCost?: unknown;
-            tooltipData?: unknown;
-            [key: string]: unknown;
-        };
-        /* eslint-enable no-restricted-syntax */
-
-        Object.entries(hudCharacteristics).forEach(([key, rawChar]) => {
-            const char = rawChar as CharHud;
-            const total = Number(char.total ?? 0);
-            const advance = Number(char.advance ?? 0);
-
-            // Use the calculated bonus (accounts for unnatural), fallback to tens digit
-            char.hudMod = char.bonus ?? Math.floor(total / 10);
-            char.hudTotal = total;
-
-            // Progress ring data (advancement 0-5 maps to 0-100%)
-            char.advanceProgress = (advance / 5) * 100;
-            char.progressCircumference = circumference;
-            char.progressOffset = circumference * (1 - advance / 5);
-
-            // XP cost for next advancement (using WH40K progression)
-            char.nextAdvanceCost = advance < 5 ? ADVANCE_XP_COSTS[advance] : 0;
-
-            // Prepare tooltip data using the mixin helper
-            char.tooltipData = this.prepareCharacteristicTooltip(key, char, modifierSources);
-        });
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /** Accumulate grants from an origin-path choice option into the running accumulators. */
-    /* eslint-disable no-restricted-syntax -- boundary: grants shape varies per game system; typed via local OriginGrants alias */
-    #accumulateOriginGrants(
-        grants: {
-            characteristics?: unknown;
-            skills?: unknown;
-            talents?: unknown;
-            traits?: unknown;
-            [key: string]: unknown;
-        },
-        charTotals: Record<string, number>,
-        skillSet: Set<string>,
-        talentSet: Set<string>,
-        traitSet: Set<string>,
-    ): void {
-        if (grants.characteristics !== undefined && grants.characteristics !== null) {
-            for (const [key, value] of Object.entries(grants.characteristics as Record<string, unknown>)) {
-                if (value !== 0) {
-                    charTotals[key] = (charTotals[key] ?? 0) + Number(value);
-                }
-            }
-        }
-        if (Array.isArray(grants.skills)) {
-            for (const skill of grants.skills as Array<{ name?: string; specialization?: string }>) {
-                const skillName =
-                    skill.specialization !== undefined && skill.specialization !== ''
-                        ? `${String(skill.name ?? '')} (${skill.specialization})`
-                        : skill.name ?? '';
-                skillSet.add(skillName);
-            }
-        }
-        if (Array.isArray(grants.talents)) {
-            for (const talent of grants.talents as Array<{ name?: string }>) {
-                talentSet.add(talent.name ?? '');
-            }
-        }
-        if (Array.isArray(grants.traits)) {
-            for (const trait of grants.traits as Array<{ name?: string }>) {
-                traitSet.add(trait.name ?? '');
-            }
-        }
-    }
-    /* eslint-enable no-restricted-syntax */
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare origin path step data.
-     * @returns {Array<object>}
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: steps are heterogeneous data passed to Handlebars templates where a concrete type doesn't propagate
-    _prepareOriginPathSteps(): Record<string, unknown>[] {
-        const gameSystem = this._resolveGameSystemId();
-        if (!gameSystem) return [];
-
-        const sysConfig = SystemConfigRegistry.get(gameSystem);
-        const stepConfig = sysConfig.getOriginStepConfig();
-        const shortLabels = sysConfig.getStepShortLabels();
-        const allSteps = [...stepConfig.coreSteps];
-        if (stepConfig.optionalStep) allSteps.push(stepConfig.optionalStep);
-
-        const steps = allSteps.map((step) => {
-            const labelKey = `WH40K.OriginPath.${capitalize(step.key)}`;
-            const label = game.i18n.localize(labelKey);
-            return {
-                key: step.key,
-                label: label !== labelKey ? label : step.step,
-                shortLabel: shortLabels[step.key] ?? step.key,
-                icon: step.icon,
-            };
-        });
-
-        const originItems = this.actor.items.filter((item) => item.type === 'originPath');
-
-        // Calculate totals from all origins
-        const charTotals: Record<string, number> = {};
-        const skillSet = new Set<string>();
-        const talentSet = new Set<string>();
-        const traitSet = new Set<string>();
-        let completedSteps = 0;
-
-        const preparedSteps = steps.map((step) => {
-            const item = originItems.find((i) => {
-                const sys = i.system as WH40KItemSystemData & { step?: string };
-                const itemStep = sys.step ?? '';
-                return itemStep === step.key || itemStep === step.label;
-            });
-
-            if (item) {
-                completedSteps++;
-                /* eslint-disable no-restricted-syntax -- boundary: origin-path item.system grants/choices vary by game system; per-key fields exist to keep noPropertyAccessFromIndexSignature happy. */
-                type OriginGrants = {
-                    skills?: unknown;
-                    talents?: unknown;
-                    traits?: unknown;
-                    choices?: unknown;
-                    characteristics?: unknown;
-                    [key: string]: unknown;
-                };
-                type OriginChoice = {
-                    label?: unknown;
-                    options?: unknown;
-                    [key: string]: unknown;
-                };
-                const system = item.system as unknown as {
-                    grants?: OriginGrants;
-                    modifiers?: { characteristics?: Record<string, unknown> };
-                    selectedChoices?: Record<string, unknown[]>;
-                    [key: string]: unknown;
-                };
-                /* eslint-enable no-restricted-syntax */
-                const grants: OriginGrants = system.grants ?? {};
-                const modifiers = system.modifiers?.characteristics ?? {};
-                const selectedChoices = system.selectedChoices ?? {};
-
-                // Accumulate base characteristics from modifiers
-                for (const [key, value] of Object.entries(modifiers)) {
-                    if (value !== 0) {
-                        charTotals[key] = (charTotals[key] ?? 0) + Number(value);
-                    }
-                }
-
-                // Collect base skills, talents, and traits from grants
-                this.#accumulateOriginGrants(grants, charTotals, skillSet, talentSet, traitSet);
-
-                // Process choice grants
-                if (Array.isArray(grants.choices)) {
-                    for (const choice of grants.choices as Array<OriginChoice>) {
-                        const selectedValues = selectedChoices[choice.label as string] ?? [];
-                        for (const selectedValue of selectedValues) {
-                            const option = (choice.options as Array<{ value?: string; grants?: OriginGrants }> | undefined)?.find(
-                                (o) => o.value === selectedValue,
-                            );
-                            if (option?.grants !== undefined) {
-                                this.#accumulateOriginGrants(option.grants, charTotals, skillSet, talentSet, traitSet);
-                            }
-                        }
-                    }
-                }
-            }
-
-            const tooltipData = item
-                ? JSON.stringify({
-                      title: `${step.label}: ${item.name}`,
-                      // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is typed by Foundry DataModel; accessing description requires a cast until the DataModel exports description
-                      content: (item.system as Record<string, unknown> & { description?: { value?: string } }).description?.value ?? '',
-                  })
-                : null;
-
-            return {
-                ...step,
-                item: item
-                    ? {
-                          _id: item.id,
-                          name: item.name,
-                          img: item.img,
-                          system: item.system,
-                      }
-                    : null,
-                tooltipData,
-            };
-        });
-
-        // Build characteristic summary array
-        const charShorts: Record<string, string> = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
-
-        const characteristicBonuses: OriginSummary['characteristics'] = [];
-        for (const [key, value] of Object.entries(charTotals)) {
-            if (value !== 0) {
-                characteristicBonuses.push({
-                    key: key,
-                    short: charShorts[key] || key.substring(0, 3).toUpperCase(),
-                    value: value,
-                    positive: value > 0,
-                });
-            }
-        }
-
-        // Store summary in context for the template
-        this._originPathSummary = {
-            steps: preparedSteps,
-            completedSteps: completedSteps,
-            totalSteps: 6,
-            isComplete: completedSteps === 6,
-            characteristics: characteristicBonuses,
-            skills: Array.from(skillSet),
-            talents: Array.from(talentSet),
-            traits: Array.from(traitSet),
-        };
-
-        return preparedSteps;
-    }
-
-    /**
-     * Get the origin path summary (call after _prepareOriginPathSteps)
-     * @returns {object}
-     */
-    _getOriginPathSummary(): OriginSummary {
-        return (
-            // eslint-disable-next-line no-restricted-syntax -- _originPathSummary is lazily computed during render; ?? provides the empty-state default until it's populated
-            this._originPathSummary ?? {
-                steps: [],
-                completedSteps: 0,
-                totalSteps: 6,
-                isComplete: false,
-                characteristics: [],
-                skills: [],
-                talents: [],
-                traits: [],
-            }
-        );
-    }
-
     /* -------------------------------------------- */
 
-    /**
-     * Get categorized items. Called fresh each time (no caching).
-     * @returns {object} Categorized items
-     * @protected
-     */
-    _getCategorizedItems(): CategorizedItems {
-        const categories: CategorizedItems = {
-            all: [],
-            allCarried: [], // Items on person or in backpack (not ship)
-            allShip: [], // Items in ship storage
-            weapons: [],
-            armour: [],
-            forceField: [],
-            cybernetic: [],
-            gear: [],
-            storageLocation: [],
-            criticalInjury: [],
-            equipped: [],
-        };
-
-        // Equipment item types that should appear in backpack
-        const equipmentTypes = ['weapon', 'armour', 'forceField', 'cybernetic', 'gear', 'storageLocation', 'ammunition', 'drugOrConsumable'];
-
-        for (const item of this.actor.items) {
-            const itemType = item.type as string;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is a Foundry DataModel; transient flags (state) and the default-grant flag are not on the typed schema yet; bracket access needs Record cast
-            const sys = item.system as Record<string, unknown>;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is an untyped transient-flag bag on the DataModel; bracket access needs Record cast
-            const sysState = sys['state'] as Record<string, unknown> | undefined;
-            const inShip = sysState?.['inShipStorage'] === true;
-            // Default-granted fallback items (e.g. the bound Unarmed strike, #228)
-            // are the combat fallback, not inventory loot — keep them out of the
-            // carried/backpack/ship inventory lists (they still flow into the
-            // combat `weapons` category below).
-            const isDefaultGrant = sys['grantedByDefault'] === true;
-
-            // Add all equipment to "all" for display
-            if (equipmentTypes.includes(itemType) && !isDefaultGrant) {
-                categories.all.push(item);
-
-                // Split into carried vs ship storage
-                if (inShip) {
-                    categories.allShip.push(item);
-                } else {
-                    categories.allCarried.push(item);
-                }
-            }
-
-            // Categorize by type (ONLY non-ship items for armour/forceField/gear panels)
-            if (itemType === 'weapon' || (item as WH40KItem).isWeapon) categories.weapons.push(item);
-            else if ((itemType === 'armour' || (item as WH40KItem).isArmour) && !inShip) categories.armour.push(item);
-            else if ((itemType === 'forceField' || (item as WH40KItem).isForceField) && !inShip) categories.forceField.push(item);
-            else if ((itemType === 'cybernetic' || (item as WH40KItem).isCybernetic) && !inShip) categories.cybernetic.push(item);
-            else if ((itemType === 'gear' || (item as WH40KItem).isGear) && !inShip) categories.gear.push(item);
-            else if (itemType === 'storageLocation') categories.storageLocation.push(item);
-            else if (itemType === 'criticalInjury' || (item as WH40KItem).isCriticalInjury) categories.criticalInjury.push(item);
-
-            // Track equipped items (only non-ship items can be equipped)
-            if (sysState?.['equipped'] === true && !inShip) categories.equipped.push(item);
-        }
-
-        return categories;
-    }
-
     /* -------------------------------------------- */
-
-    /**
-     * Prepare loadout/equipment data for the template.
-     * @param {object} context      The template render context.
-     * @param {object} categorized  Categorized items.
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
-    _prepareLoadoutData(context: Record<string, unknown>, categorized: CategorizedItems): void {
-        const loadoutContext = context as CharacterSheetContext & {
-            armourItems: WH40KItem[];
-            forceFieldItems: WH40KItem[];
-            cyberneticItems: WH40KItem[];
-            gearItems: WH40KItem[];
-            equippedItems: WH40KItem[];
-        };
-        // Add all items to context for the Backpack panel
-        loadoutContext.allItems = categorized.all;
-        loadoutContext.allCarriedItems = categorized.allCarried;
-        loadoutContext.allShipItems = categorized.allShip;
-
-        // Filter items by type
-        loadoutContext.armourItems = categorized.armour;
-        loadoutContext.forceFieldItems = categorized.forceField;
-        loadoutContext.cyberneticItems = categorized.cybernetic;
-        loadoutContext.gearItems = categorized.gear;
-        loadoutContext.storageLocations = categorized.storageLocation;
-
-        // Equipped items (all types that are equipped)
-        loadoutContext.equippedItems = categorized.equipped;
-
-        // Counts for section headers
-        loadoutContext.armourCount = loadoutContext.armourItems.length;
-        loadoutContext.forceFieldCount = loadoutContext.forceFieldItems.length;
-        loadoutContext.cyberneticCount = loadoutContext.cyberneticItems.length;
-        loadoutContext.gearCount = loadoutContext.gearItems.length;
-        loadoutContext.equippedCount = loadoutContext.equippedItems.length;
-
-        // The Carry bar: NPCSheet inherits this pipeline, but only a document that
-        // tracks encumbrance (the PC's) gets the bar, through the explicit flag (#545).
-        Object.assign(loadoutContext, encumbranceDisplay(this.actor));
-    }
-
-    /* -------------------------------------------- */
-
-    /** Calculate wounds and fatigue percentages for the combat vitals display. */
-    #prepareCombatVitals(sheetContext: CharacterSheetContext, system: WH40KActorSystemData | NonNullable<CharacterSheetContext['system']>): void {
-        const woundsValue = system.wounds?.value;
-        const woundsMaxRaw = system.wounds?.max;
-        const woundsMax = typeof woundsMaxRaw === 'number' && woundsMaxRaw > 0 ? woundsMaxRaw : 1;
-        sheetContext.woundsPercent = Math.min(100, Math.round(((woundsValue ?? 0) / woundsMax) * 100));
-
-        const fatigueValue = system.fatigue?.value;
-        const fatigueMaxRaw = system.fatigue?.max;
-        const fatigueMax = typeof fatigueMaxRaw === 'number' && fatigueMaxRaw > 0 ? fatigueMaxRaw : 1;
-        sheetContext.fatiguePercent = Math.min(100, Math.round(((fatigueValue ?? 0) / fatigueMax) * 100));
-    }
-
-    /* -------------------------------------------- */
-
-    /** The actor's ActiveEffects in the one view shape the chips, rows and dashboard all render. */
-    #effectViews(): EffectView<WH40KActiveEffect>[] {
-        return this.actor.effects.map((effect) =>
-            // eslint-disable-next-line no-restricted-syntax -- boundary: effect.changes is Foundry EffectChange[]; double-cast to EffectChangeRaw[] which is this codebase's typed wrapper
-            buildEffectView(effect, effect.changes as unknown as EffectChangeRaw[]),
-        );
-    }
-
-    /**
-     * Combat move-mode cluster state (#235): the selected move mode + whether the
-     * cluster is turn-gated (greyed) for this player + metres left this turn. GMs are
-     * never gated — they move freely — and out of combat nothing is gated.
-     */
-    #computeCombatMovement(): { inCombat: boolean; disabled: boolean; selectedMode: string | undefined; remaining: number } {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: game.combat / Combatant / TokenDocument flags are loosely-typed Foundry runtime surfaces, read defensively
-        const combat = game.combat as { started?: boolean; combatant?: { actorId?: string | null; getFlag?: (s: string, k: string) => unknown } | null } | null;
-        const inCombat = combat?.started === true;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: TokenDocument.getFlag returns Foundry's untyped flag payload
-        const token = this.actor.getActiveTokens()[0]?.document as { getFlag?: (s: string, k: string) => unknown } | undefined;
-        const rawMode = token?.getFlag?.(SYSTEM_ID, MOVE_MODE_FLAG);
-        // Disengage is a Half Action, not a move mode (#416) — no longer a valid selection here.
-        const selectedMode = rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' ? rawMode : undefined;
-        const combatant = combat?.combatant;
-        const moved = Number(combatant?.getFlag?.('wh40k-rpg', 'movedThisTurnMetres') ?? 0);
-        return combatMovementView({
-            inCombat,
-            isActorsTurn: combatant?.actorId === this.actor.id,
-            isGM: game.user.isGM,
-            selectedMode,
-            rates: this.actor.system.movement,
-            movedThisTurnMetres: Number.isFinite(moved) ? moved : 0,
-        });
-    }
-
-    /**
-     * The actor's available hands for wielding weapons (#418). Reads the optional
-     * `system.hands` count (creatures with a non-standard anatomy set their own);
-     * a missing/invalid value resolves to the standard two hands.
-     */
-    #availableHands(): number {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: `hands` is an optional per-line actor field absent from the shared system union; narrowed inline
-        const raw = (this.actor.system as { hands?: number }).hands;
-        return resolveAvailableHands(raw);
-    }
-
-    /**
-     * Build the combat-panel psychic-power rows (#412). Any owned `psychicPower`
-     * item surfaces a row; the panel is shown only when the actor knows at least
-     * one power. The actor's effective Psy Rating is surfaced on the header. The
-     * roll (targeting + Fettered/Unfettered/Push level + effective PR) is served
-     * by the existing per-line psychic roll path via the `rollPower` action.
-     */
-    #prepareCombatPsychicPowers(sheetContext: CharacterSheetContext): void {
-        const powers = this.actor.items.filter((i) => (i.type as string) === 'psychicPower');
-        sheetContext.psychicPowers = powers.map((power) => {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: psychicPower system fields (disciplineLabel/focusTestLabel getters, prCost, isAttack, state) are not on the shared system union; narrowed inline
-            const sys = power.system as {
-                disciplineLabel?: string;
-                focusTestLabel?: string;
-                prCost?: number;
-                isAttack?: boolean;
-                state?: { identified?: boolean };
-            };
-            return {
-                id: power.id,
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                name: power.name ?? '',
-                img: power.img,
-                disciplineLabel: sys.disciplineLabel ?? '',
-                focusTestLabel: sys.focusTestLabel ?? '',
-                prCost: sys.prCost ?? 0,
-                isAttack: sys.isAttack === true,
-                identified: sys.state?.identified !== false,
-            };
-        });
-        // eslint-disable-next-line no-restricted-syntax -- boundary: `psy` is an FFG-line actor field (currentRating/rating); `psyRating` is the BC-line field; neither is on the shared system union
-        const psySystem = this.actor.system as { psy?: { currentRating?: number; rating?: number }; psyRating?: number };
-        const psyRating = psySystem.psy?.currentRating ?? psySystem.psy?.rating ?? psySystem.psyRating;
-        if (psyRating !== undefined) sheetContext.psyRating = psyRating;
-        // A psyker is anyone with a Psy Rating or a known power: they get the
-        // power rows and the Perils / Phenomena controls (#194).
-        sheetContext.showPsychicPanel = powers.length > 0 || (psyRating ?? 0) > 0;
-    }
-
-    /**
-     * Prepare combat tab data for the template.
-     * @param {object} context      The template render context.
-     * @param {object} categorized  Categorized items.
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: context comes from Foundry ApplicationV2; Record<string, unknown> matches upstream signature
-    _prepareCombatData(context: Record<string, unknown>, categorized: CategorizedItems): void {
-        // Runs from BOTH `_prepareContext` and `_prepareTabPartContext` (the
-        // isolated part context doesn't inherit the main one), so the whole
-        // preparation — including mapping every ActiveEffect through
-        // `summarizeChanges` — used to be done twice per render (#507).
-        //
-        // Memoised as a DIFF rather than by returning a fresh object: the body
-        // reads loadout values (`primaryWeapon`, `armourDisplayLocations`, …)
-        // that `_prepareLoadoutData` writes onto the same context immediately
-        // before, at both call sites, so it cannot simply be handed a blank
-        // scratch object. The cache is cleared at the top of every render.
-        const cached = this.#combatDataCache;
-        if (cached !== null) {
-            Object.assign(context, cached);
-            return;
-        }
-        const before = new Map(Object.entries(context));
-
-        const sheetContext = context as CharacterSheetContext;
-        const weapons = categorized.weapons as WeaponLike[];
-        // eslint-disable-next-line no-restricted-syntax -- sheetContext.system may be absent if context was freshly created; ?? fallback to actor.system is intentional
-        const system = sheetContext.system ?? this.actor.system;
-
-        this.#prepareCombatVitals(sheetContext, system);
-        sheetContext.combatMovement = this.#computeCombatMovement();
-        // Per-turn action economy (#264) — null when this actor isn't in combat.
-        const actorId = this.actor.id;
-        sheetContext.actionBudget = actorId !== null ? actionBudgetForActor(actorId) : null;
-
-        // Critical injuries
-        sheetContext.criticalInjuries = categorized.criticalInjury;
-
-        // Force field (first active/equipped one)
-        const forceFields = categorized.forceField;
-        sheetContext.forceField =
-            forceFields.find((ff) => {
-                const sys = ff.system as WeaponLike['system'];
-                return sys.state.equipped || sys.state.activated;
-            }) ?? forceFields[0];
-        sheetContext.hasForceField = sheetContext.forceField !== undefined;
-        sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(this.actor.system, categorized.armour);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: armourDisplayMap values are heterogeneous display objects passed to Handlebars; no concrete type
-        const armourDisplayMap: Record<string, Record<string, unknown>> = {};
-        // eslint-disable-next-line no-restricted-syntax -- boundary: armourDisplayLocations is typed as unknown[] on the context; cast needed to iterate key/value pairs
-        for (const entry of sheetContext.armourDisplayLocations as Array<Record<string, unknown>>) {
-            if (typeof entry['key'] === 'string') {
-                armourDisplayMap[entry['key']] = entry;
-            }
-        }
-        sheetContext.armourDisplay = armourDisplayMap;
-
-        // Equipped non-armour gear surfaced on the body preview as icons (#334):
-        // auspex, rebreather, micro-bead, cybernetics, active force fields. Armour
-        // already renders per body location and weapons live in the arsenal, so
-        // both are excluded here to avoid duplicating them on the silhouette.
-        sheetContext.equippedGear = categorized.equipped
-            .filter((item) => item.type === 'gear' || item.type === 'cybernetic' || item.type === 'forceField')
-            .map((item) => ({ id: item.id, name: item.name, img: item.img }));
-
-        // Weapon slots - categorize by class and equipped status
-        const equippedWeapons = weapons.filter((w) => w.system.state.equipped);
-        sheetContext.equippedWeapons = equippedWeapons;
-
-        // Hand budget (#418): sum the hands consumed by equipped weapons against
-        // the actor's available hands (non-standard anatomies expose their own
-        // count via `system.hands`; unrecorded actors default to two). Surfaced
-        // on the arsenal header and enforced in the draw/holster action.
-        sheetContext.handBudget = computeHandBudget(
-            this.#availableHands(),
-            equippedWeapons.map((w) => handsForWeapon(w.system.isTwoHanded)),
-        );
-
-        // Psychic powers (#412): mirror the weapon rows. Ownership of any
-        // psychicPower item is the per-system-neutral gate — the roll itself
-        // dispatches through the actor's per-line psychic path.
-        this.#prepareCombatPsychicPowers(sheetContext);
-        const rangedWeapons = equippedWeapons.filter((w) => w.system.class !== 'Melee');
-        const meleeWeapons = equippedWeapons.filter((w) => w.system.class === 'Melee');
-
-        // Primary weapon
-        sheetContext.primaryWeapon =
-            rangedWeapons.length > 0 ? rangedWeapons[0] : meleeWeapons.length > 0 ? meleeWeapons[0] : weapons.find((w) => w.system.state.equipped);
-
-        // Secondary weapon
-        if (sheetContext.primaryWeapon !== undefined) {
-            if (rangedWeapons.length > 0 && meleeWeapons.length > 0) {
-                sheetContext.secondaryWeapon = meleeWeapons[0];
-            } else if (rangedWeapons.length > 1) {
-                sheetContext.secondaryWeapon = rangedWeapons[1];
-            } else if (meleeWeapons.length > 1) {
-                sheetContext.secondaryWeapon = meleeWeapons[1];
-            }
-        }
-
-        // Sidearm: Pistol class weapon
-        sheetContext.sidearm = weapons.find((w) => w.system.class === 'Pistol' && w !== sheetContext.primaryWeapon && w !== sheetContext.secondaryWeapon);
-
-        // Grenades, read from each weapon's class and type (#619)
-        sheetContext.grenades = weapons.filter((w) => isGrenadeWeapon(w.system));
-
-        // Other weapons (not in slots)
-        const slotWeapons = [sheetContext.primaryWeapon, sheetContext.secondaryWeapon, sheetContext.sidearm, ...(sheetContext.grenades as WeaponLike[])].filter(
-            (w): w is WeaponLike => w !== undefined && w !== null,
-        );
-        sheetContext.otherWeapons = weapons.filter((w) => !slotWeapons.includes(w));
-
-        // Add ammo percentage to weapons
-        [sheetContext.primaryWeapon, sheetContext.secondaryWeapon, sheetContext.sidearm]
-            .filter((w): w is WeaponLike => w !== undefined && w !== null)
-            .forEach((w) => {
-                const clip = w.system.clip;
-                if (clip.max > 0 && w.system.effectiveClipMax > 0) {
-                    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unnecessary-condition -- no-restricted-syntax: ammoPercentage may be absent on older data; no-unnecessary-condition: noUncheckedIndexedAccess makes ammoPercentage possibly-undefined despite WeaponLike typing it as number
-                    w.ammoPercent = w.system.ammoPercentage ?? Math.round((clip.value / w.system.effectiveClipMax) * 100);
-                }
-            });
-
-        // Active effects in the one view shape every effect surface renders (#456 time remaining included).
-        sheetContext.effects = this.#effectViews();
-
-        // Extract combat talents for display in combat actions panel
-        const talents = this.actor.items.filter((i) => i.type === 'talent') as TalentLike[];
-        sheetContext.combatTalents = talents
-            .filter((t) => t.system.category === 'combat' && t.system['isPassive'] !== true)
-            .map((t) => {
-                return {
-                    id: t.id,
-                    name: t.name,
-                    img: t.img,
-                    system: {
-                        tier: t.system.tier,
-                        category: t.system.category,
-                    },
-                };
-            });
-
-        // Attack actions are no longer surfaced on the combat panel — they live on the
-        // per-weapon attack dialog (#227), so the panel no longer needs them partitioned.
-
-        // Record what this pass produced so the second call in the same render
-        // replays it instead of recomputing (#507).
-        // eslint-disable-next-line no-restricted-syntax -- boundary: the sheet context is Foundry's untyped template payload
-        const diff: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(context)) {
-            if (!before.has(key) || before.get(key) !== value) diff[key] = value;
-        }
-        this.#combatDataCache = diff;
-    }
 
     /* -------------------------------------------- */
 
@@ -2955,433 +995,13 @@ export default class CharacterSheet extends BaseActorSheet {
         };
     }
 
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display objects passed to Handlebars; no concrete type possible
-    #prepareArmourDisplayLocations(system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
-        // `equipped` is runtime state under `system.state` (EquippableTemplate), not
-        // `system.equipped` — the flat path is always undefined, so this filter used to
-        // yield [] and no armour icon ever reached the silhouette (#486). Every other
-        // equipped-read in this file already uses the nested path.
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; `state` is contributed by EquippableTemplate and is not on that union
-        const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
-
-        return HIT_LOCATION_IDS.map((locationKey) => {
-            const locationLabel = hitLocationLabel(locationKey);
-            const armourData = this._armourAtLocation(system, locationKey);
-            const coveringItems = equippedArmour
-                .map((item) => {
-                    // Resolve AP through the shared helper so the effective-AP → AP →
-                    // armourPoints ladder lives in exactly one place, and — critically —
-                    // so the DataModel methods are invoked *as methods*. Reading them off
-                    // the model and calling them detached leaves `this` undefined, which
-                    // threw inside `armour.ts` getEffectiveAPForLocation and took the whole
-                    // sheet render down (#486).
-                    const ap = getArmourAPForLocation(item.system, locationKey);
-                    if (ap <= 0) return null;
-
-                    return {
-                        id: item.id,
-                        name: item.name,
-                        img: item.img,
-                        ap,
-                        tooltipData: JSON.stringify({
-                            title: item.name,
-                            content: `
-                                <div class="tw-flex tw-items-center tw-gap-2">
-                                    <img src="${item.img}" alt="${
-                                item.name
-                            }" class="tw-h-8 tw-w-8 tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-object-cover" />
-                                    <div class="tw-flex tw-flex-col">
-                                        <span class="tw-font-semibold">${item.name}</span>
-                                        <span class="tw-text-xs tw-text-[var(--wh40k-text-muted)]">${game.i18n.format('WH40K.ArmourSilhouette.LocationAp', {
-                                            location: locationLabel,
-                                            ap: String(ap),
-                                        })}</span>
-                                    </div>
-                                </div>
-                            `,
-                        }),
-                    };
-                })
-                .filter((piece): piece is NonNullable<typeof piece> => piece !== null);
-
-            return {
-                key: locationKey,
-                rollRange: hitLocationRollRange(locationKey),
-                label: locationLabel,
-                shortLabel: hitLocationShortLabel(locationKey),
-                total: armourData.total,
-                tooltipData: this.prepareArmorTooltip(locationKey, armourData, coveringItems),
-                items: coveringItems,
-            };
-        });
-    }
+    /* -------------------------------------------- */
 
     /* -------------------------------------------- */
 
-    /**
-     * Prepare WH40K RPG specific fields.
-     * @param {object} rogueTraderData  The rogueTrader data object.
-     * @returns {object}
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTraderData is an untyped sub-object from the sheet context; fields vary by system
-    _prepareWH40KFields(rogueTraderData: Record<string, unknown>): Record<string, unknown> {
-        /* eslint-disable no-restricted-syntax -- boundary: prepared sub-fields are heterogeneous system data passed to Handlebars */
-        const prepared = rogueTraderData as Record<string, unknown> & {
-            armour?: unknown;
-            weight?: unknown;
-            acquisitions?: unknown;
-            wounds?: unknown;
-            fate?: unknown;
-        };
-        /* eslint-enable no-restricted-syntax */
-        prepared.armour = prepared.armour ?? {
-            head: 0,
-            rightArm: 0,
-            leftArm: 0,
-            body: 0,
-            rightLeg: 0,
-            leftLeg: 0,
-        };
-        prepared.weight = prepared.weight ?? { total: 0, current: 0 };
-
-        const acquisitions = Array.isArray(prepared.acquisitions)
-            ? prepared.acquisitions
-            : prepared.acquisitions !== null && prepared.acquisitions !== undefined
-            ? [{ name: '', availability: '', modifier: 0, notes: prepared.acquisitions, acquired: false, uuid: '' }]
-            : [];
-        prepared.acquisitions = acquisitions;
-
-        // Wounds/fatigue/fate live on Acolyte-shaped actors; NPCs (which
-        // share this sheet's prepare pipeline) don't define those getters.
-        // Skip the rollup for them rather than crashing the render.
-        if ('wounds' in this.actor && 'fate' in this.actor && 'fatigue' in this.actor) {
-            const a = this.actor as {
-                wounds: { max: number; value: number; critical: number };
-                fate: { max: number; value: number };
-                fatigue: { value: number };
-            };
-            prepared.wounds = {
-                total: a.wounds.max,
-                current: a.wounds.value,
-                critical: a.wounds.critical,
-                fatigue: a.fatigue.value,
-            };
-            prepared.fate = {
-                total: a.fate.max,
-                current: a.fate.value,
-            };
-        }
-
-        return prepared;
-    }
-
     /* -------------------------------------------- */
 
-    /**
-     * Prepare dynasty tab data including wealth tiers and gauge positioning.
-     * @returns {object} Dynasty display data
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: dynasty data is a heterogeneous display object passed to Handlebars; no concrete exported type
-    _prepareDynastyData(): Record<string, unknown> {
-        const pf = (this.actor.system.rogueTrader?.profitFactor ?? {}) as {
-            current?: number;
-            starting?: number;
-            modifier?: number;
-        };
-        const currentPF = pf.current ?? 0;
-        const startingPF = pf.starting ?? 0;
-        const modifier = pf.modifier ?? 0;
-        const effectivePF = currentPF + modifier;
-
-        // Determine wealth tier (WH40K RPG wealth categories)
-        let wealthTier: { key: string; label: string; min: number };
-        if (effectivePF >= 100) {
-            wealthTier = { key: 'legendary', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Legendary'), min: 100 };
-        } else if (effectivePF >= 75) {
-            wealthTier = { key: 'mighty', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Mighty'), min: 75 };
-        } else if (effectivePF >= 50) {
-            wealthTier = { key: 'notable', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Notable'), min: 50 };
-        } else if (effectivePF >= 25) {
-            wealthTier = { key: 'modest', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Modest'), min: 25 };
-        } else {
-            wealthTier = { key: 'poor', label: game.i18n.localize('WH40K.Dynasty.WealthTier.Poor'), min: 0 };
-        }
-
-        // Calculate percentage for gauge (cap at 100 for display, but allow >100 PF)
-        const pfPercentage = Math.min(Math.max((effectivePF / 100) * 100, 0), 100);
-
-        return {
-            currentPF,
-            startingPF,
-            modifier,
-            effectivePF,
-            wealthTier,
-            pfPercentage,
-        };
-    }
-
     /* -------------------------------------------- */
-
-    /**
-     * Prepare overview dashboard context for the new ultra-dense dashboard.
-     * @param {object} context  Context being prepared.
-     * @param {object} options  Render options.
-     * @returns {Promise<object>}
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ApplicationV2 part-context signature uses Record<string, unknown>
-    async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // Dark Pacts (#84): each struck pact's Boons and Banes, read from its pact item.
-        const pacts = this.actor.system.pacts;
-        const pactDefinitions = await darkPactDefinitions(pacts);
-        context['darkPactPanel'] = darkPactPanelView(pacts, pactDefinitions, game.user.isGM);
-
-        const ctx = context as CharacterSheetContext;
-        // First prepare standard tab context
-        await this._prepareTabPartContext('overview', context, options);
-
-        // Add Active Effects data for dashboard preview
-        ctx.effects = this.#effectViews();
-
-        // Ensure combat data is available (for primaryWeapon)
-        // This is already prepared in _prepareContext via _prepareCombatData
-
-        // Ensure characteristics data is available in the format expected by dashboard
-        // This is already prepared in _prepareContext
-
-        // Prepare favorite skills for dashboard
-        const favoriteSkills = this._prepareFavoriteSkills();
-        ctx.favoriteSkills = favoriteSkills;
-
-        // Add favorite talents for display
-        const favoriteTalents = this._prepareFavoriteTalents();
-        ctx.favoriteTalents = favoriteTalents;
-
-        return ctx;
-    }
-
-    /**
-     * Origin-granted aptitudes for this actor, or `[]` when the schema has none.
-     * NPC actors reuse the PC templates but their DataModel has no `aptitudes`
-     * field, so `system.aptitudes` is undefined — defaulting here (rather than
-     * spreading a raw cast) is what stops the "granted is not iterable" NPC-sheet
-     * crash (#331). Kept as its own method so the guard's branch doesn't push
-     * `_prepareAptitudePills` over the complexity limit.
-     */
-    #grantedAptitudes(): string[] {
-        // NPCData is a separate hierarchy from CharacterData and has no `aptitudes`
-        // field, yet the character sheet (which NPCs reuse) types this.actor.system
-        // as CharacterData — so the compiler believes aptitudes is always string[].
-        // Read through an optional shape so the real NPC-runtime absence is handled
-        // instead of crashing the spread with "granted is not iterable" (#331).
-        const apt = (this.actor.system as { aptitudes?: string[] }).aptitudes;
-        return apt ?? [];
-    }
-
-    /**
-     * Build per-aptitude display data with the origin path source(s) that granted it.
-     * Aptitudes come from home world / background / role / elite advance grants or
-     * resolved choices. (Characteristic-named aptitudes are NOT auto-granted per RAW.)
-     * @protected
-     */
-    _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
-        const actor = this.actor;
-        const granted = this.#grantedAptitudes();
-
-        // Universal aptitudes (General) are inherent to every character in an
-        // aptitude system and carry no origin source; pull them from the system
-        // config so the literal lives in one place (the aptitude RAW tables).
-        const gameSystem = this._resolveGameSystemId();
-        const sysConfig = gameSystem !== null ? SystemConfigRegistry.get(gameSystem) : null;
-        const universal = sysConfig instanceof AptitudeBasedSystemConfig ? [...sysConfig.universalAptitudes] : [];
-
-        const aptitudes = [...new Set([...granted, ...universal])];
-        if (aptitudes.length === 0) return [];
-
-        const sourcesOf: Map<string, string[]> = new Map();
-        const addSource = (apt: string, src: string): void => {
-            let arr = sourcesOf.get(apt);
-            if (arr === undefined) {
-                arr = [];
-                sourcesOf.set(apt, arr);
-            }
-            if (!arr.includes(src)) arr.push(src);
-        };
-
-        // Seed the universal aptitudes with their inherent (non-origin) source.
-        const universalSource = game.i18n.localize('WH40K.AptitudeUniversalSource');
-        for (const apt of universal) addSource(apt, universalSource);
-
-        const stepLabels: Record<string, string> = {
-            homeWorld: 'Home World',
-            background: 'Background',
-            role: 'Role',
-            elite: 'Elite Advance',
-            regiment: 'Regiment',
-            speciality: 'Speciality',
-            chapter: 'Chapter',
-            archetype: 'Archetype',
-            race: 'Race',
-            pride: 'Pride',
-            disgrace: 'Disgrace',
-            career: 'Career',
-            birthright: 'Birthright',
-            lureOfTheVoid: 'Lure of the Void',
-            trialsAndTravails: 'Trials and Travails',
-            motivation: 'Motivation',
-            lineage: 'Lineage',
-            divination: 'Divination',
-        };
-
-        const originItems = actor.items.filter((i: WH40KItem) => i.isOriginPath);
-        for (const item of originItems) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; originPath fields (step, grants, selectedChoices) are not on the base type
-            const itemSystem = item.system as Record<string, unknown> & { step?: string; grants?: unknown; selectedChoices?: Record<string, string[]> };
-            const step = itemSystem.step ?? '';
-            const src = `${stepLabels[step] ?? 'Origin'}: ${String(item.name)}`;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: grants is untyped JSON from the DataModel; shape varies by system
-            const grants = (itemSystem.grants ?? {}) as { aptitudes?: unknown; choices?: unknown; [key: string]: unknown };
-
-            // Fixed aptitudes
-            if (Array.isArray(grants.aptitudes)) {
-                for (const apt of grants.aptitudes as string[]) if (apt !== '') addSource(apt, src);
-            }
-
-            // Resolved aptitude choices (mirrors logic in character.ts._computeOriginPathEffects)
-            /* eslint-disable no-restricted-syntax -- boundary: choice shape is heterogeneous JSON from DataModel; no concrete type */
-            const choices = (Array.isArray(grants.choices) ? grants.choices : []) as Array<{
-                label?: unknown;
-                name?: unknown;
-                type?: unknown;
-                options?: unknown;
-                [key: string]: unknown;
-            }>;
-            /* eslint-enable no-restricted-syntax */
-            const selectedChoices = itemSystem.selectedChoices ?? {};
-            const labelCounts: Record<string, number> = {};
-            for (const choice of choices) {
-                const baseLabel = (choice.label as string | undefined) ?? (choice.name as string | undefined) ?? '';
-                labelCounts[baseLabel] = (labelCounts[baseLabel] ?? 0) + 1;
-                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
-                const choiceKey = `${baseLabel}${suffix}`;
-                if (choice.type !== 'aptitude') continue;
-                const picks = selectedChoices[choiceKey];
-                if (!Array.isArray(picks)) continue;
-                for (const pick of picks) {
-                    const option = (choice.options as Array<{ value?: string; name?: string }> | undefined)?.find((o) => o.value === pick || o.name === pick);
-                    const value = option?.value ?? option?.name ?? pick;
-                    if (value !== '') addSource(value, src);
-                }
-            }
-        }
-
-        // General (the universal aptitude) sorts to the front, then alphabetical (#395).
-        return orderAptitudesGeneralFirst(aptitudes, new Set(universal)).map((apt) => ({
-            aptitude: apt,
-            sources: sourcesOf.get(apt) ?? ['Unknown'],
-        }));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare favorite skills for overview dashboard display.
-     * @returns {Array<object>} Array of favorite skill display objects
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns display objects for Handlebars; no concrete exported type
-    _prepareFavoriteSkills(): Record<string, unknown>[] {
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSkills') as string[] | undefined) ?? [];
-        const specialistFavorites = (this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[] | undefined) ?? [];
-        const skills = this.actor.skills;
-        const characteristics = this.actor.characteristics;
-
-        // Standard skill favourites
-        const standardFavourites = favorites
-            .map((key) => {
-                const skill = skills[key];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (skill === undefined) return null;
-                if (!this._isFavouriteEligible(skill as SkillLike)) return null;
-                const charShort = skill.characteristic !== '' ? skill.characteristic : 'S';
-                const charKey = this._charShortToKey(charShort);
-                const char = characteristics[charKey];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (char === undefined) return null;
-                const label: string = skill.label !== undefined && skill.label !== '' ? skill.label : key;
-                // Route favourites through the same prepareSkillTooltip(...) path the
-                // Statistics tab uses (issue #36) so the per-system rank labels (Known/
-                // Trained/Experienced/Veteran vs Trained/+10/+20) resolve identically.
-                // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics map is a Record<string, CharacteristicLike>; the mixin signature takes Record<string, unknown>.
-                const tooltipData = this.prepareSkillTooltip(key, { ...skill, label }, characteristics);
-                return {
-                    key,
-                    label,
-                    current: skill.current,
-                    characteristic: charKey,
-                    charShort: char.short !== '' ? char.short : charKey,
-                    breakdown: this._getSkillBreakdown(skill as SkillLike, char),
-                    tooltipData,
-                };
-            })
-            .filter((row): row is NonNullable<typeof row> => row !== null);
-
-        // Specialist favourites are stored as "skillKey:entryIndex"; resolve each to the
-        // matching specialisation entry so they appear in the Overview favourites list
-        // alongside standard skills (issue #5).
-        const specialistFavouriteRows = specialistFavorites
-            .map((compositeKey) => {
-                const [skillKey, indexStr] = compositeKey.split(':');
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (skillKey === undefined || skillKey === '' || indexStr === undefined) return null;
-                const index = Number.parseInt(indexStr, 10);
-                if (Number.isNaN(index)) return null;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: actor.skills is indexed by string; specialist skill shape not on the top-level type
-                const parent = skills[skillKey] as { entries?: unknown[]; characteristic?: string; label?: string } | undefined;
-                const entries = parent?.entries;
-                if (!Array.isArray(entries)) return null;
-                // eslint-disable-next-line no-restricted-syntax -- boundary: entries[] is unknown[] from the DataModel; cast to access specialist entry fields
-                const entry = entries[index] as Record<string, unknown> | undefined;
-                if (entry === undefined) return null;
-                const charShort = (entry['characteristic'] as string | undefined) ?? parent?.characteristic ?? 'S';
-                const charKey = this._charShortToKey(charShort);
-                const char = characteristics[charKey];
-                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                if (char === undefined) return null;
-                const entryName = (entry['name'] as string | undefined) ?? (entry['label'] as string | undefined) ?? skillKey;
-                const parentLabel = parent?.label ?? skillKey;
-                const composedLabel = `${parentLabel} (${entryName})`;
-                // Specialist entries carry the same trained/plus10/plus20/plus30 flags as
-                // standard skills (WH40KSkillEntry shape); route them through the shared
-                // prepareSkillTooltip(...) path so per-system rank labels resolve via the
-                // active GameSystemConfig (issue #36).
-                const synthesizedSkill = { ...entry, characteristic: charShort, label: composedLabel };
-                // eslint-disable-next-line no-restricted-syntax -- boundary: synthesised from the raw entries[] payload (Record<string, unknown>); the mixin signature takes Record<string, unknown>.
-                const tooltipData = this.prepareSkillTooltip(compositeKey, synthesizedSkill, characteristics);
-                return {
-                    key: compositeKey,
-                    label: composedLabel,
-                    current: (entry['current'] as number | undefined) ?? 0,
-                    characteristic: charKey,
-                    charShort: char.short !== '' ? char.short : charKey,
-                    breakdown: this._getSkillBreakdown(entry, char),
-                    tooltipData,
-                };
-            })
-            .filter((row) => row !== null);
-
-        // Sort the rendered rows by their displayed label, locale-aware. This is the
-        // single source of ordering for favourites (#6): the stored flag array's order
-        // is ignored at render time so add / remove / re-add always produces the same
-        // alphabetical sequence regardless of any historical insertion order drift.
-        const lang = game.i18n.lang;
-        const merged: { label: string }[] = [...standardFavourites, ...specialistFavouriteRows];
-        merged.sort((a, b) => a.label.localeCompare(b.label, lang, { sensitivity: 'base' }));
-        // eslint-disable-next-line no-restricted-syntax -- boundary: returned array is consumed by Handlebars; upcast to match declared return type
-        return merged;
-    }
 
     /**
      * Generate skill breakdown string for tooltips.
@@ -3418,48 +1038,6 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         return parts.join(' | ');
-    }
-
-    /**
-     * Prepare favorite talents for overview dashboard display.
-     * @returns {Array<object>} Array of favorite talent display objects
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns display objects for Handlebars; no concrete exported type
-    _prepareFavoriteTalents(): Record<string, unknown>[] {
-        const favorites = (this.actor.getFlag('wh40k-rpg', 'favoriteTalents') as string[] | undefined) ?? [];
-        const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
-
-        // Render the favourite talents and sort by their displayed name unconditionally
-        // (#6) — flag array order is ignored so add / remove / re-add is stable. Falls
-        // back to talent.name when fullName isn't set; matches what the template shows.
-        const rows = favorites
-            .map((id: string) => {
-                const talent = talents.find((t) => t.id === id);
-                if (talent === undefined) return null;
-
-                const sys = talent.system as WH40KItemSystemData & {
-                    fullName?: string;
-                    specialization?: string;
-                    category?: string;
-                };
-                const fullName = sys.fullName !== undefined && sys.fullName !== '' ? sys.fullName : talent.name;
-                return {
-                    id: talent.id,
-                    name: talent.name,
-                    img: talent.img,
-                    fullName,
-                    specialization: sys.specialization ?? '',
-                    system: {
-                        tier: sys.tier ?? 0,
-                        category: sys.category ?? '',
-                    },
-                };
-            })
-            .filter((talent) => talent !== null);
-        const lang = game.i18n.lang;
-        rows.sort((a, b) => a.fullName.localeCompare(b.fullName, lang, { sensitivity: 'base' }));
-        return rows;
     }
 
     /* -------------------------------------------- */
@@ -3537,563 +1115,6 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /* -------------------------------------------- */
 
-    /**
-     * Context of the Combat tab's Navigator-powers, rituals and ship-orders
-     * panels (#194). Each panel renders only when the character owns items of
-     * its type, on every line: the gate is item ownership, never the game line,
-     * so a Navigator in any line's sheet can use the power it holds.
-     * @returns {object} Panel context data
-     * @protected
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display data for Handlebars; no concrete exported type
-    _prepareCombatPowerPanelsContext(): Record<string, unknown> {
-        const navigatorPowers = this.actor.items.filter((i) => (i.type as string) === 'navigatorPower');
-        const rituals = this.actor.items.filter((i) => (i.type as string) === 'ritual');
-        const orders = this.actor.items.filter((i) => (i.type as string) === 'order');
-
-        // Extract unique order categories
-        const categories = new Map<string, { id: string; label: string }>();
-        for (const order of orders) {
-            const sys = order.system as WH40KItemSystemData & { category?: string; categoryLabel?: string };
-            const cat = sys.category;
-            if (cat !== undefined && cat !== '' && !categories.has(cat)) {
-                categories.set(cat, {
-                    id: cat,
-                    label: sys.categoryLabel !== undefined && sys.categoryLabel !== '' ? sys.categoryLabel : capitalize(cat),
-                });
-            }
-        }
-        const orderCategories = Array.from(categories.values());
-
-        // Apply category filter to orders
-        const activeOrderCategory = this._orderCategoryFilter;
-        let filteredOrders = orders;
-        if (activeOrderCategory !== '') {
-            filteredOrders = orders.filter((o) => (o.system as WH40KItemSystemData & { category?: string }).category === activeOrderCategory);
-        }
-
-        return {
-            navigatorPowers,
-            rituals,
-            orders: filteredOrders,
-            navigatorPowersCount: navigatorPowers.length,
-            ritualsCount: rituals.length,
-            ordersCount: orders.length,
-            orderCategories,
-            activeOrderCategory,
-        };
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Combat Actions             */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle weapon attack action.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>
-    static async #attack(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            DHTargetedActionManager.performWeaponAttack(this.actor);
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AttackFailed', { error: message }), {
-                duration: 5000,
-            });
-            console.error('Attack error:', error);
-        }
-    }
-
-    /**
-     * Handle dodge action.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #dodge(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            await this.actor.rollSkill('dodge');
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DodgeFailed', { error: message }), {
-                duration: 5000,
-            });
-            console.error('Dodge error:', error);
-        }
-    }
-
-    /**
-     * Handle parry action.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #parry(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            await this.actor.rollSkill('parry');
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ParryFailed', { error: message }), {
-                duration: 5000,
-            });
-            console.error('Parry error:', error);
-        }
-    }
-
-    /**
-     * Handle assign damage action.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #assignDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        try {
-            const hitData = new Hit();
-            // eslint-disable-next-line no-restricted-syntax -- boundary: WH40KAcolyte doesn't satisfy ActorLike structurally; double-cast to bridge the type gap
-            const assignData = new AssignDamageData(this.actor as unknown as ActorLike, hitData);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: prepareAssignDamageRoll expects a generic Record; AssignDamageData is compatible at runtime
-            prepareAssignDamageRoll(assignData as unknown as Record<string, unknown>);
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AssignDamageFailed', { error: message }), {
-                duration: 5000,
-            });
-            console.error('Assign damage error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle initiative roll.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollInitiative(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const agBonus = this.actor.system.characteristics.agility.bonus;
-
-            // Shift-click rolls immediately with no modifier — matches the convention used
-            // by characteristic rolls elsewhere in the sheet. Otherwise open a small prompt
-            // for situational modifiers (Low-Gravity, Constant Vigilance swap, Fate burn, etc).
-            // Issue #21.
-            let modifier = 0;
-            let formula = '1d10';
-            let formulaLabel = `1d10 + Agility Bonus (${agBonus})`;
-            const isShift = (event as MouseEvent).shiftKey;
-            if (!isShift) {
-                const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
-                if (DialogV2) {
-                    const result = await DialogV2.prompt({
-                        window: { title: 'WH40K.Combat.InitiativeDialogTitle' },
-                        content: `
-                            <p>${game.i18n.localize('WH40K.Combat.InitiativeDialogHelp')}</p>
-                            <div class="form-group">
-                                <label>${game.i18n.localize('WH40K.Combat.InitiativeModifier')}</label>
-                                <input type="number" name="modifier" value="0" />
-                            </div>
-                            <div class="form-group">
-                                <label><input type="checkbox" name="fateBurn" /> ${game.i18n.localize('WH40K.Combat.InitiativeFateBurn')}</label>
-                            </div>
-                        `,
-                        ok: {
-                            label: 'WH40K.Common.Roll',
-                            callback: (_evt: Event, button: HTMLButtonElement) => {
-                                const form = button.form ?? null;
-                                const mod = Number((form?.elements.namedItem('modifier') as HTMLInputElement | null)?.value ?? 0);
-                                const burn = (form?.elements.namedItem('fateBurn') as HTMLInputElement | null)?.checked === true;
-                                return { modifier: mod, fateBurn: burn };
-                            },
-                        },
-                        rejectClose: false,
-                    });
-                    if (result === null) return;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract modal form values
-                    modifier = (result as unknown as { modifier: number }).modifier;
-                    // eslint-disable-next-line no-restricted-syntax -- boundary: DialogV2 result is typed as unknown; double-cast to extract fateBurn flag
-                    if ((result as unknown as { fateBurn: boolean }).fateBurn) {
-                        formula = '10';
-                        formulaLabel = `Fate burn (10) + Agility Bonus (${agBonus})`;
-                    }
-                }
-            }
-
-            const roll = await new Roll(`${formula} + @ab + @mod`, { ab: agBonus, mod: modifier }).evaluate();
-            if (modifier !== 0) {
-                formulaLabel += ` ${formatSigned(modifier)}`;
-            }
-
-            const content = `
-                <div class="wh40k-hit-location-result">
-                    <h3><i class="fas fa-bolt"></i> Initiative Roll</h3>
-                    <div class="wh40k-hit-roll">
-                        <span class="wh40k-roll-result">${roll.total}</span>
-                    </div>
-                    <div class="wh40k-hit-location">
-                        <span class="wh40k-location-armour">${formulaLabel}</span>
-                    </div>
-                </div>
-            `;
-
-            await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-                rolls: [roll],
-                flags: {
-                    'wh40k-rpg': {
-                        type: 'initiative',
-                    },
-                },
-            });
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error);
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.InitiativeFailed', { error: message }), {
-                duration: 5000,
-            });
-            console.error('Initiative roll error:', error);
-        }
-    }
-
-    /**
-     * Handle toggling a combat action as favorite.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #toggleFavoriteAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent parent action from triggering
-        const actionKey = target.dataset['actionKey'];
-        if (actionKey === undefined || actionKey === '') return;
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system is typed by DataModel; favoriteCombatActions is a flag field not on the schema yet
-        const currentFavorites = (this.actor.system as Record<string, unknown> & { favoriteCombatActions?: string[] }).favoriteCombatActions ?? [];
-        const newFavorites = currentFavorites.includes(actionKey) ? currentFavorites.filter((k: string) => k !== actionKey) : [...currentFavorites, actionKey];
-
-        await this.actor.update({ 'system.favoriteCombatActions': newFavorites });
-    }
-
-    /**
-     * Handle generic combat action from favorites.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #combatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const actionKey = target.dataset['combatAction'];
-        if (actionKey === undefined || actionKey === '') return;
-
-        // Route to specific handler based on action key
-        if (actionKey === 'dodge') {
-            await CharacterSheet.#dodge.call(this, event, target);
-            return;
-        }
-        if (actionKey === 'parry') {
-            await CharacterSheet.#parry.call(this, event, target);
-            return;
-        }
-        if (actionKey === 'assignDamage') {
-            CharacterSheet.#assignDamage.call(this, event, target);
-            return;
-        }
-        if (actionKey === 'initiative') {
-            await CharacterSheet.#rollInitiative.call(this, event, target);
-            return;
-        }
-        this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownCombatAction', { action: actionKey }), {
-            duration: 3000,
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle clicks on combat action buttons.
-     *
-     * Default behavior (plain click): show the action's description as a
-     * sticky in-sheet tooltip anchored to the clicked button — a "personal"
-     * description for the player, not posted anywhere else. This matches the
-     * reaction buttons (Dodge/Parry), which never auto-post a description.
-     *
-     * Modifier behavior (Shift+Click): explicit opt-in to post the action
-     * to chat as a public combat-action card. Posting to chat is a deliberate
-     * secondary action, never the default.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #vocalizeCombatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const actionKey = target.dataset['actionKey'];
-        if (actionKey === undefined || actionKey === '') return;
-
-        // Find the action definition in config
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.wh40k is untyped Foundry config; cast to access combatActions structure
-        const wh40kConfig = CONFIG.wh40k as { combatActions?: { attacks?: unknown[]; movement?: unknown[]; utility?: unknown[] } } | undefined;
-        const allActions = [
-            ...(wh40kConfig?.combatActions?.attacks ?? []),
-            ...(wh40kConfig?.combatActions?.movement ?? []),
-            ...(wh40kConfig?.combatActions?.utility ?? []),
-        ] as Array<{ key: string; label: string; description: string; type?: string; burst?: 'semi' | 'full'; icon?: string; subtypes?: string[] }>;
-
-        const actionConfig = allActions.find((a) => a.key === actionKey);
-        if (actionConfig === undefined) {
-            this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownCombatAction', { action: actionKey }), { duration: 3000 });
-            return;
-        }
-        // A burst costs what the actor's line prints: Full in DH1 / DW / RT (#607).
-        const actionType = configuredActionType(actionConfig.type, actionConfig.burst, firstSystemId(this.actor));
-
-        const actionName = game.i18n.localize(actionConfig.label);
-        const actionDescription = game.i18n.localize(actionConfig.description);
-        const actionSubtypes = actionConfig.subtypes !== undefined && actionConfig.subtypes.length > 0 ? ` (${actionConfig.subtypes.join(', ')})` : '';
-
-        // Shift+Click is the explicit opt-in to actually perform the action:
-        // vocalize it to chat AND spend its cost from the action economy (#264).
-        // Disengage, now a Half Action (#416), spends a half action this way.
-        const isShiftClick = event instanceof MouseEvent && event.shiftKey;
-        if (isShiftClick) {
-            const chatData = {
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
-                    _gameSystemId: firstSystemId(this.actor),
-                    name: actionName,
-                    actor: this.actor.name,
-                    actionType: actionType ?? '',
-                    description: actionDescription,
-                    subtypes: actionConfig.subtypes?.join(', ') ?? '',
-                    icon: actionConfig.icon ?? '',
-                }),
-            };
-            await ChatMessage.create(chatData);
-
-            // Spend the action's economy cost when it maps cleanly to one action
-            // kind. Compound / variable costs ('half-full', 'varies', …) are left
-            // for the player to spend manually via the action-economy readout.
-            const kind = CharacterSheet.#actionKindFor(actionType);
-            const actorId = this.actor.id;
-            if (kind !== null && actorId !== null) {
-                spendActionForActor(actorId, kind);
-                void this.render(false);
-            }
-            return;
-        }
-
-        // Default: show the description as a sticky in-sheet tooltip on the
-        // clicked button. No chat post, no global notification toast.
-        const tooltipText = `<strong>${actionName}${actionSubtypes}</strong><br/>${actionDescription}`;
-        const tooltipManager = (
-            game as foundry.Game & {
-                tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
-            }
-        ).tooltip;
-        if (tooltipManager?.activate !== undefined) {
-            tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
-        } else {
-            // Fallback for environments without the tooltip manager (e.g., tests).
-            target.setAttribute('data-tooltip', `${actionName}${actionSubtypes}: ${actionDescription}`);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle clicks on combat-talent buttons in the Actions tab.
-     *
-     * Default behavior (plain click): show the talent's name + description
-     * as a local in-sheet tooltip on the clicked button. This matches the
-     * default for {@link #vocalizeCombatAction} and the Reactions block —
-     * a plain click never auto-posts to chat (issue #19).
-     *
-     * Modifier behavior (Shift+Click): explicit opt-in to post the talent
-     * card to chat via the item's normal {@link sendToChat} path.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #combatTalentDescribe(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset['itemId'] ?? target.closest<HTMLElement>('[data-item-id]')?.dataset['itemId'];
-        if (itemId === undefined || itemId === '') {
-            console.warn('WH40K | combatTalentDescribe: No item ID found', target);
-            return;
-        }
-
-        const item = this.actor.items.get(itemId);
-        if (item === undefined) {
-            console.warn(`WH40K | combatTalentDescribe: Item ${itemId} not found on actor`);
-            return;
-        }
-
-        // Shift+Click is the explicit opt-in to post to chat.
-        const isShiftClick = event instanceof MouseEvent && event.shiftKey;
-        if (isShiftClick) {
-            try {
-                await item.sendToChat();
-            } catch (err) {
-                console.error('WH40K | combatTalentDescribe: Error sending item to chat', err);
-                ui.notifications.error(game.i18n.format('WH40K.Combat.Actions.TalentChatFailed', { name: item.name }));
-            }
-            return;
-        }
-
-        // Default: show the talent description as a local in-sheet tooltip.
-        const itemSystem = item.system as { description?: { value?: string } } | undefined;
-        const rawDescription = itemSystem?.description?.value ?? '';
-        const descriptionText = rawDescription !== '' ? rawDescription : game.i18n.localize('WH40K.Combat.Actions.TalentNoDescription');
-        const tooltipText = `<strong>${item.name}</strong><br/>${descriptionText}`;
-        const tooltipManager = (
-            game as foundry.Game & {
-                tooltip?: { activate?: (element: HTMLElement, options?: { text?: string; direction?: string; cssClass?: string }) => void };
-            }
-        ).tooltip;
-        if (tooltipManager?.activate !== undefined) {
-            tooltipManager.activate(target, { text: tooltipText, direction: 'UP', cssClass: 'wh40k-action-description' });
-        } else {
-            // Fallback for environments without the tooltip manager (e.g., tests).
-            // Strip HTML tags so the title/data-tooltip attribute reads cleanly.
-            const plain = descriptionText.replace(/<[^>]*>/g, '').trim();
-            target.setAttribute('data-tooltip', `${item.name}: ${plain}`);
-        }
-    }
-
-    /**
-     * Handle vocalizing movement to chat.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #vocalizeMovement(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const movementType = target.dataset['movementType'] as 'half' | 'full' | 'charge' | 'run' | undefined;
-        if (movementType === undefined) return;
-
-        const movementData = {
-            half: {
-                label: game.i18n.localize('WH40K.MOVEMENT.Type.Half'),
-                icon: 'fa-walking',
-                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Half'),
-            },
-            full: {
-                label: game.i18n.localize('WH40K.MOVEMENT.Type.Full'),
-                icon: 'fa-shoe-prints',
-                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Full'),
-            },
-            charge: {
-                label: game.i18n.localize('WH40K.MOVEMENT.Type.Charge'),
-                icon: 'fa-running',
-                description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Charge'),
-            },
-            run: { label: game.i18n.localize('WH40K.MOVEMENT.Type.Run'), icon: 'fa-wind', description: game.i18n.localize('WH40K.MOVEMENT.Vocalize.Run') },
-        };
-
-        const movement = movementData[movementType];
-
-        const distance = this.actor.system.movement[movementType];
-
-        // Prepare chat data
-        const chatData = {
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
-                _gameSystemId: firstSystemId(this.actor),
-                actor: this.actor.name,
-                movementType: movementType,
-                movementLabel: movement.label,
-                distance: distance,
-                icon: movement.icon,
-                description: movement.description,
-            }),
-        };
-
-        // Create chat message
-        await ChatMessage.create(chatData);
-    }
-
-    /**
-     * Set the active movement mode on the actor's token.
-     * Updates the token's movement action flag for ruler integration.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setMovementMode(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const movementType = target.dataset['movementType'];
-        if (movementType === undefined || movementType === '') return;
-
-        // Find the actor's active token on the canvas
-        const token = this.actor.getActiveTokens()[0]?.document;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (token === null || token === undefined) {
-            ui.notifications.info(game.i18n.format('WH40K.Notify.Token.NoActiveToken', { label: game.i18n.localize('WH40K.MOVEMENT.Label') }));
-            return;
-        }
-
-        // Store movement action on token flags
-        // eslint-disable-next-line no-restricted-syntax -- boundary: token.update() accepts untyped data; cast needed to satisfy the overload
-        await token.update({ [`flags.${SYSTEM_ID}.${MOVE_MODE_FLAG}`]: movementType } as Record<string, unknown>);
-        // The flag lives on the TOKEN, whose update does not re-render the actor's sheet: redraw the
-        // Combat tab so the move-mode cluster shows the pick (#235).
-        await this.render({ parts: ['combat'] });
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG is untyped Foundry global; double-cast to access wh40k.movementTypes config
-        const config = ((CONFIG as unknown as Record<string, unknown>)['wh40k'] as Record<string, unknown> | undefined)?.['movementTypes'] as
-            | Record<string, { label?: string }>
-            | undefined;
-        const movementConfig = config?.[movementType];
-        const label = movementConfig ? game.i18n.localize(movementConfig.label ?? movementType) : movementType;
-        // Disengage is a Half Action, not a move mode (#416); only real movement
-        // speeds are selectable here.
-        const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
-        ui.notifications.info(game.i18n.format('WH40K.Notify.Token.MovementModeSet', { label, speed: String(speed) }));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Spend one action of the kind named in the button's `data-kind` (#264) for
-     * this actor's combatant, then re-render so the combat-tab readout updates.
-     * @this {CharacterSheet}
-     */
-    static #spendAction(this: CharacterSheet, _event: Event, target: HTMLElement): void {
-        const actorId = this.actor.id;
-        const kind = target.dataset['kind'] as ActionKind | undefined;
-        if (actorId === null || kind === undefined) return;
-        spendActionForActor(actorId, kind);
-        void this.render(false);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Reset this actor's combatant action budget to a fresh turn (#264).
-     * @this {CharacterSheet}
-     */
-    static #resetActions(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        const actorId = this.actor.id;
-        if (actorId === null) return;
-        resetActionsForActor(actorId);
-        void this.render(false);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Map a combat-action config `type` to a single action-economy kind, or null
-     * when the cost is compound / variable ('half-full', 'varies', …) and should
-     * be spent manually. Content-agnostic — a pure enum mapping, no content data.
-     */
-    static #actionKindFor(type: string | undefined): ActionKind | null {
-        if (type === 'full' || type === 'half' || type === 'free' || type === 'reaction') return type;
-        return null;
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Stat Adjustments           */
-    /*  (extracted to api/stat-adjustment-actions.ts; bound via DEFAULT_OPTIONS.actions) */
-    /* -------------------------------------------- */
-
     /* -------------------------------------------- */
     /*  Event Handlers - Equipment Actions          */
     /* -------------------------------------------- */
@@ -4104,59 +1125,6 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    /**
-     * Consume one use of a consumable / drug from the inventory (the Use button that
-     * sits beside the equip toggle). Delegates to the item's own `consume()` on the
-     * DataModel — which decrements uses, applies the dose's timed effects, and runs
-     * the addiction check (#457) — so a stimm can be used straight from the sheet.
-     */
-    static async #useItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const item = this._resolveItemFromTarget(target);
-        if (!item) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: consume() lives on the gear/consumable DataModel, not the shared item system union
-        const consume = (item.system as { consume?: () => Promise<unknown> }).consume;
-        if (typeof consume !== 'function') return;
-        await consume.call(item.system);
-    }
-
-    static async #toggleEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const item = this._resolveItemFromTarget(target);
-        if (!item) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; equipped not on base type; bracket access needs Record cast
-        const currentlyEquipped = ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['equipped'] === true;
-
-        // Drawing a weapon (#418): block it when the hands it needs would push the
-        // actor past their available-hand budget. Holstering is always allowed.
-        if (!currentlyEquipped && (item.type as string) === 'weapon') {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: weapon `isTwoHanded` getter and `state.equipped` are not on the shared item system union; narrowed inline
-            const weaponSystem = item.system as { isTwoHanded?: boolean; state?: { equipped?: boolean } };
-            const cost = handsForWeapon(weaponSystem.isTwoHanded === true);
-            const otherEquippedCosts = this.actor.items
-                .filter((i) => (i.type as string) === 'weapon' && i !== item)
-                // eslint-disable-next-line no-restricted-syntax -- boundary: per-weapon `isTwoHanded`/`state` fields are not on the shared item system union; narrowed inline
-                .filter((i) => (i.system as { state?: { equipped?: boolean } }).state?.equipped === true)
-                // eslint-disable-next-line no-restricted-syntax -- boundary: per-weapon `isTwoHanded` getter is not on the shared item system union; narrowed inline
-                .map((i) => handsForWeapon((i.system as { isTwoHanded?: boolean }).isTwoHanded === true));
-            const available = this.#availableHands();
-            if (!canEquipWeapon(available, otherEquippedCosts, cost)) {
-                const remaining = Math.max(0, available - otherEquippedCosts.reduce((sum, c) => sum + c, 0));
-                this._notify(
-                    'warning',
-                    game.i18n.format(pluralKey('WH40K.Combat.HandBudgetExceeded', cost, game.i18n.lang), {
-                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- item.name may be null per fvtt-types; ?? guard is intentional
-                        weapon: item.name ?? '',
-                        cost: String(cost),
-                        remaining: String(remaining),
-                        available: String(available),
-                    }),
-                    { duration: 5000 },
-                );
-                return;
-            }
-        }
-
-        await item.update({ 'system.state.equipped': !currentlyEquipped });
-    }
 
     /* -------------------------------------------- */
 
@@ -4167,385 +1135,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target              Button that was clicked.
      * @param {Record<string, boolean>} patch   Dotted `system.state.*` writes.
      */
-    async #setStowState(target: HTMLElement, patch: Record<string, boolean>): Promise<void> {
+    async _setStowState(target: HTMLElement, patch: Record<string, boolean>): Promise<void> {
         const item = this._resolveItemFromTarget(target);
         if (!item) return;
         await item.update(patch);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle stowing an item.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #stowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await this.#setStowState(target, {
-            'system.state.equipped': false,
-            'system.state.inBackpack': true,
-            'system.state.inShipStorage': false,
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle unstowing an item.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #unstowItem(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await this.#setStowState(target, { 'system.state.inBackpack': false });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle stowing an item in ship storage.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #stowToShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await this.#setStowState(target, {
-            'system.state.equipped': false,
-            'system.state.inBackpack': false,
-            'system.state.inShipStorage': true,
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle unstowing an item from ship storage.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #unstowFromShip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await this.#setStowState(target, { 'system.state.inShipStorage': false });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Swap all checked items between backpack and ship storage.
-     * Items checked in the backpack column move to ship; items checked in ship move to backpack.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #swapCheckedItems(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const panel = target.closest('.wh40k-panel-backpack-split') ?? this.element.querySelector('.wh40k-panel-backpack-split');
-        if (!panel) return;
-
-        // Gather checked items from backpack (left) column
-        const backpackChecks = panel.querySelectorAll('.wh40k-backpack-inventory .wh40k-transfer-check:checked');
-        // Gather checked items from ship (right) column
-        const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
-
-        if (!backpackChecks.length && !shipChecks.length) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoneSelected'));
-            return;
-        }
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: transferOperations holds promises to Foundry update calls; no concrete result type
-        const transferOperations: Promise<unknown>[] = [];
-
-        // Backpack → Ship
-        backpackChecks.forEach((cb: Element) => {
-            const itemId = (cb as HTMLElement).dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-
-            const item = this.actor.items.get(itemId);
-            if (!item) return;
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; stowInShipStorage is a duck-typed method not on the schema
-            const equippable = item.system as Record<string, unknown>;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: stowInShipStorage checked via typeof; cast to invocable signature for push
-            if (typeof (equippable as { stowInShipStorage?: unknown }).stowInShipStorage === 'function') {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: method retrieved as unknown; cast to concrete call signature
-                transferOperations.push((equippable as { stowInShipStorage: () => Promise<unknown> }).stowInShipStorage());
-                return;
-            }
-
-            transferOperations.push(
-                item.update({
-                    'system.state.equipped': false,
-                    'system.state.inBackpack': false,
-                    'system.state.inShipStorage': true,
-                }),
-            );
-        });
-
-        // Ship → Backpack/Carried
-        shipChecks.forEach((cb: Element) => {
-            const itemId = (cb as HTMLElement).dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-
-            const item = this.actor.items.get(itemId);
-            if (!item) return;
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; removeFromShipStorage is a duck-typed method not on the schema
-            const equippable = item.system as Record<string, unknown>;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: removeFromShipStorage checked via typeof; cast to invocable signature for push
-            if (typeof (equippable as { removeFromShipStorage?: unknown }).removeFromShipStorage === 'function') {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: method retrieved as unknown; cast to concrete call signature
-                transferOperations.push((equippable as { removeFromShipStorage: () => Promise<unknown> }).removeFromShipStorage());
-                return;
-            }
-
-            transferOperations.push(
-                item.update({
-                    'system.state.inShipStorage': false,
-                }),
-            );
-        });
-
-        if (!transferOperations.length) return;
-
-        await Promise.all(transferOperations);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Give all checked items (from both backpack and ship columns) to another actor.
-     * Opens an actor picker dialog and transfers each selected item.
-     */
-    static async #giveCheckedItems(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const panel = target.closest('.wh40k-panel-backpack-split') ?? this.element.querySelector('.wh40k-panel-backpack-split');
-        if (!panel) return;
-
-        const allChecks = panel.querySelectorAll('.wh40k-transfer-check:checked');
-        if (!allChecks.length) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoneSelectedToGive'));
-            return;
-        }
-
-        const itemIds: string[] = [];
-        allChecks.forEach((cb: Element) => {
-            const id = (cb as HTMLElement).dataset['itemId'];
-            if (id !== undefined && id !== '') itemIds.push(id);
-        });
-        if (!itemIds.length) return;
-
-        const sourceActor = this.actor;
-        const targets = game.actors.filter((a) => a.id !== sourceActor.id && a.isOwner);
-
-        if (!targets.length) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Notify.Transfer.NoRecipients'));
-            return;
-        }
-
-        const options = targets.map((a) => `<option value="${a.id}">${a.name}</option>`).join('');
-        const content = `<form><div class="form-group"><label>${game.i18n.format(pluralKey('WH40K.Notify.Transfer.GiveTo', itemIds.length, game.i18n.lang), {
-            count: String(itemIds.length),
-        })}</label><select name="targetActorId">${options}</select></div></form>`;
-
-        const targetId = await dialogV2.prompt({
-            window: { title: game.i18n.localize('WH40K.Notify.Transfer.GiveTitle') },
-            content,
-            ok: {
-                label: game.i18n.localize('WH40K.Notify.Transfer.GiveButton'),
-                icon: 'fas fa-hand-holding',
-                callback: (_event: Event, button: HTMLElement) => {
-                    return ((button as HTMLElement & { form: HTMLFormElement }).form.elements.namedItem('targetActorId') as HTMLInputElement | null)?.value;
-                },
-            },
-        });
-
-        if (targetId === null || targetId === undefined || typeof targetId !== 'string') return;
-        const targetActor = game.actors.get(targetId);
-        if (!targetActor) return;
-
-        const itemsData = itemIds
-            .map((id: string) => sourceActor.items.get(id))
-            .filter(Boolean)
-            .map((item) => {
-                /* eslint-disable no-restricted-syntax -- boundary: item.toObject() returns Foundry document data with no typed shape; cast to access system fields for transfer */
-                const data = (item as WH40KItem).toObject() as Record<string, unknown> & {
-                    system?: Record<string, unknown> & { state?: { equipped?: unknown; inBackpack?: unknown; inShipStorage?: unknown } };
-                    _id?: string;
-                };
-                /* eslint-enable no-restricted-syntax */
-                if (data.system) {
-                    data.system.state = { ...data.system.state, equipped: false, inBackpack: true, inShipStorage: false };
-                }
-                delete data._id;
-                return data;
-            });
-
-        if (!itemsData.length) return;
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: createEmbeddedDocuments data param type doesn't accept our Record shape; double-cast to satisfy the overload
-        await targetActor.createEmbeddedDocuments('Item', itemsData as unknown as Parameters<typeof targetActor.createEmbeddedDocuments<'Item'>>[1]);
-        await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
-        ui.notifications.info(
-            game.i18n.format(pluralKey('WH40K.Notify.Transfer.Gave', itemsData.length, game.i18n.lang), {
-                count: String(itemsData.length),
-                target: targetActor.name,
-            }),
-        );
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling force field activation.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #toggleActivate(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const item = this._resolveItemFromTarget(target);
-        if (!item) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system.state is Foundry DataModel; activated not on base type; bracket access needs Record cast
-        await item.update({ 'system.state.activated': ((item.system as Record<string, unknown>)['state'] as Record<string, unknown>)['activated'] !== true });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle bulk equipment operations.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #bulkEquip(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const action: string | undefined = target.dataset['bulkAction'];
-            const items = this.actor.items;
-            let count = 0;
-
-            if (action === undefined) {
-                // no-op
-            } else if (action === 'equip-armour') {
-                const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
-                const toEquip = armourItems.filter((item) => item.system.state.equipped !== true);
-                await Promise.all(toEquip.map(async (item) => item.update({ 'system.state.equipped': true })));
-                count = toEquip.length;
-                this._notify(
-                    'info',
-                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.EquippedArmourMany' : 'WH40K.Notify.CharacterSheet.EquippedArmourOne', {
-                        count: String(count),
-                    }),
-                    {
-                        duration: 3000,
-                    },
-                );
-            } else if (action === 'unequip-all') {
-                const equippedItems = items.filter((i: WH40KItem) => (i.system as { state?: { equipped?: boolean } }).state?.equipped === true);
-                await Promise.all(equippedItems.map(async (item) => item.update({ 'system.state.equipped': false })));
-                count = equippedItems.length;
-                this._notify(
-                    'info',
-                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.UnequippedMany' : 'WH40K.Notify.CharacterSheet.UnequippedOne', {
-                        count: String(count),
-                    }),
-                    {
-                        duration: 3000,
-                    },
-                );
-            } else if (action === 'stow-gear') {
-                const gearItems = items.filter(
-                    (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { state?: { inBackpack?: boolean } } }) =>
-                        (i.type === 'gear' || i.isGear) && i.system.state.inBackpack !== true,
-                );
-                await Promise.all(
-                    gearItems.map(async (item) =>
-                        item.update({
-                            'system.state.inBackpack': true,
-                            'system.state.equipped': false,
-                        }),
-                    ),
-                );
-                count = gearItems.length;
-                this._notify(
-                    'info',
-                    game.i18n.format(count !== 1 ? 'WH40K.Notify.CharacterSheet.StowedGearMany' : 'WH40K.Notify.CharacterSheet.StowedGearOne', {
-                        count: String(count),
-                    }),
-                    {
-                        duration: 3000,
-                    },
-                );
-            } else {
-                this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.UnknownBulkAction', { action }), {
-                    duration: 3000,
-                });
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.BulkFailed', { error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error('Bulk equipment error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Acquisitions               */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle adding an acquisition.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #addAcquisition(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
-        const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
-        const updatedAcquisitions = structuredClone(acquisitionList);
-        // Blank `uuid`: a hand-added row is a note, not a record of a real
-        // acquisition. Rows written by an actual acquisition test carry the item
-        // that changed hands and render as a link instead (#496).
-        updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false, uuid: '' });
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Open the item an acquisition row records (#496).
-     * @this {CharacterSheet}
-     * @param {Event} _event  Triggering click.
-     * @param {HTMLElement} target  The row's link, carrying the item uuid.
-     */
-    static async #openAcquisition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset['uuid'];
-        if (uuid === undefined || uuid === '') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: `fromUuid` is a Foundry global resolving to an untyped Document union
-        const item = (await fromUuid(uuid)) as { sheet?: { render: (force: boolean) => unknown } } | null;
-        item?.sheet?.render(true);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle removing an acquisition.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #removeAcquisition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset['index'] ?? '-1', 10);
-        if (Number.isNaN(index) || index < 0) return;
-
-        const acquisitions = this.actor.system.rogueTrader?.acquisitions;
-        if (!Array.isArray(acquisitions)) {
-            await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
-            return;
-        }
-
-        const updatedAcquisitions = structuredClone(acquisitions);
-        updatedAcquisitions.splice(index, 1);
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
     }
 
     /* -------------------------------------------- */
@@ -4553,278 +1146,23 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** The `system.pacts` index a Dark Pacts control carries in `data-pact-index`, or `null`. */
-    #pactIndex(target: HTMLElement): number | null {
+    _pactIndex(target: HTMLElement): number | null {
         const index = parseInt(target.dataset['pactIndex'] ?? '-1', 10);
         return Number.isNaN(index) || index < 0 || index >= this.actor.system.pacts.length ? null : index;
     }
 
     /** Rewrite one pact record (the Daemon's Disposition and the GM's bookkeeping). */
-    async #updatePact(index: number, change: (record: PactRecord) => PactRecord): Promise<void> {
+    async _updatePact(index: number, change: (record: PactRecord) => PactRecord): Promise<void> {
         const pacts = this.actor.system.pacts.map((record, i) => (i === index ? change(record) : record));
         await this.actor.update({ 'system.pacts': pacts });
     }
 
-    /**
-     * Shift the Daemon's Disposition (core, 0–100) by the button's
-     * `data-delta`. The GM applies Interaction-test outcomes here.
-     */
-    static async #adjustPactDisposition(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = this.#pactIndex(target);
-        const delta = parseInt(target.dataset['delta'] ?? '0', 10);
-        if (index === null || Number.isNaN(delta) || delta === 0) return;
-        await this.#updatePact(index, (record) => ({ ...record, disposition: adjustPactDisposition(record.disposition, delta) }));
-    }
-
     /* -------------------------------------------- */
-
-    /**
-     * Mark a pact discovered (or hidden again). The rules leave the
-     * Subtlety change "tailored to the individual bargain", so discovery applies
-     * no number of its own; the GM adjusts Subtlety on its panel.
-     */
-    static async #togglePactDiscovered(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = this.#pactIndex(target);
-        if (index === null) return;
-        await this.#updatePact(index, (record) => ({ ...record, discovered: !record.discovered }));
-    }
-
-    /* -------------------------------------------- */
-
-    /** Mark the pact's most recent payment made (or lapsed). */
-    static async #togglePactPayment(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = this.#pactIndex(target);
-        if (index === null) return;
-        await this.#updatePact(index, (record) => ({ ...record, paymentCurrent: !record.paymentCurrent }));
-    }
-
-    /* -------------------------------------------- */
-
-    /** Add a Boon or Bane to a pact's bargain, or take it away (`data-kind`, `data-entry`). */
-    static async #togglePactEntry(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = this.#pactIndex(target);
-        const kind = PACT_ENTRY_KINDS.find((candidate) => candidate === target.dataset['kind']);
-        const entry = target.dataset['entry'] ?? '';
-        if (index === null || kind === undefined || entry === '') return;
-        await toggleDarkPactEntry(this.actor, index, kind satisfies PactEntryKind, entry);
-    }
-
-    /* -------------------------------------------- */
-
-    /** Strike a pact chosen from the compendiums (the panel's Add Pact). */
-    static async #addDarkPact(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const pact = await chooseCompendiumDarkPact();
-        if (pact === null) {
-            this._notify('warning', game.i18n.localize('WH40K.DarkPact.NoneAvailable'));
-            return;
-        }
-        await this.#strikeDarkPact(pact);
-    }
 
     /** Strike a pact, or say the character already holds it. */
-    async #strikeDarkPact(pact: DarkPactItem): Promise<void> {
+    async _strikeDarkPact(pact: DarkPactItem): Promise<void> {
         const struck = await strikeDarkPact(this.actor, pact);
         if (!struck) this._notify('warning', game.i18n.format('WH40K.DarkPact.AlreadyHeld', { pact: pact.name }));
-    }
-
-    /* -------------------------------------------- */
-
-    /** End a pact and remove everything its Boons and Banes gave the character. */
-    static async #removeDarkPact(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const index = this.#pactIndex(target);
-        if (index === null) return;
-        await removeDarkPact(this.actor, index);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle the `complete` flag on an Endeavour's Objective. Updates the
-     * parent Endeavour item's `apEarned` total in lockstep — when an
-     * objective is checked, its AP contribution is added; when unchecked, it
-     * is reversed. Once `apEarned >= apRequired`, the actor sheet renders a
-     * "grant reward" button which calls `completeEndeavour`.
-     *
-     * The action's button carries:
-     *   - data-endeavour-id  → the parent Endeavour item id on the actor
-     *   - data-objective-index → numeric index into `system.objectives`
-     */
-    static async #completeObjective(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const endeavourId = target.dataset['endeavourId'];
-        const idxStr = target.dataset['objectiveIndex'];
-        if (endeavourId === undefined || idxStr === undefined) return;
-        const idx = Number.parseInt(idxStr, 10);
-        if (!Number.isFinite(idx)) return;
-        const item = this.actor.items.get(endeavourId);
-        if (item?.type !== 'endeavour') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel index signature widens; narrow to endeavour-specific surface via unknown
-        const sys = item.system as unknown as {
-            apEarned: number;
-            apRequired: number;
-            objectives: Array<{ name: string; description: string; complete: boolean; ap: number }>;
-        };
-        if (idx < 0 || idx >= sys.objectives.length) return;
-        const objective = sys.objectives[idx];
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- tsconfig.test parser lacks noUncheckedIndexedAccess; strict tsconfig sees indexed access as possibly undefined
-        if (objective === undefined) return;
-        const nextObjectives = sys.objectives.map((o, i) => (i === idx ? { ...o, complete: !o.complete } : o));
-        const delta = objective.complete ? -objective.ap : objective.ap;
-        const nextApEarned = Math.max(0, sys.apEarned + delta);
-        await item.update({
-            'system.objectives': nextObjectives,
-            'system.apEarned': nextApEarned,
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Grant the reward for a completed Endeavour: add the Endeavour's
-     * `reward.profitFactor` to `actor.system.rogueTrader.profitFactor.current`
-     * and post a chat card summarising the reward. The Endeavour item is
-     * left in place (with `apEarned >= apRequired`) so the GM still sees
-     * the historical record on the sheet.
-     *
-     * Guarded against double-spending: refuses to act unless
-     * `system.isComplete` evaluates to true on the embedded Endeavour.
-     */
-    static async #completeEndeavour(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const endeavourId = target.dataset['endeavourId'];
-        if (endeavourId === undefined) return;
-        const item = this.actor.items.get(endeavourId);
-        if (item?.type !== 'endeavour') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: ItemDataModel index signature widens; narrow to endeavour-specific surface via unknown
-        const sys = item.system as unknown as {
-            apEarned: number;
-            apRequired: number;
-            isComplete: boolean;
-            reward: { profitFactor: number; narrative: string };
-        };
-        if (!sys.isComplete) return;
-        const award = Math.max(0, sys.reward.profitFactor);
-        // eslint-disable-next-line no-restricted-syntax -- boundary: rogueTrader.profitFactor.current is a per-system actor schema field not exposed on the abstract WH40KBaseActor system surface
-        const currentPF = (this.actor.system as { rogueTrader?: { profitFactor?: { current?: number } } }).rogueTrader?.profitFactor?.current ?? 0;
-        if (award > 0) {
-            await this.actor.update({ 'system.rogueTrader.profitFactor.current': currentPF + award });
-        }
-        const headerLabel = game.i18n.localize('WH40K.Endeavours.RewardGrantedHeader');
-        const apLabel = game.i18n.localize('WH40K.Endeavours.APShort');
-        const pfLabel = game.i18n.localize('WH40K.Endeavours.RewardProfitFactor');
-        const narrative = sys.reward.narrative === '' ? '' : `<p>${foundry.utils.escapeHTML(sys.reward.narrative)}</p>`;
-        const content = `
-            <div class="endeavour-chat-card">
-                <h3>${headerLabel}: ${foundry.utils.escapeHTML(item.name)}</h3>
-                <p><strong>${apLabel}:</strong> ${sys.apEarned}/${sys.apRequired}</p>
-                ${award > 0 ? `<p><strong>${pfLabel}:</strong> +${award}</p>` : ''}
-                ${narrative}
-            </div>
-        `;
-        await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content,
-            flags: {
-                'wh40k-rpg': {
-                    type: 'endeavour-reward',
-                    endeavourId,
-                },
-            },
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Open the Acquisition Dialog for rolling acquisition tests.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #openAcquisitionDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        await AcquisitionDialog.show(this.actor);
-    }
-
-    /**
-     * Open the Colony Growth Dialog for resolving a 90-day Colony growth
-     * cycle (#195). RT-gated — the Dynasty tab where
-     * this button lives is only rendered for RT characters, so the
-     * runtime guard is defensive against accidental invocation on other
-     * systems.
-     * @this {CharacterSheet}
-     * @param {Event} event Triggering click event.
-     * @param {HTMLElement} target Button that was clicked.
-     */
-    // eslint-disable-next-line @typescript-eslint/require-await -- ApplicationV2 action handlers expect Promise<void>; concrete impl is synchronous
-    static async #openColonyGrowthDialog(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        if (this._resolveGameSystemId() !== 'rt') return;
-        ColonyGrowthDialog.show(this.actor);
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Experience                 */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle custom XP addition/subtraction.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #customXP(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        event.preventDefault();
-        const { openAddXPDialog } = await import('../prompts/add-xp-dialog.ts');
-        openAddXPDialog(this.actor);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Open the advancement dialog for spending XP.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #openAdvancement(this: CharacterSheet, event: Event, _target: HTMLElement): void {
-        event.preventDefault();
-        // Default to rogueTrader career for now
-        // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
-        const careerKey = this.actor.originPath['career'];
-        AdvancementDialog.open(this.actor, { careerKey });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle bonus vocalize.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #bonusVocalize(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const bonusName = target.dataset['bonusName'];
-            const bonus = (this.actor.backgroundEffects as Array<{ name?: string; source?: string; benefit?: string }> | undefined)?.find(
-                (a) => a.name === bonusName,
-            );
-            if (bonus) {
-                await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.actor.name,
-                    name: bonus.name,
-                    type: bonus.source,
-                    description: bonus.benefit,
-                    _gameSystemId: firstSystemId(this.actor),
-                });
-            } else {
-                this._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.BonusNotFound', { name: bonusName ?? '' }), {
-                    duration: 3000,
-                });
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.BonusVocalizeFailed', { error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error('Bonus vocalize error:', error);
-        }
     }
 
     /* -------------------------------------------- */
@@ -4847,55 +1185,6 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Spend one Unleash Daemon charge for the current session. Routes
-     * through the pure `spendUnleashDaemon` helper to keep parity with the
-     * engine; no-ops with a warning when the actor is in the `none` state
-     * or has exhausted their per-session uses.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #unleashDaemon(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const slot = this._readPossessionSlot();
-            if (!canUnleashDaemon(slot)) {
-                this._notify('warning', game.i18n.localize('WH40K.Possession.UnleashUnavailable'), { duration: 3000 });
-                return;
-            }
-            const next = spendUnleashDaemon(slot);
-            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
-            this._notify('info', game.i18n.localize('WH40K.Possession.UnleashSpent'), { duration: 2500 });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.UnleashDaemonFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Unleash daemon error:', error);
-        }
-    }
-
-    /**
-     * Reset the per-session Unleash Daemon counter to zero. GM-only — the
-     * button only renders for GM users in the template, but we still gate
-     * server-side in case the action is dispatched via console.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #resetPossessionSession(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            if (!game.user.isGM) {
-                this._notify('warning', game.i18n.localize('WH40K.Possession.ResetGmOnly'), { duration: 3000 });
-                return;
-            }
-            const slot = this._readPossessionSlot();
-            const next = resetSessionUnleash(slot);
-            await this._updateSystemField('system.possession.unleashUsed', next.unleashUsed);
-            this._notify('info', game.i18n.localize('WH40K.Possession.ResetDone'), { duration: 2500 });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PossessionResetFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Reset possession session error:', error);
-        }
-    }
-
-    /**
      * Post a possession Frenzy/Mismanifest chat card. Mirrors the
      * disorder-roll-dialog render+create pattern (chat templates render
      * outside the sheet root; the renderChatMessageHTML hook supplies the
@@ -4911,249 +1200,19 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /**
-     * Per-round Challenging (+0) Willpower test while the Possession power
-     * is sustained (#132). Failure inflicts Frenzy
-     * this round; the power must still be sustained.
-     * @this {CharacterSheet}
-     */
-    static async #possessionFrenzyTest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const slot = this._readPossessionSlot();
-            if (slot.state !== 'latent') {
-                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
-                return;
-            }
-            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total));
-            const rollResult = await new Roll('1d100').evaluate();
-            const roll = Number(rollResult.total);
-            const result = resolveFrenzyTest(roll, wp);
-            await this._postPossessionChat({
-                mode: 'frenzy',
-                actorName: this.actor.name,
-                roll,
-                target: result.target,
-                success: result.passed,
-                stateBefore: 'latent',
-                stateAfter: 'latent',
-            });
-            this._notify(
-                result.passed ? 'info' : 'warning',
-                game.i18n.localize(result.passed ? 'WH40K.Possession.FrenzyResistedNotify' : 'WH40K.Possession.FrenzyEnteredNotify'),
-                { duration: 3000 },
-            );
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.FrenzyFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Possession frenzy test error:', error);
-        }
-    }
-
-    /**
      * Opposed-Willpower Mismanifest contest following a Psychic Phenomena
      * result on Possession (#132). A loss escalates to full possession.
      * The daemon's Willpower mirrors the actor's until combat targeting is
      * wired (same placeholder convention as the grapple opposed roller).
      * @this {CharacterSheet}
      */
-    /**
-     * Open the Exorcism dialog (#83, DH2) with this actor
-     * as the exorcist. DH2-only: the ritual is that line's printed rule.
-     */
-    static #performExorcism(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        if (!isActorOnLine(this.actor, 'dh2')) return;
-        openDaemonologyRitualDialog(this.actor, 'exorcism');
-    }
-
-    /**
-     * Open the Summoning dialog (#80, DH2) with this actor
-     * as the summoner. DH2-only, like the Exorcism.
-     */
-    static #performSummoning(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        if (!isActorOnLine(this.actor, 'dh2')) return;
-        openDaemonologyRitualDialog(this.actor, 'summoning');
-    }
-
-    static async #possessionMismanifest(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const slot = this._readPossessionSlot();
-            if (slot.state !== 'latent') {
-                this._notify('warning', game.i18n.localize('WH40K.Possession.FrenzyLoopUnavailable'), { duration: 3000 });
-                return;
-            }
-            const wp = Math.trunc(Number(this.actor.system.characteristics.willpower.total));
-            const psykerRollResult = await new Roll('1d100').evaluate();
-            const daemonRollResult = await new Roll('1d100').evaluate();
-            const psykerRoll = Number(psykerRollResult.total);
-            const daemonRoll = Number(daemonRollResult.total);
-            const resolution = resolveMismanifestPossession(psykerRoll, wp, daemonRoll, wp, slot.state);
-            const next = applyMismanifest(slot, resolution);
-            await this._updateSystemField('system.possession.state', next.state);
-            await this._postPossessionChat({
-                mode: 'mismanifest',
-                actorName: this.actor.name,
-                roll: psykerRoll,
-                target: wp,
-                daemonRoll,
-                daemonTarget: wp,
-                psykerDoS: resolution.psykerDoS,
-                daemonDoS: resolution.daemonDoS,
-                success: resolution.psykerWon,
-                stateBefore: slot.state,
-                stateAfter: next.state,
-            });
-            this._notify(
-                resolution.psykerWon ? 'info' : 'error',
-                game.i18n.localize(resolution.psykerWon ? 'WH40K.Possession.MismanifestHeldNotify' : 'WH40K.Possession.MismanifestEscalated'),
-                { duration: 3500 },
-            );
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.MismanifestFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Possession mismanifest error:', error);
-        }
-    }
-
-    /**
-     * Fanatic role — Death to All Who Oppose Me! (#93, DH2).
-     *
-     * Spending 1 Fate grants Hatred toward the chosen foe until the encounter ends.
-     *
-     * Pipeline:
-     *   - refuse without exactly one targeted foe, or with 0 Fate
-     *   - find this line's Hatred talent document by `system.identifier`
-     *   - decrement `system.fate.value` by 1
-     *   - grant an encounter-scoped copy of that Hatred talent whose
-     *     `vsSpecialization` hooks are re-aimed at the foe (`vsActor`), so the
-     *     bonus is Hatred's own data; it is removed when the Combat is deleted
-     *   - emit a chat card naming the foe (and the 1 Insanity for leaving combat
-     *     against it, which is GM-adjudicated)
-     *
-     * Errors surface as in-sheet notifications.
-     * @this {CharacterSheet}
-     */
-    static async #deathToAllWhoOpposeMe(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const targets = Array.from(game.user.targets);
-            const foe = targets.length === 1 ? targets[0]?.actor ?? null : null;
-            const foeUuid = foe?.uuid ?? null;
-            if (foe === null || foeUuid === null) {
-                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoTarget'), { duration: 3000 });
-                return;
-            }
-
-            const fateValue = this.actor.system.fate.value;
-            if (fateValue <= 0) {
-                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoFatePoints'), { duration: 3000 });
-                return;
-            }
-
-            const hatredUuid = await findItemUuidByIdentifier('talent', HATRED_IDENTIFIER, this._resolveGameSystemId() ?? '');
-            const hatred = hatredUuid === null ? null : await fromUuid(hatredUuid);
-            if (!(hatred instanceof Item)) {
-                this._notify('warning', game.i18n.localize('WH40K.Fanatic.NoHatred'), { duration: 3000 });
-                return;
-            }
-
-            await this._updateSystemField('system.fate.value', fateValue - 1);
-
-            const source = hatred.toObject();
-            const hatredHooks = (hatred as DynamicModifierItemLike).system.modifiers?.dynamicModifiers ?? [];
-            const grant = foundry.utils.mergeObject(source, {
-                'system.specialization': foe.name,
-                'system.modifiers.dynamicModifiers': hatredAgainstFoe(hatredHooks, foeUuid),
-                [`flags.${SYSTEM_ID}.${ENCOUNTER_GRANT_FLAG}`]: true,
-            });
-            await this.actor.createEmbeddedDocuments('Item', [grant]);
-
-            const gameSystem = this._resolveGameSystemId() ?? '';
-            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/fanatic-chat.hbs', {
-                _gameSystemId: firstSystemId(this.actor),
-                actorName: this.actor.name,
-                foeName: foe.name,
-                hatredName: hatred.name,
-                gameSystem,
-            });
-            await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DeathToAllFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Death to All Who Oppose Me error:', error);
-        }
-    }
-
-    /**
-     * Crusader role — Smite the Unholy (#141).
-     * Spend 1 Fate to auto-pass a Fear test with DoS = WPB.
-     */
-    static async #smiteTheUnholy(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const fateValue = this.actor.system.fate.value;
-            if (fateValue < SMITE_THE_UNHOLY_FATE_COST) {
-                this._notify('warning', game.i18n.localize('WH40K.Crusader.NoFatePoints'), { duration: 3000 });
-                return;
-            }
-            await this._updateSystemField('system.fate.value', fateValue - SMITE_THE_UNHOLY_FATE_COST);
-            const wp = this.actor.system.characteristics.willpower.total;
-            const dos = resolveSmiteTheUnholyDoS(wp);
-            const gameSystem = this._resolveGameSystemId() ?? '';
-            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/crusader-chat.hbs', {
-                _gameSystemId: firstSystemId(this.actor),
-                actorName: this.actor.name,
-                willpowerBonus: dos,
-                gameSystem,
-            });
-            await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.SmiteFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Smite the Unholy error:', error);
-        }
-    }
-
-    /** Manacles condition — apply (#105, errata). */
-    static async #applyManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            await applyManaclesCondition(this.actor);
-            this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.AppliedNotification'), { duration: 2500 });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ManacledApplyFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('applyManacles error:', error);
-        }
-    }
-
-    /** Manacles condition — lift (#105). */
-    static async #liftManacles(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            const removed = await liftManaclesCondition(this.actor);
-            if (removed > 0) {
-                this._notify('info', game.i18n.localize('WH40K.Condition.Manacles.LiftedNotification'), { duration: 2500 });
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ManacledLiftFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('liftManacles error:', error);
-        }
-    }
-
-    /** Ace role — Right Stuff Fate-spend (#100). */
-    static #openRightStuff(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        try {
-            openRightStuffDialog({ actor: this.actor });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.RightStuffFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('openRightStuff error:', error);
-        }
-    }
 
     /**
      * The other participant of this actor's grapple: the one recorded on its
      * grapple flag, else the user's single targeted token's actor. Null when
      * neither names someone other than this actor.
      */
-    async #grappleOpponent(): Promise<WH40KBaseActor | null> {
+    async _grappleOpponent(): Promise<WH40KBaseActor | null> {
         const recorded = readGrappleOpponentUuid(this.actor.flags, SYSTEM_ID);
         const fromFlag = recorded === null ? null : await fromUuid(recorded);
         if (fromFlag instanceof WH40KBaseActor && fromFlag.id !== this.actor.id) return fromFlag;
@@ -5163,236 +1222,9 @@ export default class CharacterSheet extends BaseActorSheet {
         return targeted.length === 1 ? targeted.at(0) ?? null : null;
     }
 
-    /**
-     * Take one of the line's grapple options (#120; DH2). The button
-     * names the option and the role it belongs to. A combatant takes its own role's
-     * options; the GM also sees the other role's, and takes those for the opponent.
-     * The option is tested as its line prints it (`rolls/grapple-flow.ts`).
-     */
-    static async #grappleOption(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const optionId = target.dataset['grappleOption'];
-            const buttonRole = target.dataset['grappleRole'];
-            const ownRole = grappleRoleOf(readGrappleState(this.actor.flags, SYSTEM_ID));
-            const rules = grappleRulesFor(this._resolveGameSystemId() ?? undefined);
-            const option = rules?.options.find((entry) => entry.id === optionId && entry.role === buttonRole);
-            if (rules === null || option === undefined || ownRole === null) return;
-            const opponent = await this.#grappleOpponent();
-            if (opponent === null) {
-                this._notify('warning', game.i18n.localize('WH40K.Grapple.NoOpponent'), { duration: 4000 });
-                return;
-            }
-            // The other role's options are the GM's, taken for the opponent.
-            const actsForOpponent = option.role !== ownRole;
-            if (actsForOpponent && !game.user.isGM) return;
-            const actor: WH40KBaseActor = actsForOpponent ? opponent : this.actor;
-            const other: WH40KBaseActor = actsForOpponent ? this.actor : opponent;
-            const actorRole: GrappleRole = option.role;
-            await performGrappleOption({
-                option,
-                actor,
-                opponent: other,
-                actorRole,
-                rules,
-                gameSystem: this._resolveGameSystemId() ?? '',
-                rollSkill: async (skill, instance) => {
-                    if (isSkillRoller(actor)) await actor.rollSkill(skill, undefined, { instance });
-                },
-                dealDamage: async (rule, testRoll) => {
-                    await dealGrappleDamage({ controller: actor, opponent: other, rule, testRoll });
-                },
-                pickItem: async (declared) => promptGrappleItem(actor, declared),
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.GrappleFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Grapple action error:', error);
-        }
-    }
-
-    /**
-     * Shock — Snap Out of It (#66, "Shock And Snapping Out Of It").
-     *
-     * Rolls a d100 Willpower test (Challenging +0 — target equals the
-     * actor's Willpower total). On success, decrements `system.shock.value`
-     * by 1 via `actor.applyShock(-1)`. Either outcome is narrated to chat
-     * via the shock-snap-chat template.
-     *
-     * Errors surface as in-sheet notifications.
-     * @this {CharacterSheet}
-     */
-    static async #snapOutOfShock(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: shock slot is optional on the typed system union; cast through unknown is necessary
-            const shock = (this.actor.system as { shock?: { value: number; max: number } }).shock;
-            const shockBefore = shock?.value ?? 0;
-            if (shockBefore <= 0) {
-                this._notify('info', game.i18n.localize('WH40K.Shock.Header'), { duration: 2500 });
-                return;
-            }
-
-            // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is keyed by characteristic slug
-            const characteristics = (this.actor.system as { characteristics?: Record<string, { total?: number } | undefined> }).characteristics;
-            const willpower = characteristics?.['willpower']?.total ?? 0;
-
-            // Challenging +0 — target equals the unmodified Willpower total.
-            const roll = await new Roll('1d100').evaluate();
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Roll.total is typed loosely; we know it's a number after evaluate()
-            const rollValue = Math.trunc(Number((roll as unknown as { total?: number }).total ?? 0));
-            const success = rollValue <= willpower;
-
-            if (success) {
-                await this.actor.applyShock(-1);
-            }
-            const shockAfter = Math.max(0, shockBefore - (success ? 1 : 0));
-
-            const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/shock-snap-chat.hbs', {
-                _gameSystemId: firstSystemId(this.actor),
-                actorName: this.actor.name,
-                willpower,
-                roll: rollValue,
-                success,
-                shockBefore,
-                shockAfter,
-            });
-            await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.SnapOutOfShockFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Snap Out of It error:', error);
-        }
-    }
-
-    /**
-     * Roll a Pinning resist test (Challenging +0 Willpower). Routes through the
-     * actor's unified-roll method so Willpower talents/traits surface as
-     * situational modifiers before resolving ("Pinning").
-     * @this {CharacterSheet}
-     */
-    static #rollPinningTest(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        this.actor.rollPinningTest();
-    }
-
-    /**
-     * Roll the end-of-turn escape-from-pinning test. Prompts for the favourable
-     * condition (in cover OR not being shot at grants +30, non-stacking) then
-     * routes through the actor's unified-roll method.
-     * @this {CharacterSheet}
-     */
-    static async #escapePinning(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
-        let favourable = false;
-        if (DialogV2 !== undefined) {
-            const result = await DialogV2.prompt({
-                window: { title: 'WH40K.Pinning.EscapeLabel' },
-                content: `<div class="form-group"><label><input type="checkbox" name="favourable" /> ${game.i18n.localize(
-                    'WH40K.Pinning.FavourableBonus',
-                )}</label></div>`,
-                ok: {
-                    label: 'WH40K.Common.Roll',
-                    callback: (_evt: Event, button: HTMLButtonElement): boolean => {
-                        const form = button.form ?? null;
-                        return (form?.elements.namedItem('favourable') as HTMLInputElement | null)?.checked === true;
-                    },
-                },
-                rejectClose: false,
-            });
-            if (result === null) return;
-            // DialogV2.prompt types the resolved value as string|null; our ok-callback
-            // returns the checkbox boolean, so coerce the runtime value.
-            favourable = Boolean(result);
-        }
-        this.actor.rollEscapePinningTest({ inCover: favourable, notBeingShotAt: false });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Apply (or heal) recoverable characteristic damage ("Characteristic
-     * Damage"). Prompts for the characteristic + amount, then routes through the
-     * document's `applyCharacteristicDamage` — positive damages, negative heals
-     * (clamped at 0). The effective value is `total − damage`.
-     * @this {CharacterSheet}
-     */
-    static async #applyCharacteristicDamage(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        const DialogV2 = (foundry.applications.api as { DialogV2?: typeof foundry.applications.api.DialogV2 }).DialogV2;
-        if (DialogV2 === undefined) return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: characteristics is a dynamic record keyed by characteristic slug on the actor's DataModel
-        const chars = (this.actor.system as { characteristics?: Record<string, { label?: string; damage?: number } | undefined> }).characteristics ?? {};
-        const options = Object.entries(chars)
-            .map(([key, char]) => {
-                const label = game.i18n.localize(char?.label ?? key);
-                const dmg = char?.damage ?? 0;
-                return `<option value="${key}">${label}${dmg > 0 ? ` (−${dmg})` : ''}</option>`;
-            })
-            .join('');
-        const content = `<div class="form-group"><label>${game.i18n.localize(
-            'WH40K.Characteristic.SelectLabel',
-        )}</label><select name="characteristic">${options}</select></div><div class="form-group"><label>${game.i18n.localize(
-            'WH40K.Characteristic.AmountLabel',
-        )}</label><input type="number" name="amount" value="1" step="1" autofocus /></div><p class="notes">${game.i18n.localize(
-            'WH40K.Characteristic.DamageHint',
-        )}</p>`;
-
-        // Capture the picked values in the OK callback via a box (a bare local would
-        // stay narrowed to `null` past the await, since TS can't see the callback
-        // run); the prompt's resolved value only signals cancel. Avoids casting the
-        // string|null return type onto our object shape.
-        const picked: { value: { characteristic: string; amount: number } | null } = { value: null };
-        const result = await DialogV2.prompt({
-            window: { title: 'WH40K.Characteristic.ApplyDamageTitle' },
-            content,
-            ok: {
-                label: 'WH40K.Common.Apply',
-                callback: (_evt: Event, button: HTMLButtonElement): boolean => {
-                    const form = button.form ?? null;
-                    const char = (form?.elements.namedItem('characteristic') as HTMLSelectElement | null)?.value ?? '';
-                    const amt = Number.parseInt((form?.elements.namedItem('amount') as HTMLInputElement | null)?.value ?? '0', 10);
-                    picked.value = { characteristic: char, amount: amt };
-                    return true;
-                },
-            },
-            rejectClose: false,
-        });
-        if (result === null || picked.value === null) return;
-        const { characteristic, amount } = picked.value;
-        if (characteristic === '' || !Number.isFinite(amount) || amount === 0) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Characteristic.NoneSelected'));
-            return;
-        }
-        await this.actor.applyCharacteristicDamage(characteristic, amount);
-    }
-
     /* -------------------------------------------- */
     /*  Event Handlers - Biography Actions          */
     /* -------------------------------------------- */
-
-    /**
-     * Open the Origin Path Builder dialog for this character.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #openOriginPathBuilder(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            if (typeof game.wh40k.openOriginPathBuilder === 'function') {
-                const gameSystem = this._resolveGameSystemId();
-                await game.wh40k.openOriginPathBuilder(this.actor, gameSystem ? { gameSystem } : {});
-            } else {
-                this._notify('warning', game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'), {
-                    duration: 3000,
-                });
-                console.warn('game.wh40k.openOriginPathBuilder not found');
-            }
-        } catch (error) {
-            this._notify('error', `${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${errorMessage(error)}`, {
-                duration: 5000,
-            });
-            console.error('Origin Path Builder error:', error);
-        }
-    }
 
     /**
      * On first open of an unbuilt character, prompt to run the origin-path
@@ -5401,7 +1233,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * never prompt; see {@link shouldPromptOriginPath}. The d20 stays the
      * always-on entry point.
      */
-    async #maybePromptOriginPathIncomplete(): Promise<void> {
+    async _maybePromptOriginPathIncomplete(): Promise<void> {
         const sheetSource = this.actor.getFlag('wh40k-rpg', SHEET_SOURCE_FLAG);
         const prompt = shouldPromptOriginPath({
             isOwner: this.actor.isOwner,
@@ -5466,293 +1298,6 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-
-    /**
-     * Open the Fate Point uses reference dialog. Triggered by clicking the
-     * Fate Point icon / label on the character sheet (issue #35).
-     * @this {CharacterSheet}
-     */
-    static #viewFateUses(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        FateUsesDialog.open({
-            gameSystem: this._resolveGameSystemId(),
-        });
-    }
-
-    /**
-     * Open a compendium/world document's sheet from a clicked reference control
-     * (#389). Reads the target UUID from `data-uuid`, resolves it via `fromUuid`,
-     * and renders the linked document's sheet. Used by the divination line under
-     * the portrait (the divination's compendium entry carries the mechanical
-     * bonus authored in #316); generic enough to back any `data-uuid` link.
-     * @this {CharacterSheet}
-     */
-    static async #openUuid(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const uuid = target.dataset['uuid'];
-        if (uuid === undefined || uuid === '') return;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.fromUuid is loosely typed in fvtt-types
-        const fromUuidFn = (globalThis as unknown as { fromUuid?: (uuid: string) => Promise<object | null> }).fromUuid;
-        if (fromUuidFn === undefined) return;
-        let doc: { sheet?: { render: (force: boolean) => void } } | null = null;
-        try {
-            doc = await fromUuidFn(uuid);
-        } catch {
-            doc = null;
-        }
-        const sheet = doc?.sheet;
-        if (sheet === undefined) {
-            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.DivinationEntryMissing'));
-            return;
-        }
-        sheet.render(true);
-    }
-
-    static async #toggleAgeMode(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const mode = target.dataset['mode'];
-        if (mode !== 'age' && mode !== 'birthdate') return;
-        await this.actor.update({ 'system.bio.ageMode': mode });
-    }
-
-    /**
-     * GM-only manual stepper for the Warband Subtlety pool (#87).
-     * Reads `data-delta` (±1) from the clicked button and routes the
-     * adjustment through `WH40KBaseActor.applySubtlety(delta, 'manual')`
-     * so the loss-clamp adjusters discovered by
-     * `collectSubtletyAdjusters()` are honoured uniformly.
-     */
-    static async #adjustSubtletyManually(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        if (!game.user.isGM) return;
-        const deltaAttr = target.dataset['delta'];
-        if (deltaAttr === undefined || deltaAttr === '') return;
-        const delta = Number.parseInt(deltaAttr, 10);
-        if (!Number.isFinite(delta) || delta === 0) return;
-        await this.actor.applySubtlety(delta, 'manual');
-    }
-
-    /**
-     * Open a read-only popout listing every Subtlety adjuster currently
-     * collected on this actor (#87). Uses Foundry's DialogV2 directly to
-     * keep the surface minimal — the list is computed inline from
-     * `collectSubtletyAdjusters()`.
-     */
-    static #viewSubtletyBreakdown(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        const adjusters = this.actor.collectSubtletyAdjusters();
-        const rows = adjusters.length
-            ? adjusters
-                  .map((adj) => {
-                      const right =
-                          adj.kind === 'clamp'
-                              ? game.i18n.format('WH40K.SubtletyPanel.Clamped', { value: String(adj.minAbsoluteDelta) })
-                              : `${adj.delta > 0 ? '+' : ''}${adj.delta}`;
-                      return `<li><strong>${foundry.utils.escapeHTML(adj.label)}</strong> — <span>${foundry.utils.escapeHTML(right)}</span></li>`;
-                  })
-                  .join('')
-            : `<li><em>${game.i18n.localize('WH40K.SubtletyPanel.EmptyAdjusters')}</em></li>`;
-        const content = `<ul class="wh40k-subtlety-breakdown-list">${rows}</ul>`;
-        void dialogV2.prompt({
-            window: { title: game.i18n.localize('WH40K.SubtletyPanel.BreakdownTitle') },
-            content,
-            ok: { label: 'OK' },
-        });
-    }
-
-    /** Open the GM Inquest tracker (#90) for this actor's line. */
-    static #openInquestTracker(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        InquestTrackerDialog.open(this._resolveGameSystemId() ?? undefined);
-    }
-
-    /** Roll one Malignancy Test the character owes (button shown while any are due). */
-    static #rollMalignancyTest(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        this.actor.rollMalignancyTest();
-    }
-
-    /**
-     * Re-evaluate the BC Alignment at the next 10-CP threshold (#173).
-     *
-     * Walks the actor's chaos-advance log via `tallyAdvancesByAlignment`
-     * and `deriveAlignmentFromTally`, persists the new `chaosAlignment`
-     * and `alignmentCheckpoint` in a single update, then posts a chat
-     * card reporting the outcome. The button is only rendered by the
-     * panel when `recheckDue` is true, but we still guard against a
-     * stale click here by no-op-ing if `shouldRecheckAlignment` returns
-     * false. Naming matches the partial's `data-action="recheckBcAlignment"`
-     * — the BC-prefixed name disambiguates it from a generic re-check
-     * that may exist for other systems in the future.
-     */
-    static async #recheckBcAlignment(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this._resolveGameSystemId() !== 'bc') return;
-        const system = this.actor.system;
-        const corruption = system.corruption;
-        const previousCheckpoint = system.alignmentCheckpoint;
-        if (!shouldRecheckAlignment(corruption, previousCheckpoint)) return;
-        const previous = system.chaosAlignment;
-        const tally = tallyAdvancesByAlignment(system.chaosAdvancements);
-        const next = deriveAlignmentFromTally(tally);
-        const newCheckpoint = nextAlignmentCheckpoint(corruption);
-        try {
-            await this.actor.update({
-                'system.chaosAlignment': next,
-                'system.alignmentCheckpoint': newCheckpoint,
-            });
-            const flipped = previous !== next;
-            const messageKey = flipped ? 'WH40K.BC.Advancement.RecheckFlippedTo' : 'WH40K.BC.Advancement.RecheckUnchanged';
-            const formatted = flipped
-                ? game.i18n.format(messageKey, {
-                      previous: game.i18n.localize(chaosAlignmentLabelKey(previous)),
-                      next: game.i18n.localize(chaosAlignmentLabelKey(next)),
-                  })
-                : game.i18n.localize(messageKey);
-            await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                content: `<p><strong>${game.i18n.localize('WH40K.BC.Advancement.RecheckChatTitle')}</strong></p><p>${formatted}</p>`,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.AlignmentRecheckFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('BC alignment recheck error:', error);
-        }
-    }
-
-    /**
-     * Purchase an Infamy advance for a BC actor per the core advance cost table (#173).
-     *
-     * Pulls cost and increment from `bc-advancement-config.ts`, confirms
-     * the spend via DialogV2.prompt (matching the prompt-driven XP-spend
-     * style used elsewhere in the sheet), and writes the new
-     * `experience.used` + `infamy` value in a single update. The cap is
-     * enforced in two places defensively: `infamyAdvanceCost` returns
-     * null when at/over the cap, and the partial collapses the button to
-     * the "InfamyCapped" notice.
-     */
-    static async #buyBcInfamyAdvance(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        if (this._resolveGameSystemId() !== 'bc') return;
-        const system = this.actor.system;
-        const currentInfamy = system.infamy;
-        const cost = infamyAdvanceCost(currentInfamy);
-        if (cost === null) {
-            this._notify('warning', game.i18n.format('WH40K.BC.Advancement.BuyInfamyCapped', { cap: String(BC_INFAMY_ADVANCE_CAP) }), {
-                duration: 4000,
-            });
-            return;
-        }
-        const available = system.experience.available;
-        if (available < cost) {
-            this._notify(
-                'warning',
-                game.i18n.format('WH40K.BC.Advancement.BuyInfamyInsufficientXP', {
-                    cost: String(cost),
-                    available: String(available),
-                }),
-                { duration: 4000 },
-            );
-            return;
-        }
-        const nextInfamy = Math.min(currentInfamy + BC_INFAMY_INCREMENT, BC_INFAMY_ADVANCE_CAP);
-        const confirmContent = `<p>${game.i18n.format('WH40K.BC.Advancement.BuyInfamyConfirmBody', {
-            xp: String(cost),
-            step: String(BC_INFAMY_INCREMENT),
-            next: String(nextInfamy),
-        })}</p>`;
-        const confirmed = await dialogV2.confirm({
-            window: { title: game.i18n.localize('WH40K.BC.Advancement.BuyInfamyConfirmTitle') },
-            content: confirmContent,
-            rejectClose: false,
-        });
-        if (!confirmed) return;
-        try {
-            await this.actor.update({
-                'system.infamy': nextInfamy,
-                // No `experience.used` write: it is derived from the
-                // `chaosAdvancements` ledger below, and the derive is its only
-                // writer (#509).
-                'system.chaosAdvancements': [
-                    ...system.chaosAdvancements,
-                    {
-                        category: 'infamy',
-                        key: `infamy:${nextInfamy}`,
-                        xpCost: cost,
-                        alignment: 'unaligned',
-                        fromArchetype: false,
-                    },
-                ],
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.InfamyPurchaseFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('BC infamy advance purchase error:', error);
-        }
-    }
-
-    /**
-     * Open the characteristic setup dialog.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #openCharacteristicSetup(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        await CharacteristicSetupDialog.open(this.actor);
-    }
-
-    /**
-     * Show the utility menu.
-     * @param {Event} event     The originating click event
-     * @param {HTMLElement} target  The capturing HTML element which defined a [data-action]
-     */
-    static #showUtilityMenu(this: CharacterSheet, event: Event, target: HTMLElement): void {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const options = this._getUtilityMenuOptions();
-        if (options.length === 0) return;
-
-        // Create a simple context menu programmatically
-        const menu = document.createElement('div');
-        menu.className = 'wh40k-context-menu wh40k-utility-menu';
-        menu.style.position = 'fixed';
-        menu.style.zIndex = '1000';
-
-        // Position the menu
-        const rect = target.getBoundingClientRect();
-        menu.style.left = `${rect.left}px`;
-        menu.style.top = `${rect.bottom + 5}px`;
-
-        // Add menu items
-        options.forEach((option: UtilityMenuOption) => {
-            if (option.condition && !option.condition()) return;
-
-            const item = document.createElement('div');
-            item.className = 'context-menu-item';
-            item.innerHTML = `${option.icon} ${option.name}`;
-            item.addEventListener('click', () => {
-                void option.callback();
-                menu.remove();
-            });
-            menu.appendChild(item);
-        });
-
-        // Add close listener
-        const closeMenu = (e: Event): void => {
-            if (!menu.contains(e.target as Node | null)) {
-                menu.remove();
-                document.removeEventListener('click', closeMenu);
-            }
-        };
-
-        document.body.appendChild(menu);
-        document.addEventListener('click', closeMenu);
-    }
-
-    /**
-     * Header control — reset the window to its default width and height.
-     */
-    static #resetWindowSize(this: CharacterSheet, event: Event, _target: HTMLElement): void {
-        event.preventDefault();
-        const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position as { width?: number; height?: number };
-        const pos: { width?: number; height?: number } = {};
-        if (defaults.width !== undefined) pos.width = defaults.width;
-        if (defaults.height !== undefined) pos.height = defaults.height;
-        this.setPosition(pos);
-    }
-
-    /* -------------------------------------------- */
     /*  Context Menu Implementation                 */
     /* -------------------------------------------- */
 
@@ -5797,688 +1342,9 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
-    /*  Event Handlers - Equipment Filtering        */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle equipment filtering (search and type/status filters).
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static #filterEquipment(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
-        const equipmentPanel = this.element.querySelector('.wh40k-all-items-grid');
-        if (!equipmentPanel) return;
-
-        // Get filter values
-        const searchInput = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-search');
-        const typeFilter = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-type-filter');
-        const statusFilter = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-status-filter');
-
-        const searchTerm = searchInput?.value.toLowerCase() ?? '';
-        const typeValue = typeFilter?.value ?? '';
-        const statusValue = statusFilter?.value ?? '';
-
-        // Store filter state for persistence
-        this._equipmentFilter = {
-            search: searchInput?.value ?? '',
-            type: typeValue,
-            status: statusValue,
-        };
-
-        // Get all item cards
-        const itemCards = equipmentPanel.querySelectorAll('.wh40k-inventory-card');
-
-        let visibleCount = 0;
-
-        itemCards.forEach((card: Element) => {
-            const element = card as HTMLElement;
-            const itemName = element.getAttribute('title')?.toLowerCase() ?? '';
-            const itemType = element.getAttribute('data-item-type') ?? '';
-            const isEquipped = element.querySelector('.wh40k-inv-equipped') !== null;
-
-            // Check filters
-            const matchesSearch = searchTerm === '' || itemName.includes(searchTerm);
-            const matchesType = typeValue === '' || itemType === typeValue;
-            const matchesStatus = statusValue === '' || (statusValue === 'equipped' && isEquipped) || (statusValue === 'unequipped' && !isEquipped);
-
-            // Show/hide card
-            if (matchesSearch && matchesType && matchesStatus) {
-                element.style.display = '';
-                visibleCount++;
-            } else {
-                element.style.display = 'none';
-            }
-        });
-
-        // Toggle clear button visibility
-        const clearBtn = this.element.querySelector<HTMLElement>('.wh40k-search-clear');
-        if (clearBtn !== null) {
-            clearBtn.style.display = searchTerm !== '' ? 'flex' : 'none';
-        }
-
-        // Show message if no results
-        const existingMsg = equipmentPanel.querySelector('.wh40k-no-results');
-        if (existingMsg) existingMsg.remove();
-
-        if (visibleCount === 0 && itemCards.length > 0) {
-            const noResults = document.createElement('div');
-            noResults.className = 'wh40k-no-results';
-            Object.assign(noResults.style, {
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--wh40k-space-sm, 0.5rem)',
-                padding: 'var(--wh40k-space-lg, 1rem)',
-                color: 'var(--color-text-tertiary)',
-                fontStyle: 'italic',
-                textAlign: 'center',
-                pointerEvents: 'none',
-            });
-            noResults.innerHTML = `<i class="fas fa-search" style="font-size:2rem;opacity:0.5"></i><span style="font-size:var(--wh40k-font-size-base,0.9rem)">${game.i18n.localize(
-                'WH40K.CompendiumBrowser.NoResults',
-            )}</span>`;
-            equipmentPanel.appendChild(noResults);
-        }
-    }
-
-    /**
-     * Handle clearing equipment search.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #clearEquipmentSearch(this: CharacterSheet, event: Event, _target: HTMLElement): void {
-        const searchInput = this.element.querySelector<HTMLInputElement>('.wh40k-equipment-search');
-        if (searchInput) {
-            searchInput.value = '';
-            // Clear stored filter state
-            this._equipmentFilter = { search: '', type: '', status: '' };
-            // Trigger filter update
-            CharacterSheet.#filterEquipment.call(this, event, searchInput);
-        }
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Skills                     */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle filtering skills by search term, characteristic, and training level.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #filterSkills(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
-        const input = event.currentTarget as HTMLInputElement;
-        const name = input.name || 'search';
-        const value = input.value || '';
-
-        // Update filter state
-        this._skillsFilter[name] = value;
-
-        // Re-render skills tab only
-        await this.render({ parts: ['skills'] });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Clear all skill filters.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #clearSkillsSearch(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        // Reset all filters
-        this._skillsFilter = { search: '', characteristic: '', training: '' };
-
-        // Re-render skills tab
-        await this.render({ parts: ['skills'] });
-    }
-
-    /**
-     * Toggle favorite status for a skill.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #toggleFavoriteSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillKey = target.dataset['skill'];
-        if (skillKey === undefined || skillKey === '') return;
-        await this._toggleFavorite('favoriteSkills', skillKey, ['skills', 'overview']);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle favorite status for a specialist skill entry.
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     * @this {CharacterSheet}
-     */
-    static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const skillKey = target.dataset['skill'];
-        const entryIndex = parseInt(target.dataset['index'] ?? '');
-        if (skillKey === undefined || skillKey === '' || Number.isNaN(entryIndex)) return;
-
-        // Create a unique key for this specialist skill entry
-        const favoriteKey = `${skillKey}:${entryIndex}`;
-        await this._toggleFavorite('favoriteSpecialistSkills', favoriteKey, ['skills']);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Add a specialist-skill specialization via the advancement menu.
-     * Specializations are XP-purchased, so the "+" routes to the AdvancementDialog
-     * ('__new' specialist-add path charges XP) rather than a free add (#387).
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     * @this {CharacterSheet}
-     */
-    static #openAddSpecialistDialog(this: CharacterSheet, event: Event, _target: HTMLElement): void {
-        event.preventDefault();
-        // Specialist specializations are XP-purchased: route through the advancement
-        // menu (its '__new' specialist-add path charges XP and records the cost) rather
-        // than the free SpecialistSkillDialog, which added them untrained at no cost (#387).
-        // The free dialog is retained for NPC sheets, where the GM edits skills directly
-        // and there is no XP economy.
-        const careerKey = this.actor.originPath['career'];
-        AdvancementDialog.open(this.actor, { careerKey });
-    }
-
-    /* -------------------------------------------- */
-    /*  Talents Actions                             */
-    /* -------------------------------------------- */
-
-    /**
-     * Toggle favorite status for a talent.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the event.
-     */
-    static async #toggleFavoriteTalent(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset['itemId'];
-        if (itemId === undefined || itemId === '') return;
-        await this._toggleFavorite('favoriteTalents', itemId, ['overview', 'skills']);
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Traits                     */
-    /* -------------------------------------------- */
-
-    /**
-     * Filter traits list.
-     * @param {Event} event  Triggering event
-     * @param {HTMLElement} target  The input/select element
-     * @this {CharacterSheet}
-     * @private
-     */
-    static async #filterTraits(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const form = target.closest('.wh40k-traits-filters');
-        if (!form) return;
-
-        const search = form.querySelector<HTMLInputElement>('[name=traits-search]')?.value ?? '';
-        const category = form.querySelector<HTMLSelectElement>('[name=traits-category]')?.value ?? '';
-        const hasLevel = form.querySelector<HTMLInputElement>('[name=traits-has-level]')?.checked ?? false;
-
-        this._traitsFilter = { search, category, hasLevel };
-        await this.render({ parts: ['skills'] }); // Trait panel is in skills tab
-    }
-
-    /**
-     * Clear traits filter.
-     * @param {Event} event  Triggering event
-     * @param {HTMLElement} target  The button clicked
-     * @this {CharacterSheet}
-     * @private
-     */
-    static async #clearTraitsFilter(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        this._traitsFilter = { search: '', category: '', hasLevel: false };
-        await this.render({ parts: ['skills'] }); // Trait panel is in skills tab
-    }
-
-    /**
-     * Adjust trait level.
-     * @param {Event} event  Triggering event
-     * @param {HTMLElement} target  The button clicked
-     * @this {CharacterSheet}
-     * @private
-     */
-    static async #adjustTraitLevel(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset['itemId'];
-        const parsedDelta = parseInt(target.dataset['delta'] ?? '');
-        const delta = Number.isNaN(parsedDelta) ? 0 : parsedDelta;
-
-        if (itemId === undefined || itemId === '') return;
-        const item = this.actor.items.get(itemId);
-        if (item === undefined) return;
-
-        // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is Foundry DataModel; level not on base type; bracket access needs Record cast
-        const levelNum = Number((item.system as Record<string, unknown>)['level']);
-        const newLevel = Math.max(0, (Number.isNaN(levelNum) ? 0 : levelNum) + delta);
-        await item.update({ 'system.level': newLevel });
-
-        // Provide visual feedback
-        ui.notifications.info(
-            game.i18n.format(delta > 0 ? 'WH40K.Notify.Item.LevelIncreased' : 'WH40K.Notify.Item.LevelDecreased', { item: item.name, level: String(newLevel) }),
-        );
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Active Effects             */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle creating a new Active Effect.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #createEffect(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            // The effect-creation dialog builds a real effect (a line-resolved
-            // condition, or a characteristic / skill / combat modifier with its
-            // duration) instead of a blank, change-less one. Dismissal creates nothing.
-            const effect = await EffectCreationDialog.show(this.effectsOwner);
-            if (effect === null) return;
-
-            this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectCreated'), {
-                duration: 2000,
-            });
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectCreateFailed', { error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error('Create effect error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling an Active Effect's enabled/disabled state.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #toggleEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
-
-            if (effect === undefined) {
-                this._notify('warning', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectNotFound'), {
-                    duration: 3000,
-                });
-                return;
-            }
-
-            await effect.update({ disabled: !effect.disabled });
-
-            this._notify(
-                'info',
-                game.i18n.localize(effect.disabled ? 'WH40K.Notify.CharacterSheet.EffectDisabled' : 'WH40K.Notify.CharacterSheet.EffectEnabled'),
-                {
-                    duration: 2000,
-                },
-            );
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectToggleFailed', { error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error('Toggle effect error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle deleting an Active Effect.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #deleteEffect(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const effect = EffectActions.resolveEffect(this.effectsOwner, target);
-
-            if (effect === undefined) {
-                this._notify('warning', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectNotFound'), {
-                    duration: 3000,
-                });
-                return;
-            }
-
-            const confirmed = await ConfirmationDialog.confirm({
-                title: game.i18n.localize('WH40K.Notify.CharacterSheet.DeleteEffectTitle'),
-                content: game.i18n.format('WH40K.Notify.CharacterSheet.DeleteEffectContent', { name: effect.name ?? '' }),
-                confirmLabel: game.i18n.localize('WH40K.Common.Delete'),
-                cancelLabel: game.i18n.localize('WH40K.Cancel'),
-            });
-
-            if (confirmed) {
-                await effect.delete();
-                this._notify('info', game.i18n.localize('WH40K.Notify.CharacterSheet.EffectDeleted'), {
-                    duration: 2000,
-                });
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.EffectDeleteFailed', { error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error('Delete effect error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Handlers - Powers Actions             */
-    /* -------------------------------------------- */
-
-    /**
-     * Shared roll handler for power / ritual / order list controls. They
-     * differed only by the notify label and console tag; homologated to all
-     * surface a "<label> not found" warning.
-     */
-    static async #rollItemAction(sheet: CharacterSheet, target: HTMLElement, label: string): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = sheet.actor.items.get(itemId);
-            if (item === undefined) {
-                sheet._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label }), { duration: 3000 });
-                return;
-            }
-            await sheet.actor.rollItem(itemId);
-        } catch (error) {
-            sheet._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ItemRollFailed', { label, error: errorMessage(error) }), { duration: 5000 });
-            console.error(`${label} roll error:`, error);
-        }
-    }
-
-    /**
-     * Shared vocalize-to-chat handler for power / ritual / order controls.
-     * Differed only by the chat-card CSS class and notify label.
-     */
-    static async #vocalizeItemAction(sheet: CharacterSheet, target: HTMLElement, label: string, cssClass: string): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = sheet.actor.items.get(itemId);
-            if (item === undefined) {
-                sheet._notify('warning', game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label }), { duration: 3000 });
-                return;
-            }
-
-            if (typeof item.toChat === 'function') {
-                await item.toChat();
-            } else {
-                await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: sheet.actor }),
-                    content: `<div class="${cssClass}"><h3>${item.name}</h3><p>${item.system.description.value}</p></div>`,
-                });
-            }
-        } catch (error) {
-            sheet._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.ItemPostFailed', { label: label.toLowerCase(), error: errorMessage(error) }), {
-                duration: 5000,
-            });
-            console.error(`Vocalize ${label.toLowerCase()} error:`, error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling a psychic or navigator power.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollPower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.NavigatorPowers.Name'));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling damage for an attack power.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollPowerDamage(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        try {
-            const itemId = target.dataset['itemId'];
-            if (itemId === undefined || itemId === '') return;
-            const item = this.actor.items.get(itemId);
-            if (item === undefined) {
-                this._notify(
-                    'warning',
-                    game.i18n.format('WH40K.Notify.CharacterSheet.ItemNotFound', { label: game.i18n.localize('WH40K.NavigatorPowers.Name') }),
-                    { duration: 3000 },
-                );
-                return;
-            }
-
-            // Use the actor's damageItem method
-            await this.actor.damageItem(itemId);
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.DamageRollFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Power damage error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle vocalizing a power to chat.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #vocalizePower(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.NavigatorPowers.Name'), 'wh40k-power-chat');
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle toggling power details expansion.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #togglePowerDetails(this: CharacterSheet, _event: Event, target: HTMLElement): void {
-        const itemId = target.dataset['itemId'];
-        const detailsEl = this.element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
-
-        if (detailsEl) {
-            const isHidden = detailsEl.hasAttribute('hidden');
-            if (isHidden) {
-                detailsEl.removeAttribute('hidden');
-                target.classList.add('expanded');
-            } else {
-                detailsEl.setAttribute('hidden', '');
-                target.classList.remove('expanded');
-            }
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling a ritual.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.Rituals.Name'));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle vocalizing a ritual to chat.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #vocalizeRitual(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.Rituals.Name'), 'wh40k-ritual-chat');
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling an order.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#rollItemAction(this, target, game.i18n.localize('WH40K.Orders.Name'));
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle vocalizing an order to chat.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #vocalizeOrder(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        await CharacterSheet.#vocalizeItemAction(this, target, game.i18n.localize('WH40K.Orders.Name'), 'wh40k-order-chat');
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling psychic phenomena.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollPhenomena(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            // Use the game.wh40k roll helper if available
-            if (typeof game.wh40k.rollPsychicPhenomena === 'function') {
-                await game.wh40k.rollPsychicPhenomena(this.actor);
-            } else {
-                // Fallback: roll on phenomena table
-                /* eslint-disable no-restricted-syntax -- boundary: game.packs.getDocuments() returns untyped Foundry documents; cast to locate table by name and invoke draw() */
-                const table = (game.tables.getName('Psychic Phenomena') ??
-                    (await game.packs
-                        .get('wh40k-rpg.wh40k-rolltables-psychic')
-                        ?.getDocuments()
-                        .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Phenomena'))))) as
-                    | { draw: () => Promise<unknown> }
-                    | undefined;
-                /* eslint-enable no-restricted-syntax */
-
-                if (table) {
-                    await table.draw();
-                } else {
-                    // Simple d100 roll as last resort
-                    const roll = await new Roll('1d100').evaluate();
-                    await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="wh40k-phenomena-roll"><h3>${game.i18n.localize('WH40K.QuickActions.PsychicPhenomena')}</h3><p>${game.i18n.format(
-                            'WH40K.Roll.RollResult',
-                            { total: String(roll.total) },
-                        )}</p></div>`,
-                        rolls: [roll],
-                    });
-                }
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PhenomenaFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Phenomena roll error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle rolling perils of the warp.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #rollPerils(this: CharacterSheet, _event: Event, _target: HTMLElement): Promise<void> {
-        try {
-            // Use the game.wh40k roll helper if available
-            if (typeof game.wh40k.rollPerilsOfTheWarp === 'function') {
-                await game.wh40k.rollPerilsOfTheWarp(this.actor);
-            } else {
-                // Fallback: roll on perils table
-                /* eslint-disable no-restricted-syntax -- boundary: game.packs.getDocuments() returns untyped Foundry documents; cast to locate table by name and invoke draw() */
-                const table = (game.tables.getName('Perils of the Warp') ??
-                    (await game.packs
-                        .get('wh40k-rpg.wh40k-rolltables-psychic')
-                        ?.getDocuments()
-                        .then((docs: unknown[]) => docs.find((d: unknown) => (d as { name: string }).name.includes('Perils'))))) as
-                    | { draw: () => Promise<unknown> }
-                    | undefined;
-
-                /* eslint-enable no-restricted-syntax */
-                if (table) {
-                    await table.draw();
-                } else {
-                    // Simple d100 roll as last resort
-                    const roll = await new Roll('1d100').evaluate();
-                    await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                        content: `<div class="wh40k-perils-roll"><h3>${game.i18n.localize('WH40K.QuickActions.PerilsOfTheWarp')}</h3><p>${game.i18n.format(
-                            'WH40K.Roll.RollResult',
-                            { total: String(roll.total) },
-                        )}</p></div>`,
-                        rolls: [roll],
-                    });
-                }
-            }
-        } catch (error) {
-            this._notify('error', game.i18n.format('WH40K.Notify.CharacterSheet.PerilsFailed', { error: errorMessage(error) }), { duration: 5000 });
-            console.error('Perils roll error:', error);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle filtering orders by category.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #filterOrders(this: CharacterSheet, _event: Event, target: HTMLElement): Promise<void> {
-        const category = target.dataset['category'] ?? '';
-
-        this._orderCategoryFilter = category;
-
-        // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
-        filterBtns.forEach((btn: Element) => {
-            btn.classList.toggle('active', (btn as HTMLElement).dataset['category'] === category);
-        });
-
-        // The ship-orders panel lives on the Combat tab (#194).
-        await this.render({ parts: ['combat'] });
-    }
-
-    /* -------------------------------------------- */
     /*  Drag & Drop Override                        */
     /* -------------------------------------------- */
 
-    /**
-     * Override drop item to handle origin path updates.
-     * @override
-     */
     /**
      * After Foundry renders the sheet, wire HTML5 drag-and-drop reorder on the
      * favourite-skills / favourite-talents lists. Each row carries a
@@ -6551,17 +1417,17 @@ export default class CharacterSheet extends BaseActorSheet {
         // (NPCs) opt out, so the talent lands on them like any other item.
         // A Dark Pact is struck, not owned: it becomes a `system.pacts` record (#84).
         if (isDarkPactItem(item)) {
-            await this.#strikeDarkPact(item);
+            await this._strikeDarkPact(item);
             return false;
         }
         // A Regimental Drawback is recorded on an Only War character, not owned (#160).
         if (isRegimentalDrawback(item) && 'regimentDrawbacks' in this.actor.system) {
-            await this.#addRegimentalDrawback(item.uuid ?? '', item.name);
+            await LinePanels.recordRegimentalDrawback.call(this, item.uuid ?? '', item.name);
             return false;
         }
         // So is a medal conferred on it (content#32).
         if (isMedal(item) && 'regimentalAwards' in this.actor.system) {
-            await this.#addRegimentalAward(item.uuid ?? '', item.name);
+            await LinePanels.recordRegimentalAward.call(this, item.uuid ?? '', item.name);
             return false;
         }
 

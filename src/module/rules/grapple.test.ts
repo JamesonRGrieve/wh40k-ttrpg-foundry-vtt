@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readDeclaredPacks } from '../../../scripts/lib/pack-manifest.mjs';
@@ -415,7 +415,16 @@ describe('readGrappleState — reads the flag where the controller writes it (#1
 describe('character sheet reads the grapple state through readGrappleState (#120 regression)', () => {
     // Source-text guard: the sheet cannot load under happy-dom, so pin that it routes
     // through the shared reader and never re-derives the flag path itself.
-    const source = readFileSync(resolve(__dirname, '../applications/actor/character-sheet.ts'), 'utf8');
+    // The sheet and the handler modules split out of it (#716).
+    const partsDir = resolve(__dirname, '../applications/actor/character');
+    const source = [
+        resolve(__dirname, '../applications/actor/character-sheet.ts'),
+        ...readdirSync(partsDir)
+            .filter((f) => f.endsWith('.ts'))
+            .map((f) => resolve(partsDir, f)),
+    ]
+        .map((f) => readFileSync(f, 'utf8'))
+        .join('\n');
 
     it('uses the shared reader and the system scope', () => {
         expect(source).toContain('readGrappleState(this.actor.flags, SYSTEM_ID)');

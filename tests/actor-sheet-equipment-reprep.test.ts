@@ -50,8 +50,9 @@ describe('character sheet equipment/combat tab re-prep', () => {
         const branch = body.match(/if \(partId === 'equipment' \|\| partId === 'combat'\)\s*\{([\s\S]*?)\n {8}\}/);
         const branchBody = branch?.[1];
         expect(branchBody, 'equipment/combat re-prep branch must be present').toBeTypeOf('string');
-        expect(branchBody).toMatch(/_getCategorizedItems\(\)/);
-        expect(branchBody).toMatch(/_prepareLoadoutData\(/);
-        expect(branchBody).toMatch(/_prepareCombatData\(/);
+        // The helpers live in character/overview-context.ts and combat-context.ts (#716).
+        expect(branchBody).toMatch(/getCategorizedItems\.call\(this\)/);
+        expect(branchBody).toMatch(/prepareLoadoutData\.call\(/);
+        expect(branchBody).toMatch(/prepareCombatData\.call\(/);
     });
 });

@@ -20,21 +20,25 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { characterSheetSource } from './lib/character-sheet-source.ts';
 
 const BASE_PATH = resolve(__dirname, '../src/module/applications/actor/base-actor-sheet.ts');
 const CHAR_PATH = resolve(__dirname, '../src/module/applications/actor/character-sheet.ts');
 
 const baseSrc = readFileSync(BASE_PATH, 'utf8');
 const charSrc = readFileSync(CHAR_PATH, 'utf8');
-const combinedSrc = `${baseSrc}\n${charSrc}`;
+// The sheet's context builders also live in its split-out modules (#716).
+const combinedSrc = `${baseSrc}\n${characterSheetSource()}`;
 
 /** Collect every `this._xxxFilter` access in a prepare-context method body. */
 function collectFilterReadsInPrepareMethods(src: string): Set<string> {
     const found = new Set<string>();
     // Match `_prepare<Name>Context(...) { ... }` blocks (greedy across the file is fine —
     // we just need every `this._xxxFilter` read regardless of which prepare block it's in).
-    const prepareBlocks = src.matchAll(/_prepare\w*Context\s*\([^)]*\)[^{]*\{([\s\S]*?)\n {4}\}/g);
-    for (const block of prepareBlocks) {
+    const methodBlocks = src.matchAll(/_prepare\w*Context\s*\([^)]*\)[^{]*\{([\s\S]*?)\n {4}\}/g);
+    // The split-out builders are top-level `this`-typed functions closing at column 0.
+    const functionBlocks = src.matchAll(/\nexport (?:async )?function prepare\w*\(this: CharacterSheet[^)]*\)[^{]*\{([\s\S]*?)\n\}/g);
+    for (const block of [...methodBlocks, ...functionBlocks]) {
         const body = block[1];
         for (const m of body.matchAll(/this\.(_\w+Filter)\b/g)) {
             found.add(m[1]);

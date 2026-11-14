@@ -14,15 +14,13 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { moduleFunctionBody } from './lib/character-sheet-source.ts';
 
 const SOURCE = readFileSync(resolve(__dirname, '../src/module/applications/actor/character-sheet.ts'), 'utf8');
 
-/** The body of `static async #setMovementMode(...)`, up to the next static member. */
+/** The body of the `setMovementMode` handler (split out of the sheet, #716). */
 function handlerBody(): string {
-    const start = SOURCE.indexOf('static async #setMovementMode(');
-    expect(start).toBeGreaterThan(-1);
-    const next = SOURCE.indexOf('\n    static ', start + 1);
-    return SOURCE.slice(start, next === -1 ? undefined : next);
+    return moduleFunctionBody(readFileSync(resolve(__dirname, '../src/module/applications/actor/character/combat-actions.ts'), 'utf8'), 'setMovementMode');
 }
 
 describe('#setMovementMode (#235)', () => {

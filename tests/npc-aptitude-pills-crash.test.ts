@@ -11,9 +11,9 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { readRepoFile } from './lib/repo-file.ts';
+import { characterSheetSource } from './lib/character-sheet-source.ts';
 
-const SRC = readRepoFile('src/module/applications/actor/character-sheet.ts');
+const SRC = characterSheetSource();
 
 describe('_prepareAptitudePills NPC guard (#331)', () => {
     it('reads granted aptitudes through an optional shape so absent NPC aptitudes yield []', () => {

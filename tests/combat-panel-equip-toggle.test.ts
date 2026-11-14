@@ -31,7 +31,7 @@ describe('Combat-tab weapon equip toggle (#265)', () => {
     });
 
     it('binds to the existing toggleEquip action on the shared sheet', () => {
-        expect(CHAR_SHEET).toContain("'toggleEquip': CharacterSheet.#toggleEquip");
+        expect(CHAR_SHEET).toContain("'toggleEquip': EquipmentActions.toggleEquip");
     });
 });
 
