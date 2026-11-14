@@ -17,6 +17,7 @@
         <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
             <div class="tab active" data-tab="description" data-group="primary">
                 {{> systems/wh40k-rpg/templates/item/panel/description-panel.hbs}}
+              {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
             </div>
 
             <div class="tab" data-tab="effects" data-group="primary">

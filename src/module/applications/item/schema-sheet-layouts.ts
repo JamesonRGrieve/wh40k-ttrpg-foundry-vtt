@@ -480,6 +480,73 @@ export const DARK_PACT_EXTRA_LAYOUT: SchemaSheetLayout = {
     ],
 };
 
+/* -------------------------------------------- */
+/*  Campaign and authoring fields (#734)          */
+/* -------------------------------------------- */
+
+/**
+ * The in-campaign acquisition note ("where we got this") every item stores:
+ * BaseItemSheet adds this section to every item sheet.
+ */
+export const ITEM_COMMON_LAYOUT: SchemaSheetLayout = {
+    type: 'item',
+    labelPrefix: 'WH40K.ItemFields.Item',
+    sections: [{ key: 'acquired', icon: 'fa-hand-holding', paths: ['acquired'] }],
+};
+
+export const JOURNAL_ENTRY_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'journalEntry',
+    labelPrefix: 'WH40K.ItemFields.JournalEntry',
+    sections: [
+        {
+            key: 'lead',
+            icon: 'fa-search',
+            paths: ['isLead', 'leadStatus', 'leadSource', 'leadGmRedHerring'],
+            choiceLabels: { leadStatus: 'WH40K.Lead.State' },
+        },
+    ],
+};
+
+export const PEER_ENEMY_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'peer',
+    labelPrefix: 'WH40K.ItemFields.PeerEnemy',
+    sections: [{ key: 'group', icon: 'fa-users', paths: ['group'] }],
+};
+
+export const STORAGE_LOCATION_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'storageLocation',
+    labelPrefix: 'WH40K.ItemFields.StorageLocation',
+    sections: [{ key: 'storage', icon: 'fa-box', paths: ['isContainer'] }],
+};
+
+export const LOCATION_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'location',
+    labelPrefix: 'WH40K.ItemFields.Location',
+    sections: [
+        { key: 'homeWorld', icon: 'fa-globe', paths: ['homeWorldRules[]'] },
+        { key: 'sampleCharacters', icon: 'fa-user-friends', paths: ['sampleCharacters[].name', 'sampleCharacters[].description'] },
+    ],
+};
+
+/** The authoring fields; selected choices, roll results and the homebrew thrones are builder state. */
+export const ORIGIN_PATH_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'originPath',
+    labelPrefix: 'WH40K.ItemFields.OriginPath',
+    sections: [{ key: 'authoring', icon: 'fa-route', paths: ['isAdvancedOrigin', 'positions[]', 'replacesOrigins[]'] }],
+};
+
+export const NPC_TEMPLATE_EXTRA_LAYOUT: SchemaSheetLayout = {
+    type: 'npcTemplate',
+    labelPrefix: 'WH40K.ItemFields.NpcTemplate',
+    sections: [
+        {
+            key: 'template',
+            icon: 'fa-users-cog',
+            paths: ['baseCharacteristics.influence', 'equipmentPreset', 'allowHorde', 'defaultMagnitude', 'tactics'],
+        },
+    ],
+};
+
 /** The hand-built sheets' supplementary layouts, by the item types each sheet opens. */
 export const SUPPLEMENTARY_LAYOUTS: Readonly<Record<string, SchemaSheetLayout>> = {
     weapon: WEAPON_EXTRA_LAYOUT,
@@ -499,4 +566,11 @@ export const SUPPLEMENTARY_LAYOUTS: Readonly<Record<string, SchemaSheetLayout>> 
     trait: TRAIT_EXTRA_LAYOUT,
     skill: SKILL_EXTRA_LAYOUT,
     darkPact: DARK_PACT_EXTRA_LAYOUT,
+    journalEntry: JOURNAL_ENTRY_EXTRA_LAYOUT,
+    peer: PEER_ENEMY_EXTRA_LAYOUT,
+    enemy: PEER_ENEMY_EXTRA_LAYOUT,
+    storageLocation: STORAGE_LOCATION_EXTRA_LAYOUT,
+    location: LOCATION_EXTRA_LAYOUT,
+    originPath: ORIGIN_PATH_EXTRA_LAYOUT,
+    npcTemplate: NPC_TEMPLATE_EXTRA_LAYOUT,
 };

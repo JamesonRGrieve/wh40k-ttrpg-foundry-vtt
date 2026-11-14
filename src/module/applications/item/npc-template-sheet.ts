@@ -9,6 +9,7 @@ import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { appendTag, withoutIndex } from '../../utils/list-edit.ts';
 import { createNpcFromTemplate } from '../npc/npc-from-template.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { NPC_TEMPLATE_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** NPCTemplate items expose NPCTemplateData on `system`. */
 type NPCTemplateItem = WH40KItemDocument & {
@@ -29,6 +30,9 @@ const TAB_LABEL_PREVIEW = 'WH40K.NPC.Template.Tabs.Preview';
  * @extends {BaseItemSheet}
  */
 export default class NPCTemplateSheet extends BaseItemSheet<NPCTemplateItem> {
+    /** Stored fields the template lacks, edited through the shared schema rows (#734). */
+    static override SCHEMA_LAYOUT = NPC_TEMPLATE_EXTRA_LAYOUT;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

@@ -10,7 +10,7 @@ import {
     type SchemaSheetLayout,
     type SchemaSheetSection,
 } from './schema-sheet-layout.ts';
-import { SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS, TALENT_EXTRA_LAYOUT, TRAIT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
+import { ITEM_COMMON_LAYOUT, SCHEMA_SHEET_LAYOUTS, SUPPLEMENTARY_LAYOUTS, TALENT_EXTRA_LAYOUT, TRAIT_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** A structural stand-in for a Foundry DataField of the named class. */
 function field(name: string, extra: Partial<SchemaNode> = {}): SchemaNode {
@@ -109,12 +109,11 @@ describe('the shipped schema-sheet layouts (#731)', () => {
         ]);
     });
 
-    it.each([...SCHEMA_SHEET_LAYOUTS, ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS))].map((entry) => [entry.labelPrefix, entry] as const))(
-        '%s has a langpack label for every section and field',
-        (_type, schemaLayout) => {
-            expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
-        },
-    );
+    it.each(
+        [...SCHEMA_SHEET_LAYOUTS, ...new Set(Object.values(SUPPLEMENTARY_LAYOUTS)), ITEM_COMMON_LAYOUT].map((entry) => [entry.labelPrefix, entry] as const),
+    )('%s has a langpack label for every section and field', (_type, schemaLayout) => {
+        expect(layoutLabelKeys(schemaLayout).filter((key) => !has(key))).toEqual([]);
+    });
 
     it('gives talents and traits the one re-roll section, not two copies (#733)', () => {
         const reroll = TALENT_EXTRA_LAYOUT.sections.find((entry) => entry.key === 'reroll');

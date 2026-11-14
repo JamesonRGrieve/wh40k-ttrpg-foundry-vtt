@@ -129,11 +129,10 @@ describe.skipIf(skipAll)('item types have sheets that edit their own fields (Tie
         expect(missing).toEqual([]);
     });
 
-    it('every sheet with a schema layout renders the schema sections in one of its templates', async () => {
+    it('every item sheet renders the schema sections in one of its templates (#734: the acquisition note is on every item)', async () => {
         const { ITEM_SHEETS } = await import('../../src/module/applications/item/item-sheet-registry');
         const missing = ITEM_SHEETS.filter((entry) => {
             const sheet = entry.sheet as { SCHEMA_LAYOUT?: SchemaSheetLayout | null; PARTS?: Record<string, { template: string }> };
-            if (sheet.SCHEMA_LAYOUT == null) return false;
             const templates = Object.values(sheet.PARTS ?? {})
                 .map((part) => part.template)
                 .filter((path) => path.startsWith('systems/wh40k-rpg/'))

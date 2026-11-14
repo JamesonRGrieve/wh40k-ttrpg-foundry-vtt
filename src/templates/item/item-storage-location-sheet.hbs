@@ -48,6 +48,8 @@
 
     {{! Description Tab }}
     <section class="wh40k-tab-content tab tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3" data-group="primary" data-tab="description">
+        {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-align-left" labelKey="WH40K.Tabs.Description"}}
             <textarea
                 class="tw-w-full tw-min-h-[240px] tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y"

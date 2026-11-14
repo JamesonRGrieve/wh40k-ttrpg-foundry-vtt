@@ -5,9 +5,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet, renderSheetParts } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-journal-entry-sheet.hbs?raw';
+import { ITEM_COMMON_LAYOUT, JOURNAL_ENTRY_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0xd0c5a3e);
@@ -107,5 +109,26 @@ export const PerSystemAllRenderTitle: Story = {
             const cv = within(root);
             void expect(cv.getByDisplayValue('Encounter at Ore Processor 12')).toBeTruthy();
         }
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = {
+        ...{ ...makeCtx({ inEditMode: true }), editable: true },
+        schemaSections: [...mockSchemaSections(JOURNAL_ENTRY_EXTRA_LAYOUT, {}), ...mockSchemaSections(ITEM_COMMON_LAYOUT)],
+    };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: lead fields and the acquisition note submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            ['system.isLead', 'system.leadStatus', 'system.leadSource', 'system.leadGmRedHerring', 'system.acquired'],
+            renderWithSchemaFields,
+        );
     },
 };

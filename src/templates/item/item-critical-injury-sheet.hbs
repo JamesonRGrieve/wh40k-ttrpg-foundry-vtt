@@ -122,17 +122,16 @@
 
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-file-medical" labelKey="WH40K.ItemSheet.CriticalInjury.InjuryEffect" label=(localize "WH40K.ItemSheet.CriticalInjury.InjuryEffect" severity=item.system.severity)}}
             {{#if inEditMode}}
-              {{#each item.system.availableSeverities as |sev|}}
-                {{#with (lookup ../item.system.effects sev) as |effect|}}
-                  <div class="tw-mb-3">
+              {{!-- Every stored level, then the next one so a new level can be added (#734). --}}
+              {{#each item.system.editableSeverities as |sev|}}
+                  <div class="tw-mb-3" data-injury-severity="{{sev}}">
                     <label class="tw-text-sm tw-font-medium tw-block tw-mb-1"><strong>{{localize "WH40K.CriticalInjury.Severity"}} {{sev}}:</strong></label>
-                    {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
+                    {{editor (lookup (lookup ../item.system.effects sev) "text") target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
                     <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm tw-mt-1">
-                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
+                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked (lookup (lookup ../item.system.effects sev) "permanent")}} />
                       <span>{{localize "WH40K.CriticalInjury.Permanent"}}</span>
                     </label>
                   </div>
-                {{/with}}
               {{/each}}
             {{else}}
               <div class="tw-text-[color:var(--wh40k-text-dark)] tw-leading-[1.5] tw-text-sm [&_p]:tw-mb-2 [&_strong]:tw-font-bold [&_strong]:tw-text-[color:var(--wh40k-text-dark)]">{{{item.system.currentEffect}}}</div>
@@ -146,6 +145,7 @@
             <textarea name="system.notes" rows="3" placeholder="{{localize 'WH40K.ItemSheet.CriticalInjury.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
+        {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
       </div>
 
       {{!-- DESCRIPTION TAB --}}

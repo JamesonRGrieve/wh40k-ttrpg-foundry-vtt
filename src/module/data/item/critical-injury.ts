@@ -1,3 +1,4 @@
+import { editableSeverities } from '../../rules/critical-injury-severity.ts';
 import ItemDataModel from '../abstract/item-data-model.ts';
 import { identifierField } from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
@@ -73,6 +74,11 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      */
     get isPermanent(): boolean {
         return this.effects[this.severity]?.permanent ?? false;
+    }
+
+    /** The levels the sheet edits: every stored level, then the next one to add (#734). */
+    get editableSeverities(): number[] {
+        return editableSeverities(this.availableSeverities);
     }
 
     /**

@@ -10154,6 +10154,125 @@
                         "label": "Critical Chart"
                     }
                 }
+            },
+            "Item": {
+                "FIELDS": {
+                    "acquired": {
+                        "label": "Acquired"
+                    }
+                },
+                "Sections": {
+                    "acquired": "Acquisition Note"
+                }
+            },
+            "JournalEntry": {
+                "Sections": {
+                    "lead": "Lead"
+                },
+                "FIELDS": {
+                    "isLead": {
+                        "label": "This Entry Is a Lead"
+                    },
+                    "leadStatus": {
+                        "label": "Lead Status"
+                    },
+                    "leadSource": {
+                        "label": "Lead Source"
+                    },
+                    "leadGmRedHerring": {
+                        "label": "Red Herring (GM Only)"
+                    }
+                }
+            },
+            "Location": {
+                "Sections": {
+                    "homeWorld": "Home World Rules",
+                    "sampleCharacters": "Sample Characters"
+                },
+                "FIELDS": {
+                    "homeWorldRules": {
+                        "label": "Home World Rules"
+                    },
+                    "sampleCharacters": {
+                        "label": "Sample Characters",
+                        "name": {
+                            "label": "Name"
+                        },
+                        "description": {
+                            "label": "Description"
+                        }
+                    }
+                }
+            },
+            "NpcTemplate": {
+                "Sections": {
+                    "template": "Template Options"
+                },
+                "FIELDS": {
+                    "baseCharacteristics": {
+                        "influence": {
+                            "label": "Base Influence"
+                        }
+                    },
+                    "equipmentPreset": {
+                        "label": "Equipment Preset",
+                        "choices": {
+                            "Melee": "Melee",
+                            "Ranged": "Ranged",
+                            "Mixed": "Mixed",
+                            "Caster": "Caster",
+                            "Support": "Support",
+                            "Heavy": "Heavy",
+                            "Unarmed": "Unarmed",
+                            "Custom": "Custom"
+                        }
+                    },
+                    "allowHorde": {
+                        "label": "Allow Horde"
+                    },
+                    "defaultMagnitude": {
+                        "label": "Default Magnitude"
+                    },
+                    "tactics": {
+                        "label": "Tactics"
+                    }
+                }
+            },
+            "OriginPath": {
+                "Sections": {
+                    "authoring": "Authoring"
+                },
+                "FIELDS": {
+                    "isAdvancedOrigin": {
+                        "label": "Advanced Origin"
+                    },
+                    "positions": {
+                        "label": "Chart Positions"
+                    },
+                    "replacesOrigins": {
+                        "label": "Replaces Origins"
+                    }
+                }
+            },
+            "PeerEnemy": {
+                "Sections": {
+                    "group": "Group"
+                },
+                "FIELDS": {
+                    "group": {
+                        "label": "Group"
+                    }
+                }
+            },
+            "StorageLocation": {
+                "Sections": {
+                    "storage": "Storage"
+                },
+                "FIELDS": {
+                    "isContainer": {
+                        "label": "Is a Container"
+                    }
+                }
             }
         }
     }

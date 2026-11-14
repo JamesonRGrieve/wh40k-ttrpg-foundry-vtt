@@ -3,8 +3,10 @@ import Hbs from 'handlebars';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-location-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { ITEM_COMMON_LAYOUT, LOCATION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 
@@ -124,3 +126,27 @@ export const PerSystemBc: Story = perSystemStory('bc');
 export const PerSystemOw: Story = perSystemStory('ow');
 export const PerSystemDw: Story = perSystemStory('dw');
 export const PerSystemIm: Story = perSystemStory('im');
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: [
+            ...mockSchemaSections(LOCATION_EXTRA_LAYOUT, { homeWorldRules: ['Hive dweller'], sampleCharacters: [{ name: 'Sample' }] }),
+            ...mockSchemaSections(ITEM_COMMON_LAYOUT),
+        ],
+    };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: home world rules, sample characters and the acquisition note submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            ['system.homeWorldRules.0', 'system.sampleCharacters.0.name', 'system.sampleCharacters.0.description', 'system.acquired'],
+            renderWithSchemaFields,
+        );
+    },
+};

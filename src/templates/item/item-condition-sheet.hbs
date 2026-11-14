@@ -134,6 +134,7 @@
             <textarea name="system.notes" rows="3" placeholder="{{localize 'WH40K.ItemSheet.Condition.NotesPlaceholder'}}" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
+        {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
       </div>
 
       {{!-- DESCRIPTION TAB --}}

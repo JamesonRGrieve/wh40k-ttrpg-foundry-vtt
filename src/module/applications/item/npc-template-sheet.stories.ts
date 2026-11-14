@@ -6,6 +6,7 @@ import Hbs from 'handlebars';
 import { expect } from 'storybook/test';
 import { mockItem, renderTemplate as renderTpl } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheetParts } from '../../../../stories/test-helpers';
 import headerSrc from '../../../templates/item/npc-template/header.hbs?raw';
@@ -13,6 +14,7 @@ import basicsSrc from '../../../templates/item/npc-template/tab-basics.hbs?raw';
 import characteristicsSrc from '../../../templates/item/npc-template/tab-characteristics.hbs?raw';
 import equipmentSrc from '../../../templates/item/npc-template/tab-equipment.hbs?raw';
 import tabsSrc from '../../../templates/item/npc-template/tabs.hbs?raw';
+import { NPC_TEMPLATE_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 const headerTpl = Hbs.compile(headerSrc);
@@ -271,5 +273,23 @@ export const DefaultWidthLayout: Story = {
         }
         await expect(canvasElement.querySelectorAll('nav.tabs').length).toBe(GAME_LINES.length);
         await expect(problems).toEqual([]);
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = { ...{ ...makeCtx(), inEditMode: true, editable: true }, schemaSections: [...mockSchemaSections(NPC_TEMPLATE_EXTRA_LAYOUT, {})] };
+    return inForm(renderTpl(basicsTpl, ctx), systemId);
+}
+
+/** Edit mode: base Influence, equipment preset, horde flag and default magnitude submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            ['system.baseCharacteristics.influence', 'system.equipmentPreset', 'system.allowHorde', 'system.defaultMagnitude'],
+            renderWithSchemaFields,
+        );
     },
 };

@@ -3,10 +3,12 @@
  */
 
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { JOURNAL_ENTRY_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Sheet for journal entry items (used for character notes/journals). */
 const JournalEntryItemSheet = defineSimpleItemSheet({
     className: 'JournalEntryItemSheet',
+    schemaLayout: JOURNAL_ENTRY_EXTRA_LAYOUT,
     classes: ['wh40k-rpg', 'sheet', 'item', 'journal-entry'],
     template: 'systems/wh40k-rpg/templates/item/item-journal-entry-sheet.hbs',
     width: 550,

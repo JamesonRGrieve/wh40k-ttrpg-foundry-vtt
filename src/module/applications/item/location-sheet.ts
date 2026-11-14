@@ -9,6 +9,7 @@
 
 import { LOCATION_TYPE_SLUGS } from '../../config/location-types.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { LOCATION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Build the `{ slug: Label }` map for the location-type selector. */
 function locationTypeChoices(): Record<string, string> {
@@ -25,6 +26,7 @@ function locationTypeChoices(): Record<string, string> {
  */
 const LocationSheet = defineSimpleItemSheet({
     className: 'LocationSheet',
+    schemaLayout: LOCATION_EXTRA_LAYOUT,
     classes: ['wh40k-rpg', 'sheet', 'item', 'location'],
     template: 'systems/wh40k-rpg/templates/item/item-location-sheet.hbs',
     width: 600,

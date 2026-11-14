@@ -16,12 +16,14 @@ import { expect, within } from 'storybook/test';
 import { mockItem, mockSourceReference } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
 import { localizeKey } from '../../../../stories/mocks/lang-localize';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { clickEachTab, detailSectionTitles, renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-origin-path-sheet.hbs?raw';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { type OriginGrantFieldFlags, type OriginStepOption, originSheetLine, originSheetLineContext } from '../../rules/origin-step-options.ts';
 import { originStepLabelKey } from '../../rules/origin-steps.ts';
+import { ITEM_COMMON_LAYOUT, ORIGIN_PATH_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 const rng = seedRandom(0x0a1b2c);
@@ -463,5 +465,29 @@ export const BcRaceCreationValues: Story = {
         // The trait grant row edits its specialisation and level.
         await expect(input('system.grants.traits.0.specialization')?.value).toBe('Strength');
         await expect(input('system.grants.traits.0.level')?.value).toBe('4');
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = {
+        ...{ ...makeCtx({ inEditMode: true }), editable: true },
+        schemaSections: [
+            ...mockSchemaSections(ORIGIN_PATH_EXTRA_LAYOUT, { positions: [1], replacesOrigins: ['hive-world'] }),
+            ...mockSchemaSections(ITEM_COMMON_LAYOUT),
+        ],
+    };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: authoring fields and the acquisition note submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(
+            canvasElement,
+            ['system.isAdvancedOrigin', 'system.positions.0', 'system.replacesOrigins.0', 'system.acquired'],
+            renderWithSchemaFields,
+        );
     },
 };

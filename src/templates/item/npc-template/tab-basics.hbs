@@ -1,6 +1,8 @@
 {{! NPC Template - Basics Tab }}
 <section class="tab {{tab.cssClass}}" data-tab="basics" data-group="primary">
     {{! Description Section }}
+    {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+
     {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-scroll" labelKey="WH40K.NPC.Template.Description"}}
             <div>
                 {{formInput fields.description value=system.description enriched=enrichedDescription}}

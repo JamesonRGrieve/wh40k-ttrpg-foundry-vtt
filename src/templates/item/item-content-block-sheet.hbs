@@ -78,6 +78,8 @@
 
       {{!-- Description, the type-specific HTML fields, Notes and Modifiers: each section
            shows in edit mode, and in read-only mode only when it has content (#597). --}}
+      {{> systems/wh40k-rpg/templates/item/partial/schema-sections.hbs sections=schemaSections}}
+
       {{#> systems/wh40k-rpg/templates/item/partial/content-block-section.hbs icon="fa-book" labelKey="WH40K.Item.Tabs.Description" show=(or inEditMode (hasText system.description.value))}}
           {{#if inEditMode}}
           {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}

@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-peer-enemy-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { ITEM_COMMON_LAYOUT, PEER_ENEMY_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 interface PeerEnemyItem {
     name: string;
@@ -120,5 +122,22 @@ export const HomologationIM: Story = {
     render: (args) => renderForSystem(args, 'im'),
     play: async ({ canvasElement }) => {
         await expect(canvasElement.querySelector('[data-wh40k-system="im"]')).toBeTruthy();
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: [...mockSchemaSections(PEER_ENEMY_EXTRA_LAYOUT, {}), ...mockSchemaSections(ITEM_COMMON_LAYOUT)],
+    };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: group and the acquisition note submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(canvasElement, ['system.group', 'system.acquired'], renderWithSchemaFields);
     },
 };

@@ -8,6 +8,7 @@ import { originStepLabel } from '../../rules/origin-steps.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import BaseItemSheet from './base-item-sheet.ts';
+import { ORIGIN_PATH_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /**
  * Sheet for origin path items
@@ -45,6 +46,9 @@ const GRANT_ROW_DEFAULTS: Record<EditableGrantKey, () => GrantRow> = {
 
 // @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathSheet extends BaseItemSheet {
+    /** Stored fields the template lacks, edited through the shared schema rows (#734). */
+    static override SCHEMA_LAYOUT = ORIGIN_PATH_EXTRA_LAYOUT;
+
     /**
      * Editing an origin-path step **owned by a character** is a direct-edit
      * bypass of the sanctioned path (the origin-path creator), so it requires the

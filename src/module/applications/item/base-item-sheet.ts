@@ -18,6 +18,7 @@ import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 import { type FormObject, isFormObject, isFormValue, mergeIndexedArrays } from './reference-list-edits.ts';
 import { buildSchemaSections, type SchemaSheetLayout } from './schema-sheet-layout.ts';
+import { ITEM_COMMON_LAYOUT } from './schema-sheet-layouts.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -259,12 +260,16 @@ export default class BaseItemSheet<TItem extends WH40KItemDocument = WH40KItemDo
             dh.craftsmanships = cfgWh?.craftsmanships ?? WH40K.craftsmanships;
         }
 
-        // The stored fields this sheet edits through the shared schema rows (#731, #732).
+        // The stored fields this sheet edits through the shared schema rows (#731–#734): its own
+        // layout, then the fields every item stores (the acquisition note).
         const layout = (this.constructor as typeof BaseItemSheet).SCHEMA_LAYOUT;
-        if (layout !== null) {
-            const source = context['source'];
-            context['schemaSections'] = buildSchemaSections(layout, this.item.system.schema, isFormValue(source) ? source : undefined);
-        }
+        const rawSource = context['source'];
+        const source = isFormValue(rawSource) ? rawSource : undefined;
+        const schema = this.item.system.schema;
+        context['schemaSections'] = [
+            ...(layout === null ? [] : buildSchemaSections(layout, schema, source)),
+            ...buildSchemaSections(ITEM_COMMON_LAYOUT, schema, source),
+        ].filter((section) => section.rows.length > 0);
 
         // Merge contexts: parent provides base, our values override
         // Use spread to avoid "object is not extensible" errors with frozen parentContext

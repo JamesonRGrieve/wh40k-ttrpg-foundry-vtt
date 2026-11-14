@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import templateSrc from '../../../../src/templates/item/item-storage-location-sheet.hbs?raw';
 import type { SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { renderSheet } from '../../../../stories/test-helpers';
+import { ITEM_COMMON_LAYOUT, STORAGE_LOCATION_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 interface EmbeddedItem {
     id: string;
@@ -139,5 +141,22 @@ export const HomologationIM: Story = {
     render: (args) => renderForSystem(args, 'im'),
     play: ({ canvasElement }) => {
         void expect(canvasElement.querySelector('[data-wh40k-system="im"]')).toBeTruthy();
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = {
+        ...{ ...meta.args, inEditMode: true, editable: true },
+        schemaSections: [...mockSchemaSections(STORAGE_LOCATION_EXTRA_LAYOUT, {}), ...mockSchemaSections(ITEM_COMMON_LAYOUT)],
+    };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: container flag and the acquisition note submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(canvasElement, ['system.isContainer', 'system.acquired'], renderWithSchemaFields);
     },
 };

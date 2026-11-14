@@ -5,9 +5,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { mockItem } from '../../../../stories/mocks';
 import { seedRandom, randomId, type SystemId } from '../../../../stories/mocks/extended';
+import { inForm, mockSchemaSections, playSchemaFields } from '../../../../stories/mocks/schema-sections';
 import { initializeStoryHandlebars } from '../../../../stories/template-support';
 import { renderSheet } from '../../../../stories/test-helpers';
 import templateSrc from '../../../templates/item/item-sheet.hbs?raw';
+import { ITEM_COMMON_LAYOUT } from './schema-sheet-layouts.ts';
 
 initializeStoryHandlebars();
 
@@ -131,5 +133,19 @@ export const PerSystemIM: Story = {
     play: async ({ canvasElement }) => {
         const el = canvasElement.querySelector<HTMLElement>('[data-wh40k-system]');
         await expect(el?.dataset['wh40kSystem']).toBe('im');
+    },
+};
+
+/** The sheet with the fields its template lacks, rendered through the shared schema rows (#734). */
+function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
+    const ctx = { ...{ ...baseCtx({ inEditMode: true }), editable: true }, schemaSections: [...mockSchemaSections(ITEM_COMMON_LAYOUT)] };
+    return inForm(renderSheet(templateSrc, ctx), systemId);
+}
+
+/** Edit mode: the acquisition note every item stores submit under their `system.` paths on every line (#734). */
+export const SchemaFields: StoryObj = {
+    render: () => renderWithSchemaFields(),
+    play: ({ canvasElement }) => {
+        playSchemaFields(canvasElement, ['system.acquired'], renderWithSchemaFields);
     },
 };

@@ -21,6 +21,7 @@ interface CritArgs {
             permanent: boolean;
             currentEffect: string;
             availableSeverities: number[];
+            editableSeverities: number[];
             effects: Record<string, { text: string; permanent: boolean }>;
             notes: string;
         };
@@ -43,6 +44,7 @@ const baseSystem = (): CritArgs['item']['system'] => ({
     permanent: false,
     currentEffect: '<p>Arm useless until treated.</p>',
     availableSeverities: [1, 2, 3, 4],
+    editableSeverities: [1, 2, 3, 4, 5],
     effects: {
         '1': { text: 'Stunned 1 round.', permanent: false },
         '2': { text: 'Wound bleeds.', permanent: false },
@@ -128,3 +130,13 @@ export const HomologationBC: Story = systemStory('bc');
 export const HomologationOW: Story = systemStory('ow');
 export const HomologationDW: Story = systemStory('dw');
 export const HomologationIM: Story = systemStory('im');
+
+/** Edit mode: every stored severity level edits, and the next one is offered so a new level can be added (#734). */
+export const SeverityLevelsEditable: Story = {
+    args: { inEditMode: true },
+    play: ({ canvasElement }) => {
+        const levels = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-injury-severity]')).map((el) => el.dataset['injurySeverity']);
+        void expect(levels).toEqual(['1', '2', '3', '4', '5']);
+        void expect(canvasElement.querySelector('[name="system.effects.5.permanent"]')).not.toBeNull();
+    },
+};
