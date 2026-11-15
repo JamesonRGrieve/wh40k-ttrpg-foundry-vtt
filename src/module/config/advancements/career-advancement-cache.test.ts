@@ -43,9 +43,10 @@ interface StubDoc {
 function packWith(
     docs: StubDoc[],
     line = 'rt',
+    category = 'origins-careers',
 ): { metadata: PackMetadataLike; getIndex: ReturnType<typeof vi.fn<(options: { fields: string[] }) => Promise<StubDoc[]>>> } {
     return {
-        metadata: { name: `${line}-careers`, flags: { 'wh40k-rpg': { line, category: 'origins-careers', homebrew: false } } },
+        metadata: { name: `${line}-${category}`, flags: { 'wh40k-rpg': { line, category, homebrew: false } } },
         getIndex: vi.fn<(options: { fields: string[] }) => Promise<StubDoc[]>>(async () => {
             await Promise.resolve();
             return docs;
@@ -148,6 +149,19 @@ describe('buildCareerAdvancementIndex', () => {
         ]);
         await buildCareerAdvancementIndex();
         expect(Object.keys(getCareerAdvancementRegistry())).toEqual(['archMilitant']);
+    });
+
+    it("reads Deathwatch's specialities, its career packs", async () => {
+        const tactical: StubDoc = {
+            name: 'Tactical Marine',
+            system: {
+                identifier: 'tactical-marine',
+                careerAdvancement: { ranks: [{ rank: 1, advances: [{ name: 'Awareness', cost: 200, type: 'skill', prerequisites: [] }] }] },
+            },
+        };
+        vi.stubGlobal('game', { packs: [packWith([tactical], 'dw', 'origins-specialities'), packWith([], 'dw', 'origins-chapters')] });
+        await buildCareerAdvancementIndex();
+        expect(careerOf('tactical-marine', 'dw').RANK_1_ADVANCES.map((a) => a.name)).toEqual(['Awareness']);
     });
 
     it('yields an empty registry when the pack is absent', async () => {

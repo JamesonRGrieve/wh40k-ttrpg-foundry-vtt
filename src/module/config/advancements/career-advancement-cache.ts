@@ -83,11 +83,13 @@ const STANDARD_RANKS: readonly string[] = ['Rank 1', 'Rank 2', 'Rank 3', 'Rank 4
 const STANDARD_TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'] as const;
 
 /**
- * The lines whose career originPath docs can carry advancement tables: the
- * career-based lines (operator ruling 2026-11-14: every career line, every rank).
+ * The lines whose career originPath docs can carry advancement tables (operator
+ * ruling 2026-11-14: every career line, every rank), each with the pack category
+ * that holds them. Deathwatch's career is its speciality, packed under
+ * `origins-specialities`; reading `origins-careers` for it found no pack at all.
  * A line with no authored career pack contributes nothing.
  */
-const CAREER_LINES: readonly string[] = ['rt', 'dh1', 'dw'];
+const CAREER_PACK_CATEGORIES: Readonly<Record<string, string>> = { rt: 'origins-careers', dh1: 'origins-careers', dw: 'origins-specialities' };
 
 /** RT's registry keeps its legacy camelCase keys; every other line keys a career by its identifier. */
 const LEGACY_KEY_LINE = 'rt';
@@ -225,8 +227,8 @@ export async function buildCareerAdvancementIndex(): Promise<void> {
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
     const allPacks = [...(packGame?.packs ?? [])];
     await Promise.all(
-        CAREER_LINES.map(async (line) => {
-            const packs = lineBookPacks(allPacks, line, 'origins-careers');
+        Object.entries(CAREER_PACK_CATEGORIES).map(async ([line, category]) => {
+            const packs = lineBookPacks(allPacks, line, category);
             // Index rows, not documents (#706): the shared request carries `system.careerAdvancement`.
             const loaded = await Promise.all(packs.map(async (pack) => [...(await readPackIndex(pack))]));
             const careers: Record<string, CareerTable> = {};
