@@ -8,8 +8,9 @@
 import { getCareerAdvancements, getCareerKeyFromName, getNextCharacteristicCost, TIER_ORDER } from '../../config/advancements/index.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
+import { CareerBasedSystemConfig } from '../../config/game-systems/career-based-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
-import type { Prerequisite } from '../../config/game-systems/types.ts';
+import type { AdvanceOption, Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { characteristicLabel } from '../../helpers/characteristic-labels.ts';
@@ -46,14 +47,6 @@ const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2
 
 /** The langpack wording of unmet prerequisite chips (read when rendered, so the language is loaded). */
 const PREREQUISITE_LABELS = (): PrerequisiteLabels => prerequisiteLabels(localizeKey, characteristicLabel);
-
-interface AdvancementAdvance {
-    name: string;
-    type: 'skill' | 'talent';
-    cost: number;
-    specialization?: string;
-    prerequisites?: Prerequisite[];
-}
 
 interface AdvancementActorCharacteristic {
     advance?: number;
@@ -391,6 +384,29 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return systemConfig instanceof AptitudeBasedSystemConfig ? systemConfig : null;
     }
 
+    /** The actor's line config when that line advances through career tables (RT, DH1, DW). */
+    #getCareerConfig(systemConfig: BaseSystemConfig | null): CareerBasedSystemConfig | null {
+        return systemConfig instanceof CareerBasedSystemConfig ? systemConfig : null;
+    }
+
+    /**
+     * The actor's career key, by its own line's rule: a DH1 career and a DW speciality
+     * key by identifier in their line's registry, an RT career by RT's names. Reading
+     * every line through RT's names left a DH1 Guardsman with "No Career Selected".
+     */
+    #resolveCareerKey(systemConfig: BaseSystemConfig | null): string | null {
+        const careerConfig = this.#getCareerConfig(systemConfig);
+        if (careerConfig !== null) return careerConfig.resolveCareerKey(this.actor);
+        return getCareerKeyFromName(this.#getActorSystem().originPath?.career ?? '');
+    }
+
+    /** The career advances the actor can buy: every authored rank up to its own, from its line's registry. */
+    #careerAdvances(systemConfig: BaseSystemConfig | null): AdvanceOption[] {
+        const careerConfig = this.#getCareerConfig(systemConfig);
+        if (careerConfig !== null) return careerConfig.getAvailableAdvances(this.actor);
+        return (getCareerAdvancements(this.careerKey)?.RANK_1_ADVANCES ?? []) as AdvanceOption[];
+    }
+
     #getGameSystemId(): string {
         const id = this.#getActorSystem().gameSystem;
         return id !== undefined && id.length > 0 ? id : 'dh2';
@@ -441,8 +457,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return localized.length > 0 ? localized : 'Advancement';
         }
         const career = CONFIG.wh40k.careers[this.careerKey];
+        // RT's careers carry a localized label; any other line's career is named by its origin item.
+        const originCareer = this.#getActorSystem().originPath?.career ?? '';
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess: career may be undefined despite indexed access type
-        const careerLabel = game.i18n.localize(career !== undefined ? career.label : this.careerKey);
+        const careerLabel = career !== undefined ? game.i18n.localize(career.label) : originCareer !== '' ? originCareer : this.careerKey;
         return game.i18n.format('WH40K.Advancement.TitleWithCareer', { career: careerLabel });
     }
 
@@ -474,12 +492,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
-        // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites coming from career module are heterogeneous before validation
-        let career: { RANK_1_ADVANCES?: Array<{ name: string; cost: number; type: string; specialization?: string; prerequisites?: unknown[] }> } | null = null;
-
         if (systemConfig === null || systemConfig.usesCareerTables) {
             const originCareer = system.originPath?.career;
-            const careerKey = getCareerKeyFromName(originCareer ?? '');
+            const careerKey = this.#resolveCareerKey(systemConfig);
             context.hasCareer = careerKey !== null;
             context.originCareerName = originCareer !== undefined && originCareer.length > 0 ? originCareer : null;
 
@@ -494,7 +509,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
 
             this.careerKey = careerKey;
-            career = getCareerAdvancements(this.careerKey);
         } else {
             context.hasCareer = true;
             context.originCareerName = null;
@@ -534,12 +548,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
         context.tabs = tabs;
 
-        context.characteristics = this.#prepareCharacteristics(career, systemConfig);
+        context.characteristics = this.#prepareCharacteristics(systemConfig);
 
         if (systemConfig === null || systemConfig.usesCareerTables) {
-            const advances = career?.RANK_1_ADVANCES ?? [];
-            context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill') as AdvancementAdvance[]);
-            context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent') as AdvancementAdvance[]);
+            const advances = this.#careerAdvances(systemConfig);
+            context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill'));
+            context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent'));
         } else {
             const aptitudeConfig = this.#getAptitudeConfig(systemConfig);
             if (aptitudeConfig === null) return context;
@@ -603,8 +617,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     #prepareCharacteristics(
-        // eslint-disable-next-line no-restricted-syntax -- boundary: prerequisites coming from career module are heterogeneous before validation
-        _career: { RANK_1_ADVANCES?: Array<{ name: string; cost: number; type: string; specialization?: string; prerequisites?: unknown[] }> } | null,
         systemConfig: BaseSystemConfig | null,
         // eslint-disable-next-line no-restricted-syntax -- boundary: prepared characteristics rows are heterogeneous and passed straight to Handlebars
     ): Record<string, unknown>[] {
@@ -661,7 +673,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             });
     }
 
-    #prepareAdvances(advances: AdvancementAdvance[]): PreparedAdvance[] {
+    #prepareAdvances(advances: AdvanceOption[]): PreparedAdvance[] {
         const available = getAvailableXP(this.actor);
 
         return advances.map((advance, index) => {
@@ -1340,10 +1352,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return { owned: list, elites };
     }
 
-    #checkOwnership(advance: AdvancementAdvance): boolean {
+    #checkOwnership(advance: AdvanceOption): boolean {
         if (advance.type === 'skill') {
             return this.#hasSkillTrained(advance.name, advance.specialization ?? '');
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvanceOption.type union may grow; exhaustive guard is defensive
         } else if (advance.type === 'talent') {
             return this.#hasTalent(advance.name, advance.specialization ?? '');
         }
@@ -1551,9 +1563,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const career = getCareerAdvancements(this.careerKey);
-        const advances = (career?.RANK_1_ADVANCES ?? []) as AdvancementAdvance[];
-        const typeAdvances = advances.filter((a) => a.type === advanceType);
+        const typeAdvances = this.#careerAdvances(systemConfig).filter((a) => a.type === advanceType);
         const advance = typeAdvances[advanceIndex];
 
         /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: typeAdvances is an array; index may be out of bounds */
@@ -1585,7 +1595,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             apply: async () => {
                 if (advance.type === 'skill') {
                     await this.#applySkillAdvance(advance);
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvancementAdvance.type union may grow; exhaustive guard is defensive
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvanceOption.type union may grow; exhaustive guard is defensive
                 } else if (advance.type === 'talent') {
                     await this.#applyTalentAdvance(advance);
                 }
@@ -2029,7 +2039,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
     }
 
-    async #applySkillAdvance(advance: AdvancementAdvance): Promise<void> {
+    async #applySkillAdvance(advance: AdvanceOption): Promise<void> {
         const skillKey = SkillKeyHelper.nameToKey(advance.name);
         if (!skillKey) {
             console.warn(`AdvancementDialog: Unknown skill name "${advance.name}"`);
@@ -2069,7 +2079,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
     }
 
-    async #applyTalentAdvance(advance: AdvancementAdvance): Promise<void> {
+    async #applyTalentAdvance(advance: AdvanceOption): Promise<void> {
         const talentName =
             advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry Document#toObject() returns a plain data payload

@@ -713,6 +713,11 @@ recordDimension('origin-kit.flow', covered['origin-kit.flow'], ORIGIN_KIT_FLOWS)
 const HYDRATE_NULL_VARIANT_FLOWS = ['robes-joined', 'no-skipped-join'];
 recordDimension('hydrate-null-variant.flow', covered['hydrate-null-variant.flow'], HYDRATE_NULL_VARIANT_FLOWS);
 
+// The Advancement dialog finds a career through its own line, tests/e2e/advancement-line-career.spec.ts.
+// Keep in sync with ADVANCEMENT_CAREER_FLOWS there.
+const ADVANCEMENT_CAREER_FLOWS = ['dh1-career-recognised', 'rt-career-advances-listed'];
+recordDimension('advancement-career.flow', covered['advancement-career.flow'], ADVANCEMENT_CAREER_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];
