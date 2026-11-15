@@ -189,11 +189,13 @@ export async function joinAsUser(page: Page, userName: string): Promise<boolean>
     // it on a loaded machine (#741: /game reached and network idle, `load` still pending
     // at 30 s), and readiness is the `game.ready` wait below, which retries with reloads.
     await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS, waitUntil: 'commit' });
-    // The page can reload once more during boot (core reloads a client whose socket
-    // session came back without an id, or that reconnected after a long drop). A spec
-    // handed a page that then reloads fails on its first evaluate with "Execution
-    // context was destroyed" (#741: evasion-counter-attack, talent-test-hooks). So the
-    // join waits for the booted page to stay put, and waits for boot again if it moves.
+    // Two specs (#741: evasion-counter-attack, talent-test-hooks) failed their first
+    // evaluate with "Execution context was destroyed": the page navigated after the
+    // join handed it over. What navigated is not pinned down. Core's own same-URL
+    // history.pushState at setup (its Back-button trap) also fires framenavigated, so
+    // every join sees at least one event here; the extra boot wait it costs returns
+    // at once. So the join waits for the booted page to stay put, and waits for boot
+    // again if it moves.
     let navigations = 0;
     const onNavigated = (frame: Frame): void => {
         if (frame === page.mainFrame()) navigations += 1;

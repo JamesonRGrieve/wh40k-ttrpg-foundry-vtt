@@ -285,6 +285,15 @@ export function materializeItemVariants(
             continue;
         }
 
+        // Every branch null ({ dh2: null }): no line prints a value, so there is nothing
+        // to fall back to. Left as a container it failed the field's validation (an
+        // armour's maxAgility "must be a number"), and the owned item lost its whole
+        // compendium join. Unset, the field takes its schema default.
+        if (isLineVariantContainer(rawValue) && Object.values(rawValue).every((branch) => branch === null)) {
+            source[key] = undefined;
+            continue;
+        }
+
         if (isLineVariantContainer(rawValue) || isBookVariantContainer(rawValue)) {
             const resolved = resolveLineVariant(rawValue, lineKey, fallbackLines);
             source[key] = isPlainObject(resolved) ? materializeItemVariants(resolved, lineKey, nextPath, fallbackLines) : resolved;

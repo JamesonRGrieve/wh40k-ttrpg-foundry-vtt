@@ -122,6 +122,20 @@ describe('materializeItemVariants', () => {
         // Any other field keeps falling back past an explicit null.
         expect(materializeItemVariants(make(), 'bc')['damage']).toBe('1d10');
     });
+
+    it('unsets a field whose every line branch is null, so it takes its default (the DH2 Imperial Robes maxAgility)', () => {
+        const make = (): { maxAgility: Record<string, null>; weight: Record<string, null>; armourPoints: Record<string, number> } => ({
+            maxAgility: { dh2: null },
+            weight: { dh2: null, dh1: null },
+            armourPoints: { dh2: 2 },
+        });
+        const dh2 = materializeItemVariants(make(), 'dh2');
+        expect(dh2['maxAgility']).toBeUndefined();
+        expect(dh2['weight']).toBeUndefined();
+        expect(dh2['armourPoints']).toBe(2);
+        // A line with no branch of its own still finds nothing to inherit.
+        expect(materializeItemVariants(make(), 'rt')['maxAgility']).toBeUndefined();
+    });
 });
 
 describe('materializeItemVariants — XP cost (content#30)', () => {

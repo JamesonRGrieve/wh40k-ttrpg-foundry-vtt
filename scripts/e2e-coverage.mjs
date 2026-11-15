@@ -708,6 +708,11 @@ recordDimension('bc-csm-origin.flow', covered['bc-csm-origin.flow'], BC_CSM_ORIG
 const ORIGIN_KIT_FLOWS = ['sororitas-kit-complete', 'slash-named-item-granted'];
 recordDimension('origin-kit.flow', covered['origin-kit.flow'], ORIGIN_KIT_FLOWS);
 
+// An owned item whose canonical has an all-null line field still joins it, tests/e2e/hydrate-all-null-variant.spec.ts.
+// Keep in sync with HYDRATE_NULL_VARIANT_FLOWS there.
+const HYDRATE_NULL_VARIANT_FLOWS = ['robes-joined', 'no-skipped-join'];
+recordDimension('hydrate-null-variant.flow', covered['hydrate-null-variant.flow'], HYDRATE_NULL_VARIANT_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];
