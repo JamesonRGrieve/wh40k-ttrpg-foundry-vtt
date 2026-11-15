@@ -703,6 +703,11 @@ recordDimension('portrait-token-art.flow', covered['portrait-token-art.flow'], P
 const BC_CSM_ORIGIN_FLOWS = ['csm-talents-granted', 'csm-traits-granted', 'csm-starting-xp', 'csm-characteristic-base', 'sidebar-shows-race'];
 recordDimension('bc-csm-origin.flow', covered['bc-csm-origin.flow'], BC_CSM_ORIGIN_FLOWS);
 
+// An origin's starting kit arrives whole, a slash-named item included (content#40), tests/e2e/origin-starting-kit.spec.ts.
+// Keep in sync with ORIGIN_KIT_FLOWS there.
+const ORIGIN_KIT_FLOWS = ['sororitas-kit-complete', 'slash-named-item-granted'];
+recordDimension('origin-kit.flow', covered['origin-kit.flow'], ORIGIN_KIT_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];

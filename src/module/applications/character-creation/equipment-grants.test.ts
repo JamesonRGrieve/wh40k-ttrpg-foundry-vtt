@@ -86,6 +86,19 @@ describe('matchEquipmentEntry', () => {
         expect(matchEquipmentEntry(catalog, 'Stablight')).toBeUndefined();
         expect(matchEquipmentEntry([{ name: 'Glow Globe' }, { name: 'Glow-Globe' }], 'glowglobe')).toBeUndefined();
     });
+
+    it('matches a grant naming one part of a slash-named item (content#40: "Stablight")', () => {
+        const tools = [...catalog, { name: 'Glow-Globe/Stablight', uuid: 'f' }, { name: 'Auspex/Scanner', uuid: 'g' }];
+        expect(matchEquipmentEntry(tools, 'Stablight')?.uuid).toBe('f');
+        expect(matchEquipmentEntry(tools, 'Glow-globe')?.uuid).toBe('f');
+        expect(matchEquipmentEntry(tools, 'Auspex')?.uuid).toBe('g');
+        // The whole slash name still matches loosely too.
+        expect(matchEquipmentEntry(tools, 'Glow Globe / Stablight')?.uuid).toBe('f');
+    });
+
+    it('keeps a part shared by two slash-named items ambiguous', () => {
+        expect(matchEquipmentEntry([{ name: 'Lamp/Stablight' }, { name: 'Glow-Globe/Stablight' }], 'Stablight')).toBeUndefined();
+    });
 });
 
 describe('equipmentNameKey', () => {

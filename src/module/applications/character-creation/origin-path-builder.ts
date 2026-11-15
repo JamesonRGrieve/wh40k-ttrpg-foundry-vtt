@@ -646,6 +646,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return CommitPath.applyContentItemGrantsFromOrigins.call(this);
     }
 
+    /** Create the committed origins' starting kits and the equipment picked in their choices. */
+    async _applyEquipmentGrantsFromOrigins(): Promise<void> {
+        return CommitPath.applyEquipmentGrantsFromOrigins.call(this);
+    }
+
     /** Reset the actor's XP to the starting total and clear its advancements. */
     async _resetExperienceAndAdvancements(): Promise<void> {
         return CommitPath.resetExperienceAndAdvancements.call(this);

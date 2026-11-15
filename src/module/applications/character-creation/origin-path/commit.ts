@@ -543,9 +543,8 @@ export async function applyContentItemGrantsFromOrigins(this: OriginPathBuilder)
  * exact name and then by a unique loose match (see `matchEquipmentEntry`).
  * An item the actor already holds by name is skipped, so a re-commit doesn't
  * duplicate the kit; an entry no pack carries is reported to the GM.
- * @private
  */
-async function applyEquipmentGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
+export async function applyEquipmentGrantsFromOrigins(this: OriginPathBuilder): Promise<void> {
     const plans: EquipmentGrantPlan[] = [];
     for (const [, selection] of this.selections) {
         plans.push(...collectEquipmentGrantPlans(this._getSelectionSystem(selection)));
@@ -862,7 +861,7 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
 
         // Create each origin's starting kit and the equipment the player
         // picked in its equipment choices (they were shown but never given).
-        await applyEquipmentGrantsFromOrigins.call(this);
+        await this._applyEquipmentGrantsFromOrigins();
 
         // Apply characteristic rolls if any are assigned
         const CHARS = GENERATION_CHARACTERISTICS;

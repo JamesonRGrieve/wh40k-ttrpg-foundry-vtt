@@ -88,16 +88,28 @@ export function equipmentNameKey(name: string): string {
 }
 
 /**
+ * The loose keys an entry answers to: its whole name's, and for a name the book
+ * prints as alternatives ("Glow-globe/Stablight"), each alternative's, so a kit
+ * granting a "Stablight" finds it (content#40).
+ */
+function entryNameKeys(name: string): Set<string> {
+    const keys = new Set([equipmentNameKey(name)]);
+    if (name.includes('/')) for (const part of name.split('/')) keys.add(equipmentNameKey(part));
+    keys.delete('');
+    return keys;
+}
+
+/**
  * The compendium entry a name-only grant means: an exact name match first;
- * otherwise the single entry whose {@link equipmentNameKey} matches. Two loose
- * matches are ambiguous and resolve to nothing rather than to a guess.
+ * otherwise the single entry one of whose {@link entryNameKeys} matches. Two
+ * loose matches are ambiguous and resolve to nothing rather than to a guess.
  */
 export function matchEquipmentEntry<T extends { name: string }>(entries: readonly T[], name: string): T | undefined {
     const exact = entries.find((entry) => entry.name === name);
     if (exact !== undefined) return exact;
     const key = equipmentNameKey(name);
     if (key === '') return undefined;
-    const loose = entries.filter((entry) => equipmentNameKey(entry.name) === key);
+    const loose = entries.filter((entry) => entryNameKeys(entry.name).has(key));
     return loose.length === 1 ? loose[0] : undefined;
 }
 
