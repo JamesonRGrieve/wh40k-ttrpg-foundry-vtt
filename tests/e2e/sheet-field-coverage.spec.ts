@@ -70,7 +70,7 @@ interface ProbeDocument {
 interface ProbeGlobal {
     game: {
         system: { documentTypes: Record<string, Record<string, object>> };
-        settings: { set: (scope: string, key: string, value: boolean) => Promise<object> };
+        settings: { get: (scope: string, key: string) => boolean; set: (scope: string, key: string, value: boolean) => Promise<object> };
     };
     Actor: { create: (data: { name: string; type: string }) => Promise<ProbeDocument | null> };
     Item: { create: (data: { name: string; type: string }) => Promise<ProbeDocument | null> };
@@ -116,8 +116,12 @@ test('every stored field of every document type can be edited (#731–#736)', as
             new Promise((done) => {
                 setTimeout(done, ms);
             });
-        for (const key of ['freeform-characters', 'freeform-creation']) await g.game.settings.set('wh40k-rpg', key, true).catch(() => undefined);
-        await g.game.settings.set('wh40k-rpg', 'prompt-incomplete-origin-path', false).catch(() => undefined);
+        // Every sheet opens unlocked for the walk. The settings are put back afterwards: the
+        // world is shared with later specs, and an unlocked sheet shows an edit toggle that
+        // narrows its header (#741: a later spec's long name then overflowed).
+        const overrides: Record<string, boolean> = { 'freeform-characters': true, 'freeform-creation': true, 'prompt-incomplete-origin-path': false };
+        const previous = Object.fromEntries(Object.keys(overrides).map((key) => [key, g.game.settings.get('wh40k-rpg', key)]));
+        for (const [key, value] of Object.entries(overrides)) await g.game.settings.set('wh40k-rpg', key, value).catch(() => undefined);
 
         const leaves = (field: SchemaFieldLike, path: string, out: string[]): string[] => {
             const name = field.constructor.name;
@@ -188,6 +192,7 @@ test('every stored field of every document type can be edited (#731–#736)', as
                 await created.delete().catch(() => undefined);
             }
         }
+        for (const [key, value] of Object.entries(previous)) await g.game.settings.set('wh40k-rpg', key, value).catch(() => undefined);
         return gaps;
     }, LEGACY);
 

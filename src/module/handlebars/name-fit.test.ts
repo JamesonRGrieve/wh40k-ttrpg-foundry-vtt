@@ -6,17 +6,27 @@ import { ITEM_NAME_FIT_MAX_FITTED_CHARS, NAME_FIT_MAX_FITTED_CHARS, nameFitClass
 describe('nameFitClass for the item header (#699)', () => {
     it('keeps text-xl for a name that fits', () => {
         expect(nameFitClass('Lasgun', 'itemHeader')).toBe('tw-text-xl');
-        expect(nameFitClass('x'.repeat(22), 'itemHeader')).toBe('tw-text-xl');
+        expect(nameFitClass('x'.repeat(20), 'itemHeader')).toBe('tw-text-xl');
     });
 
     it('steps down for the name the freeze audit found clipped mid-letter', () => {
-        expect(nameFitClass('e2e-612 weaponModification', 'itemHeader')).toBe('tw-text-[1.1rem]');
-        expect(nameFitClass('x'.repeat(30), 'itemHeader')).toBe('tw-text-[0.95rem]');
-        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS), 'itemHeader')).toBe('tw-text-[0.8rem]');
+        expect(nameFitClass('e2e-612 weaponModification', 'itemHeader')).toBe('tw-text-[0.95rem]');
+        expect(nameFitClass('x'.repeat(23), 'itemHeader')).toBe('tw-text-[1.1rem]');
+        expect(nameFitClass('x'.repeat(30), 'itemHeader')).toBe('tw-text-[0.8rem]');
+        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS), 'itemHeader')).toBe('tw-text-[0.72rem]');
+    });
+
+    it('fits the longest fitted name in the narrowest header: 252px beside the edit toggle at 400px (#741)', () => {
+        // Cinzel at ~0.61em per glyph, measured: 35 characters at 0.8rem (12.8px) were 272px.
+        const remPx = { 'tw-text-xl': 20, 'tw-text-[1.1rem]': 17.6, 'tw-text-[0.95rem]': 15.2, 'tw-text-[0.8rem]': 12.8, 'tw-text-[0.72rem]': 11.52 };
+        for (let chars = 1; chars <= ITEM_NAME_FIT_MAX_FITTED_CHARS; chars += 1) {
+            const cls = nameFitClass('x'.repeat(chars), 'itemHeader') as keyof typeof remPx;
+            expect(chars * 0.607 * remPx[cls], `${chars} characters in ${cls}`).toBeLessThanOrEqual(252);
+        }
     });
 
     it('takes the floor past the longest fitted name, where the field ends in an ellipsis', () => {
-        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS + 1), 'itemHeader')).toBe('tw-text-[0.75rem]');
+        expect(nameFitClass('x'.repeat(ITEM_NAME_FIT_MAX_FITTED_CHARS + 1), 'itemHeader')).toBe('tw-text-[0.7rem]');
     });
 
     it('the sidebar stays the default field', () => {

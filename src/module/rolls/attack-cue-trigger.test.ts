@@ -148,6 +148,7 @@ describe('broadcast', () => {
     });
 
     afterEach(() => {
+        vi.useRealTimers();
         vi.unstubAllGlobals();
         vi.resetAllMocks();
     });
@@ -158,6 +159,9 @@ describe('broadcast', () => {
     });
 
     it('sends the plan for the viewed scene to the other clients, and plays its sound here, locally', () => {
+        // The plan's later steps play on timers: run them here, while the stubbed canvas
+        // still exists, or they fire after teardown against an undefined `canvas` (#741).
+        vi.useFakeTimers();
         const play = vi.fn().mockResolvedValue(undefined);
         vi.stubGlobal('foundry', { audio: { AudioHelper: { play } } });
         vi.stubGlobal('canvas', { ready: true, scene: { id: 'scene1', templates: new Map() }, tokens: { get: (): undefined => undefined } });
@@ -169,6 +173,7 @@ describe('broadcast', () => {
         expect(channel).toBe('system.wh40k-rpg');
         expect(message).toMatchObject({ type: 'attackCue', plan: { sceneId: 'scene1' } });
         expect(play).toHaveBeenCalledWith({ src: 'las.ogg', volume: 0.8, loop: false }, false);
+        vi.runAllTimers();
     });
 
     it('sends nothing when the GM has turned attack cues off', () => {

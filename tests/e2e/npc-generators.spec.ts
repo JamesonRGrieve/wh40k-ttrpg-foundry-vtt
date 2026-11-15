@@ -21,7 +21,7 @@ interface ProbeActor {
     name: string;
     type: string;
     delete: () => Promise<void>;
-    sheet?: { close: () => Promise<void> } | null;
+    sheet?: { rendered: boolean; close: () => Promise<void> } | null;
 }
 interface ProbeWindow {
     game: {
@@ -101,6 +101,19 @@ async function pausedStack(page: Page): Promise<string> {
     } finally {
         await cdp.detach().catch(() => undefined);
     }
+}
+
+/** Wait (briefly) for the sheet an import opens for the actor named `name`, then close it. */
+async function closeImportedSheet(page: Page, name: string): Promise<void> {
+    await page.evaluate(async (actorName) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: browser-context Foundry globals have no repo types
+        const w = globalThis as unknown as ProbeWindow;
+        const sheet = (): { rendered: boolean; close: () => Promise<void> } | null | undefined => w.game.actors.filter((a) => a.name === actorName)[0]?.sheet;
+        const { waitFor, scaledMs: scale } = globalThis.wh40kE2E;
+        // An import that opens no sheet is fine; there is then nothing to cover the parser.
+        await waitFor(() => sheet()?.rendered === true, 'imported NPC sheet', scale(10_000)).catch(() => undefined);
+        await sheet()?.close();
+    }, name);
 }
 
 async function createdTypes(page: Page, name: string): Promise<string[]> {
@@ -196,18 +209,22 @@ test.describe.serial('NPC generators create registered NPCs (Tier B, #644)', () 
         await expect.poll(async () => createdTypes(page, `${PREFIX} Imported DH1`)).toEqual(['dh1-npc']);
         // The import closes its window; wait for it to go before opening the next.
         await expect(page.locator(`#${id}`)).toHaveCount(0);
+        // The import then opens its NPC's sheet, and the sheet can arrive late: after an
+        // overlay clear has already run. Wherever it lands it can cover the next parser's
+        // buttons and swallow every click (#741: two gates timed out after 10 minutes of
+        // a click retried against it). Wait for that sheet and close it.
+        await closeImportedSheet(page, `${PREFIX} Imported DH1`);
 
         // Bare system data names no line: the primary line's NPC.
         const bare = JSON.stringify({ name: `${PREFIX} Imported Bare`, threatLevel: 4 });
         const second = await openGenerator(page, 'importStatBlock', 'StatBlockParser', bare);
-        // The first import opened its NPC's sheet. Wherever that window lands it can
-        // cover this parser's buttons and swallow every click (#741: the gate timed out
-        // after 10 minutes of a click retried against the sheet's header).
         await clearScreenOverlays(page, second);
         const parser = page.locator(`#${second}`);
-        await parser.locator('textarea[name="rawInput"]').fill(bare);
-        await parser.locator('[data-action="parse"]').first().click();
-        await parser.locator('button[type="submit"]').click();
+        // A covered button fails here, by name, instead of spending the whole test timeout.
+        const click = { timeout: scaledMs(30_000) };
+        await parser.locator('textarea[name="rawInput"]').fill(bare, click);
+        await parser.locator('[data-action="parse"]').first().click(click);
+        await parser.locator('button[type="submit"]').click(click);
         try {
             await expect.poll(async () => createdTypes(page, `${PREFIX} Imported Bare`), { timeout: scaledMs(60_000) }).toEqual(['dh2-npc']);
         } catch (error) {

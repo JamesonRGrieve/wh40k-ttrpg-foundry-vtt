@@ -133,11 +133,29 @@ test.describe.serial('weapon sheet Penetration tile (Tier B, #614)', () => {
                 const sheet = await openProbeSheet(page, longOwner, { itemName: longName, width });
                 if (sheet === null) throw new Error(`the long-name weapon sheet did not open at ${width} width`);
                 // eslint-disable-next-line no-await-in-loop -- reads the sheet just opened
-                const title = await page.evaluate((appId) => {
+                const measured = await page.evaluate((appId) => {
                     const input = document.querySelector<HTMLInputElement>(`#${appId} input[name="name"]`);
-                    return { fits: input !== null && input.scrollWidth <= input.clientWidth + 1, tooltip: input?.dataset['tooltip'] ?? null };
+                    // What decides the fit, reported on a failure (#741: this failed only in full runs).
+                    const style = input === null ? null : getComputedStyle(input);
+                    const header = input?.closest('header, [data-application-part="header"], .window-header, .sheet-header');
+                    const controls = Array.from(
+                        header?.querySelectorAll('button, a[data-action], img') ?? [],
+                        (el) => el.getAttribute('data-action') ?? el.tagName.toLowerCase(),
+                    );
+                    const detail =
+                        input === null
+                            ? 'no name input'
+                            : `scroll ${input.scrollWidth} / client ${input.clientWidth}; font ${style?.fontSize ?? '?'} ${style?.fontFamily ?? '?'}; class "${
+                                  input.className
+                              }"; header controls [${controls.join(', ')}]; system ${
+                                  input.closest<HTMLElement>('[data-wh40k-system]')?.dataset['wh40kSystem'] ?? 'none'
+                              }`;
+                    return { fits: input !== null && input.scrollWidth <= input.clientWidth + 1, tooltip: input?.dataset['tooltip'] ?? null, detail };
                 }, sheet.appId);
-                expect(title, `the long weapon name at ${width} width (${sheet.width}px)`).toEqual({ fits: true, tooltip: longName });
+                expect(
+                    { fits: measured.fits, tooltip: measured.tooltip },
+                    `the long weapon name at ${width} width (${sheet.width}px): ${measured.detail}`,
+                ).toEqual({ fits: true, tooltip: longName });
                 // eslint-disable-next-line no-await-in-loop -- captures the sheet just opened
                 await snap(page, `weapon-sheet-long-name-${width}-width`, { selector: `#${sheet.appId}`, closeWindows: true, keepWindow: sheet.appId });
             }

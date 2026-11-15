@@ -95,6 +95,9 @@ export async function openProbeSheet(
             await waitFor(() => sheet.rendered, 'probe sheet render', scale(10_000));
             if (args.tab !== null) sheet.changeTab?.(args.tab, 'primary');
             if (args.width !== 'default') sheet.setPosition({ width: args.width === 'min' ? 1 : args.width });
+            // Probes measure layout: let the self-hosted fonts arrive first, or a loaded
+            // machine measures the fallback font's metrics (#741: a name "overflowed").
+            await document.fonts.ready;
             await settle(400);
             return { appId: sheet.id, width: Math.round(sheet.element.getBoundingClientRect().width) };
         },

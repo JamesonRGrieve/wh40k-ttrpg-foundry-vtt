@@ -9,8 +9,10 @@
  * Each field has its own steps:
  * - `sidebar`: the actor sheet's ~145px sidebar field, Signika bold at ~0.45em per
  *   glyph.
- * - `itemHeader`: the item sheet header's ~360px title, the display face (small
- *   caps) at ~0.6em per glyph, starting from `text-xl`.
+ * - `itemHeader`: the item sheet header's title, the display face (Cinzel) at
+ *   ~0.61em per glyph, starting from `text-xl`. Sized for its narrowest case: the
+ *   400px minimum sheet with the edit-mode toggle beside it leaves the input 252px
+ *   (measured, #741). Each step holds the longest name that fits 252px at its size.
  */
 interface NameFitStep {
     readonly maxChars: number;
@@ -34,12 +36,13 @@ const NAME_FIT_PROFILES = {
     },
     itemHeader: {
         steps: [
-            { maxChars: 22, className: 'tw-text-xl' },
-            { maxChars: 26, className: 'tw-text-[1.1rem]' },
-            { maxChars: 30, className: 'tw-text-[0.95rem]' },
-            { maxChars: 36, className: 'tw-text-[0.8rem]' },
+            { maxChars: 20, className: 'tw-text-xl' },
+            { maxChars: 23, className: 'tw-text-[1.1rem]' },
+            { maxChars: 27, className: 'tw-text-[0.95rem]' },
+            { maxChars: 32, className: 'tw-text-[0.8rem]' },
+            { maxChars: 36, className: 'tw-text-[0.72rem]' },
         ],
-        floorClass: 'tw-text-[0.75rem]',
+        floorClass: 'tw-text-[0.7rem]',
     },
     qualityTile: {
         // The weapon header's quality tile: ~68px of text that wraps at spaces over

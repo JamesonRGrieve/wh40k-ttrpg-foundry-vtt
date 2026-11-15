@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Frame, Page } from '@playwright/test';
 import { clearTransientOverlays } from './screenshot';
 import { test } from './test';
 import { scaledMs } from './timing';
@@ -46,8 +46,30 @@ const GM_USER_NAME = 'Gamemaster';
 /** Per-attempt wait for the join page to know the GM user. */
 const JOIN_ATTEMPT_TIMEOUT_MS = scaledMs(20_000);
 
+// The ready wait needs its own retry, for a DIFFERENT reason than the loop
+// above. Phase one buys time for the user list; `game.ready` is a separate
+// phase, and on the first client to join a fresh server process it does not
+// merely run slow — it never arrives. Raising the cap from 60s to 180s was
+// measured: the wait consumed the whole 180s and still failed, so this is a
+// wedged client boot, not a slow one. A page reload clears it (which is why
+// the SECOND spec in a run always joins fine — a later spec arrives on a new
+// page), so retry with reloads and keep the total budget where it was.
+//
+// Left unfixed this is a trap, not just a flake: in a full run `_aa_inventory`
+// sorts first and absorbs the wedge, so the suite looks green, while ANY
+// targeted subset fails on whichever spec happens to sort first — presenting
+// as a product regression in an arbitrary spec. It cost a long bisect proving
+// an unrelated refactor innocent, because the failure MOVES when you change
+// which specs you run.
+const READY_ATTEMPTS = 3;
+const READY_TIMEOUT_MS = scaledMs(60_000);
+
 /** Wait for the system's async ready handler to finish after `game.ready` (see joinAsGM). */
 const SYSTEM_READY_TIMEOUT_MS = scaledMs(60_000);
+
+/** How long a booted page must go without a navigation before a spec gets it, and how often to re-check (#741). */
+const BOOT_SETTLE_MS = scaledMs(1_500);
+const BOOT_SETTLE_CHECKS = 3;
 
 /** Wait for the post-join navigation into /game. */
 const GAME_NAVIGATION_TIMEOUT_MS = scaledMs(30_000);
@@ -84,58 +106,12 @@ async function joinFormReady(page: Page, origin: string, userName: string, backo
     }
 }
 
-export async function joinAsGM(page: Page): Promise<boolean> {
-    return joinAsUser(page, GM_USER_NAME);
-}
-
 /**
- * Join this worker's test world as the named user (no password), the same way
- * {@link joinAsGM} joins as the GM. A player user must exist first: the GM creates
- * it, then a second client (`openClient()`) joins as it.
+ * Wait for a joined client to finish booting: core's `game.ready`, then the
+ * system's own async ready handler (see the comments inside). False when the
+ * client never becomes ready.
  */
-export async function joinAsUser(page: Page, userName: string): Promise<boolean> {
-    const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
-    // The first spec to reach /join can beat the world's boot: the user list
-    // (`game.users` holding the Gamemaster) isn't loaded until the world finishes loading.
-    // A single wait then races that startup and fails intermittently — which, for
-    // the coverage-tracker spec (_aa_inventory), corrupts the whole run's coverage,
-    // and elsewhere skips otherwise-green specs. Retry with reloads so a slow boot
-    // is tolerated rather than fatal. The world boot loads a per-world copy of every
-    // compendium pack (LevelDB single-process lock), so the FIRST spec's cold boot
-    // under simultaneous multi-worker startup can take well over a minute; budget
-    // ~180s total (≈ the webServer readiness timeout). Warm joins early-exit on the
-    // first attempt, so only a genuine cold boot / failure pays the full budget.
-    const JOIN_ATTEMPTS = 8;
-    // The ready wait needs its own retry, for a DIFFERENT reason than the loop
-    // above. Phase one buys time for the user list; `game.ready` is a separate
-    // phase, and on the first client to join a fresh server process it does not
-    // merely run slow — it never arrives. Raising the cap from 60s to 180s was
-    // measured: the wait consumed the whole 180s and still failed, so this is a
-    // wedged client boot, not a slow one. A page reload clears it (which is why
-    // the SECOND spec in a run always joins fine — a later spec arrives on a new
-    // page), so retry with reloads and keep the total budget where it was.
-    //
-    // Left unfixed this is a trap, not just a flake: in a full run `_aa_inventory`
-    // sorts first and absorbs the wedge, so the suite looks green, while ANY
-    // targeted subset fails on whichever spec happens to sort first — presenting
-    // as a product regression in an arbitrary spec. It cost a long bisect proving
-    // an unrelated refactor innocent, because the failure MOVES when you change
-    // which specs you run.
-    const READY_ATTEMPTS = 3;
-    const READY_TIMEOUT_MS = scaledMs(60_000);
-    let populated = false;
-    for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
-        // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
-        populated = await joinFormReady(page, origin, userName, attempt > 0);
-        if (populated) break;
-    }
-    if (!populated) return false;
-    await page.fill('input[name="username"]', userName);
-    await page.click('button[name="join"]');
-    // Only the move to /game is waited for here: the full `load` event can lag well past
-    // it on a loaded machine (#741: /game reached and network idle, `load` still pending
-    // at 30 s), and readiness is the `game.ready` wait below, which retries with reloads.
-    await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS, waitUntil: 'commit' });
+async function waitForBootedGame(page: Page): Promise<boolean> {
     let ready = false;
     for (let attempt = 0; attempt < READY_ATTEMPTS; attempt++) {
         try {
@@ -174,6 +150,67 @@ export async function joinAsUser(page: Page, userName: string): Promise<boolean>
         );
     } catch {
         /* an older build without the marker: carry on as before */
+    }
+    return true;
+}
+
+export async function joinAsGM(page: Page): Promise<boolean> {
+    return joinAsUser(page, GM_USER_NAME);
+}
+
+/**
+ * Join this worker's test world as the named user (no password), the same way
+ * {@link joinAsGM} joins as the GM. A player user must exist first: the GM creates
+ * it, then a second client (`openClient()`) joins as it.
+ */
+export async function joinAsUser(page: Page, userName: string): Promise<boolean> {
+    const origin = `http://127.0.0.1:${e2ePortForWorker()}`;
+    // The first spec to reach /join can beat the world's boot: the user list
+    // (`game.users` holding the Gamemaster) isn't loaded until the world finishes loading.
+    // A single wait then races that startup and fails intermittently — which, for
+    // the coverage-tracker spec (_aa_inventory), corrupts the whole run's coverage,
+    // and elsewhere skips otherwise-green specs. Retry with reloads so a slow boot
+    // is tolerated rather than fatal. The world boot loads a per-world copy of every
+    // compendium pack (LevelDB single-process lock), so the FIRST spec's cold boot
+    // under simultaneous multi-worker startup can take well over a minute; budget
+    // ~180s total (≈ the webServer readiness timeout). Warm joins early-exit on the
+    // first attempt, so only a genuine cold boot / failure pays the full budget.
+    const JOIN_ATTEMPTS = 8;
+    let populated = false;
+    for (let attempt = 0; attempt < JOIN_ATTEMPTS; attempt++) {
+        // eslint-disable-next-line no-await-in-loop -- sequential retry: each attempt must fully resolve (and fail) before the next reload; parallelizing defeats the world-boot backoff
+        populated = await joinFormReady(page, origin, userName, attempt > 0);
+        if (populated) break;
+    }
+    if (!populated) return false;
+    await page.fill('input[name="username"]', userName);
+    await page.click('button[name="join"]');
+    // Only the move to /game is waited for here: the full `load` event can lag well past
+    // it on a loaded machine (#741: /game reached and network idle, `load` still pending
+    // at 30 s), and readiness is the `game.ready` wait below, which retries with reloads.
+    await page.waitForURL(/\/game/, { timeout: GAME_NAVIGATION_TIMEOUT_MS, waitUntil: 'commit' });
+    // The page can reload once more during boot (core reloads a client whose socket
+    // session came back without an id, or that reconnected after a long drop). A spec
+    // handed a page that then reloads fails on its first evaluate with "Execution
+    // context was destroyed" (#741: evasion-counter-attack, talent-test-hooks). So the
+    // join waits for the booted page to stay put, and waits for boot again if it moves.
+    let navigations = 0;
+    const onNavigated = (frame: Frame): void => {
+        if (frame === page.mainFrame()) navigations += 1;
+    };
+    page.on('framenavigated', onNavigated);
+    try {
+        if (!(await waitForBootedGame(page))) return false;
+        for (let check = 0; check < BOOT_SETTLE_CHECKS; check++) {
+            const seen = navigations;
+            // eslint-disable-next-line no-await-in-loop -- each quiet window must elapse before the next is judged
+            await page.waitForTimeout(BOOT_SETTLE_MS);
+            if (navigations === seen) break;
+            // eslint-disable-next-line no-await-in-loop -- the reloaded page must boot before it is judged again
+            if (!(await waitForBootedGame(page))) return false;
+        }
+    } finally {
+        page.off('framenavigated', onNavigated);
     }
     // Disable the "build your unfinished character" sheet-open prompt so its
     // modal dialog never overlays sheets that other specs render/screenshot.
