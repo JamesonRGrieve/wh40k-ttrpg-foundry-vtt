@@ -72,6 +72,9 @@ const FIELDS_BY_CATEGORY: ReadonlyMap<string, readonly string[]> = new Map([
     ['skills', SKILL_INDEX_FIELDS],
     ['weapon-qualities', WEAPON_QUALITY_INDEX_FIELDS],
     ['origins-careers', CAREER_INDEX_FIELDS],
+    // Deathwatch's careers are its specialities, and its Chapters carry advances too.
+    ['origins-specialities', CAREER_INDEX_FIELDS],
+    ['origins-chapters', CAREER_INDEX_FIELDS],
     ['conditions', CONDITION_INDEX_FIELDS],
 ]);
 

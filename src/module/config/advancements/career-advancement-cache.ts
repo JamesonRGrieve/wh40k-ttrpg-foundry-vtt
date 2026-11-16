@@ -94,7 +94,7 @@ const STANDARD_TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'] as c
  * Deathwatch's Chapters carry advances too, keyed by their own identifiers.
  * A line with no authored career pack contributes nothing.
  */
-const CAREER_PACK_CATEGORIES: Readonly<Record<string, readonly string[]>> = {
+export const CAREER_PACK_CATEGORIES: Readonly<Record<string, readonly string[]>> = {
     rt: ['origins-careers'],
     dh1: ['origins-careers'],
     // A Battle-Brother also buys his Chapter's advances, authored on each Chapter origin.
@@ -156,6 +156,25 @@ interface PackGameLike {
 
 /** line → registry key → career table. `null` until the first build. */
 let registry: Record<string, Record<string, CareerTable>> | null = null;
+
+/**
+ * Settles once the index has been built. The build runs late in the `ready`
+ * sequence (after the world's actors hydrate): on a large world that is well after
+ * a player can open Advancement, which then listed no advances at all.
+ */
+let indexBuilt: Promise<void>;
+let markIndexBuilt: () => void = () => undefined;
+function resetIndexBuilt(): void {
+    indexBuilt = new Promise<void>((resolve) => {
+        markIndexBuilt = resolve;
+    });
+}
+resetIndexBuilt();
+
+/** Resolves when the career-advancement index is built (at once if it already is). */
+export async function careerAdvancementIndexReady(): Promise<void> {
+    return indexBuilt;
+}
 
 function toInt(value: number | undefined): number {
     return typeof value === 'number' && Number.isFinite(value) ? value : 0;
@@ -270,6 +289,7 @@ export async function buildCareerAdvancementIndex(): Promise<void> {
         }),
     );
     registry = next;
+    markIndexBuilt();
 }
 
 /**
@@ -292,9 +312,11 @@ export function isCareerAdvancementIndexReady(): boolean {
  */
 export function setCareerAdvancementsForTesting(entries: Record<string, CareerTable>, line = LEGACY_KEY_LINE): void {
     registry = { [line]: entries };
+    markIndexBuilt();
 }
 
 /** Reset the index to its unbuilt state (test cleanup). */
 export function resetCareerAdvancementIndexForTesting(): void {
     registry = null;
+    resetIndexBuilt();
 }

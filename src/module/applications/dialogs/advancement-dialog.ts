@@ -5,6 +5,7 @@
  * Supports characteristic advances, skills, and talents based on career.
  */
 
+import { careerAdvancementIndexReady } from '../../config/advancements/career-advancement-cache.ts';
 import { getCareerAdvancements, getCareerKeyFromName, getNextCharacteristicCost, TIER_ORDER } from '../../config/advancements/index.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
@@ -502,6 +503,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
         if (systemConfig === null || systemConfig.usesCareerTables) {
+            // The career tables load late in `ready`; opened before then, the dialog listed nothing.
+            await careerAdvancementIndexReady();
             const originCareer = system.originPath?.career;
             const careerKey = this.#resolveCareerKey(systemConfig);
             context.hasCareer = careerKey !== null;

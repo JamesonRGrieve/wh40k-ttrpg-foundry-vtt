@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PackMetadataLike } from '../../utils/line-packs.ts';
-import { CAREER_INDEX_FIELDS } from '../../utils/pack-index.ts';
+import { CAREER_INDEX_FIELDS, packIndexFields } from '../../utils/pack-index.ts';
 import {
     buildCareerAdvancementIndex,
+    CAREER_PACK_CATEGORIES,
+    careerAdvancementIndexReady,
     getCareerAdvancementRegistry,
     isCareerAdvancementIndexReady,
     resetCareerAdvancementIndexForTesting,
@@ -251,5 +253,31 @@ describe('every career line, every rank (operator ruling 2026-11-14)', () => {
         ]);
         expect(adept.RANK_1_ADVANCES.map((a) => a.name)).toEqual(['Literacy', 'Scrutiny']);
         expect(adept.CAREER_INFO.ranks).toEqual(['Initiate', 'Archivist']);
+    });
+});
+
+describe('the career packs are indexed with their tables', () => {
+    it('asks every category the cache reads for the career fields (a DW speciality pack once came back without them)', () => {
+        for (const [line, categories] of Object.entries(CAREER_PACK_CATEGORIES)) {
+            for (const category of categories) {
+                const fields = packIndexFields({ name: `${line}-${category}`, flags: { 'wh40k-rpg': { line, category, homebrew: false } } });
+                expect(fields, `${line} ${category}`).toEqual(expect.arrayContaining([...CAREER_INDEX_FIELDS]));
+            }
+        }
+    });
+});
+
+describe('careerAdvancementIndexReady', () => {
+    it('waits for the index build, then resolves', async () => {
+        let settled = false;
+        const ready = careerAdvancementIndexReady().then(() => {
+            settled = true;
+        });
+        await Promise.resolve();
+        expect(settled).toBe(false);
+        stubPack([ROGUE_TRADER_DOC]);
+        await buildCareerAdvancementIndex();
+        await ready;
+        expect(settled).toBe(true);
     });
 });
