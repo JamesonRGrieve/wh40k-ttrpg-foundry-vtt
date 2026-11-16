@@ -841,7 +841,11 @@ system.careerAdvancement = {
   Advancement (`system.careerBranches`) and is offered only its advances.
 - **Other advance sources.** A Deathwatch Battle-Brother also buys his
   Chapter's advances: a Chapter origin carries `careerAdvancement` too (its
-  advances in a rank-1 entry), and DW's config reads both.
+  advances in a rank-1 entry), and DW's config reads both. A DH1 elite advance
+  that prints its own table (the Demagogue) carries it the same way; a
+  character who owns that elite advance buys from it as well. Sources are found
+  by the origin's `identifier`, so a book-prefixed one (`salvation-demagogue`)
+  needs nothing extra.
 - **Prerequisite types:** `characteristic` (`key` a characteristic, `value` its
   minimum total), `skill` (`key` the skill, `value` 10 / 20 for +10 / +20),
   `talent` (`key` an owned talent's name), `influence` (`value` the minimum

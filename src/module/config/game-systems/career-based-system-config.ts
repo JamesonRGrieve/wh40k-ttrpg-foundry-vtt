@@ -102,6 +102,25 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
+     * The identifiers of the actor's owned origin items on `step` (a DH1 character's
+     * elite advances), read off each item: content identifiers can carry a book prefix
+     * (`salvation-demagogue`), so a name would not find them.
+     */
+    protected ownedOriginIdentifiers(actor: SystemConfigActor, step: string): string[] {
+        const identifiers: string[] = [];
+        // The actor's item collection is typed structurally with `some` only: walk it with that.
+        actor.items.some((item) => {
+            if (!item.isOriginPath) return false;
+            const fields = item.system;
+            if ('step' in fields && 'identifier' in fields && fields.step === step && typeof fields.identifier === 'string' && fields.identifier !== '') {
+                identifiers.push(fields.identifier);
+            }
+            return false;
+        });
+        return identifiers;
+    }
+
+    /**
      * The registry keys whose tables the actor buys advances from: its career. A line
      * whose character also buys from another origin overrides this (DW: speciality
      * and Chapter).

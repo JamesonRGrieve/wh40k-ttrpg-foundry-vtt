@@ -75,6 +75,8 @@ const FIELDS_BY_CATEGORY: ReadonlyMap<string, readonly string[]> = new Map([
     // Deathwatch's careers are its specialities, and its Chapters carry advances too.
     ['origins-specialities', CAREER_INDEX_FIELDS],
     ['origins-chapters', CAREER_INDEX_FIELDS],
+    // A DH1 elite advance can print its own advance table.
+    ['origins-elite-advances', CAREER_INDEX_FIELDS],
     ['conditions', CONDITION_INDEX_FIELDS],
 ]);
 

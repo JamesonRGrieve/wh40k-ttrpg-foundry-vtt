@@ -173,6 +173,11 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
     }
 
     /** The career's registry key: its identifier, from the name the origin path records. */
+    /** A DH1 character buys from its career and from each elite advance it owns (its own table, where printed). */
+    override resolveAdvanceSourceKeys(actor: SystemConfigActor): string[] {
+        return [...super.resolveAdvanceSourceKeys(actor), ...this.ownedOriginIdentifiers(actor, 'elite')];
+    }
+
     resolveCareerKey(actor: SystemConfigActor): string | null {
         const career = actor.system.originPath?.['career'];
         return typeof career === 'string' && career !== '' ? identifierFromName(career) : null;

@@ -115,3 +115,30 @@ describe("a Battle-Brother's advances: his speciality's and his Chapter's", () =
         expect(dw.getAvailableAdvances(brother('Tactical Marine', '')).map((a) => a.name)).toEqual(['Awareness']);
     });
 });
+
+describe("a DH1 character's elite advances add their tables", () => {
+    const dh1 = SystemConfigRegistry.get('dh1');
+    const eliteItem = (identifier: string, step = 'elite'): { name: string; isOriginPath: boolean; system: object } => ({
+        name: identifier,
+        isOriginPath: true,
+        system: { step, identifier },
+    });
+    const withItems = (items: Array<{ name: string; isOriginPath: boolean; system: object }>): SystemConfigActor => ({
+        system: { originPath: { career: 'Adept' }, rank: 1 },
+        items: { some: (predicate) => items.some(predicate) },
+    });
+
+    it("offers an owned elite advance's table beside the career's, found by the item's identifier", () => {
+        setCareerAdvancementsForTesting(
+            {
+                'adept': ADEPT,
+                'salvation-demagogue': { ...ADEPT, RANKS: [{ rank: 1, branch: '', title: '', minXp: 0, advances: [advance('Command')] }] },
+            },
+            'dh1',
+        );
+        expect(dh1.getAvailableAdvances(withItems([eliteItem('salvation-demagogue')])).map((a) => a.name)).toEqual(['Literacy', 'Command']);
+        // An origin on another step, or no elite at all: the career alone.
+        expect(dh1.getAvailableAdvances(withItems([eliteItem('salvation-demagogue', 'background')])).map((a) => a.name)).toEqual(['Literacy']);
+        expect(dh1.getAvailableAdvances(withItems([])).map((a) => a.name)).toEqual(['Literacy']);
+    });
+});

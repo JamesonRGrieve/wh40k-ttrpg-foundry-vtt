@@ -96,7 +96,8 @@ const STANDARD_TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'] as c
  */
 export const CAREER_PACK_CATEGORIES: Readonly<Record<string, readonly string[]>> = {
     rt: ['origins-careers'],
-    dh1: ['origins-careers'],
+    // An elite advance can print its own advance table (the Demagogue).
+    dh1: ['origins-careers', 'origins-elite-advances'],
     // A Battle-Brother also buys his Chapter's advances, authored on each Chapter origin.
     dw: ['origins-specialities', 'origins-chapters'],
 };
