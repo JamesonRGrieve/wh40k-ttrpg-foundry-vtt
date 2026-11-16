@@ -1,4 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { bandForRoll, isRollBandFormula, parseRollBands } from '../../rules/roll-bands.ts';
 import { resolveCharacteristicBonusRefs } from '../shared/characteristic-formula.ts';
 import BaseGrantData, { type GrantApplicationResult, type GrantApplyOptions, type GrantRestoreData, type GrantSummary } from './base-grant.ts';
 import {
@@ -225,10 +226,8 @@ export default class ResourceGrantData extends BaseGrantData {
             return flat;
         }
 
-        // Handle lookup table format: "(1-4|=2),(5-7|=3),(8-10|=4)"
-        // This is a d10 roll table - roll and lookup the result
-        // Match more robustly - look for pattern like (N-M|=X)
-        if (/\(\d+-\d+\|=\d+\)/.test(normalizedFormula)) {
+        // A banded d10 table, "(1-4|=2),(5-9|=3),(10|=4)": roll and look the result up.
+        if (isRollBandFormula(normalizedFormula)) {
             return this._evaluateLookupTable(normalizedFormula);
         }
 
@@ -254,20 +253,7 @@ export default class ResourceGrantData extends BaseGrantData {
      * @private
      */
     async _evaluateLookupTable(formula: string): Promise<number> {
-        // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
-        const entries: Array<{ min: number; max: number; value: number }> = [];
-        const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        let match: RegExpExecArray | null = entryPattern.exec(formula);
-
-        while (match !== null) {
-            const [, minStr = '0', maxStr = '0', valStr = '0'] = match;
-            entries.push({
-                min: parseInt(minStr, 10),
-                max: parseInt(maxStr, 10),
-                value: parseInt(valStr, 10),
-            });
-            match = entryPattern.exec(formula);
-        }
+        const entries = parseRollBands(formula);
 
         if (entries.length === 0) {
             console.warn(`ResourceGrantData: Could not parse lookup table: ${formula}`);
@@ -278,12 +264,10 @@ export default class ResourceGrantData extends BaseGrantData {
         const roll = await new Roll('1d10').evaluate();
         const rolled = roll.total;
 
-        // Find matching entry
-        for (const entry of entries) {
-            if (rolled >= entry.min && rolled <= entry.max) {
-                game.wh40k.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
-                return entry.value;
-            }
+        const entry = bandForRoll(entries, rolled);
+        if (entry !== undefined) {
+            game.wh40k.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
+            return entry.value;
         }
 
         // No match - return first entry as fallback

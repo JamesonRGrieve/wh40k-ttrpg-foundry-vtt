@@ -12,6 +12,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { bandForRoll, bandRangeLabel, parseRollBands } from '../../rules/roll-bands.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
 import { applySystemDataset } from '../api/apply-system-dataset.ts';
@@ -512,16 +513,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             return;
         }
 
-        // Parse the conditional format: "(1-5|=2),(6-10|=3)"
-        const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        const conditions = [...formula.matchAll(conditionRegex)];
+        // The banded table: "(1-5|=2),(6-9|=3),(10|=4)".
+        const bands = parseRollBands(formula);
 
         // Build options description
-        const optionsText = conditions
-            .map((match) => {
-                const [, min, max, outcome] = match;
-                return game.i18n.format('WH40K.OriginPath.ManualFateOutcome', { min: String(min), max: String(max), outcome: String(outcome) });
-            })
+        const optionsText = bands
+            .map((option) =>
+                game.i18n.format('WH40K.OriginPath.ManualFateOutcome', { min: String(option.min), max: String(option.max), outcome: String(option.value) }),
+            )
             .join('<br>');
 
         // Prompt for the d10 roll
@@ -542,25 +541,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         if (diceValue === null || Number.isNaN(diceValue) || diceValue === 0) return;
 
-        // Find matching condition
-        let result = 0;
-        let matchedRange = '';
-
-        for (const match of conditions) {
-            const [, min, max, outcome] = match;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const minVal = parseInt(min ?? '', 10);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const maxVal = parseInt(max ?? '', 10);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const outcomeVal = parseInt(outcome ?? '', 10);
-
-            if (diceValue >= minVal && diceValue <= maxVal) {
-                result = outcomeVal;
-                matchedRange = `${min}-${max}`;
-                break;
-            }
-        }
+        const band = bandForRoll(bands, diceValue);
+        const result = band?.value ?? 0;
+        const matchedRange = band === undefined ? '' : bandRangeLabel(band);
 
         const breakdownText = `Rolled ${diceValue} on 1d10 (${matchedRange} → ${result} Fate Points)`;
 
@@ -682,28 +665,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         await roll.evaluate();
         const rolledValue = roll.total ?? 0;
 
-        // Parse conditions
-        const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
-        const conditions = [...formula.matchAll(conditionRegex)];
-
-        let result = 0;
-        let matchedRange = '';
-
-        for (const match of conditions) {
-            const [, min, max, outcome] = match;
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const minVal = parseInt(min ?? '', 10);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const maxVal = parseInt(max ?? '', 10);
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess guard: regex capture groups may be undefined at runtime
-            const outcomeVal = parseInt(outcome ?? '', 10);
-
-            if (rolledValue >= minVal && rolledValue <= maxVal) {
-                result = outcomeVal;
-                matchedRange = `${min}-${max}`;
-                break;
-            }
-        }
+        const band = bandForRoll(parseRollBands(formula), rolledValue);
+        const result = band?.value ?? 0;
+        const matchedRange = band === undefined ? '' : bandRangeLabel(band);
 
         const breakdown = `Rolled ${rolledValue} on 1d10 (${matchedRange} → ${result} Fate Points)`;
 
