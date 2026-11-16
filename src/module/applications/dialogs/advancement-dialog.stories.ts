@@ -40,6 +40,7 @@ interface CharacteristicRow {
 
 interface Args {
     _gameSystemId: string;
+    branchChoice?: { rank: number; options: Array<{ branch: string; title: string }> } | null;
     hasCareer: boolean;
     originCareerName: string | null;
     xp: { total: number; used: number; available: number; usedPercent: number };
@@ -131,6 +132,34 @@ export const Characteristics: Story = {
         // localize() returns the raw key when no langpack is mounted.
         await expect(scope.getByText(/WH40K\.Advancement\.XPAvailable|XP Available/)).toBeTruthy();
         await expect(scope.getByText('750')).toBeTruthy();
+    },
+};
+
+/** A DH1 Guardsman at rank 6, where the career branches: the player picks one path (operator ruling 2026-11-15). */
+export const BranchChoice: Story = {
+    args: {
+        _gameSystemId: 'dh1',
+        originCareerName: 'Guardsman',
+        branchChoice: {
+            rank: 6,
+            options: [
+                { branch: 'assault-veteran', title: 'Assault Veteran' },
+                { branch: 'lieutenant', title: 'Lieutenant' },
+                { branch: 'scout', title: 'Scout' },
+            ],
+        },
+    },
+    play: async ({ canvasElement }) => {
+        const buttons = [...canvasElement.querySelectorAll<HTMLElement>('[data-action="chooseCareerBranch"]')];
+        await expect(buttons.map((button) => button.textContent.trim())).toEqual(['Assault Veteran', 'Lieutenant', 'Scout']);
+        await expect(buttons.map((button) => button.dataset['branch'])).toEqual(['assault-veteran', 'lieutenant', 'scout']);
+    },
+};
+
+/** No branch point pending: no path picker. */
+export const NoBranchChoice: Story = {
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelectorAll('[data-action="chooseCareerBranch"]').length).toBe(0);
     },
 };
 

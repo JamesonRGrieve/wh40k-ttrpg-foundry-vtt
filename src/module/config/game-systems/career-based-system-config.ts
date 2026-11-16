@@ -15,7 +15,19 @@ interface CareerEntry {
     CHARACTERISTIC_COSTS?: { [charKey: string]: { [tier: string]: number | undefined } };
     RANK_1_ADVANCES?: AdvanceOption[];
     /** Every authored rank's advances (operator ruling 2026-11-14: every rank). */
-    RANKS?: ReadonlyArray<{ rank: number; advances: AdvanceOption[] }>;
+    RANKS?: ReadonlyArray<{ rank: number; branch?: string; title?: string; advances: AdvanceOption[] }>;
+}
+
+/** A branch point the actor has reached but not chosen: the rank and the paths it offers. */
+export interface CareerBranchChoice {
+    rank: number;
+    options: Array<{ branch: string; title: string }>;
+}
+
+/** The career paths the actor chose, by branch id. */
+function actorBranches(actor: SystemConfigActor): readonly string[] {
+    const branches = actor.system.careerBranches;
+    return Array.isArray(branches) ? branches.filter((branch): branch is string => typeof branch === 'string') : [];
 }
 
 /** The actor's career rank: its stored rank, or 1 when it has none. */
@@ -89,17 +101,51 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return null;
     }
 
-    getAvailableAdvances(actor: SystemConfigActor): AdvanceOption[] {
+    /**
+     * The registry keys whose tables the actor buys advances from: its career. A line
+     * whose character also buys from another origin overrides this (DW: speciality
+     * and Chapter).
+     */
+    resolveAdvanceSourceKeys(actor: SystemConfigActor): string[] {
         const careerKey = this.resolveCareerKey(actor);
-        if (careerKey === null || careerKey === '') return [];
+        return careerKey === null || careerKey === '' ? [] : [careerKey];
+    }
 
-        const career = this.getCareerRegistry()[careerKey] as CareerEntry | undefined;
-        const ranks = career?.RANKS ?? [];
-        // A career with authored ranks offers every advance up to the actor's rank;
-        // one with only a rank-1 list offers that.
-        if (ranks.length === 0) return career?.RANK_1_ADVANCES ?? [];
+    getAvailableAdvances(actor: SystemConfigActor): AdvanceOption[] {
         const rank = actorRank(actor);
-        return ranks.filter((entry) => entry.rank <= rank).flatMap((entry) => entry.advances);
+        const chosen = actorBranches(actor);
+        return this.resolveAdvanceSourceKeys(actor).flatMap((key) => {
+            const career = this.getCareerRegistry()[key] as CareerEntry | undefined;
+            const ranks = career?.RANKS ?? [];
+            // A table with authored ranks offers every advance up to the actor's rank;
+            // one with only a rank-1 list offers that.
+            if (ranks.length === 0) return career?.RANK_1_ADVANCES ?? [];
+            // A branched rank offers its advances only on the path the character chose.
+            return ranks
+                .filter((entry) => entry.rank <= rank && (entry.branch === undefined || entry.branch === '' || chosen.includes(entry.branch)))
+                .flatMap((entry) => entry.advances);
+        });
+    }
+
+    /**
+     * The first branch point the actor has reached without choosing a path: the
+     * lowest rank up to its own whose entries are branches, none of them chosen.
+     * Null when there is none (or the career doesn't branch).
+     */
+    pendingCareerBranch(actor: SystemConfigActor): CareerBranchChoice | null {
+        const careerKey = this.resolveCareerKey(actor);
+        if (careerKey === null || careerKey === '') return null;
+        const career = this.getCareerRegistry()[careerKey] as CareerEntry | undefined;
+        const rank = actorRank(actor);
+        const chosen = actorBranches(actor);
+        const branched = (career?.RANKS ?? []).filter((entry) => entry.rank <= rank && entry.branch !== undefined && entry.branch !== '');
+        const ranksWithChoice = [...new Set(branched.map((entry) => entry.rank))].sort((a, b) => a - b);
+        for (const atRank of ranksWithChoice) {
+            const options = branched.filter((entry) => entry.rank === atRank);
+            if (options.some((entry) => chosen.includes(entry.branch ?? ''))) continue;
+            return { rank: atRank, options: options.map((entry) => ({ branch: entry.branch ?? '', title: entry.title ?? entry.branch ?? '' })) };
+        }
+        return null;
     }
 
     // ── RT/DH1e/DW Skill Visibility ─────────────────────────────

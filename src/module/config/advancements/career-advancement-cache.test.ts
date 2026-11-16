@@ -24,6 +24,7 @@ interface StubAdvance {
     type: string;
     specialization?: string;
     multiplier?: number;
+    level?: number;
     prerequisites: Array<{ type: string; key: string; value?: number }>;
 }
 
@@ -151,7 +152,21 @@ describe('buildCareerAdvancementIndex', () => {
         expect(Object.keys(getCareerAdvancementRegistry())).toEqual(['archMilitant']);
     });
 
-    it("reads Deathwatch's specialities, its career packs", async () => {
+    it('carries a skill advance\'s rank level, so a printed "+10" is the bare skill at level 2', async () => {
+        const guardsman: StubDoc = {
+            name: 'Guardsman',
+            system: {
+                identifier: 'guardsman',
+                careerAdvancement: { ranks: [{ rank: 2, advances: [{ name: 'Carouse', cost: 100, type: 'skill', level: 2, prerequisites: [] }] }] },
+            },
+        };
+        vi.stubGlobal('game', { packs: [packWith([guardsman], 'dh1')] });
+        await buildCareerAdvancementIndex();
+        const carouse = careerOf('guardsman', 'dh1').RANKS[0]?.advances[0];
+        expect(carouse).toMatchObject({ name: 'Carouse', level: 2 });
+    });
+
+    it("reads Deathwatch's specialities and Chapters, its career packs", async () => {
         const tactical: StubDoc = {
             name: 'Tactical Marine',
             system: {
@@ -159,9 +174,18 @@ describe('buildCareerAdvancementIndex', () => {
                 careerAdvancement: { ranks: [{ rank: 1, advances: [{ name: 'Awareness', cost: 200, type: 'skill', prerequisites: [] }] }] },
             },
         };
-        vi.stubGlobal('game', { packs: [packWith([tactical], 'dw', 'origins-specialities'), packWith([], 'dw', 'origins-chapters')] });
+        const ultramarines: StubDoc = {
+            name: 'Ultramarines',
+            system: {
+                identifier: 'ultramarines',
+                careerAdvancement: { ranks: [{ rank: 1, advances: [{ name: 'Command', cost: 200, type: 'skill', prerequisites: [] }] }] },
+            },
+        };
+        vi.stubGlobal('game', { packs: [packWith([tactical], 'dw', 'origins-specialities'), packWith([ultramarines], 'dw', 'origins-chapters')] });
         await buildCareerAdvancementIndex();
         expect(careerOf('tactical-marine', 'dw').RANK_1_ADVANCES.map((a) => a.name)).toEqual(['Awareness']);
+        // The Chapters' advances load into the same registry, by their own identifiers.
+        expect(careerOf('ultramarines', 'dw').RANK_1_ADVANCES.map((a) => a.name)).toEqual(['Command']);
     });
 
     it('yields an empty registry when the pack is absent', async () => {

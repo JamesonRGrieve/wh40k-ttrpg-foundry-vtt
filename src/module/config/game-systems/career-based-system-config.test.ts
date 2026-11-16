@@ -4,6 +4,7 @@
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { resetCareerAdvancementIndexForTesting, setCareerAdvancementsForTesting, type CareerTable } from '../advancements/career-advancement-cache.ts';
+import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import { SystemConfigRegistry } from './index.ts';
 import type { SystemConfigActor } from './types.ts';
 
@@ -14,17 +15,31 @@ const ADEPT: CareerTable = {
     CHARACTERISTIC_COSTS: {},
     RANK_1_ADVANCES: [advance('Literacy')],
     RANKS: [
-        { rank: 1, title: 'Initiate', minXp: 0, advances: [advance('Literacy')] },
-        { rank: 2, title: 'Archivist', minXp: 500, advances: [advance('Inquiry')] },
-        { rank: 3, title: 'Lexographer', minXp: 1000, advances: [advance('Scrutiny')] },
+        { rank: 1, branch: '', title: 'Initiate', minXp: 0, advances: [advance('Literacy')] },
+        { rank: 2, branch: '', title: 'Archivist', minXp: 500, advances: [advance('Inquiry')] },
+        { rank: 3, branch: '', title: 'Lexographer', minXp: 1000, advances: [advance('Scrutiny')] },
     ],
     TIER_ORDER: ['simple', 'intermediate', 'trained', 'expert'],
 };
 
 /** A DH1 character of `career` at `rank`. */
-function acolyte(career: string, rank: number | undefined): SystemConfigActor {
-    return { system: { originPath: { career }, ...(rank === undefined ? {} : { rank }) }, items: { some: () => false } };
+function acolyte(career: string, rank: number | undefined, careerBranches: string[] = []): SystemConfigActor {
+    return { system: { originPath: { career }, careerBranches, ...(rank === undefined ? {} : { rank }) }, items: { some: () => false } };
 }
+
+/** A Guardsman whose rank 6-7 branch into three paths, as DH1 prints them. */
+const GUARDSMAN: CareerTable = {
+    ...ADEPT,
+    CAREER_INFO: { key: 'guardsman', name: 'Guardsman', description: '', ranks: [] },
+    RANKS: [
+        { rank: 5, branch: '', title: 'Veteran', minXp: 3000, advances: [advance('Command')] },
+        { rank: 6, branch: 'assault-veteran', title: 'Assault Veteran', minXp: 6000, advances: [advance('Climb')] },
+        { rank: 6, branch: 'lieutenant', title: 'Lieutenant', minXp: 6000, advances: [advance('Charm')] },
+        { rank: 6, branch: 'scout', title: 'Scout', minXp: 6000, advances: [advance('Tracking')] },
+        { rank: 7, branch: 'scout', title: 'Marksman', minXp: 8000, advances: [advance('Concealment')] },
+        { rank: 7, branch: 'lieutenant', title: 'Captain', minXp: 8000, advances: [advance('Interrogation')] },
+    ],
+};
 
 afterEach(() => {
     resetCareerAdvancementIndexForTesting();
@@ -47,5 +62,56 @@ describe('career advances by rank (operator ruling 2026-11-14)', () => {
     it('falls back to the rank-1 list for a career with no rank tables', () => {
         setCareerAdvancementsForTesting({ adept: { ...ADEPT, RANKS: [] } }, 'dh1');
         expect(dh1.getAvailableAdvances(acolyte('Adept', 3)).map((a) => a.name)).toEqual(['Literacy']);
+    });
+});
+
+describe('career branches (operator ruling 2026-11-15: the player picks the path in Advancement)', () => {
+    const config = SystemConfigRegistry.get('dh1');
+    if (!(config instanceof CareerBasedSystemConfig)) throw new Error('DH1 is a career-based line');
+    const dh1 = config;
+
+    it('offers a branched rank only on the chosen path', () => {
+        setCareerAdvancementsForTesting({ guardsman: GUARDSMAN }, 'dh1');
+        expect(dh1.getAvailableAdvances(acolyte('Guardsman', 7, ['scout'])).map((a) => a.name)).toEqual(['Command', 'Tracking', 'Concealment']);
+    });
+
+    it('offers no branched advances before a path is chosen, and asks for the first unchosen branch point', () => {
+        setCareerAdvancementsForTesting({ guardsman: GUARDSMAN }, 'dh1');
+        expect(dh1.getAvailableAdvances(acolyte('Guardsman', 7)).map((a) => a.name)).toEqual(['Command']);
+        expect(dh1.pendingCareerBranch(acolyte('Guardsman', 7))).toEqual({
+            rank: 6,
+            options: [
+                { branch: 'assault-veteran', title: 'Assault Veteran' },
+                { branch: 'lieutenant', title: 'Lieutenant' },
+                { branch: 'scout', title: 'Scout' },
+            ],
+        });
+    });
+
+    it('asks nothing below the branch point or once the path is chosen', () => {
+        setCareerAdvancementsForTesting({ guardsman: GUARDSMAN }, 'dh1');
+        expect(dh1.pendingCareerBranch(acolyte('Guardsman', 5))).toBeNull();
+        expect(dh1.pendingCareerBranch(acolyte('Guardsman', 7, ['lieutenant']))).toBeNull();
+    });
+});
+
+describe("a Battle-Brother's advances: his speciality's and his Chapter's", () => {
+    const dw = SystemConfigRegistry.get('dw');
+    const brother = (speciality: string, chapter: string): SystemConfigActor => ({
+        system: { originPath: { speciality, chapter }, rank: 1 },
+        items: { some: () => false },
+    });
+
+    it("offers the speciality's ranks and the Chapter's advances together", () => {
+        setCareerAdvancementsForTesting(
+            {
+                'tactical-marine': { ...ADEPT, RANKS: [{ rank: 1, branch: '', title: '', minXp: 0, advances: [advance('Awareness')] }] },
+                'ultramarines': { ...ADEPT, RANKS: [{ rank: 1, branch: '', title: '', minXp: 0, advances: [advance('Command')] }] },
+            },
+            'dw',
+        );
+        expect(dw.getAvailableAdvances(brother('Tactical Marine', 'Ultramarines')).map((a) => a.name)).toEqual(['Awareness', 'Command']);
+        // Without a Chapter, the speciality alone.
+        expect(dw.getAvailableAdvances(brother('Tactical Marine', '')).map((a) => a.name)).toEqual(['Awareness']);
     });
 });

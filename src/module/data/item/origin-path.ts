@@ -69,6 +69,9 @@ function careerAdvanceField(fields: typeof foundry.data.fields): foundry.data.fi
         type: new fields.StringField({ required: true, choices: ['skill', 'talent'] }),
         specialization: new fields.StringField({ required: false, blank: true }),
         multiplier: new fields.NumberField({ required: false, initial: null, min: 1, integer: true }),
+        // A skill advance's rank: 1 trained, 2 +10, 3 +20, 4 +30. The book prints a
+        // +10 advance as its own entry ("Carouse +10"); the name stays the bare skill.
+        level: new fields.NumberField({ required: false, nullable: true, initial: null, min: 1, max: 4, integer: true }),
         prerequisites: new fields.ArrayField(new fields.ObjectField({ required: true }), { required: false, initial: [] }),
     });
 }
@@ -402,6 +405,9 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     ranks: new fields.ArrayField(
                         new fields.SchemaField({
                             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
+                            // The path a branched rank belongs to, shared by every rank on it
+                            // ("lieutenant": Lieutenant, Captain, Commander); blank when the rank doesn't branch.
+                            branch: new fields.StringField({ required: false, blank: true }),
                             title: new fields.StringField({ required: false, blank: true }),
                             minXp: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0, integer: true }),
                             advances: new fields.ArrayField(careerAdvanceField(fields), { required: false, initial: [] }),

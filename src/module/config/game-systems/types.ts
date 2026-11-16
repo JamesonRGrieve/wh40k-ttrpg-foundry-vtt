@@ -117,6 +117,8 @@ export interface AdvanceOption {
     cost: number;
     type: 'skill' | 'talent';
     specialization?: string;
+    /** A skill advance's rank: 1 trained, 2 +10, 3 +20, 4 +30 (1 when absent). */
+    level?: number;
     prerequisites?: Prerequisite[];
 }
 
@@ -273,6 +275,8 @@ export interface SystemConfigActor {
         originPath?: Readonly<Record<string, unknown>> | undefined;
         // eslint-disable-next-line no-restricted-syntax -- boundary: only the character DataModels declare `rank`; the others carry it under their open index signature
         rank?: unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: only the character DataModels declare `careerBranches`; the others carry it under their open index signature
+        careerBranches?: unknown;
         aptitudes?: Set<string> | string[] | undefined;
     };
     readonly items: { some: (predicate: (item: SystemConfigActorItem) => boolean) => boolean };

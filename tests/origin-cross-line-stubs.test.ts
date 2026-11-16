@@ -254,9 +254,10 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('RT’s Void Born is RT’s own, not DH2�
         });
     });
 
-    it('gives OW its own Void Born, and leaves DH2 and DH1 on DH2’s', () => {
+    it('gives OW and DH1 each their own Void Born, and DH2 its own (content#37, content#44)', () => {
         const lines = (['dh2', 'dh1', 'ow'] as const).map((line) => voidbornFor(line).modifiers.characteristics);
-        expect(lines).toEqual([{ intelligence: 5, willpower: 5, strength: -5 }, { intelligence: 5, willpower: 5, strength: -5 }, { willpower: 3 }]);
+        // DH1 prints its own Void Born (content#44): Strength −5, Willpower +5, no Intelligence bonus.
+        expect(lines).toEqual([{ intelligence: 5, willpower: 5, strength: -5 }, { willpower: 5, strength: -5 }, { willpower: 3 }]);
     });
 });
 

@@ -125,6 +125,7 @@ type CharacterGenerationCustomBases = Record<string, number | boolean>;
 export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
     declare rank: number;
+    declare careerBranches: string[];
     declare mutations: string;
     declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
     declare bio: {
@@ -390,6 +391,9 @@ export default class CharacterData extends CreatureTemplate {
             ...owBattlefieldSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
+            // The career paths the character took where its career branches (a DH1 Guardsman's
+            // "scout" at rank 6), by the career table's branch ids; chosen in Advancement.
+            careerBranches: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),
             mutations: new fields.StringField({ required: false, blank: true }),
 
             // ===== GAME SYSTEM =====

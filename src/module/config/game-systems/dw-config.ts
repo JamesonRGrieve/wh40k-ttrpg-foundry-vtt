@@ -126,6 +126,13 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         return typeof speciality === 'string' && speciality !== '' ? identifierFromName(speciality) : null;
     }
 
+    /** A Battle-Brother buys from his speciality's ranks and from his Chapter's advances. */
+    override resolveAdvanceSourceKeys(actor: SystemConfigActor): string[] {
+        const chapter = actor.system.originPath?.['chapter'];
+        const chapterKey = typeof chapter === 'string' && chapter !== '' ? identifierFromName(chapter) : null;
+        return [...super.resolveAdvanceSourceKeys(actor), ...(chapterKey === null ? [] : [chapterKey])];
+    }
+
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
         return [
             // Chapter and Speciality read DW's own step keys: `system.originPath.<step>`

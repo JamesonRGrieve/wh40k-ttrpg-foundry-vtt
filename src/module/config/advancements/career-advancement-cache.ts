@@ -43,12 +43,16 @@ interface CareerRankAdvance {
     type: 'skill' | 'talent';
     specialization?: string;
     multiplier?: number;
+    /** A skill advance's rank: 1 trained, 2 +10, 3 +20, 4 +30. */
+    level?: number;
     prerequisites: Prerequisite[];
 }
 
 /** One rank of a career: its number, printed title, starting XP and the advances it offers. */
 interface CareerRank {
     rank: number;
+    /** The path a branched rank belongs to ('' for a rank every character of the career takes). */
+    branch: string;
     title: string;
     minXp: number | null;
     advances: CareerRankAdvance[];
@@ -87,9 +91,15 @@ const STANDARD_TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'] as c
  * ruling 2026-11-14: every career line, every rank), each with the pack category
  * that holds them. Deathwatch's career is its speciality, packed under
  * `origins-specialities`; reading `origins-careers` for it found no pack at all.
+ * Deathwatch's Chapters carry advances too, keyed by their own identifiers.
  * A line with no authored career pack contributes nothing.
  */
-const CAREER_PACK_CATEGORIES: Readonly<Record<string, string>> = { rt: 'origins-careers', dh1: 'origins-careers', dw: 'origins-specialities' };
+const CAREER_PACK_CATEGORIES: Readonly<Record<string, readonly string[]>> = {
+    rt: ['origins-careers'],
+    dh1: ['origins-careers'],
+    // A Battle-Brother also buys his Chapter's advances, authored on each Chapter origin.
+    dw: ['origins-specialities', 'origins-chapters'],
+};
 
 /** RT's registry keeps its legacy camelCase keys; every other line keys a career by its identifier. */
 const LEGACY_KEY_LINE = 'rt';
@@ -115,12 +125,20 @@ const IDENTIFIER_TO_KEY: Record<string, string> = {
 /* -------------------------------------------- */
 
 /** Raw `system.careerAdvancement` payload as authored on the compendium doc. */
-type RawAdvance = { name?: string; cost?: number; type?: string; specialization?: string; multiplier?: number; prerequisites?: Prerequisite[] };
+type RawAdvance = {
+    name?: string;
+    cost?: number;
+    type?: string;
+    specialization?: string;
+    multiplier?: number;
+    level?: number | null;
+    prerequisites?: Prerequisite[];
+};
 
 interface RawCareerAdvancement {
     characteristicCosts?: Record<string, { simple?: number; intermediate?: number; trained?: number; expert?: number } | null>;
     rank1Advances?: RawAdvance[];
-    ranks?: Array<{ rank?: number; title?: string; minXp?: number | null; advances?: RawAdvance[] }>;
+    ranks?: Array<{ rank?: number; branch?: string; title?: string; minXp?: number | null; advances?: RawAdvance[] }>;
 }
 
 /** The index row of a career this module reads (stored source, `pack-index.ts`). */
@@ -174,6 +192,7 @@ function normalizeAdvances(raw: readonly RawAdvance[] | undefined): CareerRankAd
         };
         if (entry.specialization !== undefined) advance.specialization = entry.specialization;
         if (entry.multiplier !== undefined) advance.multiplier = entry.multiplier;
+        if (entry.level != null) advance.level = entry.level;
         out.push(advance);
     }
     return out;
@@ -182,25 +201,30 @@ function normalizeAdvances(raw: readonly RawAdvance[] | undefined): CareerRankAd
 /**
  * Every authored rank in order. Rank 1 merges the legacy `rank1Advances` list
  * with a `ranks` entry for rank 1; a rank number that is not a whole number of
- * at least 1 is dropped.
+ * at least 1 is dropped. A branched rank (DH1 prints alternative paths from a
+ * rank on: Assault Veteran, Lieutenant or Scout) stays its own entry, keyed by
+ * rank and branch, so a character is offered only the path it chose.
  */
 function normalizeRanks(raw: RawCareerAdvancement): CareerRank[] {
-    const byRank = new Map<number, CareerRank>();
+    const byKey = new Map<string, CareerRank>();
     const rankOne = normalizeAdvances(raw.rank1Advances);
-    if (rankOne.length > 0) byRank.set(1, { rank: 1, title: '', minXp: null, advances: rankOne });
+    if (rankOne.length > 0) byKey.set('1|', { rank: 1, branch: '', title: '', minXp: null, advances: rankOne });
     for (const entry of raw.ranks ?? []) {
         const rank = entry.rank;
         if (rank === undefined || !Number.isInteger(rank) || rank < 1) continue;
-        const prior = byRank.get(rank);
+        const branch = entry.branch ?? '';
+        const key = `${rank}|${branch}`;
+        const prior = byKey.get(key);
         const advances = normalizeAdvances(entry.advances);
-        byRank.set(rank, {
+        byKey.set(key, {
             rank,
+            branch,
             title: entry.title ?? prior?.title ?? '',
             minXp: entry.minXp ?? prior?.minXp ?? null,
             advances: [...(prior?.advances ?? []), ...advances],
         });
     }
-    return [...byRank.values()].sort((a, b) => a.rank - b.rank);
+    return [...byKey.values()].sort((a, b) => a.rank - b.rank);
 }
 
 /** Reconstruct a full career table from a compendium doc's authored advancement data. */
@@ -209,7 +233,7 @@ function buildCareerTable(key: string, name: string, raw: RawCareerAdvancement):
     return {
         CAREER_INFO: { key, name, description: '', ranks: ranks.length > 1 ? ranks.map((r) => r.title || `Rank ${r.rank}`) : [...STANDARD_RANKS] },
         CHARACTERISTIC_COSTS: normalizeCosts(raw.characteristicCosts),
-        RANK_1_ADVANCES: ranks.find((r) => r.rank === 1)?.advances ?? [],
+        RANK_1_ADVANCES: ranks.find((r) => r.rank === 1 && r.branch === '')?.advances ?? [],
         RANKS: ranks,
         TIER_ORDER: STANDARD_TIER_ORDER,
     };
@@ -227,8 +251,8 @@ export async function buildCareerAdvancementIndex(): Promise<void> {
     const packGame = (globalThis as unknown as { game?: PackGameLike }).game;
     const allPacks = [...(packGame?.packs ?? [])];
     await Promise.all(
-        Object.entries(CAREER_PACK_CATEGORIES).map(async ([line, category]) => {
-            const packs = lineBookPacks(allPacks, line, category);
+        Object.entries(CAREER_PACK_CATEGORIES).map(async ([line, categories]) => {
+            const packs = categories.flatMap((category) => lineBookPacks(allPacks, line, category));
             // Index rows, not documents (#706): the shared request carries `system.careerAdvancement`.
             const loaded = await Promise.all(packs.map(async (pack) => [...(await readPackIndex(pack))]));
             const careers: Record<string, CareerTable> = {};

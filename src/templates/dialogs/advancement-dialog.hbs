@@ -36,6 +36,20 @@
   </div>
   {{else}}
 
+  {{!-- A branch point reached without a chosen path: pick it before that rank's advances show. --}}
+  {{#if branchChoice}}
+  <section data-wh40k-hook="adv__branch" class="tw-shrink-0 tw-flex tw-flex-col tw-gap-2 tw-mx-1 tw-my-1 tw-p-2.5 tw-rounded-md tw-border tw-border-[var(--wh40k-color-gold)] tw-bg-[rgba(201,162,39,0.12)]">
+    <h3 class="tw-m-0 tw-text-[0.85rem] tw-font-semibold tw-text-[color:var(--wh40k-color-gold-light)]">{{localize "WH40K.Advancement.ChooseBranchTitle" rank=branchChoice.rank}}</h3>
+    <p class="tw-m-0 tw-text-[0.75rem] tw-text-[color:var(--color-text-secondary)]">{{localize "WH40K.Advancement.ChooseBranchHint"}}</p>
+    <div class="tw-flex tw-flex-wrap tw-gap-1.5">
+      {{#each branchChoice.options}}
+      <button type="button" data-action="chooseCareerBranch" data-branch="{{this.branch}}"
+        class="tw-px-3 tw-py-1 tw-rounded tw-border tw-border-[var(--wh40k-color-gold)] tw-bg-transparent tw-text-[0.8rem] tw-font-semibold tw-text-[color:var(--wh40k-color-gold-light)] tw-cursor-pointer hover:tw-bg-[rgba(201,162,39,0.25)]">{{this.title}}</button>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
   {{!-- Tab Navigation: a flex row sibling of the content (no sticky overlay) --}}
   <nav class="tw-shrink-0 tw-flex tw-items-stretch tw-gap-0.5 tw-bg-[var(--color-bg-secondary)] tw-border-b tw-border-[var(--wh40k-border-color)] tw-px-1 tw-py-1 tw-overflow-x-auto">
     {{#each tabs}}

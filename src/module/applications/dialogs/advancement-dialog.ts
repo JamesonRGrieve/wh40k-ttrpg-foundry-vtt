@@ -8,7 +8,7 @@
 import { getCareerAdvancements, getCareerKeyFromName, getNextCharacteristicCost, TIER_ORDER } from '../../config/advancements/index.ts';
 import { AptitudeBasedSystemConfig } from '../../config/game-systems/aptitude-based-system-config.ts';
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
-import { CareerBasedSystemConfig } from '../../config/game-systems/career-based-system-config.ts';
+import { CareerBasedSystemConfig, type CareerBranchChoice } from '../../config/game-systems/career-based-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { AdvanceOption, Prerequisite } from '../../config/game-systems/types.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
@@ -65,6 +65,11 @@ interface AdvancementActorSkillEntry {
     trained?: boolean;
 }
 
+/** A skill's or specialisation's rank: its derived rank, its bought advances, or 1 when merely trained (an origin grant). */
+function rankOf(skill: AdvancementActorSkillEntry | AdvancementActorSkill): number {
+    return Math.max(skill.rank ?? 0, skill.advance ?? 0, skill.trained === true ? 1 : 0);
+}
+
 interface AdvancementActorSkill {
     label?: string;
     rank?: number;
@@ -77,6 +82,7 @@ interface AdvancementActorSkill {
 interface AdvancementActorSystem {
     gameSystem?: string;
     originPath?: { career?: string };
+    careerBranches?: string[];
     experience?: { total?: number; used?: number };
     psy?: { rating?: number };
     characteristics?: Record<string, AdvancementActorCharacteristic>;
@@ -270,6 +276,8 @@ interface PreparedTraitPanel {
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry render context returned by _prepareContext is typed loosely
 interface AdvancementContext extends Record<string, unknown> {
     systemConfig: BaseSystemConfig | null;
+    /** A branch point the character reached without choosing its path (career lines). */
+    branchChoice?: CareerBranchChoice | null;
     _gameSystemId: string;
     usesAptitudes: boolean;
     usesCareerTables: boolean;
@@ -327,6 +335,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             switchDiscipline: AdvancementDialog.#switchDiscipline,
             toggleAvailableOnly: AdvancementDialog.#toggleAvailableOnly,
             openCompendiumItem: AdvancementDialog.#openCompendiumItem,
+            chooseCareerBranch: AdvancementDialog.#chooseCareerBranch,
         },
     };
 
@@ -509,6 +518,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
 
             this.careerKey = careerKey;
+            context.branchChoice = this.#getCareerConfig(systemConfig)?.pendingCareerBranch(this.actor) ?? null;
         } else {
             context.hasCareer = true;
             context.originCareerName = null;
@@ -683,8 +693,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const canPurchase = !owned && prereqResult.valid && available >= advance.cost;
             const cantAfford = !owned && prereqResult.valid && available < advance.cost;
             const blocked = !owned && !prereqResult.valid;
-            const displayName =
+            const baseName =
                 advance.specialization !== undefined && advance.specialization.length > 0 ? `${advance.name} (${advance.specialization})` : advance.name;
+            // A +10/+20/+30 skill advance shows its rank: level 2 is +10 (pure arithmetic, no content).
+            const displayName = (advance.level ?? 1) > 1 ? `${baseName} +${((advance.level ?? 1) - 1) * 10}` : baseName;
 
             return {
                 id,
@@ -1354,7 +1366,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     #checkOwnership(advance: AdvanceOption): boolean {
         if (advance.type === 'skill') {
-            return this.#hasSkillTrained(advance.name, advance.specialization ?? '');
+            return this.#skillRank(advance.name, advance.specialization ?? '') >= (advance.level ?? 1);
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- AdvanceOption.type union may grow; exhaustive guard is defensive
         } else if (advance.type === 'talent') {
             return this.#hasTalent(advance.name, advance.specialization ?? '');
@@ -1362,46 +1374,17 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return false;
     }
 
-    #hasSkillTrained(skillName: string, specialization: string): boolean {
-        const skills = this.#getActorSystem().skills;
-        if (!skills) return false;
-
-        const keyMap: Record<string, string> = {
-            'awareness': 'awareness',
-            'command': 'command',
-            'commerce': 'commerce',
-            'charm': 'charm',
-            'ciphers': 'ciphers',
-            'common lore': 'commonLore',
-            'dodge': 'dodge',
-            'evaluate': 'evaluate',
-            'literacy': 'literacy',
-            'pilot': 'pilot',
-            'scholastic lore': 'scholasticLore',
-            'secret tongue': 'secretTongue',
-            'speak language': 'speakLanguage',
-        };
-
-        /* eslint-disable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions -- noUncheckedIndexedAccess: keyMap and skills are Records; index access may return undefined */
-        const skillKey = keyMap[skillName.toLowerCase()] ?? skillName.toLowerCase().replace(/\s+/g, '');
-        const skill = skills[skillKey];
-
-        if (!skill) return false;
-        /* eslint-enable @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions */
-
-        if (!specialization) {
-            return skill.trained === true;
-        }
-
-        if (skill.entries) {
-            return skill.entries.some(
-                (entry) =>
-                    (entry.name?.toLowerCase() === specialization.toLowerCase() || entry.slug?.toLowerCase() === specialization.toLowerCase()) &&
-                    entry.trained === true,
-            );
-        }
-
-        return false;
+    /**
+     * The actor's rank in a skill (0 untrained, 1 trained, 2 +10, …): the skill's own,
+     * or its specialisation entry's for a specialist skill.
+     */
+    #skillRank(skillName: string, specialization: string): number {
+        const skill = this.#getActorSystem().skills?.[SkillKeyHelper.nameToKey(skillName)];
+        if (skill === undefined) return 0;
+        if (specialization === '') return rankOf(skill);
+        const wanted = specialization.toLowerCase();
+        const entry = skill.entries?.find((candidate) => candidate.name?.toLowerCase() === wanted || candidate.slug?.toLowerCase() === wanted);
+        return entry === undefined ? 0 : rankOf(entry);
     }
 
     #hasTalent(talentName: string, specialization: string): boolean {
@@ -1486,6 +1469,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const key = opts.recentKey;
             setTimeout(() => this.#recentPurchases.delete(key), 2000);
         }
+    }
+
+    /** Take the career path the player picked at a branch point (operator ruling 2026-11-15). */
+    static async #chooseCareerBranch(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
+        const branch = target.dataset['branch'];
+        if (branch === undefined || branch === '') return;
+        const chosen = this.#getActorSystem().careerBranches ?? [];
+        if (chosen.includes(branch)) return;
+        await this.actor.update({ 'system.careerBranches': [...chosen, branch] });
+        await this.render();
     }
 
     static async #purchaseCharacteristic(this: AdvancementDialog, _event: Event, target: HTMLElement): Promise<void> {
@@ -1639,7 +1632,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (specName === null || specName.length === 0) return;
 
             // Dedup on the SLUG, not the raw lower-cased name (#498). The roll engine
-            // matches a specialisation by name OR slug (`#hasSkillTrained`), so
+            // matches a specialisation by name OR slug (`#skillRank`), so
             // "High Gothic", "high gothic" and "High-Gothic" are the same skill to it
             // — but a raw name compare treats them as three, letting a player pay
             // three times for one skill and splitting the ranks across tracks.
@@ -2054,14 +2047,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const currentAdvance = currentEntries[entryIndex]?.advance ?? 0;
                 const currentCost = currentEntries[entryIndex]?.cost ?? 0;
                 await this.actor.update({
-                    [`system.skills.${skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
+                    [`system.skills.${skillKey}.entries.${entryIndex}.advance`]: Math.max(currentAdvance + 1, advance.level ?? 0),
                     [`system.skills.${skillKey}.entries.${entryIndex}.cost`]: currentCost + advance.cost,
                 });
             } else {
                 const newEntry = {
                     name: advance.specialization,
                     slug: advance.specialization.toLowerCase().replace(/\s+/g, '-'),
-                    advance: 1,
+                    advance: advance.level ?? 1,
                     bonus: 0,
                     cost: advance.cost,
                 };
@@ -2073,7 +2066,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const currentAdvance = this.#getActorSystem().skills?.[skillKey]?.advance ?? 0;
             const currentCost = this.#getActorSystem().skills?.[skillKey]?.cost ?? 0;
             await this.actor.update({
-                [`system.skills.${skillKey}.advance`]: currentAdvance + 1,
+                // A levelled advance ("+10") lands at its rank even on a skill an origin trained without an advance.
+                [`system.skills.${skillKey}.advance`]: Math.max(currentAdvance + 1, advance.level ?? 0),
                 [`system.skills.${skillKey}.cost`]: currentCost + advance.cost,
             });
         }

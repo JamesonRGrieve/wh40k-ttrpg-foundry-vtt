@@ -354,6 +354,8 @@ export type I18nKey =
     | 'WH40K.Advancement.CharacteristicConfirmContent'
     | 'WH40K.Advancement.CharacteristicConfirmTitle'
     | 'WH40K.Advancement.CharacteristicMaxed'
+    | 'WH40K.Advancement.ChooseBranchHint'
+    | 'WH40K.Advancement.ChooseBranchTitle'
     | 'WH40K.Advancement.ConfirmPurchase'
     | 'WH40K.Advancement.EliteAdvanceLoadFailed'
     | 'WH40K.Advancement.EliteApprovalNote'

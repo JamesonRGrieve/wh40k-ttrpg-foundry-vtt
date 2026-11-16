@@ -2095,6 +2095,8 @@
             "RequiresPrereq": "Requires prerequisite",
             "NoSkillsAvailable": "No skills available at this rank",
             "NoTalentsAvailable": "No talents available at this rank",
+            "ChooseBranchTitle": "Rank {rank}: choose your path",
+            "ChooseBranchHint": "Your career branches here. Pick the path your character takes; its advances, and its later ranks', open up.",
             "NoCareerTitle": "No Career Selected",
             "NoCareerMessage": "You must complete your Origin Path and select a career before you can purchase advancements.",
             "NoCareerHint": "Open the Biography tab and use the Origin Path Builder",

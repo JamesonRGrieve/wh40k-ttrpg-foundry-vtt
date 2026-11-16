@@ -718,6 +718,11 @@ recordDimension('hydrate-null-variant.flow', covered['hydrate-null-variant.flow'
 const ADVANCEMENT_CAREER_FLOWS = ['dh1-career-recognised', 'rt-career-advances-listed'];
 recordDimension('advancement-career.flow', covered['advancement-career.flow'], ADVANCEMENT_CAREER_FLOWS);
 
+// A DH1 character gets its career and home world (content#43, #44), tests/e2e/dh1-career-content.spec.ts.
+// Keep in sync with DH1_CAREER_FLOWS there.
+const DH1_CAREER_FLOWS = ['rank1-advances-listed', 'advance-bought', 'levelled-advance-shown', 'branch-chosen', 'feral-world-dh1'];
+recordDimension('dh1-career.flow', covered['dh1-career.flow'], DH1_CAREER_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];
