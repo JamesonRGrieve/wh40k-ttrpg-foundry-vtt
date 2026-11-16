@@ -15,6 +15,11 @@ interface QualityDefShim {
     mechanicalEffect: boolean;
 }
 
+interface TooltipManagerShim {
+    element: HTMLElement | null;
+    _setAnchor: (direction: string) => void;
+}
+
 interface GlobalWithGame {
     game?: GameI18nShim | undefined;
     CONFIG?: { wh40k?: { getQualityDefinition?: (id: string) => QualityDefShim | null } } | undefined;
@@ -163,5 +168,36 @@ describe('armour tooltip shows the derivation, not just the parts', () => {
         const html = build({ location: 'Head', total: 3, toughnessBonus: 3, traitBonus: 0, armorValue: 0, equipped: [] });
         expect(html).toContain(`3 (${TB}) = 3`);
         expect(html).not.toContain(TRAITS);
+    });
+});
+
+describe('repositioning a tooltip whose hovered element is gone', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+        document.body.innerHTML = '';
+    });
+
+    it('leaves the anchor alone when the element is gone or detached, and anchors a live one', async () => {
+        document.body.innerHTML = '<div id="tooltip"></div>';
+        const setAnchor = vi.fn<(direction: string) => void>();
+        const manager: TooltipManagerShim = { element: null, _setAnchor: setAnchor };
+        vi.stubGlobal('game', { i18n: { localize: (key: string) => key, format: (key: string) => key }, tooltip: manager });
+        vi.stubGlobal('Hooks', { on: vi.fn() });
+        const tips = new TooltipsWH40K();
+        vi.spyOn(tips, 'observe').mockImplementation(() => undefined);
+        vi.spyOn(tips, '_loadSkillDescriptions').mockResolvedValue(undefined);
+        await tips.initialize();
+
+        // Foundry's _setAnchor measures the element; a frame after a re-render it was null.
+        expect(() => tips._repositionTooltip()).not.toThrow();
+        manager.element = document.createElement('span');
+        tips._repositionTooltip();
+        expect(setAnchor).not.toHaveBeenCalled();
+
+        const live = document.createElement('span');
+        document.body.append(live);
+        manager.element = live;
+        tips._repositionTooltip();
+        expect(setAnchor).toHaveBeenCalledWith('LEFT');
     });
 });

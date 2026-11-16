@@ -34,6 +34,8 @@ export interface PrereqActorView {
         skills: Record<string, WH40KSkill | undefined>;
         /** The character's Influence; absent on an actor that has none. */
         influence?: number | undefined;
+        /** The character's psychic power; absent on an actor that has none. */
+        psy?: { rating?: number | undefined } | undefined;
     };
     items: { some: (predicate: (item: PrereqItemView) => boolean) => boolean };
 }
@@ -52,9 +54,9 @@ type SkillLike = WH40KSkill | WH40KSkillEntry;
 
 /**
  * @typedef {Object} Prerequisite  (see `Prerequisite` in config/game-systems/types.ts)
- * @property {'characteristic'|'skill'|'talent'|'influence'|'origin'|'notOrigin'} type - Type of prerequisite
+ * @property {'characteristic'|'skill'|'talent'|'influence'|'psyRating'|'origin'|'notOrigin'} type - Type of prerequisite
  * @property {string} key - Characteristic key, skill or talent name, or an origin's compendium UUID
- * @property {number} [value] - Required value (characteristic total, Influence)
+ * @property {number} [value] - Required value (characteristic total, Influence, Psy Rating)
  */
 
 /**
@@ -99,6 +101,7 @@ function checkSinglePrerequisite(actor: PrereqActorView, prereq: Prerequisite): 
     if (prereq.type === 'characteristic') return checkCharacteristicPrereq(actor, prereq);
     if (prereq.type === 'skill') return checkSkillPrereq(actor, prereq);
     if (prereq.type === 'influence') return checkInfluencePrereq(actor, prereq);
+    if (prereq.type === 'psyRating') return checkPsyRatingPrereq(actor, prereq);
     if (prereq.type === 'origin' || prereq.type === 'notOrigin') return checkOriginPrereq(actor, prereq);
     return checkTalentPrereq(actor, prereq);
 }
@@ -112,6 +115,18 @@ function checkInfluencePrereq(actor: PrereqActorView, prereq: Prerequisite): Sin
     return {
         valid: false,
         reason: game.i18n.format('WH40K.Advancement.Prereq.Influence', { required: String(required), current: String(current) }),
+    };
+}
+
+/** Psy Rating prerequisite: the character's psy rating is at least `value` (a DW Librarian's rank advances). */
+function checkPsyRatingPrereq(actor: PrereqActorView, prereq: Prerequisite): SinglePrerequisiteResult {
+    const required = prereq.value ?? 0;
+    const rating = actor.system.psy?.rating;
+    const current = typeof rating === 'number' && Number.isFinite(rating) ? rating : 0;
+    if (current >= required) return { valid: true };
+    return {
+        valid: false,
+        reason: game.i18n.format('WH40K.Advancement.Prereq.PsyRating', { required: String(required), current: String(current) }),
     };
 }
 

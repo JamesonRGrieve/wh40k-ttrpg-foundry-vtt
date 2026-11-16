@@ -2110,6 +2110,7 @@
                 "SkillLevel": "Requires {skill} at {level}",
                 "TalentMissing": "Requires {talent} talent",
                 "Influence": "Requires Influence {required}+ (current: {current})",
+                "PsyRating": "Requires Psy Rating {required}+ (current: {current})",
                 "OriginMissing": "Requires {origin}",
                 "OriginExcluded": "Not available with {origin}",
                 "XpCost": "Costs {cost} xp ({available} available)",

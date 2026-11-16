@@ -842,11 +842,17 @@ export class TooltipsWH40K {
         const tooltip = this.#tooltip;
         const tooltipManager = getTooltipManager();
         if (tooltip === null) return;
+        // This runs a frame after the content was built: by then the hovered element can
+        // be gone (the tooltip deactivated, or a re-render replaced it), and Foundry's
+        // _setAnchor measures it ("Cannot read properties of null (reading
+        // 'getBoundingClientRect')"). Nothing to anchor to, so nothing to move.
+        const anchor = tooltipManager.element;
+        if (anchor?.isConnected !== true) return;
 
         const pos = tooltip.getBoundingClientRect();
         const { innerHeight, innerWidth } = window;
 
-        let direction = tooltipManager.element?.dataset['tooltipDirection'];
+        let direction = anchor.dataset['tooltipDirection'];
 
         if (direction === undefined || direction === '') {
             direction = 'LEFT';

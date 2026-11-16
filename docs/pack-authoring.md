@@ -828,6 +828,25 @@ system.careerAdvancement = {
 - An advance's `type` is `skill` or `talent`; `multiplier` is how many times the
   advance may be taken; `prerequisites` uses the same shape as talent
   prerequisites.
+- An advance's `name` is the bare skill or talent ("Carouse", "Common Lore"):
+  the specialisation goes in `specialization` ("Imperial Creed"), and a
+  printed "+10" / "+20" / "+30" goes in `level` (2 / 3 / 4; a plain skill
+  advance needs none). Never put a specialisation, a rank or a footnote mark
+  in the name.
+- **Branches.** Where the book prints alternative paths at a rank (a Guardsman
+  reaching rank 6 becomes an Assault Veteran, a Lieutenant or a Scout), each
+  path's rank entry carries `branch`, a kebab id of the path shared by every
+  rank on it (`"scout"` for Scout, Marksman and Sniper). A rank every
+  character takes carries no `branch`. The character picks a path in
+  Advancement (`system.careerBranches`) and is offered only its advances.
+- **Other advance sources.** A Deathwatch Battle-Brother also buys his
+  Chapter's advances: a Chapter origin carries `careerAdvancement` too (its
+  advances in a rank-1 entry), and DW's config reads both.
+- **Prerequisite types:** `characteristic` (`key` a characteristic, `value` its
+  minimum total), `skill` (`key` the skill, `value` 10 / 20 for +10 / +20),
+  `talent` (`key` an owned talent's name), `influence` (`value` the minimum
+  Influence), `psyRating` (`value` the minimum psy rating, `key` ""), and
+  `origin` / `notOrigin` (`key` an origin document's UUID).
 
 ---
 

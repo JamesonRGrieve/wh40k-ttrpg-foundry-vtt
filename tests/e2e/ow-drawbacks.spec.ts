@@ -6,6 +6,7 @@ import { joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B for the Only War Regimental Drawbacks panel (#160).
@@ -77,7 +78,11 @@ test.describe.serial('OW Regimental Drawbacks panel (Tier B, #160)', () => {
         try {
             const sheetId = await openActorSheet(page, actor.id, 'overview');
             const panel = page.locator(`#${sheetId} ${PANEL}`);
-            await panel.scrollIntoViewIfNeeded();
+            // The sheet renders again just after opening (its compendium join); a scroll that
+            // caught the first render's panel failed "not attached" (#741 gate). Retry it whole.
+            await expect(async () => {
+                await panel.scrollIntoViewIfNeeded({ timeout: scaledMs(2_000) });
+            }).toPass({ timeout: scaledMs(20_000) });
             await expect
                 .poll(async () => shownRows(panel))
                 .toEqual([

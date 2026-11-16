@@ -389,6 +389,7 @@ export type I18nKey =
     | 'WH40K.Advancement.Prereq.Influence'
     | 'WH40K.Advancement.Prereq.OriginExcluded'
     | 'WH40K.Advancement.Prereq.OriginMissing'
+    | 'WH40K.Advancement.Prereq.PsyRating'
     | 'WH40K.Advancement.Prereq.SkillLevel'
     | 'WH40K.Advancement.Prereq.SkillMissing'
     | 'WH40K.Advancement.Prereq.TalentMissing'

@@ -131,7 +131,7 @@ export interface AdvanceOption {
  *   (an elite advance, a background) the character must, or must not, own.
  */
 export interface Prerequisite {
-    type: 'characteristic' | 'skill' | 'talent' | 'influence' | 'origin' | 'notOrigin';
+    type: 'characteristic' | 'skill' | 'talent' | 'influence' | 'psyRating' | 'origin' | 'notOrigin';
     key: string;
     value?: number;
 }

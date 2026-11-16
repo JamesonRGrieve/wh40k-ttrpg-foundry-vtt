@@ -114,6 +114,18 @@ describe('checkPrerequisites', () => {
         expect(checkPrerequisites(view(undefined), gate).unmet).toEqual(['Requires Influence 75+ (current: 0)']);
     });
 
+    it('gates on Psy Rating (a Librarian rank advance needs PR 3)', () => {
+        const view = (rating: number | undefined): PrereqActorView => ({
+            system: { characteristics: {}, skills: {}, ...(rating === undefined ? {} : { psy: { rating } }) },
+            items: { some: () => false },
+        });
+        const gate = [{ type: 'psyRating' as const, key: '', value: 3 }];
+        expect(checkPrerequisites(view(3), gate).valid).toBe(true);
+        expect(checkPrerequisites(view(2), gate).unmet).toEqual(['Requires Psy Rating 3+ (current: 2)']);
+        // An actor with no psychic power has a rating of 0.
+        expect(checkPrerequisites(view(undefined), gate).unmet).toEqual(['Requires Psy Rating 3+ (current: 0)']);
+    });
+
     describe('origin prerequisites (an elite that needs, or rules out, another origin)', () => {
         const PSYKER = 'Compendium.wh40k-rpg.elites.Item.psyker';
         const UNTOUCHABLE = 'Compendium.wh40k-rpg.elites.Item.untouchable';
