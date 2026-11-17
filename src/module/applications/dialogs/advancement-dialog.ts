@@ -1044,7 +1044,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             corruption: numericStat(stats.corruption),
             infamy: numericStat(stats.infamy),
             insanity: numericStat(stats.insanity),
-            rank: numericStat(stats.rank),
+            // The career rank by the line's own rule (from experience on a career line, or the GM's override).
+            rank: this.#getSystemConfig()?.effectiveRank(this.actor) ?? numericStat(stats.rank),
         };
         return { characteristics, skillRanks, talents, alignment: typeof stats.chaosAlignment === 'string' ? stats.chaosAlignment : '', thresholds };
     }

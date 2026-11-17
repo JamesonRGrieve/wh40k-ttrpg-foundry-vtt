@@ -8,6 +8,7 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Expert (4 tiers).
  */
 
+import { isStoredRank, rankForExperience } from '../../rules/career-rank.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption, SystemConfigActor } from './types.ts';
 
@@ -15,7 +16,7 @@ interface CareerEntry {
     CHARACTERISTIC_COSTS?: { [charKey: string]: { [tier: string]: number | undefined } };
     RANK_1_ADVANCES?: AdvanceOption[];
     /** Every authored rank's advances (operator ruling 2026-11-14: every rank). */
-    RANKS?: ReadonlyArray<{ rank: number; branch?: string; title?: string; advances: AdvanceOption[] }>;
+    RANKS?: ReadonlyArray<{ rank: number; branch?: string; title?: string; minXp?: number | null; advances: AdvanceOption[] }>;
 }
 
 /** A branch point the actor has reached but not chosen: the rank and the paths it offers. */
@@ -28,12 +29,6 @@ export interface CareerBranchChoice {
 function actorBranches(actor: SystemConfigActor): readonly string[] {
     const branches = actor.system.careerBranches;
     return Array.isArray(branches) ? branches.filter((branch): branch is string => typeof branch === 'string') : [];
-}
-
-/** The actor's career rank: its stored rank, or 1 when it has none. */
-function actorRank(actor: SystemConfigActor): number {
-    const rank = actor.system.rank;
-    return typeof rank === 'number' && Number.isInteger(rank) && rank >= 1 ? rank : 1;
 }
 
 export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
@@ -102,6 +97,20 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     }
 
     /**
+     * The career rank: the GM's override if set; else the highest rank whose printed
+     * starting XP the character's total XP has reached (operator ruling 2026-11-16);
+     * else, for a career whose tables print no starting XP, the stored rank.
+     */
+    override effectiveRank(actor: SystemConfigActor): number {
+        const { rankOverride } = actor.system;
+        if (isStoredRank(rankOverride)) return rankOverride;
+        const careerKey = this.resolveCareerKey(actor);
+        const career = careerKey === null || careerKey === '' ? undefined : (this.getCareerRegistry()[careerKey] as CareerEntry | undefined);
+        const fromExperience = rankForExperience(career?.RANKS ?? [], actor.system.experience?.total ?? 0);
+        return fromExperience ?? super.effectiveRank(actor);
+    }
+
+    /**
      * The identifiers of the actor's owned origin items on `step` (a DH1 character's
      * elite advances), read off each item: content identifiers can carry a book prefix
      * (`salvation-demagogue`), so a name would not find them.
@@ -131,7 +140,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     }
 
     getAvailableAdvances(actor: SystemConfigActor): AdvanceOption[] {
-        const rank = actorRank(actor);
+        const rank = this.effectiveRank(actor);
         const chosen = actorBranches(actor);
         return this.resolveAdvanceSourceKeys(actor).flatMap((key) => {
             const career = this.getCareerRegistry()[key] as CareerEntry | undefined;
@@ -155,7 +164,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const careerKey = this.resolveCareerKey(actor);
         if (careerKey === null || careerKey === '') return null;
         const career = this.getCareerRegistry()[careerKey] as CareerEntry | undefined;
-        const rank = actorRank(actor);
+        const rank = this.effectiveRank(actor);
         const chosen = actorBranches(actor);
         const branched = (career?.RANKS ?? []).filter((entry) => entry.rank <= rank && entry.branch !== undefined && entry.branch !== '');
         const ranksWithChoice = [...new Set(branched.map((entry) => entry.rank))].sort((a, b) => a - b);

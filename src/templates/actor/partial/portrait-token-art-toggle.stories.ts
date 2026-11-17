@@ -82,6 +82,10 @@ export const BustDH2: Story = {
         await expect(toggle.getAttribute('aria-label')).toBe('Token art: circular bust or whole image');
         await expect(toggle.dataset['tooltip']).toBe('Tokens show a circular bust. Click to show the whole art.');
         await expect(toggle.querySelector('.fa-circle-user')).not.toBeNull();
+        // Its size classes are separate tokens: glued together ("tw-shrink-0tw-h-5") both were dropped.
+        await expect(toggle.classList.contains('tw-shrink-0')).toBe(true);
+        await expect(toggle.classList.contains('tw-h-5')).toBe(true);
+        await expect([...toggle.classList].filter((name) => !name.includes('[') && name.split('tw-').length > 2)).toEqual([]);
         await expectAbovePortrait(canvasElement, toggle);
         toggle.focus();
         await expect(toggle.ownerDocument.activeElement).toBe(toggle);

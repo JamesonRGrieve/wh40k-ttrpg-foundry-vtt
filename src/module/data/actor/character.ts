@@ -125,6 +125,7 @@ type CharacterGenerationCustomBases = Record<string, number | boolean>;
 export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
     declare rank: number;
+    declare rankOverride: number | null;
     declare careerBranches: string[];
     declare mutations: string;
     declare gameSystem: 'rt' | 'dh1' | 'dh2' | 'bc' | 'ow' | 'dw' | 'im';
@@ -391,6 +392,9 @@ export default class CharacterData extends CreatureTemplate {
             ...owBattlefieldSchemaFields(),
 
             rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
+            // The GM's career rank, overriding the one a career line derives from experience
+            // (operator ruling 2026-11-16); null (the default) leaves the line's own.
+            rankOverride: new fields.NumberField({ required: false, nullable: true, initial: null, min: 1, integer: true }),
             // The career paths the character took where its career branches (a DH1 Guardsman's
             // "scout" at rank 6), by the career table's branch ids; chosen in Advancement.
             careerBranches: new fields.ArrayField(new fields.StringField({ required: true, blank: false }), { required: true, initial: [] }),

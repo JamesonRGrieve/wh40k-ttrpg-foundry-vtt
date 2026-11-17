@@ -82,7 +82,7 @@ describe('mockPlayerSheetContext', () => {
 
     it('uses SystemConfigRegistry.getHeaderFields for header rows — RT has numeric Rank', () => {
         const ctx = mockPlayerSheetContext({ systemId: 'rt' });
-        const rankField = ctx.headerFields.find((f) => f.name === 'system.rank');
+        const rankField = ctx.headerFields.find((f) => f.name === 'system.rankOverride');
         expect(rankField?.type).toBe('number');
         expect(rankField?.inputClass).toBe('wh40k-rank-input');
     });

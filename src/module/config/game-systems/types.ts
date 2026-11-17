@@ -277,6 +277,9 @@ export interface SystemConfigActor {
         rank?: unknown;
         // eslint-disable-next-line no-restricted-syntax -- boundary: only the character DataModels declare `careerBranches`; the others carry it under their open index signature
         careerBranches?: unknown;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: only the character DataModels declare `rankOverride`; the others carry it under their open index signature
+        rankOverride?: unknown;
+        experience?: { total?: number | undefined } | undefined;
         aptitudes?: Set<string> | string[] | undefined;
     };
     readonly items: { some: (predicate: (item: SystemConfigActorItem) => boolean) => boolean };
@@ -299,4 +302,6 @@ export interface SidebarHeaderField {
     valueLabel?: string;
     valueClass?: string;
     valueColor?: string;
+    /** Shown but not editable by this user (a GM-only field seen by a player). */
+    disabled?: boolean;
 }

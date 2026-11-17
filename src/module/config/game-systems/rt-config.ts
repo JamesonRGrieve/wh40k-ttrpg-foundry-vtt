@@ -137,11 +137,10 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     }
 
     getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[] {
-        const rank = typeof actor.system.rank === 'number' ? actor.system.rank : '';
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Career', 'career'),
-            this.makeField(game.i18n.localize('WH40K.Character.Rank'), 'system.rank', rank, 'Rank', 'number'),
+            this.makeRankField(actor),
         ];
     }
 }

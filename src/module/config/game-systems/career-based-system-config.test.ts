@@ -23,8 +23,14 @@ const ADEPT: CareerTable = {
 };
 
 /** A DH1 character of `career` at `rank`. */
+/** A DH1 character of `career` the GM has set to `rank` (the override), or on no override. */
 function acolyte(career: string, rank: number | undefined, careerBranches: string[] = []): SystemConfigActor {
-    return { system: { originPath: { career }, careerBranches, ...(rank === undefined ? {} : { rank }) }, items: { some: () => false } };
+    return { system: { originPath: { career }, careerBranches, ...(rank === undefined ? {} : { rankOverride: rank }) }, items: { some: () => false } };
+}
+
+/** A DH1 character of `career` with `total` XP earned, its rank left to the line. */
+function veteran(career: string, total: number, stored?: number): SystemConfigActor {
+    return { system: { originPath: { career }, experience: { total }, ...(stored === undefined ? {} : { rank: stored }) }, items: { some: () => false } };
 }
 
 /** A Guardsman whose rank 6-7 branch into three paths, as DH1 prints them. */
@@ -140,5 +146,31 @@ describe("a DH1 character's elite advances add their tables", () => {
         // An origin on another step, or no elite at all: the career alone.
         expect(dh1.getAvailableAdvances(withItems([eliteItem('salvation-demagogue', 'background')])).map((a) => a.name)).toEqual(['Literacy']);
         expect(dh1.getAvailableAdvances(withItems([])).map((a) => a.name)).toEqual(['Literacy']);
+    });
+});
+
+describe('career rank from experience (operator ruling 2026-11-16)', () => {
+    const dh1 = SystemConfigRegistry.get('dh1');
+
+    it('is the highest rank whose printed starting XP the total XP has reached', () => {
+        setCareerAdvancementsForTesting({ adept: ADEPT }, 'dh1');
+        expect([0, 499, 500, 999, 1000, 9000].map((total) => dh1.effectiveRank(veteran('Adept', total)))).toEqual([1, 1, 2, 2, 3, 3]);
+        expect(dh1.getAvailableAdvances(veteran('Adept', 500)).map((a) => a.name)).toEqual(['Literacy', 'Inquiry']);
+    });
+
+    it("gives way to the GM's override", () => {
+        setCareerAdvancementsForTesting({ adept: ADEPT }, 'dh1');
+        const overridden: SystemConfigActor = {
+            system: { originPath: { career: 'Adept' }, experience: { total: 9000 }, rankOverride: 1 },
+            items: { some: () => false },
+        };
+        expect(dh1.effectiveRank(overridden)).toBe(1);
+    });
+
+    it('keeps the stored rank when the career prints no starting XP', () => {
+        const unpriced: CareerTable = { ...ADEPT, RANKS: ADEPT.RANKS.map((entry) => ({ ...entry, minXp: null })) };
+        setCareerAdvancementsForTesting({ adept: unpriced }, 'dh1');
+        expect(dh1.effectiveRank(veteran('Adept', 9000, 2))).toBe(2);
+        expect(dh1.effectiveRank(veteran('Adept', 9000))).toBe(1);
     });
 });

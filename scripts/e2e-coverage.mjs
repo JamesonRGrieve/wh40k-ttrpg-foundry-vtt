@@ -720,8 +720,13 @@ recordDimension('advancement-career.flow', covered['advancement-career.flow'], A
 
 // A DH1 character gets its career and home world (content#43, #44), tests/e2e/dh1-career-content.spec.ts.
 // Keep in sync with DH1_CAREER_FLOWS there.
-const DH1_CAREER_FLOWS = ['rank1-advances-listed', 'advance-bought', 'levelled-advance-shown', 'branch-chosen', 'feral-world-dh1'];
+const DH1_CAREER_FLOWS = ['rank1-advances-listed', 'advance-bought', 'levelled-advance-shown', 'rank-from-experience', 'branch-chosen', 'gm-override-rank', 'feral-world-dh1'];
 recordDimension('dh1-career.flow', covered['dh1-career.flow'], DH1_CAREER_FLOWS);
+
+// An NPC's printed skill line parses to clean rows (#726), tests/e2e/npc-skill-import.spec.ts.
+// Keep in sync with NPC_SKILL_IMPORT_FLOWS there.
+const NPC_SKILL_IMPORT_FLOWS = ['advance-bracket-dropped', 'characteristic-tag-read', 'sheet-shows-clean-names'];
+recordDimension('npc-skill-import.flow', covered['npc-skill-import.flow'], NPC_SKILL_IMPORT_FLOWS);
 
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.

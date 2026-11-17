@@ -6,6 +6,7 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { type ArmourCraftsmanshipTable, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { isStoredRank } from '../../rules/career-rank.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -182,6 +183,11 @@ const NO_SHEET_CAPABILITIES: CharacterSheetCapabilities = Object.freeze({
     onlyWarPanels: false,
     imperiumStatBlock: false,
 });
+
+/** Whether `user` is a GM; false where there is no user yet (a headless test or a story). */
+function isGMUser(user: { isGM?: boolean } | null | undefined): boolean {
+    return user?.isGM === true;
+}
 
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
@@ -456,6 +462,31 @@ export abstract class BaseSystemConfig {
     abstract getHeaderFields(actor: SystemConfigActor): SidebarHeaderField[];
 
     /**
+     * The character's career rank, as everything that reads a rank should: the GM's
+     * override if set, else the stored rank, else 1. Career lines also derive it from
+     * experience (see CareerBasedSystemConfig).
+     */
+    effectiveRank(actor: SystemConfigActor): number {
+        const { rankOverride, rank } = actor.system;
+        if (isStoredRank(rankOverride)) return rankOverride;
+        return isStoredRank(rank) ? rank : 1;
+    }
+
+    /**
+     * The sidebar **Rank** row: the effective rank, which only a GM edits. A GM's entry
+     * overrides; left blank, the rank is the line's own (from experience, on a career line).
+     */
+    protected makeRankField(actor: SystemConfigActor): SidebarHeaderField {
+        const { rankOverride } = actor.system;
+        const shown = isStoredRank(rankOverride) ? rankOverride : '';
+        return {
+            ...this.makeField(game.i18n.localize('WH40K.Character.Rank'), 'system.rankOverride', shown, String(this.effectiveRank(actor)), 'number'),
+            min: 1,
+            disabled: !isGMUser(game.user),
+        };
+    }
+
+    /**
      * Build a single header-field row. All systems share the same shape; this helper is the only
      * place the row defaults live so per-system configs stay declarative.
      */
@@ -472,7 +503,7 @@ export abstract class BaseSystemConfig {
             type,
             value,
             placeholder,
-            ...(name === 'system.rank' ? { inputClass: 'wh40k-rank-input' } : {}),
+            ...(name === 'system.rank' || name === 'system.rankOverride' ? { inputClass: 'wh40k-rank-input' } : {}),
         };
     }
 

@@ -19,6 +19,7 @@
         type="{{field.type}}"
         value="{{field.value}}"
         placeholder="{{field.placeholder}}"
+        {{#if field.disabled}}disabled{{/if}}
         {{#if field.min}}min="{{field.min}}"{{/if}}
         {{#if field.max}}max="{{field.max}}"{{/if}}
         {{#if field.borderColor}}style="border-color: {{field.borderColor}};"{{else}}style="border-color: var(--wh40k-border-color,#4a3728);"{{/if}}

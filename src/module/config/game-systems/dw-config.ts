@@ -139,7 +139,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
             // is derived from each owned origin item's `step` (#728).
             this.makeOriginField(actor, 'WH40K.OriginPath.Chapter', 'chapter'),
             this.makeOriginField(actor, 'WH40K.OriginPath.Speciality', 'speciality'),
-            this.makeOriginField(actor, 'WH40K.Character.Rank', 'career'),
+            this.makeRankField(actor),
             this.makeOriginField(actor, 'WH40K.OriginPath.Demeanour', 'motivation'),
         ];
     }

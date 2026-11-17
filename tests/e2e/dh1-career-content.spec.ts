@@ -23,7 +23,15 @@ import { scaledMs } from './lib/timing';
 /** Each click gets its own limit, so a covered or missing control fails at its step. */
 const STEP = { timeout: scaledMs(30_000) };
 
-const DH1_CAREER_FLOWS = ['rank1-advances-listed', 'advance-bought', 'levelled-advance-shown', 'branch-chosen', 'feral-world-dh1'] as const;
+const DH1_CAREER_FLOWS = [
+    'rank1-advances-listed',
+    'advance-bought',
+    'levelled-advance-shown',
+    'rank-from-experience',
+    'branch-chosen',
+    'gm-override-rank',
+    'feral-world-dh1',
+] as const;
 type FlowName = (typeof DH1_CAREER_FLOWS)[number];
 
 const GUARDSMAN = compendiumUuid({ line: 'dh1', category: 'origins' }, '50246daaaf45cce5');
@@ -37,9 +45,12 @@ interface ActorRead {
     careerBranches: string[];
 }
 
-/** A DH1 character at `rank` with 1000 XP and the given origins; returns its id. */
-async function dh1Character(page: Page, name: string, rank: number, origins: string[]): Promise<string> {
-    const id = await createProbeActor(page, { name, type: 'dh1-character', system: { rank, experience: { total: 1000 } } });
+/**
+ * A DH1 character with `total` XP earned and the given origins; returns its id. Its rank
+ * follows the XP (Guardsman: Guard at 500, the rank-6 paths at 6,000).
+ */
+async function dh1Character(page: Page, name: string, total: number, origins: string[]): Promise<string> {
+    const id = await createProbeActor(page, { name, type: 'dh1-character', system: { experience: { total } } });
     if (id === null) throw new Error(`no actor ${name}`);
     await page.evaluate(
         async ({ actorId, uuids }) => {
@@ -120,7 +131,7 @@ test.describe.serial('a DH1 career and home world (Tier B, content#43, content#4
         const actors: string[] = [];
         try {
             // Rank 1: the Conscript's skills and talents, and a purchase.
-            const recruit = await dh1Character(page, 'e2e-dh1-conscript', 1, [GUARDSMAN]);
+            const recruit = await dh1Character(page, 'e2e-dh1-conscript', 400, [GUARDSMAN]);
             actors.push(recruit);
             let appId = await openAdvancement(page, recruit);
             const skills = await listed(page, appId, 'skills');
@@ -140,7 +151,7 @@ test.describe.serial('a DH1 career and home world (Tier B, content#43, content#4
             await snap(page, 'dh1-guardsman-rank1-advancement', { selector: `#${appId}`, closeWindows: true, keepWindow: appId });
 
             // Rank 2: a printed "+10" advance shows as one.
-            const guard = await dh1Character(page, 'e2e-dh1-guard', 2, [GUARDSMAN]);
+            const guard = await dh1Character(page, 'e2e-dh1-guard', 500, [GUARDSMAN]);
             actors.push(guard);
             appId = await openAdvancement(page, guard);
             const rankTwo = await listed(page, appId, 'skills');
@@ -151,8 +162,23 @@ test.describe.serial('a DH1 career and home world (Tier B, content#43, content#4
             );
 
             // Rank 6: the career branches; the player picks Scout.
-            const veteran = await dh1Character(page, 'e2e-dh1-veteran', 6, [GUARDSMAN]);
+            const veteran = await dh1Character(page, 'e2e-dh1-veteran', 6000, [GUARDSMAN]);
             actors.push(veteran);
+            // The sidebar's Rank shows the rank its 6,000 XP reaches, with nothing overridden.
+            await openProbeSheet(page, veteran);
+            const sidebarRank = await page.evaluate((id) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+                const g = globalThis as unknown as { game: { actors: { get: (i: string) => { sheet: { id: string } } | undefined } } };
+                const input = document.querySelector<HTMLInputElement>(
+                    `#${g.game.actors.get(id)?.sheet.id ?? ''} [data-sidebar-field="system.rankOverride"] input`,
+                );
+                return input === null ? null : { value: input.value, placeholder: input.placeholder, disabled: input.disabled };
+            }, veteran);
+            record(
+                'rank-from-experience',
+                sidebarRank !== null && sidebarRank.value === '' && sidebarRank.placeholder === '6' && !sidebarRank.disabled,
+                `the sidebar Rank reads ${JSON.stringify(sidebarRank)}`,
+            );
             appId = await openAdvancement(page, veteran);
             const picker = page.locator(`#${appId} [data-action="chooseCareerBranch"]`);
             const options = await picker.evaluateAll((els) => els.map((el) => el.textContent.trim()));
@@ -169,8 +195,26 @@ test.describe.serial('a DH1 career and home world (Tier B, content#43, content#4
                 for (const app of globalThis.foundry.applications.instances.values()) await app.close();
             });
 
+            // The GM sets the veteran back to rank 2: the paths and their advances go.
+            await page.evaluate(async (id) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+                const g = globalThis as unknown as { game: { actors: { get: (i: string) => { update: (d: object) => Promise<object> } | undefined } } };
+                await g.game.actors.get(id)?.update({ 'system.rankOverride': 2 });
+            }, veteran);
+            appId = await openAdvancement(page, veteran);
+            const overridden = await listed(page, appId, 'skills');
+            const noPicker = (await page.locator(`#${appId} [data-action="chooseCareerBranch"]`).count()) === 0;
+            record(
+                'gm-override-rank',
+                noPicker && overridden.includes('Swim +10') && !overridden.some((name) => name.endsWith('+20')),
+                `at rank 2 by override: picker ${noPicker ? 'gone' : 'shown'}; skills [${overridden.join(', ')}]`,
+            );
+            await page.evaluate(async () => {
+                for (const app of globalThis.foundry.applications.instances.values()) await app.close();
+            });
+
             // A Feral Worlder: DH1's modifiers and traits, no Influence, no aptitude.
-            const feral = await dh1Character(page, 'e2e-dh1-feral', 1, [FERAL_WORLD]);
+            const feral = await dh1Character(page, 'e2e-dh1-feral', 0, [FERAL_WORLD]);
             actors.push(feral);
             const world = await page.evaluate((id) => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types

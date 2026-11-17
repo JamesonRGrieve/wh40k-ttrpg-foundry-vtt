@@ -19,6 +19,7 @@ interface ActorLike {
         bio?: Record<string, string | number>;
         originPath?: Record<string, string | number>;
         rank?: string | number;
+        rankOverride?: number | null;
     };
 }
 
@@ -92,11 +93,11 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         expect(names(fields)).toEqual([]);
     });
 
-    it('dh1 returns HomeWorld + Career + Rank(role) — Divination renders as the italic quote, not a row (#226)', () => {
+    it('dh1 returns HomeWorld + Career + Rank (the GM override) — Divination renders as the italic quote, not a row (#226)', () => {
         const fields = SystemConfigRegistry.get('dh1').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.originPath.role']);
+        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.rankOverride']);
         const rankField = fields.find((f) => f.label === 'Rank');
-        expect(rankField?.name).toBe('system.originPath.role');
+        expect(rankField?.name).toBe('system.rankOverride');
     });
 
     it('bc reads its own steps: Race + Archetype + Pride + Disgrace + Motivation (#728)', () => {
@@ -145,14 +146,9 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
 
     it('dw returns Chapter + Speciality + Rank(career) + Demeanour(motivation)', () => {
         const fields = SystemConfigRegistry.get('dw').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual([
-            'system.originPath.chapter',
-            'system.originPath.speciality',
-            'system.originPath.career',
-            'system.originPath.motivation',
-        ]);
+        expect(names(fields)).toEqual(['system.originPath.chapter', 'system.originPath.speciality', 'system.rankOverride', 'system.originPath.motivation']);
         expect(fields.find((f) => f.label === 'Chapter')?.name).toBe('system.originPath.chapter');
-        expect(fields.find((f) => f.label === 'Rank')?.name).toBe('system.originPath.career');
+        expect(fields.find((f) => f.label === 'Rank')?.name).toBe('system.rankOverride');
     });
 
     /**
@@ -197,18 +193,26 @@ describe('BaseSystemConfig.getHeaderFields — name-path stability per system', 
         expect(fields.find((f) => f.label === 'Endeavour')?.name).toBe('system.originPath.motivation');
     });
 
-    it('rt returns HomeWorld + Career + Rank(system.rank, type=number)', () => {
+    it('rt returns HomeWorld + Career + Rank: the GM override, its placeholder the rank the character has', () => {
         const fields = SystemConfigRegistry.get('rt').getHeaderFields(makeActor());
-        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.rank']);
+        expect(names(fields)).toEqual(['system.originPath.homeWorld', 'system.originPath.career', 'system.rankOverride']);
         const rankField = fields[2];
         expect(rankField.type).toBe('number');
-        expect(rankField.value).toBe(3);
+        // No override: empty, showing the stored rank (RT's tables print no starting XP).
+        expect(rankField.value).toBe('');
+        expect(rankField.placeholder).toBe('3');
+        // An override shows in the field.
+        const overridden = SystemConfigRegistry.get('rt').getHeaderFields(makeActor({ system: { rank: 3, rankOverride: 5 } }))[2];
+        expect(overridden.value).toBe(5);
+        expect(overridden.placeholder).toBe('5');
     });
 
-    it('rt rank field is special — it has inputClass="wh40k-rank-input"', () => {
+    it('rt rank field is special — it has inputClass="wh40k-rank-input", and only a GM edits it', () => {
         const fields = SystemConfigRegistry.get('rt').getHeaderFields(makeActor());
-        const rankField = fields.find((f) => f.name === 'system.rank');
+        const rankField = fields.find((f) => f.name === 'system.rankOverride');
         expect(rankField?.inputClass).toBe('wh40k-rank-input');
+        // No GM user in this test, so the row is shown but not editable.
+        expect(rankField?.disabled).toBe(true);
     });
 
     it('the player name field is no longer part of getHeaderFields (rendered separately on the identity row)', () => {

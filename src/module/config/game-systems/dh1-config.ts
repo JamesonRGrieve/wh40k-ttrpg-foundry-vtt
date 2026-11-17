@@ -189,7 +189,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return [
             this.makeOriginField(actor, 'WH40K.OriginPath.HomeWorld', 'homeWorld'),
             this.makeOriginField(actor, 'WH40K.OriginPath.CareerPath', 'career'),
-            this.makeOriginField(actor, 'WH40K.Character.Rank', 'role'),
+            this.makeRankField(actor),
         ];
     }
 }

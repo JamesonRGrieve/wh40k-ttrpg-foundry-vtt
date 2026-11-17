@@ -1,3 +1,5 @@
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { SystemConfigActor } from '../../config/game-systems/types.ts';
 import type { WH40KNPC } from '../../documents/npc.ts';
 import type { I18nKey } from '../../types/i18n-keys';
 import { makeNpcFormDialog } from './npc-form-dialog.ts';
@@ -107,11 +109,7 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
 
         type PartyUser = {
             active: boolean;
-            character?: {
-                name?: string;
-                img?: string;
-                system?: { rank?: number };
-            } | null;
+            character?: (SystemConfigActor & { name?: string; img?: string; system: { gameSystem: string } }) | null;
             name?: string;
             avatar?: string;
         };
@@ -124,9 +122,11 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
 
         // Calculate average party rank
         let totalRank = 0;
+        // Each character's career rank by its own line's rule (from experience on a career line).
+        const rankOf = (character: PartyUser['character']): number =>
+            character == null ? 1 : SystemConfigRegistry.getOrNull(character.system.gameSystem)?.effectiveRank(character) ?? 1;
         for (const user of party) {
-            const rank = user.character?.system?.rank ?? 1;
-            totalRank += rank;
+            totalRank += rankOf(user.character);
         }
         const partyLevel = partySize > 0 ? Math.round(totalRank / partySize) : 1;
 
@@ -165,7 +165,7 @@ export default class DifficultyCalculatorDialog extends makeNpcFormDialog({
         // Add party members list
         context['partyMembers'] = party.map((u) => ({
             name: u.character?.name ?? u.name,
-            rank: u.character?.system?.rank ?? 1,
+            rank: rankOf(u.character),
             img: u.character?.img ?? u.avatar,
         }));
 
