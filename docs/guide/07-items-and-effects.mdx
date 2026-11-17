@@ -10,6 +10,8 @@ Weapons, armour, gear, ammunition, cybernetics, force fields, talents, traits, s
 
 Item sheets open read-only. Use **Enter Edit Mode** / **Exit Edit Mode** if you can edit the item. Compendium items cannot be edited from the sheet.
 
+In edit mode a sheet edits every field the item stores, grouped in sections below its description. That includes the structured rules the rolls read: a talent's or trait's re-roll rules, a psychic power's target, Focus Power test, range and phenomena modifier, a skill's alternative characteristics and example difficulties, a Dark Pact's Corruption, terms, Boons and Banes, and a weapon modification's changes to the weapon. Lists have add and remove buttons. Every item also has an **Acquired** note. Navigator powers, oaths, orders, rituals, ship roles, backpacks and vehicle traits and upgrades each have their own sheet. A Navigator power's mastery stays editable outside edit mode, because a Navigator raises it in play.
+
 Unless **Freeform Character Editing** is on, these are also locked:
 
 - special abilities, malignancies, mutations and mental disorders;
@@ -41,14 +43,16 @@ Active Effects appear in the **Active Effects** panel on Overview and Combat, wh
 
 The sheet shows class, damage, penetration, range, rate of fire, clip, reload and **Craftsmanship**, with description, modifications and notes tabs.
 
-- **Reload**: reload a weapon a character carries.
+- **Reload**: reload a weapon a character carries. With **Track standard ammunition (Homebrew)** on, each starting ranged weapon comes with two clips of its standard ammunition, and Reload uses them up; off, Reload tops the weapon up without one.
 - **Clear Jam**: shown when jammed. Reload afterwards.
 - **Build Clip**: load several ammunition types in firing order, for example 3 AP then 2 Hot-shot. Requires **Enable Magazine Building**.
 - **Ammunition**: load or eject special ammunition by dragging it onto the weapon.
-- **Modifications**: toggle each fitted modification on or off. On a character's own weapon, **Fit a modification** fits one the character carries, with the line's test: in Dark Heresy 2e a Trade (Armourer) test at the modification's Availability, where failure loses the parts and 2+ degrees of failure make the weapon Unreliable. **Remove and keep the parts (test)** takes it off again. Lines with no printed test fit it freely.
+- **Modifications**: toggle each fitted modification on or off. On a character's own weapon, **Fit a modification** fits one the character carries, with the line's test: in Dark Heresy 2e a Trade (Armourer) test at the modification's Availability, where failure loses the parts and 2+ degrees of failure make the weapon Unreliable. **Remove and keep the parts (test)** takes it off again. Lines with no printed test fit it freely. A fitted modification can change damage, penetration, to-hit, range (added, then multiplied), clip size, rate of fire and weight. The weapon sheet lists each change, and the weapon uses the new values for attacks, Reload and clip building. A modification's sheet edits those changes, and an edit reaches weapons it is already fitted to.
 - **Repair**: the Tech-Use Repair use fixes a broken item. In Dark Heresy 2e it takes the item's craftsmanship modifier, and failure by 4+ degrees destroys the item. Xenos gear needs a Forbidden Lore test first, if the GM rules the maker is known.
 - **Qualities**: click a quality to open it.
 - Start an attack or damage roll from the sheet.
+
+**Thrown range**: a range printed as a multiple of a characteristic bonus (SBx3, or WPBx5 for a power) is worked out from the thrower's bonus at roll time.
 
 **Unidentified weapons**: in edit mode the GM can untick **Identified**. Players then see **???** in place of stats; the GM sees the real values.
 
@@ -67,6 +71,6 @@ Qualities are compendium items whose effect is stored as data and applied automa
 
 ## Armour and force fields
 
-Armour protects by hit location, shown on the Combat tab. Force fields have their own roll, which reports **Activated**, **Not Activated** or **Overloaded**.
+Armour protects by hit location, shown on the Combat tab. Drop an armour modification on an armour sheet to fit it: it must suit the armour type and have a free slot of its kind. Power-armour sub-systems use **Sub-system Slots** (Black Crusade power armour holds three); a fitted modification can add slots and change the armour's protection. The GM is told why a modification was refused. Force fields have their own roll, which reports **Activated**, **Not Activated** or **Overloaded**.
 
 For carrying, dropping and giving items, see [The Character Sheet](?path=/docs/guide-the-character-sheet--docs).

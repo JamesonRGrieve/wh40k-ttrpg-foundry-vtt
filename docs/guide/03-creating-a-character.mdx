@@ -52,13 +52,13 @@ In Rogue Trader you can build **Home World → Career** or **Career → Home Wor
 
 1. Pick an origin card. Badges mark choices, advanced options and XP cost.
 2. Review the grants in the selection panel. Click a linked skill or talent to open it, or **View Details** for the full entry.
-3. Under **Choices Required**, use **Make Choice** for each choice.
+3. Under **Choices Required**, use **Make Choice** for each choice. A choice of characteristic applies its printed values, for example Black Crusade's Perfection: +5 to one characteristic and −3 to two others.
 4. For rolls (wounds, Fate Points, starting Throne Gelt), use **Roll** or enter a value. When rolling, choose **Roll For Me** or **I'll Roll Myself**.
 5. Click **Confirm Selection**, or **Select This Origin** in the details window.
 
 **Show:** filters origins by provenance: **Official**, **Adapted**, **Homebrew**. World-created origins are marked **Authored in this world, not in a compendium**.
 
-In Dark Heresy 2e, an origin that grants an aptitude you already have shows **Duplicate aptitude detected**. Use **Pick replacement** to choose another.
+In Dark Heresy 2e, an origin that grants an aptitude you already have shows **Duplicate aptitude detected**. Use **Pick replacement** to choose another. The replacements are saved to the character when you apply the path, and the GM can correct them under **Elective Aptitudes** on the Biography tab.
 
 An origin's rolls must be made before the next step unlocks. An Elite Advance the character does not qualify for is refused.
 
@@ -68,7 +68,7 @@ The GM can open **Home Worlds (GM Reference)**, which lists every home world in 
 
 ## Characteristics
 
-Each characteristic starts at a base of 25 plus the GM's **Characteristic Offset**. Origin bonuses are added on top. **Advanced Mode** sets custom base values for non-human characters.
+Each characteristic starts at a base of 25 plus the GM's **Characteristic Offset**, unless an origin sets its own base and starting XP: a Black Crusade Chaos Space Marine starts on a base of 30 with 500 XP. Origin bonuses are added on top. **Advanced Mode** sets custom base values for non-human characters.
 
 - **Point Buy**: each +1 above base costs 1 point from a pool set by **Point-Buy Pool** (default 60).
 - **Roll**: roll 2d10 per characteristic and add it to the base. **Roll All** rolls every characteristic.
@@ -82,10 +82,20 @@ Pick starting gear from the armoury packs, up to a selection limit. Enter or rol
 
 Click **Apply to Character**. The builder lists anything outstanding, such as pending choices, rolls or unassigned characteristics.
 
+Applying gives the character each origin's starting kit and the equipment picked in its choices, found in the line's equipment packs. A kit entry that names one part of an item printed as alternatives finds it, so a "Stablight" finds Glow-globe/Stablight. Items the character already has are skipped, so applying again adds nothing twice, and the GM is warned of any entry no pack holds. With **Track standard ammunition (Homebrew)** on, each starting ranged weapon also comes with two clips of its standard ammunition.
+
 ## Spend XP
 
 Click **Advance** in the Overview tab's **Experience** panel to open **Character Advancement**, where you buy characteristic advances, skills, talents and psychic powers. It needs a career from the origin path; without one it shows **No Career Selected**.
 
-- Talents and advances check their prerequisites, including characteristics, skills, other talents ("Hatred (any)" accepts any specialisation), Chaos alignment, Corruption, Infamy, Insanity and rank. One that is not met cannot be bought.
+In Rogue Trader, Dark Heresy 1e and Deathwatch the advances come from the career's printed tables, which give the characteristic costs and the skills and talents of each rank:
+
+- The dialog offers every rank's advances up to the character's **Rank**. The rank follows the character's total XP: it is the highest rank whose printed starting XP has been reached (a Dark Heresy 1e Guardsman becomes a Guard at 500 XP). The sidebar shows it under **Rank**, where the GM can enter a different rank to override it; clearing the entry returns to the rank the XP gives. A career whose tables print no starting XP keeps the rank it had.
+- A skill advance printed as "+10" or "+20" shows with it, and buying it raises the skill to that level.
+- Where a career branches (a Dark Heresy 1e Guardsman reaching rank 6 becomes an Assault Veteran, a Lieutenant or a Scout), the dialog asks **choose your path** before that rank's advances show. The path is kept on the character, and its later ranks follow it.
+- A Deathwatch Battle-Brother also buys his Chapter's advances. A Dark Heresy 1e character with an elite advance that prints its own table also buys from it.
+- Dark Heresy 2e, Only War and Black Crusade price advances by aptitudes instead.
+
+- Talents and advances check their prerequisites, including characteristics, skills, other talents ("Hatred (any)" accepts any specialisation), Psy Rating, Chaos alignment, Corruption, Infamy, Insanity and rank. One that is not met cannot be bought.
 - Dropping a talent on a character opens Character Advancement, because talents cost XP. **Freeform Talent and Trait Creation** shows a drop-to-add zone on the Talents and Traits panels.
 - Dropping an origin path item on a character is refused unless **Freeform Character Editing** is on.

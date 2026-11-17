@@ -9,11 +9,14 @@ Every line's sheet has a sidebar and tabs. Hover a tab for a description. The he
 ## Sidebar
 
 - **Portrait**: click to choose an image.
+- **Token art** switch, above the portrait: tokens show a circular bust of the portrait, or the whole image. Click to change.
 - **d20 icon**: opens the Origin Path Builder (**Setup Origin Path**). See [Creating a Character](?path=/docs/guide-creating-a-character--docs).
 - **Generate portrait (AI)**: GM only. Uses the image service in [Game Settings](?path=/docs/guide-game-settings--docs).
 - **Re-roll portrait** / **Pin this portrait**: GM only, when the actor has a pool of portraits.
 - **Open journal entry**: the book icon on the portrait, shown when the actor has a journal entry you can see. An owner links one by dropping a journal entry on the portrait.
 - **Name** and **player** fields.
+- **Origin rows**: the origins chosen in the builder, for example Home World and Career. Black Crusade shows the race, archetype, pride and disgrace.
+- **Rank** (Rogue Trader, Dark Heresy 1e, Deathwatch): the career rank the character's XP has reached. Only the GM can edit it, to override that rank.
 
 ## Overview
 
@@ -40,7 +43,7 @@ Characteristics, aptitudes, skills, specialist skills, talents and traits.
 
 - Click a characteristic or skill to roll. See [Rolling Tests](?path=/docs/guide-rolling-tests--docs).
 - Filter skills by name. Star skills and talents to add them to Overview.
-- Add specialisations in the specialist skills panel.
+- Add specialisations in the specialist skills panel. A name too long for its row ends in an ellipsis; hover it for the full name.
 - Adjust trait levels.
 
 ## Combat
@@ -56,17 +59,19 @@ See [Combat](?path=/docs/guide-combat--docs).
 
 ## Inventory
 
-Items are split into **Carried** and **Elsewhere**, with weights and an encumbrance warning. Each item can be edited, equipped, used, deleted or **Drop on the ground** (creates a loot pile at your token). Tick several items and use **Give selected items to another character** to hand them over.
+Items are split into **Carried** and **Elsewhere**, with weights and an encumbrance warning. Each item can be edited, equipped, used, deleted or **Drop on the ground** (creates a loot pile at your token). Tick several items and use **Give selected items to another character** to hand them over. Drop an item on a container's sheet to move it inside; it leaves the character's loose inventory.
 
 ## Biography
 
 Identity and appearance, notes (background, personality, superstitions, treasured mementos), **Contacts**, **Adversaries** and the **Character Journal**. Age displays as biological or standard age.
 
+In edit mode the tab also shows **Elective Aptitudes** (the aptitudes chosen in place of a doubled one in the builder, so the GM can correct a pick) and **Mutations (Notes)**.
+
 ## Other actor sheets
 
-- **NPC**: tabs **Skills** (opens first), **Combat**, **Inventory**, **Biography** and **NPC** (GM controls such as hordes). An NPC is a flat stat block unless **NPCs advance like characters** is on. An NPC made from an **NPC Template** receives the template's equipment. A Dark Heresy 2e Reinforcement Character shows a GM-only **Reinforcement Character** panel: **Call a Reinforcement Character** checks the caller's Influence Minimum, splits the Influence Cost with the warband and lowers Subtlety.
-- **Vehicle** (land vehicles, aircraft): **Overview**, **Combat**, **Crew**, **Components**, **Notes**.
-- **Voidcraft** (Rogue Trader): **Stats**, **Components**, **Weapons**, **Crew**, **History**, **Actions**, **Manoeuvres**. The two action tabs list **Ship Actions in Effect**. A starship actor from before 0.2.0 opens as a legacy sheet; the GM converts it with **Convert to Voidcraft** in the window's header menu. See [Combat](?path=/docs/guide-combat--docs).
+- **NPC**: tabs **Skills** (opens first), **Combat**, **Inventory**, **Biography** and **NPC** (GM controls such as hordes). An NPC is a flat stat block unless **NPCs advance like characters** is on. An NPC made from an **NPC Template** receives the template's equipment. A skill with specialisations lists each one on its own row, rolled against the skill's characteristic and included in an export. In edit mode the sheet also edits the NPC's personality (demeanour, goals, fears, quirks), its stat overrides, special abilities and template. A Dark Heresy 2e Reinforcement Character shows a GM-only **Reinforcement Character** panel: **Call a Reinforcement Character** checks the caller's Influence Minimum, splits the Influence Cost with the warband and lowers Subtlety.
+- **Vehicle** (land vehicles, aircraft): **Overview**, **Combat**, **Crew**, **Components**, **Notes**. In edit mode every stored field can be edited.
+- **Voidcraft** (Rogue Trader): **Stats**, **Components**, **Weapons**, **Crew**, **History**, **Actions**, **Manoeuvres**. The two action tabs list **Ship Actions in Effect**. In edit mode every stored field can be edited. A starship actor from before 0.2.0 opens as a legacy sheet; the GM converts it with **Convert to Voidcraft** in the window's header menu. See [Combat](?path=/docs/guide-combat--docs).
 - **Loot pile**: created when an item is dropped on the ground. Right-click its token and use **Pick Up**, or open it to take single items. Players cannot move loot piles.
 
 ## Hotbar macros

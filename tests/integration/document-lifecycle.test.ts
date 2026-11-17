@@ -26,6 +26,9 @@ interface WeaponModifierBlock {
     penetration: number;
     toHit: number;
     range: number;
+    rangeMultiplier: number;
+    clip: number;
+    rateOfFire: { single: number; semi: number; full: number };
     weight: number;
 }
 
@@ -99,7 +102,17 @@ describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
             },
         })) as ModdedWeapon;
 
-        const zeroed: WeaponModifierBlock = { damage: 0, penetration: 0, toHit: 0, range: 0, weight: 0 };
+        // The whole cached block since #740: clip, range multiplier and rate of fire too.
+        const zeroed: WeaponModifierBlock = {
+            damage: 0,
+            penetration: 0,
+            toHit: 0,
+            range: 0,
+            rangeMultiplier: 1,
+            clip: 0,
+            rateOfFire: { single: 0, semi: 0, full: 0 },
+            weight: 0,
+        };
         const cached = item.system.modifications[0]?.cachedModifiers;
         expect(cached).toBeDefined();
         expect(cached).toEqual(zeroed);
@@ -125,10 +138,12 @@ describe.skipIf(skipAll)('document lifecycle (Tier A)', () => {
         expect(item.system.effectiveDamageFormula).toBe('');
     });
 
-    it('keeps the default dice for a weapon with no damage authored, and real dice untouched (#601)', async () => {
+    it('a weapon with no damage authored deals none, not a silent 1d10, and real dice are untouched (#601)', async () => {
+        // d33fa34c7: a missing profile no longer rolls 1d10 (only Imperium Maledictum keeps that
+        // default); this world's line is Dark Heresy 2e.
         const blank = (await createItem(runtime, { type: 'weapon', name: 'Blank', system: { damage: { formula: '' } } })) as NoDamageWeapon;
-        expect(blank.system.dealsDamage).toBe(true);
-        expect(blank.system.effectiveDamageFormula).toBe('1d10');
+        expect(blank.system.dealsDamage).toBe(false);
+        expect(blank.system.effectiveDamageFormula).toBe('');
         const autogun = (await createItem(runtime, { type: 'weapon', name: 'Autogun', system: { damage: { formula: '1d10+3' } } })) as NoDamageWeapon;
         expect(autogun.system.damage.none).toBe(false);
         expect(autogun.system.effectiveDamageFormula).toBe('1d10+3');

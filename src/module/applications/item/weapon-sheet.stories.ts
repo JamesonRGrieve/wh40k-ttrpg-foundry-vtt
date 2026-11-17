@@ -128,8 +128,8 @@ export const LongNameTitle: Story = {
         const input = canvasElement.querySelector<HTMLInputElement>('input[name="name"]');
         await expect(input?.value).toBe('Mars Pattern Mk IV Long Hand Flamer');
         await expect(input?.dataset['tooltip']).toBe('Mars Pattern Mk IV Long Hand Flamer');
-        // 35 characters: the item-title fit's 0.8rem step, not the short-name text-xl.
-        await expect(input?.classList.contains('tw-text-[0.8rem]')).toBe(true);
+        // 35 characters: the item-title fit's 33-36 step (0.72rem, #741), not the short-name text-xl.
+        await expect(input?.classList.contains('tw-text-[0.72rem]')).toBe(true);
         await expect(input?.readOnly).toBe(true);
     },
 };
