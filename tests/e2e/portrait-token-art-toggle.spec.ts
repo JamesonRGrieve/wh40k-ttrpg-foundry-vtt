@@ -10,9 +10,10 @@ import { scaledMs } from './lib/timing';
  * WH40KBaseActor#setTokenArtMode, the toggleTokenArt sheet action and the
  * token-mask redraw hooks).
  *
- * An owner's actor sheet shows a small switch above the portrait. Off, the
- * actor's tokens draw the circular bust the system crops from the portrait (a
- * generated RenderTexture on the token mesh); on, they draw the whole image.
+ * An owner's actor sheet shows a switch, an icon in the portrait's top-right
+ * corner. Off, the actor's tokens draw the circular bust the system crops from
+ * the portrait (a generated RenderTexture on the token mesh); on, they draw the
+ * whole image.
  * Switching writes the prototype token and every placed token, and a flag
  * change, which core never redraws for, redraws the token.
  *

@@ -125,6 +125,15 @@ import {
     type PortraitActorLike,
     type PortraitTokenLike,
 } from './rules/portrait-spawn.ts';
+import {
+    applyRingScaleOnPreCreateActor,
+    applyRingScaleOnPreCreateToken,
+    applyRingScaleOnPreUpdateActor,
+    applyRingScaleOnPreUpdateToken,
+    normalizeRingSubjectScales,
+    type RingScaleActor,
+    type RingScaleScene,
+} from './rules/ring-subject-scale.ts';
 import { buildCelestialBodyField, buildLatitudeField, sceneBodyKey, sceneLatitude, syncSceneLighting } from './rules/scene-lighting.ts';
 import { buildSkillPackIndex } from './rules/skill-pack-index.ts';
 import { SURPRISED_STATUS_ID, surpriseHasExpired } from './rules/surprise.ts';
@@ -227,6 +236,38 @@ export class HooksManager {
         hooksOn('updateActor', (actor: Parameters<typeof onTokenArtActorUpdate>[0], changed: Parameters<typeof onTokenArtActorUpdate>[1]) =>
             onTokenArtActorUpdate(actor, changed),
         );
+        // The bust is baked for one ring subject scale (rules/ring-subject-scale.ts):
+        // every ringed actor and token gets it when created or when its ring is
+        // switched on, and the world writer fixes what already exists at ready.
+        hooksOn('preCreateActor', (actor: Parameters<typeof applyRingScaleOnPreCreateActor>[0]) => {
+            applyRingScaleOnPreCreateActor(actor);
+        });
+        hooksOn('preCreateToken', (token: Parameters<typeof applyRingScaleOnPreCreateToken>[0]) => {
+            applyRingScaleOnPreCreateToken(token);
+        });
+        hooksOn(
+            'preUpdateActor',
+            (actor: Parameters<typeof applyRingScaleOnPreUpdateActor>[0], changes: Parameters<typeof applyRingScaleOnPreUpdateActor>[1]) => {
+                applyRingScaleOnPreUpdateActor(actor, changes);
+            },
+        );
+        hooksOn(
+            'preUpdateToken',
+            (token: Parameters<typeof applyRingScaleOnPreUpdateToken>[0], changes: Parameters<typeof applyRingScaleOnPreUpdateToken>[1]) => {
+                applyRingScaleOnPreUpdateToken(token, changes);
+            },
+        );
+        hooksOn('ready', () => {
+            if (!isWorldWriter()) return;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.actors / game.scenes are Foundry WorldCollections typed loosely by fvtt-types; narrowed to the slices the pass reads and writes
+            const actors = game.actors as unknown as Iterable<RingScaleActor>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: game.scenes is a Foundry WorldCollection typed loosely by fvtt-types; narrowed to the slice the pass reads and writes
+            const scenes = game.scenes as unknown as Iterable<RingScaleScene>;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: a Promise rejection reason is untyped; it is logged, never propagated
+            normalizeRingSubjectScales(actors, scenes).catch((err: unknown) => {
+                console.error('ring-subject-scale: ready pass failed', err);
+            });
+        });
         // Token-only compendium drops (#586): an NPC/vehicle dragged from a
         // compendium becomes a compendium-backed unlinked token, not a world Actor.
         // Every client caches the compendium actors behind such tokens — at world

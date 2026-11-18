@@ -38,7 +38,7 @@ async function playStory(name: string): Promise<void> {
 }
 
 describe('portrait token art toggle stories', () => {
-    it.each(['BustDH2', 'FullArtRT', 'NotOwner', 'CraftHeaderBC'])('%s', async (name) => {
+    it.each(['BustDH2', 'FullArtRT', 'NotOwner', 'CraftHeaderBC', 'GmPortraitPoolDH2'])('%s', async (name) => {
         await expect(playStory(name)).resolves.toBeUndefined();
     });
 });

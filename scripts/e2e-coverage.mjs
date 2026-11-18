@@ -728,6 +728,11 @@ recordDimension('dh1-career.flow', covered['dh1-career.flow'], DH1_CAREER_FLOWS)
 const NPC_SKILL_IMPORT_FLOWS = ['advance-bracket-dropped', 'characteristic-tag-read', 'sheet-shows-clean-names'];
 recordDimension('npc-skill-import.flow', covered['npc-skill-import.flow'], NPC_SKILL_IMPORT_FLOWS);
 
+// Every ringed token draws its ring on the bust's edge, tests/e2e/ring-subject-scale.spec.ts.
+// Keep in sync with RING_SUBJECT_SCALE_FLOWS there.
+const RING_SUBJECT_SCALE_FLOWS = ['actor-created-at-bust-scale', 'token-created-at-bust-scale', 'ring-switched-on-at-bust-scale', 'chosen-scale-kept'];
+recordDimension('ring-subject-scale.flow', covered['ring-subject-scale.flow'], RING_SUBJECT_SCALE_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];

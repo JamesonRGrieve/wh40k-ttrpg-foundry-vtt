@@ -18,17 +18,10 @@
 
 import { SYSTEM_ID } from '../constants.ts';
 import { choosePortrait, choosePortraitAvoiding, effectivePortraitPool, type PortraitVariant, type TokenFrame } from './portrait-pool.ts';
+import { RING_SUBJECT_SCALE } from './ring-subject-scale.ts';
 
 /** No portraits taken — the default when spawn dedup is not in play. */
 const NO_USED_IMGS: ReadonlySet<string> = new Set<string>();
-
-/**
- * Ring subject scale that seats the generated circular bust inside the ring band,
- * matching player-character tokens. It applies on a fresh draw (not the
- * animation path), so a spawned bust is sized like the party's instead of
- * overflowing the ring.
- */
-const DEFAULT_RING_SUBJECT_SCALE = 0.8;
 
 /** The pending-source update {@link applySpawnPortrait} writes on spawn. */
 export interface PortraitUpdate {
@@ -94,7 +87,7 @@ export function applySpawnPortrait(actor: PortraitActorLike, chosen: PortraitVar
         img: chosen.img,
         prototypeToken: {
             flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } },
-            ring: { subject: { scale: DEFAULT_RING_SUBJECT_SCALE } },
+            ring: { subject: { scale: RING_SUBJECT_SCALE } },
         },
     });
 }
@@ -149,7 +142,7 @@ export function applyPortraitOnPreCreateToken(
     if (chosen === null) return null;
     token.updateSource({
         texture: { src: chosen.img },
-        ring: { subject: { scale: DEFAULT_RING_SUBJECT_SCALE } },
+        ring: { subject: { scale: RING_SUBJECT_SCALE } },
         flags: { [SYSTEM_ID]: { tokenFrame: chosen.tokenFrame } },
     });
     return chosen;
