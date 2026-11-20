@@ -733,6 +733,21 @@ recordDimension('npc-skill-import.flow', covered['npc-skill-import.flow'], NPC_S
 const RING_SUBJECT_SCALE_FLOWS = ['actor-created-at-bust-scale', 'token-created-at-bust-scale', 'ring-switched-on-at-bust-scale', 'chosen-scale-kept'];
 recordDimension('ring-subject-scale.flow', covered['ring-subject-scale.flow'], RING_SUBJECT_SCALE_FLOWS);
 
+// The weapon sheet's Damage tile adds SB by the rules (#744) and its own qualities can be
+// edited (#745), tests/e2e/weapon-sheet-sb-and-qualities.spec.ts. Keep in sync with WEAPON_SHEET_EDIT_FLOWS there.
+const WEAPON_SHEET_EDIT_FLOWS = [
+    'melee-damage-adds-sb',
+    'thrown-damage-adds-sb',
+    'grenade-damage-no-sb',
+    'sb-label-follows-rule',
+    'rated-quality-needs-level',
+    'quality-added-from-picker',
+    'own-quality-removed',
+    'derived-quality-not-removable',
+    'dropped-quality-added',
+];
+recordDimension('weapon-sheet-edit.flow', covered['weapon-sheet-edit.flow'], WEAPON_SHEET_EDIT_FLOWS);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];

@@ -39,16 +39,6 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
-/* eslint-disable no-restricted-syntax -- boundary: compendium pack index entry, opaque foreign system schema */
-type AttackSpecialIndexEntry = {
-    _id: string;
-    name: string;
-    img?: string;
-    type?: string;
-    system: Record<string, unknown> & { hasLevel?: boolean; level?: number | string | undefined; enabled?: number | string | boolean | undefined };
-};
-/* eslint-enable no-restricted-syntax */
-
 type OriginActorLike = WH40KBaseActor & {
     system: WH40KBaseActor['system'] & {
         characteristics?: Record<string, { base?: number }>;
@@ -520,12 +510,6 @@ export class WH40KItem extends WH40KItemContainer {
         return undefined;
     }
 
-    protected override _onCreate(data: never, options: never, userId: string): void {
-        game.wh40k.log('Determining nested items for', this);
-        void this._determineNestedItems();
-        super._onCreate(data, options, userId);
-    }
-
     override prepareData(): void {
         super.prepareData();
         game.wh40k.log('Item prepare data', this);
@@ -548,65 +532,6 @@ export class WH40KItem extends WH40KItemContainer {
         if (this.system.availability === undefined || this.system.availability === '') {
             this.system.availability = 'Common';
         }
-    }
-
-    /**
-     * This unlocks and loads nested items dynamically from the adjacent compendium.
-     * I tried to find another way to do this but couldn't find anything online - I made my own hack.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: returns opaque Foundry Document.update result
-    async _determineNestedItems(): Promise<unknown> {
-        // Already has items just skip
-        if (this.items.size > 0 || this.hasNested()) return undefined;
-
-        // Check for specials
-        if (this.system['special'] !== undefined && this.system['special'] !== null) {
-            // eslint-disable-next-line no-restricted-syntax -- boundary: legacy `system.special` is a free-form bag pre-migration
-            const specialData = this.system['special'] as Record<string, unknown>;
-            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system['special']);
-            if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', specialData);
-            if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', specialData);
-            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system['special']);
-            this.system['special'] = undefined;
-
-            this.convertNestedToItems();
-        }
-        return undefined;
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
-    async _updateSpecialsFromPack(pack: string, data: Record<string, unknown>): Promise<unknown> {
-        const compendium = game.packs.find((p: { collection?: string }) => p.collection === pack);
-        if (!compendium) return undefined;
-        await compendium.configure({ locked: false });
-        const attackSpecials = await this._getAttackSpecials(data);
-        if (attackSpecials.length > 0) {
-            await this.createNestedDocuments(attackSpecials);
-        }
-        await compendium.configure({ locked: true });
-        return undefined;
-    }
-
-    // eslint-disable-next-line no-restricted-syntax -- boundary: receives legacy `system.special` bag
-    async _getAttackSpecials(specialData: Record<string, unknown>): Promise<AttackSpecialIndexEntry[]> {
-        const attackSpecialPack = game.packs.find((p: { collection?: string }) => p.collection === 'wh40k-rpg.attack-specials');
-        if (!attackSpecialPack) return [];
-        const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
-        const specials: AttackSpecialIndexEntry[] = [];
-        for (const special of Object.keys(specialData)) {
-            const specialName = capitalize(special);
-            const attackSpecial = index.find((n: { name?: string }) => n.name === specialName) as AttackSpecialIndexEntry | undefined;
-            if (attackSpecial) {
-                const value = specialData[special];
-                if (attackSpecial.system.hasLevel === true) {
-                    attackSpecial.system.level = value as AttackSpecialIndexEntry['system']['level'];
-                } else {
-                    attackSpecial.system.enabled = value as AttackSpecialIndexEntry['system']['enabled'];
-                }
-                specials.push(attackSpecial);
-            }
-        }
-        return specials;
     }
 
     /**

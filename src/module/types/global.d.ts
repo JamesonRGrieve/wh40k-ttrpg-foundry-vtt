@@ -343,6 +343,8 @@ export type WH40KItemSystemData = ItemDataModel & {
     grants?: unknown[];
     isMeleeWeapon?: boolean;
     isRangedWeapon?: boolean;
+    /** A weapon's damage adds the wielder's Strength Bonus (melee, or thrown but not a grenade, #744); absent on non-weapons. */
+    addsStrengthBonus?: boolean;
     melee?: boolean;
     /** A weapon's quality ids after craftsmanship, ammunition and firing mode (`tearing`, `proven-3`, …); absent on non-weapons. */
     effectiveSpecial?: Set<string>;

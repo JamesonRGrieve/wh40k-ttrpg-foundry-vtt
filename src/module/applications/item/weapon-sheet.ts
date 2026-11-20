@@ -12,6 +12,7 @@ import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { promptItemChoice } from '../../rolls/skill-use-picker.ts';
 import { DEFAULT_HIT_LOCATION } from '../../rules/hit-locations.ts';
 import { consumeRounds } from '../../rules/magazine.ts';
+import { wielderStrengthBonus } from '../../rules/strength-bonus-damage.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
     modificationBlocker,
@@ -20,19 +21,25 @@ import {
     type ModificationModifiersSource,
     type ModificationSource,
 } from '../../rules/weapon-modification.ts';
+import { isOwnQuality, type QualityPickerOption, qualityPickerOptions, weaponQualityId } from '../../rules/weapon-quality-edit.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { lineCategoryPack } from '../../utils/line-packs.ts';
 import { parseQualityLevel } from '../../utils/quality-id.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
+import SetFieldActionsMixin from '../api/set-field-actions-mixin.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ClipBuilderDialog from '../dialogs/clip-builder-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+import { isDroppedQuality } from './dropped-quality.ts';
 import { WEAPON_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
 
 /** Weapon item document narrowed to its DataModel. */
 type WeaponItem = WH40KItemDocument & { system: WeaponData };
+
+/** One of the world's compendium packs, as `game.packs` yields it. */
+type CompendiumPack = typeof game.packs extends Iterable<infer P> ? P : never;
 
 /** Speculative drag-preview payload available from the dragenter event (browser security limits us to types only). */
 interface DragPreview {
@@ -78,7 +85,10 @@ interface WeaponSheetContext extends Record<string, unknown> {
     craftsmanships: Record<string, LabelModifierConfig>;
     reloadTimes: Record<string, { label: string }>;
     bodyCollapsed: boolean;
-    qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null }>;
+    /** `removable`: the weapon's own quality, not one from craftsmanship, ammunition or a mode (#745). */
+    qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null; removable: boolean }>;
+    /** The line's weapon qualities offered by the edit-mode picker (#745); empty outside edit mode. */
+    qualityOptions: QualityPickerOption[];
     prepareQualityTooltip: (identifier: string, level?: number | null) => string;
     effectiveDamageLabel: string;
     /** The penetration tile's value: the weapon's own, or its range bands' (#614). */
@@ -92,7 +102,7 @@ interface WeaponSheetContext extends Record<string, unknown> {
  * Sheet for weapon items with support for weapon modifications and ammunition.
  * Redesigned as a single-page layout with FAB action buttons.
  */
-export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
+export default class WeaponSheet extends SetFieldActionsMixin(ContainerItemSheet<WeaponItem>) {
     /** Stored fields the template lacks, edited through the shared schema rows (#732). */
     static override SCHEMA_LAYOUT = WEAPON_EXTRA_LAYOUT;
 
@@ -126,6 +136,8 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
             rollDamage: WeaponSheet.#rollDamage,
             expendAmmo: WeaponSheet.#expendAmmo,
             openQuality: WeaponSheet.#openQuality,
+            addQuality: WeaponSheet.#addQuality,
+            removeQuality: WeaponSheet.#removeQuality,
             nestedItemEdit: WeaponSheet.#nestedItemEdit,
             nestedItemDelete: WeaponSheet.#nestedItemDelete,
             toggleModificationActive: WeaponSheet.#toggleModificationActive,
@@ -243,8 +255,11 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
                 label,
                 description: def?.description ?? '',
                 level,
+                removable: isOwnQuality(system.special, q),
             };
         });
+        // The edit-mode picker reads the line's weapon-qualities compendium (#745).
+        context.qualityOptions = this.inEditMode ? await this.#qualityPickerOptions() : [];
 
         // Bind prepareQualityTooltip helper for template
         context.prepareQualityTooltip = this.prepareQualityTooltip.bind(this);
@@ -531,14 +546,18 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         }
         const formula = weaponSystem.effectiveDamageFormula;
         const damageRoll = await new Roll(formula).evaluate();
+        // Melee and thrown (non-grenade) damage adds the wielder's Strength Bonus, as the
+        // tile's "+SB" says and as the attack does (#744). It shows as its own row.
+        const strengthBonus = weaponSystem.addsStrengthBonus ? wielderStrengthBonus(actor.getCharacteristicFuzzy('Strength')) : 0;
+        const modifiers: Record<string, number> = strengthBonus !== 0 ? { 'strength bonus': strengthBonus } : {};
 
         const hit = {
             location: DEFAULT_HIT_LOCATION,
             damageRoll: { formula: damageRoll.formula, result: damageRoll.result },
-            totalDamage: damageRoll.total,
+            totalDamage: damageRoll.total + strengthBonus,
             damageType: weaponSystem.damage.type,
             totalPenetration: weaponSystem.effectivePenetration,
-            modifiers: {},
+            modifiers,
             effects: [],
             righteousFury: [],
         };
@@ -612,11 +631,7 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         const identifier = target.dataset['identifier'];
         if (identifier === undefined || identifier === '') return;
 
-        // The weapon-qualities pack is per game system; resolve it by its flags for the
-        // owning actor's system, falling back to the world's primary line for an
-        // unowned/world weapon (#403).
-        const gameSystem = (this.item.actor?.system as { gameSystem?: string } | undefined)?.gameSystem ?? WH40KSettings.getPrimaryGameSystem();
-        const pack = lineCategoryPack(game.packs, gameSystem, 'weapon-qualities');
+        const pack = this.#lineQualityPack();
         if (pack === undefined) {
             ui.notifications.warn(game.i18n.localize('WH40K.WeaponSheet.QualitiesCompendiumMissing'));
             return;
@@ -645,6 +660,75 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
                 ui.notifications.warn(game.i18n.format('WH40K.WeaponSheet.QualityNotFound', { identifier }));
             }
         }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * The weapon-qualities pack for this weapon's line: the owning actor's system,
+     * falling back to the world's primary line for an unowned/world weapon (#403).
+     */
+    #lineQualityPack(): CompendiumPack | undefined {
+        const gameSystem = (this.item.actor?.system as { gameSystem?: string } | undefined)?.gameSystem ?? WH40KSettings.getPrimaryGameSystem();
+        return lineCategoryPack(game.packs, gameSystem, 'weapon-qualities');
+    }
+
+    /** The edit-mode picker's options, read from the line's weapon-qualities index (#745). */
+    async #qualityPickerOptions(): Promise<QualityPickerOption[]> {
+        const pack = this.#lineQualityPack();
+        if (pack === undefined) return [];
+        const index = await pack.getIndex({ fields: ['system.identifier'] });
+        return qualityPickerOptions(
+            Array.from(index, (entry) => {
+                // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown for a compendium index entry's field
+                const identifier: unknown = foundry.utils.getProperty(entry, 'system.identifier');
+                return { identifier: typeof identifier === 'string' ? identifier : '', name: entry.name ?? '' };
+            }),
+        );
+    }
+
+    /**
+     * Add a quality to the weapon's own list (#745). A rated quality (`Toxic (X)`)
+     * stores the level from the level box (`toxic-4`); without a level it asks for one.
+     * Returns whether the quality was added.
+     */
+    async #addOwnQuality(identifier: string, name: string): Promise<boolean> {
+        const levelText = this.sheetLocalValue('new-quality-level');
+        const level = levelText === '' ? null : Number(levelText);
+        const id = weaponQualityId(identifier, level);
+        if (id === null) {
+            // Leave the rated quality chosen in the picker and point at the level box.
+            const picker = this.element.querySelector<HTMLSelectElement>('[data-sheet-local="new-quality"]');
+            if (picker !== null) picker.value = identifier;
+            this.element.querySelector<HTMLInputElement>('[data-sheet-local="new-quality-level"]')?.focus();
+            ui.notifications.warn(t('WH40K.WeaponSheet.QualityNeedsLevel', { name }));
+            return false;
+        }
+        await this.addToSetField('special', id);
+        this.clearSheetLocal('new-quality');
+        this.clearSheetLocal('new-quality-level');
+        return true;
+    }
+
+    /**
+     * Add the quality chosen in the edit-mode picker (#745).
+     * @this {WeaponSheet}
+     */
+    static async #addQuality(this: WeaponSheet, _event: Event, _target: HTMLElement): Promise<void> {
+        const identifier = this.sheetLocalValue('new-quality');
+        if (identifier === '') return;
+        const picker = this.element.querySelector<HTMLSelectElement>('[data-sheet-local="new-quality"]');
+        const name = picker?.selectedOptions[0]?.textContent.trim() ?? identifier;
+        await this.#addOwnQuality(identifier, name);
+    }
+
+    /**
+     * Remove one of the weapon's own qualities (#745). Qualities from craftsmanship,
+     * ammunition or a firing mode have no remove control.
+     * @this {WeaponSheet}
+     */
+    static async #removeQuality(this: WeaponSheet, _event: Event, target: HTMLElement): Promise<void> {
+        await this.removeFromSetField('special', target.dataset['identifier']);
     }
 
     /* -------------------------------------------- */
@@ -1143,6 +1227,12 @@ export default class WeaponSheet extends ContainerItemSheet<WeaponItem> {
         if ((droppedItem as { type?: string }).type === 'weaponModification') {
             // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid returns a broad Foundry document union; _onDropModification narrows via its ModificationSource shape
             return this._onDropModification(droppedItem as unknown as ModificationSource);
+        }
+
+        // A dropped weapon quality joins the weapon's own qualities in edit mode (#745).
+        if (isDroppedQuality(droppedItem)) {
+            if (!this.inEditMode) return false;
+            return this.#addOwnQuality(droppedItem.system.identifier, droppedItem.name);
         }
 
         // Handle ammunition drops

@@ -24,6 +24,7 @@ import { additionalHitLocations, DEFAULT_HIT_LOCATION, getHitLocationForRoll, re
 import { type PsychicFormulaValues, resolvePsychicFormulaTerms } from '../rules/psychic-range.ts';
 import { scatterDirection } from '../rules/scatter.ts';
 import { AIM_STATE, type ActorStateSource, collectActorStates, collectTargetTags, rangeBandOf, type TargetTagSource } from '../rules/situation-tags.ts';
+import { wielderStrengthBonus } from '../rules/strength-bonus-damage.ts';
 import { righteousFuryChartValue, vehicleHitLocation } from '../rules/vehicle-damage.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import {
@@ -68,6 +69,8 @@ interface ActionItemSystem {
     resolveContextualDamage?: (context: DamageProfileContext) => ResolvedDamageProfile | null;
     /** The RollTable a table-damage weapon draws from, '' otherwise (#608). */
     damageTableUuid?: string;
+    /** The weapon's damage adds the wielder's Strength Bonus (melee, or thrown but not a grenade, #744). Absent on powers. */
+    addsStrengthBonus?: boolean;
     // eslint-disable-next-line no-restricted-syntax -- boundary: catch-all for other system fields accessed via string keys at framework boundaries
     [key: string]: unknown;
 }
@@ -799,14 +802,14 @@ export class Hit {
             }
         }
 
-        // Melee damage adds the wielder's Strength Bonus, and so does a melee weapon's
-        // damage borrowed by a ranged one (#608: a Magna-Grapple hits as the fist does).
-        if (actionItem.isMelee || this.profile?.addsStrengthBonus === true) {
+        // Melee and thrown (non-grenade) damage adds the wielder's Strength Bonus (#744),
+        // and so does a melee weapon's damage borrowed by a ranged one (#608: a
+        // Magna-Grapple hits as the fist does). A psychic power never does.
+        if (attackData.rollData.weapon?.system.addsStrengthBonus === true || this.profile?.addsStrengthBonus === true) {
             // Effective Strength Bonus so a fatigued / buffed character's melee damage
             // reflects it — the canonical #415 case. For an unmodified character
             // effectiveBonus == bonus, so the common case is unchanged.
-            const strength = sourceActor.getCharacteristicFuzzy('Strength');
-            this.modifiers['strength bonus'] = strength.effectiveBonus ?? strength.bonus;
+            this.modifiers['strength bonus'] = wielderStrengthBonus(sourceActor.getCharacteristicFuzzy('Strength'));
 
             // Crushing Blow → data-driven via the talent's dynamicModifiers hook
             // (applied by applyDynamicModifiers). See Direction #7.

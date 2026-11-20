@@ -6,19 +6,9 @@ import type { DropData } from '../../managers/actor-journal-link.ts';
 import { attackSpecialItemFromQuality } from '../../rules/attack-specials.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
 import defineSimpleItemSheet from './define-simple-item-sheet.ts';
+import { isDroppedQuality } from './dropped-quality.ts';
 import { itemUuidFromDropData } from './reference-list-edits.ts';
 import { PSYCHIC_POWER_EXTRA_LAYOUT } from './schema-sheet-layouts.ts';
-
-/** A dropped weapon quality's fields the attack-special conversion reads. */
-interface DroppedQuality {
-    type: string;
-    name: string;
-    system: { identifier: string; level: number | null };
-}
-
-function isDroppedQuality(doc: Awaited<ReturnType<typeof fromUuid>>): doc is Awaited<ReturnType<typeof fromUuid>> & DroppedQuality {
-    return doc instanceof Item && doc.type === 'weaponQuality';
-}
 
 /**
  * The psychic power's Attack Specials are nested items, held through the container

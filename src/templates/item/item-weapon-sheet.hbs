@@ -257,9 +257,43 @@
             <span class="tw-w-full {{nameFitClass label 'qualityTile'}} tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-line-clamp-2" data-weapon-quality-label>{{label}}</span>
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
+          {{!-- The weapon's own quality can be removed in edit mode; one from craftsmanship, ammunition or a mode can't (#745). --}}
+          {{#if (and @root.inEditMode removable)}}
+          <button type="button"
+                  class="tw-absolute tw-top-1 tw-right-1 tw-z-[3] tw-m-0 tw-flex tw-h-5 tw-w-5 tw-min-h-0 tw-items-center tw-justify-center tw-rounded-full tw-border-0 tw-bg-[rgba(0,0,0,0.45)] tw-p-0 tw-text-[0.65rem] tw-text-[rgba(234,178,178,0.9)] tw-cursor-pointer hover:tw-bg-[rgba(139,0,0,0.7)] hover:tw-text-white"
+                  data-action="removeQuality"
+                  data-identifier="{{identifier}}"
+                  aria-label="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}: {{label}}"
+                  data-tooltip="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          {{/if}}
         </div>
         {{/each}}
       </div>
+
+      {{!-- Edit mode: add a quality from the line's weapon-qualities compendium, or drop one on the sheet (#745). --}}
+      {{#if inEditMode}}
+      <div class="tw-mt-2 tw-flex tw-flex-col tw-gap-1" data-weapon-quality-picker>
+        <div class="tw-flex tw-items-center tw-gap-2">
+          <select class="tw-min-w-0 tw-flex-1" data-sheet-local="new-quality" aria-label="{{localize 'WH40K.WeaponSheet.QualityPicker'}}">
+            <option value="">{{localize 'WH40K.WeaponSheet.QualityPicker'}}</option>
+            {{#each qualityOptions}}
+            <option value="{{identifier}}" data-takes-level="{{takesLevel}}">{{name}}</option>
+            {{/each}}
+          </select>
+          <input type="number" min="1" step="1" class="tw-w-16 tw-shrink-0" data-sheet-local="new-quality-level"
+                 placeholder="{{localize 'WH40K.WeaponSheet.QualityLevel'}}" aria-label="{{localize 'WH40K.WeaponSheet.QualityLevel'}}" />
+          <button type="button"
+                  class="tw-m-0 tw-inline-flex tw-w-auto tw-shrink-0 tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-gold)] tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-px-3 tw-py-1 tw-text-sm tw-text-[#1a1a1a] tw-cursor-pointer"
+                  data-action="addQuality">
+            <i class="fas fa-plus"></i>
+            {{localize 'WH40K.WeaponSheet.AddQuality'}}
+          </button>
+        </div>
+        <p class="tw-m-0 tw-text-[0.7rem] tw-italic tw-text-[color:var(--wh40k-text-muted)]">{{localize 'WH40K.WeaponSheet.QualityDropHint'}}</p>
+      </div>
+      {{/if}}
 
       {{!-- Activation Mode Toggle (powered ↔ deactivated): chainsword, shock whip,
            power weapons. Flips system.activation.activated; the effective

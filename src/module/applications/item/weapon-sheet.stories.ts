@@ -51,6 +51,60 @@ export const EditMode: Story = {
     },
 };
 
+// ── Quality editing (#745) ────────────────────────────────────────────────────
+
+/** A weapon's own Toxic (4) and a craftsmanship-given Reliable, with the line's qualities in the picker. */
+const QUALITY_EDIT_OVERRIDES = {
+    inEditMode: true,
+    bodyCollapsed: false,
+    qualitiesArray: [
+        { identifier: 'toxic-4', label: 'Toxic (4)', description: '', level: 4, removable: true },
+        { identifier: 'reliable', label: 'Reliable', description: '', level: null, removable: false },
+    ],
+    qualityOptions: [
+        { identifier: 'balanced', name: 'Balanced', takesLevel: false },
+        { identifier: 'felling-x', name: 'Felling (X)', takesLevel: true },
+        { identifier: 'tearing', name: 'Tearing', takesLevel: false },
+    ],
+    prepareQualityTooltip: (): string => '{}',
+};
+
+/**
+ * In edit mode the weapon's own quality has a remove control and a derived one
+ * doesn't; the picker lists the line's qualities with a level box, and its Add and
+ * a tile's remove send the actions the sheet handles (#745).
+ */
+export const QualityEditing: Story = {
+    args: { overrides: QUALITY_EDIT_OVERRIDES },
+    play: async ({ canvasElement }) => {
+        const clicks = captureActionClicks(canvasElement);
+        const remove = canvasElement.querySelectorAll<HTMLElement>('[data-action="removeQuality"]');
+        await expect(Array.from(remove, (el) => el.dataset['identifier'])).toEqual(['toxic-4']);
+        const reliable = canvasElement.querySelector('[data-action="openQuality"][data-identifier="reliable"]');
+        await expect(reliable?.querySelector('[data-action="removeQuality"]')).toBeNull();
+
+        const picker = canvasElement.querySelector<HTMLSelectElement>('[data-sheet-local="new-quality"]');
+        await expect(Array.from(picker?.options ?? [], (o) => o.value)).toEqual(['', 'balanced', 'felling-x', 'tearing']);
+        await expect(canvasElement.querySelector('[data-sheet-local="new-quality-level"]')).not.toBeNull();
+
+        canvasElement.querySelector<HTMLElement>('[data-action="addQuality"]')?.click();
+        canvasElement.querySelector('[data-action="removeQuality"] i')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        // The remove button sits inside the tile: the click resolves to removeQuality, not openQuality.
+        await expect(clicks.map((c) => c.action)).toEqual(['addQuality', 'removeQuality']);
+        await expect(clicks[1]?.dataset['identifier']).toBe('toxic-4');
+    },
+};
+
+/** Outside edit mode there is no picker and no remove control (#745). */
+export const QualitiesLockedOutsideEditMode: Story = {
+    args: { overrides: { ...QUALITY_EDIT_OVERRIDES, inEditMode: false } },
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-weapon-quality-picker]')).toBeNull();
+        await expect(canvasElement.querySelector('[data-action="removeQuality"]')).toBeNull();
+        await expect(canvasElement.querySelectorAll('[data-action="openQuality"]').length).toBe(2);
+    },
+};
+
 export const NoAmmoLoaded: Story = {
     args: {
         overrides: {

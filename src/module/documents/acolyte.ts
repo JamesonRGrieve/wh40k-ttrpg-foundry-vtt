@@ -41,7 +41,6 @@ import { TWISTED_FLESH_FLAG } from '../rules/chaos-backgrounds.ts';
 import { formulaWithBonus } from '../rules/damage-profile.ts';
 import type { EvasionSkill } from '../rules/evasion.ts';
 import { isForceFieldItem } from '../rules/force-field-protection.ts';
-import { isGrenadeWeapon } from '../rules/grenade-weapon.ts';
 import { craftsmanshipRepairModifier } from '../rules/item-repair.ts';
 import { corruptionTrackModifier, malignancyTestsQueued } from '../rules/malignancy-test.ts';
 import { activeFailureConsequence, type CollectedSituationalModifier, failureConsequenceField } from '../rules/situational-limits.ts';
@@ -55,6 +54,7 @@ import {
     skillUseItemCandidates,
 } from '../rules/skill-uses.ts';
 import { printedSpecialisationTest } from '../rules/specialist-skill-test.ts';
+import { wielderStrengthBonus } from '../rules/strength-bonus-damage.ts';
 import { testedSkillBaseLabel, testedSkillLabel } from '../rules/tested-skill-label.ts';
 import {
     MODIFICATION_BLOCKER_KEYS,
@@ -988,12 +988,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
             return;
         }
 
-        // Calculate damage with Strength Bonus for melee/thrown weapons
-        const isMelee = weapon.system.melee === true || weapon.system.isMeleeWeapon === true;
-        const isThrown = weapon.system.class === 'thrown';
-        // Add SB for melee weapons and thrown weapons, except grenades (#619)
-        const includeStrengthBonus = isMelee || (isThrown && !isGrenadeWeapon(weapon.system));
-        const strengthBonus = includeStrengthBonus ? this.system.characteristics.strength.bonus : 0;
+        // Melee and thrown (non-grenade) damage adds the wielder's effective Strength Bonus (#744, #415).
+        const strengthBonus = weapon.system.addsStrengthBonus === true ? wielderStrengthBonus(this.system.characteristics.strength) : 0;
 
         // The prompt takes the formula, type and penetration as its fields show them.
         // weapon.system.damage can be a string formula or an object with formula/bonus fields;

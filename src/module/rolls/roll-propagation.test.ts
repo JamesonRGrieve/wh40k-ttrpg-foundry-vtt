@@ -115,7 +115,9 @@ function actor(gameSystem: string, modifierSources: ModifierSourcesShape = {}, i
 }
 
 /** A weapon carrying its qualities the way compendium weapons do: identifiers in `effectiveSpecial`, no embedded items. */
-function weapon(opts: { qualities?: string[]; ranged?: boolean; damage?: string; penetration?: number; items?: object[] } = {}): HitWeapon {
+function weapon(
+    opts: { qualities?: string[]; ranged?: boolean; damage?: string; penetration?: number; items?: object[]; addsStrengthBonus?: boolean } = {},
+): HitWeapon {
     const ranged = opts.ranged ?? true;
     return {
         name: 'Test Weapon',
@@ -123,6 +125,8 @@ function weapon(opts: { qualities?: string[]; ranged?: boolean; damage?: string;
             effectiveSpecial: new Set(opts.qualities ?? []),
             effectiveDamageFormula: opts.damage ?? '1d10',
             effectivePenetration: opts.penetration ?? 0,
+            // WeaponData's rule (#744): melee adds SB; a thrown weapon passes it explicitly.
+            addsStrengthBonus: opts.addsStrengthBonus ?? !ranged,
         },
         items: opts.items ?? [],
         isRanged: ranged,
@@ -359,6 +363,22 @@ describe.each(SYSTEMS)('damage / penetration propagation onto a hit (%s)', (game
         // 7 (kept) + Strength Bonus 4 for a melee weapon.
         expect(hit.damage).toBe(7);
         expect(hit.totalDamage).toBe(11);
+    });
+
+    // #744: the weapon's own rule decides SB, so a thrown knife adds it and a grenade or a firearm doesn't.
+    it("adds the wielder's Strength Bonus to a thrown weapon's damage, but not to a grenade's or a firearm's", async () => {
+        dieQueue.push(5, 5, 5);
+        const knife = await Hit.createHit(attack(actor(gameSystem), weapon({ ranged: true, addsStrengthBonus: true })), 1);
+        expect(knife.modifiers['strength bonus']).toBe(4);
+        expect(knife.totalDamage).toBe(9);
+
+        const grenade = await Hit.createHit(attack(actor(gameSystem), weapon({ ranged: true, addsStrengthBonus: false })), 1);
+        expect(grenade.modifiers['strength bonus']).toBeUndefined();
+        expect(grenade.totalDamage).toBe(5);
+
+        const rifle = await Hit.createHit(attack(actor(gameSystem), weapon()), 1);
+        expect(rifle.modifiers['strength bonus']).toBeUndefined();
+        expect(rifle.totalDamage).toBe(5);
     });
 
     it('Proven (3) raises a low damage die to 3, as a sourced modifier', async () => {

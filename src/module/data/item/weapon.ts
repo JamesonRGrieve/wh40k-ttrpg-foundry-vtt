@@ -25,6 +25,7 @@ import {
     ownProfileDealsDamage,
     profileDealsDamage,
 } from '../../rules/no-damage.ts';
+import { weaponAddsStrengthBonus } from '../../rules/strength-bonus-damage.ts';
 import { applyDeactivationQualities, deactivationStatDeltas, isDeactivated, type WeaponActivationConfig } from '../../rules/weapon-activation.ts';
 import {
     activeFiringMode,
@@ -792,11 +793,15 @@ export default class WeaponData extends ItemDataModel.mixin(
     }
 
     /**
-     * Ensure special is an array for SetField compatibility.
+     * Ensure special is an array for SetField compatibility. Foundry migrates the
+     * partial `system` of every update too, so an absent `special` stays absent:
+     * defaulting it to `[]` wiped a weapon's own qualities on any update that
+     * didn't carry them, the identifier stamped at create among them (#745).
      * @param {object} source  The source data
      */
     // eslint-disable-next-line no-restricted-syntax -- boundary: mirrors _migrateData source signature for internal migration helpers
     static #migrateSpecial(source: Record<string, unknown>): void {
+        if (!('special' in source)) return;
         const special = source['special'];
         if (Array.isArray(special)) return;
         if (special !== null && special !== undefined && typeof special === 'object' && Symbol.iterator in special) {
@@ -1408,8 +1413,14 @@ export default class WeaponData extends ItemDataModel.mixin(
         return game.i18n.localize(`WH40K.DamageType.${this.effectiveDamageType.capitalize()}`);
     }
 
+    /** Whether this weapon's damage adds the wielder's Strength Bonus: melee, or thrown but not a grenade (#744). */
+    get addsStrengthBonus(): boolean {
+        return weaponAddsStrengthBonus(this);
+    }
+
     /**
-     * Get full damage formula for display, including +SB indicator for melee weapons.
+     * Get full damage formula for display, including the +SB indicator when the damage
+     * adds the wielder's Strength Bonus (#744).
      * This is intended for UI display to show users what the complete damage formula will be.
      * @type {string}
      */
@@ -1418,13 +1429,7 @@ export default class WeaponData extends ItemDataModel.mixin(
         // Resolved at attack time (#608): show what it depends on.
         if (this.hasContextualDamage) return this.damageLabel;
         const baseFormula = this.effectiveDamageFormula;
-
-        // Melee weapons add Strength Bonus to damage
-        if (this.isMeleeWeapon) {
-            return `${baseFormula}+SB`;
-        }
-
-        return baseFormula;
+        return this.addsStrengthBonus ? `${baseFormula}+SB` : baseFormula;
     }
 
     /**
