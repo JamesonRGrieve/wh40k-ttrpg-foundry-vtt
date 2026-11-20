@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isOwnQuality, qualityPickerOptions, qualityTakesLevel, weaponQualityId } from './weapon-quality-edit.ts';
+import { isOwnQuality, qualityIconLookup, qualityPickerOptions, qualityTakesLevel, weaponQualityId } from './weapon-quality-edit.ts';
 
 /** #745: a weapon's own qualities can be added and removed on its sheet. */
 describe('weaponQualityId (#745)', () => {
@@ -65,5 +65,32 @@ describe('isOwnQuality (#745)', () => {
         const special = new Set(['toxic-4', 'balanced']);
         expect(isOwnQuality(special, 'toxic-4')).toBe(true);
         expect(isOwnQuality(special, 'reliable')).toBe(false);
+    });
+});
+
+describe('qualityIconLookup', () => {
+    const icon = qualityIconLookup([
+        { identifier: 'toxic', name: 'Toxic', img: 'toxic.svg' },
+        { identifier: 'toxic-x', name: 'Toxic (X)', img: 'toxic-x.svg' },
+        { identifier: 'tearing', name: 'Tearing', img: 'tearing.svg' },
+        { identifier: 'felling', name: 'Felling', img: 'felling.svg' },
+        { identifier: 'blank', name: 'Blank', img: '' },
+    ]);
+
+    it("takes a rated id's art from its rated entry", () => {
+        expect(icon('toxic-4')).toBe('toxic-x.svg');
+    });
+
+    it('falls back to the unrated entry when no rated one exists', () => {
+        expect(icon('felling-2')).toBe('felling.svg');
+    });
+
+    it('matches an unrated id directly', () => {
+        expect(icon('tearing')).toBe('tearing.svg');
+    });
+
+    it('returns no art for an id with no entry or no image', () => {
+        expect(icon('unreliable')).toBe('');
+        expect(icon('blank')).toBe('');
     });
 });

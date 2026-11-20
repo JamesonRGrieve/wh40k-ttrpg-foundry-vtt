@@ -31,6 +31,32 @@
               {{system.craftsmanshipLabel}}
             </span>
             {{/if}}
+            {{!-- The weapon's qualities, one chip each with its compendium art, in the sticky header so
+                  they're always in view. A chip opens the quality's entry and shows its rules on hover; the
+                  weapon's own quality has a remove control in edit mode, one from craftsmanship, ammunition
+                  or a firing mode doesn't (#745, #756). --}}
+            <span class="tw-contents" data-weapon-qualities>
+              {{#each qualitiesArray}}
+              <span class="tw-inline-flex tw-max-w-full tw-items-center tw-gap-1 tw-px-1.5 tw-py-[2px] tw-bg-[rgba(212,175,55,0.1)] tw-border tw-border-solid tw-border-[rgba(212,175,55,0.35)] tw-rounded-sm tw-text-xs tw-text-[rgba(234,220,180,0.95)] tw-cursor-pointer hover:tw-border-[color:var(--wh40k-gold)] hover:tw-text-[color:var(--wh40k-gold)]"
+                    data-action="openQuality"
+                    data-identifier="{{identifier}}"
+                    data-wh40k-tooltip="quality"
+                    data-wh40k-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
+                {{#if img}}<img src="{{img}}" alt="" class="tw-h-3.5 tw-w-3.5 tw-shrink-0 tw-rounded-[2px] tw-border-0" data-weapon-quality-icon />{{/if}}
+                <span class="tw-truncate" data-weapon-quality-label>{{label}}</span>
+                {{#if (and @root.inEditMode removable)}}
+                <button type="button"
+                        class="tw-m-0 tw-flex tw-h-3.5 tw-w-3.5 tw-min-h-0 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-border-0 tw-bg-[rgba(0,0,0,0.45)] tw-p-0 tw-text-[0.55rem] tw-text-[rgba(234,178,178,0.9)] tw-cursor-pointer hover:tw-bg-[rgba(139,0,0,0.7)] hover:tw-text-white"
+                        data-action="removeQuality"
+                        data-identifier="{{identifier}}"
+                        aria-label="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}: {{label}}"
+                        data-tooltip="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+                {{/if}}
+              </span>
+              {{/each}}
+            </span>
           </div>
         </div>
 
@@ -102,11 +128,11 @@
           {{#if hasModificationEffects}}<span class="tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
         </div>
 
-        {{!-- Penetration - Arrow (Medium) --}}
+        {{!-- Penetration - pierced shield (Medium) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(212,175,55,0.4)] tw-bg-[linear-gradient(145deg,rgba(212,175,55,0.12),rgba(12,16,24,0.7))]"
              data-tooltip="{{localize 'WH40K.Combat.Penetration'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
-            <i class="fa-solid fa-location-arrow"></i>
+            <i class="fa-solid fa-shield-slash"></i>
           </div>
           {{!-- The tile is one grid column wide: the abbreviated label (as RoF) fits at
                 every sheet width, the full word is the tile's tooltip, and a range-band
@@ -229,11 +255,11 @@
         {{/if}}
         {{/if}}
 
-        {{!-- Weight - Scale (Small) --}}
+        {{!-- Weight (Small) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(148,160,178,0.3)] tw-bg-[linear-gradient(145deg,rgba(148,160,178,0.08),rgba(12,16,24,0.7))]"
              data-tooltip="{{localize 'WH40K.Weight'}}">
           <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
-            <i class="fa-solid fa-scale-balanced"></i>
+            <i class="fa-solid fa-weight-hanging"></i>
           </div>
           <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
             <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[rgba(240,232,220,0.95)] tw-leading-[1.1]">{{effectiveWeight}}<small>{{localize "WH40K.Common.Kilograms"}}</small></span>
@@ -241,35 +267,6 @@
           </div>
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
         </div>
-
-        {{!-- Individual Quality Cards --}}
-        {{#each qualitiesArray}}
-        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(58,93,132,0.4)] tw-bg-[linear-gradient(145deg,rgba(58,93,132,0.15),rgba(12,16,24,0.6))]"
-             data-action="openQuality"
-             data-identifier="{{identifier}}"
-             data-wh40k-tooltip="quality"
-             data-wh40k-tooltip-data="{{@root.prepareQualityTooltip identifier level}}">
-          <div class="tw-relative tw-z-[2] tw-text-[0.9rem] tw-mb-[2px] tw-transition-transform">
-            <i class="fa-solid fa-star"></i>
-          </div>
-          {{!-- A long quality name ("Hallucinogenic (2)") steps its font down and wraps at its spaces, inside the tile. --}}
-          <div class="tw-relative tw-z-[2] tw-flex tw-w-full tw-min-w-0 tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-w-full {{nameFitClass label 'qualityTile'}} tw-font-semibold tw-text-center tw-text-[rgba(178,208,234,0.95)] tw-leading-[1.2] tw-line-clamp-2" data-weapon-quality-label>{{label}}</span>
-          </div>
-          <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
-          {{!-- The weapon's own quality can be removed in edit mode; one from craftsmanship, ammunition or a mode can't (#745). --}}
-          {{#if (and @root.inEditMode removable)}}
-          <button type="button"
-                  class="tw-absolute tw-top-1 tw-right-1 tw-z-[3] tw-m-0 tw-flex tw-h-5 tw-w-5 tw-min-h-0 tw-items-center tw-justify-center tw-rounded-full tw-border-0 tw-bg-[rgba(0,0,0,0.45)] tw-p-0 tw-text-[0.65rem] tw-text-[rgba(234,178,178,0.9)] tw-cursor-pointer hover:tw-bg-[rgba(139,0,0,0.7)] hover:tw-text-white"
-                  data-action="removeQuality"
-                  data-identifier="{{identifier}}"
-                  aria-label="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}: {{label}}"
-                  data-tooltip="{{localize 'WH40K.WeaponSheet.RemoveQuality'}}">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          {{/if}}
-        </div>
-        {{/each}}
       </div>
 
       {{!-- Edit mode: add a quality from the line's weapon-qualities compendium, or drop one on the sheet (#745). --}}

@@ -15,6 +15,27 @@ export interface QualityPickerSource {
     name: string;
 }
 
+/** A weapon-qualities compendium index entry with its art, as the sheet's quality badges read it. */
+export interface QualityIndexEntry extends QualityPickerSource {
+    img: string;
+}
+
+/**
+ * Look up a quality's compendium art by the id the weapon carries. A rated id
+ * (`toxic-4`) takes the rated entry's art (`toxic-x`), falling back to the unrated
+ * one (`toxic`); an id with no compendium entry has no art (empty string).
+ */
+export function qualityIconLookup(entries: Iterable<QualityIndexEntry>): (identifier: string) => string {
+    const byId = new Map<string, string>();
+    for (const entry of entries) {
+        if (entry.identifier !== '' && entry.img !== '') byId.set(entry.identifier, entry.img);
+    }
+    return (identifier: string): string => {
+        const { baseId } = parseQualityLevel(identifier);
+        return byId.get(identifier) ?? byId.get(`${baseId}-x`) ?? byId.get(baseId) ?? '';
+    };
+}
+
 /** A picker option: the compendium id, its name, and whether adding it asks for a level. */
 export interface QualityPickerOption extends QualityPickerSource {
     takesLevel: boolean;

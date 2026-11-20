@@ -387,7 +387,7 @@ test.describe.serial('game-icons pack icons (#625, Tier B)', () => {
                 const loads = await gameIconLoads(page, `#${opened.appId}`);
                 if (loads.loaded === 0 || loads.broken.length > 0)
                     sheetFailures.push(`${sample.label} (${opened.name ?? ''}): loaded ${loads.loaded}, broken ${loads.broken.join(', ')}`);
-                // A weapon's quality tiles keep their names inside the tile ("Hallucinogenic (2)" ran past it).
+                // A weapon's quality badges keep their names inside the badge ("Hallucinogenic (2)" once ran past its tile).
                 const overflowing = await page
                     .locator(`#${opened.appId} [data-weapon-quality-label]`)
                     .evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.textContent.trim()));

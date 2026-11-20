@@ -21,7 +21,14 @@ import {
     type ModificationModifiersSource,
     type ModificationSource,
 } from '../../rules/weapon-modification.ts';
-import { isOwnQuality, type QualityPickerOption, qualityPickerOptions, weaponQualityId } from '../../rules/weapon-quality-edit.ts';
+import {
+    isOwnQuality,
+    qualityIconLookup,
+    type QualityIndexEntry,
+    type QualityPickerOption,
+    qualityPickerOptions,
+    weaponQualityId,
+} from '../../rules/weapon-quality-edit.ts';
 import type { WH40KItemDocument } from '../../types/global.d.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import { lineCategoryPack } from '../../utils/line-packs.ts';
@@ -86,7 +93,7 @@ interface WeaponSheetContext extends Record<string, unknown> {
     reloadTimes: Record<string, { label: string }>;
     bodyCollapsed: boolean;
     /** `removable`: the weapon's own quality, not one from craftsmanship, ammunition or a mode (#745). */
-    qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null; removable: boolean }>;
+    qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null; img: string; removable: boolean }>;
     /** The line's weapon qualities offered by the edit-mode picker (#745); empty outside edit mode. */
     qualityOptions: QualityPickerOption[];
     prepareQualityTooltip: (identifier: string, level?: number | null) => string;
@@ -240,7 +247,10 @@ export default class WeaponSheet extends SetFieldActionsMixin(ContainerItemSheet
         context.bodyCollapsed = this.#bodyCollapsed;
         context.magazineBuildingEnabled = WH40KSettings.isMagazineBuildingEnabled();
 
-        // Prepare qualities array for clickable tags
+        // The quality badges carry each quality's compendium art; the edit-mode picker
+        // lists the same index (#745).
+        const qualityEntries = await this.#lineQualityEntries();
+        const qualityIcon = qualityIconLookup(qualityEntries);
         context.qualitiesArray = Array.from(system.effectiveSpecial).map((q: string) => {
             const { level } = parseQualityLevel(q);
 
@@ -255,11 +265,11 @@ export default class WeaponSheet extends SetFieldActionsMixin(ContainerItemSheet
                 label,
                 description: def?.description ?? '',
                 level,
+                img: qualityIcon(q),
                 removable: isOwnQuality(system.special, q),
             };
         });
-        // The edit-mode picker reads the line's weapon-qualities compendium (#745).
-        context.qualityOptions = this.inEditMode ? await this.#qualityPickerOptions() : [];
+        context.qualityOptions = this.inEditMode ? qualityPickerOptions(qualityEntries) : [];
 
         // Bind prepareQualityTooltip helper for template
         context.prepareQualityTooltip = this.prepareQualityTooltip.bind(this);
@@ -673,18 +683,21 @@ export default class WeaponSheet extends SetFieldActionsMixin(ContainerItemSheet
         return lineCategoryPack(game.packs, gameSystem, 'weapon-qualities');
     }
 
-    /** The edit-mode picker's options, read from the line's weapon-qualities index (#745). */
-    async #qualityPickerOptions(): Promise<QualityPickerOption[]> {
+    /**
+     * The line's weapon-qualities index: each entry's id, name and art. It feeds the
+     * quality badges' icons and the edit-mode picker (#745).
+     */
+    async #lineQualityEntries(): Promise<QualityIndexEntry[]> {
         const pack = this.#lineQualityPack();
         if (pack === undefined) return [];
         const index = await pack.getIndex({ fields: ['system.identifier'] });
-        return qualityPickerOptions(
-            Array.from(index, (entry) => {
-                // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown for a compendium index entry's field
-                const identifier: unknown = foundry.utils.getProperty(entry, 'system.identifier');
-                return { identifier: typeof identifier === 'string' ? identifier : '', name: entry.name ?? '' };
-            }),
-        );
+        return Array.from(index, (entry) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown for a compendium index entry's field
+            const identifier: unknown = foundry.utils.getProperty(entry, 'system.identifier');
+            // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown; the index entry type is a union across document types and only some carry img
+            const img: unknown = foundry.utils.getProperty(entry, 'img');
+            return { identifier: typeof identifier === 'string' ? identifier : '', name: entry.name ?? '', img: typeof img === 'string' ? img : '' };
+        });
     }
 
     /**

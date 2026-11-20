@@ -58,8 +58,22 @@ const QUALITY_EDIT_OVERRIDES = {
     inEditMode: true,
     bodyCollapsed: false,
     qualitiesArray: [
-        { identifier: 'toxic-4', label: 'Toxic (4)', description: '', level: 4, removable: true },
-        { identifier: 'reliable', label: 'Reliable', description: '', level: null, removable: false },
+        {
+            identifier: 'toxic-4',
+            label: 'Toxic (4)',
+            description: '',
+            level: 4,
+            img: 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/lorc/poison-bottle.svg',
+            removable: true,
+        },
+        {
+            identifier: 'reliable',
+            label: 'Reliable',
+            description: '',
+            level: null,
+            img: 'https://cdn.jsdelivr.net/gh/game-icons/icons@master/delapouite/check-mark.svg',
+            removable: false,
+        },
     ],
     qualityOptions: [
         { identifier: 'balanced', name: 'Balanced', takesLevel: false },
@@ -82,6 +96,13 @@ export const QualityEditing: Story = {
         await expect(Array.from(remove, (el) => el.dataset['identifier'])).toEqual(['toxic-4']);
         const reliable = canvasElement.querySelector('[data-action="openQuality"][data-identifier="reliable"]');
         await expect(reliable?.querySelector('[data-action="removeQuality"]')).toBeNull();
+        // Qualities are badges in their own row, each with its compendium art, not stat tiles.
+        const badges = canvasElement.querySelector('[data-weapon-qualities]');
+        await expect(badges?.querySelectorAll('[data-action="openQuality"]').length).toBe(2);
+        await expect(Array.from(badges?.querySelectorAll<HTMLImageElement>('[data-weapon-quality-icon]') ?? [], (img) => img.getAttribute('src'))).toEqual([
+            'https://cdn.jsdelivr.net/gh/game-icons/icons@master/lorc/poison-bottle.svg',
+            'https://cdn.jsdelivr.net/gh/game-icons/icons@master/delapouite/check-mark.svg',
+        ]);
 
         const picker = canvasElement.querySelector<HTMLSelectElement>('[data-sheet-local="new-quality"]');
         await expect(Array.from(picker?.options ?? [], (o) => o.value)).toEqual(['', 'balanced', 'felling-x', 'tearing']);
