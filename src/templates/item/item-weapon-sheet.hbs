@@ -92,25 +92,12 @@
       </div>
       {{/if}}
 
-      {{!-- ICONIC STAT MOSAIC — as many 4.5rem tiles as the sheet's width holds, so no
-            tile (and no tile label) is ever narrower than its content (#614). --}}
-      <div class="tw-grid tw-grid-cols-[repeat(auto-fill,minmax(4.5rem,1fr))] tw-auto-rows-[minmax(60px,auto)] [grid-auto-flow:dense] tw-gap-[var(--wh40k-space-sm)] tw-p-3">
-        {{!-- Attack Action Card (if owned by actor) --}}
-        {{#if isOwnedByActor}}
-        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(115,177,113,0.5)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.25),rgba(12,16,24,0.7))]"
-             data-action="rollAttack"
-             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.RollAttack'}}">
-          <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
-            <i class="fa-solid fa-crosshairs"></i>
-          </div>
-          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
-            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-green-bright)] tw-leading-[1.1]">{{localize "WH40K.Combat.Attack"}}</span>
-            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">d100</span>
-          </div>
-          <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
-        </div>
-        {{/if}}
-
+      {{!-- ICONIC STAT MOSAIC — Damage (2×2) first, the other tiles in a two-row block beside it:
+            the column count follows the number of tiles (Damage plus up to six tiles fill 3, 4 or 5
+            columns with no gap row), counted in CSS from the grid's children so no list of which
+            tiles show lives anywhere else. Five columns at most, each at least 4.5rem, so no tile or
+            label is narrower than its content at the sheet's width (#614); more tiles wrap below. --}}
+      <div class="tw-grid tw-grid-cols-[repeat(3,minmax(4.5rem,1fr))] [&:has(>:nth-child(4)):not(:has(>:nth-child(6)))]:tw-grid-cols-[repeat(4,minmax(4.5rem,1fr))] [&:has(>:nth-child(6))]:tw-grid-cols-[repeat(5,minmax(4.5rem,1fr))] tw-auto-rows-[minmax(60px,auto)] [grid-auto-flow:dense] tw-gap-[var(--wh40k-space-sm)] tw-p-3" data-weapon-stat-grid>
         {{!-- Damage Card (clickable to roll if owned) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[10px_8px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] [grid-column:span_2] [grid-row:span_2] tw-border-[rgba(182,62,46,0.4)] tw-bg-[linear-gradient(145deg,rgba(182,62,46,0.15),rgba(12,16,24,0.7))] {{#if isOwnedByActor}}tw-cursor-pointer{{/if}}"
              {{#if isOwnedByActor}}data-action="rollDamage"{{/if}}
@@ -127,6 +114,22 @@
           <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
           {{#if hasModificationEffects}}<span class="tw-animate-star-twinkle tw-absolute tw-top-1 tw-right-1.5 tw-text-[0.6rem] tw-text-[var(--wh40k-gold)] tw-z-[3] tw-pointer-events-none" aria-hidden="true">★</span>{{/if}}
         </div>
+
+        {{!-- Attack Action Card (if owned by actor) --}}
+        {{#if isOwnedByActor}}
+        <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-cursor-pointer tw-border-[rgba(115,177,113,0.5)] tw-bg-[linear-gradient(145deg,rgba(74,132,72,0.25),rgba(12,16,24,0.7))]"
+             data-action="rollAttack"
+             data-tooltip="{{localize 'WH40K.ItemSheet.Weapon.RollAttack'}}">
+          <div class="tw-relative tw-z-[2] tw-text-[1.3rem] tw-mb-1 tw-transition-transform">
+            <i class="fa-solid fa-crosshairs"></i>
+          </div>
+          <div class="tw-relative tw-z-[2] tw-flex tw-flex-col tw-items-center tw-gap-[2px]">
+            <span class="tw-font-display tw-text-[1rem] tw-font-bold tw-text-[color:var(--wh40k-green-bright)] tw-leading-[1.1]">{{localize "WH40K.Combat.Attack"}}</span>
+            <span class="tw-text-[0.6rem] tw-font-bold tw-uppercase tw-tracking-[0.08em] tw-text-[rgba(202,210,222,0.6)]">d100</span>
+          </div>
+          <div class="tw-absolute tw-inset-0 tw-rounded-[inherit] tw-opacity-0 tw-transition-opacity tw-pointer-events-none tw-z-0"></div>
+        </div>
+        {{/if}}
 
         {{!-- Penetration - pierced shield (Medium) --}}
         <div class="tw-relative tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-[8px_6px] tw-rounded-[var(--wh40k-radius-lg)] tw-border-2 tw-overflow-hidden tw-transition-all tw-aspect-square tw-min-h-[60px] tw-border-[rgba(212,175,55,0.4)] tw-bg-[linear-gradient(145deg,rgba(212,175,55,0.12),rgba(12,16,24,0.7))]"
