@@ -8,6 +8,7 @@ import {
     isD100Success,
     printedDegrees,
     printedDegreesFromCount,
+    rawDegreesMethod,
     resolveDegreesMethod,
 } from './roll-helpers.ts';
 
@@ -196,6 +197,14 @@ describe('emitChatFromTemplate — the single-sourced template→ChatMessage idi
     it('honours an explicit user override', async () => {
         await emitChatFromTemplate('tpl.hbs', {}, { user: 'player-3' });
         expect(lastPayload().user).toBe('player-3');
+    });
+});
+
+describe('rawDegreesMethod — the line degrees method, no world setting', () => {
+    it('is gen1 for the FFG 1st-gen lines and gen2 for the rest, IM and no line', () => {
+        expect(['dh1', 'dw', 'rt'].map((line) => rawDegreesMethod(line))).toEqual(['gen1', 'gen1', 'gen1']);
+        expect(['dh2', 'bc', 'ow', 'im', 'xx'].map((line) => rawDegreesMethod(line))).toEqual(['gen2', 'gen2', 'gen2', 'gen2', 'gen2']);
+        expect(rawDegreesMethod(undefined)).toBe('gen2');
     });
 });
 

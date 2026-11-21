@@ -70,13 +70,20 @@ export function actorGameSystemId(actor: GameSystemBearer | null | undefined): s
     return lineId(slots.gameSystem) ?? lineId(slots.constructor?.gameSystem);
 }
 
+/** The degrees method a line's own rules use, with no world setting applied: Gen 1
+ * for the 1st-generation lines, Gen 2 for the rest and for no line. Pure, so
+ * tooling outside Foundry can read a line's convention without `game`. */
+export function rawDegreesMethod(systemId: string | undefined): DegreesMethod {
+    return systemId !== undefined && GEN1_DEGREE_SYSTEMS.has(systemId) ? 'gen1' : 'gen2';
+}
+
 /** Resolve the effective degrees method for an actor's game system, honouring
- * the `degreesMode` world setting. `raw` (default) → per-system; `gen1`/`gen2`
- * force one method across every system. */
+ * the `degreesMode` world setting. `raw` (default) → the line's own method
+ * ({@link rawDegreesMethod}); `gen1`/`gen2` force one method across every system. */
 export function resolveDegreesMethod(systemId: string | undefined): DegreesMethod {
     const mode = WH40KSettings.getDegreesMode();
     if (mode === 'gen1' || mode === 'gen2') return mode;
-    return systemId !== undefined && GEN1_DEGREE_SYSTEMS.has(systemId) ? 'gen1' : 'gen2';
+    return rawDegreesMethod(systemId);
 }
 
 /** Additional degrees between `a` and `b` for the given method, NOT counting
