@@ -12,6 +12,7 @@ import type { InquestRules } from '../../rules/inquest.ts';
 import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import type { VehicleCombatRules } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -89,6 +90,15 @@ export function acquisitionLadderFor(line: string | undefined): AcquisitionLadde
 export function inquestRulesFor(line: string | undefined): InquestRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.inquestRules ?? null;
+}
+
+/**
+ * Which skills a line refuses to test untrained (#757), or `null` for an unknown line.
+ * @param line  `system.gameSystem` id.
+ */
+export function untrainedSkillRulesFor(line: string | undefined): UntrainedSkillRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.untrainedSkills ?? null;
 }
 
 /**

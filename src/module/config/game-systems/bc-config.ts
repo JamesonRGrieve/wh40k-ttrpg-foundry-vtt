@@ -29,6 +29,7 @@ import {
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import type { VehicleDrivingRules } from '../../rules/vehicle-trait-tests.ts';
 import { capitalize } from '../../utils/format.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
@@ -75,6 +76,11 @@ function readBcSystem(actor: SystemConfigActor): BcCharacterSystem {
 export class BCSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'bc' as const;
     override readonly dosDamageDie = true;
+    /**
+     * Black Crusade's skill table marks the skills that can't be used untrained: Forbidden
+     * Lore and two Operate specialisations. Its other Specialist skills roll untrained (#757).
+     */
+    override readonly untrainedSkills: UntrainedSkillRules = { rule: 'listed', listed: { forbiddenLore: '*', operate: ['Aeronautica', 'Voidship'] } };
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,

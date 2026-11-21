@@ -4,11 +4,14 @@
  */
 
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { CharacterSheetCapabilities, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
+    /** Imperium Maledictum's untrained rule isn't modelled: no skill is refused (#757). */
+    override readonly untrainedSkills: UntrainedSkillRules = { rule: 'none', listed: {} };
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,

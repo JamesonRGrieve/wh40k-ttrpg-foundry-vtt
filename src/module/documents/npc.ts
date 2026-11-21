@@ -296,6 +296,7 @@ export class WH40KNPC extends WH40KBaseActor {
             target: test?.target ?? skillTarget,
             // The entry's own rank, so the dialog does not read the skill's and halve a trained row (#225).
             ...(test === undefined ? { nameOverride: title } : { skillRank: test.skillRank }),
+            skillSpecialisation: options.specialisation ?? title,
             instance: options.instance,
             sourcedModifiers: options.sourcedModifiers,
             // A test titled after something else (a vehicle's trait test) names the skill it rolled (#677).

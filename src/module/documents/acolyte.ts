@@ -600,6 +600,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             label = printed.label;
             targetValue = printed.target;
             skillRank = printed.skillRank;
+            specialityLabel = options.specialisation;
         } else if (speciality !== undefined) {
             specialityLabel = String(speciality.name ?? speciality.label ?? specialityName);
             label = `${label}: ${specialityLabel}`;
@@ -622,7 +623,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             options.instance === undefined &&
             options.sourcedModifiers === undefined &&
             hasSkillUses(resolvedSkillName) &&
-            this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank)
+            this._dispatchSkillUse(resolvedSkillName, label ?? resolvedSkillName, targetValue, skillRank, specialityLabel)
         ) {
             return Promise.resolve();
         }
@@ -639,6 +640,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             situationalKey: resolvedSkillName,
             ...(instance !== undefined ? { instance } : {}),
             ...(skillRank !== undefined ? { skillRank } : {}),
+            skillSpecialisation: specialityLabel,
             sourcedModifiers: options.sourcedModifiers,
             // A test titled after something else (a vehicle's trait test) names the skill it rolled (#677).
             tested:
@@ -666,9 +668,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * the dialog owns the roll. Every choice the roll needs is made inside that one
      * dialog: the use, the target for a target-directed use, and the item(s) for an
      * item-choice use (#535). The concrete action is built when the roll resolves,
-     * from whatever the player finally picked.
+     * from whatever the player finally picked. `specialisation` is the one a specialist
+     * skill tests, which the line's untrained-skill rule can name (#757).
      */
-    _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number): boolean {
+    _dispatchSkillUse(skillKey: string, skillLabel: string, targetValue: number, skillRank?: number, specialisation?: string): boolean {
         const action = new SkillUseActionData(skillKey, skillLabel, undefined, this._skillUseItemSource());
         this._buildSimpleSkillRoll({
             key: skillKey,
@@ -678,6 +681,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             situationalKey: skillKey,
             instance: action,
             ...(skillRank !== undefined ? { skillRank } : {}),
+            skillSpecialisation: specialisation,
         });
         action.rollData.targetActor = firstTargetedActor();
         action.syncSkillUse();

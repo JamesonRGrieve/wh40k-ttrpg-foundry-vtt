@@ -16,6 +16,7 @@ import type { ItemRepairRules } from '../../rules/item-repair.ts';
 import type { ComradeRules } from '../../rules/ow-comrade.ts';
 import type { ComradeOrderDef } from '../../rules/ow-orders.ts';
 import { grantsPsychicPowers, type PsykerUnlock } from '../../rules/psyker-unlock.ts';
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import type { VehicleCombatRules, VehicleHitLocationBand } from '../../rules/vehicle-damage.ts';
 import type { VehicleDrivingRules, VehicleTestSkill } from '../../rules/vehicle-trait-tests.ts';
 import type { WeaponModificationRules } from '../../rules/weapon-modification.ts';
@@ -208,6 +209,9 @@ export abstract class BaseSystemConfig {
 
     /** Whether this system uses aptitude-based cost calculations */
     abstract readonly usesAptitudes: boolean;
+
+    /** Which skills the line refuses to test untrained (#757): see {@link UntrainedSkillRules}. */
+    abstract readonly untrainedSkills: UntrainedSkillRules;
 
     /** Whether this system uses career-based advance tables */
     abstract readonly usesCareerTables: boolean;

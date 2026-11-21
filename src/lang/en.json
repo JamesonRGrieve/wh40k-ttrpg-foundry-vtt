@@ -957,7 +957,7 @@
             "CharacteristicLabel": "Characteristic",
             "DefaultOption": "{name} (default)",
             "HalvedIndicator": "Halved (untrained)",
-            "UntrainedAdvancedBlocked": "Advanced skill — cannot attempt untrained."
+            "UntrainedAdvancedBlocked": "This skill can't be attempted untrained under this line's rules."
         },
         "Climbing": {
             "SurfaceLabel": "Climbing Surface",

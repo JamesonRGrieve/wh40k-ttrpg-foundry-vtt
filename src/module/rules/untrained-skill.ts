@@ -3,21 +3,73 @@
  * (core rules, "Untrained Skill Use", and individual skill
  * descriptors' "Special Uses" sub-sections).
  *
- * - **Untrained Basic skills:** roll against the listed characteristic.
- * - **Untrained Advanced skills:** RAW says characters cannot use them
- *   at all without training. The dialog should refuse to surface the
- *   roll; this module flags via `untrainedAdvanced` for consumers that
- *   want a fallback (e.g. desperate retry at characteristic ÷ 2).
- * - **Untrained non-Basic skills:** the older DH1/RT convention is
- *   characteristic ÷ 2 for an untrained roll; DH2 RAW removes the
- *   halving for Basic skills but keeps the spirit for certain
- *   non-Basic edge cases. This helper offers the halving as an
- *   optional toggle, off by default for DH2.
+ * - **Which skills can't be tested untrained** is each line's own rule
+ *   ({@link untrainedTestForbidden}, #757): an Advanced skill on the career
+ *   lines (DH1, RT, DW), a Specialist skill on DH2 and Only War, and the
+ *   skills Black Crusade's table marks. A refused test is flagged through
+ *   `untrainedAdvanced`.
+ * - **The untrained base** is −20 on the aptitude lines and half the
+ *   characteristic on the career lines ({@link untrainedSkillBase}); the
+ *   actor applies it at prepare time, so callers pass it in already applied.
  * - **Alternate characteristic:** several skill descriptors list a
  *   different characteristic for specific use cases (e.g. Athletics
  *   with Toughness for marathon endurance). The dialog surfaces these
  *   as an override dropdown.
  */
+
+/**
+ * How a line decides which skills cannot be tested untrained:
+ * - `advanced`: the career lines (DH1, RT, DW) refuse an untrained Advanced skill;
+ * - `specialist`: DH2 and Only War refuse an untrained Specialist skill (a skill
+ *   group taken per specialisation) and let every other skill roll at −20;
+ * - `listed`: Black Crusade refuses only the skills its skill table marks;
+ * - `none`: no skill is refused.
+ */
+export type UntrainedSkillRule = 'advanced' | 'specialist' | 'listed' | 'none';
+
+/** The skills a `listed` line refuses untrained: skill key → `'*'` (every specialisation) or the named specialisations. */
+export type UntrainedForbiddenList = Readonly<Record<string, '*' | readonly string[]>>;
+
+/** A line's untrained-skill rule and, for `listed`, the skills it names. */
+export interface UntrainedSkillRules {
+    rule: UntrainedSkillRule;
+    listed: UntrainedForbiddenList;
+}
+
+/** The catalog traits the rule reads: the Advanced flag and whether the skill is a specialist group. */
+export interface UntrainedSkillTraits {
+    advanced: boolean;
+    hasEntries: boolean;
+}
+
+/** Whether a `listed` rule names a skill, or the specialisation tested of it. */
+function listedForbids(listed: UntrainedForbiddenList, skillKey: string, specialisation: string | undefined): boolean {
+    const named = listed[skillKey];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this index access as defined, while tsconfig.json has it on and requires the undefined guard.
+    if (named === undefined) return false;
+    if (named === '*') return true;
+    const wanted = specialisation?.trim().toLowerCase();
+    return wanted !== undefined && named.some((entry) => entry.toLowerCase() === wanted);
+}
+
+/** Each rule's test of one skill. */
+const RULE_TESTS: Readonly<
+    Record<UntrainedSkillRule, (rules: UntrainedSkillRules, skill: UntrainedSkillTraits, skillKey: string, specialisation: string | undefined) => boolean>
+> = {
+    advanced: (_rules, skill) => skill.advanced,
+    specialist: (_rules, skill) => skill.hasEntries,
+    listed: (rules, _skill, skillKey, specialisation) => listedForbids(rules.listed, skillKey, specialisation),
+    none: () => false,
+};
+
+/**
+ * Whether a line's rules refuse an untrained test of a skill (#757). `specialisation`
+ * is the specialisation being tested, which only a `listed` rule naming specialisations
+ * reads. Pure.
+ */
+export function untrainedTestForbidden(rules: UntrainedSkillRules, skill: UntrainedSkillTraits, skillKey: string, specialisation?: string): boolean {
+    return RULE_TESTS[rules.rule](rules, skill, skillKey, specialisation);
+}
 
 /**
  * Untrained-skill base value: the one place this rule is written (#710). In
@@ -41,12 +93,9 @@ export interface UntrainedTestInput {
     /** Apply the optional non-Basic halving penalty (DH1/RT carryover). */
     halveOnNonBasic?: boolean;
     /**
-     * If true, untrained Advanced/non-Basic skills are NOT blocked — they
-     * fall through to the same roll resolution as untrained Basic skills.
-     * DH2 RAW (and the aptitude/career family generally) lets any skill be
-     * attempted untrained with the -20 penalty already baked into the
-     * caller's `characteristicTotal`. The RAW "cannot attempt untrained
-     * advanced" rule belongs to RT/DH1.
+     * If true, a non-Basic skill is NOT refused untrained and resolves like a Basic one.
+     * The roll dialog passes `false` and sets `isBasic` from the line's own rule
+     * ({@link untrainedTestForbidden}, #757); no line's rules let every skill be tried untrained.
      */
     allowUntrainedAdvanced?: boolean;
 }
@@ -70,9 +119,7 @@ export function resolveUntrainedTarget(input: UntrainedTestInput): UntrainedTest
     }
     // Advance is 0 — untrained.
     if (!input.isBasic && input.allowUntrainedAdvanced !== true) {
-        // RT/DH1 RAW: cannot attempt. Caller decides whether to render the row.
-        // DH2 and the aptitude family pass `allowUntrainedAdvanced: true` so
-        // any skill stays rollable untrained (penalty already in the target).
+        // The line's rules refuse this skill untrained. Caller decides whether to render the row.
         return { target: 0, untrainedAdvanced: true, halved: false, usedAltCharacteristic: usedAlt };
     }
     // Basic untrained: roll at full characteristic in DH2, halved if the

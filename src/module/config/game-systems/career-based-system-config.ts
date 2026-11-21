@@ -9,6 +9,7 @@
  */
 
 import { isStoredRank, rankForExperience } from '../../rules/career-rank.ts';
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption, SystemConfigActor } from './types.ts';
 
@@ -34,6 +35,8 @@ function actorBranches(actor: SystemConfigActor): readonly string[] {
 export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     readonly usesAptitudes = false;
     readonly usesCareerTables = true;
+    /** DH1, RT and DW: an Advanced skill can't be attempted untrained; a Basic one rolls at half the characteristic (#757). */
+    readonly untrainedSkills: UntrainedSkillRules = { rule: 'advanced', listed: {} };
 
     // ── 3-Level Skill Ranks ──────────────────────────────────────
 

@@ -14,7 +14,7 @@
  * Keep this module a leaf: adding an import here can reintroduce those cycles.
  */
 
-import { skillAdvancedMap } from '../data/shared/skill-definitions.ts';
+import { SKILL_DEFINITIONS, skillAdvancedMap } from '../data/shared/skill-definitions.ts';
 
 /** Skill key → Advanced flag, derived once from the canonical catalog. */
 const ADVANCED_BY_KEY: Record<string, boolean> = skillAdvancedMap();
@@ -34,4 +34,16 @@ export function isBasicSkill(skillKey: string): boolean | undefined {
     const advanced = ADVANCED_BY_KEY[skillKey];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this index access as `boolean`, while tsconfig.json has it on and requires the undefined guard.
     return advanced === undefined ? undefined : !advanced;
+}
+
+/**
+ * A skill's catalog traits the untrained-skill rule reads (#757): its Advanced flag and
+ * whether it is a specialist group. `undefined` for a key not in the catalog.
+ *
+ * @param skillKey - Canonical skill key (e.g. `'forbiddenLore'`).
+ */
+export function skillUntrainedTraits(skillKey: string): { advanced: boolean; hasEntries: boolean } | undefined {
+    const def = SKILL_DEFINITIONS[skillKey];
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess parser mismatch: tsconfig.test.json (ESLint's parser project) has the flag off so it types this index access as defined, while tsconfig.json has it on and requires the undefined guard.
+    return def === undefined ? undefined : { advanced: def.advanced, hasEntries: def.hasEntries };
 }

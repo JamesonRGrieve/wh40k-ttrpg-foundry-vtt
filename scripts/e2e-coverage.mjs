@@ -748,6 +748,18 @@ const WEAPON_SHEET_EDIT_FLOWS = [
 ];
 recordDimension('weapon-sheet-edit.flow', covered['weapon-sheet-edit.flow'], WEAPON_SHEET_EDIT_FLOWS);
 
+// Each line refuses its own skills untrained (#757), tests/e2e/untrained-skill-rule.spec.ts.
+// Keep in sync with CASES there.
+const UNTRAINED_SKILL_RULE_CASES = [
+    'dh2:forbiddenLore:refused',
+    'dh2:acrobatics:rolled',
+    'rt:acrobatics:refused',
+    'rt:awareness:rolled',
+    'bc:operate:refused',
+    'bc:operate:rolled',
+];
+recordDimension('untrained-skill.rule', covered['untrained-skill.rule'], UNTRAINED_SKILL_RULE_CASES);
+
 // A BC characteristic choice reaches the character (#729), tests/e2e/bc-perfection-motivation.spec.ts.
 // Keep in sync with BC_PERFECTION_FLOWS there.
 const BC_PERFECTION_FLOWS = ['picks-become-modifiers', 'builder-applies-picks'];

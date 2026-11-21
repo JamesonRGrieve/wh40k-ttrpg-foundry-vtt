@@ -10,8 +10,9 @@
  * - Auto Roll for digital rolling
  */
 
+import { untrainedSkillRulesFor } from '../../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../../constants.ts';
-import { isBasicSkill } from '../../helpers/skill-classification.ts';
+import { isBasicSkill, skillUntrainedTraits } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
 import { aggregateModifierTotal } from '../../rolls/aggregate-target.ts';
 import { cueAttackResolved } from '../../rolls/attack-cue-trigger.ts';
@@ -69,7 +70,7 @@ import {
     targetDispositionGroup,
 } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
-import { resolveUntrainedTarget } from '../../rules/untrained-skill.ts';
+import { resolveUntrainedTarget, untrainedTestForbidden } from '../../rules/untrained-skill.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
 import { buildDifficultyPresets, type DifficultyPreset } from '../../utils/difficulty-presets.ts';
 import { capitalize, formatSigned } from '../../utils/format.ts';
@@ -638,42 +639,34 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             const usingAlt = this._charOverride !== null && this._charOverride !== listedChar;
             const altCharTotal = usingAlt ? Number(sourceActor?.characteristics?.[effectiveChar]?.total ?? 0) : 0;
 
-            // The aptitude/career family (DH2 + DH1e/BC/DW/OW/IM) lets any
-            // skill be attempted untrained — the -20 penalty is already
-            // baked into skillCurrent at actor prepare time (creature.ts
-            // line 999, `usesAptitudes === true ? charTotal - 20 : …`).
-            // Only RT/legacy systems block untrained Advanced skills.
+            // Which skills can't be tested untrained is each line's own rule (#757): an Advanced
+            // skill on the career lines (DH1, RT, DW), a Specialist skill on DH2 and Only War,
+            // the skills Black Crusade's table marks. The untrained base itself (−20, or half the
+            // characteristic on the career lines) is already in skillCurrent from prepare time
+            // (computeSkillTarget), so nothing is halved here.
             // `gameSystem` is a schema field on character/vehicle but NOT on npc — on the
             // NPC DataModel it exists only as a static on the model class. Reading just the
-            // instance path yielded '' for every NPC, so isAptitudeSystem went false and
-            // DH2 NPCs inherited RT/DH1's "cannot attempt untrained" block (#476).
+            // instance path yielded '' for every NPC (#476).
             // eslint-disable-next-line no-restricted-syntax -- boundary: the actor's system DataModel exposes gameSystem either as a schema field or as a static on its constructor; neither is on the shared union
             const actorSystemData = (sourceActor as { system?: { gameSystem?: string; constructor?: unknown } } | null | undefined)?.system;
             const staticGameSystem = (actorSystemData?.constructor as { gameSystem?: string } | undefined)?.gameSystem;
             const actorGameSystem = actorSystemData?.gameSystem ?? staticGameSystem ?? '';
-            const isAptitudeSystem =
-                actorGameSystem === 'dh2' ||
-                actorGameSystem === 'dh1' ||
-                actorGameSystem === 'bc' ||
-                actorGameSystem === 'dw' ||
-                actorGameSystem === 'ow' ||
-                actorGameSystem === 'im';
+            const untrainedRules = untrainedSkillRulesFor(actorGameSystem === '' ? undefined : actorGameSystem);
+            // A skill missing from the catalog falls back to the Basic flag resolved above.
+            const traits = (rollKey !== null && rollKey !== '' ? skillUntrainedTraits(rollKey) : undefined) ?? { advanced: !isBasic, hasEntries: false };
+            const testedSpecialisation = rollData['skillSpecialisation'];
+            const untrainedForbidden =
+                untrainedRules !== null &&
+                rollKey !== null &&
+                untrainedTestForbidden(untrainedRules, traits, rollKey, typeof testedSpecialisation === 'string' ? testedSpecialisation : undefined);
 
             const resolved = resolveUntrainedTarget({
                 advance,
-                isBasic,
+                isBasic: !untrainedForbidden,
                 characteristicTotal: listedCharTotal + trainingBonus,
                 ...(usingAlt ? { altCharacteristicTotal: altCharTotal + trainingBonus } : {}),
-                // Halving untrained non-Basic skills is a career-system (RT/DH1
-                // legacy) convention only. The aptitude family (DH2 + BC/DW/OW/IM)
-                // uses a flat -20 instead, and that penalty is already baked into
-                // baseTarget/trainingBonus at prepare time (creature.ts
-                // `usesAptitudes === true ? charTotal - 20 : …`). Gating on
-                // !isAptitudeSystem stops DH2 from halving the already -20'd target
-                // (regression from allowUntrainedAdvanced letting these rolls fall
-                // through to the halve instead of being blocked).
-                halveOnNonBasic: advance === 0 && !isBasic && !isAptitudeSystem,
-                allowUntrainedAdvanced: isAptitudeSystem,
+                halveOnNonBasic: false,
+                allowUntrainedAdvanced: false,
             });
             // Only override base target when we changed the characteristic or fired the halving rule.
             // Otherwise leave rollData.baseTarget untouched so unrelated rolls behave identically.

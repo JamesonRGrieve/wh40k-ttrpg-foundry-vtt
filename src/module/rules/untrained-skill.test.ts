@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readRepoFile } from '../testing/repo-file.ts';
-import { resolveUntrainedTarget, untrainedSkillBase } from './untrained-skill';
+import { resolveUntrainedTarget, untrainedSkillBase, untrainedTestForbidden } from './untrained-skill';
 
 describe('untrainedSkillBase (#423, #710)', () => {
     it('aptitude systems (DH2e) subtract a flat 20', () => {
@@ -81,11 +81,47 @@ describe('DH2 untrained skills use -20, never halving (regression)', () => {
         expect(r.untrainedAdvanced).toBe(false);
     });
 
-    it('the roll dialog only opts into halving for non-aptitude (career) systems', () => {
-        // The dialog (an ApplicationV2) can't be instantiated under happy-dom, so
-        // guard the call-site gating at the source level: halveOnNonBasic must be
-        // conditioned on !isAptitudeSystem so DH2/BC/DW/OW/IM never halve.
+    it('the roll dialog never halves (the untrained base is baked in) and refuses by the line rule (#757)', () => {
+        // The dialog (an ApplicationV2) can't be instantiated under happy-dom, so guard the
+        // call site at the source level: the untrained base (−20 or half) is already in the
+        // skill's current value from prepare time, and refusal comes from the line's rule.
         const dialog = readRepoFile('src/module/applications/prompts/unified-roll-dialog.ts');
-        expect(dialog).toContain('halveOnNonBasic: advance === 0 && !isBasic && !isAptitudeSystem');
+        expect(dialog).toContain('halveOnNonBasic: false');
+        expect(dialog).toContain('isBasic: !untrainedForbidden');
+        expect(dialog).toContain('untrainedTestForbidden(untrainedRules, traits, rollKey');
+        expect(dialog).not.toContain('isAptitudeSystem');
+    });
+});
+
+describe('untrainedTestForbidden: each line refuses its own skills untrained (#757)', () => {
+    const acrobatics = { advanced: true, hasEntries: false };
+    const forbiddenLore = { advanced: true, hasEntries: true };
+    const awareness = { advanced: false, hasEntries: false };
+    const none = { rule: 'none', listed: {} } as const;
+
+    it('career lines refuse an Advanced skill and allow a Basic one', () => {
+        const rules = { rule: 'advanced', listed: {} } as const;
+        expect(untrainedTestForbidden(rules, acrobatics, 'acrobatics')).toBe(true);
+        expect(untrainedTestForbidden(rules, awareness, 'awareness')).toBe(false);
+    });
+
+    it('DH2 and Only War refuse only a Specialist skill, so Acrobatics rolls at −20', () => {
+        const rules = { rule: 'specialist', listed: {} } as const;
+        expect(untrainedTestForbidden(rules, forbiddenLore, 'forbiddenLore', 'Daemonology')).toBe(true);
+        expect(untrainedTestForbidden(rules, acrobatics, 'acrobatics')).toBe(false);
+    });
+
+    it('Black Crusade refuses only the listed skills and specialisations', () => {
+        const rules = { rule: 'listed', listed: { forbiddenLore: '*', operate: ['Aeronautica', 'Voidship'] } } as const;
+        const operate = { advanced: true, hasEntries: true };
+        expect(untrainedTestForbidden(rules, forbiddenLore, 'forbiddenLore', 'Daemonology')).toBe(true);
+        expect(untrainedTestForbidden(rules, operate, 'operate', 'voidship')).toBe(true);
+        expect(untrainedTestForbidden(rules, operate, 'operate', 'Surface')).toBe(false);
+        expect(untrainedTestForbidden(rules, operate, 'operate')).toBe(false);
+        expect(untrainedTestForbidden(rules, { advanced: true, hasEntries: true }, 'commonLore', 'Imperium')).toBe(false);
+    });
+
+    it("a line with rule 'none' refuses nothing", () => {
+        expect(untrainedTestForbidden(none, forbiddenLore, 'forbiddenLore')).toBe(false);
     });
 });

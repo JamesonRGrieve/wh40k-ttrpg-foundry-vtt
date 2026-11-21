@@ -80,6 +80,8 @@ type RollDataLike = Record<string, unknown> & {
      * advance (which is ~0 for specialist skills). See #225.
      */
     skillRank?: number;
+    /** The specialisation a specialist-skill roll tests, which a line's untrained-skill rule can name (#757). */
+    skillSpecialisation?: string;
     baseLabel?: string;
     testedSkill?: string;
     modifiers: { modifier: number; situational?: number; [key: string]: number | undefined };
@@ -1441,6 +1443,8 @@ export class WH40KBaseActor extends Actor {
         situationalKey?: string | undefined;
         nameOverride?: string | undefined;
         skillRank?: number | undefined;
+        /** The specialisation a specialist-skill roll tests (#757). */
+        skillSpecialisation?: string | undefined;
         /** Free-form flavor for `rollData.type` (e.g. a weapon name), overriding the per-`type` literal. */
         typeOverride?: string | undefined;
         /**
@@ -1485,6 +1489,7 @@ export class WH40KBaseActor extends Actor {
         rollData.rollKey = opts.key;
         rollData.baseTarget = opts.target;
         if (opts.skillRank !== undefined) rollData.skillRank = opts.skillRank;
+        if (opts.skillSpecialisation !== undefined && opts.skillSpecialisation !== '') rollData.skillSpecialisation = opts.skillSpecialisation;
         if (opts.tested !== undefined) {
             rollData.testedSkill = opts.tested.skill;
             rollData.baseLabel = opts.tested.baseLabel;

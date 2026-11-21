@@ -8,6 +8,7 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Proficient / Expert (5 tiers).
  */
 
+import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption, SystemConfigActor } from './types.ts';
 
@@ -27,6 +28,8 @@ function extractContextAptitudes(
 export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     readonly usesAptitudes = true;
     readonly usesCareerTables = false;
+    /** DH2 and Only War: a Specialist skill can't be attempted untrained; every other skill rolls at −20 (#757). */
+    readonly untrainedSkills: UntrainedSkillRules = { rule: 'specialist', listed: {} };
 
     // ── 4-Level Skill Ranks ──────────────────────────────────────
 
