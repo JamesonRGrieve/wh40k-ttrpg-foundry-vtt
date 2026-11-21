@@ -64,7 +64,7 @@ describe('attackCueOutcome', () => {
     });
 
     it('reads a placed area and whether its impact scattered', () => {
-        const ref = { sceneId: 's', templateId: 'tpl' };
+        const ref = { sceneId: 's', regionId: 'tpl' };
         expect(attackCueOutcome(action({ areaTemplate: SPRAY, areaTemplateRef: ref }))?.area).toEqual({ templateId: 'tpl', shape: 'cone', scattered: false });
         const blast: AreaTemplateSpec = { ...SPRAY, qualityId: 'blast', shape: 'circle', anchor: 'impact', resolution: 'hit', avoid: null };
         expect(attackCueOutcome(action({ success: false, areaTemplate: blast, areaTemplateRef: ref }))?.area).toEqual({

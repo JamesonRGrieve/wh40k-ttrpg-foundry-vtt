@@ -253,15 +253,16 @@ test.describe.serial('every attack-cue outcome on a live canvas, on every client
                 await releaseFreeze(page);
                 // An area attack's template stays on the scene; clear it so it does not sit in the next outcome's capture.
                 await page.evaluate(async (id) => {
+                    // The attack's areas are Regions (#758).
                     interface TemplateScene {
-                        templates: { contents: Array<{ id: string }> };
+                        regions: { contents: Array<{ id: string }> };
                         deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]>;
                     }
                     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime `game.scenes` has no browser-side types
                     const g = globalThis as unknown as { game: { scenes: { get: (i: string) => TemplateScene | undefined } } };
                     const stage = g.game.scenes.get(id);
-                    const ids = stage?.templates.contents.map((t) => t.id) ?? [];
-                    if (ids.length > 0) await stage?.deleteEmbeddedDocuments('MeasuredTemplate', ids);
+                    const ids = stage?.regions.contents.map((r) => r.id) ?? [];
+                    if (ids.length > 0) await stage?.deleteEmbeddedDocuments('Region', ids);
                 }, scene.sceneId);
                 for (const event of events) recordCoverage('attack-cue.outcome', event);
             };

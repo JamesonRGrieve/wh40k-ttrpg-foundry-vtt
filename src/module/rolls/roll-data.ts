@@ -3,7 +3,15 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import { aimModifiers } from '../rules/aim.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
-import { type AreaTargetResult, type AreaTemplateSpec, type AvoidanceWielder, attackHasNoAttackRoll, resolveAreaTemplate } from '../rules/area-template.ts';
+import {
+    type AreaTargetResult,
+    type AreaTemplateSpec,
+    type AvoidanceWielder,
+    attackHasNoAttackRoll,
+    resolveAreaTemplate,
+    resolveSmokeCloud,
+    type SmokeCloudSpec,
+} from '../rules/area-template.ts';
 import { bridgeWeaponQualities, calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import type { BurstCapComponent } from '../rules/auto-fire.ts';
 import { CALLED_SHOT_ACTION, calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
@@ -785,6 +793,8 @@ export class WeaponRollData extends RollData {
      * ordinary single-target attack.
      */
     areaTemplate: AreaTemplateSpec | null = null;
+    /** The smokescreen one of the attack's qualities throws up (Smoke, #758), or null. */
+    smokeCloud: SmokeCloudSpec | null = null;
     /** A quality removes the attack roll (Spray: no BS test, #600). */
     noAttackRoll: boolean = false;
     /** The placed template for this attack, set when the attack resolves. */
@@ -939,6 +949,7 @@ export class WeaponRollData extends RollData {
         // previous update's — or on the first update, an empty — special list, so a
         // Spray card printed a roll, a target and degrees).
         this.areaTemplate = resolveAreaTemplate(this.attackSpecials, this.maxRange, this.gameSystemId);
+        this.smokeCloud = resolveSmokeCloud(this.attackSpecials, this.gameSystemId);
         this.noAttackRoll = attackHasNoAttackRoll(this.attackSpecials, this.gameSystemId);
         this.ignoreModifiers = this.noAttackRoll || this.isStun;
         this.ignoreDegrees = this.noAttackRoll || this.isStun;

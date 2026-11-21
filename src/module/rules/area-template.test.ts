@@ -15,8 +15,10 @@ import {
     type PlacedArea,
     qualityIdForAttackSpecial,
     resolveAreaTemplate,
+    resolveSmokeCloud,
     scatterOffset,
     signedModifier,
+    smokeCloudRadius,
 } from './area-template.ts';
 import { setWeaponQualityPayloadsForTesting } from './weapon-quality-payloads.ts';
 
@@ -289,5 +291,55 @@ describe('areaStatementPhrases — the card states the mechanic (#600)', () => {
         expect(areaShapeLabelKey('circle')).toBe('WH40K.AreaAttack.Area.Circle');
         expect(signedModifier(0)).toBe('+0');
         expect(signedModifier(-10)).toBe('-10');
+    });
+});
+
+describe('resolveSmokeCloud — a smokescreen comes from quality data (#758)', () => {
+    beforeEach(() => {
+        setWeaponQualityPayloadsForTesting({
+            // DH2 Smoke (X): X metres radius, 1d10+10 rounds.
+            'smoke-x': {
+                type: 'template',
+                template: { shape: 'concealment-cloud', distanceSource: 'level', measure: 'radius', blocksSight: true, duration: '1d10+10' },
+            },
+            // DH1 / RT / DW Smoke: 3d10 metres across, 2d10 rounds.
+            'smoke': {
+                type: 'template',
+                template: {
+                    shape: 'concealment-cloud',
+                    distanceSource: 'formula',
+                    sizeFormula: '3d10',
+                    measure: 'diameter',
+                    blocksSight: true,
+                    duration: '2d10',
+                },
+            },
+            'blast': { type: 'template', template: { shape: 'sphere', distanceSource: 'level', anchor: 'impact', resolution: 'hit' } },
+        });
+    });
+
+    it('Smoke (2) is a 2 m radius cloud, so a Blind Grenade is 4 m across, lasting 1d10+10 rounds', () => {
+        const spec = resolveSmokeCloud([{ name: 'Smoke (X)', level: 2 }]);
+        expect(spec).toEqual({ qualityId: 'smoke', size: 2, sizeFormula: '', measure: 'radius', duration: '1d10+10' });
+        expect(smokeCloudRadius(2, 'radius')).toBe(2);
+    });
+
+    it('the older lines roll the size: 3d10 metres across, halved for the radius', () => {
+        expect(resolveSmokeCloud([{ name: 'Smoke', level: true }])).toEqual({
+            qualityId: 'smoke',
+            size: null,
+            sizeFormula: '3d10',
+            measure: 'diameter',
+            duration: '2d10',
+        });
+        expect(smokeCloudRadius(12, 'diameter')).toBe(6);
+    });
+
+    it('a rated Smoke reads the rated quality, so Smoke (2) is not the 3d10 cloud', () => {
+        expect(resolveSmokeCloud([{ name: 'Smoke', level: 2 }])).toMatchObject({ size: 2, sizeFormula: '', measure: 'radius' });
+    });
+
+    it('a quality that does not block sight is no smokescreen', () => {
+        expect(resolveSmokeCloud([{ name: 'Blast', level: 3 }])).toBeNull();
     });
 });

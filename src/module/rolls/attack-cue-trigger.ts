@@ -77,7 +77,7 @@ export interface CueActionLike {
         /** The area the attack's quality declared (#599): its shape, and whether it sits on the impact point. */
         readonly areaTemplate?: { readonly shape: 'cone' | 'circle'; readonly anchor: string } | null | undefined;
         /** The template the attack placed on the scene. */
-        readonly areaTemplateRef?: { readonly templateId: string } | null | undefined;
+        readonly areaTemplateRef?: { readonly regionId: string } | null | undefined;
         /** Who the resolved template caught, and whether the area hit each. */
         readonly areaResults?: readonly { readonly tokenId: string; readonly hit: boolean }[] | undefined;
     };
@@ -107,7 +107,7 @@ function cueArea(rollData: CueActionLike['rollData']): CueArea | null {
     const spec = rollData.areaTemplate ?? null;
     const ref = rollData.areaTemplateRef ?? null;
     if (spec === null || ref === null) return null;
-    return { templateId: ref.templateId, shape: spec.shape, scattered: spec.anchor === 'impact' && !rollData.success };
+    return { templateId: ref.regionId, shape: spec.shape, scattered: spec.anchor === 'impact' && !rollData.success };
 }
 
 /**

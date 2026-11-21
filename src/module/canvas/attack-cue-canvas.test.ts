@@ -103,9 +103,10 @@ const TOKENS = new Map([
     ['src', { center: { x: 100, y: 100 } }],
     ['tgt', { center: { x: 600, y: 100 } }],
 ]);
-const TEMPLATES = new Map([
-    ['cone', { x: 100, y: 100, distance: 10, direction: 0, angle: 30 }],
-    ['circle', { x: 600, y: 100, distance: 3, direction: 0, angle: 0 }],
+// The attack's areas are Regions (#758): a 10 m Spray cone and a 3 m Blast, in pixels at 50 px/m.
+const REGIONS = new Map([
+    ['cone', { shapes: [{ type: 'cone', x: 100, y: 100, radius: 500, angle: 30, rotation: 0 }] }],
+    ['circle', { shapes: [{ type: 'circle', x: 600, y: 100, radius: 150 }] }],
 ]);
 
 const addChild = vi.fn();
@@ -120,7 +121,7 @@ function stubWorld(sceneId = 'scene1'): void {
     vi.stubGlobal('PIXI', { Graphics: FakeGraphics });
     vi.stubGlobal('canvas', {
         ready: true,
-        scene: { id: sceneId, templates: TEMPLATES },
+        scene: { id: sceneId, regions: REGIONS },
         tokens: { get: (id: string) => TOKENS.get(id) },
         grid: { size: 100 },
         dimensions: { distancePixels: 50 },

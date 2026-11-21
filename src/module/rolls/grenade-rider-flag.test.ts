@@ -6,7 +6,7 @@ import { GRENADE_RIDER_FLAG, readRiderThrowFlag, riderThrowFlags } from './grena
  * card's Resolve Rider — the stored JSON is untrusted, so a malformed flag reads as none.
  */
 
-const FLAG = { actorUuid: 'Actor.a1', itemId: 'i1', sceneId: 's1', templateId: 't1' };
+const FLAG = { actorUuid: 'Actor.a1', itemId: 'i1', sceneId: 's1', regionId: 'r1' };
 
 describe('riderThrowFlags', () => {
     it('stores the flag under its key, and reads back what it stored', () => {
@@ -20,11 +20,15 @@ describe('readRiderThrowFlag', () => {
     it('reads no flag, a non-object, or one missing or mistyping a field as none', () => {
         expect(readRiderThrowFlag(undefined)).toBeNull();
         expect(readRiderThrowFlag('Actor.a1')).toBeNull();
-        expect(readRiderThrowFlag({ ...FLAG, templateId: 7 })).toBeNull();
+        expect(readRiderThrowFlag({ ...FLAG, regionId: 7 })).toBeNull();
         expect(readRiderThrowFlag({ actorUuid: 'Actor.a1', itemId: 'i1', sceneId: 's1' })).toBeNull();
     });
 
     it('keeps only the four fields', () => {
         expect(readRiderThrowFlag({ ...FLAG, extra: true })).toEqual(FLAG);
+    });
+
+    it('reads a card posted before areas became Regions, which named the area templateId (#758)', () => {
+        expect(readRiderThrowFlag({ actorUuid: 'Actor.a1', itemId: 'i1', sceneId: 's1', templateId: 't1' })).toEqual({ ...FLAG, regionId: 't1' });
     });
 });

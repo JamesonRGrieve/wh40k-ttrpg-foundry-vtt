@@ -30,7 +30,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry ChatMessage.getFlag returns the stored JSON untyped; this guard narrows it
 export function readRiderThrowFlag(value: unknown): RiderThrowFlag | null {
     if (!isRecord(value)) return null;
-    const { actorUuid, itemId, sceneId, templateId } = value;
-    if (typeof actorUuid !== 'string' || typeof itemId !== 'string' || typeof sceneId !== 'string' || typeof templateId !== 'string') return null;
-    return { actorUuid, itemId, sceneId, templateId };
+    // A card posted before areas became Regions (#758) named the area `templateId`.
+    const { actorUuid, itemId, sceneId, regionId, templateId } = value;
+    const areaId = typeof regionId === 'string' ? regionId : templateId;
+    if (typeof actorUuid !== 'string' || typeof itemId !== 'string' || typeof sceneId !== 'string' || typeof areaId !== 'string') return null;
+    return { actorUuid, itemId, sceneId, regionId: areaId };
 }

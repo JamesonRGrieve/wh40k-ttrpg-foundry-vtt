@@ -1870,6 +1870,10 @@
                 "Name": "Require Active Combat to Attack",
                 "Hint": "When enabled, weapon attacks can only be initiated during an active combat encounter that the attacker's token is part of. Disable for out-of-combat or narrative attacks. Defaults to on."
             },
+            "SmokeBlindsInside": {
+                "Name": "Smoke clouds blind tokens inside",
+                "Hint": "House rule. A smokescreen gives tokens inside it the Blinded condition while they stay in it. Off by default: by the rules, smoke only blocks sight through it."
+            },
             "MagazineBuilding": {
                 "Name": "Enable Magazine Building",
                 "Hint": "When enabled, the weapon sheet shows a Build Clip action that lets players compose an ordered mixed magazine — loading several ammunition types in firing order (e.g. 3 AP then 2 Hot-shot). RAW loads one ammo type per clip, so this is off by default; the standard Reload is unaffected either way."
@@ -7032,7 +7036,53 @@
             "ModifiedBy": "Modified by {quality}",
             "MeltaNote": "Melta: Double Penetration"
         },
+        "Area": {
+            "CreateFailed": "The area could not be created on this scene.",
+            "NoGM": "No GM is connected to place an area that applies a condition.",
+            "Shape": {
+                "Circle": "Circle",
+                "Cone": "Cone",
+                "Line": "Line",
+                "Rectangle": "Rectangle"
+            },
+            "ApplyConditionBehavior": {
+                "Label": "Apply Condition",
+                "FIELDS": {
+                    "condition": {
+                        "label": "Condition",
+                        "hint": "The condition a token gains while it is inside the area."
+                    }
+                }
+            },
+            "Smoke": {
+                "Title": "Smokescreen",
+                "RegionName": "Smokescreen",
+                "Placed": "A smokescreen {metres} m across blocks sight for {rounds} rounds.",
+                "PlacedUntilRemoved": "A smokescreen {metres} m across blocks sight until it is removed."
+            },
+            "QuickTemplate": {
+                "Title": "Quick Template",
+                "Shape": "Shape",
+                "Diameter": "Diameter (m)",
+                "Length": "Length (m)",
+                "Angle": "Angle (°)",
+                "Width": "Width (m)",
+                "Height": "Height (m)",
+                "BlocksSight": "Blocks sight through it",
+                "Condition": "Condition for tokens inside",
+                "NoCondition": "None",
+                "Duration": "Lasts (rounds)",
+                "UntilRemoved": "Until removed",
+                "Name": "Name",
+                "DefaultName": "Area",
+                "Hint": "Place: click to drop a circle or rectangle; press, drag to aim and release for a cone or line. Shift: no grid snap. Esc or right-click: cancel.",
+                "Place": "Place",
+                "Clear": "Clear",
+                "ClearHint": "Remove the areas on this scene that you placed or own"
+            }
+        },
         "AreaAttack": {
+            "RegionName": "Attack area",
             "Area": {
                 "Cone": "cone",
                 "Circle": "blast"

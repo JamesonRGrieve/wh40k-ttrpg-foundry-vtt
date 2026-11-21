@@ -12,6 +12,7 @@ The system adds a **WH40K RPG** group (skull icon) to Foundry's scene controls:
 - **Event Tracker** (GM): the campaign dashboard. See below.
 - **Award XP** (GM): opens **Award XP to Characters**. Tick characters (or **Toggle All**), enter **XP to Award** and confirm. A negative amount removes XP.
 - **Environmental Hazards** (GM): resolves falling, suffocation and vacuum for the selected tokens, each by its own line's rules. See below.
+- **Quick Template** (everyone): drops an area on the map. See below.
 - **Environment** (everyone): reopens the scene environment widget.
 
 ## Event Tracker
@@ -59,6 +60,14 @@ The GM sets a scene's environment in the **Scene Environment** window (**Set Env
 - **Gravity**: Standard, Low, High or Zero. Low and high gravity change movement, Initiative, carrying capacity and jumps. Zero gravity halves movement, and a Charge or Run calls for a Hard (−20) Agility test.
 - **Harsh weather or unnatural conditions**: −20 to Weapon Skill and Ballistic Skill attack tests, shown as its own row on the card.
 - **Atmosphere**: Breathable, Vacuum or Venting atmosphere. In vacuum the widget reminds the GM to resolve exposure with **Environmental Hazards**.
+
+## Quick Template
+
+**Quick Template** in the scene controls places an area on the map without building a Region by hand. Pick a shape and its size in metres: a **Circle** by its diameter, a **Cone** by its length and angle, a **Line** by its length and width, or a **Rectangle**. Tick **Blocks sight through it** for smoke or a wall of fire, choose a **Condition for tokens inside** to give them while they stand in it (Blinded for a blind grenade), and set **Lasts (rounds)** in the current encounter, or leave it empty to keep the area until it is removed.
+
+Press **Place** and click the map to drop a circle or rectangle. A cone or line is aimed: press where it starts and drag towards where it points. The area snaps to the grid; hold Shift to place it freely. Escape or a right-click cancels. **Clear** removes the areas on this scene that you placed or own. A timed area disappears when its rounds run out or the encounter ends.
+
+An area with a condition is created by the GM's client, so a GM must be connected when a player places one.
 
 ## Environmental hazards
 

@@ -6,6 +6,7 @@ import {
     WEAPON_QUALITY_DIE_OP_PHASES,
     WEAPON_QUALITY_TEMPLATE_ANCHORS,
     WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES,
+    WEAPON_QUALITY_TEMPLATE_MEASURES,
     WEAPON_QUALITY_TEMPLATE_RESOLUTIONS,
     type WeaponQualityMechanics,
 } from './weapon-quality-mechanics.ts';
@@ -118,6 +119,12 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
                     avoidUntrainedBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
                     avoidUnbracedHeavyBonus: new fields.NumberField({ required: false, nullable: true, initial: null, integer: true }),
                     hitLocation: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    // A smokescreen (#758): it blocks sight, its size may be a dice formula
+                    // measured across, and it lasts a rolled number of rounds.
+                    blocksSight: new fields.BooleanField({ required: false, initial: false }),
+                    sizeFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
+                    measure: new fields.StringField({ required: false, blank: true, initial: '', choices: WEAPON_QUALITY_TEMPLATE_MEASURES }),
+                    duration: new fields.StringField({ required: false, blank: true, initial: '' }),
                 }),
                 rangeBands: new fields.SchemaField({
                     pointBlank: new fields.NumberField({ required: false, nullable: true, initial: null }),

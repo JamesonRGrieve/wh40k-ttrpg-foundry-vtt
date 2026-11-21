@@ -1,0 +1,73 @@
+{{!-- Quick Template (#758): drop an area on the map as a V14 Region the system builds. --}}
+<div class="tw-p-5 tw-bg-transparent tw-font-ui tw-text-[#e8e4d9]" data-quick-template>
+
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
+        <label for="wh40k-qt-kind" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Shape"}}</label>
+        <select id="wh40k-qt-kind" name="kind"
+                class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+            {{#each shapes}}
+                <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="tw-grid {{#if secondaryLabelKey}}tw-grid-cols-2{{else}}tw-grid-cols-1{{/if}} tw-gap-3 tw-mb-3">
+        <div class="tw-flex tw-flex-col tw-gap-1.5">
+            <label for="wh40k-qt-primary" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize primaryLabelKey}}</label>
+            <input id="wh40k-qt-primary" type="number" name="primary" value="{{primary}}" min="0" step="0.5" data-dtype="Number"
+                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+        </div>
+        {{#if secondaryLabelKey}}
+            <div class="tw-flex tw-flex-col tw-gap-1.5">
+                <label for="wh40k-qt-secondary" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize secondaryLabelKey}}</label>
+                <input id="wh40k-qt-secondary" type="number" name="secondary" value="{{secondary}}" min="0" step="0.5" data-dtype="Number"
+                       class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+            </div>
+        {{/if}}
+    </div>
+
+    <label class="tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-cursor-pointer">
+        <input type="checkbox" name="blocksSight" {{#if blocksSight}}checked{{/if}} />
+        <span class="tw-text-sm">{{localize "WH40K.Area.QuickTemplate.BlocksSight"}}</span>
+    </label>
+
+    <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
+        <label for="wh40k-qt-condition" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Condition"}}</label>
+        <select id="wh40k-qt-condition" name="condition"
+                class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+            <option value="">{{localize "WH40K.Area.QuickTemplate.NoCondition"}}</option>
+            {{#each conditions}}
+                <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">
+        <div class="tw-flex tw-flex-col tw-gap-1.5">
+            <label for="wh40k-qt-duration" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Duration"}}</label>
+            <input id="wh40k-qt-duration" type="number" name="duration" value="{{duration}}" min="0" step="1" data-dtype="Number"
+                   placeholder="{{localize 'WH40K.Area.QuickTemplate.UntilRemoved'}}"
+                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-1.5">
+            <label for="wh40k-qt-name" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Name"}}</label>
+            <input id="wh40k-qt-name" type="text" name="name" value="{{name}}"
+                   placeholder="{{localize 'WH40K.Area.QuickTemplate.DefaultName'}}"
+                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold" />
+        </div>
+    </div>
+
+    <p class="tw-m-0 tw-mb-4 tw-text-[0.75rem] tw-italic tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Hint"}}</p>
+
+    <div class="tw-flex tw-gap-2">
+        <button type="button" data-action="place" {{#unless canPlace}}disabled{{/unless}}
+                class="tw-flex-1 tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-sm tw-border tw-border-gold tw-bg-gradient-to-br tw-from-[var(--wh40k-gold-dark)] tw-to-[var(--wh40k-gold)] tw-text-[#1a1a1a] tw-text-sm tw-font-semibold tw-cursor-pointer disabled:tw-opacity-40 disabled:tw-cursor-not-allowed">
+            <i class="fa-solid fa-draw-polygon"></i> {{localize "WH40K.Area.QuickTemplate.Place"}}
+        </button>
+        <button type="button" data-action="clear"
+                class="tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2 tw-rounded-sm tw-border tw-border-[rgba(201,162,39,0.25)] tw-bg-[rgba(0,0,0,0.35)] tw-text-[#e8e4d9] tw-text-sm tw-cursor-pointer"
+                data-tooltip="{{localize 'WH40K.Area.QuickTemplate.ClearHint'}}">
+            <i class="fa-solid fa-eraser"></i> {{localize "WH40K.Area.QuickTemplate.Clear"}}
+        </button>
+    </div>
+</div>

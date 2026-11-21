@@ -63,6 +63,8 @@ import { openServicesDialog } from './applications/prompts/services-dialog.ts';
 import { openSisterOfBattleDialog } from './applications/prompts/sister-of-battle-dialog.ts';
 import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.ts';
 import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.ts';
+import { registerAreaRegionBehavior } from './canvas/apply-condition-behavior.ts';
+import { registerAreaRegions, registerAreaRegionSocket } from './canvas/area-regions.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
@@ -391,6 +393,10 @@ export class HooksManager {
         // Per-scene gravity / weather / vacuum, its widget and its scene-control button (#604).
         // After the WH40K control group is registered, so the button joins it.
         registerSceneEnvironment();
+
+        // Areas as V14 Regions (#758): timed areas expire with their combat's rounds; the
+        // quick-template button joins the WH40K control group.
+        registerAreaRegions();
 
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();
@@ -1087,7 +1093,6 @@ export class HooksManager {
         // eslint-disable-next-line no-restricted-syntax -- boundary: WH40K config cast to internal system config type; no fvtt-types schema available
         CONFIG.wh40k = WH40K as unknown as WH40KSystemConfig;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
-        CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Replace Foundry's generic default status list with THIS system's
         // conditions (#495). Core's `dead` marker is kept (it backs DEFEATED and the
@@ -1165,6 +1170,9 @@ export class HooksManager {
         // Resolves each combatant's initiative formula from its actor's DataModel,
         // falling back to CONFIG.Combat.initiative above (#196).
         CONFIG.Combatant.documentClass = documents.WH40KCombatant;
+
+        // Areas as V14 Regions (#758): the behaviour that gives tokens inside a condition.
+        registerAreaRegionBehavior();
 
         // Token document and movement
         CONFIG.Token.documentClass = documents.TokenDocumentWH40K;
@@ -1417,6 +1425,7 @@ export class HooksManager {
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
         registerGMProxy();
         registerAttackCueSocket();
+        registerAreaRegionSocket();
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();

@@ -22,9 +22,12 @@ interface WeaponQualityHitEffect {
 
 /**
  * Where an area template's size comes from: the weapon's range (Spray's cone runs out
- * to the weapon's range) or the quality's `(X)` level (Blast (X) is X metres).
+ * to the weapon's range), the quality's `(X)` level (Blast (X) is X metres), or a dice
+ * formula the book prints (`sizeFormula`: a smokescreen 3d10 metres across).
  */
-export const WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES = ['', 'range', 'level'] as const;
+export const WEAPON_QUALITY_TEMPLATE_DISTANCE_SOURCES = ['', 'range', 'level', 'formula'] as const;
+/** Whether an area's size is its radius (Blast) or its diameter (a smokescreen "metres across", #758). */
+export const WEAPON_QUALITY_TEMPLATE_MEASURES = ['', 'radius', 'diameter'] as const;
 
 /** Where an area template sits: on the firer (Spray's cone) or the point of impact (Blast). */
 export const WEAPON_QUALITY_TEMPLATE_ANCHORS = ['', 'firer', 'impact'] as const;
@@ -57,6 +60,14 @@ export interface WeaponQualityTemplate {
     avoidUnbracedHeavyBonus: number | null;
     /** Hit location every hit from the area strikes (`body` for Spray), or blank to roll it. */
     hitLocation: string;
+    /** The area blocks sight through it (a smokescreen, #758). */
+    blocksSight: boolean;
+    /** The size as a dice formula in metres, for `distanceSource: 'formula'` (`3d10`). */
+    sizeFormula: string;
+    /** Whether the size is the area's radius or its diameter; blank reads as radius. */
+    measure: (typeof WEAPON_QUALITY_TEMPLATE_MEASURES)[number];
+    /** How many rounds the area lasts, as a dice formula (`1d10+10`); blank lasts until removed. */
+    duration: string;
 }
 
 /**

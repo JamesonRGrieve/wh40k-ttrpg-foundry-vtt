@@ -13,7 +13,7 @@ import { scaledMs } from './lib/timing';
  * Tier B coverage of area attacks (#599, #600) and the no-damage area card (#601) on
  * a live canvas, through the real attack path: the targeted action manager opens the
  * unified roll dialog, its `_systemRoll` resolves the attack with seeded dice, the
- * attack places its MeasuredTemplate, and the card's Resolve button reads the tokens
+ * attack places its area (a V14 Region, #758), and the card's Resolve button reads the tokens
  * inside the template and posts the results card.
  *
  * - Spray (DH2 Hand Flamer, 10 m cone): no attack roll; each creature in the cone
@@ -96,19 +96,34 @@ interface CardView {
     targets: Array<{ name: string; hit: boolean }>;
 }
 
+/** The attack areas on a scene, as Regions the system placed (#758), read back in metres. */
 async function templates(page: Page, sceneId: string): Promise<TemplateView> {
     return page.evaluate((id: string): TemplateView => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as {
             game: {
                 scenes: {
-                    get: (i: string) => { templates: { contents: Array<{ t: string; x: number; y: number; distance: number; angle: number }> } } | undefined;
+                    get: (i: string) =>
+                        | {
+                              dimensions: { distancePixels: number };
+                              regions: { contents: Array<{ shapes: Array<{ type: string; x: number; y: number; radius?: number; angle?: number }> }> };
+                          }
+                        | undefined;
                 };
             };
         };
-        const all = g.game.scenes.get(id)?.templates.contents ?? [];
-        const last = all.at(-1);
-        return { count: all.length, shape: last?.t ?? null, x: last?.x ?? 0, y: last?.y ?? 0, distance: last?.distance ?? 0, angle: last?.angle ?? 0 };
+        const scene = g.game.scenes.get(id);
+        const all = scene?.regions.contents ?? [];
+        const last = all.at(-1)?.shapes.at(0);
+        const ppu = scene?.dimensions.distancePixels ?? 1;
+        return {
+            count: all.length,
+            shape: last?.type ?? null,
+            x: last?.x ?? 0,
+            y: last?.y ?? 0,
+            distance: (last?.radius ?? 0) / ppu,
+            angle: last?.type === 'cone' ? last.angle ?? 0 : 0,
+        };
     }, sceneId);
 }
 
@@ -121,7 +136,7 @@ async function clearTemplates(page: Page, sceneId: string): Promise<void> {
                     get: (
                         i: string,
                     ) =>
-                        | { templates: { contents: Array<{ id: string }> }; deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]> }
+                        | { regions: { contents: Array<{ id: string }> }; deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]> }
                         | undefined;
                 };
             };
@@ -129,8 +144,8 @@ async function clearTemplates(page: Page, sceneId: string): Promise<void> {
         const scene = g.game.scenes.get(id);
         if (scene !== undefined)
             await scene.deleteEmbeddedDocuments(
-                'MeasuredTemplate',
-                scene.templates.contents.map((t) => t.id),
+                'Region',
+                scene.regions.contents.map((r) => r.id),
             );
     }, sceneId);
 }

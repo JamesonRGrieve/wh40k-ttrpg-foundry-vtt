@@ -145,6 +145,14 @@ const SETTINGS_TABLE = {
         config: true,
         default: false,
     }),
+    smokeBlindsInside: booleanSetting({
+        key: 'smoke-blinds-inside',
+        name: 'WH40K.SETTINGS.SmokeBlindsInside.Name',
+        hint: 'WH40K.SETTINGS.SmokeBlindsInside.Hint',
+        scope: 'world',
+        config: true,
+        default: false,
+    }),
     magazineBuilding: booleanSetting({
         key: 'magazine-building',
         name: 'WH40K.SETTINGS.MagazineBuilding.Name',
@@ -910,6 +918,13 @@ export class WH40KSettings {
      *  setting is registered (returns false). */
     static isMagazineBuildingEnabled(): boolean {
         return readSetting(T.magazineBuilding);
+    }
+
+    /** House rule (#758): a smokescreen gives tokens inside it Blinded while they stay.
+     *  Off by default — RAW smoke only blocks sight through it. Safe to call before the
+     *  setting is registered (returns false). */
+    static isSmokeBlindingInside(): boolean {
+        return readSetting(T.smokeBlindsInside);
     }
 
     /** Homebrew: track standard ammunition as inventory items. On, a starting

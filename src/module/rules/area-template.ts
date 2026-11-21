@@ -18,7 +18,7 @@ import { parseQualityLevel } from '../utils/quality-id.ts';
 import { isD100Success } from './_dice.ts';
 import type { ScatterDirection, ScatterVector } from './scatter.ts';
 import { resolveTemplateRadius } from './weapon-quality-effects.ts';
-import { getWeaponQualityMechanicsForId } from './weapon-quality-payloads.ts';
+import { getWeaponQualityMechanics, getWeaponQualityMechanicsForId } from './weapon-quality-payloads.ts';
 
 /** Placeable template shapes. Foundry draws `cone` and `circle` natively. */
 export type AreaShape = 'cone' | 'circle';
@@ -126,6 +126,55 @@ export function resolveAreaTemplate(specials: readonly AreaAttackSpecial[], weap
         };
     }
     return null;
+}
+
+/** A smokescreen one of the attack's qualities declares (#758). */
+export interface SmokeCloudSpec {
+    /** The base id of the quality (`smoke`). */
+    qualityId: string;
+    /** The size in metres when the quality's rating fixes it (Smoke (X)); null when `sizeFormula` is rolled. */
+    size: number | null;
+    /** The size as a dice formula in metres (`3d10`), or '' when `size` fixes it. */
+    sizeFormula: string;
+    /** Whether the size is the cloud's radius or its diameter. */
+    measure: 'radius' | 'diameter';
+    /** How many rounds it lasts, as a dice formula; '' lasts until removed. */
+    duration: string;
+}
+
+/**
+ * Resolve the smokescreen an attack's qualities declare: the first quality whose area
+ * blocks sight and whose size resolves (a rating for Smoke (X), a dice formula for the
+ * older lines' Smoke). Null when none does. The size, measure and duration are content
+ * data on the quality (Direction #7).
+ */
+export function resolveSmokeCloud(specials: readonly AreaAttackSpecial[], systemId?: string): SmokeCloudSpec | null {
+    for (const special of specials) {
+        const qualityId = qualityIdForAttackSpecial(special.name);
+        const level = numericLevel(special.level);
+        // A rated Smoke (X) and the older lines' unrated Smoke are different areas: a
+        // special carrying a rating reads the rated quality first.
+        const baseId = parseQualityLevel(qualityId).baseId;
+        const mechanics = (level !== null ? getWeaponQualityMechanics(`${baseId}-x`, systemId) : null) ?? getWeaponQualityMechanicsForId(qualityId, systemId);
+        const tpl = mechanics?.template;
+        if (tpl?.blocksSight !== true) continue;
+        const fromLevel = tpl.distanceSource === 'level' && level !== null && level > 0;
+        const fromFormula = tpl.distanceSource === 'formula' && tpl.sizeFormula !== '';
+        if (!fromLevel && !fromFormula) continue;
+        return {
+            qualityId: baseId,
+            size: fromLevel ? level : null,
+            sizeFormula: fromLevel ? '' : tpl.sizeFormula,
+            measure: tpl.measure === 'diameter' ? 'diameter' : 'radius',
+            duration: tpl.duration,
+        };
+    }
+    return null;
+}
+
+/** A smokescreen's radius in metres from its size and how the size is measured. */
+export function smokeCloudRadius(size: number, measure: SmokeCloudSpec['measure']): number {
+    return measure === 'diameter' ? size / 2 : size;
 }
 
 /** Whether any of the attack's qualities removes the attack roll (Spray: no BS test). */

@@ -29,7 +29,7 @@ import { test } from './lib/test';
  *   - `CONFIG.Token.rulerClass` (TokenRulerWH40K)
  *   - `CONFIG.Token.movement.costAggregator` (Math.max aggregator)
  *   - `CONFIG.Combat.initiative.formula`
- *   - `CONFIG.MeasuredTemplate.defaults.angle`
+ *   - `CONFIG.RegionBehavior.dataModels.applyCondition` (areas as Regions, #758)
  *   - `CONFIG.Dice.rolls` carrying BasicRollWH40K + D100Roll
  *   - `CONFIG.wh40k` (system rules config)
  *   - `CONFIG.Actor.dataModels[<type>]` for every (system, role) pair plus
@@ -64,7 +64,7 @@ const FOUNDRY_CONFIG_FLOWS = [
     'config::Token.movement.costAggregator',
     // --- CONFIG misc system-installed values ---
     'config::Combat.initiative.formula',
-    'config::MeasuredTemplate.defaults.angle',
+    'config::RegionBehavior.applyCondition',
     'config::Dice.rolls.BasicRollWH40K',
     'config::Dice.rolls.D100Roll',
     'config::wh40k.config-installed',
@@ -203,7 +203,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[] }
                 ChatMessage?: DocumentClass;
                 Token?: TokenConfig;
                 Combat?: { initiative?: { formula?: string } };
-                MeasuredTemplate?: { defaults?: { angle?: number } };
+                RegionBehavior?: { dataModels?: Record<string, object | undefined> };
                 Dice?: { rolls?: Array<{ name?: string }> };
                 wh40k?: Wh40kNamespace;
                 TextEditor?: { enrichers?: Array<{ pattern?: RegExp | string }> };
@@ -291,7 +291,7 @@ async function probeFoundryConfig(page: Page): Promise<{ results: FlowResult[] }
                 const f = cfg?.Combat?.initiative?.formula;
                 return typeof f === 'string' && f.includes('initiative');
             });
-            guarded('config::MeasuredTemplate.defaults.angle', () => cfg?.MeasuredTemplate?.defaults?.angle === 30);
+            guarded('config::RegionBehavior.applyCondition', () => typeof cfg?.RegionBehavior?.dataModels?.['applyCondition'] === 'function');
             guarded('config::Dice.rolls.BasicRollWH40K', () => {
                 const rolls = cfg?.Dice?.rolls;
                 if (!Array.isArray(rolls)) return 'CONFIG.Dice.rolls is not an array';

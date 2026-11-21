@@ -505,24 +505,25 @@ async function riderAreaOf(page: Page, messageId: string): Promise<RiderAreaRead
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as {
             game: {
-                messages: { get: (i: string) => { getFlag: (s: string, k: string) => { templateId?: string } | undefined } | undefined };
+                messages: { get: (i: string) => { getFlag: (s: string, k: string) => { regionId?: string } | undefined } | undefined };
                 user: { targets: { first: () => { center: CanvasPoint } | undefined } };
             };
             canvas: {
-                scene: { templates: { get: (i: string) => { x: number; y: number; distance: number } | undefined } };
+                scene: { regions: { get: (i: string) => { shapes: Array<{ x: number; y: number; radius: number }> } | undefined } };
                 dimensions: { distancePixels: number };
             };
         };
         const flag = g.game.messages.get(id)?.getFlag('wh40k-rpg', 'grenadeRider');
-        const template = flag?.templateId === undefined ? undefined : g.canvas.scene.templates.get(flag.templateId);
+        // The rider's area is a Region (#758); its circle's radius is in pixels.
+        const template = flag?.regionId === undefined ? undefined : g.canvas.scene.regions.get(flag.regionId)?.shapes.at(0);
         const target = g.game.user.targets.first();
         if (template === undefined || target === undefined) return null;
         const ppu = g.canvas.dimensions.distancePixels;
-        const radius = template.distance * ppu;
+        const radius = template.radius;
         return {
-            templateId: flag?.templateId ?? '',
+            templateId: flag?.regionId ?? '',
             onTarget: Math.hypot(template.x - target.center.x, template.y - target.center.y) < 1,
-            radius: template.distance,
+            radius: template.radius / ppu,
             points: [
                 { x: template.x - radius, y: template.y - radius },
                 { x: template.x + radius, y: template.y + radius },
@@ -662,7 +663,7 @@ async function removeTemplate(page: Page, templateId: string): Promise<void> {
     await page.evaluate(async (id: string) => {
         // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
         const g = globalThis as unknown as { canvas: { scene: { deleteEmbeddedDocuments: (type: string, ids: string[]) => Promise<object[]> } } };
-        await g.canvas.scene.deleteEmbeddedDocuments('MeasuredTemplate', [id]);
+        await g.canvas.scene.deleteEmbeddedDocuments('Region', [id]);
     }, templateId);
 }
 

@@ -539,6 +539,9 @@
                 ]
             }
         },
+        "RegionBehavior": {
+            "applyCondition": {}
+        },
         "JournalEntryPage": {}
     },
     "packs": [],

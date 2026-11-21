@@ -720,7 +720,15 @@ recordDimension('advancement-career.flow', covered['advancement-career.flow'], A
 
 // A DH1 character gets its career and home world (content#43, #44), tests/e2e/dh1-career-content.spec.ts.
 // Keep in sync with DH1_CAREER_FLOWS there.
-const DH1_CAREER_FLOWS = ['rank1-advances-listed', 'advance-bought', 'levelled-advance-shown', 'rank-from-experience', 'branch-chosen', 'gm-override-rank', 'feral-world-dh1'];
+const DH1_CAREER_FLOWS = [
+    'rank1-advances-listed',
+    'advance-bought',
+    'levelled-advance-shown',
+    'rank-from-experience',
+    'branch-chosen',
+    'gm-override-rank',
+    'feral-world-dh1',
+];
 recordDimension('dh1-career.flow', covered['dh1-career.flow'], DH1_CAREER_FLOWS);
 
 // An NPC's printed skill line parses to clean rows (#726), tests/e2e/npc-skill-import.spec.ts.
@@ -891,6 +899,19 @@ const AREA_ATTACK_FLOWS = [
     'no-damage-area-card',
 ];
 recordDimension('area-attack.flow', covered['area-attack.flow'], AREA_ATTACK_FLOWS);
+
+// Smokescreens and the Quick Template tool as Regions (#758),
+// tests/e2e/smoke-and-quick-template.spec.ts. Keep in sync with AREA_REGION_FLOWS there.
+const AREA_REGION_FLOWS = [
+    'smoke-places-cloud',
+    'smoke-blocks-sight',
+    'smoke-card-states-cloud',
+    'smoke-blinds-inside-when-set',
+    'smoke-blind-lifts-on-leaving',
+    'quick-template-places-region',
+    'quick-template-blinds-inside',
+];
+recordDimension('area-region.flow', covered['area-region.flow'], AREA_REGION_FLOWS);
 
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
@@ -2159,7 +2180,7 @@ const FOUNDRY_CONFIG_FLOWS = [
     'config::Token.rulerClass',
     'config::Token.movement.costAggregator',
     'config::Combat.initiative.formula',
-    'config::MeasuredTemplate.defaults.angle',
+    'config::RegionBehavior.applyCondition',
     'config::Dice.rolls.BasicRollWH40K',
     'config::Dice.rolls.D100Roll',
     'config::wh40k.config-installed',

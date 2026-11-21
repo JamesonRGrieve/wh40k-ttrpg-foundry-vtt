@@ -1,5 +1,5 @@
 import ConfirmationDialog from '../applications/dialogs/confirmation-dialog.ts';
-import { activeTokenOf, placeAreaTemplate } from '../canvas/area-template-canvas.ts';
+import { activeTokenOf, placeAreaTemplate, placeSmokeCloud } from '../canvas/area-template-canvas.ts';
 import { comradeRulesFor } from '../config/game-systems/index.ts';
 import type { GameSystemId } from '../config/game-systems/types.ts';
 import { SYSTEM_ID } from '../constants.ts';
@@ -9,7 +9,7 @@ import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import { refundAmmo, useAmmo } from '../rules/ammo.ts';
-import type { AreaTargetResult, AreaTemplateSpec } from '../rules/area-template.ts';
+import { type AreaTargetResult, type AreaTemplateSpec, type SmokeCloudSpec, smokeCloudRadius } from '../rules/area-template.ts';
 import { hitsForDegrees, isBurstAction } from '../rules/auto-fire.ts';
 import { isChargeAction } from '../rules/combat-actions.ts';
 import { autoFailingConditions, helplessAutoHitConditions, rolledCharacteristic } from '../rules/condition-mechanics.ts';
@@ -707,9 +707,9 @@ export class ActionData {
             // auto-fail, a jam) can have a roll at or under the target.
             this.rollData.dof = Math.max(1, 1 + getDegreeForMode(degreesMethod, this.rollData.roll?.total ?? 0, this.rollData.modifiedTarget));
 
-            // An area weapon's miss scatters its template instead (prepareAreaAttack),
+            // An area weapon's or a smokescreen's miss scatters it instead (prepareAreaAttack),
             // which reports the direction and distance it actually rolled.
-            if (weaponRollData.isThrown && this.#areaTemplate() === null) {
+            if (weaponRollData.isThrown && this.#areaTemplate() === null && weaponRollData.smokeCloud === null) {
                 this.addEffect(t(EFFECT_TITLE.deviation), t('WH40K.ActionEffect.Deviation', { direction: scatterDirection() }));
             }
 
@@ -863,36 +863,68 @@ export class ActionData {
     }
 
     /**
-     * Place the area attack's template and state its mechanic on the card (#599, #600).
-     * A firer-anchored cone sits on the attacker pointing at the target; an impact
-     * template sits on the target, and on a miss it scatters (1d10 direction on the
-     * scatter diagram, 1d5 metres) and is centred where the shot lands. The creatures
-     * inside are resolved later from the card, after the user has adjusted it.
+     * Place the attack's areas and state them on the card (#599, #600, #758).
+     *
+     * - The area attack's own template: a firer-anchored cone sits on the attacker pointing
+     *   at the target; an impact template sits on the target. The creatures inside are
+     *   resolved later from the card.
+     * - A smokescreen (Smoke): a sight-blocking cloud at the impact point, sized and timed
+     *   by its quality, removed when its rounds run out.
+     *
+     * On a miss an impact area scatters (1d10 direction on the scatter diagram, 1d5 metres)
+     * and is centred where the shot lands; both areas share the one scatter.
      */
     async prepareAreaAttack(): Promise<void> {
         const rollData = this.rollData;
-        if (!(rollData instanceof WeaponRollData) || rollData.areaTemplate === null) return;
+        if (!(rollData instanceof WeaponRollData)) return;
         const spec = rollData.areaTemplate;
-        rollData.areaResults = [];
-        rollData.areaStatement = localizeAreaStatement(spec, rollData.noAttackRoll);
-
-        let scatter: ScatterVector | null = null;
-        if (spec.anchor === 'impact' && !rollData.success) {
-            const metres = await new Roll(SCATTER_DISTANCE_FORMULA).evaluate();
-            scatter = buildScatterVector(rollScatterDirection(), metres.total);
-            this.addEffect(
-                t(EFFECT_TITLE.deviation),
-                t('WH40K.AreaAttack.Scatter', { metres: scatter.metres, direction: labelForDirection(scatter.direction) }),
-            );
+        const smoke = rollData.smokeCloud;
+        if (spec === null && smoke === null) return;
+        if (spec !== null) {
+            rollData.areaResults = [];
+            rollData.areaStatement = localizeAreaStatement(spec, rollData.noAttackRoll);
         }
+
+        const scattersOnMiss = smoke !== null || spec?.anchor === 'impact';
+        const scatter = scattersOnMiss && !rollData.success ? await this.#rollScatter() : null;
 
         const firer = activeTokenOf(rollData.sourceActor);
         if (firer === null) {
             ui.notifications.warn(t('WH40K.AreaAttack.NoCanvas'));
             return;
         }
-        rollData.areaTemplateRef = await placeAreaTemplate(spec, firer, activeTokenOf(rollData.targetActor), scatter);
-        if (rollData.areaTemplateRef !== null) ui.notifications.info(t('WH40K.AreaAttack.Placed', { quality: areaQualityLabel(spec) }));
+        const target = activeTokenOf(rollData.targetActor);
+        if (spec !== null) {
+            rollData.areaTemplateRef = await placeAreaTemplate(spec, firer, target, spec.anchor === 'impact' ? scatter : null);
+            if (rollData.areaTemplateRef !== null) ui.notifications.info(t('WH40K.AreaAttack.Placed', { quality: areaQualityLabel(spec) }));
+        }
+        if (smoke !== null) await this.#placeSmoke(smoke, firer, target, scatter);
+    }
+
+    /** Roll where a missed impact area lands, and say so on the card. */
+    async #rollScatter(): Promise<ScatterVector> {
+        const metres = await new Roll(SCATTER_DISTANCE_FORMULA).evaluate();
+        const scatter = buildScatterVector(rollScatterDirection(), metres.total);
+        this.addEffect(t(EFFECT_TITLE.deviation), t('WH40K.AreaAttack.Scatter', { metres: scatter.metres, direction: labelForDirection(scatter.direction) }));
+        return scatter;
+    }
+
+    /** Roll a smokescreen's size and duration, place it, and state it on the card (#758). */
+    async #placeSmoke(
+        smoke: SmokeCloudSpec,
+        firer: NonNullable<ReturnType<typeof activeTokenOf>>,
+        target: ReturnType<typeof activeTokenOf>,
+        scatter: ScatterVector | null,
+    ): Promise<void> {
+        const size = smoke.size ?? (await new Roll(smoke.sizeFormula).evaluate()).total;
+        const rounds = smoke.duration === '' ? null : (await new Roll(smoke.duration).evaluate()).total;
+        const ref = await placeSmokeCloud(smokeCloudRadius(size, smoke.measure), rounds, WH40KSettings.isSmokeBlindingInside(), firer, target, scatter);
+        if (ref === null) return;
+        const across = smoke.measure === 'diameter' ? size : size * 2;
+        this.addEffect(
+            t('WH40K.Area.Smoke.Title'),
+            rounds === null ? t('WH40K.Area.Smoke.PlacedUntilRemoved', { metres: across }) : t('WH40K.Area.Smoke.Placed', { metres: across, rounds }),
+        );
     }
 
     /** The declared target, as an allocation entry. Falls back to an unnamed placeholder. */

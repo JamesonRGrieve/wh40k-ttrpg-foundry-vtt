@@ -14,6 +14,7 @@ import { type CueRenderer, cueSoundVolume, selectCueRenderer } from '../rules/at
 import { type CueAnchor, type CueEvent, type CuePlan, type CuePoint, type CuePreset, type CueStep, missPoint } from '../rules/attack-cue.ts';
 import { tintColour } from '../rules/cue-common.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { areaGeometry } from './area-regions.ts';
 import { playCueSound, prefersReducedMotion } from './cue-media.ts';
 
 /** How long a travelling visual (a shot, a swing, a cone) takes, in ms. Matches the mapping's travel time. */
@@ -108,12 +109,12 @@ function tokenCentre(tokenId: string): CuePoint | null {
     return token === undefined ? null : { x: token.center.x, y: token.center.y };
 }
 
-function templatePlacement(templateId: string): TemplatePlacement | null {
-    const doc = canvas.scene?.templates.get(templateId);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- boundary: `canvas.dimensions` is null until a scene is drawn
-    const perUnit = canvas.dimensions?.distancePixels;
-    if (doc === undefined || perUnit === undefined) return null;
-    return { origin: { x: doc.x, y: doc.y }, reach: doc.distance * perUnit, direction: doc.direction, angle: doc.angle };
+/** The placement of the attack's area Region (#758), by its id on the viewed scene. */
+function templatePlacement(regionId: string): TemplatePlacement | null {
+    const sceneId = canvas.scene?.id;
+    if (sceneId === undefined) return null;
+    const geometry = areaGeometry(sceneId, regionId);
+    return geometry === null ? null : { origin: geometry.origin, reach: geometry.reach, direction: geometry.direction, angle: geometry.angle };
 }
 
 function resolveAnchor(anchor: CueAnchor): CuePoint | null {
