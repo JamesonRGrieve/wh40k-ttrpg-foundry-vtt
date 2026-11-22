@@ -1,8 +1,10 @@
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { type CharacteristicGenerationRules, DEFAULT_CHARACTERISTIC_GENERATION } from '../../rules/characteristic-generation.ts';
 import { buildApplicationV2Api, type Constructor, type FakeApplicationV2 } from '../../testing/app-v2-stub.ts';
 import { asOriginPathBuilder } from '../../testing/builder-stub.ts';
 import { installFoundryDataStub } from '../../testing/foundry-data-stub.ts';
 import { readRepoFile } from '../../testing/repo-file.ts';
+import { rememberLineVariantSource } from '../../utils/item-variant-utils.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import type { GrantSourceSystem } from './origin-grant-plans.ts';
 import type { PointBuyRules } from './point-buy.ts';
@@ -130,10 +132,9 @@ vi.mock('../../wh40k-rpg-settings.ts', () => ({
     WH40KSettings: {
         isHomebrew: () => false,
         getRuleset: () => 'raw',
-        // Deterministic generation primitives for the point-buy / roll suites.
-        // Base = 20 (offset 0); pool = 100. These mirror the production
-        // defaults so the pure-logic assertions read in real units.
-        getCharacteristicBase: () => 20,
+        // Deterministic generation primitives for the point-buy / roll suites:
+        // the line's base with offset 0; pool = 100 (#760).
+        getCharacteristicBase: (lineBase = 25) => lineBase,
         getCharacteristicOffset: () => 0,
         getCharacteristicPointBuyPool: () => 100,
     },
@@ -1660,7 +1661,16 @@ interface PointBuyHost {
     _pointBuyRules: () => PointBuyRules;
     _selectionSystems: () => GrantSourceSystem[];
     _characteristicBase: () => number;
+    _generationRules: () => CharacteristicGenerationRules;
+    _getOriginCharacteristicBonuses: () => { totals: Record<string, number>; breakdowns: Record<string, { source: string; value: number }[]> };
 }
+
+/** A line rolling and allocating on 20 with a cap of 40: the units these suites assert in. */
+const TEST_RULES: CharacteristicGenerationRules = {
+    ...DEFAULT_CHARACTERISTIC_GENERATION,
+    roll: { ...DEFAULT_CHARACTERISTIC_GENERATION.roll, base: 20 },
+    pointBuy: { ...DEFAULT_CHARACTERISTIC_GENERATION.pointBuy, base: 20 },
+};
 
 function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
     const host: PointBuyHost = {
@@ -1676,6 +1686,8 @@ function makePointBuyHost(overrides: Partial<PointBuyHost> = {}): PointBuyHost {
         _pointBuyRules: (): PointBuyRules => proto._pointBuyRules.call(host),
         _selectionSystems: () => [],
         _characteristicBase: (): number => proto._characteristicBase.call(host),
+        _generationRules: () => TEST_RULES,
+        _getOriginCharacteristicBonuses: () => ({ totals: {}, breakdowns: {} }),
         ...overrides,
     };
     return host;
@@ -1783,6 +1795,8 @@ interface RollHost {
     _charGenMode: 'point-buy' | 'roll' | 'roll-pool-hb';
     _charRolls: number[];
     _charAssignments: Record<string, number | null>;
+    _generationRules: () => CharacteristicGenerationRules;
+    _getOriginCharacteristicBonuses: () => { totals: Record<string, number>; breakdowns: Record<string, { source: string; value: number }[]> };
 }
 
 function makeRollHost(): RollHost {
@@ -1790,6 +1804,8 @@ function makeRollHost(): RollHost {
         _charGenMode: 'roll',
         _charRolls: Array<number>(9).fill(0),
         _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+        _generationRules: () => TEST_RULES,
+        _getOriginCharacteristicBonuses: () => ({ totals: {}, breakdowns: {} }),
     };
 }
 
@@ -1843,6 +1859,8 @@ describe('OriginPathBuilder._hasAssignedCharacteristics across modes', () => {
             _charGenMode: 'roll-pool-hb',
             _charRolls: Array<number>(9).fill(0),
             _charAssignments: Object.fromEntries(GEN_CHARS.map((k) => [k, null])),
+            _generationRules: () => TEST_RULES,
+            _getOriginCharacteristicBonuses: () => ({ totals: {}, breakdowns: {} }),
         };
         expect(proto._hasAssignedCharacteristics.call(host)).toBe(false);
         // Assign a full bank in order with positive values.
@@ -2075,5 +2093,44 @@ describe('committing the path saves the doubled-aptitude swaps (#738)', () => {
         const created = body.indexOf("createEmbeddedDocuments('Item', cleanOriginItems");
         expect(created).toBeGreaterThan(0);
         expect(body.indexOf('await saveElectiveAptitudes.call(this);')).toBeGreaterThan(created);
+    });
+});
+
+describe('OriginPathBuilder._originForLine (#760)', () => {
+    // A home world as its pack stores it: characteristic modifiers per line. Loading
+    // collapsed it to the WORLD's line, so a builder of another line lost them.
+    const forgeWorld = {
+        id: 'DH2FrgWld0000002',
+        uuid: 'Compendium.wh40k-rpg.dh2-core-origins-homeworlds.Item.DH2FrgWld0000002',
+        name: 'Forge World',
+        img: 'icons/forge.webp',
+        type: 'originPath',
+        _source: { system: { modifiers: { characteristics: {} } } },
+    };
+    rememberLineVariantSource(forgeWorld, {
+        step: 'homeWorld',
+        modifiers: {
+            dh2: { characteristics: { intelligence: 5, toughness: 5, fellowship: -5 } },
+            dh1: { characteristics: { intelligence: 5, toughness: 5 } },
+        },
+    });
+
+    it("resolves the origin's system for the builder's own line, not the world's", () => {
+        const host = { gameSystem: 'dh2' };
+        const source = proto._originForLine.call(host, forgeWorld) as { name: string; system: { modifiers: { characteristics: Record<string, number> } } };
+        expect(source.name).toBe('Forge World');
+        expect(source.system.modifiers.characteristics).toEqual({ intelligence: 5, toughness: 5, fellowship: -5 });
+    });
+
+    it('reads an origin with no per-line variants as it is', () => {
+        const plain = {
+            id: 'x',
+            uuid: 'Compendium.x',
+            name: 'Plain',
+            img: null,
+            type: 'originPath',
+            system: { modifiers: { characteristics: { strength: 5 } } },
+        };
+        expect(proto._originForLine.call({ gameSystem: 'dh2' }, plain)).toBe(plain);
     });
 });

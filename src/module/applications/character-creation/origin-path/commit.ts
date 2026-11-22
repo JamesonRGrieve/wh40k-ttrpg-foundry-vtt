@@ -881,7 +881,6 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             // stacking. Always runs (even with 0 points spent) so an origin
             // bonus still lands on a characteristic the player left at base.
             const originModSums = this._collectOriginCharacteristicBonuses();
-            const settingDefaultBase = this._characteristicBase();
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.update() accepts an untyped path-keyed payload; Record<string,unknown> is the documented pattern
             const charUpdate: Record<string, unknown> = {
                 'system.characterGeneration.customBases.enabled': this._charAdvancedMode,
@@ -890,7 +889,8 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
             for (const key of CHARS) {
                 charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
                 charUpdate[`system.characterGeneration.pointBuy.${key}`] = Math.max(0, this._charPointBuy[key] ?? 0);
-                const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] || settingDefaultBase : settingDefaultBase;
+                // The line's point-buy base (DH2: 25), not the roll base (#760).
+                const baseDefault = this._pointBuyBaseFor(key);
                 const points = Math.max(0, this._charPointBuy[key] ?? 0);
                 const originBonus = originModSums[key] ?? 0;
                 // Skip characteristics with nothing to write so we don't wipe
@@ -934,7 +934,9 @@ export async function commit(this: OriginPathBuilder, _event: Event, _target: HT
                 // characteristic that wasn't assigned this commit — the
                 // exact "<20 everywhere" regression players hit.
                 if (rolled <= 0 && originBonus === 0) continue;
-                charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
+                // DH2's roll mode turns the origin's + / − into the dice instead (#760).
+                const addedBonus = this._originAddsToRoll(originBonus) ? originBonus : 0;
+                charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + addedBonus;
             }
             await this.actor.update(charUpdate);
         }

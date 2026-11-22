@@ -7,6 +7,7 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -44,6 +45,9 @@ export const RT_ACQUISITION_LADDER = {
 } as const satisfies AcquisitionLadder;
 
 export class RTSystemConfig extends CareerBasedSystemConfig {
+    /** RT: 2d10 + 25, then the origins' modifiers. (#760) */
+    override readonly characteristicGeneration = flatGeneration(25);
+
     readonly id = 'rt' as const;
     /** Rogue Trader's origin path can be walked backward as well as forward. */
     override readonly dosDamageDie = true;

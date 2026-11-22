@@ -443,7 +443,7 @@ export function rebaseLineVariantContent(
  * A canonical item document as the owner-line resolution reads it: its type
  * (which names the system DataModel) and its flattened stored source.
  */
-interface LineVariantDocument {
+export interface LineVariantDocument {
     type: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: untyped Foundry document source system
     _source?: { system?: Record<string, unknown> } | undefined;

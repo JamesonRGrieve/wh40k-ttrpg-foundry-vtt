@@ -7,6 +7,7 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { type ArmourCraftsmanshipTable, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { isStoredRank } from '../../rules/career-rank.ts';
+import { type CharacteristicGenerationRules, DEFAULT_CHARACTERISTIC_GENERATION } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -344,6 +345,13 @@ export abstract class BaseSystemConfig {
      * armour craftsmanship gets none.
      */
     readonly armourCraftsmanship: ArmourCraftsmanshipTable = NO_ARMOUR_CRAFTSMANSHIP;
+
+    /**
+     * How this line generates characteristics (#760): the dice and base per
+     * characteristic, how the origins' characteristic modifiers apply, point
+     * allocation, and any experienced variant. See `rules/characteristic-generation.ts`.
+     */
+    readonly characteristicGeneration: CharacteristicGenerationRules = DEFAULT_CHARACTERISTIC_GENERATION;
 
     // ── Starting Resources ────────────────────────────────────────
 

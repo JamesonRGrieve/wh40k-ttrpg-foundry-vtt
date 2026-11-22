@@ -6,6 +6,7 @@
 import { identifierFromName } from '../../data/fields/identifier-utils.ts';
 import { DW_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -18,6 +19,9 @@ import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
+    /** DW: 2d10 + 30, then the chapter's modifiers. (#760) */
+    override readonly characteristicGeneration = flatGeneration(30);
+
     readonly id = 'dw' as const;
     override readonly dosDamageDie = true;
     override readonly characterSheet: CharacterSheetCapabilities = {

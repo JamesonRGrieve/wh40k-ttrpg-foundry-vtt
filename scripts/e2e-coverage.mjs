@@ -913,6 +913,11 @@ const AREA_REGION_FLOWS = [
 ];
 recordDimension('area-region.flow', covered['area-region.flow'], AREA_REGION_FLOWS);
 
+// Character generation per line (#760), tests/e2e/char-gen-line-rules.spec.ts.
+// Keep in sync with CHAR_GEN_LINE_RULES there.
+const CHAR_GEN_LINE_RULES = ['dh2-home-world-keeps-dice', 'dh2-roll-adds-no-home-world-bonus', 'dh2-point-buy-start-and-cap', 'rt-rolls-on-25'];
+recordDimension('char-gen.line-rule', covered['char-gen.line-rule'], CHAR_GEN_LINE_RULES);
+
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
 const DAMAGE_PROFILE_FLOWS = [

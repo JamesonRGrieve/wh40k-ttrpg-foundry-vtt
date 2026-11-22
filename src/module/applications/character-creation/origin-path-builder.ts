@@ -16,6 +16,7 @@ import type { AvailabilityConfig } from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisition-ladder.ts';
+import { type CharacteristicGenerationRules, characteristicDice, originModifierAddsToRoll, pointBuyStart } from '../../rules/characteristic-generation.ts';
 import { divinationMaxim } from '../../rules/divination.ts';
 import { eliteCharge, grantedEliteSources } from '../../rules/elite-advances.ts';
 import { activeRulesetVariant, isHomebrewVariant } from '../../rules/ruleset-variant.ts';
@@ -23,6 +24,7 @@ import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global
 import type { I18nKey } from '../../types/i18n-keys';
 import { resolvePack } from '../../utils/compendium-query.ts';
 import { capitalize } from '../../utils/format.ts';
+import { canonicalSystemForLine, type LineVariantDocument } from '../../utils/item-variant-utils.ts';
 import { builderPacks, lineCategoryPack } from '../../utils/line-packs.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { iterateResolvedChoices } from '../../utils/origin-choices.ts';
@@ -90,6 +92,13 @@ interface FoundryApplicationsApi {
 // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.applications is Foundry's untyped namespace; FoundryApplicationsApi describes the shape this file uses
 const { ApplicationV2, HandlebarsApplicationMixin } = (foundry.applications as unknown as FoundryApplicationsApi).api;
 
+/** The fields of an origin document `_originForLine` reads (#760). */
+interface OriginDocumentView extends LineVariantDocument {
+    readonly id: string | null;
+    readonly uuid: string | null;
+    readonly name: string;
+    readonly img?: string | null | undefined;
+}
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
     declare actor: WH40KBaseActor;
     declare gameSystem: GameSystemId;
@@ -265,21 +274,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static GENERATION_CHARACTERISTICS = GENERATION_CHARACTERISTICS;
 
     /**
-     * Maximum starting characteristic value (base + points spent) during
-     * point-buy generation. DH2e caps a created characteristic at 40 before
-     * advances/origin bonuses (#223). Origin-path bonuses are separate grants
-     * and may legitimately push the displayed total above this.
-     */
-    static CHARACTERISTIC_GEN_MAX = 40;
-
-    /**
      * Dice expression rolled for the bonus added on top of the characteristic
      * base in BOTH dice-driven modes (`roll-pool-hb` shared bank and per-slot
      * `roll`). The full characteristic is `base (settings) + this roll +
      * origin bonus`; this constant is the roll part only. Shared here so the
      * two modes stay in lock-step rather than each carrying its own literal
-     * (DRY — was previously inlined in `#rollCharacteristicsBank`). The base
-     * value itself is sourced from `WH40KSettings.getCharacteristicBase()`.
+     * (DRY — was previously inlined in `#rollCharacteristicsBank`). It is the
+     * homebrew shared-pool mode's dice; `roll` mode rolls the line's own dice
+     * (`rules/characteristic-generation.ts`, #760).
      */
     static CHARACTERISTIC_ROLL_FORMULA = CHARACTERISTIC_ROLL_FORMULA;
 
@@ -307,7 +309,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const assignments = genData.assignments ?? {};
         const customBases = genData.customBases ?? {};
         const pointBuy = genData.pointBuy ?? {};
-        const defaultBase = WH40KSettings.getCharacteristicBase();
+        const defaultBase = WH40KSettings.getCharacteristicBase(this.registryConfig.characteristicGeneration.roll.base);
 
         for (const key of CHARS) {
             this._charAssignments[key] = assignments[key] ?? null;
@@ -605,14 +607,27 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return Array.from(this.selections.values(), (selection) => this._getSelectionSystem(selection));
     }
 
+    /** The line's characteristic generation rules (#760). */
+    _generationRules(): CharacteristicGenerationRules {
+        return this.registryConfig.characteristicGeneration;
+    }
+
     /**
      * The base added to each characteristic roll: the chosen race's (BC Chaos
-     * Space Marine: 30, #727) plus the world's offset, else the world setting
-     * (25 + offset).
+     * Space Marine: 30, #727), else the line's (#760), plus the world's offset.
      */
     _characteristicBase(): number {
         const raceBase = resolveCreationOverrides(this._selectionSystems()).characteristicBase;
-        return raceBase === null ? WH40KSettings.getCharacteristicBase() : raceBase + WH40KSettings.getCharacteristicOffset();
+        return WH40KSettings.getCharacteristicBase(raceBase ?? this._generationRules().roll.base);
+    }
+
+    /**
+     * Whether a characteristic's origin modifier is added to its rolled value. In
+     * `roll` mode a line like DH2 turns the origin's + and − characteristics into
+     * 3d10 keep-highest / keep-lowest instead; the homebrew shared pool always adds it.
+     */
+    _originAddsToRoll(originModifier: number): boolean {
+        return this._charGenMode !== 'roll' || originModifierAddsToRoll(this._generationRules(), originModifier);
     }
 
     /** Starting XP: the chosen race's (BC Chaos Space Marine: 500, #727), else the line's. */
@@ -686,6 +701,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Load all origins from compendium
      * @private
      */
+    /**
+     * An origin document as this builder's line reads it (#760). A compendium or world
+     * item is collapsed to the WORLD's line when it loads, so a character of another
+     * line saw that line's characteristic modifiers, or none: a DH2 home world in a
+     * world of another line lost its + and −. Its system is resolved for the builder's
+     * own line from the item's recorded per-line source; an item with no per-line
+     * variants is read as it is.
+     */
+    // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin reads a raw Foundry document shape (id, uuid, name, img, _source, system)
+    _originForLine(doc: OriginDocumentView): Record<string, unknown> {
+        const system = canonicalSystemForLine(doc, this.gameSystem);
+        // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw document shape and validates structurally
+        if (system === null) return doc as unknown as Record<string, unknown>;
+        return { _id: doc.id, uuid: doc.uuid, name: doc.name, img: doc.img, _source: doc._source, system };
+    }
+
     async _loadOrigins(): Promise<void> {
         if (this._originsLoaded) return;
         this._originsLoaded = true;
@@ -702,8 +733,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Filter and normalize
             const origins = documents.filter((d): d is typeof d & { type: string } => (d as { type?: string }).type === 'originPath');
             for (const d of origins) if (typeof d.id === 'string') seen.add(d.id);
-            // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw compendium document shape and validates structurally
-            allOriginPaths.push(...origins.map((d) => normalizeOrigin(d as unknown as Record<string, unknown>)));
+            // eslint-disable-next-line no-restricted-syntax -- boundary: CompendiumCollection.getDocuments() returns the untyped document union; these are the Item packs' originPath items
+            allOriginPaths.push(...origins.map((d) => normalizeOrigin(this._originForLine(d as unknown as WH40KItem))));
         }
 
         // Homebrew conversions into this line live in their own line's packs, with no stub here (content#38).
@@ -724,8 +755,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     ? true
                     : declaredSystem === this.gameSystem || declaredSystems.includes(this.gameSystem);
             if (!matchesSystem) continue;
-            // eslint-disable-next-line no-restricted-syntax -- boundary: normalizeOrigin accepts the raw document shape and validates structurally
-            const normalized = normalizeOrigin(doc as unknown as Record<string, unknown>);
+            const normalized = normalizeOrigin(this._originForLine(doc));
             normalized.fromWorld = true;
             allOriginPaths.push(normalized);
         }
@@ -959,7 +989,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // see fix in input handler) falls back to DEFAULT_BASE rather
             // than zero-out the rendered preview.
             const base = this._charAdvancedMode ? this._charCustomBases[key] || DEFAULT_BASE : DEFAULT_BASE;
-            const originBonus = originBonuses.totals[key] ?? 0;
+            const rawOriginBonus = originBonuses.totals[key] ?? 0;
+            // In DH2's roll mode the origin's + / − characteristic changes the dice
+            // (3d10 keep highest / lowest two) rather than adding to the result.
+            const originBonus = this._originAddsToRoll(rawOriginBonus) ? rawOriginBonus : 0;
+            const keepDiceLabel: I18nKey | null =
+                originBonus === rawOriginBonus ? null : rawOriginBonus > 0 ? 'WH40K.CharGen.KeepHighest' : 'WH40K.CharGen.KeepLowest';
             const total = rollValue !== null ? base + rollValue + originBonus : null;
 
             return {
@@ -975,6 +1010,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 originBonusTooltipData: this._formatOriginBonusTooltipData(originBonuses.breakdowns[key] ?? []),
                 assignedIndex,
                 total,
+                keepDiceLabel,
                 hasRoll: rollValue !== null,
             };
         });
@@ -1019,10 +1055,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 hasOriginBonusTooltip: (originBonuses.breakdowns[key] ?? []).length > 0,
                 originBonusTooltip: this._formatOriginBonusTooltip(originBonuses.breakdowns[key] ?? []),
                 originBonusTooltipData: this._formatOriginBonusTooltipData(originBonuses.breakdowns[key] ?? []),
-                total: base + points + originBonus,
-                // A +1 can only be added while the pool has headroom AND base+points
-                // is still under the generation cap (DH2e: 40).
-                canIncrease: pointBuyRemaining > 0 && base + points < OriginPathBuilder.CHARACTERISTIC_GEN_MAX,
+                total: pointBuyStart(base, originBonus) + points,
+                // A +1 can only be added while the pool has headroom AND the score is
+                // still under the line's cap. DH2: a + characteristic starts at 30 and
+                // still stops at 40 (#760).
+                canIncrease: pointBuyRemaining > 0 && pointBuyStart(base, originBonus) + points < this._generationRules().pointBuy.cap,
                 canDecrease: points > 0,
             };
         });
@@ -1457,11 +1494,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Base value for a generation characteristic in the current mode: the custom
-     * race baseline in advanced mode, otherwise the world's setting default.
+     * Point-buy base for a characteristic, before the origin's modifier: the custom
+     * baseline in advanced mode, else the race's or the line's point-buy base plus
+     * the world's offset (#760).
      */
     _pointBuyBaseFor(key: string): number {
-        const defaultBase = this._characteristicBase();
+        const raceBase = resolveCreationOverrides(this._selectionSystems()).characteristicBase;
+        const defaultBase = WH40KSettings.getCharacteristicBase(raceBase ?? this._generationRules().pointBuy.base);
         return this._charAdvancedMode ? this._charCustomBases[key] || defaultBase : defaultBase;
     }
 
@@ -1471,7 +1510,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Used by the numeric input. The requested value is floored at 0 and then
      * capped so the running total never exceeds the pool (excess is dropped, not
      * borrowed from other characteristics) and base + points never exceeds
-     * CHARACTERISTIC_GEN_MAX (DH2e: 40). Returns the clamped value stored.
+     * the line's cap (DH2: 40), counting the origin's modifier (#760). Returns the clamped value stored.
      * @private
      */
     _setPointBuy(key: string, value: number): number {
@@ -1484,8 +1523,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return {
             characteristics: OriginPathBuilder.GENERATION_CHARACTERISTICS,
             pool: WH40KSettings.getCharacteristicPointBuyPool(),
-            cap: OriginPathBuilder.CHARACTERISTIC_GEN_MAX,
-            baseFor: (key) => this._pointBuyBaseFor(key),
+            cap: this._generationRules().pointBuy.cap,
+            // The starting score the cap counts from: DH2's + characteristic starts at 30.
+            baseFor: (key) => pointBuyStart(this._pointBuyBaseFor(key), this._getOriginCharacteristicBonuses().totals[key] ?? 0),
         };
     }
 
@@ -1511,7 +1551,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (rollValues !== undefined) {
             values = CHARS.map((_key, i) => Math.max(0, Math.trunc(rollValues[i] ?? 0)));
         } else {
-            const rollInstances = CHARS.map(() => new Roll(OriginPathBuilder.CHARACTERISTIC_ROLL_FORMULA));
+            // Each characteristic rolls the line's dice: DH2's origin + / − roll 3d10 keep two (#760).
+            const origin = this._getOriginCharacteristicBonuses().totals;
+            const rollInstances = CHARS.map((key) => new Roll(characteristicDice(this._generationRules(), origin[key] ?? 0)));
             await Promise.all(rollInstances.map(async (roll) => roll.evaluate()));
             values = rollInstances.map((roll) => roll.total ?? 0);
         }

@@ -3,12 +3,16 @@
  * Reuses the aptitude-driven four-rank character framework for now.
  */
 
+import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { CharacterSheetCapabilities, FatigueModelDef, OriginStepConfig, SidebarHeaderField, SystemConfigActor } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
+    /** IM: 2d10 + 20, then the origin's modifiers. (#760) */
+    override readonly characteristicGeneration = flatGeneration(20);
+
     readonly id = 'im' as const;
     /** Imperium Maledictum's untrained rule isn't modelled: no skill is refused (#757). */
     override readonly untrainedSkills: UntrainedSkillRules = { rule: 'none', listed: {} };

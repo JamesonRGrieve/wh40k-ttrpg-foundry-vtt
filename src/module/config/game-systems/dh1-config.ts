@@ -7,6 +7,7 @@ import { identifierFromName } from '../../data/fields/identifier-utils.ts';
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -42,6 +43,9 @@ const DH1_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
+    /** DH1: 2d10 plus the home world's column (Table 1-3), which the home worlds hold as 20 ± 5. (#760) */
+    override readonly characteristicGeneration = flatGeneration(20);
+
     readonly id = 'dh1' as const;
     readonly usesMalignancyTest = true;
     // A DH1 supplement prints its own Malefic powers; its cost rule is unverified.

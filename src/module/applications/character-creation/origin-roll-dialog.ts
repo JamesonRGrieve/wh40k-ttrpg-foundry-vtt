@@ -12,6 +12,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import { fateForRoll, parseFateFormula, woundsRollFormula } from '../../rules/origin-formulas.ts';
 import { bandForRoll, bandRangeLabel, parseRollBands } from '../../rules/roll-bands.ts';
 import { firstSystemId } from '../../utils/chat-system-id.ts';
 import type { ApplicationV2Ctor } from '../api/application-types.ts';
@@ -610,12 +611,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         // Get toughness bonus
         const tb = actor.system.characteristics?.['toughness']?.bonus ?? 0;
 
-        // Parse formula: e.g., "2xTB+1d5+2"
-        // Replace TB with actual value
-        const diceFormula = formula.replace(/(\d+)xTB/gi, (_match: string, multiplier: string) => {
-            const value = parseInt(multiplier, 10) * tb;
-            return value.toString();
-        });
+        // "2xTB+1d5+2" at TB 4 rolls "8+1d5+2" (`rules/origin-formulas.ts`, #760).
+        const diceFormula = woundsRollFormula(formula, tb);
 
         // Now we have something like "8+1d5+2"
         // Evaluate using Roll
@@ -645,8 +642,9 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const formula = this.formula;
 
         // Plain number formula (e.g. "3") — no roll needed, fixed value
-        if (/^\d+$/.test(formula.trim())) {
-            const total = parseInt(formula.trim(), 10);
+        const fate = parseFateFormula(formula);
+        if (fate.kind === 'fixed') {
+            const total = fate.value;
             return {
                 type: 'fate',
                 formula: formula,
@@ -666,7 +664,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const rolledValue = roll.total ?? 0;
 
         const band = bandForRoll(parseRollBands(formula), rolledValue);
-        const result = band?.value ?? 0;
+        const result = fateForRoll(formula, rolledValue);
         const matchedRange = band === undefined ? '' : bandRangeLabel(band);
 
         const breakdown = `Rolled ${rolledValue} on 1d10 (${matchedRange} → ${result} Fate Points)`;

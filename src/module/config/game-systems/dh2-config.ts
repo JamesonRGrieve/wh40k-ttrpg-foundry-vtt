@@ -6,6 +6,7 @@
 import type { AcquisitionLadder, CraftsmanshipKey } from '../../rules/acquisition-ladder.ts';
 import { DH2_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import type { CharacteristicGenerationRules } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
@@ -102,6 +103,18 @@ export const DH2_INQUEST_RULES: InquestRules = {
 };
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
+    /**
+     * DH2 (#760): 20 + 2d10; the home world's + characteristic rolls 3d10 and keeps the
+     * highest two, its − characteristic the lowest two. Point allocation starts each at 25
+     * (+ at 30, − at 20) with 60 points and a cap of 40. Experienced characters roll on 25
+     * and allocate from 30 to a cap of 45.
+     */
+    override readonly characteristicGeneration: CharacteristicGenerationRules = {
+        roll: { dice: '2d10', base: 20, originModifiers: 'keep-dice', keepDice: '3d10' },
+        pointBuy: { base: 25, pool: 60, cap: 40, raw: true },
+        experienced: { rollBase: 25, pointBuyBase: 30, cap: 45 },
+    };
+
     readonly id = 'dh2' as const;
     /** DH2 ships RAW and homebrew variants (`dh2-ruleset`), which character creation and the sheet follow. */
     override readonly dosDamageDie = true;

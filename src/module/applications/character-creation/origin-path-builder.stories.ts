@@ -86,6 +86,8 @@ interface CharGenCharRowEntry {
     originBonusTooltipData: string;
     assignedIndex: number | null;
     total: number | null;
+    /** DH2 roll mode: the home world's + / − characteristic's dice label in place of a flat bonus (#760). */
+    keepDiceLabel: string | null;
     hasRoll: boolean;
 }
 
@@ -1041,10 +1043,14 @@ interface CharGenOverrides {
     points?: number[];
     /** Bonus rolled per characteristic (roll / roll-pool-hb modes). */
     rolls?: number[];
+    /** The base each characteristic rolls on (the line's: DH2 20). */
+    base?: number;
+    /** Per characteristic, the keep-dice label of a DH2 home world + / − (#760). */
+    keepDice?: Array<string | null>;
 }
 
 function makeCharGen(overrides: CharGenOverrides): BuilderCharGenArg {
-    const base = 25;
+    const base = overrides.base ?? 25;
     const isPointBuy = overrides.mode === 'point-buy';
     const isRoll = overrides.mode === 'roll';
     const isRollPool = overrides.mode === 'roll-pool-hb';
@@ -1070,6 +1076,7 @@ function makeCharGen(overrides: CharGenOverrides): BuilderCharGenArg {
             originBonusTooltipData: '',
             assignedIndex: hasRoll ? i : null,
             total: hasRoll ? base + rollValue : null,
+            keepDiceLabel: overrides.keepDice?.[i] ?? null,
             hasRoll,
         };
     });
@@ -1190,6 +1197,28 @@ export const RollMode: Story = {
         clickAction(canvasElement, 'rollCharacteristics');
         // WS total = base 25 + rolled 12 = 37.
         await expect(view.getAllByText('37').length).toBeGreaterThan(0);
+    },
+};
+
+/**
+ * DH2 roll mode (#760): the home world's + characteristics (Forge World: Toughness and
+ * Intelligence) roll 3d10 keeping the highest two, its − characteristic (Fellowship) the
+ * lowest two, on a base of 20, and add no flat bonus.
+ */
+export const RollModeDH2HomeWorldDice: Story = {
+    args: makeCharStepArgs(
+        makeCharGen({
+            mode: 'roll',
+            base: 20,
+            rolls: [12, 8, 11, 17, 10, 15, 9, 13, 6],
+            keepDice: [null, null, null, 'WH40K.CharGen.KeepHighest', null, 'WH40K.CharGen.KeepHighest', null, null, 'WH40K.CharGen.KeepLowest'],
+        }),
+    ),
+    play: async ({ canvasElement }) => {
+        const labels = Array.from(canvasElement.querySelectorAll('[data-keep-dice]')).map((el) => el.textContent.trim());
+        await expect(labels).toEqual(['Best 2 of 3d10', 'Best 2 of 3d10', 'Worst 2 of 3d10']);
+        // Toughness = 20 + 17, with nothing added for the home world.
+        await expect(within(canvasElement).getAllByText('37').length).toBeGreaterThan(0);
     },
 };
 

@@ -6,6 +6,7 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionCost, BurstActionRule, BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
+import type { CharacteristicGenerationRules } from '../../rules/characteristic-generation.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
@@ -71,6 +72,16 @@ export const SystemConfigRegistry = {
         return id in SYSTEM_CONFIGS;
     },
 } as const;
+
+/**
+ * A line's characteristic generation rules, as its rulebook prints them (#760):
+ * the dice and base, how origin modifiers apply (DH2's 3d10 keep for the home
+ * world's + and −), point allocation and any experienced variant. Evaluate them
+ * with `rules/characteristic-generation.ts`. Pure; Zephyrex VTT reads it.
+ */
+export function characteristicGenerationRules(line: GameSystemId): CharacteristicGenerationRules {
+    return SYSTEM_CONFIGS[line].characteristicGeneration;
+}
 
 /**
  * A line's acquisition ladder (#192), or `null` for an unknown line or one with

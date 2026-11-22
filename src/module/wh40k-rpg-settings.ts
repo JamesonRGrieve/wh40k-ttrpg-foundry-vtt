@@ -836,11 +836,13 @@ export class WH40KSettings {
         return Math.trunc(readSetting(T.characteristicOffset));
     }
 
-    /** Effective base characteristic value used by character generation: 25 + offset. */
-    static getCharacteristicBase(): number {
-        // RAW characteristic base for the FFG d100 family (2d10+25 → base 25). The
-        // offset setting tunes it per world; experienced starts add +5 on top (#223).
-        return 25 + WH40KSettings.getCharacteristicOffset();
+    /**
+     * Effective base characteristic value used by character generation: the line's
+     * base (its game-system config's `characteristicGeneration`, #760; 25 when none is
+     * given) plus the world's offset, a homebrew adjustment.
+     */
+    static getCharacteristicBase(lineBase = 25): number {
+        return lineBase + WH40KSettings.getCharacteristicOffset();
     }
 
     /**

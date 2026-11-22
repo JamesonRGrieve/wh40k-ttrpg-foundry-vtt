@@ -7,6 +7,7 @@
 import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
+import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -135,6 +136,9 @@ export const OW_LOGISTICS_FRONT_CONDITIONS = {
 };
 
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
+    /** OW: 2d10 + 20, then the regiment's and speciality's modifiers. (#760) */
+    override readonly characteristicGeneration = flatGeneration(20);
+
     readonly id = 'ow' as const;
     override readonly dosDamageDie = true;
     override readonly characterSheet: CharacterSheetCapabilities = {

@@ -3,12 +3,11 @@
 
     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
         <label for="wh40k-qt-kind" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Shape"}}</label>
-        <select id="wh40k-qt-kind" name="kind"
-                class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="kind" id="wh40k-qt-kind"}}
             {{#each shapes}}
                 <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.labelKey}}</option>
             {{/each}}
-        </select>
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
     </div>
 
     <div class="tw-grid {{#if secondaryLabelKey}}tw-grid-cols-2{{else}}tw-grid-cols-1{{/if}} tw-gap-3 tw-mb-3">
@@ -33,13 +32,12 @@
 
     <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mb-3">
         <label for="wh40k-qt-condition" class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-text-[#9a9a8a]">{{localize "WH40K.Area.QuickTemplate.Condition"}}</label>
-        <select id="wh40k-qt-condition" name="condition"
-                class="tw-w-full tw-px-3 tw-py-2 tw-bg-[rgba(0,0,0,0.35)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-sm tw-text-[#e8e4d9] tw-text-sm focus:tw-outline-none focus:tw-border-gold">
+        {{#> systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs name="condition" id="wh40k-qt-condition"}}
             <option value="">{{localize "WH40K.Area.QuickTemplate.NoCondition"}}</option>
             {{#each conditions}}
                 <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
             {{/each}}
-        </select>
+        {{/systems/wh40k-rpg/templates/prompt/partial/prompt-select.hbs}}
     </div>
 
     <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-mb-4">

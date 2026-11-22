@@ -50,7 +50,11 @@
  <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">+</span>
  <div class="tw-flex tw-min-h-[40px] tw-min-w-[52px] tw-flex-col tw-items-center tw-justify-center tw-rounded-[6px] tw-border-2 tw-border-[rgba(36,107,131,0.25)] tw-bg-[rgba(36,107,131,0.14)] tw-px-[0.35rem] tw-py-[0.2rem] {{#if hasOriginBonus}}tw-border-[rgba(176,141,87,0.45)] tw-bg-[rgba(176,141,87,0.12)]{{/if}}"
  {{#if hasOriginBonusTooltip}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{originBonusTooltipData}}" data-tooltip="{{originBonusTooltip}}"{{/if}}>
+ {{#if keepDiceLabel}}
+ <span class="tw-text-[0.7rem] tw-font-bold tw-leading-tight tw-text-center tw-text-[color:var(--csd-bone,#e8dcc4)]" data-keep-dice>{{localize keepDiceLabel}}</span>
+ {{else}}
  <span class="tw-text-[0.95rem] tw-font-bold tw-text-[color:var(--csd-bone,#e8dcc4)]">{{#if hasOriginBonus}}{{#if (gt originBonus 0)}}+{{/if}}{{originBonus}}{{else}}0{{/if}}</span>
+ {{/if}}
  <span class="tw-text-[0.5rem] tw-uppercase tw-tracking-[0.05em] tw-text-[color:rgba(232,220,196,0.55)]">{{localize "WH40K.CharGen.OriginShort"}}</span>
  </div>
  <span class="tw-text-[1rem] tw-font-bold tw-text-[color:rgba(232,220,196,0.6)]">=</span>

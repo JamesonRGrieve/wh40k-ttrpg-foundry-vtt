@@ -1,5 +1,8 @@
 {
     "TYPES": {
+        "RegionBehavior": {
+            "applyCondition": "Apply Condition"
+        },
         "Actor": {
             "character": "Player Character",
             "npc": "NPC",
@@ -1052,6 +1055,8 @@
         "CharGen": {
             "Divination": "Divination",
             "DivinationPlaceholder": "Enter divination",
+            "KeepHighest": "Best 2 of 3d10",
+            "KeepLowest": "Worst 2 of 3d10",
             "OriginShort": "Origin",
             "RollAll": "Roll All",
             "RollAllHint": "Roll a value for every characteristic",
@@ -1848,7 +1853,7 @@
             },
             "CharacteristicOffset": {
                 "Name": "Characteristic Offset",
-                "Hint": "Integer added to the characteristic base of 25 used during character generation. Effective base = 25 + offset. May be negative."
+                "Hint": "House rule. Integer added to the game line's characteristic base during character generation (Dark Heresy 2e, Dark Heresy 1e, Only War and Imperium Maledictum 20; Rogue Trader and Black Crusade 25; Deathwatch 30). May be negative. Leave at 0 for the rules as written."
             },
             "PointBuyPool": {
                 "Name": "Point-Buy Pool",

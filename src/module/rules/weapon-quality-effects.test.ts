@@ -395,11 +395,11 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('Shocking — Toughness or 1 round stun, h
     });
 });
 
-describe.skipIf(!HAS_PRIVATE_CONTENT)('Smoke (X) — concealment cloud', () => {
-    it('exposes a concealment-cloud template sized by X that targets nobody', () => {
+describe.skipIf(!HAS_PRIVATE_CONTENT)('Smoke — concealment cloud (#758)', () => {
+    it('RT Smoke throws up a cloud 3d10 m across for 2d10 rounds that blocks sight and targets nobody', () => {
         const tpl = mech('smoke').template;
         expect(tpl.shape).toBe('concealment-cloud');
-        expect(tpl.distanceSource).toBe('level');
+        expect(tpl).toMatchObject({ distanceSource: 'formula', sizeFormula: '3d10', measure: 'diameter', blocksSight: true, duration: '2d10' });
         expect(tpl.resolution).toBe('');
     });
 });
