@@ -290,6 +290,13 @@ export const RANGED_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
         tooltip: "Target doesn't know you're there. +30 to attack.",
     },
     {
+        key: 'runningTarget',
+        label: 'Running Target',
+        modifier: -20,
+        icon: 'fas fa-person-running',
+        tooltip: 'Target Ran since its last turn. -20 to ranged attacks.',
+    },
+    {
         key: 'engagedInMelee',
         label: 'Engaged in Melee',
         modifier: -20,
@@ -383,6 +390,13 @@ export const RANGED_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
  * Situational modifiers for melee attacks (multi-select).
  */
 export const MELEE_SITUATIONAL_MODIFIERS: SituationalModifierOption[] = [
+    {
+        key: 'runningTarget',
+        label: 'Running Target',
+        modifier: 20,
+        icon: 'fas fa-person-running',
+        tooltip: 'Target Ran since its last turn. +20 to melee attacks.',
+    },
     {
         key: 'proneTarget',
         label: 'Prone Target',

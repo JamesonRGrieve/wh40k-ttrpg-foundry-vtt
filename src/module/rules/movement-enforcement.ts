@@ -14,10 +14,16 @@
 import { SYSTEM_ID } from '../constants.ts';
 import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { spendActionForActor } from './action-economy.ts';
 import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
-import { evaluateCombatMovement, MOVE_MODE_FLAG, type MovementEvaluation, type MovementMode, turnMovementAllowance } from './movement-budget.ts';
+import { actionCostOf, allowanceFor, DECLARED_MOVE_FLAG, type DeclaredMove, type MoveChoice, movePrompt, type MoveRates } from './move-declaration.ts';
+import { evaluateCombatMovement, MOVE_MODE_FLAG, type MovementEvaluation } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
+/** Set when the combatant Runs; cleared at the start of its next turn (#805). */
+export const RAN_FLAG = 'ranSinceLastTurn';
+/** The update option that marks a move whose action has been declared, so the hook lets it through. */
+const DECLARED_MOVE = 'wh40kMoveDeclared';
 
 export interface TokenMoveDecisionInput {
     automation: 'full' | 'display' | 'none';
@@ -44,7 +50,9 @@ type LooseToken = {
     id?: string | null;
     x?: number;
     y?: number;
-    actor?: { system?: { movement?: { half?: number; full?: number; charge?: number; run?: number } } } | null;
+    actor?: { id?: string | null; system?: { movement?: { half?: number; full?: number; charge?: number; run?: number } } } | null;
+    update?: (data: object, options?: object) => Promise<unknown>;
+    setFlag?: (scope: string, key: string, value: string) => Promise<unknown>;
 };
 // Kept minimal so Foundry's Combat/Combatant are structurally assignable to it
 // (its getFlag/setFlag carry a narrow scope type that a `string` param rejects).
@@ -53,8 +61,8 @@ type LooseCombat = { started?: boolean; combatant?: LooseCombatant | null | unde
 // Flag accessor read off the combatant via cast — getFlag/setFlag are typed too
 // narrowly on Combatant to put in the contravariant handler param above.
 type FlagAccessor = {
-    getFlag?: (scope: string, key: string) => number | string | null | undefined;
-    setFlag?: (scope: string, key: string, value: number) => Promise<void>;
+    getFlag?: (scope: string, key: string) => number | string | boolean | null | undefined;
+    setFlag?: (scope: string, key: string, value: number | string | boolean) => Promise<void>;
 };
 
 /** The per-turn moved-metres flag on a combatant (0 when unset / unreadable). */
@@ -71,10 +79,64 @@ function writeMovedMetres(combatant: LooseCombatant | TurnCombatant | null | und
     if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, MOVED_FLAG, metres);
 }
 
-/** The token's selected move mode (the move-mode toggle flag); undefined when unset/invalid → full move. */
-function readMovementMode(token: LooseToken): MovementMode | undefined {
-    const raw = (token as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, MOVE_MODE_FLAG);
-    return raw === 'half' || raw === 'full' || raw === 'charge' || raw === 'run' ? raw : undefined;
+/** The move the combatant declared this turn; 'none' when unset. */
+function readDeclared(combatant: LooseCombatant | null | undefined): DeclaredMove {
+    const raw = (combatant as FlagAccessor | null | undefined)?.getFlag?.(SYSTEM_ID, DECLARED_MOVE_FLAG);
+    return raw === 'half' || raw === 'twoHalves' || raw === 'full' || raw === 'run' || raw === 'disengage' ? raw : 'none';
+}
+
+/** Record the combatant's declared move for this turn. */
+export async function writeDeclared(combatant: LooseCombatant | TurnCombatant | null | undefined, declared: DeclaredMove): Promise<void> {
+    const target = combatant as FlagAccessor | null | undefined;
+    if (typeof target?.setFlag === 'function') await target.setFlag(SYSTEM_ID, DECLARED_MOVE_FLAG, declared);
+}
+
+/** The token's actor's movement rates, in metres. */
+function moveRates(token: LooseToken): MoveRates {
+    const movement = token.actor?.system?.movement;
+    return { half: movement?.half ?? 0, full: movement?.full ?? 0, run: movement?.run ?? 0 };
+}
+
+/** Ask which move action this is (#805); null when the player cancels. A GM may also move freely. */
+async function askMoveAction(prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' }, rates: MoveRates, requested: number): Promise<MoveChoice | 'secondHalf' | 'free' | null> {
+    const distances: Record<MoveChoice | 'secondHalf', number> = { half: rates.half, full: rates.full, run: rates.run, secondHalf: rates.half * 2 };
+    const options = prompt.kind === 'declare' ? [...prompt.choices] : (['secondHalf'] as const);
+    const buttons = options.map((choice, index) => ({
+        action: choice,
+        label: t(`WH40K.Combat.MoveDeclare.Choice.${choice}`, { metres: String(distances[choice]) }),
+        default: index === 0,
+    }));
+    if (game.user.isGM) buttons.push({ action: 'free', label: t('WH40K.Combat.MoveDeclare.Free'), default: false });
+    const content = `<p>${t(prompt.kind === 'declare' ? 'WH40K.Combat.MoveDeclare.Body' : 'WH40K.Combat.MoveDeclare.SecondHalfBody', { metres: String(Math.round(requested * 10) / 10), half: String(rates.half) })}</p><p>${t('WH40K.Combat.MoveDeclare.RunNote')}</p>`;
+    const result = await foundry.applications.api.DialogV2.wait({
+        window: { title: t('WH40K.Combat.MoveDeclare.Title') },
+        content,
+        buttons,
+        rejectClose: false,
+    });
+    return typeof result === 'string' && (result === 'free' || result === 'secondHalf' || result === 'half' || result === 'full' || result === 'run') ? result : null;
+}
+
+/** Ask, spend the action, record the declaration, then repeat the held move. */
+async function declareAndMove(
+    tokenDoc: LooseToken,
+    combatant: LooseCombatant | null | undefined,
+    prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' },
+    rates: MoveRates,
+    requested: number,
+    changes: { x?: number | null | undefined; y?: number | null | undefined },
+): Promise<void> {
+    const choice = await askMoveAction(prompt, rates, requested);
+    if (choice === null) return;
+    if (choice !== 'free') {
+        const actorId = tokenDoc.actor?.id ?? null;
+        if (actorId !== null) spendActionForActor(actorId, actionCostOf(choice), tokenDoc.id ?? null);
+        await writeDeclared(combatant, choice === 'secondHalf' ? 'twoHalves' : choice);
+        if (choice !== 'secondHalf') await tokenDoc.setFlag?.(SYSTEM_ID, MOVE_MODE_FLAG, choice);
+        // Run: until its next turn, ranged attacks against it take −20 and melee +20.
+        if (choice === 'run') await (combatant as FlagAccessor | null | undefined)?.setFlag?.(SYSTEM_ID, RAN_FLAG, true);
+    }
+    await tokenDoc.update?.({ x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y }, { [DECLARED_MOVE]: true });
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */
@@ -91,30 +153,51 @@ function measureMoveMetres(token: LooseToken, changes: { x?: number | null | und
     return cells * distancePerCell;
 }
 
-/** preUpdateToken: block an off-turn or over-budget move; return true to allow. */
-function onPreUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | undefined; y?: number | null | undefined }): boolean {
+/**
+ * preUpdateToken: block an off-turn or over-budget move, and hold a move that needs
+ * its action declared (#805) while the player picks it; return true to allow.
+ */
+function onPreUpdateToken(
+    tokenDoc: LooseToken,
+    changes: { x?: number | null | undefined; y?: number | null | undefined },
+    options: Record<string, unknown> = {},
+): boolean {
     try {
         if (!('x' in changes) && !('y' in changes)) return true;
-        if (game.user.isGM) return true; // GMs move freely (narrative / corrections)
+        if (options[DECLARED_MOVE] === true) return true;
         if (WH40KSettings.getMovementAutomation() !== 'full') return true;
         const combat = game.combat as LooseCombat | null;
         if (combat?.started !== true) return true;
+        const isActorsTurn = combat.combatant?.tokenId === tokenDoc.id;
+        // GMs move freely (narrative / corrections), except the active combatant on its turn.
+        if (game.user.isGM && !isActorsTurn) return true;
 
+        const combatant = combat.combatant;
+        const declared = isActorsTurn ? readDeclared(combatant) : 'none';
+        const moved = readMovedMetres(combatant);
+        const requested = measureMoveMetres(tokenDoc, changes);
+        const rates = moveRates(tokenDoc);
         const decision = decideTokenMove({
             automation: 'full',
             hasActiveCombat: true,
-            isActorsTurn: combat.combatant?.tokenId === tokenDoc.id,
-            movedThisTurnMetres: readMovedMetres(combat.combatant),
-            requestedMetres: measureMoveMetres(tokenDoc, changes),
-            allowanceMetres: turnMovementAllowance(tokenDoc.actor?.system?.movement, readMovementMode(tokenDoc)),
+            isActorsTurn,
+            movedThisTurnMetres: moved,
+            requestedMetres: requested,
+            allowanceMetres: allowanceFor(declared, rates),
         });
-
-        if (!decision.allowed) {
-            if (decision.reason === 'not-your-turn') ui.notifications.warn(t('WH40K.Combat.NotYourTurnMove'));
-            else ui.notifications.warn(t('WH40K.Combat.OverMovementBudget', { remaining: Math.round(decision.remaining) }));
+        if (decision.allowed) return true;
+        if (decision.reason === 'not-your-turn') {
+            ui.notifications.warn(t('WH40K.Combat.NotYourTurnMove'));
             return false;
         }
-        return true;
+        const prompt = movePrompt(declared, moved, requested, rates);
+        if (prompt.kind === 'allow') return true;
+        if (prompt.kind === 'refuse') {
+            ui.notifications.warn(t('WH40K.Combat.OverMovementBudget', { remaining: Math.round(prompt.remaining) }));
+            return false;
+        }
+        void declareAndMove(tokenDoc, combatant, prompt, rates, requested, changes);
+        return false;
     } catch (err) {
         console.error('WH40K | movement enforcement (preUpdateToken) — allowing on error', err);
         return true;
@@ -138,10 +221,14 @@ function onUpdateToken(tokenDoc: LooseToken, changes: { x?: number | null | unde
     }
 }
 
-/** Reset the starting combatant's per-turn moved distance at the turn-start boundary. */
+/** Reset the starting combatant's moved distance, declared move and Run at the turn-start boundary. */
 function resetMovementOnTurnStart(combatant: TurnCombatant | null): void {
     try {
-        if (combatant !== null) writeMovedMetres(combatant, 0);
+        if (combatant === null) return;
+        writeMovedMetres(combatant, 0);
+        void writeDeclared(combatant, 'none');
+        const target = combatant as FlagAccessor;
+        if (target.getFlag?.(SYSTEM_ID, RAN_FLAG) === true) void target.setFlag?.(SYSTEM_ID, RAN_FLAG, false);
     } catch (err) {
         console.error('WH40K | movement enforcement (turn reset) — ignoring', err);
     }

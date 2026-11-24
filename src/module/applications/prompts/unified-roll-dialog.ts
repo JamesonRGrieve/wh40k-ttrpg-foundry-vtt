@@ -58,6 +58,7 @@ import {
 } from '../../rules/engagement.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
+import { RAN_FLAG } from '../../rules/movement-enforcement.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
 import {
@@ -1559,6 +1560,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         return reading === null ? 0 : reading.bonus + reading.talentBonus;
     }
 
+    /** Whether the chosen target's combatant Ran since its last turn (#805). */
+    #targetRan(): boolean {
+        const tokenId = this._targetTokenId;
+        if (tokenId === null) return false;
+        const combatant = game.combat?.combatants.find((c) => c.tokenId === tokenId);
+        return combatant?.getFlag(SYSTEM_ID, RAN_FLAG) === true;
+    }
+
     /** Whether the attacker and the chosen target are engaged in melee with each other (#804). */
     #engagedWithTarget(): boolean {
         const state = this.#engagementState();
@@ -2307,6 +2316,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (highGround !== null) {
             this._activeCombatSituationals.add(highGround);
             this._autoSituationals.add(highGround);
+        }
+
+        // #805: a target that Ran since its last turn: ranged −20, melee +20 (every line's Run).
+        if (this.#targetRan()) {
+            this._activeCombatSituationals.add('runningTarget');
+            this._autoSituationals.add('runningTarget');
         }
 
         // #804: shooting at a target engaged in melee with someone else takes the

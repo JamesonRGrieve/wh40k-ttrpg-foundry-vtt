@@ -23,6 +23,7 @@ import {
 import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
 import { type ActionLimit, resolveActionLimit } from './condition-mechanics.ts';
 import { activeConditionMechanics, type ConditionBearer } from './condition-registry.ts';
+import { DECLARED_MOVE_FLAG } from './move-declaration.ts';
 
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 /** Set when the combatant takes Disengage; cleared at its next turn (#770). */
@@ -127,14 +128,17 @@ export function resetActionsForActor(actorId: string, tokenId: string | null = n
 /** Disengage's flag accessor on a combatant. */
 type DisengageFlagAccessor = {
     getFlag?: (scope: string, key: string) => boolean | null | undefined;
-    setFlag?: (scope: string, key: string, value: boolean) => Promise<object>;
+    setFlag?: (scope: string, key: string, value: boolean | string) => Promise<object>;
 };
 
 /** Record that an actor's combatant (by token when given) took Disengage this turn (#770). */
 export function markDisengaged(actorId: string, tokenId: string | null = null): void {
     try {
         const target = findCombatant(actorId, tokenId) as DisengageFlagAccessor | null;
-        if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, true);
+        if (typeof target?.setFlag !== 'function') return;
+        void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, true);
+        // Disengage allows a Half Move out of melee this turn (#805).
+        void target.setFlag(SYSTEM_ID, DECLARED_MOVE_FLAG, 'disengage');
     } catch (err) {
         console.error('WH40K | action economy (disengage) — ignoring', err);
     }

@@ -2270,7 +2270,20 @@
             "CoverAPTooltip": "Cover doesn't penalise the attack roll — it adds this Armour at the hit location, absorbing part of the damage.",
             "NoActiveCombatAttack": "Attacks can only be made during an active combat encounter. Start an encounter and add this token to the tracker first.",
             "NotYourTurnMove": "It is not this combatant's turn — only the active combatant may move.",
-            "OverMovementBudget": "That move exceeds the movement remaining this turn ({remaining}m left). Spend a Charge or Run action for more.",
+            "OverMovementBudget": "That move exceeds the movement remaining this turn ({remaining}m left).",
+            "MoveDeclare": {
+                "Title": "Which move is this?",
+                "Body": "This move covers {metres} m. Up to {half} m is a Half Move (a Half Action); further is a Full Move (a Full Action).",
+                "SecondHalfBody": "This goes past your Half Move. Your other Half Action buys a second Half Move (up to {half} m more).",
+                "RunNote": "Run must be declared now: until your next turn, ranged attacks against you take −20 and melee attacks +20.",
+                "Choice": {
+                    "half": "Half Move (Half Action, up to {metres} m)",
+                    "full": "Full Move (Full Action, up to {metres} m)",
+                    "run": "Run (Full Action, up to {metres} m)",
+                    "secondHalf": "Second Half Move (Half Action, up to {metres} m in all)"
+                },
+                "Free": "Move freely (GM, no action)"
+            },
             "BattleStation": "Battle Station",
             "Initiative": "Initiative",
             "RollInitiative": "Roll Initiative",
