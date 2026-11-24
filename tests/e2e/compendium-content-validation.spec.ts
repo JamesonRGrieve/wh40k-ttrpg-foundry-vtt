@@ -61,7 +61,8 @@ const PROBED_PACKS = [
     { flow: 'dh2-weapons::validated', query: { line: 'dh2', category: 'weapons' }, docId: 'b0c338d6c6ddc9f2' },
     { flow: 'dh2-skills::validated', query: { line: 'dh2', category: 'skills' }, docId: 'Ga9jZe2fOv6pQy4C' },
     { flow: 'dh2-conditions::validated', query: { line: 'dh2', category: 'conditions' }, docId: 'ffmap8beap8f59o9' },
-    { flow: 'dh2-traits::validated', query: { line: 'dh2', category: 'traits' }, docId: 'kjk6p2WjkJEFJ20a' },
+    // Natural Weapons: a core trait every bestiary uses (the earlier pin, a stub, was removed in D11).
+    { flow: 'dh2-traits::validated', query: { line: 'dh2', category: 'traits' }, docId: 'Fj4hW9LYy1NyJe3V' },
     { flow: 'dh2-origins-homeworlds::validated', query: { line: 'dh2', category: 'origins-homeworlds' }, docId: 'DH2FrlWld0000001' },
     { flow: 'dh2-actors-bestiary::validated', query: { line: 'dh2', category: 'actors-bestiary' }, docId: 'ilzIIA8QCJ5TxcMi' },
     { flow: 'dh2-rolltables::validated', query: { line: 'dh2', category: 'rolltables' }, docId: 'wh40kDH2Disorder' },
