@@ -113,8 +113,8 @@ async function useAuspex(page: Page, scannerActorId: string, face: number): Prom
             const dialogs = (): RollApp[] =>
                 [...g.foundry.applications.instances.values()].filter((app) => app.element?.classList.contains('unified-roll-dialog') === true);
             // A roll dialog still closing from the last use isn't this use's dialog.
-            const before = new Set(dialogs());
-            const findDialog = (): RollApp | null => dialogs().find((app) => !before.has(app)) ?? null;
+            const dialogsBefore = new Set(dialogs());
+            const findDialog = (): RollApp | null => dialogs().find((app) => !dialogsBefore.has(app)) ?? null;
             let opened = false;
             try {
                 await actor.rollItem(item.id);
