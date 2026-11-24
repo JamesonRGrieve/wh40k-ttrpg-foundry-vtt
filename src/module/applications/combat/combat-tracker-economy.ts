@@ -31,12 +31,11 @@ const TRACKER_ECONOMY_TEMPLATE = 'systems/wh40k-rpg/templates/combat/tracker-act
 const INJECTED_SELECTOR = '[data-wh40k-hook="tracker-economy"]';
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 
-/* eslint-disable no-restricted-syntax -- boundary: Foundry CombatTracker / Combatant / hook payloads are loosely-typed framework surfaces; reads are structural and guarded */
-
 /** Minimal Combatant shape the tracker injection reads. */
 interface TrackerCombatant {
     id?: string | null;
     actorId?: string | null;
+    tokenId?: string | null;
 }
 
 /** Resolve the rendered tracker root as a plain HTMLElement (V13 jQuery / V14 element). */
@@ -51,6 +50,7 @@ function resolveRoot(html: HTMLElement | JQuery | undefined): HTMLElement | null
 function combatantForRow(row: HTMLElement): TrackerCombatant | null {
     const id = row.dataset['combatantId'];
     if (id === undefined || id === '') return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the Foundry `game` global's combat collection, read structurally
     const combatants = (globalThis as { game?: { combat?: { combatants?: Iterable<TrackerCombatant> | null } | null } }).game?.combat?.combatants;
     if (!combatants) return null;
     for (const c of combatants) {
@@ -65,6 +65,7 @@ function combatantForRow(row: HTMLElement): TrackerCombatant | null {
  * (the tracker re-renders wholesale, but this guards against double-injection if
  * the hook fires twice on the same DOM).
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the renderCombatTracker hook's application argument is untyped and unused
 async function onRenderCombatTracker(_app: unknown, html: HTMLElement | JQuery): Promise<void> {
     try {
         const root = resolveRoot(html);
@@ -75,7 +76,8 @@ async function onRenderCombatTracker(_app: unknown, html: HTMLElement | JQuery):
             const combatant = combatantForRow(row);
             const actorId = combatant?.actorId ?? null;
             if (actorId === null) continue;
-            const budget = actionBudgetForActor(actorId);
+            // By the row's token: copies of one creature share an actor (#777).
+            const budget = actionBudgetForActor(actorId, combatant?.tokenId ?? null);
             if (budget === null) continue;
             // eslint-disable-next-line no-await-in-loop -- sequential: each row renders its own small partial; row count is the (small) combatant count
             const readout = await foundry.applications.handlebars.renderTemplate(TRACKER_ECONOMY_TEMPLATE, { budget });
@@ -88,6 +90,7 @@ async function onRenderCombatTracker(_app: unknown, html: HTMLElement | JQuery):
 }
 
 /** True when the update payload touched the action-economy flag. */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the updateCombatant hook's change payload; flags are untyped
 function touchedActionEconomy(changes: { flags?: { 'wh40k-rpg'?: Record<string, unknown> } } | undefined): boolean {
     const wh40kFlags = changes?.flags?.['wh40k-rpg'];
     return wh40kFlags !== undefined && ACTIONS_SPENT_FLAG in wh40kFlags;
@@ -99,7 +102,9 @@ function touchedActionEconomy(changes: { flags?: { 'wh40k-rpg'?: Record<string, 
  * tracker sidebar re-renders on its own).
  */
 function onUpdateCombatant(
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's Application#render return is untyped here; it is not read
     combatant: { actorId?: string | null; actor?: { sheet?: { rendered?: boolean; render?: (force: boolean) => unknown } | null } | null },
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the updateCombatant hook's change payload; flags are untyped
     changes: { flags?: { 'wh40k-rpg'?: Record<string, unknown> } } | undefined,
 ): void {
     try {
@@ -110,7 +115,6 @@ function onUpdateCombatant(
         console.error('WH40K | combat tracker economy (updateCombatant) — ignoring', err);
     }
 }
-/* eslint-enable no-restricted-syntax */
 
 /** Register the combat-tracker action-economy surfacing hooks (#264). */
 export function registerCombatTrackerEconomy(): void {

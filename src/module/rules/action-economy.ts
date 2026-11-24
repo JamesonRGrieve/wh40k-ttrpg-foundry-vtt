@@ -29,7 +29,7 @@ const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
 // Kept minimal (no getFlag/setFlag) so Foundry's Combat/Combatant are structurally
 // assignable to it; the flag accessor is reached via the cast below (its getFlag
 // scope type is too narrow to put on the contravariant hook handler param).
-type LooseCombatant = { id?: string | null; actorId?: string | null; actor?: ConditionBearer | null | undefined };
+type LooseCombatant = { id?: string | null; actorId?: string | null; tokenId?: string | null; actor?: ConditionBearer | null | undefined };
 type LooseCombat = {
     started?: boolean;
     combatant?: LooseCombatant | null | undefined;
@@ -54,8 +54,13 @@ function writeActionsSpent(combatant: LooseCombatant | null | undefined, spent: 
     if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, ACTIONS_SPENT_FLAG, spent);
 }
 
-/** Locate the combatant for an actor id: in the combat this client views, else in any started combat. */
-function findCombatant(actorId: string): LooseCombatant | null {
+/**
+ * Locate the combatant for an actor: in the combat this client views, else in any
+ * started combat. With `tokenId` (an unlinked token's actor) it matches that token's
+ * combatant, since copies of one creature share an actor id (#777); without one (a
+ * linked actor) it matches by actor id.
+ */
+function findCombatant(actorId: string, tokenId: string | null = null): LooseCombatant | null {
     // `game.combat` is the combat on the scene THIS client views. A player looking at
     // another scene (their own map, a journal handout) has none there, yet their actor
     // still fights in the GM's started combat — and its Reaction must be read and spent
@@ -66,7 +71,7 @@ function findCombatant(actorId: string): LooseCombatant | null {
     const started = [...(g?.combats ?? [])].filter((combat) => combat !== viewed && combat.started === true);
     for (const combat of viewed === null ? started : [viewed, ...started]) {
         for (const c of combat.combatants ?? []) {
-            if (c.actorId === actorId) return c;
+            if (tokenId !== null ? c.tokenId === tokenId : c.actorId === actorId) return c;
         }
     }
     return null;
@@ -81,10 +86,10 @@ function combatantActionLimit(combatant: LooseCombatant): ActionLimit {
     return resolveActionLimit(activeConditionMechanics(combatant.actor)).limit;
 }
 
-/** The current action-budget readout for an actor's combatant, or null if not in combat. */
-export function actionBudgetForActor(actorId: string): ActionBudgetView | null {
+/** The current action-budget readout for an actor's combatant (by token when given), or null if not in combat. */
+export function actionBudgetForActor(actorId: string, tokenId: string | null = null): ActionBudgetView | null {
     try {
-        const combatant = findCombatant(actorId);
+        const combatant = findCombatant(actorId, tokenId);
         return combatant ? actionBudgetView(readActionsSpent(combatant), combatantActionLimit(combatant)) : null;
     } catch (err) {
         console.error('WH40K | action economy (view) — ignoring', err);
@@ -92,10 +97,10 @@ export function actionBudgetForActor(actorId: string): ActionBudgetView | null {
     }
 }
 
-/** Spend one action of `kind` for the given actor's combatant. Returns the new view (or null). */
-export function spendActionForActor(actorId: string, kind: ActionKind): ActionBudgetView | null {
+/** Spend one action of `kind` for the given actor's combatant (by token when given). Returns the new view (or null). */
+export function spendActionForActor(actorId: string, kind: ActionKind, tokenId: string | null = null): ActionBudgetView | null {
     try {
-        const combatant = findCombatant(actorId);
+        const combatant = findCombatant(actorId, tokenId);
         if (!combatant) return null;
         const limit = combatantActionLimit(combatant);
         const next = spendAction(readActionsSpent(combatant), kind, limit);
@@ -107,10 +112,10 @@ export function spendActionForActor(actorId: string, kind: ActionKind): ActionBu
     }
 }
 
-/** Reset an actor's combatant action budget to a fresh turn (HUD reset button). */
-export function resetActionsForActor(actorId: string): void {
+/** Reset an actor's combatant action budget (by token when given) to a fresh turn (HUD reset button). */
+export function resetActionsForActor(actorId: string, tokenId: string | null = null): void {
     try {
-        const combatant = findCombatant(actorId);
+        const combatant = findCombatant(actorId, tokenId);
         if (combatant) writeActionsSpent(combatant, { ...EMPTY_ACTIONS_SPENT });
     } catch (err) {
         console.error('WH40K | action economy (reset) — ignoring', err);

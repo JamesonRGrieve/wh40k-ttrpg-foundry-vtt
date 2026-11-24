@@ -155,3 +155,45 @@ describe('action-economy combat glue (#264)', () => {
         clearTurnSubscribers();
     });
 });
+
+describe('copies of one creature keep their own budgets (#777)', () => {
+    /** Two tokens of one actor (unlinked copies), each its own combatant. */
+    function copies(): [FakeCombatant & { tokenId: string }, FakeCombatant & { tokenId: string }] {
+        const first = { ...makeCombatant('crawler'), tokenId: 't1' };
+        const second = { ...makeCombatant('crawler'), tokenId: 't2' };
+        // Re-bind the flag accessors to each copy (the spread copied the first's closures).
+        for (const c of [first, second]) {
+            c.getFlag = (_s, _k) => c.flag;
+            c.setFlag = (_s, _k, v) => {
+                c.flag = v;
+            };
+        }
+        vi.stubGlobal('game', { combat: { started: true, combatant: first, combatants: [first, second] } });
+        vi.stubGlobal('console', { ...console, error: vi.fn() });
+        return [first, second];
+    }
+
+    it('spends the Reaction of the token that dodged, not the first copy', () => {
+        const [first, second] = copies();
+        spendActionForActor('crawler', 'reaction', 't2');
+        expect(readActionsSpent(second)).toMatchObject({ reaction: 1 });
+        expect(readActionsSpent(first)).toEqual(EMPTY_ACTIONS_SPENT);
+        expect(actionBudgetForActor('crawler', 't1')?.reactionRemaining).toBe(1);
+        expect(actionBudgetForActor('crawler', 't2')?.reactionRemaining).toBe(0);
+    });
+
+    it('resets only the named token', () => {
+        const [first, second] = copies();
+        spendActionForActor('crawler', 'half', 't1');
+        spendActionForActor('crawler', 'half', 't2');
+        resetActionsForActor('crawler', 't2');
+        expect(readActionsSpent(first)).toMatchObject({ half: 1 });
+        expect(readActionsSpent(second)).toEqual(EMPTY_ACTIONS_SPENT);
+    });
+
+    it('a linked actor (no token id) still matches by actor', () => {
+        const c = makeCombatant('pc');
+        stubCombat(c);
+        expect(spendActionForActor('pc', 'reaction')?.reactionRemaining).toBe(0);
+    });
+});

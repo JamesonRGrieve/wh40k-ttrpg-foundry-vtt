@@ -227,6 +227,8 @@ export function closeEvasionPrompt(root: HTMLElement, attackId: string, statusTe
 /** An actor as the evasion gate reads it. */
 export interface EvasionActor extends ConditionBearer {
     readonly id?: string | null;
+    /** The token an unlinked actor belongs to; null for a linked actor. */
+    readonly token?: { readonly id: string | null } | null;
     readonly flags?: object;
 }
 
@@ -235,7 +237,8 @@ export interface EvasionActor extends ConditionBearer {
  * combat), the action limit its conditions impose, and whether it is in a grapple.
  */
 export function evasionGateFor(actor: EvasionActor): EvasionGate {
-    const budget = actor.id === undefined || actor.id === null ? null : actionBudgetForActor(actor.id);
+    // By the token for an unlinked actor: copies of one creature share an actor (#777).
+    const budget = actor.id === undefined || actor.id === null ? null : actionBudgetForActor(actor.id, actor.token?.id ?? null);
     return {
         reactionRemaining: budget === null ? null : budget.reactionRemaining,
         actionLimit: budget?.actionLimit ?? resolveActionLimit(activeConditionMechanics(actor)).limit,

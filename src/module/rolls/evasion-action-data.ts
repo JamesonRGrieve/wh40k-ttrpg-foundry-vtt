@@ -162,7 +162,7 @@ export class EvasionActionData extends SimpleSkillData {
 
         const defender = this.rollData.sourceActor;
         if (defender === null) return;
-        if (defender.id !== null) spendActionForActor(defender.id, 'reaction');
+        if (defender.id !== null) spendActionForActor(defender.id, 'reaction', defender.token?.id ?? null);
         const input = this.#counterAttackInput(defender);
         this.counterAttack = this.#counterAttackFor(defender, input);
         this.counterAttackSpent = spentCounterAttack(input);

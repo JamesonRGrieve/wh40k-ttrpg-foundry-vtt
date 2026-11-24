@@ -155,7 +155,8 @@ export function prepareCombatData(this: CharacterSheet, context: Record<string, 
     sheetContext.combatMovement = computeCombatMovement.call(this);
     // Per-turn action economy (#264) — null when this actor isn't in combat.
     const actorId = this.actor.id;
-    sheetContext.actionBudget = actorId !== null ? actionBudgetForActor(actorId) : null;
+    // By the token for an unlinked token's sheet: copies of one creature share an actor (#777).
+    sheetContext.actionBudget = actorId !== null ? actionBudgetForActor(actorId, this.actor.token?.id ?? null) : null;
 
     // Critical injuries
     sheetContext.criticalInjuries = categorized.criticalInjury;

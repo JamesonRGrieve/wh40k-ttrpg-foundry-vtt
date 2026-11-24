@@ -301,7 +301,7 @@ export async function vocalizeCombatAction(this: CharacterSheet, event: Event, t
         const kind = actionKindFor(actionType);
         const actorId = this.actor.id;
         if (kind !== null && actorId !== null) {
-            spendActionForActor(actorId, kind);
+            spendActionForActor(actorId, kind, this.actor.token?.id ?? null);
             void this.render(false);
         }
         return;
@@ -481,7 +481,7 @@ export function spendAction(this: CharacterSheet, _event: Event, target: HTMLEle
     const actorId = this.actor.id;
     const kind = target.dataset['kind'] as ActionKind | undefined;
     if (actorId === null || kind === undefined) return;
-    spendActionForActor(actorId, kind);
+    spendActionForActor(actorId, kind, this.actor.token?.id ?? null);
     void this.render(false);
 }
 
@@ -492,7 +492,7 @@ export function spendAction(this: CharacterSheet, _event: Event, target: HTMLEle
 export function resetActions(this: CharacterSheet, _event: Event, _target: HTMLElement): void {
     const actorId = this.actor.id;
     if (actorId === null) return;
-    resetActionsForActor(actorId);
+    resetActionsForActor(actorId, this.actor.token?.id ?? null);
     void this.render(false);
 }
 
