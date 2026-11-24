@@ -64,8 +64,8 @@ async function checkType(page: Page, type: string): Promise<TypeReport> {
                 const panel =
                     button === null
                         ? sheet.element.querySelector<HTMLElement>('.window-content')
-                        : (sheet.element.querySelector<HTMLElement>(`.wh40k-tab-content > [data-tab="${tab}"]`) ??
-                          sheet.element.querySelector<HTMLElement>(`.tab[data-tab="${tab}"][data-group="${group}"]`));
+                        : sheet.element.querySelector<HTMLElement>(`.wh40k-tab-content > [data-tab="${tab}"]`) ??
+                          sheet.element.querySelector<HTMLElement>(`.tab[data-tab="${tab}"][data-group="${group}"]`);
                 if (panel === null) {
                     failures.push(`${tab}: no panel`);
                     continue;

@@ -125,7 +125,9 @@ export const NumberTilesAndTabContainer: Story = {
         const wide = numbers.filter((input) => input.getBoundingClientRect().width > sheetWidth / 2).map((input) => input.name);
         await expect(wide).toEqual([]);
         // The nine stat modifiers share rows: several tiles sit on the first row.
-        const tops = new Set([...canvasElement.querySelectorAll<HTMLInputElement>('input[name^="system.modifiers."]')].map((i) => Math.round(i.getBoundingClientRect().top)));
+        const tops = new Set(
+            [...canvasElement.querySelectorAll<HTMLInputElement>('input[name^="system.modifiers."]')].map((i) => Math.round(i.getBoundingClientRect().top)),
+        );
         await expect(tops.size).toBeLessThan(9);
         await expect(canvasElement.querySelector('section.wh40k-tab-content [data-tab="effects"]')).not.toBeNull();
     },

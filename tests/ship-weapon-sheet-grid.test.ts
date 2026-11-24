@@ -24,7 +24,7 @@ describe('ship item sheet number tiles', () => {
     it('the ship weapon keeps its two hooked grids, now as tiles', () => {
         for (const hook of ['ship-weapon-stat-grid', 'ship-weapon-resource-grid']) {
             const at = WEAPON.indexOf(`<div data-wh40k-hook="${hook}">`);
-            expect(at, hook).toBeGreaterThan(-1);
+            expect(at).toBeGreaterThan(-1);
             expect(WEAPON.indexOf(TILE_GRID, at)).toBeGreaterThan(at);
         }
         for (const name of ['strength', 'damage', 'crit', 'range', 'power', 'space', 'shipPoints']) {
