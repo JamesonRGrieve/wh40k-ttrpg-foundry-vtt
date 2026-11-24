@@ -23,7 +23,8 @@
         {{!-- #400: rows are pre-ordered hostile→neutral→friendly→self and carry a
              disposition colour class (red / white / green / yellow). --}}
         {{#each combatants as |c|}}
-        <option value="{{c.id}}" class="{{c.colorClass}}" {{#if c.isSelected}}selected{{/if}}>{{c.name}}</option>
+        {{!-- #806: with Charge selected, a target out of charge range is greyed out. --}}
+        <option value="{{c.id}}" class="{{#if c.disabled}}tw-text-[#777]{{else}}{{c.colorClass}}{{/if}}" {{#if c.isSelected}}selected{{/if}} {{#if c.disabled}}disabled data-charge-out-of-range title="{{c.note}}"{{/if}}>{{c.name}}{{#if c.disabled}} ({{c.note}}){{/if}}</option>
         {{/each}}
     </select>
     {{/if}}

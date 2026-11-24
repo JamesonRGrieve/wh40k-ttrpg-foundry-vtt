@@ -45,6 +45,7 @@ import {
 } from '../../rules/attack-options.ts';
 import { selectableQualityIds, toggleQualityChoice } from '../../rules/attack-specials.ts';
 import { isBurstAction } from '../../rules/auto-fire.ts';
+import { chargeContactPosition, chargeReach } from '../../rules/charge.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
 import {
     engaged,
@@ -58,7 +59,7 @@ import {
 } from '../../rules/engagement.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
-import { RAN_FLAG } from '../../rules/movement-enforcement.ts';
+import { DECLARED_MOVE_OPTION, RAN_FLAG, writeDeclared } from '../../rules/movement-enforcement.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
 import {
@@ -2657,7 +2658,72 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // eslint-disable-next-line no-restricted-syntax -- boundary: Combatant#token is a TokenDocument whose numeric `disposition` is not surfaced on the fvtt-types Combatant handle.
             disposition: (c as { token?: { disposition?: number | null } | null }).token?.disposition ?? null,
         }));
-        return UnifiedRollDialog.buildCombatantTargets(combatants, targetActorId, sourceActorId, this._targetTokenId);
+        const rows = UnifiedRollDialog.buildCombatantTargets(combatants, targetActorId, sourceActorId, this._targetTokenId);
+        return this.#markChargeReach(rows, combatants);
+    }
+
+    /**
+     * Charge (#806): move the attacker into contact with the target before the attack,
+     * if the target is in charge range. False (with a notice) when the charge can't be
+     * made, or its move was held (leaving melee pauses it for the free attacks).
+     */
+    async #performChargeMove(): Promise<boolean> {
+        if (!this.#isCharge()) return true;
+        const state = this.#engagementState();
+        const { sourceToken } = this.#activeTokenPair();
+        const targetToken = state?.target ? (canvas.tokens?.get(state.target.id) ?? null) : null;
+        if (state === null || state.target === null || sourceToken === null || targetToken === null) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Roll.Charge.NoTarget'));
+            return false;
+        }
+        const reach = chargeReach(calculateTokenDistance(sourceToken, targetToken), this.#chargeMove());
+        if (reach !== 'in-range') {
+            ui.notifications.warn(game.i18n.localize(reach === 'too-close' ? 'WH40K.Roll.Charge.TooClose' : 'WH40K.Roll.Charge.TooFar'));
+            return false;
+        }
+        const to = chargeContactPosition(state.attacker, state.target, state.grid);
+        const doc = sourceToken.document;
+        if (doc.x !== to.x || doc.y !== to.y) await doc.update({ x: to.x, y: to.y }, { [DECLARED_MOVE_OPTION]: true });
+        if (doc.x !== to.x || doc.y !== to.y) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Roll.Charge.MoveHeld'));
+            return false;
+        }
+        // Charge is a Full Action: no further move this turn beyond what it allows.
+        await writeDeclared(game.combat?.combatants.find((c) => c.tokenId === sourceToken.id) ?? null, 'full');
+        this.rollData.distance = calculateTokenDistance(sourceToken, targetToken);
+        this.rollData.engagedWithTarget = true;
+        return true;
+    }
+
+    /** Whether the attack is a Charge with a melee weapon (#806). */
+    #isCharge(): boolean {
+        return this.rollType === 'weapon' && this._attackModeKey === 'charge' && this.rollData.weapon?.isRanged !== true;
+    }
+
+    /** The attacker's Charge Move, in metres. */
+    #chargeMove(): number {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: rollData's actor handle is loose; the derived movement rates are read structurally
+        const movement = (this.rollData.sourceActor as { system?: { movement?: { charge?: number } } } | null)?.system?.movement;
+        return movement?.charge ?? 0;
+    }
+
+    /**
+     * With Charge selected, grey out the targets a charge can't reach (#806): closer
+     * than 4 m or beyond the attacker's Charge Move.
+     */
+    #markChargeReach(rows: RosterRow[], combatants: ReadonlyArray<{ id: string | null; tokenId: string | null }>): RosterRow[] {
+        if (!this.#isCharge()) return rows;
+        const { sourceToken } = this.#activeTokenPair();
+        if (sourceToken === null) return rows;
+        const chargeMove = this.#chargeMove();
+        return rows.map((row) => {
+            const tokenId = combatants.find((c) => c.id === row.id)?.tokenId ?? null;
+            const token = tokenId === null ? null : (canvas.tokens?.get(tokenId) ?? null);
+            if (token === null || token.id === sourceToken.id) return row;
+            const reach = chargeReach(calculateTokenDistance(sourceToken, token), chargeMove);
+            if (reach === 'in-range') return row;
+            return { ...row, disabled: true, note: game.i18n.localize(reach === 'too-close' ? 'WH40K.Roll.Charge.TooClose' : 'WH40K.Roll.Charge.TooFar') };
+        });
     }
 
     static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {
@@ -2763,6 +2829,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rollType = this.rollType;
         if (rollType === 'weapon') {
             if (!this._validateWeaponRoll()) return;
+            if (!(await this.#performChargeMove())) return;
             await (this.rollData['finalize'] as () => Promise<void>)();
             await this.actionData.performActionAndSendToChat();
         } else if (rollType === 'psychic') {
@@ -2934,6 +3001,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     async _submitWeaponRoll(manualTotal: number | null): Promise<void> {
         if (!this._validateWeaponRoll()) return;
+        if (!(await this.#performChargeMove())) return;
 
         if (manualTotal !== null) {
             await (this.rollData['finalize'] as () => Promise<void>)();

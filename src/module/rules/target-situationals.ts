@@ -63,6 +63,10 @@ export interface RosterRow {
     isSelected: boolean;
     group: TargetDispositionGroup;
     colorClass: string;
+    /** Greyed out: the chosen attack can't reach this target (a Charge out of range, #806). */
+    disabled?: boolean;
+    /** Why the row is greyed out. */
+    note?: string;
 }
 
 /**

@@ -23,7 +23,7 @@ const MOVED_FLAG = 'movedThisTurnMetres';
 /** Set when the combatant Runs; cleared at the start of its next turn (#805). */
 export const RAN_FLAG = 'ranSinceLastTurn';
 /** The update option that marks a move whose action has been declared, so the hook lets it through. */
-const DECLARED_MOVE = 'wh40kMoveDeclared';
+export const DECLARED_MOVE_OPTION = 'wh40kMoveDeclared';
 
 export interface TokenMoveDecisionInput {
     automation: 'full' | 'display' | 'none';
@@ -136,7 +136,7 @@ async function declareAndMove(
         // Run: until its next turn, ranged attacks against it take −20 and melee +20.
         if (choice === 'run') await (combatant as FlagAccessor | null | undefined)?.setFlag?.(SYSTEM_ID, RAN_FLAG, true);
     }
-    await tokenDoc.update?.({ x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y }, { [DECLARED_MOVE]: true });
+    await tokenDoc.update?.({ x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y }, { [DECLARED_MOVE_OPTION]: true });
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */
@@ -164,7 +164,7 @@ function onPreUpdateToken(
 ): boolean {
     try {
         if (!('x' in changes) && !('y' in changes)) return true;
-        if (options[DECLARED_MOVE] === true) return true;
+        if (options[DECLARED_MOVE_OPTION] === true) return true;
         if (WH40KSettings.getMovementAutomation() !== 'full') return true;
         const combat = game.combat as LooseCombat | null;
         if (combat?.started !== true) return true;

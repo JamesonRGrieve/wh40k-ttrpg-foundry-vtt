@@ -741,6 +741,12 @@
                 "Ratio": "Ganging Up ({attackers} against {defenders})",
                 "Talents": "Outnumbering talents"
             },
+            "Charge": {
+                "TooClose": "too close to charge",
+                "TooFar": "out of charge range",
+                "NoTarget": "Choose a target on the scene to charge.",
+                "MoveHeld": "The charge's move is waiting (leaving melee); attack once the move is done."
+            },
             "Engagement": {
                 "NoPointBlank": "engaged in melee: no Point Blank bonus",
                 "PistolOnly": "You're engaged in melee: only a Pistol-class weapon can fire.",
