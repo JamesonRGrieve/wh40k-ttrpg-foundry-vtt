@@ -961,6 +961,19 @@ const SESSION_26_FLOWS = [
 ];
 recordDimension('session-26.flow', covered['session-26.flow'], SESSION_26_FLOWS);
 
+// Melee engagement, leaving melee, declared moves and Charge (#804, #770, #805, #806),
+// tests/e2e/melee-engagement.spec.ts. Keep in sync with MELEE_ENGAGEMENT_FLOWS there.
+const MELEE_ENGAGEMENT_FLOWS = [
+    'tracker-shows-engaged',
+    'gang-up-ratio-on-card',
+    'shooting-into-melee-auto',
+    'ranged-refused-while-engaged',
+    'leave-melee-held-then-released',
+    'move-declared-as-half',
+    'charge-greys-and-moves',
+];
+recordDimension('melee-engagement.flow', covered['melee-engagement.flow'], MELEE_ENGAGEMENT_FLOWS);
+
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
 const DAMAGE_PROFILE_FLOWS = [

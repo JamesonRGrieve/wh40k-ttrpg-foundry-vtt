@@ -17,10 +17,20 @@ Add tokens to Foundry's combat tracker and start the encounter.
 With **Movement Automation** at **Full Automation** (default), during an encounter:
 
 - Players move their own token only on its turn.
-- A move cannot exceed the distance left for the chosen type (Half, Full, Charge, Run). The Combat tab shows what is left.
-- The GM moves tokens freely.
+- The first move of a turn asks which action it is. A move within the Half Move (Agility Bonus metres) is a **Half Move** (Half Action); a longer one goes straight to a **Full Move** (Full Action). **Run** (Full Action) is offered whenever it reaches, since it must be declared when you move: until your next turn, ranged attacks against you take −20 and melee attacks +20. After a Half Move, moving again offers your other Half Action for a second Half Move. The action is spent from the turn's budget.
+- A move cannot go past what was declared. The Combat tab shows what is left.
+- The GM moves tokens freely, except the active combatant on its turn, where the GM gets the same prompt with **Move freely**.
 
 A token smaller than a square (a Small creature at 0.75) sits centred in the square it moves to.
+
+## Melee engagement
+
+A token next to a foe (diagonals count) is **engaged in melee** with it. The combat tracker shows **Engaged** on each combatant that is, with the foes' names on hover.
+
+- **Ganging Up**: a side that outnumbers its foe two to one gains +10 to Weapon Skill tests against it, three to one or more +20. Both sides count: the target's allies engaged with the attackers count with the target. The card shows the two sides. **Combat Master** denies the bonus against its bearer; **Double Team** adds +10 while ganging up (+20 if a partner has it too).
+- **Shooting into melee**: a ranged attack at a target engaged with someone else selects **Engaged in Melee** (−20) automatically. It is waived when anyone in that melee is Stunned, Helpless or Unconscious, except in Dark Heresy 1e, whose rule has no waiver.
+- **Firing while engaged**: an engaged character can only fire a Pistol-class weapon; in Deathwatch, only melee attacks. Point Blank's +30 doesn't apply when you shoot the foe you're engaged with.
+- **Leaving melee**: moving away from foes you're engaged with pauses the move. A chat card gives each foe left behind a **Free Attack** (a Standard Attack, through the normal attack dialog) or **Decline**, and the GM can **Let them go**. When every foe has answered, the move goes on. Take **Disengage** (a Full Action in every line) first to leave without free attacks; it allows a Half Move.
 
 ## Make an attack
 
@@ -34,9 +44,10 @@ A jammed, empty or recharging weapon does not fire. Use **Reload** or **Clear Ja
 
 - **Attack Mode** (ranged): Standard Attack, Semi-Auto, Full-Auto, Suppressing Fire, Overwatch, Called Shot, as the weapon allows.
 - **Attack Mode** (melee): Standard Attack, Charge, All-Out Attack, Guarded Attack, Called Shot, Feint, Knockdown, Stun, Manoeuvre and Disarm.
+- **Charge**: with Charge selected, the target list greys out foes closer than 4 m or beyond your Charge Move. Rolling the charge moves your token into contact with the target first, then attacks.
 - **Aim**: No Aim, Half Aim, Full Aim.
-- **Range** and **target size**: set from the target; you can override both. Range bands are Point Blank, Short, Standard, Long and Extreme. Range is measured between the nearest squares the two tokens occupy, in metres whatever units the scene uses, and two figures engaged in melee (including diagonally) are at Point Blank. Choosing a different target in the dialog re-reads its range and size.
-- **Situational**: for example Prone, Unaware Target, Engaged in Melee, Darkness, High Ground, Stunned Target, Helpless Target, fog or smoke, cover and Ganging Up.
+- **Range** and **target size**: set from the target; you can override both. Range bands are Point Blank, Short, Standard, Long and Extreme. Range is measured between the nearest squares the two tokens occupy, in metres whatever units the scene uses; two figures engaged in melee (including diagonally) are at Point Blank range, but without its bonus. Choosing a different target in the dialog re-reads its range and size.
+- **Situational**: for example Prone, Unaware Target, Engaged in Melee, Running Target, Darkness, High Ground, Stunned Target, Helpless Target, fog or smoke, and cover. Engaged in Melee and Running Target are selected from the target's state; Ganging Up is worked out from the tokens.
 - **Firing options**: weapon qualities you can opt into for this attack.
 
 **Cover** adds armour at the hit location instead of penalising the roll. **Auto Line of Sight & Cover** pre-selects cover from scene walls. **Higher Ground elevation band** sets the height needed for the High Ground bonus.

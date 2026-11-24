@@ -8,6 +8,7 @@
  * Values are fixed for screenshot-diff stability (no Math.random).
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { expect } from 'storybook/test';
 import { initializeStoryHandlebars } from '../../../stories/template-support';
 import { renderSheet } from '../../../stories/test-helpers';
 import badgeSrc from './tracker-action-economy.hbs?raw';
@@ -23,6 +24,8 @@ interface BudgetCtx {
 }
 interface BadgeCtx {
     budget: BudgetCtx;
+    /** The foes the combatant is engaged in melee with, by name (#804). */
+    engagedWith?: string[];
 }
 
 function renderBadge(ctx: BadgeCtx): HTMLElement {
@@ -57,4 +60,26 @@ export const Exhausted: Story = {
     name: 'Exhausted — Full/Half/Reaction dimmed',
     args: { budget: { fullAvailable: false, halfRemaining: 0, reactionRemaining: 0, freeSpent: 2, usedPoints: 2 } },
     render: (args) => renderBadge(args),
+};
+
+/** Engaged in melee (#804): the row names the foes in its tooltip. */
+export const EngagedInMelee: Story = {
+    name: 'Engaged with two foes',
+    args: { budget: { fullAvailable: true, halfRemaining: 2, reactionRemaining: 1, freeSpent: 0, usedPoints: 0 }, engagedWith: ['Engaged Ork', 'Ork Boy'] },
+    render: (args) => renderBadge(args),
+    play: async ({ canvasElement }) => {
+        const engaged = canvasElement.querySelector<HTMLElement>('[data-tracker-engaged]');
+        await expect(engaged?.dataset['trackerEngaged']).toBe('Engaged Ork|Ork Boy');
+        await expect(engaged?.dataset['tooltip']).toContain('Engaged Ork, Ork Boy');
+    },
+};
+
+/** Not engaged: no engaged badge. */
+export const NotEngaged: Story = {
+    name: 'Not engaged',
+    args: { budget: { fullAvailable: true, halfRemaining: 2, reactionRemaining: 1, freeSpent: 0, usedPoints: 0 }, engagedWith: [] },
+    render: (args) => renderBadge(args),
+    play: async ({ canvasElement }) => {
+        await expect(canvasElement.querySelector('[data-tracker-engaged]')).toBeNull();
+    },
 };
