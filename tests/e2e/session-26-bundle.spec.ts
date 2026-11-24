@@ -452,7 +452,7 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
 
             // --- #774: a sub-square token centres in its square ------------------------
             // An ordinary unlinked token: a token-only token's resize is #780's.
-            const centred = await snapSubSquare(page, scene.sceneId, scene.tokens['puny'] ?? '');
+            const centred = await snapSubSquare(page, scene.sceneId, scene.tokens['crawler'] ?? '');
             pass(
                 'sub-square-token-centred',
                 // Token x/y are stored as integers, so the stored centre may round by half a pixel.
