@@ -181,6 +181,10 @@
                         <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="customXP" title="{{localize 'WH40K.VitalEditBody.AddXP'}}">
                             <i class="fas fa-plus"></i> {{localize "WH40K.VitalEditBody.AddXP"}}
                         </button>
+                        {{!-- Award XP to the party (#553): every character ticked by default --}}
+                        <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="awardPartyXP" data-tooltip="{{localize 'WH40K.XP.AwardParty'}}" aria-label="{{localize 'WH40K.XP.AwardParty'}}">
+                            <i class="fas fa-users"></i> {{localize "WH40K.XP.AwardPartyShort"}}
+                        </button>
                         {{/if}}
                         <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs)] tw-px-2 tw-py-1 tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-[var(--wh40k-radius-md)] tw-text-[0.7rem] tw-font-semibold tw-cursor-pointer tw-text-[color:var(--color-text-secondary)]" data-action="openAdvancement" title="{{localize 'WH40K.Experience.BuyAdvancements'}}">
                             <i class="fa-solid fa-arrow-up-big-small"></i> {{localize "WH40K.Experience.Advance"}}

@@ -69,16 +69,6 @@
                 title=(localize "WH40K.VitalEditBody.AddXP")
                 extraClass="tw-ml-auto"}}
 
-            {{!-- Award XP to the party (#553): GM only, every character ticked by default --}}
-            {{#if @root.isGM}}
-                {{> systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs
-                    action="awardPartyXP"
-                    tone="success"
-                    icon="fa-users"
-                    title=(localize "WH40K.XP.AwardParty")
-                    extraClass="tw-ml-0"}}
-            {{/if}}
-
             {{!-- Advancement Button --}}
             {{> systems/wh40k-rpg/templates/actor/partial/circular-icon-button.hbs
                 action="openAdvancement"
