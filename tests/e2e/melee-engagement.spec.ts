@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { type HarnessScene, type HarnessTokenSpec, installAttackHarness, leanWeapon } from './lib/attack-harness';
+import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
@@ -169,16 +170,29 @@ async function moveToken(page: Page, sceneId: string, tokenId: string, to: { x: 
     );
 }
 
-/** The leaving-melee card's foe rows, and press one of its buttons. */
-async function pressLeaveMelee(page: Page, button: 'decline' | 'release'): Promise<{ found: boolean; foes: string[] }> {
-    return page.evaluate(async (which) => {
-        const card = [...document.querySelectorAll<HTMLElement>('#chat-log [data-leave-melee-card]')].at(-1);
-        if (card === undefined) return { found: false, foes: [] };
-        const foes = [...card.querySelectorAll<HTMLElement>('[data-leave-melee-foe]')].map((li) => li.dataset['leaveMeleeFoe'] ?? '');
-        card.querySelector<HTMLElement>(`[data-leave-melee="${which}"]`)?.click();
-        await globalThis.wh40kE2E.settle(1500);
-        return { found: true, foes };
-    }, button);
+/** The newest leaving-melee card's message id, or null when none was posted. */
+async function leaveMeleeMessageId(page: Page): Promise<string | null> {
+    return page.evaluate(() => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+        const g = globalThis as unknown as { game: { messages: { contents: Array<{ id: string; getFlag: (s: string, k: string) => object | undefined }> } } };
+        const cards = g.game.messages.contents.filter((m) => m.getFlag('wh40k-rpg', 'leaveMelee') !== undefined);
+        return cards.at(-1)?.id ?? null;
+    });
+}
+
+/** The leaving-melee card's foe rows (in its popout), and press one of its buttons. */
+async function pressLeaveMelee(page: Page, root: string, button: 'decline' | 'release'): Promise<string[]> {
+    return page.evaluate(
+        async ({ sel, which }) => {
+            const card = document.querySelector<HTMLElement>(`${sel} [data-leave-melee-card]`);
+            if (card === null) return [];
+            const foes = [...card.querySelectorAll<HTMLElement>('[data-leave-melee-foe]')].map((li) => li.dataset['leaveMeleeFoe'] ?? '');
+            card.querySelector<HTMLElement>(`[data-leave-melee="${which}"]`)?.click();
+            await globalThis.wh40kE2E.settle(1500);
+            return foes;
+        },
+        { sel: root, which: button },
+    );
 }
 
 /** Answer the move-declaration dialog with `choice`; returns the choices it offered. */
@@ -323,20 +337,29 @@ test.describe.serial('melee engagement, leaving melee, declared moves and Charge
             const start = await positionOf(page, scene.sceneId, id('acolyte'));
             await moveToken(page, scene.sceneId, id('acolyte'), { x: 300, y: 500 }, 'none');
             const held = await positionOf(page, scene.sceneId, id('acolyte'));
-            await snap(page, 'melee-engagement-leave-melee-card', { selector: '#chat-log [data-leave-melee-card]' });
-            const card = await pressLeaveMelee(page, 'decline');
+            const cardId = await leaveMeleeMessageId(page);
+            let foes: string[] = [];
+            if (cardId !== null) {
+                const popout = await popOutChatMessage(page, cardId);
+                await snap(page, 'melee-engagement-leave-melee-card', { selector: popout });
+                foes = await pressLeaveMelee(page, popout, 'decline');
+            }
             const after = await positionOf(page, scene.sceneId, id('acolyte'));
             pass(
                 'leave-melee-held-then-released',
-                held.x === start.x && held.y === start.y && card.found && card.foes.includes(id('ork')) && after.y === 500,
-                JSON.stringify({ start, held, card, after }),
+                held.x === start.x && held.y === start.y && cardId !== null && foes.includes(id('ork')) && after.y === 500,
+                JSON.stringify({ start, held, cardId, foes, after }),
             );
 
             // --- #805: the shooter's first move of its turn: a Half Move -----------------
             await setTurn(page, id('shooter'));
             const shooterStart = await positionOf(page, scene.sceneId, id('shooter'));
             await moveToken(page, scene.sceneId, id('shooter'), { x: 300, y: 900 }, 'full');
-            await snap(page, 'melee-engagement-move-declaration', { selector: '.application.dialog' });
+            // Only capture the prompt if it opened; a missing prompt fails the flow below, not the run.
+            const prompted = await page.evaluate(async () =>
+                globalThis.wh40kE2E.pollUntil(() => document.querySelector('.application.dialog footer [data-action]') !== null, 10_000),
+            );
+            if (prompted) await snap(page, 'melee-engagement-move-declaration', { selector: '.application.dialog' });
             const offered = await answerMoveDialog(page, 'half');
             const declared = await declaredOf(page, id('shooter'));
             const shooterAfter = await positionOf(page, scene.sceneId, id('shooter'));

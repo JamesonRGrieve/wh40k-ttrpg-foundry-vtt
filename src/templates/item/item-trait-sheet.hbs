@@ -143,7 +143,7 @@
                 {{localize "WH40K.Fear.FearRating"}}
                 <span class="tw-text-[0.7rem] tw-italic tw-text-[color:var(--color-text-tertiary)] tw-normal-case">{{localize "WH40K.ItemSheet.Trait.ZeroNoneMax"}}</span>
               </label>
-              <input type="number" name="system.fearRating" value="{{item.system.fearRating}}" min="0" max="4" step="1" class="tw-w-full tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-rounded-sm tw-text-sm focus:tw-outline-none {{#if (gt item.system.fearRating 2)}}tw-border-red-700 tw-text-red-600 focus:tw-border-red-600{{else}}tw-border-[var(--color-border-secondary)] tw-text-[color:var(--color-text-primary)] focus:tw-border-[var(--wh40k-color-gold)]{{/if}}" placeholder="0" />
+              <input type="number" name="system.fearRating" value="{{item.system.fearRating}}" min="0" max="4" step="1" class="tw-w-[5.5rem] tw-text-center tw-px-3 tw-py-2 tw-bg-[var(--color-bg-option)] tw-border tw-rounded-sm tw-text-sm focus:tw-outline-none {{#if (gt item.system.fearRating 2)}}tw-border-red-700 tw-text-red-600 focus:tw-border-red-600{{else}}tw-border-[var(--color-border-secondary)] tw-text-[color:var(--color-text-primary)] focus:tw-border-[var(--wh40k-color-gold)]{{/if}}" placeholder="0" />
             </div>
           </div>
         {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
