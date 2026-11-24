@@ -16,7 +16,7 @@ import { t } from '../i18n/t.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { spendActionForActor } from './action-economy.ts';
 import { onTurnStart, type TurnCombatant } from './combat-turn-hooks.ts';
-import { actionCostOf, allowanceFor, DECLARED_MOVE_FLAG, type DeclaredMove, type MoveChoice, movePrompt, type MoveRates } from './move-declaration.ts';
+import { actionCostOf, DECLARED_MOVE_FLAG, type DeclaredMove, type MoveChoice, movePrompt, type MoveRates } from './move-declaration.ts';
 import { evaluateCombatMovement, MOVE_MODE_FLAG, type MovementEvaluation } from './movement-budget.ts';
 
 const MOVED_FLAG = 'movedThisTurnMetres';
@@ -189,16 +189,17 @@ function onPreUpdateToken(
         const moved = readMovedMetres(combatant);
         const requested = measureMoveMetres(tokenDoc, changes);
         const rates = moveRates(tokenDoc);
+        // The turn gate only: the budget itself is the declaration's (an allowance of 0,
+        // nothing declared yet, reads as "unknown" to the budget check and would pass).
         const decision = decideTokenMove({
             automation: 'full',
             hasActiveCombat: true,
             isActorsTurn,
-            movedThisTurnMetres: moved,
-            requestedMetres: requested,
-            allowanceMetres: allowanceFor(declared, rates),
+            movedThisTurnMetres: 0,
+            requestedMetres: 0,
+            allowanceMetres: Number.POSITIVE_INFINITY,
         });
-        if (decision.allowed) return true;
-        if (decision.reason === 'not-your-turn') {
+        if (!decision.allowed && decision.reason === 'not-your-turn') {
             ui.notifications.warn(t('WH40K.Combat.NotYourTurnMove'));
             return false;
         }

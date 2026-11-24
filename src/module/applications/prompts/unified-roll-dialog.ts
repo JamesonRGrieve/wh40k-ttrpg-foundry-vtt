@@ -2711,7 +2711,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
 
     /** Whether the attack is a Charge with a melee weapon (#806). */
     #isCharge(): boolean {
-        return this.rollType === 'weapon' && this._attackModeKey === 'charge' && this.rollData.weapon?.isRanged !== true;
+        // By the roll's action, which every way of choosing Charge sets (the mode card,
+        // or an attack opened as a Charge), not the mode key the dialog took at open.
+        const isRanged = this.rollData.weapon?.isRanged === true;
+        return this.rollType === 'weapon' && !isRanged && getAttackModeKeyForAction(this.rollData.action, isRanged) === 'charge';
     }
 
     /** The attacker's Charge Move, in metres. */
