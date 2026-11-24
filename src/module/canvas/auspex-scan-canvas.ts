@@ -167,6 +167,9 @@ export function registerAuspexScanSocket(): void {
 
 /** Whisper the scan's contacts to the GMs. */
 export async function whisperScanToGM(scannerName: string, itemName: string, contacts: readonly ScanContact[]): Promise<void> {
-    const content = await foundry.applications.handlebars.renderTemplate(SCAN_CHAT_TEMPLATE, scanCardContext(scannerName, itemName, contacts, t, game.i18n.lang));
+    const content = await foundry.applications.handlebars.renderTemplate(
+        SCAN_CHAT_TEMPLATE,
+        scanCardContext(scannerName, itemName, contacts, t, game.i18n.lang),
+    );
     await ChatMessage.create({ user: game.user.id, content, whisper: ChatMessage.getWhisperRecipients('GM') });
 }
