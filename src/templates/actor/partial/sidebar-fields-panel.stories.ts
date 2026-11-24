@@ -14,12 +14,14 @@ initializeStoryHandlebars();
 interface FieldArgs {
     label: string;
     name: string;
-    type: 'text' | 'number';
+    type: 'text' | 'number' | 'select';
     value: string | number;
     placeholder: string;
     min?: number;
     inputClass?: string;
     disabled?: boolean;
+    valueLabel?: string;
+    options?: Record<string, string>;
 }
 
 interface Args {
@@ -75,6 +77,36 @@ export const GmOverride: Story = {
     args: { headerFields: [homeWorld, rank(false, 2)] },
     play: async ({ canvasElement }) => {
         await expect(rankInput(canvasElement)?.value).toBe('2');
+    },
+};
+
+const npcFields: FieldArgs[] = [
+    { label: 'Threat', name: 'system.threatLevel', type: 'number', value: 6, placeholder: '', valueLabel: 'Standard' },
+    { label: 'Tier', name: 'system.tier', type: 'select', value: 'troop', placeholder: '', options: { troop: 'Troop', elite: 'Elite', master: 'Master' } },
+    { label: 'Faction', name: 'system.faction', type: 'text', value: '', placeholder: 'Faction' },
+];
+
+/**
+ * An NPC's rows (operator, 2026-11-24: "a little squished"). Each label sits above
+ * its control and the control takes the row: side by side, Threat's input was ~40px
+ * between its label and "Standard", and Faction alone wrapped under its label.
+ */
+export const NpcRowsStacked: Story = {
+    args: { gameSystem: 'dh2', headerFields: npcFields },
+    play: async ({ canvasElement }) => {
+        // Stacked: each control starts below its label, not beside it.
+        const stacked = npcFields.map((field) => {
+            const fieldRow = canvasElement.querySelector<HTMLElement>(`[data-sidebar-field="${field.name}"]`);
+            const label = fieldRow?.querySelector<HTMLElement>('[data-sidebar-field-label]')?.getBoundingClientRect();
+            const control = fieldRow?.querySelector<HTMLElement>('input, select')?.getBoundingClientRect();
+            return label !== undefined && control !== undefined && control.top >= label.bottom;
+        });
+        await expect(stacked).toEqual(npcFields.map(() => true));
+        const row = canvasElement.querySelector<HTMLElement>('[data-sidebar-field="system.threatLevel"]');
+        const threat = row?.querySelector<HTMLInputElement>('input');
+        // The number takes most of the row beside its value label.
+        await expect((threat?.getBoundingClientRect().width ?? 0) / (row?.getBoundingClientRect().width ?? 1)).toBeGreaterThan(0.5);
+        await expect(row?.textContent).toContain('Standard');
     },
 };
 
