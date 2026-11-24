@@ -136,7 +136,13 @@ describe('stub pack content integrity (#303)', () => {
     for (const p of NON_RT) {
         it(`${p.systemId}: every doc is a stub onto a matching RT doc or a self-contained override`, () => {
             const docs = loadDocs(p.systemId);
-            expect(docs).toHaveLength(rtIdentifiers.size);
+            // A line keeps only the qualities its books print or its weapons use
+            // (packs-private D8-D10), so its set is a non-empty subset of RT's, each
+            // identifier once.
+            expect(docs.length).toBeGreaterThan(0);
+            expect(docs.length).toBeLessThanOrEqual(rtIdentifiers.size);
+            const lineIdentifiers = docs.map((doc) => doc.system?.identifier);
+            expect(new Set(lineIdentifiers).size).toBe(lineIdentifiers.length);
             for (const doc of docs) {
                 const id = doc.system?.identifier;
                 expect(id !== undefined && rtIdentifiers.has(id)).toBe(true);

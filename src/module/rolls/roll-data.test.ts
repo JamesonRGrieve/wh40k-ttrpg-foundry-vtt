@@ -460,3 +460,46 @@ describe('RollData.modifiedTarget floors at 0 like the Roll Test dialog (#701 au
         expect(rollWith(10, -30).modifiedTarget).toBe(0);
     });
 });
+
+describe('WeaponRollData.applyTargetSize (#761)', () => {
+    beforeEach(() => {
+        vi.stubGlobal('game', { i18n: { localize: (k: string) => k } });
+        vi.stubGlobal('ui', { notifications: { warn: vi.fn() } });
+    });
+    afterEach(() => vi.unstubAllGlobals());
+
+    /** A weapon roll aimed at a target of the given size, without the config-heavy constructor. */
+    function aimedAt(size: number | string | undefined): WeaponRollData {
+        // eslint-disable-next-line no-restricted-syntax -- test: bypass the WH40K-config constructor to unit-test one method
+        const rd = Object.create(WeaponRollData.prototype) as WeaponRollData;
+        rd.modifiers = {};
+        // eslint-disable-next-line no-restricted-syntax -- test: a structural target actor carrying only the size the method reads
+        rd.targetActor = (size === undefined ? null : { system: { size } }) as unknown as WeaponRollData['targetActor'];
+        return rd;
+    }
+
+    it('a Puny target (Size 2) gives −20', () => {
+        const rd = aimedAt(2);
+        rd.applyTargetSize();
+        expect(rd.modifiers['target-size']).toBe(-20);
+    });
+
+    it('retargeting an Average human replaces the −20 with 0', () => {
+        const rd = aimedAt(2);
+        rd.applyTargetSize();
+        // eslint-disable-next-line no-restricted-syntax -- test: swap in the new structural target
+        rd.targetActor = { system: { size: 4 } } as unknown as WeaponRollData['targetActor'];
+        rd.applyTargetSize();
+        expect(rd.modifiers['target-size']).toBe(0);
+    });
+
+    it('no target, or a non-numeric size, leaves no size modifier', () => {
+        const none = aimedAt(undefined);
+        none.modifiers['target-size'] = -20;
+        none.applyTargetSize();
+        expect(none.modifiers['target-size']).toBeUndefined();
+        const junk = aimedAt('huge');
+        junk.applyTargetSize();
+        expect(junk.modifiers['target-size']).toBeUndefined();
+    });
+});
