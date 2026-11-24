@@ -3,6 +3,7 @@ import { hydrateActorInMemory } from '../compendium-hydrate.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { cachedCompendiumActor, compendiumActorUuidOf } from '../rules/compendium-token-actors.ts';
 import { resolveSenses, senseBearersOf, tokenSensesUpdate } from '../rules/token-senses.ts';
+import { centredSubSquarePosition } from '../rules/token-snap.ts';
 import { disembark, embark, embarkOnDropOnto, slaveOccupantTokens } from '../rules/vehicle-embark.ts';
 import { readAboard } from '../rules/vehicle-occupancy.ts';
 import { type PhysicalDimensions, tokenPresetFromActor } from '../utils/token-footprint.ts';
@@ -79,6 +80,23 @@ export class TokenDocumentWH40K extends TokenDocument {
         if (world !== null) return world;
         const uuid = compendiumActorUuidOf(this);
         return uuid === null ? null : cachedCompendiumActor(uuid);
+    }
+
+    /**
+     * Snap a token smaller than one square to the centre of the square its centre
+     * falls in (#774). Core rounds a 0.75 token up to one square and snaps it to the
+     * square's corner, on every drag, drop, keyboard and ruler move; every one of
+     * those paths asks the document. Larger tokens keep core snapping.
+     */
+    override getSnappedPosition(data: Parameters<TokenDocument['getSnappedPosition']>[0] = {}): ReturnType<TokenDocument['getSnappedPosition']> {
+        const snapped = super.getSnappedPosition(data);
+        const grid = this.parent?.grid;
+        if (grid?.isSquare !== true) return snapped;
+        const centred = centredSubSquarePosition(
+            { x: data.x ?? this.x, y: data.y ?? this.y, width: data.width ?? this.width, height: data.height ?? this.height },
+            grid.size,
+        );
+        return centred === null ? snapped : { ...snapped, x: centred.x, y: centred.y };
     }
 
     /* -------------------------------------------- */
