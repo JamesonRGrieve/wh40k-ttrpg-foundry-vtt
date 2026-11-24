@@ -9,7 +9,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 Add tokens to Foundry's combat tracker and start the encounter.
 
 - **Initiative**: the initiative action on the **Combat** tab opens **Roll Initiative**, which accepts a situational modifier and **Burn a Fate Point (take 10 instead of 1d10)**.
-- **Actions**: each combatant has a **Full**, **Half**, **Free** and **Reaction** budget in the combat tracker. It resets each turn.
+- **Actions**: each combatant has a **Full**, **Half**, **Free** and **Reaction** budget in the combat tracker. It resets each turn. Each token keeps its own budget, so several copies of the same NPC each have their own Reaction.
 - **Attacks need an encounter**: a weapon attack requires a running encounter that includes the attacker's token. The GM can disable **Require Active Combat to Attack**.
 
 ## Movement
@@ -19,6 +19,8 @@ With **Movement Automation** at **Full Automation** (default), during an encount
 - Players move their own token only on its turn.
 - A move cannot exceed the distance left for the chosen type (Half, Full, Charge, Run). The Combat tab shows what is left.
 - The GM moves tokens freely.
+
+A token smaller than a square (a Small creature at 0.75) sits centred in the square it moves to.
 
 ## Make an attack
 
@@ -33,7 +35,7 @@ A jammed, empty or recharging weapon does not fire. Use **Reload** or **Clear Ja
 - **Attack Mode** (ranged): Standard Attack, Semi-Auto, Full-Auto, Suppressing Fire, Overwatch, Called Shot, as the weapon allows.
 - **Attack Mode** (melee): Standard Attack, Charge, All-Out Attack, Guarded Attack, Called Shot, Feint, Knockdown, Stun, Manoeuvre and Disarm.
 - **Aim**: No Aim, Half Aim, Full Aim.
-- **Range** and **target size**: set from the target; you can override both. Range bands are Point Blank, Short, Standard, Long and Extreme.
+- **Range** and **target size**: set from the target; you can override both. Range bands are Point Blank, Short, Standard, Long and Extreme. Range is measured between the nearest squares the two tokens occupy, in metres whatever units the scene uses, and two figures engaged in melee (including diagonally) are at Point Blank. Choosing a different target in the dialog re-reads its range and size.
 - **Situational**: for example Prone, Unaware Target, Engaged in Melee, Darkness, High Ground, Stunned Target, Helpless Target, fog or smoke, cover and Ganging Up.
 - **Firing options**: weapon qualities you can opt into for this attack.
 
@@ -89,11 +91,12 @@ Click **Assign Damage** on the damage card. The system:
 1. reduces the location's armour by penetration, to a minimum of 0;
 2. subtracts that armour and the Toughness Bonus from the damage;
 3. removes the rest from wounds;
-4. treats damage beyond remaining wounds as critical damage, rolls the critical effect and applies its conditions.
+4. treats damage beyond remaining wounds as critical damage, rolls the critical effect and applies its conditions. A condition the critical row gives a duration ("Stunned for 2 rounds", "for 1d5 rounds") lasts that long and then wears off; the card lists each duration.
 
 - **Assign Damage** on the Combat tab applies damage and fatigue by hand.
 - With **Auto-apply Damage to Target**, GM-rolled damage against a selected target applies automatically ("Damage applied automatically"). Player-rolled damage still uses the button.
 - A Deathwatch horde loses Magnitude instead of wounds.
+- A **First Aid** test (Medicae) heals the token it names, including a token the player doesn't own: the GM's client applies the healing.
 
 ## Vehicles and ships
 
