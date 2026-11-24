@@ -97,6 +97,47 @@ export const Default: Story = {
     },
 };
 
+// ── Resources summed from components ──────────────────────────────────────────
+
+/** The labelled resource field's input, by its label text. */
+function resourceInput(canvasElement: HTMLElement, label: string): HTMLInputElement | null {
+    const row = [...canvasElement.querySelectorAll<HTMLLabelElement>('label')].find((l) => l.textContent.trim() === label)?.parentElement;
+    return row?.querySelector<HTMLInputElement>('input') ?? null;
+}
+
+/**
+ * Space used and power generated and used come from the ship's components
+ * (playtester, 2026-11-24: "the power and space don't automatically add up"). The
+ * fields show the derived sums, not the stored values, and are read-only with no
+ * name, so the form never writes a stale number back. Space Total stays editable.
+ */
+export const ResourcesFromComponents: Story = {
+    name: 'Resources — summed from components, read-only',
+    args: {
+        ...defaultCtxWithSource,
+        inEditMode: true,
+        editable: true,
+        system: { ...defaultCtxWithSource.system, space: { total: 110, used: 70, available: 40 }, power: { total: 95, used: 37, available: 58 } },
+        source: { ...defaultCtxWithSource.source, space: { total: 110, used: 0 }, power: { total: 0, used: 42 } },
+    },
+    render: (args) => renderVoidcraftSheet(args),
+    play: async ({ canvasElement }) => {
+        const derived = [
+            ['Space (Used)', '70'],
+            ['Power (Total)', '95'],
+            ['Power (Used)', '37'],
+        ] as const;
+        const read = derived.map(([label]) => {
+            const input = resourceInput(canvasElement, label);
+            return [label, input?.value ?? null, input?.readOnly ?? null, input?.getAttribute('name') ?? ''] as const;
+        });
+        await expect(read).toEqual(derived.map(([label, value]) => [label, value, true, ''] as const));
+        const total = resourceInput(canvasElement, 'Space (Total)');
+        await expect(total?.name).toBe('system.space.total');
+        await expect(total?.readOnly).toBe(false);
+    },
+};
+
 // ── Edit-mode fields ──────────────────────────────────────────────────────────
 
 export const EditMode: Story = {

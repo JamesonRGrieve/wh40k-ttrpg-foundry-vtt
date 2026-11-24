@@ -94,9 +94,13 @@
         </div>
         <div class="tw-grid tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-3">
             {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.SpaceTotal") name="system.space.total" value=source.space.total type="number" dataDtype="Number"}}
-            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.SpaceUsed") name="system.space.used" value=source.space.used type="number" dataDtype="Number"}}
-            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.PowerTotal") name="system.power.total" value=source.power.total type="number" dataDtype="Number"}}
-            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.PowerUsed") name="system.power.used" value=source.power.used type="number" dataDtype="Number"}}
+            {{!-- Space used, power generated and power used are summed from the ship's
+                  functional components, weapons and upgrades (voidcraft.ts). They show
+                  that sum read-only and carry no name: an input bound to the stored value
+                  showed a stale number and its edits were overwritten on every prepare. --}}
+            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.SpaceUsed") value=system.space.used type="number" readonly=true rowClass="tw-opacity-90" inputClass="tw-cursor-default"}}
+            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.PowerTotal") value=system.power.total type="number" readonly=true rowClass="tw-opacity-90" inputClass="tw-cursor-default"}}
+            {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.PowerUsed") value=system.power.used type="number" readonly=true rowClass="tw-opacity-90" inputClass="tw-cursor-default"}}
             {{> systems/wh40k-rpg/templates/shared/field-row.hbs label=(localize "WH40K.Voidcraft.Resources.ShipPoints") name="system.shipPoints" value=source.shipPoints type="number" dataDtype="Number"}}
         </div>
     {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
