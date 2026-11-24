@@ -19,6 +19,7 @@ import { AVAILABILITY_KEYS, normaliseAvailability } from '../../rules/acquisitio
 import { type CharacteristicGenerationRules, characteristicDice, originModifierAddsToRoll, pointBuyStart } from '../../rules/characteristic-generation.ts';
 import { divinationMaxim } from '../../rules/divination.ts';
 import { eliteCharge, grantedEliteSources } from '../../rules/elite-advances.ts';
+import { originChoiceStatus } from '../../rules/origin-choice-status.ts';
 import { activeRulesetVariant, isHomebrewVariant } from '../../rules/ruleset-variant.ts';
 import type { WH40KCharacteristic, WH40KItemModifiers } from '../../types/global.d.ts';
 import type { I18nKey } from '../../types/i18n-keys';
@@ -3157,26 +3158,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const equipmentComplete = !equipmentRequired || this.equipmentSelections.size > 0;
         let pendingChoices = 0;
         let pendingRolls = 0;
+        // Choices with no options (content the packs don't carry) never block the commit;
+        // the footer names them so the gap is visible.
+        const unfillableChoices: string[] = [];
+        // Each pending choice by origin and label, so the footer can say which one is left.
+        const pendingChoiceNames: string[] = [];
 
         for (const [, selection] of this.selections) {
             const system = this._getSelectionSystem(selection);
             const grants: NonNullable<OriginPathSystemData['grants']> = system.grants ?? {};
-            const selectedChoices: Record<string, string[]> = system.selectedChoices ?? {};
-
-            // Count pending choices (deduplicate labels to match dialog keys)
-            if ((grants.choices?.length ?? 0) > 0) {
-                const statusLabelCounts: Record<string, number> = {};
-                for (const choice of grants.choices as GrantChoiceRaw[]) {
-                    const base = choice.label ?? choice.name ?? '';
-                    statusLabelCounts[base] = (statusLabelCounts[base] ?? 0) + 1;
-                    const suffix = statusLabelCounts[base] > 1 ? ` (${statusLabelCounts[base]})` : '';
-                    const choiceKey = `${base}${suffix}`;
-                    const sel = selectedChoices[choiceKey];
-                    if (!Array.isArray(sel) || sel.length < (choice.count ?? 1)) {
-                        pendingChoices++;
-                    }
-                }
-            }
+            const choiceStatus = originChoiceStatus(grants.choices ?? [], system.selectedChoices ?? {});
+            pendingChoices += choiceStatus.pending.length;
+            pendingChoiceNames.push(...choiceStatus.pending.map((key) => `${selection.name}: ${key}`));
+            unfillableChoices.push(...choiceStatus.unfillable.map((key) => `${selection.name}: ${key}`));
 
             // Count pending rolls (wounds, fate, throne gelt, Influence) — the same list the stepper gates on.
             pendingRolls += this._pendingRolls(selection).length;
@@ -3193,6 +3187,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             equipmentComplete,
             equipmentMaxPicks,
             pendingChoices: pendingChoices,
+            pendingChoiceNames,
+            unfillableChoices,
             pendingRolls: pendingRolls,
             rollsComplete: pendingRolls === 0,
             canCommit: coreStepsComplete && pendingChoices === 0 && pendingRolls === 0 && equipmentComplete,

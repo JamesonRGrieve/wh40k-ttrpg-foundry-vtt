@@ -194,6 +194,9 @@ interface BuilderStoryArgs {
         pendingChoices: number;
         pendingRolls: number;
         canCommit: boolean;
+        hasSelections?: boolean;
+        unfillableChoices?: string[];
+        pendingChoiceNames?: string[];
     };
 }
 
@@ -345,6 +348,56 @@ export const Default: Story = {
         await expect(view.getByText('Acolyte Origins')).toBeTruthy();
         await expect(view.getByText('Hive World')).toBeTruthy();
         clickAction(canvasElement, 'selectOriginCard');
+    },
+};
+
+/**
+ * A choice whose options the content packs don't carry (playtester, 2026-11-24: an
+ * RT origin's table choice left "1 choice pending" and a dead Apply). It is named
+ * in the footer as skipped, the choices read complete, and Apply is enabled.
+ */
+export const UnfillableChoiceDoesNotBlock: Story = {
+    args: makeArgs({
+        status: {
+            stepsComplete: true,
+            stepsCount: 6,
+            totalSteps: 6,
+            choicesComplete: true,
+            pendingChoices: 0,
+            pendingRolls: 0,
+            canCommit: true,
+            hasSelections: true,
+            unfillableChoices: ['Lineage: Divination'],
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const skipped = canvasElement.querySelector<HTMLElement>('[data-origin-unfillable-choices]');
+        await expect(skipped).not.toBeNull();
+        await expect(skipped?.dataset['tooltip']).toBe('Lineage: Divination');
+        await expect(skipped?.textContent).toContain('1');
+        await expect(canvasElement.querySelector('[data-wh40k-hook="origin-footer-choices"]')?.textContent).toContain('All choices complete');
+    },
+};
+
+/** A pending choice is named in the footer (origin: choice), so the player knows which card to open. */
+export const PendingChoiceIsNamed: Story = {
+    args: makeArgs({
+        status: {
+            stepsComplete: true,
+            stepsCount: 6,
+            totalSteps: 6,
+            choicesComplete: false,
+            pendingChoices: 1,
+            pendingRolls: 0,
+            canCommit: false,
+            hasSelections: true,
+            pendingChoiceNames: ['Pride: Heirloom Item'],
+        },
+    }),
+    play: async ({ canvasElement }) => {
+        const footer = canvasElement.querySelector<HTMLElement>('[data-origin-pending-choices]');
+        await expect(footer?.dataset['tooltip']).toBe('Pride: Heirloom Item');
+        await expect(footer?.textContent).toContain('1');
     },
 };
 

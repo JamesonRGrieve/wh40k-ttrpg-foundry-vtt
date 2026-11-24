@@ -4259,6 +4259,7 @@
             },
             "AllChoicesComplete": "All choices complete",
             "ChoicesPending": "choices pending",
+            "ChoicesUnavailable": "choices with no options in your content (skipped)",
             "RollsPending": "rolls pending",
             "OpenAdvancementTitle": "Spend Starting Experience",
             "OpenAdvancementPrompt": "Your Acolyte has {xp} XP to spend on starting advances. Open the Advancement dialog now?",

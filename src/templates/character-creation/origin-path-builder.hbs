@@ -806,13 +806,21 @@
  </span>
  {{!-- Only once an origin is picked (#701): before that, "All choices complete" beside "0/6 steps" contradicted itself. --}}
  {{#if status.hasSelections}}
- <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-wh40k-hook="origin-footer-choices">
+ {{!-- The tooltip names each pending choice (origin: choice), so the player knows which card to open. --}}
+ <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-wh40k-hook="origin-footer-choices"{{#unless status.choicesComplete}} data-tooltip="{{join status.pendingChoiceNames ', '}}" data-origin-pending-choices="{{join status.pendingChoiceNames '|'}}"{{/unless}}>
  <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-exclamation-triangle tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
  {{#if status.choicesComplete}}
  {{localize "WH40K.OriginPath.AllChoicesComplete"}}
  {{else}}
  {{status.pendingChoices}} {{localize "WH40K.OriginPath.ChoicesPending"}}
  {{/if}}
+ </span>
+ {{/if}}
+ {{!-- A choice with no options (content the packs lack) can't be made; it never blocks Apply. --}}
+ {{#if status.unfillableChoices.length}}
+ <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-origin-unfillable-choices data-tooltip="{{join status.unfillableChoices ', '}}">
+ <i class="fa-solid fa-circle-info tw-text-[#9a9a8a] tw-text-[1rem]"></i>
+ {{status.unfillableChoices.length}} {{localize "WH40K.OriginPath.ChoicesUnavailable"}}
  </span>
  {{/if}}
  {{#if status.pendingRolls}}

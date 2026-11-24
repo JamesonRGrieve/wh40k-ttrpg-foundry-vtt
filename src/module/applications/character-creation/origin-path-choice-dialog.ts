@@ -611,9 +611,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static #confirm(this: OriginPathChoiceDialog, _event: Event, _target: HTMLElement): void {
         // Validate all choices are complete
+        // A choice needs no more picks than it has options: one with none (content the
+        // packs lack) can't block Confirm, as it can't block the builder (origin-choice-status.ts).
         const incomplete = this.pendingChoices.filter((choice) => {
             const selections = this.selections.get(choice._key) ?? new Set<string>();
-            return selections.size < choice.count;
+            return selections.size < Math.min(choice.count, choice.options.length);
         });
 
         if (incomplete.length > 0) {
