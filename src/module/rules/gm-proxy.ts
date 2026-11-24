@@ -11,7 +11,8 @@ import { emitSystemSocket, onSystemSocket, type SystemSocketMessage } from '../u
 
 interface ProxyUpdatePayload {
     readonly type: 'updateActor';
-    readonly actorId: string;
+    /** A UUID, not an id, so an unlinked token's synthetic actor resolves too (#782). */
+    readonly actorUuid: string;
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payload is an open-ended Record
     readonly data: Record<string, unknown>;
 }
@@ -28,6 +29,14 @@ type ProxyPayload = ProxyUpdatePayload | ProxyCreateEffectsPayload;
 /** The system socket also carries other features' messages (attack cues); only these two are the proxy's. */
 function isProxyPayload(message: SystemSocketMessage): message is ProxyPayload {
     return message.type === 'updateActor' || message.type === 'createActorEffects';
+}
+
+/** An actor the proxy can update: directly when owned, else by its UUID through the GM. */
+export interface ProxyActor {
+    readonly uuid: string | null;
+    readonly isOwner: boolean;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payload is an open-ended Record
+    readonly update: (data: Record<string, unknown>) => Promise<unknown>;
 }
 
 /** The slice of an actor a proxied effect creation needs. */
@@ -55,25 +64,30 @@ async function handleProxyRequest(payload: ProxyPayload): Promise<void> {
         await recipient.createEmbeddedDocuments('ActiveEffect', [...payload.effects]);
         return;
     }
-    const actor = game.actors.get(payload.actorId);
-    if (actor === undefined) {
-        console.warn(`WH40K | GM proxy: actor ${payload.actorId} not found`);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: fromUuid resolves any document type; an updateActor request only ever names an actor
+    const actor = (await fromUuid(payload.actorUuid)) as unknown as ProxyActor | null;
+    if (actor === null) {
+        console.warn(`WH40K | GM proxy: actor ${payload.actorUuid} not found`);
         return;
     }
     await actor.update(payload.data);
 }
 
+/**
+ * Update an actor the user may not own (#562). An owner updates it directly; anyone
+ * else asks the GM through the system socket, naming the actor by UUID so an
+ * unlinked token's synthetic actor (whose id is its base actor's) is the one
+ * changed, not the world actor (#782).
+ */
 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry actor.update payload is an open-ended Record
-export async function gmProxyActorUpdate(actorId: string, data: Record<string, unknown>): Promise<void> {
-    const actor = game.actors.get(actorId);
-    if (actor === undefined) return;
-
+export async function gmProxyActorUpdate(actor: ProxyActor, data: Record<string, unknown>): Promise<void> {
     if (actor.isOwner) {
         await actor.update(data);
         return;
     }
-
-    const payload: ProxyUpdatePayload = { type: 'updateActor', actorId, data };
+    // An actor with no UUID (an unsaved document) can't be named to the GM.
+    if (actor.uuid === null) return;
+    const payload: ProxyUpdatePayload = { type: 'updateActor', actorUuid: actor.uuid, data };
     emitSystemSocket(payload);
 }
 

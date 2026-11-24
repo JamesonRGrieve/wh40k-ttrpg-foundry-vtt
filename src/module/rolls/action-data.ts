@@ -1706,9 +1706,6 @@ export class MedicaeActionData extends SimpleSkillData {
             return;
         }
 
-        const targetId = target.id;
-        // eslint-disable-next-line no-restricted-syntax -- boundary: targetActor is an opaque Foundry Actor; narrow to the ownership + update surface used here
-        const patientActor = target as unknown as { isOwner?: boolean; update?: (data: Record<string, unknown>) => Promise<unknown> };
         const patient: FirstAidPatient = {
             woundsValue,
             woundsMax,
@@ -1719,15 +1716,9 @@ export class MedicaeActionData extends SimpleSkillData {
                 if (patch.woundsValue !== undefined) upd['system.wounds.value'] = patch.woundsValue;
                 if (patch.criticalDamage !== undefined) upd['system.wounds.critical'] = patch.criticalDamage;
                 if (Object.keys(upd).length === 0) return;
-                // Prefer a direct update when we own the target: this reaches an
-                // UNLINKED token patient (whose actor `id` is null and so cannot be
-                // reached through the id-keyed GM proxy). Otherwise route through the
-                // proxy so a player can heal a target they do not own.
-                if (patientActor.isOwner === true && typeof patientActor.update === 'function') {
-                    await patientActor.update(upd);
-                } else if (targetId !== null) {
-                    await gmProxyActorUpdate(targetId, upd);
-                }
+                // Directly when the healer owns the patient, else through the GM by the
+                // patient's UUID, which reaches an unlinked token's own actor (#782).
+                await gmProxyActorUpdate(target, upd);
             },
         };
         await applyFirstAidOutcome(patient, outcome);
@@ -1735,10 +1726,10 @@ export class MedicaeActionData extends SimpleSkillData {
         // RAW cooldown (#458): close the patient's gate so the same use cannot be
         // repeated on them until the in-universe window elapses (First Aid: 24h).
         const gate = getSkillUse('medicae', this.useKind)?.timeGate;
-        if (gate?.windowSeconds !== undefined && targetId !== null) {
+        if (gate?.windowSeconds !== undefined) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry flag path is a string key
             const flagPath = `flags.wh40k-rpg.timeGates.${gate.key}`;
-            await gmProxyActorUpdate(targetId, { [flagPath]: Number(game.time.worldTime) + gate.windowSeconds });
+            await gmProxyActorUpdate(target, { [flagPath]: Number(game.time.worldTime) + gate.windowSeconds });
         }
 
         const parts = [game.i18n.format('WH40K.SkillUse.Applied', { medic: this.rollData.sourceActor?.name ?? '', use: useLabel, patient: target.name })];
@@ -1778,13 +1769,12 @@ export class InterrogationActionData extends SimpleSkillData {
 
         const degrees = this.rollData.success ? Math.max(1, this.rollData.dos) : 0;
         const outcome = resolveInterrogation(degrees);
-        const interrogateTargetId = target.id;
-        if (outcome.fatigue > 0 && interrogateTargetId !== null) {
+        if (outcome.fatigue > 0) {
             // eslint-disable-next-line no-restricted-syntax -- boundary: actor.system shape varies by subclass
             const fatigue = (target.system as { fatigue?: { value: number; max: number } }).fatigue;
             if (fatigue !== undefined) {
                 const next = Math.max(0, fatigue.value + Math.trunc(outcome.fatigue));
-                await gmProxyActorUpdate(interrogateTargetId, { 'system.fatigue.value': next });
+                await gmProxyActorUpdate(target, { 'system.fatigue.value': next });
             }
         }
         if (outcome.success) {
@@ -1801,12 +1791,12 @@ export class InterrogationActionData extends SimpleSkillData {
                 t(EFFECT_TITLE.interrogation),
                 game.i18n.format('WH40K.SkillUse.Interrogation.Resisted', { subject: target.name, fatigue: String(outcome.fatigue) }),
             );
-            if (this.rollData.dof >= 2 && interrogateTargetId !== null) {
+            if (this.rollData.dof >= 2) {
                 const lockout = new Roll('1d5');
                 await lockout.evaluate();
                 const days = lockout.total ?? 1;
                 const expiry = Math.trunc(Number(game.time.worldTime) + days * DAY_SECONDS);
-                await gmProxyActorUpdate(interrogateTargetId, {
+                await gmProxyActorUpdate(target, {
                     'flags.wh40k-rpg.timeGates.interrogate': expiry,
                 });
                 this.addEffect(
