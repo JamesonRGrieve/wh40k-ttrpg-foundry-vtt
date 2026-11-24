@@ -323,7 +323,7 @@ export interface CriticalSideEffectReport {
 }
 
 /** A timed condition's rolled duration, as the card shows it. */
-export interface AppliedConditionDuration {
+interface AppliedConditionDuration {
     /** The condition's display name. */
     name: string;
     /** The rolled amount. */

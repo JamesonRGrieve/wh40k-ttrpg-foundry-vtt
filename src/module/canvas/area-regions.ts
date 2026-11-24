@@ -54,7 +54,7 @@ function combatClock(): { id: string; round: number } | null {
 }
 
 /** The system area flag a Region carries, or null for a Region the system didn't place. */
-export function areaFlagOf(region: { flags: object }): AreaRegionFlag | null {
+function areaFlagOf(region: { flags: object }): AreaRegionFlag | null {
     // eslint-disable-next-line no-restricted-syntax -- boundary: foundry.utils.getProperty returns unknown; the system flag is the AreaRegionFlag this module writes
     const flag = foundry.utils.getProperty(region.flags, `${SYSTEM_ID}.area`) as AreaRegionFlag | undefined;
     return flag ?? null;

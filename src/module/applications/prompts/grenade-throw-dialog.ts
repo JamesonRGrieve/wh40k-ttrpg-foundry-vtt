@@ -44,7 +44,7 @@ function riderGrenades(actor: GrenadeThrower): GrenadeItemView[] {
         item.id !== null && item.isThrown && resolveThrow(item.system).path === 'grenade-dialog' ? [{ id: item.id, name: item.name, system: item.system }] : [],
     );
 }
-export default class GrenadeThrowDialog extends ApplicationV2Mixin(applicationV2Base()) {
+class GrenadeThrowDialog extends ApplicationV2Mixin(applicationV2Base()) {
     readonly #actor: GrenadeThrower;
 
     #selectedId: string;

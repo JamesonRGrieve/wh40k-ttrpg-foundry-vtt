@@ -20,7 +20,7 @@
  */
 
 /** How an origin's characteristic modifier enters character generation. */
-export type OriginModifierMode = 'flat' | 'keep-dice';
+type OriginModifierMode ='flat' | 'keep-dice';
 
 /** One line's characteristic generation rules. */
 export interface CharacteristicGenerationRules {

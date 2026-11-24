@@ -20,7 +20,7 @@ import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, no
 type CriticalArmourGate = 'none' | 'negates' | 'worsensIfUnarmoured';
 
 /** The unit a Critical Effects row states a condition's duration in. */
-export type CriticalDurationUnit = 'rounds' | 'minutes' | 'hours' | 'days';
+type CriticalDurationUnit ='rounds' | 'minutes' | 'hours' | 'days';
 
 /** How long a crit-applied condition lasts, as the row states it (#766). */
 export interface CriticalConditionDuration {

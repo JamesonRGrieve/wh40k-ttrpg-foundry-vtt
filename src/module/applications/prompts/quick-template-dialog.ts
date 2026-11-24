@@ -36,7 +36,7 @@ function conditionOptions(): ConditionOption[] {
 // eslint-disable-next-line no-restricted-syntax -- boundary: Handlebars context is an open bag; Record<string, unknown> matches the mixin's return type
 interface QuickTemplateRenderContext extends Record<string, unknown>, QuickTemplateContext {}
 
-export default class QuickTemplateDialog extends ApplicationV2Mixin(applicationV2Base()) {
+class QuickTemplateDialog extends ApplicationV2Mixin(applicationV2Base()) {
     /** The form's current state; kept across re-renders. */
     formState: QuickTemplateState = initialQuickTemplateState();
 

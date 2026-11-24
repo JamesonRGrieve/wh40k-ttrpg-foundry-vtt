@@ -26,7 +26,7 @@ function effectsFrom(actor: WH40KBaseActorDocument, origin: string): string[] {
 /** The fields of an apply-condition behaviour. */
 type ApplyConditionSchema = { condition: foundry.data.fields.StringField<{ required: true; blank: true; initial: '' }> };
 
-export class ApplyConditionRegionBehavior extends foundry.data.regionBehaviors.RegionBehaviorType<ApplyConditionSchema> {
+class ApplyConditionRegionBehavior extends foundry.data.regionBehaviors.RegionBehaviorType<ApplyConditionSchema> {
     static override LOCALIZATION_PREFIXES = ['WH40K.Area.ApplyConditionBehavior'];
 
     static override defineSchema(): ApplyConditionSchema {

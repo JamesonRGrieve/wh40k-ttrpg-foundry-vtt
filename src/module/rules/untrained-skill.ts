@@ -25,10 +25,10 @@
  * - `listed`: Black Crusade refuses only the skills its skill table marks;
  * - `none`: no skill is refused.
  */
-export type UntrainedSkillRule = 'advanced' | 'specialist' | 'listed' | 'none';
+type UntrainedSkillRule ='advanced' | 'specialist' | 'listed' | 'none';
 
 /** The skills a `listed` line refuses untrained: skill key → `'*'` (every specialisation) or the named specialisations. */
-export type UntrainedForbiddenList = Readonly<Record<string, '*' | readonly string[]>>;
+type UntrainedForbiddenList =Readonly<Record<string, '*' | readonly string[]>>;
 
 /** A line's untrained-skill rule and, for `listed`, the skills it names. */
 export interface UntrainedSkillRules {

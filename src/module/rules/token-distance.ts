@@ -22,7 +22,7 @@ export interface TokenBox {
 }
 
 /** A point on the canvas, in pixels. */
-export interface CanvasPoint {
+interface CanvasPoint {
     x: number;
     y: number;
 }
