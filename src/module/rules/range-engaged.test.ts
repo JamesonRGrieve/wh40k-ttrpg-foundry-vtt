@@ -18,7 +18,7 @@ describe("Point Blank when engaged with the target (#804, RAW: the bonus doesn't
 
     it('the weapon range applies it and says why on the card', () => {
         const range = readRepoFile('src/module/rules/range.ts');
-        expect(range).toMatch(/pointBlankWhenEngaged\(mutableRollData\.rangeBracket[\s\S]*rollData\.engagedWithTarget\)/);
+        expect(range).toMatch(/pointBlankWhenEngaged\(mutableRollData\.rangeBracket, rollData\.rangeBonus, rollData\.engagedWithTarget\)/);
         expect(range).toContain("t('WH40K.Roll.Engagement.NoPointBlank')");
     });
 });

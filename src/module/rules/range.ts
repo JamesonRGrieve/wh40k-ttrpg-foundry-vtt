@@ -190,7 +190,7 @@ export function calculateWeaponRange(rollData: WeaponRollData): void {
     calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
-    const engagedRange = pointBlankWhenEngaged(mutableRollData.rangeBracket ?? '', rollData.rangeBonus, rollData.engagedWithTarget);
+    const engagedRange = pointBlankWhenEngaged(mutableRollData.rangeBracket, rollData.rangeBonus, rollData.engagedWithTarget);
     if (engagedRange.voided) {
         rollData.rangeBonus = engagedRange.bonus;
         mutableRollData.rangeModifiedBy = t('WH40K.Roll.Engagement.NoPointBlank');
