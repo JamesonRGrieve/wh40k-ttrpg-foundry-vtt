@@ -10,7 +10,8 @@
  * - Auto Roll for digital rolling
  */
 
-import { untrainedSkillRulesFor } from '../../config/game-systems/index.ts';
+import { sceneEngagementTokens, sceneGridSize } from '../../canvas/engagement-canvas.ts';
+import { meleeEngagementRulesFor, untrainedSkillRulesFor } from '../../config/game-systems/index.ts';
 import { SYSTEM_ID } from '../../constants.ts';
 import { isBasicSkill, skillUntrainedTraits } from '../../helpers/skill-classification.ts';
 import type { ActionData } from '../../rolls/action-data.ts';
@@ -45,7 +46,16 @@ import {
 import { selectableQualityIds, toggleQualityChoice } from '../../rules/attack-specials.ts';
 import { isBurstAction } from '../../rules/auto-fire.ts';
 import { getClimbingModifier, type ClimbingSurface } from '../../rules/climbing.ts';
-import { computeGangUpModifier, gangUpConfigFor, type GangUpTokenLike } from '../../rules/gang-up.ts';
+import {
+    engaged,
+    engagedFoes,
+    type EngagementToken,
+    gangUp,
+    type GangUpReading,
+    type MeleeEngagementRules,
+    rangedAttackWhileEngaged,
+    shootingIntoMelee,
+} from '../../rules/engagement.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
@@ -1512,28 +1522,61 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     /**
-     * Ganging Up melee bonus for the active weapon roll (#417). Melee only:
-     * resolves the attacker and target tokens plus the scene roster, then defers
-     * to the pure {@link computeGangUpModifier} to count engaged allies and apply
-     * the per-line +10/ally cap. Returns 0 for ranged attacks, when either token
-     * is off-scene, or when the line has no Ganging Up rule (IM).
-     * @returns {number}
+     * The melee engagement around this attack (#804): the attacker's and the chosen
+     * target's tokens among the scene's, the grid size and the line's rules. Null
+     * when the line doesn't track engagement or the attacker isn't on the scene.
+     * The target is the token the dialog chose (#764), not the actor's first token,
+     * so copies of one creature are told apart.
      */
+    #engagementState(): { attacker: EngagementToken; target: EngagementToken | null; tokens: EngagementToken[]; grid: number; rules: MeleeEngagementRules } | null {
+        const rules = meleeEngagementRulesFor(this.rollData.gameSystemId);
+        const grid = sceneGridSize();
+        if (rules === null || !rules.tracked || grid <= 0) return null;
+        const { sourceToken, targetToken } = this.#activeTokenPair();
+        const tokens = sceneEngagementTokens();
+        const attacker = tokens.find((token) => token.id === sourceToken?.id);
+        if (attacker === undefined) return null;
+        const targetId = this._targetTokenId ?? targetToken?.id ?? null;
+        const target = targetId === null ? null : (tokens.find((token) => token.id === targetId) ?? null);
+        return { attacker, target, tokens, grid, rules };
+    }
+
+    /**
+     * Ganging Up for the active melee attack (#804, RAW): the two sides of the melee
+     * and the bonus their ratio gives, plus the attacker's outnumbering talents.
+     * Null for a ranged attack, or with no engagement to read.
+     */
+    _gangUpReading(): GangUpReading | null {
+        if (this.rollData.weapon?.isRanged === true) return null;
+        const state = this.#engagementState();
+        if (state === null || state.target === null) return null;
+        return gangUp(state.attacker, state.target, state.tokens, state.grid, state.rules);
+    }
+
+    /** Ganging Up's total to-hit bonus (the tiers plus talents), 0 when it doesn't apply. */
     _calculateGangUpModifier(): number {
-        const rd = this.rollData;
-        if (rd.weapon?.isRanged === true) return 0;
-        const attacker = UnifiedRollDialog.#tokenLikeFor(rd.sourceActor);
-        const target = UnifiedRollDialog.#tokenLikeFor(rd.targetActor);
-        if (attacker === null || target === null) return 0;
-        const gridSize = canvas.grid?.size ?? 0;
-        if (gridSize <= 0) return 0;
-        const config = gangUpConfigFor(rd.gameSystemId);
-        const tokens: GangUpTokenLike[] = [];
-        for (const placeable of canvas.tokens?.placeables ?? []) {
-            const like = UnifiedRollDialog.#tokenLikeFromPlaceable(placeable);
-            if (like !== null) tokens.push(like);
-        }
-        return computeGangUpModifier({ attacker, target, tokens, gridSize, config }).bonus;
+        const reading = this._gangUpReading();
+        return reading === null ? 0 : reading.bonus + reading.talentBonus;
+    }
+
+    /** Whether the attacker and the chosen target are engaged in melee with each other (#804). */
+    #engagedWithTarget(): boolean {
+        const state = this.#engagementState();
+        return state !== null && state.target !== null && engaged(state.attacker, state.target, state.grid);
+    }
+
+    /**
+     * Why an engaged attacker may not make this ranged attack (#804, RAW, operator:
+     * strict): only a Pistol-class weapon fires while engaged; in Deathwatch nothing
+     * ranged does. Null when the attack may go ahead.
+     */
+    _rangedRefusal(): 'pistol-only' | 'melee-only' | null {
+        const weapon = this.rollData.weapon;
+        if (weapon?.isRanged !== true) return null;
+        const state = this.#engagementState();
+        if (state === null) return null;
+        const attackerEngaged = engagedFoes(state.attacker, state.tokens, state.grid).length > 0;
+        return rangedAttackWhileEngaged(attackerEngaged, String((weapon.system as { class?: string }).class ?? ''), state.rules);
     }
 
     /**
@@ -1625,7 +1668,23 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 .map((s) => ({ key: s.key, label: s.label, value: s.modifier, source: combatSitSource }));
             modifiers['combat-situational'] = combatSitComponents.reduce((total, c) => total + c.value, 0);
             expandedBuckets['combat-situational'] = combatSitComponents;
+            // Ganging Up (#804): the ratio's bonus and the outnumbering talents as their own rows.
+            const gang = this._gangUpReading();
+            const gangSource = game.i18n.localize('WH40K.Roll.ModifierSource.GangUp');
+            const gangComponents: RollModifierComponent[] = [];
+            if (gang !== null && gang.bonus > 0) {
+                gangComponents.push({
+                    key: 'gang-up',
+                    label: game.i18n.format('WH40K.Roll.GangUp.Ratio', { attackers: String(gang.attackers), defenders: String(gang.defenders) }),
+                    value: gang.bonus,
+                    source: gangSource,
+                });
+            }
+            if (gang !== null && gang.talentBonus > 0) {
+                gangComponents.push({ key: 'gang-up-talents', label: game.i18n.localize('WH40K.Roll.GangUp.Talents'), value: gang.talentBonus, source: gangSource });
+            }
             modifiers['gang-up'] = this._calculateGangUpModifier();
+            expandedBuckets['gang-up'] = gangComponents;
         }
         return { modifiers, expandedBuckets };
     }
@@ -1653,41 +1712,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const components = buildModifierComponents(record, { ...rd.expandedBuckets, ...pending.expandedBuckets });
         const { total, raw, capFired } = aggregateModifierTotal(record);
         return { finalTarget: Math.max(0, baseTarget + total), components, capFired, rawModifierTotal: raw, modifierTotal: total };
-    }
-
-    /**
-     * Reduce an actor's placed token to a {@link GangUpTokenLike}, or null when the
-     * actor is off-scene. Prefers the linked token, falling back to the first
-     * active token.
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: rollData carries a loose actor handle; Foundry Actor token accessors are not on the fvtt-types surface here
-    static #tokenLikeFor(actor: unknown): GangUpTokenLike | null {
-        type ActorToken = foundry.canvas.placeables.Token;
-        const withTokens = actor as { token?: ActorToken | null; getActiveTokens?: () => ActorToken[] } | null | undefined;
-        const token = withTokens?.token ?? withTokens?.getActiveTokens?.()[0] ?? null;
-        return UnifiedRollDialog.#tokenLikeFromPlaceable(token);
-    }
-
-    /**
-     * Reduce a Foundry Token placeable to a {@link GangUpTokenLike}, reading its
-     * document geometry (grid origin, footprint) and disposition. Returns null
-     * when the placeable or its document is unavailable (preview / teardown).
-     */
-    // eslint-disable-next-line no-restricted-syntax -- boundary: Token#document geometry is loosely typed here (preview/teardown placeables leave it undefined)
-    static #tokenLikeFromPlaceable(token: unknown): GangUpTokenLike | null {
-        const doc = (token as { id?: string | null; document?: { x?: number; y?: number; width?: number; height?: number; disposition?: number } } | null)
-            ?.document;
-        const id = (token as { id?: string | null } | null)?.id;
-        if (doc === undefined || typeof id !== 'string' || id === '') return null;
-        if (typeof doc.x !== 'number' || typeof doc.y !== 'number') return null;
-        return {
-            id,
-            x: doc.x,
-            y: doc.y,
-            width: typeof doc.width === 'number' ? doc.width : 1,
-            height: typeof doc.height === 'number' ? doc.height : 1,
-            disposition: typeof doc.disposition === 'number' ? doc.disposition : 0,
-        };
     }
 
     _stepDifficulty(direction: number): void {
@@ -2211,6 +2235,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         rd.distance = calculateTokenDistance(sourceToken, targetToken);
         rd.targetActor = targetToken.actor;
         this._targetTokenId = targetToken.id;
+        rd.engagedWithTarget = this.#engagedWithTarget();
         this.#applyTargetSize();
         return true;
     }
@@ -2282,6 +2307,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (highGround !== null) {
             this._activeCombatSituationals.add(highGround);
             this._autoSituationals.add(highGround);
+        }
+
+        // #804: shooting at a target engaged in melee with someone else takes the
+        // line's penalty, unless the line waives it for a defenceless participant.
+        if (isRanged) {
+            const state = this.#engagementState();
+            if (state !== null && state.target !== null && shootingIntoMelee(state.attacker, state.target, state.tokens, state.grid, state.rules) < 0) {
+                this._activeCombatSituationals.add('engagedInMelee');
+                this._autoSituationals.add('engagedInMelee');
+            }
         }
 
         // #406: opt-in auto line-of-sight + cover from the scene's walls. Off by
@@ -2411,6 +2446,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (combatantId === '') {
             rd.targetActor = null;
             this._targetTokenId = null;
+            rd.engagedWithTarget = false;
             // Clearing the target drops its auto-selected situationals (#393)…
             this.#applyTargetSituationals();
             // …and its canvas reticle (#401).
@@ -2437,6 +2473,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- parser mismatch: noUncheckedIndexedAccess (tsconfig.json) makes getActiveTokens()[0] possibly undefined; the lint parser disagrees
             if (sourceToken != null) {
                 rd.distance = calculateTokenDistance(sourceToken, targetToken);
+                rd.engagedWithTarget = this.#engagedWithTarget();
                 this._selectedRangeBracket = null;
             }
         }
@@ -2932,6 +2969,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     }
 
     _validateWeaponRoll(): boolean {
+        // #804, RAW (operator: strict): an engaged attacker fires only a Pistol-class
+        // weapon, and in Deathwatch makes melee attacks only.
+        const refusal = this._rangedRefusal();
+        if (refusal !== null) {
+            ui.notifications.warn(game.i18n.localize(refusal === 'pistol-only' ? 'WH40K.Roll.Engagement.PistolOnly' : 'WH40K.Roll.Engagement.MeleeOnly'));
+            return false;
+        }
         if (this.rollData['fireRate'] === 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.NotEnoughAmmo'));
             return false;

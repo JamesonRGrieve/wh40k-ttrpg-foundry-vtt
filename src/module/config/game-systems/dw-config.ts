@@ -8,6 +8,7 @@ import { DW_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
+import { type MeleeEngagementRules, STANDARD_MELEE_ENGAGEMENT } from '../../rules/engagement.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -21,6 +22,8 @@ import type { CharacterSheetCapabilities, DispositionModelDef, FatigueModelDef, 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     /** DW: 2d10 + 30, then the chapter's modifiers. (#760) */
     override readonly characteristicGeneration = flatGeneration(30);
+    /** Deathwatch: characters engaged in melee can only make attacks with the Melee subtype (#804). */
+    override readonly meleeEngagement: MeleeEngagementRules = { ...STANDARD_MELEE_ENGAGEMENT, rangedWhileEngaged: 'none' };
 
     readonly id = 'dw' as const;
     override readonly dosDamageDie = true;

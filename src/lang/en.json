@@ -737,6 +737,15 @@
             "SourcePlaceholder": "Book, page"
         },
         "Roll": {
+            "GangUp": {
+                "Ratio": "Ganging Up ({attackers} against {defenders})",
+                "Talents": "Outnumbering talents"
+            },
+            "Engagement": {
+                "NoPointBlank": "engaged in melee: no Point Blank bonus",
+                "PistolOnly": "You're engaged in melee: only a Pistol-class weapon can fire.",
+                "MeleeOnly": "You're engaged in melee: only melee attacks are allowed."
+            },
             "RollResult": "Roll: {total}",
             "TestLabel": "{name} Test",
             "TestedSkill": {
@@ -2228,6 +2237,24 @@
             "DisarmTake": "You wrench the weapon away and take it for yourself!",
             "DisarmFail": "The target keeps hold of their weapon.",
             "ActionEconomy": "Actions",
+            "Engaged": "Engaged",
+            "EngagedWith": "Engaged in melee with {names}",
+            "LeaveMelee": {
+                "Title": "{name} is leaving melee",
+                "Rule": "Each foe left behind may make a free Standard Attack before the move goes on. Disengage first to leave without one.",
+                "Done": "Every foe has answered; the move goes on.",
+                "Attack": "Free Attack",
+                "AttackTip": "{name} makes its free Standard Attack against the one leaving",
+                "Decline": "Decline",
+                "DeclineTip": "{name} lets them go without an attack",
+                "Attacked": "attacked",
+                "Declined": "declined",
+                "Release": "Let them go",
+                "ReleaseTip": "GM: skip the remaining free attacks and let the move go on",
+                "Paused": "Leaving melee: the move waits for the free attacks.",
+                "Waiting": "Still waiting for the free attacks from leaving melee.",
+                "NoMeleeWeapon": "{name} has no melee weapon to attack with."
+            },
             "FullAction": "Full",
             "HalfAction": "Half",
             "FreeAction": "Free",

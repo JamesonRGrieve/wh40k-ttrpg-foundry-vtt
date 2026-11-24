@@ -9,6 +9,7 @@ import { PRINTED_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.t
 import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { flatGeneration } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
+import { type MeleeEngagementRules, STANDARD_MELEE_ENGAGEMENT } from '../../rules/engagement.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
@@ -45,6 +46,8 @@ const DH1_VEHICLE_DRIVING: VehicleDrivingRules = {
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
     /** DH1: 2d10 plus the home world's column (Table 1-3), which the home worlds hold as 20 ± 5. (#760) */
     override readonly characteristicGeneration = flatGeneration(20);
+    /** DH1's Shooting into Melee prints no waiver for a Stunned, Helpless or Unaware participant (#804). */
+    override readonly meleeEngagement: MeleeEngagementRules = { ...STANDARD_MELEE_ENGAGEMENT, shootingIntoMeleeWaivedByDefenceless: false };
 
     readonly id = 'dh1' as const;
     readonly usesMalignancyTest = true;

@@ -7,6 +7,7 @@ import type { AcquisitionLadder } from '../../rules/acquisition-ladder.ts';
 import { type ArmourCraftsmanshipEffect, armourCraftsmanshipTier, NO_ARMOUR_CRAFTSMANSHIP } from '../../rules/armour-craftsmanship.ts';
 import type { BurstActionCost, BurstActionRule, BurstCapRules, BurstMode } from '../../rules/auto-fire.ts';
 import type { CharacteristicGenerationRules } from '../../rules/characteristic-generation.ts';
+import type { MeleeEngagementRules } from '../../rules/engagement.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import type { GrappleRules } from '../../rules/grapple.ts';
 import type { InquestRules } from '../../rules/inquest.ts';
@@ -101,6 +102,15 @@ export function acquisitionLadderFor(line: string | undefined): AcquisitionLadde
 export function inquestRulesFor(line: string | undefined): InquestRules | null {
     if (line === undefined) return null;
     return SystemConfigRegistry.getOrNull(line)?.inquestRules ?? null;
+}
+
+/**
+ * A line's melee engagement rules (#804), or `null` for an unknown line.
+ * @param line  `system.gameSystem` id.
+ */
+export function meleeEngagementRulesFor(line: string | undefined): MeleeEngagementRules | null {
+    if (line === undefined) return null;
+    return SystemConfigRegistry.getOrNull(line)?.meleeEngagement ?? null;
 }
 
 /**

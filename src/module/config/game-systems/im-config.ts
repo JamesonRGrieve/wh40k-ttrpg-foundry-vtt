@@ -4,6 +4,7 @@
  */
 
 import { flatGeneration } from '../../rules/characteristic-generation.ts';
+import { type MeleeEngagementRules, UNTRACKED_MELEE_ENGAGEMENT } from '../../rules/engagement.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { UntrainedSkillRules } from '../../rules/untrained-skill.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
@@ -16,6 +17,8 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
     /** Imperium Maledictum's untrained rule isn't modelled: no skill is refused (#757). */
     override readonly untrainedSkills: UntrainedSkillRules = { rule: 'none', listed: {} };
+    /** Imperium Maledictum's melee rules aren't transcribed here; engagement isn't tracked (it had no Ganging Up before #804 either). */
+    override readonly meleeEngagement: MeleeEngagementRules = UNTRACKED_MELEE_ENGAGEMENT;
     override readonly characterSheet: CharacterSheetCapabilities = {
         influenceResources: false,
         subtletyPool: false,

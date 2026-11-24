@@ -649,6 +649,8 @@ export default class ModifiersTemplate extends SystemDataModel {
         senses: SenseEntry[];
         /** Data-driven test substitutions (Direction #7) — see {@link TestSubstitutionEntry}. */
         testSubstitutions: TestSubstitutionEntry[];
+        /** What the item does to Ganging Up (#804): Combat Master denies it, Double Team adds to it. */
+        outnumbering: { denies: boolean; bonus: number; sharedBonus: number };
     };
 
     /** @inheritdoc */
@@ -708,6 +710,15 @@ export default class ModifiersTemplate extends SystemDataModel {
                 // authored on content that lets its bearer roll a different skill in place
                 // of a Called Shot or an area-avoidance roll, under stated conditions.
                 testSubstitutions: testSubstitutionsSchema(),
+                // Ganging Up (#804). Default inert; authored on the outnumbering
+                // talents: Combat Master `denies` (no Ganging Up bonus against the
+                // bearer); Double Team `bonus` +10 and `sharedBonus` +10 more when a
+                // partner in the gang has it too. Read by rules/engagement.ts.
+                outnumbering: new fields.SchemaField({
+                    denies: new fields.BooleanField({ required: true, initial: false }),
+                    bonus: new fields.NumberField({ required: true, integer: true, initial: 0 }),
+                    sharedBonus: new fields.NumberField({ required: true, integer: true, initial: 0 }),
+                }),
             }),
         };
     }

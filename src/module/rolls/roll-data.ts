@@ -227,6 +227,8 @@ export class RollData {
 
     maxRange: number = 0;
     distance: number = 0;
+    /** The attacker and target are engaged in melee with each other (#804): Point Blank's bonus then doesn't apply. */
+    engagedWithTarget: boolean = false;
     rangeName: string = '';
     /**
      * The computed range bracket key (`pointBlank` / `short` / … / `melee`), as

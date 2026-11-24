@@ -9,6 +9,7 @@ import type { BurstActionRules, BurstCapRules } from '../../rules/auto-fire.ts';
 import { isStoredRank } from '../../rules/career-rank.ts';
 import { type CharacteristicGenerationRules, DEFAULT_CHARACTERISTIC_GENERATION } from '../../rules/characteristic-generation.ts';
 import { DISPOSITION_MODELS } from '../../rules/disposition.ts';
+import { type MeleeEngagementRules, STANDARD_MELEE_ENGAGEMENT } from '../../rules/engagement.ts';
 import type { EvasionRules } from '../../rules/evasion.ts';
 import { FATIGUE_MODES } from '../../rules/fatigue.ts';
 import type { GrappleDamageRule, GrappleOptionRule, GrapplePushRule, GrappleRules } from '../../rules/grapple.ts';
@@ -352,6 +353,12 @@ export abstract class BaseSystemConfig {
      * allocation, and any experienced variant. See `rules/characteristic-generation.ts`.
      */
     readonly characteristicGeneration: CharacteristicGenerationRules = DEFAULT_CHARACTERISTIC_GENERATION;
+
+    /**
+     * Melee engagement (#804): Ganging Up, shooting into melee, and what an engaged
+     * character may fire. The FFG core rule by default; see `rules/engagement.ts`.
+     */
+    readonly meleeEngagement: MeleeEngagementRules = STANDARD_MELEE_ENGAGEMENT;
 
     // ── Starting Resources ────────────────────────────────────────
 

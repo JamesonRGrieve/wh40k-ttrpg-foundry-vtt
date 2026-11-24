@@ -180,6 +180,13 @@ export function calculateWeaponRange(rollData: WeaponRollData): void {
     calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
+    // #804, RAW: Point Blank's bonus does not apply when the attacker and target are
+    // engaged in melee with each other (a pistol fired at the foe you're fighting).
+    if (rollData.engagedWithTarget && mutableRollData.rangeBracket === 'pointBlank' && rollData.rangeBonus > 0) {
+        rollData.rangeBonus = 0;
+        mutableRollData.rangeModifiedBy = t('WH40K.Roll.Engagement.NoPointBlank');
+    }
+
     // Ignore Negative Range Bonus for certain modifications
     if (rollData.rangeBonus < 0) {
         const aiming = (rollData.modifiers['aim'] ?? 0) > 0;
