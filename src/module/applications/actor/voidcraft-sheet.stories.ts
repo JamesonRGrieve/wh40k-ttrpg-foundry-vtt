@@ -62,6 +62,13 @@ const defaultCtxWithSource: SheetContextLike = {
     // The sheet's context carries the hull type's label (voidcraft-sheet.ts); without
     // it the header reads "Not set" for a ship that has one.
     hullTypeLabel: 'Frigate',
+    // The data model's derived resource sums (#799): the summary pills and the
+    // read-only Space/Power fields read these, not the stored values.
+    system: {
+        ...defaultStarshipCtx.system,
+        space: { total: 40, used: 22, available: 18 },
+        power: { total: 60, used: 35, available: 25 },
+    },
     source: {
         ...defaultStarshipCtx.source,
         hullType: 'frigate',
