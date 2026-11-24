@@ -152,9 +152,17 @@ export interface GangUpReading {
  * defenders are the target plus everyone on its side engaged with one of those
  * attackers. The bonus is the highest tier whose ratio the attackers reach.
  */
-export function gangUp(attacker: EngagementToken, target: EngagementToken, tokens: readonly EngagementToken[], gridSize: number, rules: MeleeEngagementRules): GangUpReading {
+export function gangUp(
+    attacker: EngagementToken,
+    target: EngagementToken,
+    tokens: readonly EngagementToken[],
+    gridSize: number,
+    rules: MeleeEngagementRules,
+): GangUpReading {
     if (!rules.tracked || !engaged(attacker, target, gridSize)) return { attackers: 0, defenders: 0, bonus: 0, talentBonus: 0, denied: false };
-    const attackers = tokens.filter((t) => t.id === attacker.id || (t.disposition === attacker.disposition && t.id !== target.id && engaged(t, target, gridSize)));
+    const attackers = tokens.filter(
+        (t) => t.id === attacker.id || (t.disposition === attacker.disposition && t.id !== target.id && engaged(t, target, gridSize)),
+    );
     const defenders = tokens.filter(
         (t) => t.id === target.id || (t.disposition === target.disposition && t.id !== attacker.id && attackers.some((a) => engaged(t, a, gridSize))),
     );
@@ -165,7 +173,7 @@ export function gangUp(attacker: EngagementToken, target: EngagementToken, token
     if (denied || bonus === 0) return { attackers: attackers.length, defenders: defenders.length, bonus: 0, talentBonus: 0, denied };
     const own = attacker.outnumbering;
     const partnerShares = attackers.some((a) => a.id !== attacker.id && (a.outnumbering?.sharedBonus ?? 0) > 0);
-    const talentBonus = (own?.bonus ?? 0) + (partnerShares ? (own?.sharedBonus ?? 0) : 0);
+    const talentBonus = (own?.bonus ?? 0) + (partnerShares ? own?.sharedBonus ?? 0 : 0);
     return { attackers: attackers.length, defenders: defenders.length, bonus, talentBonus, denied };
 }
 
@@ -174,7 +182,13 @@ export function gangUp(attacker: EngagementToken, target: EngagementToken, token
  * when the target is engaged with anyone other than the shooter, 0 otherwise or
  * when the line waives it because someone in that melee is defenceless.
  */
-export function shootingIntoMelee(shooter: EngagementToken, target: EngagementToken, tokens: readonly EngagementToken[], gridSize: number, rules: MeleeEngagementRules): number {
+export function shootingIntoMelee(
+    shooter: EngagementToken,
+    target: EngagementToken,
+    tokens: readonly EngagementToken[],
+    gridSize: number,
+    rules: MeleeEngagementRules,
+): number {
     if (!rules.tracked) return 0;
     const foes = engagedFoes(target, tokens, gridSize).filter((foe) => foe.id !== shooter.id);
     if (foes.length === 0) return 0;

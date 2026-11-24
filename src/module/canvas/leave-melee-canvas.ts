@@ -20,18 +20,47 @@ import { engagementRulesFor, type EngagementTokenDoc, sceneEngagementTokens, sce
 
 const CARD_TEMPLATE = 'systems/wh40k-rpg/templates/chat/leave-melee-card.hbs';
 const STATE_FLAG = 'leaveMelee';
-/** The update option that marks the completed move, so the hook lets it through. */
-const COMPLETED_MOVE = 'wh40kLeaveMeleeResolved';
 
 /** Movers whose move is paused on this client, so a second drag doesn't post a second card. */
 const pausedMovers = new Set<string>();
+
+/** The update options the hook reads: the completed move carries the marker, so it passes. */
+interface MoveOptions {
+    readonly wh40kLeaveMeleeResolved?: boolean;
+}
+
+/** An owned weapon, as the free attack picks one. */
+interface WeaponLike {
+    readonly id: string | null;
+    readonly type: string;
+    readonly isMelee?: boolean;
+    readonly system?: { readonly state?: { readonly equipped?: boolean } };
+}
+
+/** A scene token, as the card reads it. */
+interface SceneTokenLike {
+    readonly name?: string;
+    readonly actor?: {
+        readonly isOwner?: boolean;
+        readonly items: Iterable<WeaponLike>;
+        rollItem?(id: string): Promise<object | undefined>;
+    } | null;
+    readonly object?: { setTarget(targeted: boolean, options: object): void } | null;
+    update(data: object, options?: MoveOptions): Promise<object | undefined>;
+}
+
+/** A scene token by scene and token id. */
+function sceneToken(sceneId: string, tokenId: string): SceneTokenLike | undefined {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.scenes and Scene#tokens collections, read through the structural SceneTokenLike
+    const scenes = game.scenes as unknown as { get(id: string): { readonly tokens: { get(id: string): SceneTokenLike | undefined } } | undefined };
+    return scenes.get(sceneId)?.tokens.get(tokenId);
+}
 
 /** A token document as the move hook reads it. */
 type MovingTokenDoc = EngagementTokenDoc & {
     readonly name?: string;
     readonly parent?: { readonly id?: string | null } | null;
     readonly actor?: (EngagementTokenDoc['actor'] & { readonly id?: string | null }) | null;
-    update: (data: object, options?: object) => Promise<unknown>;
 };
 
 /** A foe's answer, relayed to a GM by a user who can't update the card. */
@@ -46,15 +75,14 @@ interface LeaveMeleeAnswer extends SystemSocketMessage {
 interface CardMessage {
     readonly id: string | null;
     readonly isAuthor?: boolean;
-    getFlag: (scope: string, key: string) => LeaveMeleeState | null | undefined;
-    update: (data: object) => Promise<unknown>;
+    getFlag(scope: string, key: string): LeaveMeleeState | null | undefined;
+    update(data: object): Promise<object | undefined>;
 }
 
 /** Render the card's content for a state. */
 async function renderCard(state: LeaveMeleeState): Promise<string> {
-    const mover = game.scenes.get(state.sceneId)?.tokens.get(state.moverTokenId);
     return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, {
-        moverName: mover?.name ?? '',
+        moverName: sceneToken(state.sceneId, state.moverTokenId)?.name ?? '',
         foes: state.foes.map((foe) => ({ ...foe, pending: foe.outcome === 'pending', attacked: foe.outcome === 'attacked' })),
         open: !everyFoeAnswered(state),
     });
@@ -66,9 +94,9 @@ async function writeState(message: CardMessage, state: LeaveMeleeState): Promise
 }
 
 /** preUpdateToken: pause a move that leaves melee; return false to hold it. */
-function onPreUpdateToken(doc: MovingTokenDoc, changes: { x?: number; y?: number }, options: Record<string, unknown>): boolean {
+function onPreUpdateToken(doc: MovingTokenDoc, changes: { x?: number; y?: number }, options: MoveOptions): boolean {
     try {
-        if (options[COMPLETED_MOVE] === true) return true;
+        if (options.wh40kLeaveMeleeResolved === true) return true;
         if (!('x' in changes) && !('y' in changes)) return true;
         const combat = game.combat;
         if (combat?.started !== true || doc.id === null) return true;
@@ -88,12 +116,13 @@ function onPreUpdateToken(doc: MovingTokenDoc, changes: { x?: number; y?: number
             return false;
         }
         pausedMovers.add(doc.id);
+        const sceneId = doc.parent?.id ?? '';
         const state: LeaveMeleeState = {
-            sceneId: doc.parent?.id ?? '',
+            sceneId,
             moverTokenId: doc.id,
             moverUserId: game.user.id,
             to,
-            foes: left.map((foe) => ({ tokenId: foe.id, name: canvas.scene?.tokens.get(foe.id)?.name ?? '', outcome: 'pending' as const })),
+            foes: left.map((foe) => ({ tokenId: foe.id, name: sceneToken(sceneId, foe.id)?.name ?? '', outcome: 'pending' as const })),
             completed: false,
         };
         void postCard(state, doc.name ?? '');
@@ -128,27 +157,18 @@ async function answer(message: CardMessage, foeTokenId: string | null, outcome: 
     emitSystemSocket(relay);
 }
 
-/** An owned weapon, as the free attack picks one. */
-interface WeaponLike {
-    readonly id: string | null;
-    readonly type: string;
-    readonly isMelee?: boolean;
-    readonly system?: { readonly state?: { readonly equipped?: boolean } };
-}
-
 /** The foe's free attack: target the mover and open its attack with a melee weapon (an equipped one first). */
 async function freeAttack(state: LeaveMeleeState, foeTokenId: string): Promise<boolean> {
-    const scene = game.scenes.get(state.sceneId);
-    const foe = scene?.tokens.get(foeTokenId);
-    const actor = foe?.actor as (foundry.documents.BaseActor & { items: Iterable<WeaponLike>; rollItem?: (id: string) => Promise<unknown> }) | null | undefined;
-    if (actor == null || typeof actor.rollItem !== 'function') return false;
+    const foe = sceneToken(state.sceneId, foeTokenId);
+    const actor = foe?.actor ?? null;
+    if (actor === null || actor.rollItem === undefined) return false;
     const melee = [...actor.items].filter((item) => item.type === 'weapon' && item.isMelee === true);
-    const weapon = melee.find((item) => item.system?.state?.equipped === true) ?? melee[0];
-    if (weapon?.id == null) {
+    const weapon = melee.find((item) => item.system?.state?.equipped === true) ?? melee.at(0);
+    if (weapon === undefined || weapon.id === null) {
         ui.notifications.warn(t('WH40K.Combat.LeaveMelee.NoMeleeWeapon', { name: foe?.name ?? '' }));
         return false;
     }
-    scene?.tokens.get(state.moverTokenId)?.object?.setTarget(true, { releaseOthers: true, groupSelection: false });
+    sceneToken(state.sceneId, state.moverTokenId)?.object?.setTarget(true, { releaseOthers: true, groupSelection: false });
     await actor.rollItem(weapon.id);
     return true;
 }
@@ -159,8 +179,8 @@ function bindCard(message: CardMessage, html: HTMLElement): void {
     if (state == null) return;
     for (const button of html.querySelectorAll<HTMLElement>('[data-leave-melee]')) {
         const foeTokenId = button.dataset['foeToken'] ?? null;
-        const foeActor = foeTokenId === null ? null : (game.scenes.get(state.sceneId)?.tokens.get(foeTokenId)?.actor ?? null);
-        const mayAct = button.dataset['leaveMelee'] === 'release' ? game.user.isGM : game.user.isGM || foeActor?.isOwner === true;
+        const foeOwned = foeTokenId !== null && sceneToken(state.sceneId, foeTokenId)?.actor?.isOwner === true;
+        const mayAct = button.dataset['leaveMelee'] === 'release' ? game.user.isGM : game.user.isGM || foeOwned;
         if (!mayAct) {
             button.remove();
             continue;
@@ -190,8 +210,7 @@ async function maybeComplete(message: CardMessage): Promise<void> {
     if (!completer) return;
     pausedMovers.delete(state.moverTokenId);
     await writeState(message, { ...state, completed: true });
-    const mover = game.scenes.get(state.sceneId)?.tokens.get(state.moverTokenId) as MovingTokenDoc | undefined;
-    await mover?.update({ x: state.to.x, y: state.to.y }, { [COMPLETED_MOVE]: true });
+    await sceneToken(state.sceneId, state.moverTokenId)?.update({ x: state.to.x, y: state.to.y }, { wh40kLeaveMeleeResolved: true });
 }
 
 function isAnswer(message: SystemSocketMessage): message is LeaveMeleeAnswer {
@@ -200,18 +219,27 @@ function isAnswer(message: SystemSocketMessage): message is LeaveMeleeAnswer {
 
 /** Register the leaving-melee pause (#770). */
 export function registerLeaveMelee(): void {
-    Hooks.on('preUpdateToken', (doc, changes, options) => onPreUpdateToken(doc as unknown as MovingTokenDoc, changes as { x?: number; y?: number }, options as Record<string, unknown>));
+    Hooks.on('preUpdateToken', (doc, changes, options) =>
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the preUpdateToken hook payload (TokenDocument, its change, Foundry's update options) is read structurally
+        onPreUpdateToken(doc as unknown as MovingTokenDoc, changes as { x?: number; y?: number }, options as MoveOptions),
+    );
     Hooks.on('renderChatMessageHTML', (message, html) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the renderChatMessageHTML hook's ChatMessage, read through the structural CardMessage
         bindCard(message as unknown as CardMessage, html);
     });
     Hooks.on('updateChatMessage', (message) => {
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the updateChatMessage hook's ChatMessage, read through the structural CardMessage
         void maybeComplete(message as unknown as CardMessage);
     });
     onSystemSocket((payload) => {
         if (!isAnswer(payload) || !game.user.isGM) return;
         // One GM answers: the first active GM by id.
-        const firstGM = game.users.filter((user) => user.isGM && user.active).sort((a, b) => (a.id ?? '').localeCompare(b.id ?? ''))[0];
-        if (firstGM?.id !== game.user.id) return;
+        const gmIds = game.users
+            .filter((user) => user.isGM && user.active)
+            .map((user) => user.id)
+            .sort();
+        if (gmIds[0] !== game.user.id) return;
+        // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.messages collection, read through the structural CardMessage
         const message = game.messages.get(payload.messageId) as unknown as CardMessage | undefined;
         if (message !== undefined) void answer(message, payload.foeTokenId, payload.outcome);
     });

@@ -7,11 +7,19 @@
  * movement hooks and the combat tracker all read engagement through here.
  */
 import { meleeEngagementRulesFor } from '../config/game-systems/index.ts';
-import { type EngagementToken, engagedFoes, isDefenceless, type MeleeEngagementRules, type OutnumberingItemLike, outnumberingTraitsOf } from '../rules/engagement.ts';
+import {
+    type EngagementToken,
+    engagedFoes,
+    isDefenceless,
+    type MeleeEngagementRules,
+    type OutnumberingItemLike,
+    outnumberingTraitsOf,
+} from '../rules/engagement.ts';
 
 /** A scene token document, as engagement reads it. */
 export interface EngagementTokenDoc {
     readonly id: string | null;
+    readonly name?: string;
     readonly x: number;
     readonly y: number;
     readonly width: number;
@@ -41,10 +49,16 @@ export function engagementToken(doc: EngagementTokenDoc, at: { x?: number; y?: n
     };
 }
 
-/** Every visible token on the viewed scene as engagement reads it. Hidden tokens aren't in the fight. */
-export function sceneEngagementTokens(): EngagementToken[] {
+/** The viewed scene's visible token documents. Hidden tokens aren't in the fight. */
+function sceneTokenDocs(): EngagementTokenDoc[] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's canvas.scene.tokens collection; TokenDocument is read through the structural EngagementTokenDoc
     const docs = (canvas.scene?.tokens.contents ?? []) as unknown as EngagementTokenDoc[];
-    return docs.filter((doc) => doc.hidden !== true).flatMap((doc) => engagementToken(doc) ?? []);
+    return docs.filter((doc) => doc.hidden !== true);
+}
+
+/** Every visible token on the viewed scene as engagement reads it. */
+export function sceneEngagementTokens(): EngagementToken[] {
+    return sceneTokenDocs().flatMap((doc) => engagementToken(doc) ?? []);
 }
 
 /** The viewed scene's grid size in pixels (0 without a scene). */
@@ -57,10 +71,12 @@ export function engagementRulesFor(doc: Pick<EngagementTokenDoc, 'actor'> | null
     return meleeEngagementRulesFor(doc?.actor?.system?.gameSystem);
 }
 
-/** The foes a scene token is engaged with, by id. */
-export function engagedFoeIds(tokenId: string): string[] {
-    const tokens = sceneEngagementTokens();
-    const self = tokens.find((t) => t.id === tokenId);
-    if (self === undefined) return [];
-    return engagedFoes(self, tokens, sceneGridSize()).map((t) => t.id);
+/** The names of the foes a scene token is engaged with (#804). */
+export function engagedFoeNames(tokenId: string): string[] {
+    const docs = sceneTokenDocs();
+    const tokens = docs.flatMap((doc) => engagementToken(doc) ?? []);
+    const token = tokens.find((t) => t.id === tokenId);
+    if (token === undefined) return [];
+    const ids = new Set(engagedFoes(token, tokens, sceneGridSize()).map((t) => t.id));
+    return docs.filter((doc) => doc.id !== null && ids.has(doc.id)).map((doc) => doc.name ?? '');
 }

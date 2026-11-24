@@ -40,19 +40,15 @@ export type MovePrompt =
 
 /** How far a declaration lets the character move this turn. */
 export function allowanceFor(declared: DeclaredMove, rates: MoveRates): number {
-    switch (declared) {
-        case 'half':
-        case 'disengage':
-            return rates.half;
-        case 'twoHalves':
-            return rates.half * 2;
-        case 'full':
-            return rates.full;
-        case 'run':
-            return rates.run;
-        case 'none':
-            return 0;
-    }
+    const allowance: Record<DeclaredMove, number> = {
+        none: 0,
+        half: rates.half,
+        disengage: rates.half,
+        twoHalves: rates.half * 2,
+        full: rates.full,
+        run: rates.run,
+    };
+    return allowance[declared];
 }
 
 const EPSILON = 0.01;

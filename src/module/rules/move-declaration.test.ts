@@ -44,6 +44,8 @@ describe('costs and allowances', () => {
         expect([actionCostOf('half'), actionCostOf('secondHalf'), actionCostOf('full'), actionCostOf('run')]).toEqual(['half', 'half', 'full', 'full']);
     });
     it('each declaration allows its distance', () => {
-        expect(['none', 'half', 'twoHalves', 'full', 'run', 'disengage'].map((d) => allowanceFor(d as Parameters<typeof allowanceFor>[0], RATES))).toEqual([0, 3, 6, 6, 18, 3]);
+        expect(['none', 'half', 'twoHalves', 'full', 'run', 'disengage'].map((d) => allowanceFor(d as Parameters<typeof allowanceFor>[0], RATES))).toEqual([
+            0, 3, 6, 6, 18, 3,
+        ]);
     });
 });

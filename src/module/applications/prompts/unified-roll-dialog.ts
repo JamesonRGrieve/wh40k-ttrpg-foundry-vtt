@@ -59,7 +59,7 @@ import {
 } from '../../rules/engagement.ts';
 import { appliesHighGround, highGroundKey, highGroundMode } from '../../rules/high-ground.ts';
 import { hitDropdown, resolveHitLocationId } from '../../rules/hit-locations.ts';
-import { DECLARED_MOVE_OPTION, RAN_FLAG, writeDeclared } from '../../rules/movement-enforcement.ts';
+import { moveDeclared, ranSinceLastTurn, writeDeclared } from '../../rules/movement-enforcement.ts';
 import { resolvePsyMode, type PsyMode } from '../../rules/psychic-push.ts';
 import { type AssistCandidate, type AssistSkillSource, eligibleAssistants, retainEligibleSelection } from '../../rules/roll-assist.ts';
 import {
@@ -242,6 +242,15 @@ const URD_BODY_CONTAINER = {
     id: 'urd-body',
     classes: ['tw-flex', 'tw-flex-col', 'tw-min-h-0', 'tw-overflow-y-auto', 'tw-overflow-x-hidden', 'tw-max-h-[60vh]'],
 };
+
+/** The melee engagement around an attack (#804): the two tokens, the scene's tokens, the grid and the line's rules. */
+interface EngagementState {
+    attacker: EngagementToken;
+    target: EngagementToken | null;
+    tokens: EngagementToken[];
+    grid: number;
+    rules: MeleeEngagementRules;
+}
 
 /**
  * Unified dialog for configuring all roll types.
@@ -1530,7 +1539,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * The target is the token the dialog chose (#764), not the actor's first token,
      * so copies of one creature are told apart.
      */
-    #engagementState(): { attacker: EngagementToken; target: EngagementToken | null; tokens: EngagementToken[]; grid: number; rules: MeleeEngagementRules } | null {
+    #engagementState(): EngagementState | null {
         const rules = meleeEngagementRulesFor(this.rollData.gameSystemId);
         const grid = sceneGridSize();
         if (rules === null || !rules.tracked || grid <= 0) return null;
@@ -1538,8 +1547,9 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const tokens = sceneEngagementTokens();
         const attacker = tokens.find((token) => token.id === sourceToken?.id);
         if (attacker === undefined) return null;
-        const targetId = this._targetTokenId ?? targetToken?.id ?? null;
-        const target = targetId === null ? null : (tokens.find((token) => token.id === targetId) ?? null);
+        const chosenId = this._targetTokenId;
+        const targetId = chosenId !== null ? chosenId : targetToken?.id ?? null;
+        const target = tokens.find((token) => token.id === targetId) ?? null;
         return { attacker, target, tokens, grid, rules };
     }
 
@@ -1551,7 +1561,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     _gangUpReading(): GangUpReading | null {
         if (this.rollData.weapon?.isRanged === true) return null;
         const state = this.#engagementState();
-        if (state === null || state.target === null) return null;
+        if (state?.target == null) return null;
         return gangUp(state.attacker, state.target, state.tokens, state.grid, state.rules);
     }
 
@@ -1564,15 +1574,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** Whether the chosen target's combatant Ran since its last turn (#805). */
     #targetRan(): boolean {
         const tokenId = this._targetTokenId;
-        if (tokenId === null) return false;
-        const combatant = game.combat?.combatants.find((c) => c.tokenId === tokenId);
-        return combatant?.getFlag(SYSTEM_ID, RAN_FLAG) === true;
+        return tokenId !== null && ranSinceLastTurn(tokenId);
     }
 
     /** Whether the attacker and the chosen target are engaged in melee with each other (#804). */
     #engagedWithTarget(): boolean {
         const state = this.#engagementState();
-        return state !== null && state.target !== null && engaged(state.attacker, state.target, state.grid);
+        return state?.target != null && engaged(state.attacker, state.target, state.grid);
     }
 
     /**
@@ -1586,7 +1594,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const state = this.#engagementState();
         if (state === null) return null;
         const attackerEngaged = engagedFoes(state.attacker, state.tokens, state.grid).length > 0;
-        return rangedAttackWhileEngaged(attackerEngaged, String((weapon.system as { class?: string }).class ?? ''), state.rules);
+        const weaponClass = (weapon.system as { class?: string }).class;
+        return rangedAttackWhileEngaged(attackerEngaged, typeof weaponClass === 'string' ? weaponClass : '', state.rules);
     }
 
     /**
@@ -1691,7 +1700,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
                 });
             }
             if (gang !== null && gang.talentBonus > 0) {
-                gangComponents.push({ key: 'gang-up-talents', label: game.i18n.localize('WH40K.Roll.GangUp.Talents'), value: gang.talentBonus, source: gangSource });
+                gangComponents.push({
+                    key: 'gang-up-talents',
+                    label: game.i18n.localize('WH40K.Roll.GangUp.Talents'),
+                    value: gang.talentBonus,
+                    source: gangSource,
+                });
             }
             modifiers['gang-up'] = this._calculateGangUpModifier();
             expandedBuckets['gang-up'] = gangComponents;
@@ -2671,8 +2685,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!this.#isCharge()) return true;
         const state = this.#engagementState();
         const { sourceToken } = this.#activeTokenPair();
-        const targetToken = state?.target ? (canvas.tokens?.get(state.target.id) ?? null) : null;
-        if (state === null || state.target === null || sourceToken === null || targetToken === null) {
+        const targetToken = state?.target == null ? null : canvas.tokens?.get(state.target.id) ?? null;
+        if (state?.target == null || sourceToken === null || targetToken === null) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.Charge.NoTarget'));
             return false;
         }
@@ -2683,7 +2697,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
         const to = chargeContactPosition(state.attacker, state.target, state.grid);
         const doc = sourceToken.document;
-        if (doc.x !== to.x || doc.y !== to.y) await doc.update({ x: to.x, y: to.y }, { [DECLARED_MOVE_OPTION]: true });
+        if (doc.x !== to.x || doc.y !== to.y) await moveDeclared(doc, to);
         if (doc.x !== to.x || doc.y !== to.y) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.Charge.MoveHeld'));
             return false;
@@ -2718,7 +2732,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const chargeMove = this.#chargeMove();
         return rows.map((row) => {
             const tokenId = combatants.find((c) => c.id === row.id)?.tokenId ?? null;
-            const token = tokenId === null ? null : (canvas.tokens?.get(tokenId) ?? null);
+            const token = tokenId === null ? null : canvas.tokens?.get(tokenId) ?? null;
             if (token === null || token.id === sourceToken.id) return row;
             const reach = chargeReach(calculateTokenDistance(sourceToken, token), chargeMove);
             if (reach === 'in-range') return row;

@@ -160,7 +160,8 @@ function resetOnTurnStart(combatant: TurnCombatant | null): void {
         if (combatant === null) return;
         writeActionsSpent(combatant, { ...EMPTY_ACTIONS_SPENT });
         const target = combatant as DisengageFlagAccessor;
-        if (target.getFlag?.(SYSTEM_ID, DISENGAGED_FLAG) === true && typeof target.setFlag === 'function') void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, false);
+        if (target.getFlag?.(SYSTEM_ID, DISENGAGED_FLAG) === true && typeof target.setFlag === 'function')
+            void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, false);
     } catch (err) {
         console.error('WH40K | action economy (turn reset) — ignoring', err);
     }

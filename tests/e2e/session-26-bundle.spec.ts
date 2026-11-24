@@ -56,7 +56,7 @@ async function snapSubSquare(
                 x: number;
                 y: number;
                 width: number;
-                update: (d: object) => Promise<object | undefined>;
+                update: (d: object, o?: object) => Promise<object | undefined>;
                 getSnappedPosition: (d: object) => { x: number; y: number };
             }
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types

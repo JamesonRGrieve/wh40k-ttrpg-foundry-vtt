@@ -51,9 +51,12 @@ type LooseToken = {
     x?: number;
     y?: number;
     actor?: { id?: string | null; system?: { movement?: { half?: number; full?: number; charge?: number; run?: number } } } | null;
-    update?: (data: object, options?: object) => Promise<unknown>;
-    setFlag?: (scope: string, key: string, value: string) => Promise<unknown>;
 };
+/** A token document as the declared move repeats it (method syntax, so TokenDocument is assignable). */
+interface MovableToken {
+    update(data: object, options?: object): Promise<unknown>;
+    setFlag(scope: string, key: string, value: string): Promise<unknown>;
+}
 // Kept minimal so Foundry's Combat/Combatant are structurally assignable to it
 // (its getFlag/setFlag carry a narrow scope type that a `string` param rejects).
 type LooseCombatant = { tokenId?: string | null };
@@ -98,23 +101,32 @@ function moveRates(token: LooseToken): MoveRates {
 }
 
 /** Ask which move action this is (#805); null when the player cancels. A GM may also move freely. */
-async function askMoveAction(prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' }, rates: MoveRates, requested: number): Promise<MoveChoice | 'secondHalf' | 'free' | null> {
+async function askMoveAction(
+    prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' },
+    rates: MoveRates,
+    requested: number,
+): Promise<MoveChoice | 'secondHalf' | 'free' | null> {
     const distances: Record<MoveChoice | 'secondHalf', number> = { half: rates.half, full: rates.full, run: rates.run, secondHalf: rates.half * 2 };
     const options = prompt.kind === 'declare' ? [...prompt.choices] : (['secondHalf'] as const);
-    const buttons = options.map((choice, index) => ({
+    const buttons: Array<{ action: string; label: string; default: boolean }> = options.map((choice, index) => ({
         action: choice,
         label: t(`WH40K.Combat.MoveDeclare.Choice.${choice}`, { metres: String(distances[choice]) }),
         default: index === 0,
     }));
     if (game.user.isGM) buttons.push({ action: 'free', label: t('WH40K.Combat.MoveDeclare.Free'), default: false });
-    const content = `<p>${t(prompt.kind === 'declare' ? 'WH40K.Combat.MoveDeclare.Body' : 'WH40K.Combat.MoveDeclare.SecondHalfBody', { metres: String(Math.round(requested * 10) / 10), half: String(rates.half) })}</p><p>${t('WH40K.Combat.MoveDeclare.RunNote')}</p>`;
+    const content = `<p>${t(prompt.kind === 'declare' ? 'WH40K.Combat.MoveDeclare.Body' : 'WH40K.Combat.MoveDeclare.SecondHalfBody', {
+        metres: String(Math.round(requested * 10) / 10),
+        half: String(rates.half),
+    })}</p><p>${t('WH40K.Combat.MoveDeclare.RunNote')}</p>`;
     const result = await foundry.applications.api.DialogV2.wait({
         window: { title: t('WH40K.Combat.MoveDeclare.Title') },
         content,
         buttons,
         rejectClose: false,
     });
-    return typeof result === 'string' && (result === 'free' || result === 'secondHalf' || result === 'half' || result === 'full' || result === 'run') ? result : null;
+    return typeof result === 'string' && (result === 'free' || result === 'secondHalf' || result === 'half' || result === 'full' || result === 'run')
+        ? result
+        : null;
 }
 
 /** Ask, spend the action, record the declaration, then repeat the held move. */
@@ -132,11 +144,11 @@ async function declareAndMove(
         const actorId = tokenDoc.actor?.id ?? null;
         if (actorId !== null) spendActionForActor(actorId, actionCostOf(choice), tokenDoc.id ?? null);
         await writeDeclared(combatant, choice === 'secondHalf' ? 'twoHalves' : choice);
-        if (choice !== 'secondHalf') await tokenDoc.setFlag?.(SYSTEM_ID, MOVE_MODE_FLAG, choice);
+        if (choice !== 'secondHalf') await (tokenDoc as unknown as MovableToken).setFlag(SYSTEM_ID, MOVE_MODE_FLAG, choice);
         // Run: until its next turn, ranged attacks against it take −20 and melee +20.
         if (choice === 'run') await (combatant as FlagAccessor | null | undefined)?.setFlag?.(SYSTEM_ID, RAN_FLAG, true);
     }
-    await tokenDoc.update?.({ x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y }, { [DECLARED_MOVE_OPTION]: true });
+    await (tokenDoc as unknown as MovableToken).update({ x: changes.x ?? tokenDoc.x, y: changes.y ?? tokenDoc.y }, { [DECLARED_MOVE_OPTION]: true });
 }
 
 /** Metres a token move covers, from the position delta and the scene grid. */
@@ -233,11 +245,25 @@ function resetMovementOnTurnStart(combatant: TurnCombatant | null): void {
         console.error('WH40K | movement enforcement (turn reset) — ignoring', err);
     }
 }
+/** Whether a token's combatant in the viewed combat Ran since its last turn (#805). */
+export function ranSinceLastTurn(tokenId: string): boolean {
+    const combatants = (game.combat as { combatants?: Iterable<LooseCombatant & FlagAccessor> } | null)?.combatants ?? [];
+    for (const combatant of combatants) if (combatant.tokenId === tokenId) return combatant.getFlag?.(SYSTEM_ID, RAN_FLAG) === true;
+    return false;
+}
+
+/** Repeat a move whose action is already declared (a Charge's approach), past the declaration prompt. */
+export async function moveDeclared(token: object, to: { x: number; y: number }): Promise<void> {
+    await (token as MovableToken).update({ x: to.x, y: to.y }, { [DECLARED_MOVE_OPTION]: true });
+}
 /* eslint-enable no-restricted-syntax */
 
 /** Register the combat movement-enforcement hooks. Idempotent enough for boot. */
 export function registerMovementEnforcement(): void {
-    Hooks.on('preUpdateToken', onPreUpdateToken);
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the preUpdateToken hook payload (TokenDocument, its change, Foundry's update options) is read structurally
+    Hooks.on('preUpdateToken', (doc, changes, options) =>
+        onPreUpdateToken(doc as LooseToken, changes as { x?: number; y?: number }, options as unknown as Record<string, unknown>),
+    );
     Hooks.on('updateToken', onUpdateToken);
     // Per-turn budget resets via the shared turn-start hook (#413), the single
     // place the combatant turn boundary is derived.

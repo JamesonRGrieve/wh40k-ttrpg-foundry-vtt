@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
+import { type HarnessScene, type HarnessTokenSpec, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
@@ -39,7 +39,7 @@ const LASPISTOL = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'f1G2h3I4
 const MODULE_ROOT = '/systems/wh40k-rpg/module';
 
 /** A friendly acolyte with a chainsword, a lasgun and a laspistol; Agility 40 (Half 4 m, Charge 12 m). */
-const acolyte = (key: string, name: string, x: number, y: number): object => ({
+const acolyte = (key: string, name: string, x: number, y: number): HarnessTokenSpec => ({
     key,
     name,
     type: 'dh2-character',
@@ -50,7 +50,7 @@ const acolyte = (key: string, name: string, x: number, y: number): object => ({
 });
 
 // 100 px squares, 1 m each. The ork at (4,3) is engaged with the acolyte (3,3) and the ally (5,3).
-const TOKENS = [
+const TOKENS: HarnessTokenSpec[] = [
     acolyte('acolyte', 'Engaged Acolyte', 300, 300),
     acolyte('ally', 'Flanking Ally', 500, 300),
     acolyte('shooter', 'Rear Shooter', 300, 700),
@@ -70,13 +70,17 @@ async function startCombat(page: Page, scene: HarnessScene): Promise<string> {
             const g = globalThis as unknown as {
                 game: { scenes: { get: (i: string) => { updateEmbeddedDocuments: (t: string, d: object[]) => Promise<object[]> } | undefined } };
                 Combat: {
-                    create: (d: object) => Promise<{ id: string; createEmbeddedDocuments: (t: string, d: object[]) => Promise<object[]>; startCombat: () => Promise<object> }>;
+                    create: (
+                        d: object,
+                    ) => Promise<{ id: string; createEmbeddedDocuments: (t: string, d: object[]) => Promise<object[]>; startCombat: () => Promise<object> }>;
                 };
             };
-            await g.game.scenes.get(sceneId)?.updateEmbeddedDocuments('Token', [
-                ...friends.map((id) => ({ _id: id, disposition: 1 })),
-                ...foes.map((id) => ({ _id: id, disposition: -1 })),
-            ]);
+            await g.game.scenes
+                .get(sceneId)
+                ?.updateEmbeddedDocuments('Token', [
+                    ...friends.map((id) => ({ _id: id, disposition: 1 })),
+                    ...foes.map((id) => ({ _id: id, disposition: -1 })),
+                ]);
             const combat = await g.Combat.create({ scene: sceneId, active: true });
             await combat.createEmbeddedDocuments(
                 'Combatant',
@@ -107,7 +111,7 @@ async function messageText(page: Page, ids: readonly string[]): Promise<string> 
         const g = globalThis as unknown as { game: { messages: { get: (i: string) => { content: string } | undefined } } };
         const div = document.createElement('div');
         div.innerHTML = list.map((id) => g.game.messages.get(id)?.content ?? '').join('\n');
-        return (div.textContent ?? '').replace(/\s+/g, ' ');
+        return div.textContent.replace(/\s+/g, ' ');
     }, ids);
 }
 
@@ -121,8 +125,13 @@ async function trackerEngaged(page: Page, tokenId: string): Promise<string> {
         };
         await g.ui.combat.render({ force: true });
         const row = g.game.combat?.combatants.contents.find((c) => c.tokenId === id);
-        await globalThis.wh40kE2E.pollUntil(() => (g.ui.combat.element?.querySelector(`[data-combatant-id="${row?.id ?? ''}"] [data-tracker-engaged]`) ?? null) !== null, 10_000);
-        return g.ui.combat.element?.querySelector<HTMLElement>(`[data-combatant-id="${row?.id ?? ''}"] [data-tracker-engaged]`)?.dataset['trackerEngaged'] ?? '';
+        await globalThis.wh40kE2E.pollUntil(
+            () => (g.ui.combat.element?.querySelector(`[data-combatant-id="${row?.id ?? ''}"] [data-tracker-engaged]`) ?? null) !== null,
+            10_000,
+        );
+        return (
+            g.ui.combat.element?.querySelector<HTMLElement>(`[data-combatant-id="${row?.id ?? ''}"] [data-tracker-engaged]`)?.dataset['trackerEngaged'] ?? ''
+        );
     }, tokenId);
 }
 
@@ -131,7 +140,9 @@ async function positionOf(page: Page, sceneId: string, tokenId: string): Promise
     return page.evaluate(
         ({ s, t }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
-            const g = globalThis as unknown as { game: { scenes: { get: (i: string) => { tokens: { get: (i: string) => { x: number; y: number } | undefined } } | undefined } } };
+            const g = globalThis as unknown as {
+                game: { scenes: { get: (i: string) => { tokens: { get: (i: string) => { x: number; y: number } | undefined } } | undefined } };
+            };
             const doc = g.game.scenes.get(s)?.tokens.get(t);
             return { x: doc?.x ?? -1, y: doc?.y ?? -1 };
         },
@@ -173,7 +184,10 @@ async function pressLeaveMelee(page: Page, button: 'decline' | 'release'): Promi
 /** Answer the move-declaration dialog with `choice`; returns the choices it offered. */
 async function answerMoveDialog(page: Page, choice: string): Promise<string[]> {
     return page.evaluate(async (pick) => {
-        await globalThis.wh40kE2E.pollUntil(() => document.querySelector('.application.dialog [data-action="half"], .application.dialog [data-action="full"]') !== null, 10_000);
+        await globalThis.wh40kE2E.pollUntil(
+            () => document.querySelector('.application.dialog [data-action="half"], .application.dialog [data-action="full"]') !== null,
+            10_000,
+        );
         const dialog = [...document.querySelectorAll<HTMLElement>('.application.dialog')].at(-1);
         const offered = [...(dialog?.querySelectorAll<HTMLElement>('footer [data-action]') ?? [])].map((b) => b.dataset['action'] ?? '');
         dialog?.querySelector<HTMLElement>(`[data-action="${pick}"]`)?.click();
@@ -188,7 +202,11 @@ async function declaredOf(page: Page, tokenId: string): Promise<{ declared: stri
         async ({ id, root }) => {
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
-                game: { combat: { combatants: { contents: Array<{ tokenId: string; actorId: string; getFlag: (s: string, k: string) => string | undefined }> } } | null };
+                game: {
+                    combat: {
+                        combatants: { contents: Array<{ tokenId: string; actorId: string; getFlag: (s: string, k: string) => string | undefined }> };
+                    } | null;
+                };
             };
             const economy = (await import(/* @vite-ignore */ `${root}/rules/action-economy.js`)) as {
                 actionBudgetForActor: (actorId: string, tokenId: string | null) => { halfRemaining: number } | null;
@@ -196,7 +214,7 @@ async function declaredOf(page: Page, tokenId: string): Promise<{ declared: stri
             const combatant = g.game.combat?.combatants.contents.find((c) => c.tokenId === id);
             return {
                 declared: combatant?.getFlag('wh40k-rpg', 'moveDeclared') ?? 'none',
-                halfRemaining: combatant === undefined ? -1 : (economy.actionBudgetForActor(combatant.actorId, id)?.halfRemaining ?? -1),
+                halfRemaining: combatant === undefined ? -1 : economy.actionBudgetForActor(combatant.actorId, id)?.halfRemaining ?? -1,
             };
         },
         { id: tokenId, root: MODULE_ROOT },
@@ -223,7 +241,9 @@ async function chargeRows(page: Page, scene: HarnessScene): Promise<{ disabled: 
             const targeted = (await import(/* @vite-ignore */ `${root}/actions/targeted-action-manager.js`)) as {
                 DHTargetedActionManager: { performWeaponAttack: (s: TokenLike, t: TokenLike | null, w: object) => void };
             };
-            const dialogModule = (await import(/* @vite-ignore */ `${root}/applications/prompts/unified-roll-dialog.js`)) as { default: abstract new (...a: never[]) => object };
+            const dialogModule = (await import(/* @vite-ignore */ `${root}/applications/prompts/unified-roll-dialog.js`)) as {
+                default: abstract new (...a: never[]) => object;
+            };
             const findDialog = (): Dialog | null => {
                 for (const app of g.foundry.applications.instances.values()) if (app instanceof dialogModule.default) return app as Dialog;
                 return null;
@@ -331,7 +351,13 @@ test.describe.serial('melee engagement, leaving melee, declared moves and Charge
             const rows = await chargeRows(page, scene);
             const charge = await page.evaluate(
                 async (a) =>
-                    globalThis.wh40kAttack.attack({ firer: a.firer, target: a.target, weaponName: 'Chainsword', faces: [[10, 100]], choices: { action: 'Charge' } }),
+                    globalThis.wh40kAttack.attack({
+                        firer: a.firer,
+                        target: a.target,
+                        weaponName: 'Chainsword',
+                        faces: [[10, 100]],
+                        choices: { action: 'Charge' },
+                    }),
                 { firer: id('charger'), target: id('far') },
             );
             const chargerAt = await positionOf(page, scene.sceneId, id('charger'));
@@ -349,7 +375,10 @@ test.describe.serial('melee engagement, leaving melee, declared moves and Charge
             await page.evaluate(async () => {
                 // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
                 const g = globalThis as unknown as {
-                    game: { combats: { contents: Array<{ delete: () => Promise<object> }> }; settings: { set: (a: string, b: string, c: string) => Promise<object> } };
+                    game: {
+                        combats: { contents: Array<{ delete: () => Promise<object> }> };
+                        settings: { set: (a: string, b: string, c: string) => Promise<object> };
+                    };
                 };
                 for (const combat of [...g.game.combats.contents]) await combat.delete();
                 await g.game.settings.set('wh40k-rpg', 'movement-automation', 'full');

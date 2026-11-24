@@ -13,7 +13,7 @@
  * quirk can never break the tracker or a sheet.
  */
 
-import { engagedFoeIds } from '../../canvas/engagement-canvas.ts';
+import { engagedFoeNames } from '../../canvas/engagement-canvas.ts';
 import { actionBudgetForActor } from '../../rules/action-economy.ts';
 import { hooksOn } from '../../utils/hooks-on.ts';
 
@@ -82,7 +82,7 @@ async function onRenderCombatTracker(_app: unknown, html: HTMLElement | JQuery):
             if (budget === null) continue;
             // #804: the foes this combatant's token is engaged in melee with, by name.
             const tokenId = combatant?.tokenId ?? null;
-            const engagedWith = tokenId === null ? [] : engagedFoeIds(tokenId).map((id) => canvas.scene?.tokens.get(id)?.name ?? '').filter((name) => name !== '');
+            const engagedWith = tokenId === null ? [] : engagedFoeNames(tokenId);
             // eslint-disable-next-line no-await-in-loop -- sequential: each row renders its own small partial; row count is the (small) combatant count
             const readout = await foundry.applications.handlebars.renderTemplate(TRACKER_ECONOMY_TEMPLATE, { budget, engagedWith });
             const anchor = row.querySelector('.token-name') ?? row.querySelector('.combatant-controls') ?? row;
@@ -128,6 +128,6 @@ export function registerCombatTrackerEconomy(): void {
     hooksOn('updateCombatant', onUpdateCombatant);
     // #804: a token moving in or out of contact changes who is engaged; redraw the tracker.
     hooksOn('updateToken', (_doc: object, changes: { x?: number; y?: number }) => {
-        if (game.combat?.started === true && ('x' in changes || 'y' in changes)) void ui.combat?.render();
+        if (game.combat?.started === true && ('x' in changes || 'y' in changes)) ui.combat.render();
     });
 }

@@ -261,7 +261,16 @@ export async function vocalizeCombatAction(this: CharacterSheet, event: Event, t
         ...(wh40kConfig?.combatActions?.attacks ?? []),
         ...(wh40kConfig?.combatActions?.movement ?? []),
         ...(wh40kConfig?.combatActions?.utility ?? []),
-    ] as Array<{ key: string; label: string; description: string; type?: string; burst?: 'semi' | 'full'; icon?: string; subtypes?: string[]; breaksEngagement?: boolean }>;
+    ] as Array<{
+        key: string;
+        label: string;
+        description: string;
+        type?: string;
+        burst?: 'semi' | 'full';
+        icon?: string;
+        subtypes?: string[];
+        breaksEngagement?: boolean;
+    }>;
 
     const actionConfig = allActions.find((a) => a.key === actionKey);
     if (actionConfig === undefined) {
