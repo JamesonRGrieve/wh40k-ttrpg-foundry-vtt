@@ -508,9 +508,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const layout = (this.constructor as typeof BaseActorSheet).SCHEMA_LAYOUT;
         if (layout === null) return;
         const stored = this.actor.system._source;
-        context['schemaSections'] = buildSchemaSections(layout, this.actor.system.schema, isFormValue(stored) ? stored : undefined, (mapPath, key) =>
+        const sections = buildSchemaSections(layout, this.actor.system.schema, isFormValue(stored) ? stored : undefined, (mapPath, key) =>
             this.schemaMapLabel(mapPath, key),
         );
+        // Actor sheets have no item-style edit mode (`inEditMode` is never set on
+        // them), so a row live only in edit mode could never be edited: an NPC's
+        // Custom Stat Overrides read as dead inputs. Every actor section is live
+        // whenever the sheet is editable.
+        context['schemaSections'] = sections.map((section) => ({ ...section, inPlay: true }));
     }
 
     /* -------------------------------------------- */

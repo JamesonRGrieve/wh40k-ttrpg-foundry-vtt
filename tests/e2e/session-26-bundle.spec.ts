@@ -17,7 +17,9 @@ import { scaledMs } from './lib/timing';
  *   document and on a keyboard move (#774);
  * - a crit row's stated duration lands on its condition effect (#766);
  * - the GM opens the party XP award from a character sheet, every character
- *   ticked (#553).
+ *   ticked (#553);
+ * - an NPC's Faction & Allegiance fields keep what was typed, and its Custom Stat
+ *   Overrides are editable (playtest report, 2026-11-24).
  *
  * Each flow records under `session-26.flow`. Keys MUST match SESSION_26_FLOWS in
  * scripts/e2e-coverage.mjs.
@@ -28,6 +30,8 @@ const SESSION_26_FLOWS = [
     'sub-square-token-centred',
     'crit-condition-duration',
     'party-xp-from-sheet',
+    'npc-faction-holds',
+    'npc-custom-stats-editable',
 ] as const;
 type FlowName = (typeof SESSION_26_FLOWS)[number];
 
@@ -185,8 +189,49 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
     );
 }
 
+/** On an NPC sheet: set the subfaction through the form, re-render, read it back; is the Custom Stats checkbox live? */
+async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction: string; checkboxEnabled: boolean }> {
+    return page.evaluate(
+        async ({ id }) => {
+            interface SheetLike {
+                element: HTMLElement;
+                render: (o: object) => Promise<SheetLike>;
+                close: () => Promise<void>;
+                changeTab?: (tab: string, group: string) => void;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                game: { actors: { get: (i: string) => { sheet: SheetLike; update: (d: object) => Promise<object> } | undefined } };
+            };
+            const actor = g.game.actors.get(id);
+            if (actor === undefined) throw new Error('no NPC');
+            const sheet = await actor.sheet.render({ force: true });
+            sheet.changeTab?.('npc', 'primary');
+            await globalThis.wh40kE2E.pollUntil(() => sheet.element.querySelector('input[name="system.subfaction"]') !== null, 10_000);
+            const input = sheet.element.querySelector<HTMLInputElement>('input[name="system.subfaction"]');
+            if (input === null) throw new Error('no subfaction input');
+            input.value = 'Ordo Hereticus cell';
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            await globalThis.wh40kE2E
+                .pollUntil(() => sheet.element.querySelector<HTMLInputElement>('input[name="system.subfaction"]')?.value === 'Ordo Hereticus cell', 10_000)
+                .catch(() => undefined);
+            await sheet.render({ force: true });
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 500);
+            });
+            const subfaction = sheet.element.querySelector<HTMLInputElement>('input[name="system.subfaction"]')?.value ?? '';
+            const checkbox = sheet.element.querySelector<HTMLInputElement>('input[name="system.customStats.enabled"]');
+            const checkboxEnabled = checkbox !== null && !checkbox.disabled;
+            await sheet.close();
+            return { subfaction, checkboxEnabled };
+        },
+        { id: actorId },
+    );
+}
+
 const TOKENS = [
     { key: 'pc', name: 'Bundle Medic', type: 'dh2-character', x: 300, y: 300 },
+    { key: 'dh1npc', name: 'Bundle DH1 Sergeant', type: 'dh1-npc', x: 900, y: 500 },
     { key: 'crawler', name: 'Bundle Crawler', type: 'dh2-npc', x: 500, y: 300, system: { wounds: { max: 10, value: 3 } } },
 ];
 
@@ -384,6 +429,11 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             // --- #553: the party XP award from a character sheet ---------------------
             const party = await openPartyXp(page, scene.actors['pc'] ?? '');
             pass('party-xp-from-sheet', party.opened && party.boxes > 0 && party.ticked === party.boxes, JSON.stringify(party));
+
+            // --- NPC sheet: faction holds, custom stats editable ----------------------
+            const npc = await npcSheetInputs(page, scene.actors['dh1npc'] ?? '');
+            pass('npc-faction-holds', npc.subfaction === 'Ordo Hereticus cell', JSON.stringify(npc));
+            pass('npc-custom-stats-editable', npc.checkboxEnabled, JSON.stringify(npc));
         } finally {
             await deleteDocuments(page, { combats: cleanup.combats, users: cleanup.users });
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());
