@@ -1547,8 +1547,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const tokens = sceneEngagementTokens();
         const attacker = tokens.find((token) => token.id === sourceToken?.id);
         if (attacker === undefined) return null;
-        const chosenId = this._targetTokenId;
-        const targetId = chosenId !== null ? chosenId : targetToken?.id ?? null;
+        const chosenId: string | null = this._targetTokenId;
+        const targetId = chosenId ?? targetToken?.id ?? null;
         const target = tokens.find((token) => token.id === targetId) ?? null;
         return { attacker, target, tokens, grid, rules };
     }

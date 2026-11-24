@@ -52,10 +52,10 @@ type LooseToken = {
     y?: number;
     actor?: { id?: string | null; system?: { movement?: { half?: number; full?: number; charge?: number; run?: number } } } | null;
 };
-/** A token document as the declared move repeats it (method syntax, so TokenDocument is assignable). */
+/** A token document as the declared move repeats it. */
 interface MovableToken {
-    update(data: object, options?: object): Promise<unknown>;
-    setFlag(scope: string, key: string, value: string): Promise<unknown>;
+    readonly update: (data: object, options?: object) => Promise<object | undefined>;
+    readonly setFlag: (scope: string, key: string, value: string) => Promise<object | undefined>;
 }
 // Kept minimal so Foundry's Combat/Combatant are structurally assignable to it
 // (its getFlag/setFlag carry a narrow scope type that a `string` param rejects).
@@ -260,8 +260,8 @@ export async function moveDeclared(token: object, to: { x: number; y: number }):
 
 /** Register the combat movement-enforcement hooks. Idempotent enough for boot. */
 export function registerMovementEnforcement(): void {
-    // eslint-disable-next-line no-restricted-syntax -- boundary: the preUpdateToken hook payload (TokenDocument, its change, Foundry's update options) is read structurally
     Hooks.on('preUpdateToken', (doc, changes, options) =>
+        // eslint-disable-next-line no-restricted-syntax -- boundary: the preUpdateToken hook payload (TokenDocument, its change, Foundry's update options) is read structurally
         onPreUpdateToken(doc as LooseToken, changes as { x?: number; y?: number }, options as unknown as Record<string, unknown>),
     );
     Hooks.on('updateToken', onUpdateToken);

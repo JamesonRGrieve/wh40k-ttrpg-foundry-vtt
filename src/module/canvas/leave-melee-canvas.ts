@@ -43,16 +43,16 @@ interface SceneTokenLike {
     readonly actor?: {
         readonly isOwner?: boolean;
         readonly items: Iterable<WeaponLike>;
-        rollItem?(id: string): Promise<object | undefined>;
+        readonly rollItem?: (id: string) => Promise<object | undefined>;
     } | null;
-    readonly object?: { setTarget(targeted: boolean, options: object): void } | null;
-    update(data: object, options?: MoveOptions): Promise<object | undefined>;
+    readonly object?: { readonly setTarget: (targeted: boolean, options: object) => void } | null;
+    readonly update: (data: object, options?: MoveOptions) => Promise<object | undefined>;
 }
 
 /** A scene token by scene and token id. */
 function sceneToken(sceneId: string, tokenId: string): SceneTokenLike | undefined {
     // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry's game.scenes and Scene#tokens collections, read through the structural SceneTokenLike
-    const scenes = game.scenes as unknown as { get(id: string): { readonly tokens: { get(id: string): SceneTokenLike | undefined } } | undefined };
+    const scenes = game.scenes as unknown as { get: (id: string) => { readonly tokens: { get: (id: string) => SceneTokenLike | undefined } } | undefined };
     return scenes.get(sceneId)?.tokens.get(tokenId);
 }
 
@@ -75,8 +75,8 @@ interface LeaveMeleeAnswer extends SystemSocketMessage {
 interface CardMessage {
     readonly id: string | null;
     readonly isAuthor?: boolean;
-    getFlag(scope: string, key: string): LeaveMeleeState | null | undefined;
-    update(data: object): Promise<object | undefined>;
+    readonly getFlag: (scope: string, key: string) => LeaveMeleeState | null | undefined;
+    readonly update: (data: object) => Promise<object | undefined>;
 }
 
 /** Render the card's content for a state. */
@@ -161,10 +161,10 @@ async function answer(message: CardMessage, foeTokenId: string | null, outcome: 
 async function freeAttack(state: LeaveMeleeState, foeTokenId: string): Promise<boolean> {
     const foe = sceneToken(state.sceneId, foeTokenId);
     const actor = foe?.actor ?? null;
-    if (actor === null || actor.rollItem === undefined) return false;
+    if (actor?.rollItem === undefined) return false;
     const melee = [...actor.items].filter((item) => item.type === 'weapon' && item.isMelee === true);
     const weapon = melee.find((item) => item.system?.state?.equipped === true) ?? melee.at(0);
-    if (weapon === undefined || weapon.id === null) {
+    if (weapon?.id == null) {
         ui.notifications.warn(t('WH40K.Combat.LeaveMelee.NoMeleeWeapon', { name: foe?.name ?? '' }));
         return false;
     }
