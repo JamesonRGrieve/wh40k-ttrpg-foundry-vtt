@@ -23,6 +23,21 @@ export async function customXP(this: CharacterSheet, event: Event, _target: HTML
 }
 
 /**
+ * Open the party XP award (#553) from a character sheet: every character ticked by
+ * default, so the GM unticks the absent players and awards one amount to the rest.
+ * GM only.
+ * @this {CharacterSheet}
+ * @param {Event} event         Triggering click event.
+ * @param {HTMLElement} target  Button that was clicked.
+ */
+export async function awardPartyXP(this: CharacterSheet, event: Event, _target: HTMLElement): Promise<void> {
+    event.preventDefault();
+    if (!game.user.isGM) return;
+    const { openBatchXPDialog } = await import('../../prompts/batch-xp-dialog.ts');
+    openBatchXPDialog();
+}
+
+/**
  * Open the advancement dialog for spending XP.
  * @this {CharacterSheet}
  * @param {Event} event         Triggering click event.

@@ -7778,6 +7778,7 @@ export type I18nKey =
     | 'WH40K.WorldTime.UnitLabel'
     | 'WH40K.Wounds'
     | 'WH40K.XP.AmountLabel'
+    | 'WH40K.XP.AwardParty'
     | 'WH40K.XP.BatchTitle'
     | 'WH40K.XP.GmOnly'
     | 'WH40K.XP.SelectAll'

@@ -17,7 +17,9 @@ import { scaledMs } from './lib/timing';
  *   its width and height (#780);
  * - a token smaller than a square snaps to the centre of its square, through the
  *   document and on a keyboard move (#774);
- * - a crit row's stated duration lands on its condition effect (#766).
+ * - a crit row's stated duration lands on its condition effect (#766);
+ * - the GM opens the party XP award from a character sheet, every character
+ *   ticked (#553).
  *
  * Each flow records under `session-26.flow`. Keys MUST match SESSION_26_FLOWS in
  * scripts/e2e-coverage.mjs.
@@ -29,6 +31,7 @@ const SESSION_26_FLOWS = [
     'token-only-resize',
     'sub-square-token-centred',
     'crit-condition-duration',
+    'party-xp-from-sheet',
 ] as const;
 type FlowName = (typeof SESSION_26_FLOWS)[number];
 
@@ -185,6 +188,44 @@ async function applyTimedCrit(page: Page, actorId: string): Promise<{ rounds: nu
             return { rounds: stunned?.duration.rounds ?? stunned?.duration.value ?? null, label: report.conditionDurations.at(0)?.label ?? '' };
         },
         { root: MODULE_ROOT, id: actorId },
+    );
+}
+
+/** As GM, click the sheet's party XP button; read the dialog's character checkboxes. */
+async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boolean; boxes: number; ticked: number }> {
+    return page.evaluate(
+        async ({ id }) => {
+            interface App {
+                element?: HTMLElement;
+                close: () => Promise<void>;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                game: {
+                    actors: {
+                        get: (i: string) => { sheet: { render: (o: object) => Promise<{ element: HTMLElement }>; close: () => Promise<void> } } | undefined;
+                    };
+                };
+                foundry: { applications: { instances: Map<string, App> } };
+            };
+            const sheet = g.game.actors.get(id)?.sheet;
+            if (sheet === undefined) throw new Error('no sheet');
+            const rendered = await sheet.render({ force: true });
+            await globalThis.wh40kE2E.pollUntil(() => rendered.element.querySelector('[data-action="awardPartyXP"]') !== null, 10_000);
+            rendered.element.querySelector<HTMLButtonElement>('[data-action="awardPartyXP"]')?.click();
+            const find = (): App | undefined =>
+                [...g.foundry.applications.instances.values()].find((app) => app.element?.classList.contains('batch-xp-dialog') === true);
+            const opened = await globalThis.wh40kE2E
+                .pollUntil(() => find() !== undefined, 10_000)
+                .then(() => true)
+                .catch(() => false);
+            const boxes = [...(find()?.element?.querySelectorAll<HTMLInputElement>('input[name="selected"]') ?? [])];
+            const result = { opened, boxes: boxes.length, ticked: boxes.filter((b) => b.checked).length };
+            await find()?.close();
+            await sheet.close();
+            return result;
+        },
+        { id: actorId },
     );
 }
 
@@ -389,6 +430,10 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782)', () => {
             // --- #766: a crit's stated duration on its condition ------------------------
             const timed = await applyTimedCrit(page, scene.actors['pc'] ?? '');
             pass('crit-condition-duration', timed.rounds === 2 && timed.label.includes('2 rounds'), JSON.stringify(timed));
+
+            // --- #553: the party XP award from a character sheet ---------------------
+            const party = await openPartyXp(page, scene.actors['pc'] ?? '');
+            pass('party-xp-from-sheet', party.opened && party.boxes > 0 && party.ticked === party.boxes, JSON.stringify(party));
         } finally {
             await deleteDocuments(page, { combats: cleanup.combats, users: cleanup.users });
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());

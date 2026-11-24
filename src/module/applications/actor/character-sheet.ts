@@ -359,6 +359,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Experience actions
             'customXP': ExperienceActions.customXP,
+            'awardPartyXP': ExperienceActions.awardPartyXP,
             'openAdvancement': ExperienceActions.openAdvancement,
 
             // Active Effect actions

@@ -953,6 +953,7 @@ const SESSION_26_FLOWS = [
     'token-only-resize',
     'sub-square-token-centred',
     'crit-condition-duration',
+    'party-xp-from-sheet',
 ];
 recordDimension('session-26.flow', covered['session-26.flow'], SESSION_26_FLOWS);
 
