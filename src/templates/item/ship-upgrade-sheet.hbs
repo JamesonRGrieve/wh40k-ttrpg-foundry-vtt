@@ -11,84 +11,33 @@
             (object tab="effects" label=(localize "WH40K.Item.Tabs.Effects") icon="fa-magic"))}}
 
         <!-- Tab Content -->
-        <section class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
+        {{!-- `wh40k-tab-content` is what the item sheet's tab binder looks for: without it
+              the tab buttons were never bound and Effects could not be opened. --}}
+        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-[var(--wh40k-space-md)]">
             <!-- Details Tab -->
             <div class="tab active" data-tab="details" data-group="primary">
                 <!-- Basic Properties -->
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-level-up-alt" labelKey="WH40K.ItemSheet.Ship.UpgradeProperties"}}
-                        <div class="form-group">
-                            <label>{{localize "WH40K.Availability.Label"}}</label>
+                        <label class="tw-flex tw-w-[12rem] tw-max-w-full tw-flex-col tw-gap-1">
+                            <span class="tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] {{themeClassFor 'accent'}}">{{localize "WH40K.Availability.Label"}}</span>
                             <select name="system.availability">
                                 {{selectOptions availabilities selected=source.availability}}
                             </select>
-                        </div>
+                        </label>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Resource Requirements -->
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-battery-half" labelKey="WH40K.ItemSheet.Ship.ResourceRequirements"}}
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ShipComponent.Power"}}</label>
-                                <input type="number" name="system.power" value="{{source.power}}" />
-                                <p class="hint">{{localize "WH40K.ItemSheet.Ship.NegativePower"}}</p>
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ShipComponent.Space"}}</label>
-                                <input type="number" name="system.space" value="{{source.space}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.ItemSheet.Ship.ShipPoints"}}</label>
-                                <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
-                            </div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/item/partial/number-tile-grid.hbs fields=(array
+                            (object label=(localize "WH40K.ShipComponent.Power") name="system.power" value=source.power)
+                            (object label=(localize "WH40K.ShipComponent.Space") name="system.space" value=source.space)
+                            (object label=(localize "WH40K.ItemSheet.Ship.ShipPoints") name="system.shipPoints" value=source.shipPoints))}}
+                        <p class="hint">{{localize "WH40K.ItemSheet.Ship.NegativePower"}}</p>
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 <!-- Stat Modifiers -->
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-chart-line" labelKey="WH40K.ItemSheet.Ship.StatModifiers"}}
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Speed"}}</label>
-                                <input type="number" name="system.modifiers.speed" value="{{source.modifiers.speed}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Manoeuvrability"}}</label>
-                                <input type="number" name="system.modifiers.manoeuvrability" value="{{source.modifiers.manoeuvrability}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Detection"}}</label>
-                                <input type="number" name="system.modifiers.detection" value="{{source.modifiers.detection}}" />
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Armour"}}</label>
-                                <input type="number" name="system.modifiers.armour" value="{{source.modifiers.armour}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.HullIntegrity"}}</label>
-                                <input type="number" name="system.modifiers.hullIntegrity" value="{{source.modifiers.hullIntegrity}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.TurretRating"}}</label>
-                                <input type="number" name="system.modifiers.turretRating" value="{{source.modifiers.turretRating}}" />
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.VoidShields"}}</label>
-                                <input type="number" name="system.modifiers.voidShields" value="{{source.modifiers.voidShields}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.Morale"}}</label>
-                                <input type="number" name="system.modifiers.morale" value="{{source.modifiers.morale}}" />
-                            </div>
-                            <div class="form-group">
-                                <label>{{localize "WH40K.Voidcraft.Build.Stat.CrewRating"}}</label>
-                                <input type="number" name="system.modifiers.crewRating" value="{{source.modifiers.crewRating}}" />
-                            </div>
-                        </div>
+                        {{> systems/wh40k-rpg/templates/item/partial/ship-stat-modifier-tiles.hbs}}
                 {{/systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs}}
 
                 {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-magic" labelKey="WH40K.Tabs.Effect"}}
