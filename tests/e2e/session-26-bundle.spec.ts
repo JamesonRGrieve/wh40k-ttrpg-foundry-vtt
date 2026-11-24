@@ -424,7 +424,8 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             const reactions = await reactionsAfterCopyDodges(page, scene.sceneId, scene.tokens['crawler'] ?? '', copyId);
             cleanup.combats.push(reactions.combatId);
             pass('per-token-reaction-budget', reactions.first === 1 && reactions.copy === 0, JSON.stringify(reactions));
-            await snap(page, 'session-26-copies-own-reaction-budgets', { selector: '#combat', closeWindows: true });
+            // The combat sidebar isn't the open tab, so capture the board (a hidden selector waits forever).
+            await snap(page, 'session-26-copies-own-reaction-budgets', { selector: '#board', closeWindows: true });
 
             // --- #782: a player heals an unowned unlinked token through the GM ----------
             cleanup.users.push(await createPlayer(page, PLAYER));
