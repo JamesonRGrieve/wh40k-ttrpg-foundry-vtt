@@ -3,7 +3,8 @@
   Clean reference-card style for weapon quality definitions
 }}
 <div class="tw-flex tw-flex-col tw-h-full">
-    <div autocomplete="off">
+    {{!-- A bounded column: the tab section below scrolls only if its parent has a height. --}}
+    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0" autocomplete="off" data-item-sheet-body>
 
         {{! ═══════════════════════════════════════════════════════════════════
          HEADER: Simple quality identity
@@ -89,7 +90,7 @@
         {{! ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ }}
-        <section class="wh40k-tab-content tw-flex-1 tw-overflow-y-auto tw-p-3">
+        <section class="wh40k-tab-content tw-flex-1 tw-min-h-0 tw-overflow-y-auto tw-p-3">
 
             {{! EFFECT TAB (Primary) }}
             <div class="tab active" data-tab="effect" data-group="primary">

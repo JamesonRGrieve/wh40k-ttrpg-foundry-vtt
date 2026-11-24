@@ -1,5 +1,6 @@
 <div class="wh40k-item-sheet ship-component tw-flex tw-flex-col tw-h-full tw-overflow-hidden tw-bg-[var(--wh40k-sheet-bg)] tw-text-[var(--wh40k-text-dark)]">
-    <div autocomplete="off">
+    {{!-- A bounded column: the tab section below scrolls only if its parent has a height. --}}
+    <div class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0" autocomplete="off" data-item-sheet-body>
         {{!-- Item Header (canonical partial) --}}
         {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs
             namePlaceholderKey="WH40K.ItemSheet.NamePlaceholder.ShipComponent"
