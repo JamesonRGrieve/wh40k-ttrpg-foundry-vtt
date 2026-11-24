@@ -284,8 +284,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _targetHookId: number | null;
     /** The targeted token's id, so the roster dropdown shows that token rather than any copy of its actor (#764). */
     declare _targetTokenId: string | null;
-    /** The roster row the dropdown last rendered as selected ('' for none): a submit retargets only when the dropdown moved off it (#764). */
-    declare _renderedCombatantId: string;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
     /**
@@ -332,7 +330,6 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._previousTarget = null;
         this._selectedRangeBracket = null;
         this._targetTokenId = null;
-        this._renderedCombatantId = '';
 
         // Card-based weapon panel state
         this._attackModeKey = 'standard';
@@ -1736,7 +1733,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /*  Form Handler                                 */
     /* -------------------------------------------- */
 
-    static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, _form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+    static async #onFormSubmit(this: UnifiedRollDialog, _event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
         // eslint-disable-next-line no-restricted-syntax -- boundary: FormDataExtended.object is typed loosely by Foundry; cast is the documented pattern
         const formObject = (formData as unknown as { object: Record<string, unknown> }).object;
         // The item pickers (#535) must be taken before the form merges into the roll data.
@@ -1757,12 +1754,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
         // Target combatant dropdown (#250) — bind the chosen defender + recompute range.
         // Every submit carries the dropdown's value, so it retargets only when the
-        // dropdown itself moved: otherwise any other control would reset a canvas or
-        // Select Target choice to whatever the dropdown last showed (#764).
+        // dropdown itself moved off the row it was rendered with (carried on the
+        // element, so a submit racing a re-render compares like with like): otherwise
+        // any other control would reset a canvas or Select Target choice (#764).
         if ('targetCombatantId' in formObject) {
             const combatantId = formObject['targetCombatantId'];
             const picked = typeof combatantId === 'string' ? combatantId : '';
-            if (picked !== this._renderedCombatantId) this.#applyTargetCombatant(picked);
+            const rendered = form.querySelector<HTMLSelectElement>('select[name="targetCombatantId"]')?.dataset['renderedCombatant'] ?? '';
+            if (picked !== rendered) this.#applyTargetCombatant(picked);
         }
         // Update roll data fields from form
         const rd = this.rollData;
@@ -2574,15 +2573,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      */
     #getTargetSelectorContext(): {
         combatants: RosterRow[];
+        renderedCombatantId: string;
         hasCombat: boolean;
         hasTarget: boolean;
         targetName: string | null;
     } {
         const targetActorForDisplay = this.rollData.targetActor as { name?: string } | null | undefined;
         const combatants = this.#getCombatantTargets();
-        this._renderedCombatantId = combatants.find((row) => row.isSelected)?.id ?? '';
         return {
             combatants,
+            renderedCombatantId: combatants.find((row) => row.isSelected)?.id ?? '',
             hasCombat: combatants.length > 0,
             hasTarget: targetActorForDisplay != null,
             targetName: targetActorForDisplay?.name ?? null,
