@@ -44,7 +44,7 @@ const DH1_VEHICLE_DRIVING: VehicleDrivingRules = {
 };
 
 export class DH1eSystemConfig extends CareerBasedSystemConfig {
-    /** DH1: 2d10 plus the home world's column (Table 1-3), which the home worlds hold as 20 ± 5. (#760) */
+    /** DH1: 2d10 plus the home world's column (the characteristics table), which the home worlds hold as 20 ± 5. (#760) */
     override readonly characteristicGeneration = flatGeneration(20);
     /** DH1's Shooting into Melee prints no waiver for a Stunned, Helpless or Unaware participant (#804). */
     override readonly meleeEngagement: MeleeEngagementRules = { ...STANDARD_MELEE_ENGAGEMENT, shootingIntoMeleeWaivedByDefenceless: false };

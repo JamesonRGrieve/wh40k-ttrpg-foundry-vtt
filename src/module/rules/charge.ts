@@ -13,7 +13,7 @@
 import type { EngagementToken } from './engagement.ts';
 
 /** The closest a charge target may be, in metres. */
-export const CHARGE_MINIMUM_METRES = 4;
+const CHARGE_MINIMUM_METRES = 4;
 
 /** Whether a target at `distance` metres can be charged with a Charge Move of `chargeMove` metres. */
 export type ChargeReach = 'in-range' | 'too-close' | 'too-far';

@@ -169,9 +169,11 @@ export async function clearSceneAreas(): Promise<void> {
 
 /**
  * Expire timed areas as their combat's rounds pass, and drop a combat's timed areas when
- * it ends; add the quick-template button to the WH40K scene-control group.
+ * it ends; add the quick-template button to the WH40K scene-control group. The button
+ * opens the dialog the caller passes, so this module doesn't import the dialog (which
+ * imports it: an import cycle).
  */
-export function registerAreaRegions(): void {
+export function registerAreaRegions(openQuickTemplate: () => void): void {
     hooksOn('updateCombat', (combat: Combat, changed: { round?: number }) => {
         if (changed.round === undefined || game.users.activeGM?.isSelf !== true || combat.id === null) return;
         const clock = { id: combat.id, round: combat.round };
@@ -189,9 +191,7 @@ export function registerAreaRegions(): void {
             title: 'WH40K.Area.QuickTemplate.Title',
             icon: 'fa-solid fa-draw-polygon',
             visible: true,
-            onChange: () => {
-                void import('../applications/prompts/quick-template-dialog.ts').then(({ openQuickTemplateDialog }) => openQuickTemplateDialog());
-            },
+            onChange: openQuickTemplate,
             button: true,
             order: Object.keys(group.tools).length,
         };

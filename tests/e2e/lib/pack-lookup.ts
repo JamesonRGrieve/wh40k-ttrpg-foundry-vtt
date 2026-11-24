@@ -59,6 +59,15 @@ export function packHoldingName(query: PackQuery, docName: string): string {
     throw new Error(`no ${query.line} ${query.category} pack holds a document named ${docName}`);
 }
 
+/** The source file of document `docId` in whichever of the query's packs holds it; throws when none does. */
+export function documentFile(query: PackQuery, docId: string): string {
+    for (const pack of matchingPacks(query)) {
+        const file = sourceFiles(pack).find((name) => name === `${docId}.json` || name.endsWith(`_${docId}.json`));
+        if (file !== undefined) return join(pack.sourceDir, file);
+    }
+    throw new Error(`no ${query.line} ${query.category} pack holds document ${docId}`);
+}
+
 /** The compendium UUID of document `docId` in whichever of the query's packs holds it. */
 export function compendiumUuid(query: PackQuery, docId: string, documentClass = 'Item'): string {
     return `Compendium.wh40k-rpg.${packHoldingId(query, docId)}.${documentClass}.${docId}`;

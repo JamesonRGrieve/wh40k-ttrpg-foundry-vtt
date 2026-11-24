@@ -21,9 +21,9 @@ import { evaluateCombatMovement, MOVE_MODE_FLAG, type MovementEvaluation } from 
 
 const MOVED_FLAG = 'movedThisTurnMetres';
 /** Set when the combatant Runs; cleared at the start of its next turn (#805). */
-export const RAN_FLAG = 'ranSinceLastTurn';
+const RAN_FLAG = 'ranSinceLastTurn';
 /** The update option that marks a move whose action has been declared, so the hook lets it through. */
-export const DECLARED_MOVE_OPTION = 'wh40kMoveDeclared';
+const DECLARED_MOVE_OPTION = 'wh40kMoveDeclared';
 
 export interface TokenMoveDecisionInput {
     automation: 'full' | 'display' | 'none';
@@ -98,35 +98,6 @@ export async function writeDeclared(combatant: LooseCombatant | TurnCombatant | 
 function moveRates(token: LooseToken): MoveRates {
     const movement = token.actor?.system?.movement;
     return { half: movement?.half ?? 0, full: movement?.full ?? 0, run: movement?.run ?? 0 };
-}
-
-/** Ask which move action this is (#805); null when the player cancels. A GM may also move freely. */
-async function askMoveAction(
-    prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' },
-    rates: MoveRates,
-    requested: number,
-): Promise<MoveChoice | 'secondHalf' | 'free' | null> {
-    const distances: Record<MoveChoice | 'secondHalf', number> = { half: rates.half, full: rates.full, run: rates.run, secondHalf: rates.half * 2 };
-    const options = prompt.kind === 'declare' ? [...prompt.choices] : (['secondHalf'] as const);
-    const buttons: Array<{ action: string; label: string; default: boolean }> = options.map((choice, index) => ({
-        action: choice,
-        label: t(`WH40K.Combat.MoveDeclare.Choice.${choice}`, { metres: String(distances[choice]) }),
-        default: index === 0,
-    }));
-    if (game.user.isGM) buttons.push({ action: 'free', label: t('WH40K.Combat.MoveDeclare.Free'), default: false });
-    const content = `<p>${t(prompt.kind === 'declare' ? 'WH40K.Combat.MoveDeclare.Body' : 'WH40K.Combat.MoveDeclare.SecondHalfBody', {
-        metres: String(Math.round(requested * 10) / 10),
-        half: String(rates.half),
-    })}</p><p>${t('WH40K.Combat.MoveDeclare.RunNote')}</p>`;
-    const result = await foundry.applications.api.DialogV2.wait({
-        window: { title: t('WH40K.Combat.MoveDeclare.Title') },
-        content,
-        buttons,
-        rejectClose: false,
-    });
-    return typeof result === 'string' && (result === 'free' || result === 'secondHalf' || result === 'half' || result === 'full' || result === 'run')
-        ? result
-        : null;
 }
 
 /** Ask, spend the action, record the declaration, then repeat the held move. */
@@ -258,6 +229,35 @@ export async function moveDeclared(token: object, to: { x: number; y: number }):
     await (token as MovableToken).update({ x: to.x, y: to.y }, { [DECLARED_MOVE_OPTION]: true });
 }
 /* eslint-enable no-restricted-syntax */
+
+/** Ask which move action this is (#805); null when the player cancels. A GM may also move freely. */
+async function askMoveAction(
+    prompt: { kind: 'declare'; choices: readonly MoveChoice[] } | { kind: 'secondHalf' },
+    rates: MoveRates,
+    requested: number,
+): Promise<MoveChoice | 'secondHalf' | 'free' | null> {
+    const distances: Record<MoveChoice | 'secondHalf', number> = { half: rates.half, full: rates.full, run: rates.run, secondHalf: rates.half * 2 };
+    const options = prompt.kind === 'declare' ? [...prompt.choices] : (['secondHalf'] as const);
+    const buttons: Array<{ action: string; label: string; default: boolean }> = options.map((choice, index) => ({
+        action: choice,
+        label: t(`WH40K.Combat.MoveDeclare.Choice.${choice}`, { metres: String(distances[choice]) }),
+        default: index === 0,
+    }));
+    if (game.user.isGM) buttons.push({ action: 'free', label: t('WH40K.Combat.MoveDeclare.Free'), default: false });
+    const content = `<p>${t(prompt.kind === 'declare' ? 'WH40K.Combat.MoveDeclare.Body' : 'WH40K.Combat.MoveDeclare.SecondHalfBody', {
+        metres: String(Math.round(requested * 10) / 10),
+        half: String(rates.half),
+    })}</p><p>${t('WH40K.Combat.MoveDeclare.RunNote')}</p>`;
+    const result = await foundry.applications.api.DialogV2.wait({
+        window: { title: t('WH40K.Combat.MoveDeclare.Title') },
+        content,
+        buttons,
+        rejectClose: false,
+    });
+    return typeof result === 'string' && (result === 'free' || result === 'secondHalf' || result === 'half' || result === 'full' || result === 'run')
+        ? result
+        : null;
+}
 
 /** Register the combat movement-enforcement hooks. Idempotent enough for boot. */
 export function registerMovementEnforcement(): void {

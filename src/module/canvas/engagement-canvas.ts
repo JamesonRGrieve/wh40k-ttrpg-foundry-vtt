@@ -34,7 +34,7 @@ export interface EngagementTokenDoc {
 }
 
 /** One token document as engagement reads it, or null without an id. */
-export function engagementToken(doc: EngagementTokenDoc, at: { x?: number; y?: number } = {}): EngagementToken | null {
+function engagementToken(doc: EngagementTokenDoc, at: { x?: number; y?: number } = {}): EngagementToken | null {
     if (doc.id === null) return null;
     const actor = doc.actor ?? null;
     return {

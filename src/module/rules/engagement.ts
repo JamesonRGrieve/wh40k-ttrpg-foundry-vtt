@@ -47,13 +47,13 @@ export interface OutnumberingTraits {
 }
 
 /** One rung of the Ganging Up ladder: at this ratio of attackers to defenders or more, this bonus. */
-export interface GangUpTier {
+interface GangUpTier {
     readonly ratio: number;
     readonly bonus: number;
 }
 
 /** What an engaged character may attack with. */
-export type RangedWhileEngaged = 'pistol' | 'none';
+type RangedWhileEngaged = 'pistol' | 'none';
 
 /** A line's engagement rules. */
 export interface MeleeEngagementRules {
@@ -108,7 +108,7 @@ function cellRect(token: EngagementToken, gridSize: number): CellRect {
 }
 
 /** Whether two tokens are on adjacent (or the same) squares; diagonals count. */
-export function tokensAdjacent(a: EngagementToken, b: EngagementToken, gridSize: number): boolean {
+function tokensAdjacent(a: EngagementToken, b: EngagementToken, gridSize: number): boolean {
     if (a.id === b.id) return false;
     const ra = cellRect(a, gridSize);
     const rb = cellRect(b, gridSize);
@@ -118,7 +118,7 @@ export function tokensAdjacent(a: EngagementToken, b: EngagementToken, gridSize:
 }
 
 /** Whether two tokens are on opposing sides: one friendly, one hostile. Neutral and secret tokens are bystanders. */
-export function opposed(a: EngagementToken, b: EngagementToken): boolean {
+function opposed(a: EngagementToken, b: EngagementToken): boolean {
     return (a.disposition === 1 && b.disposition === -1) || (a.disposition === -1 && b.disposition === 1);
 }
 

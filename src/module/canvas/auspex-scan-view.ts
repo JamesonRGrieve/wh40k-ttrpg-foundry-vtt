@@ -12,7 +12,7 @@ import type { I18nKey } from '../types/i18n-keys';
 export type Translate = (key: I18nKey, params?: Record<string, string | number | boolean>) => string;
 
 /** One contact row on the card. */
-export type ScanCardRow = {
+type ScanCardRow = {
     name: string;
     kind: ContactKind;
     kindLabel: string;

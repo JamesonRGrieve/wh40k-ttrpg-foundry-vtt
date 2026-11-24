@@ -34,7 +34,7 @@ export const Contacts: Story = {
     play: async ({ canvasElement }) => {
         const view = within(canvasElement);
         await expect(view.getByText(localizeKey('WH40K.Auspex.ChatTitle'))).toBeTruthy();
-        await expect(view.getByText('Brother Kael scanned with Auspex/Scanner: 3 contact(s).')).toBeTruthy();
+        await expect(view.getByText('Brother Kael scanned with Auspex/Scanner: 3 contacts.')).toBeTruthy();
         const rows = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-auspex-contact]'));
         await expect(rows.map((row) => row.dataset['auspexContact'])).toEqual(['life', 'life', 'machine']);
         await expect(view.getByText('4.5 m, bearing 90°')).toBeTruthy();

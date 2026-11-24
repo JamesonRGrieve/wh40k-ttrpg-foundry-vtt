@@ -15,12 +15,16 @@ const baseSheet = readRepoFile('src/module/applications/actor/base-actor-sheet.t
 const vitals = readRepoFile('src/templates/actor/panel/overview-vitals-panel.hbs');
 
 describe('NPC tab inputs hold their values', () => {
-    it.each(['subfaction', 'allegiance', 'source'])('the %s input shows the stored system.%s', (field) => {
+    it.each(['subfaction', 'allegiance'])('the %s input shows the stored system.%s', (field) => {
         expect(tab).toContain(`name="system.${field}" value="{{system.${field}}}"`);
     });
 
     it('no faction input reads the source reference as if it were the system data', () => {
-        expect(tab).not.toMatch(/value="\{\{(sourceLabel )?source\.(subfaction|allegiance|source)\}\}"/);
+        expect(tab).not.toMatch(/value="\{\{source\.(subfaction|allegiance)\}\}"/);
+    });
+
+    it('the Source field formats the structured source for display (#229, #252)', () => {
+        expect(tab).toContain('name="system.source" value="{{sourceLabel source.source}}"');
     });
 });
 

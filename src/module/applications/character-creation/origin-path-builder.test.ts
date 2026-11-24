@@ -2101,7 +2101,7 @@ describe('OriginPathBuilder._originForLine (#760)', () => {
     // collapsed it to the WORLD's line, so a builder of another line lost them.
     const forgeWorld = {
         id: 'DH2FrgWld0000002',
-        uuid: 'Compendium.wh40k-rpg.dh2-core-origins-homeworlds.Item.DH2FrgWld0000002',
+        uuid: 'Compendium.wh40k-rpg.test-origins.Item.DH2FrgWld0000002',
         name: 'Forge World',
         img: 'icons/forge.webp',
         type: 'originPath',

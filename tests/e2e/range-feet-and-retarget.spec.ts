@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import type { Page } from '@playwright/test';
 import { type HarnessScene, installAttackHarness, leanWeapon } from './lib/attack-harness';
 import { popOutChatMessage } from './lib/chat-capture';
 import { recordCoverage } from './lib/coverage-tracker';
 import { joinOrSkip } from './lib/join';
-import { compendiumUuid } from './lib/pack-lookup';
+import { compendiumUuid, documentFile } from './lib/pack-lookup';
 import { snap } from './lib/screenshot';
 import { expect, test } from './lib/test';
 import { scaledMs } from './lib/timing';
@@ -47,7 +46,7 @@ const LASPISTOL = compendiumUuid({ line: 'dh2', category: 'weapons' }, 'f1G2h3I4
 
 /** The Corpse-Crawler's own Acid Spray, as its bestiary entry embeds it (no clip, Reload "—"). */
 function crawlerAcidSpray(): object {
-    const file = join(process.cwd(), 'src/packs-private/dark-heresy-2/dh2-core-actors-bestiary/_source/corpse-crawler_CFPEyLfUMDBUVCd2.json');
+    const file = documentFile({ line: 'dh2', category: 'actors' }, 'CFPEyLfUMDBUVCd2');
     // eslint-disable-next-line no-restricted-syntax -- boundary: JSON.parse returns unknown (ts-reset); only the embedded items are read
     const doc = JSON.parse(readFileSync(file, 'utf8')) as { items?: Array<{ name?: string; _id?: string }> };
     const spray = doc.items?.find((item) => item.name === 'Acid Spray');

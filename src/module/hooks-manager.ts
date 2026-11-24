@@ -60,6 +60,7 @@ import { openHomeworldInfoDialog } from './applications/prompts/homeworld-info-d
 import { openMedicaeMechadendriteDialog } from './applications/prompts/medicae-mechadendrite-dialog.ts';
 import { openMutantBackgroundDialog } from './applications/prompts/mutant-background-dialog.ts';
 import { openMutationRollDialog } from './applications/prompts/mutation-roll-dialog.ts';
+import { openQuickTemplateDialog } from './applications/prompts/quick-template-dialog.ts';
 import { openServicesDialog } from './applications/prompts/services-dialog.ts';
 import { openSisterOfBattleDialog } from './applications/prompts/sister-of-battle-dialog.ts';
 import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.ts';
@@ -405,7 +406,7 @@ export class HooksManager {
 
         // Areas as V14 Regions (#758): timed areas expire with their combat's rounds; the
         // quick-template button joins the WH40K control group.
-        registerAreaRegions();
+        registerAreaRegions(openQuickTemplateDialog);
 
         // Per-turn action-economy reset (Full/Half/Free/Reaction) during combat (#264).
         registerActionEconomy();

@@ -112,7 +112,7 @@ export function scanFrom(scanner: foundry.canvas.placeables.Token, reach: Scanne
 }
 
 /** Draw a sweep on this client: a ring running out to the range, then a blip on each contact, fading out. */
-export function drawScanSweep(sweep: ScanSweep): void {
+function drawScanSweep(sweep: ScanSweep): void {
     const controls = canvas.controls;
     if (controls === undefined || canvas.scene?.id !== sweep.sceneId) return;
     const graphics = new PIXI.Graphics();
