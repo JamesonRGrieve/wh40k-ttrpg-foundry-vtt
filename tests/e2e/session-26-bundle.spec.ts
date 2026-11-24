@@ -19,7 +19,9 @@ import { scaledMs } from './lib/timing';
  * - the GM opens the party XP award from a character sheet, every character
  *   ticked (#553);
  * - an NPC's Faction & Allegiance fields keep what was typed, and its Custom Stat
- *   Overrides are editable (playtest report, 2026-11-24).
+ *   Overrides are editable (playtest report, 2026-11-24);
+ * - with no condition documents for the line (a public install), the Create
+ *   Active Effect dialog offers the registered token statuses and applies one.
  *
  * Each flow records under `session-26.flow`. Keys MUST match SESSION_26_FLOWS in
  * scripts/e2e-coverage.mjs.
@@ -33,6 +35,7 @@ const SESSION_26_FLOWS = [
     'npc-faction-holds',
     'npc-custom-stats-editable',
     'npc-combat-tab-fatigue',
+    'effect-picker-falls-back-to-statuses',
 ] as const;
 type FlowName = (typeof SESSION_26_FLOWS)[number];
 
@@ -230,6 +233,53 @@ async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction
             return { subfaction, checkboxEnabled, combatFatiguePips };
         },
         { id: actorId },
+    );
+}
+
+/** With the condition catalog emptied, open Create Active Effect on an actor; count its rows, pick one, read the effect. */
+async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows: number; statuses: number; applied: string[] }> {
+    return page.evaluate(
+        async ({ root, id }) => {
+            interface DialogLike {
+                element?: HTMLElement;
+                close: () => Promise<void>;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                CONFIG: { statusEffects: Array<{ id?: string }> };
+                game: { actors: { get: (i: string) => { effects: { contents: Array<{ statuses: Set<string> }> } } | undefined } };
+                foundry: { applications: { instances: Map<string, DialogLike> } };
+            };
+            const registry = (await import(/* @vite-ignore */ `${root}/rules/condition-registry.js`)) as {
+                setConditionCatalog: (next: Map<string, object>) => void;
+            };
+            const dialogModule = (await import(/* @vite-ignore */ `${root}/applications/prompts/effect-creation-dialog.js`)) as {
+                default: { show: (owner: object) => Promise<object | null> };
+            };
+            const actor = g.game.actors.get(id);
+            if (actor === undefined) throw new Error('no actor');
+            registry.setConditionCatalog(new Map());
+            const shown = dialogModule.default.show(actor);
+            const open = (): DialogLike | undefined =>
+                [...g.foundry.applications.instances.values()].find((app) => app.element?.querySelector('[data-action="selectCondition"]') !== null);
+            await globalThis.wh40kE2E.pollUntil(() => open() !== undefined, 10_000).catch(() => undefined);
+            const dialog = open();
+            const rows = [...(dialog?.element?.querySelectorAll<HTMLElement>('[data-action="selectCondition"]') ?? [])];
+            const stunned = rows.find((row) => row.dataset['conditionId'] === 'stunned') ?? rows.at(0);
+            const picked = stunned?.dataset['conditionId'] ?? '';
+            stunned?.click();
+            dialog?.element?.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+            await Promise.race([
+                shown,
+                new Promise<void>((resolve) => {
+                    setTimeout(resolve, 5000);
+                }),
+            ]);
+            const applied = actor.effects.contents.filter((e) => e.statuses.has(picked)).map(() => picked);
+            await open()?.close();
+            return { rows: rows.length, statuses: g.CONFIG.statusEffects.filter((s) => s.id !== undefined && s.id !== 'dead').length, applied };
+        },
+        { root: MODULE_ROOT, id: actorId },
     );
 }
 
@@ -439,6 +489,14 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             pass('npc-faction-holds', npc.subfaction === 'Ordo Hereticus cell', JSON.stringify(npc));
             pass('npc-custom-stats-editable', npc.checkboxEnabled, JSON.stringify(npc));
             pass('npc-combat-tab-fatigue', npc.combatFatiguePips > 0, JSON.stringify(npc));
+
+            // --- Effect picker with no condition catalog (public install) -------------
+            const picker = await effectPickerFallback(page, scene.actors['pc'] ?? '');
+            pass(
+                'effect-picker-falls-back-to-statuses',
+                picker.rows > 0 && picker.rows === picker.statuses && picker.applied.length === 1,
+                JSON.stringify(picker),
+            );
         } finally {
             await deleteDocuments(page, { combats: cleanup.combats, users: cleanup.users });
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());

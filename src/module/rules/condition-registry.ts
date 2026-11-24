@@ -381,6 +381,38 @@ export function conditionPickerRows(line: SupportedLineKey): ConditionRow[] {
 /** One condition, resolved for a line, as a picker or status row shows it. */
 type ConditionRow = { id: string; name: string; img: string; nature: string };
 
+/** A registered status (`CONFIG.statusEffects` row) as the picker fallback reads it. */
+export interface RegisteredStatus {
+    id?: string | null | undefined;
+    name?: string | null | undefined;
+    img?: string | null | undefined;
+}
+
+/**
+ * Picker rows from the registered token statuses, for a bearer whose line has no
+ * condition documents in the catalog (an install without condition packs, where the
+ * token HUD still lists the statuses registered there). Core's `dead` marker is
+ * left out; it's applied by damage, not picked. Pure.
+ */
+export function statusPickerRows(statuses: Iterable<RegisteredStatus>, translate: (key: string) => string): ConditionRow[] {
+    const rows: ConditionRow[] = [];
+    for (const status of statuses) {
+        const id = status.id ?? '';
+        if (id === '' || id === DEAD_STATUS_ID) continue;
+        rows.push({ id, name: translate(status.name ?? id), img: status.img ?? '', nature: 'neutral' });
+    }
+    return rows;
+}
+
+/** The effect a registered status confers, for a status picked from {@link statusPickerRows}; null for an unknown id. Pure. */
+export function statusEffectPayload(id: string, statuses: Iterable<RegisteredStatus>, translate: (key: string) => string): EffectDataInput | null {
+    for (const status of statuses) {
+        if (status.id !== id) continue;
+        return { name: translate(status.name ?? id), img: status.img ?? '', statuses: [id] };
+    }
+    return null;
+}
+
 /** Every catalog condition `keep` accepts, resolved for `line`. */
 function conditionRows(line: SupportedLineKey, keep: (entry: ConditionCatalogEntry) => boolean): ConditionRow[] {
     const rows: ConditionRow[] = [];

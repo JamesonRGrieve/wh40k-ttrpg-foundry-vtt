@@ -14,6 +14,8 @@ import {
     packLine,
     registerConditionStatusEffects,
     resolveCondition,
+    statusEffectPayload,
+    statusPickerRows,
     setConditionCatalog,
 } from './condition-registry.ts';
 
@@ -301,5 +303,27 @@ describe('activeConditionMechanics', () => {
 
     it('is empty for a missing bearer', () => {
         expect(activeConditionMechanics(null)).toEqual([]);
+    });
+});
+
+describe('registered-status fallback for the condition picker', () => {
+    const statuses = [
+        { id: 'dead', name: 'EFFECT.StatusDead', img: 'icons/svg/skull.svg' },
+        { id: 'stunned', name: 'EFFECT.StatusStunned', img: 'icons/svg/daze.svg' },
+        { id: 'amputated', name: 'Amputated', img: 'modules/x/amputated.svg' },
+        { name: 'No id' },
+    ];
+    const translate = (key: string): string => (key === 'EFFECT.StatusStunned' ? 'Stunned' : key);
+
+    it('lists every registered status but the dead marker and id-less rows, names translated', () => {
+        expect(statusPickerRows(statuses, translate)).toEqual([
+            { id: 'stunned', name: 'Stunned', img: 'icons/svg/daze.svg', nature: 'neutral' },
+            { id: 'amputated', name: 'Amputated', img: 'modules/x/amputated.svg', nature: 'neutral' },
+        ]);
+    });
+
+    it('builds an effect that confers the picked status', () => {
+        expect(statusEffectPayload('amputated', statuses, translate)).toEqual({ name: 'Amputated', img: 'modules/x/amputated.svg', statuses: ['amputated'] });
+        expect(statusEffectPayload('nope', statuses, translate)).toBeNull();
     });
 });

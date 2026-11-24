@@ -3,7 +3,16 @@
  * Streamlined, thematic dialog for creating Active Effects in WH40K RPG
  */
 
-import { bearerLine, conditionEffectData, conditionPickerRows, type EffectDataInput, type EffectDuration } from '../../rules/condition-registry.ts';
+import {
+    bearerLine,
+    conditionEffectData,
+    conditionPickerRows,
+    type EffectDataInput,
+    type EffectDuration,
+    type RegisteredStatus,
+    statusEffectPayload,
+    statusPickerRows,
+} from '../../rules/condition-registry.ts';
 import { capitalize } from '../../utils/format.ts';
 import type { SupportedLineKey } from '../../utils/item-variant-utils.ts';
 import type { ActiveEffectLike, EffectsOwner } from '../api/effect-actions.ts';
@@ -72,6 +81,18 @@ interface CustomEffectPayload {
     name: string;
     icon: string;
     disabled: boolean;
+}
+
+/** The token statuses registered with Foundry (`CONFIG.statusEffects`). */
+function registeredStatuses(): RegisteredStatus[] {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: CONFIG.statusEffects is Foundry's loosely typed registry; read only id / name / img
+    const registry = CONFIG.statusEffects as unknown as Iterable<RegisteredStatus> | undefined;
+    return registry === undefined ? [] : [...registry];
+}
+
+/** Localize a status name, which Foundry stores as a langpack key or plain text. */
+function localizeKey(key: string): string {
+    return game.i18n.localize(key);
 }
 
 export default class EffectCreationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -154,7 +175,10 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
         // Conditions come from the condition compendium documents (#495), resolved
         // for the owner's line — the same catalog the token HUD and crit riders
         // apply from, so a condition picked here is the same document.
-        context['conditions'] = conditionPickerRows(bearerLine(this.owner));
+        // An install without condition documents for the line still has the statuses
+        // the token HUD lists; offer those rather than an empty picker.
+        const catalogRows = conditionPickerRows(bearerLine(this.owner));
+        context['conditions'] = catalogRows.length > 0 ? catalogRows : statusPickerRows(registeredStatuses(), localizeKey);
 
         // Characteristics
         context['characteristics'] = [
@@ -286,7 +310,7 @@ export default class EffectCreationDialog extends HandlebarsApplicationMixin(App
     static _createConditionData(data: EffectCreationData, line: SupportedLineKey): EffectDataInput | null {
         const conditionId = data.conditionId ?? '';
         if (conditionId === '') return null;
-        const payload = conditionEffectData(conditionId, line);
+        const payload = conditionEffectData(conditionId, line) ?? statusEffectPayload(conditionId, registeredStatuses(), localizeKey);
         return payload === null ? null : this._applyDuration(payload, data);
     }
 
