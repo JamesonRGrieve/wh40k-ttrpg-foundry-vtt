@@ -24,7 +24,7 @@ export const AREA_SHAPE_KINDS = ['circle', 'cone', 'line', 'rectangle'] as const
 export type AreaShapeKind = (typeof AREA_SHAPE_KINDS)[number];
 
 /** What placed an area: the quick-template tool, an attack, or a smokescreen. */
-type AreaSource ='quick' | 'attack' | 'smoke';
+type AreaSource = 'quick' | 'attack' | 'smoke';
 
 /** A point in canvas pixels. */
 export interface PixelPoint {
