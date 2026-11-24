@@ -55,8 +55,7 @@
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
                     {{/if}}
 
-                    {{#unless isNPC}}
-                    {{!-- Fatigue (PC-only) --}}
+                    {{!-- Fatigue: PCs and NPCs alike, so the Combat tab carries it (#795). --}}
                     {{#> systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs
                         icon="fa-zzz" label=(localize "WH40K.Status.Fatigue.Label")}}
                         {{> systems/wh40k-rpg/templates/actor/partial/pip-tracker-row
@@ -73,6 +72,7 @@
                         {{/if}}
                     {{/systems/wh40k-rpg/templates/actor/partial/vital-pip-row.hbs}}
 
+                    {{#unless isNPC}}
                     {{!-- Shock (#66) — DH2-only; rendered immediately under Fatigue in the
                          same vital-row style. Lift/Push moved to the Combat-tab Movement panel. --}}
                     {{#if capabilities.shockAndPinning}}

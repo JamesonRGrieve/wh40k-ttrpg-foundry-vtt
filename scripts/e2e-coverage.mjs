@@ -954,6 +954,7 @@ const SESSION_26_FLOWS = [
     'party-xp-from-sheet',
     'npc-faction-holds',
     'npc-custom-stats-editable',
+    'npc-combat-tab-fatigue',
 ];
 recordDimension('session-26.flow', covered['session-26.flow'], SESSION_26_FLOWS);
 

@@ -32,6 +32,7 @@ const SESSION_26_FLOWS = [
     'party-xp-from-sheet',
     'npc-faction-holds',
     'npc-custom-stats-editable',
+    'npc-combat-tab-fatigue',
 ] as const;
 type FlowName = (typeof SESSION_26_FLOWS)[number];
 
@@ -190,7 +191,7 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
 }
 
 /** On an NPC sheet: set the subfaction through the form, re-render, read it back; is the Custom Stats checkbox live? */
-async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction: string; checkboxEnabled: boolean }> {
+async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction: string; checkboxEnabled: boolean; combatFatiguePips: number }> {
     return page.evaluate(
         async ({ id }) => {
             interface SheetLike {
@@ -222,8 +223,11 @@ async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction
             const subfaction = sheet.element.querySelector<HTMLInputElement>('input[name="system.subfaction"]')?.value ?? '';
             const checkbox = sheet.element.querySelector<HTMLInputElement>('input[name="system.customStats.enabled"]');
             const checkboxEnabled = checkbox !== null && !checkbox.disabled;
+            sheet.changeTab?.('combat', 'primary');
+            await globalThis.wh40kE2E.pollUntil(() => sheet.element.querySelector('[data-action="setFatigueBolt"]') !== null, 10_000).catch(() => undefined);
+            const combatFatiguePips = sheet.element.querySelectorAll('[data-action="setFatigueBolt"]').length;
             await sheet.close();
-            return { subfaction, checkboxEnabled };
+            return { subfaction, checkboxEnabled, combatFatiguePips };
         },
         { id: actorId },
     );
@@ -434,6 +438,7 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             const npc = await npcSheetInputs(page, scene.actors['dh1npc'] ?? '');
             pass('npc-faction-holds', npc.subfaction === 'Ordo Hereticus cell', JSON.stringify(npc));
             pass('npc-custom-stats-editable', npc.checkboxEnabled, JSON.stringify(npc));
+            pass('npc-combat-tab-fatigue', npc.combatFatiguePips > 0, JSON.stringify(npc));
         } finally {
             await deleteDocuments(page, { combats: cleanup.combats, users: cleanup.users });
             await page.evaluate(async () => globalThis.wh40kAttack.teardown());

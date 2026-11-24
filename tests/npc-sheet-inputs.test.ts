@@ -12,6 +12,7 @@ import { readRepoFile } from '../src/module/testing/repo-file.ts';
 
 const tab = readRepoFile('src/templates/actor/npc/tab-npc.hbs');
 const baseSheet = readRepoFile('src/module/applications/actor/base-actor-sheet.ts');
+const vitals = readRepoFile('src/templates/actor/panel/overview-vitals-panel.hbs');
 
 describe('NPC tab inputs hold their values', () => {
     it.each(['subfaction', 'allegiance', 'source'])('the %s input shows the stored system.%s', (field) => {
@@ -26,5 +27,16 @@ describe('NPC tab inputs hold their values', () => {
 describe('actor schema rows are editable on an editable sheet', () => {
     it('every schema section an actor sheet prepares is in play', () => {
         expect(baseSheet).toMatch(/context\['schemaSections'\] = sections\.map\(\(section\) => \(\{ \.\.\.section, inPlay: true \}\)\)/);
+    });
+});
+
+describe('the Combat tab carries Fatigue for NPCs too (#795)', () => {
+    it('the Fatigue pip row is outside the PC-only gate', () => {
+        const fatigue = vitals.indexOf('action="setFatigueBolt"');
+        const gateBefore = vitals.lastIndexOf('{{#unless isNPC}}', fatigue);
+        const closeBefore = vitals.lastIndexOf('{{/unless}}', fatigue);
+        expect(fatigue).toBeGreaterThan(-1);
+        // Any PC-only gate opened before the Fatigue row is already closed.
+        expect(closeBefore).toBeGreaterThan(gateBefore);
     });
 });
