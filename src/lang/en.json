@@ -1663,7 +1663,12 @@
                 "Heavy": "Heavy Protection",
                 "Power": "Power Protection"
             },
-            "AP": "AP"
+            "AP": "AP",
+            "Notice": {
+                "None": "This character carries no armour.",
+                "Unequipped": "This character isn't wearing any armour. Equip a piece to count its protection:",
+                "EquipPiece": "Equip {name}"
+            }
         },
         "Movement": "Movement",
         "MOVEMENT": {
@@ -8023,7 +8028,8 @@
             "SelectAll": "Toggle All",
             "AmountLabel": "XP to Award",
             "GmOnly": "Only the GM can award XP to multiple characters.",
-            "AwardParty": "Award XP to the party…"
+            "AwardParty": "Award XP to the party…",
+            "AwardPartyShort": "Party XP"
         },
         "WorldTime": {
             "Title": "In-Universe Time",

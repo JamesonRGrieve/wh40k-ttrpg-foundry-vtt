@@ -10,6 +10,7 @@ import type { WH40KActiveEffect } from '../../../documents/active-effect.ts';
 import type { WH40KItem } from '../../../documents/item.ts';
 import { buildEffectView, type EffectChangeRaw, type EffectView } from '../../../helpers/effects.ts';
 import { actionBudgetForActor } from '../../../rules/action-economy.ts';
+import { armourNotice } from '../../../rules/armour-notice.ts';
 import { isGrenadeWeapon } from '../../../rules/grenade-weapon.ts';
 import { computeHandBudget, handsForWeapon, resolveAvailableHands } from '../../../rules/hand-budget.ts';
 import { HIT_LOCATION_IDS, hitLocationLabel, hitLocationRollRange, hitLocationShortLabel } from '../../../rules/hit-locations.ts';
@@ -179,6 +180,17 @@ export function prepareCombatData(this: CharacterSheet, context: Record<string, 
         }
     }
     sheetContext.armourDisplay = armourDisplayMap;
+    // A character with no armour worn is told why it reads 0 AP (#798). An NPC's
+    // armour is its stat block's flat values, so it gets no notice.
+    sheetContext.armourNotice = this.actor.type.endsWith('-character')
+        ? armourNotice(
+              categorized.armour.map((item) => ({
+                  id: item.id ?? '',
+                  name: item.name,
+                  equipped: isWorn(item),
+              })),
+          )
+        : null;
 
     // Equipped non-armour gear surfaced on the body preview as icons (#334):
     // auspex, rebreather, micro-bead, cybernetics, active force fields. Armour
@@ -278,14 +290,22 @@ export function prepareCombatData(this: CharacterSheet, context: Record<string, 
     this._combatDataCache = diff;
 }
 
+/**
+ * Whether an armour item is worn. `equipped` is runtime state under `system.state`
+ * (EquippableTemplate), not `system.equipped`.
+ */
+function isWorn(item: WH40KItem): boolean {
+    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; `state` is contributed by EquippableTemplate and is not on that union
+    return (item.system as { state?: { equipped?: boolean } }).state?.equipped === true;
+}
+
 // eslint-disable-next-line no-restricted-syntax -- boundary: returns heterogeneous display objects passed to Handlebars; no concrete type possible
 function prepareArmourDisplayLocations(this: CharacterSheet, system: WH40KActorSystemData, armourItems: WH40KItem[]): Array<Record<string, unknown>> {
     // `equipped` is runtime state under `system.state` (EquippableTemplate), not
     // `system.equipped` — the flat path is always undefined, so this filter used to
     // yield [] and no armour icon ever reached the silhouette (#486). Every other
     // equipped-read in this file already uses the nested path.
-    // eslint-disable-next-line no-restricted-syntax -- boundary: item.system is the shared item union; `state` is contributed by EquippableTemplate and is not on that union
-    const equippedArmour = armourItems.filter((item) => (item.system as { state?: { equipped?: boolean } }).state?.equipped === true);
+    const equippedArmour = armourItems.filter(isWorn);
 
     return HIT_LOCATION_IDS.map((locationKey) => {
         const locationLabel = hitLocationLabel(locationKey);

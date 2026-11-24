@@ -71,7 +71,7 @@
                   of clipping L.ARM / L.LEG and the check (#617, #620). --}}
             <div class="tw-grid tw-grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] tw-gap-3 tw-items-start" data-combat-armour-movement>
                 <div class="tw-flex tw-flex-col tw-gap-2">
-                    {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=false}}
+                    {{> systems/wh40k-rpg/templates/actor/partial/armour-zone.hbs armourDisplay=armourDisplay equippedGear=equippedGear armourNotice=armourNotice compact=false}}
                     {{#if hasForceField}}
                     <div class="wh40k-panel tw-mt-[var(--wh40k-space-xs)]">
                         <div class="wh40k-panel-header">

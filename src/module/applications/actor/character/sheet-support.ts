@@ -9,6 +9,7 @@ import type { CharacterSheetCapabilities, ChaosAlignment, GameSystemId } from '.
 import type { WH40KItem } from '../../../documents/item.ts';
 import type { SimpleSkillData } from '../../../rolls/action-data.ts';
 import type { ResourceRow } from '../../../rules/acquisition-resources.ts';
+import type { ArmourNotice } from '../../../rules/armour-notice.ts';
 import type { DaemonPrinceAlignment } from '../../../rules/bc-daemon-prince.ts';
 import type { PsyMode } from '../../../rules/bc-psychic-strength.ts';
 import type { AstartesImplantId } from '../../../rules/dw-astartes.ts';
@@ -166,6 +167,7 @@ type CharacterSheetContextDeclaredFields = {
     hasForceField?: boolean;
     armourDisplayLocations?: HandlebarsValue;
     armourDisplay?: HandlebarsContext;
+    armourNotice?: ArmourNotice | null;
     equippedGear?: Array<{ id: string | null; name: string; img: string | null }>;
     equippedWeapons?: HandlebarsValue[];
     handBudget?: HandBudget;

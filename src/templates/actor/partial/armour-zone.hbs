@@ -12,6 +12,24 @@
         {{> systems/wh40k-rpg/templates/actor/partial/panel-header.hbs label=(localize "WH40K.Equipment.Armour") icon="fa-shield-alt"}}
     </div>
     <div class="wh40k-panel-body">
+        {{!-- #798: a character wearing no armour is told why every location reads 0 AP. --}}
+        {{#if armourNotice}}
+        <div class="tw-mb-2 tw-flex tw-flex-col tw-gap-1 tw-rounded-md tw-border tw-border-solid tw-p-2 tw-text-xs {{#if (eq armourNotice.kind 'unequipped')}}tw-border-amber-500/50 tw-bg-amber-500/10{{else}}tw-border-[var(--wh40k-border-color-light)] tw-bg-black/10{{/if}} tw-text-[var(--wh40k-text-dark,#333)]" role="status" data-armour-notice="{{armourNotice.kind}}">
+            <span><i class="fas {{#if (eq armourNotice.kind 'unequipped')}}fa-triangle-exclamation{{else}}fa-circle-info{{/if}}"></i>
+                {{#if (eq armourNotice.kind 'unequipped')}}{{localize "WH40K.Armour.Notice.Unequipped"}}{{else}}{{localize "WH40K.Armour.Notice.None"}}{{/if}}</span>
+            {{#if (eq armourNotice.kind 'unequipped')}}
+            <div class="tw-flex tw-flex-wrap tw-gap-1">
+                {{#each armourNotice.pieces as |piece|}}
+                <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-[var(--wh40k-btn-bg)] tw-px-2 tw-py-0.5 tw-text-xs tw-cursor-pointer"
+                        data-action="toggleEquip" data-item-id="{{piece.id}}"
+                        data-tooltip="{{localize 'WH40K.Armour.Notice.EquipPiece' name=piece.name}}" aria-label="{{localize 'WH40K.Armour.Notice.EquipPiece' name=piece.name}}">
+                    <i class="fas fa-shield-halved"></i> {{piece.name}}
+                </button>
+                {{/each}}
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
         {{> systems/wh40k-rpg/templates/actor/partial/armour-silhouette.hbs armourDisplay=armourDisplay equippedGear=equippedGear compact=compact}}
     </div>
 </div>
