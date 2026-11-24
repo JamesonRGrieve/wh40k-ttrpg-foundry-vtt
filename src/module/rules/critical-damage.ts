@@ -19,6 +19,19 @@ import { type CanonicalBodyPart, type CanonicalDamageType, normalizeBodyPart, no
  */
 type CriticalArmourGate = 'none' | 'negates' | 'worsensIfUnarmoured';
 
+/** The unit a Critical Effects row states a condition's duration in. */
+export type CriticalDurationUnit = 'rounds' | 'minutes' | 'hours' | 'days';
+
+/** How long a crit-applied condition lasts, as the row states it (#766). */
+export interface CriticalConditionDuration {
+    /** A dice formula or a whole number ("1d10", "2"). */
+    readonly formula: string;
+    readonly unit: CriticalDurationUnit;
+}
+
+/** The conditions a Critical Effects row can give a duration. */
+export type TimedCriticalCondition = 'stunned' | 'blinded' | 'deafened' | 'prone';
+
 interface CriticalDamageTable {
     [key: string]: {
         [key: string]: {
@@ -89,6 +102,12 @@ export interface CriticalDamageRiders {
      * damage path does not have).
      */
     readonly detonatesMunitions: boolean;
+    /**
+     * How long each timed condition lasts, where the row says ("Stunned for 1d5
+     * rounds", "Blinded for [[1d10]] rounds"). A condition with no stated duration
+     * is absent and lasts until removed (#766).
+     */
+    readonly durations: Readonly<Partial<Record<TimedCriticalCondition, CriticalConditionDuration>>>;
 }
 
 /** Structured Critical Damage lookup result. */
@@ -121,7 +140,59 @@ const NO_RIDERS: CriticalDamageRiders = Object.freeze({
     dropsHeldItem: false,
     weaponDestroyed: false,
     detonatesMunitions: false,
+    durations: Object.freeze({}),
 });
+
+/** A timed condition, then "for <amount> <unit>" within the same clause. */
+const DURATION_PATTERN =
+    /\b(stunned|blinded|deafened|prone)\b[^.;]{0,60}?\bfor (\[\[[^\]]+\]\]|\d+d\d+(?:\s*[+-]\s*\d+)?|\d+|one|two|three|four|five|six|seven|eight|nine|ten) (round|turn|minute|hour|day)s?\b/gi;
+
+const NUMBER_WORDS: Readonly<Partial<Record<string, string>>> = {
+    one: '1',
+    two: '2',
+    three: '3',
+    four: '4',
+    five: '5',
+    six: '6',
+    seven: '7',
+    eight: '8',
+    nine: '9',
+    ten: '10',
+};
+
+const DURATION_UNITS: Readonly<Partial<Record<string, CriticalDurationUnit>>> = {
+    round: 'rounds',
+    turn: 'rounds',
+    minute: 'minutes',
+    hour: 'hours',
+    day: 'days',
+};
+
+/** The narrowing guard for a captured condition name. */
+function isTimedCondition(value: string): value is TimedCriticalCondition {
+    return value === 'stunned' || value === 'blinded' || value === 'deafened' || value === 'prone';
+}
+
+/**
+ * The durations a Critical Effects row states for its timed conditions (#766):
+ * the first "<condition> … for <amount> <unit>" per condition, within one clause.
+ * Pure text scan, like the rest of the classifier.
+ */
+export function criticalConditionDurations(effectText: string): Readonly<Partial<Record<TimedCriticalCondition, CriticalConditionDuration>>> {
+    const found: Partial<Record<TimedCriticalCondition, CriticalConditionDuration>> = {};
+    for (const match of effectText.matchAll(DURATION_PATTERN)) {
+        const [, conditionRaw = '', amountRaw = '', unitRaw = ''] = match;
+        const condition = conditionRaw.toLowerCase();
+        const unit = DURATION_UNITS[unitRaw.toLowerCase()];
+        if (!isTimedCondition(condition) || unit === undefined || found[condition] !== undefined) continue;
+        const amount = amountRaw
+            .replace(/^\[\[|\]\]$/g, '')
+            .trim()
+            .toLowerCase();
+        found[condition] = Object.freeze({ formula: NUMBER_WORDS[amount] ?? amount.replace(/\s+/g, ''), unit });
+    }
+    return Object.freeze(found);
+}
 
 const BURNING_KEYWORDS = ['catch fire', 'catches fire', 'on fire', 'immolate', 'burning'] as const;
 const BLINDED_KEYWORDS = ['blinded', 'lost eye', 'loses an eye', 'scooping out the eye'] as const;
@@ -250,6 +321,7 @@ export function classifyCriticalEffect(effectText: string | null | undefined): C
         dropsHeldItem: anyKeyword(t, DROP_HELD_KEYWORDS),
         weaponDestroyed: anyKeyword(t, WEAPON_DESTROYED_KEYWORDS),
         detonatesMunitions: anyKeyword(t, MUNITION_NOUN_KEYWORDS) && anyKeyword(t, DETONATION_VERB_KEYWORDS),
+        durations: criticalConditionDurations(effectText),
     });
 }
 

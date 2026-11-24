@@ -3057,7 +3057,25 @@
                 "WeaponDestroyed": "Weapon destroyed — unusable until repaired",
                 "MunitionsTitle": "Carried munitions detonate!",
                 "MunitionDamage": "{name}: {damage} {type} damage — GM distributes the blast",
-                "MunitionGmResolve": "{name} detonates — GM resolves the blast per the effect text"
+                "MunitionGmResolve": "{name} detonates — GM resolves the blast per the effect text",
+                "Duration": {
+                    "Rounds": {
+                        "One": "{condition} for {amount} round ({formula})",
+                        "Other": "{condition} for {amount} rounds ({formula})"
+                    },
+                    "Minutes": {
+                        "One": "{condition} for {amount} minute ({formula})",
+                        "Other": "{condition} for {amount} minutes ({formula})"
+                    },
+                    "Hours": {
+                        "One": "{condition} for {amount} hour ({formula})",
+                        "Other": "{condition} for {amount} hours ({formula})"
+                    },
+                    "Days": {
+                        "One": "{condition} for {amount} day ({formula})",
+                        "Other": "{condition} for {amount} days ({formula})"
+                    }
+                }
             }
         },
         "TwoWeaponWielder": {

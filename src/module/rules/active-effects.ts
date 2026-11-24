@@ -1,3 +1,4 @@
+import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import { emitChatFromTemplate, roll1d100 } from '../rolls/roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
@@ -10,12 +11,13 @@ import {
     conditionEffectData,
     type EffectChange,
     type EffectDataInput,
+    type EffectDuration,
     type EffectOptions,
     MODE_ADD,
     skillChangeKey,
 } from './condition-registry.ts';
 import { resolveTickTest, tickFailureCondition, ticksDueAtTurnStart, type TickTestOutcome } from './condition-tick.ts';
-import { type CriticalDamageRecord, criticalRiderConditionIds } from './critical-damage.ts';
+import { type CriticalConditionDuration, type CriticalDamageRecord, criticalRiderConditionIds, type TimedCriticalCondition } from './critical-damage.ts';
 import type { CanonicalBodyPart } from './damage-type.ts';
 
 /* -------------------------------------------- */
@@ -314,8 +316,62 @@ export interface CriticalSideEffectReport {
     munitions: DetonatedMunition[];
     /** Condition identifiers applied this call (completeness / tests). */
     conditionsApplied: string[];
+    /** The rolled duration of each timed condition applied (#766), for the card. */
+    conditionDurations: AppliedConditionDuration[];
     /** True when the report carries anything worth surfacing on the chat card. */
     hasSideEffects: boolean;
+}
+
+/** A timed condition's rolled duration, as the card shows it. */
+export interface AppliedConditionDuration {
+    /** The condition's display name. */
+    name: string;
+    /** The rolled amount. */
+    amount: number;
+    unit: CriticalDurationUnitLabel;
+    /** The formula it was rolled from. */
+    formula: string;
+    /** The card line ("Stunned for 3 rounds (1d5)"). */
+    label: string;
+}
+
+/** A duration unit as the card labels it. */
+type CriticalDurationUnitLabel = CriticalConditionDuration['unit'];
+
+/** The langpack line for each unit. */
+const DURATION_LABEL_KEYS = {
+    rounds: 'WH40K.CriticalDamage.SideEffects.Duration.Rounds',
+    minutes: 'WH40K.CriticalDamage.SideEffects.Duration.Minutes',
+    hours: 'WH40K.CriticalDamage.SideEffects.Duration.Hours',
+    days: 'WH40K.CriticalDamage.SideEffects.Duration.Days',
+} as const;
+
+/** Seconds per unit, for durations past rounds. */
+const UNIT_SECONDS: Readonly<Record<Exclude<CriticalDurationUnitLabel, 'rounds'>, number>> = { minutes: 60, hours: 3600, days: 86400 };
+
+/** The condition id a crit's timed rider applies (they match one to one). */
+function timedConditionFor(id: string): TimedCriticalCondition | null {
+    return id === 'stunned' || id === 'blinded' || id === 'deafened' || id === 'prone' ? id : null;
+}
+
+/**
+ * Roll a crit condition's stated duration into the effect duration Foundry counts
+ * down (#766): rounds from the current combat round and turn, longer units in
+ * seconds of world time. Foundry V14 refreshes and expires it itself.
+ */
+async function rollCriticalDuration(duration: CriticalConditionDuration): Promise<{ amount: number; effect: EffectDuration }> {
+    const roll = new Roll(duration.formula);
+    await roll.evaluate();
+    const amount = Math.max(1, Math.trunc(roll.total ?? 1));
+    if (duration.unit === 'rounds') {
+        const combat = game.combat;
+        const started = combat?.started === true;
+        return {
+            amount,
+            effect: started ? { rounds: amount, startRound: combat.round, startTurn: combat.turn ?? 0 } : { rounds: amount },
+        };
+    }
+    return { amount, effect: { seconds: amount * UNIT_SECONDS[duration.unit] } };
 }
 
 /**
@@ -347,6 +403,7 @@ export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocumen
         weaponBroken: null,
         munitions: [],
         conditionsApplied: [],
+        conditionDurations: [],
         hasSideEffects: false,
     };
 
@@ -372,9 +429,23 @@ export async function applyCriticalDamageConditions(actor: WH40KBaseActorDocumen
                 (e) => (e as unknown as { getFlag: (scope: string, key: string) => unknown }).getFlag('wh40k-rpg', 'criticalConditionId') === id,
             );
             if (already !== undefined) continue;
+            const timed = timedConditionFor(id);
+            const stated = timed === null ? undefined : record.riders.durations[timed];
+            // eslint-disable-next-line no-await-in-loop -- sequential: each roll feeds the create below
+            const rolled = stated === undefined ? null : await rollCriticalDuration(stated);
+            const flags = { flags: { 'wh40k-rpg': { criticalConditionId: id } } };
             // eslint-disable-next-line no-await-in-loop -- sequential: each create mutates the actor's effects collection the next dedupe reads
-            await createConditionEffect(actor, id, { flags: { 'wh40k-rpg': { criticalConditionId: id } } });
+            await createConditionEffect(actor, id, rolled === null ? flags : { ...flags, duration: rolled.effect });
             report.conditionsApplied.push(id);
+            if (rolled !== null && stated !== undefined) {
+                const name = conditionEffectData(id, bearerLine(actor))?.name ?? id;
+                const label = game.i18n.format(pluralKey(DURATION_LABEL_KEYS[stated.unit], rolled.amount, game.i18n.lang), {
+                    condition: name,
+                    amount: String(rolled.amount),
+                    formula: stated.formula,
+                });
+                report.conditionDurations.push({ name, amount: rolled.amount, unit: stated.unit, formula: stated.formula, label });
+            }
         }
     }
 
@@ -425,7 +496,8 @@ function finalizeSideEffectReport(report: CriticalSideEffectReport): CriticalSid
         report.helmetTornOff !== null ||
         report.itemDropped !== null ||
         report.weaponBroken !== null ||
-        report.munitions.length > 0;
+        report.munitions.length > 0 ||
+        report.conditionDurations.length > 0;
     return report;
 }
 

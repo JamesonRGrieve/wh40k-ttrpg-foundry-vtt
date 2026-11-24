@@ -3,6 +3,7 @@ import { packMetadata } from '../testing/pack-metadata.ts';
 import {
     classifyCriticalEffect,
     clampCriticalSeverity,
+    criticalConditionDurations,
     type CriticalDamageRiders,
     criticalRiderConditionIds,
     getCriticalDamageRecord,
@@ -420,6 +421,7 @@ describe('criticalRiderConditionIds (#108 — riders → condition registry ids)
         dropsHeldItem: false,
         weaponDestroyed: false,
         detonatesMunitions: false,
+        durations: {},
     };
 
     it('returns no ids when no riders fire', () => {
@@ -488,5 +490,34 @@ describe('per-line critical-injury pack (#439 homologation)', () => {
     it('defaults to the DH2 pack when no system id is given', async () => {
         const rec = await getCriticalDamageRecord('Impact', 'Head', 5);
         expect(rec?.effect).toContain('DH2 head crit');
+    });
+});
+
+describe('crit condition durations (#766)', () => {
+    it('reads a plain round count', () => {
+        expect(criticalConditionDurations('The target is Stunned for 1 round.')).toEqual({ stunned: { formula: '1', unit: 'rounds' } });
+    });
+
+    it('reads an inline roll and a second condition in the same row', () => {
+        expect(criticalConditionDurations('He is Blinded for [[1d10]] rounds and Stunned for 1 round.')).toEqual({
+            blinded: { formula: '1d10', unit: 'rounds' },
+            stunned: { formula: '1', unit: 'rounds' },
+        });
+    });
+
+    it('reads a dice formula with a modifier, a number word and longer units', () => {
+        expect(criticalConditionDurations('Stunned for 1d5+1 rounds.').stunned).toEqual({ formula: '1d5+1', unit: 'rounds' });
+        expect(criticalConditionDurations('Deafened for two hours.').deafened).toEqual({ formula: '2', unit: 'hours' });
+    });
+
+    it('does not borrow a duration across a sentence', () => {
+        expect(criticalConditionDurations('He is knocked Prone. Next turn, he is Stunned for 2 rounds.')).toEqual({
+            stunned: { formula: '2', unit: 'rounds' },
+        });
+    });
+
+    it('rides on the classified riders, and a row with no stated duration has none', () => {
+        expect(classifyCriticalEffect('Stunned for 1d5 rounds.').durations).toEqual({ stunned: { formula: '1d5', unit: 'rounds' } });
+        expect(classifyCriticalEffect('The target is Stunned.').durations).toEqual({});
     });
 });
