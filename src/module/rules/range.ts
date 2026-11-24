@@ -173,6 +173,16 @@ function calculateRangeNameAndBonus(rollData: RollData): void {
 }
 
 /**
+ * #804, RAW: Point Blank's bonus does not apply when the attacker and target are
+ * engaged in melee with each other (a pistol fired at the foe you're fighting).
+ * The band stays Point Blank; only its bonus goes.
+ */
+export function pointBlankWhenEngaged(bracket: string, bonus: number, engagedWithTarget: boolean): { bonus: number; voided: boolean } {
+    if (engagedWithTarget && bracket === 'pointBlank' && bonus > 0) return { bonus: 0, voided: true };
+    return { bonus, voided: false };
+}
+
+/**
  * @param rollData {WeaponRollData}
  */
 export function calculateWeaponRange(rollData: WeaponRollData): void {
@@ -180,10 +190,9 @@ export function calculateWeaponRange(rollData: WeaponRollData): void {
     calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
-    // #804, RAW: Point Blank's bonus does not apply when the attacker and target are
-    // engaged in melee with each other (a pistol fired at the foe you're fighting).
-    if (rollData.engagedWithTarget && mutableRollData.rangeBracket === 'pointBlank' && rollData.rangeBonus > 0) {
-        rollData.rangeBonus = 0;
+    const engagedRange = pointBlankWhenEngaged(mutableRollData.rangeBracket ?? '', rollData.rangeBonus, rollData.engagedWithTarget);
+    if (engagedRange.voided) {
+        rollData.rangeBonus = engagedRange.bonus;
         mutableRollData.rangeModifiedBy = t('WH40K.Roll.Engagement.NoPointBlank');
     }
 

@@ -13,6 +13,7 @@
 import { pixelsPerUnit } from '../canvas/area-regions.ts';
 import { broadcastScanSweep, scanFrom, whisperScanToGM } from '../canvas/auspex-scan-canvas.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { pluralKey } from '../i18n/plural.ts';
 import { t } from '../i18n/t.ts';
 import type { ScannerReach, ScanStamp } from '../rules/auspex-scan.ts';
 import { SimpleSkillData } from './action-data.ts';
@@ -59,6 +60,6 @@ export class AuspexScanActionData extends SimpleSkillData {
             blips: contacts.map((contact) => contact.center),
         });
         await whisperScanToGM(actor?.name ?? this.#token.document.name, this.#itemName, contacts);
-        this.addEffect(title, t('WH40K.Auspex.Contacts', { count: contacts.length, range: this.#reach.range }));
+        this.addEffect(title, t(pluralKey('WH40K.Auspex.Contacts', contacts.length, game.i18n.lang), { count: contacts.length, range: this.#reach.range }));
     }
 }

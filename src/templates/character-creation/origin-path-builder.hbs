@@ -806,7 +806,6 @@
  </span>
  {{!-- Only once an origin is picked (#701): before that, "All choices complete" beside "0/6 steps" contradicted itself. --}}
  {{#if status.hasSelections}}
- {{!-- The tooltip names each pending choice (origin: choice), so the player knows which card to open. --}}
  <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs)] tw-text-[0.85rem]" data-wh40k-hook="origin-footer-choices"{{#unless status.choicesComplete}} data-tooltip="{{join status.pendingChoiceNames ', '}}" data-origin-pending-choices="{{join status.pendingChoiceNames '|'}}"{{/unless}}>
  <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle tw-text-[#4caf50]{{else}}fa-exclamation-triangle tw-text-[#ffaa00]{{/if}} tw-text-[1rem]"></i>
  {{#if status.choicesComplete}}

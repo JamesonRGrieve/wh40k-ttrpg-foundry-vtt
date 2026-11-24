@@ -87,6 +87,8 @@ const SITES: readonly PluralSite[] = [
     { base: 'WH40K.Effects.RemainingRounds', count: 'n', file: 'src/module/documents/active-effect.ts' },
     { base: 'WH40K.Effects.RemainingTurns', count: 'n', file: 'src/module/documents/active-effect.ts' },
     { base: 'WH40K.InventoryGenerator.Applied', count: 'count', file: 'src/module/managers/inventory-generator-manager.ts' },
+    { base: 'WH40K.Auspex.ScanLine', count: 'count', file: 'src/module/canvas/auspex-scan-view.ts' },
+    { base: 'WH40K.Auspex.Contacts', count: 'count', file: 'src/module/rolls/auspex-scan-action-data.ts' },
 ];
 
 describe('langpack plurals (#663)', () => {

@@ -4,6 +4,7 @@
  * Pure: the translate function is passed in, so the card's context is built the same
  * way in Foundry (`t`) and in stories and tests (the langpack lookup).
  */
+import { pluralKey } from '../i18n/plural.ts';
 import type { ContactKind, ScanContact } from '../rules/auspex-scan.ts';
 import type { I18nKey } from '../types/i18n-keys';
 
@@ -25,9 +26,9 @@ export type ScanCardContext = {
 };
 
 /** Build the GM card's context: who scanned with what, and each contact, nearest first. */
-export function scanCardContext(scannerName: string, itemName: string, contacts: readonly ScanContact[], tr: Translate): ScanCardContext {
+export function scanCardContext(scannerName: string, itemName: string, contacts: readonly ScanContact[], tr: Translate, lang = 'en'): ScanCardContext {
     return {
-        scanLine: tr('WH40K.Auspex.ScanLine', { actor: scannerName, item: itemName, count: contacts.length }),
+        scanLine: tr(pluralKey('WH40K.Auspex.ScanLine', contacts.length, lang), { actor: scannerName, item: itemName, count: contacts.length }),
         contacts: contacts.map((contact) => ({
             name: contact.name,
             kind: contact.kind,

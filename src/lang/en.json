@@ -7135,7 +7135,10 @@
         },
         "Auspex": {
             "ChatTitle": "Auspex Contacts",
-            "ScanLine": "{actor} scanned with {item}: {count} contact(s).",
+            "ScanLine": {
+                "One": "{actor} scanned with {item}: {count} contact.",
+                "Other": "{actor} scanned with {item}: {count} contacts."
+            },
             "NoContacts": "Nothing within reach.",
             "Distance": "{metres} m, bearing {bearing}°",
             "Kind": {
@@ -7143,7 +7146,10 @@
                 "Machine": "Machine"
             },
             "EffectTitle": "Auspex",
-            "Contacts": "The scan picks up {count} contact(s) within {range} m.",
+            "Contacts": {
+                "One": "The scan picks up {count} contact within {range} m.",
+                "Other": "The scan picks up {count} contacts within {range} m."
+            },
             "NoReading": "The scanner gives no clear reading.",
             "NoToken": "Place this character's token on the scene to scan from it.",
             "OncePerRound": "This scanner has already been used this round.",
