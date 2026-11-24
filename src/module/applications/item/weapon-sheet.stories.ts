@@ -160,8 +160,9 @@ export const StatTilesFormABlock: Story = {
         const tiles = [...grid.children].filter((el): el is HTMLElement => el instanceof HTMLElement);
         // Damage leads, spanning two columns and two rows.
         const damage = tiles.at(0);
-        await expect(getComputedStyle(damage ?? grid).gridColumnEnd).toBe('span 2');
-        await expect(getComputedStyle(damage ?? grid).gridRowEnd).toBe('span 2');
+        // `grid-column: span 2` computes to a start of `span 2` (the end stays `auto`).
+        await expect(getComputedStyle(damage ?? grid).gridColumnStart).toBe('span 2');
+        await expect(getComputedStyle(damage ?? grid).gridRowStart).toBe('span 2');
         const expected = tiles.length >= 6 ? 5 : tiles.length >= 4 ? 4 : 3;
         const columns = getComputedStyle(grid)
             .gridTemplateColumns.split(' ')
