@@ -110,6 +110,9 @@ interface CombatActionConfig {
     /** True if the action is only available to psykers (any actor with psy rating > 0
         or any psychic power item). */
     requiresPsyker?: boolean;
+    /** Taking this action lets the character leave melee this turn without giving its
+        opponents their free attacks (Disengage, #770). */
+    breaksEngagement?: boolean;
 }
 
 interface CraftsmanshipRuleEffect {
@@ -1253,11 +1256,13 @@ WH40K.combatActions = {
         },
         {
             key: 'disengage',
-            // DH2: Disengage is a HALF Action — a Half Move that
-            // provokes no reaction. It is a combat action (spends a half action),
-            // not a movement speed/mode (#416).
+            // Every line's core book prints Disengage as a Full Action (Movement): a
+            // Half Move out of melee that gives the opponents no free attack. A combat
+            // action, not a movement speed/mode (#416). Deathwatch lets a Challenging
+            // Acrobatics test make it a Half Action.
             label: 'WH40K.Combat.Action.Disengage',
-            type: 'half',
+            type: 'full',
+            breaksEngagement: true,
             description: 'WH40K.Combat.Action.DisengageDesc',
             icon: 'fa-undo',
             subtypes: ['Movement'],

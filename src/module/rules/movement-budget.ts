@@ -61,8 +61,8 @@ export function evaluateCombatMovement(input: MovementEvaluationInput): Movement
 
 /** The combat move modes a player selects (the move-mode toggle / token flag).
  *
- * Disengage is NOT a move mode / speed — in DH2 it is a Half Action (#416): a
- * Half Move that provokes no reaction, spent through the action economy, so it
+ * Disengage is NOT a move mode / speed — every line prints it as a Full Action (#416):
+ * a Half Move that gives no free attacks, spent through the action economy, so it
  * lives with the combat actions, not in this movement-rate list. */
 export type MovementMode = 'half' | 'full' | 'charge' | 'run';
 

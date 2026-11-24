@@ -68,6 +68,7 @@ import { registerAreaRegionBehavior } from './canvas/apply-condition-behavior.ts
 import { registerAreaRegions, registerAreaRegionSocket } from './canvas/area-regions.ts';
 import { registerAuspexScanSocket } from './canvas/auspex-scan-canvas.ts';
 import { onRenderWallConfig } from './canvas/auspex-wall-config.ts';
+import { registerLeaveMelee } from './canvas/leave-melee-canvas.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
@@ -1435,6 +1436,8 @@ export class HooksManager {
         registerAttackCueSocket();
         registerAreaRegionSocket();
         registerAuspexScanSocket();
+        // Leaving melee pauses the move for the foes' free attacks (#770).
+        registerLeaveMelee();
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();

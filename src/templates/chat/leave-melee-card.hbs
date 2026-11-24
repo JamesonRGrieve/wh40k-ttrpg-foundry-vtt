@@ -1,0 +1,37 @@
+{{!-- Leaving melee (#770): a combatant's move out of melee is paused until each foe
+     it leaves behind takes its free Standard Attack or declines. Context: moverName,
+     foes [{ tokenId, name, pending, attacked }], open (any foe still to answer).
+     Buttons carry data-leave-melee; canvas/leave-melee-canvas.ts removes the ones
+     this user may not press and binds the rest. --}}
+<div class="wh40k-rpg tw-flex tw-flex-col tw-gap-2 tw-p-2" data-leave-melee-card>
+    <div class="tw-flex tw-items-center tw-gap-2 tw-font-semibold">
+        <i class="fas fa-person-running"></i>
+        <span>{{localize "WH40K.Combat.LeaveMelee.Title" name=moverName}}</span>
+    </div>
+    <p class="tw-m-0 tw-text-xs">{{#if open}}{{localize "WH40K.Combat.LeaveMelee.Rule"}}{{else}}{{localize "WH40K.Combat.LeaveMelee.Done"}}{{/if}}</p>
+    <ul class="tw-m-0 tw-flex tw-list-none tw-flex-col tw-gap-1 tw-p-0">
+        {{#each foes as |foe|}}
+        <li class="tw-flex tw-items-center tw-gap-2" data-leave-melee-foe="{{foe.tokenId}}">
+            <span class="tw-flex-1 tw-truncate">{{foe.name}}</span>
+            {{#if foe.pending}}
+            <button type="button" class="tw-w-auto tw-px-2 tw-py-0.5 tw-text-xs" data-leave-melee="attack" data-foe-token="{{foe.tokenId}}"
+                    data-tooltip="{{localize 'WH40K.Combat.LeaveMelee.AttackTip' name=foe.name}}" aria-label="{{localize 'WH40K.Combat.LeaveMelee.AttackTip' name=foe.name}}">
+                <i class="fas fa-khanda"></i> {{localize "WH40K.Combat.LeaveMelee.Attack"}}
+            </button>
+            <button type="button" class="tw-w-auto tw-px-2 tw-py-0.5 tw-text-xs" data-leave-melee="decline" data-foe-token="{{foe.tokenId}}"
+                    data-tooltip="{{localize 'WH40K.Combat.LeaveMelee.DeclineTip' name=foe.name}}" aria-label="{{localize 'WH40K.Combat.LeaveMelee.DeclineTip' name=foe.name}}">
+                {{localize "WH40K.Combat.LeaveMelee.Decline"}}
+            </button>
+            {{else}}
+            <span class="tw-text-xs tw-italic">{{#if foe.attacked}}{{localize "WH40K.Combat.LeaveMelee.Attacked"}}{{else}}{{localize "WH40K.Combat.LeaveMelee.Declined"}}{{/if}}</span>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+    {{#if open}}
+    <button type="button" class="tw-self-end tw-w-auto tw-px-2 tw-py-0.5 tw-text-xs" data-leave-melee="release"
+            data-tooltip="{{localize 'WH40K.Combat.LeaveMelee.ReleaseTip'}}" aria-label="{{localize 'WH40K.Combat.LeaveMelee.ReleaseTip'}}">
+        {{localize "WH40K.Combat.LeaveMelee.Release"}}
+    </button>
+    {{/if}}
+</div>

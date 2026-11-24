@@ -58,7 +58,7 @@ function computeCombatMovement(this: CharacterSheet): { inCombat: boolean; disab
     // eslint-disable-next-line no-restricted-syntax -- boundary: TokenDocument.getFlag returns Foundry's untyped flag payload
     const token = this.actor.getActiveTokens()[0]?.document as { getFlag?: (s: string, k: string) => unknown } | undefined;
     const rawMode = token?.getFlag?.(SYSTEM_ID, MOVE_MODE_FLAG);
-    // Disengage is a Half Action, not a move mode (#416) — no longer a valid selection here.
+    // Disengage is a Full Action, not a move mode (#416) — no longer a valid selection here.
     const selectedMode = rawMode === 'half' || rawMode === 'full' || rawMode === 'charge' || rawMode === 'run' ? rawMode : undefined;
     const combatant = combat?.combatant;
     const moved = Number(combatant?.getFlag?.('wh40k-rpg', 'movedThisTurnMetres') ?? 0);

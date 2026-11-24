@@ -25,6 +25,8 @@ import { type ActionLimit, resolveActionLimit } from './condition-mechanics.ts';
 import { activeConditionMechanics, type ConditionBearer } from './condition-registry.ts';
 
 const ACTIONS_SPENT_FLAG = 'actionsSpentThisTurn';
+/** Set when the combatant takes Disengage; cleared at its next turn (#770). */
+const DISENGAGED_FLAG = 'disengagedThisTurn';
 
 // Kept minimal (no getFlag/setFlag) so Foundry's Combat/Combatant are structurally
 // assignable to it; the flag accessor is reached via the cast below (its getFlag
@@ -122,10 +124,39 @@ export function resetActionsForActor(actorId: string, tokenId: string | null = n
     }
 }
 
-/** Reset the starting combatant's budget (Full/Half/Free + Reaction) for a fresh turn. */
+/** Disengage's flag accessor on a combatant. */
+type DisengageFlagAccessor = {
+    getFlag?: (scope: string, key: string) => boolean | null | undefined;
+    setFlag?: (scope: string, key: string, value: boolean) => Promise<object>;
+};
+
+/** Record that an actor's combatant (by token when given) took Disengage this turn (#770). */
+export function markDisengaged(actorId: string, tokenId: string | null = null): void {
+    try {
+        const target = findCombatant(actorId, tokenId) as DisengageFlagAccessor | null;
+        if (typeof target?.setFlag === 'function') void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, true);
+    } catch (err) {
+        console.error('WH40K | action economy (disengage) — ignoring', err);
+    }
+}
+
+/** Whether an actor's combatant (by token when given) took Disengage this turn (#770). */
+export function disengagedThisTurn(actorId: string, tokenId: string | null = null): boolean {
+    try {
+        const target = findCombatant(actorId, tokenId) as DisengageFlagAccessor | null;
+        return target?.getFlag?.(SYSTEM_ID, DISENGAGED_FLAG) === true;
+    } catch {
+        return false;
+    }
+}
+
+/** Reset the starting combatant's budget (Full/Half/Free + Reaction) and Disengage for a fresh turn. */
 function resetOnTurnStart(combatant: TurnCombatant | null): void {
     try {
-        if (combatant !== null) writeActionsSpent(combatant, { ...EMPTY_ACTIONS_SPENT });
+        if (combatant === null) return;
+        writeActionsSpent(combatant, { ...EMPTY_ACTIONS_SPENT });
+        const target = combatant as DisengageFlagAccessor;
+        if (target.getFlag?.(SYSTEM_ID, DISENGAGED_FLAG) === true && typeof target.setFlag === 'function') void target.setFlag(SYSTEM_ID, DISENGAGED_FLAG, false);
     } catch (err) {
         console.error('WH40K | action economy (turn reset) — ignoring', err);
     }

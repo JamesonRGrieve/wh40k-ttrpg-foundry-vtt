@@ -9,7 +9,7 @@ import { SYSTEM_ID } from '../../../constants.ts';
 import { AssignDamageData, type ActorLike } from '../../../rolls/assign-damage-data.ts';
 import { Hit } from '../../../rolls/damage-data.ts';
 import type { ActionKind } from '../../../rules/action-budget.ts';
-import { resetActionsForActor, spendActionForActor } from '../../../rules/action-economy.ts';
+import { markDisengaged, resetActionsForActor, spendActionForActor } from '../../../rules/action-economy.ts';
 import { configuredActionType } from '../../../rules/combat-actions.ts';
 import { MOVE_MODE_FLAG } from '../../../rules/movement-budget.ts';
 import { firstSystemId } from '../../../utils/chat-system-id.ts';
@@ -261,7 +261,7 @@ export async function vocalizeCombatAction(this: CharacterSheet, event: Event, t
         ...(wh40kConfig?.combatActions?.attacks ?? []),
         ...(wh40kConfig?.combatActions?.movement ?? []),
         ...(wh40kConfig?.combatActions?.utility ?? []),
-    ] as Array<{ key: string; label: string; description: string; type?: string; burst?: 'semi' | 'full'; icon?: string; subtypes?: string[] }>;
+    ] as Array<{ key: string; label: string; description: string; type?: string; burst?: 'semi' | 'full'; icon?: string; subtypes?: string[]; breaksEngagement?: boolean }>;
 
     const actionConfig = allActions.find((a) => a.key === actionKey);
     if (actionConfig === undefined) {
@@ -277,7 +277,7 @@ export async function vocalizeCombatAction(this: CharacterSheet, event: Event, t
 
     // Shift+Click is the explicit opt-in to actually perform the action:
     // vocalize it to chat AND spend its cost from the action economy (#264).
-    // Disengage, now a Half Action (#416), spends a half action this way.
+    // Disengage (#416) is a Full Action in every line; it spends one this way.
     const isShiftClick = event instanceof MouseEvent && event.shiftKey;
     if (isShiftClick) {
         const chatData = {
@@ -304,6 +304,8 @@ export async function vocalizeCombatAction(this: CharacterSheet, event: Event, t
             spendActionForActor(actorId, kind, this.actor.token?.id ?? null);
             void this.render(false);
         }
+        // Disengage (#770): this turn's move out of melee gives no free attacks.
+        if (actionConfig.breaksEngagement === true && actorId !== null) markDisengaged(actorId, this.actor.token?.id ?? null);
         return;
     }
 
@@ -466,7 +468,7 @@ export async function setMovementMode(this: CharacterSheet, _event: Event, targe
         | undefined;
     const movementConfig = config?.[movementType];
     const label = movementConfig ? game.i18n.localize(movementConfig.label ?? movementType) : movementType;
-    // Disengage is a Half Action, not a move mode (#416); only real movement
+    // Disengage is a Full Action, not a move mode (#416); only real movement
     // speeds are selectable here.
     const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
     ui.notifications.info(game.i18n.format('WH40K.Notify.Token.MovementModeSet', { label, speed: String(speed) }));
