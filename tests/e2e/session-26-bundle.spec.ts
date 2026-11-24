@@ -92,7 +92,7 @@ async function snapSubSquare(
     page: Page,
     sceneId: string,
     tokenId: string,
-): Promise<{ width: number; snapped: { x: number; y: number }; moved: { x: number; y: number } }> {
+): Promise<{ width: number; snapped: { x: number; y: number }; moved: { x: number; y: number }; diag: object }> {
     return page.evaluate(
         async ({ scene, id }) => {
             interface TokenDocLike {
@@ -110,13 +110,18 @@ async function snapSubSquare(
             const doc = g.game.scenes.get(scene)?.tokens.get(id);
             if (doc === undefined) throw new Error('no token');
             await doc.update({ width: 0.75, height: 0.75 });
-            const snapped = doc.getSnappedPosition({ x: 300, y: 500 });
+            const snapped = doc.getSnappedPosition({ x: 300, y: 500, width: 0.75, height: 0.75 });
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the token document's parent scene grid, read for diagnosis
+            const parentGrid = (doc as unknown as { parent?: { grid?: { isSquare?: boolean; size?: number } } }).parent?.grid;
+            // eslint-disable-next-line no-restricted-syntax -- boundary: the token document's height, read for diagnosis
+            const height = (doc as unknown as { height: number }).height;
+            const diag = { cls: doc.constructor.name, w: doc.width, h: height, square: parentGrid?.isSquare ?? null, size: parentGrid?.size ?? null };
             await doc.update({ x: snapped.x, y: snapped.y });
             await g.canvas.tokens.moveMany({ dx: 1, dy: 0, ids: [id] });
             await new Promise<void>((resolve) => {
                 setTimeout(resolve, 1500);
             });
-            return { width: doc.width, snapped, moved: { x: doc.x, y: doc.y } };
+            return { width: doc.width, snapped, moved: { x: doc.x, y: doc.y }, diag };
         },
         { scene: sceneId, id: tokenId },
     );
@@ -183,6 +188,9 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
                 .pollUntil(() => batchDialog() !== undefined, 10_000)
                 .then(() => true)
                 .catch(() => false);
+            await globalThis.wh40kE2E
+                .pollUntil(() => (batchDialog()?.element?.querySelectorAll('input[name="selected"]').length ?? 0) > 0, 10_000)
+                .catch(() => undefined);
             const boxes = [...(batchDialog()?.element?.querySelectorAll<HTMLInputElement>('input[name="selected"]') ?? [])];
             const result = { opened, boxes: boxes.length, ticked: boxes.filter((b) => b.checked).length };
             await batchDialog()?.close();
@@ -237,7 +245,7 @@ async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction
 }
 
 /** With the condition catalog emptied, open Create Active Effect on an actor; count its rows, pick one, read the effect. */
-async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows: number; statuses: number; applied: string[] }> {
+async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows: number; statuses: number; fallbackRows: number; applied: string[] }> {
     return page.evaluate(
         async ({ root, id }) => {
             interface DialogLike {
@@ -252,6 +260,7 @@ async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows
             };
             const registry = (await import(/* @vite-ignore */ `${root}/rules/condition-registry.js`)) as {
                 setConditionCatalog: (next: Map<string, object>) => void;
+                statusPickerRows: (statuses: Iterable<object>, translate: (key: string) => string) => object[];
             };
             const dialogModule = (await import(/* @vite-ignore */ `${root}/applications/prompts/effect-creation-dialog.js`)) as {
                 default: { show: (owner: object) => Promise<object | null> };
@@ -261,7 +270,8 @@ async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows
             registry.setConditionCatalog(new Map());
             const shown = dialogModule.default.show(actor);
             const open = (): DialogLike | undefined =>
-                [...g.foundry.applications.instances.values()].find((app) => app.element?.querySelector('[data-action="selectCondition"]') !== null);
+                // `?? null`: an app with no element must not match (undefined !== null).
+                [...g.foundry.applications.instances.values()].find((app) => (app.element?.querySelector('[data-action="selectCondition"]') ?? null) !== null);
             await globalThis.wh40kE2E.pollUntil(() => open() !== undefined, 10_000).catch(() => undefined);
             const dialog = open();
             const rows = [...(dialog?.element?.querySelectorAll<HTMLElement>('[data-action="selectCondition"]') ?? [])];
@@ -277,7 +287,8 @@ async function effectPickerFallback(page: Page, actorId: string): Promise<{ rows
             ]);
             const applied = actor.effects.contents.filter((e) => e.statuses.has(picked)).map(() => picked);
             await open()?.close();
-            return { rows: rows.length, statuses: g.CONFIG.statusEffects.filter((s) => s.id !== undefined && s.id !== 'dead').length, applied };
+            const fallbackRows = registry.statusPickerRows(g.CONFIG.statusEffects, (key) => key).length;
+            return { rows: rows.length, statuses: g.CONFIG.statusEffects.filter((s) => s.id !== undefined && s.id !== 'dead').length, fallbackRows, applied };
         },
         { root: MODULE_ROOT, id: actorId },
     );

@@ -269,7 +269,7 @@ test.describe.serial('auspex scan (Tier B, #759)', () => {
             const second = await useAuspex(page, scannerActor, 5);
             pass(
                 'scan-once-per-round',
-                first.opened && !second.opened && second.notices.some((n) => n.includes('already been used this round')),
+                first.opened && second.rollCard === '' && second.notices.some((n) => n.includes('already been used this round')),
                 `first opened ${String(first.opened)}; second opened ${String(second.opened)}; notices ${second.notices.join(' | ')}`,
             );
 
