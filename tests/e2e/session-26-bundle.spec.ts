@@ -296,7 +296,7 @@ async function effectPickerFallback(
             // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
             const g = globalThis as unknown as {
                 CONFIG: { statusEffects: Array<{ id?: string }> };
-                game: { actors: { get: (i: string) => { effects: { contents: Array<{ statuses: Set<string> }> } } | undefined } };
+                game: { actors: { get: (i: string) => { effects: { contents: Array<{ id: string; statuses: Set<string> }> } } | undefined } };
                 foundry: { applications: { instances: Map<string, DialogLike> } };
             };
             const registry = (await import(/* @vite-ignore */ `${root}/rules/condition-registry.js`)) as {
@@ -309,6 +309,8 @@ async function effectPickerFallback(
             const actor = g.game.actors.get(id);
             if (actor === undefined) throw new Error('no actor');
             registry.setConditionCatalog(new Map());
+            // The PC may already carry a status from an earlier flow (a crit's Stunned); count only what this pick adds.
+            const before = new Set(actor.effects.contents.map((e) => e.id));
             const errors: string[] = [];
             // eslint-disable-next-line no-restricted-syntax -- boundary: a rejected promise's reason is untyped; narrowed by instanceof on the next line
             const shown = dialogModule.default.show(actor).catch((err: unknown) => {
@@ -333,7 +335,7 @@ async function effectPickerFallback(
                     setTimeout(resolve, 5000);
                 }),
             ]);
-            const applied = actor.effects.contents.filter((e) => e.statuses.has(picked)).map(() => picked);
+            const applied = actor.effects.contents.filter((e) => !before.has(e.id) && e.statuses.has(picked)).map(() => picked);
             await open()?.close();
             const fallbackRows = registry.statusPickerRows(g.CONFIG.statusEffects, (key) => key).length;
             const apps = [...g.foundry.applications.instances.values()].map((app) => app.element?.className ?? '(no element)');

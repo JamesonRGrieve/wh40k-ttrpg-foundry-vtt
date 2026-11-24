@@ -58,10 +58,14 @@ async function checkType(page: Page, type: string): Promise<TypeReport> {
                     // eslint-disable-next-line no-await-in-loop -- each tab switch must render before it is read
                     await globalThis.wh40kE2E.settle(200);
                 }
+                // A panel is found as the sheet's tab binder finds it (api/sheet-tabs.ts): a
+                // `[data-tab]` child of the content container, or a `.tab` panel of the group.
+                const group = button?.dataset['group'] ?? '';
                 const panel =
                     button === null
                         ? sheet.element.querySelector<HTMLElement>('.window-content')
-                        : sheet.element.querySelector<HTMLElement>(`.tab[data-tab="${tab}"][data-group="${button.dataset['group'] ?? ''}"]`);
+                        : (sheet.element.querySelector<HTMLElement>(`.wh40k-tab-content > [data-tab="${tab}"]`) ??
+                          sheet.element.querySelector<HTMLElement>(`.tab[data-tab="${tab}"][data-group="${group}"]`));
                 if (panel === null) {
                     failures.push(`${tab}: no panel`);
                     continue;
@@ -70,6 +74,22 @@ async function checkType(page: Page, type: string): Promise<TypeReport> {
                     failures.push(`${tab}: its button did not open it`);
                     continue;
                 }
+                // The other tabs' panels are hidden, not stacked under it.
+                const shownOthers = tabs.filter((other) => {
+                    if (other === tab) return false;
+                    const otherPanel =
+                        sheet.element.querySelector<HTMLElement>(`.wh40k-tab-content > [data-tab="${other}"]`) ??
+                        sheet.element.querySelector<HTMLElement>(`.tab[data-tab="${other}"][data-group="${group}"]`);
+                    return otherPanel !== null && otherPanel.getClientRects().length > 0;
+                });
+                if (button !== null && shownOthers.length > 0) failures.push(`${tab}: other tabs still shown (${shownOthers.join(', ')})`);
+                // A number box is sized to its value, never stretched across the window
+                // (operator, 2026-11-24: "Full width fields for numbers?").
+                const windowWidth = sheet.element.getBoundingClientRect().width;
+                const wide = [...panel.querySelectorAll<HTMLInputElement>('input[type="number"]')]
+                    .filter((input) => input.getClientRects().length > 0 && input.getBoundingClientRect().width > windowWidth / 2)
+                    .map((input) => `${input.name} ${Math.round(input.getBoundingClientRect().width)}px`);
+                if (wide.length > 0) failures.push(`${tab}: full-width number boxes ${wide.join(', ')}`);
                 // The tab's last visible field.
                 const fields = [...panel.querySelectorAll<HTMLElement>('input, select, textarea, button, prose-mirror, multi-checkbox')].filter(
                     (el) => el.getClientRects().length > 0,
@@ -121,5 +141,5 @@ test('every item sheet: tabs switch and content scrolls into reach', async ({ pa
     await snap(page, 'item-sheet-ship-component-effects-tab', { selector: `#${shipSheet}`, closeWindows: true, keepWindow: shipSheet });
 
     const failed = reports.filter((r) => r.failures.length > 0).map((r) => `${r.type} [${r.tabs.join(', ')}]: ${r.failures.join('; ')}`);
-    expect(failed, `item sheets with an unreachable field or a dead tab:\n${failed.join('\n')}`).toEqual([]);
+    expect(failed, `item sheets with an unreachable field, a dead tab or a full-width number box:\n${failed.join('\n')}`).toEqual([]);
 });
