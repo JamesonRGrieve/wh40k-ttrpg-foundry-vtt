@@ -563,7 +563,7 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             pass('npc-custom-stats-editable', npc.checkboxEnabled, JSON.stringify(npc));
             pass('npc-combat-tab-fatigue', npc.combatFatiguePips > 0, JSON.stringify(npc));
             pass('npc-sidebar-rows-stacked', npc.threatStacked && npc.threatShare > 0.5, JSON.stringify(npc));
-            await snap(page, 'session-26-npc-sidebar-rows-stacked', { selector: `#${npc.sheetId}`, closeWindows: true });
+            await snap(page, 'session-26-npc-sidebar-rows-stacked', { selector: `#${npc.sheetId}`, closeWindows: true, keepWindow: npc.sheetId });
 
             // --- Effect picker with no condition catalog (public install) -------------
             const picker = await effectPickerFallback(page, scene.actors['pc'] ?? '');
@@ -575,7 +575,7 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
 
             // --- #798: the Armour panel's notice, and equipping from it ---------------
             const notice = await armourNoticeFlow(page, scene.actors['pc'] ?? '');
-            await snap(page, 'session-26-armour-notice-unequipped', { selector: `#${notice.sheetId}` });
+            await snap(page, 'session-26-armour-notice-unequipped', { selector: `#${notice.sheetId}`, closeWindows: true, keepWindow: notice.sheetId });
             const equipped = await equipFromNotice(page, scene.actors['pc'] ?? '');
             pass(
                 'armour-notice-equips',
