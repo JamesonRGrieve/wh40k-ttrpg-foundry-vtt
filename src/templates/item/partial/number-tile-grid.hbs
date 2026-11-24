@@ -1,0 +1,18 @@
+{{!--
+    A grid of compact stat inputs: each a small label over a fixed-width, centred box,
+    as many to a row as the sheet's width holds. Numbers and short formulas get a box
+    sized to their value, not the full width of the sheet (operator, 2026-11-24).
+
+    Hash params:
+        fields — array of { label, name, value, type? ("number" default, or "text"), placeholder? }
+--}}
+<div class="tw-grid tw-grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] tw-gap-x-3 tw-gap-y-2" data-number-tile-grid>
+    {{#each fields as |field|}}
+    <label class="tw-flex tw-min-w-0 tw-flex-col tw-gap-1">
+        <span class="tw-truncate tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] {{themeClassFor 'accent'}}" data-tooltip="{{field.label}}">{{field.label}}</span>
+        <input class="tw-w-[5.5rem] tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-border-light)] tw-bg-[var(--wh40k-bg-input)] tw-px-1 tw-py-1 tw-text-center tw-tabular-nums tw-text-[color:var(--color-text-primary)]"
+               type="{{#if field.type}}{{field.type}}{{else}}number{{/if}}" name="{{field.name}}" value="{{field.value}}"
+               {{#if field.placeholder}}placeholder="{{field.placeholder}}"{{/if}}{{#unless field.type}} data-dtype="Number"{{/unless}} />
+    </label>
+    {{/each}}
+</div>

@@ -70,6 +70,14 @@ describe('schema sheet rows (#731)', () => {
         expect(inputs[0]?.choices).toBeNull();
     });
 
+    it('marks a plain number as numeric, so it renders as a compact box, and nothing else', () => {
+        expect(inputs.map((row) => row.numeric)).toEqual([false, false, false, false]);
+        expect(lists[1]?.entries[0]?.rows.map((row) => [row.name, row.numeric])).toEqual([
+            ['system.abilities.0.name', false],
+            ['system.abilities.0.bonus', true],
+        ]);
+    });
+
     it('turns an array of scalars into one indexed input per entry', () => {
         expect(lists[0]?.name).toBe('system.tags');
         expect(lists[0]?.entries.map((entry) => entry.rows.map((row) => [row.name, row.value]))).toEqual([[['system.tags.0', 'a']], [['system.tags.1', 'b']]]);

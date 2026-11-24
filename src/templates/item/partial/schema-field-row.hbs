@@ -60,7 +60,12 @@
     {{#if row.html}}
     {{editor row.value target=row.name button=true editable=editing engine="prosemirror"}}
     {{else}}
+    {{!-- A plain number takes a compact box, not the full row. --}}
+    {{#if row.numeric}}
+    {{formInput row.field name=row.name value=row.value localize=true disabled=(not editing) classes="tw-w-[5.5rem] tw-flex-none tw-text-center tw-tabular-nums"}}
+    {{else}}
     {{formInput row.field name=row.name value=row.value choices=row.choices localize=true disabled=(not editing)}}
+    {{/if}}
     {{/if}}
 </div>
 {{/if}}

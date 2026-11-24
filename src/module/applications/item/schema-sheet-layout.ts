@@ -76,6 +76,8 @@ export interface SchemaInputRow {
     readonly html: boolean;
     /** A choice field's options, value → label key, for `{{formInput … choices= localize=true}}`. */
     readonly choices: Readonly<Record<string, string>> | null;
+    /** A plain number: the template gives it a compact box sized to its value, not the full row. */
+    readonly numeric: boolean;
 }
 
 /** One entry of a list row: its inputs, and its index for the remove button. */
@@ -196,6 +198,11 @@ function isHtml(node: SchemaNode): boolean {
     return node.constructor.name === 'HTMLField';
 }
 
+/** A number field with no choices: rendered as a compact box (operator, 2026-11-24). */
+function isPlainNumber(node: SchemaNode, choices: Readonly<Record<string, string>> | null): boolean {
+    return node.constructor.name === 'NumberField' && choices === null;
+}
+
 function asEntries(value: FormValue): readonly FormValue[] {
     return Array.isArray(value) ? value : [];
 }
@@ -254,6 +261,7 @@ export function buildSectionRows(
             continue;
         }
         if (item.kind === 'input') {
+            const choices = choiceMap(layout, section, item.path, node);
             rows.push({
                 kind: 'input',
                 name: `system.${item.path}`,
@@ -261,7 +269,8 @@ export function buildSectionRows(
                 field: node,
                 value: valueAt(source, item.path),
                 html: isHtml(node),
-                choices: choiceMap(layout, section, item.path, node),
+                choices,
+                numeric: isPlainNumber(node, choices),
             });
             continue;
         }
@@ -274,6 +283,7 @@ export function buildSectionRows(
                 const field = sub === '' ? element : schemaNodeAt(element, sub);
                 if (field === undefined) return [];
                 const suffix = sub === '' ? '' : `.${sub}`;
+                const choices = choiceMap(layout, section, `${item.path}${suffix}`, field);
                 return [
                     {
                         kind: 'input',
@@ -282,7 +292,8 @@ export function buildSectionRows(
                         field,
                         value: sub === '' ? entry : valueAt(entry, sub),
                         html: isHtml(field),
-                        choices: choiceMap(layout, section, `${item.path}${suffix}`, field),
+                        choices,
+                        numeric: isPlainNumber(field, choices),
                     },
                 ];
             }),

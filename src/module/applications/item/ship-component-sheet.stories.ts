@@ -107,6 +107,30 @@ export const HullTypesAsCheckboxes: Story = {
     play: async ({ canvasElement }) => expectHullTypeCheckboxes(canvasElement, ['transport', 'frigate']),
 };
 
+/**
+ * Numbers are compact tiles, not full-width rows (operator, 2026-11-24), and the tab
+ * section is the sheet's `.wh40k-tab-content`, the container its tab binder needs
+ * to make Details / Effects switch.
+ */
+export const NumberTilesAndTabContainer: Story = {
+    render: () => {
+        const el = renderSheet(templateSrc, makeCtx({ inEditMode: true }));
+        el.style.width = '600px';
+        return el;
+    },
+    play: async ({ canvasElement }) => {
+        const sheetWidth = canvasElement.querySelector<HTMLElement>('.wh40k-item-sheet')?.getBoundingClientRect().width ?? 600;
+        const numbers = [...canvasElement.querySelectorAll<HTMLInputElement>('input[type="number"]')];
+        await expect(numbers.length).toBeGreaterThanOrEqual(13);
+        const wide = numbers.filter((input) => input.getBoundingClientRect().width > sheetWidth / 2).map((input) => input.name);
+        await expect(wide).toEqual([]);
+        // The nine stat modifiers share rows: several tiles sit on the first row.
+        const tops = new Set([...canvasElement.querySelectorAll<HTMLInputElement>('input[name^="system.modifiers."]')].map((i) => Math.round(i.getBoundingClientRect().top)));
+        await expect(tops.size).toBeLessThan(9);
+        await expect(canvasElement.querySelector('section.wh40k-tab-content [data-tab="effects"]')).not.toBeNull();
+    },
+};
+
 export const RendersComponentName: Story = {
     render: () => renderSheet(templateSrc, makeCtx()),
     play: async ({ canvasElement }) => {

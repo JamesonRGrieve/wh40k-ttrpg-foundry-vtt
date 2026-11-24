@@ -1,0 +1,12 @@
+{{!-- The nine ship stat modifiers a component or upgrade can carry, as compact tiles.
+     Shared by the Ship Component and Ship Upgrade sheets; reads `source.modifiers`. --}}
+{{> systems/wh40k-rpg/templates/item/partial/number-tile-grid.hbs fields=(array
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.Speed") name="system.modifiers.speed" value=source.modifiers.speed)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.Manoeuvrability") name="system.modifiers.manoeuvrability" value=source.modifiers.manoeuvrability)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.Detection") name="system.modifiers.detection" value=source.modifiers.detection)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.Armour") name="system.modifiers.armour" value=source.modifiers.armour)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.HullIntegrity") name="system.modifiers.hullIntegrity" value=source.modifiers.hullIntegrity)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.TurretRating") name="system.modifiers.turretRating" value=source.modifiers.turretRating)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.VoidShields") name="system.modifiers.voidShields" value=source.modifiers.voidShields)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.Morale") name="system.modifiers.morale" value=source.modifiers.morale)
+    (object label=(localize "WH40K.Voidcraft.Build.Stat.CrewRating") name="system.modifiers.crewRating" value=source.modifiers.crewRating))}}
