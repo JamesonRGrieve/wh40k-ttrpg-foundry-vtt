@@ -144,6 +144,10 @@ export default class ArmourModSheet extends SetFieldActionsMixin(ContainerItemSh
         const partContext = { ...sharedContext, ...context };
         // eslint-disable-next-line no-restricted-syntax -- boundary: this.item.system DataModel doesn't expose ArmourModSystem-shaped properties to TS
         const system = this.item.system as unknown as ArmourModSystem;
+        // Each tab is its own part. Foundry's changeTab shows and hides `.tab[data-group]`
+        // panels, so each panel's root carries that class and starts active only if it is
+        // the remembered tab; without it all four rendered at once and the buttons did nothing.
+        if (ArmourModSheet.TABS.some((t) => t.tab === partId)) partContext['tabActive'] = this.tabGroups.primary === partId;
 
         if (partId === 'header') {
             partContext['icon'] = system.icon;

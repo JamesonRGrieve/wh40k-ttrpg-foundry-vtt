@@ -1,5 +1,5 @@
 {{!-- Armour Modification Properties Tab --}}
-<div class="tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-4" data-tab="properties">
+<div class="tab{{#if tabActive}} active{{/if}} tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-4" data-tab="properties" data-group="primary">
     <div class="tw-grid tw-grid-cols-2 tw-gap-6">
         {{!-- Added Properties Column --}}
         {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-plus-circle" labelKey="WH40K.Modification.AddedProperties"}}

@@ -1,5 +1,5 @@
 {{!-- Armour Modification Modifiers Tab --}}
-<div class="tw-flex tw-flex-col tw-gap-0" data-tab="modifiers">
+<div class="tab{{#if tabActive}} active{{/if}} tw-flex tw-flex-col tw-gap-0" data-tab="modifiers" data-group="primary">
     {{#> systems/wh40k-rpg/templates/item/partial/item-detail-section.hbs icon="fa-chart-line" labelKey="WH40K.Modification.Modifiers"}}
             {{!-- Armour Points --}}
             <div class="tw-flex tw-items-center tw-gap-5 tw-p-5 tw-border tw-border-[rgba(212,197,166,0.15)] tw-rounded-lg tw-mb-4 tw-transition-all hover:tw-border-[rgba(212,175,55,0.3)]" style="background: rgba(255,255,255,0.02)">
