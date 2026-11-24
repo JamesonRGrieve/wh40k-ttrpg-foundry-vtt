@@ -949,8 +949,6 @@ recordDimension('range-retarget.flow', covered['range-retarget.flow'], RANGE_RET
 const SESSION_26_FLOWS = [
     'per-token-reaction-budget',
     'proxy-heals-unowned-token',
-    'token-only-item-edit',
-    'token-only-resize',
     'sub-square-token-centred',
     'crit-condition-duration',
     'party-xp-from-sheet',

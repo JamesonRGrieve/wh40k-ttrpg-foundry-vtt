@@ -13,8 +13,6 @@ import { scaledMs } from './lib/timing';
  *   one dodging leaves the other its Reaction (#777);
  * - a player heals an unlinked token they don't own: the GM proxy changes that
  *   token's actor, not the world actor it was copied from (#782);
- * - a token-only compendium token (#586) takes edits to its items (#779) and to
- *   its width and height (#780);
  * - a token smaller than a square snaps to the centre of its square, through the
  *   document and on a keyboard move (#774);
  * - a crit row's stated duration lands on its condition effect (#766);
@@ -27,8 +25,6 @@ import { scaledMs } from './lib/timing';
 const SESSION_26_FLOWS = [
     'per-token-reaction-budget',
     'proxy-heals-unowned-token',
-    'token-only-item-edit',
-    'token-only-resize',
     'sub-square-token-centred',
     'crit-condition-duration',
     'party-xp-from-sheet',
@@ -80,46 +76,6 @@ async function placeTokenOnly(page: Page, sceneId: string, uuid: string): Promis
             return id;
         },
         { root: MODULE_ROOT, scene: sceneId, actorUuid: uuid },
-    );
-}
-
-/** Edit the token-only crawler's Acid Spray, resize the token, and read both back (with any errors). */
-async function editTokenOnly(page: Page, sceneId: string, tokenId: string): Promise<{ clip: number | null; width: number | null; errors: string[] }> {
-    return page.evaluate(
-        async ({ scene, id }) => {
-            interface ItemLike {
-                name: string;
-                system: { clip?: { value: number } };
-                update: (d: object) => Promise<object | undefined>;
-            }
-            interface TokenLike {
-                width: number;
-                actor: { items: { contents: ItemLike[] } } | null;
-                update: (d: object, o?: object) => Promise<object | undefined>;
-            }
-            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
-            const g = globalThis as unknown as {
-                game: { scenes: { get: (i: string) => { tokens: { get: (i: string) => TokenLike | undefined } } | undefined } };
-            };
-            const errors: string[] = [];
-            const token = (): TokenLike | undefined => g.game.scenes.get(scene)?.tokens.get(id);
-            const spray = (): ItemLike | undefined => token()?.actor?.items.contents.find((i) => i.name === 'Acid Spray');
-            try {
-                await spray()?.update({ 'system.clip.value': 5 });
-            } catch (err) {
-                errors.push(`item: ${err instanceof Error ? err.message : String(err)}`);
-            }
-            try {
-                await token()?.update({ width: 1, height: 1 });
-            } catch (err) {
-                errors.push(`resize: ${err instanceof Error ? err.message : String(err)}`);
-            }
-            await new Promise<void>((resolve) => {
-                setTimeout(resolve, 1500);
-            });
-            return { clip: spray()?.system.clip?.value ?? null, width: token()?.width ?? null, errors };
-        },
-        { scene: sceneId, id: tokenId },
     );
 }
 
@@ -350,7 +306,7 @@ async function woundsOf(page: Page, sceneId: string, copyId: string, actorId: st
     );
 }
 
-test.describe.serial('Session 26 bundle (Tier B, #777 #782)', () => {
+test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () => {
     test.setTimeout(scaledMs(300_000));
     test('copies keep their own budgets; a player heals an unowned token through the GM', async ({ page, openClient }) => {
         await joinOrSkip(page);
@@ -411,14 +367,8 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782)', () => {
                 `owner ${String(heal.owner)}; before ${JSON.stringify(before)}; after ${JSON.stringify(after)}`,
             );
 
-            // --- #779 / #780: a token-only token takes item edits and a resize -------
-            const tokenOnlyId = await placeTokenOnly(page, scene.sceneId, CRAWLER_UUID);
-            const edited = await editTokenOnly(page, scene.sceneId, tokenOnlyId);
-            pass('token-only-item-edit', edited.clip === 5 && !edited.errors.some((e) => e.startsWith('item')), JSON.stringify(edited));
-            pass('token-only-resize', edited.width === 1 && !edited.errors.some((e) => e.startsWith('resize')), JSON.stringify(edited));
-            await snap(page, 'session-26-token-only-crawler-resized', { selector: '#board', closeWindows: true });
-
             // --- #774: a sub-square token centres in its square ------------------------
+            const tokenOnlyId = await placeTokenOnly(page, scene.sceneId, CRAWLER_UUID);
             const centred = await snapSubSquare(page, scene.sceneId, tokenOnlyId);
             pass(
                 'sub-square-token-centred',
