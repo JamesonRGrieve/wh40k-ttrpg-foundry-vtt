@@ -944,6 +944,18 @@ const RANGE_RETARGET_FLOWS = [
 ];
 recordDimension('range-retarget.flow', covered['range-retarget.flow'], RANGE_RETARGET_FLOWS);
 
+// The Session 26 bundle (#777, #782, …), tests/e2e/session-26-bundle.spec.ts.
+// Keep in sync with SESSION_26_FLOWS there.
+const SESSION_26_FLOWS = [
+    'per-token-reaction-budget',
+    'proxy-heals-unowned-token',
+    'token-only-item-edit',
+    'token-only-resize',
+    'sub-square-token-centred',
+    'crit-condition-duration',
+];
+recordDimension('session-26.flow', covered['session-26.flow'], SESSION_26_FLOWS);
+
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
 const DAMAGE_PROFILE_FLOWS = [
