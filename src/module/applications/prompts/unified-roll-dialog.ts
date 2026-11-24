@@ -243,6 +243,9 @@ const URD_BODY_CONTAINER = {
     classes: ['tw-flex', 'tw-flex-col', 'tw-min-h-0', 'tw-overflow-y-auto', 'tw-overflow-x-hidden', 'tw-max-h-[60vh]'],
 };
 
+/** How long a Charge waits for its animated approach to arrive (#806). */
+const CHARGE_ARRIVAL_MS = 5000;
+
 /** The melee engagement around an attack (#804): the two tokens, the scene's tokens, the grid and the line's rules. */
 interface EngagementState {
     attacker: EngagementToken;
@@ -2697,8 +2700,16 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         }
         const to = chargeContactPosition(state.attacker, state.target, state.grid);
         const doc = sourceToken.document;
-        if (doc.x !== to.x || doc.y !== to.y) await moveDeclared(doc, to);
-        if (doc.x !== to.x || doc.y !== to.y) {
+        const arrived = (): boolean => doc.x === to.x && doc.y === to.y;
+        if (!arrived()) await moveDeclared(doc, to);
+        // V14 animates the move: wait for the token to arrive. One held by leaving melee never does.
+        for (let waited = 0; !arrived() && waited < CHARGE_ARRIVAL_MS; waited += 100) {
+            // eslint-disable-next-line no-await-in-loop -- polling the animated move, one step at a time
+            await new Promise<void>((resolve) => {
+                setTimeout(resolve, 100);
+            });
+        }
+        if (!arrived()) {
             ui.notifications.warn(game.i18n.localize('WH40K.Roll.Charge.MoveHeld'));
             return false;
         }

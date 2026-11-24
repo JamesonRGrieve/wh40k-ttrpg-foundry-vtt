@@ -383,6 +383,8 @@ test.describe.serial('melee engagement, leaving melee, declared moves and Charge
                     }),
                 { firer: id('charger'), target: id('far') },
             );
+            // The approach is animated: read where the charger ends up.
+            await page.waitForTimeout(scaledMs(2000));
             const chargerAt = await positionOf(page, scene.sceneId, id('charger'));
             await snap(page, 'melee-engagement-charge-arrived', { selector: '#board' });
             pass(
