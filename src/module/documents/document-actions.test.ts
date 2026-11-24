@@ -3,7 +3,12 @@ import { documentActions, registerDocumentActionHandlers } from './document-acti
 
 describe('document action slot', () => {
     it('hands back the handlers hooks-manager registered', async () => {
-        const handlers = { performWeaponAttack: vi.fn(), performPsychicCast: vi.fn(), sendItemVocalizeChat: vi.fn(async () => Promise.resolve()) };
+        const handlers = {
+            performWeaponAttack: vi.fn(),
+            performPsychicCast: vi.fn(),
+            sendItemVocalizeChat: vi.fn(async () => Promise.resolve()),
+            performAuspexScan: vi.fn(),
+        };
         registerDocumentActionHandlers(handlers);
         const actor = {};
         const weapon = {};

@@ -13,7 +13,7 @@
     Params: rerollOptions (RerollOption[]), rollId.
 --}}
 {{#each rerollOptions}}
-<button class="roll-control__variant-reroll tw-flex-1 {{chatActionButton 'powers' 'sm'}}" {{#if disabled}}disabled{{/if}} data-roll-id="{{../rollId}}" data-variant-id="{{id}}" data-variant-kind="{{kind}}" data-variant-modifier="{{modifier}}">
+<button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.Reroll' source=label}}" class="roll-control__variant-reroll tw-flex-1 {{chatActionButton 'powers' 'sm'}}" {{#if disabled}}disabled{{/if}} data-roll-id="{{../rollId}}" data-variant-id="{{id}}" data-variant-kind="{{kind}}" data-variant-modifier="{{modifier}}">
     <span class="material-icons tw-text-[14px]">casino</span>
     <span>{{#if modifier}}{{localize "WH40K.Reroll.WithModifier" label=label modifier=modifier}}{{else}}{{label}}{{/if}}</span>
 </button>

@@ -19,7 +19,7 @@
             {{#if noDamage}}
             {{> systems/wh40k-rpg/templates/chat/partial/no-damage-note.hbs}}
             {{else}}
-            <button class="roll-control__roll-damage tw-flex-none tw-w-full {{chatActionButton 'wounds'}}" data-roll-id="{{rollId}}">
+            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.RollDamage'}}" class="roll-control__roll-damage tw-flex-none tw-w-full {{chatActionButton 'wounds'}}" data-roll-id="{{rollId}}">
                 <span class="material-icons tw-text-[16px]" aria-hidden="true">bolt</span>
                 <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
             </button>

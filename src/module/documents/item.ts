@@ -10,6 +10,7 @@ import {
     type OriginModifierBag,
 } from '../origin-grant-ledger.ts';
 import { actorGameSystemId, applyRollModeWhispers, isD100Success, printedDegrees, resolveDegreesMethod } from '../rolls/roll-helpers.ts';
+import type { ScannerData } from '../rules/auspex-scan.ts';
 import { startingCorruptionHoldsMalignancy } from '../rules/chaos-backgrounds.ts';
 import {
     NAVIGATOR_LEVEL_LABEL_KEY,
@@ -335,6 +336,16 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'skill';
     }
 
+    /**
+     * The scanner data of a gear item that is a scanner (an auspex, #759), or null.
+     * Content data on the gear item (`GearData.scanner`); a range of 0 is no scanner.
+     */
+    get scanner(): ScannerData | null {
+        if (this._type !== 'gear') return null;
+        const scanner = (this.system as { scanner?: ScannerData }).scanner;
+        return scanner !== undefined && scanner.range > 0 ? scanner : null;
+    }
+
     get isOrder(): boolean {
         return this._type === 'order';
     }
@@ -411,8 +422,15 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'weapon' && this.#weaponClass() === 'thrown';
     }
 
+    /**
+     * Does this ranged weapon draw down ammunition? The weapon's own rule decides
+     * (`WeaponData.usesAmmo`: a clip, or a single-use mode). A Reload entry alone
+     * doesn't: natural weapons and creature sprays print a dash for Reload and have
+     * no clip, and reading the dash as a reload refused them as out of ammo.
+     */
     get usesAmmo(): boolean {
-        return this.isRanged && this.system.reload !== undefined && this.system.reload !== '' && this.system.reload !== 'N/A';
+        // eslint-disable-next-line no-restricted-syntax -- boundary: usesAmmo is a WeaponData getter not on the shared item system union
+        return this.isRanged && (this.system as { usesAmmo?: boolean }).usesAmmo === true;
     }
 
     get isMelee(): boolean {

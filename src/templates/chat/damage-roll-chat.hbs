@@ -141,7 +141,7 @@
                                     data-roll-id="{{@root.rollId}}"
                                     data-hit-index="{{@index}}"
                                     data-dos="{{hit.dos}}"
-                                    title="{{localize 'WH40K.Chat.Damage.DamageDieTooltip' dos=hit.dos}}"
+                                    data-tooltip="{{localize 'WH40K.Chat.Damage.DamageDieTooltip' dos=hit.dos}}"
                                 >
                                     <span class="material-icons">cached</span>
                                     <span>{{localize "WH40K.DamageDieReplacement.ButtonLabel"}} ({{hit.dos}})</span>
@@ -160,7 +160,7 @@
                         </div>
                         {{else}}
                         <div class="tw-flex tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
-                            <button
+                            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.AssignDamage'}}"
                                 class="roll-control__assign-damage tw-flex-1 {{chatActionButton 'wounds'}}"
                                 data-location="{{hit.location}}"
                                 data-total-damage="{{hit.totalDamage}}"

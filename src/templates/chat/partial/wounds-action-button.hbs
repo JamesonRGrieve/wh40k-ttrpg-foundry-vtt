@@ -10,6 +10,7 @@
         icon            — Material Icons ligature (default "api").
         label           — button text.
         labelKey        — i18n key for the label (preferred over `label`).
+        tooltipKey      — i18n key for the hover tooltip (default: apply damage or fatigue).
         dataUuid        — actor uuid (data-uuid).
         dataDamage      — data-damage value.
         dataFatigue     — data-fatigue value.
@@ -17,7 +18,7 @@
         dataIgnoreArmour— optional data-ignore-armour ("true").
         dataLocation    — optional data-location (hit-location id the damage lands on).
 --}}
-<button
+<button data-tooltip="{{#if tooltipKey}}{{localize tooltipKey}}{{else}}{{localize 'WH40K.Chat.ButtonTip.ApplyWounds'}}{{/if}}"
     class="{{action}} tw-flex-1 {{chatActionButton 'wounds'}}"
     {{#if dataType}}data-type="{{dataType}}"
     {{/if}}{{#if dataIgnoreArmour}}data-ignore-armour="{{dataIgnoreArmour}}"

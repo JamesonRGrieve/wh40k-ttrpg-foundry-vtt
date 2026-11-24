@@ -18,6 +18,8 @@ export interface DocumentActionHandlers {
     performWeaponAttack: (attacker: object | null, weapon: object) => void;
     /** Open the focus power roll for `power`, cast by `caster`. No pre-chosen target. */
     performPsychicCast: (caster: object, power: object) => void;
+    /** Open the scanner's test for `scanner` (an auspex, #759), used by `user`; a success sweeps the canvas. */
+    performAuspexScan: (user: object, scanner: object) => void;
     /** Post an item's description card to chat. */
     // eslint-disable-next-line no-restricted-syntax -- boundary: the vocalize template payload is the manager's untyped Handlebars context
     sendItemVocalizeChat: (data: Record<string, unknown>) => Promise<void>;

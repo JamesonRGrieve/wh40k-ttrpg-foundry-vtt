@@ -1602,6 +1602,11 @@ export class WH40KBaseActor extends Actor {
             await item.performAction();
             return;
         }
+        // A scanner (an auspex, #759) rolls its test and, on a success, sweeps the canvas.
+        if (item.scanner !== null) {
+            documentActions().performAuspexScan(this, item);
+            return;
+        }
         await this._vocalizeItem(item);
     }
 

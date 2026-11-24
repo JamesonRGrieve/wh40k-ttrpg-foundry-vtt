@@ -45,7 +45,7 @@
                     <div class="tw-p-3 tw-my-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-card-gold)] tw-rounded-md tw-text-center" data-action="horde-break-check">
                         <div class="tw-font-display tw-text-sm tw-text-[var(--wh40k-card-gold)] tw-uppercase tw-tracking-widest tw-mb-1">{{this.hordeBreakLabel}}</div>
                         {{#if this.hordeBreakCheck.requiresTest}}
-                            <button type="button"
+                            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.HordeBreak'}}" type="button"
                                 class="roll-control__horde-break-test tw-mt-1 tw-px-3 tw-py-1.5 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded tw-text-[var(--wh40k-wounds-secondary)] tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer hover:tw-bg-[rgba(139,0,0,0.2)]"
                                 data-target-uuid="{{this.actor.uuid}}"
                                 data-willpower-modifier="{{this.hordeBreakCheck.willpowerModifier}}">

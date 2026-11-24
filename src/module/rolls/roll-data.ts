@@ -968,6 +968,23 @@ export class WeaponRollData extends RollData {
         this.displayTarget = aggregateRollTarget(this.baseTarget, this.assembleFinalModifiers());
     }
 
+    /**
+     * Set the target-size modifier from the current target's size. Runs on open and
+     * again whenever the dialog's target changes, so retargeting never keeps the
+     * previous target's size. An unknown or non-numeric size leaves it unset.
+     */
+    applyTargetSize(): void {
+        delete this.modifiers['target-size'];
+        const size = (this.targetActor?.system as { size?: string | number } | undefined)?.size;
+        if (size === undefined || size === '' || size === 0) return;
+        const parsed = Number.parseInt(size.toString(), 10);
+        if (Number.isNaN(parsed)) {
+            ui.notifications.warn(game.i18n.localize('WH40K.Warning.TargetSizeNotANumber'));
+            return;
+        }
+        this.modifiers['target-size'] = targetSizeModifier(parsed);
+    }
+
     initialize(): void {
         this.baseTarget = 0;
         this.modifiers['attack'] = 0;
@@ -976,16 +993,7 @@ export class WeaponRollData extends RollData {
         this.modifiers['aim'] = 0;
         this.modifiers['modifier'] = 0;
 
-        // Size Bonus should not change after initial targeting
-        const targetActorSystem = this.targetActor?.system as { size?: string | number };
-        if (this.targetActor && targetActorSystem.size !== undefined && targetActorSystem.size !== '' && targetActorSystem.size !== 0) {
-            try {
-                const size = Number.parseInt(targetActorSystem.size.toString(), 10);
-                this.modifiers['target-size'] = targetSizeModifier(size);
-            } catch {
-                ui.notifications.warn(game.i18n.localize('WH40K.Warning.TargetSizeNotANumber'));
-            }
-        }
+        this.applyTargetSize();
 
         // Eye of Vengeance availability — discovered from the talent's activatable
         // dynamicModifiers hook (Direction #7), not a `hasTalent('Eye of Vengeance')`

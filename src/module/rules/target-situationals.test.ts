@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { shouldSkipSelfTargetDefenderMods, TARGET_GROUP_COLOR_CLASS, TARGET_GROUP_ORDER, targetDispositionGroup } from './target-situationals';
+import {
+    buildTargetRoster,
+    shouldSkipSelfTargetDefenderMods,
+    TARGET_GROUP_COLOR_CLASS,
+    TARGET_GROUP_ORDER,
+    targetDispositionGroup,
+} from './target-situationals';
 
 /**
  * The target-condition modifiers (Prone, Stunned, Unaware, …) are no longer
@@ -57,5 +63,42 @@ describe('shouldSkipSelfTargetDefenderMods (#393)', () => {
         expect(shouldSkipSelfTargetDefenderMods(true, null, 'actor1')).toBe(false);
         expect(shouldSkipSelfTargetDefenderMods(true, 'actor1', null)).toBe(false);
         expect(shouldSkipSelfTargetDefenderMods(true, null, null)).toBe(false);
+    });
+});
+
+describe('buildTargetRoster (#250, #400, #764)', () => {
+    const crawlers = [
+        { id: 'c1', name: 'Corpse-Crawler', actorId: 'crawler', tokenId: 't1', disposition: -1 },
+        { id: 'c2', name: 'Corpse-Crawler', actorId: 'crawler', tokenId: 't2', disposition: -1 },
+        { id: 'c3', name: 'Corpse-Crawler', actorId: 'crawler', tokenId: 't3', disposition: -1 },
+    ];
+    const selected = (rows: Array<{ id: string; isSelected: boolean }>): string[] => rows.filter((r) => r.isSelected).map((r) => r.id);
+
+    it('selects the targeted token, not every copy of its actor', () => {
+        expect(selected(buildTargetRoster(crawlers, { actorId: 'crawler', tokenId: 't2' }, 'pc'))).toEqual(['c2']);
+    });
+
+    it('selects nothing for a targeted token that is not in the combat', () => {
+        expect(selected(buildTargetRoster(crawlers, { actorId: 'tawny', tokenId: 't9' }, 'pc'))).toEqual([]);
+    });
+
+    it('falls back to the actor when the token is unknown', () => {
+        expect(selected(buildTargetRoster([{ id: 'a', name: 'Heretic', actorId: 'h' }], { actorId: 'h', tokenId: null }, 'pc'))).toEqual(['a']);
+    });
+
+    it('orders hostile, neutral, friendly, then self, and skips rows without an id', () => {
+        const rows = buildTargetRoster(
+            [
+                { id: 'self', name: 'Me', actorId: 'pc', disposition: 1 },
+                { id: 'ally', name: 'Ally', actorId: 'a', disposition: 1 },
+                { id: '', name: 'Ghost', actorId: 'g' },
+                { id: 'foe', name: 'Foe', actorId: 'f', disposition: -1 },
+                { id: 'bystander', name: 'Bystander', actorId: 'b', disposition: 0 },
+            ],
+            { actorId: null, tokenId: null },
+            'pc',
+        );
+        expect(rows.map((r) => r.id)).toEqual(['foe', 'bystander', 'ally', 'self']);
+        expect(rows[0]?.colorClass).toBe(TARGET_GROUP_COLOR_CLASS.hostile);
     });
 });

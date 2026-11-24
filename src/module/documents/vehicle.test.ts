@@ -79,7 +79,7 @@ describe('WH40KVehicle.rollItem — fires with the OPERATOR characteristics (RAW
         vi.stubGlobal('ui', { notifications: { warn: (): void => undefined } });
         // The vehicle starts the attack through the document-action slot (hooks-manager fills it at init).
         const spy = vi.fn();
-        registerDocumentActionHandlers({ performWeaponAttack: spy, performPsychicCast: vi.fn(), sendItemVocalizeChat: vi.fn() });
+        registerDocumentActionHandlers({ performWeaponAttack: spy, performPsychicCast: vi.fn(), sendItemVocalizeChat: vi.fn(), performAuspexScan: vi.fn() });
         return { vehicle, spy };
     }
 

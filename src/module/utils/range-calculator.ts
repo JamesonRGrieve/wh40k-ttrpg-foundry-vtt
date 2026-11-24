@@ -11,7 +11,9 @@
  */
 
 import { t } from '../i18n/t.ts';
+import { figureDistance, measurePoints, type TokenBox } from '../rules/token-distance.ts';
 import type { I18nKey } from '../types/i18n-keys';
+import { sceneUnitsToMetres } from './token-footprint.ts';
 
 interface RangeBracket {
     /** Langpack key of the bracket name. */
@@ -232,13 +234,23 @@ export function tokenElevation(token: foundry.canvas.placeables.Token): number {
     return typeof doc?.elevation === 'number' ? doc.elevation : 0;
 }
 
+/** A token's footprint as the distance reads it (top-left in pixels, size in cells). */
+function tokenBox(token: foundry.canvas.placeables.Token): TokenBox {
+    // fvtt-types asserts Token#document is non-null; a preview / teardown placeable has none (#233).
+    const doc = (token as { document?: { x?: number; y?: number; width?: number; height?: number } }).document;
+    return { x: doc?.x ?? token.x, y: doc?.y ?? token.y, width: doc?.width ?? 1, height: doc?.height ?? 1 };
+}
+
 /**
- * Calculate distance between two tokens in combat.
- * Accounts for elevation differences (3D distance).
+ * The distance between two tokens' figures, in metres, including the difference in
+ * elevation. It runs between the footprints' nearest cells (not their top-left
+ * corners), follows the world's diagonal rule, converts the scene's grid units
+ * (feet, yards, …) to metres, and reads two figures in neighbouring cells as
+ * engaged (melee reach). See `rules/token-distance.ts`.
  *
  * @param {Token} token1 - First token
  * @param {Token} token2 - Second token
- * @returns {number} - Distance in grid units (converted to meters)
+ * @returns {number} - Whole metres between them
  */
 export function calculateTokenDistance(
     token1: foundry.canvas.placeables.Token | null | undefined,
@@ -247,23 +259,11 @@ export function calculateTokenDistance(
     if (token1 === null || token1 === undefined || token2 === null || token2 === undefined) return 0;
     const grid = canvas.grid;
     if (grid === null) return 0;
-
-    // Measure path distance using Foundry's grid system
-    const pathDistance = grid.measurePath([token1, token2], {});
-    let distance = typeof pathDistance === 'number' ? pathDistance : pathDistance.distance;
-
-    // Account for elevation difference (3D distance). Guarded against a missing
-    // token document (preview / teardown) via tokenElevation (#233).
-    const elevation1 = tokenElevation(token1);
-    const elevation2 = tokenElevation(token2);
-
-    if (elevation1 !== elevation2) {
-        const elevationDiff = Math.abs(elevation2 - elevation1);
-        // Pythagorean theorem: sqrt(horizontal^2 + vertical^2)
-        distance = Math.sqrt(distance ** 2 + elevationDiff ** 2);
-    }
-
-    return Math.floor(distance);
+    const points = measurePoints(tokenBox(token1), tokenBox(token2), { size: grid.size, square: grid.isSquare });
+    const measured = grid.measurePath([points.from, points.to], {});
+    const flat = sceneUnitsToMetres(typeof measured === 'number' ? measured : measured.distance, grid.units);
+    const rise = sceneUnitsToMetres(tokenElevation(token2) - tokenElevation(token1), grid.units);
+    return figureDistance(flat, rise, points.adjacent, sceneUnitsToMetres(grid.distance, grid.units));
 }
 
 /**

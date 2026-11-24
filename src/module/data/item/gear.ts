@@ -6,6 +6,15 @@ import EquippableTemplate from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
+/** A scanner's reach (#759); see `rules/auspex-scan.ts`. */
+export interface GearScanner {
+    range: number;
+    testSkill: string;
+    wallPenetration: number;
+    poorWallPenetration: number | null;
+    perRound: number | null;
+}
+
 /**
  * Data model for Gear items (general equipment).
  * @extends ItemDataModel
@@ -47,6 +56,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     declare addictive: number;
     /** A service's hire consequences: the threat it draws and the Subtlety it changes by. */
     declare hire: { threatLevel: number; subtlety: number };
+    declare scanner: GearScanner;
 
     // Properties from PhysicalItemTemplate
     declare weight: number;
@@ -111,6 +121,21 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             hire: new fields.SchemaField({
                 threatLevel: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
                 subtlety: new fields.NumberField({ required: true, nullable: false, initial: 0, integer: true }),
+            }),
+
+            // A scanner (an auspex, #759): what a scan with it reaches. Content data
+            // (Direction #7), read by `rules/auspex-scan.ts`. A range of 0 is not a scanner.
+            scanner: new fields.SchemaField({
+                // How far a scan reaches, in metres.
+                range: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0 }),
+                // The skill a scan tests (Tech-Use in every line that prints one).
+                testSkill: new fields.StringField({ required: true, blank: true, initial: '' }),
+                // The thickest wall, in centimetres, a scan sees through; 0 = any wall blocks.
+                wallPenetration: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0 }),
+                // The same for a Poor-craftsmanship scanner, when its line prints one; null = unchanged.
+                poorWallPenetration: new fields.NumberField({ required: true, nullable: true, initial: null, min: 0 }),
+                // How often a scan may be made in combat: once a round, or without limit.
+                perRound: new fields.NumberField({ required: true, nullable: true, initial: null, min: 1, integer: true }),
             }),
 
             // Active-Effect grants (drugs primarily). Each entry creates

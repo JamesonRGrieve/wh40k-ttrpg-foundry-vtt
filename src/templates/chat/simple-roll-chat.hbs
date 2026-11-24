@@ -64,7 +64,7 @@
                     data-modifier="{{@root.counterAttack.attackModifier}}"
                     data-source="{{@root.counterAttack.sourceName}}"
                     data-limit="{{@root.counterAttack.limit}}"
-                    title="{{localize 'WH40K.Evasion.CounterAttackTooltip' source=@root.counterAttack.sourceName modifier=@root.counterAttack.attackModifier}}"
+                    data-tooltip="{{localize 'WH40K.Evasion.CounterAttackTooltip' source=@root.counterAttack.sourceName modifier=@root.counterAttack.attackModifier}}"
                 >
                     <i class="fas fa-reply tw-text-[0.8rem]" aria-hidden="true"></i>
                     {{!-- The attacker's name can be long at chat width: the label wraps inside the button (#603). --}}
@@ -93,7 +93,7 @@
             {{#if @root.rerollOptions.length}}
             <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-px-4 tw-py-2.5 tw-mt-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color)]">
                 {{#if success}}{{#if @root.sourceFatePoints}}
-                <button class="roll-control__fate-add-dos tw-flex-1 {{chatActionButton 'powers' 'sm'}}" data-roll-id="{{@root.id}}">
+                <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.FateAddDoS'}}" class="roll-control__fate-add-dos tw-flex-1 {{chatActionButton 'powers' 'sm'}}" data-roll-id="{{@root.id}}">
                     <span class="material-icons tw-text-[14px]">add_circle</span>
                     <span>{{localize "WH40K.FateAddDoS"}}</span>
                 </button>

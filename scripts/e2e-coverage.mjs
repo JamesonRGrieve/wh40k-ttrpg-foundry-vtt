@@ -918,6 +918,32 @@ recordDimension('area-region.flow', covered['area-region.flow'], AREA_REGION_FLO
 const CHAR_GEN_LINE_RULES = ['dh2-home-world-keeps-dice', 'dh2-roll-adds-no-home-world-bonus', 'dh2-point-buy-start-and-cap', 'rt-rolls-on-25'];
 recordDimension('char-gen.line-rule', covered['char-gen.line-rule'], CHAR_GEN_LINE_RULES);
 
+// Auspex scans (#759), tests/e2e/auspex-scan.spec.ts. Keep in sync with AUSPEX_FLOWS there.
+const AUSPEX_FLOWS = [
+    'scan-finds-contact-in-range',
+    'scan-wall-blocks',
+    'scan-out-of-range-missed',
+    'scan-card-states-contacts',
+    'scan-failure-reads-nothing',
+    'scan-once-per-round',
+    'wall-config-shows-scan-fields',
+];
+recordDimension('auspex.flow', covered['auspex.flow'], AUSPEX_FLOWS);
+
+// Range on a feet grid, retargeting and Fate re-rolls (#233, #761, #762, #764),
+// tests/e2e/range-feet-and-retarget.spec.ts. Keep in sync with RANGE_RETARGET_FLOWS there.
+const RANGE_RETARGET_FLOWS = [
+    'feet-diagonal-neighbour-engaged',
+    'feet-orthogonal-neighbour-engaged',
+    'feet-distance-in-metres',
+    'retarget-recomputes-size',
+    'canvas-target-survives-form-change',
+    'fate-reroll-spends-ammo-once',
+    'card-buttons-have-tooltips',
+    'clipless-natural-weapon-fires',
+];
+recordDimension('range-retarget.flow', covered['range-retarget.flow'], RANGE_RETARGET_FLOWS);
+
 // No-damage weapons and range-band damage (#601, #608), tests/e2e/damage-profiles.spec.ts.
 // Keep in sync with DAMAGE_PROFILE_FLOWS there.
 const DAMAGE_PROFILE_FLOWS = [

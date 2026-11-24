@@ -89,7 +89,7 @@
             <span>{{localize "WH40K.Grapple.Push.Distance"}}</span>
             <span class="tw-tabular-nums" data-grapple-push-metres="{{push.metres}}">{{localize "WH40K.Grapple.Push.Metres" metres=push.metres}}</span>
         </div>
-        <button type="button"
+        <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.GrapplePush'}}" type="button"
                 class="roll-control__grapple-push tw-mt-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-1.5 tw-rounded-sm tw-border tw-border-solid tw-border-slate-300 tw-bg-slate-700/60 tw-text-[color:var(--wh40k-text-bright)] tw-text-[0.8rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer hover:tw-bg-slate-600/70"
                 data-controller-uuid="{{push.controllerUuid}}"
                 data-target-uuid="{{push.targetUuid}}"

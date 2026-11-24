@@ -84,6 +84,16 @@ export function metresToSceneUnits(metres: number, units: string | null | undefi
     return metres * (UNITS_PER_METRE.get((units ?? '').trim().toLowerCase()) ?? 1);
 }
 
+/**
+ * Convert a length in a scene's grid units into metres (the inverse of
+ * {@link metresToSceneUnits}).
+ * @param length  A length in the scene's units.
+ * @param units   The scene's `grid.units` label.
+ */
+export function sceneUnitsToMetres(length: number, units: string | null | undefined): number {
+    return length / (UNITS_PER_METRE.get((units ?? '').trim().toLowerCase()) ?? 1);
+}
+
 /** The scene grid a footprint is laid out on. */
 export interface GridScale {
     /** Scene units per grid cell (`scene.grid.distance`). */

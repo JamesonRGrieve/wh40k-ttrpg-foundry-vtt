@@ -184,7 +184,7 @@
                             <button
                                 class="roll-control__resolve-area tw-flex-none tw-w-full {{chatActionButton 'wounds'}}"
                                 data-roll-id="{{@root.id}}"
-                                title="{{localize 'WH40K.AreaAttack.ResolveTooltip'}}"
+                                data-tooltip="{{localize 'WH40K.AreaAttack.ResolveTooltip'}}"
                             >
                                 <i class="fas fa-bullseye tw-text-[0.8rem]" aria-hidden="true"></i>
                                 <span>{{localize "WH40K.AreaAttack.ResolveButton"}}</span>
@@ -204,29 +204,29 @@
                                 <span>{{localize "WH40K.Grapple.Attempt.CardNote"}}</span>
                             </p>
                             {{#if success}}
-                                <button class="roll-control__begin-grapple tw-flex-none tw-w-full {{chatActionButton 'slate'}}" data-roll-id="{{@root.id}}" data-wh40k-hook="begin-grapple-btn">
+                                <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.BeginGrapple'}}" class="roll-control__begin-grapple tw-flex-none tw-w-full {{chatActionButton 'slate'}}" data-roll-id="{{@root.id}}" data-wh40k-hook="begin-grapple-btn">
                                     <i class="fas fa-hands-bound tw-text-[0.8rem]" aria-hidden="true"></i>
                                     <span>{{localize "WH40K.Grapple.Start.Button"}}</span>
                                 </button>
                             {{/if}}
                         {{else if showDamage}}
-                            <button class="roll-control__roll-damage tw-flex-none tw-w-full {{chatActionButton 'wounds'}}" data-roll-id="{{@root.id}}">
+                            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.RollDamage'}}" class="roll-control__roll-damage tw-flex-none tw-w-full {{chatActionButton 'wounds'}}" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.RollDamage"}}</span>
                             </button>
                         {{else}}
-                            <button class="tw-flex-none tw-w-full {{chatActionButton 'inert'}}">
+                            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.NoDamage'}}" class="tw-flex-none tw-w-full {{chatActionButton 'inert'}}">
                                 <span class="material-icons tw-text-[16px]">bolt</span>
                                 <span>{{localize "WH40K.Weapon.Damage"}}</span>
                             </button>
                         {{/if}}
                         <div class="tw-flex tw-gap-1.5">
-                            <button class="roll-control__refund tw-flex-1 {{chatActionButton 'gold' 'sm'}}" data-roll-id="{{@root.id}}">
+                            <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.Refund'}}" class="roll-control__refund tw-flex-1 {{chatActionButton 'gold' 'sm'}}" data-roll-id="{{@root.id}}">
                                 <span class="material-icons tw-text-[14px]">deblur</span>
                                 <span>{{localize "WH40K.FateRefund"}}</span>
                             </button>
                             {{#if success}}{{#unless noAttackRoll}}
-                                <button class="roll-control__fate-add-dos tw-flex-1 {{chatActionButton 'powers' 'sm'}}" data-roll-id="{{@root.id}}">
+                                <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.FateAddDoS'}}" class="roll-control__fate-add-dos tw-flex-1 {{chatActionButton 'powers' 'sm'}}" data-roll-id="{{@root.id}}">
                                     <span class="material-icons tw-text-[14px]">add_circle</span>
                                     <span>{{localize "WH40K.FateAddDoS"}}</span>
                                 </button>
@@ -240,7 +240,7 @@
                                     class="roll-control__assassins-strike tw-flex-none tw-w-full {{chatActionButton 'shadow'}}"
                                     data-action="assassinsStrike"
                                     data-roll-id="{{@root.id}}"
-                                    title="{{localize 'WH40K.AssassinsStrike.ButtonTooltip'}}"
+                                    data-tooltip="{{localize 'WH40K.AssassinsStrike.ButtonTooltip'}}"
                                 >
                                     <span>🥷</span>
                                     <span>{{localize "WH40K.AssassinsStrike.ButtonLabel"}}</span>

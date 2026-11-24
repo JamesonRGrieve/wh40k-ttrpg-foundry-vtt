@@ -25,8 +25,9 @@ afterEach(() => {
 /** Minimal Token-placeable projection the distance helper reads. */
 type TokenArg = Parameters<typeof calculateTokenDistance>[0];
 function fakeToken(elevation: number | undefined, hasDocument = true): TokenArg {
-    const token = hasDocument ? { document: elevation === undefined ? {} : { elevation } } : { document: undefined };
-    // eslint-disable-next-line no-restricted-syntax -- boundary: a real Foundry Token placeable cannot be constructed in a unit test; calculateTokenDistance only reads token.document.elevation, which this projection supplies
+    const at = { x: 0, y: 0, width: 1, height: 1 };
+    const token = hasDocument ? { ...at, document: elevation === undefined ? at : { ...at, elevation } } : { ...at, document: undefined };
+    // eslint-disable-next-line no-restricted-syntax -- boundary: a real Foundry Token placeable cannot be constructed in a unit test; calculateTokenDistance only reads the footprint and token.document.elevation, which this projection supplies
     return token as unknown as TokenArg;
 }
 
@@ -187,8 +188,9 @@ describe('isOutOfRange', () => {
 });
 
 describe('calculateTokenDistance (#233)', () => {
-    function stubGrid(measured: number): void {
-        vi.stubGlobal('canvas', { grid: { measurePath: () => measured } });
+    /** A gridless scene in metres whose every measurement reads `measured`. */
+    function stubGrid(measured: number, units = 'm'): void {
+        vi.stubGlobal('canvas', { grid: { measurePath: () => ({ distance: measured }), size: 100, distance: 1, units, isSquare: false } });
     }
 
     it('returns 0 when either token is null/undefined', () => {
@@ -218,5 +220,10 @@ describe('calculateTokenDistance (#233)', () => {
         stubGrid(3);
         // token2 has a document but no elevation key -> 0, matching token1 at 0.
         expect(calculateTokenDistance(fakeToken(0), fakeToken(undefined))).toBe(3);
+    });
+
+    it('converts a scene measured in feet to metres', () => {
+        stubGrid(30, 'ft'); // 30 ft is about 9.1 m
+        expect(calculateTokenDistance(fakeToken(0), fakeToken(0))).toBe(9);
     });
 });

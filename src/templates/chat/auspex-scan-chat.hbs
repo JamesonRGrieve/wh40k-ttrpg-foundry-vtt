@@ -1,0 +1,25 @@
+{{!-- An auspex scan's contacts (#759), whispered to the GM only. The player sees only the blips on the canvas. --}}
+{{!-- The wh40k-rpg class lets the tw- utilities apply outside a sheet root. --}}
+<div class="wh40k-rpg tw-p-3 tw-rounded-md tw-border tw-border-[color:var(--wh40k-accent-gold)] tw-bg-[rgba(14,22,28,0.88)]" data-wh40k-surface="dark" data-auspex-scan>
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
+        <i class="fas fa-satellite-dish tw-text-[color:var(--wh40k-accent-gold)]" aria-hidden="true"></i>
+        <div class="tw-font-display tw-uppercase tw-tracking-[0.12em] tw-text-[0.85rem] tw-text-[color:var(--wh40k-accent-gold)]">
+            {{localize "WH40K.Auspex.ChatTitle"}}
+        </div>
+    </div>
+    <div class="tw-text-[0.85rem] tw-text-slate-200 tw-mb-2">{{scanLine}}</div>
+    {{#if contacts.length}}
+        <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-col tw-gap-1">
+            {{#each contacts}}
+                <li class="tw-flex tw-items-center tw-gap-2 tw-text-[0.85rem] tw-text-slate-100" data-auspex-contact="{{kind}}">
+                    <i class="fas {{#if (eq kind 'machine')}}fa-gears{{else}}fa-heart-pulse{{/if}} tw-w-4 tw-text-center tw-text-[color:var(--wh40k-accent-gold)]" aria-hidden="true"></i>
+                    <span class="tw-font-bold">{{name}}</span>
+                    <span class="tw-text-slate-300">{{kindLabel}}</span>
+                    <span class="tw-ml-auto tw-text-slate-300">{{distanceLabel}}</span>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <div class="tw-text-[0.85rem] tw-italic tw-text-slate-400" data-auspex-none>{{localize "WH40K.Auspex.NoContacts"}}</div>
+    {{/if}}
+</div>

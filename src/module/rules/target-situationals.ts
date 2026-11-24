@@ -47,6 +47,49 @@ export function targetDispositionGroup(disposition: number | null | undefined, i
     return 'neutral';
 }
 
+/** One combatant as the target dropdown reads it. */
+export interface RosterCombatant {
+    id: string | null | undefined;
+    name: string | null | undefined;
+    actorId: string | null | undefined;
+    tokenId?: string | null | undefined;
+    disposition?: number | null | undefined;
+}
+
+/** One target-dropdown row. */
+export interface RosterRow {
+    id: string;
+    name: string;
+    isSelected: boolean;
+    group: TargetDispositionGroup;
+    colorClass: string;
+}
+
+/**
+ * The target dropdown's rows (#250): every combatant with an id, ordered hostile →
+ * neutral → friendly → self (#400), combat order kept within a group, each with its
+ * colour class. The selected row is the targeted token's when that is known, since
+ * copies of one creature share an actor (#764); otherwise the target actor's.
+ * Pure.
+ */
+export function buildTargetRoster(
+    combatants: ReadonlyArray<RosterCombatant>,
+    target: { actorId: string | null; tokenId: string | null },
+    sourceActorId: string | null,
+): RosterRow[] {
+    const rows: RosterRow[] = [];
+    for (const c of combatants) {
+        const id = c.id ?? '';
+        if (id === '') continue;
+        const isSelf = c.actorId != null && sourceActorId != null && c.actorId === sourceActorId;
+        const group = targetDispositionGroup(c.disposition, isSelf);
+        const isSelected = target.tokenId !== null ? c.tokenId === target.tokenId : c.actorId != null && c.actorId === target.actorId;
+        rows.push({ id, name: c.name ?? '', isSelected, group, colorClass: TARGET_GROUP_COLOR_CLASS[group] });
+    }
+    // Array.prototype.sort is stable, so combat order holds within each group.
+    return rows.sort((a, b) => TARGET_GROUP_ORDER[a.group] - TARGET_GROUP_ORDER[b.group]);
+}
+
 /**
  * Whether the homebrew self-target treatment applies (#393): the setting is on
  * AND the chosen target actor is the attacker themselves. When true the dialog

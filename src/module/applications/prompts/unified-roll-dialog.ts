@@ -62,13 +62,7 @@ import {
 import { getSkillVariantsForKey, normalizeSkillKey } from '../../rules/skill-pack-index.ts';
 import { isSkillUseItemSlotKey, type SkillUseItemSlotKey } from '../../rules/skill-uses.ts';
 import { availableSkillVariants, filterModifiersByVariant, type SkillVariant, variantAutoFails } from '../../rules/skill-variants.ts';
-import {
-    shouldSkipSelfTargetDefenderMods,
-    TARGET_GROUP_COLOR_CLASS,
-    TARGET_GROUP_ORDER,
-    type TargetDispositionGroup,
-    targetDispositionGroup,
-} from '../../rules/target-situationals.ts';
+import { buildTargetRoster, type RosterCombatant, type RosterRow, shouldSkipSelfTargetDefenderMods } from '../../rules/target-situationals.ts';
 import { getTryAgainAdvice, type RetryAdvice } from '../../rules/trying-again.ts';
 import { resolveUntrainedTarget, untrainedTestForbidden } from '../../rules/untrained-skill.ts';
 import { detectTargetVisibility } from '../../utils/cover-geometry.ts';
@@ -288,6 +282,10 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
     /** Foundry `targetToken` hook id while open, so the range/situational preview tracks target changes live (#233). */
     declare _targetHookId: number | null;
+    /** The targeted token's id, so the roster dropdown shows that token rather than any copy of its actor (#764). */
+    declare _targetTokenId: string | null;
+    /** The roster row the dropdown last rendered as selected ('' for none): a submit retargets only when the dropdown moved off it (#764). */
+    declare _renderedCombatantId: string;
     declare _psyMode: PsyMode;
     declare _pushLevel: number;
     /**
@@ -333,6 +331,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         this._contextExpanded = true;
         this._previousTarget = null;
         this._selectedRangeBracket = null;
+        this._targetTokenId = null;
+        this._renderedCombatantId = '';
 
         // Card-based weapon panel state
         this._attackModeKey = 'standard';
@@ -1756,9 +1756,13 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             this._charOverride = typeof override === 'string' && override !== '' ? override : null;
         }
         // Target combatant dropdown (#250) — bind the chosen defender + recompute range.
+        // Every submit carries the dropdown's value, so it retargets only when the
+        // dropdown itself moved: otherwise any other control would reset a canvas or
+        // Select Target choice to whatever the dropdown last showed (#764).
         if ('targetCombatantId' in formObject) {
             const combatantId = formObject['targetCombatantId'];
-            this.#applyTargetCombatant(typeof combatantId === 'string' ? combatantId : '');
+            const picked = typeof combatantId === 'string' ? combatantId : '';
+            if (picked !== this._renderedCombatantId) this.#applyTargetCombatant(picked);
         }
         // Update roll data fields from form
         const rd = this.rollData;
@@ -2207,7 +2211,19 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         if (!targetToken) return false;
         rd.distance = calculateTokenDistance(sourceToken, targetToken);
         rd.targetActor = targetToken.actor;
+        this._targetTokenId = targetToken.id;
+        this.#applyTargetSize();
         return true;
+    }
+
+    /**
+     * Take the target-size modifier from the current target, dropping any size the
+     * player picked for an earlier target: a retarget must never keep the previous
+     * target's size (a Puny creature's −20 stayed on a human).
+     */
+    #applyTargetSize(): void {
+        this._sizeModifierKey = null;
+        if (this.rollData instanceof WeaponRollData) this.rollData.applyTargetSize();
     }
 
     /**
@@ -2373,6 +2389,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             return false;
         }
         this.rollData.targetActor = targetToken.actor;
+        this._targetTokenId = targetToken.id;
         return true;
     }
 
@@ -2394,6 +2411,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const rd = this.rollData;
         if (combatantId === '') {
             rd.targetActor = null;
+            this._targetTokenId = null;
             // Clearing the target drops its auto-selected situationals (#393)…
             this.#applyTargetSituationals();
             // …and its canvas reticle (#401).
@@ -2403,6 +2421,8 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         const combatant = game.combat?.combatants.get(combatantId);
         if (combatant == null) return;
         rd.targetActor = combatant.actor ?? null;
+        this._targetTokenId = combatant.tokenId ?? null;
+        this.#applyTargetSize();
         // Refresh auto-selected situational modifiers for the new target (#393).
         this.#applyTargetSituationals();
         const actor = rd.sourceActor;
@@ -2432,32 +2452,12 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * within a group (unit-tested).
      */
     static buildCombatantTargets(
-        combatants: ReadonlyArray<{
-            id: string | null | undefined;
-            name: string | null | undefined;
-            actorId: string | null | undefined;
-            disposition?: number | null | undefined;
-        }>,
+        combatants: ReadonlyArray<RosterCombatant>,
         targetActorId: string | null,
         sourceActorId: string | null,
-    ): Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> {
-        const rows: Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> = [];
-        for (const c of combatants) {
-            const id = c.id ?? '';
-            if (id === '') continue;
-            const isSelf = c.actorId != null && sourceActorId != null && c.actorId === sourceActorId;
-            const group = targetDispositionGroup(c.disposition, isSelf);
-            rows.push({
-                id,
-                name: c.name ?? '',
-                isSelected: c.actorId != null && c.actorId === targetActorId,
-                group,
-                colorClass: TARGET_GROUP_COLOR_CLASS[group],
-            });
-        }
-        // Stable sort by disposition group (Array.prototype.sort is stable), so
-        // combat order is preserved within each hostile/neutral/friendly/self band.
-        return rows.sort((a, b) => TARGET_GROUP_ORDER[a.group] - TARGET_GROUP_ORDER[b.group]);
+        targetTokenId: string | null = null,
+    ): RosterRow[] {
+        return buildTargetRoster(combatants, { actorId: targetActorId, tokenId: targetTokenId }, sourceActorId);
     }
 
     /**
@@ -2573,13 +2573,14 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
      * skill uses reuse the identical picker from this one source.
      */
     #getTargetSelectorContext(): {
-        combatants: Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }>;
+        combatants: RosterRow[];
         hasCombat: boolean;
         hasTarget: boolean;
         targetName: string | null;
     } {
         const targetActorForDisplay = this.rollData.targetActor as { name?: string } | null | undefined;
         const combatants = this.#getCombatantTargets();
+        this._renderedCombatantId = combatants.find((row) => row.isSelected)?.id ?? '';
         return {
             combatants,
             hasCombat: combatants.length > 0,
@@ -2591,7 +2592,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
     /** Resolve the active Combat's combatants into #250 target-dropdown rows,
      *  disposition-ordered and colour-tagged, marking the currently-targeted
      *  actor selected. Empty when no combat. */
-    #getCombatantTargets(): Array<{ id: string; name: string; isSelected: boolean; group: TargetDispositionGroup; colorClass: string }> {
+    #getCombatantTargets(): RosterRow[] {
         const targetActorId = (this.rollData.targetActor as { id?: string } | null | undefined)?.id ?? null;
         const sourceActorId = (this.rollData.sourceActor as { id?: string } | null | undefined)?.id ?? null;
         const combat = game.combat;
@@ -2600,10 +2601,11 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
             id: c.id,
             name: c.name,
             actorId: c.actorId,
+            tokenId: c.tokenId,
             // eslint-disable-next-line no-restricted-syntax -- boundary: Combatant#token is a TokenDocument whose numeric `disposition` is not surfaced on the fvtt-types Combatant handle.
             disposition: (c as { token?: { disposition?: number | null } | null }).token?.disposition ?? null,
         }));
-        return UnifiedRollDialog.buildCombatantTargets(combatants, targetActorId, sourceActorId);
+        return UnifiedRollDialog.buildCombatantTargets(combatants, targetActorId, sourceActorId, this._targetTokenId);
     }
 
     static async #onSelectTarget(this: UnifiedRollDialog, _event: Event, _target: HTMLElement): Promise<void> {

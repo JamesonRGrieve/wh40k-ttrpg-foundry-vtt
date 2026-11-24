@@ -6322,6 +6322,28 @@
             "Reload": {
                 "FullActions": "Full Actions",
                 "HalfActions": "Half Actions"
+            },
+            "ButtonTip": {
+                "BeginGrapple": "Start a grapple with the target",
+                "RollDamage": "Roll this attack's damage",
+                "NoDamage": "Nothing to roll: the attack didn't hit",
+                "Refund": "Undo what this roll spent: ammunition, a jam, and any Fate point or corruption it cost",
+                "FateAddDoS": "Spend a Fate point to add one degree of success",
+                "HordeBreak": "Roll the horde's Willpower test to see whether it breaks",
+                "ViewDetails": "Open this item's sheet",
+                "AssignDamage": "Apply this damage to the target",
+                "GrapplePush": "GM: confirm the direction and move both tokens",
+                "Roll": "Roll this item's test",
+                "Attack": "Attack with this weapon",
+                "Use": "Use this item",
+                "Reload": "Reload this weapon",
+                "NavigatorMutation": "Roll whether using this power brings on a Navigator mutation",
+                "ResolveRider": "Resolve this grenade's extra effect against the tokens it caught",
+                "Reroll": "Roll this test again ({source}); the new result stands",
+                "DamageControl": "Re-roll this vehicle's Righteous Fury roll, once",
+                "ShowEffect": "Show or hide the power's full effect",
+                "NoEffect": "No effect: the power failed",
+                "ApplyWounds": "Apply this damage or fatigue to the actor"
             }
         },
         "CompendiumBrowser": {
@@ -7040,6 +7062,28 @@
             "MeleeDescription": "Melee range",
             "ModifiedBy": "Modified by {quality}",
             "MeltaNote": "Melta: Double Penetration"
+        },
+        "Auspex": {
+            "ChatTitle": "Auspex Contacts",
+            "ScanLine": "{actor} scanned with {item}: {count} contact(s).",
+            "NoContacts": "Nothing within reach.",
+            "Distance": "{metres} m, bearing {bearing}°",
+            "Kind": {
+                "Life": "Life sign",
+                "Machine": "Machine"
+            },
+            "EffectTitle": "Auspex",
+            "Contacts": "The scan picks up {count} contact(s) within {range} m.",
+            "NoReading": "The scanner gives no clear reading.",
+            "NoToken": "Place this character's token on the scene to scan from it.",
+            "OncePerRound": "This scanner has already been used this round.",
+            "Wall": {
+                "Legend": "Auspex Scans",
+                "Thickness": "Thickness (cm)",
+                "ThicknessHint": "How thick this wall is. A scanner cannot see through a wall thicker than it can read through. Leave blank for an ordinary thin wall.",
+                "Shielded": "Blocks scanners",
+                "ShieldedHint": "The wall is made of a shielding material that stops every scan."
+            }
         },
         "Area": {
             "CreateFailed": "The area could not be created on this scene.",

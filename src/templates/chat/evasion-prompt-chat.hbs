@@ -26,7 +26,7 @@
                 type="button"
                 class="roll-control__evade tw-flex-1 {{chatActionButton 'gold' 'sm'}}"
                 data-skill="dodge"
-                title="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
+                data-tooltip="{{localize 'WH40K.Combat.AttemptDodgeTooltip'}}"
             >
                 <i class="fas fa-wind tw-text-[0.75rem]" aria-hidden="true"></i>
                 <span>{{localize "WH40K.Combat.AttemptDodge"}}</span>
@@ -35,7 +35,7 @@
                 type="button"
                 class="roll-control__evade tw-flex-1 {{chatActionButton 'gold' 'sm'}}"
                 data-skill="parry"
-                {{#if parryBlocked}}disabled title="{{parryBlocked}}"{{else}}title="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"{{/if}}
+                {{#if parryBlocked}}disabled data-tooltip="{{parryBlocked}}"{{else}}data-tooltip="{{localize 'WH40K.Combat.AttemptParryTooltip'}}"{{/if}}
             >
                 <i class="fas fa-hand-paper tw-text-[0.75rem]" aria-hidden="true"></i>
                 <span>{{localize "WH40K.Combat.AttemptParry"}}</span>
@@ -43,7 +43,7 @@
             <button
                 type="button"
                 class="roll-control__take-hit tw-flex-1 {{chatActionButton 'wounds' 'sm'}}"
-                title="{{localize 'WH40K.Evasion.TakeHitTooltip'}}"
+                data-tooltip="{{localize 'WH40K.Evasion.TakeHitTooltip'}}"
             >
                 <span>{{localize "WH40K.Evasion.TakeHit"}}</span>
             </button>

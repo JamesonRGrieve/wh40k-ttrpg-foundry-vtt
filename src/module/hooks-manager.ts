@@ -6,6 +6,7 @@
 
 // Import V2 Item Sheets (ApplicationV2-based)
 
+import { performAuspexScan } from './actions/auspex-scan.ts';
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
 import { clearComradeFearAtCombatEnd } from './actions/ow-comrade-actions.ts';
@@ -65,6 +66,8 @@ import { prepareUnifiedRoll } from './applications/prompts/unified-roll-dialog.t
 import { openWarpTravelDialog } from './applications/prompts/warp-travel-dialog.ts';
 import { registerAreaRegionBehavior } from './canvas/apply-condition-behavior.ts';
 import { registerAreaRegions, registerAreaRegionSocket } from './canvas/area-regions.ts';
+import { registerAuspexScanSocket } from './canvas/auspex-scan-canvas.ts';
+import { onRenderWallConfig } from './canvas/auspex-wall-config.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { registerStackedTokenPicker } from './canvas/stacked-token-picker-hook.ts';
 import { refreshAllStatusVisuals, registerStatusVisuals } from './canvas/status-visual-layer.ts';
@@ -220,6 +223,8 @@ export class HooksManager {
         // Foundry submits `flags.<scope>.<key>` inputs onto the document itself, so
         // the checkbox name is the entire wiring — no submit handler needed.
         hooksOn('renderSceneConfig', (app: WarpWeaknessSceneConfig, html: HTMLElement | JQuery) => HooksManager.onRenderSceneConfig(app, html));
+        // A wall's thickness and shielding, for an auspex scan (#759).
+        hooksOn('renderWallConfig', (app: Parameters<typeof onRenderWallConfig>[0], html: HTMLElement) => onRenderWallConfig(app, html));
         hooksOn('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) => HooksManager.getActorDirectoryEntryContext(options));
         hooksOn('renderTokenHUD', (app: LootTokenHUDLike, html: HTMLElement | JQuery) => HooksManager.onLootTokenHUD(app, html));
         // Loot piles are dropped in place — non-GM players can't drag them around.
@@ -319,6 +324,9 @@ export class HooksManager {
             },
             performPsychicCast: (caster, power) => {
                 if (power instanceof WH40KItem && caster instanceof WH40KBaseActor) DHTargetedActionManager.performPsychicCast(caster, null, power);
+            },
+            performAuspexScan: (user, scanner) => {
+                if (scanner instanceof WH40KItem && user instanceof WH40KBaseActor) performAuspexScan(user, scanner);
             },
             sendItemVocalizeChat: async (data) => DHBasicActionManager.sendItemVocalizeChat(data),
         });
@@ -1426,6 +1434,7 @@ export class HooksManager {
         registerGMProxy();
         registerAttackCueSocket();
         registerAreaRegionSocket();
+        registerAuspexScanSocket();
 
         await checkAndMigrateWorld();
         await HooksManager.hydrateWorldActorsOnReady();

@@ -128,23 +128,23 @@
         {{#if hasActions}}
             <div class="tw-flex tw-gap-1.5 tw-px-3 tw-py-2.5 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border-t tw-border-[var(--wh40k-border-color-light)] tw-justify-center">
                 {{#if isRollable}}
-                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-skills-primary)_0%,var(--wh40k-skills-secondary)_100%)] tw-border tw-border-[var(--wh40k-skills-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
+                    <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.Roll'}}" type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-skills-primary)_0%,var(--wh40k-skills-secondary)_100%)] tw-border tw-border-[var(--wh40k-skills-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
                         <i class="fas fa-dice-d20 tw-text-[12px]"></i>
                         {{localize "WH40K.Common.Roll"}}
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
-                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
+                    <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.Attack'}}" type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-red)_0%,var(--wh40k-red-dark)_100%)] tw-border tw-border-[var(--wh40k-red-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
                         <i class="fas fa-crosshairs tw-text-[12px]"></i>
                         {{localize "WH40K.Combat.Attack"}}
                     </button>
-                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border tw-border-[var(--wh40k-gold-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
+                    <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.RollDamage'}}" type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-gold)_0%,var(--wh40k-gold-dark)_100%)] tw-border tw-border-[var(--wh40k-gold-dark)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
                         <i class="fas fa-burst tw-text-[12px]"></i>
                         {{localize "WH40K.Weapon.Damage"}}
                     </button>
                 {{/if}}
                 {{#if isUsable}}
-                    <button type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-powers-primary)_0%,var(--wh40k-powers-secondary)_100%)] tw-border tw-border-[var(--wh40k-powers-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
+                    <button data-tooltip="{{localize 'WH40K.Chat.ButtonTip.Use'}}" type="button" class="tw-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-[linear-gradient(135deg,var(--wh40k-powers-primary)_0%,var(--wh40k-powers-secondary)_100%)] tw-border tw-border-[var(--wh40k-powers-primary)] tw-rounded-md tw-text-white tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
                         <i class="fas fa-hand-sparkles tw-text-[12px]"></i>
                         {{localize "WH40K.Chat.Item.Use"}}
                     </button>
