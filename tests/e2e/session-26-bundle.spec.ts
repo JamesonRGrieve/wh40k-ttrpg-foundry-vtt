@@ -213,15 +213,15 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
             const rendered = await sheet.render({ force: true });
             await globalThis.wh40kE2E.pollUntil(() => rendered.element.querySelector('[data-action="awardPartyXP"]') !== null, 10_000);
             rendered.element.querySelector<HTMLButtonElement>('[data-action="awardPartyXP"]')?.click();
-            const find = (): App | undefined =>
+            const batchDialog = (): App | undefined =>
                 [...g.foundry.applications.instances.values()].find((app) => app.element?.classList.contains('batch-xp-dialog') === true);
             const opened = await globalThis.wh40kE2E
-                .pollUntil(() => find() !== undefined, 10_000)
+                .pollUntil(() => batchDialog() !== undefined, 10_000)
                 .then(() => true)
                 .catch(() => false);
-            const boxes = [...(find()?.element?.querySelectorAll<HTMLInputElement>('input[name="selected"]') ?? [])];
+            const boxes = [...(batchDialog()?.element?.querySelectorAll<HTMLInputElement>('input[name="selected"]') ?? [])];
             const result = { opened, boxes: boxes.length, ticked: boxes.filter((b) => b.checked).length };
-            await find()?.close();
+            await batchDialog()?.close();
             await sheet.close();
             return result;
         },
