@@ -271,10 +271,8 @@ async function fateReroll(page: Page, messageId: string): Promise<boolean> {
         button.click();
         await globalThis.wh40kE2E.pollUntil(() => document.querySelector('[data-action="confirm"]') !== null, 8000);
         document.querySelector<HTMLButtonElement>('[data-action="confirm"]')?.click();
-        return globalThis.wh40kE2E
-            .pollUntil(() => g.game.messages.contents.length >= before + 2, 15_000)
-            .then(() => true)
-            .catch(() => false);
+        // pollUntil resolves to whether the condition held; it never rejects.
+        return globalThis.wh40kE2E.pollUntil(() => g.game.messages.contents.length >= before + 2, 15_000);
     }, messageId);
 }
 

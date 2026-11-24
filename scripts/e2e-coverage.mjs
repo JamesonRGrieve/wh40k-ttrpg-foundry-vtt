@@ -955,7 +955,9 @@ const SESSION_26_FLOWS = [
     'npc-faction-holds',
     'npc-custom-stats-editable',
     'npc-combat-tab-fatigue',
+    'npc-sidebar-rows-stacked',
     'effect-picker-falls-back-to-statuses',
+    'armour-notice-equips',
 ];
 recordDimension('session-26.flow', covered['session-26.flow'], SESSION_26_FLOWS);
 

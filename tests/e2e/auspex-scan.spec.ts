@@ -118,10 +118,8 @@ async function useAuspex(page: Page, scannerActorId: string, face: number): Prom
             let opened = false;
             try {
                 await actor.rollItem(item.id);
-                opened = await globalThis.wh40kE2E
-                    .pollUntil(() => findDialog() !== null, 8000)
-                    .then(() => true)
-                    .catch(() => false);
+                // pollUntil resolves to whether the condition held; it never rejects.
+                opened = await globalThis.wh40kE2E.pollUntil(() => findDialog() !== null, 8000);
                 const dialog = findDialog();
                 if (dialog !== null) {
                     const original = dice.randomUniform;

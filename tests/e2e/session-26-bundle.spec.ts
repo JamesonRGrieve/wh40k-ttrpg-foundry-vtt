@@ -35,7 +35,9 @@ const SESSION_26_FLOWS = [
     'npc-faction-holds',
     'npc-custom-stats-editable',
     'npc-combat-tab-fatigue',
+    'npc-sidebar-rows-stacked',
     'effect-picker-falls-back-to-statuses',
+    'armour-notice-equips',
 ] as const;
 type FlowName = (typeof SESSION_26_FLOWS)[number];
 
@@ -129,17 +131,13 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
             const sheet = g.game.actors.get(id)?.sheet;
             if (sheet === undefined) throw new Error('no sheet');
             const rendered = await sheet.render({ force: true });
-            await globalThis.wh40kE2E.pollUntil(() => rendered.element.querySelector('[data-action="awardPartyXP"]') !== null, 10_000);
+            // pollUntil resolves to whether the condition held; it never rejects.
+            const shown = await globalThis.wh40kE2E.pollUntil(() => rendered.element.querySelector('[data-action="awardPartyXP"]') !== null, 10_000);
             rendered.element.querySelector<HTMLButtonElement>('[data-action="awardPartyXP"]')?.click();
             const batchDialog = (): App | undefined =>
                 [...g.foundry.applications.instances.values()].find((app) => app.element?.classList.contains('batch-xp-dialog') === true);
-            const opened = await globalThis.wh40kE2E
-                .pollUntil(() => batchDialog() !== undefined, 10_000)
-                .then(() => true)
-                .catch(() => false);
-            await globalThis.wh40kE2E
-                .pollUntil(() => (batchDialog()?.element?.querySelectorAll('input[name="selected"]').length ?? 0) > 0, 10_000)
-                .catch(() => undefined);
+            const opened = shown && (await globalThis.wh40kE2E.pollUntil(() => batchDialog() !== undefined, 10_000));
+            await globalThis.wh40kE2E.pollUntil(() => (batchDialog()?.element?.querySelectorAll('input[name="selected"]').length ?? 0) > 0, 10_000);
             const boxes = [...(batchDialog()?.element?.querySelectorAll<HTMLInputElement>('input[name="selected"]') ?? [])];
             const html = batchDialog()?.element?.innerHTML ?? '';
             const result = {
@@ -158,10 +156,15 @@ async function openPartyXp(page: Page, actorId: string): Promise<{ opened: boole
 }
 
 /** On an NPC sheet: set the subfaction through the form, re-render, read it back; is the Custom Stats checkbox live? */
-async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction: string; checkboxEnabled: boolean; combatFatiguePips: number }> {
+/** An NPC sheet's faction input, Custom Stats checkbox, Combat-tab Fatigue and sidebar row layout; the sheet stays open for its screenshot. */
+async function npcSheetInputs(
+    page: Page,
+    actorId: string,
+): Promise<{ subfaction: string; checkboxEnabled: boolean; combatFatiguePips: number; sheetId: string; threatStacked: boolean; threatShare: number }> {
     return page.evaluate(
         async ({ id }) => {
             interface SheetLike {
+                id: string;
                 element: HTMLElement;
                 render: (o: object) => Promise<SheetLike>;
                 close: () => Promise<void>;
@@ -193,8 +196,87 @@ async function npcSheetInputs(page: Page, actorId: string): Promise<{ subfaction
             sheet.changeTab?.('combat', 'primary');
             await globalThis.wh40kE2E.pollUntil(() => sheet.element.querySelector('[data-action="setFatigueBolt"]') !== null, 10_000).catch(() => undefined);
             const combatFatiguePips = sheet.element.querySelectorAll('[data-action="setFatigueBolt"]').length;
-            await sheet.close();
-            return { subfaction, checkboxEnabled, combatFatiguePips };
+            // The sidebar's Threat row: its input sits below its label and takes most of the row.
+            const threatRow = sheet.element.querySelector<HTMLElement>('[data-sidebar-field="system.threatLevel"]');
+            const threatLabel = threatRow?.querySelector<HTMLElement>('[data-sidebar-field-label]')?.getBoundingClientRect();
+            const threatInput = threatRow?.querySelector<HTMLElement>('input')?.getBoundingClientRect();
+            const threatStacked = threatLabel !== undefined && threatInput !== undefined && threatInput.top >= threatLabel.bottom;
+            const threatShare = threatInput === undefined || threatRow === null ? 0 : threatInput.width / threatRow.getBoundingClientRect().width;
+            return { subfaction, checkboxEnabled, combatFatiguePips, sheetId: sheet.id, threatStacked, threatShare };
+        },
+        { id: actorId },
+    );
+}
+
+/**
+ * #798: a character carrying a Flak Vest it doesn't wear. The Combat tab's Armour
+ * panel names it with an Equip button; equipping it from there clears the notice.
+ * The sheet stays open on the notice for its screenshot, then is equipped.
+ */
+async function armourNoticeFlow(page: Page, actorId: string): Promise<{ before: string; buttons: string[]; sheetId: string }> {
+    return page.evaluate(
+        async ({ id }) => {
+            interface SheetLike {
+                id: string;
+                element: HTMLElement;
+                render: (o: object) => Promise<SheetLike>;
+                changeTab?: (tab: string, group: string) => void;
+            }
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                game: {
+                    actors: {
+                        get: (i: string) =>
+                            | {
+                                  sheet: SheetLike;
+                                  items: { contents: Array<{ type: string; delete: () => Promise<object | undefined> }> };
+                                  createEmbeddedDocuments: (t: string, d: object[]) => Promise<object[]>;
+                              }
+                            | undefined;
+                    };
+                };
+            };
+            const actor = g.game.actors.get(id);
+            if (actor === undefined) throw new Error('no PC');
+            for (const item of actor.items.contents.filter((i) => i.type === 'armour')) await item.delete();
+            await actor.createEmbeddedDocuments('Item', [
+                { name: 'Flak Vest', type: 'armour', system: { state: { equipped: false }, armourPoints: { body: 3 } } },
+            ]);
+            const sheet = await actor.sheet.render({ force: true });
+            sheet.changeTab?.('combat', 'primary');
+            await globalThis.wh40kE2E.pollUntil(() => sheet.element.querySelector('[data-armour-notice]') !== null, 10_000);
+            const notice = sheet.element.querySelector<HTMLElement>('[data-armour-notice]');
+            const buttons = [...(notice?.querySelectorAll<HTMLElement>('[data-action="toggleEquip"]') ?? [])].map((b) => b.textContent.trim());
+            return { before: notice?.dataset['armourNotice'] ?? '', buttons, sheetId: sheet.id };
+        },
+        { id: actorId },
+    );
+}
+
+/** #798: click the notice's Equip button; read whether the notice cleared and the vest is worn. */
+async function equipFromNotice(page: Page, actorId: string): Promise<{ cleared: boolean; worn: boolean }> {
+    return page.evaluate(
+        async ({ id }) => {
+            // eslint-disable-next-line no-restricted-syntax -- boundary: Foundry runtime globals are injected by the licensed app; no shipped types
+            const g = globalThis as unknown as {
+                game: {
+                    actors: {
+                        get: (i: string) =>
+                            | {
+                                  sheet: { element: HTMLElement; close: () => Promise<void> };
+                                  items: { contents: Array<{ type: string; system: { state?: { equipped?: boolean } } }> };
+                              }
+                            | undefined;
+                    };
+                };
+            };
+            const actor = g.game.actors.get(id);
+            if (actor === undefined) throw new Error('no PC');
+            actor.sheet.element.querySelector<HTMLElement>('[data-armour-notice] [data-action="toggleEquip"]')?.click();
+            const cleared = await globalThis.wh40kE2E.pollUntil(() => actor.sheet.element.querySelector('[data-armour-notice]') === null, 10_000);
+            const worn = actor.items.contents.some((i) => i.type === 'armour' && i.system.state?.equipped === true);
+            await actor.sheet.close();
+            return { cleared, worn };
         },
         { id: actorId },
     );
@@ -234,9 +316,11 @@ async function effectPickerFallback(
                 return null;
             });
             const open = (): DialogLike | undefined =>
-                // `?? null`: an app with no element must not match (undefined !== null).
-                [...g.foundry.applications.instances.values()].find((app) => (app.element?.querySelector('[data-action="selectCondition"]') ?? null) !== null);
-            await globalThis.wh40kE2E.pollUntil(() => open() !== undefined, 10_000).catch(() => undefined);
+                [...g.foundry.applications.instances.values()].find((app) => app.element?.classList.contains('wh40k-effect-creation-dialog') === true);
+            await globalThis.wh40kE2E.pollUntil(() => open() !== undefined, 10_000);
+            // The dialog opens on Custom; the player picks the Condition category, as Skyhawk did.
+            open()?.element?.querySelector<HTMLElement>('[data-action="selectCategory"][data-category="condition"]')?.click();
+            await globalThis.wh40kE2E.pollUntil(() => (open()?.element?.querySelector('[data-action="selectCondition"]') ?? null) !== null, 10_000);
             const dialog = open();
             const rows = [...(dialog?.element?.querySelectorAll<HTMLElement>('[data-action="selectCondition"]') ?? [])];
             const stunned = rows.find((row) => row.dataset['conditionId'] === 'stunned') ?? rows.at(0);
@@ -478,6 +562,8 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
             pass('npc-faction-holds', npc.subfaction === 'Ordo Hereticus cell', JSON.stringify(npc));
             pass('npc-custom-stats-editable', npc.checkboxEnabled, JSON.stringify(npc));
             pass('npc-combat-tab-fatigue', npc.combatFatiguePips > 0, JSON.stringify(npc));
+            pass('npc-sidebar-rows-stacked', npc.threatStacked && npc.threatShare > 0.5, JSON.stringify(npc));
+            await snap(page, 'session-26-npc-sidebar-rows-stacked', { selector: `#${npc.sheetId}`, closeWindows: true });
 
             // --- Effect picker with no condition catalog (public install) -------------
             const picker = await effectPickerFallback(page, scene.actors['pc'] ?? '');
@@ -485,6 +571,16 @@ test.describe.serial('Session 26 bundle (Tier B, #777 #782 #774 #766 #553)', () 
                 'effect-picker-falls-back-to-statuses',
                 picker.rows > 0 && picker.rows === picker.statuses && picker.applied.length === 1,
                 JSON.stringify(picker),
+            );
+
+            // --- #798: the Armour panel's notice, and equipping from it ---------------
+            const notice = await armourNoticeFlow(page, scene.actors['pc'] ?? '');
+            await snap(page, 'session-26-armour-notice-unequipped', { selector: `#${notice.sheetId}` });
+            const equipped = await equipFromNotice(page, scene.actors['pc'] ?? '');
+            pass(
+                'armour-notice-equips',
+                notice.before === 'unequipped' && notice.buttons.join() === 'Flak Vest' && equipped.cleared && equipped.worn,
+                JSON.stringify({ notice, equipped }),
             );
         } finally {
             await deleteDocuments(page, { combats: cleanup.combats, users: cleanup.users });

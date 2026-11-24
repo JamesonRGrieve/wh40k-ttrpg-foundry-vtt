@@ -147,6 +147,34 @@ export const NoDamageDash: Story = {
     },
 };
 
+/**
+ * The stat tiles form an even block beside Damage (adc468c8f, operator feedback):
+ * Damage comes first and spans 2x2, and the column count follows the number of
+ * tiles (3, 4 or 5), so the tiles beside it fill whole rows with no empty cells.
+ */
+export const StatTilesFormABlock: Story = {
+    play: async ({ canvasElement }) => {
+        const grid = canvasElement.querySelector<HTMLElement>('[data-weapon-stat-grid]');
+        await expect(grid).not.toBeNull();
+        if (grid === null) return;
+        const tiles = [...grid.children].filter((el): el is HTMLElement => el instanceof HTMLElement);
+        // Damage leads, spanning two columns and two rows.
+        const damage = tiles.at(0);
+        await expect(getComputedStyle(damage ?? grid).gridColumnEnd).toBe('span 2');
+        await expect(getComputedStyle(damage ?? grid).gridRowEnd).toBe('span 2');
+        const expected = tiles.length >= 6 ? 5 : tiles.length >= 4 ? 4 : 3;
+        const columns = getComputedStyle(grid)
+            .gridTemplateColumns.split(' ')
+            .filter((track) => track !== '').length;
+        await expect(columns).toBe(expected);
+        // The tiles beside Damage fill its two rows: none of them starts below them
+        // while a cell beside Damage is still empty.
+        const damageBox = damage?.getBoundingClientRect();
+        const beside = tiles.slice(1).filter((tile) => tile.getBoundingClientRect().top < (damageBox?.bottom ?? 0));
+        await expect(beside.length).toBe(Math.min(tiles.length - 1, 2 * (expected - 2)));
+    },
+};
+
 /** The penetration tile and its label, read from the rendered sheet. */
 function penetrationTile(canvasElement: HTMLElement): { value: HTMLElement | null; label: HTMLElement | null; tile: HTMLElement | null } {
     const value = canvasElement.querySelector<HTMLElement>('[data-weapon-penetration]');
