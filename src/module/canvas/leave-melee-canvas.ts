@@ -27,6 +27,8 @@ const pausedMovers = new Set<string>();
 /** The update options the hook reads: the completed move carries the marker, so it passes. */
 interface MoveOptions {
     readonly wh40kLeaveMeleeResolved?: boolean;
+    /** Foundry's teleport flag: the token is placed, not moved, so it leaves no one behind. */
+    readonly teleport?: boolean;
 }
 
 /** An owned weapon, as the free attack picks one. */
@@ -111,7 +113,7 @@ async function writeState(message: CardMessage, state: LeaveMeleeState): Promise
 /** preUpdateToken: pause a move that leaves melee; return false to hold it. */
 function onPreUpdateToken(doc: MovingTokenDoc, changes: { x?: number; y?: number }, options: MoveOptions): boolean {
     try {
-        if (options.wh40kLeaveMeleeResolved === true) return true;
+        if (options.wh40kLeaveMeleeResolved === true || options.teleport === true) return true;
         if (!('x' in changes) && !('y' in changes)) return true;
         const combat = game.combat;
         if (combat?.started !== true || doc.id === null) return true;

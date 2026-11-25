@@ -29,6 +29,7 @@ import { recordCoverage } from './lib/coverage-tracker';
 import { joinAsUser, joinOrSkip } from './lib/join';
 import { compendiumUuid } from './lib/pack-lookup';
 import { expect, test } from './lib/test';
+import { scaledMs } from './lib/timing';
 
 /**
  * Tier B — the evasion window across clients, the way the table plays it (#414).
@@ -183,13 +184,19 @@ test.describe.serial('Evasion across clients (Tier B, DH2)', () => {
             /* ---- 1. The hit prompts the defender's owner on their own client ---- */
             const playerBefore = await messageIds(player);
             const bystanderBefore = await messageIds(bystander);
+            // Watch for the notification from before the attack: it fades after a few seconds,
+            // and the prompt card is awaited first.
+            const notice = player.locator('#notifications .notification', { hasText: 'is hit by Heretic Autogunner' });
+            const noticeShown = notice.waitFor({ state: 'visible', timeout: scaledMs(30_000) }).then(
+                () => true,
+                () => false,
+            );
             const first = await burst(page, fight, 1);
             expect(first.html, 'the burst hits and opens the evasion window').toContain('data-evasion-status="pending"');
             const prompt = await awaitCard(player, playerBefore, 'data-evasion-prompt');
             expect(prompt.html).toContain('data-skill="dodge"');
             expect(prompt.html, 'the burst lands three hits').toContain('3 hits incoming');
-            const notice = player.locator('#notifications .notification', { hasText: 'is hit by Heretic Autogunner' });
-            await expect(notice, 'the defender’s client raises a notification for the attack').toBeVisible();
+            expect(await noticeShown, 'the defender’s client raises a notification for the attack').toBe(true);
             expect(await snapCard(player, 'evasion-two-client-player-prompt', prompt.id)).not.toBeNull();
             recordCoverage('evasion.two-client.flow', 'owner-prompted');
 

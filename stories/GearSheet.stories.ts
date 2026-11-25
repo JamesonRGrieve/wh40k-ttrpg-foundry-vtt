@@ -53,10 +53,22 @@ function renderWithSchemaFields(systemId?: SystemId): HTMLFormElement {
     return inForm(renderSheet(gearSheetSrc, context), systemId);
 }
 
-/** Edit mode: addictive and per-place availability submit under their `system.` paths on every line (#732). */
+/** Edit mode: addictive, the scanner's reach (#759) and per-place availability submit under their `system.` paths on every line (#732). */
 export const SchemaFields: Story = {
     render: () => renderWithSchemaFields(),
     play: ({ canvasElement }) => {
-        playSchemaFields(canvasElement, ['system.addictive', 'system.availabilityRestriction'], renderWithSchemaFields);
+        playSchemaFields(
+            canvasElement,
+            [
+                'system.addictive',
+                'system.scanner.range',
+                'system.scanner.testSkill',
+                'system.scanner.wallPenetration',
+                'system.scanner.poorWallPenetration',
+                'system.scanner.perRound',
+                'system.availabilityRestriction',
+            ],
+            renderWithSchemaFields,
+        );
     },
 };

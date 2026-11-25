@@ -87,6 +87,16 @@ describe('movement enforcement wiring (#235)', () => {
         expect(src).toContain('allowing on error');
     });
 
+    it('lets a teleport through before any move prompt: a placement is not a move action (#805, #770)', () => {
+        const onPre = /function onPreUpdateToken[\s\S]*?\n\}/.exec(src)?.[0] ?? '';
+        const teleportAt = onPre.indexOf("options['teleport'] === true");
+        expect(teleportAt).toBeGreaterThan(-1);
+        expect(teleportAt).toBeLessThan(onPre.indexOf('movePrompt('));
+        const leaveMelee = readRepoFile('src/module/canvas/leave-melee-canvas.ts');
+        const leavePre = /function onPreUpdateToken[\s\S]*?\n\}/.exec(leaveMelee)?.[0] ?? '';
+        expect(leavePre).toContain('options.teleport === true');
+    });
+
     it('is wired into the boot hook registration', () => {
         expect(hooks).toContain('registerMovementEnforcement()');
     });

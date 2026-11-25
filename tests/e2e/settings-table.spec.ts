@@ -68,7 +68,7 @@ async function probeSettingsTable(page: Page): Promise<FlowResult[]> {
                 .filter((entry) => registered.get(`wh40k-rpg.${entry.key}`)?.type?.name !== entry.type.name)
                 .map((entry) => `${entry.key}(${registered.get(`wh40k-rpg.${entry.key}`)?.type?.name ?? 'missing'} ≠ ${entry.type.name})`);
             const trackerMissing = Object.values(trackerMod.EVENT_TRACKER_SETTINGS).filter((key) => !registered.has(`wh40k-rpg.${key}`));
-            const allRegistered = missing.length === 0 && trackerMissing.length === 0 && Object.keys(WH40KSettings.TABLE).length === 51;
+            const allRegistered = missing.length === 0 && trackerMissing.length === 0 && Object.keys(WH40KSettings.TABLE).length === 52;
             out.push({
                 name: 'table-keys-registered',
                 ok: allRegistered,

@@ -380,7 +380,16 @@ export const FORCE_FIELD_EXTRA_LAYOUT: SchemaSheetLayout = {
 export const GEAR_EXTRA_LAYOUT: SchemaSheetLayout = {
     type: 'gear',
     labelPrefix: 'WH40K.ItemFields.Gear',
-    sections: [{ key: 'gear', icon: 'fa-flask', paths: ['addictive'] }, PHYSICAL_AVAILABILITY],
+    sections: [
+        { key: 'gear', icon: 'fa-flask', paths: ['addictive'] },
+        // A scanner's reach (#759); a range of 0 is not a scanner.
+        {
+            key: 'scanner',
+            icon: 'fa-satellite-dish',
+            paths: ['scanner.range', 'scanner.testSkill', 'scanner.wallPenetration', 'scanner.poorWallPenetration', 'scanner.perRound'],
+        },
+        PHYSICAL_AVAILABILITY,
+    ],
 };
 
 export const WEAPON_MODIFICATION_EXTRA_LAYOUT: SchemaSheetLayout = {

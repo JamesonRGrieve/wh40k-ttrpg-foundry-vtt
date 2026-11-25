@@ -57,6 +57,9 @@ export default defineConfig({
     // Every budget scales with E2E_TIMEOUT_SCALE (tests/e2e/lib/timing.ts) so a
     // loaded shared runner can be given proportional headroom.
     timeout: scaledMs(600_000),
+    // Assertions (toBeVisible, expect.poll, toPass) too; left at Playwright's 5 s
+    // default they flaked under a loaded or parallel run.
+    expect: { timeout: scaledMs(5_000) },
     use: {
         baseURL: `http://127.0.0.1:${PORT}`,
         trace: 'on-first-retry',

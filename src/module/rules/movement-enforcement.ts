@@ -148,6 +148,8 @@ function onPreUpdateToken(
     try {
         if (!('x' in changes) && !('y' in changes)) return true;
         if (options[DECLARED_MOVE_OPTION] === true) return true;
+        // A teleport places the token (a GM correction, a resize's snap); it is not a move action.
+        if (options['teleport'] === true) return true;
         if (WH40KSettings.getMovementAutomation() !== 'full') return true;
         const combat = game.combat as LooseCombat | null;
         if (combat?.started !== true) return true;

@@ -10035,11 +10035,29 @@
             },
             "Gear": {
                 "Sections": {
-                    "gear": "Gear"
+                    "gear": "Gear",
+                    "scanner": "Scanner"
                 },
                 "FIELDS": {
                     "addictive": {
                         "label": "Addictive"
+                    },
+                    "scanner": {
+                        "range": {
+                            "label": "Scan Range (m)"
+                        },
+                        "testSkill": {
+                            "label": "Scan Test Skill"
+                        },
+                        "wallPenetration": {
+                            "label": "Sees Through Walls Up To (cm)"
+                        },
+                        "poorWallPenetration": {
+                            "label": "Poor Craftsmanship: Walls Up To (cm)"
+                        },
+                        "perRound": {
+                            "label": "Scans per Round"
+                        }
                     }
                 }
             },
