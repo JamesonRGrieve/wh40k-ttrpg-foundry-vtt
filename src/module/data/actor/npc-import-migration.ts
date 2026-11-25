@@ -170,31 +170,75 @@ export function migrateWeapons(source: JsonObject): void {
  */
 function skillNameToKey(name: string): string {
     const base = name.replace(/\([^)]*\)/g, ' ').trim();
-    const words = base.split(/[\s/-]+/).filter((w) => w !== '');
+    // Letters and digits only: any other mark ("Tracking." when a printed line ran on)
+    // would reach the stored key, and Foundry expands a "." in a key into a nested path.
+    const words = base.split(/[^A-Za-z0-9]+/).filter((w) => w !== '');
     return words.map((w, i) => (i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())).join('');
 }
 
 /**
  * Split a skill list on top-level commas, ignoring commas inside parentheses so a
  * multi-part specialisation ("Common Lore (Imperium, Adeptus Arbites)") stays one
- * entry instead of fragmenting into nonsense skills.
+ * entry instead of fragmenting into nonsense skills. A top-level full stop followed
+ * by a space also ends an entry: a printed line the next one ran into ("Tracking.
+ * Resistance (Psychic Powers)") holds two skills, not one.
  */
 function splitSkillList(list: string): string[] {
     const parts: string[] = [];
     let depth = 0;
     let current = '';
-    for (const char of list) {
+    const chars = [...list];
+    chars.forEach((char, index) => {
         if (char === '(') depth += 1;
         else if (char === ')') depth = Math.max(0, depth - 1);
-        if (char === ',' && depth === 0) {
+        const sentenceBreak = char === '.' && depth === 0 && /\s/.test(chars[index + 1] ?? '');
+        if ((char === ',' && depth === 0) || sentenceBreak) {
             parts.push(current);
             current = '';
-            continue;
+            return;
         }
         current += char;
-    }
+    });
     parts.push(current);
     return parts.map((part) => part.trim()).filter((part) => part !== '');
+}
+
+/** True when a stored `trainedSkills` value is a skill row (it carries its display name). */
+function isSkillRow(value: Json): value is JsonObject {
+    return isJsonObject(value) && typeof value['name'] === 'string';
+}
+
+/** Every skill row nested anywhere under `value`. */
+function nestedSkillRows(value: Json): JsonObject[] {
+    if (!isJsonObject(value)) return [];
+    return Object.values(value).flatMap((child) => (isSkillRow(child) ? [child] : nestedSkillRows(child)));
+}
+
+/**
+ * Repair `trainedSkills` rows an older import stored under a key with a "." in it.
+ * Foundry expands such a key into a nested object with no `name` ("tracking" holding
+ * "Resistance"), and the sheet's skill lists cannot read it. Each nested row is lifted
+ * back out under the key its own name gives, split where its name ran two printed
+ * skills together; a key already present is never overwritten. A flat row that only
+ * lacks its name keeps its ranks and gets an empty name, which the sheets show as
+ * its key. Idempotent.
+ */
+function repairNestedSkillRows(trained: JsonObject): void {
+    for (const [key, value] of Object.entries(trained)) {
+        if (isSkillRow(value) || !isJsonObject(value)) continue;
+        if (nestedSkillRows(value).length === 0) {
+            value['name'] = '';
+            continue;
+        }
+        delete trained[key];
+        for (const row of nestedSkillRows(value)) {
+            for (const part of splitSkillList(String(row['name']))) {
+                const liftedKey = skillNameToKey(part);
+                if (liftedKey === '' || trained[liftedKey] !== undefined) continue;
+                trained[liftedKey] = { ...row, name: part };
+            }
+        }
+    }
 }
 
 /**
@@ -372,9 +416,10 @@ export function parseSkillEntries(raw: string): ParsedSkillEntry[] {
 }
 
 export function migrateSkills(source: JsonObject): void {
+    const existing = source['trainedSkills'];
+    if (isJsonObject(existing)) repairNestedSkillRows(existing);
     const raw = source['skills'];
     if (typeof raw !== 'string' || raw.trim() === '') return;
-    const existing = source['trainedSkills'];
     if (isJsonObject(existing) && Object.keys(existing).length > 0) return;
 
     const trained: JsonObject = {};

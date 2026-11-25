@@ -232,6 +232,40 @@ describe('migrateSkills (#256)', () => {
         expect(source['trainedSkills']).toBe(existing);
     });
 
+    // A printed line the next one ran into: "Tracking." ended a skill and the comma was
+    // lost. The "." reached the key, and Foundry expanded it into a nested row with no
+    // name, so the NPC sheet could not open (reported by the pack converter, 0.3.0).
+    it('splits a skill list at a full stop and keys only on letters and digits', () => {
+        const source: JsonObject = { skills: 'Awareness, Tracking. Resistance (Psychic Powers), True Grit' };
+        migrateSkills(source);
+        const ts = source['trainedSkills'] as JsonObject;
+        expect(Object.keys(ts).sort()).toEqual(['awareness', 'resistance', 'tracking', 'trueGrit']);
+        expect(Object.keys(ts).filter((key) => !/^[A-Za-z0-9]+$/.test(key))).toEqual([]);
+        expect(ts['resistance']).toMatchObject({ name: 'Resistance (Psychic Powers)' });
+        expect(ts['tracking']).toMatchObject({ name: 'Tracking' });
+    });
+
+    it('lifts rows an older import nested under a dotted key back out to their own keys', () => {
+        const nested = { name: 'Tracking. Resistance (Psychic Powers)', characteristic: 'intelligence', advance: 2, trained: true, plus10: true };
+        const source: JsonObject = { trainedSkills: { awareness: { name: 'Awareness', advance: 1 }, tracking: { Resistance: nested } } };
+        migrateSkills(source);
+        const ts = source['trainedSkills'] as JsonObject;
+        expect(Object.keys(ts).sort()).toEqual(['awareness', 'resistance', 'tracking']);
+        expect(ts['tracking']).toMatchObject({ name: 'Tracking', advance: 2, characteristic: 'intelligence' });
+        expect(ts['resistance']).toMatchObject({ name: 'Resistance (Psychic Powers)', advance: 2 });
+        expect(ts['awareness']).toEqual({ name: 'Awareness', advance: 1 });
+        // Running it again changes nothing.
+        const once = JSON.stringify(ts);
+        migrateSkills(source);
+        expect(JSON.stringify(source['trainedSkills'])).toBe(once);
+    });
+
+    it('keeps a flat row that lacks its name, with an empty name the sheet reads as its key', () => {
+        const source: JsonObject = { trainedSkills: { dodge: { trained: true, advance: 1 } } };
+        migrateSkills(source);
+        expect((source['trainedSkills'] as JsonObject)['dodge']).toEqual({ trained: true, advance: 1, name: '' });
+    });
+
     it('is a no-op when the skills string is absent or blank', () => {
         const a: JsonObject = {};
         migrateSkills(a);

@@ -733,7 +733,7 @@ recordDimension('dh1-career.flow', covered['dh1-career.flow'], DH1_CAREER_FLOWS)
 
 // An NPC's printed skill line parses to clean rows (#726), tests/e2e/npc-skill-import.spec.ts.
 // Keep in sync with NPC_SKILL_IMPORT_FLOWS there.
-const NPC_SKILL_IMPORT_FLOWS = ['advance-bracket-dropped', 'characteristic-tag-read', 'sheet-shows-clean-names'];
+const NPC_SKILL_IMPORT_FLOWS = ['advance-bracket-dropped', 'characteristic-tag-read', 'sheet-shows-clean-names', 'run-on-line-splits', 'nested-row-lifted'];
 recordDimension('npc-skill-import.flow', covered['npc-skill-import.flow'], NPC_SKILL_IMPORT_FLOWS);
 
 // Every ringed token draws its ring on the bust's edge, tests/e2e/ring-subject-scale.spec.ts.
