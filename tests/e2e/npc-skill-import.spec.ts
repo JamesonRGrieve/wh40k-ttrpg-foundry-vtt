@@ -153,7 +153,8 @@ test.describe.serial('an NPC printed skill line parses to clean rows (Tier B, #7
                     clean(runOn.keys) &&
                     runOn.keys.includes('tracking') &&
                     runOn.keys.includes('resistance') &&
-                    runOn.shown.some((name) => name.startsWith('Resistance')),
+                    // A specialist skill shows under its group, its row named by the specialisation.
+                    runOn.shown.includes('Psychic Powers'),
                 detail: JSON.stringify(runOn),
             });
             results.push({
