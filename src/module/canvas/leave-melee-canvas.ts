@@ -85,6 +85,7 @@ interface CardMessage {
  * another module passes; a throw inside one aborts every later handler for that
  * message, so a payload without the document methods is skipped.
  */
+// eslint-disable-next-line no-restricted-syntax -- boundary: the raw renderChatMessageHTML/updateChatMessage hook payload, narrowed by the method checks below
 function asCardMessage(payload: unknown): CardMessage | null {
     if (typeof payload !== 'object' || payload === null) return null;
     if (!('getFlag' in payload) || typeof payload.getFlag !== 'function') return null;
