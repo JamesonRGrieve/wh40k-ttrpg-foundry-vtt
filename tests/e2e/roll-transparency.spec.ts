@@ -453,7 +453,10 @@ test.describe.serial('roll transparency chat card (Tier B)', () => {
             await expect(row).toHaveCount(1);
 
             await clearScreenOverlays(page, popout.replace('#', ''));
-            // A real hover: the rich-tooltip rows open on hover (#692).
+            // A real hover: the rich-tooltip rows open on hover (#692). The pointer first leaves the
+            // card: it can rest over the row already (the join click leaves it there), and moving
+            // within the row fires no pointerenter on it, so the tooltip would never open.
+            await page.mouse.move(0, 0);
             await row.hover();
             const tooltip = page.locator('#tooltip.wh40k-tooltip');
             await expect(tooltip).toBeVisible();
