@@ -203,13 +203,16 @@ function splitSkillList(list: string): string[] {
     return parts.map((part) => part.trim()).filter((part) => part !== '');
 }
 
-/** True when a stored `trainedSkills` value is a skill row (it carries its display name). */
-function isSkillRow(value: Json): value is JsonObject {
+/** A stored `trainedSkills` row: it carries its display name. */
+type SkillRow = JsonObject & { name: string };
+
+/** True when a stored `trainedSkills` value is a skill row. */
+function isSkillRow(value: Json): value is SkillRow {
     return isJsonObject(value) && typeof value['name'] === 'string';
 }
 
 /** Every skill row nested anywhere under `value`. */
-function nestedSkillRows(value: Json): JsonObject[] {
+function nestedSkillRows(value: Json): SkillRow[] {
     if (!isJsonObject(value)) return [];
     return Object.values(value).flatMap((child) => (isSkillRow(child) ? [child] : nestedSkillRows(child)));
 }
@@ -232,7 +235,7 @@ function repairNestedSkillRows(trained: JsonObject): void {
         }
         delete trained[key];
         for (const row of nestedSkillRows(value)) {
-            for (const part of splitSkillList(String(row['name']))) {
+            for (const part of splitSkillList(row.name)) {
                 const liftedKey = skillNameToKey(part);
                 if (liftedKey === '' || trained[liftedKey] !== undefined) continue;
                 trained[liftedKey] = { ...row, name: part };

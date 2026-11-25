@@ -143,13 +143,13 @@ test.describe.serial('an NPC printed skill line parses to clean rows (Tier B, #7
             return out;
         });
         try {
-            const [runOn, lifted] = reads;
+            const runOn = reads.at(0);
+            const lifted = reads.at(1);
             const clean = (keys: string[]): boolean => keys.every((key) => /^[A-Za-z0-9]+$/.test(key));
             results.push({
                 name: 'run-on-line-splits',
                 ok:
-                    runOn !== undefined &&
-                    runOn.error === null &&
+                    runOn?.error === null &&
                     clean(runOn.keys) &&
                     runOn.keys.includes('tracking') &&
                     runOn.keys.includes('resistance') &&
@@ -159,8 +159,7 @@ test.describe.serial('an NPC printed skill line parses to clean rows (Tier B, #7
             results.push({
                 name: 'nested-row-lifted',
                 ok:
-                    lifted !== undefined &&
-                    lifted.error === null &&
+                    lifted?.error === null &&
                     clean(lifted.keys) &&
                     lifted.keys.join() === 'resistance,tracking' &&
                     lifted.shown.some((name) => name.startsWith('Tracking')),
