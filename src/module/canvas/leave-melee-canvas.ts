@@ -79,6 +79,20 @@ interface CardMessage {
     readonly update: (data: object) => Promise<object | undefined>;
 }
 
+/**
+ * The hook payload as a card message, or null when it isn't a chat message document.
+ * `renderChatMessageHTML` and `updateChatMessage` hand handlers whatever Foundry or
+ * another module passes; a throw inside one aborts every later handler for that
+ * message, so a payload without the document methods is skipped.
+ */
+function asCardMessage(payload: unknown): CardMessage | null {
+    if (typeof payload !== 'object' || payload === null) return null;
+    if (!('getFlag' in payload) || typeof payload.getFlag !== 'function') return null;
+    if (!('update' in payload) || typeof payload.update !== 'function') return null;
+    // eslint-disable-next-line no-restricted-syntax -- boundary: the renderChatMessageHTML/updateChatMessage hook's ChatMessage, checked above for the methods CardMessage reads
+    return payload as unknown as CardMessage;
+}
+
 /** Render the card's content for a state. */
 async function renderCard(state: LeaveMeleeState): Promise<string> {
     return foundry.applications.handlebars.renderTemplate(CARD_TEMPLATE, {
@@ -223,13 +237,13 @@ export function registerLeaveMelee(): void {
         // eslint-disable-next-line no-restricted-syntax -- boundary: the preUpdateToken hook payload (TokenDocument, its change, Foundry's update options) is read structurally
         onPreUpdateToken(doc as unknown as MovingTokenDoc, changes as { x?: number; y?: number }, options as MoveOptions),
     );
-    Hooks.on('renderChatMessageHTML', (message, html) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: the renderChatMessageHTML hook's ChatMessage, read through the structural CardMessage
-        bindCard(message as unknown as CardMessage, html);
+    Hooks.on('renderChatMessageHTML', (payload, html) => {
+        const message = asCardMessage(payload);
+        if (message !== null) bindCard(message, html);
     });
-    Hooks.on('updateChatMessage', (message) => {
-        // eslint-disable-next-line no-restricted-syntax -- boundary: the updateChatMessage hook's ChatMessage, read through the structural CardMessage
-        void maybeComplete(message as unknown as CardMessage);
+    Hooks.on('updateChatMessage', (payload) => {
+        const message = asCardMessage(payload);
+        if (message !== null) void maybeComplete(message);
     });
     onSystemSocket((payload) => {
         if (!isAnswer(payload) || !game.user.isGM) return;

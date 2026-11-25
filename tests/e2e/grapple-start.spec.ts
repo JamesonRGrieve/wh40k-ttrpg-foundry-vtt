@@ -81,9 +81,11 @@ test.describe.serial('Grapple start and end (Tier B, #450)', () => {
             ],
         });
         const defender = await createActor(page, { data: dh2Character('Held Acolyte', 35, 50) });
+        // 100 px squares of 1 m: the defender stands 5 m off, inside the attacker's 9 m Charge
+        // (Agility 30: Half Move 3 m) and past its 4 m minimum, so the Charge closes in (#806).
         const stage = await stageScene(page, 'Grapple ring', [
             { actorId: attacker.id, x: 400, y: 300 },
-            { actorId: defender.id, x: 500, y: 300 },
+            { actorId: defender.id, x: 900, y: 300 },
         ]);
         const combatId = await startCombat(page, stage.sceneId, [
             { actorId: attacker.id, initiative: 20 },

@@ -247,7 +247,7 @@ test.describe.serial('auspex scan (Tier B, #759)', () => {
             );
             pass('scan-wall-blocks', hit.gmCard !== null && !gm.includes('Walled Contact'), `gm card ${JSON.stringify(hit.gmCard)}`);
             pass('scan-out-of-range-missed', hit.gmCard !== null && !gm.includes('Distant Contact'), `gm card ${JSON.stringify(hit.gmCard)}`);
-            pass('scan-card-states-contacts', hit.rollCard.includes('1 contact(s) within 50 m'), `roll card ${JSON.stringify(hit.rollCard.slice(0, 400))}`);
+            pass('scan-card-states-contacts', hit.rollCard.includes('1 contact within 50 m'), `roll card ${JSON.stringify(hit.rollCard.slice(0, 400))}`);
             const clip = await canvasClip(page, [SCANNER_CENTRE, { x: 1050, y: 550 }, { x: 550, y: 50 }], 200);
             await snap(page, 'auspex-scan-sweep-on-canvas', clip === null ? { selector: '#board', closeWindows: true } : { clip, closeWindows: true });
             if (hit.gmCardId !== null) await snap(page, 'auspex-scan-gm-card', { selector: await popOutChatMessage(page, hit.gmCardId) });
