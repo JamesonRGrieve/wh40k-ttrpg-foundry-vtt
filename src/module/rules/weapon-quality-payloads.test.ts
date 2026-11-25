@@ -119,7 +119,9 @@ describe.skipIf(!HAS_PRIVATE_CONTENT)('per-system weaponQuality index resolution
     });
 });
 
-describe('stub pack content integrity (#303)', () => {
+// The quality packs are private content: a public checkout (CI, the release workflow)
+// has none, and "a non-empty subset per line" cannot hold there.
+describe.skipIf(!HAS_PRIVATE_CONTENT)('stub pack content integrity (#303)', () => {
     const rtDocs = loadDocs('rt');
     const rtUuidsByIdentifier = new Map<string, Set<string>>();
     for (const doc of rtDocs) {
