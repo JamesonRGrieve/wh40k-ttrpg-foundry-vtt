@@ -2,6 +2,10 @@
 
 Unofficial, fan-made Foundry VTT system for the Warhammer 40,000 d100 RPG family. Not affiliated with or endorsed by Games Workshop, Fantasy Flight Games, or Cubicle 7 Entertainment.
 
+[![User guide](https://img.shields.io/badge/docs-user%20guide-blue)](https://jamesonrgrieve.github.io/wh40k-ttrpg-foundry-vtt/?path=/docs/guide-introduction--docs)
+
+**[Read the user guide](https://jamesonrgrieve.github.io/wh40k-ttrpg-foundry-vtt/?path=/docs/guide-introduction--docs)** for installing the system, creating a character, rolling tests, combat, items and effects, and every setting. Quick links: [Installing and updating](https://jamesonrgrieve.github.io/wh40k-ttrpg-foundry-vtt/?path=/docs/guide-installation-and-updating--docs) · [Combat](https://jamesonrgrieve.github.io/wh40k-ttrpg-foundry-vtt/?path=/docs/guide-combat--docs) · [Troubleshooting](https://jamesonrgrieve.github.io/wh40k-ttrpg-foundry-vtt/?path=/docs/guide-troubleshooting--docs).
+
 The repo currently carries support for the FFG d100 lines under a shared TypeScript codebase, with per-system variants where the rules or presentation diverge.
 
 This project is in active migration:
